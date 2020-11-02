@@ -1,9 +1,17 @@
 namespace ep;	
-	
+
+using { ep as dtl } from './EP_LOI_DTL-model';
+
 entity Loi_Vendor_Selection {	
     key tenant_id : String(5)  not null;	
     key company_code : String(10)  not null;	
     key loi_selection_number : String(100)  not null;	
+
+    item : Association[*] to dtl.Loi_Dtl
+        on item.tenant_id = tenant_id 
+        and item.company_code = company_code        
+        and item.loi_selection_number = loi_selection_number;  
+
     loi_selection_ttl : String(100)  ;	
     progress_status_code : String(30)  ;	
     attach_group_number : String(100)  ;	

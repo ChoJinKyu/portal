@@ -79,7 +79,7 @@
 						</goals>
 					</execution>
 
-					<execution>
+					<!-- <execution>
 						<id>cds.install-node</id>
 						<goals>
 							<goal>install-node</goal>
@@ -99,7 +99,7 @@
 							<skip>${cdsdk-global}</skip>
 							<version>${cdsdk.version}</version>
 						</configuration>
-					</execution>
+					</execution> -->
 
 					<execution>
 						<id>cds.build</id>

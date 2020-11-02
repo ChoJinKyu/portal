@@ -3,7 +3,7 @@ namespace cm;
 using { User } from '@sap/cds/common';
 	
 entity Hr_Employee {	
-  key tenant_id : String(4)  not null;	
+  key tenant_id : String(5)  not null;	
   key employee_number : String(30)  not null;	
     user_status_code : String(30)  not null;	 
     email_id : String(240)  ;	

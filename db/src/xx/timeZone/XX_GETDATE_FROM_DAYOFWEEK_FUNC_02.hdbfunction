@@ -1,0 +1,85 @@
+FUNCTION XX_GETDATE_FROM_DAYOFWEEK_FUNC_02 (P_YYYY BIGINT, P_MM BIGINT, P_DD BIGINT, P_WEEK_OF_MONTH BIGINT, P_DAY_OF_WEEK BIGINT)
+RETURNS D_RETURN NVARCHAR(10)
+LANGUAGE SQLSCRIPT
+AS
+
+BEGIN
+    DECLARE N_YYYY BIGINT;
+    DECLARE N_MM BIGINT;
+    DECLARE N_WEEK_OF_MONTH BIGINT;
+    DECLARE N_DAYS BIGINT;
+    DECLARE V_MESSAGE_TEXT NVARCHAR(200);
+    
+    DECLARE V_MM NVARCHAR(2);
+    DECLARE V_DD NVARCHAR(2);
+    V_MM := CAST(:P_MM  AS  NVARCHAR(2));
+    V_DD := CAST(:P_DD  AS  NVARCHAR(2));
+
+    -- Input parameter null check    
+    IF (:P_YYYY IS NULL  OR 
+        :P_MM   IS NULL  OR
+        :P_DD   IS NULL  OR
+        :P_WEEK_OF_MONTH  IS  NULL  OR
+        :P_DAY_OF_WEEK  IS  NULL)  THEN
+        V_MESSAGE_TEXT = 'Error';
+    END IF;
+
+    -- p_day_of_week Range(1~7) Check
+    -- Maria 기준 ==> 0:Sun,1:Mon,2:Tue,3:Wed,4:Thu,5:Fri,6:Sat
+    -- Oracle = Maria + 1
+    IF (:P_DAY_OF_WEEK >= 1 OR :P_DAY_OF_WEEK <= 7) THEN
+        V_MESSAGE_TEXT := 'Error';
+    END IF;
+
+    IF :P_MM < 10 THEN
+            V_MM :='0'||:P_MM;
+    ELSE
+        V_MM := :P_MM;
+    END IF;
+
+    IF :P_DD < 10 THEN
+        V_DD :='0'||:P_DD;
+    ELSE
+        V_DD := :P_DD;
+    END IF;
+
+    -- IF (P_DD IS NULL OR P_DD = '') THEN
+    IF (:P_DD IS NULL) THEN
+
+        IF (:P_WEEK_OF_MONTH > 0) THEN
+            N_WEEK_OF_MONTH := :P_WEEK_OF_MONTH - 1;
+            N_MM            := :P_MM ;
+            N_YYYY          := :P_YYYY ;
+        ELSE
+            N_WEEK_OF_MONTH := :P_WEEK_OF_MONTH;
+            N_MM            := :P_MM + 1;
+            IF (N_MM > 12) THEN
+                N_MM        := 1;
+                N_YYYY      := :P_YYYY + 1;
+            ELSE
+                N_YYYY      := :P_YYYY;
+            END IF;
+        END IF;
+        N_DAYS := N_WEEK_OF_MONTH * 7;
+		
+        SELECT Y.SYS_DATE
+        INTO  D_RETURN
+        FROM (SELECT X.SYS_DATE
+                    ,TO_CHAR(X.SYS_DATE,'D')  AS  D  -- MARIA 0:SUN,1:MON,2:TUE,3:WED,4:THU,5:FRI,6:SAT ==> ORACLE = MARIA + 1, SAP HANA 기준 ==> 1:Mon,2:Tue,3:Wed,4:Thu,5:Fri,6:Sat,7:Sun
+              FROM  (
+              	        SELECT ADD_DAYS(TO_DATE(P_YYYY||V_MM||'01', 'YYYYMMDD'), N_DAYS  +  C.WNUMBER  -  1)  AS  SYS_DATE
+                        FROM   CM_COPY  C
+                        WHERE C.WNUMBER <= 7
+                     ) X
+             ) Y
+        WHERE Y.D = P_DAY_OF_WEEK;
+    ELSE
+      
+	    SELECT  TO_DATE(CAST(P_YYYY  AS  NVARCHAR(4))||V_MM||V_DD, 'YYYYMMDD')
+	    INTO    D_RETURN
+	    FROM    CM_DUMMY;
+
+    END IF;
+
+
+END;

@@ -27,8 +27,8 @@
                 },
                 {
                     "name": "타임존 관리",
-                    "url": "../cm/controlOptionMgr/webapp",
-                    "component": "cm.controlOptionMgr"
+                    "url": "../cm/timeZoneMgr/webapp",
+                    "component": "cm.timeZoneMgr"
                 },
                 {
                     "name": "메시지 관리",

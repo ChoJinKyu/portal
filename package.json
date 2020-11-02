@@ -5,7 +5,7 @@
   "license": "ISC",
   "repository": "<Add your repository here>",
   "scripts": {
-      "deploy": "cds deploy --to hana:sppDb_hdi_dev --no-save"
+    "deploy": "cds deploy --to hana:sppDb_hdi_dev --no-save"
   },
   "dependencies": {
     "@sap/cds": "^4.1.9",
