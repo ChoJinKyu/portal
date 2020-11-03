@@ -1,0 +1,168 @@
+FUNCTION XX_DB_SYSDATE_MTZ_FUNC_02 (P_TENANT_ID NVARCHAR(5), P_SYSDATE DATE, P_FROM_TIME_ZONE NVARCHAR(5), P_TO_TIME_ZONE NVARCHAR(5))
+RETURNS D_RETURN TIMESTAMP
+LANGUAGE SQLSCRIPT
+AS
+
+BEGIN
+
+	DECLARE  D_SYSDATE             TIMESTAMP;
+
+    DECLARE  V_FROM_TIME_ZONE      NVARCHAR(50);
+    
+    DECLARE  D_SYS_DT              TIMESTAMP;
+    DECLARE  N_FROM_GMT_OFFSET     BIGINT;
+    DECLARE  N_FROM_MAX_GMT_OFFSET BIGINT;
+    DECLARE  V_FROM_TIME_ZONE_CD   NVARCHAR(50);
+    DECLARE  N_TO_GMT_OFFSET       BIGINT;
+    DECLARE  V_TO_DST_FLAG         NVARCHAR(10);
+    DECLARE  D_TO_DST_STRT_DT      TIMESTAMP;
+    DECLARE  D_TO_DST_END_DT       TIMESTAMP;
+    DECLARE  N_GAP_GMT_OFFSET      BIGINT;
+    DECLARE  V_GAP_TIME            BIGINT;
+
+    DECLARE  V_CHECK_DST_FLAG      NVARCHAR(10);
+    DECLARE  V_MESSAGE_TEXT        NVARCHAR(200);
+
+    IF (P_SYSDATE IS NULL) THEN
+        D_SYSDATE := NULL;
+    ELSE
+        D_SYSDATE := P_SYSDATE;
+    END IF;
+
+    IF (P_FROM_TIME_ZONE IS NULL OR P_FROM_TIME_ZONE = '') THEN
+	    SELECT  IFNULL((
+					SELECT  D.CONTROL_OPTION_VAL
+					FROM    CM_CONTROL_OPTION_MST M
+						   ,CM_CONTROL_OPTION_DTL D
+					WHERE  M.TENANT_ID                  =  D.TENANT_ID
+					AND    M.CONTROL_OPTION_CODE        =  D.CONTROL_OPTION_CODE
+					AND    M.TENANT_ID                  =  P_TENANT_ID   --( 파라미터... 받은것 /  파라미터 명 표준도 모델링 가이드에 반영 부탁 ) 
+					AND    M.CHAIN_CODE                 =  'CM'
+					AND    M.CONTROL_OPTION_CODE        =  'CM_DB_TIME_ZONE_CD'
+					AND    D.CONTROL_OPTION_LEVEL_CODE  =  'T'
+					AND    D.CONTROL_OPTION_LEVEL_VAL   =  'Default'
+                		)
+                		, 'AS054'
+                	)
+        INTO	V_FROM_TIME_ZONE            
+        FROM	CM_DUMMY
+        ;
+    ELSE
+        V_FROM_TIME_ZONE := P_FROM_TIME_ZONE;
+    END IF;
+
+    IF  (P_TO_TIME_ZONE  IS NULL  OR  P_TO_TIME_ZONE  =  '')  THEN
+        V_MESSAGE_TEXT  :=  'To Time Zone is null...';
+    END IF;
+
+    SELECT
+			 D.D_SYS_DT                       AS  D_SYS_DT
+            ,IFNULL(FMTZ.GMT_OFFSET,  0)      AS  FROM_GMT_OFFSET
+            ,IFNULL(FMTZ.MAX_GMT_OFFSET,  0)  AS  FROM_MAX_GMT_OFFSET
+            ,FMTZ.TIME_ZONE_CODE              AS  FROM_TIME_ZONE_CD
+            ,IFNULL(TMTZ.GMT_OFFSET,  0)      AS  TO_GMT_OFFSET
+            ,TMTZ.DST_FLAG                    AS  TO_DST_FLAG         -- 서머타임구분
+            ,(CASE  WHEN  TMTZ.DST_FLAG  =  'Y' 
+                    THEN  ADD_SECONDS(XX_GETDATE_FROM_DAYOFWEEK_FUNC_02(D.YYYY, TMTZ.DST_START_MONTH, NULL, TMTZ.DST_START_WEEK, TMTZ.DST_START_DAY_OF_WEEK),  (TMTZ.DST_START_TIME_RATE  /  24) * 60 * 60)
+                    ELSE  NULL
+              END)                            AS  TO_DST_STRT_DT
+            ,(CASE  WHEN  TMTZ.DST_FLAG  =  'Y' 
+                    THEN  ADD_SECONDS(XX_GETDATE_FROM_DAYOFWEEK_FUNC_02(D.YYYY, TMTZ.DST_END_MONTH, NULL, TMTZ.DST_END_WEEK, TMTZ.DST_END_DAY_OF_WEEK),  (TMTZ.DST_END_TIME_RATE  /  24) * 60 * 60)
+                    ELSE  NULL
+              END)                            AS  DST_END_TIME
+            ,IFNULL((-FMTZ.GMT_OFFSET  +  TMTZ.GMT_OFFSET),  0)  AS  GAP_GMT_OFFSET
+            ,IFNULL((-FMTZ.GMT_OFFSET  +  TMTZ.GMT_OFFSET),  0)  AS  GAP_TIME
+    INTO     D_SYS_DT
+            ,N_FROM_GMT_OFFSET
+            ,N_FROM_MAX_GMT_OFFSET
+            ,V_FROM_TIME_ZONE_CD
+            ,N_TO_GMT_OFFSET
+            ,V_TO_DST_FLAG
+            ,D_TO_DST_STRT_DT
+            ,D_TO_DST_END_DT
+            ,N_GAP_GMT_OFFSET
+            ,V_GAP_TIME
+    FROM     CM_COPY  X
+    LEFT  OUTER  JOIN  (
+            SELECT  TO_TIMESTAMP(IFNULL(D_SYSDATE, CURRENT_TIMESTAMP))  AS  D_SYS_DT
+                   ,TO_CHAR(TO_DATE(IFNULL(D_SYSDATE, CURRENT_TIMESTAMP)), 'YYYY')  +  0  AS  YYYY
+            FROM    CM_DUMMY
+            )  D
+          ON  X.WNUMBER  =  1
+    LEFT  OUTER JOIN  (
+    		SELECT CT.TIMEZONE_CODE  AS  TIME_ZONE_CODE
+                  ,CT.GMT_OFFSET     AS  GMT_OFFSET
+                  ,CT.GMT_OFFSET     AS  MAX_GMT_OFFSET
+            FROM   CM_TIME_ZONE CT
+            WHERE  CT.TIMEZONE_CODE  =  V_FROM_TIME_ZONE
+            AND    CT.TENANT_ID      =  P_TENANT_ID 
+           )  FMTZ
+          ON  X.WNUMBER  =  1
+    LEFT  OUTER  JOIN  (
+    		SELECT  CT.*
+            FROM    CM_TIME_ZONE  CT
+            WHERE   CT.TIMEZONE_CODE  =  P_TO_TIME_ZONE
+            AND     CT.TENANT_ID      =  P_TENANT_ID
+            )  TMTZ
+          ON  X.WNUMBER  =  1
+    WHERE  X.WNUMBER  =  1
+    ;
+
+    -- From/To Time Zone 존재 여부 Check
+    /*
+    IF (N_FROM_GMT_OFFSET IS NULL) THEN
+        NULL;
+    ELSE
+        -- From Time Zone의 Setup 정보가 2개 이상인지 Check
+        IF (N_FROM_GMT_OFFSET  !=  N_FROM_MAX_GMT_OFFSET) THEN
+              NULL;
+        END IF;
+    END IF;
+
+    IF (N_TO_GMT_OFFSET IS NULL) THEN
+        NULL;
+    END IF;
+	*/
+    -- From/To OffSet이 같으면, input된 일시로 Return 함
+    IF (N_FROM_GMT_OFFSET  =  N_TO_GMT_OFFSET) THEN
+        --D_RETURN  :=  D_SYS_DT;
+        SELECT  D_SYS_DT
+        INTO    D_RETURN
+        FROM    CM_DUMMY;
+    ELSE
+        -- To Time Zone 시간으로 변환 (From/To Gap 만큼 OffSet)
+        --D_RETURN  :=  D_SYS_DT  +  V_GAP_TIME  /  24;
+        SELECT  ADD_SECONDS(D_SYS_DT,  V_GAP_TIME * 60 * 60) --From/To Gap만큰 Offset * 1분(60-SEC)*1시간(60분)
+        INTO    D_RETURN
+        FROM    CM_DUMMY;
+        
+        -- To DST Check
+        IF (V_TO_DST_FLAG  =  'Y') THEN
+            -- To Time Zone 기간으로 변환된 일시가 DST 구간내에 속하는지 Check 시작
+            V_CHECK_DST_FLAG  :=  'N';
+
+            -- DST 시작일시보다 종료일시가 작은 경우(내년으로 순환 되어 이어지는 경우)
+            IF  (D_TO_DST_STRT_DT  >  D_TO_DST_END_DT)  THEN
+                IF  (D_RETURN  <=  D_TO_DST_END_DT  OR 
+                     D_RETURN  >=  D_TO_DST_STRT_DT)  THEN
+                    V_CHECK_DST_FLAG  :=  'Y';
+                END IF;
+            -- DST 시작일시가 종료일시보다 같거나 장은 경우
+            ELSE
+                IF  (D_TO_DST_STRT_DT  <=  D_RETURN  AND 
+                     D_RETURN  <  D_TO_DST_END_DT)  THEN
+                    V_CHECK_DST_FLAG  :=  'Y';
+                END IF;
+            END IF;
+
+            -- DST 시간으로 변환 : 1시간을 더해 줌
+            IF  (V_CHECK_DST_FLAG  =  'Y')  THEN
+                --D_RETURN  :=  D_RETURN  +  1/24;
+	        SELECT  ADD_SECONDS(:D_SYS_DT,  60 * 60)  -- 1분(60-SEC)*1시간(60분)
+	        INTO    D_RETURN
+	        FROM    CM_DUMMY;
+            END IF;
+        END IF;
+    END IF;
+
+END;

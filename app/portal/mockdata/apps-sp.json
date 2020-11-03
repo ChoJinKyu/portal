@@ -1,0 +1,37 @@
+{
+    "menus": [
+        {
+            "name": "Exam1",
+            "icon": "sap-icon://source-code",
+            "subMenus": [
+                {
+                    "name": "App #1",
+                    "url": "../cm/codeMgr/webapp",
+                    "component": "cm.codeMgr"
+                },
+                {
+                    "name": "App #2",
+                    "url": "../cm/controlOptionMgr/webapp",
+                    "component": "cm.controlOptionMgr"
+                }
+            ]
+        },
+        {
+            "name": "Exam2",
+            "icon": "sap-icon://locate-me",
+            "subMenus": [
+                {
+                    "name": "App #3",
+                    "url": "../cm/codeMgr/webapp",
+                    "component": "cm.codeMgr"
+                },
+                {
+                    "name": "App #4",
+                    "url": "../cm/controlOptionMgr/webapp",
+                    "component": "cm.controlOptionMgr"
+                }
+            ]
+        }
+    ]
+    
+}

@@ -7,7 +7,7 @@ entity Time_Zone {
     timezone_name : String(30)  not null;	
     country_code : String(30)  not null;	
     gmt_offset : Decimal  ;	
-    dst_flag : Boolean not null @title: '사용여부';
+    dst_flag : Boolean not null @title: '사용여부'; 
     dst_start_month : String(2)  ;	
     dst_start_day : String(2)  ;	
     dst_start_week :  Decimal ;	

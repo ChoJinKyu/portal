@@ -1,5 +1,5 @@
 {
-    "welcomeFile": "welcom.html",
+    "welcomeFile": "launchpad.html",
     "routes": [
         {
             "csrfProtection": false,

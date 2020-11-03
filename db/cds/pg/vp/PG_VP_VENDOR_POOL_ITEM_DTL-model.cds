@@ -1,5 +1,5 @@
 namespace pg;	
-
+ 
 using { User } from '@sap/cds/common';
 using {pg as mst} from './PG_VP_VENDOR_POOL_MST-model';
 

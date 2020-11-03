@@ -4,14 +4,14 @@ using { User } from '@sap/cds/common';
 
 entity Code_Mst {
     
-    key tenant_id: String(4) not null @title: '테넌트ID';
+    key tenant_id: String(5) not null @title: '테넌트ID';
     key company_code: String(10) not null @title: '회사코드';
     key group_code: String(30) not null @title: '그룹코드';
     
     chain_code: String(30) not null @title: '체인코드';
     group_name: String(240) not null @title: '그룹명';
     group_description: String not null @title: '그룹설명';
-    use_yn: Boolean not null @title: '사용여부';
+    use_flag: Boolean not null @title: '사용여부';
     
     local_create_dtm: DateTime not null @title: '로컬등록시간';
     local_update_dtm: DateTime not null @title: '로컬수정시간';

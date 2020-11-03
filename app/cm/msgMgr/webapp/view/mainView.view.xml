@@ -1,0 +1,269 @@
+<mvc:View class="sapUiSizeCompact" 
+controllerName="cm.msgMgr.controller.mainView" 
+xmlns:mvc="sap.ui.core.mvc" 
+    xmlns:core="sap.ui.core"    
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:layout="sap.ui.layout"
+    xmlns:table="sap.ui.table"
+    xmlns:form="sap.ui.layout.form"
+    displayBlock="true">
+	<!-- <Shell id="shell"> -->
+	<App>
+
+    <f:DynamicPage id="dynamicPageId" toggleHeaderOnTitleClick="true" headerExpanded="true">
+        <!--DynamicPage Title -->
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:heading>
+                    <Title text="{i18n>PageTitle}"/>
+                </f:heading>
+            </f:DynamicPageTitle>
+        </f:title>
+        
+<!--DynamicPage Header -->
+					<f:header>
+						<f:DynamicPageHeader pinnable="true">
+							<layout:HorizontalLayout>
+								<form:Form editable="true" width="100%">
+									<form:formContainers>
+										<form:FormContainer>
+											<form:formElements>
+												<form:FormElement label="{i18n>HeaderLabelChain_code}">
+                                            <form:fields>
+                                               <ComboBox id="search_chain_code"
+                                                            selectedKey=""
+                                                            selectionChange="handleSelectionChange"
+                                                            selectionFinish="handleSelectionFinish"
+                                                            width="350px">
+                                                            <core:Item key="CM" text="공통"/>
+                                                            <core:Item key="DP" text="개발구매"/>
+                                                            <core:Item key="EP" text="설비/공사 구매"/>
+                                                            <core:Item key="OP" text="조달구매"/>
+                                                            <core:Item key="PG" text="구매거버넌스"/>
+                                                            <core:Item key="SP" text="양산(전략)구매"/>                                                            
+                                                 </ComboBox>	
+                                            </form:fields>
+                                        </form:FormElement>
+										</form:formElements>
+										</form:FormContainer>
+
+										<form:FormContainer>
+											<form:formElements>
+												<form:FormElement label="{i18n>HeaderLabelLanguage_code}">
+                                            <form:fields>
+                                                <ComboBox   id="search_language_code"
+                                                           selectedKey=""
+                                                            selectionChange="handleSelectionChange"
+                                                            selectionFinish="handleSelectionFinish"
+                                                            width="350px">
+                                                            <core:Item key="EN" text="영어"/>
+                                                            <core:Item key="KO" text="한국어"/>                                                                                                               
+                                                </ComboBox>
+                                            </form:fields>
+                                        </form:FormElement>
+												
+											</form:formElements>
+										</form:FormContainer>
+										<form:FormContainer>
+											<form:formElements>
+												 <form:FormElement label="{i18n>HeaderLabelmessage_code}">
+                                            <form:fields>
+                                                <Input id="search_message_code" width="100%"/>
+                                            </form:fields>
+                                            </form:FormElement>
+											</form:formElements>
+										</form:FormContainer>
+										<form:FormContainer>
+											<form:formElements>
+												<form:FormElement label="{i18n>HeaderLabelMessage_contents}">
+                                                    <form:fields>
+                                                        <Input id="search_message_contents" width="100%"/>
+                                                    </form:fields>
+                                                </form:FormElement>                                            
+												<form:FormElement label="{i18n>HeaderLabelUse_yn}">
+													<form:fields>
+														<ComboBox id="comboxUse">
+															<items>
+																<core:Item key="Y" text="Yes"/>
+                                                                <core:Item key="N" text="No"/>							
+															</items>
+														</ComboBox>
+													</form:fields>
+												</form:FormElement>
+
+											</form:formElements>
+										</form:FormContainer>
+									</form:formContainers>
+									<form:layout>
+									<form:ResponsiveGridLayout columnsM="4" columnsL="4" columnsXL="4"/>
+									</form:layout>
+								</form:Form>
+							</layout:HorizontalLayout>
+							<HBox width="100%" alignItems="Center" alignContent="End" justifyContent="End">
+								<items>
+									<Button text="{i18n>HeaderBtnSearch}" press=".onSearch" icon="sap-icon://search"/>
+								</items>
+							</HBox>
+						</f:DynamicPageHeader>
+					</f:header>
+                    <!-- DynamicPage Content -->
+                    <f:content>	                 
+						<VBox fitContainer="true">
+                            <table:Table id="mainList"
+                                rows="{ path : '/Message',
+                            		parameters : {
+                                        $count : true,
+						                $$updateGroupId : 'MainUpdateGroup'
+                                        }
+                                    }"
+                                visibleRowCount="15"      
+                                rowSelectionChange = ".onCheck"    
+                            >
+                                <table:extension>
+									<OverflowToolbar class="sapFDynamicPageAlignContent">
+									<ToolbarSpacer/>       
+                                    <Button text="{i18n>TblBtnInsert}" icon="sap-icon://add"    enabled="{=${ui>/bAdd}}" type="Accept" press=".onCreateRow"/>
+                                    <Button text="{i18n>TblBtnCopy}"   icon="sap-icon://copy"   enabled="{=${ui>/bCopy}}" type="Accept" press=".onCopyRow"/>
+                                    <Button text="{i18n>TblBtnModify}"   icon="sap-icon://copy" enabled="{=${ui>/bModify}}" type="Accept" press=".onModifyRow"/>
+                                    <Button text="{i18n>TblBtnDelete}" icon="sap-icon://delete" enabled="{=${ui>/bDelete}}" type="Reject" press=".onDelete"/>
+                                    <Button text="{i18n>TblBtnSave}"   icon="sap-icon://save"   enabled="{=${ui>/bSave}}" type="Attention" press=".onSave"/>
+								    </OverflowToolbar>
+								</table:extension>                                
+                                <table:columns>
+								    <table:Column  width="12rem" hAlign="Center" >                                        
+                                            <Label text="{i18n>TblHdTenant_id}"/>           
+										<table:template>
+											<Input id="input_tenant_id" value="{tenant_id}" 
+                                              enabled="{=%{parts: [
+                                                            {path: 'i18n>StdKey'},
+                                                            {path: 'update_user_id'},
+                                                            {path: 'ui>/bEvent'}]
+                                                          ,formatter: '.formatter.setStatus'}}" /> 
+										</table:template>
+									</table:Column>
+                                </table:columns> 
+
+                                <table:columns>
+								    <table:Column  width="12rem" hAlign="Center" >                                        
+                                            <Label text="{i18n>TblHdMessage_code}"/>           
+										<table:template>
+											<Input id="input_Message_code" value="{message_code}"
+                                                    enabled="{=%{parts: [
+                                                                            {path: 'i18n>StdKey'},
+                                                                            {path: 'update_user_id'},
+                                                                            {path: 'ui>/bEvent'}]
+                                                                            ,formatter: '.formatter.setStatus'}}" /> 
+										</table:template>
+									</table:Column>
+                                </table:columns>
+
+  
+                                <table:columns>
+								    <table:Column  width="12rem" hAlign="Center" >
+                                            <Label text="{i18n>TblHdLanguage_code}"/>           
+										<table:template>
+											<ComboBox   id="search_languageE_code"
+                                                            selectedKey="{language_code}"
+                                                            selectionChange="handleSelectionChange"
+                                                            selectionFinish="handleSelectionFinish"
+                                                            width="350px"
+                                                            enabled="{=%{parts: [
+                                                                            {path: 'i18n>StdKey'},
+                                                                            {path: 'update_user_id'},
+                                                                            {path: 'ui>/bEvent'}]
+                                                                            ,formatter: '.formatter.setStatus'}}">
+                                                            <core:Item key="EN" text="영어"/>
+                                                            <core:Item key="KO" text="한국어"/>                                                                                                               
+                                                </ComboBox>
+										</table:template>
+									</table:Column>
+                                </table:columns>
+                                                              
+                                <table:columns>
+								    <table:Column  width="12rem" hAlign="Center" >                                        
+                                            <Label text="{i18n>TblHdChain_code}"/>           
+										<table:template>
+                                            <ComboBox id="comboBoxE_chain_code"
+                                                            selectedKey="{chain_code}"
+                                                            selectionChange="handleSelectionChange"
+                                                            selectionFinish="handleSelectionFinish"
+                                                            width="350px"
+                                                            enabled="{=%{parts: [
+                                                                            {path: 'chain_code'},
+                                                                            {path: 'update_user_id'},
+                                                                            {path: 'ui>/bEvent'}]
+                                                                            ,formatter: '.formatter.setStatus'}}"
+                                                            >                                                           
+                                                            <core:Item key="CM" text="공통"/>
+                                                            <core:Item key="DP" text="개발구매"/>
+                                                            <core:Item key="EP" text="설비/공사 구매"/>
+                                                            <core:Item key="OP" text="조달구매"/>
+                                                            <core:Item key="PG" text="구매거버넌스"/>
+                                                            <core:Item key="SP" text="양산(전략)구매"/>                                                            
+                                                 </ComboBox>											
+										</table:template>
+									</table:Column>
+                                </table:columns>
+
+                                <table:columns>
+								    <table:Column  width="12rem" hAlign="Center" >                                        
+                                            <Label text="{i18n>TblHdMessage_type_code}"/>           
+										<table:template>
+											<Input id="input_message_type_code" value="{message_type_code}" 
+                                            enabled="{=%{parts: [
+                                                                            {path: 'message_type_code'},
+                                                                            {path: 'update_user_id'},
+                                                                            {path: 'ui>/bEvent'}]
+                                                                            ,formatter: '.formatter.setStatus'}}"/> 
+										</table:template>
+									</table:Column>
+                                </table:columns>
+
+
+
+
+                                <table:columns>
+								    <table:Column  width="12rem" hAlign="Center" >                                        
+                                            <Label text="{i18n>TblHdMessage_contents}"/>           
+										<table:template>
+											<Input class="msgMgrInput" id="input_Message_contents" value="{message_contents}"
+                                                                        enabled="{=%{parts: [
+                                                                            {path: 'message_contents'},
+                                                                            {path: 'update_user_id'},
+                                                                            {path: 'ui>/bEvent'}]
+                                                                            ,formatter: '.formatter.setStatus'}}" /> 
+										</table:template>
+									</table:Column>
+                                </table:columns>
+
+                               
+
+                                <table:columns>
+								    <table:Column  width="12rem" hAlign="Center" >                                        
+                                            <Label text="{i18n>TblHdUpdate_user_id}"/>           
+										<table:template>
+											<Label id="input_Update_user_id" text="{create_user_id}"/> 
+										</table:template>
+									</table:Column>
+                                </table:columns>
+
+                                <table:columns>
+								    <table:Column  width="20rem" hAlign="Center" >                                        
+                                            <Label text="{i18n>TblHdSystem_update_dtm}"/>           
+										<table:template>
+											<Label id="input_System_update_dtm" text="{system_update_dtm}"/> 
+										</table:template>
+									</table:Column>
+                                </table:columns>
+
+                             
+
+                            </table:Table>
+                        </VBox>
+					</f:content>
+    </f:DynamicPage>	
+
+
+    </App>
+</mvc:View>

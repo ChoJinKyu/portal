@@ -1,0 +1,98 @@
+{
+	"UserCollection": [  
+		{
+			"manager": "손흥민(hungmin.son)",
+			"title": "책임연구원",
+            "mobile": "010-1234-5678",
+            "dept": "회로부품개발구매팀" 
+		},
+		{
+			"manager": "황의찬(2chan.hwang)",
+			"title": "책임연구원",
+            "mobile": "010-2124-5678",
+            "dept": "회로부품개발구매팀"
+		},
+		{
+			"manager": "이강인(kangin12.lee)",
+			"title": "수석연구원",
+            "mobile": "010-2134-5678",
+            "dept": "회로부품개발구매팀"
+		},
+		{
+			"manager": "베컴",
+			"title": "은퇴",
+            "mobile": "010-2154-5678",
+            "dept": "회로부품개발구매팀"
+		}
+    ],
+    "SignalCollection": [ 
+		{
+            "sid": "0000",
+			"condition": "LessThen",
+			"value1": "90",
+            "value2": "",
+            "status": "A"
+		}
+    ],
+    "KeysSelected": ["1","2"],
+    "comboBoxType" : "100",
+    "comboboxScenario" : "300",
+    "radioActive" : "1",
+    "comboBoxRawMaterials" : "200",
+    "comboboxOffice" : "1200",
+    "conboBoxNatioinStatus" : "200",
+    "reMonitoringPurpose" : "모니터링 목적",
+    "reMonitoringPurposeDetail" : "시나리오 설명",
+    "reSourceSystem" : "소스시스템",
+    "reSourceSystemDetail" : "소스시스템 상세설명",
+    "HistoryData" : [
+                        {
+                            "name": "손흥민(hungmin.son)",
+                            "title": "책임연구원",
+                            "team" : "회로부품개발구매팀",
+                            "office" : "토트넘",
+                            "old_date" : "2020-10-28 15:30 20",
+                            "new_date" : "2020-10-29 09:15 40",  
+                            "regdate": "2020-10-29 09:15 40" ,                        
+                            "modifyHistory": [
+                                {   
+                                    "number" : "0001",                  
+                                    "item" : "구분",
+                                    "old_content" : "계약관리",
+                                    "change_content" :"PR/PO관리"
+                                },
+                                {
+                                    "number" : "0002", 
+                                    "item" : "시나리오",
+                                    "old_content" : "수입PO생성지연",
+                                    "change_content" :"PR미진행"
+                                }              
+                            ]             
+
+                        },
+                        {
+                            "name": "안정환(An)",
+                            "title": "수석연구원",
+                            "team" : "뭉처야산다",
+                            "office" : "부산",
+                            "old_date" : "2020-10-28 15:30 20",
+                            "new_date" : "2020-10-29 09:15 40",  
+                            "regdate": "2020-10-29 09:15 40" ,                        
+                            "modifyHistory": [
+                                {   
+                                    "number" : "0001",                  
+                                    "item" : "구분",
+                                    "old_content" : "계약관리",
+                                    "change_content" :"PR/PO관리"
+                                },
+                                {
+                                    "number" : "0002", 
+                                    "item" : "시나리오",
+                                    "old_content" : "수입PO생성지연",
+                                    "change_content" :"PR미진행"
+                                }              
+                            ]             
+
+                        }        
+]      
+}

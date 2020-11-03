@@ -3,7 +3,7 @@ using { cm.Country_Lng as country_Lng } from './CM_COUNTRY_LNG-model';
 using { User } from '@sap/cds/common';
 	
 entity Country {	
-  key tenant_id : String(4)  not null;	
+  key tenant_id : String(5)  not null;	
   key country_code : String(30)  not null;	
     iso_code : String(30)  ;	
     eu_code : String(30)  ;	

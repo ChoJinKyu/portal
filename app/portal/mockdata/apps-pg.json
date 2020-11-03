@@ -1,0 +1,37 @@
+{
+    "menus": [
+        {
+            "name": "모니터링 항목 관리",
+            "icon": "sap-icon://source-code",
+            "subMenus": [
+                {
+                    "name": "App #1",
+                    "url": "../pg/purchaseMgr/webapp",
+                    "component": "pg.purchaseMgr"
+                },
+                {
+                    "name": "App #2",
+                    "url": "../pg/purchaseMgr/webap",
+                    "component": "pg.purchaseMgr"
+                }
+            ]
+        },
+        {
+            "name": "Exam2",
+            "icon": "sap-icon://locate-me",
+            "subMenus": [
+                {
+                    "name": "App #3",
+                    "url": "../pg/purchaseMgr/webap",
+                    "component": "pg.purchaseMgr"
+                },
+                {
+                    "name": "App #4",
+                    "url": "../pg/purchaseMgr/webap",
+                    "component": "pg.purchaseMgr"
+                }
+            ]
+        }
+    ]
+    
+}

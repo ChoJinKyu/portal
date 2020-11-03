@@ -12,7 +12,7 @@
 
   <!-- <Shell id="shell"> -->
     <App id="app">
-        <f:DynamicPage id="codeMgrPage" toggleHeaderOnTitleClick="true" headerExpanded="true">
+        <f:DynamicPage id="currencyMgrPage" toggleHeaderOnTitleClick="true" headerExpanded="true">
             <f:title>
                 <f:DynamicPageTitle>
                     <f:heading>
@@ -31,7 +31,8 @@
                                             <form:fields>            													
                                                 <SearchField 
                                                     id="search_currency_code" 
-                                                    width="100%"/>
+                                                    width="100%"
+                                                    search=".onSearch"/>
                                             </form:fields>
                                         </form:FormElement>  
                                   
@@ -107,11 +108,11 @@
                                         <Label text="통화코드설명"/>
                                     </header>
                                 </Column>
-                                <Column hAlign="Center" width="200px">
+                                <!-- <Column hAlign="Center" width="200px">
                                     <header>
                                         <Label text="ISO통화"/>
                                     </header>
-                                </Column>
+                                </Column> -->
                                 <Column hAlign="Center" width="200px">
                                     <header>
                                         <Label text="소수점자리"/>
@@ -122,11 +123,11 @@
                                         <Label text="확장소수점자리"/>
                                     </header>
                                 </Column>
-                                <Column hAlign="Center" width="100px">
+                                <!-- <Column hAlign="Center" width="100px">
                                     <header>
                                         <Label text="Symbol"/>
                                     </header>
-                                </Column>
+                                </Column> -->
                                 <Column hAlign="Center" width="100px">
                                     <header>
                                         <Label text="Prefix"/>
@@ -147,21 +148,19 @@
                                         <Label text="유효종료일자"/>
                                     </header>
                                 </Column>
-                                <Column hAlign="Center" width="200px">
+                                <!-- <Column hAlign="Center" width="200px">
                                     <header>
                                         <Label text="사용여부"/>
                                     </header>
-                                </Column>                                
+                                </Column> -->
                             </columns>
                             <items>
                                 <ColumnListItem type="Active" id="currencyColumnListItem" press="onMstTableItemPress">
                                     <cells>
                                         <Text id="currency_code" text="{currency_code}"/>
                                         <Text id="currency_code_name" text="{currency_code_name}"/>
-                                        <Text id="currency_code_desc" text="{currency_code_desc}"/>
-                                        <Text id="iso" text=""/>
-                                        <Text id="scale" text=""/>
-                                        <Text id="symbol" text=""/>
+                                        <Text id="currency_code_desc" text="{currency_code_desc}"/>                                       
+                                        <Text id="scale" text=""/>                                        
                                         <Text id="extension_scale" text=""/>
                                         <Text id="currency_prefix" text="{currency_prefix}"/>
                                         <Text id="currency_suffix" text="{currency_suffix}"/>                                        
@@ -169,7 +168,7 @@
                                         <Text id="effective_end_date" text="{effective_end_date}"/>
                                         <!-- <DatePicker dateValue="{path : 'effective_start_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/>
                                         <DatePicker dateValue="{path : 'effective_end_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/>-->
-                                        <Text id="use_yn" text=""/>
+                                        <!-- <Text id="use_flag" text="{use_flag}"/> -->
                                     </cells>
                                 </ColumnListItem>
                             </items>
@@ -181,11 +180,11 @@
                                 <form:toolbar>
                                     <Toolbar width="100%" id="toolbar3">
                                         <content>
-                                            <Title xmlns="sap.m" text="통화코드 상세" id="title18" />
+                                            <Title text="통화코드 상세" id="title18" />
                                             <ToolbarSpacer/>
-                                            <Button xmlns="sap.m" icon="sap-icon://create" text="신규" id="button5" type="Accept" />
-                                            <Button xmlns="sap.m" icon="sap-icon://save" text="저장" id="button7" type="Attention" />
-                                            <Button xmlns="sap.m" icon="sap-icon://delete" text="삭제" id="button8" type="Reject" />
+                                            <Button icon="sap-icon://create" text="신규" press="onCreate" type="Accept" />
+                                            <Button icon="sap-icon://save" text="저장" press="onSave" type="Attention" />
+                                            <Button icon="sap-icon://delete" text="삭제" press="onDelete" type="Reject" />                                           
                                         </content>
                                     </Toolbar>
                                 </form:toolbar>
@@ -194,46 +193,48 @@
                                         <form:formElements>
                                                 <form:FormElement label="* 통화코드" >
                                                     <form:fields>
-                                                        <Input width="180px" id="input1" value="{Currency>currency_code}" />                                                        
+                                                        <Input width="180px" id="ipCurCode" value="{currency_code}" />                                                        
                                                     </form:fields>
                                                 </form:FormElement>
-                                                <form:FormElement label="ISO통화">
+                                                <!-- <form:FormElement label="ISO통화">
                                                     <form:fields>
-                                                        <Input width="180px" id="input2" value="{Currency>currency_code}"/>
+                                                        <Input width="180px" id="input2" value="{currency_code}"/>
                                                     </form:fields>
-                                                </form:FormElement>
+                                                </form:FormElement> -->
                                                 <form:FormElement label="* 소수점자리">
                                                     <form:fields>
-                                                        <Input width="180px" id="input3" value="{Currency>scale}"/>
+                                                        <Input width="180px" id="ipScale" value="{scale}"/>
                                                     </form:fields>
                                                 </form:FormElement>
                                                 <form:FormElement label="확장소수점자리">
                                                     <form:fields>
-                                                        <Input width="180px" id="input4" value="{Currency>extension_scale}"/>
+                                                        <Input width="180px" id="ipExScale" value="{extension_scale}"/>
                                                     </form:fields>
                                                 </form:FormElement>
                                         </form:formElements>
                                     </form:FormContainer>
                                     <form:FormContainer id="container3">
                                         <form:formElements>
-                                            <form:FormElement label="Symbol">
+                                            <!-- <form:FormElement label="Symbol">
                                                 <form:fields>
-                                                    <Input width="180px" id="input5" value="{Currency>extension_scale}"/>
+                                                    <Input width="180px" id="input5" value="{extension_scale}"/>
                                                 </form:fields>
-                                            </form:FormElement>
+                                            </form:FormElement> -->
                                             <form:FormElement label="* 유효시작일자">
                                                 <form:fields>                                                    
-                                                    <DatePicker width="180px" dateValue="{path : 'effective_start_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/>
+                                                    <!-- <DatePicker width="180px" dateValue="{path : 'effective_start_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/> -->
+                                                    <DatePicker width="180px" id="strtDate" value="{effective_start_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/>
                                                 </form:fields>
                                             </form:FormElement>
                                             <form:FormElement label="유효종료일자">
                                                 <form:fields>                                                    
-                                                    <DatePicker width="180px" dateValue="{path : 'effective_end_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/>
+                                                    <!-- <DatePicker width="180px" dateValue="{path : 'effective_end_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/> -->
+                                                    <DatePicker width="180px" id="endDate" value="{effective_end_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/>
                                                 </form:fields>
                                             </form:FormElement>
                                             <form:FormElement label="사용여부">
                                                 <form:fields>
-                                                    <Input width="180px" id="input8" value="{Currency>use_yn}"/>
+                                                    <Input width="180px" id="ipUseFlag" value="{use_flag}"/>
                                                 </form:fields>
                                             </form:FormElement>
                                         </form:formElements>

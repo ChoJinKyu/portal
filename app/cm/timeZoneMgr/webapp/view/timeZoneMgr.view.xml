@@ -1,0 +1,258 @@
+<!-- delete 추가 
+rows copy ??
+ui.table > m.table 변환하기   -->
+  <mvc:View
+	class="sapUiSizeCompact"
+	controllerName="cm.timeZoneMgr.controller.timeZoneMgr"
+	xmlns="sap.m"
+    xmlns:f="sap.f"
+	xmlns:core="sap.ui.core"
+	xmlns:demo="sap.ui.core.sample.common"
+	xmlns:form="sap.ui.layout.form"
+    xmlns:t="sap.ui.table"    
+    xmlns:layout="sap.ui.layout" displayBlock="true"
+	xmlns:mvc="sap.ui.core.mvc">
+	<App id="app">
+    
+        <f:DynamicPage id="dynamicPageId" toggleHeaderOnTitleClick="true" headerExpanded="true">
+            <!--DynamicPage Title -->
+            <f:title>
+                <f:DynamicPageTitle>
+                    <f:heading>
+                        <Title text="타임존관리"/>
+                    </f:heading>
+                </f:DynamicPageTitle>
+            </f:title>
+            <!--DynamicPage Header -->
+            <f:header>
+                <f:DynamicPageHeader pinnable="true">
+                    <layout:VerticalLayout
+                        id="oVerticalContent"
+                        width="100%">
+                        <layout:content>                     
+                        </layout:content>
+                    </layout:VerticalLayout>                           
+                    <layout:HorizontalLayout>                          
+                        <form:Form editable="true" width="auto">
+                            <form:formContainers>
+                                <form:FormContainer>
+                                    <form:formElements>
+                                        <form:FormElement label="코드">
+                                            <form:fields>
+                                                <Input id="time_zone_code" />					
+                                            </form:fields>
+                                        </form:FormElement>
+                                    </form:formElements>
+                                </form:FormContainer>
+                                <form:FormContainer>
+                                    <form:formElements >
+                                        <form:FormElement label="타임존" >
+                                            <form:fields>	
+                                                <Input id="time_zone" />
+                                            </form:fields>
+                                        </form:FormElement>
+                                    </form:formElements>
+                                </form:FormContainer>
+                                <form:FormContainer>
+                                    <form:formElements>
+                                        <form:FormElement label="국가">
+                                            <form:fields>	     													
+                                                <Input
+                                                    id="timeZoneCountryInput"
+                                                    type="Text"
+                                                    value=""
+                                                    placeholder=""
+                                                    showValueHelp="true"
+                                                    valueHelpOnly="false"
+                                                    valueHelpRequest="handleValueHelp"
+                                                    width=""
+                                                    class="sapUiSmallMarginBottom"/>
+                                            </form:fields>
+                                        </form:FormElement>
+                                    </form:formElements>
+                                </form:FormContainer>
+                            </form:formContainers>
+                            <form:layout>
+                                <form:ResponsiveGridLayout columnsM="3" columnsL="3" columnsXL="3"/>
+                            </form:layout>
+                        </form:Form>
+                    </layout:HorizontalLayout>
+                    <HBox width="100%" alignItems="Center" alignContent="End" justifyContent="End">
+                        <items>
+                            <Button text="검색" press=".onSearch" />
+                        </items>
+                    </HBox>
+                </f:DynamicPageHeader>
+            </f:header>
+            <f:content>
+                <t:Table id="table"
+                selectionMode="MultiToggle" 
+                rows="{ path : '/TimeZone',
+                parameters: {
+                                $count: true,
+                                $$updateGroupId : 'updateGroupTimeZone'
+                            }
+                }"
+                cellClick=".onCellClick"
+                rowSelectionChange = ".onCheck"
+                visibleRowCountMode="Auto"
+                columnResize="onColumnResize">
+                    <t:extension>
+                        <OverflowToolbar class="sapFDynamicPageAlignContent"> 									
+                        <ToolbarSpacer/>
+                        <Button text="생성" id="buttonMainCreateRow" press=".onCreate"  type="Transparent"/>
+                        <!-- <Button text="복사" id="buttonMainCopyRow" press=".onCopyRow"   type="Transparent"/>									 -->
+                        <Button text="삭제" id="buttonMainDeleteRow" press=".onDelete"   type="Transparent"/>
+                        <Button text="저장" id="buttonMainSaveRow" press=".onSave"   type="Transparent"/>				 
+                        </OverflowToolbar>
+                    </t:extension>
+                    <t:rowSettingsTemplate>
+                        <!-- <t:RowSettings highlight="Success"/> -->
+                        <!-- <t:RowSettings highlight="Success"/> -->
+                    </t:rowSettingsTemplate>                                
+                    <t:columns>
+                        <t:Column  width="0rem" hAlign="Center" visible="false">                                        
+                                <Label text="tenant_id"/>           
+                            <t:template>
+                                <Text id="tenant_id" text="{tenant_id}"/> 
+                            </t:template>
+                        </t:Column>
+                        <t:Column width="3rem">
+                            <Label text="No." textAlign="Center" width="100%"/>
+                            <t:template> 
+                                <Text text="" />
+                            </t:template>
+                        </t:Column>
+                        <t:Column>
+                            <Label text="코드" textAlign="Center" width="100%"/>
+                            <t:template> 
+                                    <Input value="{timezone_code}" valueLiveUpdate="true"/>
+                            </t:template>
+                        </t:Column>
+                        <t:Column>
+                            <Label text="타임존" textAlign="Center" width="100%"/>
+                            <t:template> 
+                                <Input value="{timezone_name}" valueLiveUpdate="true"/>
+                            </t:template>
+                        </t:Column>
+                        <t:Column>
+                            <Label text="국가" textAlign="Center" width="100%"/>
+                            <t:template> 
+                                <Input value="{country_code}" valueLiveUpdate="true"/>
+                            </t:template>
+                        </t:Column>
+                        <t:Column>
+                            <Label text="GMT" textAlign="Center" width="100%"/>
+                            <t:template> 
+                                <Input value="{gmt_offset}" valueLiveUpdate="true"/>
+                            </t:template>
+                        </t:Column>
+                        <t:Column headerSpan="1" hAlign="Center">
+                            <t:multiLabels>
+                                <Label text="서머타임" textAlign="Center" width="100%"/>
+                                <Label text="적용여부" textAlign="Center" width="100%"/>
+                            </t:multiLabels>
+                            <t:template> 
+                                <CheckBox selected="{dst_flag}" textAlign="Center"/>
+                                    <!-- <Select width="100%">
+                                        <core:Item key="{!dst_flag}" text="{dst_flag}" />
+                                        <core:Item key="{dst_flag}" text="{dst_flag}" />
+                                    </Select> -->
+                            </t:template>
+                        </t:Column>
+                        <t:Column headerSpan="5">
+                            <t:multiLabels>
+                                <Label text="서머타임시작" textAlign="Center" width="100%"/>
+                                <Label text="월" textAlign="Center" width="100%"/>
+                            </t:multiLabels>
+                            <t:template> 
+                                <Input value="{dst_start_month}" valueLiveUpdate="true" type="Number"/>
+                            </t:template>
+                        </t:Column>
+                        <t:Column>
+                            <t:multiLabels>
+                                <Label text="서머타임시작"/>
+                                <Label text="일" textAlign="Center" width="100%"/>
+                            </t:multiLabels>
+                            <t:template> 
+                                <Input value="{dst_start_day}" valueLiveUpdate="true" type="Number" />
+                            </t:template>
+                        </t:Column>
+                        <t:Column>
+                            <t:multiLabels>
+                                <Label text="서머타임시작"/>
+                                <Label text="주" textAlign="Center" width="100%"/>
+                            </t:multiLabels>
+                            <t:template> 
+                                <Input value="{dst_start_week}" valueLiveUpdate="true" type="Number"/>
+                            </t:template>
+                        </t:Column>
+                        <t:Column>
+                            <t:multiLabels>
+                                <Label text="서머타임시작"/>
+                                <Label text="요일" textAlign="Center" width="100%"/>
+                            </t:multiLabels>
+                            <t:template> 
+                                <Input value="{dst_start_day_of_week}" valueLiveUpdate="true" type="Number"/>
+                            </t:template>
+                        </t:Column>
+                        <t:Column>
+                            <t:multiLabels>
+                                <Label text="서머타임시작"/>
+                                <Label text="시간" textAlign="Center" width="100%"/>
+                            </t:multiLabels>
+                            <t:template> 
+                                <Input value="{dst_start_time_rate}"  valueLiveUpdate="true" type="Number"/>
+                            </t:template>
+                        </t:Column>
+                        <t:Column headerSpan="5">
+                            <t:multiLabels>
+                                <Label text="서머타임종료" textAlign="Center" width="100%"/>
+                                <Label text="월" textAlign="Center" width="100%"/>
+                            </t:multiLabels>
+                            <t:template> 
+                                <Input value="{dst_end_month}" valueLiveUpdate="true" type="Number"/>
+                            </t:template>
+                        </t:Column>
+                        <t:Column>
+                            <t:multiLabels>
+                                <Label text="서머타임종료"/>
+                                <Label text="일" textAlign="Center" width="100%"/>
+                            </t:multiLabels>
+                            <t:template> 
+                                <Input value="{dst_end_day}" valueLiveUpdate="true" type="Number"/>
+                            </t:template>
+                        </t:Column>
+                        <t:Column>
+                            <t:multiLabels>
+                                <Label text="서머타임종료"/>
+                                <Label text="주" textAlign="Center" width="100%" />
+                            </t:multiLabels>
+                            <t:template> 
+                                <Input value="{dst_end_week}" valueLiveUpdate="true" type="Number"/>
+                            </t:template>
+                        </t:Column>
+                        <t:Column>
+                            <t:multiLabels>
+                                <Label text="서머타임종료"/>
+                                <Label text="요일" textAlign="Center" width="100%"/>
+                            </t:multiLabels>
+                            <t:template> 
+                                <Input value="{dst_end_day_of_week}" valueLiveUpdate="true" type="Number"/>
+                            </t:template>
+                        </t:Column>
+                        <t:Column>
+                            <t:multiLabels>
+                                <Label text="서머타임종료"/>
+                                <Label text="시간" textAlign="Center" width="100%"/>
+                            </t:multiLabels>
+                            <t:template> 
+                                <Input value="{dst_end_time_rate}" valueLiveUpdate="true" type="Number"/>
+                            </t:template>
+                        </t:Column>
+                    </t:columns>
+                </t:Table>
+            </f:content>
+        </f:DynamicPage>	
+    </App>
+</mvc:View>

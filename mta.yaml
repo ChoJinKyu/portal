@@ -91,6 +91,22 @@ modules:
       - currencyMgr-content.zip
       name: currencyMgr
       target-path: resources/
+    - artifacts:
+      - timeZoneMgr-content.zip
+      name: timeZoneMgr
+      target-path: resources/
+    - artifacts:
+      - msgMgr-content.zip
+      name: msgMgr
+      target-path: resources/
+    - artifacts:
+      - hrEmployeeMgr-content.zip
+      name: hrEmployeeMgr
+      target-path: resources/
+    - artifacts:
+      - vendorPoolSearch-content.zip
+      name: vendorPoolSearch
+      target-path: resources/
 - name: sampleMstMgr
   type: html5
   path: app/xx/sampleMstMgr
@@ -134,6 +150,38 @@ modules:
 - name: currencyMgr
   type: html5
   path: app/cm/currencyMgr
+  build-parameters:
+    builder: custom
+    commands:
+    - npm run build
+    supported-platforms: []
+- name: timeZoneMgr
+  type: html5
+  path: app/cm/timeZoneMgr
+  build-parameters:
+    builder: custom
+    commands:
+    - npm run build
+    supported-platforms: []
+- name: msgMgr
+  type: html5
+  path: app/cm/msgMgr
+  build-parameters:
+    builder: custom
+    commands:
+    - npm run build
+    supported-platforms: []
+- name: hrEmployeeMgr
+  type: html5
+  path: app/cm/hrEmployeeMgr
+  build-parameters:
+    builder: custom
+    commands:
+    - npm run build
+    supported-platforms: []
+- name: vendorPoolSearch
+  type: html5
+  path: app/pg/vp/vendorPoolSearch
   build-parameters:
     builder: custom
     commands:

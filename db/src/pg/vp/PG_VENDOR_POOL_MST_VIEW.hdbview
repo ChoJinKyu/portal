@@ -1,0 +1,82 @@
+VIEW PG_VENDOR_POOL_MST_VIEW AS 
+SELECT PARENT_ID
+      ,NODE_ID
+      ,TENANT_ID
+      ,COMPANY_CODE 
+      ,'LGC' COMPANY_NAME               /*조직 테이블 정보*/
+      ,OPERATION_ORG_TYPE_CODE
+      ,NULL OPERATION_ORG_TYPE_NAME     /*조직 테이블 정보*/
+      ,OPERATION_ORG_CODE
+      ,'석유화학' OPERATION_ORG_NAME    /*조직 테이블 정보*/
+      ,VENDOR_POOL_CODE
+      ,VENDOR_POOL_LOCAL_NAME
+      ,VENDOR_POOL_ENGLISH_NAME
+      ,REPR_DEPARTMENT_CODE
+      ,'구매팀' REPR_DEPARTMENT_NAME    /*부서 테이블 정보*/  
+      ,EVALUATION_OPERATION_UNIT_CODE
+      ,'Raw Material' EVALUATION_OPERATION_UNIT_NAME /*코드 테이블 정보*/
+      ,INP_TYPE_CODE
+      ,'물동' INP_TYPE_NAME       /*코드 테이블 정보*/
+      ,MTLMOB_BASIC_CODE
+      ,'Amount' MTLMOB_BASIC_NAME /*코드 테이블 정보*/
+      ,REGULAR_EVALUATION_FLAG
+      ,INDUSTRY_CLASS_CODE
+      ,null INDUSTRY_CLASS_NAME   /*코드 테이블 정보*/
+      ,SD_EXCEPTION_FLAG
+      ,VENDOR_POOL_EXCEPTION_FLAG
+      ,SITE_INTERNAL_RATE
+      ,SITE_EXTERNAL_RATE
+      ,EQUIPMENT_GRADE_CODE
+      ,EQUIPMENT_TYPE_CODE
+      ,VENDOR_POOL_USE_FLAG
+      ,VENDOR_POOL_DESC
+      ,VENDOR_POOL_HISTORY_DESC
+      ,PARENT_VENDOR_POOL_CODE
+      ,LEAF_FLAG
+      ,LEVEL_NUMBER
+      ,DISPLAY_SEQUENCE
+      ,REGISTER_REASON_TEXT
+      ,APPROVAL_REQUEST_NUMBER
+      ,hierarchy_rank            /*현재node의 순번(sibling order by에 의한)*/
+      ,hierarchy_tree_size       /*현재node포함 하위node 갯수(1이면 leaf node(마지막node))*/
+      ,hierarchy_parent_rank     /*부모node의 순번*/
+      ,hierarchy_level           /*현재node의 Level*/
+      ,hierarchy_root_rank       /*root node의 순번*/
+      ,hierarchy_is_cycle        /*순환구조여부(0:False, 1:True)*/ 
+      ,hierarchy_is_orphan       /*전개후 연결이 끊어진 노드여부(0:False, 1:True)*/		  
+FROM   HIERARCHY (
+                  SOURCE (SELECT  A.TENANT_ID
+                                 ,A.COMPANY_CODE
+                                 ,A.OPERATION_ORG_TYPE_CODE
+                                 ,A.OPERATION_ORG_CODE
+                                 ,A.VENDOR_POOL_CODE
+                                 ,A.VENDOR_POOL_LOCAL_NAME
+                                 ,A.VENDOR_POOL_ENGLISH_NAME
+                                 ,A.REPR_DEPARTMENT_CODE
+                                 ,A.EVALUATION_OPERATION_UNIT_CODE
+                                 ,A.INP_TYPE_CODE
+                                 ,A.MTLMOB_BASIC_CODE
+                                 ,A.REGULAR_EVALUATION_FLAG
+                                 ,A.INDUSTRY_CLASS_CODE
+                                 ,A.SD_EXCEPTION_FLAG
+                                 ,A.VENDOR_POOL_EXCEPTION_FLAG
+                                 ,A.SITE_INTERNAL_RATE
+                                 ,A.SITE_EXTERNAL_RATE
+                                 ,A.EQUIPMENT_GRADE_CODE
+                                 ,A.EQUIPMENT_TYPE_CODE
+                                 ,A.VENDOR_POOL_USE_FLAG
+                                 ,A.VENDOR_POOL_DESC
+                                 ,A.VENDOR_POOL_HISTORY_DESC
+                                 ,A.PARENT_VENDOR_POOL_CODE
+                                 ,A.LEAF_FLAG
+                                 ,A.LEVEL_NUMBER
+                                 ,A.DISPLAY_SEQUENCE
+                                 ,A.REGISTER_REASON_TEXT
+                                 ,A.APPROVAL_REQUEST_NUMBER
+                                 ,HIERARCHY_COMPOSITE_ID(A.TENANT_ID, A.COMPANY_CODE, A.OPERATION_ORG_TYPE_CODE, A.OPERATION_ORG_CODE, A.PARENT_VENDOR_POOL_CODE) AS PARENT_ID
+                                 ,HIERARCHY_COMPOSITE_ID(A.TENANT_ID, A.COMPANY_CODE, A.OPERATION_ORG_TYPE_CODE, A.OPERATION_ORG_CODE, A.VENDOR_POOL_CODE) AS NODE_ID
+                          FROM   PG_VENDOR_POOL_MST A)
+                  START WHERE PARENT_VENDOR_POOL_CODE IS NULL
+                  SIBLING ORDER BY DISPLAY_SEQUENCE, NODE_ID)
+ORDER BY HIERARCHY_RANK
+;

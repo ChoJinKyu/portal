@@ -3,7 +3,7 @@ namespace cm;
 using { User } from '@sap/cds/common';
 	
 entity Country_Lng {	
-  key tenant_id : String(4)  not null;	
+  key tenant_id : String(5)  not null;	
   key country_code : String(30)  not null;	
   key language_code : String(30)  not null;	
     country_name : String(30)  not null;	
