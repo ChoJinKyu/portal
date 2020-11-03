@@ -510,7 +510,7 @@ sap.ui.define([
                     var idx = indices[i];     
                     if (oTable.isIndexSelected(idx)) { 
                         that.getView().setBusy(true);
-                            rows[idx].getRowBindingContext().setProperty("update_user_id", "");
+                            rows[idx].getRowBindingContext().setProperty("update_user_id", "M");
                         oTable.getContextByIndex(idx);
                         that.getView().setBusy(false);
                     }

@@ -129,23 +129,57 @@ xmlns:mvc="sap.ui.core.mvc"
                                     <Button text="{i18n>TblBtnDelete}" icon="sap-icon://delete" enabled="{=${ui>/bDelete}}" type="Reject" press=".onDelete"/>
                                     <Button text="{i18n>TblBtnSave}"   icon="sap-icon://save"   enabled="{=${ui>/bSave}}" type="Attention" press=".onSave"/>
 								    </OverflowToolbar>
-								</table:extension>
-                                <table:rowSettingsTemplate>
-                                    <table:RowSettings highlight="{}"/>
-                                </table:rowSettingsTemplate> 
+								</table:extension>                                
                                 <table:columns>
 								    <table:Column  width="12rem" hAlign="Center" >                                        
                                             <Label text="{i18n>TblHdTenant_id}"/>           
 										<table:template>
 											<Input id="input_tenant_id" value="{tenant_id}" 
                                               enabled="{=%{parts: [
-                                                            {path: 'tenant_id'},
+                                                            {path: 'i18n>StdKey'},
                                                             {path: 'update_user_id'},
                                                             {path: 'ui>/bEvent'}]
                                                           ,formatter: '.formatter.setStatus'}}" /> 
 										</table:template>
 									</table:Column>
                                 </table:columns> 
+
+                                <table:columns>
+								    <table:Column  width="12rem" hAlign="Center" >                                        
+                                            <Label text="{i18n>TblHdMessage_code}"/>           
+										<table:template>
+											<Input id="input_Message_code" value="{message_code}"
+                                                    enabled="{=%{parts: [
+                                                                            {path: 'i18n>StdKey'},
+                                                                            {path: 'update_user_id'},
+                                                                            {path: 'ui>/bEvent'}]
+                                                                            ,formatter: '.formatter.setStatus'}}" /> 
+										</table:template>
+									</table:Column>
+                                </table:columns>
+
+  
+                                <table:columns>
+								    <table:Column  width="12rem" hAlign="Center" >
+                                            <Label text="{i18n>TblHdLanguage_code}"/>           
+										<table:template>
+											<ComboBox   id="search_languageE_code"
+                                                            selectedKey="{language_code}"
+                                                            selectionChange="handleSelectionChange"
+                                                            selectionFinish="handleSelectionFinish"
+                                                            width="350px"
+                                                            enabled="{=%{parts: [
+                                                                            {path: 'i18n>StdKey'},
+                                                                            {path: 'update_user_id'},
+                                                                            {path: 'ui>/bEvent'}]
+                                                                            ,formatter: '.formatter.setStatus'}}">
+                                                            <core:Item key="EN" text="영어"/>
+                                                            <core:Item key="KO" text="한국어"/>                                                                                                               
+                                                </ComboBox>
+										</table:template>
+									</table:Column>
+                                </table:columns>
+                                                              
                                 <table:columns>
 								    <table:Column  width="12rem" hAlign="Center" >                                        
                                             <Label text="{i18n>TblHdChain_code}"/>           
@@ -187,33 +221,13 @@ xmlns:mvc="sap.ui.core.mvc"
                                 </table:columns>
 
 
-                                <table:columns>
-								    <table:Column  width="12rem" hAlign="Center" >
-                                            <Label text="{i18n>TblHdLanguage_code}"/>           
-										<table:template>
-											<ComboBox   id="search_languageE_code"
-                                                            selectedKey="{language_code}"
-                                                            selectionChange="handleSelectionChange"
-                                                            selectionFinish="handleSelectionFinish"
-                                                            width="350px"
-                                                            enabled="{=%{parts: [
-                                                                            {path: 'language_code'},
-                                                                            {path: 'update_user_id'},
-                                                                            {path: 'ui>/bEvent'}]
-                                                                            ,formatter: '.formatter.setStatus'}}">
-                                                            <core:Item key="EN" text="영어"/>
-                                                            <core:Item key="KO" text="한국어"/>                                                                                                               
-                                                </ComboBox>
-										</table:template>
-									</table:Column>
-                                </table:columns>
 
 
                                 <table:columns>
 								    <table:Column  width="12rem" hAlign="Center" >                                        
                                             <Label text="{i18n>TblHdMessage_contents}"/>           
 										<table:template>
-											<Input id="input_Message_contents" value="{message_contents}"
+											<Input class="msgMgrInput" id="input_Message_contents" value="{message_contents}"
                                                                         enabled="{=%{parts: [
                                                                             {path: 'message_contents'},
                                                                             {path: 'update_user_id'},
@@ -223,26 +237,13 @@ xmlns:mvc="sap.ui.core.mvc"
 									</table:Column>
                                 </table:columns>
 
-                                 <table:columns>
-								    <table:Column  width="12rem" hAlign="Center" >                                        
-                                            <Label text="{i18n>TblHdMessage_code}"/>           
-										<table:template>
-											<Input id="input_Message_code" value="{message_code}"
-                                                    enabled="{=%{parts: [
-                                                                            {path: 'message_code'},
-                                                                            {path: 'update_user_id'},
-                                                                            {path: 'ui>/bEvent'}]
-                                                                            ,formatter: '.formatter.setStatus'}}" /> 
-										</table:template>
-									</table:Column>
-                                </table:columns>
-
+                               
 
                                 <table:columns>
 								    <table:Column  width="12rem" hAlign="Center" >                                        
                                             <Label text="{i18n>TblHdUpdate_user_id}"/>           
 										<table:template>
-											<Label id="input_Update_user_id" text="{update_user_id}"/> 
+											<Label id="input_Update_user_id" text="{create_user_id}"/> 
 										</table:template>
 									</table:Column>
                                 </table:columns>

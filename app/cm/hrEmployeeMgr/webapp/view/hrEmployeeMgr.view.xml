@@ -1,0 +1,410 @@
+<mvc:View
+    class="sapUiSizeCompact"
+    controllerName="cm.hrEmployeeMgr.controller.hrEmployeeMgr"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:layout="sap.ui.layout"
+    xmlns:table="sap.ui.table"
+    xmlns:form="sap.ui.layout.form"
+    displayBlock="true">
+
+
+ 
+	<!-- <Shell id="shell"> -->
+		<App id="app">
+        <f:DynamicPage id="employeeMgrPage" toggleHeaderOnTitleClick="true" headerExpanded="true">
+            <f:title>
+                <f:DynamicPageTitle>
+                    <f:heading>
+                        <Title text="사용자관리"/>
+                    </f:heading>
+                </f:DynamicPageTitle>
+            </f:title>
+            <f:header>
+                <f:DynamicPageHeader pinnable="true">
+                    <layout:HorizontalLayout>
+                        <form:Form editable="true" width="100%">
+                            <form:formContainers >
+                                <form:FormContainer >
+                                    <form:formElements>
+                                        <form:FormElement label="회사" >                                            
+                                            <form:fields>            													
+                                                <SearchField 
+                                                    id="search_company_code" 
+                                                    width="100%"/>
+                                            </form:fields>
+                                        </form:FormElement>  
+                                        <form:FormElement label="이메일" >                                            
+                                            <form:fields>            													
+                                                <SearchField 
+                                                    id="search_email_id" 
+                                                    width="100%"/>
+                                            </form:fields>
+                                        </form:FormElement>  
+                                    </form:formElements>
+                                </form:FormContainer>
+                                <form:FormContainer >
+                                    <form:formElements>
+                                        <form:FormElement label="로그인ID" >                                            
+                                            <form:fields>            													
+                                                <SearchField 
+                                                    id="search_tenant_id" 
+                                                    width="100%"/>
+                                            </form:fields>
+                                        </form:FormElement>  
+                                        <form:FormElement label="역활코드" >                                            
+                                            <form:fields>            													
+                                                <SearchField 
+                                                    id="search_assign_type_code" 
+                                                    width="100%"/>
+                                            </form:fields>
+                                        </form:FormElement>  
+                                    </form:formElements>
+                                </form:FormContainer>
+                                <form:FormContainer >
+                                    <form:formElements>
+                                        <form:FormElement label="성명" >                                            
+                                            <form:fields>            													
+                                                <SearchField 
+                                                    id="search_user_korean_name" 
+                                                    width="100%"/>
+                                            </form:fields>
+                                        </form:FormElement>  
+                                        <form:FormElement label="역활명" >                                            
+                                            <form:fields>            													
+                                                <SearchField 
+                                                    id="search_job_title" 
+                                                    width="100%"/>
+                                            </form:fields>
+                                        </form:FormElement>  
+                                    </form:formElements>
+                                </form:FormContainer>                                
+                                <form:FormContainer >
+                                    <form:formElements>
+                                        <form:FormElement label="성명(영문)" >                                            
+                                            <form:fields>            													
+                                                <SearchField 
+                                                    id="search_user_english_name" 
+                                                    width="100%"/>
+                                            </form:fields>
+                                        </form:FormElement>                                         
+                                    </form:formElements>                                
+                                    <form:formElements>
+                                        <form:FormElement label="사용여부" >
+                                            <form:fields >
+                                                <ComboBox id="search_comboBox_use_yn"
+                                                    selectedKey="Y"
+			                                        change="handleChange"                                                    
+                                                    width="350px">
+                                                    <core:Item key="Y" text="Yes"/>                                                            
+                                                    <core:Item key="N" text="No"/>
+                                                 </ComboBox>	
+                                            </form:fields>
+                                        </form:FormElement>                                          
+                                    </form:formElements>
+                                </form:FormContainer>                                                                
+                            </form:formContainers>
+                            <form:layout>
+                                <form:ResponsiveGridLayout columnsM="4" columnsL="4" columnsXL="4"/>
+                            </form:layout>
+                        </form:Form>
+                    </layout:HorizontalLayout>
+                    <HBox width="100%" alignItems="Center" alignContent="End" justifyContent="End">
+                        <items>
+                            <Button text="검색" press="onSearch"/>
+                            <Button text="수정" press="onUpdate"/>
+                        </items>
+                    </HBox>
+                </f:DynamicPageHeader>
+            </f:header>
+            <f:content>
+            
+                <layout:Splitter orientation="Vertical">
+                        <Table  id="hremployeeTable"
+                                items="{
+                                            path : '/HrEmployee',
+                                            parameters: {
+                                                $$updateGroupId : 'hremployeeMstUpdateGroup'
+                                            }
+                                        }"
+                                mode="MultiSelect"                                        
+                                updateFinished="onMstUpdateFinished"
+                        >
+                        <layoutData>
+                            <layout:SplitterLayoutData size="55%" />
+                        </layoutData>
+                            <headerToolbar>
+                                <OverflowToolbar>
+                                    <content>
+                                        <Title text="사용자 목록" level="H2"/>
+                                        <ToolbarSpacer/>
+                                        <!-- <Button text="행추가" icon="sap-icon://add"  type="Accept" press="onMstAddRow"/>
+                                        <Button text="행복사" icon="sap-icon://copy" type="Accept" press="onMstCopyRow"/>
+                                        <Button text="행삭제" icon="sap-icon://delete" type="Reject" press="onMstDeleteRow"/>
+                                        <Button text="저장"   icon="sap-icon://save" type="Attention" press="onMstSave"/> -->
+                                    </content>
+                                </OverflowToolbar>
+                            </headerToolbar>
+                            <columns>
+                                <Column hAlign="Center" width="100px" id="c_tenant_id">
+                                    <header>
+                                        <Label text="TENANT ID"/>
+                                    </header>
+                                </Column>
+                                <!-- <Column hAlign="Center" width="100px">
+                                    <header>
+                                        <Label text="로그인ID"/>
+                                    </header>
+                                </Column> -->
+                                <Column hAlign="Center" width="100px">
+                                    <header>
+                                        <Label text="사번"/>
+                                    </header>
+                                </Column>
+                                <Column hAlign="Center" width="200px">
+                                    <header>
+                                        <Label text="성명"/>
+                                    </header>
+                                </Column>
+                                <Column hAlign="Center" width="200px">
+                                    <header>
+                                        <Label text="성명(영문)"/>
+                                    </header>
+                                </Column>
+                                <Column hAlign="Center" width="100px">
+                                    <header>
+                                        <Label text="이메일"/>
+                                    </header>
+                                </Column>
+                                <Column hAlign="Center" width="100px">
+                                    <header>
+                                        <Label text="조직명"/>
+                                    </header>
+                                </Column>
+                                <Column hAlign="Center" width="200px">
+                                    <header>
+                                        <Label text="시작일"/>
+                                    </header>
+                                </Column>
+                                <Column hAlign="Center" width="200px">
+                                    <header>
+                                        <Label text="종료일"/>
+                                    </header>
+                                </Column>
+                                <Column hAlign="Center" width="200px">
+                                    <header>
+                                        <Label text="회사"/>
+                                    </header>
+                                </Column>
+                                <Column hAlign="Center" width="200px">
+                                    <header>
+                                        <Label text="언어"/>
+                                    </header>
+                                </Column>
+                                <Column hAlign="Center" width="200px">
+                                    <header>
+                                        <Label text="타임존"/>
+                                    </header>
+                                </Column>   
+                                <!-- <Column hAlign="Center" width="200px">
+                                    <header>
+                                        <Label text="날짜형식"/>
+                                    </header>
+                                </Column>   
+                                <Column hAlign="Center" width="200px">
+                                    <header>
+                                        <Label text="숫자형식"/>
+                                    </header>
+                                </Column>   
+                                <Column hAlign="Center" width="200px">
+                                    <header>
+                                        <Label text="기본통화"/>
+                                    </header>
+                                </Column>   
+                                <Column hAlign="Center" width="200px">
+                                    <header>
+                                        <Label text="사용자ID"/>
+                                    </header>
+                                </Column>                                                                                                                                                                                                      -->
+                            </columns>
+                            <items>
+                                <ColumnListItem type="Active" id="employeeColumnListItem" press="onMstTableItemPress">
+                                    <cells>
+                                        <!--사용자ID-->
+                                        <Text id="l_tenant_id" text="{tenant_id}"/>
+                                        <!--로그인ID-->
+                                        <!-- <Text id="l_" text="{currency_code_name}"/> -->
+                                        <!--사번-->
+                                        <Text id="l_employee_number" text="{employee_number}"/>
+                                        <!--성명-->
+                                        <Text id="l_user_korean_name" text="{user_korean_name}"/>
+                                        <!--성명(영문)-->
+                                        <Text id="l_user_english_name" text="{user_english_name}"/>
+                                        <!--이메일-->
+                                        <Text id="l_email_id" text="{email_id}"/>
+                                        <!--조직명-->
+                                        <Text id="l_department_id" text="{department_id}"/>
+                                        <!--시작일-->
+                                        <Text id="l_local_create_dtm" text="{local_create_dtm}"/>
+                                        <!--종료일-->
+                                        <Text id="l_local_update_dtm" text="{local_update_dtm}"/>
+                                        <!--회사-->
+                                        <Text id="l_assign_company_name" text="{assign_company_name}"/>
+                                        <!--언어-->
+                                        <Text id="l_nation_code" text="{nation_code}"/>
+                                        <!--타임존-->
+                                        <Text id="l_locale_code" text="{locale_code}"/>
+                                        <!-- 날짜형식-->
+                                        <!-- <Text id="l_" text="{scale}"/> -->
+                                        <!--숫자형식-->
+                                        <!-- <Text id="l_" text="{extension_scale}"/> -->
+                                        <!--기본통화-->
+                                        <!-- <Text id="l_" text="{currency_prefix}"/> -->
+                                        <!--사용자ID-->
+                                        <!-- <Text id="l_" text="{use_yn}"/>  -->
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+
+                <layout:Splitter>
+                           <layout:contentAreas>
+                            <form:Form 
+                                editable="true" 
+                                id="employeeDetail"
+                                items="{
+                                            path : '/HrEmployee',
+                                            parameters: {
+                                                $$updateGroupId : 'hremployeeMstUpdateGroup'
+                                            }
+                                        }"
+                                >
+
+                                <form:toolbar>
+                                    <Toolbar width="100%" id="toolbar3">
+                                        <content>
+                                            <Title xmlns="sap.m" text="사용자상세" id="title18" />
+                                            <ToolbarSpacer/>
+                                            <Button xmlns="sap.m" icon="sap-icon://create" text="신규" id="emp_add" type="Accept" />
+                                            <Button xmlns="sap.m" icon="sap-icon://save" text="저장" id="emp_save" type="Attention" />
+                                            <Button xmlns="sap.m" icon="sap-icon://delete" text="삭제" id="emp_del" type="Reject" />
+                                        </content>
+                                    </Toolbar>
+                                </form:toolbar>
+                                <form:formContainers>
+                                    <form:FormContainer id="container2" >
+                                        <form:formElements>
+                                                <form:FormElement label="사번" >
+                                                    <form:fields>
+                                                        <Input width="180px" id="i_employee_number" />
+                                                    </form:fields>
+                                                </form:FormElement>
+                                                <form:FormElement label="Tenant ID">
+                                                    <form:fields>
+                                                        <Input width="180px" id="i_tenant_id"/>
+                                                    </form:fields>
+                                                </form:FormElement>
+                                                <form:FormElement label="성명">
+                                                    <form:fields>
+                                                        <Input width="180px" id="i_user_korean_name"/>
+                                                    </form:fields>
+                                                </form:FormElement>
+                                                <form:FormElement label="성명(영문)">
+                                                    <form:fields>
+                                                        <Input width="180px" id="i_user_english_name"/>
+                                                    </form:fields>
+                                                </form:FormElement>
+                                        </form:formElements>
+                                    </form:FormContainer>
+                                    <form:FormContainer id="container3">
+                                        <form:formElements>
+                                            <form:FormElement label="이메일">
+                                                <form:fields>
+                                                    <Input width="180px" id="i_email_id"/>
+                                                </form:fields>
+                                            </form:FormElement>
+                                            <form:FormElement label="시작일">
+                                                <form:fields>                                                    
+                                                    <DatePicker width="180px" dateValue="{path : 'local_create_dtm'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/>
+                                                </form:fields>
+                                            </form:FormElement>
+                                            <form:FormElement label="종료일">
+                                                <form:fields>                                                    
+                                                    <DatePicker width="180px" dateValue="{path : 'local_create_dtm'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/>
+                                                </form:fields>
+                                            </form:FormElement>
+                                            <form:FormElement label="언어">
+                                                <form:fields>
+                                                    <Input width="180px" id="i_user_lang"/>
+                                                </form:fields>
+                                            </form:FormElement>
+                                        </form:formElements>
+                                    </form:FormContainer>
+                                </form:formContainers>
+                                <form:layout>
+                                    <form:ResponsiveGridLayout id="layout2" columnsM="2" columnsL="2" columnsXL="2"/>
+                                </form:layout></form:Form>
+                            </layout:contentAreas>
+
+                            <Table  
+                                    id="roleTable"
+                                    items= "{   
+                                                path : '/Role',
+                                                parameters: {
+                                                    $$updateGroupId : 'roleUpdateGroup'
+                                                }
+                                            }"
+                                    mode="MultiSelect"
+                            >
+                            <layoutData>
+                                <layout:SplitterLayoutData size="50%" />
+                            </layoutData>
+                                <headerToolbar>
+                                    <OverflowToolbar>
+                                        <content>
+                                            <Title text="역활목록" level="H2"/>
+                                            <ToolbarSpacer/>
+                                            <Button xmlns="sap.m" icon="sap-icon://create" text="신규" id="role_add" type="Accept" />
+                                            <Button xmlns="sap.m" icon="sap-icon://save" text="저장" id="role_save" type="Attention" />
+                                            <Button xmlns="sap.m" icon="sap-icon://delete" text="삭제" id="role_del" type="Reject" />
+                                        </content>
+                                    </OverflowToolbar>
+                                </headerToolbar>
+                                <columns>
+                                    <Column hAlign="Center" width="80px">
+                                        <header>
+                                            <Label text="역활명"/>
+                                        </header>
+                                    </Column>
+                                    <Column hAlign="Center" width="80px">
+                                        <header>
+                                            <Label text="시작일"/>
+                                        </header>
+                                    </Column>
+                                    <Column hAlign="Center" width="150px">
+                                        <header>
+                                            <Label text="종료일"/>
+                                        </header>
+                                    </Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem type="Active" id="roleColumnListItem">
+                                        <cells>
+                                            <Input id="language_code1" value="{language_code}"/>
+                                            <Input id="currency_code_name1" value="{currency_code_name}"/>
+                                            <Input id="currency_code_desc1" value="{currency_code_desc}"/>
+                                       
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </layout:Splitter>            
+                        
+                </layout:Splitter>
+            </f:content>            
+        </f:DynamicPage>
+		</App>
+	<!-- </Shell> -->
+</mvc:View>

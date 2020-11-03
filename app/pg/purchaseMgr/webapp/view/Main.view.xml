@@ -1,0 +1,357 @@
+  <!--
+화면명 : 모니터링 항목 관리 App 개발
+  -->
+  <mvc:View
+	  class="sapUiSizeCompact"
+	  controllerName="pg.purchaseMgr.controller.Main"	
+	  xmlns="sap.m"
+	  xmlns:core="sap.ui.core"
+	  xmlns:demo="sap.ui.core.sample.common"
+	  xmlns:f="sap.ui.layout.form"
+      xmlns:table="sap.ui.table"    
+      xmlns:l="sap.ui.layout"
+	  xmlns:html="http://www.w3.org/1999/xhtml"	
+      xmlns:u="sap.ui.unified"    
+      xmlns:rte="sap.ui.richtexteditor" 
+      xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+	  xmlns:smartTable="sap.ui.comp.smarttable"        
+	  xmlns:mvc="sap.ui.core.mvc">
+	<App>    
+	    <Page id="page" floatingFooter="true" showHeader="false"> 
+            <VBox>
+                <Toolbar design="Transparent">
+                    <Label design="Bold" 
+                    labelFor="partCategoryManagement" text="Part Category Management">
+                        <layoutData>
+                            <ToolbarLayoutData shrinkable="false" />
+                        </layoutData>
+                    </Label>		
+                    <ToolbarSpacer />	<!--빈 툴바 영역 -->		
+                    <ToolbarSpacer />   <!--빈 툴바 영역 -->		
+                    <Button press=".onEdit" id="buttonEdit" text="Edit"/>
+                    <Button press=".onDelete" id="buttonDelete"  enabled="{=${ui>/bEditMode}}" text="Delete"/>
+                    <Button press=".onSave" id="buttonSave"  enabled="{=${ui>/bEditMode}}" text="Save"/>
+                    <Button press=".onHistory" id="buttonHistory" text="History"/>
+                </Toolbar>
+            </VBox>
+            <VBox>
+                <l:VerticalLayout
+                        id="oVerticalContent"
+                        width="100%">
+                        <l:content>                     
+                        </l:content>
+                </l:VerticalLayout>             
+                <f:SimpleForm 
+                    editable="true" 
+                    layout="ResponsiveGridLayout">
+                <f:content>
+                    <!--1 row-->
+                    <Label text="구분" design="Bold" >
+                        <layoutData>
+                            <l:GridData span="XL2 L2 M2 S12"/>
+                        </layoutData>
+                    </Label>
+                    <ComboBox id="comboBoxType" items="{view>/ItemType}" enabled="{=${ui>/bEditMode}}">
+                        <core:Item key="{view>key}" text="{view>text}" />
+                        <layoutData>
+                            <l:GridData span="XL2 L4 M2 S12"/>
+                        </layoutData>
+                     </ComboBox>	
+                    <Label text="시나리오" design="Bold">
+                        <layoutData>
+                            <l:GridData span="XL2 L2 M2 S12"/>
+                        </layoutData>
+                    </Label>
+                    <ComboBox  id="comboboxScenario" items="{view>/ScenarioType}"  enabled="{=${ui>/bEditMode}}">
+                             <core:Item key="{view>key}" text="{view>text}" />
+                        <layoutData>
+                            <l:GridData span="XL2 L2 M2 S12"/>
+                        </layoutData>
+                     </ComboBox>	
+                    <Label text="　" design="Bold" class="sapMLabelNoText">
+                        <layoutData>
+                            <l:GridData span="XL2 L2 M2 S12"/>
+                        </layoutData>
+                    </Label>
+                    <RadioButtonGroup id="radioActive" columns="2" width="100%"  enabled="{=${ui>/bEditMode}}">
+                        <RadioButton  text="Active" />
+                        <RadioButton  text="In Active"/>
+                        <layoutData>
+                            <l:GridData span="XL2 L2 M2 S12"/>
+                        </layoutData>
+                    </RadioButtonGroup>	 
+                                     
+                    <!--2 row-->
+                    <Label text="구매유형" design="Bold">
+                        <layoutData>
+                            <l:GridData span="XL2 L2 M2 S12"/>
+                        </layoutData>
+                    </Label>
+                    <ComboBox id="comboBoxRawMaterials" items="{view>/RawMaterials}"  enabled="{=${ui>/bEditMode}}">
+                        <core:Item key="{view>key}" text="{view>text}" />  
+                        <layoutData>
+                            <l:GridData span="XL2 L2 M2 S12"/>
+                        </layoutData>                        
+                    </ComboBox>     
+                    <!--빈칸 -->
+                    <Text text="　" ><layoutData><l:GridData span="XL2 L2 M2 S12"/></layoutData></Text>
+                    <Text text="　" ><layoutData><l:GridData span="XL2 L2 M2 S12"/></layoutData></Text>
+                    <Text text="　" ><layoutData><l:GridData span="XL2 L2 M2 S12"/></layoutData></Text>
+                    <Text text="　" ><layoutData><l:GridData span="XL2 L2 M2 S12"/></layoutData></Text>
+                    <!--3 row-->
+                    <Label text="회사" design="Bold" >
+                        <layoutData>
+                            <l:GridData span="XL2 L2 M2 S12"/>
+                        </layoutData>
+                    </Label>
+                    <ComboBox  id="comboboxOffice" items="{view>/Office}"  enabled="{=${ui>/bEditMode}}">
+                        <core:Item key="{view>key}" text="{view>text}" />                    
+                        <layoutData>
+                            <l:GridData span="XL2 L2 M2 S12"/>
+                        </layoutData>                        
+                    </ComboBox>	
+
+                    <Label text="법인" design="Bold">
+                        <layoutData>
+                            <l:GridData span="XL2 L2 M2 S12"/>
+                        </layoutData>
+                    </Label>
+
+                    <ComboBox id="conboBoxNatioinStatus"  items="{view>/NatioinStatus}"  enabled="{=${ui>/bEditMode}}">
+                        <core:Item key="{view>key}" text="{view>text}" /> 
+                        <layoutData>
+                            <l:GridData span="XL2 L2 M2 S12"/>
+                        </layoutData>                                                
+                    </ComboBox>	
+                    <Text text="　" ><layoutData><l:GridData span="XL2 L2 M2 S12"/></layoutData></Text>
+                    <Text text="　" ><layoutData><l:GridData span="XL2 L2 M2 S12"/></layoutData></Text>                    
+                    <!--4 row-->                 
+                    <Label text="담당자" >
+                        <layoutData>
+                            <l:GridData span="XL2 L2 M2 S12"/>
+                        </layoutData>
+                    </Label>
+                   <MultiInput
+                        valueHelpOnly="true"
+                        value="손홍민"
+                        enabled="{=${ui>/bEditMode}}"
+                        valueHelpRequest=".onValueHelpRequested">
+                        <layoutData>
+                            <l:GridData span="XL2 L2 M2 S12"/>
+                        </layoutData> 
+                    </MultiInput>                    
+                    <Text text="　" ><layoutData><l:GridData span="XL8 L8 M8 S12"/></layoutData></Text>
+                    <Label text="　"  class="sapMLabelNoText"> 
+                        <layoutData>
+                            <l:GridData span="XL2 L2 M2 S12"/>
+                        </layoutData>
+                    </Label>
+                    <Table  id="userList"
+                            items="{ path : 'odata>/UserCollection' }"
+                            mode="MultiSelect"
+                            enabled="{=${ui>/bEditMode}}" 
+                    >         
+                        <columns>
+                            <Column hAlign="Center" width="100px">
+                                <header>
+                                    <Label text="담당자"/>
+                                </header>
+                            </Column>
+                            <Column hAlign="Center" width="100px">
+                                <header>
+                                    <Label text="Title"/>
+                                </header>
+                            </Column>
+                            <Column hAlign="Center" width="100px">
+                                <header>
+                                    <Label text="휴대폰"/>
+                                </header>
+                            </Column>
+                            <Column hAlign="Center" width="200px">
+                                <header>
+                                    <Label text="Department"/>
+                                </header>
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem type="Active" id="userListmItem" press="onuserListIemPress">
+                                <cells>
+                                    <Label text="{odata>manager}"/>
+                                    <Label text="{odata>title}"/>
+                                    <Label text="{odata>mobile}"/>
+                                    <Label text="{odata>dept}"/>             
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table> 
+                    <!--6 row-->
+                    <Label text="모니터링 목적" design="Bold">
+                        <layoutData>
+                            <l:GridData span="XL2 L2 M2 S12"/>
+                        </layoutData>
+                    </Label>
+                    <rte:RichTextEditor id="reMonitoringPurpose" editable="{=${ui>/bEditMode}}" class="sapUiTinyMarginTop" editorType="TinyMCE4" width="100%" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="true"/>			
+                    <!--7 row-->
+                    <Label text="시나리오 설명" design="Bold">
+                        <layoutData>
+                            <l:GridData span="XL2 L2 M2 S12"/>
+                        </layoutData>
+                    </Label>
+                    <rte:RichTextEditor id="reMonitoringPurposeDetail" editable="{=${ui>/bEditMode}}" class="sapUiTinyMarginTop" editorType="TinyMCE4" width="100%" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="true"/>			
+                    <!--8 row-->
+                    <Label text="운영방식" design="Bold">
+                        <layoutData>
+                            <l:GridData span="XL2 L2 M2 S12"/>
+                        </layoutData>
+                    </Label>  
+                    <HBox class="sapUiContentPadding">
+                        <VBox width="70px">
+                        <CheckBox id="checkBoxOMType1" text="조회"  enabled="{=${ui>/bEditMode}}"/>
+                            </VBox>
+                        <VBox width="70px">
+                            <CheckBox id="checkBoxOMType2" text="소명"  enabled="{=${ui>/bEditMode}}"/>
+                        </VBox>                        
+                        <VBox width="70px">
+                            <CheckBox id="checkBoxOMType3" text="알람"  enabled="{=${ui>/bEditMode}}"/>
+                        </VBox>  		
+                    </HBox>   
+                    <!--9 row-->
+                    <Label text="소스시스템" design="Bold">
+                        <layoutData>
+                            <l:GridData span="XL2 L2 M2 S12"/>
+                        </layoutData>
+                    </Label>
+                    <rte:RichTextEditor id="reSourceSystem"  editable="{=${ui>/bEditMode}}" class="sapUiTinyMarginTop" editorType="TinyMCE4" width="100%" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="true"/>			
+                    <!--10 row-->
+                    <Label text="소스시스템/상세설명" design="Bold">
+                        <layoutData>
+                            <l:GridData span="XL2 L2 M2 S12"/>
+                        </layoutData>
+                    </Label>
+                    <rte:RichTextEditor id="reSourceSystemDetail"  editable="{=${ui>/bEditMode}}" class="sapUiTinyMarginTop" editorType="TinyMCE4" width="100%" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="true"/>			
+                    <!--11 row-->
+                    <Label text="Signal" design="Bold">
+                        <layoutData>
+                            <l:GridData span="XL2 L2 M2 S12"/>
+                        </layoutData>
+                    </Label>
+                    <Table  id="signalList"
+                            items="{ path : 'odata>/SignalCollection'}"
+                            mode="MultiSelect"
+                    >      
+                        <headerToolbar>
+                            <OverflowToolbar>
+                                <content>
+                                    <ToolbarSpacer/>
+                                        <Button text="Add" id="buttonSignalAddRow" press=".onSignalListAddRow()"   enabled="{=${ui>/bEditMode}}" type="Transparent"/>
+                                        <Button text="Delete" id="buttonSignalDeleteRow" press=".onSignalListDelete()"    enabled="{=${ui>/bEditMode}}" type="Transparent"/>
+                                </content>
+                            </OverflowToolbar>
+                        </headerToolbar>                           
+                        <columns>
+                            <Column hAlign="Center" width="100px">
+                                <header>
+                                    <Label text="condition"/>
+                                </header>
+                            </Column>
+                            <Column hAlign="Center" width="100px">
+                                <header>
+                                    <Label text="Value 1"/>
+                                </header>
+                            </Column>
+                            <Column hAlign="Center" width="100px">
+                                <header>
+                                    <Label text="Value 2"/>
+                                </header>
+                            </Column>
+                            <Column hAlign="Center" width="200px">
+                                <header>
+                                    <Label text="Department"/>
+                                </header>
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem type="Active" id="signalListItem" press="signalListTableItemPress">
+                                <cells>
+                                    <ComboBox  selectedKey="{odata>condition}"  enabled="{=${ui>/bEditMode}}">
+                                        <core:Item key="LessThen" text="LessThen" />
+                                        <core:Item key="Between" text="Between" />
+                                        <core:Item key="Equal" text="Equal" />
+                                    </ComboBox>	
+                                    <Input  value="{odata>value1}"  enabled="{=${ui>/bEditMode}}"/>
+                                    <Input  value="{odata>value2}"  enabled="{=${ui>/bEditMode}}"/>
+                                    <ComboBox  selectedKey="{odata>status}"  enabled="{=${ui>/bEditMode}}">
+                                        <core:Item key="A" text="A" />
+                                        <core:Item key="B" text="B" />
+                                        <core:Item key="C" text="C" />
+                                    </ComboBox>	            
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table> 
+
+                    <!--주기 row-->
+                    <Label text="주기" design="Bold" >
+                        <layoutData>
+                            <l:GridData span="XL2 L2 M2 S12"/>
+                        </layoutData>
+                    </Label>
+                    <!--items-->
+                    <MultiComboBox
+                        id="multiComboBoxCycle"
+                        selectionChange="handleSelectionChange"
+                        selectionFinish="handleSelectionFinish"
+                        class="sapUiTinyMarginTop"
+                        enabled="{=${ui>/bEditMode}}"
+                        selectedKeys="{ path : 'odata>/KeysSelected'}"
+                        >
+                        <core:Item key="1" text="일"/>
+                        <core:Item key="2" text="월"/>
+                        <core:Item key="3" text="분기"/>
+                        <core:Item key="4" text="반기"/>
+                        <layoutData><l:GridData span="XL2 L2 M2 S12"/></layoutData>
+                    </MultiComboBox> 
+                </f:content>
+              </f:SimpleForm>
+              <f:SimpleForm 
+                  editable="true" 
+                  layout="ResponsiveGridLayout"
+                  class="sapUiTinyMarginTop marginMinusTop"
+                  enabled="{=${ui>/bEditMode}}"
+                  >
+                <f:content>   
+                    <!--첨부파일-->
+                    <Label text="첨부파일1" design="Bold">
+                        <layoutData>
+                            <l:GridData span="XL2 L2 M2 S12"/>
+                        </layoutData>
+                    </Label>
+                    <VBox>
+                    <!-- instantUpload false 찾아보기 삭제 바로 업로드 진행
+                    7번 부터  확인
+                    https://blogs.sap.com/2019/12/29/sapui5-and-odata-uploadcollection-example/
+                    uploadEnabled="{=${ui>/bEditMode}}" 토글이 되고 있지 않음
+                     -->
+                    <UploadCollection
+                          id="UploadCollection"
+                          maximumFilenameLength="55"
+                          maximumFileSize="10"
+                          multiple="true"
+                          sameFilenameAllowed="true"
+                          instantUpload="false"
+                          noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
+                          change="onChange"
+                          fileDeleted="onFileDeleted"
+                          filenameLengthExceed="onFilenameLengthExceed"
+                          fileSizeExceed="onFileSizeExceed"
+                          typeMissmatch="onTypeMissmatch"
+                          uploadComplete="onUploadComplete"
+                          beforeUploadStarts="onBeforeUploadStarts" />                                        
+                  </VBox>
+                </f:content>
+              </f:SimpleForm>                           
+            </VBox>
+
+        </Page>        
+    </App>
+</mvc:View>

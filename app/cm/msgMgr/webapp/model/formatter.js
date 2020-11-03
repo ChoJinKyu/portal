@@ -8,20 +8,19 @@ sap.ui.define([], function () {
             return false ;          
         },
 
-        setStatus : function (oValue, oEntity, oEvent) {
+        setStatus : function (oKey, oEntity, oEvent) {
             
-            switch (oEvent)
+            switch (oEntity)
             {
               case "" :
-               return false;
-              case "AddRow" :
-              case "ModifyRow" :
-                  switch (oEntity)     // 전달되는 값이 없을경우(저장되지 않은 데이터)  수정가능 ..
+               return true;
+              case "M" :
+                  switch (oKey)     // 전달되는 값이 없을경우(저장되지 않은 데이터)  수정가능 ..
                     {
-                    case "" :
-                        return true;
-                    default :
+                    case "Key" :
                         return false;
+                    default :
+                        return true;
                     } ;
                default :
                 return false;

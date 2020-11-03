@@ -50,6 +50,15 @@ sap.ui.define([
                     comboBox_use_yn = this.byId("comboBox_use_yn").getSelectedItem().getKey();
                 }
 
+                 // 필터 추가 
+                if(!this.isValNull(search_currency_code)){
+                    filters.push(new Filter("currency_code", FilterOperator.Contains, search_currency_code));
+                }
+                
+                if(!this.isValNull(comboBox_use_yn)){
+                   // filters.push(new Filter("use_flag", FilterOperator.Contains, comboBox_use_yn));
+                }
+
                 var mstBinding = this.byId("currencyTable").getBinding("items");
                 //var mstBinding = this.byId("codeMstTable").getBinding("rows");
                 mstBinding.resetChanges();
@@ -193,8 +202,16 @@ sap.ui.define([
                 var oSelectedItem = oEvent.getSource();
                 var oContext = oSelectedItem.getBindingContext();
                 var sPath = oContext.getPath();
-                var oProductDetailPanel = this.getView().byId("currencyDetail");
-                oProductDetailPanel.bindElement({ path: sPath, model: "Currency" });
+                //sPath.replace("CurrencyView","Currency");
+                var oCurrencyDetail = this.getView().byId("currencyDetail");
+                //oProductDetailPanel.bindElement({ path: sPath, model: "Currency" });
+                //oProductDetailPanel.bindElement("/Currency(tenant_id='1000',currency_code='CNY')");
+                oCurrencyDetail.bindElement({ path: sPath.replace("CurrencyView","Currency")});
+
+                oCurrencyDetail.bindElement({ path: sPath.replace("CurrencyView","Currency")
+                                            , parameters: {
+                                                    $$updateGroupId : 'CurrencyUpdateGroup'
+                                            }});
 
                 this.fn_searchCodeDtl(v_searchCond);
 
@@ -208,6 +225,19 @@ sap.ui.define([
                         tenant_id : v_item.getBindingContext().getValue('tenant_id'),
                         currency_code : v_item.getBindingContext().getValue('currency_code')
                     };
+
+                    var oSelectedItem =  oEvent.getSource().getItems()[0];
+                    var oContext = oSelectedItem.getBindingContext();
+                    var sPath = oContext.getPath();
+                    //sPath.replace("CurrencyView","Currency");
+                    var oCurrencyDetail = this.getView().byId("currencyDetail");
+                    //oProductDetailPanel.bindElement({ path: sPath, model: "Currency" });
+                    //oProductDetailPanel.bindElement("/Currency(tenant_id='1000',currency_code='CNY')");
+                    
+                    oCurrencyDetail.bindElement({ path: sPath.replace("CurrencyView","Currency")
+                                                , parameters: {
+                                                    $$updateGroupId : 'CurrencyUpdateGroup'
+                                                }});
 
                     this.fn_searchCodeDtl(v_searchCond);
                 }
@@ -237,6 +267,32 @@ sap.ui.define([
                 }
 
                 this._retrieveParam.dtlParam = p_searchCond;
+
+            },
+
+            onCreate : function () {
+                // var dtlVal = this._retrieveParam.dtlParam;
+                // var oCurrencyDetail = this.getView().byId("currencyDetail");
+                // var oContext = oCurrencyDetail.create({
+                //         "tenant_id" : "1000",
+                //         "currency_code" : "aa",
+                //         "language_code" : "",
+                //         "currency_code_desc" : "",
+                //         "currency_prefix" : "",
+                //         "currency_suffix" : ""
+                        
+                //     });
+                // var oCurrencyDetail = this.getView().byId("currencyDetail");
+                //var oInput1 = this.getView().byId("input1");
+                this.getView().byId("ipCurCode").setValue("");
+                this.getView().byId("ipScale").setValue("");
+                this.getView().byId("ipExScale").setValue("");                
+                this.getView().byId("ipUseFlag").setValue("");                
+                this.getView().byId("strtDate").setValue("");
+                this.getView().byId("endDate").setValue("");
+
+                //oCurrencyDetail.getBindingContext(). getValue("tenant_id");
+                
 
             },
 

@@ -99,6 +99,10 @@ modules:
       - msgMgr-content.zip
       name: msgMgr
       target-path: resources/
+    - artifacts:
+      - hrEmployeeMgr-content.zip
+      name: hrEmployeeMgr
+      target-path: resources/
 - name: sampleMstMgr
   type: html5
   path: app/xx/sampleMstMgr
@@ -158,6 +162,14 @@ modules:
 - name: msgMgr
   type: html5
   path: app/cm/msgMgr
+  build-parameters:
+    builder: custom
+    commands:
+    - npm run build
+    supported-platforms: []
+- name: hrEmployeeMgr
+  type: html5
+  path: app/cm/hrEmployeeMgr
   build-parameters:
     builder: custom
     commands:

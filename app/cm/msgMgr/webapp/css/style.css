@@ -3,3 +3,10 @@
 
 .sapFDynamicPageAlignContent
 {margin-bottom: 0.8em;}
+
+.sapMInputBaseReadonlyWrapper, .sapMInputBaseDisabledWrapper {
+     background: none ; 
+     border: none;
+     color: #333333;
+}
+     
