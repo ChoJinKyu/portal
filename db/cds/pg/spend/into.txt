@@ -1,0 +1,4 @@
+// 구매 거버넌스>품목별 spend 분석 / 구매기준정보 관리 Model
+   cds deploy --to hana:sppDb_hdi_dev
+
+   git config credential.helper store

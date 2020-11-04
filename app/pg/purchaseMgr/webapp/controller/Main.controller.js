@@ -32,8 +32,10 @@ sap.ui.define([
     "sap/m/Label",
     "sap/ui/core/Fragment",
     "sap/ui/core/util/MockServer",
-    "sap/ui/model/odata/v2/ODataModel"
-    ], function ( MessageBox, MessageToast,  Controller, Filter, FilterOperator, FilterType, Sorter, JSONModel, Token, MessageStrip, InvisibleMessage, library, compLibrary, SearchField, ColumnListItem, typeString, Label, Fragment, MockServer, ODataModel) {
+    "sap/ui/model/odata/v2/ODataModel",
+	"sap/m/UploadCollectionParameter",
+	"sap/ui/core/format/FileSizeFormat"    
+    ], function ( MessageBox, MessageToast,  Controller, Filter, FilterOperator, FilterType, Sorter, JSONModel, Token, MessageStrip, InvisibleMessage, library, compLibrary, SearchField, ColumnListItem, typeString, Label, Fragment, MockServer, ODataModel, UploadCollectionParameter, FileSizeFormat) {
     "use strict";
     
     var InvisibleMessageMode = library.InvisibleMessageMode;
@@ -82,6 +84,29 @@ sap.ui.define([
 
             console.groupEnd();
         },   
+
+        /**
+         * Initial UploadCollection
+         * @private
+         */
+        _upcollection : function() {
+			var sPath;
+
+			// set mock data
+			sPath = sap.ui.require.toUrl("uploadCollection.json");
+			this.getView().setModel(new JSONModel(sPath));
+
+			// Sets the text to the label
+			this.byId("UploadCollection").addEventDelegate({
+				onBeforeRendering: function() {
+					this.byId("attachmentTitle").setText(this.getAttachmentTitleText());
+				}.bind(this)
+			});
+
+			this.bIsUploadVersion = false;            
+        },
+
+
 
         /**
          * Note : controller.js 내부에서 사용될 메세지를 정의 합니다. (i18n 구성이후 변경)
@@ -563,11 +588,177 @@ sap.ui.define([
         },
 
 
-         /** ------------------------------------------------------------
-         * Search Control
-         * -------------------------------------------------------------
-         */
+        /** ------------------------------------------------------------
+        * Search Control
+        * -------------------------------------------------------------
+        */
 
+        /** ------------------------------------------------------------
+        * UploadCollection Control
+        * 하기 내용은 API 내용을 그대로 참조
+        * -------------------------------------------------------------
+        */
+		formatAttribute: function(sValue, sType) {
+			if (sType === "size") {
+				return FileSizeFormat.getInstance({
+					binaryFilesize: false,
+					maxFractionDigits: 1,
+					maxIntegerDigits: 3
+				}).format(sValue);
+			} else {
+				return sValue;
+			}
+		},
+
+		onChange: function(oEvent) {
+			var oUploadCollection = oEvent.getSource();
+			// Header Token
+			var oCustomerHeaderToken = new UploadCollectionParameter({
+				name: "x-csrf-token",
+				value: "securityTokenFromModel"
+			});
+			oUploadCollection.addHeaderParameter(oCustomerHeaderToken);
+
+		},
+
+		onFileSizeExceed: function(oEvent) {
+			MessageToast.show("FileSizeExceed event triggered.");
+		},
+
+		onTypeMissmatch: function(oEvent) {
+			MessageToast.show("TypeMissmatch event triggered.");
+		},
+
+		onUploadComplete: function(oEvent) {
+			// If the upload is triggered by a new version, this function updates the metadata of the old file and deletes the progress indicator once the upload was finished.
+			if (this.bIsUploadVersion) {
+				this.updateFile(oEvent.getParameters());
+			} else {
+				var oData = this.byId("UploadCollection").getModel().getData();
+				var aItems = deepExtend({}, oData).items;
+				var oItem = {};
+				var sUploadedFile = oEvent.getParameter("files")[0].fileName;
+				// at the moment parameter fileName is not set in IE9
+				if (!sUploadedFile) {
+					var aUploadedFile = (oEvent.getParameters().getSource().getProperty("value")).split(/\" "/);
+					sUploadedFile = aUploadedFile[0];
+				}
+				oItem = {
+					"documentId": Date.now().toString(), // generate Id,
+					"fileName": sUploadedFile,
+					"mimeType": "",
+					"thumbnailUrl": "",
+					"url": "",
+					"attributes": [
+						{
+							"title": "Uploaded By",
+							"text": "You"
+						},
+						{
+							"title": "Uploaded On",
+							"text": new Date().toLocaleDateString()
+						},
+						{
+							"title": "File Size",
+							"text": "505000"
+						},
+						{
+							"title": "Version",
+							"text": "1"
+						}
+					]
+				};
+				aItems.unshift(oItem);
+				this.byId("UploadCollection").getModel().setData({
+					"items": aItems
+				});
+				// Sets the text to the label
+				this.byId("attachmentTitle").setText(this.getAttachmentTitleText());
+			}
+
+			// delay the success message for to notice onChange message
+			setTimeout(function() {
+				MessageToast.show("UploadComplete event triggered.");
+			}, 4000);
+		},
+
+		onBeforeUploadStarts: function(oEvent) {
+			// Header Slug
+			var oCustomerHeaderSlug = new UploadCollectionParameter({
+				name: "slug",
+				value: oEvent.getParameter("fileName")
+			});
+			oEvent.getParameters().addHeaderParameter(oCustomerHeaderSlug);
+			MessageToast.show("BeforeUploadStarts event triggered.");
+		},
+
+		getAttachmentTitleText: function() {
+			var aItems = this.byId("UploadCollection").getItems();
+			return "Uploaded (" + aItems.length + ")";
+		},
+
+		onDownloadItem: function() {
+			var oUploadCollection = this.byId("UploadCollection");
+			var aSelectedItems = oUploadCollection.getSelectedItems();
+			if (aSelectedItems) {
+				for (var i = 0; i < aSelectedItems.length; i++) {
+					oUploadCollection.downloadItem(aSelectedItems[i], true);
+				}
+			} else {
+				MessageToast.show("Select an item to download");
+			}
+		},
+
+		onVersion: function() {
+			var oUploadCollection = this.byId("UploadCollection");
+			this.bIsUploadVersion = true;
+			this.oItemToUpdate = oUploadCollection.getSelectedItem();
+			oUploadCollection.openFileDialog(this.oItemToUpdate);
+		},
+
+		onSelectionChange: function() {
+			var oUploadCollection = this.byId("UploadCollection");
+			// If there's any item selected, sets download button enabled
+			if (oUploadCollection.getSelectedItems().length > 0) {
+				this.byId("downloadButton").setEnabled(true);
+				if (oUploadCollection.getSelectedItems().length === 1) {
+					this.byId("versionButton").setEnabled(true);
+				} else {
+					this.byId("versionButton").setEnabled(false);
+				}
+			} else {
+				this.byId("downloadButton").setEnabled(false);
+				this.byId("versionButton").setEnabled(false);
+			}
+		},
+
+		updateFile: function() {
+			var oData = this.byId("UploadCollection").getModel().getData();
+			var aItems = deepExtend({}, oData).items;
+			// Adds the new metadata to the file which was updated.
+			for (var i = 0; i < aItems.length; i++) {
+				if (aItems[i].documentId === this.oItemToUpdate.getDocumentId()) {
+					// Uploaded by
+					aItems[i].attributes[0].text = "You";
+					// Uploaded on
+					aItems[i].attributes[1].text = new Date().toLocaleDateString();
+					// Version
+					var iVersion = parseInt(aItems[i].attributes[3].text);
+					iVersion++;
+					aItems[i].attributes[3].text = iVersion;
+				}
+			}
+			// Updates the model.
+			this.byId("UploadCollection").getModel().setData({
+				"items": aItems
+			});
+			// Sets the flag back to false.
+			this.bIsUploadVersion = false;
+			this.oItemToUpdate = null;
+		},
+
+
+         
         /**
          * system function
          * @private

@@ -118,7 +118,8 @@ xmlns:mvc="sap.ui.core.mvc"
                                         }
                                     }"
                                 visibleRowCount="15"      
-                                rowSelectionChange = ".onCheck"    
+                                rowSelectionChange = ".onCheck"   
+                                cellClick = ".onCellClick" 
                             >
                                 <table:extension>
 									<OverflowToolbar class="sapFDynamicPageAlignContent">
@@ -131,7 +132,7 @@ xmlns:mvc="sap.ui.core.mvc"
 								    </OverflowToolbar>
 								</table:extension>                                
                                 <table:columns>
-								    <table:Column  width="12rem" hAlign="Center" >                                        
+								    <table:Column  width="8rem" hAlign="Center" >                                        
                                             <Label text="{i18n>TblHdTenant_id}"/>           
 										<table:template>
 											<Input id="input_tenant_id" value="{tenant_id}" 
@@ -145,7 +146,7 @@ xmlns:mvc="sap.ui.core.mvc"
                                 </table:columns> 
 
                                 <table:columns>
-								    <table:Column  width="12rem" hAlign="Center" >                                        
+								    <table:Column  width="10rem" hAlign="Center" >                                        
                                             <Label text="{i18n>TblHdMessage_code}"/>           
 										<table:template>
 											<Input id="input_Message_code" value="{message_code}"
@@ -160,7 +161,7 @@ xmlns:mvc="sap.ui.core.mvc"
 
   
                                 <table:columns>
-								    <table:Column  width="12rem" hAlign="Center" >
+								    <table:Column  width="10rem" hAlign="Center" >
                                             <Label text="{i18n>TblHdLanguage_code}"/>           
 										<table:template>
 											<ComboBox   id="search_languageE_code"
@@ -181,7 +182,7 @@ xmlns:mvc="sap.ui.core.mvc"
                                 </table:columns>
                                                               
                                 <table:columns>
-								    <table:Column  width="12rem" hAlign="Center" >                                        
+								    <table:Column  width="10rem" hAlign="Center" >                                        
                                             <Label text="{i18n>TblHdChain_code}"/>           
 										<table:template>
                                             <ComboBox id="comboBoxE_chain_code"
@@ -207,7 +208,7 @@ xmlns:mvc="sap.ui.core.mvc"
                                 </table:columns>
 
                                 <table:columns>
-								    <table:Column  width="12rem" hAlign="Center" >                                        
+								    <table:Column  width="10rem" hAlign="Center" >                                        
                                             <Label text="{i18n>TblHdMessage_type_code}"/>           
 										<table:template>
 											<Input id="input_message_type_code" value="{message_type_code}" 
@@ -224,23 +225,28 @@ xmlns:mvc="sap.ui.core.mvc"
 
 
                                 <table:columns>
-								    <table:Column  width="12rem" hAlign="Center" >                                        
-                                            <Label text="{i18n>TblHdMessage_contents}"/>           
+								    <table:Column  width="20rem" hAlign="Center" >                                        
+                                        <Label text="{i18n>TblHdMessage_contents}"/>  
 										<table:template>
 											<Input class="msgMgrInput" id="input_Message_contents" value="{message_contents}"
                                                                         enabled="{=%{parts: [
                                                                             {path: 'message_contents'},
                                                                             {path: 'update_user_id'},
                                                                             {path: 'ui>/bEvent'}]
-                                                                            ,formatter: '.formatter.setStatus'}}" /> 
-										</table:template>
+                                                                            ,formatter: '.formatter.setStatus'}}"
+<<<<<<< HEAD
+=======
+                                                    liveChange = ".OnLiveChange"                        
+>>>>>>> 753a59f591c514307cbd8c3a8ecba3882a5aac16
+                                                    />                                        
+                                        </table:template>                                        
 									</table:Column>
                                 </table:columns>
 
                                
 
                                 <table:columns>
-								    <table:Column  width="12rem" hAlign="Center" >                                        
+								    <table:Column  width="10rem" hAlign="Center" >                                        
                                             <Label text="{i18n>TblHdUpdate_user_id}"/>           
 										<table:template>
 											<Label id="input_Update_user_id" text="{create_user_id}"/> 
@@ -249,16 +255,15 @@ xmlns:mvc="sap.ui.core.mvc"
                                 </table:columns>
 
                                 <table:columns>
-								    <table:Column  width="20rem" hAlign="Center" >                                        
-                                            <Label text="{i18n>TblHdSystem_update_dtm}"/>           
+								    <table:Column  width="15rem" hAlign="Center" >                                        
+                                         <Label text="{i18n>TblHdSystem_update_dtm}"/>           
 										<table:template>
 											<Label id="input_System_update_dtm" text="{system_update_dtm}"/> 
 										</table:template>
 									</table:Column>
                                 </table:columns>
 
-                             
-
+                               
                             </table:Table>
                         </VBox>
 					</f:content>

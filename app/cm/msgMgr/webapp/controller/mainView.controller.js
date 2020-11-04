@@ -41,7 +41,8 @@ sap.ui.define([
                 this.sucessSave = "저장이 성공 하였습니다.";
                 this.noChangeContent = "수정한 내용이 없습니다.";
                 this.confirmSave = "저장 하시 겠습니까?";
-                this.confirmSaveTitle = "저장 확인";                
+                this.confirmSaveTitle = "저장 확인";       
+                this.sUpdate_user_id = "" ;        
                 console.groupEnd();
             },
 
@@ -511,7 +512,7 @@ sap.ui.define([
                     if (oTable.isIndexSelected(idx)) { 
                         that.getView().setBusy(true);
                             rows[idx].getRowBindingContext().setProperty("update_user_id", "M");
-                        oTable.getContextByIndex(idx);
+                        //oTable.getContextByIndex(idx);
                         that.getView().setBusy(false);
                     }
                 }
@@ -519,7 +520,58 @@ sap.ui.define([
                 this.getView().setBusy(false);
 
                 console.groupEnd();
-            },  
+            },
+            
+            OnClick : function(oEvent) {
+               
+            },
+
+            onCellClick(oEvent)
+            {
+                console.group("onCellClick");
+                 var oTable = this.byId("mainList"),     
+                      that = this,
+                      oBinding = oTable.getBinding("rows"),                    
+                      rows = oTable.getRows(), 
+                      oUiModel = this.getModel("ui");
+
+                 
+
+                
+                if (rows[oEvent.mParameters.rowIndex].getRowBindingContext() === null)
+                {
+                      return;
+                }
+
+                oUiModel.setProperty("/bEvent", "ModifyRow"); 
+
+                that.getView().setBusy(true);
+
+                    if (rows[oEvent.mParameters.rowIndex].getRowBindingContext().getValue("update_user_id") === 'M')              
+                    {
+                        rows[oEvent.mParameters.rowIndex].getRowBindingContext().setProperty("update_user_id", "Modify");
+                    }
+                    else
+                    {
+                        switch (oEvent.mParameters.columnIndex)
+                        {
+                            case "3" :
+                            case "4" :
+                            case "5" :
+                                 this.sUpdate_user_id = "Modify" ;
+                                 rows[oEvent.mParameters.rowIndex].getRowBindingContext().setProperty("update_user_id", "M");
+                            default :
+                        }                       
+                    }
+   
+
+                that.getView().setBusy(false);
+     
+                console.groupEnd();     
+            },
+            OnLiveChange(oEvent){
+                var sNewValue = oEvent.getParameter("value");
+            },
 
             /**
              * @public

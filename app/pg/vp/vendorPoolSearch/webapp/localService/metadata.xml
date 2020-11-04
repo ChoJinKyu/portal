@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+    <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="pg.VpSearchService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="vPSearchView" EntityType="pg.VpSearchService.vPSearchView"/>
+      </EntityContainer>
+      <EntityType Name="vPSearchView">
+        <Property Name="evaluation_operation_unit_code" Type="Edm.String" MaxLength="30"/>
+        <Property Name="evaluation_operation_unit_name" Type="Edm.String" MaxLength="12"/>
+        <Property Name="vendor_pool_level1_name" Type="Edm.String"/>
+        <Property Name="vendor_pool_level2_name" Type="Edm.String"/>
+        <Property Name="vendor_pool_level3_name" Type="Edm.String"/>
+        <Property Name="vendor_pool_level4_name" Type="Edm.String"/>
+        <Property Name="vendor_pool_level5_name" Type="Edm.String"/>
+        <Property Name="inp_type_code" Type="Edm.String" MaxLength="30"/>
+        <Property Name="inp_type_name" Type="Edm.String" MaxLength="240"/>
+        <Property Name="equipment_grade_code" Type="Edm.String" MaxLength="30"/>
+        <Property Name="equipment_type_code" Type="Edm.String" MaxLength="30"/>
+        <Property Name="vendor_code" Type="Edm.String" MaxLength="15"/>
+        <Property Name="vendor_local_name" Type="Edm.String" MaxLength="240"/>
+        <Property Name="vendor_english_name" Type="Edm.String" MaxLength="240"/>
+        <Property Name="company_name" Type="Edm.String" MaxLength="240"/>
+        <Property Name="vendor_type_name" Type="Edm.String" MaxLength="240"/>
+        <Property Name="supplier_flag" Type="Edm.Boolean"/>
+        <Property Name="maker_flag" Type="Edm.Boolean"/>
+        <Property Name="vendor_status_name" Type="Edm.String" MaxLength="240"/>
+        <Property Name="evaluation_control_flag" Type="Edm.Boolean"/>
+        <Property Name="evaluation_control_start_date" Type="Edm.String" MaxLength="8"/>
+        <Property Name="evaluation_control_end_date" Type="Edm.String" MaxLength="8"/>
+        <Property Name="rm_control_flag" Type="Edm.Boolean"/>
+        <Property Name="sd_exception_flag" Type="Edm.Boolean"/>
+        <Property Name="vendor_pool_exception_flag" Type="Edm.Boolean"/>
+        <Property Name="repr_department_code" Type="Edm.String" MaxLength="50"/>
+        <Property Name="repr_department_name" Type="Edm.String" MaxLength="240"/>
+        <Property Name="managers_name" Type="Edm.String"/>
+      </EntityType>
+      <Annotations Target="pg.VpSearchService.vPSearchView/evaluation_operation_unit_code">
+        <Annotation Term="Common.Label" String="평가운영단위코드"/>
+      </Annotations>
+      <Annotations Target="pg.VpSearchService.vPSearchView/evaluation_operation_unit_name">
+        <Annotation Term="Common.Label" String="평가운영단위"/>
+      </Annotations>
+      <Annotations Target="pg.VpSearchService.vPSearchView/vendor_pool_level1_name">
+        <Annotation Term="Common.Label" String="V/P(Level1)"/>
+      </Annotations>
+      <Annotations Target="pg.VpSearchService.vPSearchView/vendor_pool_level2_name">
+        <Annotation Term="Common.Label" String="V/P(Level2)"/>
+      </Annotations>
+      <Annotations Target="pg.VpSearchService.vPSearchView/vendor_pool_level3_name">
+        <Annotation Term="Common.Label" String="V/P(Level3)"/>
+      </Annotations>
+      <Annotations Target="pg.VpSearchService.vPSearchView/vendor_pool_level4_name">
+        <Annotation Term="Common.Label" String="V/P(Level4)"/>
+      </Annotations>
+      <Annotations Target="pg.VpSearchService.vPSearchView/vendor_pool_level5_name">
+        <Annotation Term="Common.Label" String="V/P(Level5)"/>
+      </Annotations>
+      <Annotations Target="pg.VpSearchService.vPSearchView/inp_type_code">
+        <Annotation Term="Common.Label" String="품목속성코드"/>
+      </Annotations>
+      <Annotations Target="pg.VpSearchService.vPSearchView/inp_type_name">
+        <Annotation Term="Common.Label" String="품목속성"/>
+      </Annotations>
+      <Annotations Target="pg.VpSearchService.vPSearchView/equipment_grade_code">
+        <Annotation Term="Common.Label" String="심의등급"/>
+      </Annotations>
+      <Annotations Target="pg.VpSearchService.vPSearchView/equipment_type_code">
+        <Annotation Term="Common.Label" String="장비구분"/>
+      </Annotations>
+      <Annotations Target="pg.VpSearchService.vPSearchView/vendor_code">
+        <Annotation Term="Common.Label" String="협력사 코드"/>
+      </Annotations>
+      <Annotations Target="pg.VpSearchService.vPSearchView/vendor_local_name">
+        <Annotation Term="Common.Label" String="협력사 명"/>
+      </Annotations>
+      <Annotations Target="pg.VpSearchService.vPSearchView/vendor_english_name">
+        <Annotation Term="Common.Label" String="협력사 영문명"/>
+      </Annotations>
+      <Annotations Target="pg.VpSearchService.vPSearchView/company_name">
+        <Annotation Term="Common.Label" String="법인명"/>
+      </Annotations>
+      <Annotations Target="pg.VpSearchService.vPSearchView/vendor_type_name">
+        <Annotation Term="Common.Label" String="분류"/>
+      </Annotations>
+      <Annotations Target="pg.VpSearchService.vPSearchView/supplier_flag">
+        <Annotation Term="Common.Label" String="공급유형(Supplier)"/>
+      </Annotations>
+      <Annotations Target="pg.VpSearchService.vPSearchView/maker_flag">
+        <Annotation Term="Common.Label" String="공급유형(Maker)"/>
+      </Annotations>
+      <Annotations Target="pg.VpSearchService.vPSearchView/vendor_status_name">
+        <Annotation Term="Common.Label" String="거래상태"/>
+      </Annotations>
+      <Annotations Target="pg.VpSearchService.vPSearchView/evaluation_control_flag">
+        <Annotation Term="Common.Label" String="평가통제"/>
+      </Annotations>
+      <Annotations Target="pg.VpSearchService.vPSearchView/evaluation_control_start_date">
+        <Annotation Term="Common.Label" String="평가통제시작"/>
+      </Annotations>
+      <Annotations Target="pg.VpSearchService.vPSearchView/evaluation_control_end_date">
+        <Annotation Term="Common.Label" String="평가통제종료"/>
+      </Annotations>
+      <Annotations Target="pg.VpSearchService.vPSearchView/rm_control_flag">
+        <Annotation Term="Common.Label" String="RM통제"/>
+      </Annotations>
+      <Annotations Target="pg.VpSearchService.vPSearchView/sd_exception_flag">
+        <Annotation Term="Common.Label" String="SD예외"/>
+      </Annotations>
+      <Annotations Target="pg.VpSearchService.vPSearchView/vendor_pool_exception_flag">
+        <Annotation Term="Common.Label" String="V/P예외"/>
+      </Annotations>
+      <Annotations Target="pg.VpSearchService.vPSearchView/repr_department_code">
+        <Annotation Term="Common.Label" String="구매부서코드"/>
+      </Annotations>
+      <Annotations Target="pg.VpSearchService.vPSearchView/repr_department_name">
+        <Annotation Term="Common.Label" String="구매부서"/>
+      </Annotations>
+      <Annotations Target="pg.VpSearchService.vPSearchView/managers_name">
+        <Annotation Term="Common.Label" String="담당자"/>
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

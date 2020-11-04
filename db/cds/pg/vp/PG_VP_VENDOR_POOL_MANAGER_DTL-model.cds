@@ -1,16 +1,16 @@
 namespace pg;
-
+ 
 using { User } from '@sap/cds/common';
 using {pg as mst} from './PG_VP_VENDOR_POOL_MST-model';
 	
-entity Vendor_Pool_Manager_Dtl {	
+entity Vp_Vendor_Pool_Manager_Dtl {	
     key tenant_id : String(5) not null @title: '테넌트ID';
     key company_code : String(10) not null @title: '회사코드';
     key operation_org_type_code : String(30) not null @title: '운영조직유형코드';
     key operation_org_code : String(30) not null @title: '운영조직코드';
     key vendor_pool_code : String(30) not null @title: '협력사풀코드';
     
-    ref : Association to mst.Vendor_Pool_Mst on ref.tenant_id = tenant_id and 
+    ref : Association to mst.Vp_Vendor_Pool_Mst on ref.tenant_id = tenant_id and 
                                                 ref.company_code = company_code and 
                                                 ref.operation_org_type_code = operation_org_type_code and
                                                 ref.operation_org_code = operation_org_code and

@@ -1,8 +1,8 @@
 namespace pg;	
-
+ 
 using { User } from '@sap/cds/common';	
 	
-entity Vendor_Pool_Mst {	
+entity Vp_Vendor_Pool_Mst {	
     key tenant_id : String(5)  not null @title: '테넌트ID';	
     key company_code : String(10) not null @title: '회사코드';
     key operation_org_type_code : String(30) not null @title: '운영조직유형코드';

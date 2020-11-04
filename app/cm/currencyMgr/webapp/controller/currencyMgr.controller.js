@@ -297,6 +297,7 @@ sap.ui.define([
             },
 
 			onLngAddRow : function () {
+                var utcDate = this._getUtcSapDate();
                 
                 var dtlVal = this._retrieveParam.dtlParam;
 
@@ -305,9 +306,12 @@ sap.ui.define([
                         "tenant_id" : dtlVal.tenant_id,
                         "currency_code" : dtlVal.currency_code,
                         "language_code" : "",
+                        "currency_code_name" : "",
                         "currency_code_desc" : "",
                         "currency_prefix" : "",
-                        "currency_suffix" : ""
+                        "currency_suffix" : "",
+                        "local_create_dtm" : utcDate,
+                        "local_update_dtm" : utcDate
                         
                     });
 
@@ -391,7 +395,18 @@ sap.ui.define([
                 this.getView().setBusy(true);
                 dtlBinding.refresh();
                 this.getView().setBusy(false);
-            },           
+            },
+            
+            _getUtcSapDate : function(){
+                var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+                    pattern: "yyyy-MM-dd'T'HH:mm"
+                });
+                
+                var oNow = new Date();
+                var utcDate = oDateFormat.format(oNow)+":00Z"; 
+                console.log("utcDate",utcDate);
+                return utcDate;
+            },
 
 			onDtlUpdateFinished : function (oEvent) {
                 

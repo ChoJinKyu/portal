@@ -23,6 +23,14 @@
           "odataVersion": "4.0",
           "localUri": "localService/metadata.xml"
         }
+      },
+      "countryMgrSources": {
+        "uri" : "../../../cm/countryMgr/srv-api/odata/v4/cm.CountryMgrService/",
+        "type": "OData",
+        "settings": {
+        "odataVersion": "4.0",
+        "localUri": "localService/metadata.xml"
+        }
       }
     }
   },
@@ -82,7 +90,18 @@
           "synchronizationMode": "None",
           "autoExpandSelect": true
         }
+      },
+      "country" : {
+        "dataSource": "countryMgrSources",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "groupId": "$direct",
+          "synchronizationMode": "None",
+          "autoExpandSelect": true
+        }
       }
+
     },
     "resources": {
       "css": [

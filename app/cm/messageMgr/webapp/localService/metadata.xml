@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+    <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="cm.MsgMgrService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="Message" EntityType="cm.MsgMgrService.Message"/>
+      </EntityContainer>
+      <EntityType Name="Message">
+        <Key>
+          <PropertyRef Name="tenant_id"/>
+          <PropertyRef Name="message_code"/>
+          <PropertyRef Name="language_code"/>
+        </Key>
+        <Property Name="tenant_id" Type="Edm.String" MaxLength="5" Nullable="false"/>
+        <Property Name="message_code" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="language_code" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="chain_code" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="message_type_code" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="message_contents" Type="Edm.String" MaxLength="1000" Nullable="false"/>
+        <Property Name="local_create_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+        <Property Name="local_update_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+        <Property Name="create_user_id" Type="Edm.String" MaxLength="255" Nullable="false"/>
+        <Property Name="update_user_id" Type="Edm.String" MaxLength="255" Nullable="false"/>
+        <Property Name="system_create_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+        <Property Name="system_update_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+      </EntityType>
+      <Annotations Target="cm.MsgMgrService.Message/create_user_id">
+        <Annotation Term="Common.Label" String="{i18n>UserID}"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+      </Annotations>
+      <Annotations Target="cm.MsgMgrService.Message/update_user_id">
+        <Annotation Term="Common.Label" String="변경사용자ID"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+      </Annotations>
+      <Annotations Target="cm.MsgMgrService.Message/system_create_dtm">
+        <Annotation Term="Common.Label" String="시스템등록시간"/>
+      </Annotations>
+      <Annotations Target="cm.MsgMgrService.Message/system_update_dtm">
+        <Annotation Term="Common.Label" String="시스템수정시간"/>
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

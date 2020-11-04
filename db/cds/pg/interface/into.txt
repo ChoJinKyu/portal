@@ -1,0 +1,4 @@
+// 구매 거버넌스>외부 시스템 interface
+   cds deploy --to hana:sppDb_hdi_dev
+
+   git config credential.helper store

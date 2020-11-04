@@ -1,0 +1,4 @@
+// 구매 거버넌스>모니터링 관리
+   cds deploy --to hana:sppDb_hdi_dev
+
+   git config credential.helper store

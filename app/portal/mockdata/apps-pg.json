@@ -1,18 +1,18 @@
 {
     "menus": [
         {
-            "name": "Exam1",
+            "name": "모니터링 항목 관리",
             "icon": "sap-icon://source-code",
             "subMenus": [
                 {
                     "name": "App #1",
-                    "url": "../cm/codeMgr/webapp",
-                    "component": "cm.codeMgr"
+                    "url": "../pg/purchaseMgr/webapp",
+                    "component": "pg.purchaseMgr"
                 },
                 {
                     "name": "App #2",
-                    "url": "../cm/controlOptionMgr/webapp",
-                    "component": "cm.controlOptionMgr"
+                    "url": "../pg/purchaseMgr/webap",
+                    "component": "pg.purchaseMgr"
                 }
             ]
         },
@@ -22,13 +22,13 @@
             "subMenus": [
                 {
                     "name": "App #3",
-                    "url": "../cm/codeMgr/webapp",
-                    "component": "cm.codeMgr"
+                    "url": "../pg/purchaseMgr/webap",
+                    "component": "pg.purchaseMgr"
                 },
                 {
                     "name": "App #4",
-                    "url": "../cm/controlOptionMgr/webapp",
-                    "component": "cm.controlOptionMgr"
+                    "url": "../pg/purchaseMgr/webap",
+                    "component": "pg.purchaseMgr"
                 }
             ]
         }
