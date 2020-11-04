@@ -36,6 +36,11 @@
                     "component": "cm.msgMgr"
                 },
                 {
+                    "name": "메시지 관리(Template based)",
+                    "url": "../cm/messageMgr/webapp",
+                    "component": "cm.messageMgr"
+                },
+                {
                     "name": "통화 관리",
                     "url": "../cm/currencyMgr/webapp",
                     "component": "cm.currencyMgr"
@@ -53,11 +58,6 @@
                 },
                 {
                     "name": "SMS 관리",
-                    "url": "../cm/controlOptionMgr/webapp",
-                    "component": "cm.controlOptionMgr"
-                },
-                {
-                    "name": "메시지 관리",
                     "url": "../cm/controlOptionMgr/webapp",
                     "component": "cm.controlOptionMgr"
                 }

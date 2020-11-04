@@ -1,13 +1,13 @@
 {
     "menus": [
         {
-            "name": "Exam1",
+            "name": "Mold",
             "icon": "sap-icon://source-code",
             "subMenus": [
                 {
-                    "name": "App #1",
-                    "url": "../cm/codeMgr/webapp",
-                    "component": "cm.codeMgr"
+                    "name": "Mold Development Receipt",
+                    "url": "../dp/developmentReceipt/webapp",
+                    "component": "dp.developmentReceipt"
                 },
                 {
                     "name": "App #2",

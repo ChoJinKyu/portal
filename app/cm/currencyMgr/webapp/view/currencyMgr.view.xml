@@ -84,11 +84,7 @@
                                 <OverflowToolbar>
                                     <content>
                                         <Title text="통화 코드 목록" level="H2"/>
-                                        <ToolbarSpacer/>
-                                        <!-- <Button text="행추가" icon="sap-icon://add"  type="Accept" press="onMstAddRow"/>
-                                        <Button text="행복사" icon="sap-icon://copy" type="Accept" press="onMstCopyRow"/>
-                                        <Button text="행삭제" icon="sap-icon://delete" type="Reject" press="onMstDeleteRow"/>
-                                        <Button text="저장"   icon="sap-icon://save" type="Attention" press="onMstSave"/> -->
+                                        <ToolbarSpacer/>                                        
                                     </content>
                                 </OverflowToolbar>
                             </headerToolbar>
@@ -265,8 +261,7 @@
                                         <content>
                                             <Title text="다국어" level="H2"/>
                                             <ToolbarSpacer/>
-                                            <Button text="행추가" icon="sap-icon://add"  type="Accept" press="onLngAddRow"/>
-                                            <Button text="행복사" icon="sap-icon://copy" type="Accept" press="onLngCopyRow"/>
+                                            <Button text="행추가" icon="sap-icon://add"  type="Accept" press="onLngAddRow"/>                                            
                                             <Button text="행삭제" icon="sap-icon://delete" type="Reject" press="onLngDeleteRow"/>
                                             <Button text="저장"   icon="sap-icon://save" type="Attention" press="onLngSave"/>
                                         </content>
