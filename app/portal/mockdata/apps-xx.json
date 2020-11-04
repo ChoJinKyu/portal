@@ -1,0 +1,37 @@
+{
+    "menus": [
+        {
+            "name": "Sample",
+            "icon": "sap-icon://source-code",
+            "subMenus": [
+                {
+                    "name": "Sample Mgr",
+                    "url": "../xx/sampleMgr/webapp",
+                    "component": "xx.sampleMgr"
+                },
+                {
+                    "name": "Sample Grp mgr",
+                    "url": "../xx/sampleGrpMgr/webapp",
+                    "component": "xx.sampleGrpMgr"
+                },
+                {
+                    "name": "Sample Mst Mgr",
+                    "url": "../xx/sampleMstMgr/webapp",
+                    "component": "xx.sampleMstMgr"
+                }
+            ]
+        },
+        {
+            "name": "Example",
+            "icon": "sap-icon://locate-me",
+            "subMenus": [
+                {
+                    "name": "UI5 Example #1",
+                    "url": "../xx/ui5Examples/webapp",
+                    "component": "xx.ui5Examples"
+                }
+            ]
+        }
+    ]
+    
+}

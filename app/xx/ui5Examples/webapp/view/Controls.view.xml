@@ -1,0 +1,19 @@
+<mvc:View controllerName="xx.ui5Examples.controller.Controls" displayBlock="true" 
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns:lib-m="ext.lib.m"
+    xmlns="sap.m">
+	<Shell id="shell">
+		<App id="app">
+			<pages>
+                <Page id="listPage" title="{i18n>title}" showNavButton="true" navButtonPress="onNavBack">
+                    <content>
+                        <VBox>
+                            <lib-m:CodeInput placeholder="Choose One"/>
+                            <Input showValueHelp="true" valueHelpRequest=".onValueHelpRequest"></Input>
+                        </VBox>
+                    </content>
+                </Page>
+			</pages>
+		</App>
+	</Shell>
+</mvc:View>

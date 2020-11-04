@@ -98,6 +98,7 @@ modules:
     - artifacts:
       - sampleTemplate-content.zip
       name: sampleTemplate
+    - artifacts:
       - timeZoneMgr-content.zip
       name: timeZoneMgr
       target-path: resources/
@@ -116,6 +117,10 @@ modules:
     - artifacts:
       - detailSpecEntry-content.zip
       name: detailSpecEntry
+      target-path: resources/
+    - artifacts:
+      - orgMgr-content.zip
+      name: orgMgr
       target-path: resources/
 - name: sampleMstMgr
   type: html5
@@ -211,6 +216,14 @@ modules:
 - name: detailSpecEntry
   type: html5
   path: app/dp/detailSpecEntry
+  build-parameters:
+    builder: custom
+    commands:
+    - npm run build
+    supported-platforms: []
+- name: orgMgr
+  type: html5
+  path: app/cm/orgMgr
   build-parameters:
     builder: custom
     commands:

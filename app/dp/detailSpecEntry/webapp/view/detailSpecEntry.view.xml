@@ -1,11 +1,216 @@
-<mvc:View controllerName="dp.detailSpecEntry.controller.detailSpecEntry" xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m">
-	<Shell id="shell">
-		<App id="app">
-			<pages>
-				<Page id="page" title="{i18n>title}">
-					<content></content>
-				</Page>
-			</pages>
-		</App>
-	</Shell>
+<mvc:View
+    class="sapUiSizeCompact"
+    controllerName="dp.detailSpecEntry.controller.detailSpecEntry"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:layout="sap.ui.layout"
+    xmlns:table="sap.ui.table"
+    xmlns:form="sap.ui.layout.form"
+    displayBlock="true">
+
+  <!-- <Shell id="shell"> -->
+    <App id="app">
+        <f:DynamicPage id="codeMgrPage" toggleHeaderOnTitleClick="true" headerExpanded="true">
+            <f:title>
+                <f:DynamicPageTitle>
+                    <f:heading>
+                        <Title text="{i18n>title}"/>
+                    </f:heading>
+                </f:DynamicPageTitle>
+            </f:title>
+            <f:header>
+                <f:DynamicPageHeader pinnable="true">
+                    <layout:HorizontalLayout>
+                        <form:Form editable="true" width="100%">
+                            <form:formContainers>
+                                <form:FormContainer>
+                                    <form:formElements>
+                                        <form:FormElement label="Tenant">
+                                            <form:fields>
+                                                <ComboBox   id="search_tenant_id"
+                                                            items="{
+                                                                        path : '/CodeCombo',
+                                                                        filters : [
+                                                                            {path : 'tenant_id', operator : 'EQ', value1 : '1000'},
+                                                                            {path : 'company_code', operator : 'EQ', value1 : 'G100'},
+                                                                            {path : 'group_code', operator : 'EQ', value1 : 'CM_TENANT_CD'},
+                                                                            {path : 'language_cd', operator : 'EQ', value1 : 'KO'}                                                                        
+                                                                        ]
+                                                                    }"
+                                                >
+                                                    <core:Item key="{code}" text="{code_name}" />
+                                                </ComboBox>
+                                            </form:fields>
+                                        </form:FormElement>
+                                        <form:FormElement label="그룹코드">
+                                            <form:fields>
+                                                <Input id="search_group_code" width="100%"/>
+                                            </form:fields>
+                                        </form:FormElement>
+                                    </form:formElements>
+                                </form:FormContainer>
+                                <form:FormContainer>
+                                    <form:formElements>
+                                        <form:FormElement label="Company">
+                                            <form:fields>
+                                                <ComboBox   id="search_company_code"
+                                                            items="{
+                                                                        path : '/CodeCombo',
+                                                                        filters : [
+                                                                            {path : 'tenant_id', operator : 'EQ', value1 : '1000'},
+                                                                            {path : 'company_code', operator : 'EQ', value1 : 'G100'},
+                                                                            {path : 'group_code', operator : 'EQ', value1 : 'CM_COMPANY_CD'},
+                                                                            {path : 'language_cd', operator : 'EQ', value1 : 'KO'}                                                                        
+                                                                        ]
+                                                                    }"
+                                                >
+                                                    <core:Item key="{code}" text="{code_name}" />
+                                                </ComboBox>
+                                            </form:fields>
+                                        </form:FormElement>
+                                        <form:FormElement label="그룹 명">
+                                            <form:fields>
+                                                <Input id="search_group_name" width="100%"/>
+                                            </form:fields>
+                                        </form:FormElement>
+                                    </form:formElements>
+                                </form:FormContainer>
+                                <form:FormContainer>
+                                    <form:formElements>
+                                        <form:FormElement label="Chain">
+                                            <form:fields>
+                                                <ComboBox   id="search_chain_code"
+                                                            items="{
+                                                                        path : '/CodeCombo',
+                                                                        filters : [
+                                                                            {path : 'tenant_id', operator : 'EQ', value1 : '1000'},
+                                                                            {path : 'company_code', operator : 'EQ', value1 : 'G100'},
+                                                                            {path : 'group_code', operator : 'EQ', value1 : 'CM_CHAIN_CD'},
+                                                                            {path : 'language_cd', operator : 'EQ', value1 : 'KO'}                                                                        
+                                                                        ]
+                                                                    }"
+                                                >
+                                                    <core:Item key="{code}" text="{code_name}" />
+                                                </ComboBox>
+                                            </form:fields>
+                                        </form:FormElement>
+                                        <form:FormElement label="그룹 설명">
+                                            <form:fields>
+                                                <Input id="search_group_description" width="100%"/>
+                                            </form:fields>
+                                        </form:FormElement>
+                                    </form:formElements>
+                                </form:FormContainer>
+                                <form:FormContainer>
+                                    <form:formElements>
+                                        <form:FormElement label="사용여부">
+                                            <form:fields>
+                                                <ComboBox   id="search_use_yn"    
+                                                            items="{
+                                                                        path : '/CodeCombo',
+                                                                        filters : [
+                                                                            {path : 'tenant_id', operator : 'EQ', value1 : '1000'},
+                                                                            {path : 'company_code', operator : 'EQ', value1 : 'G100'},
+                                                                            {path : 'group_code', operator : 'EQ', value1 : 'CM_YN'},
+                                                                            {path : 'language_cd', operator : 'EQ', value1 : 'KO'}                                                                        
+                                                                        ]
+                                                                    }"
+                                                >
+                                                    <core:Item key="{code}" text="{code_name}" />
+                                                </ComboBox>
+                                            </form:fields>
+                                        </form:FormElement>
+                                    </form:formElements>
+                                </form:FormContainer>
+                            </form:formContainers>
+                            <form:layout>
+                            <form:ResponsiveGridLayout columnsM="4" columnsL="4" columnsXL="4"/>
+                            </form:layout>
+                        </form:Form>
+                    </layout:HorizontalLayout>
+                    <HBox width="100%" alignItems="Center" alignContent="End" justifyContent="End">
+                        <items>
+                            <Button text="검색" press="onSearch"/>
+                        </items>
+                    </HBox>
+                </f:DynamicPageHeader>
+            </f:header>
+            <f:content>
+                <layout:Splitter orientation="Vertical">
+                        <Table  id="itemSpecTable"
+                                items="{
+                                            path : '/MoldItemSpec'
+                                        }"
+                                mode="MultiSelect"
+                                updateFinished="onItemSpecUpdateFinished"
+                                
+                        >
+                        <layoutData>
+                            <layout:SplitterLayoutData size="95%" />
+                        </layoutData>
+                            <headerToolbar>
+                                <OverflowToolbar>
+                                    <content>
+                                        <Title text="{i18n>itemSpec}" level="H2"/>
+                                        <ToolbarSpacer/>
+                                        <Button text="행추가" icon="sap-icon://add"  type="Accept" press="onMstAddRow"/>
+                                        <Button text="행복사" icon="sap-icon://copy" type="Accept" press="onMstCopyRow"/>
+                                        <Button text="행삭제" icon="sap-icon://delete" type="Reject" press="onMstDeleteRow"/>
+                                        <Button text="저장"   icon="sap-icon://save" type="Attention" press="onMstSave"/>
+                                    </content>
+                                </OverflowToolbar>
+                            </headerToolbar>
+                            <columns>
+                                <Column hAlign="Center" width="100px">
+                                    <header>
+                                        <Label text="사업부코드"/>
+                                    </header>
+                                </Column>
+                                <Column hAlign="Center" width="100px">
+                                    <header>
+                                        <Label text="도번 ID"/>
+                                    </header>
+                                </Column>
+                                <Column hAlign="Center" width="100px">
+                                    <header>
+                                        <Label text="작성자"/>
+                                    </header>
+                                </Column>
+                                <Column hAlign="Center" width="200px">
+                                    <header>
+                                        <Label text="작성일"/>
+                                    </header>
+                                </Column>
+                                <Column hAlign="Center" width="200px">
+                                    <header>
+                                        <Label text="최종 수정자"/>
+                                    </header>
+                                </Column>
+                                <Column hAlign="Center" width="200px">
+                                    <header>
+                                        <Label text="최종 수정일"/>
+                                    </header>
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem type="Active" id="itemSpecColumnListItem" press="onitemSpecTableItemPress">
+                                    <cells>
+                                        <Input id="is_org_code" value="{org_code}"/>
+                                        <Input id="is_item_id" value="{item_id}"/>
+                                        <Text id="is_created_by" text="{created_by}"/>
+                                        <Text id="is_create_date" text="{create_date}"/>
+                                        <Text id="is_last_updated_by" text="{last_updated_by}"/>
+                                        <Text id="is_last_update_date" text="{last_update_date}"/>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+
+                </layout:Splitter>
+            </f:content>
+        </f:DynamicPage>
+    </App>
+  <!-- </Shell> -->
 </mvc:View>

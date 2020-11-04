@@ -1,73 +1,68 @@
 sap.ui.define([
-   "sap/ui/core/mvc/Controller",
-   "sap/ui/core/routing/History",
-   "sap/ui/core/UIComponent",
-   "sap/ui/model/json/JSONModel",
-   "sap/ui/core/format/DateFormat"
-], function (Controller, History, UIComponent, JSONModel, DateFormat) {
-   "use strict";
+  "sap/ui/core/mvc/Controller",
+  "sap/ui/core/routing/History",
+  "sap/ui/core/UIComponent"
+], function(Controller, History, UIComponent, formatter) {
+  "use strict";
 
-   return Controller.extend("cm.currencyMgr.controller.BaseController", {
-		getRouter : function () {
-			return UIComponent.getRouterFor(this);
-		},
+  return Controller.extend("cm.currencyMgr.controller.BaseController", {    
 
-		onNavBack: function () {
-			var oHistory, sPreviousHash;
+    /**
+     * Convenience method for getting the view model by name in every controller of the application.
+     * @public
+     * @param {string} sName the model name
+     * @returns {sap.ui.model.Model} the model instance
+     */
+    getModel: function(sName) {
+      return this.getView().getModel(sName);
+    },
 
-			oHistory = History.getInstance();
-			sPreviousHash = oHistory.getPreviousHash();
+    formatter: formatter,
 
-			if (sPreviousHash !== undefined) {
-				window.history.go(-1);
-			} else {
-				this.getRouter().navTo("home", {}, true /*no history*/);
-			}
-        },
-        
-        isValNull: function (p_val) {
-			if(!p_val || p_val == "" || p_val == null){
-                return true
-            }else{
-                return false;
-            }
-        },
-        
-        gfn_init: function () {
-            this._userInfoModel = new JSONModel({
-                dateValueFormat: "yyyyMMdd",
-                dateDisplayFormat:"yyyy-MM-dd",
-                langCd:"KO"
-            }); 
+    /**
+     * Convenience method for setting the view model in every controller of the application.
+     * @public
+     * @param {sap.ui.model.Model} oModel the model instance
+     * @param {string} sName the model name
+     * @returns {sap.ui.mvc.View} the view instance
+     */
+    setModel: function(oModel, sName) {
+      return this.getView().setModel(oModel, sName);
+    },
 
-            this.getView().setModel(this._userInfoModel, "userInfoModel");
+    /**
+     * Convenience method for getting the resource bundle.
+     * @public
+     * @returns {sap.ui.model.resource.ResourceModel} the resourceModel of the component
+     */
+    getResourceBundle: function() {
+      return this.getOwnerComponent().getModel("i18n").getResourceBundle();
+    },
 
-            sap.ui.getCore().getConfiguration().setLanguage(this.getView().getModel("userInfoModel").getData().langCd);
+    /**
+     * Method for navigation to specific view
+     * @public
+     * @param {string} psTarget Parameter containing the string for the target navigation
+     * @param {mapping} pmParameters? Parameters for navigation
+     * @param {boolean} pbReplace? Defines if the hash should be replaced (no browser history entry) or set (browser history entry)
+     */
+    navTo: function(psTarget, pmParameters, pbReplace) {
+      this.getRouter().navTo(psTarget, pmParameters, pbReplace);
+    },
 
-            sap.ui.getCore().getConfiguration().getFormatSettings().setNumberSymbol("decimal",",");
-            sap.ui.getCore().getConfiguration().getFormatSettings().setNumberSymbol("group"  ,".");
-        },
+    getRouter: function() {
+      return UIComponent.getRouterFor(this);
+    },
 
-        // sap.m.getLocaleData().getNumberSymbol("decimal")
-        // sap.m.getLocaleData().getNumberSymbol("decimal")
-        // sap.m.getLocaleData().getNumberSymbol("group")
+    onNavBack: function() {
+      var sPreviousHash = History.getInstance().getPreviousHash();
 
-        gfn_dateFormatOtoJ : function(p_date){            
-            
-            if(this.isValNull(p_date)){
-                return "";
-            }
-            
-            var v_dateNumber = p_date.replace(/[^0-9]+/g,'');
-            var v_dateNumberInt = parseInt(v_dateNumber);
-            var v_date = new Date(v_dateNumberInt);
-            var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : this.getView().getModel("userInfoModel").getData().dateDisplayFormat });   
-            var dateFormatted = dateFormat.format(v_date);
-            return dateFormatted;
-        }
-
-
-
-   });
+      if (sPreviousHash !== undefined) {
+        window.history.back();
+      } else {
+        this.getRouter().navTo("appHome", {}, true /*no history*/ );
+      }
+    }
+  });
 
 });

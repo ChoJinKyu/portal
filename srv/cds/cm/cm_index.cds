@@ -6,3 +6,5 @@ using from './countryMgr/countryMgr-service';
 using from './timeZoneMgr/timeZoneMgr-service'; 
 using from './hrEmployeeMgr/hrEmployeeMgr-service'; 
 using from './calendarHolidayMgr/calendarHolidayMgr-service';
+using from './orgMgr/orgMgr-service';
+using from './util/util-service';

@@ -1,3 +1,13 @@
+<<<<<<< HEAD
+src/gen/cm*
+src/cm/**
+src/gen/dp*
+src/dp/**
+src/gen/ep*
+src/ep/**
+src/gen/op*
+src/op/**
+=======
 #src/gen/cm*
 #src/cm/**
 #src/gen/dp*
@@ -8,6 +18,7 @@
 #src/mc/**
 #src/gen/op*
 #src/op/**
+>>>>>>> b5dd2ca1523885dedb70aafdc9913bcd4a09f41b
 src/gen/pg*
 src/pg/**
 src/gen/sp*

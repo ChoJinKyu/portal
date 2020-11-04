@@ -1,8 +1,10 @@
-using { dp as itemSpec } from '../../../../db/cds/dp/moldMgt/DP_ITEM_SPEC-model';
+using { dp as moldItem } from '../../../../db/cds/dp/moldMgt/DP_MOLD_ITEM-model';
+using { dp as moldItemSpec } from '../../../../db/cds/dp/moldMgt/DP_MOLD_ITEM_SPEC-model';
 
 namespace dp;
 @path : '/dp.DetailSpecEntryService'
 service DetailSpecEntryService {
 
-    entity ItemSpec as projection on itemSpec.Item_Spec;
+    entity MoldItem as projection on moldItem.Mold_Item;
+    entity MoldItemSpec as projection on moldItemSpec.Mold_Item_Spec;
 }

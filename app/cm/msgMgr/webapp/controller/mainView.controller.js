@@ -364,7 +364,8 @@ sap.ui.define([
                         initialFocus : sap.m.MessageBox.Action.CANCEL,
                         onClose : function(sButton) {
                             if (sButton === MessageBox.Action.OK) {
-                                for (var i = 0; i < indices.length; i++) {
+                                //for (var i = 0; i < indices.length; i++) {
+                                for (var i = indices.length; i >= 0; i--) {
                                     var idx = indices[i];     
                                     if (oTable.isIndexSelected(idx)) { 
                                         that.getView().setBusy(true);
@@ -592,7 +593,8 @@ sap.ui.define([
                 var fnSuccess = function () {
                     oView.setBusy(false);
                     MessageToast.show("저장 되었습니다.");
-                    this.onSearch();
+                    //this.onSearch();
+                    oView.refresh();
                 }.bind(this);
 
                 var fnError = function (oError) {
@@ -653,7 +655,7 @@ sap.ui.define([
                 }.bind(this);
 
                 var fnError = function (oError) {
-                    //this._setBusy(false);
+                    this._setBusy(false);
                     
                     MessageBox.error(oError.message);
                 }.bind(this);

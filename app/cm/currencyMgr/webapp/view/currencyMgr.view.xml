@@ -156,8 +156,8 @@
                                         <Text id="currency_code" text="{currency_code}"/>
                                         <Text id="currency_code_name" text="{currency_code_name}"/>
                                         <Text id="currency_code_desc" text="{currency_code_desc}"/>                                       
-                                        <Text id="scale" text=""/>                                        
-                                        <Text id="extension_scale" text=""/>
+                                        <Text id="scale" text="{scale}"/>                                        
+                                        <Text id="extension_scale" text="{extension_scale}"/>
                                         <Text id="currency_prefix" text="{currency_prefix}"/>
                                         <Text id="currency_suffix" text="{currency_suffix}"/>                                        
                                         <Text id="effective_start_date" text="{effective_start_date}"/>
@@ -178,9 +178,9 @@
                                         <content>
                                             <Title text="통화코드 상세" id="title18" />
                                             <ToolbarSpacer/>
-                                            <Button icon="sap-icon://create" text="신규" press="onCreate" type="Accept" />
-                                            <Button icon="sap-icon://save" text="저장" press="onSave" type="Attention" />
-                                            <Button icon="sap-icon://delete" text="삭제" press="onDelete" type="Reject" />                                           
+                                            <Button icon="sap-icon://create" text="신규" press="onCreate" type="Accept" />                                            
+                                            <Button icon="sap-icon://delete" text="삭제" press="onDelete" type="Reject" />
+                                            <Button icon="sap-icon://save" text="저장" press="onSave" type="Attention" />                                           
                                         </content>
                                     </Toolbar>
                                 </form:toolbar>
