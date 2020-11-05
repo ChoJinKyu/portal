@@ -1,11 +1,17 @@
 namespace dp;
 
-using {User} from '@sap/cds/common';
+using util from '../../util/util-model';
+using { dp as spec } from './DP_MOLD_ITEM_SPEC-model';
 
 entity Mold_Item {
-    affiliate_code               : String(4) not null  @title         : '관계사 지사코드';
-    org_code                     : String(3) not null  @title         : '사업부코드';
-    item_id                      : Integer64 not null  @title         : '도번 id';
+    key affiliate_code               : String(4) not null  @title         : '관계사 지사코드';
+    key org_code                     : String(3) not null  @title         : '사업부코드';
+    key item_id                      : Integer64 not null  @title         : '도번 id';
+
+    children: Composition of one spec.Mold_Item_Spec
+        on children.org_code = org_code 
+        and children.item_id = item_id;
+
     part_no                      : String(50) not null @title         : '품번(도번)명';
     item_seq                     : Integer not null    @title         : '차수 ( 1호 금형, 2호 금형.....)';
     description                  : String(200)         @title         : '품명';
@@ -63,10 +69,6 @@ entity Mold_Item {
     clear_expect_date            : String(8)           @title         : '정리예정일(저장품)';
     prod_vendor_id               : Integer             @title         : '양산처';
     remarks                      : String(4000)        @title         : '비고';
-    created_by                   : User not null       @cds.on.insert : $user  @title         : '작성자';
-    create_date                  : DateTime not null   @cds.on.insert : $now  @title          : '작성일';
-    last_updated_by              : User not null       @cds.on.insert : $user  @cds.on.update : $user  @title : '최종수정자';
-    last_update_date             : DateTime not null   @cds.on.insert : $now  @cds.on.update  : $now  @title  : '최종수정일';
     assets_flag                  : String(20)          @title         : '자산구분:Y- 부외자산';
     make_group                   : String(30)          @title         : '제품군(제품군2)';
     conversion_flag              : String(1)           @title         : 'conversion구분:Y-CONVERSION DATE';
@@ -141,3 +143,5 @@ entity Mold_Item {
     buyer_asset_type             : String(1)           @title         : '';
 
 }
+
+extend Mold_Item with util.Managed;

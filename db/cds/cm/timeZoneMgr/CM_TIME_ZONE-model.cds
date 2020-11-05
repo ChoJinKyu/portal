@@ -1,4 +1,6 @@
 namespace cm;	
+
+using util from '../../util/util-model';
 using { User } from '@sap/cds/common';
 
 entity Time_Zone {	
@@ -18,10 +20,6 @@ entity Time_Zone {
     dst_end_week            : Decimal;	
     dst_end_day_of_week     : Decimal;	
     dst_end_time_rate       : Decimal;	
-    local_create_dtm        : DateTime      not null;	
-    local_update_dtm        : DateTime      not null;	
-    create_user_id          : User          not null    @cds.on.insert: $user ;
-    update_user_id          : User          not null    @cds.on.insert: $user @cds.on.update: $user @title: '변경사용자ID';
-    system_create_dtm       : DateTime      not null    @cds.on.insert: $now                        @title: '시스템등록시간';
-    system_update_dtm       : DateTime      not null    @cds.on.insert: $now  @cds.on.update: $now  @title: '시스템수정시간';	
 }	
+
+extend Time_Zone with util.Managed;
