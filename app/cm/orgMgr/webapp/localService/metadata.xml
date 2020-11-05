@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+    <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="cm.OrgMgrService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="Org_Business" EntityType="cm.OrgMgrService.Org_Business"/>
+        <EntitySet Name="Org_Company" EntityType="cm.OrgMgrService.Org_Company"/>
+        <EntitySet Name="Org_Division" EntityType="cm.OrgMgrService.Org_Division"/>
+        <EntitySet Name="Org_Plant" EntityType="cm.OrgMgrService.Org_Plant"/>
+        <EntitySet Name="Org_Purchasing" EntityType="cm.OrgMgrService.Org_Purchasing"/>
+        <EntitySet Name="Org_Tenant" EntityType="cm.OrgMgrService.Org_Tenant"/>
+      </EntityContainer>
+      <EntityType Name="Org_Business">
+        <Key>
+          <PropertyRef Name="tenant_id"/>
+          <PropertyRef Name="bizunit_code"/>
+        </Key>
+        <Property Name="tenant_id" Type="Edm.String" MaxLength="5" Nullable="false"/>
+        <Property Name="bizunit_code" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="bizunit_name" Type="Edm.String" MaxLength="240" Nullable="false"/>
+        <Property Name="bizdivision_code" Type="Edm.String" MaxLength="10"/>
+        <Property Name="use_flag" Type="Edm.Boolean" Nullable="false"/>
+        <Property Name="local_create_dtm" Type="Edm.DateTimeOffset"/>
+        <Property Name="local_update_dtm" Type="Edm.DateTimeOffset"/>
+        <Property Name="create_user_id" Type="Edm.String" MaxLength="255" Nullable="false"/>
+        <Property Name="update_user_id" Type="Edm.String" MaxLength="255" Nullable="false"/>
+        <Property Name="system_create_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+        <Property Name="system_update_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="Org_Company">
+        <Key>
+          <PropertyRef Name="tenant_id"/>
+          <PropertyRef Name="company_code"/>
+        </Key>
+        <Property Name="tenant_id" Type="Edm.String" MaxLength="5" Nullable="false"/>
+        <Property Name="company_code" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="company_name" Type="Edm.String" MaxLength="240" Nullable="false"/>
+        <Property Name="use_flag" Type="Edm.Boolean" Nullable="false"/>
+        <Property Name="currency_code" Type="Edm.String" MaxLength="30"/>
+        <Property Name="nation_code" Type="Edm.String" MaxLength="30"/>
+        <Property Name="language_code" Type="Edm.String" MaxLength="30"/>
+        <Property Name="affiliate_code" Type="Edm.String" MaxLength="10"/>
+        <Property Name="local_create_dtm" Type="Edm.DateTimeOffset"/>
+        <Property Name="local_update_dtm" Type="Edm.DateTimeOffset"/>
+        <Property Name="create_user_id" Type="Edm.String" MaxLength="255" Nullable="false"/>
+        <Property Name="update_user_id" Type="Edm.String" MaxLength="255" Nullable="false"/>
+        <Property Name="system_create_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+        <Property Name="system_update_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="Org_Division">
+        <Key>
+          <PropertyRef Name="tenant_id"/>
+          <PropertyRef Name="bizdivision_code"/>
+        </Key>
+        <Property Name="tenant_id" Type="Edm.String" MaxLength="5" Nullable="false"/>
+        <Property Name="bizdivision_code" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="bizdivision_name" Type="Edm.String" MaxLength="240" Nullable="false"/>
+        <Property Name="use_flag" Type="Edm.Boolean" Nullable="false"/>
+        <Property Name="local_create_dtm" Type="Edm.DateTimeOffset"/>
+        <Property Name="local_update_dtm" Type="Edm.DateTimeOffset"/>
+        <Property Name="create_user_id" Type="Edm.String" MaxLength="255" Nullable="false"/>
+        <Property Name="update_user_id" Type="Edm.String" MaxLength="255" Nullable="false"/>
+        <Property Name="system_create_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+        <Property Name="system_update_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="Org_Plant">
+        <Key>
+          <PropertyRef Name="tenant_id"/>
+          <PropertyRef Name="company_code"/>
+          <PropertyRef Name="plant_code"/>
+        </Key>
+        <Property Name="tenant_id" Type="Edm.String" MaxLength="5" Nullable="false"/>
+        <Property Name="company_code" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="plant_code" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="plant_name" Type="Edm.String" MaxLength="240" Nullable="false"/>
+        <Property Name="use_flag" Type="Edm.Boolean" Nullable="false"/>
+        <Property Name="purchase_org_code" Type="Edm.String" MaxLength="10"/>
+        <Property Name="bizdivision_code" Type="Edm.String" MaxLength="10"/>
+        <Property Name="au_code" Type="Edm.String" MaxLength="10"/>
+        <Property Name="hq_au_code" Type="Edm.String" MaxLength="10"/>
+        <Property Name="local_create_dtm" Type="Edm.DateTimeOffset"/>
+        <Property Name="local_update_dtm" Type="Edm.DateTimeOffset"/>
+        <Property Name="create_user_id" Type="Edm.String" MaxLength="255" Nullable="false"/>
+        <Property Name="update_user_id" Type="Edm.String" MaxLength="255" Nullable="false"/>
+        <Property Name="system_create_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+        <Property Name="system_update_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="Org_Purchasing">
+        <Key>
+          <PropertyRef Name="tenant_id"/>
+          <PropertyRef Name="purchase_org_code"/>
+        </Key>
+        <Property Name="tenant_id" Type="Edm.String" MaxLength="5" Nullable="false"/>
+        <Property Name="purchase_org_code" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="purchase_org_name" Type="Edm.String" MaxLength="240" Nullable="false"/>
+        <Property Name="use_flag" Type="Edm.Boolean" Nullable="false"/>
+        <Property Name="local_create_dtm" Type="Edm.DateTimeOffset"/>
+        <Property Name="local_update_dtm" Type="Edm.DateTimeOffset"/>
+        <Property Name="create_user_id" Type="Edm.String" MaxLength="255" Nullable="false"/>
+        <Property Name="update_user_id" Type="Edm.String" MaxLength="255" Nullable="false"/>
+        <Property Name="system_create_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+        <Property Name="system_update_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="Org_Tenant">
+        <Key>
+          <PropertyRef Name="tenant_id"/>
+        </Key>
+        <Property Name="tenant_id" Type="Edm.String" MaxLength="5" Nullable="false"/>
+        <Property Name="tenant_name" Type="Edm.String" MaxLength="240" Nullable="false"/>
+        <Property Name="erp_type_code" Type="Edm.String" MaxLength="30"/>
+        <Property Name="use_flag" Type="Edm.Boolean" Nullable="false"/>
+        <Property Name="local_create_dtm" Type="Edm.DateTimeOffset"/>
+        <Property Name="local_update_dtm" Type="Edm.DateTimeOffset"/>
+        <Property Name="create_user_id" Type="Edm.String" MaxLength="255" Nullable="false"/>
+        <Property Name="update_user_id" Type="Edm.String" MaxLength="255" Nullable="false"/>
+        <Property Name="system_create_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+        <Property Name="system_update_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+      </EntityType>
+      <Annotations Target="cm.OrgMgrService.Org_Business/tenant_id">
+        <Annotation Term="Common.Label" String="테넌트ID"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Business/bizunit_code">
+        <Annotation Term="Common.Label" String="사업부코드"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Business/bizunit_name">
+        <Annotation Term="Common.Label" String="사업부명"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Business/bizdivision_code">
+        <Annotation Term="Common.Label" String="사업본부코드"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Business/use_flag">
+        <Annotation Term="Common.Label" String="사용여부"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Business/local_create_dtm">
+        <Annotation Term="Common.Label" String="로컬타임등록시간"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Business/local_update_dtm">
+        <Annotation Term="Common.Label" String="로컬타임수정시간"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Business/create_user_id">
+        <Annotation Term="Common.Label" String="시스템등록자ID"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Business/update_user_id">
+        <Annotation Term="Common.Label" String="변경사용자ID"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Business/system_create_dtm">
+        <Annotation Term="Common.Label" String="시스템등록시간"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Business/system_update_dtm">
+        <Annotation Term="Common.Label" String="시스템수정시간"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Company/tenant_id">
+        <Annotation Term="Common.Label" String="테넌트ID"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Company/company_code">
+        <Annotation Term="Common.Label" String="회사코드"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Company/company_name">
+        <Annotation Term="Common.Label" String="회사명"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Company/use_flag">
+        <Annotation Term="Common.Label" String="사용여부"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Company/currency_code">
+        <Annotation Term="Common.Label" String="통화코드"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Company/nation_code">
+        <Annotation Term="Common.Label" String="국가코드"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Company/language_code">
+        <Annotation Term="Common.Label" String="언어코드"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Company/affiliate_code">
+        <Annotation Term="Common.Label" String="관계사코드"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Company/local_create_dtm">
+        <Annotation Term="Common.Label" String="로컬등록시간"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Company/local_update_dtm">
+        <Annotation Term="Common.Label" String="로컬수정시간"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Company/create_user_id">
+        <Annotation Term="Common.Label" String="등록사용자ID"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Company/update_user_id">
+        <Annotation Term="Common.Label" String="변경사용자ID"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Company/system_create_dtm">
+        <Annotation Term="Common.Label" String="시스템등록시간"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Company/system_update_dtm">
+        <Annotation Term="Common.Label" String="시스템수정시간"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Division/tenant_id">
+        <Annotation Term="Common.Label" String="테넌트ID"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Division/bizdivision_code">
+        <Annotation Term="Common.Label" String="사업본부코드"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Division/bizdivision_name">
+        <Annotation Term="Common.Label" String="사업본부명"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Division/use_flag">
+        <Annotation Term="Common.Label" String="사용여부"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Division/local_create_dtm">
+        <Annotation Term="Common.Label" String="로컬타임등록시간"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Division/local_update_dtm">
+        <Annotation Term="Common.Label" String="로컬타임수정시간"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Division/create_user_id">
+        <Annotation Term="Common.Label" String="시스템등록자ID"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Division/update_user_id">
+        <Annotation Term="Common.Label" String="변경사용자ID"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Division/system_create_dtm">
+        <Annotation Term="Common.Label" String="시스템등록시간"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Division/system_update_dtm">
+        <Annotation Term="Common.Label" String="시스템수정시간"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Plant/tenant_id">
+        <Annotation Term="Common.Label" String="테넌트ID"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Plant/company_code">
+        <Annotation Term="Common.Label" String="회사코드"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Plant/plant_code">
+        <Annotation Term="Common.Label" String="플랜트코드"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Plant/plant_name">
+        <Annotation Term="Common.Label" String="플랜트명"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Plant/use_flag">
+        <Annotation Term="Common.Label" String="사용여부"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Plant/purchase_org_code">
+        <Annotation Term="Common.Label" String="구매조직코드"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Plant/bizdivision_code">
+        <Annotation Term="Common.Label" String="사업본부코드"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Plant/au_code">
+        <Annotation Term="Common.Label" String="AU_CODE"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Plant/hq_au_code">
+        <Annotation Term="Common.Label" String="HQ_AU_CODE"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Plant/local_create_dtm">
+        <Annotation Term="Common.Label" String="로컬등록시간"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Plant/local_update_dtm">
+        <Annotation Term="Common.Label" String="로컬수정시간"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Plant/create_user_id">
+        <Annotation Term="Common.Label" String="등록사용자ID"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Plant/update_user_id">
+        <Annotation Term="Common.Label" String="변경사용자ID"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Plant/system_create_dtm">
+        <Annotation Term="Common.Label" String="시스템등록시간"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Plant/system_update_dtm">
+        <Annotation Term="Common.Label" String="시스템수정시간"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Purchasing/tenant_id">
+        <Annotation Term="Common.Label" String="테넌트ID"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Purchasing/purchase_org_code">
+        <Annotation Term="Common.Label" String="구매조직코드"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Purchasing/purchase_org_name">
+        <Annotation Term="Common.Label" String="구매조직명"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Purchasing/use_flag">
+        <Annotation Term="Common.Label" String="사용여부"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Purchasing/local_create_dtm">
+        <Annotation Term="Common.Label" String="로컬타임등록시간"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Purchasing/local_update_dtm">
+        <Annotation Term="Common.Label" String="로컬타임수정시간"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Purchasing/create_user_id">
+        <Annotation Term="Common.Label" String="시스템등록자ID"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Purchasing/update_user_id">
+        <Annotation Term="Common.Label" String="변경사용자ID"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Purchasing/system_create_dtm">
+        <Annotation Term="Common.Label" String="시스템등록시간"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Purchasing/system_update_dtm">
+        <Annotation Term="Common.Label" String="시스템수정시간"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Tenant/tenant_id">
+        <Annotation Term="Common.Label" String="테넌트ID"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Tenant/tenant_name">
+        <Annotation Term="Common.Label" String="테넌트명"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Tenant/erp_type_code">
+        <Annotation Term="Common.Label" String="ERP유형코드"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Tenant/use_flag">
+        <Annotation Term="Common.Label" String="사용여부"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Tenant/local_create_dtm">
+        <Annotation Term="Common.Label" String="로컬등록시간"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Tenant/local_update_dtm">
+        <Annotation Term="Common.Label" String="로컬수정시간"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Tenant/create_user_id">
+        <Annotation Term="Common.Label" String="등록사용자ID"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Tenant/update_user_id">
+        <Annotation Term="Common.Label" String="변경사용자ID"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Tenant/system_create_dtm">
+        <Annotation Term="Common.Label" String="시스템등록시간"/>
+      </Annotations>
+      <Annotations Target="cm.OrgMgrService.Org_Tenant/system_update_dtm">
+        <Annotation Term="Common.Label" String="시스템수정시간"/>
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

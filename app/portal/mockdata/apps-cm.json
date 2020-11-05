@@ -44,6 +44,11 @@
                     "name": "통화 관리",
                     "url": "../cm/currencyMgr/webapp",
                     "component": "cm.currencyMgr"
+                },
+                {
+                    "name": "조직 관리",
+                    "url": "../cm/orgMgr/webapp",
+                    "component": "cm.orgMgr"
                 }
             ]
         },

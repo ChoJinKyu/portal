@@ -17,7 +17,7 @@
         },
         "dataSources": {
             "mainService": {
-                "uri": "srv-api/odata/v4/dp.DevelopmentReceiptService/",
+                "uri": "srv-api/odata/v4/dp.DetailSpecEntryService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "4.0",

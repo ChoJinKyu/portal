@@ -234,10 +234,7 @@ xmlns:mvc="sap.ui.core.mvc"
                                                                             {path: 'update_user_id'},
                                                                             {path: 'ui>/bEvent'}]
                                                                             ,formatter: '.formatter.setStatus'}}"
-<<<<<<< HEAD
-=======
                                                     liveChange = ".OnLiveChange"                        
->>>>>>> 753a59f591c514307cbd8c3a8ecba3882a5aac16
                                                     />                                        
                                         </table:template>                                        
 									</table:Column>

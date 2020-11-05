@@ -1,5 +1,6 @@
 namespace cm;
 using { User } from '@sap/cds/common';
+using util from '../../util/util-model';
 
 
 entity Org_Plant {
@@ -11,11 +12,7 @@ entity Org_Plant {
     purchase_org_code : String(10)  @title: '구매조직코드';
     bizdivision_code : String(10)  @title: '사업본부코드';
     au_code : String(10)  @title: 'AU_CODE';
-    hq_au_code : String(10)  @title: 'HQ_AU_CODE';
-    local_create_dtm : DateTime @title: '로컬등록시간';
-    local_update_dtm : DateTime @title: '로컬수정시간';
-    create_user_id : User not null @cds.on.insert: $user @title: '등록사용자ID';
-    update_user_id : User not null @cds.on.insert: $user @cds.on.update: $user @title: '변경사용자ID'  ;
-    system_create_dtm : DateTime not null @cds.on.insert: $now @title: '시스템등록시간'  ;
-    system_update_dtm : DateTime not null @cds.on.insert: $now  @cds.on.update: $now @title: '시스템수정시간'  ;
+    hq_au_code : String(10)  @title: 'HQ_AU_CODE'; 
 }
+
+extend Org_Plant with util.Managed;

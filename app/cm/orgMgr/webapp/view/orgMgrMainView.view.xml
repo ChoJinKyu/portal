@@ -1,0 +1,46 @@
+<mvc:View controllerName="cm.orgMgr.controller.orgMgrMainView" xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m" xmlns:t="sap.ui.table">
+	<Shell id="shell">
+		<App id="app">
+			<pages>
+				<Page id="page" title="{i18n>title}">
+					<content>
+
+                        <t:Table
+				id="table"
+				selectionMode="MultiToggle"
+				visibleRowCount="7"
+				enableSelectAll="false"
+				rows="{
+					path: '/Org_Tenant'
+				}">
+				<t:extension>
+					<OverflowToolbar>
+						<Title id="title" text="Products"/>
+						<ToolbarSpacer/>
+						<Button
+							icon="sap-icon://refresh"
+							tooltip="Reinitialize Model"
+							press="onModelRefresh"/>
+					</OverflowToolbar>
+				</t:extension>
+				<t:columns>
+					<t:Column
+						sortProperty="Name"
+						filterProperty="Name"
+						autoResizable="true"
+						width="11rem">
+						<Label text="{tenant_id}" />
+						<t:template>
+							<Text text="{tenant_id}"/>
+						</t:template>
+					</t:Column>
+				</t:columns>
+				
+			</t:Table>
+                    
+                    </content>
+				</Page>
+			</pages>
+		</App>
+	</Shell>
+</mvc:View>

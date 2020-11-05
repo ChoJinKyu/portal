@@ -1,11 +1,17 @@
 namespace dp;
 
-using {User} from '@sap/cds/common';
+using util from '../../util/util-model';
+using {dp as item} from './DP_MOLD_ITEM-model';
 
-entity Item_Spec {
+entity Mold_Item_Spec {
 
     org_code                 : String(3) not null  @title : '사업부코드';
     item_id                  : Integer64 not null  @title : '도번 ID';
+
+    parent: Association to item.Mold_Item_Spec
+        on parent.org_code = org_code 
+        and parent.item_id = item_id ;
+
     use_material             : String(100)         @title : '사용 재료';
     inspection               : String(1)           @title : '금형검사 유무( Y:유, N:무 )';
     assy_approval            : String(1)           @title : '조립도 승인';
@@ -30,10 +36,6 @@ entity Item_Spec {
     pd_material_die          : String(100)         @title : 'PD 금형 재료 DIE';
     pd_material_punch        : String(100)         @title : 'PD 금형 재료 Punch';
     remarks                  : String(500)         @title : '비고';
-    created_by               : String(20) not null @title : '작성자';
-    create_date              : Date not null       @title : '작성일';
-    last_updated_by          : String(20) not null @title : '최종 수정자';
-    last_update_date         : Date not null       @title : '최종 수정일';
     gu_ct_or_process         : String(60)          @title : 'C/T OR PROCESS(공정수)';
     gu_top_circle            : String(60)          @title : '상원판';
     gu_bottom_circle         : String(60)          @title : '하원판';
@@ -92,3 +94,5 @@ entity Item_Spec {
 
 
 }
+
+extend Mold_Item_Spec with util.Managed;

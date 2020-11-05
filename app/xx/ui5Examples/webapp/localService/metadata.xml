@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="xx.SampleMgrService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="SampleDetails" EntityType="xx.SampleMgrService.SampleDetails"/>
+        <EntitySet Name="SampleHeaders" EntityType="xx.SampleMgrService.SampleHeaders">
+          <NavigationPropertyBinding Path="details" Target="SampleDetails"/>
+        </EntitySet>
+        <EntitySet Name="SampleMgrView" EntityType="xx.SampleMgrService.SampleMgrView"/>
+        <EntitySet Name="SampleView" EntityType="xx.SampleMgrService.SampleView"/>
+        <EntitySet Name="SampleViewCondition" EntityType="xx.SampleMgrService.SampleViewConditionParameters"/>
+      </EntityContainer>
+      <EntityType Name="SampleDetails">
+        <Key>
+          <PropertyRef Name="detail_id"/>
+        </Key>
+        <Property Name="detail_id" Type="Edm.Int64" Nullable="false"/>
+        <Property Name="header_id" Type="Edm.Int64"/>
+        <Property Name="cd" Type="Edm.String"/>
+        <Property Name="name" Type="Edm.String"/>
+      </EntityType>
+      <EntityType Name="SampleHeaders">
+        <Key>
+          <PropertyRef Name="header_id"/>
+        </Key>
+        <Property Name="header_id" Type="Edm.Int64" Nullable="false"/>
+        <Property Name="cd" Type="Edm.String"/>
+        <Property Name="name" Type="Edm.String"/>
+        <NavigationProperty Name="details" Type="Collection(xx.SampleMgrService.SampleDetails)"/>
+      </EntityType>
+      <EntityType Name="SampleMgrView">
+        <Key>
+          <PropertyRef Name="header_id"/>
+          <PropertyRef Name="detail_id"/>
+        </Key>
+        <Property Name="header_id" Type="Edm.Int64" Nullable="false"/>
+        <Property Name="detail_id" Type="Edm.Int64" Nullable="false"/>
+        <Property Name="header_cd" Type="Edm.String"/>
+        <Property Name="header_name" Type="Edm.String"/>
+        <Property Name="detail_cd" Type="Edm.String"/>
+        <Property Name="detail_name" Type="Edm.String"/>
+      </EntityType>
+      <EntityType Name="SampleView">
+        <Key>
+          <PropertyRef Name="header_id"/>
+          <PropertyRef Name="detail_id"/>
+        </Key>
+        <Property Name="header_id" Type="Edm.Int64" Nullable="false"/>
+        <Property Name="header_cd" Type="Edm.String"/>
+        <Property Name="header_name" Type="Edm.String"/>
+        <Property Name="detail_id" Type="Edm.Int64" Nullable="false"/>
+        <Property Name="detail_cd" Type="Edm.String"/>
+        <Property Name="detail_name" Type="Edm.String"/>
+      </EntityType>
+      <EntityType Name="SampleViewConditionParameters">
+        <Key>
+          <PropertyRef Name="header_cd"/>
+          <PropertyRef Name="detail_cd"/>
+        </Key>
+        <Property Name="header_cd" Type="Edm.String" Nullable="false"/>
+        <Property Name="detail_cd" Type="Edm.String" Nullable="false"/>
+        <NavigationProperty Name="Set" Type="Collection(xx.SampleMgrService.SampleViewConditionType)" Partner="Parameters" ContainsTarget="true"/>
+      </EntityType>
+      <EntityType Name="SampleViewConditionType">
+        <Key>
+          <PropertyRef Name="detail_id"/>
+        </Key>
+        <Property Name="header_id" Type="Edm.Int64"/>
+        <Property Name="header_cd" Type="Edm.String"/>
+        <Property Name="header_name" Type="Edm.String"/>
+        <Property Name="detail_id" Type="Edm.Int64" Nullable="false"/>
+        <Property Name="detail_cd" Type="Edm.String"/>
+        <Property Name="detail_name" Type="Edm.String"/>
+        <NavigationProperty Name="Parameters" Type="xx.SampleMgrService.SampleViewConditionParameters" Partner="Set"/>
+      </EntityType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

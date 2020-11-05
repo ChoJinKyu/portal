@@ -1,0 +1,111 @@
+{
+    "_version": "1.12.0",
+    "sap.app": {
+        "id": "ext.lib",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "1.0.0"
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "resources": "resources.json",
+        "ach": "ach",
+        "dataSources": {
+            "mainService": {
+                "uri": "srv-api/odata/v4/cm.CodeMgrService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "4.0",
+                    "localUri": "localService/metadata.xml"
+                }
+            }
+        }
+    },
+    "sap.cloud": {
+        "public": true,
+        "service": "sppCap_ui_dev"
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "flexEnabled": false,
+        "rootView": {
+            "viewName": "ext.lib.view.Launchpad",
+            "type": "XML",
+            "async": true,
+            "id": "Launchpad"
+        },
+        "dependencies": {
+            "minUI5Version": "1.60.1",
+            "libs": {
+				"sap.ui.core": {},
+				"sap.tnt": {},
+				"sap.m": {},
+                "sap.ui.layout": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "ext.lib.i18n.i18n"
+                }
+            }
+        },
+        "resources": {
+            "css": [
+                {
+                    "uri": "css/style.css"
+                }
+            ]
+        },
+        "routing": {
+            "config": {
+                "routerClass": "sap.m.routing.Router",
+                "viewType": "XML",
+                "async": true,
+                "viewPath": "cm.codeMgr.view",
+                "controlAggregation": "pages",
+                "controlId": "app",
+                "clearControlAggregation": false
+            },
+            "routes": [
+                {
+                    "name": "RouteCodeMgr",
+                    "pattern": "RouteCodeMgr",
+                    "target": [
+                        "TargetCodeMgr"
+                    ]
+                }
+            ],
+            "targets": {
+                "TargetCodeMgr": {
+                    "viewType": "XML",
+                    "transition": "slide",
+                    "clearControlAggregation": false,
+                    "viewId": "CodeMgr",
+                    "viewName": "CodeMgr"
+                }
+            }
+        }
+    }
+}
