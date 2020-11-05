@@ -1,17 +1,16 @@
 namespace dp;
 
 using util from '../../util/util-model';
-using {dp as item} from './DP_MOLD_ITEM-model';
+using {dp as mst} from './DP_MOLD_MST-model';
 
-entity Mold_Item_Spec {
+entity Mold_Spec {
 
-    key org_code                 : String(3) not null  @title : '사업부코드';
-    key item_id                  : Integer64 not null  @title : '도번 ID';
+    key mold_id                  : Integer64 not null  @title : '도번 ID';
 
-    parent: Association to item.Mold_Item_Spec
-        on parent.org_code = org_code 
-        and parent.item_id = item_id ;
+    parent: Association to mst.Mold_Mst
+        on parent.mold_id = mold_id ;
 
+    org_code                 : String(3) not null  @title : '사업부코드';
     use_material             : String(100)         @title : '사용 재료';
     inspection               : String(1)           @title : '금형검사 유무( Y:유, N:무 )';
     assy_approval            : String(1)           @title : '조립도 승인';
@@ -95,4 +94,4 @@ entity Mold_Item_Spec {
 
 }
 
-extend Mold_Item_Spec with util.Managed;
+extend Mold_Spec with util.Managed;

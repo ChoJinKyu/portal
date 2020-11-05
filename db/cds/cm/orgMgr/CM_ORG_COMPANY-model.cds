@@ -10,7 +10,7 @@ entity Org_Company {
     use_flag : Boolean not null @title: '사용여부';
     erp_type_code : String(30)  @title: 'ERP유형코드';
     currency_code : String(30) @title: '통화코드';
-    nation_code : String(30) @title: '국가코드';
+    country_code : String(30) @title: '국가코드';
     language_code : String(30) @title: '언어코드';
     affiliate_code : String(10) @title: '관계사코드';
 }
