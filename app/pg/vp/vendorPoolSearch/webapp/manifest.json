@@ -17,7 +17,7 @@
     },
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v4/pg.VpSearchService/",
+        "uri": "srv-api/odata/v4/pg.vendorPoolSearchService/",
         "type": "OData",
         "settings": {
           "odataVersion": "4.0",

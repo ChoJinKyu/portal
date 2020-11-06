@@ -13,14 +13,14 @@
 namespace dp;
 using { User } from '@sap/cds/common';
 using util from '../../../util/util-model';
-using {dp.Dc_Project_Master as pjtMst} from './DP_DC_PROJECT_MASTER-model';
+using {dp.Dc_Project as pjt} from './DP_DC_PROJECT-model';
 
-entity Dc_Project_Master_History {
+entity Dc_Project_His {
     key tenant_id: String(5) not null @title: '테넌트ID';
     key project_code: String(50) not null @title: '프로젝트코드';
     key version: Integer not null @title: '버전';
 
-    ref : Association to pjtMst
+    ref : Association to pjt
         on ref.tenant_id = tenant_id
         and ref.project_code = project_code;
 
@@ -55,4 +55,4 @@ entity Dc_Project_Master_History {
     nti_event_name: String(50) @title: 'NTI(기술개발) PROJECT EVENT NAME';
 }
 
-  extend Dc_Project_Master_History with util.Managed;
+  extend Dc_Project_His with util.Managed;

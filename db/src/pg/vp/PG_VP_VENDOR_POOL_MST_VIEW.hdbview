@@ -17,7 +17,7 @@ SELECT PARENT_ID
       ,'Raw Material' EVALUATION_OPERATION_UNIT_NAME /*코드 테이블 정보*/
       ,INP_TYPE_CODE
       ,'물동' INP_TYPE_NAME       /*코드 테이블 정보*/
-      ,MTLMOB_BASIC_CODE
+      ,MTLMOB_BASE_CODE
       ,'Amount' MTLMOB_BASIC_NAME /*코드 테이블 정보*/
       ,REGULAR_EVALUATION_FLAG
       ,INDUSTRY_CLASS_CODE
@@ -34,7 +34,7 @@ SELECT PARENT_ID
       ,PARENT_VENDOR_POOL_CODE
       ,LEAF_FLAG
       ,LEVEL_NUMBER
-      ,DISPLAY_SEQUENCE
+      ,MARK_SEQUENCE
       ,REGISTER_REASON_TEXT
       ,APPROVAL_REQUEST_NUMBER
       ,hierarchy_rank            /*현재node의 순번(sibling order by에 의한)*/
@@ -55,7 +55,7 @@ FROM   HIERARCHY (
                                  ,A.REPR_DEPARTMENT_CODE
                                  ,A.EVALUATION_OPERATION_UNIT_CODE
                                  ,A.INP_TYPE_CODE
-                                 ,A.MTLMOB_BASIC_CODE
+                                 ,A.MTLMOB_BASE_CODE
                                  ,A.REGULAR_EVALUATION_FLAG
                                  ,A.INDUSTRY_CLASS_CODE
                                  ,A.SD_EXCEPTION_FLAG
@@ -70,13 +70,13 @@ FROM   HIERARCHY (
                                  ,A.PARENT_VENDOR_POOL_CODE
                                  ,A.LEAF_FLAG
                                  ,A.LEVEL_NUMBER
-                                 ,A.DISPLAY_SEQUENCE
+                                 ,A.MARK_SEQUENCE
                                  ,A.REGISTER_REASON_TEXT
                                  ,A.APPROVAL_REQUEST_NUMBER
                                  ,HIERARCHY_COMPOSITE_ID(A.TENANT_ID, A.COMPANY_CODE, A.OPERATION_ORG_TYPE_CODE, A.OPERATION_ORG_CODE, A.PARENT_VENDOR_POOL_CODE) AS PARENT_ID
                                  ,HIERARCHY_COMPOSITE_ID(A.TENANT_ID, A.COMPANY_CODE, A.OPERATION_ORG_TYPE_CODE, A.OPERATION_ORG_CODE, A.VENDOR_POOL_CODE) AS NODE_ID
                           FROM   PG_VP_VENDOR_POOL_MST A)
                   START WHERE PARENT_VENDOR_POOL_CODE IS NULL
-                  SIBLING ORDER BY DISPLAY_SEQUENCE, NODE_ID)
+                  SIBLING ORDER BY MARK_SEQUENCE, NODE_ID)
 ORDER BY HIERARCHY_RANK
 ;
