@@ -42,10 +42,10 @@ sap.ui.define([
 		/**
 		 * Event handler  for navigating back.
 		 * It there is a history entry we go one step back in the browser history
-		 * If not, it will replace the current entry of the browser history with the worklist route.
+		 * If not, it will replace the current entry of the browser history with the miainList route.
 		 * @public
 		 */
-		onNavBack : function() {
+		onPageNavBackButtonPress : function() {
 			var sPreviousHash = History.getInstance().getPreviousHash();
 			if (sPreviousHash !== undefined) {
 				// eslint-disable-next-line sap-no-history-manipulation
@@ -61,35 +61,6 @@ sap.ui.define([
 		 */
 		onPageEditButtonPress: function(){
 			this._toEditMode();
-		},
-		
-		/**
-		 * Event handler for saving page changes
-		 * @public
-		 */
-        onPageSaveButtonPress: function(){
-			var oView = this.getView(),
-				me = this,
-				oMessageContents = this.byId("inputMessageContents");
-
-			if(!oMessageContents.getValue()) {
-				oMessageContents.setValueState(sap.ui.core.ValueState.Error);
-				return;
-			}
-			MessageBox.confirm("Are you sure ?", {
-				title : "Comfirmation",
-				initialFocus : sap.m.MessageBox.Action.CANCEL,
-				onClose : function(sButton) {
-					if (sButton === MessageBox.Action.OK) {
-						oView.setBusy(true);
-						oView.getModel().submitBatch("forUpdate").then(function(ok){
-							me._toShowMode();
-							oView.setBusy(false);
-						});
-					};
-				}
-			});
-
 		},
 		
 		/**
@@ -116,15 +87,42 @@ sap.ui.define([
 
 		},
 		
-		
 		/**
-		 * Event handler for page edit cancel
+		 * Event handler for saving page changes
 		 * @public
 		 */
-        onPageCancelButtonPress: function(){
-			this.byId("page").setProperty("showFooter", false);
-            this._showFormFragment('MainObject_Show');
-			this.byId("pageEditButton").setEnabled(true);
+        onPageFooterSaveButtonPress: function(){
+			var oView = this.getView(),
+				me = this,
+				oMessageContents = this.byId("inputMessageContents");
+
+			if(!oMessageContents.getValue()) {
+				oMessageContents.setValueState(sap.ui.core.ValueState.Error);
+				return;
+			}
+			MessageBox.confirm("Are you sure ?", {
+				title : "Comfirmation",
+				initialFocus : sap.m.MessageBox.Action.CANCEL,
+				onClose : function(sButton) {
+					if (sButton === MessageBox.Action.OK) {
+						oView.setBusy(true);
+						oView.getModel().submitBatch("forUpdate").then(function(ok){
+							me._toShowMode();
+							oView.setBusy(false);
+						});
+					};
+				}
+			});
+
+		},
+		
+		
+		/**
+		 * Event handler for cancel page editing
+		 * @public
+		 */
+        onPageFooterCancelButtonPress: function(){
+			this._toShowMode();
         },
 
 		/* =========================================================== */
@@ -132,7 +130,7 @@ sap.ui.define([
 		/* =========================================================== */
 
 		/**
-		 * Binds the view to the object path.
+		 * Binds the view to the data path.
 		 * @function
 		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
 		 * @private
@@ -191,14 +189,20 @@ sap.ui.define([
 
 		_toEditMode: function(){
             this._showFormFragment('MainObject_Edit');
+			this.byId("page").setSelectedSection("pageSectionMain");
 			this.byId("page").setProperty("showFooter", true);
 			this.byId("pageEditButton").setEnabled(false);
+			this.byId("pageDeleteButton").setEnabled(false);
+			this.byId("pageNavBackButton").setEnabled(false);
 		},
 
 		_toShowMode: function(){
+			this._showFormFragment('MainObject_Show');
+			this.byId("page").setSelectedSection("pageSectionMain");
 			this.byId("page").setProperty("showFooter", false);
-            this._showFormFragment('MainObject_Show');
 			this.byId("pageEditButton").setEnabled(true);
+			this.byId("pageDeleteButton").setEnabled(true);
+			this.byId("pageNavBackButton").setEnabled(true);
 		},
 
 		_oFragments: {},

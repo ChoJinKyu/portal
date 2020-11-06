@@ -19,6 +19,13 @@
           "odataVersion": "4.0",
           "localUri": "localService/metadata.xml"
         }
+      },
+      "commonUtilService": {
+        "uri": "srv-api/odata/v4/util.CommonService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0"
+        }
       }
     }
   },
@@ -66,6 +73,16 @@
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
           "bundleName": "cm.messageMgr.i18n.i18n"
+        }
+      },
+      "util": {
+        "dataSource": "commonUtilService",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "groupId": "$direct",
+          "synchronizationMode": "None",
+          "autoExpandSelect": true
         }
       },
       "": {
