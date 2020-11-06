@@ -1,5 +1,5 @@
-using { dp as uomClass } from '../../../../db/cds/dp/MaterialMgr/DP_MM_UOM_CLASS-model';
-using { dp as uomClassLng } from '../../../../db/cds/dp/MaterialMgr/DP_MM_UOM_CLASS_LNG-model';
+using { dp as uomClass } from '../../../../db/cds/dp/materialMgr/DP_MM_UOM_CLASS-model';
+using { dp as uomClassLng } from '../../../../db/cds/dp/materialMgr/DP_MM_UOM_CLASS_LNG-model';
 namespace dp;
 
 service UomClassMgrService {
