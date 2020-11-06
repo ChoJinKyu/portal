@@ -96,6 +96,9 @@
         }
       }
     },
+    "resourceRoots": {
+        "ext.lib": "../../../lib"
+    },
     "routing": {
       "config": {
         "routerClass": "sap.m.routing.Router",
