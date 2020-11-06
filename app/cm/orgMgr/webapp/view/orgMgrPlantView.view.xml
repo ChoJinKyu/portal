@@ -1,0 +1,91 @@
+<mvc:View 
+    xmlns="sap.m" 
+    xmlns:mvc="sap.ui.core.mvc"
+    controllerName="cm.orgMgr.controller.orgMgrMainView" 
+    >
+	<Table
+        id="PlantTable"
+        growing="true"
+        growingThreshold="10"
+        items="{
+            path: '/Org_Plant',
+            parameters : {
+                $count : true,
+                $$updateGroupId : 'Org_PlantGroup'
+                }
+        }"
+        mode="MultiSelect"
+        >
+        <headerToolbar>
+            <OverflowToolbar>
+                <content>
+                    <Title text="Org_Plant" level="H2"/>
+                    <ToolbarSpacer/>
+                    <Button text="행추가" icon="sap-icon://add"  type="Accept" press="onAddRow"/>                                            
+                    <Button text="행삭제" icon="sap-icon://delete" type="Reject" press="onDeleteRow"/>
+                    <Button text="저장"   icon="sap-icon://save" type="Attention" press="onSave"/>
+                </content>
+            </OverflowToolbar>
+        </headerToolbar>
+        <columns>
+            <Column id="tenant_id">
+                <Text text="tenant_id"/>
+            </Column>
+            <Column id="company_code">
+                <Text text="company_code"/>
+            </Column>
+            <Column id="plant_code">
+                <Text text="plant_code"/>
+            </Column>
+            <Column id="plant_name">
+                <Text text="plant_name"/>
+            </Column>
+            <Column id="use_flag">
+                <Text text="use_flag"/>
+            </Column>
+            <Column id="purchase_org_code">
+                <Text text="purchase_org_code"/>
+            </Column>
+            <Column id="bizdivision_code">
+                <Text text="bizdivision_code"/>
+            </Column>
+            <Column id="au_code">
+                <Text text="au_code"/>
+            </Column>
+            <Column id="hq_au_code">
+                <Text text="hq_au_code"/>
+            </Column>
+        </columns>
+        <items>
+            <ColumnListItem>
+                <cells>
+                    <Input value="{tenant_id}"/>
+                </cells>
+                <cells>
+                    <Input value="{company_code}"/>
+                </cells>
+                <cells>
+                    <Input value="{plant_code}"/>
+                </cells>
+                <cells>
+                    <Input value="{plant_name}"/>
+                </cells>
+                <cells>
+                    <Input value="{use_flag}"/>
+                </cells>
+                <cells>
+                    <Input value="{purchase_org_code}"/>
+                </cells>
+                <cells>
+                    <Input value="{bizdivision_code}"/>
+                </cells>
+                <cells>
+                    <Input value="{au_code}"/>
+                </cells>
+                <cells>
+                    <Input value="{hq_au_code}"/>
+                </cells>
+            </ColumnListItem>
+        </items>
+    </Table>
+</mvc:View>

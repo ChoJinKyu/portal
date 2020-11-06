@@ -30,8 +30,8 @@ entity Vp_Vendor_Pool_Supplier_Dtl {
     use_flag : Boolean @title: '사용여부';
     register_reason_text : String(300) @title: '등록사유텍스트';
     register_approval_request_number : String(50) @title: '등록승인요청번호';
-    local_create_dtm: DateTime not null @title: '로컬등록시간';
-    local_update_dtm: DateTime not null @title: '로컬수정시간';
+    local_create_dtm: DateTime not null @cds.on.insert: $now @title: '로컬등록시간';
+    local_update_dtm: DateTime not null @cds.on.insert: $now @title: '로컬수정시간';
     create_user_id: User not null @cds.on.insert: $user @title: '등록사용자ID';
     update_user_id: User not null @cds.on.insert: $user @cds.on.update: $user @title: '변경사용자ID';
     system_create_dtm: DateTime not null @cds.on.insert: $now @title: '시스템등록시간';

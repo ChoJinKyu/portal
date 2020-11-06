@@ -15,6 +15,7 @@ service VpSearchService {
            s.operation_org_type_code,
            s.operation_org_code,
            s.vendor_pool_code,
+           s.vendor_code,
            s.evaluation_target_flag,
            s.review_pass_flag,
            s.evaluation_control_flag,

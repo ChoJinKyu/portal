@@ -189,7 +189,7 @@
                                         <form:formElements>
                                                 <form:FormElement label="* 통화코드" >
                                                     <form:fields>
-                                                        <Input width="180px" id="ipCurCode" value="{currency_code}" />                                                        
+                                                        <Input width="180px" id="ipCurCode" value="{currency_code}" editable="false" />                                                        
                                                     </form:fields>
                                                 </form:FormElement>
                                                 <!-- <form:FormElement label="ISO통화">
@@ -251,7 +251,7 @@
                                                 filters : [{path : 'tenant_id', operator : 'EQ', value1 : '0000'}]
                                             }"
                                     mode="MultiSelect"
-                                    updateFinished="onDtlUpdateFinished"
+                                    updateFinished="onLngUpdateFinished"
                             >
                             <layoutData>
                                 <layout:SplitterLayoutData size="50%" />
@@ -292,16 +292,22 @@
                                         <header>
                                             <Label text="Suffix"/>
                                         </header>
-                                    </Column>                                    
+                                    </Column>
+                                    <Column hAlign="Center" width="100px" visible="false">
+                                        <header>
+                                            <Label text="update_user_id"/>
+                                        </header>
+                                    </Column>                                      
                                 </columns>
                                 <items>
                                     <ColumnListItem type="Active" id="currencyLngColumnListItem">
                                         <cells>
-                                            <Input id="language_code1" value="{language_code}"/>
+                                            <Input id="language_code1" value="{language_code}" editable= "false"/>
                                             <Input id="currency_code_name1" value="{currency_code_name}"/>
                                             <Input id="currency_code_desc1" value="{currency_code_desc}"/>
                                             <Input id="currency_prefix1" value="{currency_prefix}"/>
-                                            <Input id="currency_suffix1" value="{currency_suffix}"/>                                            
+                                            <Input id="currency_suffix1" value="{currency_suffix}"/>
+                                            <Input id="update_user_id1" value="{update_user_id}" />                                            
                                         </cells>
                                     </ColumnListItem>
                                 </items>

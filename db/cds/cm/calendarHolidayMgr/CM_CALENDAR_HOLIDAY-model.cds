@@ -1,5 +1,6 @@
 namespace cm;
 
+using util from '../../util/util-model';
 using { User } from '@sap/cds/common';
 
 entity Calendar_Holiday {
@@ -23,12 +24,7 @@ entity Calendar_Holiday {
     certain_holiday_days:       Integer                @title: '특정휴일일수-휴일이 특정요일인 경우 몇요일인지를 정의한다.';
     apply_start_date:           Date          not null @title: '적용시작일자';
     effect_end_date:            Date                   @title: '적용종료일자';
-    
-    local_create_dtm:           DateTime      not null @title: '로컬등록시간';
-    local_update_dtm:           DateTime      not null @title: '로컬수정시간';
-    create_user_id:             User          not null @cds.on.insert: $user @title: '등록사용자ID';
-    update_user_id:             User          not null @cds.on.insert: $user @cds.on.update: $user @title: '변경사용자ID';
-    system_create_dtm:          DateTime      not null @cds.on.insert: $now @title: '시스템등록시간';
-    system_update_dtm:          DateTime      not null @cds.on.insert: $now  @cds.on.update: $now @title: '시스템수정시간';
 
 }
+
+extend Calendar_Holiday with util.Managed;
