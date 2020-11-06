@@ -1,0 +1,87 @@
+<mvc:View xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc">
+	<Table
+        id="CompanyTable"
+        growing="true"
+        growingThreshold="10"
+        items="{
+            path: '/Org_Company',
+            parameters : {
+                $count : true,
+                $$updateGroupId : 'Org_CompanyGroup'
+                }
+        }"
+        mode="MultiSelect"
+        >
+        <headerToolbar>
+            <OverflowToolbar>
+                <content>
+                    <Title text="Org_Company" level="H2"/>
+                    <ToolbarSpacer/>
+                    <Button text="행추가" icon="sap-icon://add"  type="Accept" press="onAddRow"/>                                            
+                    <Button text="행삭제" icon="sap-icon://delete" type="Reject" press="onDeleteRow"/>
+                    <Button text="저장"   icon="sap-icon://save" type="Attention" press="onSave"/>
+                </content>
+            </OverflowToolbar>
+        </headerToolbar>
+        <columns>
+            <Column id="tenant_id">
+                <Text text="tenant_id"/>
+            </Column>
+            <Column id="company_code">
+                <Text text="company_code"/>
+            </Column>
+            <Column id="company_name">
+                <Text text="company_name"/>
+            </Column>
+            <Column id="use_flag">
+                <Text text="use_flag"/>
+            </Column>
+            <Column id="erp_type_code">
+                <Text text="erp_type_code"/>
+            </Column>
+            <Column id="currency_code">
+                <Text text="currency_code"/>
+            </Column>
+            <Column id="country_code">
+                <Text text="country_code"/>
+            </Column>
+            <Column id="language_code">
+                <Text text="language_code"/>
+            </Column>
+            <Column id="affiliate_code">
+                <Text text="affiliate_code"/>
+            </Column>
+        </columns>
+        <items>
+            <ColumnListItem>
+                <cells>
+                    <Input value="{tenant_id}"/>
+                </cells>
+                <cells>
+                    <Input value="{company_code}"/>
+                </cells>
+                <cells>
+                    <Input value="{company_name}"/>
+                </cells>
+                <cells>
+                    <Input value="{use_flag}"/>
+                </cells>
+                <cells>
+                    <Input value="{erp_type_code}"/>
+                </cells>
+                <cells>
+                    <Input value="{currency_code}"/>
+                </cells>
+                <cells>
+                    <Input value="{country_code}"/>
+                </cells>
+                <cells>
+                    <Input value="{language_code}"/>
+                </cells>
+                <cells>
+                    <Input value="{affiliate_code}"/>
+                </cells>
+            </ColumnListItem>
+        </items>
+    </Table>
+</mvc:View>

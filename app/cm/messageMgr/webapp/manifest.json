@@ -13,7 +13,7 @@
     "resources": "resources.json",
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v4/cm.MsgMgrService/",
+        "uri": "srv-api/odata/v4/xx.MessageMgrService/",
         "type": "OData",
         "settings": {
           "odataVersion": "4.0",
@@ -96,35 +96,35 @@
       "routes": [
         {
           "pattern": "",
-          "name": "worklist",
+          "name": "mainList",
           "target": [
-            "worklist"
+            "mainList"
           ]
         },
         {
-          "pattern": "Message{objectId}",
-          "name": "object",
+          "pattern": "Message/{tenantId}/{messageCode}/{languageCode}",
+          "name": "mainObject",
           "target": [
-            "object"
+            "mainObject"
           ]
         }
       ],
       "targets": {
-        "worklist": {
-          "viewName": "Worklist",
-          "viewId": "worklist",
+        "mainList": {
+          "viewName": "MainList",
+          "viewId": "mainList",
           "viewLevel": 1,
-          "title": "{i18n>worklistViewTitle}"
+          "title": "{i18n>mainListViewTitle}"
         },
-        "object": {
-          "viewName": "Object",
-          "viewId": "object",
+        "mainObject": {
+          "viewName": "MainObject",
+          "viewId": "mainObject",
           "viewLevel": 2,
-          "title": "{i18n>objectViewTitle}"
+          "title": "{i18n>mainObjectViewTitle}"
         },
-        "objectNotFound": {
-          "viewName": "ObjectNotFound",
-          "viewId": "objectNotFound"
+        "mainObjectNotFound": {
+          "viewName": "MainObjectNotFound",
+          "viewId": "mainObjectNotFound"
         },
         "notFound": {
           "viewName": "NotFound",

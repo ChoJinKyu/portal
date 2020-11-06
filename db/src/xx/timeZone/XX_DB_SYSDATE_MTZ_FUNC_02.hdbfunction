@@ -45,7 +45,7 @@ BEGIN
                 		, 'AS054'
                 	)
         INTO	V_FROM_TIME_ZONE            
-        FROM	CM_DUMMY
+        FROM	DUMMY
         ;
     ELSE
         V_FROM_TIME_ZONE := P_FROM_TIME_ZONE;
@@ -86,7 +86,7 @@ BEGIN
     LEFT  OUTER  JOIN  (
             SELECT  TO_TIMESTAMP(IFNULL(D_SYSDATE, CURRENT_TIMESTAMP))  AS  D_SYS_DT
                    ,TO_CHAR(TO_DATE(IFNULL(D_SYSDATE, CURRENT_TIMESTAMP)), 'YYYY')  +  0  AS  YYYY
-            FROM    CM_DUMMY
+            FROM    DUMMY
             )  D
           ON  X.WNUMBER  =  1
     LEFT  OUTER JOIN  (
@@ -128,13 +128,13 @@ BEGIN
         --D_RETURN  :=  D_SYS_DT;
         SELECT  D_SYS_DT
         INTO    D_RETURN
-        FROM    CM_DUMMY;
+        FROM    DUMMY;
     ELSE
         -- To Time Zone 시간으로 변환 (From/To Gap 만큼 OffSet)
         --D_RETURN  :=  D_SYS_DT  +  V_GAP_TIME  /  24;
         SELECT  ADD_SECONDS(D_SYS_DT,  V_GAP_TIME * 60 * 60) --From/To Gap만큰 Offset * 1분(60-SEC)*1시간(60분)
         INTO    D_RETURN
-        FROM    CM_DUMMY;
+        FROM    DUMMY;
         
         -- To DST Check
         IF (V_TO_DST_FLAG  =  'Y') THEN
@@ -160,7 +160,7 @@ BEGIN
                 --D_RETURN  :=  D_RETURN  +  1/24;
 	        SELECT  ADD_SECONDS(:D_SYS_DT,  60 * 60)  -- 1분(60-SEC)*1시간(60분)
 	        INTO    D_RETURN
-	        FROM    CM_DUMMY;
+	        FROM    DUMMY;
             END IF;
         END IF;
     END IF;

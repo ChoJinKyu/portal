@@ -1,0 +1,107 @@
+<mvc:View controllerName="cm.messageMgr.controller.MainObject" 
+	xmlns:mvc="sap.ui.core.mvc" 
+	xmlns="sap.m" 
+	xmlns:uxap="sap.uxap" 
+	xmlns:layout="sap.ui.layout" 
+    xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core"
+	height="100%">
+
+	<uxap:ObjectPageLayout id="page"
+		showTitleInHeaderContent="true"
+		showEditHeaderButton="true" 
+		showFooter="false"
+		editHeaderButtonPress="handleEditBtnPress">
+		<uxap:headerTitle>
+			<uxap:ObjectPageDynamicHeaderTitle>
+				<uxap:expandedHeading>
+					<Title text="Message Details" wrapping="true" />
+				</uxap:expandedHeading>
+
+				<uxap:snappedHeading>
+					<Title text="Message Details" wrapping="true" />
+				</uxap:snappedHeading>
+
+				<uxap:expandedContent>
+					<Text text="Details of the {message_code}" />
+				</uxap:expandedContent>
+
+				<uxap:snappedContent>
+					<Text text="Details of the {message_code}" />
+				</uxap:snappedContent>
+
+				<uxap:snappedTitleOnMobile>
+					<Title text="Message Details" />
+				</uxap:snappedTitleOnMobile>
+
+				<uxap:actions>
+					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" />
+					<Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" />
+				</uxap:actions>
+                <uxap:navigationActions>
+					<OverflowToolbarButton icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onNavBack" />
+                </uxap:navigationActions>
+			</uxap:ObjectPageDynamicHeaderTitle>
+		</uxap:headerTitle>
+
+		<uxap:headerContent>
+			<FlexBox wrap="Wrap" visible="false">
+				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+					<layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
+						<Label text="Chain: " />
+						<Text text="{chain_code}"/>
+					</layout:HorizontalLayout>
+					<layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
+						<Label text="Language: " />
+						<Text text="{language_code}" />
+					</layout:HorizontalLayout>
+				</layout:VerticalLayout>
+
+				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+					<layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
+						<Label text="Created: "/>
+						<Text text="{create_user_id} / {system_create_dtm}"/>
+					</layout:HorizontalLayout>
+					<layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
+						<Label text="Updated: "/>
+						<Text text="{update_user_id} / {system_update_dtm}"/>
+					</layout:HorizontalLayout>
+				</layout:VerticalLayout>
+			</FlexBox>
+		</uxap:headerContent>
+
+		<uxap:sections>
+			<uxap:ObjectPageSection titleUppercase="false" title="Message Details">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection id="pageSubSection1" >
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+			<uxap:ObjectPageSection titleUppercase="false" title="Managed Values">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<form:SimpleForm editable="false">
+							<Label text="Created by"/>
+							<Text text="{create_user_id}"/>
+							<Label text="Created At"/>
+							<Text text="{system_create_dtm}"/>
+							<Label text="Updated by"/>
+							<Text text="{update_user_id}"/>
+							<Label text="Updated At"/>
+							<Text text="{system_update_dtm}"/>
+						</form:SimpleForm>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+		</uxap:sections>
+		<uxap:footer>
+			<OverflowToolbar>
+				<ToolbarSpacer />
+				<OverflowToolbarButton text="Edit" icon="sap-icon://edit"/>
+				<Button type="Accept" text="Save" press=".onPageSaveButtonPress" />
+				<Button type="Reject" text="Cancel" press=".onPageCancelButtonPress"/>
+			</OverflowToolbar>
+		</uxap:footer>
+	</uxap:ObjectPageLayout>
+</mvc:View>

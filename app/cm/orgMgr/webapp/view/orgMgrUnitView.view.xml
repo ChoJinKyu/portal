@@ -1,0 +1,57 @@
+<mvc:View xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc">
+	<Table
+        id="UnitTable"
+        growing="true"
+        growingThreshold="10"
+        items="{
+            path: '/Org_Unit',
+            parameters : {
+                $count : true,
+                $$updateGroupId : 'Org_UnitGroup'
+                }
+        }"
+        mode="MultiSelect"
+        >
+        <headerToolbar>
+            <OverflowToolbar>
+                <content>
+                    <Title text="Org_Unit" level="H2"/>
+                    <ToolbarSpacer/>
+                    <Button text="행추가" icon="sap-icon://add"  type="Accept" press="onAddRow"/>                                            
+                    <Button text="행삭제" icon="sap-icon://delete" type="Reject" press="onDeleteRow"/>
+                    <Button text="저장"   icon="sap-icon://save" type="Attention" press="onSave"/>
+                </content>
+            </OverflowToolbar>
+        </headerToolbar>
+        <columns>
+            <Column id="tenant_id">
+                <Text text="tenant_id"/>
+            </Column>
+            <Column id="bizunit_code">
+                <Text text="bizunit_code"/>
+            </Column>
+            <Column id="bizunit_name">
+                <Text text="bizunit_name"/>
+            </Column>
+            <Column id="use_flag">
+                <Text text="use_flag"/>
+            </Column>
+        </columns>
+        <items>
+            <ColumnListItem>
+                <cells>
+                    <Input value="{tenant_id}"/>
+                </cells>
+                <cells>
+                    <Input value="{bizunit_code}"/>
+                </cells>
+                <cells>
+                    <Input value="{bizunit_name}"/>
+                </cells>
+                <cells>
+                    <Input value="{use_flag}"/>
+                </cells>
+            </ColumnListItem>
+        </items>
+    </Table>
+</mvc:View>
