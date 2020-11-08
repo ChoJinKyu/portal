@@ -13,18 +13,14 @@
 namespace dp;
 using { User } from '@sap/cds/common';
 using util from '../../../util/util-model';
-using {dp.Dc_Project_Master as pjtMst} from './DP_DC_PROJECT_MASTER-model';
+using {dp.Dc_Project_Member as pjtMember} from './DP_DC_PROJECT_MEMBER-model';
 
-entity Dc_Project_Master_History {
+entity Dc_Project {
     key tenant_id: String(5) not null @title: '테넌트ID';
     key project_code: String(50) not null @title: '프로젝트코드';
-    key version: Integer not null @title: '버전';
-
-    ref : Association to pjtMst
-        on ref.tenant_id = tenant_id
-        and ref.project_code = project_code;
-
     project_name: String(200) @title: '프로젝트명';
+    operation_type: String(200) @title: '구매운영조직유형';	
+    operation_code: String(200) @title: '구매운영조직코드';	
     division_code: String(50) @title: 'DIVISION CODE';
     division_name: String(200) @title: 'DIVISION NAME';
     model_code: String(50) @title: '모델코드';
@@ -51,6 +47,10 @@ entity Dc_Project_Master_History {
     operating_unit_id: Integer @title: 'OPERATING UNIT ID';
     mbom_exists_flag: Boolean @title: 'MBOM존재여부';
     nti_event_name: String(50) @title: 'NTI(기술개발) PROJECT EVENT NAME';
+
+    members : Association[0..*] to pjtMember
+        on members.tenant_id = tenant_id
+        and members.project_code = project_code;    
 }
 
-  extend Dc_Project_Master_History with util.Managed;
+  extend Dc_Project with util.Managed;

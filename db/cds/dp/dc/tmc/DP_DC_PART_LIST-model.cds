@@ -19,8 +19,10 @@ entity Dc_Part_List {
     key tenant_id: String(5) not null @title: '테넌트ID';
     key model_code: String(50) not null @title: '모델코드';
     key item_number: String(50) not null @title: '품목번호';
-    item_id: Integer @title: '품목ID';
+    operation_type: String(200) @title: '구매운영조직유형';
+    operation_code: String(200) @title: '구매운영조직코드';
     organization_id: Integer @title: 'ORGANIZATION ID';
+    item_id: Integer @title: '품목ID';
     item_name: String(200) @title: '품목명';
     item_desc: String(1000) @title: '품목설명';
     item_type: String(10) @title: '품목TYPE';

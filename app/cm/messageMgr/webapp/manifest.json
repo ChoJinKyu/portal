@@ -13,11 +13,18 @@
     "resources": "resources.json",
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v4/cm.MsgMgrService/",
+        "uri": "srv-api/odata/v4/xx.MessageMgrService/",
         "type": "OData",
         "settings": {
           "odataVersion": "4.0",
           "localUri": "localService/metadata.xml"
+        }
+      },
+      "commonUtilService": {
+        "uri": "srv-api/odata/v4/util.CommonService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0"
         }
       }
     }
@@ -68,6 +75,16 @@
           "bundleName": "cm.messageMgr.i18n.i18n"
         }
       },
+      "util": {
+        "dataSource": "commonUtilService",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "groupId": "$direct",
+          "synchronizationMode": "None",
+          "autoExpandSelect": true
+        }
+      },
       "": {
         "dataSource": "mainService",
         "preload": true,
@@ -78,6 +95,9 @@
           "autoExpandSelect": true
         }
       }
+    },
+    "resourceRoots": {
+        "ext.lib": "../../../lib"
     },
     "routing": {
       "config": {
@@ -96,35 +116,35 @@
       "routes": [
         {
           "pattern": "",
-          "name": "worklist",
+          "name": "mainList",
           "target": [
-            "worklist"
+            "mainList"
           ]
         },
         {
-          "pattern": "Message{objectId}",
-          "name": "object",
+          "pattern": "Message/{tenantId}/{messageCode}/{languageCode}",
+          "name": "mainObject",
           "target": [
-            "object"
+            "mainObject"
           ]
         }
       ],
       "targets": {
-        "worklist": {
-          "viewName": "Worklist",
-          "viewId": "worklist",
+        "mainList": {
+          "viewName": "MainList",
+          "viewId": "mainList",
           "viewLevel": 1,
-          "title": "{i18n>worklistViewTitle}"
+          "title": "{i18n>mainListViewTitle}"
         },
-        "object": {
-          "viewName": "Object",
-          "viewId": "object",
+        "mainObject": {
+          "viewName": "MainObject",
+          "viewId": "mainObject",
           "viewLevel": 2,
-          "title": "{i18n>objectViewTitle}"
+          "title": "{i18n>mainObjectViewTitle}"
         },
-        "objectNotFound": {
-          "viewName": "ObjectNotFound",
-          "viewId": "objectNotFound"
+        "mainObjectNotFound": {
+          "viewName": "MainObjectNotFound",
+          "viewId": "mainObjectNotFound"
         },
         "notFound": {
           "viewName": "NotFound",

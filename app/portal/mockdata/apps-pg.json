@@ -17,13 +17,13 @@
             ]
         },
         {
-            "name": "Exam2",
-            "icon": "sap-icon://locate-me",
+            "name": "Vendor Pool",
+            "icon": "sap-icon://source-code",
             "subMenus": [
                 {
-                    "name": "App #3",
-                    "url": "../pg/purchaseMgr/webap",
-                    "component": "pg.purchaseMgr"
+                    "name": "Vendor Pool Search",
+                    "url": "../pg/vp/vendorPoolSearch/webapp",
+                    "component": "pg.vendorPoolSearch"
                 },
                 {
                     "name": "App #4",

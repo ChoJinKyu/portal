@@ -13,14 +13,14 @@
 namespace dp;
 using { User } from '@sap/cds/common';
 using util from '../../../util/util-model';
-using {dp.Dc_Project_Master as pjtMst} from './DP_DC_PROJECT_MASTER-model';
+using {dp.Dc_Project as pjt} from './DP_DC_PROJECT-model';
 
 entity Dc_Project_Schedule {
     key tenant_id: String(5) not null @title: '테넌트ID';
     key project_code: String(50) not null @title: '프로젝트코드';
     key event_code: String(20) not null @title: '개발단계코드';
 
-    ref : Association to pjtMst
+    ref : Association to pjt
         on ref.tenant_id = tenant_id
         and ref.project_code = project_code;
 

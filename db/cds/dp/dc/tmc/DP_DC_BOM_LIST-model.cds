@@ -20,10 +20,10 @@ entity Dc_Bom_List {
     key bom_type: String(10) not null @title: 'BOM TYPE';
     key node_id: Integer not null @title: 'NODE ID';
     parent_node_id: Integer @title: 'PARENT NODE ID';
+    operation_type: String(200) @title: '구매운영조직유형';
+    operation_code: String(200) @title: '구매운영조직코드';
     sort_order: Integer @title: 'SORT ORDER';
-    org_id: Integer @title: 'ORG ID';
     ogranization_id: Integer @title: 'ORGANIZATION ID';
-    organization_code: String(20) @title: 'ORGANIZATION CODE';
     item_number: String(50) @title: '품목번호';
     item_id: Integer(20) @title: '품목ID';
     quantity: Integer @title: '소요량';

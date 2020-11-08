@@ -10,7 +10,7 @@ service CodeMgrService {
     entity CodeDetails as projection on codeDtl.Code_Dtl;
     entity CodeLanguages as projection on codeLng.Code_Lng;
 
-    view CodeCombo as 
+/*    view CodeCombo as 
     select 
         key tenant_id,
         key company_code,
@@ -18,5 +18,5 @@ service CodeMgrService {
         key code,
         key language_cd,
         code_name
-    from codeLng.Code_Lng;
+    from codeLng.Code_Lng; */
 }

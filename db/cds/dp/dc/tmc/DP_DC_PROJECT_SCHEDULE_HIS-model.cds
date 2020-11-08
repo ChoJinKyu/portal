@@ -13,20 +13,22 @@
 namespace dp;
 using { User } from '@sap/cds/common';
 using util from '../../../util/util-model';
-using {dp.Dc_Project_Target_Cost as pjtTargetCost} from './DP_DC_PROJECT_TARGET_COST-model';
+using {dp.Dc_Project_Schedule as pjtSchedule} from './DP_DC_PROJECT_SCHEDULE-model';
 
-entity Dc_Project_Target_Cost_History {
+entity Dc_Project_Schedule_His {
     key tenant_id: String(5) not null @title: '테넌트ID';
     key project_code: String(50) not null @title: '프로젝트코드';
     key event_code: String(20) not null @title: '개발단계코드';
     key version: Integer not null @title: '버전';
-    key target_cost_code: String(10) not null @title: '목표비용코드';
 
-    ref: Association to pjtTargetCost
+    ref: Association to pjtSchedule
         on ref.tenant_id = tenant_id
         and ref.project_code = project_code;
 
-    target_cost_value: String(500) @title: '목표비용값';
+    plan_start_date: DateTime @title: '계획시작일';
+    plan_end_date: DateTime @title: '계획종료일';
+    result_start_date: DateTime @title: '결과시작일';
+    result_end_date: DateTime @title: '결과종료일';
 }
 
-  extend Dc_Project_Target_Cost_History with util.Managed;
+  extend Dc_Project_Schedule_His with util.Managed;

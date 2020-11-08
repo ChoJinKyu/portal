@@ -1,7 +1,7 @@
-src/gen/cm*
-src/cm/**
-#src/gen/dp*
-#src/dp/**
+#src/gen/cm*
+#src/cm/**
+src/gen/dp*
+src/dp/**
 src/gen/ep*
 src/ep/**
 src/gen/mc*
@@ -12,8 +12,8 @@ src/gen/pg*
 src/pg/**
 src/gen/sp*
 src/sp/**
-src/gen/xx*
-src/xx/**
-src/gen/zz*
-src/zz/**
-XX*
+#src/gen/xx*
+#src/xx/**
+#src/gen/zz*
+#src/zz/**
+#XX*

@@ -88,10 +88,12 @@ ui.table > m.table 변환하기   -->
                 <t:Table id="table"
                 selectionMode="MultiToggle" 
                 rows="{ path : '/TimeZone',
-                parameters: {
-                                $count: true,
-                                $$updateGroupId : 'updateGroupTimeZone'
-                            }
+                    parameters: {
+                        $count: true,
+                        $$updateGroupId : 'updateGroupTimeZone'
+                    },
+                    filter : [{path : 'timezone_code', operator : 'EQ', value1 : '00000'}],
+                    sorter: { path: 'timezone_code'}
                 }"
                 cellClick=".onCellClick"
                 rowSelectionChange = ".onCheck"
