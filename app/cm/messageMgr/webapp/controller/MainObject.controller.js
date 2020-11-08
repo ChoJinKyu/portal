@@ -91,7 +91,7 @@ sap.ui.define([
 		 * Event handler for saving page changes
 		 * @public
 		 */
-        onPageFooterSaveButtonPress: function(){
+        onPageSaveButtonPress: function(){
 			var oView = this.getView(),
 				me = this,
 				oMessageContents = this.byId("inputMessageContents");
@@ -106,7 +106,7 @@ sap.ui.define([
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
 						oView.setBusy(true);
-						oView.getModel().submitBatch("forUpdate").then(function(ok){
+						oView.getModel().submitBatch("oataGroupIdForUpdate").then(function(ok){
 							me._toShowMode();
 							oView.setBusy(false);
 						});
@@ -121,7 +121,7 @@ sap.ui.define([
 		 * Event handler for cancel page editing
 		 * @public
 		 */
-        onPageFooterCancelButtonPress: function(){
+        onPageCancelEditButtonPress: function(){
 			this._toShowMode();
         },
 
@@ -156,7 +156,7 @@ sap.ui.define([
 			this.getView().bindElement({
 				path: sObjectPath,
 				parameters: {
-					"$$updateGroupId" : 'forUpdate'
+					"$$updateGroupId" : 'oataGroupIdForUpdate'
 				},
 				events: {
 					change: this._onBindingChange.bind(this),
