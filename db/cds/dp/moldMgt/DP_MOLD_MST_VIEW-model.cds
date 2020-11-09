@@ -111,6 +111,6 @@ entity Mold_Mst_View {
         acq_date : String(8)	@title:'취득일자';
         acq_amount : Decimal(20,2)	@title:'취득금액';
         use_department_code : String(30)	@title:'사용부서코드';
-        mold_structure : String(10)	@title:'사용부서코드';
-        size : String(10)	@title:'사용부서코드';
+        mold_structure : String(30)	@title:'사용부서코드';
+        size : String(30)	@title:'사용부서코드';
 }

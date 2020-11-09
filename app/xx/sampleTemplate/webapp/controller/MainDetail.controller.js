@@ -4,8 +4,9 @@ sap.ui.define([
 	"sap/ui/core/routing/History",
 	"../model/formatter",
 	"sap/ui/model/Filter",
-	"sap/ui/model/FilterOperator"
-], function (BaseController, JSONModel, History, formatter, Filter, FilterOperator) {
+	"sap/ui/model/FilterOperator",
+    "sap/ui/richtexteditor/RichTextEditor"
+], function (BaseController, JSONModel, History, formatter, Filter, FilterOperator, RichTextEditor) {
 	"use strict";
 
 	return BaseController.extend("com.template.sampleTemplate.controller.MainDetail", {
@@ -21,32 +22,62 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {
-            alert("Detail")
-            /*
-			var oViewModel;
+			var oControlModel;
 
 			// keeps the search state
 			this._aTableSearchState = [];
 
 			// Model used to manipulate control states
-			oViewModel = new JSONModel({
-				worklistTableTitle : this.getResourceBundle().getText("worklistTableTitle"),
-				saveAsTileTitle: this.getResourceBundle().getText("saveAsTileTitle", this.getResourceBundle().getText("worklistViewTitle")),
-				shareOnJamTitle: this.getResourceBundle().getText("worklistTitle"),
-				shareSendEmailSubject: this.getResourceBundle().getText("shareSendEmailWorklistSubject"),
-				shareSendEmailMessage: this.getResourceBundle().getText("shareSendEmailWorklistMessage", [location.href]),
-				tableNoDataText : this.getResourceBundle().getText("tableNoDataText")
+			oControlModel = new JSONModel({
+				readMode : true,
+                editMode : false,
+                lanes: [
+                    {
+                        "id": "0",
+                        "icon": "sap-icon://complete",
+                        "label": "In Order",
+                        "position": 0
+                    },
+                    {
+                        "id": "1",
+                        "icon": "sap-icon://complete",
+                        "label": "In Invoice",
+                        "position": 1
+                    },
+                    {
+                        "id": "2",
+                        "icon": "",
+                        "label": "In Invoice",
+                        "position": 2
+                    }
+                ]
 			});
-			this.setModel(oViewModel, "worklistView");
-
-			// Add the worklist page to the flp routing history
-			this.addHistoryEntry({
-				title: this.getResourceBundle().getText("worklistViewTitle"),
-				icon: "sap-icon://table-view",
-				intent: "#Template-display"
-            }, true);
-            */
-		},
+            this.setModel(oControlModel, "contModel");
+        },
+        onAfterRendering : function () {
+            var that = this,
+				sHtmlValue = '<p style="text-align: justify; background: white; font-size: 10pt; font-family: Calibri, sans-serif;"><strong><span style="font-size: 10.5pt; font-family: sans-serif; color: black;">Lorem ipsum dolor sit amet</span></strong>' +
+				'<span style="font-size: 10.5pt; font-family: sans-serif; color: black;">, consectetur adipiscing elit. Suspendisse ornare, nibh nec gravida tincidunt, ipsum quam venenatis nisl, vitae venenatis urna sem eget ipsum. Ut cursus auctor leo et vulputate. ' +
+				'Curabitur nec pretium odio, sed auctor felis. In vehicula, eros aliquam pharetra mattis, ante mi fermentum massa, nec pharetra arcu massa finibus augue. </span></p> ';
+			sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
+				function (RTE, EditorType) {
+					var oRichTextEditor = new RTE("myRTE", {
+						editorType: EditorType.TinyMCE4,
+						width: "100%",
+                        height: "300px",
+                        editable: "{contModel>/editMode}",
+						customToolbar: true,
+						showGroupFont: true,
+						showGroupLink: true,
+						showGroupInsert: true,
+						value: sHtmlValue,
+						ready: function () {
+							this.addButtonGroup("styleselect").addButtonGroup("table");
+						}
+					});
+					that.getView().byId("idVerticalLayout").addContent(oRichTextEditor);
+            });
+        },
 
 		/* =========================================================== */
 		/* event handlers                                              */
@@ -67,14 +98,27 @@ sap.ui.define([
 				oTable = oEvent.getSource(),
 				iTotalItems = oEvent.getParameter("total");
 			// only update the counter if the length is final and
-			// the table is not empty
+            // the table is not empty
 			if (iTotalItems && oTable.getBinding("items").isLengthFinal()) {
 				sTitle = this.getResourceBundle().getText("worklistTableTitleCount", [iTotalItems]);
 			} else {
 				sTitle = this.getResourceBundle().getText("worklistTableTitle");
 			}
 			this.getModel("worklistView").setProperty("/worklistTableTitle", sTitle);
-		},
+        },
+        
+        doEditMode : function (oEvent){
+            var oContModel = this.getView().getModel("contModel");
+            var bReadMode = oContModel.getProperty("/readMode");
+            if(bReadMode){
+                oContModel.setProperty("/readMode", false);
+                oContModel.setProperty("/editMode", true);
+            }else{
+                oContModel.setProperty("/readMode", true);
+                oContModel.setProperty("/editMode", false);
+            }
+            
+        },
 
 		/**
 		 * Event handler when a table item gets pressed

@@ -317,28 +317,6 @@ sap.ui.define([
             },
 
             onCreate : function () {
-                // var dtlVal = this._retrieveParam.dtlParam;
-                // var oCurrencyDetail = this.getView().byId("currencyDetail");
-                // var oContext = oCurrencyDetail.create({
-                //         "tenant_id" : "1000",
-                //         "currency_code" : "aa",
-                //         "language_code" : "",
-                //         "currency_code_desc" : "",
-                //         "currency_prefix" : "",
-                //         "currency_suffix" : ""
-                        
-                //     });
-                // var oCurrencyDetail = this.getView().byId("currencyDetail");
-                //var oInput1 = this.getView().byId("input1");
-                this.getView().byId("ipCurCode").setValue("");
-                this.getView().byId("ipScale").setValue("");
-                this.getView().byId("ipExScale").setValue("");                
-                this.getView().byId("ipUseFlag").setValue("");                
-                this.getView().byId("strtDate").setValue("");
-                this.getView().byId("endDate").setValue("");
-
-                //oCurrencyDetail.getBindingContext(). getValue("tenant_id");
-                
 
             },
 
