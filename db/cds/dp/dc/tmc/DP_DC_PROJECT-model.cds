@@ -15,7 +15,7 @@ using { User } from '@sap/cds/common';
 using util from '../../../util/util-model';
 using {dp.Dc_Project_Member as pjtMember} from './DP_DC_PROJECT_MEMBER-model';
 
-entity Dc_Project_Master {
+entity Dc_Project {
     key tenant_id: String(5) not null @title: '테넌트ID';
     key project_code: String(50) not null @title: '프로젝트코드';
     project_name: String(200) @title: '프로젝트명';
@@ -53,4 +53,4 @@ entity Dc_Project_Master {
         and members.project_code = project_code;    
 }
 
-  extend Dc_Project_Master with util.Managed;
+  extend Dc_Project with util.Managed;

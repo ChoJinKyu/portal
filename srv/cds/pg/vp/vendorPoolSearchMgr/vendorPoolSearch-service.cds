@@ -25,7 +25,7 @@ service VpSearchService {
            s.evaluation_restrict_end_date,
            s.inp_code,
            s.rm_control_flag,
-           s.supplier_basic_portion_rate,
+           s.supplier_base_portion_rate,
            s.use_flag,
            s.register_reason_text,
            s.register_approval_request_number,

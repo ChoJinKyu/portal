@@ -1,0 +1,524 @@
+<mvc:View 
+    controllerName="dp.developmentReceipt.controller.developmentReceipt"
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns:core="sap.ui.core" 
+    xmlns="sap.m" 
+    xmlns:f="sap.f" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:table="sap.ui.table" 
+    xmlns:form="sap.ui.layout.form" 
+    xmlns:microchart="sap.suite.ui.microchart" 
+    xmlns:sc="sap.suite.ui.commons" 
+    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+	xmlns:sv="sap.ui.comp.smartvariants"
+    class="sapUiSizeCompact"  
+    displayBlock="true" 
+    height="100%">
+    
+    <App id="app">
+		<f:DynamicPage id="developmentReceiptPage" headerExpanded="true" toggleHeaderOnTitleClick="true">
+			<!-- DynamicPage Title -->
+			<f:title>
+				<f:DynamicPageTitle>
+					<f:heading>
+						<Title text="{i18n>appTitle}"/>
+					</f:heading>
+					<f:expandedContent>
+                    <!--<layout:HorizontalLayout allowWrapping="true">-->
+                        <HBox>
+                            <Text text=""/>
+                        </HBox>
+                        <HBox>
+                            <Title text="Process"/>
+                        </HBox>
+                        <HBox>
+                            <sc:MicroProcessFlow>
+                                <sc:content>
+                                    <sc:MicroProcessFlowItem state="Error" stepWidth="2rem" icon="sap-icon://circle-task" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                </sc:content>
+                            </sc:MicroProcessFlow>
+                        </HBox>
+                        <HBox>
+                            <Text renderWhitespace="true" text=" PR    " />
+                            <Text renderWhitespace="true" text=" Budget    " />
+                            <Text renderWhitespace="true" text=" RFQ      " />
+                            <Text renderWhitespace="true" text="Mold&#10;Spec  "   />
+                            <Text renderWhitespace="true" text="Purchase&#10; Contract" />
+                            <Text renderWhitespace="true" text="   PO     " />
+                            <Text renderWhitespace="true" text="   RCV   " />
+                            <Text renderWhitespace="true" text="  Lease&#10;Contract" />
+                            <Text renderWhitespace="true" text=" Invoice" />
+                        </HBox>
+						<form:Form editable="true" width="100%">
+                            <form:formContainers>
+                                <form:FormContainer>
+                                    <form:formElements>
+                                        <form:FormElement label="Affiliate">
+                                            <form:fields>	
+                                                <MultiInput id="multiInputAffiliate" valueHelpOnly="true" valueHelpRequest=".onValueHelpRequested"/>
+                                            </form:fields>
+                                        </form:FormElement>
+                                    </form:formElements>
+                                </form:FormContainer>
+                                <form:FormContainer>
+                                    <form:formElements>
+                                        <form:FormElement label="Division">
+                                            <form:fields>	
+                                                <MultiInput id="multiInputDivision" valueHelpOnly="true" valueHelpRequest=".onValueHelpRequested"/>
+                                            </form:fields>
+                                        </form:FormElement>
+                                    </form:formElements>
+                                </form:FormContainer>
+                                <form:FormContainer>
+                                    <form:formElements>
+                                        <form:FormElement label="Receipt Date">
+                                            <form:fields>
+                                                <DateRangeSelection id="ReceiptDate" change="handleChange"/>
+                                            </form:fields>
+                                        </form:FormElement>
+                                    </form:formElements>
+                                </form:FormContainer>
+                                <form:FormContainer>
+                                    <form:formElements>
+                                        <form:FormElement label="Status">
+                                            <form:fields>
+                                                <Button text="All" press="onAll" />
+                                                <Button text="Received" press="onReceived" />
+                                                <Button text="Unreceived" press="onUnreceived" />
+                                            </form:fields>
+                                        </form:FormElement>
+                                    </form:formElements>
+                                </form:FormContainer>
+                            </form:formContainers>
+                            <form:layout>
+                            <form:ColumnLayout columnsM="2" columnsL="3" columnsXL="4"/>
+                            </form:layout>
+                        </form:Form>
+                        <!--</layout:HorizontalLayout>-->
+					</f:expandedContent>
+					<f:snappedContent><HBox>
+                            <Text text=""/>
+                        </HBox>
+                        <HBox>
+                            <Title text="Process"/>
+                        </HBox>
+                        <HBox>
+                            <sc:MicroProcessFlow>
+                                <sc:content>
+                                    <sc:MicroProcessFlowItem state="Error" stepWidth="2rem" icon="sap-icon://circle-task" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                </sc:content>
+                            </sc:MicroProcessFlow>
+                        </HBox>
+                        <HBox>
+                            <Text renderWhitespace="true" text=" PR    " />
+                            <Text renderWhitespace="true" text=" Budget    " />
+                            <Text renderWhitespace="true" text=" RFQ      " />
+                            <Text renderWhitespace="true" text="Mold&#10;Spec  "   />
+                            <Text renderWhitespace="true" text="Purchase&#10; Contract" />
+                            <Text renderWhitespace="true" text="   PO     " />
+                            <Text renderWhitespace="true" text="   RCV   " />
+                            <Text renderWhitespace="true" text="  Lease&#10;Contract" />
+                            <Text renderWhitespace="true" text=" Invoice" />
+                        </HBox>
+						<form:Form editable="true" width="100%">
+                            <form:formContainers>
+                                <form:FormContainer>
+                                    <form:formElements>
+                                        <form:FormElement label="Affiliate">
+                                            <form:fields>	
+                                                <MultiInput id="multiInputAffiliate1" valueHelpOnly="true" valueHelpRequest=".onValueHelpRequested"/>
+                                            </form:fields>
+                                        </form:FormElement>
+                                    </form:formElements>
+                                </form:FormContainer>
+                                <form:FormContainer>
+                                    <form:formElements>
+                                        <form:FormElement label="Division">
+                                            <form:fields>	
+                                                <MultiInput id="multiInputDivision1" valueHelpOnly="true" valueHelpRequest=".onValueHelpRequested"/>
+                                            </form:fields>
+                                        </form:FormElement>
+                                    </form:formElements>
+                                </form:FormContainer>
+                                <form:FormContainer>
+                                    <form:formElements>
+                                        <form:FormElement label="Receipt Date">
+                                            <form:fields>
+                                                <DateRangeSelection id="ReceiptDate1" change="handleChange"/>
+                                            </form:fields>
+                                        </form:FormElement>
+                                    </form:formElements>
+                                </form:FormContainer>
+                                <form:FormContainer>
+                                    <form:formElements>
+                                        <form:FormElement label="Status">
+                                            <form:fields>
+                                                <Button text="All" press="onAll" />
+                                                <Button text="Received" press="onReceived" />
+                                                <Button text="Unreceived" press="onUnreceived" />
+                                            </form:fields>
+                                        </form:FormElement>
+                                    </form:formElements>
+                                </form:FormContainer>
+                            </form:formContainers>
+                            <form:layout>
+                            <form:ColumnLayout columnsM="2" columnsL="3" columnsXL="4"/>
+                            </form:layout>
+                        </form:Form>
+					</f:snappedContent>
+				</f:DynamicPageTitle>
+			</f:title>
+			<!-- DynamicPage Header -->
+			<f:header>
+				<f:DynamicPageHeader pinnable="true">
+					<layout:HorizontalLayout allowWrapping="true">
+						<form:Form editable="true" width="100%">
+                            <form:formContainers>
+                                <form:FormContainer>
+                                    <form:formElements>
+                                        <form:FormElement label="Item Type">
+                                            <form:fields>
+                                                <MultiInput id="multiInputItemType" valueHelpOnly="true" valueHelpRequest=".onValueHelpRequested"/>
+                                            </form:fields>
+                                        </form:FormElement>
+                                        <form:FormElement label="Model">
+                                            <form:fields>
+                                                <MultiInput id="multiInputModel" valueHelpOnly="true" valueHelpRequest=".onValueHelpRequested"/>
+                                            </form:fields>
+                                        </form:FormElement>
+                                    </form:formElements>
+                                </form:FormContainer>
+                                <form:FormContainer>
+                                    <form:formElements>
+                                        <form:FormElement label="Production Type">
+                                            <form:fields>
+                                                <MultiInput id="multiInputProductionType" valueHelpOnly="true" valueHelpRequest=".onValueHelpRequested"/>
+                                            </form:fields>
+                                        </form:FormElement>
+                                        <form:FormElement label="Part No">
+                                            <form:fields>
+                                                <MultiInput id="multiInputPartNo" valueHelpOnly="true" valueHelpRequest=".onValueHelpRequested"/>
+                                            </form:fields>
+                                        </form:FormElement>
+                                    </form:formElements>
+                                </form:FormContainer>
+                                <form:FormContainer>
+                                    <form:formElements>
+                                        <form:FormElement label="Description">
+                                            <form:fields>
+                                                <Input id="searchDescription" width="100%"/>
+                                            </form:fields>
+                                        </form:FormElement>
+                                        <form:FormElement label="Family Part No">
+                                            <form:fields>
+                                                <Input id="searchFamilyPartNo" width="100%"/>
+                                            </form:fields>
+                                        </form:FormElement>
+                                    </form:formElements>
+                                </form:FormContainer>
+                                <form:FormContainer>
+                                    <form:formElements>
+                                        <form:FormElement label="E/D Type">
+                                            <form:fields>
+                                                <ComboBox   id="searchEDType"
+                                                            selectedKey=""
+                                                            items="{
+                                                                        path : 'cc>/CodeCombo',
+                                                                        filters : [
+                                                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                                            {path : 'company_code', operator : 'EQ', value1 : '*'},
+                                                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ED_TYPE'},
+                                                                            {path : 'language_cd', operator : 'EQ', value1 : 'EN'}
+                                                                        ]
+                                                                    }"
+                                                >
+                                                    <core:Item key="{cc>code}" text="{cc>code_name}" />
+                                                </ComboBox>
+                                            </form:fields>
+                                        </form:FormElement>
+                                        <form:FormElement>
+                                            <form:fields>
+                                                
+                                            </form:fields>
+                                        </form:FormElement>
+                                    </form:formElements>
+                                </form:FormContainer>
+                            </form:formContainers>
+                            <form:layout>
+                            <form:ColumnLayout columnsM="2" columnsL="3" columnsXL="4"/>
+                            </form:layout>
+                        </form:Form>
+					</layout:HorizontalLayout>
+                    <HBox width="100%" alignItems="Center" alignContent="End" justifyContent="End">
+                        <items>
+                            <Button text="Search" type="Emphasized" press="onSearch"/>
+                        </items>
+                    </HBox>
+				</f:DynamicPageHeader>
+			</f:header>
+			<f:content>
+                <Page showHeader="false" enableScrolling="false" class="sapUiContentPadding">
+                    
+                    <Table id="moldMstTable" 
+                        items="{    path: '/MoldMasters',
+                                    parameters: {
+                                                $$updateGroupId : 'moldMstUpdateGroup'
+                                                },
+                                    
+                                    sorter: [
+                                        { path: 'tenent_id' }, 
+                                        { path: 'company_code' },
+                                        { path: 'group_code' }
+                                    ]
+                                }" 
+                        mode="MultiSelect" 
+                    >
+                    
+                        <headerToolbar>
+                            <Toolbar>
+                                <ToolbarSpacer/>
+                                <Button text="Bind &amp; Receipt" press=".onBindReceipt" />
+                                <Button text="Cancel Bind" press=".onCancelBind" />
+                                <Button text="Delete" press=".onDelete" />
+                                <Button type="Emphasized" text="Receipt" press=".onReceipt" />
+                                <Button icon="sap-icon://excel-attachment" press="onExport"/>
+                                <Button icon="sap-icon://action-settings" press="onPersoButtonPressed" >
+                                    <layoutData>
+                                        <OverflowToolbarLayoutData priority="NeverOverflow" />
+                                    </layoutData>
+                                </Button>
+                            </Toolbar>
+                        </headerToolbar>
+                        <columns>
+                            <Column id="affiliateCol" width="6em" hAlign="Center" mergeDuplicates="true">
+                                <Text text="Affiliate"/>
+                            </Column>
+                            <Column id="divisionCol" width="6em" minScreenWidth="Tablet" demandPopin="true" hAlign="Center">
+                                <Text text="Division"/>
+                            </Column>
+                            <Column id="modelCol" width="15em" minScreenWidth="Tablet" demandPopin="true" >
+                                <Text text="Model"/>
+                            </Column>
+                            <Column id="partNoCol" width="12em" minScreenWidth="Tablet" demandPopin="true" hAlign="Center">
+                                <Text text="Part No"/>
+                            </Column>
+                            <Column id="seqCol" width="5em" minScreenWidth="Tablet" hAlign="Center">
+                                <Text text="Seq"/>
+                            </Column>
+                            <Column id="descriptionCol" width="12em">
+                                <Text text="Description"/>
+                            </Column>
+                            <Column id="statusCol" width="12em" hAlign="Center">
+                                <Text text="Status"/>
+                            </Column>
+                            <Column id="familyFlagCol" width="8em" hAlign="Center" demandPopin="true" >
+                                <Text text="Family Y/N"/>
+                            </Column>
+                            <Column id="productionTypeCol" width="12em" hAlign="Center" demandPopin="true" >
+                                <Text text="Production&#10;Type"/>
+                            </Column>
+                            <Column id="itemTypeCol" width="10em" hAlign="Center" demandPopin="true" >
+                                <Text text="Item&#10;Type"/>
+                            </Column>
+                            <Column id="moldTypeCol" width="10em" hAlign="Center" demandPopin="true" >
+                                <Text text="Mold&#10;Type"/>
+                            </Column>
+                            <Column id="eDTypeCol" width="10em" hAlign="Center" demandPopin="true" >
+                                <Text text="Export/Domestic&#10;Type"/>
+                            </Column>
+                            <Column id="testUseFlagCol" width="8em" hAlign="Center">
+                                <Text text="T-EST&#10;Use Y/N"/>
+                            </Column>
+                            <Column id="testAttachCol" width="8em" hAlign="Center">
+                                <Text text="T-EST&#10;Attach"/>
+                            </Column>
+                            <Column id="processTypeCol" width="8em" hAlign="Center">
+                                <Text text="Process&#10;Type"/>
+                            </Column>
+                            <Column id="moldStructureCol" width="10em" hAlign="Center">
+                                <Text text="Mold&#10;Structure"/>
+                            </Column>
+                            <Column id="sizeCol" width="10em" hAlign="Center">
+                                <Text text="Size"/>
+                            </Column>
+                            <Column id="receiptDateCol" width="10em" hAlign="Center">
+                                <Text text="Receipt&#10;Date"/>
+                            </Column>
+                            <Column id="requesterCol" width="12em" hAlign="Center">
+                                <Text text="Requester"/>
+                            </Column>
+                            <Column id="moldDeveloperCol" width="12em" hAlign="Center">
+                                <Text text="Mold&#10;Developer"/>
+                            </Column>
+                            <Column id="remarkCol" width="20em" hAlign="Center">
+                                <Text text="Remark"/>
+                            </Column>
+                            <Column id="projectCodeCol" width="15em">
+                                <Text text="Project Code"/>
+                            </Column>
+                            <Column id="projectNameCol" width="20em">
+                                <Text text="Project Name"/>
+                            </Column>
+                            <Column id="familyPartNo1Col" width="12em" hAlign="Center">
+                                <Text text="Family&#10;Part No(1)"/>
+                            </Column>
+                            <Column id="familyPartNo2Col" width="12em" hAlign="Center">
+                                <Text text="Family&#10;Part No(2)"/>
+                            </Column>
+                            <Column id="familyPartNo3Col" width="12em" hAlign="Center">
+                                <Text text="Family&#10;Part No(3)"/>
+                            </Column>
+                            <Column id="familyPartNo4Col" width="12em" hAlign="Center">
+                                <Text text="Family&#10;Part No(4)"/>
+                            </Column>
+                            <Column id="familyPartNo5Col" width="12em" hAlign="Center">
+                                <Text text="Family&#10;Part No(5)"/>
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text id="company_code" text="{company_code}"/>
+                                    <Text id="group_code" text="{group_code}"/>
+                                    <Text id="model" text="{model}"/>
+                                    <Text id="part_number" text="{part_number}"/>
+                                    <Text id="mold_sequence" text="{mold_sequence}"/>
+                                    <Text id="spec_name" text="{spec_name}"/>
+                                    <Text id="mold_receipt_flag" text="{mold_receipt_flag}"/>
+                                    
+                                    <ComboBox   id="family_flag"    
+                                                selectedKey="{family_flag}"
+                                                items="{
+                                                            path : 'cc>/CodeCombo',
+                                                            filters : [
+                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                                {path : 'company_code', operator : 'EQ', value1 : 'G100'},
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'CM_YN'},
+                                                                {path : 'language_cd', operator : 'EQ', value1 : 'KO'}
+                                                            ]
+                                                        }"
+                                    >
+                                        <core:Item key="{cc>code}" text="{cc>code_name}" />
+                                    </ComboBox>
+                                    <ComboBox   id="mold_production_type_code"
+                                                selectedKey="{mold_production_type_code}"
+                                                items="{
+                                                            path : 'cc>/CodeCombo',
+                                                            filters : [
+                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                                {path : 'company_code', operator : 'EQ', value1 : '*'},
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'},
+                                                                {path : 'language_cd', operator : 'EQ', value1 : 'EN'}
+                                                            ]
+                                                        }"
+                                    >
+                                        <core:Item key="{cc>code}" text="{cc>code_name}" />
+                                    </ComboBox>
+                                    <ComboBox   id="mold_item_type_code"
+                                                selectedKey="{mold_item_type_code}"
+                                                items="{
+                                                            path : 'cc>/CodeCombo',
+                                                            filters : [
+                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                                {path : 'company_code', operator : 'EQ', value1 : '*'},
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'},
+                                                                {path : 'language_cd', operator : 'EQ', value1 : 'EN'}
+                                                            ]
+                                                        }"
+                                    >
+                                        <core:Item key="{cc>code}" text="{cc>code_name}" />
+                                    </ComboBox>
+                                    <ComboBox   id="mold_type_code"
+                                                selectedKey="{mold_type_code}"
+                                                items="{
+                                                            path : 'cc>/CodeCombo',
+                                                            filters : [
+                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                                {path : 'company_code', operator : 'EQ', value1 : '*'},
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_TYPE'},
+                                                                {path : 'language_cd', operator : 'EQ', value1 : 'EN'}
+                                                            ]
+                                                        }"
+                                    >
+                                        <core:Item key="{cc>code}" text="{cc>code_name}" />
+                                    </ComboBox>
+                                    <ComboBox   id="export_domestic_type_code"
+                                                selectedKey="{export_domestic_type_code}"
+                                                items="{
+                                                            path : 'cc>/CodeCombo',
+                                                            filters : [
+                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                                {path : 'company_code', operator : 'EQ', value1 : '*'},
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ED_TYPE'},
+                                                                {path : 'language_cd', operator : 'EQ', value1 : 'EN'}
+                                                            ]
+                                                        }"
+                                    >
+                                        <core:Item key="{cc>code}" text="{cc>code_name}" />
+                                    </ComboBox>
+                                    <ComboBox   id="t_est_use_flag"    
+                                                selectedKey="{t_est_use_flag}"
+                                                items="{
+                                                            path : 'cc>/CodeCombo',
+                                                            filters : [
+                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                                {path : 'company_code', operator : 'EQ', value1 : 'G100'},
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'CM_TF_FLAG'},
+                                                                {path : 'language_cd', operator : 'EQ', value1 : 'EN'}
+                                                            ]
+                                                        }"
+                                    >
+                                        <core:Item key="{cc>code}" text="{cc>code_name}" />
+                                    </ComboBox>
+                                    <core:Icon 
+                                        src="sap-icon://attachment"
+                                        press="handleAttachmentPress" >
+                                        <core:layoutData>
+                                            <FlexItemData growFactor="1" />
+                                        </core:layoutData>
+                                    </core:Icon>
+                                    <Text id="import_mold_flag" text="{import_mold_flag}"/>
+                                    <ComboBox id="mold_structure" selectedKey="{mold_structure}">
+                                        <core:Item key="Y" text="Two-Plate"/>
+                                    </ComboBox>
+                                    <ComboBox id="size" selectedKey="{size}">
+                                        <core:Item key="Y" text="Large"/>
+                                    </ComboBox>
+                                    <Text id="receiving_report_date" text="{receiving_report_date}"/>
+                                    <Text id="develope_request_empno" text="{develope_request_empno}"/>
+                                    <Text id="mold_developer_id" text="{mold_developer_id}"/>
+                                    <TextArea id="remark" value="{remark}" rows="2" />
+                                    <Text id="pdm_project_code" text="{pdm_project_code}"/>
+                                    <Text id="pdm_project_name" text="{pdm_project_name}"/>
+                                    <Input id="family_part_number_1" value="{family_part_number_1}" maxLength="11"/>
+                                    <Input id="family_part_number_2" value="{family_part_number_2}" maxLength="11"/>
+                                    <Input id="family_part_number_3" value="{family_part_number_3}" maxLength="11"/>
+                                    <Input id="family_part_number_4" value="{family_part_number_4}" maxLength="11"/>
+                                    <Input id="family_part_number_5" value="{family_part_number_5}" maxLength="11"/>
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                
+                </Page>
+			</f:content>
+		</f:DynamicPage>
+    </App>
+</mvc:View>
