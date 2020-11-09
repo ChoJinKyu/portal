@@ -4,6 +4,7 @@ namespace pg;
 entity Vp_Vendor_Pool_Search_View {	
   evaluation_operation_unit_code: String(30) @title: '평가운영단위코드';
   evaluation_operation_unit_name: String(12) @title: '평가운영단위';
+  vendor_pool_code: String(30) @title: '협력사풀코드';
   vendor_pool_level1_name: String @title: 'V/P(Level1)';
   vendor_pool_level2_name: String @title: 'V/P(Level2)';
   vendor_pool_level3_name: String @title: 'V/P(Level3)';

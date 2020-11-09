@@ -1,4 +1,0 @@
-// 구매 거버넌스>기준정보관리>구매기준정보 관리 Model
-   cds deploy --to hana:sppDb_hdi_dev
-
-   git config credential.helper store

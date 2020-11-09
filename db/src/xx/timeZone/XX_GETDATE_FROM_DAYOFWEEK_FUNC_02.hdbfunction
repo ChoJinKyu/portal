@@ -77,7 +77,7 @@ BEGIN
       
 	    SELECT  TO_DATE(CAST(P_YYYY  AS  NVARCHAR(4))||V_MM||V_DD, 'YYYYMMDD')
 	    INTO    D_RETURN
-	    FROM    CM_DUMMY;
+	    FROM    DUMMY;
 
     END IF;
 

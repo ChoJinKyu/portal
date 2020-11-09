@@ -1,1 +1,1 @@
-// 구매 거버넌스 Handler
+// 구매 거버넌스 Handler.

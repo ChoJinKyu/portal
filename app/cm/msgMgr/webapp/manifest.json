@@ -17,7 +17,7 @@
     },
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v4/cm.MsgMgrService/",
+        "uri": "srv-api/odata/v4/xx.MessageMgrService/",
         "type": "OData",
         "settings": {
           "odataVersion": "4.0",

@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+    <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="dp.DevelopmentReceiptService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="MoldMasters" EntityType="dp.DevelopmentReceiptService.MoldMasters"/>
+      </EntityContainer>
+      <EntityType Name="MoldMasters">
+        <Key>
+          <PropertyRef Name="tenent_id"/>
+          <PropertyRef Name="org_code"/>
+        </Key>
+        <Property Name="tenent_id" Type="Edm.String" MaxLength="4" Nullable="false"/>
+        <Property Name="affiliate_code" Type="Edm.String" MaxLength="4" Nullable="false"/>
+        <Property Name="org_code" Type="Edm.String" MaxLength="3" Nullable="false"/>
+        <Property Name="item_id" Type="Edm.Int64" Nullable="false"/>
+        <Property Name="part_no" Type="Edm.String" MaxLength="50" Nullable="false"/>
+        <Property Name="item_seq" Type="Edm.Int64" Nullable="false"/>
+        <Property Name="description" Type="Edm.String" MaxLength="200"/>
+        <Property Name="model" Type="Edm.String" MaxLength="50"/>
+        <Property Name="assets_no" Type="Edm.String" MaxLength="30"/>
+        <Property Name="old_assets_no" Type="Edm.String" MaxLength="45"/>
+        <Property Name="item_type" Type="Edm.String" MaxLength="10"/>
+        <Property Name="prod_type" Type="Edm.String" MaxLength="30"/>
+        <Property Name="offline_bid_flag" Type="Edm.String" MaxLength="1"/>
+        <Property Name="e_d_type" Type="Edm.String" MaxLength="1"/>
+        <Property Name="first_prod_date" Type="Edm.String" MaxLength="8"/>
+        <Property Name="complete_date" Type="Edm.String" MaxLength="8"/>
+        <Property Name="budget_report_no" Type="Edm.String" MaxLength="20"/>
+        <Property Name="budget_report_date" Type="Edm.String" MaxLength="8"/>
+        <Property Name="budget_amount" Type="Edm.Decimal" Scale="variable"/>
+        <Property Name="currency" Type="Edm.String" MaxLength="3"/>
+        <Property Name="target_amount" Type="Edm.Decimal" Scale="variable"/>
+        <Property Name="estimate_end_date" Type="Edm.String" MaxLength="10"/>
+        <Property Name="item_update_flag" Type="Edm.String" MaxLength="1"/>
+        <Property Name="import_flag" Type="Edm.String" MaxLength="1"/>
+        <Property Name="costtable_flag" Type="Edm.String" MaxLength="1"/>
+        <Property Name="estimate_report_no" Type="Edm.String" MaxLength="20"/>
+        <Property Name="estimate_report_date" Type="Edm.String" MaxLength="8"/>
+        <Property Name="v_select_cancel_report_no" Type="Edm.String" MaxLength="20"/>
+        <Property Name="v_select_cancel_report_date" Type="Edm.String" MaxLength="8"/>
+        <Property Name="v_select_cancel_reason" Type="Edm.String" MaxLength="200"/>
+        <Property Name="v_select_remarks" Type="Edm.String" MaxLength="1000"/>
+        <Property Name="vend_select_report_no" Type="Edm.String" MaxLength="20"/>
+        <Property Name="vend_select_report_date" Type="Edm.String" MaxLength="8"/>
+        <Property Name="confirm_amount" Type="Edm.Decimal" Scale="variable"/>
+        <Property Name="order_vendor_id" Type="Edm.Int64"/>
+        <Property Name="order_amount" Type="Edm.Decimal" Scale="variable"/>
+        <Property Name="order_nego_status" Type="Edm.String" MaxLength="1"/>
+        <Property Name="order_report_no" Type="Edm.String" MaxLength="20"/>
+        <Property Name="order_report_date" Type="Edm.String" MaxLength="8"/>
+        <Property Name="order_no" Type="Edm.String" MaxLength="15"/>
+        <Property Name="order_concurrent_yn" Type="Edm.String" MaxLength="1"/>
+        <Property Name="invest_cost_type" Type="Edm.String" MaxLength="1"/>
+        <Property Name="project_code" Type="Edm.String" MaxLength="13"/>
+        <Property Name="invest_code" Type="Edm.String" MaxLength="12"/>
+        <Property Name="invest_seq" Type="Edm.String" MaxLength="3"/>
+        <Property Name="exec_seq" Type="Edm.String" MaxLength="3"/>
+        <Property Name="order_seq" Type="Edm.String" MaxLength="2"/>
+        <Property Name="local_create_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+        <Property Name="local_update_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+        <Property Name="create_user_id" Type="Edm.String" MaxLength="255" Nullable="false"/>
+        <Property Name="update_user_id" Type="Edm.String" MaxLength="255" Nullable="false"/>
+        <Property Name="system_create_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+        <Property Name="system_update_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+      </EntityType>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/tenent_id">
+        <Annotation Term="Common.Label" String="테넌트ID (LGE : 2000)"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/affiliate_code">
+        <Annotation Term="Common.Label" String="관계사 지사코드"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/org_code">
+        <Annotation Term="Common.Label" String="사업부코드"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/item_id">
+        <Annotation Term="Common.Label" String="도번 id"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/part_no">
+        <Annotation Term="Common.Label" String="품번(도번)명"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/item_seq">
+        <Annotation Term="Common.Label" String="차수 ( 1호 금형, 2호 금형.....)"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/description">
+        <Annotation Term="Common.Label" String="품명"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/model">
+        <Annotation Term="Common.Label" String="모델"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/assets_no">
+        <Annotation Term="Common.Label" String="자산번호"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/old_assets_no">
+        <Annotation Term="Common.Label" String="이전자산번호"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/item_type">
+        <Annotation Term="Common.Label" String="금형구분 : pd / md / rub /...(imdm_code 테이블에서 관리함)"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/prod_type">
+        <Annotation Term="Common.Label" String="제작 구분 ( n : 신작, r : 노후대체,k : 저장품) / [b:백업,f:fdm,m:mock-up,n:신작,s:간이금형]"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/offline_bid_flag">
+        <Annotation Term="Common.Label" String="공개입찰여부"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/e_d_type">
+        <Annotation Term="Common.Label" String="수출/내수 구분 ( e: 수출, d: 내수 )"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/first_prod_date">
+        <Annotation Term="Common.Label" String="초품일 ( 견적시 : d+몇일 )"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/complete_date">
+        <Annotation Term="Common.Label" String="제작 완료일 ( 견적시 : d + 몇일 )"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/budget_report_no">
+        <Annotation Term="Common.Label" String="집행품의번호"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/budget_report_date">
+        <Annotation Term="Common.Label" String="집행품의완료일"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/budget_amount">
+        <Annotation Term="Common.Label" String="gbms 가용예산금액"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/currency">
+        <Annotation Term="Common.Label" String="통화코드"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/target_amount">
+        <Annotation Term="Common.Label" String="목표가(tobe - 집행가)"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/estimate_end_date">
+        <Annotation Term="Common.Label" String="견적요청 완료일(due date)"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/item_update_flag">
+        <Annotation Term="Common.Label" String="item수정여부(개발의뢰접수여부)"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/import_flag">
+        <Annotation Term="Common.Label" String="y:도입,n:내수"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/costtable_flag">
+        <Annotation Term="Common.Label" String="costtable사용여부"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/estimate_report_no">
+        <Annotation Term="Common.Label" String="견적 요청 품의 번호"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/estimate_report_date">
+        <Annotation Term="Common.Label" String="견적 품의완료일( = 업체에 견적요청일 )"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/v_select_cancel_report_no">
+        <Annotation Term="Common.Label" String="업체선정 취소 품의 번호"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/v_select_cancel_report_date">
+        <Annotation Term="Common.Label" String="업체선정취소 품의 최종승인일자"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/v_select_cancel_reason">
+        <Annotation Term="Common.Label" String="업체선정취소 사유"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/v_select_remarks">
+        <Annotation Term="Common.Label" String="업체선정비고"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/vend_select_report_no">
+        <Annotation Term="Common.Label" String="견적 업체 선정표 품의 번호"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/vend_select_report_date">
+        <Annotation Term="Common.Label" String="발주품의 최종승인일"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/confirm_amount">
+        <Annotation Term="Common.Label" String="견적완료금액"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/order_vendor_id">
+        <Annotation Term="Common.Label" String="발주처(제작업체) id"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/order_amount">
+        <Annotation Term="Common.Label" String="발주금액"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/order_nego_status">
+        <Annotation Term="Common.Label" String="발주금액 nego status(임시저장:c, lge 금액제시:l, 업체 금액제시:v, 업체합의 :a, 발주:o)"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/order_report_no">
+        <Annotation Term="Common.Label" String="발주 품의 번호"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/order_report_date">
+        <Annotation Term="Common.Label" String="발주 품의완료일( = 업체에 제작요청일 )"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/order_no">
+        <Annotation Term="Common.Label" String="발주서 no"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/order_concurrent_yn">
+        <Annotation Term="Common.Label" String="동시발주 유무(y:동시발주, n(or null):요청발주)"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/invest_cost_type">
+        <Annotation Term="Common.Label" String="투자/경비 구분 ( 투자:i, 경비:c )"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/project_code">
+        <Annotation Term="Common.Label" String="project code"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/invest_code">
+        <Annotation Term="Common.Label" String="투자코드"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/invest_seq">
+        <Annotation Term="Common.Label" String="투자 항번"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/exec_seq">
+        <Annotation Term="Common.Label" String="집행 항번"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/order_seq">
+        <Annotation Term="Common.Label" String="발주 항번"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/local_create_dtm">
+        <Annotation Term="Common.Label" String="로컬등록시간"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/local_update_dtm">
+        <Annotation Term="Common.Label" String="로컬수정시간"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/create_user_id">
+        <Annotation Term="Common.Label" String="등록사용자ID"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/update_user_id">
+        <Annotation Term="Common.Label" String="변경사용자ID"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/system_create_dtm">
+        <Annotation Term="Common.Label" String="시스템등록시간"/>
+      </Annotations>
+      <Annotations Target="dp.DevelopmentReceiptService.MoldMasters/system_update_dtm">
+        <Annotation Term="Common.Label" String="시스템수정시간"/>
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

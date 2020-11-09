@@ -1,18 +1,24 @@
 sap.ui.define([
-		"sap/ui/core/mvc/Controller",
-        "sap/ui/model/json/JSONModel",
-        "sap/m/MessageToast",
+		"cm/currencyMgr/controller/BaseController",
+        "sap/base/Log",
         "sap/m/MessageBox",
+        "sap/m/MessageToast",
+        "sap/ui/core/format/DateFormat",        
         "sap/ui/model/Filter",
-        "sap/ui/model/FilterOperator"
+        "sap/ui/model/FilterOperator",
+        "sap/ui/model/FilterType",
+        "sap/ui/model/Sorter",
+        "sap/ui/model/json/JSONModel",
+        "sap/ui/thirdparty/jquery",
+        "sap/m/Token"        
 	],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (BaseController, JSONModel, MessageToast, MessageBox, Filter, FilterOperator) {
+	function (Controller, Log, MessageBox, MessageToast, DateFormat, Filter, FilterOperator, FilterType, Sorter, JSONModel, jquery, Token) {
 		"use strict";
 
-		return BaseController.extend("cm.currencyMgr.controller.currencyMgr", {
+		return Controller.extend("cm.currencyMgr.controller.currencyMgr", {            
 
             isValNull: function (p_val) {
                 if(!p_val || p_val == "" || p_val == null){
@@ -27,7 +33,9 @@ sap.ui.define([
                     mstParam : "",
                     dtlParam : "",
                     lngParam : ""
-                });                
+                });          
+                
+                this._createView();
                 
             },
 
@@ -37,6 +45,41 @@ sap.ui.define([
                 // search_use_yn
                 // this.byId("search_use_yn").getBinding("items")
 
+            },
+
+            /**
+             * @private
+             * @see view에서 사용할 객체를 생성합니다.
+             */
+            _createView : function() {
+                console.group("_createView");
+
+                var oView = this.getView();
+
+                var oUiModel = new JSONModel({ 
+                            filterCommonID : "",
+                            filterValue : "",
+                            hasUIChanges : false,  
+                            bSearch : false,
+                            bNewRow : true,
+                            bOldRow : false,
+                            bAdd : true,
+                            bDelete : false,                                                    
+                            bCopy : false,
+                            bModify : false,
+                            bSave : true,
+                            bSelect : false,
+                            bCheck : false,
+                            subListCount : 0,
+                            bSubCheck : false,
+                            bSubListTrue : false,
+                            bEvent : "",
+
+                });          
+
+                this.setModel(oUiModel, "ui");
+
+                console.groupEnd();
             },
 
 			onSearch: function () {
@@ -260,6 +303,9 @@ sap.ui.define([
 
                     var dtlBinding = this.byId("currencyLngTable").getBinding("items");
                     dtlBinding.resetChanges();
+                    //체크박스 클리어를 위해
+                    var oTable = this.byId("currencyLngTable");
+                    oTable.removeSelections(true);
                     this.getView().setBusy(true);
                     dtlBinding.filter(filters);
                     this.getView().setBusy(false);
@@ -296,8 +342,41 @@ sap.ui.define([
 
             },
 
-			onLngAddRow : function () {
+            onSave : function () {                
+
+                var oView = this.getView();
+                var fnSuccess = function () {
+                    oView.setBusy(false);
+                    MessageToast.show("저장 되었습니다.");
+                    this.onMstRefresh();
+                    //this.onLngRefresh();
+                }.bind(this);
+
+                var fnError = function (oError) {
+                    oView.setBusy(false);
+                    MessageBox.error(oError.message);
+                }.bind(this);
+
+
+                MessageBox.confirm("저장 하시 겠습니까?", {
+                    title : "Comfirmation",
+                    initialFocus : sap.m.MessageBox.Action.CANCEL,
+                    onClose : function(sButton) {
+                        if (sButton === MessageBox.Action.OK) {
+                            oView.setBusy(true);
+                            oView.getModel().submitBatch("CurrencyUpdateGroup").then(fnSuccess, fnError);
+                        } else if (sButton === MessageBox.Action.CANCEL) {
+                            
+                        };
+                    }
+                });
+            },
+
+			onLngAddRow : function () {               
+
                 var utcDate = this._getUtcSapDate();
+
+                var oUiModel = this.getModel("ui");
                 
                 var dtlVal = this._retrieveParam.dtlParam;
 
@@ -313,7 +392,9 @@ sap.ui.define([
                         "local_create_dtm" : utcDate,
                         "local_update_dtm" : utcDate
                         
-                    });
+                });               
+
+                    // oUiModel.setProperty("/bEvent", "AddRow"); 
 
                         /*
                         ,
@@ -344,6 +425,7 @@ sap.ui.define([
                             oView.setBusy(false);
                             MessageToast.show("삭제 되었습니다.");
                             this.onLngRefresh();
+                            this.onMstRefresh();
                         }.bind(this), function (oError) {
                             oView.setBusy(false);
                             MessageBox.error(oError.message);
@@ -368,6 +450,7 @@ sap.ui.define([
                     oView.setBusy(false);
                     MessageToast.show("저장 되었습니다.");
                     this.onLngRefresh();
+                    this.onMstRefresh();
                 }.bind(this);
 
                 var fnError = function (oError) {
@@ -391,8 +474,9 @@ sap.ui.define([
             },
 
             onLngRefresh : function () {
+                
                 var dtlBinding = this.byId("currencyLngTable").getBinding("items");
-                this.getView().setBusy(true);
+                this.getView().setBusy(true);                
                 dtlBinding.refresh();
                 this.getView().setBusy(false);
             },
@@ -406,9 +490,22 @@ sap.ui.define([
                 var utcDate = oDateFormat.format(oNow)+":00Z"; 
                 console.log("utcDate",utcDate);
                 return utcDate;
-            },
+            },            
 
-			onDtlUpdateFinished : function (oEvent) {
+			onLngUpdateFinished : function (oEvent) {
+
+                var oTable = this.byId("currencyLngTable");
+                
+                var aItems = oTable.getItems();
+
+                for (var i = 0; i < aItems.length; i++) {
+                    if(this.isValNull(aItems[i].getCells()[5].getValue()))
+                    aItems[i].getCells()[0].setEditable(true);
+                    else
+                    aItems[i].getCells()[0].setEditable(false); 
+                    
+                }
+                
                 
                 // if(oEvent.getSource().getItems().length > 0){
                 //     var v_item = oEvent.getSource().getItems()[0];

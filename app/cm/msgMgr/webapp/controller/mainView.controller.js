@@ -291,10 +291,12 @@ sap.ui.define([
                 
                 console.log("tableName: " + tableName);
 
-                var oUiModel = this.getModel("ui"), 
+                var oUiModel  = this.getModel("ui"), 
+                    mainModel = this.getModel("mainModel"),
                     oTable = this.byId(tableName);
 
                 var oBinding = oTable.getBinding("rows"),
+                    oData    = oBinding.getModel("mainModel").oData,
                     today = this._getToday(),
                     utcDate = this._getUtcSapDate(); 
 
@@ -364,12 +366,12 @@ sap.ui.define([
                         initialFocus : sap.m.MessageBox.Action.CANCEL,
                         onClose : function(sButton) {
                             if (sButton === MessageBox.Action.OK) {
-                                for (var i = 0; i < indices.length; i++) {
+                                //for (var i = 0; i < indices.length; i++) {
+                                for (var i = indices.length; i >= 0; i--) {
                                     var idx = indices[i];     
                                     if (oTable.isIndexSelected(idx)) { 
                                         that.getView().setBusy(true);
-                                        oTable.getContextByIndex(idx).delete("$auto").then(function () {   
-                                            
+                                        oTable.getContextByIndex(idx).delete("$auto").then(function () {                                              
                                            
                                             that._showMsgStrip("s", that.sucessDelete);
                                         
@@ -425,6 +427,8 @@ sap.ui.define([
                     var idx = indices[i];     
                     if (oTable.isIndexSelected(idx)) { 
                         that.getView().setBusy(true);
+
+                        //rows.AddRow()
                             
                         var oContext = oBinding.create({
                                 "tenant_id": rows[idx].getRowBindingContext().getValue("tenant_id"),
@@ -441,22 +445,18 @@ sap.ui.define([
                                 "system_update_dtm": "2020-10-13T00:00:00Z",
                         });
                         
-                        oTable.getContextByIndex(idx);
+                        //oTable.getContextByIndex(idx);
                         that.getView().setBusy(false);
                     }
-                }
-
-                
+                }              
 
                 oUiModel.setProperty("/bEvent", "AddRow"); 
                 
-                oTable.clearSelection();
+                //oTable.clearSelection();
 
                 this.getView().setBusy(true);
 
-                oContext.created().then(function () {
-                    oBinding.refresh();
-                });
+               
 
                 //focus 이동
                 oTable.getRows().some(function (oRows) {
@@ -465,6 +465,10 @@ sap.ui.define([
                         oRows.setSelected(true);
                         return true;
                     }
+                });
+
+                oContext.created().then(function () {
+                    oBinding.refresh();
                 });
 
                 this.getView().setBusy(false);
@@ -500,8 +504,6 @@ sap.ui.define([
                 }
 
                 oUiModel.setProperty("/bEvent", "ModifyRow"); 
-                
-                //oTable.clearSelection();
 
                 this.getView().setBusy(true);
 
@@ -534,28 +536,40 @@ sap.ui.define([
                       oBinding = oTable.getBinding("rows"),                    
                       rows = oTable.getRows(), 
                       oUiModel = this.getModel("ui");
-
-                 this.getView().setBusy(true);
+                
+                if (oBinding.getContexts()[oEvent.getParameter('rowIndex')] === null)
+                {
+                      return;
+                }
 
                 oUiModel.setProperty("/bEvent", "ModifyRow"); 
 
- 
                 that.getView().setBusy(true);
 
-                    if (rows[oEvent.mParameters.rowIndex].getRowBindingContext().getValue("update_user_id") === 'M')              
+                    if (oBinding.getContexts()[oEvent.getParameter('rowIndex')].getValue("update_user_id") === 'M')              
                     {
-                        rows[oEvent.mParameters.rowIndex].getRowBindingContext().setProperty("update_user_id", "Modify");
+                        oBinding.getContexts()[oEvent.getParameter('rowIndex')].setProperty("update_user_id", "Modify");
                     }
                     else
                     {
-                        this.sUpdate_user_id = "Modify" ;
-                        rows[oEvent.mParameters.rowIndex].getRowBindingContext().setProperty("update_user_id", "M");
+                        switch (oEvent.mParameters.columnIndex)
+                        {
+                            case "3" :
+                            case "4" :
+                            case "5" :
+                                 this.sUpdate_user_id = "Modify" ;
+                                 oBinding.getContexts()[oEvent.getParameter('rowIndex')].setProperty("update_user_id", "M");
+                            default :
+                        }                       
                     }
    
 
                 that.getView().setBusy(false);
      
                 console.groupEnd();     
+            },
+            OnLiveChange(oEvent){
+                var sNewValue = oEvent.getParameter("value");
             },
 
             /**
@@ -566,6 +580,7 @@ sap.ui.define([
             onSave : function () {
                 console.group("onSave");
 
+                 var oTable = this.byId("mainList");
                  var mstBinding = this.byId("mainList").getBinding("rows");
 
                 if (!mstBinding.hasPendingChanges()) {
@@ -577,7 +592,8 @@ sap.ui.define([
                 var fnSuccess = function () {
                     oView.setBusy(false);
                     MessageToast.show("저장 되었습니다.");
-                    this.onSearch();
+                    //this.onSearch();
+                    //oView.refresh();
                 }.bind(this);
 
                 var fnError = function (oError) {
@@ -593,11 +609,13 @@ sap.ui.define([
                         if (sButton === MessageBox.Action.OK) {
                             oView.setBusy(true);
                             oView.getModel().submitBatch("MainUpdateGroup").then(fnSuccess, fnError);
+                            oTable.clearSelection(); 
                         } else if (sButton === MessageBox.Action.CANCEL) {
                             
                         };
                     }
-                });     
+                });    
+                
 
                 console.groupEnd();
             },
@@ -638,7 +656,7 @@ sap.ui.define([
                 }.bind(this);
 
                 var fnError = function (oError) {
-                    //this._setBusy(false);
+                    this._setBusy(false);
                     
                     MessageBox.error(oError.message);
                 }.bind(this);

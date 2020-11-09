@@ -117,16 +117,19 @@ xmlns:mvc="sap.ui.core.mvc"
 						                $$updateGroupId : 'MainUpdateGroup'
                                         }
                                     }"
-                                visibleRowCount="15"      
+                                visibleRowCount="15"   
+                                VisibleRowCountMode="Auto"
+                                selectionMode="MultiToggle"
                                 rowSelectionChange = ".onCheck"   
-                                cellClick = ".onCellClick" 
+                                cellClick = ".onCellClick"
+
                             >
                                 <table:extension>
 									<OverflowToolbar class="sapFDynamicPageAlignContent">
 									<ToolbarSpacer/>       
                                     <Button text="{i18n>TblBtnInsert}" icon="sap-icon://add"    enabled="{=${ui>/bAdd}}" type="Accept" press=".onCreateRow"/>
                                     <Button text="{i18n>TblBtnCopy}"   icon="sap-icon://copy"   enabled="{=${ui>/bCopy}}" type="Accept" press=".onCopyRow"/>
-                                    <!-- <Button text="{i18n>TblBtnModify}"   icon="sap-icon://copy" enabled="{=${ui>/bModify}}" type="Accept" press=".onModifyRow"/> -->
+                                    <Button text="{i18n>TblBtnModify}"   icon="sap-icon://copy" enabled="{=${ui>/bModify}}" type="Accept" press=".onModifyRow"/>
                                     <Button text="{i18n>TblBtnDelete}" icon="sap-icon://delete" enabled="{=${ui>/bDelete}}" type="Reject" press=".onDelete"/>
                                     <Button text="{i18n>TblBtnSave}"   icon="sap-icon://save"   enabled="{=${ui>/bSave}}" type="Attention" press=".onSave"/>
 								    </OverflowToolbar>
@@ -140,7 +143,7 @@ xmlns:mvc="sap.ui.core.mvc"
                                                             {path: 'i18n>StdKey'},
                                                             {path: 'update_user_id'},
                                                             {path: 'ui>/bEvent'}]
-                                                          ,formatter: '.formatter.setStatus'}}" /> 
+                                                          ,formatter: '.formatter.setStatus'}}" />                                          
 										</table:template>
 									</table:Column>
                                 </table:columns> 
@@ -209,8 +212,9 @@ xmlns:mvc="sap.ui.core.mvc"
 
                                 <table:columns>
 								    <table:Column  width="10rem" hAlign="Center" >                                        
-                                            <Label text="{i18n>TblHdMessage_type_code}"/>           
+                                            <Label text="{i18n>TblHdMessage_type_code}"/>                                                   
 										<table:template>
+                                             
 											<Input id="input_message_type_code" value="{message_type_code}" 
                                             enabled="{=%{parts: [
                                                                             {path: 'message_type_code'},
@@ -234,6 +238,7 @@ xmlns:mvc="sap.ui.core.mvc"
                                                                             {path: 'update_user_id'},
                                                                             {path: 'ui>/bEvent'}]
                                                                             ,formatter: '.formatter.setStatus'}}"
+                                                    liveChange = ".OnLiveChange"                        
                                                     />                                        
                                         </table:template>                                        
 									</table:Column>
