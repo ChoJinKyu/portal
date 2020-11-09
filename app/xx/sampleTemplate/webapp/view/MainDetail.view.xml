@@ -1,112 +1,565 @@
 <mvc:View controllerName="com.template.sampleTemplate.controller.MainDetail"  
     xmlns:mvc="sap.ui.core.mvc"
 	xmlns="sap.uxap"
+    xmlns:form="sap.ui.layout.form"
 	xmlns:layout="sap.ui.layout"
+    xmlns:tnt="sap.tnt"
+    xmlns:co="sap.suite.ui.commons"
+    xmlns:si="sap.suite.ui.commons.statusindicator"
+    xmlns:u="sap.ui.unified"
 	xmlns:m="sap.m"
 	height="100%">
-	<ObjectPageLayout id="ObjectPageLayout"
-		showTitleInHeaderContent="true"
+    <ObjectPageLayout id="ObjectPageLayout"
+        showTitleInHeaderContent="true"
 		showEditHeaderButton="true"
-		editHeaderButtonPress="handleEditBtnPress">
+		editHeaderButtonPress="handleEditBtnPress"
+        upperCaseAnchorBar="false"
+        showAnchorBarPopover="false"
+        showFooter="true">
 		<headerTitle>
 			<ObjectPageDynamicHeaderTitle>
 				<breadcrumbs>
-					<m:Breadcrumbs id="breadcrumbsId" currentLocationText="Object Page Example" >
-						<m:Link text="Page 1 a very long link" press="handleLink1Press"/>
-						<m:Link text="Page 2 long link" press="handleLink2Press"/>
-					</m:Breadcrumbs>
 				</breadcrumbs>
 
 				<expandedHeading>
-						<m:Title text="Denise Smith" wrapping="true"/>
+						<m:Title text="Order Report" wrapping="true"/>
 				</expandedHeading>
 
 				<snappedHeading>
 					<m:FlexBox  fitContainer="true" alignItems="Center">
-						<m:Avatar src="./test-resources/sap/uxap/images/imageID_275314.png" class="sapUiTinyMarginEnd"/>
-						<m:Title text="Denise Smith" wrapping="true"/>
+						<m:Title text="Order Report" wrapping="true"/>
 					</m:FlexBox>
 				</snappedHeading>
 
 				<expandedContent>
-					<m:Text text="Senior UI Developer"/>
 				</expandedContent>
 
 				<snappedContent>
-					<m:Text text="Senior UI Developer"/>
 				</snappedContent>
 
 				<snappedTitleOnMobile>
-					<m:Title text="Header Title On Phone"/>
 				</snappedTitleOnMobile>
 
 				<actions>
-					<m:OverflowToolbarButton icon="sap-icon://edit" text="edit header" type="Emphasized" tooltip="edit"/>
-					<m:OverflowToolbarButton icon="sap-icon://pull-down" text="show section" type="Emphasized" tooltip="pull-down"/>
-					<m:OverflowToolbarButton icon="sap-icon://show" text="show state" tooltip="show"/>
-					<m:Button text="Toggle Footer" press="toggleFooter"/>
 				</actions>
 			</ObjectPageDynamicHeaderTitle>
 		</headerTitle>
 
 		<headerContent>
 			<m:FlexBox wrap="Wrap">
-				<m:Avatar class="sapUiSmallMarginEnd" src="./test-resources/sap/uxap/images/imageID_275314.png"  displaySize="L" />
-
 					<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-						<m:Link text="+33 6 4512 5158"/>
-						<m:Link text="DeniseSmith@sap.com"/>
+                        <m:ObjectStatus
+                            title="Report No"
+                            text="332424-20B-00144"/>
+                        <m:ObjectStatus
+                            title="Requester"
+                            text="김갑수[ks.kim]"/>
+                        <m:ObjectStatus
+                            title="Request Date"
+                            text="2020-07-02"/>
 					</layout:VerticalLayout>
 
-					<layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
-						<m:Image src="./test-resources/sap/uxap/images/linkedin.png"/>
-						<m:Image src="./test-resources/sap/uxap/images/Twitter.png" class="sapUiSmallMarginBegin"/>
-					</layout:HorizontalLayout>
+					<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                        <m:ObjectStatus
+                            title="Affiliate"
+                            text="EKHQ"/>
+                        <m:ObjectStatus
+                            title="Division"
+                            text="DFZ"/>
+					</layout:VerticalLayout>
 
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-					<m:Label text="Hello! I am Denise and I use UxAP"/>
-					<m:VBox>
-						<m:Label text="Achieved goals"/>
-						<m:ProgressIndicator percentValue="30" displayValue="30%"/>
-					</m:VBox>
+					<m:Label text="Status :"/>
+                    <m:ObjectStatus
+                        class="sapMObjectStatusLarge"
+                        text="New"
+                        state="Error" />
 				</layout:VerticalLayout>
-
+                <!-- 
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-					<m:Label text="San Jose, USA"/>
+					<m:Label text="Process : "/>
+                    <co:MicroProcessFlow>
+                        <co:content>
+                            <co:MicroProcessFlowItem icon="sap-icon://complete" stepWidth="30px"/>
+                            <co:MicroProcessFlowItem icon="sap-icon://complete" stepWidth="30px"/>
+                            <co:MicroProcessFlowItem icon="sap-icon://complete" stepWidth="30px"/>
+                            <co:MicroProcessFlowItem icon="sap-icon://complete" stepWidth="30px"/>
+                            <co:MicroProcessFlowItem icon="sap-icon://complete" stepWidth="30px"/>
+                            <co:MicroProcessFlowItem state="Error" icon="sap-icon://circle-task" stepWidth="30px"/>
+                            <co:MicroProcessFlowItem stepWidth="30px"/>
+                            <co:MicroProcessFlowItem stepWidth="30px"/>
+                            <co:MicroProcessFlowItem stepWidth="30px"/>
+                        </co:content>
+			        </co:MicroProcessFlow>
+                </layout:VerticalLayout>
+                 -->
+                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+					<m:Label text="Process 2 : "/>
+                    <co:ProcessFlow
+                        id="processflow"
+                        scrollable="false"
+                        nodePress="onNodePress">
+                        <co:lanes>
+                            <co:ProcessFlowLaneHeader
+                                laneId="id0"
+                                iconSrc="sap-icon://order-status"
+                                text="In Order"
+                                position="0" />
+                            <co:ProcessFlowLaneHeader
+                                laneId="id1"
+                                iconSrc="sap-icon://monitor-payments"
+                                text="In Delivery"
+                                position="1" />
+                            <co:ProcessFlowLaneHeader
+                                laneId="id2"
+                                iconSrc="sap-icon://payment-approval"
+                                text="In Invoice"
+                                position="2" />
+                            <co:ProcessFlowLaneHeader
+                                laneId="id3"
+                                iconSrc="sap-icon://money-bills"
+                                text="In Accounting"
+                                position="3" />
+                        </co:lanes>
+                    </co:ProcessFlow>
 				</layout:VerticalLayout>
 			</m:FlexBox>
 		</headerContent>
 
 		<sections>
-			<ObjectPageSection titleUppercase="false" id="goalsSection" title="2014 Goals Plan">
+			<ObjectPageSection titleUppercase="false" id="goalsSection" title="General Information">
 				<subSections>
-					<ObjectPageSubSection id="goalsSectionSS1">
+					<ObjectPageSubSection>
 						<blocks>
-							<goals:GoalsBlock id="goalsblock"/>
+                            <m:HBox alignItems="Center">
+                                <m:Label
+                                    text="Report Name : "
+                                    design="Bold"
+                                    class="sapUiTinyMarginEnd"
+                                    textAlign="Left"
+                                    labelFor="input"
+                                    required="{contModel>/editMode}"/>
+                                <m:Text
+                                    text="Hisen2 에너지 1등급 금형 발주품의"
+                                    visible="{contModel>/readMode}">
+                                </m:Text>
+                                <m:Input
+                                    id="input"
+                                    width="20em"
+                                    placeholder="필수"
+                                    value="Hisen2 에너지 1등급 금형 발주품의"
+                                    visible="{contModel>/editMode}">
+                                </m:Input>
+                            </m:HBox>
+						</blocks>
+					</ObjectPageSubSection>
+
+					<ObjectPageSubSection title="info">
+						<blocks>
+                            <form:SimpleForm
+                                maxContainerCols="2"
+                                editable="true"
+                                layout="ResponsiveGridLayout"
+                                adjustLabelSpan="false"
+                                labelSpanL="4"
+                                labelSpanM="4"
+                                emptySpanL="0"
+                                emptySpanM="0"
+                                columnsL="2"
+                                columnsM="2">
+                                <form:content>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Purpose of Order "/>
+                                        <m:Text
+                                            visible="{contModel>/readMode}"
+                                            text="읽기모드">
+                                        </m:Text>
+                                        <m:Input
+                                            visible="{contModel>/editMode}"
+                                            value="수정모드"
+                                            placeholder="">
+                                        </m:Input>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Per
+                                            iod : "/>
+                                        <m:Text
+                                            visible="{contModel>/readMode}"
+                                            text="2020-11-04">
+                                        </m:Text>
+                                        <m:DatePicker
+                                            id="date"
+                                            visible="{contModel>/editMode}"
+                                            placeholder="Date"/>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Remark : "/>
+                                        <m:Text
+                                            visible="{contModel>/readMode}"
+                                            text="Remark">
+                                        </m:Text>
+                                        <m:Input
+                                            visible="{contModel>/editMode}"
+                                            placeholder="">
+                                        </m:Input>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                </form:content>
+                            </form:SimpleForm>
+						</blocks>
+					</ObjectPageSubSection>
+
+					<ObjectPageSubSection title="Process별 담당부서">
+						<blocks>
+                            <form:SimpleForm
+                                maxContainerCols="2"
+                                editable="true"
+                                layout="ResponsiveGridLayout"
+                                adjustLabelSpan="false"
+                                labelSpanL="4"
+                                labelSpanM="4"
+                                emptySpanL="0"
+                                emptySpanM="0"
+                                columnsL="2"
+                                columnsM="2">
+                                <form:content>
+                                    <m:VBox>
+                                        <m:HBox alignItems="Center">
+                                            <tnt:InfoLabel text="1" 
+                                                renderMode="Narrow" 
+                                                colorScheme="7" 
+                                                displayOnly= "true" 
+                                                class="sapUiTinyMarginEnd"/>
+                                            <m:Label
+                                                text="금형개발의뢰 : "/>
+                                        </m:HBox>
+                                        <m:Text
+                                            visible="{contModel>/readMode}"
+                                            text="의뢰">
+                                        </m:Text>
+                                        <m:Input
+                                            visible="{contModel>/editMode}"
+                                            placeholder=""
+                                            showValueHelp="true">
+                                        </m:Input>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:HBox alignItems="Center">
+                                            <tnt:InfoLabel text="2" 
+                                                renderMode="Narrow" 
+                                                colorScheme="7" 
+                                                displayOnly= "true" 
+                                                class="sapUiTinyMarginEnd"/>
+                                            <m:Label
+                                                text="금형개발접수 : "/>
+                                        </m:HBox>
+                                        <m:Text
+                                            visible="{contModel>/readMode}"
+                                            text="접수">
+                                        </m:Text>
+                                        <m:Input
+                                            visible="{contModel>/editMode}"
+                                            placeholder=""
+                                            showValueHelp="true">
+                                        </m:Input>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:HBox alignItems="Center">
+                                            <tnt:InfoLabel text="3" 
+                                                renderMode="Narrow" 
+                                                colorScheme="7" 
+                                                displayOnly= "true" 
+                                                class="sapUiTinyMarginEnd"/>
+                                            <m:Label
+                                                text="예산집행품의 : "/>
+                                        </m:HBox>
+                                        <m:Text
+                                            visible="{contModel>/readMode}"
+                                            text="품의">
+                                        </m:Text>
+                                        <m:Input
+                                            visible="{contModel>/editMode}"
+                                            placeholder=""
+                                            showValueHelp="true">
+                                        </m:Input>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="4. 금형 상세 확정: "/>
+                                        <m:Text
+                                            visible="{contModel>/readMode}"
+                                            text="확정">
+                                        </m:Text>
+                                        <m:Input
+                                            visible="{contModel>/editMode}"
+                                            placeholder=""
+                                            showValueHelp="true">
+                                        </m:Input>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="5. 발주품의 : "/>
+                                        <m:Text
+                                            visible="{contModel>/readMode}"
+                                            text="발주품의">
+                                        </m:Text>
+                                        <m:Input
+                                            visible="{contModel>/editMode}"
+                                            placeholder=""
+                                            showValueHelp="true">
+                                        </m:Input>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="6. 입고확정 : "/>
+                                        <m:Text
+                                            visible="{contModel>/readMode}"
+                                            text="입고확정">
+                                        </m:Text>
+                                        <m:Input
+                                            visible="{contModel>/editMode}"
+                                            placeholder=""
+                                            showValueHelp="true">
+                                        </m:Input>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="7. 입고품의: "/>
+                                        <m:Text
+                                            visible="{contModel>/readMode}"
+                                            text="입고품의">
+                                        </m:Text>
+                                        <m:Input
+                                            visible="{contModel>/editMode}"
+                                            placeholder=""
+                                            showValueHelp="true">
+                                        </m:Input>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                </form:content>
+                            </form:SimpleForm>
+						</blocks>
+					</ObjectPageSubSection>
+
+                    <ObjectPageSubSection title="Descriprion">
+						<blocks>
+                            <layout:VerticalLayout id="idVerticalLayout" class="sapUiContentPadding" width="100%">
+                            </layout:VerticalLayout>
 						</blocks>
 					</ObjectPageSubSection>
 				</subSections>
 			</ObjectPageSection>
 
-			<ObjectPageSection titleUppercase="false" id="personalSection" title="Personal" importance="Medium">
+			<ObjectPageSection titleUppercase="false" title="Attachment" importance="Medium">
 				<subSections>
-					<ObjectPageSubSection id="personalSectionSS1" title="Connect" titleUppercase="false">
-					</ObjectPageSubSection>
-
-					<ObjectPageSubSection id="personalSectionSS2" title="Payment information" titleUppercase="false">
+					<ObjectPageSubSection>
+						<blocks>
+                            <u:FileUploader
+                                id="fileUploader"
+                                name="myFileUpload"
+                                uploadUrl="upload/"
+                                tooltip="Upload your file to the local server"
+                                uploadComplete="handleUploadComplete"/>
+						</blocks>
 					</ObjectPageSubSection>
 				</subSections>
 			</ObjectPageSection>
 
-			<ObjectPageSection titleUppercase="false" id="employmentSection" title="Employment">
+			<ObjectPageSection titleUppercase="false" id="employmentSection" title="Order Parts">
 				<subSections>
-					<ObjectPageSubSection id="employmentSectionSS1" title="Job information" titleUppercase="false">
+					<ObjectPageSubSection titleUppercase="false">
+						<blocks>
+                            <m:Table id=""
+                                    mode="{= ${contModel>/readMode}?'None':'MultiSelect'}"
+                                    sticky="HeaderToolbar,ColumnHeaders"
+                                    inset="false"
+                                    class="sapFDynamicPageAlignContent"
+                                    width="auto">
+                                <m:headerToolbar>
+                                    <m:Toolbar>
+                                        <m:Title text="Total Order Amount" level="H2"/>
+                                        <m:ObjectStatus
+                                            text="27,000,000 KRW"
+                                            state="Error" />
+                                        <m:ToolbarSpacer/>
+                                        <m:HBox 
+                                            visible="{contModel>/editMode}">
+                                            <m:Button type="Transparent" text="Add"/>
+                                            <m:Button type="Transparent" text="Delete"/>
+                                        </m:HBox>
+                                    </m:Toolbar>
+                                </m:headerToolbar>
+                                <m:columns>
+                                    <m:Column
+                                            width="12em">
+                                        <m:Text text="Model" />
+                                    </m:Column>
+                                    <m:Column
+                                            minScreenWidth="Tablet"
+                                            demandPopin="true">
+                                        <m:Text text="Part No" />
+                                    </m:Column>
+                                    <m:Column
+                                            minScreenWidth="Tablet"
+                                            demandPopin="true">
+                                        <m:Text text="Budget" />
+                                    </m:Column>
+                                    <m:Column>
+                                        <m:Text text="Currency" />
+                                    </m:Column>
+                                    <m:Column>
+                                        <m:Text text="Order" />
+                                    </m:Column>
+                                    <m:Column>
+                                        <m:Text text="T_EST Amount" />
+                                    </m:Column>
+                                    <m:Column>
+                                        <m:Text text="Prod Type" />
+                                    </m:Column>
+                                    <m:Column>
+                                        <m:Text text="Family Part No" />
+                                    </m:Column>
+                                </m:columns>
+                                <m:items>
+                                    <m:ColumnListItem>
+                                        <m:cells>
+                                            <m:ObjectIdentifier
+                                                    title="{Name}"
+                                                    text="{ProductId}"/>
+                                            <m:Text
+                                                    text="{SupplierName}" />
+                                            <m:Text
+                                                    text="" />
+                                            <m:Text
+                                                    text="" />
+                                            <m:Text
+                                                    text="" />
+                                            <m:Text
+                                                    text="" />
+                                            <m:Text
+                                                    text="" />
+                                        </m:cells>
+                                    </m:ColumnListItem>
+                                </m:items>
+                            </m:Table>
+						</blocks>
 					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
 
-					<ObjectPageSubSection id="employmentSectionSS2" title="Employee Details" importance="Medium" titleUppercase="false">
-					</ObjectPageSubSection>
-
-					<ObjectPageSubSection id="employmentSectionSS3" title="Job Relationship" importance="Low" titleUppercase="false">
+			<ObjectPageSection titleUppercase="false" title="Report Line">
+				<subSections>
+					<ObjectPageSubSection titleUppercase="false">
+						<blocks>
+                            <m:Table
+                                    sticky="HeaderToolbar,ColumnHeaders"
+                                    inset="false"
+                                    class="sapFDynamicPageAlignContent"
+                                    width="auto">
+                                <m:headerToolbar>
+                                    <m:Toolbar>
+                                        <m:ToolbarSpacer/>
+                                        <m:Button 
+                                            type="Transparent" 
+                                            text="Address Book"
+                                            icon="sap-icon://address-book"/>
+                                    </m:Toolbar>
+                                </m:headerToolbar>
+                                <m:columns>
+                                    <m:Column
+                                            width="12em">
+                                        <m:Text text="Model" />
+                                    </m:Column>
+                                    <m:Column
+                                            minScreenWidth="Tablet"
+                                            demandPopin="true">
+                                        <m:Text text="Part No" />
+                                    </m:Column>
+                                    <m:Column
+                                            minScreenWidth="Tablet"
+                                            demandPopin="true">
+                                        <m:Text text="Budget" />
+                                    </m:Column>
+                                    <m:Column>
+                                        <m:Text text="Currency" />
+                                    </m:Column>
+                                    <m:Column>
+                                        <m:Text text="Order" />
+                                    </m:Column>
+                                    <m:Column>
+                                        <m:Text text="T_EST Amount" />
+                                    </m:Column>
+                                    <m:Column>
+                                        <m:Text text="Prod Type" />
+                                    </m:Column>
+                                    <m:Column>
+                                        <m:Text text="Family Part No" />
+                                    </m:Column>
+                                </m:columns>
+                                <m:items>
+                                    <m:ColumnListItem>
+                                        <m:cells>
+                                            <m:ObjectIdentifier
+                                                    title="{Name}"
+                                                    text="{ProductId}"/>
+                                            <m:Text
+                                                    text="{SupplierName}" />
+                                            <m:Text
+                                                    text="" />
+                                            <m:Text
+                                                    text="" />
+                                            <m:Text
+                                                    text="" />
+                                            <m:Text
+                                                    text="" />
+                                            <m:Text
+                                                    text="" />
+                                        </m:cells>
+                                    </m:ColumnListItem>
+                                </m:items>
+                            </m:Table>
+						</blocks>
 					</ObjectPageSubSection>
 				</subSections>
 			</ObjectPageSection>
@@ -114,8 +567,11 @@
 		<footer>
 			<m:OverflowToolbar>
 				<m:ToolbarSpacer />
-				<m:Button type="Accept" text="Accept"/>
-				<m:Button type="Reject" text="Reject"/>
+				<m:Button type="Transparent" text="Edit" press=".doEditMode"/>
+				<m:Button type="Transparent" text="Draft"/>
+				<m:Button type="Transparent" text="Review"/>
+				<m:Button type="Transparent" text="Delete"/>
+				<m:Button type="Emphasized" text="Request"/>
 			</m:OverflowToolbar>
 		</footer>
 	</ObjectPageLayout>

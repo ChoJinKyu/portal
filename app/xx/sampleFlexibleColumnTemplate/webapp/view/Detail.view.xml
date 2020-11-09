@@ -1,82 +1,68 @@
-<mvc:View
-    controllerName="com.template.sampleTemplate.controller.MainList"
-    xmlns:mvc="sap.ui.core.mvc"
-	xmlns="sap.uxap"
-    xmlns:form="sap.ui.layout.form"
-	xmlns:layout="sap.ui.layout"
-    xmlns:co="sap.suite.ui.commons"
-    xmlns:u="sap.ui.unified"
-	xmlns:m="sap.m"
-	height="100%">
-    <ObjectPageLayout id="ObjectPageLayout"
-		showTitleInHeaderContent="true"
-		showEditHeaderButton="true"
-		editHeaderButtonPress="handleEditBtnPress"
-        upperCaseAnchorBar="false"
-        showFooter="true">
-		<headerTitle>
-			<ObjectPageDynamicHeaderTitle>
-				<breadcrumbs>
-				</breadcrumbs>
+<mvc:View displayBlock="true" controllerName="com.template.sampleFlexibleColumnTemplate.controller.Detail" height="100%"
+		xmlns="sap.uxap"
+		xmlns:mvc="sap.ui.core.mvc"
+		xmlns:f="sap.f"
+        xmlns:form="sap.ui.layout.form"
+        xmlns:layout="sap.ui.layout"
+        xmlns:tnt="sap.tnt"
+        xmlns:co="sap.suite.ui.commons"
+        xmlns:u="sap.ui.unified"
+        xmlns:m="sap.m">
 
-				<expandedHeading>
-						<m:Title text="Order Report" wrapping="true"/>
-				</expandedHeading>
+	<ObjectPageLayout id="ObjectPageLayout"
+        showFooter="true"
+        toggleHeaderOnTitleClick="true"
+        headerExpanded="true"
+        showTitleInHeaderContent = "true"
+        alwaysShowContentHeader = "true"
+					preserveHeaderStateOnScroll="false"
+					headerContentPinnable="true"
+					isChildPage="true"
+					upperCaseAnchorBar="false">
+				<headerTitle>
+					<ObjectPageDynamicHeaderTitle>
+						<expandedHeading>
+							<m:Title text="{products>4}" wrapping="true" class="sapUiSmallMarginEnd"/>
+						</expandedHeading>
 
-				<snappedHeading>
-					<m:FlexBox  fitContainer="true" alignItems="Center">
-						<m:Title text="Order Report" wrapping="true"/>
-					</m:FlexBox>
-				</snappedHeading>
+						<navigationActions>
+							<m:OverflowToolbarButton type="Transparent" icon="sap-icon://full-screen" press="handleFullScreen" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
+							<m:OverflowToolbarButton type="Transparent" icon="sap-icon://exit-full-screen" press="handleExitFullScreen" tooltip="Exit Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
+							<m:OverflowToolbarButton type="Transparent" icon="sap-icon://decline" press="handleClose"  tooltip="Close column" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+						</navigationActions>
 
-				<expandedContent>
-				</expandedContent>
+					</ObjectPageDynamicHeaderTitle>
+				</headerTitle>
 
-				<snappedContent>
-				</snappedContent>
-
-				<snappedTitleOnMobile>
-				</snappedTitleOnMobile>
-
-				<actions>
-				</actions>
-			</ObjectPageDynamicHeaderTitle>
-		</headerTitle>
-
-		<headerContent>
+				<headerContent>
 			<m:FlexBox wrap="Wrap">
-					<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-						<m:Text text="Report No : 332424-20B-00144"/>
-						<m:Text text="Requester : 김갑수[ks.kim]"/>
-						<m:Text text="Request Date : 2020-07-02"/>
-					</layout:VerticalLayout>
-
-					<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-						<m:Text text="Affiliate : EKHQ"/>
-						<m:Text text="Division : DFZ"/>
-					</layout:VerticalLayout>
-
-				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-					<m:Label text="Status :"/>
-					<m:Title text="New" titleStyle="H2"/>
-				</layout:VerticalLayout>
-
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
 					<m:Label text="Process : "/>
                     <co:MicroProcessFlow>
                         <co:content>
-                            <co:MicroProcessFlowItem icon="sap-icon://complete" stepWidth="30px"/>
-                            <co:MicroProcessFlowItem icon="sap-icon://complete" stepWidth="30px"/>
-                            <co:MicroProcessFlowItem icon="sap-icon://complete" stepWidth="30px"/>
-                            <co:MicroProcessFlowItem icon="sap-icon://complete" stepWidth="30px"/>
-                            <co:MicroProcessFlowItem icon="sap-icon://complete" stepWidth="30px"/>
-                            <co:MicroProcessFlowItem state="Error" stepWidth="30px"/>
-                            <co:MicroProcessFlowItem stepWidth="30px"/>
-                            <co:MicroProcessFlowItem stepWidth="30px"/>
-                            <co:MicroProcessFlowItem stepWidth="30px"/>
+                            <co:MicroProcessFlowItem icon="sap-icon://complete" stepWidth="3em"/>
+                            <co:MicroProcessFlowItem icon="sap-icon://complete" stepWidth="3em"/>
+                            <co:MicroProcessFlowItem icon="sap-icon://complete" stepWidth="3em"/>
+                            <co:MicroProcessFlowItem icon="sap-icon://complete" stepWidth="3em"/>
+                            <co:MicroProcessFlowItem icon="sap-icon://complete" stepWidth="3em"/>
+                            <co:MicroProcessFlowItem state="Error" icon="sap-icon://circle-task" stepWidth="3em"/>
+                            <co:MicroProcessFlowItem stepWidth="3em"/>
+                            <co:MicroProcessFlowItem stepWidth="3em"/>
+                            <co:MicroProcessFlowItem stepWidth="3em"/>
                         </co:content>
 			        </co:MicroProcessFlow>
-				</layout:VerticalLayout>
+                    <layout:HorizontalLayout>
+                        <m:Text text="PR" width="4em" textAlign="Center"/>
+                        <m:Text text="Budget" width="4em" textAlign="Center"/>
+                        <m:Text text="RFQ" width="5em" textAlign="Center"/>
+                        <m:Text text="Mold Spec" width="5em" textAlign="Center"/>
+                        <m:Text text="Purchase Contract" width="5em" textAlign="Center"/>
+                        <m:Text text="PO" width="5em" textAlign="Center"/>
+                        <m:Text text="RCV" width="5em" textAlign="Center"/>
+                        <m:Text text="Lease Contract" width="5em" textAlign="Center"/>
+                        <m:Text text="Invoice" width="5em" textAlign="Center"/>
+                    </layout:HorizontalLayout>
+                </layout:VerticalLayout>
 			</m:FlexBox>
 		</headerContent>
 
@@ -85,38 +71,26 @@
 				<subSections>
 					<ObjectPageSubSection>
 						<blocks>
-                            <form:SimpleForm
-                                maxContainerCols="2"
-                                editable="true"
-                                layout="ResponsiveGridLayout"
-                                adjustLabelSpan="false"
-                                labelSpanL="4"
-                                labelSpanM="4"
-                                emptySpanL="0"
-                                emptySpanM="0"
-                                columnsL="2"
-                                columnsM="2">
-                                <form:content>
-                                    <m:Label
-                                        text="Report Name"
-                                        design="Bold"
-                                        textAlign="Left"
-                                        labelFor="input"
-                                        required="true">
-                                        <m:layoutData>
-                                        <layout:GridData
-                                            span="XL2 L2 M3 S3" />
-                                        </m:layoutData>
-                                    </m:Label>
-                                    <m:Input
-                                        placeholder="필수">
-                                        <m:layoutData>
-                                        <layout:GridData
-                                            span="XL4 L4 M9 S9" />
-                                        </m:layoutData>
-                                    </m:Input>
-                                </form:content>
-                            </form:SimpleForm>
+                            <m:HBox alignItems="Center">
+                                <m:Label
+                                    text="Report Name"
+                                    design="Bold"
+                                    class="sapUiTinyMarginEnd"
+                                    textAlign="Left"
+                                    labelFor="input"
+                                    required="{contModel>/editMode}"/>
+                                <m:Text
+                                    text="Hisen2 에너지 1등급 금형 발주품의"
+                                    visible="{contModel>/readMode}">
+                                </m:Text>
+                                <m:Input
+                                    id="input"
+                                    width="20em"
+                                    placeholder="필수"
+                                    value="Hisen2 에너지 1등급 금형 발주품의"
+                                    visible="{contModel>/editMode}">
+                                </m:Input>
+                            </m:HBox>
 						</blocks>
 					</ObjectPageSubSection>
 
@@ -136,10 +110,14 @@
                                 <form:content>
                                     <m:VBox>
                                         <m:Label
-                                            text="Purpose of Order : "
-                                        >
-                                        </m:Label>
+                                            text="Purpose of Order"/>
+                                        <m:Text
+                                            visible="{contModel>/readMode}"
+                                            text="읽기모드">
+                                        </m:Text>
                                         <m:Input
+                                            visible="{contModel>/editMode}"
+                                            value="수정모드"
                                             placeholder="">
                                         </m:Input>
                                         <m:layoutData>
@@ -149,11 +127,14 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="Period : "
-                                        >
-                                        </m:Label>
+                                            text="Period"/>
+                                        <m:Text
+                                            visible="{contModel>/readMode}"
+                                            text="2020-11-04">
+                                        </m:Text>
                                         <m:DatePicker
                                             id="date"
+                                            visible="{contModel>/editMode}"
                                             placeholder="Date"/>
                                         <m:layoutData>
                                             <layout:GridData
@@ -162,10 +143,13 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="Remark : "
-                                        >
-                                        </m:Label>
+                                            text="Remark"/>
+                                        <m:Text
+                                            visible="{contModel>/readMode}"
+                                            text="Remark">
+                                        </m:Text>
                                         <m:Input
+                                            visible="{contModel>/editMode}"
                                             placeholder="">
                                         </m:Input>
                                         <m:layoutData>
@@ -193,11 +177,69 @@
                                 columnsM="2">
                                 <form:content>
                                     <m:VBox>
-                                        <m:Label
-                                            text="1. 금형개발의뢰 : "
-                                        >
-                                        </m:Label>
+                                        <m:HBox alignItems="Center">
+                                            <tnt:InfoLabel text="1" 
+                                                renderMode="Narrow" 
+                                                colorScheme="7" 
+                                                displayOnly= "true" 
+                                                class="sapUiTinyMarginEnd"/>
+                                            <m:Label
+                                                text="금형개발의뢰 : "/>
+                                        </m:HBox>
+                                        <m:Text
+                                            visible="{contModel>/readMode}"
+                                            text="의뢰">
+                                        </m:Text>
                                         <m:Input
+                                            visible="{contModel>/editMode}"
+                                            placeholder=""
+                                            showValueHelp="true">
+                                        </m:Input>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:HBox alignItems="Center">
+                                            <tnt:InfoLabel text="2" 
+                                                renderMode="Narrow" 
+                                                colorScheme="7" 
+                                                displayOnly= "true" 
+                                                class="sapUiTinyMarginEnd"/>
+                                            <m:Label
+                                                text="금형개발접수 : "/>
+                                        </m:HBox>
+                                        <m:Text
+                                            visible="{contModel>/readMode}"
+                                            text="접수">
+                                        </m:Text>
+                                        <m:Input
+                                            visible="{contModel>/editMode}"
+                                            placeholder=""
+                                            showValueHelp="true">
+                                        </m:Input>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:HBox alignItems="Center">
+                                            <tnt:InfoLabel text="3" 
+                                                renderMode="Narrow" 
+                                                colorScheme="7" 
+                                                displayOnly= "true" 
+                                                class="sapUiTinyMarginEnd"/>
+                                            <m:Label
+                                                text="예산집행품의 : "/>
+                                        </m:HBox>
+                                        <m:Text
+                                            visible="{contModel>/readMode}"
+                                            text="품의">
+                                        </m:Text>
+                                        <m:Input
+                                            visible="{contModel>/editMode}"
                                             placeholder=""
                                             showValueHelp="true">
                                         </m:Input>
@@ -208,10 +250,13 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="2. 금형개발접수 : "
-                                        >
-                                        </m:Label>
+                                            text="4. 금형 상세 확정: "/>
+                                        <m:Text
+                                            visible="{contModel>/readMode}"
+                                            text="확정">
+                                        </m:Text>
                                         <m:Input
+                                            visible="{contModel>/editMode}"
                                             placeholder=""
                                             showValueHelp="true">
                                         </m:Input>
@@ -222,10 +267,13 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="3. 예산집행품의 : "
-                                        >
-                                        </m:Label>
+                                            text="5. 발주품의 : "/>
+                                        <m:Text
+                                            visible="{contModel>/readMode}"
+                                            text="발주품의">
+                                        </m:Text>
                                         <m:Input
+                                            visible="{contModel>/editMode}"
                                             placeholder=""
                                             showValueHelp="true">
                                         </m:Input>
@@ -236,10 +284,13 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="4. 금형 상세 확정: "
-                                        >
-                                        </m:Label>
+                                            text="6. 입고확정 : "/>
+                                        <m:Text
+                                            visible="{contModel>/readMode}"
+                                            text="입고확정">
+                                        </m:Text>
                                         <m:Input
+                                            visible="{contModel>/editMode}"
                                             placeholder=""
                                             showValueHelp="true">
                                         </m:Input>
@@ -250,38 +301,13 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="5. 발주품의 : "
-                                        >
-                                        </m:Label>
+                                            text="7. 입고품의: "/>
+                                        <m:Text
+                                            visible="{contModel>/readMode}"
+                                            text="입고품의">
+                                        </m:Text>
                                         <m:Input
-                                            placeholder=""
-                                            showValueHelp="true">
-                                        </m:Input>
-                                        <m:layoutData>
-                                            <layout:GridData
-                                                span="XL2 L3 M6 S12" />
-                                        </m:layoutData>
-                                    </m:VBox>
-                                    <m:VBox>
-                                        <m:Label
-                                            text="6. 입고확정 : "
-                                        >
-                                        </m:Label>
-                                        <m:Input
-                                            placeholder=""
-                                            showValueHelp="true">
-                                        </m:Input>
-                                        <m:layoutData>
-                                            <layout:GridData
-                                                span="XL2 L3 M6 S12" />
-                                        </m:layoutData>
-                                    </m:VBox>
-                                    <m:VBox>
-                                        <m:Label
-                                            text="7. 입고품의: "
-                                        >
-                                        </m:Label>
-                                        <m:Input
+                                            visible="{contModel>/editMode}"
                                             placeholder=""
                                             showValueHelp="true">
                                         </m:Input>
@@ -324,7 +350,7 @@
 					<ObjectPageSubSection titleUppercase="false">
 						<blocks>
                             <m:Table id=""
-                                    mode="MultiSelect"
+                                    mode="{= ${contModel>/readMode}?'None':'MultiSelect'}"
                                     sticky="HeaderToolbar,ColumnHeaders"
                                     inset="false"
                                     class="sapFDynamicPageAlignContent"
@@ -332,9 +358,15 @@
                                 <m:headerToolbar>
                                     <m:Toolbar>
                                         <m:Title text="Total Order Amount" level="H2"/>
-                                        <m:Title text="27,000,000 KRW"/>
-                                        <m:Button type="Transparent" text="Add"/>
-                                        <m:Button type="Transparent" text="Delete"/>
+                                        <m:ObjectStatus
+                                            text="27,000,000 KRW"
+                                            state="Error" />
+                                        <m:ToolbarSpacer/>
+                                        <m:HBox 
+                                            visible="{contModel>/editMode}">
+                                            <m:Button type="Transparent" text="Add"/>
+                                            <m:Button type="Transparent" text="Delete"/>
+                                        </m:HBox>
                                     </m:Toolbar>
                                 </m:headerToolbar>
                                 <m:columns>
@@ -475,9 +507,9 @@
 			<m:OverflowToolbar>
 				<m:ToolbarSpacer />
 				<m:Button type="Transparent" text="Draft"/>
-				<m:Button type="Transparent" text="Review"/>
-				<m:Button type="Transparent" text="Delete"/>
-				<m:Button type="Emphasized" text="Request"/>
+                <m:Button type="Transparent" text="Edit" press=".doEditMode"/>
+				<m:Button type="Transparent" text="Cancel" press=".doCancelMode"/>
+				<m:Button type="Emphasized" text="Confirm"/>
 			</m:OverflowToolbar>
 		</footer>
 	</ObjectPageLayout>
