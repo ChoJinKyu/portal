@@ -3,11 +3,11 @@ SELECT PARENT_ID
       ,NODE_ID
       ,TENANT_ID
       ,COMPANY_CODE 
-      ,'LGC' COMPANY_NAME               /*조직 테이블 정보*/
-      ,OPERATION_ORG_TYPE_CODE
-      ,NULL OPERATION_ORG_TYPE_NAME     /*조직 테이블 정보*/
-      ,OPERATION_ORG_CODE
-      ,'석유화학' OPERATION_ORG_NAME    /*조직 테이블 정보*/
+      ,'LGC' COMPANY_NAME     /*조직 테이블 정보*/
+      ,ORG_TYPE_CODE
+      ,NULL ORG_TYPE_NAME     /*조직 테이블 정보*/
+      ,ORG_CODE
+      ,'석유화학' ORG_NAME     /*조직 테이블 정보*/
       ,VENDOR_POOL_CODE
       ,VENDOR_POOL_LOCAL_NAME
       ,VENDOR_POOL_ENGLISH_NAME
@@ -47,8 +47,8 @@ SELECT PARENT_ID
 FROM   HIERARCHY (
                   SOURCE (SELECT  A.TENANT_ID
                                  ,A.COMPANY_CODE
-                                 ,A.OPERATION_ORG_TYPE_CODE
-                                 ,A.OPERATION_ORG_CODE
+                                 ,A.ORG_TYPE_CODE
+                                 ,A.ORG_CODE
                                  ,A.VENDOR_POOL_CODE
                                  ,A.VENDOR_POOL_LOCAL_NAME
                                  ,A.VENDOR_POOL_ENGLISH_NAME
@@ -73,8 +73,8 @@ FROM   HIERARCHY (
                                  ,A.MARK_SEQUENCE
                                  ,A.REGISTER_REASON_TEXT
                                  ,A.APPROVAL_REQUEST_NUMBER
-                                 ,HIERARCHY_COMPOSITE_ID(A.TENANT_ID, A.COMPANY_CODE, A.OPERATION_ORG_TYPE_CODE, A.OPERATION_ORG_CODE, A.PARENT_VENDOR_POOL_CODE) AS PARENT_ID
-                                 ,HIERARCHY_COMPOSITE_ID(A.TENANT_ID, A.COMPANY_CODE, A.OPERATION_ORG_TYPE_CODE, A.OPERATION_ORG_CODE, A.VENDOR_POOL_CODE) AS NODE_ID
+                                 ,HIERARCHY_COMPOSITE_ID(A.TENANT_ID, A.COMPANY_CODE, A.ORG_TYPE_CODE, A.ORG_CODE, A.PARENT_VENDOR_POOL_CODE) AS PARENT_ID
+                                 ,HIERARCHY_COMPOSITE_ID(A.TENANT_ID, A.COMPANY_CODE, A.ORG_TYPE_CODE, A.ORG_CODE, A.VENDOR_POOL_CODE) AS NODE_ID
                           FROM   PG_VP_VENDOR_POOL_MST A)
                   START WHERE PARENT_VENDOR_POOL_CODE IS NULL
                   SIBLING ORDER BY MARK_SEQUENCE, NODE_ID)
