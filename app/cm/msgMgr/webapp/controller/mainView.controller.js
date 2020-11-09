@@ -429,14 +429,14 @@ sap.ui.define([
                         that.getView().setBusy(true);
 
                         //rows.AddRow()
-                            
+
                         var oContext = oBinding.create({
-                                "tenant_id": rows[idx].getRowBindingContext().getValue("tenant_id"),
-                                "message_code": rows[idx].getRowBindingContext().getValue("message_code"),
-                                "language_code": rows[idx].getRowBindingContext().getValue("language_code"),
-                                "chain_code": rows[idx].getRowBindingContext().getValue("chain_code"),
-                                "message_type_code": rows[idx].getRowBindingContext().getValue("message_type_code"),
-                                "message_contents": rows[idx].getRowBindingContext().getValue("message_contents"),
+                                "tenant_id": oBinding.getContexts()[idx].getValue("tenant_id"),
+                                "message_code": oBinding.getContexts()[idx].getValue("message_code"),
+                                "language_code": oBinding.getContexts()[idx].getValue("language_code"),
+                                "chain_code": oBinding.getContexts()[idx].getValue("chain_code"),
+                                "message_type_code": oBinding.getContexts()[idx].getValue("message_type_code"),
+                                "message_contents": oBinding.getContexts()[idx].getValue("message_contents"),
                                 "local_create_dtm": "2020-10-13T00:00:00Z",
                                 "local_update_dtm": "2020-10-13T00:00:00Z",
                                 "create_user_id": "Admin",
@@ -513,7 +513,8 @@ sap.ui.define([
                     var idx = indices[i];     
                     if (oTable.isIndexSelected(idx)) { 
                         that.getView().setBusy(true);
-                            rows[idx].getRowBindingContext().setProperty("update_user_id", "M");
+                            oBinding.getContexts()[idx].setProperty('update_user_id', 'M')
+                            //rows[idx].getRowBindingContext().setProperty("update_user_id", "M");
                         //oTable.getContextByIndex(idx);
                         that.getView().setBusy(false);
                     }
