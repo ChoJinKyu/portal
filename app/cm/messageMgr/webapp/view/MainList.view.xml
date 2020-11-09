@@ -5,9 +5,10 @@
     xmlns:form="sap.ui.layout.form" 
     xmlns:layout="sap.ui.layout" 
     xmlns:core="sap.ui.core" 
+    xmlns:lib-m="ext.lib.m"
     height="100%">
 
-    <f:DynamicPage id="pageMainList"
+    <f:DynamicPage id="page"
         headerExpanded="false" 
         toggleHeaderOnTitleClick="true">
         <!-- DynamicPage Title -->
@@ -17,36 +18,47 @@
                     <Title text="{i18n>appTitle}" />
                 </f:heading>
                 <f:snappedContent>
-                    <form:SimpleForm maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                    <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
-                                <Label text="Chain: " labelFor="searchChainS" required="true"></Label>
-                                <Select id="searchChainS" width="100%" selectedKey="CM">
+                                <Label text="Chain" labelFor="searchChainS" required="true"></Label>
+                                <ComboBox id="searchChainS" width="100%" selectedKey="CM" items="{
+                                        path: 'util>/CodeDetails',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                            {path: 'company_code', operator: 'EQ', value1: 'G100'},
+                                            {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
+                                        ]
+                                    }">
                                     <items>
-                                        <core:Item key="CM" text="Common" />
-                                        <core:Item key="DP" text="DP" />
-                                        <core:Item key="PG" text="PG" />
+                                        <core:Item key="{util>code}" text="{util>code} :{util>code_description}" />
                                     </items>
-                                </Select>
+                                </ComboBox>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Language: " labelFor="searchLanguageS"></Label>
-                                <Select id="searchLanguageS" width="100%" selectedKey="">
+                                <Label text="Language" labelFor="searchLanguageS"></Label>
+                                <ComboBox id="searchLanguageS" width="100%" items="{
+                                        path: 'util>/CodeDetails',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                            {path: 'company_code', operator: 'EQ', value1: 'G100'},
+                                            {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
+                                        ]
+                                    }">
                                     <items>
                                         <core:Item key="" text="Choose a Language" />
-                                        <core:Item key="KO" text="Korean" />
-                                        <core:Item key="EN" text="English" />
+                                        <core:Item key="{util>code}" text="{util>code} :{util>code_description}" />
                                     </items>
-                                </Select>
+                                </ComboBox>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Keyword: " labelFor="searchKeywordS"></Label>
+                                <Label text="Keyword" labelFor="searchKeywordS"></Label>
                                 <Input id="searchKeywordS" placeholder="Keywords of the Code or Content"></Input>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
@@ -58,7 +70,8 @@
                 <f:expandedContent>
                 </f:expandedContent>
                 <f:actions>
-                    <Button text="Search" type="Emphasized" press=".onSearchPress" />
+                    <Button id="pageEditButton" text="Edit" type="Transparent" press=".onPageEditButtonPress" />
+                    <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onPageSearchButtonPress" />
                 </f:actions>
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -71,7 +84,7 @@
                 <form:SimpleForm maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="Chain: " labelFor="searchChainE"></Label>
+                            <Label text="Chain" labelFor="searchChainE"></Label>
                             <Select id="searchChainE" width="100%" selectedKey="">
                                 <items>
                                     <core:Item key="" text="Choose a Chain" />
@@ -83,7 +96,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Language: " labelFor="searchLanguageE"></Label>
+                            <Label text="Language" labelFor="searchLanguageE"></Label>
                             <Select id="searchLanguageE" width="100%" selectedKey="">
                                 <items>
                                     <core:Item key="" text="Choose a Language" />
@@ -96,7 +109,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Keyword: " labelFor="searchKeywordE" required="true"></Label>
+                            <Label text="Keyword" labelFor="searchKeywordE" required="true"></Label>
                             <Input id="searchKeywordE" placeholder="Keywords of the Code or Content"></Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
@@ -111,7 +124,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Segmented Button : " required="true"></Label>
+                            <Label text="Segmented Button" required="true"></Label>
                             <SegmentedButton selectedKey="all" class="sapUiSmallMarginBottom" width="100%">
                                 <items>
                                     <SegmentedButtonItem text="All" key="all" />
@@ -128,14 +141,14 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Chain : " labelFor="searchfield"></Label>
+                            <Label text="Chain " labelFor="searchfield"></Label>
                             <SearchField />
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" linebreak="true" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Select Box : " labelFor="select"></Label>
+                            <Label text="Select Box " labelFor="select"></Label>
                             <Select width="100%" selectedKey="all">
                                 <items>
                                     <core:Item key="all" text="ALL" />
@@ -148,7 +161,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Combo Box : " labelFor="combo"></Label>
+                            <Label text="Combo Box " labelFor="combo"></Label>
                             <ComboBox width="100%">
                                 <core:Item text="Combo 1" />
                                 <core:Item text="Combo 2" />
@@ -159,7 +172,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Multi Combo Box : "></Label>
+                            <Label text="Multi Combo Box "></Label>
                             <MultiComboBox>
                                 <core:Item text="Multi 1" />
                                 <core:Item text="Multi 2" />
@@ -170,7 +183,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Date Range 1 : "></Label>
+                            <Label text="Date Range 1 "></Label>
                             <HBox>
                                 <Select class="sapUiTinyMarginEnd" selectedKey="save">
                                     <items>
@@ -185,7 +198,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Date Range 2 : "></Label>
+                            <Label text="Date Range 2 "></Label>
                             <HBox>
                                 <DatePicker placeholder="Start Date ..." />
                                 <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
@@ -196,56 +209,56 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Date : " labelFor="date"></Label>
+                            <Label text="Date " labelFor="date"></Label>
                             <DatePicker id="searchDate1" placeholder="Date" />
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Time : " labelFor="time"></Label>
+                            <Label text="Time " labelFor="time"></Label>
                             <TimePicker id="searchTime1" width="100%" placeholder="Time" />
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Date Time : " labelFor="datetime"></Label>
+                            <Label text="Date Time " labelFor="datetime"></Label>
                             <DateTimePicker id="searchDateTime1" placeholder="Date Time" />
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Number : " labelFor="searchNumber1"></Label>
+                            <Label text="Number " labelFor="searchNumber1"></Label>
                             <Input id="searchNumber1" type="Number" textAlign="Right" fieldWidth="80%" description="KRW" />
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Stepper : " labelFor="searchStepper1"></Label>
+                            <Label text="Stepper " labelFor="searchStepper1"></Label>
                             <StepInput id="searchStepper1" value="5" min="0" max="10" />
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Open Popup : " labelFor="searchPopup1"></Label>
+                            <Label text="Open Popup " labelFor="searchPopup1"></Label>
                             <Input id="searchPopup1" showValueHelp="true"></Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Slider (Range): " labelFor="searchRangeSlider1"></Label>
+                            <Label text="Slider (Range)" labelFor="searchRangeSlider1"></Label>
                             <RangeSlider id="searchRangeSlider1" showAdvancedTooltip="true" min="0" max="100" width="100%" />
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Slider (Discrete): " labelFor="searchSlider1"></Label>
+                            <Label text="Slider (Discrete)" labelFor="searchSlider1"></Label>
                             <Slider id="searchSlider1" enableTickmarks="true" showAdvancedTooltip="true" step="5" min="0" max="100" width="100%" />
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
@@ -253,7 +266,7 @@
                         </VBox>
 
                         <VBox>
-                            <Label text="Radio Button : " labelFor="searchRadioButton1"></Label>
+                            <Label text="Radio Button " labelFor="searchRadioButton1"></Label>
                             <RadioButtonGroup id="searchRadioButton1" columns="4" width="100%">
                                 <RadioButton id="searchRadio1" text="Radio 1" />
                                 <RadioButton id="searchRadio2" text="Radio 2" />
@@ -265,7 +278,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Check Box : "></Label>
+                            <Label text="Check Box "></Label>
                             <HBox>
                                 <CheckBox id="searchCheckBox1" text="Check Box1" />
                                 <Text text="  " class="sapUiTinyMarginEnd" />
@@ -291,9 +304,6 @@
             <Table id="listMainTable" 
                     sticky="HeaderToolbar,ColumnHeaders" 
                     inset="false" 
-                    items="{
-                        path: '/Message'
-                    }"
                     class="sapFDynamicPageAlignContent" 
                     updateFinished=".onListMainTableUpdateFinished"
                     width="auto">
@@ -328,25 +338,16 @@
                     </Column>
                 </columns>
                 <items>
-                    <ColumnListItem type="Navigation" press=".onListMainTableItemPress">
-                        <cells>
-                            <ObjectIdentifier text="{chain_code}"/>
-                            <ObjectIdentifier text="{language_code}"/>
-                            <ObjectIdentifier text="{message_code}" />
-                            <Text text="{message_contents}" />
-                            <ObjectIdentifier text="{message_type_code}"/>
-                        </cells>
-                    </ColumnListItem>
                 </items>
             </Table>
         </f:content>
         <!-- DynamicPage Footer -->
         <f:footer>
             <OverflowToolbar>
-                <Button icon="sap-icon://message-popup" text="123123" type="Emphasized" press=".onMessageButtonPress" />
+                <!-- <Button icon="sap-icon://message-popup" text="123123" type="Emphasized" press=".onMessageButtonPress" /> -->
                 <ToolbarSpacer />
-                <Button type="Accept" text="Accept" />
-                <Button type="Reject" text="Reject" />
+				<Button type="Accept" text="Save" press=".onPageSaveButtonPress" />
+				<Button type="Reject" text="Cancel" press=".onPageCancelEditButtonPress"/>
             </OverflowToolbar>
         </f:footer>
     </f:DynamicPage>

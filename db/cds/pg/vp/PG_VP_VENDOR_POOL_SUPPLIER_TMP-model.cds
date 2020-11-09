@@ -1,6 +1,6 @@
 namespace pg;
  
-using { User } from '@sap/cds/common';	
+using util from '../../util/util-model';	
 	
 entity Vp_Vendor_Pool_Supplier_Tmp {	
   key tenant_id : String(5)  not null @title: '테넌트ID';	
@@ -21,11 +21,7 @@ entity Vp_Vendor_Pool_Supplier_Tmp {
     inp_code : String(30)   @title: 'I&P코드';	
     rm_control_flag : Boolean   @title: '위험관리제어여부';	
     supplier_base_portion_rate : Decimal   @title: '공급업체기준분배비율';	
-    approval_request_number : String(50)   @title: '승인요청번호';	
-    local_create_dtm: DateTime not null @title: '로컬등록시간';
-    local_update_dtm: DateTime not null @title: '로컬수정시간';
-    create_user_id: User not null @cds.on.insert: $user @title: '등록사용자ID';
-    update_user_id: User not null @cds.on.insert: $user @cds.on.update: $user @title: '변경사용자ID';
-    system_create_dtm: DateTime not null @cds.on.insert: $now @title: '시스템등록시간';
-    system_update_dtm: DateTime not null @cds.on.insert: $now  @cds.on.update: $now @title: '시스템수정시간';
-}	
+    approval_request_number : String(50)   @title: '승인요청번호';
+}
+
+extend Vp_Vendor_Pool_Supplier_Tmp with util.Managed;

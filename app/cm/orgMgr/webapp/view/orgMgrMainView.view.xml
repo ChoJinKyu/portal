@@ -67,149 +67,36 @@
                 <IconTabBar
                     id="iconTabBar"
                     headerBackgroundDesign="Transparent"
-                    class="sapUiResponsiveContentPadding">
+                    expandable="false"
+                    select=".onSelectedKey"
+                    >
                     <items>
-                        <IconTabFilter id="TenantTab" text="TenantTab" key="Tenant">
+                        <IconTabFilter id="TenantTab" text="TenantTab" key="Tenant" count="{/Org_Tenant/$count}">
                             <mvc:XMLView viewName="cm.orgMgr.view.orgMgrTenantView"></mvc:XMLView>
                         </IconTabFilter>
-                        <IconTabFilter id="CompanyTab" text="CompanyTab" key="Company">
+                        <IconTabSeparator />
+                        <IconTabFilter id="CompanyTab" text="CompanyTab" key="Company" count="{/Org_Company/$count}"> 
                             <mvc:XMLView viewName="cm.orgMgr.view.orgMgrCompanyView"></mvc:XMLView>
                         </IconTabFilter>
-                        <IconTabFilter id="PurchasingTab" text="PurchasingTab" key="Purchasing">
+                        <IconTabSeparator />
+                        <IconTabFilter id="PurchasingTab" text="PurchasingTab" key="Purchasing" count="{/Org_Purchasing/$count}">
                             <mvc:XMLView viewName="cm.orgMgr.view.orgMgrPurchasingView"></mvc:XMLView>
                         </IconTabFilter>
-                        <IconTabFilter id="PlantTab" text="PlantTab" key="Plant">
+                        <IconTabSeparator />
+                        <IconTabFilter id="PlantTab" text="PlantTab" key="Plant" count="{/Org_Plant/$count}">
                             <mvc:XMLView viewName="cm.orgMgr.view.orgMgrPlantView"></mvc:XMLView>
                         </IconTabFilter>
-                        <IconTabFilter id="UnitTab" text="UnitTab" key="Unit">
+                        <IconTabSeparator />
+                        <IconTabFilter id="UnitTab" text="UnitTab" key="Unit" count="{/Org_Unit/$count}">
                             <mvc:XMLView viewName="cm.orgMgr.view.orgMgrUnitView"></mvc:XMLView>
                         </IconTabFilter>
-                        <IconTabFilter id="DivisionTab" text="DivisionTab" key="Division">
+                        <IconTabSeparator />
+                        <IconTabFilter id="DivisionTab" text="DivisionTab" key="Division" count="{/Org_Division/$count}">
                             <mvc:XMLView viewName="cm.orgMgr.view.orgMgrDivisionView"></mvc:XMLView>
                         </IconTabFilter>
-
-                        
                     </items>
                 </IconTabBar>
             </f:content>
-            <!--
-            <f:content>
-                <Table  id="codeMstTable"
-                        items="{
-                                    path : '/CodeMasters',
-                                    parameters: {
-                                        $$updateGroupId : 'codeMstUpdateGroup'
-                                    },
-                                    filters : [{path : 'tenant_id', operator : 'EQ', value1 : '0000'}],
-                                    sorter: { path: 'group_code'}
-                                }"
-                        mode="MultiSelect"
-                        updateFinished="onMstUpdateFinished"
-                        
-                >
-                <layoutData>
-                    <layout:SplitterLayoutData size="55%" />
-                </layoutData>
-                    <headerToolbar>
-                        <OverflowToolbar>
-                            <content>
-                                <Title text="코드 마스터" level="H2"/>
-                                <ToolbarSpacer/>
-                                <Button text="행추가" icon="sap-icon://add"  type="Accept" press="onMstAddRow"/>
-                                <Button text="행복사" icon="sap-icon://copy" type="Accept" press="onMstCopyRow"/>
-                                <Button text="행삭제" icon="sap-icon://delete" type="Reject" press="onMstDeleteRow"/>
-                                <Button text="저장"   icon="sap-icon://save" type="Attention" press="onMstSave"/>
-                            </content>
-                        </OverflowToolbar>
-                    </headerToolbar>
-                    <columns>
-                        <Column hAlign="Center" width="100px">
-                            <header>
-                                <Label text="Tenant"/>
-                            </header>
-                        </Column>
-                        <Column hAlign="Center" width="100px">
-                            <header>
-                                <Label text="Company"/>
-                            </header>
-                        </Column>
-                        <Column hAlign="Center" width="100px">
-                            <header>
-                                <Label text="Chanin"/>
-                            </header>
-                        </Column>
-                        <Column hAlign="Center" width="200px">
-                            <header>
-                                <Label text="그룹 코드"/>
-                            </header>
-                        </Column>
-                        <Column hAlign="Center" width="200px">
-                            <header>
-                                <Label text="그룹 명"/>
-                            </header>
-                        </Column>
-                        <Column hAlign="Center" width="200px">
-                            <header>
-                                <Label text="그룹 설명"/>
-                            </header>
-                        </Column>
-                        <Column hAlign="Center" width="100px">
-                            <header>
-                                <Label text="사용 여부"/>
-                            </header>
-                        </Column>
-                        <Column hAlign="Center" width="100px">
-                            <header>
-                                <Label text="생성자"/>
-                            </header>
-                        </Column>
-                        <Column hAlign="Center" width="100px">
-                            <header>
-                                <Label text="수정자"/>
-                            </header>
-                        </Column>
-                        <Column hAlign="Center" width="200px">
-                            <header>
-                                <Label text="생성 시간"/>
-                            </header>
-                        </Column>
-                        <Column hAlign="Center" width="200px">
-                            <header>
-                                <Label text="수정 시간"/>
-                            </header>
-                        </Column>
-                        <Column hAlign="Center" width="200px">
-                            <header>
-                                <Label text="시스템 생성 시간"/>
-                            </header>
-                        </Column>
-                        <Column hAlign="Center" width="200px">
-                            <header>
-                                <Label text="시스템 수정 시간"/>
-                            </header>
-                        </Column>
-                    </columns>
-                    <items>
-                        <ColumnListItem type="Active" id="codeMstColumnListItem" press="onMstTableItemPress">
-                            <cells>
-                                <Input id="mst_tenant_id" value="{tenant_id}"/>
-                                <Input id="mst_company_code" value="{company_code}"/>
-                                <Input id="mst_chain_code" value="{chain_code}"/>
-                                <Input id="mst_group_code" value="{group_code}"/>
-                                <Input id="mst_group_name" value="{group_name}"/>
-                                <Input id="mst_group_description" value="{group_description}"/>
-                                <Input id="mst_use_yn" value="{use_yn}"/>
-                                <Text id="mst_create_user_id" text="{create_user_id}"/>
-                                <Text id="mst_update_user_id" text="{update_user_id}"/>
-                                <Text id="mst_local_create_dtm" text="{local_create_dtm}"/>
-                                <Text id="mst_local_update_dtm" text="{local_update_dtm}"/>
-                                <Text id="mst_system_create_dtm" text="{system_create_dtm}"/>
-                                <Text id="mst_system_update_dtm" text="{system_update_dtm}"/>
-                            </cells>
-                        </ColumnListItem>
-                    </items>
-                </Table>
-            </f:content>-->
         </f:DynamicPage> 
     </App>
 </mvc:View>

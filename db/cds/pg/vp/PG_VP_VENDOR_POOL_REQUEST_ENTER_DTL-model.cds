@@ -1,6 +1,6 @@
 namespace pg;
  
-using { User } from '@sap/cds/common';
+using util from '../../util/util-model';
 	
 entity Vp_Vendor_Pool_Request_Enter_Dtl {	
   key tenant_id : String(5)  not null @title: '테넌트ID';	
@@ -17,10 +17,6 @@ entity Vp_Vendor_Pool_Request_Enter_Dtl {
     vendor_pool_code : String(20)   @title: '협력사풀코드';	
     technology_evaluation_main_dtl : String(3000)   @title: '기술평가주요내역';	
     txn_hope_id : String(100)   @title: '거래희망ID';	
-    local_create_dtm: DateTime not null @title: '로컬등록시간';
-    local_update_dtm: DateTime not null @title: '로컬수정시간';
-    create_user_id: User not null @cds.on.insert: $user @title: '등록사용자ID';
-    update_user_id: User not null @cds.on.insert: $user @cds.on.update: $user @title: '변경사용자ID';
-    system_create_dtm: DateTime not null @cds.on.insert: $now @title: '시스템등록시간';
-    system_update_dtm: DateTime not null @cds.on.insert: $now  @cds.on.update: $now @title: '시스템수정시간';
-}	
+}
+
+extend Vp_Vendor_Pool_Request_Enter_Dtl with util.Managed;

@@ -23,11 +23,11 @@
 				</uxap:snappedHeading>
 
 				<uxap:expandedContent>
-					<Text text="Details of the {message_code}" />
+					<Text text="Details for message {message_code}" />
 				</uxap:expandedContent>
 
 				<uxap:snappedContent>
-					<Text text="Details of the {message_code}" />
+					<Text text="Details for message {message_code}" />
 				</uxap:snappedContent>
 
 				<uxap:snappedTitleOnMobile>
@@ -39,7 +39,7 @@
 					<Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" />
 				</uxap:actions>
                 <uxap:navigationActions>
-					<OverflowToolbarButton icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onNavBack" />
+					<OverflowToolbarButton id="pageNavBackButton" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" />
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
@@ -71,7 +71,7 @@
 		</uxap:headerContent>
 
 		<uxap:sections>
-			<uxap:ObjectPageSection titleUppercase="false" title="Message Details">
+			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="Message Details">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection1" >
 					</uxap:ObjectPageSubSection>
@@ -98,9 +98,9 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
-				<OverflowToolbarButton text="Edit" icon="sap-icon://edit"/>
+				<!-- <OverflowToolbarButton text="Edit" icon="sap-icon://edit"/> -->
 				<Button type="Accept" text="Save" press=".onPageSaveButtonPress" />
-				<Button type="Reject" text="Cancel" press=".onPageCancelButtonPress"/>
+				<Button type="Reject" text="Cancel" press=".onPageCancelEditButtonPress"/>
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

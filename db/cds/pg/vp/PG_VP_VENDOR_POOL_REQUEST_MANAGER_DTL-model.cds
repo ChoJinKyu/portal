@@ -1,6 +1,6 @@
 namespace pg;
 
-using { User } from '@sap/cds/common';
+using util from '../../util/util-model';
  	
 entity Vp_Vendor_Pool_Request_Manager_Dtl {	
   key tenant_id : String(5)  not null @title: '테넌트ID';	
@@ -15,11 +15,7 @@ entity Vp_Vendor_Pool_Request_Manager_Dtl {
     department_code : String(50)   @title: '부서코드';	
     before_person_empno : String(30)   @title: '전담당자사번';	
     before_role_text : String(500)   @title: '전역할텍스트';	
-    before_department_code : String(50)   @title: '전부서코드';	
-    local_create_dtm: DateTime not null @title: '로컬등록시간';
-    local_update_dtm: DateTime not null @title: '로컬수정시간';
-    create_user_id: User not null @cds.on.insert: $user @title: '등록사용자ID';
-    update_user_id: User not null @cds.on.insert: $user @cds.on.update: $user @title: '변경사용자ID';
-    system_create_dtm: DateTime not null @cds.on.insert: $now @title: '시스템등록시간';
-    system_update_dtm: DateTime not null @cds.on.insert: $now  @cds.on.update: $now @title: '시스템수정시간';
+    before_department_code : String(50)   @title: '전부서코드';
 }	
+
+extend Vp_Vendor_Pool_Request_Manager_Dtl with util.Managed;
