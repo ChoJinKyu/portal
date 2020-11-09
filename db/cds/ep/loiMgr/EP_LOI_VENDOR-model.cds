@@ -1,5 +1,6 @@
 namespace ep;	
 
+using util from '../../util/util-model'; 
 using { ep as dtl } from './EP_LOI_DTL-model';
 
 entity Loi_Vendor {	
@@ -16,10 +17,6 @@ entity Loi_Vendor {
 
     key vendor_code : String(15)  not null;	
     vendor_pool_code : String(30)  ;	
-    rmks : String(3000)  ;	
-    local_create_dtm : DateTime  not null;	
-    local_update_dtm : DateTime  not null;	
-    create_user_id : String(50)  not null;	
-    update_user_id : String(50)  not null;	
-    system_create_dtm : DateTime  not null;	
+    remark : String(3000)  ;	
 }	
+extend  Loi_Vendor with util.Managed;	

@@ -19,7 +19,7 @@ service LoiMgrService {
             dtl.company_code,	
             dtl.loi_write_number,	
             dtl.loi_item_number,	
-            pub.purchase_manager_id,	
+            pub.purchasing_person_id,	
             pub.publish_date,	
             pub.vendor_code	
         from loiPub.Loi_Publish as pub		
@@ -35,9 +35,9 @@ service LoiMgrService {
             mst.company_code,
             mst.loi_write_number,
             mst.loi_number,
-            mst.loi_request_ttl,
+            mst.loi_request_title,
             mst.progress_status_code,
-            pub.purchase_manager_id,	
+            pub.purchasing_person_id,	
             pub.publish_date,	
             pub.vendor_code	
         from loiMst.Loi_Mst as mst

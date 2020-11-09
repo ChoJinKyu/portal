@@ -1,5 +1,6 @@
 namespace ep;	
 
+using util from '../../util/util-model'; 
 using { ep as mst } from './EP_LOI_MST-model';
 using { ep as vdsel } from './EP_LOI_VENDOR_SELECTION-model';
 using { ep as pub } from './EP_LOI_PUBLISH-model';
@@ -15,18 +16,18 @@ entity Loi_Dtl {
         and header.loi_write_number = loi_write_number;  
 
     key loi_item_number : String(100)  not null;	
-    item_line_number : Integer64  ;	
+    item_line_number : Decimal  ;	
     item_code : String(40)  ;	
     item_name : String(240)  ;	
-    request_qty : Decimal  ;	
-    unt : String(30)  ;	
-    request_amt : Decimal  ;	
+    request_quantity : Decimal  ;	
+    unit : String(30)  ;	
+    request_amount : Decimal  ;	
     currency_code : String(30)  ;	
     spec_desc : String(1000)  ;	
     plant_code : String(30)  ;	
-    delivery_request_date : String(8)  ;	
-    loi_selection_number : String(100)  ;
-    loi_publish_number : String(100)  ;
+    delivery_request_date : Date  ;	
+    loi_selection_number : String(100)  ;	
+    loi_publish_number : String(100)  ;	
 
     selection : Association[1] to vdsel.Loi_Vendor_Selection
         on selection.tenant_id = tenant_id 
@@ -44,11 +45,6 @@ entity Loi_Dtl {
     contract_item_number : String(100)  ;	
     po_number : String(100)  ;	
     po_item_number : String(100)  ;	
-    rmks : String(3000)  ;	
-    local_create_dtm : DateTime  not null;	
-    local_update_dtm : DateTime  not null;	
-    create_user_id : String(50)  not null;	
-    update_user_id : String(50)  not null;	
-    system_create_dtm : DateTime  not null;	
-    system_update_dtm : DateTime  not null;	
+    remark : String(3000)  ;	
 }	
+extend  Loi_Dtl with util.Managed;	

@@ -1,5 +1,6 @@
 namespace ep;	
 
+using util from '../../util/util-model'; 
 using { ep as dtl } from './EP_LOI_DTL-model';
 
 entity Loi_Publish {	
@@ -12,25 +13,20 @@ entity Loi_Publish {
         and item.company_code = company_code        
         and item.loi_publish_number = loi_publish_number;  
 
-    loi_publish_ttl : String(100)  ;	
+    loi_publish_title : String(100)  ;	
     progress_status_code : String(30)  ;	
     vendor_code : String(15)  ;	
     format_id : String(100)  ;	
-    offline_yn : Boolean  ;	
-    contract_date : String(8)  ;	
+    offline_flag : Boolean  ;	
+    contract_date : Date  ;	
     additional_condition_desc : String(1000)  ;	
-    attach_group_number : String(100)  ;	
-    approve_number : String(100)  ;	
-    purchase_manager_id : String(50)  ;	
-    purchase_department_code : String(30)  ;	
-    publish_date : String(8)  ;	
-    rmks : String(3000)  ;	
-    operation_org_type_code : String(30)  ;	
-    operation_org_code : String(30)  ;	
-    local_create_dtm : DateTime  not null;	
-    local_update_dtm : DateTime  not null;	
-    create_user_id : String(50)  not null;	
-    update_user_id : String(50)  not null;	
-    system_create_dtm : DateTime  not null;	
-    system_update_dtm : DateTime  not null;	
+    attachment_group_number : String(100)  ;	
+    approve_number : String(50)  ;	
+    purchasing_person_id : String(50)  ;	
+    purchasing_department_code : String(30)  ;	
+    publish_date : Date  ;	
+    remark : String(3000)  ;	
+    org_type_code : String(30)  ;	
+    org_code : String(30)  ;	
 }	
+extend  Loi_Publish with util.Managed;		
