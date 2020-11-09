@@ -10,21 +10,29 @@ sap.ui.define([
         "sap/ui/model/Sorter",
         "sap/ui/model/json/JSONModel",
         "sap/ui/thirdparty/jquery",
-        "sap/m/Token"  
+        "sap/m/Token",
+        "../model/formatter"
     ],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
 
-	function (Controller, Log, MessageBox, MessageToast, DateFormat, Filter, FilterOperator, FilterType, Sorter, JSONModel, jquery, Token) {
-		"use strict";
+	function (Controller, Log, MessageBox, MessageToast, DateFormat, Filter, FilterOperator, FilterType, Sorter, JSONModel, jquery, Token, formatter) {
+        "use strict";
+        var _aValidTabKeys = ["Tenant", "Company", "Purchasing", "Plant", "Unit", "Division"];
+        
 
 		return Controller.extend("cm.orgMgr.controller.orgMgrMainView", {
-
+            formatter: formatter,
 			onInit: function () {
 
-               // this.tabModel();
-               var oMessageManager = sap.ui.getCore().getMessageManager(),
+                var oRouter = this.getRouter();
+                this.getView().setModel(new JSONModel(), "view");
+                
+                //oRouter.getRoute("TargetorgMgrMainView").attachMatched(this._onRouteMatched, this);
+
+                // this.tabModel();
+                var oMessageManager = sap.ui.getCore().getMessageManager(),
 				oMessageModel = oMessageManager.getMessageModel(),
 				oMessageModelBinding = oMessageModel.bindList("/", undefined, [],
 					new Filter("technical", FilterOperator.EQ, true)),
@@ -42,6 +50,35 @@ sap.ui.define([
                 // oMessageModelBinding.attachChange(this.onMessageBindingChange, this);
                 // this._bTechnicalErrors = false;
                 
+            },
+            _onRouteMatched: function (oEvent) {
+                debugger;
+                var oArgs, oView, oQuery;
+                oArgs = oEvent.getParameter("arguments");
+                oView = this.getView();
+            
+                oQuery = oArgs["?query"];
+                if (oQuery && _aValidTabKeys.indexOf(oQuery.tab) > -1){
+                    oView.getModel("view").setProperty("/selectedTabKey", oQuery.tab);
+                } else {
+                    this.getRouter().navTo("TargetorgMgrMainView", {
+                        tabkeyId: oArgs.tabkeyId,
+                        "?query": {
+                            tab: _aValidTabKeys[0]
+                        }
+                    }, true /*no history*/);
+                }
+            },
+
+            
+            onTabSelect: function (oEvent){
+                var oCtx = this.getView().getBindingContext();
+                this.getRouter().navTo("TargetorgMgrMainView", {
+                    tabkeyId: oCtx.getProperty("tabkeyId"),
+                    "?query": {
+                        tab: oEvent.getParameter("selectedKey")
+                    }
+                }, true /*without history*/);
             },
 
             onAddRow: function (oEvent) {
@@ -239,7 +276,6 @@ sap.ui.define([
                 });
                 // this.getView().getModel().submitBatch(vSelectKey).then(fnSuccess, fnError);
                 this._bTechnicalErrors = false; // If there were technical errors, a new save resets them.
-                onRefresh();
             
             },
             _setBusy : function (bIsBusy) {
@@ -252,6 +288,7 @@ sap.ui.define([
                 var vSelectKey = this.getView().oParent.mProperties.key + "Table";
                 var oBinding = this.byId(vSelectKey).getBinding("items");
                 this.getView().setBusy(true);
+                oBinding.resetChanges();
                 oBinding.refresh();
                 this.getView().setBusy(false);
                 console.groupEnd();
@@ -300,7 +337,6 @@ sap.ui.define([
                     MessageBox.error("선택된 행이 없습니다.");
                     oView.setBusy(false);
                 }
-                onRefresh();    
             }
             
 		});

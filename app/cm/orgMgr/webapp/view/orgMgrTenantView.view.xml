@@ -15,6 +15,7 @@
                 }
         }"
         mode="MultiSelect"
+        width="auto"
         >
         <headerToolbar>
             <OverflowToolbar>
