@@ -4,9 +4,8 @@ sap.ui.define([
 	"sap/ui/core/routing/History",
 	"../model/formatter",
 	"sap/ui/model/Filter",
-    "sap/ui/model/FilterOperator",
-     "sap/ui/richtexteditor/RichTextEditor"
-], function (BaseController, JSONModel, History, formatter, Filter, FilterOperator, RichTextEditor) {
+    "sap/ui/model/FilterOperator"
+], function (BaseController, JSONModel, History, formatter, Filter, FilterOperator) {
 	"use strict";
 
 	return BaseController.extend("com.template.sampleTemplate.controller.MainList", {
@@ -50,6 +49,7 @@ sap.ui.define([
         },
         
         onAfterRendering : function () {
+            /*
             var that = this,
 				sHtmlValue = '<p style="text-align: justify; background: white; font-size: 10pt; font-family: Calibri, sans-serif;"><strong><span style="font-size: 10.5pt; font-family: sans-serif; color: black;">Lorem ipsum dolor sit amet</span></strong>' +
 				'<span style="font-size: 10.5pt; font-family: sans-serif; color: black;">, consectetur adipiscing elit. Suspendisse ornare, nibh nec gravida tincidunt, ipsum quam venenatis nisl, vitae venenatis urna sem eget ipsum. Ut cursus auctor leo et vulputate. ' +
@@ -71,7 +71,8 @@ sap.ui.define([
 					});
 
 					that.getView().byId("idVerticalLayout").addContent(oRichTextEditor);
-			});
+            });
+            */
         },
 
 		/* =========================================================== */
@@ -133,7 +134,7 @@ sap.ui.define([
 
 		onSearch : function (oEvent) {
             console.log(this, oEvent)
-            this.getRouter().navTo("mainDetail",{});
+            this.getRouter().navTo("mainDetail");
 
             // this.getRouter().navTo("object", {
             //     objectId_Old: "123",

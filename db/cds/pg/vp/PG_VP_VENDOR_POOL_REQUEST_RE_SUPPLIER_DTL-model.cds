@@ -1,6 +1,6 @@
 namespace pg;
  
-using { User } from '@sap/cds/common';
+using util from '../../util/util-model';
 
 entity Vp_Vendor_Pool_Request_Re_Supplier_Dtl {	
   key tenant_id : String(5)  not null @title: '테넌트ID';	
@@ -18,10 +18,6 @@ entity Vp_Vendor_Pool_Request_Re_Supplier_Dtl {
     evaluation_control_start_date : String(8)   @title: '평가제어시작일자';	
     evaluation_control_end_date : String(8)   @title: '평가제어종료일자';	
     rm_control_flag : Boolean   @title: '위험관리제어여부';	
-    local_create_dtm: DateTime not null @title: '로컬등록시간';
-    local_update_dtm: DateTime not null @title: '로컬수정시간';
-    create_user_id: User not null @cds.on.insert: $user @title: '등록사용자ID';
-    update_user_id: User not null @cds.on.insert: $user @cds.on.update: $user @title: '변경사용자ID';
-    system_create_dtm: DateTime not null @cds.on.insert: $now @title: '시스템등록시간';
-    system_update_dtm: DateTime not null @cds.on.insert: $now  @cds.on.update: $now @title: '시스템수정시간';
-}	
+}
+
+extend Vp_Vendor_Pool_Request_Re_Supplier_Dtl with util.Managed;

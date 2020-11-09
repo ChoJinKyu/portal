@@ -1,0 +1,155 @@
+<mvc:View 
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns:core="sap.ui.core" 
+    xmlns="sap.m" 
+    xmlns:f="sap.f" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:table="sap.ui.table" 
+    xmlns:form="sap.ui.layout.form" 
+    class="sapUiSizeCompact" 
+    controllerName="pg.vendorPoolSearch.controller.VendorPoolSearch" 
+    displayBlock="true">
+
+	<Shell id="shell">
+		<App id="app">
+            <Page xmlns="sap.m" id="pageId" title="Vendor Pool Search" floatingFooter="true">
+                <headerContent>
+                    <Button icon="sap-icon://action" tooltip="Share" id="button0"/>
+                    
+                </headerContent>
+                <content>
+                    <VBox id="vbox0">
+                        
+                    <items>
+                        
+                        <Table xmlns:cd="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" noDataText="Drop column list items here and columns in the area above" id="table0" cd:w5g.dt.context="/vPSearchView">
+                        
+                            <items>
+                        
+                                <ColumnListItem type="Active" id="item0">
+                        
+                                    <cells>
+                        
+                                        <Text text="{evaluation_operation_unit_name}" id="text6"/>
+                        
+                                        <Text id="text7" text="{vendor_code}"/>
+                        
+                                        <Text text="{vendor_english_name}" id="text8"/>
+                        
+                                        <Link xmlns="sap.m" href="https://ui5.sap.com" text="Link Text" id="link0"/>
+                        
+                                        <ActionListItem type="Navigation" text="Text" id="item0_1604463779373"/></cells>
+                        
+                                </ColumnListItem>
+                        
+                            </items>
+                        
+                            <columns>
+                        
+                                <Column id="column0">
+                        
+                                    <header>
+                        
+                                        <Label text="평가운영단위" id="label0"/>
+                        
+                                    </header>
+                        
+                                </Column>
+                        
+                                <Column id="column1">
+                        
+                                    <header>
+                        
+                                        <Label text="협력사코드" id="label1"/>
+                        
+                                    </header>
+                        
+                                </Column>
+                        
+                                <Column id="column2">
+                        
+                                    <header>
+                        
+                                        <Label text="협력사 영문" id="label2"/>
+                        
+                                    </header>
+                        
+                                </Column></columns></Table>
+                        
+                    </items>
+                        
+                    </VBox>
+                    
+                </content>
+                <footer>
+                    <OverflowToolbar id="toolbar1">
+                        <ToolbarSpacer/>
+                        <Button type="Accept" text="Accept"/>
+                        </OverflowToolbar>
+                    
+                </footer>
+                <customHeader>
+                    <Toolbar width="100%" id="toolbar2">
+                        <content>
+                            <layout:HorizontalLayout id="layout0">
+                            <layout:content>
+                                <form:Form editable="true" id="form0">
+                                    <form:formContainers>
+                                        <form:FormContainer title="Title" id="container0">
+                                            <form:formElements>
+                                                <form:FormElement label="부서" id="element1">
+                                                    <form:fields>
+                                                        <Input width="100%" id="input1"/>
+                                                    </form:fields>
+                                                </form:FormElement>
+                                                <form:FormElement label="평가운영단위" id="element2">
+                                                    <form:fields>
+                                                        <Input width="100%" id="input2"/>
+                                                    </form:fields>
+                                                </form:FormElement>
+                                            </form:formElements>
+                                        </form:FormContainer>
+                                        <form:FormContainer title="Title" id="container1">
+                                            <form:formElements>
+                                                <form:FormElement label="작성자" id="element3">
+                                                    <form:fields>
+                                                        <Input width="100%" id="input3"/>
+                                                    </form:fields>
+                                                </form:FormElement>
+                                                <form:FormElement label="Vendor Pool" id="element4">
+                                                    <form:fields>
+                                                        <Input width="100%" id="input4"/>
+                                                    </form:fields>
+                                                </form:FormElement>
+                                            </form:formElements>
+                                        </form:FormContainer>
+                                        <form:FormContainer title="Title" id="container0_1604391682151">
+                                            <form:formElements>
+                                                <form:FormElement label="Label" id="element0">
+                                                    <form:fields>
+                                                        <ComboBox xmlns="sap.m" id="box0">
+                                                            <items>
+                                                                <core:Item xmlns:core="sap.ui.core" key="S" text="설비" id="item1"/>
+                                                                <core:Item xmlns:core="sap.ui.core" key="P" text="계획" id="item2"/>
+                                                                </items>
+                                                            
+                                                        </ComboBox>
+                                                    </form:fields>
+                                                </form:FormElement>
+                                            </form:formElements>
+                                        </form:FormContainer>
+                                    </form:formContainers>
+                                    <form:layout>
+                                        <form:ResponsiveGridLayout id="layout2"/>
+                                    </form:layout></form:Form>
+                            </layout:content>
+                            </layout:HorizontalLayout>
+                            <Button xmlns="sap.m" text="검색" id="button1" activeIcon="sap-icon://search"/>
+                        </content>
+                    </Toolbar>
+                </customHeader>
+                </Page>
+		<pages/>
+		</App>
+	</Shell>
+</mvc:View>

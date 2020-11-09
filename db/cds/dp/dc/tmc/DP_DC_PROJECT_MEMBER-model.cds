@@ -13,7 +13,7 @@
 namespace dp;
 using { User } from '@sap/cds/common';
 using util from '../../../util/util-model';
-using {dp.Dc_Project_Master as pjtMst} from './DP_DC_PROJECT_MASTER-model';
+using {dp.Dc_Project as pjt} from './DP_DC_PROJECT-model';
 
 entity Dc_Project_Member {
     key tenant_id: String(5) not null @title: '테넌트ID';
@@ -21,7 +21,7 @@ entity Dc_Project_Member {
     key emp_no: String(20) not null @title: '사번';
     project_manager_flag: String(50) @title: '프로젝트매니저여부';
 
-    ref: Association to pjtMst
+    ref: Association to pjt
         on ref.tenant_id = tenant_id
         and ref.project_code = project_code;
 }
