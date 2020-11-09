@@ -60,9 +60,21 @@
                                 </SegmentedButton>
                                 <layoutData>
                                     <layout:GridData
-                                        span="XL10 L9 M6 S12"/>
+                                        span="XL8 L6 M6 S12"/>
                                 </layoutData>
                             </VBox>
+                            <FlexBox
+                                alignItems="Start"
+                                justifyContent="End">
+                                <Button 
+                                    text="Search"
+                                    type="Emphasized"
+                                    press=".onSearch"/>
+                                <layoutData>
+                                    <layout:GridData
+                                        span="XL2 L3 M12 S12" />
+                                </layoutData>
+                            </FlexBox>
                         </form:content>
                     </form:SimpleForm>
                 </f:snappedContent>
