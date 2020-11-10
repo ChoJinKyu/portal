@@ -15,3 +15,5 @@ db/src/gen/
 node_modules/
 app/uxFreeStyleDemo/
 *.zip
+.hdiignore
+undeploy.json
