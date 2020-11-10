@@ -1,8 +1,12 @@
-<mvc:View xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc">
+<mvc:View 
+    xmlns="sap.m" 
+    xmlns:mvc="sap.ui.core.mvc"
+    controllerName="cm.orgMgr.controller.orgMgrMainView" 
+    >
 	<Table
         id="DivisionTable"
         growing="true"
-        growingThreshold="10"
+        growingThreshold="30"
         items="{
             path: '/Org_Division',
             parameters : {
@@ -11,6 +15,7 @@
                 }
         }"
         mode="MultiSelect"
+        width="auto"
         >
         <headerToolbar>
             <OverflowToolbar>
@@ -20,6 +25,7 @@
                     <Button text="행추가" icon="sap-icon://add"  type="Accept" press="onAddRow"/>                                            
                     <Button text="행삭제" icon="sap-icon://delete" type="Reject" press="onDeleteRow"/>
                     <Button text="저장"   icon="sap-icon://save" type="Attention" press="onSave"/>
+                    <Button icon="sap-icon://synchronize" type="Attention" press="onRefresh"/>
                 </content>
             </OverflowToolbar>
         </headerToolbar>
@@ -36,7 +42,7 @@
             <Column id="bizunit_code">
                 <Text text="bizunit_code"/>
             </Column>
-            <Column id="use_flag">
+            <Column id="use_flag" hAlign="Center" width="10%">
                 <Text text="use_flag"/>
             </Column>
         </columns>
@@ -55,7 +61,8 @@
                     <Input value="{bizunit_code}"/>
                 </cells>
                 <cells>
-                    <Input value="{use_flag}"/>
+                    <!-- <Input value="{use_flag}"/> -->
+                    <CheckBox selected="{use_flag}" textAlign="Center"/>
                 </cells>
             </ColumnListItem>
         </items>
