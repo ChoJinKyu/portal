@@ -19,4 +19,4 @@ entity Sc_Uri_Link {
     call_key5 : String(2000)  ;	
     use_yn : Boolean  ;	
 }	
-extend Control_Option_Dtl with util.Managed;	
+extend Sc_Uri_Link with util.Managed;	

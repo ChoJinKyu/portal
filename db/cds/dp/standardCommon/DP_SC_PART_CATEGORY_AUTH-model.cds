@@ -10,4 +10,4 @@ entity Sc_Part_Category_Auth {
   key auth_code : String(200)  not null;	
     status_code : String(10)  ;	
 }	
-extend Control_Option_Dtl with util.Managed;	
+extend Sc_Part_Category_Auth with util.Managed;	

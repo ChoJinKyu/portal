@@ -13,4 +13,4 @@ entity Sc_Part_Category {
     desc : String(2000)  ;	
     status_code : String(10)  ;	
 }	
-extend Control_Option_Dtl with util.Managed;	
+extend Sc_Part_Category with util.Managed;	

@@ -11,4 +11,4 @@ entity Sc_Spec_Name {
     status_code : String(10)  ;	
     spec_value_list_code : String(10)  ;	
 }	
-extend Control_Option_Dtl with util.Managed;	
+extend Sc_Spec_Name with util.Managed;	

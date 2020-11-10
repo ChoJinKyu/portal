@@ -10,4 +10,4 @@ entity Sc_Part_Category_Class {
   key class_code : String(200)  not null;	
     status_code : String(10)  ;	
 }	
-extend Control_Option_Dtl with util.Managed;	
+extend Sc_Part_Category_Class with util.Managed;	
