@@ -64,6 +64,26 @@ sap.ui.define([
                 //this.onSearch();
                 console.groupEnd();
             },
+            OnSubmit(oEvent){
+                //oEvent.getSource().getParent().getRowBindingContext().iIndex                
+                // var sNewValue = oEvent.getParameter("value");
+
+                var oUiModel  = this.getModel("ui"), 
+                    mainModel = this.getModel("mainModel"),
+                    oTable = this.byId("mainList");
+
+                var oBinding = oTable.getBinding("rows"),
+                    oData    = oBinding.getModel("mainModel").oData;
+
+                this.getView().setBusy(true);
+
+                oBinding.getContexts()[oEvent.getSource().getParent().getRowBindingContext().iIndex].setProperty('update_user_id', 'Modifyed')                       
+                
+                this.getView().setBusy(false);     
+
+
+
+            },
            
              /**
              * @private
@@ -606,9 +626,6 @@ sap.ui.define([
                 that.getView().setBusy(false);
      
                 console.groupEnd();     
-            },
-            OnLiveChange(oEvent){
-                var sNewValue = oEvent.getParameter("value");
             },
 
             /**
