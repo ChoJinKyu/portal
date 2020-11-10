@@ -116,10 +116,17 @@
           ]
         },
         {
-          "pattern": "",
+          "pattern": "mainDetail",
           "name": "mainDetail",
           "target": [
             "mainDetail"
+          ]
+        },
+        {
+          "pattern": "scrollToIndexTable",
+          "name": "scrollToIndexTable",
+          "target": [
+            "scrollToIndexTable"
           ]
         },
         {
@@ -142,6 +149,20 @@
           "viewId": "mainDetail",
           "viewLevel": 2,
           "title": "{i18n>mainDetaillViewTitle}"
+        },
+        "scrollToIndexTable": {
+          "viewName": "ScrollToIndexTable",
+          "viewId": "scrollToIndexTable",
+          "viewLevel": 1,
+          "title": "{i18n>scrollToIndexTableViewTitle}"
+        },
+        "master": {
+            "viewName": "Master",
+            "controlAggregation": "beginColumnPages"
+        },
+        "detail": {
+            "viewName": "Detail",
+            "controlAggregation": "midColumnPages"
         },
         "object": {
           "viewName": "Object",

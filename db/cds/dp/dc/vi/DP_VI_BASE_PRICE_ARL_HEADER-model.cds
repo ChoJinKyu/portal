@@ -18,8 +18,8 @@ entity VI_Base_Price_Arl_Header {
   key tenant_id : String(5)  not null @title: '테넌트ID';	
   key arl_number : String(100) not null @title: '품의서번호';	
     company_code : String(10)  not null @title: '회사코드';	
-    operation_type : String(200) not null @title: '구매운영조직유형';	
-    operation_code : String(200) not null @title: '구매운영조직코드';	
+    org_type_code : String(30) not null @title: '조직유형코드';	
+    org_code : String(10) not null @title: '조직코드';	
     arl_type_code : String(3) not null @title: '품의서유형코드';	
     new_change_code : String(1) not null  @title: '신규변경코드';	
     arl_status : String(3) not null @title: '품의서상태';	

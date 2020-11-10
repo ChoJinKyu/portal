@@ -98,9 +98,8 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
-				<OverflowToolbarButton text="Edit" icon="sap-icon://edit"/>
-				<Button type="Accept" text="Save" press=".onPageFooterSaveButtonPress" />
-				<Button type="Reject" text="Cancel" press=".onPageFooterCancelButtonPress"/>
+				<Button type="Emphasized" text="Save" press=".onPageSaveButtonPress" />
+				<Button type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

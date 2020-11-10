@@ -1,0 +1,23 @@
+// 구매 거버넌스 > Vendor Pool관리 Model
+   cds deploy --to hana:sppDb_hdi_dev
+
+   git config credential.helper store
+
+-------------- 아래 참고  -------------------
+
+   wap서버 올릴때 :  mvn spring-boot:run
+
+           디버거이이콘 클리시 오류나면
+               터미널에서     cd app    엔터
+                             npm i     엔터 
+                                 
+
+git pull
+
+git push
+
+cds build
+
+deploy : cds deploy --to hana:sppDb_hdi_dev --no-save
+
+서비스 data확인 : cds watch
