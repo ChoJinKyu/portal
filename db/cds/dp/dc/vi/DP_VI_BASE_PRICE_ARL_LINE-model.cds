@@ -6,7 +6,7 @@ using {dp.VI_Base_Price_Arl_Header as header} from './DP_VI_BASE_PRICE_ARL_HEADE
 entity VI_Base_Price_Arl_Line {
     key tenant_id                     : String(5) not null   @title : '테넌트ID';
     key arl_number                    : String(100) not null @title : '품의서번호';
-    key line_number                   : Decimal not null     @title : '회사코드';
+    key line_number                   : Decimal not null     @title : '라인번호';
         item_code                     : String(100) not null @title : '품목코드';
         supplier_code                 : String(100) not null @title : '공급업체코드';
         basic_date                    : Date not null        @title : '기준일자';

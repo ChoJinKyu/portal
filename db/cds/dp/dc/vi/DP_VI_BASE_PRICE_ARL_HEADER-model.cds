@@ -18,7 +18,7 @@ entity VI_Base_Price_Arl_Header {
         approval_request_date    : Date                 @title : '승인요청일자';
         attached_file_no         : String(30)           @title : '첨부파일No';
 
-        children                 : Association to line
+        children                 : Composition of many line
                                        on  line.tenant_id  = tenant_id
                                        and line.arl_number = arl_number;
 }
