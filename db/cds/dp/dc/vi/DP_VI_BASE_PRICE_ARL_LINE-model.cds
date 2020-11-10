@@ -23,14 +23,14 @@ entity VI_Base_Price_Arl_Line {
 	    basic_date : Date  not null @title: '기준일자';					
 	    new_dom_basic_price : Decimal  @title:'신규내수기준단가';	
 	    new_dom_basic_curr_code : String(3) @title:'신규내수기준통화코드';		
-	    new_exp_basic_price : Decimal  @title:'신규수출기준단가';	 ;	
+	    new_exp_basic_price : Decimal  @title:'신규수출기준단가';	 
 	    new_exp_basic_curr_code : String(3) @title:'신규수출기준통화코드';		
 	    curr_dom_basic_price : String(3) @title:'현재내수기준단가';	
-	    curr_dom_basic_curr_code : String(3) @title:'현재수출기준통화코드';		
+	    curr_dom_basic_curr_code : String(3) @title:'현재내수기준통화코드';	
 	    curr_exp_basic_price : Decimal  @title:'현재수출기준단가';	
-	    curr_exp_basic_curr_code : String(3)  ;	
+	    curr_exp_basic_curr_code : String(3)  @title:'현재수출기준통화코드';		
 	    dom_first_po_price : Decimal  @title:'내수최초구매단가';	
-	    dom_first_po_price_curr_code : String(3)  @title:'내수최초구매단가';		
+	    dom_first_po_price_curr_code : String(3)  @title:'내수최초구매단가통화코드';		
 	    exp_first_po_price : Decimal  @title:'수출최초구매단가';			
 	    exp_first_po_price_curr_code : String(3) @title:'수출최초구매단가통화코드';				
 	    dom_first_po_price_start_date : Date  @title:'내수최초구매단가시작일자';					
