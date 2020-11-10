@@ -6,8 +6,8 @@ entity Pur_Operation_Org {
   key tenant_id : String(5)  not null @title: '테넌트ID';	
   key company_code : String(10)  not null @title: '회사코드';
   key org_type_code : String(30)  not null @title: '조직유형코드';
-  key operation_org_code : String(10)  not null @title: '운영조직코드';	
-    operation_org_name : String(10)  not null @title: '운영조직명';
+  key org_code : String(10)  not null @title: '운영조직코드';	
+    org_name : String(10)  not null @title: '운영조직명';
     purchase_org_code : String(10) @title: '구매조직코드';
     plant_code : String(10) @title: '플랜트코드';
     affiliate_code : String(10) @title: '관계사코드';
