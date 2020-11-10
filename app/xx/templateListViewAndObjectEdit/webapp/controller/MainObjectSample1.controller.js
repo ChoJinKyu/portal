@@ -11,7 +11,7 @@ sap.ui.define([
 ], function (BaseController, JSONModel, History, formatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
 	"use strict";
 
-	return BaseController.extend("cm.messageMgr.controller.MainObject", {
+	return BaseController.extend("xx.templateListViewAndObjectEdit.controller.MainObjectSample1", {
 
 		formatter: formatter,
 
@@ -144,7 +144,7 @@ sap.ui.define([
 				sTenantId = oArgs.tenantId,
 				sLanguageCode = oArgs.languageCode,
 				sMessageCode = oArgs.messageCode;
-			this._bindView("/Message(tenant_id='" + sTenantId + "',language_code='" + sLanguageCode + "',message_code='" + sMessageCode + "')");
+			//this._bindView("/Message(tenant_id='" + sTenantId + "',language_code='" + sLanguageCode + "',message_code='" + sMessageCode + "')");
 			this._toShowMode();
 		},
 
@@ -192,21 +192,19 @@ sap.ui.define([
 		},
 
 		_toEditMode: function(){
-            this._showFormFragment('MainObject_Edit');
-			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("page").setProperty("showFooter", true);
-			this.byId("pageEditButton").setEnabled(false);
-			this.byId("pageDeleteButton").setEnabled(false);
-			this.byId("pageNavBackButton").setEnabled(false);
+			// this.byId("page").setSelectedSection("pageSectionMain");
+			// this.byId("page").setProperty("showFooter", true);
+			// this.byId("pageEditButton").setEnabled(false);
+			// this.byId("pageDeleteButton").setEnabled(false);
+			// this.byId("pageNavBackButton").setEnabled(false);
 		},
 
 		_toShowMode: function(){
-			this._showFormFragment('MainObject_Show');
-			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("page").setProperty("showFooter", false);
-			this.byId("pageEditButton").setEnabled(true);
-			this.byId("pageDeleteButton").setEnabled(true);
-			this.byId("pageNavBackButton").setEnabled(true);
+			// this.byId("page").setSelectedSection("pageSectionMain");
+			// this.byId("page").setProperty("showFooter", false);
+			// this.byId("pageEditButton").setEnabled(true);
+			// this.byId("pageDeleteButton").setEnabled(true);
+			// this.byId("pageNavBackButton").setEnabled(true);
 		},
 
 		_oFragments: {},
@@ -221,7 +219,7 @@ sap.ui.define([
 			if(!this._oFragments[sFragmentName]){
 				Fragment.load({
 					id: this.getView().getId(),
-					name: "cm.messageMgr.view." + sFragmentName,
+					name: "xx.templateListViewAndObjectEdit.view." + sFragmentName,
 					controller: this
 				}).then(function(oFragment){
 					this._oFragments[sFragmentName] = oFragment;

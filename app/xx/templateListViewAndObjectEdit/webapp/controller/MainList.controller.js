@@ -18,7 +18,7 @@ sap.ui.define([
 ], function (BaseController, JSONModel, History, formatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
 	"use strict";
 
-	return BaseController.extend("cm.messageMgr.controller.MainList", {
+	return BaseController.extend("xx.templateListViewAndObjectEdit.controller.MainList", {
 
 		formatter: formatter,
 
@@ -385,7 +385,7 @@ sap.ui.define([
 			// init and activate controller
 			this._oTPC = new TablePersoController({
 				table: this.byId("listMainTable"),
-				componentName: "messageMgr",
+				componentName: "templateListViewAndObjectEdit",
 				persoService: MainListPersoService,
 				hasGrouping: true
 			}).activate();

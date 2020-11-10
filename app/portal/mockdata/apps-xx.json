@@ -23,12 +23,43 @@
         },
         {
             "name": "Example",
-            "icon": "sap-icon://locate-me",
+            "icon": "sap-icon://example",
             "subMenus": [
                 {
                     "name": "UI5 Example #1",
                     "url": "../xx/ui5Examples/webapp",
                     "component": "xx.ui5Examples"
+                }
+            ]
+        },
+        {
+            "name": "Template",
+            "icon": "sap-icon://suitcase",
+            "subMenus": [
+                {
+                    "name": "단건의 View 모드",
+                    "url": "../xx/templateObject/webapp",
+                    "component": "xx.templateObject"
+                },
+                {
+                    "name": "단건의 Edit 모드 (TBD)",
+                    "url": "../xx/templateObjectEdit/webapp",
+                    "component": "xx.templateObjectEdit"
+                },
+                {
+                    "name": "다건(목록)의 View 모드 + 단건의 Edit 모드",
+                    "url": "../xx/templateListViewAndObjectEdit/webapp",
+                    "component": "xx.templateListViewAndObjectEdit"
+                },
+                {
+                    "name": "다건(목록)의 Edit 모드",
+                    "url": "../xx/templateListInlneEdit/webapp",
+                    "component": "xx.templateListInlneEdit"
+                },
+                {
+                    "name": "다건(목록) + 상세정보",
+                    "url": "../xx/templateListWithDetailsSeparated/webapp",
+                    "component": "xx.templateListWithDetailsSeparated"
                 }
             ]
         }
