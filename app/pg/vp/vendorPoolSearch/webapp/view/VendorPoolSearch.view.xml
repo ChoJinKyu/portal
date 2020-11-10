@@ -112,7 +112,7 @@
 
                     >
                        <layoutData>
-                            <layout:SplitterLayoutData size="30%" />
+                            <layout:SplitterLayoutData size="55%" />
                         </layoutData>
                         <headerToolbar>
                             <OverflowToolbar>
@@ -264,12 +264,12 @@
                         </items>                                                                        
                         </Table>
 
-                        <Table  
-                                    id="VpSupplierDtlViewTable"
+                            <Table  
+                                    id="VpSupplierTable"
                                     items= "{   
-                                                path : '/VpSupplierDtlView',
+                                                path : '/VpSupplier',
                                                 parameters: {
-                                                    $$updateGroupId : 'dtlViewUpdateGroup'
+                                                    $$updateGroupId : 'SupplierUpdateGroup'
                                                 }
 
                                             }"
@@ -290,69 +290,7 @@
                                         </content>
                                     </OverflowToolbar>
                                 </headerToolbar>
-                                <columns>
-                                    <Column hAlign="Center" width="80px">
-                                        <header>
-                                            <Label text="협력사 코드"/>
-                                        </header>
-                                    </Column>                                
-                                    <Column hAlign="Center" width="80px">
-                                        <header>
-                                            <Label text="협력사 명"/>
-                                        </header>
-                                    </Column>
-                                    <Column hAlign="Center" width="80px">
-                                        <header>
-                                            <Label text="협력사 영문명"/>
-                                        </header>
-                                    </Column>                                    
-                                    <Column hAlign="Center" width="100px">
-                                        <header>
-                                            <Label text="Operation Org"/>
-                                        </header>
-                                    </Column>
-                                    <Column hAlign="Center" width="100px">
-                                        <header>
-                                            <Label text="Vendor Pool"/>
-                                        </header>
-                                    </Column>                                    
-                                </columns>
-                                <items>
-                                    <ColumnListItem type="Active" id="VpSupplierDtlViewColumnListItem">
-                                        <cells>
-                                            <Input id="t1_vendor_code" value="{vendor_code}" />
-                                            <Input id="t1_vendor_name" value="{vendor_name}" /> 
-                                            <Input id="t1_vendor_englis_name" value="{vendor_englis_name}" /> 
-                                            <Input id="t1_operation_org_code" value="{operation_org_code}"/>
-                                            <Input id="t1_vendor_pool_code" value="{vendor_pool_code}"/>
-                                        </cells>
-                                    </ColumnListItem>
-                                </items>
-                            </Table>
-                            <!-- visible.None Table -->
-                            <Table  
-                                    id="VpSupplierTable"
-                                    items= "{   
-                                                path : '/VpSupplier',
-                                                parameters: {
-                                                    $$updateGroupId : 'SupplierUpdateGroup'
-                                                }
-
-                                            }"
-                                    mode="MultiSelect"
-                                    updateFinished="onSupplierDtlUpdateFinished"
-
-                            >
-                            <layoutData>
-                                <layout:SplitterLayoutData size="30%" />
-                            </layoutData>
-                                <headerToolbar>
-                                    <OverflowToolbar>
-                                        <content>
-                                            <Title text="협력사 관리(Visible None Table)" level="H2"/>
-                                        </content>
-                                    </OverflowToolbar>
-                                </headerToolbar>
+                               
                                 <columns>
                                     <Column hAlign="Center" width="80px">
                                         <header>
@@ -389,21 +327,36 @@
                                             <Label text="협력사 명"/>
                                         </header>
                                     </Column> -->
+                                    <Column hAlign="Center" width="80px" >
+                                        <header>
+                                            <Label text="local_create_dtm"/>
+                                        </header>
+                                    </Column>
+                                    <Column hAlign="Center" width="80px" >
+                                        <header>
+                                            <Label text="local_update_dtm"/>
+                                        </header>
+                                    </Column>                                                                        
                                 </columns>
                                 <items>
                                     <ColumnListItem type="Active" id="VpSupplierColumnListItem">
                                         <cells>
-                                            <Input id="t2_tenant_id" value="{tenant_id}" />                                        
-                                            <Input id="t2_company_code" value="{company_code}" />
-                                            <Input id="t2_operation_org_type_code" value="{operation_org_type_code}" />                                        
-                                            <Input id="t2_operation_org_code" value="{operation_org_code}" />
-                                            <Input id="t2_vendor_pool_code" value="{vendor_pool_code}" />                                        
-                                            <Input id="t2_vendor_code" value="{vendor_code}" />                                                                                        
+                                            <Input id="t2_tenant_id" value="{tenant_id}" editable="false" />                                        
+                                            <Input id="t2_company_code" value="{company_code}" editable="false" />
+                                            <Input id="t2_operation_org_type_code" value="{org_type_code}" editable="false" />                                        
+                                            <Input id="t2_operation_org_code" value="{org_code}" editable="false" />
+                                            <Input id="t2_vendor_pool_code" value="{vendor_pool_code}" editable="false"  />                                        
+                                            <Input id="t2_vendor_code" value="{vendor_code}"  />
+                                            <Input id="t2_local_create_dtm" value="{local_create_dtm}" editable="false"  />                                        
+                                            <Input id="t2_local_update_dtm" value="{local_update_dtm}" editable="false" />
+                                                                                                                                  
                                             <!-- <Input id="t2_vendor_name" value="" />  -->
                                         </cells>
                                     </ColumnListItem>
                                 </items>
-                            </Table>                                                                         
+                            </Table>
+
+                                                                                                  
                     </layout:Splitter>
                 </f:content> 
             </f:DynamicPage>

@@ -5,13 +5,13 @@ using {dp as mst} from './DP_MOLD_MST-model';
 
 entity Mold_Spec {
 
-    key mold_id                       : Integer64     @title : '금형ID';
+    key mold_id                       : Integer64   not null  @title : '금형ID';
         use_material_value            : String(240)   @title : '사용재질값';
         inspection_flag               : Boolean       @title : '검사여부';
         assembly_approval_flag        : Boolean       @title : '조립승인여부';
         request_life_shot_count       : Integer       @title : '요구수명샷개수';
         order_qty                     : Decimal(20, 2)@title : '주문수량';
-        cavity_process_qty            : Integer       @title : '캐비티프로세스수량';
+        cavity_process_qty            : String(100)       @title : '캐비티프로세스수량';
         mold_tonnage                  : Decimal(20, 2)@title : '금형톤수';
         die_form                      : String(240)   @title : '다이형상';
         mold_outform_spec_name        : String(240)   @title : '사출OUTFORM규격명';

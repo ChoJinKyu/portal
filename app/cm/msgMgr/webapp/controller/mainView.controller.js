@@ -114,6 +114,8 @@ sap.ui.define([
 
             onSearch  : function() {
 
+                var oTable = this.byId("mainList");
+
                 var filters = [];
 
                 var search_chain_code = "";
@@ -124,7 +126,43 @@ sap.ui.define([
 
                 var search_message_code = this.getView().byId("search_message_code").getValue();
                 var search_message_contents = this.getView().byId("search_message_contents").getValue();
+
+                var mstBinding = this.byId("mainList").getBinding("rows");
                 
+                
+                if (mstBinding.hasPendingChanges()) {
+                   
+                    MessageBox.confirm("수정내용이 있습니다.  먼저 저장하시겠습니까?", {
+                    title : "Comfirmation",
+                    initialFocus : sap.m.MessageBox.Action.CANCEL,
+                    onClose : function(sButton) {
+                        if (sButton === MessageBox.Action.OK) {
+                            oView.setBusy(true);
+                            oView.getModel().submitBatch("MainUpdateGroup").then(fnSuccess, fnError);
+                            oTable.clearSelection(); 
+                        } else if (sButton === MessageBox.Action.CANCEL) {
+                            oView.setBusy(false);
+                            return  ;
+                        };
+                    }
+                });   
+
+                }
+
+
+                var oView = this.getView();
+                var fnSuccess = function () {
+                    oView.setBusy(false);
+                    MessageToast.show("저장 되었습니다.");
+                    //this.onSearch();
+                    //oView.refresh();
+                }.bind(this);
+
+                var fnError = function (oError) {
+                    oView.setBusy(false);
+                    MessageBox.error(oError.message);
+                }.bind(this);
+
 
                 if(this.byId("search_chain_code").getSelectedItem()){
                     search_chain_code = this.byId("search_chain_code").getSelectedItem().getKey();
@@ -429,14 +467,14 @@ sap.ui.define([
                         that.getView().setBusy(true);
 
                         //rows.AddRow()
-                            
+
                         var oContext = oBinding.create({
-                                "tenant_id": rows[idx].getRowBindingContext().getValue("tenant_id"),
-                                "message_code": rows[idx].getRowBindingContext().getValue("message_code"),
-                                "language_code": rows[idx].getRowBindingContext().getValue("language_code"),
-                                "chain_code": rows[idx].getRowBindingContext().getValue("chain_code"),
-                                "message_type_code": rows[idx].getRowBindingContext().getValue("message_type_code"),
-                                "message_contents": rows[idx].getRowBindingContext().getValue("message_contents"),
+                                "tenant_id": oBinding.getContexts()[idx].getValue("tenant_id"),
+                                "message_code": oBinding.getContexts()[idx].getValue("message_code"),
+                                "language_code": oBinding.getContexts()[idx].getValue("language_code"),
+                                "chain_code": oBinding.getContexts()[idx].getValue("chain_code"),
+                                "message_type_code": oBinding.getContexts()[idx].getValue("message_type_code"),
+                                "message_contents": oBinding.getContexts()[idx].getValue("message_contents"),
                                 "local_create_dtm": "2020-10-13T00:00:00Z",
                                 "local_update_dtm": "2020-10-13T00:00:00Z",
                                 "create_user_id": "Admin",
@@ -513,7 +551,8 @@ sap.ui.define([
                     var idx = indices[i];     
                     if (oTable.isIndexSelected(idx)) { 
                         that.getView().setBusy(true);
-                            rows[idx].getRowBindingContext().setProperty("update_user_id", "M");
+                            oBinding.getContexts()[idx].setProperty('update_user_id', 'M')
+                            //rows[idx].getRowBindingContext().setProperty("update_user_id", "M");
                         //oTable.getContextByIndex(idx);
                         that.getView().setBusy(false);
                     }
