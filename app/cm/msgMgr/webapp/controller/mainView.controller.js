@@ -64,7 +64,7 @@ sap.ui.define([
                 //this.onSearch();
                 console.groupEnd();
             },
-            OnSubmit(oEvent){
+            OnSubmit: function(oEvent){
                 //oEvent.getSource().getParent().getRowBindingContext().iIndex                
                 // var sNewValue = oEvent.getParameter("value");
 
@@ -77,13 +77,11 @@ sap.ui.define([
 
                 this.getView().setBusy(true);
 
-                oBinding.getContexts()[oEvent.getSource().getParent().getRowBindingContext().iIndex].setProperty('update_user_id', 'Modifyed')                       
+                oBinding.getContexts()[oEvent.getSource().getParent().getRowBindingContext().iIndex].setProperty('update_user_id', 'Modified')                       
                 
                 this.getView().setBusy(false);     
-
-
-
             },
+            
            
              /**
              * @private
