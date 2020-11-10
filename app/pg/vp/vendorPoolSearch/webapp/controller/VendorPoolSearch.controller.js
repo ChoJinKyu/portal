@@ -35,6 +35,11 @@ sap.ui.define([
             },
 
 			onInit: function () {
+                this._retrieveParam = new JSONModel({
+                    mstParam : "",
+                    dtlParam : "",
+                    lngParam : ""
+                });    
                 // this.byId("VpSupplierTable").setEditable(true);
                 // this.byId("t2_vent2_company_codedor_code").setEditable(true);
                 // this.byId("t2_operation_org_type_code").setEnabled(true);
@@ -86,7 +91,7 @@ sap.ui.define([
             onMstTableItemPress : function (oEvent) {
 
                 var v_vendor_code = oEvent.getSource().getBindingContext().getValue('vendor_pool_code');
-
+                
                     if(!this.isValNull(v_vendor_code))
                     {
                         var filters = [];
@@ -97,17 +102,18 @@ sap.ui.define([
                         supBinding.filter(filters);
                         this.getView().setBusy(false);
                     }
-                    // this._retrieveParam.dtlParam = v_vendor_code;
+                    this._retrieveParam.dtlParam = v_vendor_code;
             },
             onSupAddRow : function () {
                 
                 var supBinding = this.byId("VpSupplierTable").getBinding("items");
+                var dtlVal = this._retrieveParam.dtlParam;
                 var oContext = supBinding.create({
                         "tenant_id" : "L2100",
                         "company_code" : "*",
                         "org_type_code" : "70",
                         "org_code" : "LGCKR2000",
-                        "vendor_pool_code" : "VP201610260088",
+                        "vendor_pool_code" : dtlVal,
                         "local_create_dtm": "2020-11-09T00:00:00Z",
                         "local_update_dtm": "2020-11-09T00:00:00Z"
                     });
@@ -164,7 +170,7 @@ sap.ui.define([
                 var viewBinding = this.byId("vendorPoolSearchTable").getBinding("items");
                 
                 this.getView().setBusy(true);
-                viewBinding.onRefresh();
+                viewBinding.refresh();
                 this.getView().setBusy(false);
             },                   
 
