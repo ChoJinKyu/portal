@@ -13,7 +13,8 @@
 namespace dp;	
 using { User } from '@sap/cds/common';
 using util from '../../../util/util-model';
-using { VI_Base_Price_Arl_Header as header } from './DP_VI_BASE_PRICE_ARL_HEADER-model';
+using {dp.Dc_Project as pjt} from './DP_DC_PROJECT-model';
+using { dp.VI_Base_Price_Arl_Header as header } from './DP_VI_BASE_PRICE_ARL_HEADER-model';
 	
 entity VI_Base_Price_Arl_Line {	
   key tenant_id : String(5)  not null @title: '테넌트ID';		
