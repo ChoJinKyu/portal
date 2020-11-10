@@ -13,6 +13,7 @@
 namespace dp;	
 using { User } from '@sap/cds/common';
 using util from '../../../util/util-model';
+using { VI_Base_Price_Arl_Header as header } from './DP_VI_BASE_PRICE_ARL_HEADER-model';
 	
 entity VI_Base_Price_Arl_Line {	
   key tenant_id : String(5)  not null @title: '테넌트ID';		
@@ -35,6 +36,10 @@ entity VI_Base_Price_Arl_Line {
 	    exp_first_po_price_curr_code : String(3) @title:'수출최초구매단가통화코드';				
 	    dom_first_po_price_start_date : Date  @title:'내수최초구매단가시작일자';					
 	    exp_first_po_price_start_date : Date  @title:'수출최초구매단가시작일자';	
+
+    parent: Association to header 
+        on parent.tenant_id = tenant_id 
+        and parent.arl_number = arl_number ;        
 }	
 
 extend VI_Base_Price_Arl_Line with util.Managed;
