@@ -49,6 +49,11 @@
                     "name": "조직 관리",
                     "url": "../cm/orgMgr/webapp",
                     "component": "cm.orgMgr"
+                },
+                {
+                    "name": "구매 관리",
+                    "url": "../cm/purOrgMgr/webapp",
+                    "component": "cm.purOrgMgr"
                 }
             ]
         },

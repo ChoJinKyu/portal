@@ -30,7 +30,7 @@
                                             <form:fields>
                                                 <ComboBox   id="search_tenant_id"
                                                             items="{
-                                                                        path : '/CodeCombo',
+                                                                        path : 'commonCode>/CodeCombo',
                                                                         filters : [
                                                                             {path : 'tenant_id', operator : 'EQ', value1 : '1000'},
                                                                             {path : 'company_code', operator : 'EQ', value1 : 'G100'},
@@ -47,7 +47,7 @@
                                             <form:fields>
                                                 <ComboBox   id="operation_org_code"    
                                                             items="{
-                                                                        path : '/CodeCombo',
+                                                                        path : 'commonCode>/CodeCombo',
                                                                         filters : [
                                                                             {path : 'tenant_id', operator : 'EQ', value1 : '1000'},
                                                                             {path : 'company_code', operator : 'EQ', value1 : 'G100'},
@@ -68,7 +68,7 @@
                                             <form:fields>
                                                 <ComboBox   id="search_company_code"
                                                             items="{
-                                                                        path : '/CodeCombo',
+                                                                        path : 'commonCode>/CodeCombo',
                                                                         filters : [
                                                                             {path : 'tenant_id', operator : 'EQ', value1 : '1000'},
                                                                             {path : 'company_code', operator : 'EQ', value1 : 'G100'},
@@ -85,7 +85,7 @@
                                             <form:fields>
                                                 <ComboBox   id="use_flag"    
                                                             items="{
-                                                                        path : '/CodeCombo',
+                                                                        path : 'commonCode>/CodeCombo',
                                                                         filters : [
                                                                             {path : 'tenant_id', operator : 'EQ', value1 : '1000'},
                                                                             {path : 'company_code', operator : 'EQ', value1 : 'G100'},
@@ -106,7 +106,7 @@
                                             <form:fields>
                                                 <ComboBox   id="process_type_code"
                                                             items="{
-                                                                        path : '/CodeCombo',
+                                                                        path : 'commonCode>/CodeCombo',
                                                                         filters : [
                                                                             {path : 'tenant_id', operator : 'EQ', value1 : '1000'},
                                                                             {path : 'company_code', operator : 'EQ', value1 : 'G100'},
@@ -127,7 +127,7 @@
                                             <form:fields>
                                                 <ComboBox   id="org_type_code"    
                                                             items="{
-                                                                        path : '/CodeCombo',
+                                                                        path : 'commonCode>/CodeCombo',
                                                                         filters : [
                                                                             {path : 'tenant_id', operator : 'EQ', value1 : '1000'},
                                                                             {path : 'company_code', operator : 'EQ', value1 : 'G100'},
@@ -156,70 +156,110 @@
                 </f:DynamicPageHeader>
             </f:header>
             <f:content>
-                <layout:Splitter orientation="Vertical">
-                    <Table id="orgTypeMappingTable"
-                        items="{ path : '/Pur_Org_Type_Mapping' }"
-                        mode="MultiSelect"
-                        updateFinished="onMstUpdateFinished"
-                    >
-                        <headerToolbar>
-                            <OverflowToolbar>
-                                <content>
-                                    <Title text="코드 마스터" level="H2"/>
-                                    <ToolbarSpacer/>
-                                    <Button text="행추가" icon="sap-icon://add"  type="Accept" press="onMstAddRow"/>
-                                    <Button text="행복사" icon="sap-icon://copy" type="Accept" press="onMstCopyRow"/>
-                                    <Button text="행삭제" icon="sap-icon://delete" type="Reject" press="onMstDeleteRow"/>
-                                    <Button text="저장"   icon="sap-icon://save" type="Attention" press="onMstSave"/>
-                                </content>
-                            </OverflowToolbar>
-                        </headerToolbar>
-                        <columns>
-                            <Column hAlign="Center" width="100px">
-                                <header>
-                                    <Label text="생성자"/>
-                                </header>
-                            </Column>
-                            <Column hAlign="Center" width="100px">
-                                <header>
-                                    <Label text="수정자"/>
-                                </header>
-                            </Column>
-                            <Column hAlign="Center" width="200px">
-                                <header>
-                                    <Label text="생성 시간"/>
-                                </header>
-                            </Column>
-                            <Column hAlign="Center" width="200px">
-                                <header>
-                                    <Label text="수정 시간"/>
-                                </header>
-                            </Column>
-                            <Column hAlign="Center" width="200px">
-                                <header>
-                                    <Label text="시스템 생성 시간"/>
-                                </header>
-                            </Column>
-                            <Column hAlign="Center" width="200px">
-                                <header>
-                                    <Label text="시스템 수정 시간"/>
-                                </header>
-                            </Column>
-                        </columns>
-                        <items>
-                            <ColumnListItem type="Active" id="codeMstColumnListItem" press="onMstTableItemPress">
-                                <cells>
-                                    <Text id="mst_create_user_id" text="{create_user_id}"/>
-                                    <Text id="mst_update_user_id" text="{update_user_id}"/>
-                                    <Text id="mst_local_create_dtm" text="{local_create_dtm}"/>
-                                    <Text id="mst_local_update_dtm" text="{local_update_dtm}"/>
-                                    <Text id="mst_system_create_dtm" text="{system_create_dtm}"/>
-                                    <Text id="mst_system_update_dtm" text="{system_update_dtm}"/>
-                                </cells>
-                            </ColumnListItem>
-                        </items>
-                    </Table>
-                </layout:Splitter>                                
+                <TabContainer   id="myTabContainer"
+                                showAddNewButton="true"
+                                class="sapUiResponsiveContentPadding sapUiResponsivePadding--header"
+                                addNewButtonPress="addNewButtonPressHandler" itemClose="itemCloseHandler">
+                    <items>
+                        <TabContainerItem name="유형" modified="false">
+                            <content>
+                              <Table id="orgTypeMappingTable"
+                                  items="{ path : '/Pur_Org_Type_Mapping' }"
+                                  mode="MultiSelect"
+                                  updateFinished="onMstUpdateFinished"
+                              >
+                                  <headerToolbar>
+                                      <OverflowToolbar>
+                                          <content>
+                                              <Title text="코드 마스터" level="H2"/>
+                                              <ToolbarSpacer/>
+                                              <Button text="행추가" icon="sap-icon://add"  type="Accept" press="onMstAddRow"/>
+                                              <Button text="행복사" icon="sap-icon://copy" type="Accept" press="onMstCopyRow"/>
+                                              <Button text="행삭제" icon="sap-icon://delete" type="Reject" press="onMstDeleteRow"/>
+                                              <Button text="저장"   icon="sap-icon://save" type="Attention" press="onMstSave"/>
+                                          </content>
+                                      </OverflowToolbar>
+                                  </headerToolbar>
+                                  <columns>
+                                      <Column hAlign="Center" width="100px">
+                                          <header>
+                                              <Label text="테넌트"/>
+                                          </header>
+                                      </Column>
+                                      <Column hAlign="Center" width="100px">
+                                          <header>
+                                              <Label text="회사"/>
+                                          </header>
+                                      </Column>
+                                      <Column hAlign="Center" width="100px">
+                                          <header>
+                                              <Label text="프로세스유형"/>
+                                          </header>
+                                      </Column>
+                                      <Column hAlign="Center" width="100px">
+                                          <header>
+                                              <Label text="조직유형"/>
+                                          </header>
+                                      </Column>
+                                      <Column hAlign="Center" width="100px">
+                                          <header>
+                                              <Label text="사용여부"/>
+                                          </header>
+                                      </Column>
+                                      <Column hAlign="Center" width="100px">
+                                          <header>
+                                              <Label text="생성자"/>
+                                          </header>
+                                      </Column>
+                                      <Column hAlign="Center" width="100px">
+                                          <header>
+                                              <Label text="수정자"/>
+                                          </header>
+                                      </Column>
+                                      <Column hAlign="Center" width="200px">
+                                          <header>
+                                              <Label text="생성 시간"/>
+                                          </header>
+                                      </Column>
+                                      <Column hAlign="Center" width="200px">
+                                          <header>
+                                              <Label text="수정 시간"/>
+                                          </header>
+                                      </Column>
+                                      <Column hAlign="Center" width="200px">
+                                          <header>
+                                              <Label text="시스템 생성 시간"/>
+                                          </header>
+                                      </Column>
+                                      <Column hAlign="Center" width="200px">
+                                          <header>
+                                              <Label text="시스템 수정 시간"/>
+                                          </header>
+                                      </Column>
+                                  </columns>
+                                  <items>
+                                      <ColumnListItem type="Active" id="codeMstColumnListItem" press="onMstTableItemPress">
+                                          <cells>
+                                              <Text text="{tenant_id}"/>
+                                              <Text text="{company_code}"/>
+                                              <Text text="{process_type_code}"/>
+                                              <Text text="{org_type_code}"/>
+                                              <Text text="{use_flag}"/>
+                                              <Text id="mst_create_user_id" text="{create_user_id}"/>
+                                              <Text id="mst_update_user_id" text="{update_user_id}"/>
+                                              <Text id="mst_local_create_dtm" text="{local_create_dtm}"/>
+                                              <Text id="mst_local_update_dtm" text="{local_update_dtm}"/>
+                                              <Text id="mst_system_create_dtm" text="{system_create_dtm}"/>
+                                              <Text id="mst_system_update_dtm" text="{system_update_dtm}"/>
+                                          </cells>
+                                      </ColumnListItem>
+                                  </items>
+                              </Table>
+                            </content>
+                        </TabContainerItem>
+
+                    </items>
+                </TabContainer>    
             </f:content>
         </f:DynamicPage>
     </App>
