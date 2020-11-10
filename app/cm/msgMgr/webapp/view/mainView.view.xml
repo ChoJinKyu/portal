@@ -157,7 +157,8 @@ xmlns:mvc="sap.ui.core.mvc"
                                                                             {path: 'i18n>StdKey'},
                                                                             {path: 'update_user_id'},
                                                                             {path: 'ui>/bEvent'}]
-                                                                            ,formatter: '.formatter.setStatus'}}" /> 
+                                                                            ,formatter: '.formatter.setStatus'}}" 
+                                                    /> 
 										</table:template>
 									</table:Column>
                                 </table:columns>
@@ -197,7 +198,7 @@ xmlns:mvc="sap.ui.core.mvc"
                                                                             {path: 'chain_code'},
                                                                             {path: 'update_user_id'},
                                                                             {path: 'ui>/bEvent'}]
-                                                                            ,formatter: '.formatter.setStatus'}}"
+                                                                            ,formatter: '.formatter.setStatus'}}"                
                                                             >                                                           
                                                             <core:Item key="CM" text="공통"/>
                                                             <core:Item key="DP" text="개발구매"/>
@@ -220,7 +221,9 @@ xmlns:mvc="sap.ui.core.mvc"
                                                                             {path: 'message_type_code'},
                                                                             {path: 'update_user_id'},
                                                                             {path: 'ui>/bEvent'}]
-                                                                            ,formatter: '.formatter.setStatus'}}"/> 
+                                                                            ,formatter: '.formatter.setStatus'}}"
+                                                                            
+                                             submit = ".OnSubmit"                                  /> 
 										</table:template>
 									</table:Column>
                                 </table:columns>
@@ -238,7 +241,7 @@ xmlns:mvc="sap.ui.core.mvc"
                                                                             {path: 'update_user_id'},
                                                                             {path: 'ui>/bEvent'}]
                                                                             ,formatter: '.formatter.setStatus'}}"
-                                                    liveChange = ".OnLiveChange"                        
+                                                     submit = ".OnSubmit"                    
                                                     />                                        
                                         </table:template>                                        
 									</table:Column>
