@@ -1,9 +1,6 @@
 namespace dp;	
-using util from '../../util/util-model';  	
+using util from '../../../util/util-model';  	
 using { dp as uomclass } from './DP_MM_UOM_CLASS-model';
-//using {dp as uomclass} from '../MaterialMgr/DP_MM_UOM_CLASS-model';
-
-//
 	
 entity Mm_Uom_Class_Lng {	
   key tenant_id : String(5)  not null @title: 'Tenant ID' ;	
