@@ -303,6 +303,9 @@ sap.ui.define([
 
                     var dtlBinding = this.byId("currencyLngTable").getBinding("items");
                     dtlBinding.resetChanges();
+                    //체크박스 클리어를 위해
+                    var oTable = this.byId("currencyLngTable");
+                    oTable.removeSelections(true);
                     this.getView().setBusy(true);
                     dtlBinding.filter(filters);
                     this.getView().setBusy(false);
@@ -314,28 +317,6 @@ sap.ui.define([
             },
 
             onCreate : function () {
-                // var dtlVal = this._retrieveParam.dtlParam;
-                // var oCurrencyDetail = this.getView().byId("currencyDetail");
-                // var oContext = oCurrencyDetail.create({
-                //         "tenant_id" : "1000",
-                //         "currency_code" : "aa",
-                //         "language_code" : "",
-                //         "currency_code_desc" : "",
-                //         "currency_prefix" : "",
-                //         "currency_suffix" : ""
-                        
-                //     });
-                // var oCurrencyDetail = this.getView().byId("currencyDetail");
-                //var oInput1 = this.getView().byId("input1");
-                this.getView().byId("ipCurCode").setValue("");
-                this.getView().byId("ipScale").setValue("");
-                this.getView().byId("ipExScale").setValue("");                
-                this.getView().byId("ipUseFlag").setValue("");                
-                this.getView().byId("strtDate").setValue("");
-                this.getView().byId("endDate").setValue("");
-
-                //oCurrencyDetail.getBindingContext(). getValue("tenant_id");
-                
 
             },
 
@@ -369,7 +350,8 @@ sap.ui.define([
                 });
             },
 
-			onLngAddRow : function () {
+			onLngAddRow : function () {               
+
                 var utcDate = this._getUtcSapDate();
 
                 var oUiModel = this.getModel("ui");
@@ -388,9 +370,9 @@ sap.ui.define([
                         "local_create_dtm" : utcDate,
                         "local_update_dtm" : utcDate
                         
-                    });
+                });               
 
-                    oUiModel.setProperty("/bEvent", "AddRow"); 
+                    // oUiModel.setProperty("/bEvent", "AddRow"); 
 
                         /*
                         ,
@@ -470,8 +452,9 @@ sap.ui.define([
             },
 
             onLngRefresh : function () {
+                
                 var dtlBinding = this.byId("currencyLngTable").getBinding("items");
-                this.getView().setBusy(true);
+                this.getView().setBusy(true);                
                 dtlBinding.refresh();
                 this.getView().setBusy(false);
             },
@@ -487,7 +470,20 @@ sap.ui.define([
                 return utcDate;
             },            
 
-			onDtlUpdateFinished : function (oEvent) {
+			onLngUpdateFinished : function (oEvent) {
+
+                var oTable = this.byId("currencyLngTable");
+                
+                var aItems = oTable.getItems();
+
+                for (var i = 0; i < aItems.length; i++) {
+                    if(this.isValNull(aItems[i].getCells()[5].getValue()))
+                    aItems[i].getCells()[0].setEditable(true);
+                    else
+                    aItems[i].getCells()[0].setEditable(false); 
+                    
+                }
+                
                 
                 // if(oEvent.getSource().getItems().length > 0){
                 //     var v_item = oEvent.getSource().getItems()[0];

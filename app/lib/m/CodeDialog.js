@@ -44,14 +44,6 @@ sap.ui.define([
                 }.bind(this)
             }));
 
-            var oColumnList = new ColumnListItem({
-                type="Navigation",
-                cells: [
-                    new Text({text: '{code}'}),
-                    new Text({text: '{code_description}'})
-                ]
-            });
-            oColumnList.attachPress(this.onTablePress);
 
             this.addContent(new Table({
                 columns: [
@@ -66,7 +58,14 @@ sap.ui.define([
                 ],
                 items: {
                     path: "/value",
-                    template: oColumnList
+                    template: new ColumnListItem({
+                        type: "Active",
+                        cells: [
+                            new Text({text: '{code}'}),
+                            new Text({text: '{code_description}'})
+                        ],
+                        press: this.onTablePress
+                    })
                 }
             }));
                 

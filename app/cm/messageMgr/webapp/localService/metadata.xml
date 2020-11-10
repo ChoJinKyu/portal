@@ -7,9 +7,9 @@
     <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
   </edmx:Reference>
   <edmx:DataServices>
-    <Schema Namespace="cm.MsgMgrService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Schema Namespace="xx.MessageMgrService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
       <EntityContainer Name="EntityContainer">
-        <EntitySet Name="Message" EntityType="cm.MsgMgrService.Message"/>
+        <EntitySet Name="Message" EntityType="xx.MessageMgrService.Message"/>
       </EntityContainer>
       <EntityType Name="Message">
         <Key>
@@ -30,18 +30,18 @@
         <Property Name="system_create_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
         <Property Name="system_update_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
       </EntityType>
-      <Annotations Target="cm.MsgMgrService.Message/create_user_id">
+      <Annotations Target="xx.MessageMgrService.Message/create_user_id">
         <Annotation Term="Common.Label" String="{i18n>UserID}"/>
         <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
       </Annotations>
-      <Annotations Target="cm.MsgMgrService.Message/update_user_id">
+      <Annotations Target="xx.MessageMgrService.Message/update_user_id">
         <Annotation Term="Common.Label" String="변경사용자ID"/>
         <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
       </Annotations>
-      <Annotations Target="cm.MsgMgrService.Message/system_create_dtm">
+      <Annotations Target="xx.MessageMgrService.Message/system_create_dtm">
         <Annotation Term="Common.Label" String="시스템등록시간"/>
       </Annotations>
-      <Annotations Target="cm.MsgMgrService.Message/system_update_dtm">
+      <Annotations Target="xx.MessageMgrService.Message/system_update_dtm">
         <Annotation Term="Common.Label" String="시스템수정시간"/>
       </Annotations>
     </Schema>

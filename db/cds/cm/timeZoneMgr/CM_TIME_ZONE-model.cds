@@ -1,7 +1,6 @@
 namespace cm;	
 
 using util from '../../util/util-model';
-using { User } from '@sap/cds/common';
 
 entity Time_Zone {	
   key tenant_id             : String(5)     not null;	
