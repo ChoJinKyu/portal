@@ -10,11 +10,5 @@ entity Sc_Part_Class_Spec_Name {
   key spec_code : String(200)  not null;	
     seq : Decimal default 0 ;	
     status_code : String(10)  ;	
-    local_create_date : DateTime  ;	
-    local_update_date : DateTime  ;	
-    create_user_id : User not null @cds.on.insert: $user  ;	
-    update_user_id : User not null @cds.on.insert: $user @cds.on.update: $user @title: '변경사용자ID'  ;	
-    system_create_date : DateTime not null @cds.on.insert: $now @title: '시스템등록시간'  ;	
-    system_update_date : DateTime not null @cds.on.insert: $now  @cds.on.update: $now @title: '시스템수정시간'  ;	
 }	
-extend Control_Option_Dtl with util.Managed;	
+extend Sc_Part_Class_Spec_Name with util.Managed;	

@@ -12,4 +12,4 @@ entity Sc_Spec_Name_Lov {
     seq : Decimal default 0 ;	
     status_code : String(10)  ;	
 }	
-extend Control_Option_Dtl with util.Managed;	
+extend Sc_Spec_Name_Lov with util.Managed;	

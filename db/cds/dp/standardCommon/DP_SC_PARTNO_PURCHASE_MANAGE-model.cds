@@ -15,4 +15,4 @@ entity Sc_Partno_Purchase_Manage {
     recommend_reason : String(200)   @title: '추천사유' ;	
     replace_group_code : String(30)   @title: '대치그룹코드' ;	
 }	
-extend Control_Option_Dtl with util.Managed;	
+extend Sc_Partno_Purchase_Manage with util.Managed;	

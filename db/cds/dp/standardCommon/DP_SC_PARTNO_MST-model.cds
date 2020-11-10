@@ -19,4 +19,4 @@ entity Sc_Partno_Mst {
     part_status_code : String(10)  ;	
     spec_value_list_code : String(10)  ;	
 }	
-extend Control_Option_Dtl with util.Managed;	
+extend Sc_Partno_Mst with util.Managed;	
