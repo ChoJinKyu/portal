@@ -327,12 +327,12 @@
                                             <Label text="협력사 명"/>
                                         </header>
                                     </Column> -->
-                                    <Column hAlign="Center" width="80px" >
+                                    <Column hAlign="Center" width="80px" visible = "false" >
                                         <header>
-                                            <Label text="local_create_dtm"/>
+                                            <Label text="local_create_dtm"  />
                                         </header>
                                     </Column>
-                                    <Column hAlign="Center" width="80px" >
+                                    <Column hAlign="Center" width="80px" visible = "false" >
                                         <header>
                                             <Label text="local_update_dtm"/>
                                         </header>

@@ -24,12 +24,11 @@
                     "localUri": "localService/metadata.xml"
                 }
             },
-            "codeService": {
-                "uri": "srv-api/odata/v4/cm.CodeMgrService/",
+            "commonUtilService": {
+                "uri": "srv-api/odata/v4/util.CommonService/",
                 "type": "OData",
                 "settings": {
-                    "odataVersion": "4.0",
-                    "localUri": "localService/metadata.xml"
+                    "odataVersion": "4.0"
                 }
             }
         },
@@ -104,11 +103,12 @@
                     "autoExpandSelect": true
                 }
             },
-            "cc": {
-                "dataSource": "codeService",
+            "util": {
+                "dataSource": "commonUtilService",
                 "preload": true,
                 "settings": {
                     "operationMode": "Server",
+                    "groupId": "$direct",
                     "synchronizationMode": "None",
                     "autoExpandSelect": true
                 }
