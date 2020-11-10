@@ -83,13 +83,14 @@ entity Mold_Mst {
         prepay_rate                     : Decimal(20,2)         @title:'선급금비율';
         progresspay_rate                : Decimal(20,2)         @title:'중도금비율';
         rpay_rate                       : Decimal(20,2)         @title:'잔여금액비율';
-        sales_flag                      : Boolean               @title:'매출여부';
+        sales_status_code               : String(30)            @title:'매출상태코드';
         pr_number                       : String(240)           @title:'구매요청번호';
         boi_number                      : String(240)           @title:'BOI번호';
         import_company_code             : String(30)            @title:'수입회사코드';
         import_company_org_code         : String(30)            @title:'수입회사조직코드';
         prodvendor_update_report_number : String(240)           @title:'양산처변경보고서번호';
         prodvendor_update_report_date   : String(8)             @title:'양산처변경보고서일자';
+        receiving_complete_tr_date      : String(8)             @title:'입고트랜잭션완료일자';
         inspection_date                 : String(8)             @title:'검사일자';
         temp_ap_flag                    : Boolean               @title:'임시AP여부';
         tax_exempt_flag                 : Boolean               @title:'면세여부';
