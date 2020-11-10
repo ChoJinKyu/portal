@@ -14,13 +14,13 @@ entity VI_Base_Price_Arl_Header {
         new_change_code          : String(30) not null  @title : '신규변경코드';
         arl_status_code          : String(30) not null  @title : '품의서상태';
         approval_request_desc    : String(3000)         @title : '승인요청설명';
-        approval_requester_empno : String(100) not null @title : '승인작성자사번';
+        approval_requester_empno : String(30) not null  @title : '승인작성자사번';
         approval_request_date    : Date                 @title : '승인요청일자';
         attached_file_no         : String(30)           @title : '첨부파일No';
 
         children                 : Composition of many line
-                                       on  line.tenant_id  = tenant_id
-                                       and line.arl_number = arl_number;
+                                       on  children.tenant_id  = tenant_id
+                                       and children.arl_number = arl_number;
 }
 
 extend VI_Base_Price_Arl_Header with util.Managed;
