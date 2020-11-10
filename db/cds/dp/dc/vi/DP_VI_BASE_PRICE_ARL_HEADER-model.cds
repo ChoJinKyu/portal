@@ -1,7 +1,7 @@
 namespace dp;
 
 using util from '../../../util/util-model';
-using {dp.VI_Base_Price_Arl_Line as line} from './DP_VI_BASE_PRICE_ARL_HEADER-model';
+using {dp.VI_Base_Price_Arl_Line as line} from './DP_VI_BASE_PRICE_ARL_LINE-model';
 
 
 entity VI_Base_Price_Arl_Header {
