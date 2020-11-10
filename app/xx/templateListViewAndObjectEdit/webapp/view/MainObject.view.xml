@@ -1,4 +1,4 @@
-<mvc:View controllerName="cm.messageMgr.controller.MainObject" 
+<mvc:View controllerName="xx.templateListViewAndObjectEdit.controller.MainObject" 
 	xmlns:mvc="sap.ui.core.mvc" 
 	xmlns="sap.m" 
 	xmlns:uxap="sap.uxap" 

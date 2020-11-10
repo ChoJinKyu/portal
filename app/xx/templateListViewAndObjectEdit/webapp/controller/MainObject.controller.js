@@ -11,7 +11,7 @@ sap.ui.define([
 ], function (BaseController, JSONModel, History, formatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
 	"use strict";
 
-	return BaseController.extend("cm.messageMgr.controller.MainObject", {
+	return BaseController.extend("xx.templateListViewAndObjectEdit.controller.MainObject", {
 
 		formatter: formatter,
 
@@ -221,7 +221,7 @@ sap.ui.define([
 			if(!this._oFragments[sFragmentName]){
 				Fragment.load({
 					id: this.getView().getId(),
-					name: "cm.messageMgr.view." + sFragmentName,
+					name: "xx.templateListViewAndObjectEdit.view." + sFragmentName,
 					controller: this
 				}).then(function(oFragment){
 					this._oFragments[sFragmentName] = oFragment;
