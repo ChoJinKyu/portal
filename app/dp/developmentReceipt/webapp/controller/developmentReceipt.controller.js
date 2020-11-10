@@ -58,10 +58,10 @@ sap.ui.define([
             _searchControlInit : function () {
                 //console.group("_searchControlInit");
                 //회사 
-                this._oMultiInput = this.getView().byId("multiInputAffiliate");
+                this._oMultiInput = this.getView().byId("multiInputAffiliateE");
                 this._oMultiInput.setTokens(this._getDefaultTokens());
 
-                this._oMultiInput1 = this.getView().byId("multiInputAffiliate1");
+                this._oMultiInput1 = this.getView().byId("multiInputAffiliateS");
                 this._oMultiInput1.setTokens(this._getDefaultTokens());
 
                 this.oColModel = new JSONModel(sap.ui.require.toUrl("dp/developmentReceipt/localService/mockdata") + "/columnsModel.json");
@@ -128,7 +128,7 @@ sap.ui.define([
              */
             onValueHelpOkPress : function (oEvent) {
                 var aTokens = oEvent.getParameter("tokens");
-                this.multiInputAffiliate = this.getView().byId("multiInputAffiliate");
+                this.multiInputAffiliate = this.getView().byId("multiInputAffiliateE");
                 this.multiInputAffiliate.setTokens(aTokens);
                 this._oValueHelpDialog.close();
             },
@@ -180,14 +180,36 @@ sap.ui.define([
             },
 
 			onSearch: function () {
-                
                 var filters = [];
-                var mstBinding = this.byId("moldMstTable").getBinding("items");
-                //var mstBinding = this.byId("moldMstTable").getBinding("rows");
-                mstBinding.resetChanges();
+                
+                var searchEDType = "";
+                var searchDescription = this.getView().byId("searchDescription").getValue();
+                var searchFamilyPartNo = this.getView().byId("searchFamilyPartNo").getValue();
+
+                if(this.byId("searchEDType").getSelectedItem()){
+                    searchEDType = this.byId("searchEDType").getSelectedItem().getKey();
+                }
+
+                MessageToast.show(searchEDType);
+                // 필터 추가 
+                if(!this.isValNull(searchEDType)){
+                    filters.push(new Filter("export_domestic_type_code", FilterOperator.Contains, searchEDType));
+                }
+
+                if(!this.isValNull(searchDescription)){
+                    filters.push(new Filter("spec_name", FilterOperator.Contains, searchDescription));
+                }
+
+                if(!this.isValNull(searchFamilyPartNo)){
+                    filters.push(new Filter("family_part_number_1", FilterOperator.Contains, searchFamilyPartNo));
+                }
+
+                var oBinding = this.byId("moldMstTable").getBinding("items");
+                //var oBinding = this.byId("moldMstTable").getBinding("rows");
+                //oBinding.resetChanges();
                 
                 this.getView().setBusy(true);
-                mstBinding.filter(filters);
+                oBinding.filter(filters);
                 this.getView().setBusy(false);
 
             },
@@ -252,9 +274,9 @@ sap.ui.define([
 
             /** 필수 입력 항목 모두 입력 후 Receipt */
             onReceipt : function() {
-                var mstBinding = this.byId("moldMstTable").getBinding("items");
+                var oBinding = this.byId("moldMstTable").getBinding("items");
 
-                if (!mstBinding.hasPendingChanges()) {
+                if (!oBinding.hasPendingChanges()) {
                     MessageBox.error("수정한 내용이 없습니다.");
                     return;
                 }
@@ -263,7 +285,7 @@ sap.ui.define([
                 var fnSuccess = function () {
                     oView.setBusy(false);
                     MessageToast.show("Receipt 되었습니다.");
-                    this.onMstRefresh();
+                    this.onRefresh();
                 }.bind(this);
 
                 var fnError = function (oError) {
@@ -286,11 +308,11 @@ sap.ui.define([
                 });
             },
 
-            onMstRefresh : function () {
-                //var mstBinding = this.byId("moldMstTable").getBinding("rows");
-                var mstBinding = this.byId("moldMstTable").getBinding("items");
+            onRefresh : function () {
+                //var oBinding = this.byId("moldMstTable").getBinding("rows");
+                var oBinding = this.byId("moldMstTable").getBinding("items");
                 this.getView().setBusy(true);
-                mstBinding.refresh();
+                oBinding.refresh();
                 this.getView().setBusy(false);
             },
 

@@ -8,11 +8,14 @@ sap.ui.define([
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
+    "sap/m/MessageToast",
 	"sap/m/ColumnListItem",
 	"sap/m/ObjectIdentifier",
 	"sap/m/Text",
 	"sap/m/Input",
-], function (BaseController, JSONModel, History, formatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, ColumnListItem, ObjectIdentifier, Text, Input) {
+	"sap/m/ComboBox",
+	"sap/ui/core/Item",
+], function (BaseController, JSONModel, History, formatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
 	"use strict";
 
 	return BaseController.extend("cm.messageMgr.controller.MainList", {
@@ -165,42 +168,79 @@ sap.ui.define([
 		 * Event handler for page edit button press
 		 * @public
 		 */
-		onPageEditButtonPress: function(){
+		onListMainTableEditButtonPress: function(){
 			this._toEditMode();
 		},
 
+       
+        onListMainTableDraftButtonPress: function(){
+			var oTable = this.byId("listMainTable"),
+                oBinding = oTable.getBinding("items");
+
+            var oContext = oBinding.create({
+                "tenant_id": "L2100",
+                "chain_code": "CM",
+                "language_code": "",
+                "message_code": "",
+                "message_type_code": "",
+                "message_contents": "",
+                "local_create_dtm": "2020-10-13T00:00:00Z",
+                "local_update_dtm": "2020-10-13T00:00:00Z"
+            });
+
+            oContext.created().then(function (oEvent) {
+                oTable.refresh();
+                MessageToast.show("Success to create.");
+            }).catch(function(oEvent){
+                MessageBox.error("Error while creating.");
+            });
+        },
 		
 		/**
-		 * Event handler for saving page changes
+		 * Event handler for cancel page editing
 		 * @public
 		 */
-        onPageSaveButtonPress: function(){
+        onListMainTableCancelEditButtonPress: function(){
+			this._toShowMode();
+        },
+        
+        onListMainTableSaveButtonPress: function(){
 			var oView = this.getView(),
 				me = this;
-				
 			MessageBox.confirm("Are you sure ?", {
 				title : "Comfirmation",
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
 						oView.setBusy(true);
-						oView.getModel().submitBatch("oataGroupIdForUpdate").then(function(ok){
+						oView.getModel().submitBatch("odataGroupIdForUpdate").then(function(ok){
 							me._toShowMode();
 							oView.setBusy(false);
-						});
+                            MessageToast.show("Success to save.");
+						}).catch(function(err){
+                            MessageBox.error("Error while saving.");
+                        });
 					};
 				}
 			});
-		},
-		
-		
+        },
+
+		/**
+		 * Event handler for saving page changes
+		 * @public
+		 */
+        onPageSaveButtonPress: function(){
+            this.onListMainTableSaveButtonPress.apply(this, arguments);
+        },
+        
 		/**
 		 * Event handler for cancel page editing
 		 * @public
 		 */
         onPageCancelEditButtonPress: function(){
-			this._toShowMode();
+			this.onListMainTableCancelEditButtonPress.apply(this, arguments);
         },
+
 		/**
 		 * Event handler for refresh event. Keeps filter, sort
 		 * and group settings and refreshes the list binding.
@@ -257,7 +297,7 @@ sap.ui.define([
 				path: "/Message",
 				filters: aFilters,
 				parameters: {
-					"$$updateGroupId" : 'oataGroupIdForUpdate'
+					"$$updateGroupId" : 'odataGroupIdForUpdate'
 				},
 				template: oTemplate,
 				templateShareable: true,
@@ -266,19 +306,27 @@ sap.ui.define([
 		},
 
 		_toEditMode: function(){
-			this.byId("page").setProperty("showFooter", true);
-			this.byId("pageSearchFormS").setEditable(false);
-			this.byId("pageEditButton").setEnabled(false);
-			this.byId("pageSearchButton").setEnabled(false);
+            var FALSE = false;
+			this.byId("page").setProperty("showFooter", !FALSE);
+			this.byId("pageSearchFormS").setEditable(FALSE);
+			this.byId("pageSearchButton").setEnabled(FALSE);
+			this.byId("listMainTableDraftButton").setEnabled(!FALSE);
+			this.byId("listMainTableEditButton").setEnabled(FALSE);
+			this.byId("listMainTableCancelEditButton").setEnabled(!FALSE);
+			this.byId("listMainTableSaveButton").setEnabled(!FALSE);
 			this._rebindTable(this.oEditableTemplate, "Edit");
 		},
 
 		_toShowMode: function(){
+            var TRUE = true;
 			this._rebindTable(this.oReadOnlyTemplate, "Navigation");
-			this.byId("pageSearchFormS").setEditable(true);
-			this.byId("page").setProperty("showFooter", false);
-			this.byId("pageEditButton").setEnabled(true);
-			this.byId("pageSearchButton").setEnabled(true);
+			this.byId("pageSearchFormS").setEditable(TRUE);
+			this.byId("pageSearchButton").setEnabled(TRUE);
+			this.byId("listMainTableDraftButton").setEnabled(!TRUE);
+			this.byId("listMainTableEditButton").setEnabled(TRUE);
+			this.byId("listMainTableCancelEditButton").setEnabled(!TRUE);
+			this.byId("listMainTableSaveButton").setEnabled(!TRUE);
+			this.byId("page").setProperty("showFooter", !TRUE);
 		},
 
 		_doInitTable: function(){
@@ -301,6 +349,21 @@ sap.ui.define([
 			});
 			this.oReadOnlyTemplate.attachPress(this.onListMainTableItemPress.bind(this));
 
+            var oMessageTypeComboBox = new ComboBox({
+                    selectedKey: "{message_type_code}"
+                });
+                oMessageTypeComboBox.bindItems({
+                    path: 'util>/CodeDetails',
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
+                        new Filter("company_code", FilterOperator.EQ, '*'),
+                        new Filter("group_code", FilterOperator.EQ, 'CM_MESSAGE_TYPE_CODE')
+                    ],
+                    template: new Item({
+                        key: "{util>code}",
+                        text: "{util>code_description}"
+                    })
+                });
 			this.oEditableTemplate = new ColumnListItem({
 				cells: [
 					new Input({
@@ -311,11 +374,9 @@ sap.ui.define([
 						value: "{message_code}"
 					}), new Input({
 						value: "{message_contents}"
-					}), new Input({
-						value: "{message_type_code}"
-					})
+					}), oMessageTypeComboBox
 				]
-			});
+            });
 
 			this._toShowMode();
 		},

@@ -157,7 +157,8 @@ xmlns:mvc="sap.ui.core.mvc"
                                                                             {path: 'i18n>StdKey'},
                                                                             {path: 'update_user_id'},
                                                                             {path: 'ui>/bEvent'}]
-                                                                            ,formatter: '.formatter.setStatus'}}" /> 
+                                                                            ,formatter: '.formatter.setStatus'}}" 
+                                                    /> 
 										</table:template>
 									</table:Column>
                                 </table:columns>
@@ -190,7 +191,7 @@ xmlns:mvc="sap.ui.core.mvc"
 										<table:template>
                                             <ComboBox id="comboBoxE_chain_code"
                                                             selectedKey="{chain_code}"
-                                                            selectionChange="handleSelectionChange"
+                                                            selectionChange="OnSubmit"
                                                             selectionFinish="handleSelectionFinish"
                                                             width="350px"
                                                             enabled="{=%{parts: [
@@ -220,7 +221,9 @@ xmlns:mvc="sap.ui.core.mvc"
                                                                             {path: 'message_type_code'},
                                                                             {path: 'update_user_id'},
                                                                             {path: 'ui>/bEvent'}]
-                                                                            ,formatter: '.formatter.setStatus'}}"/> 
+                                                                            ,formatter: '.formatter.setStatus'}}"
+                                                                            
+                                             submit = ".OnSubmit"                                  /> 
 										</table:template>
 									</table:Column>
                                 </table:columns>
@@ -238,7 +241,7 @@ xmlns:mvc="sap.ui.core.mvc"
                                                                             {path: 'update_user_id'},
                                                                             {path: 'ui>/bEvent'}]
                                                                             ,formatter: '.formatter.setStatus'}}"
-                                                    liveChange = ".OnLiveChange"                        
+                                                     submit = ".OnSubmit"                    
                                                     />                                        
                                         </table:template>                                        
 									</table:Column>
@@ -250,7 +253,7 @@ xmlns:mvc="sap.ui.core.mvc"
 								    <table:Column  width="10rem" hAlign="Center" >                                        
                                             <Label text="{i18n>TblHdUpdate_user_id}"/>           
 										<table:template>
-											<Label id="input_Update_user_id" text="{create_user_id}"/> 
+											<Label id="input_Update_user_id" text="{update_user_id}"/> 
 										</table:template>
 									</table:Column>
                                 </table:columns>
