@@ -18,8 +18,8 @@ entity User {
     currency_code : String(30)  not null @title: '통화코드';
     password : String(4000)  not null @title: '비밀번호';
     email : String(240)  not null @title: '이메일';
-    start_date : String(8)  not null @title: '시작일자';
-    end_date : String(8)  not null @title: '종료일자';
+    start_date : Date  not null @title: '시작일자';
+    end_date : Date not null @title: '종료일자';
     use_flag : Boolean  not null @title: '사용여부';
 }
 
