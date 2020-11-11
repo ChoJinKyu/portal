@@ -25,11 +25,11 @@
         }
       },
       "countryMgrSources": {
-        "uri" : "../../../cm/countryMgr/srv-api/odata/v4/cm.CountryMgrService/",
+        "uri": "../../../cm/countryMgr/srv-api/odata/v4/cm.CountryMgrService/",
         "type": "OData",
         "settings": {
-        "odataVersion": "4.0",
-        "localUri": "localService/metadata.xml"
+          "odataVersion": "4.0",
+          "localUri": "localService/metadata.xml"
         }
       }
     }
@@ -91,7 +91,7 @@
           "autoExpandSelect": true
         }
       },
-      "country" : {
+      "country": {
         "dataSource": "countryMgrSources",
         "preload": true,
         "settings": {
@@ -101,7 +101,6 @@
           "autoExpandSelect": true
         }
       }
-
     },
     "resources": {
       "css": [

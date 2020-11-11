@@ -13,6 +13,8 @@ entity Org_Plant {
     bizdivision_code    : String(10)             @title: '사업부코드';
     au_code             : String(10)             @title: 'AU_CODE';
     hq_au_code          : String(10)             @title: 'HQ_AU_CODE'; 
+    master_org_flag     : Boolean       not null @title: '마스터조직여부';
+    validation_org_flag : Boolean       not null @title: '밸리데이션조직여부';
 }
 
 extend Org_Plant with util.Managed;
