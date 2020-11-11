@@ -22,8 +22,8 @@
             "subMenus": [
                 {
                     "name": "국가 관리",
-                    "url": "../cm/codeMgr/webapp",
-                    "component": "cm.codeMgr"
+                    "url": "../cm/countryMgr/webapp",
+                    "component": "cm.countryMgr"
                 },
                 {
                     "name": "타임존 관리",
