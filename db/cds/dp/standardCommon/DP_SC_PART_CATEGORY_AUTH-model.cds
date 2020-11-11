@@ -8,7 +8,7 @@ entity Sc_Part_Category_Auth {
   key org_code : String(10)  not null;	
   key category_code : String(200)  not null;	
 
-    parent: Composition of many partCategory.Sc_Part_Category
+    parent: Composition of partCategory.Sc_Part_Category
         on parent.tenant_id = tenant_id 
         and parent.org_type_code = org_type_code
         and parent.org_code = org_code
