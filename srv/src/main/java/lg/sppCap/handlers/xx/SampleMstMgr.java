@@ -14,19 +14,14 @@ import cds.gen.xx.samplemstmgrservice.SelectProcContext;
 import cds.gen.xx.samplemstmgrservice.SelectProcType;
 
 import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.sql.DataSource;
 
-import com.sap.cds.reflect.CdsModel;
-import com.sap.cds.services.EventContext;
-import com.sap.cds.services.cds.CdsCreateEventContext;
-import com.sap.cds.services.cds.CdsUpdateEventContext;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.Before;
@@ -125,8 +120,57 @@ public class SampleMstMgr implements EventHandler {
     @On(event = InsertSelectProcContext.CDS_NAME)
     //@Transactional
     public void onInsertProc(InsertSelectProcContext context) {
-        //String v_sql = "CALL XX_SAMPLE_MASTER_INSERT_PROC(O_TABLE => ?)";
+        
+        // local Temp table은 테이블명이 #(샵) 으로 시작해야 함
+        String v_sql_createTable = "CREATE local TEMPORARY column TABLE #LOCAL_TEMP (CD NVARCHAR(5000), NAME NVARCHAR(5000))";
+        String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP VALUES (?, ?)";
+        String v_sql_callProc = "CALL XX_SAMPLE_MASTER_INSERT_PROC(I_TABLE => #LOCAL_TEMP,O_TABLE => ?)";
 
+        Collection<SelectProcType> v_result = new ArrayList<>();
+        Collection<InsertProcType> v_inRows = context.getValue();
+
+        ResultSet v_rs = null;
+
+
+		try {
+            
+            Connection conn = jdbc.getDataSource().getConnection();
+
+            // Local Temp Table 생성
+            CallableStatement v_statement_table = conn.prepareCall(v_sql_createTable);
+            v_statement_table.execute();
+
+            // Local Temp Table에 insert
+            CallableStatement v_statement_insert = conn.prepareCall(v_sql_insertTable);
+
+            if(!v_inRows.isEmpty() && v_inRows.size() > 0){
+                for(InsertProcType v_inRow : v_inRows){
+                    v_statement_insert.setString(1, v_inRow.getCd());
+                    v_statement_insert.setString(2, v_inRow.getName());
+                    v_statement_insert.executeUpdate();
+                }
+            }
+
+            // Procedure Call
+            CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc);
+            v_rs = v_statement_proc.executeQuery();
+
+            // Procedure Out put 담기
+            while (v_rs.next()){
+                SelectProcType v_row = SelectProcType.create();
+                v_row.setMasterId(v_rs.getLong("master_id"));
+                v_row.setCd(v_rs.getString("cd"));
+                v_row.setName(v_rs.getString("name"));
+                v_result.add(v_row);
+            }
+            
+
+            context.setResult(v_result);
+            context.setCompleted();
+
+		} catch (SQLException e) { 
+			e.printStackTrace();
+		}        
     }
 
 }
