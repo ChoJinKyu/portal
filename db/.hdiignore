@@ -10,8 +10,8 @@ src/gen/mc*
 src/mc/**
 src/gen/op*
 src/op/**
-src/gen/pg*
-src/pg/**
+#src/gen/pg*
+#src/pg/**
 src/gen/sp*
 src/sp/**
 src/gen/xx*

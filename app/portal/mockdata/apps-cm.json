@@ -22,7 +22,7 @@
             "subMenus": [
                 {
                     "name": "국가 관리",
-                    "url": "../cm/countryMgr/webapp",
+                    "url": "../cm/codeMgr/webapp",
                     "component": "cm.countryMgr"
                 },
                 {
@@ -49,6 +49,11 @@
                     "name": "조직 관리",
                     "url": "../cm/orgMgr/webapp",
                     "component": "cm.orgMgr"
+                },
+                {
+                    "name": "구매 관리",
+                    "url": "../cm/purOrgMgr/webapp",
+                    "component": "cm.purOrgMgr"
                 }
             ]
         },
