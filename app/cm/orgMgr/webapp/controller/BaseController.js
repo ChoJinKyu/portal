@@ -5,7 +5,7 @@ sap.ui.define([
 ], function(Controller, History, UIComponent, formatter) {
   "use strict";
 
-  return Controller.extend("cm.currencyMgr.controller.BaseController", {    
+  return Controller.extend("cm.orgMgr.controller.BaseController", {    
 
     /**
      * Convenience method for getting the view model by name in every controller of the application.

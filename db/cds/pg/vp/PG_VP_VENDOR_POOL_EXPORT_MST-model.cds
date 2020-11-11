@@ -1,13 +1,13 @@
 namespace pg;	
  
-using { User } from '@sap/cds/common';	
+using util from '../../util/util-model';
 
 entity Vp_Vendor_Pool_Export_Mst {	
     key tenant_id : String(5) not null @title: '테넌트ID';
     key company_code : String(10) not null @title: '회사코드';
-    key operation_org_type_code : String(30) not null @title: '운영조직유형코드';
-    key operation_org_code : String(30) not null @title: '운영조직코드';
-    key vendor_pool_code : String(30) not null @title: '협력사풀코드';
+    key org_type_code : String(30) not null @title: '조직유형코드';
+    key org_code : String(10) not null @title: '조직코드';
+    key vendor_pool_code : String(20) not null @title: '협력사풀코드';
     vendor_pool_local_name : String(240) @title: '협력사풀로칼명';
     vendor_pool_english_name : String(240) @title: '협력사풀영문명';
     repr_department_code : String(40) @title: '대표부서코드';
@@ -43,10 +43,6 @@ entity Vp_Vendor_Pool_Export_Mst {
     vendor_pool_level3_name : String(240) @title: '협력사풀레벨3명';
     vendor_pool_level4_name : String(240) @title: '협력사풀레벨4명';
     vendor_pool_level5_name : String(240) @title: '협력사풀레벨5명';
-    local_create_dtm: DateTime not null @title: '로컬등록시간';
-    local_update_dtm: DateTime not null @title: '로컬수정시간';
-    create_user_id: User not null @cds.on.insert: $user @title: '등록사용자ID';
-    update_user_id: User not null @cds.on.insert: $user @cds.on.update: $user @title: '변경사용자ID';
-    system_create_dtm: DateTime not null @cds.on.insert: $now @title: '시스템등록시간';
-    system_update_dtm: DateTime not null @cds.on.insert: $now  @cds.on.update: $now @title: '시스템수정시간';
 }
+
+extend Vp_Vendor_Pool_Export_Mst with util.Managed;

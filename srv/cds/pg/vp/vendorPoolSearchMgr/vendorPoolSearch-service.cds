@@ -12,8 +12,8 @@ service VpSearchService {
     view VpSupplierDtlView as
     select s.tenant_id,
            s.company_code,
-           s.operation_org_type_code,
-           s.operation_org_code,
+           s.org_type_code,
+           s.org_code,
            s.vendor_pool_code,
            s.vendor_code,
            s.evaluation_target_flag,

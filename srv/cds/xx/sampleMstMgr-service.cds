@@ -23,7 +23,20 @@ service SampleMstMgrService {
 
 
     // Procedure 사용
-    //entity InsertProcType as projection on MasterP.Sample_Master_Proc_Type;
-    //action InsertProc (value : array of InsertProcType) returns array of InsertProcType;
-    //action SelectProc () returns array of InsertProcType;
+    action InsertSingleProc(master_id : Integer64, cd: String, name: String) returns String;
+
+    type SelectProcType{
+        master_id : Integer64;
+        cd : String;
+        name : String;
+    };
+    action SelectProc (name: String) returns array of SelectProcType;
+
+
+    type InsertProcType{
+        master_id : Integer64;
+        cd : String;
+        name : String;
+    };
+    action InsertSelectProc (value : array of InsertProcType) returns array of SelectProcType;
 }
