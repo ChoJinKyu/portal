@@ -15,6 +15,7 @@ import cds.gen.xx.samplemstmgrservice.SelectProcType;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -137,18 +138,23 @@ public class SampleMstMgr implements EventHandler {
             Connection conn = jdbc.getDataSource().getConnection();
 
             // Local Temp Table 생성
-            CallableStatement v_statement_table = conn.prepareCall(v_sql_createTable);
+            //CallableStatement v_statement_table = conn.prepareCall(v_sql_createTable);
+            PreparedStatement v_statement_table = conn.prepareStatement(v_sql_createTable);
             v_statement_table.execute();
 
             // Local Temp Table에 insert
-            CallableStatement v_statement_insert = conn.prepareCall(v_sql_insertTable);
+            //CallableStatement v_statement_insert = conn.prepareCall(v_sql_insertTable);
+            PreparedStatement v_statement_insert = conn.prepareStatement(v_sql_insertTable);
 
             if(!v_inRows.isEmpty() && v_inRows.size() > 0){
                 for(InsertProcType v_inRow : v_inRows){
                     v_statement_insert.setString(1, v_inRow.getCd());
                     v_statement_insert.setString(2, v_inRow.getName());
-                    v_statement_insert.executeUpdate();
+                    //v_statement_insert.executeUpdate();
+                    v_statement_insert.addBatch();
                 }
+
+                v_statement_insert.executeBatch();
             }
 
             // Procedure Call
@@ -163,14 +169,14 @@ public class SampleMstMgr implements EventHandler {
                 v_row.setName(v_rs.getString("name"));
                 v_result.add(v_row);
             }
-            
+
 
             context.setResult(v_result);
             context.setCompleted();
 
 		} catch (SQLException e) { 
 			e.printStackTrace();
-		}        
+		}
     }
 
 }
