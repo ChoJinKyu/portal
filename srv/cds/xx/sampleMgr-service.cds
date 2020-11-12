@@ -21,7 +21,7 @@ service SampleMgrService {
         ]
     }
     *********************************/
-    action SaveSampleHeaderMultiProc (sampleHeaders : array of SampleHeaders) returns array of SampleHeaders;
+    //action SaveSampleHeaderMultiProc (sampleHeaders : array of SampleHeaders) returns array of SampleHeaders;
 
 
 
@@ -44,21 +44,21 @@ service SampleMgrService {
         }
     }
     *********************************/
-    type saveReturnType {
-        savedHeaders : array of {
-            header_id : Integer64;
-            cd : String;
-            name: String;
-        };
-        savedDetails : array of {
-            detail_id : Integer64;
-            header_id : Integer64;
-            cd : String;
-            name: String;
-        };
-    }
+    // type saveReturnType {
+    //     savedHeaders : array of {
+    //         header_id : Integer64;
+    //         cd : String;
+    //         name: String;
+    //     };
+    //     savedDetails : array of {
+    //         detail_id : Integer64;
+    //         header_id : Integer64;
+    //         cd : String;
+    //         name: String;
+    //     };
+    // }
 
-    action SaveSampleMultiEnitylProc (inputData : saveReturnType) returns saveReturnType;
+    // action SaveSampleMultiEnitylProc (inputData : saveReturnType) returns saveReturnType;
 
     // (단일 Header에 multi Detail) 가 multi
     // Test 데이터
@@ -86,18 +86,18 @@ service SampleMgrService {
         ]
     }
     *********************************/
-    type hdSaveType {
-        header_id : Integer64;
-        cd : String;
-        name: String;
-        details:  array of {
-            detail_id : Integer64;
-            header_id : Integer64;
-            cd : String;
-            name: String;
-        };
-    }
-    action SaveSampleHeaderDetailProc (inputData : array of hdSaveType) returns array of hdSaveType;
+    // type hdSaveType {
+    //     header_id : Integer64;
+    //     cd : String;
+    //     name: String;
+    //     details:  array of {
+    //         detail_id : Integer64;
+    //         header_id : Integer64;
+    //         cd : String;
+    //         name: String;
+    //     };
+    // }
+    // action SaveSampleHeaderDetailProc (inputData : array of hdSaveType) returns array of hdSaveType;
 
 
 
