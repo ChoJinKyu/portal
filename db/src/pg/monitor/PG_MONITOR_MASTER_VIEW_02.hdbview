@@ -1,57 +1,88 @@
 view pg_monitor_master_view_02 as
-    select
-            main.separated                        																		as separated_code,
-            sprt.separated_text                   																		as separated_text,
-            main.scenario_code                    																		as scenario_code,
-			snr.scenario_code_text																						as scenario_code_text,
-            main.tenant_id                        																		as tenant_id,
-            org_t.tenant_name                     																		as tenant_name,
-            main.company_code                     																		as company_code,
-            org_c.company_name                    																		as company_name,
-            string_agg(mng.manager, ';' order by mng.manager)															as manager,
-            string_agg(mng.user_korean_name, ';' order by mng.manager)													as user_korean_name,
-            case when main.local_update_dtm = main.local_create_dtm then main.local_create_dtm else main.local_update_dtm end	as enrollment_date,
-			case when oprmd.operation = 'mntrorm001' then 'true' else 'false' end 										as search_flag,
-            case when oprmd.operation = 'mntrorm002' then 'true' else 'false' end 										as calling_flag,
-            case when oprmd.operation = 'mntrorm003' then 'true' else 'false' end 										as alert_flag,
-            main.activate_inactivate_flag																				as active_flag
-    from pg_monitor_mntr_mst as main
-    left join pg_monitor_mntr_snr_mst as snr
-        on  main.tenant_id    	= snr.tenant_id
-        and main.company_code 	= snr.company_code
-        and main.scenario_code	= snr.scenario_code
-    left join pg_monitor_mntr_sprt_mst as sprt
-        on  main.tenant_id    = sprt.tenant_id
-        and main.company_code = sprt.company_code
-        and main.separated    = sprt.separated
-    left join pg_monitor_mntr_manager_mngt as mng
-        on  main.tenant_id                 = mng.tenant_id
-        and main.company_code              = mng.company_code
-        and main.scenario_code             = mng.scenario_code
-        and main.manager_management_header = mng.manager_management_header
-    left join pg_monitor_mntr_oprtmd_mngt as oprmd
-        on  main.tenant_id                        = oprmd.tenant_id
-        and main.company_code                     = oprmd.company_code
-        and main.scenario_code                    = oprmd.scenario_code
-        and main.operation_mode_management_header = oprmd.operation_mode_management_header
-    left join cm_org_tenant  as org_t
-        on  main.tenant_id  =  org_t.tenant_id
-    left join cm_org_company  as  org_c
-        on  main.tenant_id  =  org_c.tenant_id
-        and main.company_code  =  org_c.company_code
-    group by
-		main.separated,
-		sprt.separated_text,
-		main.scenario_code,
-		snr.scenario_code_text,
-		main.tenant_id,
-		org_t.tenant_name,
-		main.company_code,
-		org_c.company_name,
-		main.type_management_header,
-		case when main.local_update_dtm = main.local_create_dtm then main.local_create_dtm else main.local_update_dtm end,
-		case when oprmd.operation = 'mntrorm001' then 'true' else 'false' end,
-		case when oprmd.operation = 'mntrorm002' then 'true' else 'false' end,
-        case when oprmd.operation = 'mntrorm003' then 'true' else 'false' end,
-        main.activate_inactivate_flag;
+select  x.separated_code as separated_code,
+        x.separated_text as separated_text,
+        x.scenario_code as scenario_code,
+        x.scenario_code_text as scenario_code_text,
+        x.tenant_id as tenant_id,
+        x.tenant_name as tenant_name,
+        x.company_code as company_code,
+        x.company_name as company_name,
+        string_agg(x.manager, ';' order by x.manager)			as manager,
+        string_agg(x.user_korean_name, ';' order by x.manager)	as user_korean_name,
+        x.enrollment_date as enrollment_date,
+        x.search_flag as search_flag,
+        x.calling_flag as calling_flag,
+        x.alert_flag as alert_flag,
+        x.active_flag as active_flag
+from (
+		select
+				main.separated                        																		as separated_code,
+				sprt.separated_text                   																		as separated_text,
+				main.scenario_code                    																		as scenario_code,
+				snr.scenario_code_text																						as scenario_code_text,
+				main.tenant_id                        																		as tenant_id,
+				org_t.tenant_name                     																		as tenant_name,
+				main.company_code                     																		as company_code,
+				org_c.company_name                    																		as company_name,
+				mng.manager, mng.user_korean_name,
+				--string_agg(mng.manager, ';' order by mng.manager)															as manager,
+				--string_agg(mng.user_korean_name, ';' order by mng.manager)													as user_korean_name,
+				case when main.local_update_dtm = main.local_create_dtm then main.local_create_dtm else main.local_update_dtm end	as enrollment_date,
+				--oprmd.operation,
+				max(case when oprmd.operation = 'MNTRORM001' then 'true' else 'false' end) 										as search_flag,
+				max(case when oprmd.operation = 'MNTRORM002' then 'true' else 'false' end) 										as calling_flag,
+				max(case when oprmd.operation = 'MNTRORM003' then 'true' else 'false' end) 										as alert_flag,
+				main.activate_inactivate_flag																				as active_flag
+		from pg_monitor_mntr_mst as main
+		left join pg_monitor_mntr_snr_mst as snr
+			on  main.tenant_id    	= snr.tenant_id
+			and main.company_code 	= snr.company_code
+			and main.scenario_code	= snr.scenario_code
+		left join pg_monitor_mntr_sprt_mst as sprt
+			on  main.tenant_id    = sprt.tenant_id
+			and main.company_code = sprt.company_code
+			and main.separated    = sprt.separated
+		left join pg_monitor_mntr_manager_mngt as mng
+			on  main.tenant_id                 = mng.tenant_id
+			and main.company_code              = mng.company_code
+			and main.scenario_code             = mng.scenario_code
+			and main.manager_management_header = mng.manager_management_header
+			--and mng.manager_management_item = '1'
+		left join pg_monitor_mntr_oprtmd_mngt as oprmd
+			on  main.tenant_id                        = oprmd.tenant_id
+			and main.company_code                     = oprmd.company_code
+			and main.scenario_code                    = oprmd.scenario_code
+			and main.operation_mode_management_header = oprmd.operation_mode_management_header
+		left join cm_org_tenant  as org_t
+			on  main.tenant_id  =  org_t.tenant_id
+		left join cm_org_company  as  org_c
+			on  main.tenant_id  =  org_c.tenant_id
+			and main.company_code  =  org_c.company_code
+		group by
+			main.separated,
+			sprt.separated_text,
+			main.scenario_code,
+			snr.scenario_code_text,
+			main.tenant_id,
+			org_t.tenant_name,
+			main.company_code,
+			org_c.company_name,
+			case when main.local_update_dtm = main.local_create_dtm then main.local_create_dtm else main.local_update_dtm end,
+			main.activate_inactivate_flag
+				,mng.manager, mng.user_korean_name 
+	)  as x
+group by x.separated_code,
+        x.separated_text,
+        x.scenario_code,
+        x.scenario_code_text,
+        x.tenant_id,
+        x.tenant_name,
+        x.company_code,
+        x.company_name,
+        x.enrollment_date,
+        x.search_flag,
+        x.calling_flag,
+        x.alert_flag,
+        x.active_flag
+        ;
 
