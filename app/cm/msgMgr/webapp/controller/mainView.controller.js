@@ -64,6 +64,24 @@ sap.ui.define([
                 //this.onSearch();
                 console.groupEnd();
             },
+            OnSubmit: function(oEvent){
+                //oEvent.getSource().getParent().getRowBindingContext().iIndex                
+                // var sNewValue = oEvent.getParameter("value");
+
+                var oUiModel  = this.getModel("ui"), 
+                    mainModel = this.getModel("mainModel"),
+                    oTable = this.byId("mainList");
+
+                var oBinding = oTable.getBinding("rows"),
+                    oData    = oBinding.getModel("mainModel").oData;
+
+                this.getView().setBusy(true);
+
+                oBinding.getContexts()[oEvent.getSource().getParent().getRowBindingContext().iIndex].setProperty('update_user_id', 'Modified')                       
+                
+                this.getView().setBusy(false);     
+            },
+            
            
              /**
              * @private
@@ -114,6 +132,8 @@ sap.ui.define([
 
             onSearch  : function() {
 
+                var oTable = this.byId("mainList");
+
                 var filters = [];
 
                 var search_chain_code = "";
@@ -124,7 +144,43 @@ sap.ui.define([
 
                 var search_message_code = this.getView().byId("search_message_code").getValue();
                 var search_message_contents = this.getView().byId("search_message_contents").getValue();
+
+                var mstBinding = this.byId("mainList").getBinding("rows");
                 
+                
+                if (mstBinding.hasPendingChanges()) {
+                   
+                    MessageBox.confirm("수정내용이 있습니다.  먼저 저장하시겠습니까?", {
+                    title : "Comfirmation",
+                    initialFocus : sap.m.MessageBox.Action.CANCEL,
+                    onClose : function(sButton) {
+                        if (sButton === MessageBox.Action.OK) {
+                            oView.setBusy(true);
+                            oView.getModel().submitBatch("MainUpdateGroup").then(fnSuccess, fnError);
+                            oTable.clearSelection(); 
+                        } else if (sButton === MessageBox.Action.CANCEL) {
+                            oView.setBusy(false);
+                            return  ;
+                        };
+                    }
+                });   
+
+                }
+
+
+                var oView = this.getView();
+                var fnSuccess = function () {
+                    oView.setBusy(false);
+                    MessageToast.show("저장 되었습니다.");
+                    //this.onSearch();
+                    //oView.refresh();
+                }.bind(this);
+
+                var fnError = function (oError) {
+                    oView.setBusy(false);
+                    MessageBox.error(oError.message);
+                }.bind(this);
+
 
                 if(this.byId("search_chain_code").getSelectedItem()){
                     search_chain_code = this.byId("search_chain_code").getSelectedItem().getKey();
@@ -568,9 +624,6 @@ sap.ui.define([
                 that.getView().setBusy(false);
      
                 console.groupEnd();     
-            },
-            OnLiveChange(oEvent){
-                var sNewValue = oEvent.getParameter("value");
             },
 
             /**

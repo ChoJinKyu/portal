@@ -65,13 +65,17 @@
             </f:header>
             <f:content>
                 <IconTabBar
+                    
                     id="iconTabBar"
                     headerBackgroundDesign="Transparent"
                     expandable="false"
                     select=".onSelectedKey"
+                    upperCase="true"
+                    selectedKey="{view>/selectedTabKey}"
+                    class="sapUiResponsivePadding--header sapUiResponsivePadding--content"
                     >
                     <items>
-                        <IconTabFilter id="TenantTab" text="TenantTab" key="Tenant" count="{/Org_Tenant/$count}">
+                        <IconTabFilter id="TenantTab" text="TenantTab" key="Tenant" count="{path:'/Org_Tenant/$count',formatter: '.formatter.setCount'}"> 
                             <mvc:XMLView viewName="cm.orgMgr.view.orgMgrTenantView"></mvc:XMLView>
                         </IconTabFilter>
                         <IconTabSeparator />

@@ -104,7 +104,7 @@
       "routes": [
         {
           "name": "RouteorgMgrMainView",
-          "pattern": "RouteorgMgrMainView",
+          "pattern": "RouteorgMgrMainView:?query:",
           "target": [
             "TargetorgMgrMainView"
           ]

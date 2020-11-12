@@ -4,7 +4,11 @@ sap.ui.define([
         "sap/m/MessageToast",
         "sap/m/MessageBox",
         "sap/ui/model/Filter",
-        "sap/ui/model/FilterOperator"
+        "sap/ui/model/FilterOperator",
+        "sap/m/Text",
+        "sap/m/Input",
+        "sap/m/ColumnListItem",
+        "sap/m/ObjectIdentifier",        
         
 	],
 	/**
@@ -22,7 +26,6 @@ sap.ui.define([
 		return BaseController.extend("pg.vendorPoolSearch.controller.VendorPoolSearch", {
 
 
-
             isValNull: function (p_val) {
                 if(!p_val || p_val == "" || p_val == null){
                     return true
@@ -32,6 +35,18 @@ sap.ui.define([
             },
 
 			onInit: function () {
+                this._retrieveParam = new JSONModel({
+                    mstParam : "",
+                    dtlParam : "",
+                    lngParam : ""
+                });    
+                // this.byId("VpSupplierTable").setEditable(true);
+                // this.byId("t2_vent2_company_codedor_code").setEditable(true);
+                // this.byId("t2_operation_org_type_code").setEnabled(true);
+                // this.byId("t2_operation_org_code").setEnabled(true);
+                // this.byId("t2_vendor_pool_code").setEnabled(true);
+                // this.byId("t2_vendor_code").setEnabled(true);
+                // this.getView().byId("VpSupplierTable").setEditable(true);
 
             },
             
@@ -76,42 +91,33 @@ sap.ui.define([
             onMstTableItemPress : function (oEvent) {
 
                 var v_vendor_code = oEvent.getSource().getBindingContext().getValue('vendor_pool_code');
-
+                
                     if(!this.isValNull(v_vendor_code))
                     {
                         var filters = [];
                         filters.push(new Filter("vendor_pool_code"   , FilterOperator.EQ, v_vendor_code));
-
                         var supBinding = this.byId("VpSupplierTable").getBinding("items");
-                        var dtlBinding = this.byId("VpSupplierDtlViewTable").getBinding("items");
-                        dtlBinding.resetChanges();
                         supBinding.resetChanges();
                         this.getView().setBusy(true);
-                        dtlBinding.filter(filters);
                         supBinding.filter(filters);
                         this.getView().setBusy(false);
                     }
-                    // this._retrieveParam.dtlParam = v_vendor_code;
+                    this._retrieveParam.dtlParam = v_vendor_code;
             },
             onSupAddRow : function () {
                 
                 var supBinding = this.byId("VpSupplierTable").getBinding("items");
-                var dtlBinding = this.byId("VpSupplierDtlViewTable").getBinding("items");
+                var dtlVal = this._retrieveParam.dtlParam;
                 var oContext = supBinding.create({
                         "tenant_id" : "L2100",
                         "company_code" : "*",
-                        "operation_org_type_code" : "70",
-                        "operation_org_code" : "LGCKR2000",
-                        "vendor_pool_code" : "VP201610260088"
+                        "org_type_code" : "70",
+                        "org_code" : "LGCKR2000",
+                        "vendor_pool_code" : dtlVal,
+                        "local_create_dtm": "2020-11-09T00:00:00Z",
+                        "local_update_dtm": "2020-11-09T00:00:00Z"
                     });
-
-                var oContext = dtlBinding.create({
-                        "vendor_code" : "",
-                        "vendor_name" : "",
-                        "vendor_englis_name" : "",
-                        "operation_org_code" : "LGCKR2000",
-                        "vendor_pool_code" : "VP201610260088"
-                    });
+      			// this.byId("t2_vendor_code").setEditable(true);
 
                     /*
                         ,
@@ -136,7 +142,7 @@ sap.ui.define([
                 var fnSuccess = function () {
                     oView.setBusy(false);
                     MessageToast.show("저장 되었습니다.");
-                    // this.onDtlRefresh();
+                    this.onDtlRefresh();
                 }.bind(this);
 
                 var fnError = function (oError) {
@@ -161,17 +167,15 @@ sap.ui.define([
 
             onDtlRefresh : function () {
                 var supBinding = this.byId("VpSupplierTable").getBinding("items");
-                var dtlBinding = this.byId("VpSupplierDtlViewTable").getBinding("items");
+                var viewBinding = this.byId("vendorPoolSearchTable").getBinding("items");
                 
                 this.getView().setBusy(true);
-                dtlBinding.refresh();
-
+                viewBinding.refresh();
                 this.getView().setBusy(false);
             },                   
 
             onSupDeleteRow : function () {
 
-                var oSelected  = this.byId("VpSupplierDtlViewTable").getSelectedContexts();
                 var supSelected  = this.byId("VpSupplierTable").getSelectedContexts();
                 var supBinding = this.byId("VpSupplierTable").getBinding("items");
                 var supTable  = this.byId("VpSupplierTable");
@@ -188,8 +192,7 @@ sap.ui.define([
 
 
                 // this.byId("VpSupplierTable").set
-                alert(" oSelected : " + oSelected) ;
-                alert(" supSelected : " + supSelected);
+
                 alert(" supBinding : " + supBinding);
                 alert(" supBinding : " + supTable);
                 // alert(" supt : " + supt);

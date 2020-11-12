@@ -7,7 +7,8 @@ sap.ui.define([
 	"sap/ui/model/FilterOperator",
 	"sap/ui/core/Fragment",
     "sap/m/MessageBox",
-], function (BaseController, JSONModel, History, formatter, Filter, FilterOperator, Fragment, MessageBox) {
+    "sap/m/MessageToast",
+], function (BaseController, JSONModel, History, formatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
 	"use strict";
 
 	return BaseController.extend("cm.messageMgr.controller.MainObject", {
@@ -106,9 +107,12 @@ sap.ui.define([
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
 						oView.setBusy(true);
-						oView.getModel().submitBatch("oataGroupIdForUpdate").then(function(ok){
+						oView.getModel().submitBatch("odataGroupIdForUpdate").then(function(ok){
 							me._toShowMode();
 							oView.setBusy(false);
+                            MessageToast.show("Success to save.");
+						}).catch(function(err){
+                            MessageBox.error("Error while saving.");
 						});
 					};
 				}
@@ -156,7 +160,7 @@ sap.ui.define([
 			this.getView().bindElement({
 				path: sObjectPath,
 				parameters: {
-					"$$updateGroupId" : 'oataGroupIdForUpdate'
+					"$$updateGroupId" : 'odataGroupIdForUpdate'
 				},
 				events: {
 					change: this._onBindingChange.bind(this),
