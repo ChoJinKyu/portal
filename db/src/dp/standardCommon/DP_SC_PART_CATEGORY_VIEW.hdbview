@@ -14,7 +14,8 @@ SELECT hierarchy_rank,            /*현재node의 순번(sibling order by에 의
       category_code,
       parent_category_code,
       seq,
-      category_name
+      category_name,
+      status_code
        FROM HIERARCHY (
 				    SOURCE (
 				        SELECT  ca.tenant_id,
@@ -23,7 +24,8 @@ SELECT hierarchy_rank,            /*현재node의 순번(sibling order by에 의
                                 ca.category_code,
                                 ca.parent_category_code,
                                 ca.seq,
-                                ca.category_name,                        
+                                ca.category_name,
+                                ca.status_code,                        
                                 HIERARCHY_COMPOSITE_ID(ca.tenant_id,ca.org_type_code,ca.org_code,ca.parent_category_code) as parent_id, 
                                 HIERARCHY_COMPOSITE_ID(ca.tenant_id,ca.org_type_code,ca.org_code,ca.category_code) as node_id
 				        FROM dp_sc_part_category ca
