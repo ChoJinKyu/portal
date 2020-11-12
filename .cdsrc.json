@@ -33,6 +33,7 @@
             "db/cds/cm/hrEmployeeMgr",                         
             "db/cds/dp",
             "db/cds/dp/standardCommon",
+            "db/cds/dp/standardCommon/categoryMgr",
             "db/cds/dp/materialMgr/materialMasterMgr",
             "db/cds/dp/materialMgr/uomMgr",
             "db/cds/dp/moldMgt",
