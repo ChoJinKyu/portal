@@ -9,4 +9,5 @@ using from './calendarHolidayMgr/calendarHolidayMgr-service';
 using from './orgMgr/orgMgr-service';
 using from './purOrgMgr/purOrgMgr-service';
 using from './userMgr/userMgr-service';
+using from './roleMgr/roleMgr-service';
 using from './util/util-service';
