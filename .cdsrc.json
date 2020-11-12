@@ -50,6 +50,7 @@
             "db/cds/pg/monitor",
             "db/cds/pg/risk",
             "db/cds/pg/spend",
+            "db/cds/pg/spend_md",
             "db/cds/pg/vp",
             "db/cds/sp",
             "db/cds/mc",
