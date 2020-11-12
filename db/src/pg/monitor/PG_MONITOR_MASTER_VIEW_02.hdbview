@@ -1,0 +1,42 @@
+view pg_monitor_master_view_02 as
+    select
+            main.tenant_id                        as tenant_id,
+            org_t.tenant_name                     as tenant_name,
+            main.company_code                     as company_code,
+            org_c.company_name                    as company_name,
+            main.scenario_code                    as scenario_code,
+            main.separated                        as separated_code,
+            sprt.separated_text                   as separated_text,
+            string_agg(mng.manager, ';' order by mng.manager) as manager,
+            string_agg(mng.user_korean_name, ';' order by mng.manager) as user_korean_name,
+            string_agg(mng.user_english_name, ';' order by mng.manager) as user_english_name
+            ,main.local_create_dtm  as  local_create_date
+            ,'true'   as  search_flag
+            ,'false'  as  calling_flag
+            ,'true'   as  alert_flag
+            ,main.activate_inactivate_flag  as  active_flag
+    from pg_monitor_mntr_mst as main
+    left join pg_monitor_mntr_sprt_mst as sprt
+        on  main.tenant_id    = sprt.tenant_id
+        and main.company_code = sprt.company_code
+        and main.separated    = sprt.separated
+    left join pg_monitor_mntr_manager_mngt as mng
+        on  main.tenant_id                 = mng.tenant_id
+        and main.company_code              = mng.company_code
+        and main.scenario_code             = mng.scenario_code
+        and main.manager_management_header = mng.manager_management_header
+    left join cm_org_tenant  as org_t
+        on  main.tenant_id  =  org_t.tenant_id
+    left join cm_org_company  as  org_c
+        on  main.tenant_id  =  org_c.tenant_id
+        and main.company_code  =  org_c.company_code
+    group by main.tenant_id
+            ,org_t.tenant_name
+            ,main.company_code
+            ,org_c.company_name
+            ,main.scenario_code
+            ,main.separated
+            ,sprt.separated_text
+            ,main.type_management_header
+            ,main.local_create_dtm
+            ,main.activate_inactivate_flag;
