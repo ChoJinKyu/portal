@@ -22,7 +22,7 @@ SELECT ca.hierarchy_rank,            /*현재node의 순번(sibling order by에 
                                 HIERARCHY_COMPOSITE_ID(tenant_id,org_type_code,org_code,parent_category_code) as parent_id, 
                                 HIERARCHY_COMPOSITE_ID(tenant_id,org_type_code,org_code,category_code) as node_id
 				         FROM dp_sc_part_category
-                        WHERE tenant_id = :p_tenant_id AND org_type_code = :p_org_type_code AND org_code = :p_org_code AND category_code = :p_org_type_code
+                        WHERE tenant_id = :p_tenant_id AND org_type_code = :p_org_type_code AND org_code = :p_org_code AND status_code = :p_status_code
 				    )
 				    START WHERE parent_category_code = 'E'
             ) ca
