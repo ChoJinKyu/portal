@@ -1,20 +1,19 @@
 <!-- delete 추가 
 rows copy ??
 ui.table > m.table 변환하기   -->
-  <mvc:View
-	class="sapUiSizeCompact"
-	controllerName="cm.timeZoneMgr.controller.timeZoneMgr"
-	xmlns="sap.m"
-    xmlns:f="sap.f"
-	xmlns:core="sap.ui.core"
-	xmlns:demo="sap.ui.core.sample.common"
-	xmlns:form="sap.ui.layout.form"
-    xmlns:t="sap.ui.table"    
-    xmlns:layout="sap.ui.layout" displayBlock="true"
-	xmlns:mvc="sap.ui.core.mvc">
+<mvc:View
+  class="sapUiSizeCompact"
+  controllerName="cm.timeZoneMgr.controller.timeZoneMgr"
+  xmlns="sap.m"
+  xmlns:f="sap.f"
+  xmlns:core="sap.ui.core"
+  xmlns:demo="sap.ui.core.sample.common"
+  xmlns:form="sap.ui.layout.form"
+  xmlns:t="sap.ui.table"    
+  xmlns:layout="sap.ui.layout" displayBlock="true"
+  xmlns:mvc="sap.ui.core.mvc">
 	<App id="app">
-    
-        <f:DynamicPage id="dynamicPageId" toggleHeaderOnTitleClick="true" headerExpanded="true">
+        <f:DynamicPage id="page" toggleHeaderOnTitleClick="true" headerExpanded="true">
             <!--DynamicPage Title -->
             <f:title>
                 <f:DynamicPageTitle>
@@ -26,29 +25,54 @@ ui.table > m.table 변환하기   -->
             <!--DynamicPage Header -->
             <f:header>
                 <f:DynamicPageHeader pinnable="true">
-                    <layout:VerticalLayout
+                    <!-- <layout:VerticalLayout
                         id="oVerticalContent"
                         width="100%">
                         <layout:content>                     
                         </layout:content>
-                    </layout:VerticalLayout>                           
+                    </layout:VerticalLayout> -->
                     <layout:HorizontalLayout>                          
-                        <form:Form editable="true" width="auto">
+                        <form:Form id="searchForm" editable="true" width="auto">
                             <form:formContainers>
                                 <form:FormContainer>
-                                    <form:formElements>
-                                        <form:FormElement label="코드">
-                                            <form:fields>
-                                                <Input id="time_zone_code" />					
+                                    <form:formElements >
+                                        <form:FormElement label="테넌트">
+                                            <form:fields>	
+                                                <ComboBox 
+                                                  id="searchTenantCombo" 
+                                                  width="100%" 
+                                                  selectedKey="L2100"
+                                                  items="{
+                                                    path: 'org>/Org_Tenant',
+                                                    filters: [
+                                                      {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                    ]
+                                                  }">
+                                                  <items>
+                                                    <core:Item key="{org>tenant_id}" text="{org>tenant_id} : {org>tenant_name}" />
+                                                  </items>
+                                                </ComboBox>
                                             </form:fields>
                                         </form:FormElement>
                                     </form:formElements>
                                 </form:FormContainer>
                                 <form:FormContainer>
                                     <form:formElements >
-                                        <form:FormElement label="타임존" >
+                                        <form:FormElement label="타임존">
                                             <form:fields>	
-                                                <Input id="time_zone" />
+                                                <ComboBox 
+                                                  id="searchTimeZoneCombo" 
+                                                  width="100%" 
+                                                  items="{
+                                                    path: '/TimeZone',
+                                                    filters: [
+                                                      {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                    ]
+                                                  }">
+                                                  <items>
+                                                    <core:Item key="{timezone_code}" text="{timezone_code} : {timezone_name}" />
+                                                  </items>
+                                                </ComboBox>
                                             </form:fields>
                                         </form:FormElement>
                                     </form:formElements>
@@ -58,7 +82,7 @@ ui.table > m.table 변환하기   -->
                                         <form:FormElement label="국가">
                                             <form:fields>	     													
                                                 <Input
-                                                    id="timeZoneCountryInput"
+                                                    id="searchCountryInput"
                                                     type="Text"
                                                     value=""
                                                     placeholder=""
@@ -85,18 +109,16 @@ ui.table > m.table 변환하기   -->
                 </f:DynamicPageHeader>
             </f:header>
             <f:content>
-                <t:Table id="table"
+                <t:Table id="mainTable"
                 selectionMode="MultiToggle" 
-                rows="{ path : '/TimeZone',
-                    parameters: {
-                        $count: true,
-                        $$updateGroupId : 'updateGroupTimeZone'
-                    },
-                    filter : [{path : 'timezone_code', operator : 'EQ', value1 : '00000'}],
-                    sorter: { path: 'timezone_code'}
+                rows="{ 
+                  path: '/TimeZone',
+                  filters: [
+                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                  ]
                 }"
                 cellClick=".onCellClick"
-                rowSelectionChange = ".onCheck"
+                rowSelectionChange=".onCheck"
                 visibleRowCountMode="Auto"
                 columnResize="onColumnResize">
                     <t:extension>
@@ -113,16 +135,10 @@ ui.table > m.table 변환하기   -->
                         <!-- <t:RowSettings highlight="Success"/> -->
                     </t:rowSettingsTemplate>                                
                     <t:columns>
-                        <t:Column  width="0rem" hAlign="Center" visible="false">                                        
-                                <Label text="tenant_id"/>           
+                        <t:Column width="0rem" hAlign="Center" visible="false">                                        
+                            <Label text="tenant_id"/>           
                             <t:template>
-                                <Text id="tenant_id" text="{tenant_id}"/> 
-                            </t:template>
-                        </t:Column>
-                        <t:Column width="3rem">
-                            <Label text="No." textAlign="Center" width="100%"/>
-                            <t:template> 
-                                <Text text="" />
+                              <Text id="tenant_id" text="{tenant_id}"/> 
                             </t:template>
                         </t:Column>
                         <t:Column>
@@ -135,12 +151,37 @@ ui.table > m.table 변환하기   -->
                             <Label text="타임존" textAlign="Center" width="100%"/>
                             <t:template> 
                                 <Input value="{timezone_name}" valueLiveUpdate="true"/>
+                                <!-- <ComboBox 
+                                  id="mainTimeZoneCodeColumn" 
+                                  width="100%"
+                                  selectedKey="{timezone_code}"
+                                  items="{
+                                    path: '/TimeZone',
+                                    filters: [
+                                      {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                    ]
+                                  }">
+                                  <items>
+                                    <core:Item key="{timezone_code}" text="{timezone_code} : {timezone_name}" value="{timezone_code}" valueLiveUpdate="true" />
+                                  </items>
+                                </ComboBox> -->
                             </t:template>
                         </t:Column>
-                        <t:Column>
+                        <t:Column id="mainCountryColumn">
                             <Label text="국가" textAlign="Center" width="100%"/>
                             <t:template> 
-                                <Input value="{country_code}" valueLiveUpdate="true"/>
+                                <!-- {path: 'tenant_id', operator: 'EQ', value1: 'L2100'} -->
+                                <ComboBox 
+                                  width="100%"
+                                  items="{
+                                    path: 'country>/Country',
+                                    filters: []
+                                  }"
+                                  selectedKey="{country_code}">
+                                  <items>
+                                    <core:Item key="{country>country_code}" text="{country>country_code} : {country>iso_code}" value="{country>country_code}" valueLiveUpdate="true" />
+                                  </items>
+                                </ComboBox>
                             </t:template>
                         </t:Column>
                         <t:Column>
@@ -198,7 +239,7 @@ ui.table > m.table 변환하기   -->
                                 <Input value="{dst_start_day_of_week}" valueLiveUpdate="true" type="Number"/>
                             </t:template>
                         </t:Column>
-                        <t:Column>
+                        <!-- <t:Column>
                             <t:multiLabels>
                                 <Label text="서머타임시작"/>
                                 <Label text="시간" textAlign="Center" width="100%"/>
@@ -206,7 +247,7 @@ ui.table > m.table 변환하기   -->
                             <t:template> 
                                 <Input value="{dst_start_time_rate}"  valueLiveUpdate="true" type="Number"/>
                             </t:template>
-                        </t:Column>
+                        </t:Column> -->
                         <t:Column headerSpan="5">
                             <t:multiLabels>
                                 <Label text="서머타임종료" textAlign="Center" width="100%"/>
