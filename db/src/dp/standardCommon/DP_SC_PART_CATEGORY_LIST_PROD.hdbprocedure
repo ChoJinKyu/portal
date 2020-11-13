@@ -11,7 +11,7 @@ PROCEDURE DP_SC_PART_CATEGORY_LIST_PROC (
         SEQ DECIMAL,
         CATEGORY_NAME NVARCHAR(2000),
         STATUS_CODE NVARCHAR(10),
-        AUTH_CODE NVARCHAR )
+        AUTH_CODE NVARCHAR(4000) )
 )
 LANGUAGE SQLSCRIPT
 SQL SECURITY INVOKER 
@@ -32,7 +32,7 @@ BEGIN
                 ca.seq,			
                 ca.category_name,			
                 ca.status_code,			
-                STRING_AGG( au.auth_code, ',')			
+                STRING_AGG( au.auth_code, ',') as au_code	
                 FROM HIERARCHY (			
                         SOURCE (
                             SELECT  tenant_id,
