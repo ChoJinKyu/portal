@@ -30,6 +30,7 @@ import cds.gen.xx.samplemgrservice.*;
 @ServiceName("xx.SampleMgrService")
 public class SampleMgr implements EventHandler {
 
+    /*
     @Autowired
     private JdbcTemplate jdbc;
 
@@ -51,6 +52,7 @@ public class SampleMgr implements EventHandler {
 
         }
     }
+    */
 
     /*
     @On(entity=SampleHeaderProc_.CDS_NAME)
