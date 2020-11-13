@@ -7,11 +7,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.EventContext;
 import com.sap.cds.services.cds.CdsCreateEventContext;
 import com.sap.cds.services.cds.CdsReadEventContext;
@@ -31,6 +33,34 @@ public class SampleMgr implements EventHandler {
     @Autowired
     private JdbcTemplate jdbc;
 
+    @On(entity=SampleHeaderDetailProc_.CDS_NAME)
+    public void onSampleHeaderDetailProc(List<SampleHeaderDetailProc> sampleHeaderDetailProc) {
+        for(SampleHeaderDetailProc row : sampleHeaderDetailProc) {
+
+            List<SampleHeaderProc> header = row.getHeaders();
+
+            for(SampleHeaderProc h : header){
+
+                List<SampleDetailProc> detail =  h.getDetails();
+
+                for(SampleDetailProc d : detail){
+                     String a = d.getCd();
+                     String b = d.getName();
+                }
+            }
+
+        }
+    }
+
+    /*
+    @On(entity=SampleHeaderProc_.CDS_NAME)
+    public void onSampleHeaderProc(List<SampleHeaderProc> sampleHeaderProc) {
+        for(SampleHeaderProc row : sampleHeaderProc) {
+            
+        }
+    }
+    */
+
     /*
     @On(event = CdsService.EVENT_CREATE, entity=SampleHeaders_.CDS_NAME)
     public void onCreateCodeMasters(CdsCreateEventContext context) {
@@ -39,6 +69,7 @@ public class SampleMgr implements EventHandler {
     }
     */
 
+/*    
     // Procedure 호출해서 header 저장
     // Header Multi Row
     @On(event = SaveSampleHeaderMultiProcContext.CDS_NAME)
@@ -296,7 +327,7 @@ public class SampleMgr implements EventHandler {
         }
 
     }
-
+*/
     /*
     @On(event = CdsService.EVENT_READ, entity=SampleHeaders_.CDS_NAME)
     public void onReadCodeMasters(EventContext context) {
