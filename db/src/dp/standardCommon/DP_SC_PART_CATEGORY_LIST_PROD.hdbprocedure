@@ -55,6 +55,5 @@ BEGIN
         GROUP BY ca.hierarchy_rank, ca.hierarchy_level,ca.category_code,ca.parent_category_code,ca.seq,ca.category_name,ca.status_code			
         ORDER BY ca.HIERARCHY_RANK			
         ;
-    return O_CATEGORY_TABLE;
 				
 END
