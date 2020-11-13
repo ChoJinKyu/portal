@@ -18,11 +18,13 @@
 namespace pg;
 
 using util from '../../util/util-model';
-using {pg as MI_Categ_Text} from '../mi/PG_MI_CATEGORY_TEXT-model';
+using {pg as Categ_Text} from './PG_MI_CATEGORY_TEXT-model';
 
 entity Category_Text {
     key tenant_id     : String(5) not null  @title : '테넌트ID';
     key company_code  : String(10) not null @title : '회사코드';
+    key org_type_code : String(30) not null @title : '조직유형코드';
+    key org_code      : String(10) not null @title : '조직코드';
     key category      : String(10) not null @title : '범주';
     key language_code : String(4) not null  @title : '언어코드';
         category_text : String(50)          @title : '범주 내역';
