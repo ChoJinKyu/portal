@@ -9,7 +9,6 @@
 
 	<uxap:ObjectPageLayout id="page"
 		toggleHeaderOnTitleClick="true"
-		headerExpanded="true"
 		alwaysShowContentHeader = "true"
 		preserveHeaderStateOnScroll="false"
 		headerContentPinnable="true"
