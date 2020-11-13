@@ -15,10 +15,10 @@
         headerExpanded="true"
         showTitleInHeaderContent = "true"
         alwaysShowContentHeader = "true"
-					preserveHeaderStateOnScroll="false"
-					headerContentPinnable="true"
-					isChildPage="true"
-					upperCaseAnchorBar="false">
+        preserveHeaderStateOnScroll="false"
+        headerContentPinnable="true"
+        isChildPage="true"
+        upperCaseAnchorBar="false">
 				<headerTitle>
 					<ObjectPageDynamicHeaderTitle>
 						<expandedHeading>

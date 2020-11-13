@@ -42,6 +42,27 @@ sap.ui.define([
 		/* event handlers                                              */
 		/* =========================================================== */
 
+		onPageEnterFullScreenButtonPress: function () {
+			var sNextLayout = this.getOwnerComponent().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
+			this.getRouter().navTo("midObject", {
+				layout: sNextLayout, 
+				tenantId: this._sTenantId,
+				controlOptionCode: this._sControlOptionCode
+			});
+		},
+		onPageExitFullScreenButtonPress: function () {
+			var sNextLayout = this.getOwnerComponent().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
+			this.getRouter().navTo("midObject", {
+				layout: sNextLayout, 
+				tenantId: this._sTenantId,
+				controlOptionCode: this._sControlOptionCode
+			});
+		},
+		onPageNavBackButtonPress: function () {
+            this.getView().getModel('mainListView').setProperty("/headerExpandFlag", true);
+			var sNextLayout = this.oModel.getProperty("/actionButtonsInfo/midColumn/closeColumn");
+            this.oRouter.navTo("mainOject", {layout: sNextLayout});
+		},
 
 		/**
 		 * Event handler  for navigating back.
@@ -137,10 +158,10 @@ sap.ui.define([
 		 * @private
 		 */
 		_onObjectMatched : function (oEvent) {
-			var oArgs = oEvent.getParameter("arguments"),
-				sTenantId = oArgs.tenantId,
-				sControlOptionCode = oArgs.controlOptionCode;
-			this._bindView("/ControlOptionMasters(tenant_id='" + sTenantId + "',control_option_code='" + sControlOptionCode + "')");
+			var oArgs = oEvent.getParameter("arguments");
+			this._sTenantId = oArgs.tenantId;
+			this._sControlOptionCode = oArgs.controlOptionCode;
+			this._bindView("/ControlOptionMasters(tenant_id='" + this._sTenantId + "',control_option_code='" + this._sControlOptionCode + "')");
 			this._toShowMode();
 		},
 
