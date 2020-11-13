@@ -11,16 +11,12 @@
     "description": "{{appDescription}}",
     "resources": "resources.json",
     "ach": "ach",
-    "sourceTemplate": {
-      "id": "html5moduletemplates.basicSAPUI5ApplicationProjectModule",
-      "version": "1.40.12"
-    },
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v4/cm.CurrencyMgrService/",
+        "uri": "srv-api/odata/v2/cm.CurrencyMgrService/",
         "type": "OData",
         "settings": {
-          "odataVersion": "4.0",
+          "odataVersion": "2.0",
           "localUri": "localService/metadata.xml"
         }
       }
@@ -47,21 +43,25 @@
     }
   },
   "sap.ui5": {
-    "flexEnabled": false,
     "rootView": {
-      "viewName": "cm.currencyMgr.view.currencyMgr",
+      "viewName": "cm.currencyMgr.view.currencyMainView",
       "type": "XML",
       "async": true,
-      "id": "currencyMgr"
+      "id": "fcl"
     },
     "dependencies": {
       "minUI5Version": "1.60.1",
       "libs": {
         "sap.ui.core": {},
         "sap.m": {},
-        "sap.ui.layout": {}
+        "sap.ui.layout": {},
+        "sap.f": {},
+        "sap.uxap": {}
       }
     },
+    "config": {
+			"fullWidth": true
+		},
     "contentDensities": {
       "compact": true,
       "cozy": true
@@ -93,32 +93,44 @@
     },
     "routing": {
       "config": {
-        "routerClass": "sap.m.routing.Router",
+        "routerClass": "sap.f.routing.Router",
         "viewType": "XML",
         "async": true,
         "viewPath": "cm.currencyMgr.view",
-        "controlAggregation": "pages",
-        "controlId": "app",
-        "clearControlAggregation": false
+        "controlId": "flexibleColumnLayout",
+        "transition": "slide",
+        "bypassed": {
+            }
       },
-      "routes": [
-        {
-          "name": "RoutecurrencyMgr",
-          "pattern": "RoutecurrencyMgr",
-          "target": [
-            "TargetcurrencyMgr"
-          ]
-        }
-      ],
-      "targets": {
-        "TargetcurrencyMgr": {
-          "viewType": "XML",
-          "transition": "slide",
-          "clearControlAggregation": false,
-          "viewId": "currencyMgr",
-          "viewName": "currencyMgr"
-        }
-      }
+			"routes": [
+                
+				{
+					"pattern": ":layout:",
+					"name": "master",
+					"target": [
+						"master",
+						"detail"
+					]
+				},
+				{
+					"pattern": "detail/{currency}/{layout}",
+					"name": "detail",
+					"target": [
+						"master",
+						"detail"
+					]
+				}
+			],
+			"targets": {
+				"master": {
+					"viewName": "currencyMasterView",
+					"controlAggregation": "beginColumnPages"
+				},
+				"detail": {
+					"viewName": "currencyDetailView",
+					"controlAggregation": "midColumnPages"
+				}
+			}
     }
   }
 }

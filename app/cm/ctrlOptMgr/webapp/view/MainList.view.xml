@@ -1,0 +1,173 @@
+<mvc:View controllerName="cm.controlOptionMgr.controller.MainList"
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m" 
+    xmlns:f="sap.f" 
+    xmlns:form="sap.ui.layout.form" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:core="sap.ui.core" 
+    xmlns:lib-m="ext.lib.m"
+    height="100%">
+
+    <f:DynamicPage id="page"
+        headerExpanded="false" 
+        toggleHeaderOnTitleClick="true">
+        <!-- DynamicPage Title -->
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:heading>
+                    <Title text="{i18n>appTitle}" />
+                </f:heading>
+                <f:snappedContent>
+                    <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                        <form:content>
+                            <VBox>
+                                <Label text="Chain" labelFor="searchChainS" required="true"></Label>
+                                <ComboBox id="searchChainS" width="100%" selectedKey="CM" items="{
+                                        path: 'util>/CodeDetails',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                            {path: 'company_code', operator: 'EQ', value1: '*'},
+                                            {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
+                                        ]
+                                    }">
+                                    <items>
+                                        <core:Item key="{util>code}" text="{util>code} :{util>code_description}" />
+                                    </items>
+                                </ComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="Keyword" labelFor="searchKeywordS"></Label>
+                                <Input id="searchKeywordS" placeholder="Keywords of the Code or Content"></Input>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                        </form:content>
+                    </form:SimpleForm>
+                </f:snappedContent>
+                <f:expandedContent>
+                    <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                        <form:content>
+                            <VBox>
+                                <Label text="Chain" labelFor="searchChainE" required="true"></Label>
+                                <ComboBox id="searchChainE" width="100%" selectedKey="CM" items="{
+                                        path: 'util>/CodeDetails',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                            {path: 'company_code', operator: 'EQ', value1: '*'},
+                                            {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
+                                        ]
+                                    }">
+                                    <items>
+                                        <core:Item key="{util>code}" text="{util>code} :{util>code_description}" />
+                                    </items>
+                                </ComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="Keyword" labelFor="searchKeywordE"></Label>
+                                <Input id="searchKeywordE" placeholder="Keywords of the Code or Content"></Input>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                        </form:content>
+                    </form:SimpleForm>
+                </f:expandedContent>
+                <f:actions>
+                    <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onPageSearchButtonPress" />
+                </f:actions>
+                <f:navigationActions>
+                    <Button icon="sap-icon://unfavorite" type="Transparent" />
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <!-- DynamicPage Header -->
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <VBox>
+                <Table id="mainTable" 
+                        sticky="HeaderToolbar,ColumnHeaders" 
+                        inset="false" 
+                        class="sapFDynamicPageAlignContent" 
+                        updateFinished=".onMainTableUpdateFinished"
+                        items="{list>/}"
+                        mode="none" 
+                        width="auto">
+                    <headerToolbar>
+                        <OverflowToolbar>
+                            <Title text="Control Options" level="H2"/>
+                            <ToolbarSpacer/>
+                            <ToolbarSeparator/>
+                            <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+                                <layoutData>
+                                    <OverflowToolbarLayoutData priority="NeverOverflow" />
+                                </layoutData>
+                            </Button>
+                        </OverflowToolbar>
+                    </headerToolbar>
+                    <columns>
+                        <Column id="mainColumnChainCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="8em" >
+                            <Text text="Chain" />
+                        </Column>
+                        <Column id="mainColumnCode" minScreenWidth="Tablet" hAlign="Center" width="14em" >
+                            <Text text="Code" />
+                        </Column>
+                        <Column id="mainColumnName" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
+                            <Text text="Name" />
+                        </Column>
+                        <Column id="mainColumnStartDate" minScreenWidth="Tablet" hAlign="Center" width="15em">
+                            <Text text="Start Date" />
+                        </Column>
+                        <Column id="mainColumnEndDate" minScreenWidth="Tablet" hAlign="Center" width="15em" >
+                            <Text text="End Date" />
+                        </Column>
+                        <Column id="mainColumnSiteFlag" minScreenWidth="Tablet" hAlign="Center" width="6em" >
+                            <Text text="Site" />
+                        </Column>
+                        <Column id="mainColumnCompanyFlag" minScreenWidth="Tablet" hAlign="Center" width="6em" >
+                            <Text text="Company" />
+                        </Column>
+                        <Column id="mainColumnOrganizationFlag" minScreenWidth="Tablet" hAlign="Center" width="6em" >
+                            <Text text="Organization" />
+                        </Column>
+                        <Column id="mainColumnUserFlag" minScreenWidth="Tablet" hAlign="Center" width="6em" >
+                            <Text text="User" />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem type="Navigation" press=".onMainTableItemPress">
+                            <cells>
+                                <Text text="{list>chain_code}"></Text>
+                                <Text text="{list>control_option_code}"></Text>
+                                <Text text="{list>control_option_name}"></Text>
+                                <Text text="{list>start_date}"></Text>
+                                <Text text="{list>end_date}"></Text>
+                                <Text text="{list>site_flag}"></Text>
+                                <Text text="{list>company_flag}"></Text>
+                                <Text text="{list>organization_flag}"></Text>
+                                <Text text="{list>user_flag}"></Text>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </VBox>
+        </f:content>
+        <!-- DynamicPage Footer -->
+        <f:footer>
+            <OverflowToolbar>
+                <ToolbarSpacer />
+				<Button text="Save" type="Emphasized" press=".onPageSaveButtonPress" />
+				<Button text="Cancel" type="Transparent" press=".onPageCancelEditButtonPress"/>
+            </OverflowToolbar>
+        </f:footer>
+    </f:DynamicPage>
+</mvc:View>
