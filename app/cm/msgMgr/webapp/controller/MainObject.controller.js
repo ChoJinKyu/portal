@@ -107,6 +107,7 @@ sap.ui.define([
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
 						oView.setBusy(true);
+						debugger;
 						oView.getModel().submitBatch("odataGroupIdForUpdate").then(function(ok){
 							me._toShowMode();
 							oView.setBusy(false);

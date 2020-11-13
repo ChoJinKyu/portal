@@ -3,18 +3,19 @@ sap.ui.define([
 	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
 	"ext/lib/model/ManagedModel",
-	"../model/formatter",
+	"ext/lib/model/ManagedListModel",
+	"ext/lib/formatter/DateFormatter",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
 	"sap/ui/core/Fragment",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-], function (BaseController, History, JSONModel, ManagedModel, formatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
+], function (BaseController, History, JSONModel, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
 	"use strict";
 
 	return BaseController.extend("cm.controlOptionMgr.controller.MidObject", {
 
-		formatter: formatter,
+		dateFormatter: DateFormatter,
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -32,52 +33,48 @@ sap.ui.define([
 					busy : true,
 					delay : 0
 				});
-			this.getRouter().getRoute("midObject").attachPatternMatched(this._onObjectMatched, this);
+			this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
 			this.setModel(oViewModel, "midObjectView");
 			
 			this.setModel(new ManagedModel(), "master");
+			this.setModel(new ManagedListModel(), "details");
 		}, 
 
 		/* =========================================================== */
 		/* event handlers                                              */
 		/* =========================================================== */
 
-		onPageEnterFullScreenButtonPress: function () {
-			var sNextLayout = this.getOwnerComponent().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
-			this.getRouter().navTo("midObject", {
-				layout: sNextLayout, 
-				tenantId: this._sTenantId,
-				controlOptionCode: this._sControlOptionCode
-			});
-		},
-		onPageExitFullScreenButtonPress: function () {
-			var sNextLayout = this.getOwnerComponent().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
-			this.getRouter().navTo("midObject", {
-				layout: sNextLayout, 
-				tenantId: this._sTenantId,
-				controlOptionCode: this._sControlOptionCode
-			});
-		},
-		onPageNavBackButtonPress: function () {
-            this.getView().getModel('mainListView').setProperty("/headerExpandFlag", true);
-			var sNextLayout = this.oModel.getProperty("/actionButtonsInfo/midColumn/closeColumn");
-            this.oRouter.navTo("mainOject", {layout: sNextLayout});
-		},
-
 		/**
-		 * Event handler  for navigating back.
-		 * It there is a history entry we go one step back in the browser history
-		 * If not, it will replace the current entry of the browser history with the miainList route.
+		 * Event handler for Enter Full Screen Button pressed
 		 * @public
 		 */
-		onPageNavBackButtonPress : function() {
-			var sPreviousHash = History.getInstance().getPreviousHash();
-			if (sPreviousHash !== undefined) {
-				// eslint-disable-next-line sap-no-history-manipulation
-				history.go(-1);
-			} else {
-				this.getRouter().navTo("mainList", {}, true);
-			}
+		onPageEnterFullScreenButtonPress: function () {
+			var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
+			this.getRouter().navTo("midPage", {
+				layout: sNextLayout, 
+				tenantId: this._sTenantId,
+				controlOptionCode: this._sControlOptionCode
+			});
+		},
+		/**
+		 * Event handler for Exit Full Screen Button pressed
+		 * @public
+		 */
+		onPageExitFullScreenButtonPress: function () {
+			var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
+			this.getRouter().navTo("midPage", {
+				layout: sNextLayout, 
+				tenantId: this._sTenantId,
+				controlOptionCode: this._sControlOptionCode
+			});
+		},
+		/**
+		 * Event handler for Nav Back Button pressed
+		 * @public
+		 */
+		onPageNavBackButtonPress: function () {
+			var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+            this.getRouter().navTo("mainPage", {layout: sNextLayout});
 		},
 
 		/**
@@ -95,7 +92,6 @@ sap.ui.define([
         onPageDeleteButtonPress: function(){
 			var oView = this.getView(),
 				me = this;
-
 			MessageBox.confirm("Are you sure to delete?", {
 				title : "Comfirmation",
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -109,7 +105,6 @@ sap.ui.define([
 					};
 				}
 			});
-
 		},
 		
 		/**
@@ -152,17 +147,39 @@ sap.ui.define([
 		/* =========================================================== */
 
 		/**
-		 * Binds the view to the data path.
-		 * @function
+		 * When it routed to this page from the other page.
 		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
 		 * @private
 		 */
-		_onObjectMatched : function (oEvent) {
-			var oArgs = oEvent.getParameter("arguments");
+		_onRoutedThisPage: function(oEvent){
+			var oArgs = oEvent.getParameter("arguments"),
+				oView = this.getView();
 			this._sTenantId = oArgs.tenantId;
 			this._sControlOptionCode = oArgs.controlOptionCode;
-			this._bindView("/ControlOptionMasters(tenant_id='" + this._sTenantId + "',control_option_code='" + this._sControlOptionCode + "')");
-			this._toShowMode();
+
+			if(oArgs.tenantId == "new" && oArgs.controlOptionCode == "code"){
+				//It comes Add button pressed from the before page.
+				var oMasterModel = this.getModel("master");
+				oMasterModel.setData({
+					tenant_id: "L2100"
+				});
+				this._toEditMode();
+			}else{
+				this._bindView("/ControlOptionMasters(tenant_id='" + this._sTenantId + "',control_option_code='" + this._sControlOptionCode + "')");
+				oView.setBusy(true);
+				var oDetailModel = this.getModel("details");
+				oDetailModel.setTransactionModel(this.getModel());
+				oDetailModel.read("/ControlOptionDetails", {
+					filters: [
+						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+						new Filter("control_option_code", FilterOperator.EQ, this._sControlOptionCode),
+					],
+					success: function(oData){
+						oView.setBusy(false);
+					}
+				});
+				this._toShowMode();
+			}
 		},
 
 		/**
