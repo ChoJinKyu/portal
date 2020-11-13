@@ -30,6 +30,7 @@
                                         <Button id="btnAdd" icon="sap-icon://add" press="onCreate" tooltip="추가"></Button>
                                         <Button id="btnDelete" icon="sap-icon://delete" press="onDelete" tooltip="삭제"></Button>
                                         <Button id="btnSave" icon="sap-icon://save" press="onSave" tooltip="저장"></Button>
+                                        <Button id="btnSaveProc" press="onSaveSampleHeaderMultiProc" tooltip="SaveSampleHeaderMultiProc" text="Procedure"></Button>
                                         <Button id="btnReset" icon="sap-icon://reset" press="onResetChanges" tooltip="초기화"></Button>
                                     </content>
                                 </OverflowToolbar>
@@ -52,7 +53,7 @@
                                 </Column>
                             </columns>
                             <items>
-                                <ColumnListItem type="Active" id="sampleMstItemList" press="onTableItemPress">
+                                <ColumnListItem type="Active" id="sampleHeaderItemList" press="onTableItemPress">
                                     <cells>
                                         <Input value="{header_id}"/>
                                         <Input value="{cd}"/>

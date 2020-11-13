@@ -7,8 +7,30 @@ namespace xx;
 @path : '/xx.SampleMgrService'
 service SampleMgrService {
     
-    entity SampleHeaders as projection on Header.Sample_Header
+    entity SampleHeaders as projection on Header.Sample_Header;
     entity SampleDetails as projection on Detail.Sample_Detail;
+
+/*
+    entity SampleDetailProc {
+        key detail_id : Integer64;
+        header_id : Integer64;
+        cd : String;
+        name: String;
+    }
+
+    entity SampleHeaderProc {
+        key header_id : Integer64;
+        row_key : String;
+        cd : String;
+        name: String;
+        details: Association to many SampleDetailProc on details.header_id = header_id;
+    }
+
+    entity SampleHeaderDetailProc {
+        key row_key : String;
+        headers: Association to many SampleHeaderProc on headers.row_key = row_key;
+    }
+*/    
 
     // Procedure 호출해서 header 저장
     // Header Multi Row
@@ -22,7 +44,6 @@ service SampleMgrService {
     }
     *********************************/
     //action SaveSampleHeaderMultiProc (sampleHeaders : array of SampleHeaders) returns array of SampleHeaders;
-
 
 
     // Procedure 호출해서 header/Detail 저장
@@ -44,21 +65,23 @@ service SampleMgrService {
         }
     }
     *********************************/
-    // type saveReturnType {
-    //     savedHeaders : array of {
-    //         header_id : Integer64;
-    //         cd : String;
-    //         name: String;
-    //     };
-    //     savedDetails : array of {
-    //         detail_id : Integer64;
-    //         header_id : Integer64;
-    //         cd : String;
-    //         name: String;
-    //     };
-    // }
+    /*
+    type saveReturnType {
+        savedHeaders : array of {
+            header_id : Integer64;
+            cd : String;
+            name: String;
+        };
+        savedDetails : array of {
+            detail_id : Integer64;
+            header_id : Integer64;
+            cd : String;
+            name: String;
+        };
+    }
+    */
 
-    // action SaveSampleMultiEnitylProc (inputData : saveReturnType) returns saveReturnType;
+    //action SaveSampleMultiEnitylProc (inputData : saveReturnType) returns saveReturnType;
 
     // (단일 Header에 multi Detail) 가 multi
     // Test 데이터
@@ -86,29 +109,68 @@ service SampleMgrService {
         ]
     }
     *********************************/
-    // type hdSaveType {
-    //     header_id : Integer64;
-    //     cd : String;
-    //     name: String;
-    //     details:  array of {
-    //         detail_id : Integer64;
-    //         header_id : Integer64;
-    //         cd : String;
-    //         name: String;
-    //     };
-    // }
-    // action SaveSampleHeaderDetailProc (inputData : array of hdSaveType) returns array of hdSaveType;
+    
+    /*
+    type hdSaveType {
+        header_id : Integer64;
+        cd : String;
+        name: String;
+        details:  array of {
+            detail_id : Integer64;
+            header_id : Integer64;
+            cd : String;
+            name: String;
+        };
+    }
+    */
+
+/*
+    entity dSaveType {
+        detail_id : Integer64;
+        header_id : Integer64;
+        cd : String;
+        name: String;
+    };
+
+    entity hdSaveType {
+        header_id : Integer64;
+        cd : String;
+        name: String;
+        details : Association to many dSaveType on details.header_id = header_id; 
+    }
+
+    
+    action SaveSampleHeaderDetailProc (inputData : array of hdSaveType) returns array of hdSaveType;
+*/    
 
 
+/*
+    type Genre : String enum {
+        Mystery; Fiction; Drama;
+    }
 
+    type testEntity {
+        id : String;
+        cd : String;
+    };
 
+    action testEntityAction (cd : String) returns testEntity;
+    action testEntityActionEntityInputEnum (inputData : Genre) returns testEntity;
+    //action testEntityActionEntityInput (inputData : testEntity) returns testEntity;
+    //-> java.lang.IllegalArgumentException: No enum constant org.apache.olingo.odata2.api.edm.EdmSimpleTypeKind.testEntity
 
+    type testType {
+        id :String;
+        cd : String;
+    };
+    action testTypeAction (cd : String) returns testType;
+    //action testTypeActionTypeInput (inputData : testType) returns testType;
+    //-> java.lang.IllegalArgumentException: No enum constant org.apache.olingo.odata2.api.edm.EdmSimpleTypeKind.testEntity
 
-
-
-
-
-
+    entity viewModel as projection on MgrView.Sample_Mgr_View;
+    action testModelAction (cd : String) returns viewModel;
+    //action testModelActionInput (inputData : viewModel) returns viewModel;
+*/
 
 
 
