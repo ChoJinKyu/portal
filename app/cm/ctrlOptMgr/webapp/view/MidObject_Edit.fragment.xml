@@ -6,28 +6,59 @@
 	<form:SimpleForm id="midObjectForm1Edit" editable="false" >
 		
 		<core:Title text="Normal" />
-		<Label text="Chain"/>
-		<Text text="{master>/chain_code}"/>
-		<Label text="Code"/>
-		<Text text="{master>/control_option_code}"/>
-		<Label text="Name"/>
+		<Label text="Chain" required="true"/>
+		<ComboBox id="searchChain" width="100%" selectedKey="{master>/chain_code}" items="{
+				path: 'util>/CodeDetails',
+				filters: [
+					{path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+					{path: 'company_code', operator: 'EQ', value1: '*'},
+					{path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
+				]
+			}">
+			<items>
+				<core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+			</items>
+		</ComboBox>
+		<Label text="Code" required="true"/>
+		<Input value="{master>/control_option_code}"/>
+		<Label text="Name" required="true"/>
 		<Input value="{master>/control_option_name}"/>
 
 		<core:Title text="Effect" />
-		<Label text="From"/>
-		<Text text="{master>/start_date}"/>
-		<Label text="To"/>
-		<Text text="{master>/end_date}"/>
+		<Label text="From" required="true"/>
+		<DatePicker placeholder="Starts From" value="{master>/start_date}"/>
+		<Label text="To" required="true"/>
+		<DatePicker placeholder="Ends To" value="{master>/end_date}"/>
 		
 		<core:Title text="Boundry" />
 		<Label text="Site"/>
-		<Text text="{master>/site_flag}"></Text>
+		<SegmentedButton selectedKey="{master>/site_flag}" width="100%" >
+			<items>
+				<SegmentedButtonItem text="Yes" key="true" width="4.1rem" />
+				<SegmentedButtonItem text="No" key="false" width="4.1rem" />
+			</items>
+		</SegmentedButton>
 		<Label text="Company"/>
-		<Text text="{master>/company_flag}"></Text>
+		<SegmentedButton selectedKey="{master>/company_flag}" width="100%" >
+			<items>
+				<SegmentedButtonItem text="Yes" key="true" width="4.1rem" />
+				<SegmentedButtonItem text="No" key="false" width="4.1rem" />
+			</items>
+		</SegmentedButton>
 		<Label text="Organization"/>
-		<Text text="{master>/organization_flag}"></Text>
+		<SegmentedButton selectedKey="{master>/organization_flag}" width="100%" >
+			<items>
+				<SegmentedButtonItem text="Yes" key="true" width="4.1rem" />
+				<SegmentedButtonItem text="No" key="false" width="4.1rem" />
+			</items>
+		</SegmentedButton>
 		<Label text="User"/>
-		<Text text="{master>/user_flag}"></Text>
+		<SegmentedButton selectedKey="{master>/user_flag}" width="100%" >
+			<items>
+				<SegmentedButtonItem text="Yes" key="true" width="4.1rem" />
+				<SegmentedButtonItem text="No" key="false" width="4.1rem" />
+			</items>
+		</SegmentedButton>
 
 	</form:SimpleForm>
 </core:FragmentDefinition>

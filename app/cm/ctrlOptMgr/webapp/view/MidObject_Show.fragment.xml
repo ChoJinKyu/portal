@@ -15,10 +15,16 @@
 
 		<core:Title text="Effect" />
 		<Label text="From"/>
-		<Text text="{master>/start_date}"/>
+		<Text text="{
+				path: 'master>/start_date',
+				formatter: '.dateFormatter.toDateTimeString'
+			}"/>
 		<Label text="To"/>
-		<Text text="{master>/end_date}"/>
-		
+		<Text text="{
+				path: 'master>/end_date',
+				formatter: '.dateFormatter.toDateTimeString'
+			}"/>
+
 		<core:Title text="Boundry" />
 		<Label text="Site"/>
 		<Text text="{master>/site_flag}"></Text>
