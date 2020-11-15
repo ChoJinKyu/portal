@@ -53,8 +53,8 @@
                 },
                 {
                     "name": "다건(목록)의 Edit 모드",
-                    "url": "../xx/templateListInlneEdit/webapp",
-                    "component": "xx.templateListInlneEdit"
+                    "url": "../xx/templateListInlineEdit/webapp",
+                    "component": "xx.templateListInlineEdit"
                 },
                 {
                     "name": "다건(목록) + 상세정보",
