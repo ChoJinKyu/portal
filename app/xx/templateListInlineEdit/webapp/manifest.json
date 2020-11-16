@@ -13,7 +13,7 @@
     "resources": "resources.json",
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v2/cm.MsgMgrService/",
+        "uri": "srv-api/odata/v2/xx.TemplateService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -95,6 +95,13 @@
           "useBatch": true
         }
       }
+    },
+    "resources": {
+        "css": [
+            {
+                "uri": "css/style.css"
+            }
+        ]
     },
     "resourceRoots": {
         "ext.lib": "../../../lib"
