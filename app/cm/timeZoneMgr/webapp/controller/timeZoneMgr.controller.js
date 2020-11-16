@@ -54,7 +54,6 @@ sap.ui.define([
       },
       onCreate: function () {
         var [tId, mName, aCol] = arguments;
-        var table = this.byId(tId);
         var model = this.getView().getModel(mName);
         // 레코드추가
         model.addRecord(aCol.reduce((function (acc, col) {
@@ -67,7 +66,6 @@ sap.ui.define([
       },
       onSave: function () {
         var [tId, mName] = arguments;
-        var table = this.byId(tId);
         var view = this.getView();
         var model = view.getModel(mName);
         // Validation
