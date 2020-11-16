@@ -78,7 +78,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="Status"></Label>
-                                <SegmentedButton selectedKey="" class="sapUiSmallMarginBottom" width="100%">
+                                <SegmentedButton id="searchStatusS" selectedKey="" class="sapUiSmallMarginBottom" width="100%">
                                     <items>
                                         <SegmentedButtonItem text="All" key="" />
                                         <SegmentedButtonItem text="Received" width="5em" />
@@ -150,9 +150,9 @@
                             </VBox>
                             <VBox>
                                 <Label text="Status"></Label>
-                                <SegmentedButton selectedKey="all" class="sapUiSmallMarginBottom" width="100%">
+                                <SegmentedButton id="searchStatusE" selectedKey="" class="sapUiSmallMarginBottom" width="100%">
                                     <items>
-                                        <SegmentedButtonItem text="All" key="all" />
+                                        <SegmentedButtonItem text="All" key="" />
                                         <SegmentedButtonItem text="Received" width="5em" />
                                         <SegmentedButtonItem text="Unreceived" width="7em" />
                                     </items>
@@ -258,10 +258,10 @@
                         <OverflowToolbar>
                             <ToolbarSpacer/>
                             <!-- Add the Personalization button -->
-                            <Button id="moldMstTableBindButton" text="Bind &amp; Receipt" type="Transparent" press=".onMoldMstTableBindButtonPress" />
-                            <Button id="moldMstTableCancelButton" text="Cancel Bind" type="Transparent" press=".onMoldMstTableCancelButtonPress" />
-                            <Button id="moldMstTableDeleteButton" text="Delete" type="Transparent" press=".onMoldMstTableDeleteButtonPress" />
-                            <Button id="moldMstTableReceiptButton" text="Receipt" type="Emphasized" press=".onMoldMstTableReceiptButtonPress" />
+                            <Button id="moldMstTableBindButton"     type="Transparent" text="Bind &amp; Receipt" press=".onMoldMstTableBindButtonPress" />
+                            <Button id="moldMstTableCancelButton"   type="Transparent" text="Cancel Bind"   press=".onMoldMstTableCancelButtonPress" />
+                            <Button id="moldMstTableDeleteButton"   type="Transparent" text="Delete"        press=".onMoldMstTableDeleteButtonPress" />
+                            <Button id="moldMstTableReceiptButton"  type="Emphasized"  text="Receipt"       press=".onMoldMstTableReceiptButtonPress" />
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://action-settings" press=".onMoldMstTablePersoButtonPressed" >
                                 <layoutData>
@@ -271,13 +271,13 @@
                         </OverflowToolbar>
                     </table:extension>                             
                     <table:columns>
-                        <table:Column id="moldMstColumnAffiliate" width="6em" hAlign="Center">
+                        <table:Column id="moldMstColumnAffiliate" width="5em" hAlign="Center">
                             <Label text="Affiliate"/>           
                             <table:template>
                                 <Text id="company_code" text="{list>company_code}"/> 
                             </table:template>
                         </table:Column>
-                        <table:Column id="moldMstColumnDivision" width="6em" hAlign="Center">
+                        <table:Column id="moldMstColumnDivision" width="4em" hAlign="Center">
                             <Label text="Division"/>
                             <table:template>
                                 <Text id="org_code" text="{list>org_code}"/>
@@ -295,7 +295,7 @@
                                 <Text id="part_number" text="{list>part_number}"/>
                             </table:template>
                         </table:Column>
-                        <table:Column id="moldMstColumnSeq" width="5em" hAlign="Center">
+                        <table:Column id="moldMstColumnSeq" width="3em" hAlign="Center">
                             <Label text="Seq"/>
                             <table:template>
                                 <Text id="mold_sequence" text="{list>mold_sequence}"/>
@@ -307,7 +307,7 @@
                                 <Text id="spec_name" text="{list>spec_name}"/>
                             </table:template>
                         </table:Column>
-                        <table:Column id="moldMstColumnStatus" width="7em" hAlign="Center">
+                        <table:Column id="moldMstColumnStatus" width="5em" hAlign="Center">
                             <Label text="Status"/>
                             <table:template>
                                 <Text id="mold_receipt_flag" text="{list>mold_receipt_flag}"/>
