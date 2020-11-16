@@ -35,6 +35,7 @@ sap.ui.define([
                             true4 : false,
                         });
             this.setModel(oModel, "Currency");
+            this.setModel(new JSONModel(), "flexibleColumnLayout");
              
              
 

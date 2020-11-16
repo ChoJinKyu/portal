@@ -4,7 +4,8 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/model/FilterType",
-], function (Controller, JSONModel, Filter, FilterOperator ) {
+    "ext/lib/model/ManagedListModel",
+], function (Controller, JSONModel, Filter, FilterOperator, ManagedListModel ) {
 	"use strict";
 
 	return Controller.extend("cm.currencyMgr.controller.currencyDetailView", {
@@ -18,6 +19,10 @@ sap.ui.define([
 
 			this.oRouter.getRoute("master").attachPatternMatched(this._onProductMatched, this);
             this.oRouter.getRoute("detail").attachPatternMatched(this._onProductMatched, this);
+            //debugger;
+            this.setModel(new ManagedListModel(), "list");
+
+			//this._doInitTablePerso();
             
         },
         
@@ -68,8 +73,8 @@ sap.ui.define([
             var oFCL = this.oView.getParent().getParent();
                 oFCL.setLayout("MidColumnFullScreen");
                 
-			// var sNextLayout = "MidColumnFullScreen";//this.oModel.getProperty("/actionButtonsInfo/midColumn/fullScreen");
-			// this.oRouter.navTo("detail", {layout: sNextLayout, currency: this._currency});
+			var sNextLayout = "MidColumnFullScreen";//this.oModel.getProperty("/actionButtonsInfo/midColumn/fullScreen");
+			this.oRouter.navTo("detail", {layout: sNextLayout, currency: this._currency});
 		},
 
 		handleExitFullScreen: function () {
@@ -78,8 +83,8 @@ sap.ui.define([
             var oUiModel = this.getView().getModel("Currency");
                 oUiModel.setProperty("/true1", true);
                 oUiModel.setProperty("/true2", false);
-			// var sNextLayout = this.oModel.getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
-			// this.oRouter.navTo("detail", {layout: sNextLayout, currency: this._currency});
+			var sNextLayout = "exitFullScreen"; 
+			this.oRouter.navTo("detail", {layout: sNextLayout, currency: this._currency});
 		},
 
 		handleClose: function () {
@@ -92,8 +97,8 @@ sap.ui.define([
             oUiModel.setProperty("/true4", false);
             oObjectPage.setShowFooter(false);
                 
-			// var sNextLayout = this.oModel.getProperty("/actionButtonsInfo/midColumn/closeColumn");
-			// this.oRouter.navTo("master", {layout: sNextLayout});
+			var sNextLayout = this.oModel.getProperty("/actionButtonsInfo/midColumn/closeColumn");
+			this.oRouter.navTo("master", {layout: sNextLayout});
         },
         
         onFooterCancelButton: function () {
@@ -102,6 +107,16 @@ sap.ui.define([
 
             oUiModel.setProperty("/true4", false);
             oObjectPage.setShowFooter(false);
-        }
+        },
+
+        _doInitTablePerso: function(){
+			// init and activate controller
+			this._oTPC = new TablePersoController({
+				table: this.byId("CurrencyLngTable"),
+				componentName: "msgMgr",
+				persoService: MainListPersoService,
+				hasGrouping: true
+			}).activate();
+		}
 	});
 });

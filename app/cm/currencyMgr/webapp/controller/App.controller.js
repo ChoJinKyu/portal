@@ -1,20 +1,18 @@
 sap.ui.define([
-        "sap/ui/core/mvc/Controller",
-        "sap/ui/model/json/JSONModel",
-        "./BaseController"
-	],
-	// /**
-    //  * @param {typeof sap.ui.core.mvc.Controller} Controller
-    //  */
-	function (Controller, JSONModel, BaseController) {
-		"use strict";
+	"./BaseController"
+], function (BaseController) {
+	"use strict";
 
-		return BaseController.extend("cm.currencyMgr.controller.currencyMainView", {
-			onInit: function () {
-                this.oOwnerComponent = this.getOwnerComponent();
+	return BaseController.extend("cm.currencyMgr.controller.App", {
+
+		onInit : function () {
+            // apply content density mode to root view
+            // debugger;
+            //this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
+            this.oOwnerComponent = this.getOwnerComponent();
                 this.oRouter = this.oOwnerComponent.getRouter();
                 this.oRouter.attachRouteMatched(this.onRouteMatched, this);
-            },
+		},
             onRouteMatched: function (oEvent) {
 			var sRouteName = oEvent.getParameter("name"),
 				oArguments = oEvent.getParameter("arguments");
@@ -26,14 +24,15 @@ sap.ui.define([
             onStateChanged: function (oEvent) {
                 var bIsNavigationArrow = oEvent.getParameter("isNavigationArrow"),
                     sLayout = oEvent.getParameter("layout");
-                this._updateUIElements();
+                //this._updateUIElements();
                 // Replace the URL with the new layout if a navigation arrow was used
                 if (bIsNavigationArrow) {
                     this.oRouter.navTo(this.currentRouteName, {layout: sLayout, currency: this.currentcurrency}, true);
                 }
             },
             _updateUIElements: function () {
-                var oModel = this.oOwnerComponent.getModel();
+                debugger;
+                var oModel = this.oOwnerComponent.getModel("flexibleColumnLayout");
                 var oUIState = this.oOwnerComponent.getHelper().getCurrentUIState();
                 oModel.setData(oUIState);
             },

@@ -24,7 +24,7 @@ sap.ui.define([
 				sQuery = oEvent.getParameter("query");
 
 			if (sQuery && sQuery.length > 0) {
-				oTableSearchState = [new Filter("Name", FilterOperator.Contains, sQuery)];
+				oTableSearchState = [new Filter("currency_code_name", FilterOperator.Contains, sQuery)];
 			}
 
 			this.ocurrencysTable.getBinding("items").filter(oTableSearchState, "Application");
@@ -57,14 +57,20 @@ sap.ui.define([
                     view : view,
                     });
                 }.bind(this));
-            
-                var oFCL = this.oView.getParent().getParent();
-                oFCL.setLayout("TwoColumnsMidExpanded");
+                var layout = this.oView.getParent().getParent().getLayout();
+
+                if ( this.oView.getParent().getParent().getLayout() === "TwoColumnsMidExpanded" || 
+                     this.oView.getParent().getParent().getLayout() === "OneColumn"){
+
+                    var oFCL = this.oView.getParent().getParent();
+                    oFCL.setLayout("TwoColumnsMidExpanded");
+                }
+                
                 
                 // currencyPath = oEvent.getSource().getBindingContext("currencys").getPath(),
                 // currency = "Currency(tenant_id='L2100',currency_code='AED')"
 
-			//this.oRouter.navTo("detail", {layout: "TwoColumnsMidExpanded" , currency: currency});
+			    this.oRouter.navTo("detail", {layout: "TwoColumnsMidExpanded" , currency: currency});
 		}
 	});
 });

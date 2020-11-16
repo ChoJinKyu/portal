@@ -101,18 +101,14 @@
 								labelSpanM="12"
 								emptySpanL="0"
 								emptySpanM="0"
-								columnsL="1"
-								columnsM="1">
+								columnsL="2"
+								columnsM="2">
 								<form:content>
                                     <form:Form editable="true" id="currencyDetail">
                                     <form:toolbar>
                                         <Toolbar width="100%" id="toolbar3">
                                             <content>
                                                 <Title text="통화코드 상세" id="title18" />
-                                                <ToolbarSpacer/>
-                                                <!-- <Button icon="sap-icon://create" text="신규" press="onCreate" type="Accept" />                                             -->
-                                                <!-- <Button icon="sap-icon://delete" text="삭제" press="onDelete" type="Reject" /> -->
-                                                <!-- <Button icon="sap-icon://save" text="저장" press="onSave" type="Attention" />                                            -->
                                             </content>
                                         </Toolbar>
                                     </form:toolbar>
@@ -121,7 +117,7 @@
                                             <form:formElements>
                                                     <form:FormElement label="* 통화코드" >
                                                         <form:fields>
-                                                            <Input width="180px" id="ipCurCode" value="{currency_code}" editable="false" />                                                        
+                                                            <Input width="auto" id="ipCurCode" value="{currency_code}" editable="false" />                                                        
                                                         </form:fields>
                                                     </form:FormElement>
                                                     <!-- <form:FormElement label="ISO통화">
@@ -131,12 +127,12 @@
                                                     </form:FormElement> -->
                                                     <form:FormElement label="* 소수점자리">
                                                         <form:fields>
-                                                            <Input width="180px" id="ipScale" value="{scale}" editable="{Currency>/true4}"/>
+                                                            <Input width="auto" id="ipScale" value="{scale}" editable="{Currency>/true4}"/>
                                                         </form:fields>
                                                     </form:FormElement>
                                                     <form:FormElement label="확장소수점자리">
                                                         <form:fields>
-                                                            <Input width="180px" id="ipExScale" value="{extension_scale}" editable="{Currency>/true4}"/>
+                                                            <Input width="auto" id="ipExScale" value="{extension_scale}" editable="{Currency>/true4}"/>
                                                         </form:fields>
                                                     </form:FormElement>
                                             </form:formElements>
@@ -151,18 +147,18 @@
                                                 <form:FormElement label="* 유효시작일자">
                                                     <form:fields>                                                    
                                                         <!-- <DatePicker width="180px" dateValue="{path : 'effective_start_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/> -->
-                                                        <DatePicker width="180px" id="strtDate" value="{effective_start_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" editable="{Currency>/true4}"/>
+                                                        <DatePicker width="auto" id="strtDate" value="{effective_start_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" editable="{Currency>/true4}"/>
                                                     </form:fields>
                                                 </form:FormElement>
                                                 <form:FormElement label="유효종료일자">
                                                     <form:fields>                                                    
                                                         <!-- <DatePicker width="180px" dateValue="{path : 'effective_end_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/> -->
-                                                        <DatePicker width="180px" id="endDate" value="{effective_end_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" editable="{Currency>/true4}"/>
+                                                        <DatePicker width="auto" id="endDate" value="{effective_end_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" editable="{Currency>/true4}"/>
                                                     </form:fields>
                                                 </form:FormElement>
                                                 <form:FormElement label="사용여부">
                                                     <form:fields>
-                                                        <Input width="180px" id="ipUseFlag" value="{use_flag}" editable="{Currency>/true4}"/>
+                                                        <Input width="auto" id="ipUseFlag" value="{use_flag}" editable="{Currency>/true4}"/>
                                                     </form:fields>
                                                 </form:FormElement>
                                             </form:formElements>
@@ -194,9 +190,9 @@
                                     <OverflowToolbar>
                                         <content>
                                             <ToolbarSpacer/>
-                                            <Button text="행추가" icon="sap-icon://add"  type="Accept" press="onLngAddRow"/>                                            
-                                            <Button text="행삭제" icon="sap-icon://delete" type="Reject" press="onLngDeleteRow"/>
-                                            <Button text="저장"   icon="sap-icon://save" type="Attention" press="onLngSave"/>
+                                            <Button text="Create" type="Transparent" press="onLngAddRow"/>                                            
+                                            <Button text="Delete" type="Transparent" press="onLngDeleteRow"/>
+                                            <Button text="Save" type="Emphasized" press="onLngSave"/>
                                         </content>
                                     </OverflowToolbar>
                                 </headerToolbar>
@@ -207,17 +203,13 @@
                                     <Column	hAlign="End" >
                                         <Text text="통화코드명"/>
                                     </Column>
-                                    <Column width="auto" 
-                                            minScreenWidth="Desktop"
-                                            demandPopin="true">
+                                    <Column width="auto" >
                                         <Text text="통화코드설명"/>
                                     </Column>
-                                    <Column	hAlign="End" minScreenWidth="Desktop"
-                                            demandPopin="true">
+                                    <Column	hAlign="End">
                                         <Text text="Prefix"/>
                                     </Column>
-                                    <Column width="auto" minScreenWidth="Desktop"
-                                            demandPopin="true">
+                                    <Column width="auto">
                                         <Text text="Suffix"/>
                                     </Column>
 								</columns>
@@ -242,8 +234,9 @@
         <uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer/>
-				<Button type="Accept" text="Save"/>
-				<Button type="Reject" text="Cancel" press=".onFooterCancelButton"/>
+				<Button type="Transparent" text="Draft"/>
+				<Button type="Transparent" text="Cancel" press=".onFooterCancelButton"/>
+                <Button type="Emphasized" text="Confirm"/>
 			</OverflowToolbar>
 		</uxap:footer>
 

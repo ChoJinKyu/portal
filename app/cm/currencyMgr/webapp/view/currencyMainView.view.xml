@@ -3,18 +3,17 @@
     xmlns:mvc="sap.ui.core.mvc" 
     displayBlock="true" 
     xmlns="sap.m" 
-    xmlns:f="sap.f">
-		<App id="app">
-			<pages>
-				<Page id="page" >
-					<content>
-                    	<f:FlexibleColumnLayout
-                            id="flexibleColumnLayout"
-                            stateChange=".onStateChanged"
-                            backgroundDesign="Translucent"
-                            layout="{Currency>/layout}"/>
-                    </content>
-				</Page>
-			</pages>
-		</App>
+    xmlns:f="sap.f"
+    height="100%">
+    <App id="app">
+            
+        <f:FlexibleColumnLayout
+            id="flexibleColumnLayout"
+            stateChange=".onStateChanged"
+            backgroundDesign="Translucent"
+            layout="{Currency>/layout}"/>
+                  
+    </App>
+               
+				
 </mvc:View>
