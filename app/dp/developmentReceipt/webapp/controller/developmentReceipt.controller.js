@@ -16,8 +16,9 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
-    "sap/m/Token"
-], function (BaseController, JSONModel, History, formatter, ManagedListModel, TablePersoController, developmentReceiptPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, Token) {
+    "sap/m/Token",
+    'sap/ui/core/Element'
+], function (BaseController, JSONModel, History, formatter, ManagedListModel, TablePersoController, developmentReceiptPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, Token, Element) {
 	"use strict";
 
 	return BaseController.extend("dp.developmentReceipt.controller.developmentReceipt", {
@@ -301,23 +302,34 @@ sap.ui.define([
 		_getSearchStates: function(){
 			var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S",
 				//affiliate = this.getView().byId("searchAffiliate"+sSurffix).getSelectedKey(),
-				//division = this.getView().byId("searchDivision"+sSurffix).getSelectedKey(),
-                receiptDate = this.getView().byId("searchReceiptDate"+sSurffix),
+                //division = this.getView().byId("searchDivision"+sSurffix).getSelectedKey(),
+                statusSelectedItemId = this.getView().byId("searchStatus"+sSurffix).getSelectedItem(),
+                status = Element.registry.get(statusSelectedItemId).getText(),
+                receiptFromDate = this.getView().byId("searchReceiptDate"+sSurffix).getDateValue(),
+                receiptToDate = this.getView().byId("searchReceiptDate"+sSurffix).getSecondDateValue(),
                 searchEDType = this.getView().byId("searchEDType").getSelectedKey(),
                 description = this.getView().byId("searchDescription").getValue(),
                 familyPartNo = this.getView().byId("searchFamilyPartNo").getValue();
-				MessageToast.show(receiptDate.getSecondDateValue());
+				
             var aTableSearchState = [];
             
-			if (receiptDate && receiptDate.length > 0) {
-                aTableSearchState.push(new Filter({
-					filters: [
-						new Filter("receiving_report_date", FilterOperator.GE, receiptDate.getDateValue()),
-						new Filter("receiving_report_date", FilterOperator.LE, receiptDate.getSecondDateValue())
-					],
-					and: false
-				}));
-				aTableSearchState.push(new Filter("receiving_report_date", FilterOperator.Contains, receiptDate));
+			if (status !== "All") {
+				aTableSearchState.push(new Filter("mold_receipt_flag", FilterOperator.EQ, (status == "Received" ? true : false)));
+
+				if (status == "Received") {
+					if (receiptFromDate && receiptFromDate.length > 0) {
+						var fromDate = receiptFromDate.getFullYear()+""+(receiptFromDate.getMonth()+1)+""+receiptFromDate.getDate(),
+							toDate = receiptToDate.getFullYear()+""+(receiptToDate.getMonth()+1)+""+receiptToDate.getDate();
+
+						aTableSearchState.push(new Filter({
+							filters: [
+								new Filter("receiving_report_date", FilterOperator.GE, fromDate),
+								new Filter("receiving_report_date", FilterOperator.LE, toDate)
+							],
+							and: false
+						}));
+					}
+				}
 			}
 			if (searchEDType && searchEDType.length > 0) {
 				aTableSearchState.push(new Filter("export_domestic_type_code", FilterOperator.EQ, searchEDType));
