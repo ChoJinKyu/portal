@@ -15,22 +15,6 @@
 		isChildPage="true"
 		upperCaseAnchorBar="false">
         <uxap:headerTitle>
-            <!-- <uxap:expandedHeading>
-                <Title text="{currency_code}" wrapping="true" class="sapUiSmallMarginEnd"/>
-            </uxap:expandedHeading>
-
-            <uxap:snappedHeading>
-                <FlexBox wrap="Wrap" fitContainer="true" alignItems="Center">
-                    <FlexBox wrap="NoWrap" fitContainer="true" alignItems="Center" class="sapUiTinyMarginEnd">
-                        <f:Avatar
-                            
-                            displaySize="S"
-                            displayShape="Square"
-                            class="sapUiTinyMarginEnd"/>
-                        <Title text="{currency_code}" wrapping="true"/>
-                    </FlexBox>
-                </FlexBox>
-            </uxap:snappedHeading> -->
 
 			<uxap:ObjectPageDynamicHeaderTitle>
 
@@ -181,10 +165,11 @@
 							<Table 
                                 id="CurrencyLngTable"
                                 inset="false"
-                                items="{/CurrencyLng}"
+                                items="{list>/}"
                                 class="sapFDynamicPageAlignContent"
                                 width="auto"
                                 mode="MultiSelect"
+                                updateFinished=".onMainTableUpdateFinished"
 								>
                                 <headerToolbar>
                                     <OverflowToolbar>
@@ -197,6 +182,9 @@
                                     </OverflowToolbar>
                                 </headerToolbar>
 								<columns>
+                                    <Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="40px" >
+                                        <Text text="S" />
+                                    </Column>
 									<Column width="auto">
 							        <Text text="언어"/>
                                     </Column>
@@ -216,11 +204,12 @@
 								<items>
 									<ColumnListItem >
 										<cells>
-											<Text id="language_code" text="{language_code}"/>
-                                            <Text id="currency_code_name" text="{currency_code_name}"/>
-                                            <Text id="currency_code_desc" text="{currency_code_desc}"/>
-                                            <Text id="currency_prefix" text="{currency_prefix}"/>
-                                            <Text id="currency_suffix" text="{currency_suffix}"/>
+                                            <Text text="{list>_row_state_}"></Text>
+											<Text id="language_code" text="{list>language_code}"/>
+                                            <Text id="currency_code_name" text="{list>currency_code_name}"/>
+                                            <Text id="currency_code_desc" text="{list>currency_code_desc}"/>
+                                            <Text id="currency_prefix" text="{list>currency_prefix}"/>
+                                            <Text id="currency_suffix" text="{list>currency_suffix}"/>
 										</cells>
 									</ColumnListItem>
 								</items>

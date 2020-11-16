@@ -9,7 +9,13 @@
     },
     "title": "{{appTitle}}",
     "description": "{{appDescription}}",
-    "resources": "resources.json",
+    "resources": {
+        "css": [
+            {
+                "uri": "css/style.css"
+            }
+        ]
+    },
     "ach": "ach",
     "dataSources": {
       "mainService": {

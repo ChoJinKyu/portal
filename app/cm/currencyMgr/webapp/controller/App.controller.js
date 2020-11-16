@@ -1,5 +1,5 @@
 sap.ui.define([
-	"./BaseController"
+    "ext/lib/controller/BaseController"
 ], function (BaseController) {
 	"use strict";
 
@@ -10,8 +10,9 @@ sap.ui.define([
             // debugger;
             //this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
             this.oOwnerComponent = this.getOwnerComponent();
-                this.oRouter = this.oOwnerComponent.getRouter();
-                this.oRouter.attachRouteMatched(this.onRouteMatched, this);
+            this.oRouter = this.oOwnerComponent.getRouter();
+            this.oRouter.attachRouteMatched(this.onRouteMatched, this);
+            this.getRouter().attachBeforeRouteMatched(this._onBeforeRouteMatched, this);
 		},
             onRouteMatched: function (oEvent) {
 			var sRouteName = oEvent.getParameter("name"),
@@ -39,7 +40,24 @@ sap.ui.define([
         
             onExit: function () {
                 this.oRouter.detachRouteMatched(this.onRouteMatched, this);
-            }
+            },
+            
+            _onBeforeRouteMatched: function(oEvent) {
+			var oModel = this.getModel(),
+				sLayout = oEvent.getParameters().arguments.layout,
+				oNextUIState;
+
+			// If there is no layout parameter, set a default layout (normally OneColumn) TwoColumnsMidExpanded
+			if (!sLayout) {
+				this.getHelper().then(function(oHelper) {
+					oNextUIState = oHelper.getNextUIState(0);
+					oModel.setProperty("/layout", oNextUIState.layout);
+				});
+				return;
+			}
+
+            oModel.setProperty("/layout", sLayout);
+        },
         
 
 

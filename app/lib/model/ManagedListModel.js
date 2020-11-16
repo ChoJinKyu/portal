@@ -113,7 +113,6 @@ sap.ui.define([
             console.group("oData V2 Transaction submitBatch");
             (cs || []).forEach(function(oItem){
                 delete oItem[STATE_COL];
-                debugger;
                 oService.create(sTransactionPath, [oItem, oItem], {
                     groupId: sGroupId,
                     success: function(oData){
