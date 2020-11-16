@@ -11,7 +11,7 @@
                 },
                 {
                     "name": "제어옵션관리",
-                    "url": "../cm/controlOptionMgr/webapp",
+                    "url": "../cm/ctrlOptMgr/webapp",
                     "component": "cm.controlOptionMgr"
                 }
             ]
@@ -23,7 +23,7 @@
                 {
                     "name": "국가 관리",
                     "url": "../cm/codeMgr/webapp",
-                    "component": "cm.codeMgr"
+                    "component": "cm.countryMgr"
                 },
                 {
                     "name": "타임존 관리",
@@ -36,11 +36,6 @@
                     "component": "cm.msgMgr"
                 },
                 {
-                    "name": "메시지 관리(Template based)",
-                    "url": "../cm/messageMgr/webapp",
-                    "component": "cm.messageMgr"
-                },
-                {
                     "name": "통화 관리",
                     "url": "../cm/currencyMgr/webapp",
                     "component": "cm.currencyMgr"
@@ -49,6 +44,11 @@
                     "name": "조직 관리",
                     "url": "../cm/orgMgr/webapp",
                     "component": "cm.orgMgr"
+                },
+                {
+                    "name": "구매 관리",
+                    "url": "../cm/purOrgMgr/webapp",
+                    "component": "cm.purOrgMgr"
                 }
             ]
         },

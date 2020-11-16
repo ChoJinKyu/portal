@@ -1,19 +1,19 @@
 sap.ui.define([
-	"./BaseController",
+	"ext/lib/controller/BaseController",
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/core/routing/History",
-	"../model/formatter",
+	"ext/lib/formatter/DateFormatter",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
 	"sap/ui/core/Fragment",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-], function (BaseController, JSONModel, History, formatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
+], function (BaseController, JSONModel, History, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
 	"use strict";
 
 	return BaseController.extend("xx.templateListViewAndObjectEdit.controller.MainObject", {
 
-		formatter: formatter,
+		dateFormatter: DateFormatter,
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -159,9 +159,6 @@ sap.ui.define([
 
 			this.getView().bindElement({
 				path: sObjectPath,
-				parameters: {
-					"$$updateGroupId" : 'odataGroupIdForUpdate'
-				},
 				events: {
 					change: this._onBindingChange.bind(this),
 					dataRequested: function () {
@@ -183,12 +180,7 @@ sap.ui.define([
 				this.getRouter().getTargets().display("mainObjectNotFound");
 				return;
 			}
-			oView.getBindingContext().requestObject().then((function (oObject) {
-				var sTenantId = oObject.tenant_id,
-					sLanguageCode = oObject.language_code,
-					sMessageCode = oObject.message_code;
-				oViewModel.setProperty("/busy", false);
-			}).bind(this));
+			oViewModel.setProperty("/busy", false);
 		},
 
 		_toEditMode: function(){

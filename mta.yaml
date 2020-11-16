@@ -122,6 +122,14 @@ modules:
       - orgMgr-content.zip
       name: orgMgr
       target-path: resources/
+    - artifacts:
+      - purOrgMgr-content.zip
+      name: purOrgMgr
+      target-path: resources/
+    - artifacts:
+      - monitor-content.zip
+      name: monitor
+      target-path: resources/
 - name: sampleMstMgr
   type: html5
   path: app/xx/sampleMstMgr
@@ -224,6 +232,22 @@ modules:
 - name: orgMgr
   type: html5
   path: app/cm/orgMgr
+  build-parameters:
+    builder: custom
+    commands:
+    - npm run build
+    supported-platforms: []
+- name: purOrgMgr
+  type: html5
+  path: app/cm/purOrgMgr
+  build-parameters:
+    builder: custom
+    commands:
+    - npm run build
+    supported-platforms: []
+- name: monitor
+  type: html5
+  path: app/pg/monitor
   build-parameters:
     builder: custom
     commands:

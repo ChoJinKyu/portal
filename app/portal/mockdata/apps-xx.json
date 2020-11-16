@@ -27,8 +27,8 @@
             "subMenus": [
                 {
                     "name": "UI5 Example #1",
-                    "url": "../xx/ui5Examples/webapp",
-                    "component": "xx.ui5Examples"
+                    "url": "../xx/exampleControls/webapp",
+                    "component": "xx.exampleControls"
                 }
             ]
         },
@@ -37,12 +37,12 @@
             "icon": "sap-icon://suitcase",
             "subMenus": [
                 {
-                    "name": "단건의 View 모드",
+                    "name": "단건의 View 모드 (TBD)",
                     "url": "../xx/templateObject/webapp",
                     "component": "xx.templateObject"
                 },
                 {
-                    "name": "단건의 Edit 모드 (TBD)",
+                    "name": "단건의 Edit 모드",
                     "url": "../xx/templateObjectEdit/webapp",
                     "component": "xx.templateObjectEdit"
                 },
@@ -53,13 +53,19 @@
                 },
                 {
                     "name": "다건(목록)의 Edit 모드",
-                    "url": "../xx/templateListInlneEdit/webapp",
-                    "component": "xx.templateListInlneEdit"
+                    "url": "../xx/templateListInlineEdit/webapp",
+                    "component": "xx.templateListInlineEdit"
                 },
                 {
                     "name": "다건(목록) + 상세정보",
                     "url": "../xx/templateListWithDetailsSeparated/webapp",
-                    "component": "xx.templateListWithDetailsSeparated"
+                    "component": "xx.templateListWithDetailsSeparated",
+                    "visible": false
+                }, 
+                {
+                    "name": "다건(목록) + 화면분할 상세정보",
+                    "url": "../xx/templateFlexibleColumns/webapp",
+                    "component": "xx.templateFlexibleColumns"
                 }
             ]
         }

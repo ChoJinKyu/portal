@@ -85,11 +85,17 @@
 							<Label text="Created by"/>
 							<Text text="{create_user_id}"/>
 							<Label text="Created At"/>
-							<Text text="{system_create_dtm}"/>
+							<Text text="{
+									path: 'system_create_dtm',
+									formatter: '.dateFormatter.toUTCDateTimeString'
+								}"/>
 							<Label text="Updated by"/>
 							<Text text="{update_user_id}"/>
 							<Label text="Updated At"/>
-							<Text text="{system_update_dtm}"/>
+							<Text text="{
+									path: 'system_update_dtm',
+									formatter: '.dateFormatter.toUTCDateTimeString'
+								}"/>
 						</form:SimpleForm>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>

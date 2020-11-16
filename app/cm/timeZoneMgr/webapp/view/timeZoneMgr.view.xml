@@ -1,20 +1,19 @@
 <!-- delete 추가 
 rows copy ??
 ui.table > m.table 변환하기   -->
-  <mvc:View
-	class="sapUiSizeCompact"
-	controllerName="cm.timeZoneMgr.controller.timeZoneMgr"
-	xmlns="sap.m"
-    xmlns:f="sap.f"
-	xmlns:core="sap.ui.core"
-	xmlns:demo="sap.ui.core.sample.common"
-	xmlns:form="sap.ui.layout.form"
-    xmlns:t="sap.ui.table"    
-    xmlns:layout="sap.ui.layout" displayBlock="true"
-	xmlns:mvc="sap.ui.core.mvc">
+<mvc:View
+  class="sapUiSizeCompact"
+  controllerName="cm.timeZoneMgr.controller.timeZoneMgr"
+  xmlns="sap.m"
+  xmlns:f="sap.f"
+  xmlns:core="sap.ui.core"
+  xmlns:demo="sap.ui.core.sample.common"
+  xmlns:form="sap.ui.layout.form"
+  xmlns:t="sap.ui.table"    
+  xmlns:layout="sap.ui.layout" displayBlock="true"
+  xmlns:mvc="sap.ui.core.mvc">
 	<App id="app">
-    
-        <f:DynamicPage id="dynamicPageId" toggleHeaderOnTitleClick="true" headerExpanded="true">
+        <f:DynamicPage id="page" toggleHeaderOnTitleClick="true" headerExpanded="true">
             <!--DynamicPage Title -->
             <f:title>
                 <f:DynamicPageTitle>
@@ -26,29 +25,49 @@ ui.table > m.table 변환하기   -->
             <!--DynamicPage Header -->
             <f:header>
                 <f:DynamicPageHeader pinnable="true">
-                    <layout:VerticalLayout
-                        id="oVerticalContent"
-                        width="100%">
-                        <layout:content>                     
-                        </layout:content>
-                    </layout:VerticalLayout>                           
                     <layout:HorizontalLayout>                          
-                        <form:Form editable="true" width="auto">
+                        <form:Form id="searchForm" editable="true" width="auto">
                             <form:formContainers>
                                 <form:FormContainer>
-                                    <form:formElements>
-                                        <form:FormElement label="코드">
-                                            <form:fields>
-                                                <Input id="time_zone_code" />					
+                                    <form:formElements >
+                                        <form:FormElement label="테넌트">
+                                            <form:fields>	
+                                                <ComboBox 
+                                                  id="searchTenantCombo" 
+                                                  width="100%" 
+                                                  selectedKey="L2100"
+                                                  items="{
+                                                    path: 'org>/Org_Tenant',
+                                                    filters: [
+                                                      {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                    ]
+                                                  }">
+                                                  <items>
+                                                    <core:Item key="{org>tenant_id}" text="{org>tenant_id} : {org>tenant_name}" />
+                                                  </items>
+                                                </ComboBox>
                                             </form:fields>
                                         </form:FormElement>
                                     </form:formElements>
                                 </form:FormContainer>
                                 <form:FormContainer>
                                     <form:formElements >
-                                        <form:FormElement label="타임존" >
+                                        <form:FormElement label="타임존">
                                             <form:fields>	
-                                                <Input id="time_zone" />
+                                                <!-- {path: 'org', operator: 'EQ', value1: 'L2100'} -->
+                                                <ComboBox 
+                                                  id="searchTimeZoneCombo" 
+                                                  width="100%" 
+                                                  items="{
+                                                    path: '/TimeZone',
+                                                    filters: [
+                                                      {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                    ]
+                                                  }">
+                                                  <items>
+                                                    <core:Item key="{timezone_code}" text="{timezone_code} : {timezone_name}" />
+                                                  </items>
+                                                </ComboBox>
                                             </form:fields>
                                         </form:FormElement>
                                     </form:formElements>
@@ -58,7 +77,7 @@ ui.table > m.table 변환하기   -->
                                         <form:FormElement label="국가">
                                             <form:fields>	     													
                                                 <Input
-                                                    id="timeZoneCountryInput"
+                                                    id="searchCountryInput"
                                                     type="Text"
                                                     value=""
                                                     placeholder=""
@@ -85,26 +104,23 @@ ui.table > m.table 변환하기   -->
                 </f:DynamicPageHeader>
             </f:header>
             <f:content>
-                <t:Table id="table"
-                selectionMode="MultiToggle" 
-                rows="{ path : '/TimeZone',
-                    parameters: {
-                        $count: true,
-                        $$updateGroupId : 'updateGroupTimeZone'
-                    },
-                    filter : [{path : 'timezone_code', operator : 'EQ', value1 : '00000'}],
-                    sorter: { path: 'timezone_code'}
-                }"
-                cellClick=".onCellClick"
-                rowSelectionChange = ".onCheck"
-                visibleRowCountMode="Auto"
-                columnResize="onColumnResize">
+                <t:Table id="mainTable"
+                  selectionMode="MultiToggle" 
+                  rows="{ 
+                    path: 'list>/',
+                    filters: [
+                      {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                    ]
+                  }"
+                  cellClick=".onCellClick"
+                  rowSelectionChange=".onCheck"
+                  visibleRowCountMode="Auto"
+                  columnResize="onColumnResize">
                     <t:extension>
                         <OverflowToolbar class="sapFDynamicPageAlignContent"> 									
                         <ToolbarSpacer/>
-                        <Button text="생성" id="buttonMainCreateRow" press=".onCreate"  type="Transparent"/>
-                        <!-- <Button text="복사" id="buttonMainCopyRow" press=".onCopyRow"   type="Transparent"/>									 -->
-                        <Button text="삭제" id="buttonMainDeleteRow" press=".onDelete"   type="Transparent"/>
+                        <Button text="생성" id="buttonMainCreateRow" press=".onCreate('mainTable', 'list', ['tenant_id', 'timezone_code', 'timezone_name'])"  type="Transparent"/>
+                        <Button text="삭제" id="buttonMainDeleteRow" press=".onDelete('mainTable', 'list')"   type="Transparent"/>
                         <Button text="저장" id="buttonMainSaveRow" press=".onSave"   type="Transparent"/>				 
                         </OverflowToolbar>
                     </t:extension>
@@ -113,40 +129,51 @@ ui.table > m.table 변환하기   -->
                         <!-- <t:RowSettings highlight="Success"/> -->
                     </t:rowSettingsTemplate>                                
                     <t:columns>
-                        <t:Column  width="0rem" hAlign="Center" visible="false">                                        
-                                <Label text="tenant_id"/>           
+                        <t:Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="40px" >
                             <t:template>
-                                <Text id="tenant_id" text="{tenant_id}"/> 
+                              <Text text="{list>_row_state_}"></Text>
                             </t:template>
                         </t:Column>
-                        <t:Column width="3rem">
-                            <Label text="No." textAlign="Center" width="100%"/>
-                            <t:template> 
-                                <Text text="" />
+                        <t:Column width="0rem" hAlign="Center" visible="false">                                        
+                            <Label text="tenant_id"/>           
+                            <t:template>
+                              <Text text="{list>tenant_id}"/> 
                             </t:template>
                         </t:Column>
-                        <t:Column>
+                        <t:Column id="mainTimezoneCodeColumn">
                             <Label text="코드" textAlign="Center" width="100%"/>
                             <t:template> 
-                                    <Input value="{timezone_code}" valueLiveUpdate="true"/>
+                                    <Input value="{list>timezone_code}" valueLiveUpdate="true"/>
                             </t:template>
                         </t:Column>
-                        <t:Column>
+                        <t:Column id="mainTimezoneNameColumn">
                             <Label text="타임존" textAlign="Center" width="100%"/>
                             <t:template> 
-                                <Input value="{timezone_name}" valueLiveUpdate="true"/>
+                                <Input value="{list>timezone_name}" valueLiveUpdate="true"/>
                             </t:template>
                         </t:Column>
-                        <t:Column>
+                        <t:Column id="mainCountryCodeColumn">
                             <Label text="국가" textAlign="Center" width="100%"/>
-                            <t:template> 
-                                <Input value="{country_code}" valueLiveUpdate="true"/>
+                            <t:template>
+                                <!-- {path: 'org', operator: 'EQ', value1: 'tenant_id'} -->
+                                <ComboBox 
+                                  width="100%"
+                                  items="{
+                                    path: 'country>/Country',
+                                    filters: [
+                                    ]
+                                  }"
+                                  selectedKey="{list>country_code}">
+                                  <items>
+                                    <core:Item key="{country>country_code}" text="{country>country_code} : {country>iso_code}" value="{country>country_code}" valueLiveUpdate="true" />
+                                  </items>
+                                </ComboBox>
                             </t:template>
                         </t:Column>
-                        <t:Column>
+                        <t:Column id="mainGmtOffsetColumn">
                             <Label text="GMT" textAlign="Center" width="100%"/>
                             <t:template> 
-                                <Input value="{gmt_offset}" valueLiveUpdate="true"/>
+                                <Input value="{list>gmt_offset}" valueLiveUpdate="true"/>
                             </t:template>
                         </t:Column>
                         <t:Column headerSpan="1" hAlign="Center">
@@ -155,7 +182,7 @@ ui.table > m.table 변환하기   -->
                                 <Label text="적용여부" textAlign="Center" width="100%"/>
                             </t:multiLabels>
                             <t:template> 
-                                <CheckBox selected="{dst_flag}" textAlign="Center"/>
+                                <CheckBox selected="{list>dst_flag}" textAlign="Center"/>
                                     <!-- <Select width="100%">
                                         <core:Item key="{!dst_flag}" text="{dst_flag}" />
                                         <core:Item key="{dst_flag}" text="{dst_flag}" />
@@ -168,7 +195,7 @@ ui.table > m.table 변환하기   -->
                                 <Label text="월" textAlign="Center" width="100%"/>
                             </t:multiLabels>
                             <t:template> 
-                                <Input value="{dst_start_month}" valueLiveUpdate="true" type="Number"/>
+                                <Input value="{list>dst_start_month}" valueLiveUpdate="true" type="Number"/>
                             </t:template>
                         </t:Column>
                         <t:Column>
@@ -177,7 +204,7 @@ ui.table > m.table 변환하기   -->
                                 <Label text="일" textAlign="Center" width="100%"/>
                             </t:multiLabels>
                             <t:template> 
-                                <Input value="{dst_start_day}" valueLiveUpdate="true" type="Number" />
+                                <Input value="{list>dst_start_day}" valueLiveUpdate="true" type="Number" />
                             </t:template>
                         </t:Column>
                         <t:Column>
@@ -186,7 +213,7 @@ ui.table > m.table 변환하기   -->
                                 <Label text="주" textAlign="Center" width="100%"/>
                             </t:multiLabels>
                             <t:template> 
-                                <Input value="{dst_start_week}" valueLiveUpdate="true" type="Number"/>
+                                <Input value="{list>dst_start_week}" valueLiveUpdate="true" type="Number"/>
                             </t:template>
                         </t:Column>
                         <t:Column>
@@ -195,7 +222,7 @@ ui.table > m.table 변환하기   -->
                                 <Label text="요일" textAlign="Center" width="100%"/>
                             </t:multiLabels>
                             <t:template> 
-                                <Input value="{dst_start_day_of_week}" valueLiveUpdate="true" type="Number"/>
+                                <Input value="{list>dst_start_day_of_week}" valueLiveUpdate="true" type="Number"/>
                             </t:template>
                         </t:Column>
                         <t:Column>
@@ -204,7 +231,8 @@ ui.table > m.table 변환하기   -->
                                 <Label text="시간" textAlign="Center" width="100%"/>
                             </t:multiLabels>
                             <t:template> 
-                                <Input value="{dst_start_time_rate}"  valueLiveUpdate="true" type="Number"/>
+                                <!-- <Input value="{list>dst_start_time_rate}"  valueLiveUpdate="true" type="Number"/> -->
+                                <Input value="{path: 'list>dst_start_time_rate', type: 'sap.ui.model.type.Float' }"  />
                             </t:template>
                         </t:Column>
                         <t:Column headerSpan="5">
@@ -213,7 +241,7 @@ ui.table > m.table 변환하기   -->
                                 <Label text="월" textAlign="Center" width="100%"/>
                             </t:multiLabels>
                             <t:template> 
-                                <Input value="{dst_end_month}" valueLiveUpdate="true" type="Number"/>
+                                <Input value="{list>dst_end_month}" valueLiveUpdate="true" type="Number"/>
                             </t:template>
                         </t:Column>
                         <t:Column>
@@ -222,7 +250,7 @@ ui.table > m.table 변환하기   -->
                                 <Label text="일" textAlign="Center" width="100%"/>
                             </t:multiLabels>
                             <t:template> 
-                                <Input value="{dst_end_day}" valueLiveUpdate="true" type="Number"/>
+                                <Input value="{list>dst_end_day}" valueLiveUpdate="true" type="Number"/>
                             </t:template>
                         </t:Column>
                         <t:Column>
@@ -231,7 +259,7 @@ ui.table > m.table 변환하기   -->
                                 <Label text="주" textAlign="Center" width="100%" />
                             </t:multiLabels>
                             <t:template> 
-                                <Input value="{dst_end_week}" valueLiveUpdate="true" type="Number"/>
+                                <Input value="{list>dst_end_week}" valueLiveUpdate="true" type="Number"/>
                             </t:template>
                         </t:Column>
                         <t:Column>
@@ -240,7 +268,7 @@ ui.table > m.table 변환하기   -->
                                 <Label text="요일" textAlign="Center" width="100%"/>
                             </t:multiLabels>
                             <t:template> 
-                                <Input value="{dst_end_day_of_week}" valueLiveUpdate="true" type="Number"/>
+                                <Input value="{list>dst_end_day_of_week}" valueLiveUpdate="true" type="Number"/>
                             </t:template>
                         </t:Column>
                         <t:Column>
@@ -249,7 +277,7 @@ ui.table > m.table 변환하기   -->
                                 <Label text="시간" textAlign="Center" width="100%"/>
                             </t:multiLabels>
                             <t:template> 
-                                <Input value="{dst_end_time_rate}" valueLiveUpdate="true" type="Number"/>
+                                <Input value="{list>dst_end_time_rate}" valueLiveUpdate="true" type="Number"/>
                             </t:template>
                         </t:Column>
                     </t:columns>
