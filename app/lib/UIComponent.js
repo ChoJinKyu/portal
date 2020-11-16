@@ -1,35 +1,32 @@
 sap.ui.define([
+	"jquery.sap.global",
 	"sap/ui/core/UIComponent",
 	"sap/ui/Device",
 	"ext/lib/model/models",
-	"ext/lib/controller/ErrorHandler"
-], function (UIComponent, Device, models, ErrorHandler) {
+	"ext/lib/controller/ErrorHandler",
+], function (jQuery, UIComponent, Device, models, ErrorHandler) {
 	"use strict";
 
-	return UIComponent.extend("xx.templateListInlineEdit.Component", {
+	return UIComponent.extend("ext.lib.UIComponent", {
 
-		metadata : {
+		metadata: {
 			manifest: "json"
 		},
 
 		/**
 		 * The component is initialized by UI5 automatically during the startup of the app and calls the init method once.
-		 * In this function, the device models are set and the router is initialized.
 		 * @public
 		 * @override
 		 */
-		init : function () {
+		init: function () {
 			// call the base component's init function
 			UIComponent.prototype.init.apply(this, arguments);
 
-			// initialize the error handler with the component
-			this._oErrorHandler = new ErrorHandler(this);
+			// enable routing
+			this.getRouter().initialize();
 
 			// set the device model
 			this.setModel(models.createDeviceModel(), "device");
-
-			// create the views based on the url/hash
-			this.getRouter().initialize();
 		},
 
 		/**
@@ -65,7 +62,5 @@ sap.ui.define([
 			}
 			return this._sContentDensityClass;
 		}
-
 	});
-
 });
