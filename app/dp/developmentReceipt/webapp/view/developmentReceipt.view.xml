@@ -248,26 +248,12 @@
                 <table:Table id="moldMstTable"
                         selectionMode="MultiToggle"
                         fixedColumnCount="7"
+                        visibleRowCount="12"
                         class="sapFDynamicPageAlignContent" 
                         cellClick=".onCellClick"
                         rowSelectionChange = ".onCheck"  
-                        updateFinished=".onMoldMstTableUpdateFinished"
-                        rows="{ path : '/MoldMasters',
-                                parameters : {
-                                    $count : true,
-                                    $$updateGroupId : 'moldMstUpdateGroup'
-                                },
-                                filters : [
-                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                        {path : 'company_code', operator : 'EQ', value1 : 'LGEKR'}
-                                    ],
-                                    sorter: [
-                                        { path: 'tenant_id' }, 
-                                        { path: 'company_code' },
-                                        { path: 'org_code' }
-                                    ]
-                        }"               
-                        >
+                        rows="{list>/}"
+                        ><!--updateFinished=".onMoldMstTableUpdateFinished"-->
                     <table:extension>
                         <OverflowToolbar>
                             <ToolbarSpacer/>
@@ -288,50 +274,50 @@
                         <table:Column id="moldMstColumnAffiliate" width="6em" hAlign="Center">
                             <Label text="Affiliate"/>           
                             <table:template>
-                                <Text id="company_code" text="{company_code}"/> 
+                                <Text id="company_code" text="{list>company_code}"/> 
                             </table:template>
                         </table:Column>
                         <table:Column id="moldMstColumnDivision" width="6em" hAlign="Center">
                             <Label text="Division"/>
                             <table:template>
-                                <Text id="org_code" text="{org_code}"/>
+                                <Text id="org_code" text="{list>org_code}"/>
                             </table:template>
                         </table:Column>
                         <table:Column id="moldMstColumnModel" width="15em" >
                             <Label text="Model"/>
                             <table:template>
-                                <Text id="model" text="{model}"/>
+                                <Text id="model" text="{list>model}"/>
                             </table:template>
                         </table:Column>
                         <table:Column id="moldMstColumnPartNo" width="8em" hAlign="Center">
                             <Label text="Part No"/>
                             <table:template>
-                                <Text id="part_number" text="{part_number}"/>
+                                <Text id="part_number" text="{list>part_number}"/>
                             </table:template>
                         </table:Column>
                         <table:Column id="moldMstColumnSeq" width="5em" hAlign="Center">
                             <Label text="Seq"/>
                             <table:template>
-                                <Text id="mold_sequence" text="{mold_sequence}"/>
+                                <Text id="mold_sequence" text="{list>mold_sequence}"/>
                             </table:template>
                         </table:Column>
                         <table:Column id="moldMstColumnDescription" width="12em">
                             <Label text="Description"/>
                             <table:template>
-                                <Text id="spec_name" text="{spec_name}"/>
+                                <Text id="spec_name" text="{list>spec_name}"/>
                             </table:template>
                         </table:Column>
                         <table:Column id="moldMstColumnStatus" width="7em" hAlign="Center">
                             <Label text="Status"/>
                             <table:template>
-                                <Text id="mold_receipt_flag" text="{mold_receipt_flag}"/>
+                                <Text id="mold_receipt_flag" text="{list>mold_receipt_flag}"/>
                             </table:template>
                         </table:Column>
                         <table:Column id="moldMstColumnFamilyFlag" width="8em" hAlign="Center">
                             <Label text="Family Y/N"/>
                             <table:template>
                                 <ComboBox   id="family_flag"    
-                                            selectedKey="{family_flag}"
+                                            selectedKey="{list>family_flag}"
                                             items="{
                                                         path : 'util>/CodeDetails',
                                                         filters : [
@@ -349,7 +335,7 @@
                             <Label text="Production&#10;Type"/>
                             <table:template>
                                 <ComboBox   id="mold_production_type_code"
-                                            selectedKey="{mold_production_type_code}"
+                                            selectedKey="{list>mold_production_type_code}"
                                             items="{
                                                         path : 'util>/CodeDetails',
                                                         filters : [
@@ -367,7 +353,7 @@
                             <Label text="Item&#10;Type"/>
                             <table:template>
                                 <ComboBox   id="mold_item_type_code"
-                                            selectedKey="{mold_item_type_code}"
+                                            selectedKey="{list>mold_item_type_code}"
                                             items="{
                                                         path : 'util>/CodeDetails',
                                                         filters : [
@@ -385,7 +371,7 @@
                             <Label text="Mold&#10;Type"/>
                             <table:template>
                                 <ComboBox   id="mold_type_code"
-                                            selectedKey="{mold_type_code}"
+                                            selectedKey="{list>mold_type_code}"
                                             items="{
                                                         path : 'util>/CodeDetails',
                                                         filters : [
@@ -403,7 +389,7 @@
                             <Label text="Export/Domestic&#10;Type"/>
                             <table:template>
                                 <ComboBox   id="export_domestic_type_code"
-                                            selectedKey="{export_domestic_type_code}"
+                                            selectedKey="{list>export_domestic_type_code}"
                                             items="{
                                                         path : 'util>/CodeDetails',
                                                         filters : [
@@ -421,7 +407,7 @@
                             <Label text="T-EST&#10;Use Y/N"/>
                             <table:template>
                                 <ComboBox   id="t_est_use_flag"    
-                                            selectedKey="{t_est_use_flag}"
+                                            selectedKey="{list>t_est_use_flag}"
                                             items="{
                                                         path : 'util>/CodeDetails',
                                                         filters : [
@@ -450,14 +436,14 @@
                         <table:Column id="moldMstColumnProcessType" width="8em" hAlign="Center">
                             <Label text="Process&#10;Type"/>
                             <table:template>
-                                <Text id="import_mold_flag" text="{import_mold_flag}"/>
+                                <Text id="import_mold_flag" text="{list>import_mold_flag}"/>
                             </table:template>
                         </table:Column>
                         <table:Column id="moldMstColumnMoldStructure" width="10em" hAlign="Center">
                             <Label text="Mold&#10;Structure"/>
                             <table:template>
                                 <ComboBox   id="die_form"    
-                                            selectedKey="{die_form}"
+                                            selectedKey="{list>die_form}"
                                             items="{
                                                         path : 'util>/CodeDetails',
                                                         filters : [
@@ -475,7 +461,7 @@
                             <Label text="Size"/>
                             <table:template>
                                 <ComboBox   id="mold_size"    
-                                            selectedKey="{mold_size}"
+                                            selectedKey="{list>mold_size}"
                                             items="{
                                                         path : 'util>/CodeDetails',
                                                         filters : [
@@ -492,67 +478,67 @@
                         <table:Column id="moldMstColumnReceiptDate" width="10em" hAlign="Center">
                             <Label text="Receipt&#10;Date"/>
                             <table:template>
-                                <Text id="receiving_report_date" text="{receiving_report_date}"/>
+                                <Text id="receiving_report_date" text="{list>receiving_report_date}"/>
                             </table:template>
                         </table:Column>
                         <table:Column id="moldMstColumnRequester" width="12em" hAlign="Center">
                             <Label text="Requester"/>
                                 <table:template>
-	                                <Text id="develope_request_empno" text="{develope_request_empno}"/>
+	                                <Text id="develope_request_empno" text="{list>develope_request_empno}"/>
 	                            </table:template>
                         </table:Column>
                         <table:Column id="moldMstColumnMoldDeveloper" width="12em" hAlign="Center">
                             <Label text="Mold&#10;Developer"/>
                                 <table:template>
-	                                <Text id="mold_developer_id" text="{mold_developer_id}"/>
+	                                <Text id="mold_developer_id" text="{list>mold_developer_id}"/>
 	                            </table:template>
                         </table:Column>
                         <table:Column id="moldMstColumnRemark" width="20em" hAlign="Center">
                             <Label text="Remark"/>
                                 <table:template>
-	                                <Input id="remark" value="{remark}"/>
+	                                <Input id="remark" value="{list>remark}"/>
 	                            </table:template>
                         </table:Column>
                         <table:Column id="moldMstColumnProjectCode" width="15em">
                             <Label text="Project Code"/>
                                 <table:template>
-	                                <Text id="pdm_project_code" text="{pdm_project_code}"/>
+	                                <Text id="pdm_project_code" text="{list>pdm_project_code}"/>
 	                            </table:template>
                         </table:Column>
                         <table:Column id="moldMstColumnProjectName" width="20em">
                             <Label text="Project Name"/>
                                 <table:template>
-	                                <Text id="pdm_project_name" text="{pdm_project_name}"/>
+	                                <Text id="pdm_project_name" text="{list>pdm_project_name}"/>
 	                            </table:template>
                         </table:Column>
                         <table:Column id="moldMstColumnFamilyPartNo1" width="12em" hAlign="Center">
                             <Label text="Family&#10;Part No(1)"/>
                                 <table:template>
-	                                <Input id="family_part_number_1" value="{family_part_number_1}"/>
+	                                <Input id="family_part_number_1" value="{list>family_part_number_1}"/>
 	                            </table:template>
                         </table:Column>
                         <table:Column id="moldMstColumnFamilyPartNo2" width="12em" hAlign="Center">
                             <Label text="Family&#10;Part No(2)"/>
                                 <table:template>
-	                                <Input id="family_part_number_2" value="{family_part_number_2}"/>
+	                                <Input id="family_part_number_2" value="{list>family_part_number_2}"/>
 	                            </table:template>
                         </table:Column>
                         <table:Column id="moldMstColumnFamilyPartNo3" width="12em" hAlign="Center">
                             <Label text="Family&#10;Part No(3)"/>
                                 <table:template>
-	                                <Input id="family_part_number_3" value="{family_part_number_3}"/>
+	                                <Input id="family_part_number_3" value="{list>family_part_number_3}"/>
 	                            </table:template>
                         </table:Column>
                         <table:Column id="moldMstColumnFamilyPartNo4" width="12em" hAlign="Center">
                             <Label text="Family&#10;Part No(4)"/>
                                 <table:template>
-	                                <Input id="family_part_number_4" value="{family_part_number_4}"/>
+	                                <Input id="family_part_number_4" value="{list>family_part_number_4}"/>
 	                            </table:template>
                         </table:Column>
                         <table:Column id="moldMstColumnFamilyPartNo5" width="12em" hAlign="Center">
                             <Label text="Family&#10;Part No(5)"/>
                                 <table:template>
-	                                <Input id="family_part_number_5" value="{family_part_number_5}"/>
+	                                <Input id="family_part_number_5" value="{list>family_part_number_5}"/>
 	                            </table:template>
                         </table:Column>
                     </table:columns>
