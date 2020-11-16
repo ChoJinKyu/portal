@@ -2,7 +2,6 @@ sap.ui.define([
 	"ext/lib/controller/BaseController",
 	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
-	"../model/formatter",
 	"ext/lib/model/ManagedListModel",
 	"sap/m/TablePersoController",
 	"./MainListPersoService",
@@ -16,12 +15,10 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, formatter, ManagedListModel, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+], function (BaseController, History, JSONModel, ManagedListModel, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
 	"use strict";
 
 	return BaseController.extend("xx.templateListInlineEdit.controller.MainList", {
-
-		formatter: formatter,
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */

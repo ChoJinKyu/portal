@@ -1,10 +1,10 @@
 sap.ui.define([
-	"jquery.sap.global",
 	"ext/lib/UIComponent",
 	"ext/lib/model/models",
 	"ext/lib/controller/ErrorHandler",
+	"jquery.sap.global",
 	"sap/f/FlexibleColumnLayoutSemanticHelper"
-], function (jQuery, UIComponent, models, ErrorHandler, FlexibleColumnLayoutSemanticHelper) {
+], function (UIComponent, models, ErrorHandler, jQuery, FlexibleColumnLayoutSemanticHelper) {
 	"use strict";
 
 	return UIComponent.extend("xx.templateFlexibleColumns.Component", {
@@ -22,17 +22,8 @@ sap.ui.define([
 		init : function () {
 			// call the base component's init function
 			UIComponent.prototype.init.apply(this, arguments);
-
-			// initialize the error handler with the component
-			this._oErrorHandler = new ErrorHandler(this);
-
-			// set the device model
-			this.setModel(models.createDeviceModel(), "device");
 			
 			this.setModel(models.createModel(), "fcl");
-
-			// create the views based on the url/hash
-			this.getRouter().initialize();
 		},
 
 		/**
