@@ -21,11 +21,7 @@
             </f:title>
             <!--DynamicPage Header -->
             <f:header>
-				<f:DynamicPageHeader pinnable="true">
-                    <layout:VerticalLayout
-                        id="oVerticalContent"
-                        width="100%">
-                    </layout:VerticalLayout>                         
+				<f:DynamicPageHeader pinnable="true">                       
                     <layout:HorizontalLayout>                          
                         <form:Form editable="true" width="100%">
                             <!-- 검색 조건 -->
@@ -33,8 +29,10 @@
                                 <form:FormContainer>
                                     <form:formElements> 
                                         <!-- 국가코드 -->
-                                        <form:FormElement label="국가코드">
-                                            <Input id="search_country_code" width="100%"/>
+                                        <form:FormElement label="국가코드">                                       
+                                            <form:fields>            	
+                                                <Input id="search_country_code" width="100%"/>                                       
+                                            </form:fields>            	
                                         </form:FormElement>
                                         <!-- 날짜형식 -->
                                         <form:FormElement label="날짜형식">
@@ -60,8 +58,10 @@
                                 <form:FormContainer>
                                     <form:formElements>
                                         <!-- 국가명 -->
-                                        <form:FormElement label="국가명">
-                                            <Input id="search_country_name" width="100%"/>
+                                        <form:FormElement label="국가명">                                       
+                                            <form:fields>            	
+                                                <Input id="search_country_name" width="100%"/>                                       
+                                            </form:fields>            	
                                         </form:FormElement>
                                         <!-- 숫자형식 -->
                                         <form:FormElement label="숫자형식"> 
@@ -87,14 +87,18 @@
                                 <form:FormContainer>
                                     <form:formElements>
                                         <!-- ISO코드 -->
-                                        <form:FormElement label="ISO코드">
-                                            <Input id="search_iso_code" width="100%"/>
+                                        <form:FormElement label="ISO코드">                                       
+                                            <form:fields>            	
+                                                <Input id="search_iso_code" width="100%"/>                                       
+                                            </form:fields>            	
                                         </form:FormElement>
                                         <!-- 통화 -->
-                                        <form:FormElement label="통화"> 
-                                            <SearchField 
-                                                id="searchCurrency" 
-                                                width="100%"/>
+                                        <form:FormElement label="통화">                                           
+                                            <form:fields>            	
+                                                <SearchField 
+                                                    id="searchCurrency" 
+                                                    width="100%"/>
+                                            </form:fields>
                                         </form:FormElement>
                                     </form:formElements>
                                 </form:FormContainer>
@@ -123,7 +127,7 @@
                                 </form:FormContainer>
                             </form:formContainers>
                             <form:layout>
-                                <form:ResponsiveGridLayout columnsM="4" columnsL="4" columnsXL="4"/>
+								<form:ResponsiveGridLayout columnsM="4" columnsL="4" columnsXL="4"/>
                             </form:layout>
                         </form:Form>
                     </layout:HorizontalLayout> 
@@ -136,247 +140,184 @@
             </f:header>
 
             
-            <f:content>
-            
-                <VBox fitContainer="true">
-                    <!--filters 값이 나오지 않아야 하기에 강제 적용-->
-
-                    <table:Table id="mainList"
-                    selectionMode="MultiToggle"  
-                    rows="{ path : '/Country',
-                            parameters : {
-                                $count : true,
-                                $$updateGroupId : 'MainUpdateGroup'
-                            },
-                            filters : [{path : 'tenant_id', operator : 'EQ', value1 : '0000'}],
-                            sorter: { path: 'country_code'}
-                    }"
-                    cellClick=".onCellClick"                   
-                    visibleRowCount="7"  
-                    rowSelectionChange = ".onCheck('mainList')"                 
-                    ariaLabelledBy="title">
-                        <table:extension>
-                            <OverflowToolbar class="sapFDynamicPageAlignContent"> 									
+            <f:content>      
+                <layout:Splitter orientation="Vertical">   
+                    <Table  id="mainList"
+                            items="{
+                                    path : '/Country',
+                                    parameters: {
+                                        $$updateGroupId : 'MainUpdateGroup'
+                                    },
+                                    filters : [{path : 'tenant_id', operator : 'EQ', value1 : '0000'}],
+                                    sorter: { path: 'country_code'}
+                                }"
+                            mode="MultiSelect"               
+                            ariaLabelledBy="title"   
+                    >    
+                    <layoutData>
+                        <layout:SplitterLayoutData size="65%" />
+                    </layoutData>  
+                    <headerToolbar>
+                        <OverflowToolbar>	
+                            <content>  								
                                 <ToolbarSpacer/>
-                                <Button text="Create" icon="sap-icon://add"  press=".onCreateRow('mainList')"  type="Accept" enabled="{=${ui>/bAdd}}"/>
-                                <Button text="Copy" icon="sap-icon://copy" press=".onCopyRow"   type="Accept" enabled="{=${ui>/bCopy}}"/>									
-                                <Button text="Delete" icon="sap-icon://delete" press=".onDelete('mainList')"   type="Reject" enabled="{=${ui>/bDelete}}"/>
-                                <Button text="Save"   icon="sap-icon://save" press=".onSave('mainList')"   type="Accept" enabled="{=${ui>/bSave}}"/>	
-                            </OverflowToolbar>
-                        </table:extension>
-                        <table:rowSettingsTemplate>
-                            <table:RowSettings highlight="{}"/>
-                        </table:rowSettingsTemplate>                                
-                        <table:columns>
-                            <table:Column  width="0rem" hAlign="Center" >                                        
-                                    <Label text="tenant_id"/>           
-                                <table:template>
-                                    <Input id="tenant_id" value="{tenant_id}"
-                                        enabled="{=%{parts: [
-                                                            {path: 'i18n>StdKey'},
-                                                            {path: 'update_user_id'},
-                                                            {path: 'ui>/bEvent'}]
-                                                          ,formatter: '.formatter.setStatus'}}"/> 
-                                </table:template>
-                            </table:Column>
-                            <table:Column width="8rem" hAlign="Center">
+                                <Button text="Create" icon="sap-icon://add"  press=".onCreateRow('mainList')"  type="Accept" />
+                                <Button text="Copy" icon="sap-icon://copy" press=".onCopyRow"   type="Accept" />									
+                                <Button text="Delete" icon="sap-icon://delete" press=".onDelete('mainList')"   type="Reject" />
+                                <Button text="Save"   icon="sap-icon://save" press=".onSave('mainList')"   type="Accept" />	
+                            </content>
+                        </OverflowToolbar>
+                    </headerToolbar>  
+                    <columns>
+                        <Column hAlign="Center" width="100px">
+                            <header>
                                 <Label text="국가코드"/>
-                                <table:template>                                           
-                                    <Input id="country_code" 
-                                            value="{country_code}"
-                                            valueLiveUpdate="true"
-                                            liveChange=".onInputChange"
-                                            placeholder="국가코드코드 필수."/>                                             
-                                </table:template>                                        
-                            </table:Column>
-                            <!-- <table:Column  width="12rem" hAlign="Center">                                        
-                                    <Label text="국가명"/>           
-                                <table:template>
-                                    <Input id="country_code" 
-                                    value="{country_code}"  
-                                    valueLiveUpdate="true"
-                                    liveChange=".onInputChange"
-                                    placeholder="국가명 필수."/> 
-                                </table:template>
-                            </table:Column> 
-                            <table:Column  width="6rem" hAlign="Center">                                        
-                                <Label text="ISO코드(숫자)"/>                                            
-                                <table:template>
-                                    <Input id="iso_code" 
-                                    value="{iso_code}"  
-                                    valueLiveUpdate="true"
-                                    liveChange=".onInputChange"/> 
-                                </table:template>
-                            </table:Column>		-->
-                            <table:Column  width="6rem" hAlign="Center">                                      
-                                <Label text="ISO코드"/>                                            
-                                <table:template>
-                                    <Input id="iso_code" 
-                                    value="{iso_code}"  
-                                    valueLiveUpdate="true"
-                                    liveChange=".onInputChange"/> 
-                                </table:template>
-                            </table:Column>
-                            <table:Column  width="6rem" hAlign="Center">                                      
-                                <Label text="EU코드"/>                                            
-                                <table:template>
-                                    <Input id="eu_code" 
-                                    value="{eu_code}"  
-                                    valueLiveUpdate="true"
-                                    liveChange=".onInputChange"/> 
-                                </table:template>
-                            </table:Column>     
-                            <table:Column  width="12rem" hAlign="Center">                                    
-                                <Label text="대표언어"/>                                            
-                                <table:template>
-                                    <Input id="language_code" 
-                                    value="{language_code}"  
-                                    valueLiveUpdate="true"
-                                    liveChange=".onInputChange"/> 
-                                </table:template>
-                            </table:Column>	
-                            <table:Column width="12rem" hAlign="Center">
+                            </header>
+                        </Column>
+                        <Column hAlign="Center" width="100px">
+                            <header>
+                                <Label text="ISO코드"/>
+                            </header>
+                        </Column>
+                        <Column hAlign="Center" width="100px">
+                            <header>
+                                <Label text="EU코드"/>
+                            </header>
+                        </Column>
+                        <Column hAlign="Center" width="100px">
+                            <header>
+                                <Label text="대표언어"/>
+                            </header>
+                        </Column>
+                        <Column hAlign="Center" width="100px">
+                            <header>
                                 <Label text="날짜형식"/>
-                                <table:template hAlign="Center">
-                                    <DatePicker	value="{date_format_code}" displayFormat="yyyy-MM-dd"/>
-                                </table:template>
-                            </table:Column>
-                            <table:Column width="8rem" hAlign="Center">  
-                                <Label text="숫자형식"/>                                     
-                                <table:template>
-                                    <Input id="number_format_code" 
-                                    value="{number_format_code}"  
-                                    valueLiveUpdate="true"
-                                    liveChange=".onInputChange"/> 
-                                </table:template>
-                            </table:Column>
-                            <table:Column width="8rem" hAlign="Center">  
-                                <Label text="통화"/>                                     
-                                <table:template>
-                                    <Input id="currency_code" 
-                                    value="{currency_code}"  
-                                    valueLiveUpdate="true"
-                                    liveChange=".onInputChange"/> 
-                                </table:template>
-                            </table:Column>
-                            <table:Column width="12rem" hAlign="Center">  
-                                <Label text="주소스타일"/>                                     
-                                <table:template>
-                                    <Label text=""/>
-                                </table:template>
-                            </table:Column>
-                            <table:Column width="8rem" hAlign="Center"> 
+                            </header>
+                        </Column>
+                        <Column hAlign="Center" width="100px">
+                            <header>
+                                <Label text="숫자형식"/>
+                            </header>
+                        </Column>
+                        <Column hAlign="Center" width="100px">
+                            <header>
+                                <Label text="통화"/>
+                            </header>
+                        </Column>
+                        <!-- <Column hAlign="Center" width="100px">
+                            <header>
+                                <Label text="주소스타일"/>
+                            </header>
+                        </Column> -->
+                        <Column hAlign="Center" width="100px">
+                            <header>
                                 <Label text="최초작성자"/>
-                                <table:template>
-                                    <Label text=""/>
-                                </table:template>
-                            </table:Column>
-                            <table:Column width="12rem" hAlign="Center">
+                            </header>
+                        </Column>
+                        <Column hAlign="Center" width="100px">
+                            <header>
                                 <Label text="유효시작일자"/>
-                                <table:template>
-                                    <Label text=""/>
-                                </table:template>
-                            </table:Column>
-                            <table:Column width="8rem" hAlign="Center"> 
+                            </header>
+                        </Column>
+                        <Column hAlign="Center" width="100px">
+                            <header>
                                 <Label text="최종수정자"/>
-                                <table:template>
-                                    <Label text=""/>
-                                </table:template>
-                            </table:Column>
-                            <table:Column width="12rem" hAlign="Center">
-                                <Label text="최종수정일시" />
-                                <table:template>
-                                    <Label text=""/>
-                                </table:template>
-                            </table:Column>
-                        </table:columns>
-                    </table:Table>
+                            </header>
+                        </Column>
+                        <Column hAlign="Center" width="100px">
+                            <header>
+                                <Label text="최종수정일시"/>
+                            </header>
+                        </Column>
                     
-                    <table:Table id="subList"   
-                    rows="{ path : '/CountryLng',
-                            parameters : {
-                            $count : true,                                                    
-                            $$updateGroupId : 'SubUpdateGroup'
-                            },
-                            filters : [{path : 'language_code', operator : 'EQ', value1 : '0000'}],
-                            sorter: { path: 'language_code'},
-                            events : {dataReceived : '.onDataEvents'}
+                    </columns>  
+                    <items>
+                        <ColumnListItem type="Active" id="mainColumnListItem" press="onMainListPress">
+                            <cells>
+                                <Input id="main_country_code" value="{country_code}" placeholder="국가코드코드 필수."/>
+                                <Input id="main_iso_code" value="{iso_code}"  />
+                                <Input id="main_eu_code" value="{eu_code}"/>
+                                <Input id="main_language_code" value="{language_code}"/>
+                                <Input id="main_date_format_code" value="{date_format_code}"/>
+                                <Input id="main_number_format_code" value="{number_format_code}"/>
+                                <Input id="main_currency_code" value="{currency_code}"/>
+                            </cells>
+                            <!-- <cells>
+                                주소스타일 <Text id="main_currency_code" text="{currency_code}"/>
+                            </cells> -->
+                            <cells>
+                                <Text id="main_create_user_id" text="{create_user_id}"/>
+                            </cells>
+                            <cells>
+                                <Text id="main_system_create_dtm" text="{system_create_dtm}"/>
+                            </cells>
+                            <cells>
+                                <Text id="main_update_user_id" text="{update_user_id}"/>
+                            </cells>
+                            <cells>
+                                <Text id="main_system_update_dtm" text="{system_update_dtm}"/>
+                            </cells>
+                                                            
+                        </ColumnListItem>
+                    </items>                                                              
+                    </Table> 
 
-                    }"
-                    rowSelectionChange = ".onCheck('subList')"   
-                    selectionMode="MultiToggle"  
-                    visibleRowCount="7"                                         
-                    paste="on-paste"
-                    ariaLabelledBy="title">
-                        <table:extension>
-                            <OverflowToolbar class="sapFDynamicPageAlignContent"> 									
+
+                    <Table  id="subList"
+                            items="{
+                                    path : '/CountryLng',
+                                    parameters: {
+                                        $$updateGroupId : 'SubUpdateGroup'
+                                    },
+                                    filters : [{path : 'tenant_id', operator : 'EQ', value1 : '0000'}],
+                                    sorter: { path: 'language_code'}
+                                }"
+                            mode="MultiSelect"                   
+                            ariaLabelledBy="title"   
+                    >    
+                    <layoutData>
+                        <layout:SplitterLayoutData size="30%" />
+                    </layoutData>  
+                    <headerToolbar>
+                        <OverflowToolbar>	
+                            <content>  								
                                 <ToolbarSpacer/>
-                                <Button text="Create" icon="sap-icon://add"  press=".onCreateRow('subList')"  type="Accept" enabled="{=${ui>/bAdd}}"/>
-                                <Button text="Delete" icon="sap-icon://delete" press=".onDelete('subList')"   type="Reject" enabled="{=${ui>/bDelete}}"/>
-                                <Button text="Save"   icon="sap-icon://save" press=".onSave('subList')"   type="Accept" enabled="{=${ui>/bSave}}"/>	
-                            </OverflowToolbar>
-                            <!-- <OverflowToolbar class="sapFDynamicPageAlignContent">
-                            <ToolbarSpacer/>   
-                            <Button text="Create" id="buttonSubAddRow" press=".onCreateRow('subList')"  type="Transparent"/>									
-                            <Button text="Delete" id="buttonSubDeleteRow" press=".onDelete('subList')"   type="Transparent"/>
-                            <Button text="Save"   id="buttonSubSaveRow" press=".onSave('subList')"   type="Transparent"/>		                                                         
-                        </OverflowToolbar> -->
-                        </table:extension>
-                        <table:columns>								   
-                            <table:Column width="0rem" hAlign="Center">
-                                <Label text="국가코드"/>
-                                <table:template>
-                                    <Label text="국가코드" />
-                                    <Input id="sub_country_code"  
-                                            value="{country_code}"
-                                    />                                             
-                                </table:template>                                        
-                            </table:Column>                              
-                            <table:Column width="20rem" hAlign="Center">
+                                <Button text="Create" icon="sap-icon://add"  press=".onCreateRow('subList')"  type="Accept" />						
+                                <Button text="Delete" icon="sap-icon://delete" press=".onDelete('subList')"   type="Reject" />
+                                <Button text="Save"   icon="sap-icon://save" press=".onSave('subList')"   type="Accept" />	
+                            </content>
+                        </OverflowToolbar>
+                    </headerToolbar>    
+                    <columns>
+                        <Column hAlign="Center" width="100px">
+                            <header>
                                 <Label text="언어"/>
-                                <table:template>
-                                    <Input id="sub_language_code" 
-                                            value="{language_code}"
-                                            valueLiveUpdate="true"
-                                            liveChange=".onInputChange"                                                   
-                                            placeholder="언어 필수"
-                                    />											
-                                </table:template>
-                            </table:Column>
-                            <table:Column  width="20rem" hAlign="Center">
-                                <Label text="국가명"/>             
-                                <table:template>
-                                    <Input id="sub_country_name"
-                                            valueLiveUpdate="true"
-                                            liveChange=".onInputChange"             
-                                            value="{country_name}"
-                                    />
-                                </table:template>
-                            </table:Column>                                    
-                            <table:Column width="30rem" hAlign="Center">
+                            </header>
+                        </Column>
+                        <Column hAlign="Center" width="100px">
+                            <header>
+                                <Label text="국가명"/>
+                            </header>
+                        </Column>
+                        <Column hAlign="Center" width="100px">
+                            <header>
                                 <Label text="설명"/>
-                                <table:template>
-                                    <Input id="sub_description"                                             
-                                    valueLiveUpdate="true"
-                                    liveChange=".onInputChange" 
-                                    value="{description}"
-                                    />
-                                </table:template>
-                            </table:Column>
-                        </table:columns>
-                    </table:Table>
-                    
-                </VBox>
-            </f:content>
-
-
-
-                <!-- DynamicPage Footer -->
-            <f:footer>
-                <OverflowToolbar>
-                    <ToolbarSpacer/>								
-                </OverflowToolbar>
-            </f:footer>                    
+                            </header>
+                        </Column>                    
+                    </columns>    
+                    <items>
+                        <ColumnListItem type="Active" id="subColumnListItem" press="onSubListPress">
+                            <cells>
+                                <Input id="sub_language_code" value="{language_code}" placeholder="언어 필수."/>
+                                <Input id="sub_country_name" value="{country_name}"  />
+                                <Input id="sub_description" value="{description}"  />
+                            </cells>
+                                                            
+                        </ColumnListItem>
+                    </items>                                                                      
+                    </Table> 
+                </layout:Splitter>
+            </f:content>                 
         </f:DynamicPage>
     </App>
 </mvc:View>

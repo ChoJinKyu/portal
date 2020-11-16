@@ -4,36 +4,38 @@
     "id": "cm.msgMgr",
     "type": "application",
     "i18n": "i18n/i18n.properties",
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
     "applicationVersion": {
       "version": "1.0.0"
     },
-    "title": "{{appTitle}}",
-    "description": "{{appDescription}}",
+    "ach": "set-ach",
     "resources": "resources.json",
-    "ach": "ach",
-    "sourceTemplate": {
-      "id": "html5moduletemplates.basicSAPUI5ApplicationProjectModule",
-      "version": "1.40.12"
-    },
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v4/xx.MessageMgrService/",
+        "uri": "srv-api/odata/v2/cm.MsgMgrService/",
         "type": "OData",
         "settings": {
-          "odataVersion": "4.0",
-          "localUri": "localService/metadata.xml"
+          "odataVersion": "2.0"
+        }
+      },
+      "commonUtilService": {
+        "uri": "srv-api/odata/v2/util.CommonService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
         }
       }
     }
   },
-  "sap.cloud": {
-    "public": true,
-    "service": "sppCap_ui_dev"
+  "sap.fiori": {
+    "registrationIds": [],
+    "archeType": "transactional"
   },
   "sap.ui": {
     "technology": "UI5",
     "icons": {
-      "icon": "",
+      "icon": "sap-icon://task",
       "favIcon": "",
       "phone": "",
       "phone@2": "",
@@ -47,25 +49,25 @@
     }
   },
   "sap.ui5": {
-    "flexEnabled": false,
     "rootView": {
-      "viewName": "cm.msgMgr.view.mainView",
+      "viewName": "cm.msgMgr.view.App",
       "type": "XML",
       "async": true,
-      "id": "mainView"
+      "id": "app"
     },
     "dependencies": {
-      "minUI5Version": "1.60.1",
+      "minUI5Version": "1.66.0",
       "libs": {
         "sap.ui.core": {},
         "sap.m": {},
-        "sap.ui.layout": {}
+        "sap.f": {}
       }
     },
     "contentDensities": {
       "compact": true,
       "cozy": true
     },
+    "handleValidation": true,
     "models": {
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
@@ -73,52 +75,86 @@
           "bundleName": "cm.msgMgr.i18n.i18n"
         }
       },
+      "util": {
+        "dataSource": "commonUtilService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "useBatch": true
+        }
+      },
       "": {
         "dataSource": "mainService",
         "preload": true,
         "settings": {
-          "operationMode": "Server",
-          "groupId": "$direct",
-          "synchronizationMode": "None",
-          "autoExpandSelect": true
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": true,
+          "useBatch": true
         }
       }
     },
-    "resources": {
-      "css": [
-        {
-          "uri": "css/style.css"
-        }
-      ]
+    "resourceRoots": {
+        "ext.lib": "../../../lib"
     },
     "routing": {
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
-        "async": true,
         "viewPath": "cm.msgMgr.view",
-        "controlAggregation": "pages",
         "controlId": "app",
-        "clearControlAggregation": false
+        "controlAggregation": "pages",
+        "bypassed": {
+          "target": [
+            "notFound"
+          ]
+        },
+        "async": true
       },
       "routes": [
         {
-          "name": "RoutemainView",
-          "pattern": "RoutemainView",
+          "pattern": "",
+          "name": "mainList",
           "target": [
-            "TargetmainView"
+            "mainList"
+          ]
+        },
+        {
+          "pattern": "Message/{tenantId}/{messageCode}/{languageCode}",
+          "name": "mainObject",
+          "target": [
+            "mainObject"
           ]
         }
       ],
       "targets": {
-        "TargetmainView": {
-          "viewType": "XML",
-          "transition": "slide",
-          "clearControlAggregation": false,
-          "viewId": "mainView",
-          "viewName": "mainView"
+        "mainList": {
+          "viewName": "MainList",
+          "viewId": "mainList",
+          "viewLevel": 1,
+          "title": "{i18n>mainListViewTitle}"
+        },
+        "mainObject": {
+          "viewName": "MainObject",
+          "viewId": "mainObject",
+          "viewLevel": 2,
+          "title": "{i18n>mainObjectViewTitle}"
+        },
+        "mainObjectNotFound": {
+          "viewName": "MainObjectNotFound",
+          "viewId": "mainObjectNotFound"
+        },
+        "notFound": {
+          "viewName": "NotFound",
+          "viewId": "notFound"
         }
       }
     }
+  },
+  "sap.cloud": {
+    "public": true,
+    "service": "sppCap_ui_dev"
   }
 }

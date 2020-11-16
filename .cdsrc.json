@@ -30,9 +30,12 @@
             "db/cds/cm/countryMgr",
             "db/cds/cm/timeZoneMgr",
             "db/cds/cm/hrDeptMgr", 
-            "db/cds/cm/hrEmployeeMgr",                         
+            "db/cds/cm/hrEmployeeMgr",     
+            "db/cds/cm/roleMgr",    
+            "db/cds/cm/menuMgr",                    
             "db/cds/dp",
             "db/cds/dp/standardCommon",
+            "db/cds/dp/standardCommon/categoryMgr",
             "db/cds/dp/materialMgr/materialMasterMgr",
             "db/cds/dp/materialMgr/uomMgr",
             "db/cds/dp/moldMgt",
@@ -49,6 +52,7 @@
             "db/cds/pg/monitor",
             "db/cds/pg/risk",
             "db/cds/pg/spend",
+            "db/cds/pg/spend_md",
             "db/cds/pg/vp",
             "db/cds/sp",
             "db/cds/mc",
@@ -67,6 +71,6 @@
     }
   },
   "odata": {
-    "version": "v4"
+    "version": "v2"
   }
 }

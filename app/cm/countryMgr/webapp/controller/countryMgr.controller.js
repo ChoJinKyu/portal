@@ -1,6 +1,5 @@
 sap.ui.define([
-		// "sap/ui/core/mvc/Controller",
-        "cm/countryMgr/controller/BaseController",
+		"sap/ui/core/mvc/Controller",
         "sap/m/MessageBox",
         "sap/m/MessageToast",
         "sap/m/MessageStrip",
@@ -15,10 +14,19 @@ sap.ui.define([
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (Controller, MessageBox, MessageToast, MessageStrip, DateFormat, jquery, Filter, FilterOperator, FilterType, Sorter, JSONModel) {
+	function (BaseController, MessageBox, MessageToast, MessageStrip, DateFormat, jquery, Filter, FilterOperator, FilterType, Sorter, JSONModel) {
 		"use strict";
 
-		return Controller.extend("cm.countryMgr.controller.countryMgr", {
+		return BaseController.extend("cm.countryMgr.controller.countryMgr", {
+
+            isValNull: function (p_val) {
+                if(!p_val || p_val == "" || p_val == null){
+                    return true
+                }else{
+                    return false;
+                }
+            },
+    
             
             _setMessage : function() {
                 console.group("_setMessage");
@@ -56,68 +64,15 @@ sap.ui.define([
                     lngParam : ""
                 });      
 
-                this._createView();          
+                // this._createView();          
 
                 console.groupEnd();
 
             },
            
-             /**
-             * @private
-             * @see view에서 사용할 객체를 생성합니다.
-             */
-            _createView : function() {
-                console.group("_createView");
-
-                var oView = this.getView();
-
-                // var oUiModel = new JSONModel({ 
-                //             filterCommonID : "",
-                //             filterValue : "",
-                //             hasUIChanges : false,  
-                //             bSearch : false,
-                //             bNewRow : true,
-                //             bOldRow : false,
-                //             bAdd : true,
-                //             bDelete : false,                                                    
-                //             bCopy : false,
-                //             bSave : true,
-                //             bSelect : false,
-                //             bCheck : false,
-                //             subListCount : 0,
-                //             bSubCheck : false,
-                //             bSubListTrue : false,
-                //             bEvent : "",
-
-                // });     
-                
-                //선택값과 필수값을 저장 및 체크 합니다. 
-                var oMainModel = new JSONModel({ 
-                            data : [],
-                            selectrow : [],
-                            // country_codeEmpty : true, 
-                            // control_option_nameEmpty : true
-                });  
-
-                // var oSubModel = new JSONModel({ 
-                //             data : [],
-                //             selectrow : [],
-                //             // country_codeEdit : true,
-                //             // country_nameEdit : true
-                // });                    
-
-                // this.setModel(oUiModel, "ui");     
-                this.setModel(oMainModel, "mainModel");
-                // this.setModel(oSubModel, "subModel");
- 
-                console.groupEnd();
-            },
-
-
 			onSearch: function () {
 
-                var filters = [];  
-                var filters2 = [];        
+                var filters = [];         
                 var search_language_code = "", // 대표언어
                     search_date_type = "",  // 날짜형식
                     search_number_type = "",   // 숫자형식
@@ -170,13 +125,8 @@ sap.ui.define([
                 //     filters.push(new Filter("number_format_code", FilterOperator.Contains, search_number_type));
                 // }
 
-                var mstBinding = this.byId("mainList").getBinding("rows");
-                var subBinding = this.byId("subList").getBinding("rows");
+                var mstBinding = this.byId("mainList").getBinding("items");
                 mstBinding.resetChanges();
-                subBinding.resetChanges();
-                // this._retrieveParam.mstParam = "";
-                // this._retrieveParam.dtlParam = "";
-                // this._retrieveParam.lngParam = "";
 
                 this.getView().setBusy(true);
                 mstBinding.filter(filters);
@@ -185,208 +135,26 @@ sap.ui.define([
             },
 
 
-            /**
-             *  mainList row select event
-             * @public
-             * @param {*} oEvent 
-             */
-            onCellClick : function (oEvent) {       
+            onMainListPress : function (oEvent) {       
                 console.group("onCellClick");
-                    //search_country_name = this.getView().byId("search_country_name").getValue(),
-                // console.log(oEvent.getSource());
-                // var oMainList = this.byId("mainList"),
-                //         oRow = oMainList.getRows(),
-                //         idx = oEvent.getParameter("rowIndex");
-                // var v_searchCond = { //rows[idx].getRowBindingContext().getValue("tenant_id"
-                //     country_code : oEvent.getSource().getBindingContext().getValue('country_code')
-                //     // tenant_id : oRow[idx].getCells()[0].mProperties.value
-                //     //oRow[idx].getRowBindingContext().getValue('tenant_id')
-                // };
-                // this._onSubListBinding(v_searchCond);
-                var oMainModel = this.getView().getModel("mainModel"),
-                    oUiModel = this.getView().getModel("ui"), 
-                    oView = this.getView(),
-                    oSubList = this.byId("subList");
 
-                var oBinding = oSubList.getBinding("rows");
-                if (oBinding.hasPendingChanges()) {
-                    //MessageToast.show(this.errorHasUIChangesSave);
-                    this._showMsgStrip("e", this.errorHasUIChangesSave);
-                    return;
-                }
-                                
-                var rowIndex = oEvent.getParameter("rowIndex"),
-                    oTable = this.byId("mainList");         
-
-                console.log("Indices: " + oTable.getSelectedIndices());
-
-                var rowsBinding = this.byId("mainList").getBinding("rows"),
-                    rows = oTable.getRows();
-
-                console.log("rowIndex",rowIndex);
-
-                //기존 선택된 값을 초기화 한다. 
-                oMainModel.setProperty("/data","");
-                oMainModel.setProperty("/selectrow","");
-                            
-                oUiModel.setProperty("/bSelect", rowIndex>-1 ? true : false);
-                //oUiModel.setProperty("/bSubSelected", false);
-               
-                var oCheckRow = new JSONModel({ 
-                            tenant_id : "",
-                            country_code : "",
-                            language_code : ""
-                });  
+                var v_country_code = oEvent.getSource().getBindingContext().getValue('country_code');
                 
-                oCheckRow.tenant_id = rows[rowIndex].getCells()[0].mProperties.value;
-                oCheckRow.country_code = rows[rowIndex].getCells()[1].mProperties.value;
-                oCheckRow.language_code = rows[rowIndex].getCells()[4].mProperties.value;
-                
-                oMainModel.setProperty("/selectrow", oCheckRow);                 
-                
-                //array에 저장한후 벨류 체크가 필요할시 진행한다.
-                oMainModel.setProperty("/data", oCheckRow);
-
-                //mainList 에서 선택된 상태를 넣어준다. 
-                
-                //oUiModel.setProperty
-                console.group("selectRow");
-                console.dir(oMainModel.getProperty("/selectrow"));
-                console.groupEnd();   
-
-                this._onSubListBinding(rowIndex);  
-
-                this._setButtonState();
+                 if(!this.isValNull(v_country_code))
+                    {
+                        var filters = [];
+                        filters.push(new Filter("country_code"   , FilterOperator.EQ, v_country_code));
+                        var subBinding = this.byId("subList").getBinding("items");
+                        subBinding.resetChanges();
+                        this.getView().setBusy(true);
+                        subBinding.filter(filters);
+                        this.getView().setBusy(false);
+                    }
+                    this._retrieveParam.dtlParam = v_country_code;
 
                 console.groupEnd();        
             },
 
-
-            /**
-             * subList 테이블 아이템을 바인딩 한다. 
-             * @private
-             * @param {*} oMainListContext rowIndex
-             */
-            _onSubListBinding : function (p_searchCond){//rowIndex
-                console.group("_onSubListBinding");
-
-                var v_tenant_id = p_searchCond.tenant_id;
-                var v_country_code = p_searchCond.country_code;  
-                var v_language_code = p_searchCond.language_code;               
-                
-                var filters = [];
-                filters.push(new Filter("tenant_id"   , FilterOperator.EQ, v_tenant_id));
-                filters.push(new Filter("country_code", FilterOperator.EQ, v_country_code));  
-                filters.push(new Filter("language_code", FilterOperator.EQ, v_language_code));                  
-
-                var dtlBinding = this.byId("subList").getBinding("rows");
-                dtlBinding.resetChanges();
-                //체크박스 클리어를 위해
-                var oTable = this.byId("subList");
-                oTable.removeSelections(true);
-                this.getView().setBusy(true);
-                dtlBinding.filter(filters);
-                this.getView().setBusy(false);
-
-
-                // var oMainModel = this.getModel("mainModel"),
-                //     oView = this.getView(),
-                //     oSubList = this.byId("subList");                
-
-                // var oSelectRow = oMainModel.getProperty("/selectrow");
-                // console.log("oSelectRow.tenant_id", oSelectRow.tenant_id);
-                // console.log("oSelectRow.country_code", oSelectRow.country_code);
-                // console.log("oSelectRow.language_code", oSelectRow.language_code);
-                    
-                // //sub model filter
-                // var oFilter1 = new Filter("tenant_id", FilterOperator.EQ, oSelectRow.tenant_id),   
-                //     oFilter2 = new Filter("country_code", FilterOperator.EQ, oSelectRow.country_code),   
-                //     oFilter3 = new Filter("language_code", FilterOperator.EQ, oSelectRow.language_code);                                   
-
-                // var oBinding = oSubList.getBinding("rows");
-
-                //     oBinding.filter([                
-                //         oFilter1,
-                //         oFilter2,
-                //         oFilter3
-                //     ]);
-
-                console.groupEnd();
-            },  
-   
-           
-            /**
-             * @private
-             * @see View 에 있는 버튼 상태 컨트롤 각종 액션 처리 상태에 따라 활성화와 비활성화 상태값을 설정.
-             */
-            _setButtonState : function (){                
-                console.group("_setButtonState");
-                var oUiModel = this.getModel("ui"),
-                    oTable= this.getView().byId("mainList"); 
-                /**
-                 * 1. 메인 리스트 행추가 버튼은 처음 검색결과과 출력된후 활성화 된다.
-                 * 2. 메인 리스트 행복사 버튼은 선택한 로우가 하나 일때 활성화 된다.
-                 * 3. 메인 리스트 삭제 버튼은 선택한 로우가 하나 이상일때 활성화 된다.
-                 * 4. 메인 리스트 저장 버튼은 검색결과가 활성화 될때 동시 활성화 된다. 
-                 */
-                
-                 //선택된 row들 idx[]
-                var indices = oTable.getSelectedIndices()
-                console.log("table rowindices", indices);    
-
-                /*
-                상태 테그로 모두 관리 한다. 
-                검색을 실행하여 리스트가 바인딩 된 상태
-                리스트 항목을 선택한 상태
-                리스트 항목을 체크한 상태
-                리스트 항목을 선택도 하고 체크도 한 상태 
-                */
-                var bSelect = oUiModel.getProperty("/bSubListTrue"),
-                    bSearch =  oUiModel.getProperty("/bSearch"); //검색출력상태
-                
-                //row를 선택한 상태
-                if(bSearch==true){
-                    oUiModel.setProperty("/bAdd", true); 
-                    oUiModel.setProperty("/bSave", true);
-                }
-
-                if(oUiModel.getProperty("/bCheck")){
-                    //검색 출력이 있는 상태에서 체크를 선택한 상태 
-                    if( indices.length > 0 ) {
-                        oUiModel.setProperty("/bAdd", true); 
-                        oUiModel.setProperty("/bCopy", true); 
-                        oUiModel.setProperty("/bDelete", true);
-                        oUiModel.setProperty("/bModify", true); 
-                        
-                        //체크한 Row수 체크 
-                        if(indices.length>1){
-                            oUiModel.setProperty("/bCopy", false); 
-                            oUiModel.setProperty("/bModify", false); 
-                        } 
-                
-                    }else{//검색 출력 있지만 체크 선택 안함
-                        oUiModel.setProperty("/bCopy", false); 
-                        oUiModel.setProperty("/bDelete", false);
-                        oUiModel.setProperty("/bModify", false); 
-                    } 
-                }else{//검색 출력상태 아님
-                    if(!oUiModel.getProperty("/bSubListTrue")){
-                        oUiModel.setProperty("/bSubCheck", false); 
-                    } else {
-                        //subList 상태 체크 
-                        indices = this.getView().byId("subList").getSelectedIndices().length;
-
-                        console.log("sublist indices length" , indices);
-                        if( indices > 0 ) {
-                            oUiModel.setProperty("/bSubCheck", true); 
-                        } else {
-                            oUiModel.setProperty("/bSubCheck", false);
-                        }
-                    }
-                }
-
-                console.groupEnd();
-            },
 
             /**
              * table 행추가, 신규 Row
@@ -399,16 +167,13 @@ sap.ui.define([
                 var tableName = tableType,
                     bSub = false, //tableName:Main-false / sub-true
                     oContext;
-               
                 console.log("tableName: " + tableName);
 
                 if(tableName!="mainList"){ bSub = true; }
-
-                var oUiModel = this.getModel("ui");
                 var oTable = this.byId(tableName);
                 
                 // var dtlVal = this._retrieveParam.dtlParam;
-                var oBinding = oTable.getBinding("rows"),
+                var oBinding = oTable.getBinding("items"),
                     today = this._getToday(),
                     utcDate = this._getUtcSapDate(); 
 
@@ -438,53 +203,20 @@ sap.ui.define([
                     //사용자가 행을 추가 했음을 알려준다. 
                     // this._setUIChanges(null, false);
                     console.log("test1");
-                    var oMainList = this.byId("mainList"),
-                        oRow = oMainList.getRows(),
-                        oView = this.getView(),
-                        oSubList = this.byId("subList");  
-                    var indices = oMainList.getSelectedIndices(); 
+                    var dtlVal = this._retrieveParam.dtlParam;
 
-                    console.log("test2");
-                    if(indices.length<1){
-                        MessageBox.show(this.errorCheckChangeMainRow, {
-                            icon: MessageBox.Icon.ERROR,
-                            title: this.errorCheckChangeCopyRowTitle,
-                            actions: [MessageBox.Action.OK],
-                            styleClass: "sapUiSizeCompact"
-                        });
-                        return;
-
-                    }
-                    console.log("test3"); 
-
-                    for (var i = 0; i < indices.length; i++) {
-                        var idx = indices[i];     
-                        if (oMainList.isIndexSelected(idx)) { 
-                    console.log("test4");
-                            this.getView().setBusy(true);
-
-                            oContext = oBinding.create({
-                                "tenant_id": oRow[idx].getRowBindingContext().getValue("tenant_id"),
-                                "country_code": oRow[idx].getRowBindingContext().getValue("country_code"),
-                                "language_code": oRow[idx].getRowBindingContext().getValue("language_code"),                    
-                                "country_name": "",
-                                "description": "",
-                                "local_create_dtm": utcDate,
-                                "local_update_dtm": utcDate,
-                                "create_user_id": "Admin",
-                                "update_user_id": "Admin"
-                            }); 
-                             
-                            
-                    console.log("test5");
-                            oMainList.getContextByIndex(idx);
-                            this.getView().setBusy(false);
-                        }
-                    }  
+                    oContext = oBinding.create({
+                        "tenant_id": "",
+                        "country_code": dtlVal,
+                        "language_code": "",                    
+                        "country_name": "",
+                        "description": "",
+                        "local_create_dtm": utcDate,
+                        "local_update_dtm": utcDate,
+                        "create_user_id": "Admin",
+                        "update_user_id": "Admin"
+                    });   
                 }
-
-                // this.getView().setBusy(true);
-                oUiModel.setProperty("/bEvent", "AddRow");   
 
                 oContext.created().then(function () {
                     oBinding.refresh();                    
@@ -498,12 +230,7 @@ sap.ui.define([
                         return true;
                     }
                 });
-                if(!bSub){
-                    this._subListFilter(); 
-                }
-                // this.getView().setBusy(false);
 
-                this._setButtonState();
                 console.groupEnd();
             }, 
 
@@ -518,12 +245,12 @@ sap.ui.define([
                 var tableName = tableType,
                     bSub = false; //tableName:Main-false / sub-true
 
-                var oTable = this.byId(tableName),
-                  oUiModel = this.getModel("ui"),
-                      that = this; 
-                 
-                var indices = oTable.getSelectedIndices();  
-                if(indices.length<1){
+                var that = this,
+                    oTable = this.byId(tableName),
+                    oSelected  = oTable.getSelectedContexts();
+                var subTable = this.byId("subList");
+            
+                if(oSelected.length<1){
                     MessageBox.show(this.errorDeleteRowChooice, {
                         icon: MessageBox.Icon.ERROR,
                         title: this.errorCheckChangeCopyRowTitle,
@@ -535,30 +262,51 @@ sap.ui.define([
 
                     var msg = this.confirmAllDeleteRow;
                    
-
                     MessageBox.confirm(msg, {
                         title : this.confirmDeleteRowTitle,                        
                         initialFocus : sap.m.MessageBox.Action.CANCEL,
                         onClose : function(sButton) {
-                            if (sButton === MessageBox.Action.OK) {
-                                //for (var i = 0; i < indices.length; i++) {
-                                for (var i = indices.length; i >= 0; i--) {
-                                    var idx = indices[i];     
-                                    if (oTable.isIndexSelected(idx)) { 
-                                        that.getView().setBusy(true);
-                                        oTable.getContextByIndex(idx).delete("$auto").then(function () {   
-                                            
-                                           
-                                            that._showMsgStrip("s", that.sucessDelete);
-                                        
-                                            //MessageToast.show(this.sucessDelete);
-                                            
-                                            oTable.clearSelection();  
-                                        }.bind(this), function (oError) {
-                                            MessageBox.error(oError.message);
-                                        });
-                                        that.getView().setBusy(false);
+                            if (sButton === MessageBox.Action.OK) {   
+                             
+                                for(var idx = 0; idx < oSelected.length; idx++){
+                                    that.getView().setBusy(true);
+
+                                    // var mainSelectedItem_countryCode = oSelected[idx].getValue("country_code");
+                                    // //var subListCnt = 
+                                    // var subSelectedItem = subTable.getItems(mainSelectedItem_countryCode); //array
+
+                                    // //mainList-subList:delete all
+                                    // if(!bSub && subSelectedItem.length > 0){
+                                    //     for(var i = 0; i < subSelectedItem.length; i++){
+                                    //         subSelectedItem[i].delete("$auto").then(function () { 
+                                    //         }.bind(this), function (oError) {
+                                    //             MessageBox.error(oError.message);
+                                    //             return;
+                                    //         });
+                                    //     }
+                                    // }
+                                    if(!bSub){
+                                        subTable.selectAll(true);
+                                        var subSelected = subTable.getSelectedContexts();
+                                        for(var i = 0; i<subSelected.length; i++){
+                                            subSelected[i].delete("$auto").then(function () {                  
+                                                
+                                            }.bind(this), function (oError) {
+                                                MessageBox.error(oError.message);
+                                                return;
+                                            });
+                                        }
                                     }
+
+                                    oSelected[idx].delete("$auto").then(function () {                  
+                                        that._showMsgStrip("s", that.sucessDelete);
+                                                                            
+                                        oTable.clearSelection();  
+                                    }.bind(this), function (oError) {
+                                        MessageBox.error(oError.message);
+                                    });
+                                    that.getView().setBusy(false);
+                                    
                                 }
                             } else if (sButton === MessageBox.Action.CANCEL) {
                                 return;
@@ -577,91 +325,88 @@ sap.ui.define([
              * @public 
              */
             onCopyRow : function (oEvent) {
-                console.group("onCopyRow");
-                var oTable = this.byId("mainList"),
-                    oBinding = oTable.getBinding("rows"),  
-                    rows = oTable.getRows(), 
-                    indices = oTable.getSelectedIndices(),                    
-                    today = this._getToday(),
-                    utcDate = this._getUtcSapDate();    
+                // console.group("onCopyRow");
 
-                 var oUiModel = this.getModel("ui");
+                // var oTable = this.byId("mainList"),
+                //     oBinding = oTable.getBinding("items"),  
+                //     rows  = oTable.getSelectedContexts(),
+                //     indices = oTable.getSelectedIndices(),                    
+                //     today = this._getToday(),
+                //     utcDate = this._getUtcSapDate();  
+                // var dtlVal = this._retrieveParam.dtlParam;  
 
-                console.log("indices", indices);        
+                // console.log("indices", indices);        
 
-                if(indices.length>1){
-                    MessageBox.show(this.errorCheckChangeCopyRow, {
-                        icon: MessageBox.Icon.ERROR,
-                        title: this.errorCheckChangeCopyRowTitle,
-                        actions: [MessageBox.Action.OK],
-                        styleClass: "sapUiSizeCompact"
-                    });
-                    return;
-                }
-                var mainModel = this.getModel("mainModel");
+                // if(indices.length>1){
+                //     MessageBox.show(this.errorCheckChangeCopyRow, {
+                //         icon: MessageBox.Icon.ERROR,
+                //         title: this.errorCheckChangeCopyRowTitle,
+                //         actions: [MessageBox.Action.OK],
+                //         styleClass: "sapUiSizeCompact"
+                //     });
+                //     return;
+                // }
+                // // var mainModel = this.getModel("mainModel");
 
-                for (var i = 0; i < indices.length; i++) {
-                    var idx = indices[i];     
-                    if (oTable.isIndexSelected(idx)) { 
-                        this.getView().setBusy(true);
+                // for (var i = 0; i < indices.length; i++) {
+                //     var idx = indices[i];     
+                //     if (oTable.isIndexSelected(idx)) { 
+                //         this.getView().setBusy(true);
                             
-                        var oContext = oBinding.create({
-                                "tenant_id": rows[idx].getRowBindingContext().getValue("tenant_id"),
-                                "country_code": rows[idx].getRowBindingContext().getValue("country_code"),
-                                "iso_code": rows[idx].getRowBindingContext().getValue("iso_code"),
-                                "eu_code": rows[idx].getRowBindingContext().getValue("eu_code"),
-                                "language_code": rows[idx].getRowBindingContext().getValue("language_code"),
-                                "date_format_code": rows[idx].getRowBindingContext().getValue("date_format_code"),
-                                "number_format_code": rows[idx].getRowBindingContext().getValue("number_format_code"),
-                                "currency_code": rows[idx].getRowBindingContext().getValue("currency_code"),
-                                "local_create_dtm": utcDate,
-                                "local_update_dtm": utcDate,
-                                "create_user_id": "Admin",
-                                "update_user_id": "Admin"
+                //         var oContext = oBinding.create({
+                //             "tenant_id": "",//dtlVal.tenant_id,
+                //             "country_code": dtlVal.country_code,
+                //             "iso_code": "",
+                //             "eu_code": "",
+                //             "language_code": "",
+                //             "date_format_code": this._getToday(),
+                //             "number_format_code": "",
+                //             "currency_code": "",
+                //             "local_create_dtm": utcDate,
+                //             "local_update_dtm": utcDate,
+                //             "create_user_id": "Admin",
+                //             "update_user_id": "Admin"
 
-                                // "tenant_id": rows[idx].getRowBindingContext().getValue("tenant_id"),
-                                // "message_code": rows[idx].getRowBindingContext().getValue("message_code"),
-                                // "language_code": rows[idx].getRowBindingContext().getValue("language_code"),
-                                // "chain_code": rows[idx].getRowBindingContext().getValue("chain_code"),
-                                // "message_type_code": rows[idx].getRowBindingContext().getValue("message_type_code"),
-                                // "message_contents": rows[idx].getRowBindingContext().getValue("message_contents"),
-                                // "local_create_dtm": "2020-10-13T00:00:00Z",
-                                // "local_update_dtm": "2020-10-13T00:00:00Z",
-                                // "create_user_id": "Admin",
-                                // "update_user_id": "",
-                                // "system_create_dtm": "2020-10-13T00:00:00Z",
-                                // "system_update_dtm": "2020-10-13T00:00:00Z",
-                        });
+                //                 // "tenant_id": rows[idx].getRowBindingContext().getValue("tenant_id"),
+                //                 // "country_code": rows[idx].getRowBindingContext().getValue("country_code"),
+                //                 // "iso_code": rows[idx].getRowBindingContext().getValue("iso_code"),
+                //                 // "eu_code": rows[idx].getRowBindingContext().getValue("eu_code"),
+                //                 // "language_code": rows[idx].getRowBindingContext().getValue("language_code"),
+                //                 // "date_format_code": rows[idx].getRowBindingContext().getValue("date_format_code"),
+                //                 // "number_format_code": rows[idx].getRowBindingContext().getValue("number_format_code"),
+                //                 // "currency_code": rows[idx].getRowBindingContext().getValue("currency_code"),
+                //                 // "local_create_dtm": utcDate,
+                //                 // "local_update_dtm": utcDate,
+                //                 // "create_user_id": "Admin",
+                //                 // "update_user_id": "Admin"
+                //         });
                         
-                        oTable.getContextByIndex(idx);
-                        this.getView().setBusy(false);
-                    }
-                }
+                //         oTable.getContextByIndex(idx);
+                //         this.getView().setBusy(false);
+                //     }
+                // }
 
                 
+                // oTable.clearSelection();
 
-                oUiModel.setProperty("/bEvent", "AddRow"); 
-                
-                oTable.clearSelection();
+                // this.getView().setBusy(true);
 
-                this.getView().setBusy(true);
+                // oContext.created().then(function () {
+                //     oBinding.refresh();
+                // });
 
-                oContext.created().then(function () {
-                    oBinding.refresh();
-                });
+                // //focus 이동
+                // oTable.getRows().some(function (oRows) {
+                //     if (oRows.getBindingContext() === oContext) {
+                //         oRows.focus();
+                //         oRows.setSelected(true);
+                //         return true;
+                //     }
+                // });
 
-                //focus 이동
-                oTable.getRows().some(function (oRows) {
-                    if (oRows.getBindingContext() === oContext) {
-                        oRows.focus();
-                        oRows.setSelected(true);
-                        return true;
-                    }
-                });
+                // this.getView().setBusy(false);
 
-                this.getView().setBusy(false);
-
-                console.groupEnd();
+                // console.groupEnd();
             },
 
 
@@ -679,10 +424,10 @@ sap.ui.define([
                     oUpdateGroupId;
 
                 var oTable = this.byId(tableName);                    
-                var mstBinding = oTable.getBinding("rows");
+                var oBinding = oTable.getBinding("items");
 
                 if(tableName!="mainList"){ bSub = true; }
-                if (!mstBinding.hasPendingChanges()) {
+                if (!oBinding.hasPendingChanges()) {
                     MessageBox.error("수정한 내용이 없습니다.");
                     return;
                 }
@@ -729,9 +474,9 @@ sap.ui.define([
              */
             onMstRefresh : function (tableType) {
                 var tableName = tableType;
-                var mstBinding = this.byId(tableName).getBinding("rows");
+                var oBinding = this.byId(tableName).getBinding("items");
                 this.getView().setBusy(true);
-                mstBinding.refresh();
+                oBinding.refresh();
                 this.getView().setBusy(false);
             },
 
