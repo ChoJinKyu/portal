@@ -17,34 +17,34 @@
     },
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v4/cm.TimeZoneMgrService/",
+        "uri": "srv-api/odata/v2/cm.TimeZoneMgrService/",
         "type": "OData",
         "settings": {
-          "odataVersion": "4.0",
+          "odataVersion": "2.0",
           "localUri": "localService/metadata.xml"
         }
       },
       "orgMgrService": {
-        "uri": "../../../cm/codeMgr/srv-api/odata/v4/cm.OrgMgrService/",
+        "uri": "../../../cm/codeMgr/srv-api/odata/v2/cm.OrgMgrService/",
         "type": "OData",
         "settings": {
-          "odataVersion": "4.0",
+          "odataVersion": "2.0",
           "localUri": "localService/metadata.xml"
         }
       },
       "codeMgrService": {
-        "uri": "../../../cm/codeMgr/srv-api/odata/v4/cm.CodeMgrService/",
+        "uri": "../../../cm/codeMgr/srv-api/odata/v2/cm.CodeMgrService/",
         "type": "OData",
         "settings": {
-          "odataVersion": "4.0",
+          "odataVersion": "2.0",
           "localUri": "localService/metadata.xml"
         }
       },
       "countryMgrService": {
-        "uri": "../../../cm/countryMgr/srv-api/odata/v4/cm.CountryMgrService/",
+        "uri": "../../../cm/countryMgr/srv-api/odata/v2/cm.CountryMgrService/",
         "type": "OData",
         "settings": {
-          "odataVersion": "4.0",
+          "odataVersion": "2.0",
           "localUri": "localService/metadata.xml"
         }
       }
@@ -144,6 +144,9 @@
           "uri": "css/style.css"
         }
       ]
+    },
+    "resourceRoots": {
+      "ext.lib": "../../../lib"
     },
     "routing": {
       "config": {

@@ -3,6 +3,7 @@ sap.ui.define([
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/core/routing/History",
 	"../model/formatter",
+	"ext/lib/model/ManagedListModel",
 	"sap/m/TablePersoController",
 	"./developmentReceiptPersoService",
 	"sap/ui/model/Filter",
@@ -16,7 +17,7 @@ sap.ui.define([
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
     "sap/m/Token"
-], function (BaseController, JSONModel, History, formatter, TablePersoController, developmentReceiptPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, Token) {
+], function (BaseController, JSONModel, History, formatter, ManagedListModel, TablePersoController, developmentReceiptPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, Token) {
 	"use strict";
 
 	return BaseController.extend("dp.developmentReceipt.controller.developmentReceipt", {
@@ -51,10 +52,13 @@ sap.ui.define([
 
             this._doInitSearch();
 			//this._doInitTable();
-			//this._doInitTablePerso();
+            //this._doInitTablePerso();
+            
+            this.setModel(new ManagedListModel(), "list");
         },
         
         onAfterRendering : function () {
+			this.byId("pageSearchButton").firePress();
 			return;
         },
 
@@ -86,15 +90,25 @@ sap.ui.define([
 			this.getModel("developmentReceiptView").setProperty("/developmentReceiptTableTitle", sTitle);
 		},
 
+		/**
+		 * Event handler when a table item gets pressed
+		 * @param {sap.ui.base.Event} oEvent the table selectionChange event
+		 * @public
+		 */
 		onMoldMstTablePersoButtonPressed: function(oEvent){
 			this._oTPC.openDialog();
 		},
 
+		/**
+		 * Event handler when a table personalization refresh
+		 * @param {sap.ui.base.Event} oEvent the table selectionChange event
+		 * @public
+		 */
 		onMoldMstTablePersoRefresh : function() {
 			developmentReceiptPersoService.resetPersData();
 			this._oTPC.refresh();
 		},
-
+/*
 		onMoldMstTableFilterPress: function(oEvent){
 			var oTableFilterState = [],
 				sQuery = oEvent.getParameter("query");
@@ -113,7 +127,7 @@ sap.ui.define([
 
 			this.getView().byId("moldMstTable").getBinding("items").filter(oTableFilterState, "Application");
 		},
-
+*/
 		/**
 		 * Event handler when a table item gets pressed
 		 * @param {sap.ui.base.Event} oEvent the table selectionChange event
@@ -140,30 +154,6 @@ sap.ui.define([
 				var aTableSearchState = this._getSearchStates();
 				this._applySearch(aTableSearchState);
 			}
-		},
-
-		_getSearchStates: function(){
-			var chain = this.getView().byId("searchAffiliateS").getSelectedKey(),
-				language = this.getView().byId("searchDivisionS").getSelectedKey(),
-				keyword = this.getView().byId("searchReceiptDateS").getValue();
-				
-			var aTableSearchState = [];
-			if (chain && chain.length > 0) {
-				aTableSearchState.push(new Filter("chain_code", FilterOperator.EQ, chain));
-			}
-			if (language && language.length > 0) {
-				aTableSearchState.push(new Filter("language_code", FilterOperator.EQ, language));
-			}
-			if (keyword && keyword.length > 0) {
-				aTableSearchState.push(new Filter({
-					filters: [
-						new Filter("message_code", FilterOperator.Contains, keyword),
-						new Filter("message_contents", FilterOperator.Contains, keyword)
-					],
-					and: false
-				}));
-			}
-			return aTableSearchState;
 		},
 
 		/**
@@ -203,7 +193,19 @@ sap.ui.define([
 		 * @public
 		 */
         onMoldMstTableDeleteButtonPress: function(){
-			this._toShowMode();
+			var oTable = this.byId("moldMstTable"),
+				oModel = this.getModel("list"),
+				aItems = oTable.getSelectedItems(),
+				aIndices = [];
+			aItems.forEach(function(oItem){
+				aIndices.push(oModel.getData().indexOf(oItem.getBindingContext("list").getObject()));
+			});
+			aIndices = aIndices.sort(function(a, b){return b-a;});
+			aIndices.forEach(function(nIndex){
+				//oModel.removeRecord(nIndex);
+				oModel.markRemoved(nIndex);
+			});
+			oTable.removeSelections(true);
         },
         
         onMoldMstTableReceiptButtonPress: function(){
@@ -284,6 +286,62 @@ sap.ui.define([
 		 * @private
 		 */
 		_applySearch: function(aTableSearchState) {
+			var oView = this.getView(),
+				oModel = this.getModel("list");
+			oView.setBusy(true);
+			oModel.setTransactionModel(this.getModel());
+			oModel.read("/MoldMasters", {
+				filters: aTableSearchState,
+				success: function(oData){
+					oView.setBusy(false);
+				}
+			});
+        },
+        
+		_getSearchStates: function(){
+			var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S",
+				//affiliate = this.getView().byId("searchAffiliate"+sSurffix).getSelectedKey(),
+				//division = this.getView().byId("searchDivision"+sSurffix).getSelectedKey(),
+                receiptDate = this.getView().byId("searchReceiptDate"+sSurffix),
+                searchEDType = this.getView().byId("searchEDType").getSelectedKey(),
+                description = this.getView().byId("searchDescription").getValue(),
+                familyPartNo = this.getView().byId("searchFamilyPartNo").getValue();
+				MessageToast.show(receiptDate.getSecondDateValue());
+            var aTableSearchState = [];
+            
+			if (receiptDate && receiptDate.length > 0) {
+                aTableSearchState.push(new Filter({
+					filters: [
+						new Filter("receiving_report_date", FilterOperator.GE, receiptDate.getDateValue()),
+						new Filter("receiving_report_date", FilterOperator.LE, receiptDate.getSecondDateValue())
+					],
+					and: false
+				}));
+				aTableSearchState.push(new Filter("receiving_report_date", FilterOperator.Contains, receiptDate));
+			}
+			if (searchEDType && searchEDType.length > 0) {
+				aTableSearchState.push(new Filter("export_domestic_type_code", FilterOperator.EQ, searchEDType));
+			}
+			if (description && description.length > 0) {
+                aTableSearchState.push(new Filter("spec_name", FilterOperator.Contains, description));
+			}
+			if (familyPartNo && familyPartNo.length > 0) {
+				aTableSearchState.push(new Filter({
+					filters: [
+						new Filter("family_part_number_1", FilterOperator.Contains, familyPartNo.toUpperCase()),
+						new Filter("family_part_number_2", FilterOperator.Contains, familyPartNo.toUpperCase()),
+						new Filter("family_part_number_3", FilterOperator.Contains, familyPartNo.toUpperCase()),
+						new Filter("family_part_number_4", FilterOperator.Contains, familyPartNo.toUpperCase()),
+						new Filter("family_part_number_5", FilterOperator.Contains, familyPartNo.toUpperCase())
+					],
+					and: false
+				}));
+			}
+			return aTableSearchState;
+		},
+
+        /*
+		_applySearch: function(aTableSearchState) {
 			var oTable = this.byId("moldMstTable"),
 				oViewModel = this.getModel("developmentReceiptView");
 			oTable.getBinding("items").filter(aTableSearchState, "Application");
@@ -306,6 +364,7 @@ sap.ui.define([
 				key: "message_code"
 			}).setKeyboardMode(sKeyboardMode);
 		},
+*/
 
 		_toEditMode: function(){
             var FALSE = false;
@@ -335,15 +394,20 @@ sap.ui.define([
          * @see 검색을 위한 컨트롤에 대하여 필요 초기화를 진행 합니다. 
          */
 		_doInitSearch: function(){
-			this._oMultiInput = this.getView().byId("searchAffiliateE");
-            this._oMultiInput.setTokens(this._getDefaultTokens());
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S";
 
-            this._oMultiInput1 = this.getView().byId("searchAffiliateS");
-            this._oMultiInput1.setTokens(this._getDefaultTokens());
+			this._oMultiInput = this.getView().byId("searchAffiliate"+sSurffix);
+            this._oMultiInput.setTokens(this._getDefaultTokens());
 
             this.oColModel = new JSONModel(sap.ui.require.toUrl("dp/developmentReceipt/localService/mockdata") + "/columnsModel.json");
             this.oAffiliateModel = new JSONModel(sap.ui.require.toUrl("dp/developmentReceipt/localService/mockdata") + "/affiliate.json");
             this.setModel("affiliateModel", this.oAffiliateModel);
+
+            /** Receipt Date */
+            var today = new Date();
+            
+            this.getView().byId("searchReceiptDate"+sSurffix).setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
+            this.getView().byId("searchReceiptDate"+sSurffix).setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
         },
         /**
          * @private 
@@ -352,7 +416,7 @@ sap.ui.define([
         _getDefaultTokens: function () {
             
             var oToken = new Token({
-                key: "LGEKR",
+                key: "EKHQ",
                 text: "[LGEKR] LG Electronics Inc."
             });
 
@@ -401,8 +465,10 @@ sap.ui.define([
          * @see 사용처 ValueHelpDialogAffiliate Fragment 선택후 확인 이벤트
          */
         onValueHelpOkPress : function (oEvent) {
-            var aTokens = oEvent.getParameter("tokens");
-            this.searchAffiliate = this.getView().byId("searchAffiliateE");
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S",
+                aTokens = oEvent.getParameter("tokens");
+
+            this.searchAffiliate = this.getView().byId("searchAffiliate"+sSurffix);
             this.searchAffiliate.setTokens(aTokens);
             this._oValueHelpDialog.close();
         },
@@ -423,7 +489,7 @@ sap.ui.define([
             this._oValueHelpDialog.destroy();
         },
         /* Affiliate End */
-
+/*
 		_doInitTable: function(){
 
 			this.oReadOnlyTemplate = new ColumnListItem({
@@ -475,7 +541,7 @@ sap.ui.define([
 
 			this._toShowMode();
 		},
-
+*/
 		_doInitTablePerso: function(){
 			// init and activate controller
 			this._oTPC = new TablePersoController({
