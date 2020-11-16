@@ -16,14 +16,14 @@ import com.sap.cds.services.persistence.PersistenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import cds.gen.xx.messagemgrservice.Message;
-import cds.gen.xx.messagemgrservice.MessageMgrService_;
-import cds.gen.xx.messagemgrservice.Message_;
+import cds.gen.xx.templateservice.Message;
+import cds.gen.xx.templateservice.TemplateService_;
+import cds.gen.xx.templateservice.Message_;
 import lg.sppCap.handlers.base.BaseEventHandler;
 
 @Component
-@ServiceName(MessageMgrService_.CDS_NAME)
-public class MessageMgrService extends BaseEventHandler {
+@ServiceName(TemplateService_.CDS_NAME)
+public class TemplateService extends BaseEventHandler {
 
     @Autowired
     PersistenceService db;

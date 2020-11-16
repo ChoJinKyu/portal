@@ -1,15 +1,15 @@
 namespace xx;
 
-using {xx as messageMgr} from '../../../db/cds/xx/messageMgr/XX_MESSAGE-model';
+using {xx as template} from '../../../db/cds/xx/template/XX_MESSAGE-model';
 
-@path : '/xx.MessageMgrService'
-service MessageMgrService {
+@path : '/xx.TemplateService'
+service TemplateService {
 
-    entity Message as projection on messageMgr.Message;
+    entity Message as projection on template.Message;
 
 }
 
-annotate MessageMgrService.Message with @(
+annotate TemplateService.Message with @(
   UI: {
     SelectionFields: [ tenant_id, message_code, language_code, chain_code, message_type_code, message_contents ],
     LineItem: [

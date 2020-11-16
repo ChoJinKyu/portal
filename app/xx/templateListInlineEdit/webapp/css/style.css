@@ -1,0 +1,5 @@
+/* Enter your custom styles here */
+span.sapMBtnInner.sapMBtnEmphasized {
+    background-color: rgb(145, 24, 68);
+    border-color: rgb(145, 24, 68)
+}
