@@ -1,7 +1,7 @@
 {
   "_version": "1.12.0",
   "sap.app": {
-    "id": "xx.templateListViewAndObjectEdit",
+    "id": "xx.templateFlexibleColumns",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "title": "{{appTitle}}",
@@ -13,7 +13,7 @@
     "resources": "resources.json",
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v2/xx.TemplateService/",
+        "uri": "srv-api/odata/v2/cm.ControlOptionMgrService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -50,7 +50,7 @@
   },
   "sap.ui5": {
     "rootView": {
-      "viewName": "xx.templateListViewAndObjectEdit.view.App",
+      "viewName": "xx.templateFlexibleColumns.view.App",
       "type": "XML",
       "async": true,
       "id": "app"
@@ -67,11 +67,12 @@
       "compact": true,
       "cozy": true
     },
+    "handleValidation": true,
     "models": {
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "xx.templateListViewAndObjectEdit.i18n.i18n"
+          "bundleName": "xx.templateFlexibleColumns.i18n.i18n"
         }
       },
       "util": {
@@ -95,16 +96,23 @@
         }
       }
     },
+    "resources": {
+        "css": [
+            {
+                "uri": "css/style.css"
+            }
+        ]
+    },
     "resourceRoots": {
-        "ext.lib": "../../../lib"
+      "ext.lib": "../../../lib"
     },
     "routing": {
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
-        "viewPath": "xx.templateListViewAndObjectEdit.view",
-        "controlId": "app",
-        "controlAggregation": "pages",
+        "viewPath": "xx.templateFlexibleColumns.view",
+        "controlId": "fcl",
+				"transition": "slide",
         "bypassed": {
           "target": [
             "notFound"
@@ -113,42 +121,35 @@
         "async": true
       },
       "routes": [
-        {
-          "pattern": "",
-          "name": "mainList",
-          "target": [
-            "mainList"
-          ]
-        },
-        {
-          "pattern": "Message/{tenantId}/{messageCode}/{languageCode}",
-          "name": "mainObject",
-          "target": [
-            "mainObject"
-          ]
-        }
+          {
+              "pattern": ":layout:",
+              "name": "mainPage",
+              "target": [
+                  "mainObject"
+              ]
+          },
+          {
+              "pattern": "midObject/{layout}/{tenantId}/{controlOptionCode}",
+              "name": "midPage",
+              "target": [
+                  "mainObject",
+                  "midObject"
+              ]
+          }
       ],
       "targets": {
-        "mainList": {
-          "viewName": "MainList",
-          "viewId": "mainList",
-          "viewLevel": 1,
-          "title": "{i18n>mainListViewTitle}"
-        },
-        "mainObject": {
-          "viewName": "MainObject",
-          "viewId": "mainObject",
-          "viewLevel": 2,
-          "title": "{i18n>mainObjectViewTitle}"
-        },
-        "mainObjectNotFound": {
-          "viewName": "MainObjectNotFound",
-          "viewId": "mainObjectNotFound"
-        },
-        "notFound": {
-          "viewName": "NotFound",
-          "viewId": "notFound"
-        }
+          "mainObject": {
+              "viewName": "MainList",
+              "controlAggregation": "beginColumnPages"
+          },
+          "midObject": {
+              "viewName": "MidObject",
+              "controlAggregation": "midColumnPages"
+          },
+          "notFound": {
+            "viewName": "MidObjectNotFound",
+            "viewId": "notFound"
+          }
       }
     }
   },
