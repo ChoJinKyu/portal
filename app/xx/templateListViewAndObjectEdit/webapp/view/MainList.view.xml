@@ -59,7 +59,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="Keyword" labelFor="searchKeywordS"></Label>
-                                <Input id="searchKeywordS" placeholder="Keywords of the Code or Content"></Input>
+                                <Input id="searchKeywordS" placeholder="Code or Content"></Input>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
@@ -109,7 +109,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="Keyword" labelFor="searchKeywordE"></Label>
-                                <Input id="searchKeywordE" placeholder="Keywords of the Code or Content"></Input>
+                                <Input id="searchKeywordE" placeholder="Code or Content"></Input>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
@@ -128,176 +128,6 @@
         <!-- DynamicPage Header -->
         <f:header>
             <f:DynamicPageHeader pinnable="true">
-                <form:SimpleForm maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
-                    <form:content>
-                        <VBox>
-                            <Label text="Segmented Button" required="true"></Label>
-                            <SegmentedButton selectedKey="all" class="sapUiSmallMarginBottom" width="100%">
-                                <items>
-                                    <SegmentedButtonItem text="All" key="all" />
-                                    <SegmentedButtonItem text="PR" width="3em" />
-                                    <SegmentedButtonItem text="Budget" width="5em" />
-                                    <SegmentedButtonItem text="RFQ" />
-                                    <SegmentedButtonItem text="Mold Spec" width="6em" />
-                                    <SegmentedButtonItem text="PO" width="3em" />
-                                    <SegmentedButtonItem text="RCV" width="4em" />
-                                </items>
-                            </SegmentedButton>
-                            <layoutData>
-                                <layout:GridData span="XL10 L9 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Chain " labelFor="searchfield"></Label>
-                            <SearchField />
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" linebreak="true" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Select Box " labelFor="select"></Label>
-                            <Select width="100%" selectedKey="all">
-                                <items>
-                                    <core:Item key="all" text="ALL" />
-                                    <core:Item key="1" text="Select 1" />
-                                    <core:Item key="2" text="Select 2" />
-                                </items>
-                            </Select>
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Combo Box " labelFor="combo"></Label>
-                            <ComboBox width="100%">
-                                <core:Item text="Combo 1" />
-                                <core:Item text="Combo 2" />
-                                <core:Item text="Combo 3" />
-                            </ComboBox>
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Multi Combo Box "></Label>
-                            <MultiComboBox>
-                                <core:Item text="Multi 1" />
-                                <core:Item text="Multi 2" />
-                                <core:Item text="Multi 3" />
-                            </MultiComboBox>
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Date Range 1 "></Label>
-                            <HBox>
-                                <Select class="sapUiTinyMarginEnd" selectedKey="save">
-                                    <items>
-                                        <core:Item key="save" text="Saved Date" />
-                                        <core:Item key="update" text="Update Date" />
-                                    </items>
-                                </Select>
-                                <DateRangeSelection displayFormat="yyyy/MM/dd'" />
-                            </HBox>
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Date Range 2 "></Label>
-                            <HBox>
-                                <DatePicker placeholder="Start Date ..." />
-                                <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
-                                <DatePicker placeholder="End Date ..." />
-                            </HBox>
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Date " labelFor="date"></Label>
-                            <DatePicker id="searchDate1" placeholder="Date" />
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Time " labelFor="time"></Label>
-                            <TimePicker id="searchTime1" width="100%" placeholder="Time" />
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Date Time " labelFor="datetime"></Label>
-                            <DateTimePicker id="searchDateTime1" placeholder="Date Time" />
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Number " labelFor="searchNumber1"></Label>
-                            <Input id="searchNumber1" type="Number" textAlign="Right" fieldWidth="80%" description="KRW" />
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Stepper " labelFor="searchStepper1"></Label>
-                            <StepInput id="searchStepper1" value="5" min="0" max="10" />
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Open Popup " labelFor="searchPopup1"></Label>
-                            <Input id="searchPopup1" showValueHelp="true"></Input>
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Slider (Range)" labelFor="searchRangeSlider1"></Label>
-                            <RangeSlider id="searchRangeSlider1" showAdvancedTooltip="true" min="0" max="100" width="100%" />
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Slider (Discrete)" labelFor="searchSlider1"></Label>
-                            <Slider id="searchSlider1" enableTickmarks="true" showAdvancedTooltip="true" step="5" min="0" max="100" width="100%" />
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-
-                        <VBox>
-                            <Label text="Radio Button " labelFor="searchRadioButton1"></Label>
-                            <RadioButtonGroup id="searchRadioButton1" columns="4" width="100%">
-                                <RadioButton id="searchRadio1" text="Radio 1" />
-                                <RadioButton id="searchRadio2" text="Radio 2" />
-                                <RadioButton id="searchRadio3" text="Radio 3" />
-                                <RadioButton id="searchRadio4" text="Radio 4" />
-                            </RadioButtonGroup>
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Check Box "></Label>
-                            <HBox>
-                                <CheckBox id="searchCheckBox1" text="Check Box1" />
-                                <Text text="  " class="sapUiTinyMarginEnd" />
-                                <CheckBox id="searchCheckBox2" text="Check Box2" />
-                            </HBox>
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        
-                    </form:content>
-                </form:SimpleForm>
             </f:DynamicPageHeader>
         </f:header>
         <f:content>
@@ -307,7 +137,7 @@
                     showIcon="true"
                     showCloseButton="false">
 			    </MessageStrip>
-                <Table id="listMainTable" 
+                <Table id="mainTable" 
                         sticky="HeaderToolbar,ColumnHeaders" 
                         inset="false" 
                         mode="None" 
@@ -320,10 +150,7 @@
                             <ToolbarSpacer/>
                             <SearchField width="17.5rem" search=".onListMainTableFilterPress" />
                             <!-- Add the Personalization button -->
-                            <Button id="listMainTableDraftButton" text="Draft" type="Transparent" press=".onListMainTableDraftButtonPress" />
-                            <Button id="listMainTableEditButton" text="Edit" type="Transparent" press=".onListMainTableEditButtonPress" />
-                            <Button id="listMainTableCancelEditButton" text="Cancel Edit" type="Transparent" press=".onListMainTableCancelEditButtonPress" />
-                            <Button id="listMainTableSaveButton" text="Save" type="Emphasized" press=".onListMainTableSaveButtonPress" />
+                            <Button id="mainTableAddButton" text="Add" type="Emphasized" press=".onListMainTableAddButtonPress" />
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://action-settings" press=".onListMainTablePersoButtonPressed" >
                                 <layoutData>
@@ -333,19 +160,19 @@
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
-                        <Column id="listMainColumnChainCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
+                        <Column id="mainColumnChainCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
                             <Text text="Chain" />
                         </Column>
-                        <Column id="listMainColumnLanguageCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
+                        <Column id="mainColumnLanguageCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
                             <Text text="Language" />
                         </Column>
-                        <Column id="listMainColumnMessageCode" minScreenWidth="Tablet" hAlign="Right" width="12em" >
+                        <Column id="mainColumnMessageCode" minScreenWidth="Tablet" hAlign="Right" width="12em" >
                             <Text text="Code" />
                         </Column>
-                        <Column id="listMainColumnMessageContents" minScreenWidth="Tablet" hAlign="Left">
+                        <Column id="mainColumnMessageContents" minScreenWidth="Tablet" hAlign="Left">
                             <Text text="Content" />
                         </Column>
-                        <Column id="listMainColumnMessageTypeCode" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                        <Column id="mainColumnMessageTypeCode" minScreenWidth="Tablet" hAlign="Center" width="12em" >
                             <Text text="Type" />
                         </Column>
                     </columns>

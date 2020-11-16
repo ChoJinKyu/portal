@@ -1,5 +1,5 @@
 <mvc:View
-	controllerName="xx.templateListViewAndObjectEdit.controller.MainObjectNotFound"
+	controllerName="ext.lib.controller.NotFound"
 	xmlns="sap.m"
 	xmlns:mvc="sap.ui.core.mvc">
 

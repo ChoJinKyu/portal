@@ -4,31 +4,31 @@ sap.ui.define(["jquery.sap.global"],
 
         var _columns = [
             {
-                id: "templateListViewAndObjectEdit-mainList-listMainColumnChainCode",
+                id: "templateListViewAndObjectEdit-mainList-mainColumnChainCode",
                 order: 0,
                 text: "Chain",
                 visible: true
             },
             {
-                id: "templateListViewAndObjectEdit-mainList-listMainColumnLanguageCode",
+                id: "templateListViewAndObjectEdit-mainList-mainColumnLanguageCode",
                 order: 1,
                 text: "Language",
                 visible: false
             },
             {
-                id: "templateListViewAndObjectEdit-mainList-listMainColumnMessageCode",
+                id: "templateListViewAndObjectEdit-mainList-mainColumnMessageCode",
                 order: 4,
                 text: "Code",
                 visible: false
             },
             {
-                id: "templateListViewAndObjectEdit-mainList-listMainColumnMessageContents",
+                id: "templateListViewAndObjectEdit-mainList-mainColumnMessageContents",
                 order: 2,
                 text: "Contents",
                 visible: true
             },
             {
-                id: "templateListViewAndObjectEdit-mainList-listMainColumnMessageTypeCode",
+                id: "templateListViewAndObjectEdit-mainList-mainColumnMessageTypeCode",
                 order: 3,
                 text: "Type",
                 visible: true
@@ -87,9 +87,9 @@ sap.ui.define(["jquery.sap.global"],
 
             getGroup: function (oColumn) {
                 var sId = oColumn.getId();
-                if (sId.indexOf("listMainColumnChainCode") != -1 ||
-                    sId.indexOf("listMainColumnLanguageCode") != -1 ||
-                    sId.indexOf("listMainColumnMessageCode") != -1) {
+                if (sId.indexOf("mainColumnChainCode") != -1 ||
+                    sId.indexOf("mainColumnLanguageCode") != -1 ||
+                    sId.indexOf("mainColumnMessageCode") != -1) {
                     return "Keys";
                 }
                 return "Others";

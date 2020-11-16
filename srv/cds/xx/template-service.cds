@@ -1,11 +1,14 @@
 namespace xx;
 
-using {xx as template} from '../../../db/cds/xx/template/XX_MESSAGE-model';
+using {xx as message} from '../../../db/cds/xx/template/XX_MESSAGE-model';
+using {xx as controlOptionMgr} from '../../../db/cds/xx/template/XX_CONTROL_OPTION_DTL-model';
 
 @path : '/xx.TemplateService'
 service TemplateService {
 
-    entity Message as projection on template.Message;
+    entity Message as projection on message.Message;
+    entity ControlOptionMasters as projection on controlOptionMgr.Control_Option_Mst;
+    entity ControlOptionDetails as projection on controlOptionMgr.Control_Option_Dtl;
 
 }
 
