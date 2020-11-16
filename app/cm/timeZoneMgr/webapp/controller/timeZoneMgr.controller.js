@@ -41,7 +41,6 @@ sap.ui.define([
         var [tId, mName] = arguments;
         var table = this.byId(tId);
         var model = this.getView().getModel(mName);
-        var rows = model.getData();
         table
           .getSelectedIndices()
           .reverse()
@@ -63,7 +62,7 @@ sap.ui.define([
           return acc;
         }).bind(model.getData()), {
           "local_create_dtm": new Date(),
-          "local_update_dtm": new Date(),
+          "local_update_dtm": new Date()
         }), 0);
       },
       onSave: function () {
