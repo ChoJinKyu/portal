@@ -1,9 +1,6 @@
 {
   "welcomeFile": "/index.html",
   "authenticationMethod": "none",
-  "logout": {
-    "logoutEndpoint": "/do/logout"
-  },
   "routes": [
     {
       "authenticationType": "none",
@@ -16,11 +13,6 @@
       "source": "^(.*)$",
       "target": "$1",
       "service": "html5-apps-repo-rt",
-      "authenticationType": "xsuaa"
-    },
-    {
-      "source": "/odata/v4",
-      "destination": "srv-api",
       "authenticationType": "none"
     }
   ]
