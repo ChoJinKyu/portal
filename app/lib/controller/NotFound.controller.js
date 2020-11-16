@@ -1,9 +1,9 @@
 sap.ui.define([
-	"./BaseController"
+	"ext/lib/controller/BaseController"
 ], function (BaseController) {
 	"use strict";
 
-	return BaseController.extend("xx.templateListViewAndObjectEdit.controller.MainObjectNotFound", {
+	return BaseController.extend("ext.lib.controller.NotFound", {
 
 		/**
 		 * Navigates to the worklist when the link is pressed

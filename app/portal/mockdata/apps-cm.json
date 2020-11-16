@@ -11,7 +11,7 @@
                 },
                 {
                     "name": "제어옵션관리",
-                    "url": "../cm/controlOptionMgr/webapp",
+                    "url": "../cm/ctrlOptMgr/webapp",
                     "component": "cm.controlOptionMgr"
                 }
             ]
@@ -34,11 +34,6 @@
                     "name": "메시지 관리",
                     "url": "../cm/msgMgr/webapp",
                     "component": "cm.msgMgr"
-                },
-                {
-                    "name": "메시지 관리(Template based)",
-                    "url": "../cm/messageMgr/webapp",
-                    "component": "cm.messageMgr"
                 },
                 {
                     "name": "통화 관리",
