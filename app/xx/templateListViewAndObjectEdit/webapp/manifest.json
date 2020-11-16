@@ -95,8 +95,15 @@
         }
       }
     },
+    "resources": {
+        "css": [
+            {
+                "uri": "css/style.css"
+            }
+        ]
+    },
     "resourceRoots": {
-        "ext.lib": "../../../lib"
+      "ext.lib": "../../../lib"
     },
     "routing": {
       "config": {
@@ -141,12 +148,9 @@
           "viewLevel": 2,
           "title": "{i18n>mainObjectViewTitle}"
         },
-        "mainObjectNotFound": {
-          "viewName": "MainObjectNotFound",
-          "viewId": "mainObjectNotFound"
-        },
         "notFound": {
           "viewName": "NotFound",
+          "viewPath": "ext.lib.view",
           "viewId": "notFound"
         }
       }
