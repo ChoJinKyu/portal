@@ -39,17 +39,29 @@ sap.ui.define([
       },
       onDelete: function () {
         var [tId, mName] = arguments;
-        // 1. 생성 후 삭제(화면에서 사라짐)
-        // 2. 삭제표시
         var table = this.byId(tId);
         var model = this.getView().getModel(mName);
+        var rows = model.getData();
         table
           .getSelectedIndices()
           .reverse()
+          // 1. 삭제표시
+          .map(function (idx) {
+            if (rows[idx]["_row_state_"] != "C") {
+              model.markRemoved(idx);
+            }
+            return idx;
+          })
+          // 2. 생성 후 삭제(화면에서 사라짐)
           .forEach(function (idx) {
-            model.markRemoved(idx);
+            if (rows[idx]["_row_state_"] == "C") {
+              rows.splice(idx, 1);
+              model.refresh();
+            }
           });
-        table.removeSelections(true);
+        table
+          .clearSelection()
+          .removeSelections(true);
       },
       onCreate: function () {
         var [tId, mName, aCol] = arguments;

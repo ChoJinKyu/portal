@@ -119,7 +119,7 @@ ui.table > m.table 변환하기   -->
                     <t:extension>
                         <OverflowToolbar class="sapFDynamicPageAlignContent"> 									
                         <ToolbarSpacer/>
-                        <Button text="생성" id="buttonMainCreateRow" press=".onCreate('mainTable', 'list', ['tenant_id', 'timezone_code'])"  type="Transparent"/>
+                        <Button text="생성" id="buttonMainCreateRow" press=".onCreate('mainTable', 'list', ['tenant_id', 'timezone_code', 'timezone_name'])"  type="Transparent"/>
                         <Button text="삭제" id="buttonMainDeleteRow" press=".onDelete('mainTable', 'list')"   type="Transparent"/>
                         <Button text="저장" id="buttonMainSaveRow" press=".onSave"   type="Transparent"/>				 
                         </OverflowToolbar>
