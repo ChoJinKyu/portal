@@ -77,6 +77,7 @@ sap.ui.define([
 
         setTransactionModel: function(oModel){
             this._oTransactionModel = oModel;
+            return this;
         },
 
         addTransactionGroup: function(sGroup){

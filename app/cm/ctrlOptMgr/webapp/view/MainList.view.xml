@@ -9,7 +9,7 @@
     height="100%">
 
     <f:DynamicPage id="page"
-        headerExpanded="false" 
+        headerExpanded="{mainListView>/headerExpanded}" 
         toggleHeaderOnTitleClick="true">
         <!-- DynamicPage Title -->
         <f:title>
@@ -18,66 +18,8 @@
                     <Title text="{i18n>appTitle}" />
                 </f:heading>
                 <f:snappedContent>
-                    <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
-                        <form:content>
-                            <VBox>
-                                <Label text="Chain" labelFor="searchChainS" required="true"></Label>
-                                <ComboBox id="searchChainS" width="100%" selectedKey="CM" items="{
-                                        path: 'util>/CodeDetails',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                            {path: 'company_code', operator: 'EQ', value1: '*'},
-                                            {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
-                                        ]
-                                    }">
-                                    <items>
-                                        <core:Item key="{util>code}" text="{util>code} :{util>code_description}" />
-                                    </items>
-                                </ComboBox>
-                                <layoutData>
-                                    <layout:GridData span="XL2 L3 M6 S12" />
-                                </layoutData>
-                            </VBox>
-                            <VBox>
-                                <Label text="Keyword" labelFor="searchKeywordS"></Label>
-                                <Input id="searchKeywordS" placeholder="Keywords of the Code or Content"></Input>
-                                <layoutData>
-                                    <layout:GridData span="XL2 L3 M6 S12" />
-                                </layoutData>
-                            </VBox>
-                        </form:content>
-                    </form:SimpleForm>
                 </f:snappedContent>
                 <f:expandedContent>
-                    <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
-                        <form:content>
-                            <VBox>
-                                <Label text="Chain" labelFor="searchChainE" required="true"></Label>
-                                <ComboBox id="searchChainE" width="100%" selectedKey="CM" items="{
-                                        path: 'util>/CodeDetails',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                            {path: 'company_code', operator: 'EQ', value1: '*'},
-                                            {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
-                                        ]
-                                    }">
-                                    <items>
-                                        <core:Item key="{util>code}" text="{util>code} :{util>code_description}" />
-                                    </items>
-                                </ComboBox>
-                                <layoutData>
-                                    <layout:GridData span="XL2 L3 M6 S12" />
-                                </layoutData>
-                            </VBox>
-                            <VBox>
-                                <Label text="Keyword" labelFor="searchKeywordE"></Label>
-                                <Input id="searchKeywordE" placeholder="Keywords of the Code or Content"></Input>
-                                <layoutData>
-                                    <layout:GridData span="XL2 L3 M6 S12" />
-                                </layoutData>
-                            </VBox>
-                        </form:content>
-                    </form:SimpleForm>
                 </f:expandedContent>
                 <f:actions>
                     <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onPageSearchButtonPress" />
@@ -90,6 +32,51 @@
         <!-- DynamicPage Header -->
         <f:header>
             <f:DynamicPageHeader pinnable="true">
+
+                <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                    <form:content>
+                        <VBox>
+                            <Label text="Chain:" labelFor="searchChain" required="true"></Label>
+                            <ComboBox id="searchChain" width="100%" selectedKey="CM" items="{
+                                    path: 'util>/CodeDetails',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'company_code', operator: 'EQ', value1: '*'},
+                                        {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
+                                    ]
+                                }">
+                                <items>
+                                    <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+                                </items>
+                            </ComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Keyword:" labelFor="searchKeyword"></Label>
+                            <Input id="searchKeyword" placeholder="Keywords of the Code or Content"></Input>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Usage:" labelFor="searchUsageSegmentButton"></Label>
+                            <SegmentedButton id="searchUsageSegmentButton" selectedKey="all" class="sapUiSmallMarginBottom" width="100%" >
+                                <items>
+                                    <SegmentedButtonItem text="All" key="all" width="4.1rem" />
+                                    <SegmentedButtonItem text="Site" key="site" width="4.1rem" />
+                                    <SegmentedButtonItem text="Company" key="company" width="5rem" />
+                                    <SegmentedButtonItem text="Org." key="org" width="4.1rem" />
+                                    <SegmentedButtonItem text="User" key="user" width="4.1rem" />
+                                </items>
+                            </SegmentedButton>
+                            <layoutData>
+                                <layout:GridData span="XL6 L6 M12 S12" />
+                            </layoutData>
+                        </VBox>
+                    </form:content>
+                </form:SimpleForm>
             </f:DynamicPageHeader>
         </f:header>
         <f:content>
@@ -97,15 +84,18 @@
                 <Table id="mainTable" 
                         sticky="HeaderToolbar,ColumnHeaders" 
                         inset="false" 
+                        growing="true"
+                        growingThreshold="10"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
                         items="{list>/}"
-                        mode="none" 
+                        mode="None" 
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="Control Options" level="H2"/>
+                            <Title text="Control Options ({= ${list>/}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
+                            <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                                 <layoutData>
@@ -115,46 +105,52 @@
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
-                        <Column id="mainColumnChainCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="8em" >
-                            <Text text="Chain" />
-                        </Column>
-                        <Column id="mainColumnCode" minScreenWidth="Tablet" hAlign="Center" width="14em" >
+                        <Column id="mainColumnCode" minScreenWidth="Tablet" hAlign="Center">
                             <Text text="Code" />
                         </Column>
-                        <Column id="mainColumnName" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
+                        <Column id="mainColumnName" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
                             <Text text="Name" />
                         </Column>
-                        <Column id="mainColumnStartDate" minScreenWidth="Tablet" hAlign="Center" width="15em">
+                        <Column id="mainColumnStartDate" minScreenWidth="Tablet" hAlign="Center">
                             <Text text="Start Date" />
                         </Column>
-                        <Column id="mainColumnEndDate" minScreenWidth="Tablet" hAlign="Center" width="15em" >
+                        <Column id="mainColumnEndDate" minScreenWidth="Tablet" hAlign="Center">
                             <Text text="End Date" />
                         </Column>
-                        <Column id="mainColumnSiteFlag" minScreenWidth="Tablet" hAlign="Center" width="6em" >
+                        <Column id="mainColumnSiteFlag" minScreenWidth="Tablet" hAlign="Center" width="3rem" demandPopin="true" popinDisplay="Inline">
                             <Text text="Site" />
                         </Column>
-                        <Column id="mainColumnCompanyFlag" minScreenWidth="Tablet" hAlign="Center" width="6em" >
+                        <Column id="mainColumnCompanyFlag" minScreenWidth="Tablet" hAlign="Center" width="3rem" demandPopin="true" popinDisplay="Inline">
                             <Text text="Company" />
                         </Column>
-                        <Column id="mainColumnOrganizationFlag" minScreenWidth="Tablet" hAlign="Center" width="6em" >
-                            <Text text="Organization" />
+                        <Column id="mainColumnOrganizationFlag" minScreenWidth="Tablet" hAlign="Center" width="3rem" demandPopin="true" popinDisplay="Inline">
+                            <Text text="Org." />
                         </Column>
-                        <Column id="mainColumnUserFlag" minScreenWidth="Tablet" hAlign="Center" width="6em" >
+                        <Column id="mainColumnUserFlag" minScreenWidth="Tablet" hAlign="Center" width="3rem" demandPopin="true" popinDisplay="Inline">
                             <Text text="User" />
                         </Column>
                     </columns>
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>
-                                <Text text="{list>chain_code}"></Text>
-                                <Text text="{list>control_option_code}"></Text>
-                                <Text text="{list>control_option_name}"></Text>
-                                <Text text="{list>start_date}"></Text>
-                                <Text text="{list>end_date}"></Text>
-                                <Text text="{list>site_flag}"></Text>
-                                <Text text="{list>company_flag}"></Text>
-                                <Text text="{list>organization_flag}"></Text>
-                                <Text text="{list>user_flag}"></Text>
+                                <ObjectIdentifier text="{list>control_option_code}"/>
+                                <ObjectIdentifier text="{list>control_option_name}"/>
+                                <ObjectIdentifier text="{
+                                        path: 'list>start_date',
+                                        formatter: '.dateFormatter.toDateString'
+                                    }"/>
+                                <ObjectIdentifier text="{
+                                        path: 'list>end_date',
+                                        formatter: '.dateFormatter.toDateString'
+                                    }"/>
+                                <ObjectStatus
+                                    icon="{= ${list>site_flag} === true ? 'sap-icon://accept' : ''}"/>
+                                <ObjectStatus 
+                                    icon="{= ${list>company_flag} === true ? 'sap-icon://accept' : ''}"/>
+                                <ObjectStatus 
+                                    icon="{= ${list>organization_flag} === true ? 'sap-icon://accept' : ''}"/>
+                                <ObjectStatus 
+                                    icon="{= ${list>user_flag} === true ? 'sap-icon://accept' : ''}"/>
                             </cells>
                         </ColumnListItem>
                     </items>

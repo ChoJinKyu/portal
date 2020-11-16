@@ -1,5 +1,5 @@
 sap.ui.define([
-	"./BaseController",
+	"ext/lib/controller/BaseController",
 	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
 	"../model/formatter",
@@ -155,7 +155,7 @@ sap.ui.define([
 			oTable.removeSelections(true);
 		},
        
-        onMainTableDraftButtonPress: function(){
+        onMainTableSaveButtonPress: function(){
 			var oModel = this.getModel("list"),
 				oView = this.getView();
 			
@@ -200,9 +200,10 @@ sap.ui.define([
 		},
 		
 		_getSearchStates: function(){
-			var chain = this.getView().byId("searchChainS").getSelectedKey(),
-				language = this.getView().byId("searchLanguageS").getSelectedKey(),
-				keyword = this.getView().byId("searchKeywordS").getValue();
+			var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S",
+				chain = this.getView().byId("searchChain"+sSurffix).getSelectedKey(),
+				language = this.getView().byId("searchLanguage"+sSurffix).getSelectedKey(),
+				keyword = this.getView().byId("searchKeyword"+sSurffix).getValue();
 				
 			var aTableSearchState = [];
 			if (chain && chain.length > 0) {

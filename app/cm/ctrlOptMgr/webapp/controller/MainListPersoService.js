@@ -4,33 +4,51 @@ sap.ui.define(["jquery.sap.global"],
 
         var _columns = [
             {
-                id: "controlOptionMgr-mainList-listMainColumnChainCode",
+                id: "controlOptionMgr-mainList-mainColumnCode",
                 order: 0,
-                text: "Chain",
-                visible: true
-            },
-            {
-                id: "controlOptionMgr-mainList-listMainColumnLanguageCode",
-                order: 1,
-                text: "Language",
-                visible: false
-            },
-            {
-                id: "controlOptionMgr-mainList-listMainColumnMessageCode",
-                order: 4,
                 text: "Code",
-                visible: false
-            },
-            {
-                id: "controlOptionMgr-mainList-listMainColumnMessageContents",
-                order: 2,
-                text: "Contents",
                 visible: true
             },
             {
-                id: "controlOptionMgr-mainList-listMainColumnMessageTypeCode",
+                id: "controlOptionMgr-mainList-mainColumnName",
+                order: 1,
+                text: "Name",
+                visible: false
+            },
+            {
+                id: "controlOptionMgr-mainList-mainColumnStartDate",
+                order: 2,
+                text: "Start Date",
+                visible: false
+            },
+            {
+                id: "controlOptionMgr-mainList-mainColumnEndDate",
                 order: 3,
-                text: "Type",
+                text: "End Date",
+                visible: true
+            },
+            {
+                id: "controlOptionMgr-mainList-mainColumnSiteFlag",
+                order: 4,
+                text: "Site",
+                visible: true
+            },
+            {
+                id: "controlOptionMgr-mainList-mainColumnCompanyFlag",
+                order: 5,
+                text: "Company",
+                visible: true
+            },
+            {
+                id: "controlOptionMgr-mainList-mainColumnOrganizationFlag",
+                order: 6,
+                text: "Organization",
+                visible: true
+            },
+            {
+                id: "controlOptionMgr-mainList-mainColumnUserFlag",
+                order: 7,
+                text: "User",
                 visible: true
             }
         ];
@@ -87,10 +105,9 @@ sap.ui.define(["jquery.sap.global"],
 
             getGroup: function (oColumn) {
                 var sId = oColumn.getId();
-                if (sId.indexOf("listMainColumnChainCode") != -1 ||
-                    sId.indexOf("listMainColumnLanguageCode") != -1 ||
-                    sId.indexOf("listMainColumnMessageCode") != -1) {
-                    return "Keys";
+                if (sId.indexOf("mainColumnCode") != -1 ||
+                    sId.indexOf("mainColumnName") != -1) {
+                    return "Columns of Key";
                 }
                 return "Others";
             }
