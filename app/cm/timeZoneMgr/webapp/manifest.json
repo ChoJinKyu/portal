@@ -24,7 +24,23 @@
           "localUri": "localService/metadata.xml"
         }
       },
-      "countryMgrSources": {
+      "orgMgrService": {
+        "uri": "../../../cm/codeMgr/srv-api/odata/v4/cm.OrgMgrService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0",
+          "localUri": "localService/metadata.xml"
+        }
+      },
+      "codeMgrService": {
+        "uri": "../../../cm/codeMgr/srv-api/odata/v4/cm.CodeMgrService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0",
+          "localUri": "localService/metadata.xml"
+        }
+      },
+      "countryMgrService": {
         "uri": "../../../cm/countryMgr/srv-api/odata/v4/cm.CountryMgrService/",
         "type": "OData",
         "settings": {
@@ -91,8 +107,28 @@
           "autoExpandSelect": true
         }
       },
+      "org": {
+        "dataSource": "orgMgrService",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "groupId": "$direct",
+          "synchronizationMode": "None",
+          "autoExpandSelect": true
+        }
+      },
+      "code": {
+        "dataSource": "codeMgrService",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "groupId": "$direct",
+          "synchronizationMode": "None",
+          "autoExpandSelect": true
+        }
+      },
       "country": {
-        "dataSource": "countryMgrSources",
+        "dataSource": "countryMgrService",
         "preload": true,
         "settings": {
           "operationMode": "Server",
