@@ -45,19 +45,9 @@ sap.ui.define([
         table
           .getSelectedIndices()
           .reverse()
-          // 1. 삭제표시
-          .map(function (idx) {
-            if (rows[idx]["_row_state_"] != "C") {
-              model.markRemoved(idx);
-            }
-            return idx;
-          })
-          // 2. 생성 후 삭제(화면에서 사라짐)
+          // 삭제
           .forEach(function (idx) {
-            if (rows[idx]["_row_state_"] == "C") {
-              rows.splice(idx, 1);
-              model.refresh();
-            }
+            model.markRemoved(idx);
           });
         table
           .clearSelection()
@@ -71,7 +61,36 @@ sap.ui.define([
         model.addRecord(aCol.reduce((function (acc, col) {
           acc[col] = (this || {})[0][col] || "";
           return acc;
-        }).bind(model.getData()), {}), 0);
+        }).bind(model.getData()), {
+          "local_create_dtm": new Date(),
+          "local_update_dtm": new Date(),
+        }), 0);
+      },
+      onSave: function () {
+        var [tId, mName] = arguments;
+        var table = this.byId(tId);
+        var view = this.getView();
+        var model = view.getModel(mName);
+        // Validation
+        if (model.getChanges() <= 0) {
+          MessageBox.alert("변경사항이 없습니다.");
+          reutn;
+        }
+        MessageBox.confirm("Are you sure ?", {
+          title: "Comfirmation",
+          initialFocus: sap.m.MessageBox.Action.CANCEL,
+          onClose: function (sButton) {
+            if (sButton === MessageBox.Action.OK) {
+              view.setBusy(true);
+              model.submitChanges({
+                success: function (oEvent) {
+                  view.setBusy(false);
+                  MessageToast.show("Success to save.");
+                }
+              });
+            };
+          }
+        });
       }
     });
   });
