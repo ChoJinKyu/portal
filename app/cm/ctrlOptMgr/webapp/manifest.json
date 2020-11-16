@@ -116,14 +116,14 @@
       "routes": [
           {
               "pattern": ":layout:",
-              "name": "mainObject",
+              "name": "mainPage",
               "target": [
                   "mainObject"
               ]
           },
           {
               "pattern": "midObject/{layout}/{tenantId}/{controlOptionCode}",
-              "name": "midObject",
+              "name": "midPage",
               "target": [
                   "mainObject",
                   "midObject"

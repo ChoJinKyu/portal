@@ -3,7 +3,7 @@ sap.ui.define([
 	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
 	"ext/lib/model/ManagedListModel",
-	"../model/formatter",
+	"ext/lib/formatter/DateFormatter",
 	"sap/m/TablePersoController",
 	"./MainListPersoService",
 	"sap/ui/model/Filter",
@@ -16,12 +16,12 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, ManagedListModel, formatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
 	"use strict";
 
 	return BaseController.extend("cm.controlOptionMgr.controller.MainList", {
 
-		formatter: formatter,
+		dateFormatter: DateFormatter,
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -37,6 +37,7 @@ sap.ui.define([
 
 			// Model used to manipulate control states
 			oViewModel = new JSONModel({
+				headerExpanded: true,
 				mainListTableTitle : oResourceBundle.getText("mainListTableTitle"),
 				tableNoDataText : oResourceBundle.getText("tableNoDataText")
 			});
@@ -50,6 +51,8 @@ sap.ui.define([
 			}, true);
 			
 			this.setModel(new ManagedListModel(), "list");
+			
+			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
 			this._doInitTablePerso();
         },
@@ -107,6 +110,20 @@ sap.ui.define([
 		},
 
 		/**
+		 * Event handler when a table add button pressed
+		 * @param {sap.ui.base.Event} oEvent
+		 * @public
+		 */
+		onMainTableAddButtonPress: function(){
+			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
+			this.getRouter().navTo("midPage", {
+				layout: oNextUIState.layout, 
+				tenantId: "new",
+				controlOptionCode: "code"
+			});
+		},
+
+		/**
 		 * Event handler when a search button pressed
 		 * @param {sap.ui.base.Event} oEvent the button press event
 		 * @public
@@ -119,17 +136,22 @@ sap.ui.define([
 				// refresh the list binding.
 				this.onRefresh();
 			} else {
-				var aTableSearchState = this._getSearchStates();
-				this._applySearch(aTableSearchState);
+				var aSearchFilters = this._getSearchStates();
+				this._applySearch(aSearchFilters);
 			}
 		},
 
+		/**
+		 * Event handler when pressed the item of table
+		 * @param {sap.ui.base.Event} oEvent
+		 * @public
+		 */
 		onMainTableItemPress: function(oEvent) {
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
 				sPath = oEvent.getSource().getBindingContext("list").getPath(),
 				oRecord = this.getModel("list").getProperty(sPath);
 
-			this.getRouter().navTo("midObject", {
+			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
 				tenantId: oRecord.tenant_id,
 				controlOptionCode: oRecord.control_option_code
@@ -151,17 +173,26 @@ sap.ui.define([
 		/* =========================================================== */
 
 		/**
-		 * Internal helper method to apply both filter and search state together on the list binding
-		 * @param {sap.ui.model.Filter[]} aTableSearchState An array of filters for the search
+		 * When it routed to this page from the other page.
+		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
 		 * @private
 		 */
-		_applySearch: function(aTableSearchState) {
+		_onRoutedThisPage: function(){
+			this.getModel("mainListView").setProperty("/headerExpanded", true);
+		},
+
+		/**
+		 * Internal helper method to apply both filter and search state together on the list binding
+		 * @param {sap.ui.model.Filter[]} aSearchFilters An array of filters for the search
+		 * @private
+		 */
+		_applySearch: function(aSearchFilters) {
 			var oView = this.getView(),
 				oModel = this.getModel("list");
 			oView.setBusy(true);
 			oModel.setTransactionModel(this.getModel());
 			oModel.read("/ControlOptionMasters", {
-				filters: aTableSearchState,
+				filters: aSearchFilters,
 				success: function(oData){
 					oView.setBusy(false);
 				}
@@ -169,23 +200,40 @@ sap.ui.define([
 		},
 		
 		_getSearchStates: function(){
-			var chain = this.getView().byId("searchChainS").getSelectedKey(),
-				keyword = this.getView().byId("searchKeywordS").getValue();
-				
-			var aTableSearchState = [];
-			if (chain && chain.length > 0) {
-				aTableSearchState.push(new Filter("chain_code", FilterOperator.EQ, chain));
+			var sChain = this.getView().byId("searchChain").getSelectedKey(),
+				sKeyword = this.getView().byId("searchKeyword").getValue(),
+				sUsage = this.getView().byId("searchUsageSegmentButton").getSelectedKey();
+			
+			var aSearchFilters = [];
+			if (sChain && sChain.length > 0) {
+				aSearchFilters.push(new Filter("chain_code", FilterOperator.EQ, sChain));
 			}
-			if (keyword && keyword.length > 0) {
-				aTableSearchState.push(new Filter({
+			if (sKeyword && sKeyword.length > 0) {
+				aSearchFilters.push(new Filter({
 					filters: [
-						new Filter("message_code", FilterOperator.Contains, keyword),
-						new Filter("message_contents", FilterOperator.Contains, keyword)
+						new Filter("control_option_code", FilterOperator.Contains, sKeyword),
+						new Filter("control_option_name", FilterOperator.Contains, sKeyword)
 					],
 					and: false
 				}));
 			}
-			return aTableSearchState;
+			if(sUsage != "all"){
+				switch (sUsage) {
+					case "site":
+					aSearchFilters.push(new Filter("site_flag", FilterOperator.EQ, "true"));
+					break;
+					case "company":
+					aSearchFilters.push(new Filter("company_flag", FilterOperator.EQ, "true"));
+					break;
+					case "org":
+					aSearchFilters.push(new Filter("organization_flag", FilterOperator.EQ, "true"));
+					break;
+					case "user":
+					aSearchFilters.push(new Filter("user_flag", FilterOperator.EQ, "true"));
+					break;
+				}
+			}
+			return aSearchFilters;
 		},
 		
 		_doInitTablePerso: function(){

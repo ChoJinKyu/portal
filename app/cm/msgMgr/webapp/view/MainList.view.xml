@@ -59,7 +59,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="Keyword" labelFor="searchKeywordS"></Label>
-                                <Input id="searchKeywordS" placeholder="Keywords of the Code or Content"></Input>
+                                <Input id="searchKeywordS" placeholder="Code or Content"></Input>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
@@ -146,7 +146,7 @@
                             <ToolbarSpacer/>
                             <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
                             <Button id="mainTableDeleteButton" text="Delete" type="Transparent" press=".onMainTableDeleteButtonPress" />
-                            <Button id="mainTableDraftButton" text="Draft" type="Emphasized" press=".onMainTableDraftButtonPress" />
+                            <Button id="mainTableSaveButton" text="Save" type="Emphasized" press=".onMainTableSaveButtonPress" />
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                                 <layoutData>

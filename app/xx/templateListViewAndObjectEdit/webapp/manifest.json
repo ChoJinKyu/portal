@@ -13,18 +13,17 @@
     "resources": "resources.json",
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v4/xx.MessageMgrService/",
+        "uri": "srv-api/odata/v2/xx.TemplateService/",
         "type": "OData",
         "settings": {
-          "odataVersion": "4.0",
-          "localUri": "localService/metadata.xml"
+          "odataVersion": "2.0"
         }
       },
       "commonUtilService": {
-        "uri": "srv-api/odata/v4/util.CommonService/",
+        "uri": "srv-api/odata/v2/util.CommonService/",
         "type": "OData",
         "settings": {
-          "odataVersion": "4.0"
+          "odataVersion": "2.0"
         }
       }
     }
@@ -79,25 +78,32 @@
         "dataSource": "commonUtilService",
         "preload": true,
         "settings": {
-          "operationMode": "Server",
-          "groupId": "$direct",
-          "synchronizationMode": "None",
-          "autoExpandSelect": true
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "useBatch": true
         }
       },
       "": {
         "dataSource": "mainService",
         "preload": true,
         "settings": {
-          "operationMode": "Server",
-          "groupId": "$direct",
-          "synchronizationMode": "None",
-          "autoExpandSelect": true
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": true,
+          "useBatch": true
         }
       }
     },
+    "resources": {
+        "css": [
+            {
+                "uri": "css/style.css"
+            }
+        ]
+    },
     "resourceRoots": {
-        "ext.lib": "../../../lib"
+      "ext.lib": "../../../lib"
     },
     "routing": {
       "config": {
@@ -142,12 +148,9 @@
           "viewLevel": 2,
           "title": "{i18n>mainObjectViewTitle}"
         },
-        "mainObjectNotFound": {
-          "viewName": "MainObjectNotFound",
-          "viewId": "mainObjectNotFound"
-        },
         "notFound": {
           "viewName": "NotFound",
+          "viewPath": "ext.lib.view",
           "viewId": "notFound"
         }
       }

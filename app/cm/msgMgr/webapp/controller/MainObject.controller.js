@@ -1,5 +1,5 @@
 sap.ui.define([
-	"./BaseController",
+	"ext/lib/controller/BaseController",
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/core/routing/History",
 	"../model/formatter",
@@ -107,6 +107,7 @@ sap.ui.define([
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
 						oView.setBusy(true);
+						debugger;
 						oView.getModel().submitBatch("odataGroupIdForUpdate").then(function(ok){
 							me._toShowMode();
 							oView.setBusy(false);
