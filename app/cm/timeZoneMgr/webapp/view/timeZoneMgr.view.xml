@@ -102,7 +102,8 @@
                 </form:FormContainer>
               </form:formContainers>
               <form:layout>
-                <form:ResponsiveGridLayout columnsM="3" columnsL="3" columnsXL="3"/>
+                <!-- <form:ResponsiveGridLayout columnsM="3" columnsL="3" columnsXL="3"/> -->
+                <form:ResponsiveGridLayout columnsS="12" columnsM="6" columnsL="3" columnsXL="2"/>
               </form:layout>
             </form:Form>
           </layout:HorizontalLayout>
