@@ -1,5 +1,6 @@
 namespace pg;
 
+using {pg.Md_Category_Item as items} from './PG_MD_CATEGORY_ITEM-model';
 using util from '../../util/util-model';
 
 entity Md_Category_Id {
@@ -13,6 +14,12 @@ entity Md_Category_Id {
         md_cell_clolor_rgb      : String(7) default '#FFFFFF'@title : '셀 색상(RGB)';
         md_category_id_sort_seq : Integer64 not null         @title : 'Category 정렬 순서';
 
+        items : Association to many items on items.tenant_id = tenant_id
+                                        and items.company_code = company_code
+                                        and items.org_type_code = org_type_code
+                                        and items.org_code = org_code
+                                        and items.md_category_id = md_category_id
+                                        ;
 }
 
 extend Md_Category_Id with util.Managed;
