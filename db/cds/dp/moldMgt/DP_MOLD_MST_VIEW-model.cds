@@ -112,7 +112,8 @@ entity Mold_Mst_View {
         scrap_date                      : String(8)             @title:'폐기일자';
         acq_date                        : String(8)             @title:'취득일자';
         acq_amount                      : Decimal(20,2)         @title:'취득금액';
-        use_department_code             : String(30)            @title:'사용부서코드';
+
+        mold_size                       : String(10)	        @title:'금형크기';        use_department_code             : String(30)            @title:'사용부서코드';
         die_form                        : String(10)	        @title:'다이형상';
         mold_size                       : String(10)	        @title:'금형크기';
 }

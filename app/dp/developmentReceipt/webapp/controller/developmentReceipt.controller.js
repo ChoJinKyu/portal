@@ -210,7 +210,7 @@ sap.ui.define([
         },
         
         onMoldMstTableReceiptButtonPress: function(){
-			var oView = this.getView(),
+			/*var oView = this.getView(),
 				me = this;
 			MessageBox.confirm("Are you sure ?", {
 				title : "Comfirmation",
@@ -225,6 +225,24 @@ sap.ui.define([
 						}).catch(function(err){
                             MessageBox.error("Error while saving.");
                         });
+					};
+				}
+            });*/
+            var oModel = this.getModel("list"),
+				oView = this.getView();
+			
+			MessageBox.confirm("Are you sure ?", {
+				title : "Comfirmation",
+				initialFocus : sap.m.MessageBox.Action.CANCEL,
+				onClose : function(sButton) {
+					if (sButton === MessageBox.Action.OK) {
+						oView.setBusy(true);
+						oModel.submitChanges({
+							success: function(oEvent){
+								oView.setBusy(false);
+								MessageToast.show("Success to save.");
+							}
+						});
 					};
 				}
 			});
