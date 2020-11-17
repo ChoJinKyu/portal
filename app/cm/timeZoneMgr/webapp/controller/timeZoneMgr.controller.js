@@ -1,26 +1,35 @@
 sap.ui.define([
-  "sap/ui/core/mvc/Controller",
-  "ext/lib/model/ManagedListModel",
-  "sap/ui/core/Fragment",
+  "ext/lib/controller/BaseController",
   "sap/ui/model/json/JSONModel",
+  "ext/lib/model/ManagedListModel",
   "sap/ui/model/Filter",
   "sap/ui/model/FilterOperator",
-  "sap/ui/model/FilterType",
   "sap/m/MessageToast",
   "sap/m/MessageBox",
-  "sap/ui/core/format/DateFormat",
-  "sap/ui/model/ChangeReason"
+  "../model/formatter"
 ],
-  function (Controller, ManagedListModel, Fragment, JSONModel, Filter, FilterOperator, FilterType, MessageToast, MessageBox, DateFormat, ChangeReason) {
+  function (
+    BaseController,
+    JSONModel,
+    ManagedListModel,
+    Filter,
+    FilterOperator,
+    MessageToast,
+    MessageBox,
+    formatter
+  ) {
     "use strict";
 
-    return Controller.extend("cm.timeZoneMgr.controller.timeZoneMgr", {
+    return BaseController.extend("cm.timeZoneMgr.controller.timeZoneMgr", {
+
+      formatter: formatter,
+
       onInit: function () {
         this.getView().setModel(new ManagedListModel(), "list");
-        this.onSearch();
       },
       // Display row number without changing data
       onAfterRendering: function () {
+        this.onSearch();
       },
       onSearch: function () {
         var predicates = [];
