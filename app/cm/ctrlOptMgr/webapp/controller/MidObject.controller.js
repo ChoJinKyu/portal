@@ -2,6 +2,7 @@ sap.ui.define([
 	"./BaseController",
 	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
+	"ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedModel",
 	"ext/lib/model/ManagedListModel",
 	"ext/lib/formatter/DateFormatter",
@@ -10,8 +11,19 @@ sap.ui.define([
 	"sap/ui/core/Fragment",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-], function (BaseController, History, JSONModel, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
+	"sap/m/ColumnListItem",
+	"sap/m/ObjectIdentifier",
+	"sap/m/Text",
+	"sap/m/Input",
+	"sap/m/ComboBox",
+	"sap/ui/core/Item",
+], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
+	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
+	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+		
 	"use strict";
+
+	var oTransactionManager;
 
 	return BaseController.extend("cm.controlOptionMgr.controller.MidObject", {
 
@@ -38,6 +50,12 @@ sap.ui.define([
 			
 			this.setModel(new ManagedModel(), "master");
 			this.setModel(new ManagedListModel(), "details");
+
+			oTransactionManager = new TransactionManager();
+			oTransactionManager.addDataModel(this.getModel("master"));
+			oTransactionManager.addDataModel(this.getModel("details"));
+
+			this._initTableTemplates();
 		}, 
 
 		/* =========================================================== */
@@ -106,6 +124,36 @@ sap.ui.define([
 				}
 			});
 		},
+
+		onMidTableAddButtonPress: function(){
+			var oTable = this.byId("midTable"),
+				oModel = this.getModel("details");
+			oModel.addRecord({
+				"tenant_id": this._sTenantId,
+				"control_option_code": this._sControlOptionCode,
+				"control_option_level_code": "",
+				"control_option_level_val": "",
+				"control_option_val": "",
+				"local_create_dtm": new Date(),
+				"local_update_dtm": new Date()
+			});
+		},
+
+		onMidTableDeleteButtonPress: function(){
+			var oTable = this.byId("midTable"),
+				oModel = this.getModel("details"),
+				aItems = oTable.getSelectedItems(),
+				aIndices = [];
+			aItems.forEach(function(oItem){
+				aIndices.push(oModel.getData().indexOf(oItem.getBindingContext("details").getObject()));
+			});
+			aIndices = aIndices.sort(function(a, b){return b-a;});
+			aIndices.forEach(function(nIndex){
+				//oModel.removeRecord(nIndex);
+				oModel.markRemoved(nIndex);
+			});
+			oTable.removeSelections(true);
+		},
 		
 		/**
 		 * Event handler for saving page changes
@@ -120,7 +168,8 @@ sap.ui.define([
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
 						oView.setBusy(true);
-						oView.getModel("master").submitChanges({
+						oTransactionManager.submit({
+						// oView.getModel("master").submitChanges({
 							success: function(ok){
 								me._toShowMode();
 								oView.setBusy(false);
@@ -180,6 +229,7 @@ sap.ui.define([
 				});
 				this._toShowMode();
 			}
+			oTransactionManager.setServiceModel(this.getModel());
 		},
 
 		/**
@@ -190,10 +240,10 @@ sap.ui.define([
 		 */
 		_bindView : function (sObjectPath) {
 			var oView = this.getView(),
-				oModel = this.getModel("master");
+				oMasterModel = this.getModel("master");
 			oView.setBusy(true);
-			oModel.setTransactionModel(this.getModel());
-			oModel.read(sObjectPath, {
+			oMasterModel.setTransactionModel(this.getModel());
+			oMasterModel.read(sObjectPath, {
 				success: function(oData){
 					oView.setBusy(false);
 				}
@@ -201,21 +251,96 @@ sap.ui.define([
 		},
 
 		_toEditMode: function(){
+			var FALSE = false;
             this._showFormFragment('MidObject_Edit');
 			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("page").setProperty("showFooter", true);
-			this.byId("pageEditButton").setEnabled(false);
-			this.byId("pageDeleteButton").setEnabled(false);
-			this.byId("pageNavBackButton").setEnabled(false);
+			this.byId("page").setProperty("showFooter", !FALSE);
+			this.byId("pageEditButton").setEnabled(FALSE);
+			this.byId("pageDeleteButton").setEnabled(FALSE);
+			this.byId("pageNavBackButton").setEnabled(FALSE);
+
+			this.byId("midTableAddButton").setEnabled(!FALSE);
+			this.byId("midTableDeleteButton").setEnabled(!FALSE);
+			this.byId("midTableSearchField").setEnabled(FALSE);
+			this.byId("midTableApplyFilterButton").setEnabled(FALSE);
+			this.byId("midTable").setMode(sap.m.ListMode.SingleSelectLeft);
+			this._bindMidTable(this.oEditableTemplate, "Edit");
 		},
 
 		_toShowMode: function(){
+			var TRUE = true;
 			this._showFormFragment('MidObject_Show');
 			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("page").setProperty("showFooter", false);
-			this.byId("pageEditButton").setEnabled(true);
-			this.byId("pageDeleteButton").setEnabled(true);
-			this.byId("pageNavBackButton").setEnabled(true);
+			this.byId("page").setProperty("showFooter", !TRUE);
+			this.byId("pageEditButton").setEnabled(TRUE);
+			this.byId("pageDeleteButton").setEnabled(TRUE);
+			this.byId("pageNavBackButton").setEnabled(TRUE);
+
+			this.byId("midTableAddButton").setEnabled(!TRUE);
+			this.byId("midTableDeleteButton").setEnabled(!TRUE);
+			this.byId("midTableSearchField").setEnabled(TRUE);
+			this.byId("midTableApplyFilterButton").setEnabled(TRUE);
+			this.byId("midTable").setMode(sap.m.ListMode.None);
+			this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
+		},
+
+		_initTableTemplates: function(){
+			this.oReadOnlyTemplate = new ColumnListItem({
+				cells: [
+					new Text({
+						text: "{details>_row_state_}"
+					}), 
+					new ObjectIdentifier({
+						text: "{details>control_option_level_code}"
+					}), 
+					new Text({
+						text: "{details>control_option_level_val}"
+					}), 
+					new Text({
+						text: "{details>control_option_val}"
+					})
+				],
+				type: sap.m.ListType.Inactive
+			});
+
+            var oLevelCodeCombo = new ComboBox({
+                    selectedKey: "{details>control_option_level_code}"
+                });
+                oLevelCodeCombo.bindItems({
+                    path: 'util>/CodeDetails',
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
+                        new Filter("company_code", FilterOperator.EQ, 'G100'),
+                        new Filter("group_code", FilterOperator.EQ, 'TEST')
+                    ],
+                    template: new Item({
+                        key: "{util>code}",
+                        text: "{util>code_description}"
+                    })
+                });
+			this.oEditableTemplate = new ColumnListItem({
+				cells: [
+					new Text({
+						value: "{details>_row_state_}"
+					}), 
+					oLevelCodeCombo, 
+					new Input({
+						value: "{details>control_option_level_val}"
+					}), 
+					new Input({
+						value: "{details>control_option_val}"
+					})
+				]
+            });
+		},
+
+		_bindMidTable: function(oTemplate, sKeyboardMode){
+			this.byId("midTable").bindItems({
+				path: "details>/",
+				template: oTemplate,
+				templateShareable: true,
+				key: "control_option_level_val"
+			}).setKeyboardMode(sKeyboardMode);
 		},
 
 		_oFragments: {},

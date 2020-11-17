@@ -34,12 +34,11 @@ sap.ui.define([
             );
         },
 
-        _executeBatch: function(oServiceModel, sGroupId){
+        _executeBatch: function(sGroupId){
             var oItem = this.getData(),
                 sEntity = oItem.__entity;
-
             delete oItem.__entity;
-            oServiceModel.update(sEntity, oItem,{
+            this._oTransactionModel.update(sEntity, oItem,{
                 groupId: sGroupId,
                 success: function(){
                     oItem.__entity = sEntity;

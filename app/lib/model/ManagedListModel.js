@@ -93,8 +93,8 @@ sap.ui.define([
             );
         },
 
-        _executeBatch: function(oServiceModel, sGroupId){
-            var oService = this._oTransactionModel,
+        _executeBatch: function(sGroupId){
+            var oServiceModel = this._oTransactionModel,
                 sTransactionPath = this._transactionPath,
                 cs = this.getCreatedRecords(),
                 us = this.getUpdatedRecords(),
