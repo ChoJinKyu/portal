@@ -7,7 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,36 +26,287 @@ import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.After;
 import com.sap.cds.services.handler.annotations.ServiceName;
+import com.sap.cds.services.request.ParameterInfo;
 
 import cds.gen.xx.samplemgrservice.*;
 
 @Component
-@ServiceName("xx.SampleMgrService")
+@ServiceName(SampleMgrService_.CDS_NAME)
 public class SampleMgr implements EventHandler {
 
-    /*
     @Autowired
     private JdbcTemplate jdbc;
 
-    @On(entity=SampleHeaderDetailProc_.CDS_NAME)
-    public void onSampleHeaderDetailProc(List<SampleHeaderDetailProc> sampleHeaderDetailProc) {
-        for(SampleHeaderDetailProc row : sampleHeaderDetailProc) {
+    // Header만 Multi
+    
+    @On(event = CdsService.EVENT_CREATE,   entity=SampleMultiHeaderProc_.CDS_NAME)
+    public void onCreateSampleMultiHeader(CdsCreateEventContext context) {
 
-            List<SampleHeaderProc> header = row.getHeaders();
+        List<Map<String, Object>> entries = context.getCqn().entries();
+        List<SampleMultiHeaderProc> v_results = new ArrayList<SampleMultiHeaderProc>();
+        SampleMultiHeaderProc v_result = SampleMultiHeaderProc.create();
+        List<SampleHeaderForMulti> v_resultHeader = new ArrayList<SampleHeaderForMulti>();
+        String multikey = "";
 
-            for(SampleHeaderProc h : header){
 
-                List<SampleDetailProc> detail =  h.getDetails();
+        // local Temp table은 테이블명이 #(샵) 으로 시작해야 함
+        String v_sql_createTable = "CREATE local TEMPORARY column TABLE #LOCAL_TEMP (HEADER_ID BIGINT, CD NVARCHAR(5000), NAME NVARCHAR(5000))";
+        String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP VALUES (?, ?, ?)";
+        String v_sql_callProc = "CALL XX_SAMPLE_HEADER_SAVE_PROC(I_TABLE => #LOCAL_TEMP, O_TABLE => ?)";
 
-                for(SampleDetailProc d : detail){
-                     String a = d.getCd();
-                     String b = d.getName();
+        
+        ResultSet v_rs = null;
+
+		try {
+            
+            if(entries != null && !entries.isEmpty()){
+
+            }
+            Connection conn = jdbc.getDataSource().getConnection();
+
+            // Local Temp Table 생성
+            PreparedStatement v_statement_table = conn.prepareStatement(v_sql_createTable);
+            v_statement_table.execute();
+
+            // Local Temp Table에 insert
+            PreparedStatement v_statement_insert = conn.prepareStatement(v_sql_insertTable);
+            List<HashMap<String, Object>> headers = null;
+            for (Map<String, Object> row : entries) {
+                
+                for ( String key : row.keySet()) {
+                    if(key.equals("headers")){
+                        if(row.get(key) != null && row.get(key) instanceof List){
+                            headers =  (List<HashMap<String, Object>>) row.get(key);
+
+                        }
+                    }else if(key.equals("multi_key")){
+                        multikey = (String) row.get(key);
+                    }
+                }
+
+                // Detail Local Temp Table에 insert
+                for (HashMap<String, Object> header : headers){
+                    v_statement_insert.setObject(1, header.get("header_id"));
+                    v_statement_insert.setObject(2, header.get("cd"));
+                    v_statement_insert.setObject(3, header.get("name"));
+                    v_statement_insert.addBatch();
+                }
+                
+            }
+
+            v_statement_insert.executeBatch();
+
+            // Procedure Call
+            CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc);
+            v_rs = v_statement_proc.executeQuery();
+
+            // Procedure Out put 담기
+            while (v_rs.next()){
+                SampleHeaderForMulti v_row = SampleHeaderForMulti.create();
+                v_row.setHeaderId(v_rs.getLong("header_id"));
+                v_row.setCd(v_rs.getString("cd"));
+                v_row.setName(v_rs.getString("name"));
+                v_resultHeader.add(v_row);
+            }
+
+
+		} catch (SQLException e) { 
+			e.printStackTrace();
+        }
+
+        v_result.setHeaders(v_resultHeader);
+        v_result.setMultiKey(multikey);
+        v_results.add(v_result);
+        context.setResult(v_results);
+        context.setCompleted();
+    }
+    
+
+
+    @On(event = CdsService.EVENT_CREATE,   entity=SampleHeaders_.CDS_NAME)
+    public void onCreateSampleHeaders(CdsCreateEventContext context) {
+
+        List<Map<String, Object>> entries = context.getCqn().entries();
+        List<Map<String, Object>> v_result = new ArrayList<>();
+
+
+        // local Temp table은 테이블명이 #(샵) 으로 시작해야 함
+        String v_sql_createTable = "CREATE local TEMPORARY column TABLE #LOCAL_TEMP (HEADER_ID BIGINT, CD NVARCHAR(5000), NAME NVARCHAR(5000))";
+        String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP VALUES (?, ?, ?)";
+        String v_sql_callProc = "CALL XX_SAMPLE_HEADER_SAVE_PROC(I_TABLE => #LOCAL_TEMP, O_TABLE => ?)";
+
+        
+        ResultSet v_rs = null;
+
+		try {
+            
+            if(entries != null && !entries.isEmpty()){
+
+            }
+            Connection conn = jdbc.getDataSource().getConnection();
+
+            // Local Temp Table 생성
+            PreparedStatement v_statement_table = conn.prepareStatement(v_sql_createTable);
+            v_statement_table.execute();
+
+            // Local Temp Table에 insert
+            PreparedStatement v_statement_insert = conn.prepareStatement(v_sql_insertTable);
+
+            for (Map<String, Object> row : entries) {
+                v_statement_insert.setObject(1, row.get("header_id"));
+                v_statement_insert.setObject(2, row.get("cd"));
+                v_statement_insert.setObject(3, row.get("name"));
+                v_statement_insert.addBatch();
+            }
+
+            v_statement_insert.executeBatch();
+
+            // Procedure Call
+            CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc);
+            v_rs = v_statement_proc.executeQuery();
+
+            // Procedure Out put 담기
+            while (v_rs.next()){
+                SampleHeaders v_row = SampleHeaders.create();
+                v_row.setHeaderId(v_rs.getLong("header_id"));
+                v_row.setCd(v_rs.getString("cd"));
+                v_row.setName(v_rs.getString("name"));
+                v_result.add(v_row);
+            }
+
+
+		} catch (SQLException e) { 
+			e.printStackTrace();
+        }
+
+        context.setResult(v_result);
+        context.setCompleted();
+    }
+
+    @On(event = CdsService.EVENT_CREATE,   entity=SampleHeaderProc_.CDS_NAME)
+    public void onSampleHeaderDetailProc(CdsCreateEventContext context) {
+
+        String v_sql_createTableD = "CREATE local TEMPORARY column TABLE #LOCAL_TEMP_D (DETAIL_ID BIGINT, HEADER_ID BIGINT, CD NVARCHAR(5000), NAME NVARCHAR(5000))";
+        String v_sql_truncateTableD = "TRUNCATE TABLE #LOCAL_TEMP_D";        
+        String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D VALUES (?, ?, ?, ?)";
+        String v_sql_callProc = "CALL XX_SAMPLE_H_D_SAVE_PROC(HEADER_ID => ?, CD => ?, NAME => ?, I_D_TABLE => #LOCAL_TEMP_D, O_H_TABLE => ?, O_D_TABLE => ?)";
+
+        List<Map<String, Object>> entries = context.getCqn().entries();
+        //List<Map<String, Object>> v_results = new ArrayList<Map<String, Object>>();
+        List<SampleHeaderProc> v_results = new ArrayList<SampleHeaderProc>();
+
+        try {
+            
+            if(entries != null && !entries.isEmpty()){
+                Connection conn = jdbc.getDataSource().getConnection();
+
+                // Detail Local Temp Table 생성
+                PreparedStatement v_statement_tableD = conn.prepareStatement(v_sql_createTableD);
+                v_statement_tableD.execute();
+                
+                // Detail Local Temp Table에 insert
+                PreparedStatement v_statement_insertD = conn.prepareStatement(v_sql_insertTableD);
+
+                for (Map<String, Object> row : entries) {
+                    
+                    Object h_header_id = null;
+                    Object h_cd = null;
+                    Object h_name = null;
+                    List<HashMap<String, Object>> details = null;
+                    
+                    for ( String key : row.keySet()) {
+                        if(key.equals("header_id")){
+                            h_header_id = row.get(key);
+                        }else if(key.equals("cd")){
+                            h_cd = row.get(key);
+                        }else if(key.equals("name")){
+                            h_name = row.get(key);
+                        }else if(key.equals("details")){
+                            if(row.get(key) != null && row.get(key) instanceof List){
+                                details = (List<HashMap<String, Object>>) row.get(key);
+                            }
+                        }
+                    }
+
+                    // Detail Local Temp Table에 insert
+                    for (HashMap<String, Object> detail : details){
+                        v_statement_insertD.setObject(1, detail.get("detail_id"));
+                        v_statement_insertD.setObject(2, detail.get("header_id"));
+                        v_statement_insertD.setObject(3, detail.get("cd"));
+                        v_statement_insertD.setObject(4, detail.get("name"));
+                        v_statement_insertD.addBatch();
+                    }
+
+                    v_statement_insertD.executeBatch();
+
+                    // Procedure Call
+                    CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc);
+                    v_statement_proc.setObject(1, h_header_id);
+                    v_statement_proc.setObject(2, h_cd);
+                    v_statement_proc.setObject(3, h_name);
+
+                    // procedure Return Data
+                    boolean v_isMore = v_statement_proc.execute();
+                    int v_resultSetNo = 0;
+
+                    //Map<String, Object> v_resultH = new HashMap<String, Object>();
+                    SampleHeaderProc v_resultH = SampleHeaderProc.create();
+                    //List<Object> v_resultDList = new ArrayList<Object>();
+                    List<SampleDetailProc> v_resultDList = new ArrayList<SampleDetailProc>();
+
+                    // Procedure Out put 담기
+                    while(v_isMore){
+                        ResultSet v_rs = v_statement_proc.getResultSet();
+
+                        while (v_rs.next()){
+                            if(v_resultSetNo == 0){
+                                //v_resultH.put("header_id", v_rs.getLong("header_id"));
+                                //v_resultH.put("cd", v_rs.getString("cd"));
+                                //v_resultH.put("name", v_rs.getString("name"));
+                                v_resultH.setHeaderId(v_rs.getLong("header_id"));
+                                v_resultH.setCd(v_rs.getString("cd"));
+                                v_resultH.setName(v_rs.getString("name"));
+                            }else if(v_resultSetNo == 1){
+                                //Map<String, Object> v_resultD = new HashMap<String, Object>();
+                                //v_resultD.put("detail_id", v_rs.getLong("detail_id"));
+                                //v_resultD.put("header_id", v_rs.getLong("header_id"));
+                                //v_resultD.put("cd", v_rs.getString("cd"));
+                                //v_resultD.put("name", v_rs.getString("name"));
+                                //v_resultDList.add(v_resultD);
+
+                                SampleDetailProc detail = SampleDetailProc.create();
+                                detail.setDetailId(v_rs.getLong("detail_id"));
+                                detail.setHeaderId(v_rs.getLong("header_id"));
+                                detail.setCd(v_rs.getString("cd"));
+                                detail.setName(v_rs.getString("name"));
+                                v_resultDList.add(detail);
+
+                            }
+                        }
+
+                        v_isMore = v_statement_proc.getMoreResults();
+                        v_resultSetNo++;
+                    }
+
+                    //v_resultH.put("details", v_resultDList);
+                    v_resultH.setDetails(v_resultDList);
+                    //v_results.add(v_resultH);
+                    v_results.add(v_resultH);
+
+                    // Detail Local Temp Table trunc
+                    PreparedStatement v_statement_trunc_tableD = conn.prepareStatement(v_sql_truncateTableD);
+                    v_statement_trunc_tableD.execute();
                 }
             }
 
+        } catch (SQLException e) { 
+            e.printStackTrace();
         }
+
+        context.setResult(v_results);
+        context.setCompleted();
+        
     }
-    */
 
     /*
     @On(entity=SampleHeaderProc_.CDS_NAME)
