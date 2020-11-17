@@ -72,8 +72,20 @@
                             </ComboBox>
                           </VBox>
                           <VBox>
-                            <Label text="국가" labelFor="searchCountryInput"></Label>
-                            <Input
+                            <Label text="국가" labelFor="searchCountryCombo"></Label>
+                            <ComboBox
+                              id="searchCountryCombo"
+                              width="100%"
+                              items="{
+                                path: 'country>/Country',
+                                filters: [
+                                ]
+                              }">
+                              <items>
+                                <core:Item key="{country>country_code}" text="{country>country_code} : {country>iso_code}" value="{country>country_code}"/>
+                              </items>
+                            </ComboBox>
+                            <!-- <Input
                               id="searchCountryInput"
                               type="Text"
                               value=""
@@ -82,7 +94,7 @@
                               valueHelpOnly="false"
                               valueHelpRequest="handleValueHelp"
                               width=""
-                              class="sapUiSmallMarginBottom"/>
+                              class="sapUiSmallMarginBottom"/> -->
                           </VBox>
                         </form:fields>
                     </form:FormElement>
