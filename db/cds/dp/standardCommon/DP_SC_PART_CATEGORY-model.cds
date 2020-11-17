@@ -6,9 +6,10 @@ using {dp as categoryAuth} from '../standardCommon/DP_SC_PART_CATEGORY_AUTH-mode
 	
 entity Sc_Part_Category {	
   key tenant_id : String(5)  not null;	
+  key company_code : String(10)  not null default '*';	
   key org_type_code : String(30)  not null;	
   key org_code : String(10)  not null;	
-  key category_code : String(200)  not null;	
+  key category_code : String(200)  not null;
 
     cClass: Composition of many categoryClass.Sc_Part_Category_Class
         on cClass.tenant_id = tenant_id 

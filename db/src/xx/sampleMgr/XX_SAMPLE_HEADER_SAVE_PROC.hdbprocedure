@@ -8,9 +8,16 @@ SQL SECURITY INVOKER
 AS
 BEGIN
 
+    DECLARE v_cnt BIGINT;
+
+    SELECT COUNT(*)
+    INTO   v_cnt
+    FROM   :I_TABLE
+    ;
+
     O_TABLE =   SELECT  IFNULL(A.HEADER_ID, XX_SAMPLE_HEADER_ID_SEQ.NEXTVAL) AS HEADER_ID
                        ,A.CD
-                       ,A.NAME
+                       ,(A.NAME || v_cnt) AS NAME
                 FROM    :I_TABLE A;
 
 

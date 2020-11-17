@@ -1,11 +1,16 @@
 sap.ui.define([
-	"sap/ui/core/UIComponent",
-	"sap/ui/Device",
-	"cm/currencyMgr/model/models",
+    
+	"ext/lib/UIComponent",
+	"ext/lib/model/models",
+    "ext/lib/controller/ErrorHandler",
+    
+	// "sap/ui/core/UIComponent",
+	// "sap/ui/Device",
+	// "cm/currencyMgr/model/models",
 	'sap/f/library',
     'sap/ui/model/json/JSONModel',
     'sap/f/FlexibleColumnLayoutSemanticHelper'
-], function (UIComponent, Device, models, fioriLibrary, JSONModel, FlexibleColumnLayoutSemanticHelper) {
+], function (UIComponent, Device, models, fioriLibrary, JSONModel, FlexibleColumnLayoutSemanticHelper, ErrorHandler) {
 	"use strict";
 
 	return UIComponent.extend("cm.currencyMgr.Component", {
@@ -33,41 +38,21 @@ sap.ui.define([
                             true2 : false,
                             true3 : true,
                             true4 : false,
+                            true5 : false,
+                            LiveChange : "",
+                            newCheck : "",
+                            true6 : true,
                         });
             this.setModel(oModel, "Currency");
+            this.setModel(new JSONModel(), "flexibleColumnLayout");
              
-             
-
-            // enable routing
-            this.getRouter().attachBeforeRouteMatched(this._onBeforeRouteMatched, this);
-			this.getRouter().initialize();
-
-			// set the device model
-			this.setModel(models.createDeviceModel(), "device");
 		},
-
-		_onBeforeRouteMatched: function(oEvent) {
-			var oModel = this.getModel(),
-				sLayout = oEvent.getParameters().arguments.layout,
-				oNextUIState;
-
-			// If there is no layout parameter, set a default layout (normally OneColumn) TwoColumnsMidExpanded
-			if (!sLayout) {
-				this.getHelper().then(function(oHelper) {
-					oNextUIState = oHelper.getNextUIState(0);
-					oModel.setProperty("/layout", oNextUIState.layout);
-				});
-				return;
-			}
-
-            oModel.setProperty("/layout", sLayout);
-        },
 
         getHelper: function () {
 			return this._getFcl().then(function(oFCL) {
 				var oSettings = {
 					defaultTwoColumnLayoutType: fioriLibrary.LayoutType.TwoColumnsMidExpanded,
-					defaultThreeColumnLayoutType: fioriLibrary.LayoutType.ThreeColumnsMidExpanded
+					//defaultThreeColumnLayoutType: fioriLibrary.LayoutType.ThreeColumnsMidExpanded
 				};
 				return (FlexibleColumnLayoutSemanticHelper.getInstanceFor(oFCL, oSettings));
 			});

@@ -9,7 +9,13 @@
     },
     "title": "{{appTitle}}",
     "description": "{{appDescription}}",
-    "resources": "resources.json",
+    "resources": {
+        "css": [
+            {
+                "uri": "css/style.css"
+            }
+        ]
+    },
     "ach": "ach",
     "dataSources": {
       "mainService": {
@@ -42,12 +48,16 @@
       "phone": true
     }
   },
+  "sap.fiori": {
+    "registrationIds": [],
+    "archeType": "transactional"
+  },
   "sap.ui5": {
     "rootView": {
-      "viewName": "cm.currencyMgr.view.currencyMainView",
+      "viewName": "cm.currencyMgr.view.App",
       "type": "XML",
       "async": true,
-      "id": "fcl"
+      "id": "flexibleColumnLayout"
     },
     "dependencies": {
       "minUI5Version": "1.60.1",
@@ -84,13 +94,10 @@
         }
       }
     },
-    "resources": {
-      "css": [
-        {
-          "uri": "css/style.css"
-        }
-      ]
+    "resourceRoots": {
+      "ext.lib": "../../../lib"
     },
+    "resources": "resources.json",
     "routing": {
       "config": {
         "routerClass": "sap.f.routing.Router",

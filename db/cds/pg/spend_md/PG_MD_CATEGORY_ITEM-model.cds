@@ -13,7 +13,7 @@ entity Md_Category_Item {
         md_category_item_name     : String(100) not null @title : 'Item Name';
         md_category_item_desc     : String(500)          @title : 'Item Desc';
         md_category_item_type     : String(1) not null   @title : 'Value Type';
-        md_category_itme_content  : String(100)          @title : 'Content';
+        md_category_item_content  : String(100)          @title : 'Content';
         md_category_item_sort_seq : Integer64 not null   @title : '정렬 순서';
 
 }

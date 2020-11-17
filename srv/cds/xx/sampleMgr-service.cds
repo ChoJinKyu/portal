@@ -10,7 +10,37 @@ service SampleMgrService {
     entity SampleHeaders as projection on Header.Sample_Header;
     entity SampleDetails as projection on Detail.Sample_Detail;
 
-/*
+    // Header만 Multi
+    entity SampleHeaderForMulti {
+        key header_id : Integer64;
+        multi_key : String;
+        cd : String;
+        name: String;
+    }
+
+    entity SampleMultiHeaderProc {
+        key multi_key : String;
+        headers: Association to many SampleHeaderForMulti on headers.multi_key = multi_key;
+    }
+    // Header만 Multi
+
+
+
+    entity SampleDetailProc {
+        key detail_id : Integer64;
+        header_id : Integer64;
+        cd : String;
+        name: String;
+    }
+
+    entity SampleHeaderProc {
+        key header_id : Integer64;
+        cd : String;
+        name: String;
+        details: Association to many SampleDetailProc on details.header_id = header_id;
+    }
+
+    /*
     entity SampleDetailProc {
         key detail_id : Integer64;
         header_id : Integer64;
@@ -30,7 +60,7 @@ service SampleMgrService {
         key row_key : String;
         headers: Association to many SampleHeaderProc on headers.row_key = row_key;
     }
-*/    
+    */
 
     // Procedure 호출해서 header 저장
     // Header Multi Row
@@ -79,9 +109,10 @@ service SampleMgrService {
             name: String;
         };
     }
-    */
+    
 
-    //action SaveSampleMultiEnitylProc (inputData : saveReturnType) returns saveReturnType;
+    action SaveSampleMultiEnitylProc (inputData : saveReturnType) returns saveReturnType;
+    */
 
     // (단일 Header에 multi Detail) 가 multi
     // Test 데이터

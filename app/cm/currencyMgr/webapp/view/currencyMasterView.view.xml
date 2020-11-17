@@ -57,7 +57,8 @@
                     </layout:HorizontalLayout>
                     <HBox width="100%" alignItems="Center" alignContent="End" justifyContent="End">
                         <items>
-                            <Button text="검색" press="onSearch"/>
+                            <Button text="New" type="Transparent" press="onCreateAdd" enabled="{Currency>/true6}"/>
+                            <Button text="Search" type="Emphasized" press="onSearch" enabled="{Currency>/true6}"/>
                         </items>
                     </HBox>
                 </f:DynamicPageHeader>
@@ -94,27 +95,25 @@
 						</Column>
                         <Column width="auto" 
                                 minScreenWidth="Desktop"
-								demandPopin="true">
+								demandPopin="true"  popinHAlign="Right">
 							<Text text="소수점자리"/>
 						</Column>
 						<Column	hAlign="End" minScreenWidth="Desktop"
-								demandPopin="true">
+								demandPopin="true"  popinHAlign="Right">
 							<Text text="확장소수점자리"/>
 						</Column>
-                        <Column width="auto" minScreenWidth="Desktop"
-								demandPopin="true">
+                        <Column width="auto">
 							<Text text="Prefix"/>
 						</Column>
-						<Column	hAlign="End" minScreenWidth="Desktop"
-								demandPopin="true">
+						<Column	hAlign="End" >
 							<Text text="Suffix"/>
 						</Column>
                         <Column width="auto" minScreenWidth="Desktop"
-								demandPopin="true">
+								demandPopin="false">
 							<Text text="유효시작일자"/>
 						</Column>
                         <Column width="auto" minScreenWidth="Desktop"
-								demandPopin="true">
+								demandPopin="false">
 							<Text text="유효종료일자"/>
 						</Column>
 					</columns>
@@ -136,14 +135,5 @@
 				</Table>
 			</VBox>
 		</f:content>
-
-		<!-- DynamicPage Footer -->
-		<f:footer>
-			<OverflowToolbar>
-				<ToolbarSpacer/>
-				<Button type="Accept" text="Accept"/>
-				<Button type="Reject" text="Reject"/>
-			</OverflowToolbar>
-		</f:footer>
 	</f:DynamicPage>
 </mvc:View>
