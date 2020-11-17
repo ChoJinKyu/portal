@@ -1,5 +1,5 @@
 sap.ui.define([
-	"sap/ui/model/json/JSONModel"
+	"./AbstractModel"
 ], function (JSONModel) {
     "use strict";
 
@@ -20,18 +20,6 @@ sap.ui.define([
             JSONModel.prototype.setData.call(this, oData, bMerge);
         },
 
-        setTransactionModel: function(oModel){
-            this._oTransactionModel = oModel;
-        },
-
-        addTransactionGroup: function(sGroup){
-            if(this._oTransactionModel){
-                var aDeferredGroups = this._oTransactionModel.getDeferredGroups();
-                aDeferredGroups = aDeferredGroups.concat([sGroup]);
-                this._oTransactionModel.setDeferredGroups(aDeferredGroups);
-            }
-        },
-
         read: function(sPath, oParameters){
             var that = this,
                 successHandler = oParameters.success;
@@ -46,33 +34,18 @@ sap.ui.define([
             );
         },
 
-        submitChanges: function(oParameters){
-            var oService = this._oTransactionModel,
-                sTransactionPath = this._transactionPath,
-                oItem = this.getData(),
-                sGroupId = "changes";
+        _executeBatch: function(oServiceModel, sGroupId){
+            var oItem = this.getData(),
+                sEntity = oItem.__entity;
 
-            console.group("oData V2 Transaction submitBatch");
-            var sEntity = oItem.__entity;
             delete oItem.__entity;
-            oService.update(sEntity, oItem,{
+            oServiceModel.update(sEntity, oItem,{
                 groupId: sGroupId,
                 success: function(){
                     oItem.__entity = sEntity;
                     console.log("Updated a record that changed by origin model.");
                 }
             });
-
-            var successHandler = oParameters.success,
-                that = this;
-            oService.submitChanges(jQuery.extend({
-                    success: function(oEvent){
-                        console.groupEnd();
-                        if(successHandler)
-                            successHandler.apply(that._oTransactionModel, arguments);
-                    }
-                })
-            );
         }
 
     });

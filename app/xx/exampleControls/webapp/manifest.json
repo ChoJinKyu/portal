@@ -1,7 +1,7 @@
 {
   "_version": "1.12.0",
   "sap.app": {
-    "id": "dp.developmentReceipt",
+    "id": "xx.exampleControls",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "title": "{{appTitle}}",
@@ -13,11 +13,10 @@
     "resources": "resources.json",
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v2/dp.DevelopmentReceiptService/",
+        "uri": "srv-api/odata/v2/xx.TemplateService/",
         "type": "OData",
         "settings": {
-          "odataVersion": "2.0",
-          "localUri": "localService/metadata.xml"
+          "odataVersion": "2.0"
         }
       },
       "commonUtilService": {
@@ -51,7 +50,7 @@
   },
   "sap.ui5": {
     "rootView": {
-      "viewName": "dp.developmentReceipt.view.App",
+      "viewName": "xx.exampleControls.view.App",
       "type": "XML",
       "async": true,
       "id": "app"
@@ -68,33 +67,41 @@
       "compact": true,
       "cozy": true
     },
+    "handleValidation": true,
     "models": {
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "dp.developmentReceipt.i18n.i18n"
+          "bundleName": "xx.exampleControls.i18n.i18n"
         }
       },
       "util": {
         "dataSource": "commonUtilService",
         "preload": true,
         "settings": {
-          "operationMode": "Server",
-          "groupId": "$direct",
-          "synchronizationMode": "None",
-          "autoExpandSelect": true
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "useBatch": true
         }
       },
       "": {
         "dataSource": "mainService",
         "preload": true,
         "settings": {
-          "operationMode": "Server",
-          "groupId": "$direct",
-          "synchronizationMode": "None",
-          "autoExpandSelect": true
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": true,
+          "useBatch": true
         }
       }
+    },
+    "resources": {
+        "css": [
+            {
+                "uri": "css/style.css"
+            }
+        ]
     },
     "resourceRoots": {
         "ext.lib": "../../../lib"
@@ -103,7 +110,7 @@
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
-        "viewPath": "dp.developmentReceipt.view",
+        "viewPath": "xx.exampleControls.view",
         "controlId": "app",
         "controlAggregation": "pages",
         "bypassed": {
@@ -116,21 +123,35 @@
       "routes": [
         {
           "pattern": "",
-          "name": "developmentReceipt",
+          "name": "home",
           "target": [
-            "developmentReceipt"
+            "home"
+          ]
+        },
+        {
+          "pattern": "example1",
+          "name": "example1",
+          "target": [
+            "example1"
           ]
         }
       ],
       "targets": {
-        "developmentReceipt": {
-          "viewName": "developmentReceipt",
-          "viewId": "developmentReceipt",
+        "home": {
+          "viewName": "Home",
+          "viewId": "home",
           "viewLevel": 1,
-          "title": "{i18n>developmentReceiptViewTitle}"
+          "title": "{i18n>homeViewTitle}"
+        },
+        "example1": {
+          "viewName": "SearchAreaControls",
+          "viewId": "example1",
+          "viewLevel": 2,
+          "title": "{i18n>exampleViewTitle}"
         },
         "notFound": {
           "viewName": "NotFound",
+          "viewPath": "ext.lib.view",
           "viewId": "notFound"
         }
       }
