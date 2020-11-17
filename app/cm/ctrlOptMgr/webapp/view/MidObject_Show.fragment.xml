@@ -27,13 +27,13 @@
 
 		<core:Title text="Boundry" />
 		<Label text="Site"/>
-		<Text text="{master>/site_flag}"></Text>
+		<Text text="{path: 'master>/site_flag', formatter: '.formatter.toYesNo'}"></Text>
 		<Label text="Company"/>
-		<Text text="{master>/company_flag}"></Text>
+		<Text text="{path: 'master>/company_flag', formatter: '.formatter.toYesNo'}"></Text>
 		<Label text="Organization"/>
-		<Text text="{master>/organization_flag}"></Text>
+		<Text text="{path: 'master>/organization_flag', formatter: '.formatter.toYesNo'}"></Text>
 		<Label text="User"/>
-		<Text text="{master>/user_flag}"></Text>
+		<Text text="{path: 'master>/user_flag', formatter: '.formatter.toYesNo'}"></Text>
 
 	</form:SimpleForm>
 </core:FragmentDefinition>

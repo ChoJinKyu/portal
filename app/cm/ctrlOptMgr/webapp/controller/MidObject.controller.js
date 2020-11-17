@@ -29,6 +29,14 @@ sap.ui.define([
 
 		dateFormatter: DateFormatter,
 
+		formatter: (function(){
+			return {
+				toYesNo: function(oData){
+					return oData === true ? "YES" : "NO"
+				},
+			}
+		})(),
+
 		/* =========================================================== */
 		/* lifecycle methods                                           */
 		/* =========================================================== */
@@ -54,6 +62,8 @@ sap.ui.define([
 			oTransactionManager = new TransactionManager();
 			oTransactionManager.addDataModel(this.getModel("master"));
 			oTransactionManager.addDataModel(this.getModel("details"));
+
+			this.getModel("master").attachPropertyChange(this._onMasterDataChanged);
 
 			this._initTableTemplates();
 		}, 
@@ -128,6 +138,7 @@ sap.ui.define([
 		onMidTableAddButtonPress: function(){
 			var oTable = this.byId("midTable"),
 				oModel = this.getModel("details");
+				debugger;
 			oModel.addRecord({
 				"tenant_id": this._sTenantId,
 				"control_option_code": this._sControlOptionCode,
@@ -195,6 +206,10 @@ sap.ui.define([
 		/* internal methods                                            */
 		/* =========================================================== */
 
+		_onMasterDataChanged: function(oEvent){
+debugger;
+		},
+
 		/**
 		 * When it routed to this page from the other page.
 		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
@@ -208,9 +223,22 @@ sap.ui.define([
 
 			if(oArgs.tenantId == "new" && oArgs.controlOptionCode == "code"){
 				//It comes Add button pressed from the before page.
+				this._isAddMode = true;
 				var oMasterModel = this.getModel("master");
 				oMasterModel.setData({
 					tenant_id: "L2100"
+				});
+				var oDetailModel = this.getModel("details");
+				oDetailModel.setTransactionModel(this.getModel());
+				oDetailModel.setData([]);
+				oDetailModel.addRecord({
+					"tenant_id": this._sTenantId,
+					"control_option_code": this._sControlOptionCode,
+					"control_option_level_code": "",
+					"control_option_level_val": "",
+					"control_option_val": "",
+					"local_create_dtm": new Date(),
+					"local_update_dtm": new Date()
 				});
 				this._toEditMode();
 			}else{
@@ -321,7 +349,7 @@ sap.ui.define([
 			this.oEditableTemplate = new ColumnListItem({
 				cells: [
 					new Text({
-						value: "{details>_row_state_}"
+						text: "{details>_row_state_}"
 					}), 
 					oLevelCodeCombo, 
 					new Input({

@@ -32,33 +32,29 @@
 		
 		<core:Title text="Boundry" />
 		<Label text="Site"/>
-		<SegmentedButton selectedKey="{master>/site_flag}" width="100%" >
-			<items>
-				<SegmentedButtonItem text="Yes" key="true" width="4.1rem" />
-				<SegmentedButtonItem text="No" key="false" width="4.1rem" />
-			</items>
-		</SegmentedButton>
+		<Switch state="{master>/site_flag}" customTextOn="Yes" customTextOff="No">
+			<layoutData>
+				<FlexItemData growFactor="1" />
+			</layoutData>
+		</Switch>
 		<Label text="Company"/>
-		<SegmentedButton selectedKey="{master>/company_flag}" width="100%" >
-			<items>
-				<SegmentedButtonItem text="Yes" key="true" width="4.1rem" />
-				<SegmentedButtonItem text="No" key="false" width="4.1rem" />
-			</items>
-		</SegmentedButton>
+		<Switch state="{master>/company_flag}" customTextOn="Yes" customTextOff="No">
+			<layoutData>
+				<FlexItemData growFactor="1" />
+			</layoutData>
+		</Switch>
 		<Label text="Organization"/>
-		<SegmentedButton selectedKey="{master>/organization_flag}" width="100%" >
-			<items>
-				<SegmentedButtonItem text="Yes" key="true" width="4.1rem" />
-				<SegmentedButtonItem text="No" key="false" width="4.1rem" />
-			</items>
-		</SegmentedButton>
+		<Switch state="{master>/organization_flag}" customTextOn="Yes" customTextOff="No">
+			<layoutData>
+				<FlexItemData growFactor="1" />
+			</layoutData>
+		</Switch>
 		<Label text="User"/>
-		<SegmentedButton selectedKey="{master>/user_flag}" width="100%" >
-			<items>
-				<SegmentedButtonItem text="Yes" key="true" width="4.1rem" />
-				<SegmentedButtonItem text="No" key="false" width="4.1rem" />
-			</items>
-		</SegmentedButton>
+		<Switch state="{master>/user_flag}" customTextOn="Yes" customTextOff="No">
+			<layoutData>
+				<FlexItemData growFactor="1" />
+			</layoutData>
+		</Switch>
 
 	</form:SimpleForm>
 </core:FragmentDefinition>
