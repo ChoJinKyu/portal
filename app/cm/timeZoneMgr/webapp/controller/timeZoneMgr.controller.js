@@ -52,7 +52,7 @@ sap.ui.define([
           .clearSelection()
           .removeSelections(true);
       },
-      onCreate: function () {
+      onAdd: function () {
         var [tId, mName, aCol] = arguments;
         var model = this.getView().getModel(mName);
         // 레코드추가
