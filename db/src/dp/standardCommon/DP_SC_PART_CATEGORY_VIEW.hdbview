@@ -9,6 +9,7 @@ SELECT hierarchy_rank,            /*현재node의 순번(sibling order by에 의
       parent_id,
       node_id,
       tenant_id,
+      company_code,
       org_type_code,
       org_code,
       category_code,
@@ -19,6 +20,7 @@ SELECT hierarchy_rank,            /*현재node의 순번(sibling order by에 의
        FROM HIERARCHY (
 				    SOURCE (
 				        SELECT  ca.tenant_id,
+                                ca.company_code,
                                 ca.org_type_code,
                                 ca.org_code,
                                 ca.category_code,

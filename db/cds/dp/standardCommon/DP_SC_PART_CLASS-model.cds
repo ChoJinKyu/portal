@@ -4,6 +4,7 @@ using {dp.Sc_Part_Class as Part_Class} from '../standardCommon/DP_SC_PART_CLASS-
 	
 entity Sc_Part_Class {	
   key tenant_id : String(5)  not null;	
+  key company_code : String(10)  not null default '*';
   key org_type_code : String(30)  not null;	
   key org_code : String(10)  not null;	
   key class_code : String(200)  not null;	
