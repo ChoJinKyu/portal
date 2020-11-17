@@ -17,6 +17,6 @@ entity Country {
     update_user_id: User not null @cds.on.insert: $user @cds.on.update: $user @title: '변경사용자ID';
     system_create_dtm: DateTime not null @cds.on.insert: $now @title: '시스템등록시간';
     system_update_dtm: DateTime not null @cds.on.insert: $now  @cds.on.update: $now @title: '시스템수정시간';
-    details: Association to many country_Lng on details.tenant_id = tenant_id
+    details: Composition of many country_Lng on details.tenant_id = tenant_id
                                               and details.country_code = country_code;
 }	
