@@ -80,6 +80,7 @@ sap.ui.define([
 				bCurrentShowFooterState = oObjectPage.getShowFooter();
             oUiModel.setProperty("/true4", !bCurrentShowFooterState);
             oUiModel.setProperty("/true6", bCurrentShowFooterState);
+            oUiModel.setProperty("/newCheck", "NewNew");
             if(this.getView().byId(""))
             {
                 oUiModel.setProperty("/true5", !bCurrentShowFooterState);
@@ -138,7 +139,7 @@ sap.ui.define([
             oUiModel.setProperty("/true6", true);
             oObjectPage.setShowFooter(false);
 
-            if(oUiModel.getProperty("/newCheck"))
+            if(oUiModel.getProperty("/newCheck") === "New")
             {
 
                 this.handleClose();
