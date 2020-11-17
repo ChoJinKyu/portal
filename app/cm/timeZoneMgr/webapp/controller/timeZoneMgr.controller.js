@@ -26,6 +26,7 @@ sap.ui.define([
         var predicates = [];
         if (!!this.byId("searchTenantCombo").getSelectedKey()) predicates.push(new Filter("tenant_id", FilterOperator.Contains, this.byId("searchTenantCombo").getSelectedKey()));
         if (!!this.byId("searchTimeZoneCombo").getSelectedKey()) predicates.push(new Filter("timezone_code", FilterOperator.Contains, this.byId("searchTimeZoneCombo").getSelectedKey()));
+        if (!!this.byId("searchCountryCombo").getSelectedKey()) predicates.push(new Filter("country_code", FilterOperator.Contains, this.byId("searchCountryCombo").getSelectedKey()));
         this.getView()
           .setBusy(true)
           .getModel("list")
@@ -52,7 +53,7 @@ sap.ui.define([
           .clearSelection()
           .removeSelections(true);
       },
-      onCreate: function () {
+      onAdd: function () {
         var [tId, mName, aCol] = arguments;
         var model = this.getView().getModel(mName);
         // 레코드추가
