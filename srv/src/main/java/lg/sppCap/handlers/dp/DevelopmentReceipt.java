@@ -20,76 +20,11 @@ public class DevelopmentReceipt implements EventHandler {
 
     // Development Receipt
     
-    @Before(event = CdsService.EVENT_CREATE, entity=CodeMasters_.CDS_NAME)
-    public void beforeCreateCodeMasters(List<CodeMasters> codeMasters) {
+    @Before(event = CdsService.EVENT_UPDATE, entity=MoldMasters_.CDS_NAME)
+    public void beforeCreateCodeMasters(List<MoldMasters> moldMasters) {
         
-        Instant current = Instant.now();
-
-        for(CodeMasters codeMaster : codeMasters) {
-            //codeMaster.setSystemCreateDtm(current);
-            //codeMaster.setSystemUpdateDtm(current);
-            codeMaster.setLocalCreateDtm(current);
-            codeMaster.setLocalUpdateDtm(current);
-            //codeMaster.setUpdateUserId("Temp");
-            //codeMaster.setCreateUserId("Temp");
-        }
-
-    }
-
-    @Before(event = CdsService.EVENT_UPDATE, entity=CodeMasters_.CDS_NAME)
-    public void beforeUpdateCodeMasters(List<CodeMasters> codeMasters) {
-        
-        Instant current = Instant.now();
-
-        for(CodeMasters codeMaster : codeMasters) {
-            //codeMaster.setSystemUpdateDtm(current);
-            codeMaster.setLocalUpdateDtm(current);
-            //codeMaster.setUpdateUserId("Temp");
-            //codeMaster.setCreateUserId("Temp");
-        }
-
-    }
-
-
-    /*
-    @After(event = CdsService.EVENT_READ, entity = CodeMasters_.CDS_NAME)
-    public void afterReadCodeMasters(List<CodeMasters> codeMasters) {
-        for(CodeMasters codeMaster : codeMasters) {
-            codeMaster.setGroupDescription(codeMaster.getGroupDescription() + " desc");
-        }
-    }
-    */
-
-
-
-    // Code Detail
-
-    @Before(event = CdsService.EVENT_CREATE, entity=CodeDtl_.CDS_NAME)
-    public void beforeCreateCodeDetails(List<CodeDetails> codeDetails) {
-        
-        Instant current = Instant.now();
-
-        for(CodeDetails codeDetail : codeDetails) {
-            //codeDetail.setSystemCreateDtm(current);
-            //codeDetail.setSystemUpdateDtm(current);
-            codeDetail.setLocalCreateDtm(current);
-            codeDetail.setLocalUpdateDtm(current);
-            //codeDetail.setUpdateUserId("Temp");
-            //codeDetail.setCreateUserId("Temp");
-        }
-
-    }
-
-    @Before(event = CdsService.EVENT_UPDATE, entity=CodeDtl_.CDS_NAME)
-    public void beforeUpdateCodeDetails(List<CodeDetails> codeDetails) {
-        
-        Instant current = Instant.now();
-
-        for(CodeDetails codeDetail : codeDetails) {
-            //codeDetail.setSystemUpdateDtm(current);
-            codeDetail.setLocalUpdateDtm(current);
-            //codeDetail.setUpdateUserId("Temp");
-            //codeDetail.setCreateUserId("Temp");
+        for(MoldMasters moldMaster : moldMasters) {
+            moldMaster.setMoldReceiptFlag(true);
         }
 
     }
