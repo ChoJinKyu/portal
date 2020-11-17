@@ -25,6 +25,7 @@ entity Mold_Mst_View {
         target_amount                   : Decimal(20,2)         @title:'목표금액';
         quotation_end_date              : String(8)             @title:'견적종료일자';
         mold_receipt_flag               : String(30)            @title:'금형접수여부';
+        family_flag                     : String(10)            @title:'가족부품번호등록여부';
         import_mold_flag                : Boolean               @title:'수입금형여부';
         costtable_use_flag              : Boolean               @title:'코스트테이블사용여부';
         quotation_report_number         : String(240)           @title:'견적보고서번호';
@@ -112,4 +113,6 @@ entity Mold_Mst_View {
         acq_date                        : String(8)             @title:'취득일자';
         acq_amount                      : Decimal(20,2)         @title:'취득금액';
         use_department_code             : String(30)            @title:'사용부서코드';
+        die_form                        : String(10)	        @title:'다이형상';
+        mold_size                       : String(10)	        @title:'금형크기';
 }
