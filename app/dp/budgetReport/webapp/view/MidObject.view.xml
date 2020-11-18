@@ -1,4 +1,4 @@
-<mvc:View controllerName="cm.controlOptionMgr.controller.MidObject" 
+<mvc:View controllerName="dp.budgetReport.controller.MidObject" 
 	xmlns:mvc="sap.ui.core.mvc" 
 	xmlns="sap.m" 
 	xmlns:uxap="sap.uxap" 
@@ -105,10 +105,10 @@
 						<Table id="midTable" 
 								sticky="HeaderToolbar,ColumnHeaders" 
 								inset="false" 
+								mode="None" 
 								items="{details>/}"
 								class="sapFDynamicPageAlignContent" 
 								updateFinished=".onMidTableUpdateFinished"
-								mode="SingleSelectLeft" 
 								width="auto">
 							<headerToolbar>
 								<OverflowToolbar>
@@ -117,9 +117,10 @@
 									<!-- Add the Personalization button -->
 									<Button id="midTableAddButton" text="Add" type="Transparent" press=".onMidTableAddButtonPress" />
 									<Button id="midTableDeleteButton" text="Delete" type="Transparent" press=".onMidTableDeleteButtonPress" />
+									<Button id="midTableSaveButton" text="Save" type="Emphasized" press=".onMidTableSaveButtonPress" />
 									<ToolbarSeparator/>
-									<SearchField id="midTableSearchField" width="10rem" search=".onMidTableFilterPress" />
-									<Button id="midTableApplyFilterButton" text="Apply" type="Transparent" press=".onMidTableApplyFilterButton" />
+									<SearchField width="10rem" search=".onMidTableFilterPress" />
+									<Button id="midTableApplyFilterButton" text="Apply" type="Transparent" press=".onMidTableSaveButtonPress" />
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
@@ -137,7 +138,7 @@
 								</Column>
 							</columns>
 							<items>
-								<ColumnListItem type="Inactive" press=".onMidTableItemPress">
+								<ColumnListItem type="Navigation" press=".onMidTableItemPress">
 									<cells>
 										<Text text="{details>_row_state_}"/>
 										<Input value="{details>control_option_level_code}"/>

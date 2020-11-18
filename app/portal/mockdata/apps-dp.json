@@ -9,6 +9,12 @@
                     "url": "../dp/developmentReceipt/webapp",
                     "component": "dp.developmentReceipt"
                 },
+                
+                {
+                    "name": "Budget Report",
+                    "url": "../dp/budgetReport/webapp",
+                    "component": "dp.budgetReport"
+                },
                 {
                     "name": "App #2",
                     "url": "../cm/controlOptionMgr/webapp",

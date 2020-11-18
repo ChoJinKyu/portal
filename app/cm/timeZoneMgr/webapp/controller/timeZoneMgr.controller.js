@@ -16,8 +16,7 @@ sap.ui.define([
     FilterOperator,
     MessageToast,
     MessageBox,
-    formatter
-  ) {
+    formatter) {
     "use strict";
 
     return BaseController.extend("cm.timeZoneMgr.controller.timeZoneMgr", {
@@ -86,18 +85,20 @@ sap.ui.define([
         MessageBox.confirm("Are you sure ?", {
           title: "Comfirmation",
           initialFocus: sap.m.MessageBox.Action.CANCEL,
-          onClose: function (sButton) {
+          onClose: (function (sButton) {
             if (sButton === MessageBox.Action.OK) {
               view.setBusy(true);
               model.submitChanges({
-                success: function (oEvent) {
+                success: (function (oEvent) {
                   view.setBusy(false);
                   MessageToast.show("Success to save.");
-                }
+                  this.onSearch();
+                }).bind(this)
               });
-            };
-          }
-        });
+            }
+          }).bind(this)
+        })
       }
     });
-  });
+  }
+);

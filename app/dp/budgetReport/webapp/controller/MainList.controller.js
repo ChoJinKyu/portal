@@ -1,9 +1,9 @@
 sap.ui.define([
-	"ext/lib/controller/BaseController",
+	"./BaseController",
 	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
-	"ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedListModel",
+	"ext/lib/formatter/DateFormatter",
 	"sap/m/TablePersoController",
 	"./MainListPersoService",
 	"sap/ui/model/Filter",
@@ -16,12 +16,12 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, TransactionManager, ManagedListModel, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
 	"use strict";
 
-	// var oTransactionManager;
+	return BaseController.extend("dp.budgetReport.controller.MainList", {
 
-	return BaseController.extend("xx.templateListInlineEdit.controller.MainList", {
+		dateFormatter: DateFormatter,
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -37,6 +37,7 @@ sap.ui.define([
 
 			// Model used to manipulate control states
 			oViewModel = new JSONModel({
+				headerExpanded: true,
 				mainListTableTitle : oResourceBundle.getText("mainListTableTitle"),
 				tableNoDataText : oResourceBundle.getText("tableNoDataText")
 			});
@@ -50,9 +51,8 @@ sap.ui.define([
 			}, true);
 			
 			this.setModel(new ManagedListModel(), "list");
-
-			// oTransactionManager = new TransactionManager();
-			// oTransactionManager.addDataModel(this.getModel("list"));
+			
+			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
 			this._doInitTablePerso();
         },
@@ -110,6 +110,20 @@ sap.ui.define([
 		},
 
 		/**
+		 * Event handler when a table add button pressed
+		 * @param {sap.ui.base.Event} oEvent
+		 * @public
+		 */
+		onMainTableAddButtonPress: function(){
+			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
+			this.getRouter().navTo("midPage", {
+				layout: oNextUIState.layout, 
+				tenantId: "new",
+				controlOptionCode: "code"
+			});
+		},
+
+		/**
 		 * Event handler when a search button pressed
 		 * @param {sap.ui.base.Event} oEvent the button press event
 		 * @public
@@ -122,124 +136,111 @@ sap.ui.define([
 				// refresh the list binding.
 				this.onRefresh();
 			} else {
-				var aTableSearchState = this._getSearchStates();
-				this._applySearch(aTableSearchState);
+				var aSearchFilters = this._getSearchStates();
+				this._applySearch(aSearchFilters);
 			}
 		},
 
-		onMainTableAddButtonPress: function(){
-			var oTable = this.byId("mainTable"),
-				oModel = this.getModel("list");
-			oModel.addRecord({
-				"tenant_id": "L2100",
-				"chain_code": "CM",
-				"language_code": "",
-				"message_code": "",
-				"message_type_code": "LBL",
-				"message_contents": "",
-				"local_create_dtm": new Date(),
-				"local_update_dtm": new Date()
-			}, 0);
-		},
+		/**
+		 * Event handler when pressed the item of table
+		 * @param {sap.ui.base.Event} oEvent
+		 * @public
+		 */
+		onMainTableItemPress: function(oEvent) {
+			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
+				sPath = oEvent.getSource().getBindingContext("list").getPath(),
+				oRecord = this.getModel("list").getProperty(sPath);
 
-		onMainTableDeleteButtonPress: function(){
-			var oTable = this.byId("mainTable"),
-				oModel = this.getModel("list"),
-				aItems = oTable.getSelectedItems(),
-				aIndices = [];
-			aItems.forEach(function(oItem){
-				aIndices.push(oModel.getData().indexOf(oItem.getBindingContext("list").getObject()));
+			this.getRouter().navTo("midPage", {
+				layout: oNextUIState.layout, 
+				tenantId: oRecord.tenant_id,
+				controlOptionCode: oRecord.control_option_code
 			});
-			aIndices = aIndices.sort(function(a, b){return b-a;});
-			aIndices.forEach(function(nIndex){
-				//oModel.removeRecord(nIndex);
-				oModel.markRemoved(nIndex);
-			});
-			oTable.removeSelections(true);
+
+            if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
+                this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
+            }
+
+			var oItem = oEvent.getSource();
+			oItem.setNavigated(true);
+			var oParent = oItem.getParent();
+			// store index of the item clicked, which can be used later in the columnResize event
+			this.iIndex = oParent.indexOfItem(oItem);
 		},
-       
-        onMainTableSaveButtonPress: function(){
-			var oModel = this.getModel("list"),
-				oView = this.getView();
-			
-			MessageBox.confirm("Are you sure ?", {
-				title : "Comfirmation",
-				initialFocus : sap.m.MessageBox.Action.CANCEL,
-				onClose : function(sButton) {
-					if (sButton === MessageBox.Action.OK) {
-						oView.setBusy(true);
-						oModel.submitChanges({
-							success: function(oEvent){
-								oView.setBusy(false);
-								MessageToast.show("Success to save.");
-							}
-						});
-						//oTransactionManager.submit({
-						// 	success: function(oEvent){
-						// 		oView.setBusy(false);
-						// 		MessageToast.show("Success to save.");
-						// 	}
-						// });
-					};
-				}
-			});
-			
-        }, 
 
 		/* =========================================================== */
 		/* internal methods                                            */
 		/* =========================================================== */
 
 		/**
-		 * Internal helper method to apply both filter and search state together on the list binding
-		 * @param {sap.ui.model.Filter[]} aTableSearchState An array of filters for the search
+		 * When it routed to this page from the other page.
+		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
 		 * @private
 		 */
-		_applySearch: function(aTableSearchState) {
+		_onRoutedThisPage: function(){
+			this.getModel("mainListView").setProperty("/headerExpanded", true);
+		},
+
+		/**
+		 * Internal helper method to apply both filter and search state together on the list binding
+		 * @param {sap.ui.model.Filter[]} aSearchFilters An array of filters for the search
+		 * @private
+		 */
+		_applySearch: function(aSearchFilters) {
 			var oView = this.getView(),
 				oModel = this.getModel("list");
 			oView.setBusy(true);
 			oModel.setTransactionModel(this.getModel());
-			oModel.read("/Message", {
-				filters: aTableSearchState,
+			oModel.read("/ControlOptionMasters", {
+				filters: aSearchFilters,
 				success: function(oData){
 					oView.setBusy(false);
 				}
 			});
-
-			// oTransactionManager.setServiceModel(this.getModel());
 		},
 		
 		_getSearchStates: function(){
-			var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S",
-				chain = this.getView().byId("searchChain"+sSurffix).getSelectedKey(),
-				language = this.getView().byId("searchLanguage"+sSurffix).getSelectedKey(),
-				keyword = this.getView().byId("searchKeyword"+sSurffix).getValue();
-				
-			var aTableSearchState = [];
-			if (chain && chain.length > 0) {
-				aTableSearchState.push(new Filter("chain_code", FilterOperator.EQ, chain));
+			var sChain = this.getView().byId("searchChain").getSelectedKey(),
+				sKeyword = this.getView().byId("searchKeyword").getValue(),
+				sUsage = this.getView().byId("searchUsageSegmentButton").getSelectedKey();
+			
+			var aSearchFilters = [];
+			if (sChain && sChain.length > 0) {
+				aSearchFilters.push(new Filter("chain_code", FilterOperator.EQ, sChain));
 			}
-			if (language && language.length > 0) {
-				aTableSearchState.push(new Filter("language_code", FilterOperator.EQ, language));
-			}
-			if (keyword && keyword.length > 0) {
-				aTableSearchState.push(new Filter({
+			if (sKeyword && sKeyword.length > 0) {
+				aSearchFilters.push(new Filter({
 					filters: [
-						new Filter("message_code", FilterOperator.Contains, keyword),
-						new Filter("message_contents", FilterOperator.Contains, keyword)
+						new Filter("control_option_code", FilterOperator.Contains, sKeyword),
+						new Filter("control_option_name", FilterOperator.Contains, sKeyword)
 					],
 					and: false
 				}));
 			}
-			return aTableSearchState;
+			if(sUsage != "all"){
+				switch (sUsage) {
+					case "site":
+					aSearchFilters.push(new Filter("site_flag", FilterOperator.EQ, "true"));
+					break;
+					case "company":
+					aSearchFilters.push(new Filter("company_flag", FilterOperator.EQ, "true"));
+					break;
+					case "org":
+					aSearchFilters.push(new Filter("organization_flag", FilterOperator.EQ, "true"));
+					break;
+					case "user":
+					aSearchFilters.push(new Filter("user_flag", FilterOperator.EQ, "true"));
+					break;
+				}
+			}
+			return aSearchFilters;
 		},
 		
 		_doInitTablePerso: function(){
 			// init and activate controller
 			this._oTPC = new TablePersoController({
 				table: this.byId("mainTable"),
-				componentName: "templateListInlineEdit",
+				componentName: "controlOptionMgr",
 				persoService: MainListPersoService,
 				hasGrouping: true
 			}).activate();
