@@ -9,8 +9,8 @@
   class="sapUiSizeCompact"
   displayBlock="true"
   height="100%">
-	<App id="app">
-    <f:DynamicPage id="page" toggleHeaderOnTitleClick="true" headerExpanded="true">
+  <App id="app">
+    <f:DynamicPage id="page" toggleHeaderOnTitleClick="false" headerExpanded="true" fitContent="true">
       <!--DynamicPage Title -->
       <f:title>
         <f:DynamicPageTitle>
@@ -29,7 +29,7 @@
       </f:title>
       <!--DynamicPage Header -->
       <f:header>
-        <f:DynamicPageHeader pinnable="true">
+        <f:DynamicPageHeader pinnable="false">
           <layout:HorizontalLayout>
             <form:Form id="searchForm" editable="true" width="auto">
               <form:formContainers>
@@ -110,6 +110,7 @@
         </f:DynamicPageHeader>
       </f:header>
       <f:content>
+      <FlexBox fitContainer="true">
         <t:Table id="mainTable"
           selectionMode="MultiToggle"
           rows="{
@@ -296,6 +297,7 @@
             </t:Column>
           </t:columns>
         </t:Table>
+        </FlexBox>
       </f:content>
     </f:DynamicPage>
   </App>

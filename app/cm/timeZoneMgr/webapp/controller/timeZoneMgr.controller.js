@@ -6,9 +6,8 @@ sap.ui.define([
   "sap/ui/model/FilterOperator",
   "sap/m/MessageToast",
   "sap/m/MessageBox",
-  //"sap/m/TablePersoController",
   "sap/ui/table/TablePersoController",
-  "../model/formatter",
+  //"../model/formatter",
   "./timeZonePersoService"
 ],
   function (
@@ -20,13 +19,13 @@ sap.ui.define([
     MessageToast,
     MessageBox,
     TablePersoController,
-    formatter,
+    //formatter,
     timeZonePersoService) {
     "use strict";
 
     return BaseController.extend("cm.timeZoneMgr.controller.timeZoneMgr", {
 
-      formatter: formatter,
+      //formatter: formatter,
 
       onInit: function () {
         this.getView().setModel(new ManagedListModel(), "list");
@@ -49,6 +48,7 @@ sap.ui.define([
           //     oDeferred.resolve();
           //     return oDeferred.promise();
           //   }
+          // }
         }).setTable(this.byId("mainTable"));
       },
       onMainTablePersoButtonPressed: function (event) {

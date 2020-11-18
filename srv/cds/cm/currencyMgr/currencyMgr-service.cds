@@ -26,5 +26,6 @@ service CurrencyMgrService {
     from currency.Currency as c 
     join currencyLng.Currency_Lng as l 
     on c.tenant_id = l.tenant_id and c.currency_code = l.currency_code
+    group by c.tenant_id, c.currency_code
     ;
 }
