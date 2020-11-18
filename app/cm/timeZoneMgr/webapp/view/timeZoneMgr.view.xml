@@ -9,8 +9,8 @@
   class="sapUiSizeCompact"
   displayBlock="true"
   height="100%">
-	<App id="app">
-    <f:DynamicPage id="page" toggleHeaderOnTitleClick="false" headerExpanded="true">
+  <App id="app">
+    <f:DynamicPage id="page" toggleHeaderOnTitleClick="false" headerExpanded="true" fitContent="true">
       <!--DynamicPage Title -->
       <f:title>
         <f:DynamicPageTitle>
@@ -110,6 +110,7 @@
         </f:DynamicPageHeader>
       </f:header>
       <f:content>
+      <FlexBox fitContainer="true">
         <t:Table id="mainTable"
           selectionMode="MultiToggle"
           rows="{
@@ -296,6 +297,7 @@
             </t:Column>
           </t:columns>
         </t:Table>
+        </FlexBox>
       </f:content>
     </f:DynamicPage>
   </App>
