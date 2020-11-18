@@ -44,10 +44,10 @@
                         </VBox>
                         <VBox>
                             <Label text="사용여부" labelFor="searchChain" required="true"></Label>
-                            <ComboBox id="searchChain" selectedKey="Y"
+                            <ComboBox id="searchChain" selectedKey=""
                                                     width="100%">
-                                                    <core:Item key="Y" text="Yes"/>                                                            
-                                                    <core:Item key="N" text="No"/>
+                                                    <core:Item key="true" text="Yes"/>                                                            
+                                                    <core:Item key="false" text="No"/>
                             </ComboBox>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />

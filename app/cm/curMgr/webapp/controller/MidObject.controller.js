@@ -81,7 +81,7 @@ sap.ui.define([
 			this.getRouter().navTo("midPage", {
 				layout: sNextLayout, 
 				tenantId: this._sTenantId,
-				controlOptionCode: this._sControlOptionCode
+				currencyCode: this._sCurrencyCode
 			});
 		},
 		/**
@@ -93,7 +93,7 @@ sap.ui.define([
 			this.getRouter().navTo("midPage", {
 				layout: sNextLayout, 
 				tenantId: this._sTenantId,
-				controlOptionCode: this._sControlOptionCode
+				currencyCode: this._sCurrencyCode
 			});
 		},
 		/**
@@ -147,7 +147,7 @@ sap.ui.define([
 			oDetailsModel.addRecord({
                 "tenant_id": this._sTenantId,
                 "language_code" : "",
-				"currency_code": this._sControlOptionCode,
+				"currency_code": this._sCurrencyCode,
 				"currency_code_name": "",
 				"currency_code_desc": "",
                 "currency_prefix": "",
@@ -218,11 +218,11 @@ sap.ui.define([
 				var oMasterModel = this.getModel("master");
 				var oDetailsModel = this.getModel("details");
 				var sTenantId = oMasterModel.getProperty("/tenant_id");
-				var sControlOPtionCode = oMasterModel.getProperty("/control_option_code");
+				var sCurrencyCode = oMasterModel.getProperty("/control_option_code");
 				var oDetailsData = oDetailsModel.getData();
 				oDetailsData.forEach(function(oItem, nIndex){
 					oDetailsModel.setProperty("/"+nIndex+"/tenant_id", sTenantId);
-					oDetailsModel.setProperty("/"+nIndex+"/control_option_code", sControlOPtionCode);
+					oDetailsModel.setProperty("/"+nIndex+"/control_option_code", sCurrencyCode);
 				});
 				oDetailsModel.setData(oDetailsData);
 			}
@@ -237,9 +237,9 @@ sap.ui.define([
 			var oArgs = oEvent.getParameter("arguments"),
 				oView = this.getView();
 			this._sTenantId = oArgs.tenantId;
-			this._sControlOptionCode = oArgs.controlOptionCode;
+            this._sCurrencyCode = oArgs.currencyCode;
 
-			if(oArgs.tenantId == "new" && oArgs.controlOptionCode == "code"){
+			if(oArgs.tenantId == "new" && oArgs.currencyCode == "code"){
 				//It comes Add button pressed from the before page.
 				this.getModel("midObjectView").setProperty("/isAddedMode", true);
 				var oMasterModel = this.getModel("master");
@@ -250,7 +250,7 @@ sap.ui.define([
 					"extension_scale": "",
                     "effective_start_date": new Date(),
                     "effective_end_date" : new Date(9999, 11, 31),
-					"user_flag": false,
+					"use_flag": false,
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
 				}, "/Currency");
@@ -259,8 +259,8 @@ sap.ui.define([
 				oDetailsModel.setData([]);
 				oDetailsModel.addRecord({
                     "tenant_id": this._sTenantId,
-                    "language_code" : "",
-					"currency_code": this._sControlOptionCode,
+                    "language_code" : "KO",
+					"currency_code": "PO",
 					"currency_code_name": "",
 					"currency_code_desc": "",
                     "currency_prefix": "",
@@ -271,14 +271,14 @@ sap.ui.define([
 				this._toEditMode();
 			}else{
                 this.getModel("midObjectView").setProperty("/isAddedMode", false);
-				this._bindView("/Currency(tenant_id='" + this._sTenantId + "',currency_code='" + this._sControlOptionCode + "')");
+				this._bindView("/Currency(tenant_id='" + this._sTenantId + "',currency_code='" + this._sCurrencyCode + "')");
 				oView.setBusy(true);
 				var oDetailsModel = this.getModel("details");
 				oDetailsModel.setTransactionModel(this.getModel());
 				oDetailsModel.read("/CurrencyLng", {
 					filters: [
 						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-						new Filter("currency_code", FilterOperator.EQ, this._sControlOptionCode),
+						new Filter("currency_code", FilterOperator.EQ, this._sCurrencyCode),
 					],
 					success: function(oData){
 						oView.setBusy(false);

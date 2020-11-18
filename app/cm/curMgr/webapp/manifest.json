@@ -122,7 +122,7 @@
               ]
           },
           {
-              "pattern": "midObject/{layout}/{tenantId}/{controlOptionCode}",
+              "pattern": "midObject/{layout}/{tenantId}/{currencyCode}",
               "name": "midPage",
               "target": [
                   "mainObject",

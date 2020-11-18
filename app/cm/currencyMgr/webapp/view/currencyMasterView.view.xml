@@ -128,7 +128,6 @@
                                 <Text id="currency_suffix" text="{currency_suffix}"/>
                                 <Text id="effective_start_date" text="{effective_start_date}"/>
                                 <Text id="effective_end_date" text="{effective_end_date}"/>
-								
 							</cells>
 						</ColumnListItem>
 					</items>
