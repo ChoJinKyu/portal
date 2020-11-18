@@ -139,12 +139,12 @@
             </f:header>
             <f:content>
                 <layout:Splitter orientation="Vertical">
-                        <Table  id="itemSpecTable"
+                        <Table  id="itemTable"
                                 items="{
-                                            path : '/MoldItemSpec'
+                                            path : '/MoldItem'
                                         }"
                                 mode="MultiSelect"
-                                updateFinished="onItemSpecUpdateFinished"
+                                updateFinished="onItemUpdateFinished"
                                 
                         >
                         <layoutData>
@@ -153,56 +153,96 @@
                             <headerToolbar>
                                 <OverflowToolbar>
                                     <content>
-                                        <Title text="{i18n>itemSpec}" level="H2"/>
                                         <ToolbarSpacer/>
-                                        <Button text="행추가" icon="sap-icon://add"  type="Accept" press="onMstAddRow"/>
-                                        <Button text="행복사" icon="sap-icon://copy" type="Accept" press="onMstCopyRow"/>
-                                        <Button text="행삭제" icon="sap-icon://delete" type="Reject" press="onMstDeleteRow"/>
-                                        <Button text="저장"   icon="sap-icon://save" type="Attention" press="onMstSave"/>
+                                        <Button text="Excel" icon="sap-icon://excel"  type="Accept" press="onExcelDown"/>
                                     </content>
                                 </OverflowToolbar>
                             </headerToolbar>
                             <columns>
                                 <Column hAlign="Center" width="100px">
                                     <header>
-                                        <Label text="사업부코드"/>
+                                        <Label text="LG Affiliate"/>
                                     </header>
                                 </Column>
                                 <Column hAlign="Center" width="100px">
                                     <header>
-                                        <Label text="도번 ID"/>
+                                        <Label text="LG Division"/>
                                     </header>
                                 </Column>
                                 <Column hAlign="Center" width="100px">
                                     <header>
-                                        <Label text="작성자"/>
+                                        <Label text="Model"/>
                                     </header>
                                 </Column>
-                                <Column hAlign="Center" width="200px">
+                                <Column hAlign="Center" width="100px">
                                     <header>
-                                        <Label text="작성일"/>
+                                        <Label text="Part No"/>
                                     </header>
                                 </Column>
-                                <Column hAlign="Center" width="200px">
+                                <Column hAlign="Center" width="100px">
                                     <header>
-                                        <Label text="최종 수정자"/>
+                                        <Label text="Seq"/>
                                     </header>
                                 </Column>
-                                <Column hAlign="Center" width="200px">
+                                <Column hAlign="Center" width="100px">
                                     <header>
-                                        <Label text="최종 수정일"/>
+                                        <Label text="Status"/>
                                     </header>
                                 </Column>
+
+                                <Column hAlign="Center" width="100px">
+                                    <header>
+                                        <Label text="Description"/>
+                                    </header>
+                                </Column>
+                                <Column hAlign="Center" width="100px">
+                                    <header>
+                                        <Label text="Item Type"/>
+                                    </header>
+                                </Column>
+                                <Column hAlign="Center" width="100px">
+                                    <header>
+                                        <Label text="1st Production Date"/>
+                                    </header>
+                                </Column>
+                                <Column hAlign="Center" width="100px">
+                                    <header>
+                                        <Label text="Complete Date"/>
+                                    </header>
+                                </Column>
+                                <Column hAlign="Center" width="100px">
+                                    <header>
+                                        <Label text="User"/>
+                                    </header>
+                                </Column>
+                                <Column hAlign="Center" width="100px">
+                                    <header>
+                                        <Label text="Date"/>
+                                    </header>
+                                </Column>
+                                <Column hAlign="Center" width="100px">
+                                    <header>
+                                        <Label text="Family Part No"/>
+                                    </header>
+                                </Column>
+
                             </columns>
                             <items>
-                                <ColumnListItem type="Active" id="itemSpecColumnListItem" press="onitemSpecTableItemPress">
+                                <ColumnListItem type="Active" id="itemColumnListItem" press="onitemTableItemPress">
                                     <cells>
-                                        <Input id="is_org_code" value="{org_code}"/>
-                                        <Input id="is_item_id" value="{item_id}"/>
-                                        <Text id="is_created_by" text="{created_by}"/>
-                                        <Text id="is_create_date" text="{create_date}"/>
-                                        <Text id="is_last_updated_by" text="{last_updated_by}"/>
-                                        <Text id="is_last_update_date" text="{last_update_date}"/>
+                                        <Text id="affiliate_code" value="{affiliate_code}"/>
+                                        <Text id="org_code" value="{org_code}"/>
+                                        <Text id="model" value="{model}"/>
+                                        <Text id="part_no" value="{part_no}"/>
+                                        <Text id="item_seq" value="{item_seq}"/>
+                                        <Text id="order_nego_status" value="{order_nego_status}"/>
+                                        <Text id="description" value="{description}"/>
+                                        <Text id="item_type" value="{item_type}"/>
+                                        <Text id="first_prod_date" value="{first_prod_date}"/>
+                                        <Text id="complete_date" value="{complete_date}"/>
+                                        <Text id="created_by" value="{created_by}"/>
+                                        <Text id="last_update_date" text="{local_update_dtm}"/>
+                                        <Text id="family_part_no_1" text="{family_part_no_1}"/>
                                     </cells>
                                 </ColumnListItem>
                             </items>
@@ -214,3 +254,4 @@
     </App>
   <!-- </Shell> -->
 </mvc:View>
+

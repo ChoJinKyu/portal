@@ -1,0 +1,35 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core"
+    xmlns:uxap="sap.uxap" >
+
+    <form:SimpleForm editable="false">
+        <l:VerticalLayout>
+            <Label text="Model"/>
+            <Text text="{master>/model}"/>
+            <Label text="Prod Type"/>
+            <Text text="{master>/mold_production_type_code}"/>
+            <Label text="Mold Supplier"/>
+            <Text text="{master>/mold_vendor_id}"></Text>
+        </l:VerticalLayout>            
+        <l:VerticalLayout >
+            <Label text="Part No"/> 
+            <Text text="{master>/part_number}"/>
+            <Label text="Item Type"/>
+            <Text text="{master>/mold_item_type_code}"/>
+            <Label text="Order Supplier"/>
+            <Text text="{master>/order_vendor_id}"></Text>
+        </l:VerticalLayout>            
+        <l:VerticalLayout >
+            <Label text="Seq"/>
+            <Text text="{master>/mold_sequence}"/>
+            <Label text="Description"/>
+            <Text text="{master>/spec_name}"></Text>
+            <Label text="Prod Supplier"/>
+            <Text text="{master>/production_vendor_id}"></Text>
+        </l:VerticalLayout>
+    </form:SimpleForm>
+	
+</core:FragmentDefinition>

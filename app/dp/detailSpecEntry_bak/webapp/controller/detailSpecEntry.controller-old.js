@@ -21,7 +21,7 @@ sap.ui.define([
 
                 console.log('aa');
 
-                var mstBinding = this.byId("itemSpecTable").getBinding("items");
+                var mstBinding = this.byId("itemTable").getBinding("items");
                 //var mstBinding = this.byId("codeMstTable").getBinding("rows");
 
                 console.log('bb');
