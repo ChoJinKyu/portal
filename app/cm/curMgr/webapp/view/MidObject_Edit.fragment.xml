@@ -1,0 +1,50 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<form:SimpleForm id="midObjectForm1Edit" editable="false" >
+		
+		<core:Title text="Normal" />
+		<Label text="Chain" required="true"/>
+		<Label text="Code" required="true"/>
+		<Input value="{master>/control_option_code}"/>
+		<Label text="Name" required="true"/>
+		<Input value="{master>/control_option_name}"/>
+
+		<core:Title text="Effect" />
+		<Label text="From" required="true"/>
+		<DatePicker placeholder="Starts From" value="{master>/start_date}"/>
+		<Label text="To" required="true"/>
+		<DatePicker placeholder="Ends To" value="{master>/end_date}"/>
+		
+		<core:Title text="Boundry" />
+		<Label text="Site"/>
+		<Switch state="{master>/site_flag}" customTextOn="Yes" customTextOff="No">
+			<layoutData>
+				<FlexItemData growFactor="1" />
+			</layoutData>
+		</Switch>
+		
+		<Label text="Organization"/>
+		<Switch state="{master>/organization_flag}" customTextOn="Yes" customTextOff="No">
+			<layoutData>
+				<FlexItemData growFactor="1" />
+			</layoutData>
+		</Switch>
+		<Label text="User"/>
+		<Switch state="{master>/user_flag}" customTextOn="Yes" customTextOff="No">
+			<layoutData>
+				<FlexItemData growFactor="1" />
+			</layoutData>
+		</Switch>
+
+        <Label text="Company"/>
+		<Switch state="{master>/company_flag}" customTextOn="Yes" customTextOff="No">
+			<layoutData>
+				<FlexItemData growFactor="1" />
+			</layoutData>
+		</Switch>
+
+	</form:SimpleForm>
+</core:FragmentDefinition>
