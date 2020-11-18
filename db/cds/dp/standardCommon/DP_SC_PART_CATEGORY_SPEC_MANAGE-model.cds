@@ -1,16 +1,18 @@
 namespace dp;	
 using util from '../../util/util-model'; 	
-// using {dp as specNameLov} from '../standardCommon/DP_SC_SPEC_NAME_LOV-model';	
+// using {dp as categorySpecManage} from '../standardCommon/DP_SC_PART_CATEGORY_SPEC_MANAGE-model';	
 	
-entity Sc_Spec_Name_Lov {	
+entity Sc_Part_Category_Spec_Manage {	
   key tenant_id : String(5)  not null;	
   key company_code : String(10) default '*' not null;	
   key org_type_code : String(30)  not null;	
   key org_code : String(10)  not null;	
+  key category_code : String(200)  not null;	
   key spec_code : String(200)  not null;	
-  key spec_value_code : String(200)  not null;	
-    spec_value_name : String(2000)  ;	
     seq : Decimal default 0 ;	
+    detail_flag : Boolean  ;	
+    search_condition_flag : Boolean  ;	
+    class_code : String(200)  ;	
     status_code : String(10)  ;	
 }	
-extend Sc_Spec_Name_Lov with util.Managed;	
+extend Sc_Part_Category_Spec_Manage with util.Managed;
