@@ -15,7 +15,7 @@
                     "component": "dp.moldApprovalList"
                 },
                 {
-                    "name": "Budget Report",
+                    "name": "Budget Report(임시)",
                     "url": "../dp/budgetReport/webapp",
                     "component": "dp.budgetReport"
                 },

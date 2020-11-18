@@ -183,7 +183,7 @@
                         </Column>
                     </columns>
                     <items>
-                        <ColumnListItem type="Navigation" press=".onMainTableItemPress">
+                        <ColumnListItem type="Navigation" press=".onListMainTableItemPress">
                             <cells>
                                 <ObjectIdentifier text="{list>control_option_code}"/>
                                 <ObjectIdentifier text="{list>language_code}"/>

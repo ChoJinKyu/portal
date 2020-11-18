@@ -58,7 +58,6 @@ sap.ui.define([
                 mainListTableTitle: oResourceBundle.getText("mainListTableTitle"),
                 tableNoDataText: oResourceBundle.getText("tableNoDataText")
             });
-            console.log("  여기 왔나??? 3");
             this.setModel(oViewModel, "mainListView");
 
             // Add the mainList page to the flp routing history
@@ -67,7 +66,7 @@ sap.ui.define([
                 icon: "sap-icon://table-view",
                 intent: "#Template-display"
             }, true);
-            console.log("  여기 왔나??? 4");
+        
             this.setModel(new ManagedListModel(), "list");
             //this._doInitTable();
             //this._doInitTablePerso(); 
@@ -76,16 +75,10 @@ sap.ui.define([
         },
 
         onAfterRendering: function () { 
-              console.log("  여기 왔나??? onAfterRendering ");
             this.byId("pageSearchButton").firePress();
             return;
         },
 
-        _onObjectMatched: function () {
-            console.log("  여기 왔나??? 555 ");
-
-            this.byId("pageSearchButton").firePress();
-        },
         _onRoutedThisPage: function () {
              console.log("  여기 왔나??? _onRoutedThisPage ");
             this.getModel("mainListView").setProperty("/headerExpanded", true);
@@ -254,10 +247,10 @@ sap.ui.define([
 		 */
 		_showMainObject : function (oItem) {
 			var that = this;
-			that.getRouter().navTo("mainObject", {
-				tenantId: oItem.getBindingContext().getProperty("tenant_id"),
-				messageCode: oItem.getBindingContext().getProperty("message_code"),
-				languageCode: oItem.getBindingContext().getProperty("language_code")
+			that.getRouter().navTo("budgetReportObject", {
+                message_code: "01" 
+                , chain_code : "code" 
+                , language_code : "codelang"
 			});
 		},
 
