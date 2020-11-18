@@ -134,20 +134,27 @@
           "target": [
             "example1"
           ]
+        },
+        {
+          "pattern": "example2",
+          "name": "example2",
+          "target": [
+            "example2"
+          ]
         }
       ],
       "targets": {
         "home": {
           "viewName": "Home",
-          "viewId": "home",
-          "viewLevel": 1,
-          "title": "{i18n>homeViewTitle}"
+          "viewId": "home"
         },
         "example1": {
           "viewName": "SearchAreaControls",
-          "viewId": "example1",
-          "viewLevel": 2,
-          "title": "{i18n>exampleViewTitle}"
+          "viewId": "example1"
+        },
+        "example2": {
+          "viewName": "ControlValidation",
+          "viewId": "example2"
         },
         "notFound": {
           "viewName": "NotFound",

@@ -3,14 +3,14 @@ sap.ui.define([
 ], function () {
     "use strict";
 
-    var Util = {
-        validtionRequired : function(targetControl, groupId){
+    var ValidatorUtil = {
+        checkRequires : function(targetControl, groupId){
             if(!targetControl && typeof(targetControl) !== "object"){
                 throw new Error("targetControl arguments are required.")
             }
             var bReturn = true;
             var sGroupId = (groupId && groupId.length)?groupId:"";
-            var oControl = (targetControl.getMetadata().getStereotype() === "controller")?targetControl.getView():targetControl;
+            var oControl = (targetControl.getMetadata().getStereotype() === "controller") ? targetControl.getView() : targetControl;
 
             var aControl = oControl.getControlsByFieldGroupId(sGroupId);
             aControl.forEach(function(item){
@@ -32,5 +32,5 @@ sap.ui.define([
         }
     };
 
-    return Util;
+    return ValidatorUtil;
 });

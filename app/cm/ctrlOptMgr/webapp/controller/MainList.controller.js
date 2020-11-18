@@ -1,5 +1,5 @@
 sap.ui.define([
-	"./BaseController",
+	"ext/lib/controller/BaseController",
 	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
 	"ext/lib/model/ManagedListModel",
@@ -56,9 +56,9 @@ sap.ui.define([
 
 			this._doInitTablePerso();
         },
-        
-        onAfterRendering : function () {
-			return;
+		
+        onRenderedFirst : function () {
+			this.byId("pageSearchButton").firePress();
         },
 
 		/* =========================================================== */
@@ -178,7 +178,6 @@ sap.ui.define([
 		 */
 		_onRoutedThisPage: function(){
 			this.getModel("mainListView").setProperty("/headerExpanded", true);
-			this.byId("pageSearchButton").firePress();
 		},
 
 		/**

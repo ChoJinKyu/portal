@@ -3,5 +3,10 @@
         "name": "Search Area Controls",
         "icon": "sap-icon://source-code",
         "viewName": "example1"
+    },
+    {
+        "name": "Control Validations",
+        "icon": "sap-icon://source-code",
+        "viewName": "example2"
     }
 ]

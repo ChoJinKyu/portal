@@ -96,6 +96,13 @@
         }
       }
     },
+    "resources": {
+        "css": [
+            {
+                "uri": "css/style.css"
+            }
+        ]
+    },
     "resourceRoots": {
       "ext.lib": "../../../lib"
     },
@@ -140,7 +147,8 @@
               "controlAggregation": "midColumnPages"
           },
           "notFound": {
-            "viewName": "MidObjectNotFound",
+            "viewName": "NotFound",
+            "viewPath": "ext.lib.view",
             "viewId": "notFound"
           }
       }

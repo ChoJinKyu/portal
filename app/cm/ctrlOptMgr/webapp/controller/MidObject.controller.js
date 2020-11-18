@@ -1,6 +1,6 @@
 sap.ui.define([
-	"./BaseController",
-	"sap/ui/core/routing/History",
+	"ext/lib/controller/BaseController",
+	"ext/lib/util/ValidatorUtil",
 	"sap/ui/model/json/JSONModel",
 	"ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedModel",
@@ -17,7 +17,7 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
+], function (BaseController, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
 	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
 	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
 		
@@ -66,6 +66,9 @@ sap.ui.define([
 			this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
 
 			this._initTableTemplates();
+
+			this.enableValidator();
+
 		}, 
 
 		/* =========================================================== */
@@ -178,6 +181,7 @@ sap.ui.define([
         onPageSaveButtonPress: function(){
 			var oView = this.getView(),
 				that = this;
+				debugger;
 			MessageBox.confirm("Are you sure ?", {
 				title : "Comfirmation",
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -185,10 +189,10 @@ sap.ui.define([
 					if (sButton === MessageBox.Action.OK) {
 						oView.setBusy(true);
 						oTransactionManager.submit({
-						// oView.getModel("master").submitChanges({
 							success: function(ok){
 								that._toShowMode();
 								oView.setBusy(false);
+								that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
 								MessageToast.show("Success to save.");
 							}
 						});
@@ -198,13 +202,16 @@ sap.ui.define([
 
 		},
 		
-		
 		/**
 		 * Event handler for cancel page editing
 		 * @public
 		 */
         onPageCancelEditButtonPress: function(){
-			this._toShowMode();
+			if(this.getModel("midObjectView").getProperty("/isAddedMode") == true){
+				this.onPageNavBackButtonPress.call(this);
+			}else{
+				this._toShowMode();
+			}
         },
 
 		/* =========================================================== */
@@ -363,10 +370,12 @@ sap.ui.define([
 			});
 
             var oLevelCodeCombo = new ComboBox({
-                    selectedKey: "{details>control_option_level_code}"
+					required: true,
+					selectedKey: "{details>control_option_level_code}"
                 });
                 oLevelCodeCombo.bindItems({
-                    path: 'util>/CodeDetails',
+					id: "testCombo1",
+					path: 'util>/CodeDetails',
                     filters: [
                         new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
                         new Filter("company_code", FilterOperator.EQ, 'G100'),
@@ -376,7 +385,7 @@ sap.ui.define([
                         key: "{util>code}",
                         text: "{util>code_description}"
                     })
-                });
+				});
 			this.oEditableTemplate = new ColumnListItem({
 				cells: [
 					new Text({
@@ -387,10 +396,24 @@ sap.ui.define([
 					}), 
 					oLevelCodeCombo, 
 					new Input({
-						value: "{details>control_option_level_val}"
-					}), 
+						value: {
+							path: "details>control_option_level_val",
+							constraints: {
+								minLength: 4,
+								maxLength: 100
+							}
+						},
+						required: true
+					}),
 					new Input({
-						value: "{details>control_option_val}"
+						value: {
+							path: "details>control_option_val",
+							constraints: {
+								minLength: 4,
+								maxLength: 100
+							}
+						},
+						required: true
 					})
 				]
             });

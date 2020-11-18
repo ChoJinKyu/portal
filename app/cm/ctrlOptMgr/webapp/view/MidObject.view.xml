@@ -159,6 +159,12 @@
 		
 		<uxap:footer>
 			<OverflowToolbar>
+                <Button
+                    icon="sap-icon://alert"
+                    text="{= ${message>/}.length }"
+                    visible="{= ${message>/}.length > 0 }"
+                    type="Emphasized"
+                    press=".onValidatorMessagePopoverPress" />
 				<ToolbarSpacer />
 				<Button type="Emphasized" text="Save" press=".onPageSaveButtonPress" />
 				<Button type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
