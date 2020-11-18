@@ -119,7 +119,7 @@ sap.ui.define([
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
 				tenantId: "new",
-				controlOptionCode: "code"
+				currencyCode: "code"
 			});
 		},
 
@@ -153,7 +153,7 @@ sap.ui.define([
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
 				tenantId: oRecord.tenant_id,
-				controlOptionCode: oRecord.currency_code
+				currencyCode: oRecord.currency_code
 			});
 
             if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
@@ -200,39 +200,22 @@ sap.ui.define([
 		},
 		
 		_getSearchStates: function(){
-			// var sChain = this.getView().byId("searchChain").getSelectedKey(),
-			// 	sKeyword = this.getView().byId("searchKeyword").getValue(),
+			var sChain = this.getView().byId("searchChain").getSelectedKey(),
+				sKeyword = this.getView().byId("searchKeyword").getValue();
 			// 	sUsage = this.getView().byId("searchUsageSegmentButton").getSelectedKey();
 			
-			var aSearchFilters = [];
-			// if (sChain && sChain.length > 0) {
-			// 	aSearchFilters.push(new Filter("chain_code", FilterOperator.EQ, sChain));
-			// }
-			// if (sKeyword && sKeyword.length > 0) {
-			// 	aSearchFilters.push(new Filter({
-			// 		filters: [
-			// 			new Filter("control_option_code", FilterOperator.Contains, sKeyword),
-			// 			new Filter("control_option_name", FilterOperator.Contains, sKeyword)
-			// 		],
-			// 		and: false
-			// 	}));
-			// }
-			// if(sUsage != "all"){
-			// 	switch (sUsage) {
-			// 		case "site":
-			// 		aSearchFilters.push(new Filter("site_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 		case "company":
-			// 		aSearchFilters.push(new Filter("company_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 		case "org":
-			// 		aSearchFilters.push(new Filter("organization_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 		case "user":
-			// 		aSearchFilters.push(new Filter("user_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 	}
-			// }
+            var aSearchFilters = [];
+			if (sChain && sChain.length > 0) {
+				aSearchFilters.push(new Filter("use_flag", FilterOperator.EQ, sChain));
+			}
+			if (sKeyword && sKeyword.length > 0) {
+				aSearchFilters.push(new Filter({
+					filters: [
+						new Filter("currency_code", FilterOperator.Contains, sKeyword)
+					],
+					and: false
+				}));
+			}
 			return aSearchFilters;
 		},
 		
