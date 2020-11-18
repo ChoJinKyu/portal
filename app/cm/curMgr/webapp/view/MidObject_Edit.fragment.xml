@@ -15,9 +15,9 @@
 
 		<core:Title text="유효여부" />
 		<Label text="유효시작일자" required="true"/>
-		<DatePicker placeholder="Starts From" value="{master>/effective_start_date}"/>
+		<DatePicker placeholder="Starts From" value="{master>/effective_start_date}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
 		<Label text="유효종료일자" required="true"/>
-		<DatePicker placeholder="Ends To" value="{master>/effective_end_date}"/>
+		<DatePicker placeholder="Ends To" value="{master>/effective_end_date}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
 
         <Label text="사용여부"/>
 		<Switch state="{master>/use_flag}" customTextOn="Yes" customTextOff="No">

@@ -55,7 +55,7 @@ sap.ui.define([
 			// Save the current route name
 			this.sCurrentRouteName = sRouteName;
             this.sCurrentTenantId = oArguments.tenantId;
-			this.sCurrentcurrencyCodeCode = oArguments.currencyCode;
+			this.sCurrentcurrencyCode = oArguments.currencyCode;
 		},
 
 		onStateChanged: function (oEvent) {
@@ -67,7 +67,7 @@ sap.ui.define([
 				this.oRouter.navTo(this.sCurrentRouteName, {
 					layout: sLayout, 
 					tenantId: this.sCurrentTenantId, 
-					currencyCode: this.sCurrentcurrencyCodeCode
+					currencyCode: this.sCurrentcurrencyCode
 				}, true);
 			}
 		},

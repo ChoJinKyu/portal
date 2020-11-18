@@ -51,7 +51,9 @@ sap.ui.define([
 			// between the busy indication for loading the view's meta data
 			var oViewModel = new JSONModel({
 					busy : true,
-					delay : 0
+                    delay : 0,
+                    screen : "",
+                    editMode : "",
 				});
 			this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
 			this.setModel(oViewModel, "midObjectView");
@@ -77,32 +79,40 @@ sap.ui.define([
 		 * @public
 		 */
 		onPageEnterFullScreenButtonPress: function () {
-			var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
+            var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
+            var oViewModel = this.getModel("midObjectView");
 			this.getRouter().navTo("midPage", {
 				layout: sNextLayout, 
 				tenantId: this._sTenantId,
-				currencyCode: this._sCurrencyCode
-			});
+                currencyCode: this._sCurrencyCode
+            });
+            oViewModel.setProperty("/screen", "fullScreen");
+            
+            
 		},
 		/**
 		 * Event handler for Exit Full Screen Button pressed
 		 * @public
 		 */
 		onPageExitFullScreenButtonPress: function () {
-			var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
+            var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
+            var oViewModel = this.getModel("midObjectView");
 			this.getRouter().navTo("midPage", {
 				layout: sNextLayout, 
 				tenantId: this._sTenantId,
 				currencyCode: this._sCurrencyCode
-			});
+            });
+            oViewModel.setProperty("/screen", "exitFullScreen");
 		},
 		/**
 		 * Event handler for Nav Back Button pressed
 		 * @public
 		 */
 		onPageNavBackButtonPress: function () {
-			var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+            var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+            var oViewModel = this.getModel("midObjectView");
             this.getRouter().navTo("mainPage", {layout: sNextLayout});
+            oViewModel.setProperty("/screen", "");
 		},
 
 		/**
@@ -246,10 +256,10 @@ sap.ui.define([
 				oMasterModel.setData({
                     "tenant_id": "L2100",
 					"currency_code": "",
-					"scale": "",
-					"extension_scale": "",
+					"scale": null,
+					"extension_scale": null,
                     "effective_start_date": new Date(),
-                    "effective_end_date" : new Date(9999, 11, 31),
+                    "effective_end_date" : new Date(2099, 12, 31),
 					"use_flag": false,
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
@@ -263,8 +273,8 @@ sap.ui.define([
 					"currency_code": "PO",
 					"currency_code_name": "",
 					"currency_code_desc": "",
-                    "currency_prefix": "",
-                    "currency_suffix" : "",
+                    "currency_prefix": null,
+                    "currency_suffix" : null,
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
 				}, "/CurrencyLng");
@@ -308,14 +318,18 @@ sap.ui.define([
 		},
 
 		_toEditMode: function(){
-			var FALSE = false;
+            var FALSE = false;
+            var oViewModel = this.getModel("midObjectView");
+            oViewModel.setProperty("/editMode", "edit");
             this._showFormFragment('MidObject_Edit');
 			this.byId("page").setSelectedSection("pageSectionMain");
 			this.byId("page").setProperty("showFooter", !FALSE);
 			this.byId("pageEditButton").setEnabled(FALSE);
 			this.byId("pageDeleteButton").setEnabled(FALSE);
-			this.byId("pageNavBackButton").setEnabled(FALSE);
+            this.byId("pageNavBackButton").setEnabled(FALSE);
 
+            this.byId("pageExitFullScreenButton").setVisible(false); 
+            this.byId("pageEnterFullScreenButton").setVisible(false);
 			this.byId("midTableAddButton").setEnabled(!FALSE);
 			this.byId("midTableDeleteButton").setEnabled(!FALSE);
 			this.byId("midTableSearchField").setEnabled(FALSE);
@@ -325,20 +339,36 @@ sap.ui.define([
 		},
 
 		_toShowMode: function(){
-			var TRUE = true;
+            var TRUE = true;
+            var oViewModel = this.getModel("midObjectView");
 			this._showFormFragment('MidObject_Show');
 			this.byId("page").setSelectedSection("pageSectionMain");
 			this.byId("page").setProperty("showFooter", !TRUE);
 			this.byId("pageEditButton").setEnabled(TRUE);
 			this.byId("pageDeleteButton").setEnabled(TRUE);
-			this.byId("pageNavBackButton").setEnabled(TRUE);
+            this.byId("pageNavBackButton").setEnabled(TRUE);
+            switch(oViewModel.getProperty("/screen")){
+                case "exitFullScreen" :
+                    this.byId("pageExitFullScreenButton").setVisible(false); 
+                    this.byId("pageEnterFullScreenButton").setVisible(true);
+                    break;
+                case "fullScreen" :
+                    this.byId("pageExitFullScreenButton").setVisible(true); 
+                    this.byId("pageEnterFullScreenButton").setVisible(false);
+                    break;
+                case "" :
+                    this.byId("pageExitFullScreenButton").setVisible(false); 
+                    this.byId("pageEnterFullScreenButton").setVisible(true); 
+                    break;
+            }
 
 			this.byId("midTableAddButton").setEnabled(!TRUE);
 			this.byId("midTableDeleteButton").setEnabled(!TRUE);
 			this.byId("midTableSearchField").setEnabled(TRUE);
 			this.byId("midTableApplyFilterButton").setEnabled(TRUE);
 			this.byId("midTable").setMode(sap.m.ListMode.None);
-			this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
+            this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
+            oViewModel.setProperty("/editMode", "");
 		},
 
 		_initTableTemplates: function(){
