@@ -150,14 +150,16 @@
                 <Table id="mainTable" 
                         sticky="HeaderToolbar,ColumnHeaders" 
                         inset="false" 
-                        mode="None" 
+                        growing="true"
+                        growingThreshold="20"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onListMainTableUpdateFinished"
+                        mode="None" 
                         width="auto"
                         items="{list>/}">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="Messages" level="H2"/>
+                            <Title text="Approval List ({= ${list>/}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <SearchField width="17.5rem" search=".onListMainTableFilterPress" />
                             <!-- Add the Personalization button -->
