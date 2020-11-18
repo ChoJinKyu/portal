@@ -4,31 +4,31 @@ sap.ui.define(["jquery.sap.global"],
 
         var _columns = [
             {
-                id: "templateListViewAndObjectEdit-mainList-mainColumnChainCode",
+                id: "budgetReport-mainList-mainColumnChainCode",
                 order: 0,
                 text: "Chain",
                 visible: true
             },
             {
-                id: "templateListViewAndObjectEdit-mainList-mainColumnLanguageCode",
+                id: "budgetReport-mainList-mainColumnLanguageCode",
                 order: 1,
                 text: "Language",
                 visible: false
             },
             {
-                id: "templateListViewAndObjectEdit-mainList-mainColumnMessageCode",
+                id: "budgetReport-mainList-mainColumnMessageCode",
                 order: 4,
                 text: "Code",
                 visible: false
             },
             {
-                id: "templateListViewAndObjectEdit-mainList-mainColumnMessageContents",
+                id: "budgetReport-mainList-mainColumnMessageContents",
                 order: 2,
                 text: "Contents",
                 visible: true
             },
             {
-                id: "templateListViewAndObjectEdit-mainList-mainColumnMessageTypeCode",
+                id: "budgetReport-mainList-mainColumnMessageTypeCode",
                 order: 3,
                 text: "Type",
                 visible: true

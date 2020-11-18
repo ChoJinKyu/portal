@@ -1,6 +1,7 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
-	"sap/ui/model/json/JSONModel",
+    "sap/ui/model/json/JSONModel", 
+    "ext/lib/model/ManagedListModel",
 	"sap/m/TablePersoController",
 	"./MainListPersoService",
 	"sap/ui/model/Filter",
@@ -12,11 +13,32 @@ sap.ui.define([
 	"sap/m/Text",
 	"sap/m/Input",
 	"sap/m/ComboBox",
-	"sap/ui/core/Item",
-], function (BaseController, JSONModel, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
-	"use strict";
-
+    "sap/ui/core/Item", 
+    "../model/formatter",
+], function (BaseController
+           , JSONModel 
+           , ManagedListModel
+           , TablePersoController
+           , MainListPersoService
+           , Filter
+           , FilterOperator
+           , MessageBox
+           , MessageToast
+           , ColumnListItem
+           , ObjectIdentifier
+           , Text
+           , Input
+           , ComboBox
+           , Item
+           , formatter 
+           ) {"use strict";
+    /**
+     * @description 예산집행품의 목록 
+     * @date 2020.11.18
+     * @author jinseon.lee 
+     */
 	return BaseController.extend("dp.budgetReport.controller.MainList", {
+        formatter: formatter,
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -26,30 +48,40 @@ sap.ui.define([
 		 * Called when the mainList controller is instantiated.
 		 * @public
 		 */
-		onInit : function () {
-			var oViewModel,
-				oResourceBundle = this.getResourceBundle();
+        onInit: function () {
+            console.log("  여기 왔나??? 1");
+            var oViewModel,
+                oResourceBundle = this.getResourceBundle();
+            console.log("  여기 왔나??? 2");
+            // Model used to manipulate control states
+            oViewModel = new JSONModel({
+                mainListTableTitle: oResourceBundle.getText("mainListTableTitle"),
+                tableNoDataText: oResourceBundle.getText("tableNoDataText")
+            });
+            this.setModel(oViewModel, "mainListView");
 
-			// Model used to manipulate control states
-			oViewModel = new JSONModel({
-				mainListTableTitle : oResourceBundle.getText("mainListTableTitle"),
-				tableNoDataText : oResourceBundle.getText("tableNoDataText")
-			});
-			this.setModel(oViewModel, "mainListView");
-
-			// Add the mainList page to the flp routing history
-			this.addHistoryEntry({
-				title: oResourceBundle.getText("mainListViewTitle"),
-				icon: "sap-icon://table-view",
-				intent: "#Template-display"
+            // Add the mainList page to the flp routing history
+            this.addHistoryEntry({
+                title: oResourceBundle.getText("mainListViewTitle"),
+                icon: "sap-icon://table-view",
+                intent: "#Template-display"
             }, true);
-
-			this._doInitTable();
-			this._doInitTablePerso();
-        },
         
-        onAfterRendering : function () {
-			return;
+            this.setModel(new ManagedListModel(), "list");
+            //this._doInitTable();
+            //this._doInitTablePerso(); 
+
+            this.getRouter().getRoute("mainList").attachPatternMatched(this._onRoutedThisPage, this); // 페이지에 도달했을때 실행 
+        },
+
+        onAfterRendering: function () { 
+            this.byId("pageSearchButton").firePress();
+            return;
+        },
+
+        _onRoutedThisPage: function () {
+             console.log("  여기 왔나??? _onRoutedThisPage ");
+            this.getModel("mainListView").setProperty("/headerExpanded", true);
         },
 
 		/* =========================================================== */
@@ -65,6 +97,7 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent the update finished event
 		 * @public
 		 */
+     
 		onListMainTableUpdateFinished : function (oEvent) {
 			// update the mainList's object counter after the table update
 			var sTitle,
@@ -137,12 +170,13 @@ sap.ui.define([
 		},
 
 		_getSearchStates: function(){
-			var chain = this.getView().byId("searchChainS").getSelectedKey(),
+		/*	var chain = this.getView().byId("searchChainS").getSelectedKey(),
 				language = this.getView().byId("searchLanguageS").getSelectedKey(),
-				keyword = this.getView().byId("searchKeywordS").getValue();
+				keyword = this.getView().byId("searchKeywordS").getValue(); */ 
 				
-			var aTableSearchState = [];
-			if (chain && chain.length > 0) {
+			var aTableSearchState = [new Filter("message_code", FilterOperator.Contains, ""),
+						new Filter("message_contents", FilterOperator.Contains, "")];
+			/*if (chain && chain.length > 0) {
 				aTableSearchState.push(new Filter("chain_code", FilterOperator.EQ, chain));
 			}
 			if (language && language.length > 0) {
@@ -156,7 +190,7 @@ sap.ui.define([
 					],
 					and: false
 				}));
-			}
+			} */ 
 			return aTableSearchState;
 		},
 
@@ -167,8 +201,6 @@ sap.ui.define([
 		onListMainTableEditButtonPress: function(){
 			this._toEditMode();
 		},
-
-       
         onListMainTableAddtButtonPress: function(){
 			var oTable = this.byId("mainTable"),
                 oBinding = oTable.getBinding("items");
@@ -215,10 +247,10 @@ sap.ui.define([
 		 */
 		_showMainObject : function (oItem) {
 			var that = this;
-			that.getRouter().navTo("mainObject", {
-				tenantId: oItem.getBindingContext().getProperty("tenant_id"),
-				messageCode: oItem.getBindingContext().getProperty("message_code"),
-				languageCode: oItem.getBindingContext().getProperty("language_code")
+			that.getRouter().navTo("budgetReportObject", {
+                message_code: "01" 
+                , chain_code : "code" 
+                , language_code : "codelang"
 			});
 		},
 
@@ -227,17 +259,31 @@ sap.ui.define([
 		 * @param {sap.ui.model.Filter[]} aTableSearchState An array of filters for the search
 		 * @private
 		 */
-		_applySearch: function(aTableSearchState) {
+		_applySearch: function(aSearchFilters) {
+
+            var oView = this.getView(),
+				oModel = this.getModel("list");
+			oView.setBusy(true);
+			oModel.setTransactionModel(this.getModel());
+			oModel.read("/Message", {
+				filters: aSearchFilters,
+				success: function(oData){
+					oView.setBusy(false);
+				}
+			});
+
+
+            
 			var oTable = this.byId("mainTable"),
 				oViewModel = this.getModel("mainListView");
 
-			oTable.getBinding("items").filter(aTableSearchState, "Application");
+			oTable.getBinding("items").filter(aSearchFilters, "Application");
 			// changes the noDataText of the list in case there are no filter results
-			if (aTableSearchState.length !== 0) {
+			if (aSearchFilters.length !== 0) {
 				oViewModel.setProperty("/tableNoDataText", this.getResourceBundle().getText("mainListNoDataWithSearchText"));
 			}
 		},
-
+ /*
 		_doInitTable: function(){
 
 			this.oReadOnlyTemplate = new ColumnListItem({
@@ -272,12 +318,15 @@ sap.ui.define([
 			// init and activate controller
 			this._oTPC = new TablePersoController({
 				table: this.byId("mainTable"),
-				componentName: "templateListViewAndObjectEdit",
+				componentName: "budgetReport",
 				persoService: MainListPersoService,
 				hasGrouping: true
 			}).activate();
 		}
-
-
+ 
+        ,  */
+        _pageMove : function(){
+            // onListMainTableUpdateFinished 
+        }
 	});
 });
