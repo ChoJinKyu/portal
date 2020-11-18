@@ -9,7 +9,11 @@
                     "url": "../dp/developmentReceipt/webapp",
                     "component": "dp.developmentReceipt"
                 },
-                
+                {
+                    "name": "Mold Approval List",
+                    "url": "../dp/moldApprovalList/webapp",
+                    "component": "dp.moldApprovalList"
+                },
                 {
                     "name": "Budget Report",
                     "url": "../dp/budgetReport/webapp",
