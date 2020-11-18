@@ -142,7 +142,7 @@
             <!-- <t:RowSettings highlight="Success"/> -->
           </t:rowSettingsTemplate>
           <t:columns>
-            <t:Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="40px">
+            <t:Column id="mainStateColumn" minScreenWidth="Tablet" hAlign="Center" width="40px">
               <Label text="S" textAlign="Center" width="100%"/>
               <t:template>
                 <Text text="{list>_row_state_}"></Text>

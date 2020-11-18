@@ -6,7 +6,10 @@ sap.ui.define([
   "sap/ui/model/FilterOperator",
   "sap/m/MessageToast",
   "sap/m/MessageBox",
-  "../model/formatter"
+  //"sap/m/TablePersoController",
+  "sap/ui/table/TablePersoController",
+  "../model/formatter",
+  "./timeZonePersoService"
 ],
   function (
     BaseController,
@@ -16,7 +19,9 @@ sap.ui.define([
     FilterOperator,
     MessageToast,
     MessageBox,
-    formatter) {
+    TablePersoController,
+    formatter,
+    timeZonePersoService) {
     "use strict";
 
     return BaseController.extend("cm.timeZoneMgr.controller.timeZoneMgr", {
@@ -25,6 +30,29 @@ sap.ui.define([
 
       onInit: function () {
         this.getView().setModel(new ManagedListModel(), "list");
+        // 개인화 - UI 테이블의 경우만 해당
+        this._oTPC = new TablePersoController({
+          customDataKey: "timeZoneMgr",
+          persoService: timeZonePersoService
+          // persoService: {
+          //   getPersData: function () {
+          //     var oDeferred = new $.Deferred();
+          //     return oDeferred.promise();
+          //   },
+          //   setPersData: function (oBundle) {
+          //     var oDeferred = new $.Deferred();
+          //     oDeferred.resolve();
+          //     return oDeferred.promise();
+          //   },
+          //   delPersData: function () {
+          //     var oDeferred = new $.Deferred();
+          //     oDeferred.resolve();
+          //     return oDeferred.promise();
+          //   }
+        }).setTable(this.byId("mainTable"));
+      },
+      onMainTablePersoButtonPressed: function (event) {
+        this._oTPC.openDialog();
       },
       // Display row number without changing data
       onAfterRendering: function () {

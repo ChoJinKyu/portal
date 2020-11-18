@@ -35,8 +35,10 @@ sap.ui.define([
             JSONModel.prototype.setProperty.call(this, sPath, oValue, oContext, bAsyncUpdate);
         },
 
-        addRecord: function (oRecord, nIndex) {
+        addRecord: function (oRecord, sPath, nIndex) {
+            if(typeof sPath == "number") nIndex = sPath;
             if (nIndex == undefined) nIndex = this.oData.length;
+            if(!!sPath) oRecord.__entity = sPath;
             oRecord[STATE_COL] = "C";
             this.oData.splice(nIndex || 0, 0, oRecord);
             JSONModel.prototype.setProperty.call(this, "/", this.oData);
@@ -89,8 +91,7 @@ sap.ui.define([
                     if (successHandler)
                         successHandler.apply(that._oTransactionModel, arguments);
                 }
-            })
-            );
+            }));
         },
 
         _executeBatch: function(sGroupId){
@@ -101,8 +102,10 @@ sap.ui.define([
                 ds = this.getDeletedRecords();
                 
             (cs || []).forEach(function (oItem) {
+                var sPath = oItem.__entity || sTransactionPath;
                 delete oItem[STATE_COL];
-                oServiceModel.create(sTransactionPath, oItem, {
+                delete oItem.__entity;
+                oServiceModel.create(sPath, oItem, {
                     groupId: sGroupId,
                     success: function (oData) {
                         console.log("Added a new record that created by origin model.", "oData V2 Transaction submitBatch");

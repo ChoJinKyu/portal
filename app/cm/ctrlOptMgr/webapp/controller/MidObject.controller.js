@@ -126,13 +126,13 @@ sap.ui.define([
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
-						debugger;
 						oView.setBusy(true);
 						oMasterModel.removeData();
 						oMasterModel.setTransactionModel(that.getModel());
 						oMasterModel.submitChanges({
 							success: function(ok){
 								oView.setBusy(false);
+								that.onPageNavBackButtonPress.call(that);
 								MessageToast.show("Success to delete.");
 							}
 						});
@@ -265,7 +265,7 @@ sap.ui.define([
 					"control_option_val": "",
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
-				});
+				}, "/ControlOptionDetails");
 				this._toEditMode();
 			}else{
 				this.getModel("midObjectView").setProperty("/isAddedMode", false);
