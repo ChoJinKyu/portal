@@ -1,19 +1,17 @@
 sap.ui.define([
-	"./BaseController",
-	"sap/ui/core/routing/History",
+	"ext/lib/controller/BaseController",
 	"sap/ui/model/json/JSONModel",
-	"ext/lib/model/ManagedModel",
-	"ext/lib/model/ManagedListModel",
+	"sap/ui/core/routing/History",
 	"ext/lib/formatter/DateFormatter",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
 	"sap/ui/core/Fragment",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-], function (BaseController, History, JSONModel, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
+], function (BaseController, JSONModel, History, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
 	"use strict";
 
-	return BaseController.extend("dp.budgetReport.controller.MidObject", {
+	return BaseController.extend("dp.budgetReport.controller.MainObject", {
 
 		dateFormatter: DateFormatter,
 
@@ -22,59 +20,40 @@ sap.ui.define([
 		/* =========================================================== */
 
 		/**
-		 * Called when the midObject controller is instantiated.
+		 * Called when the mainObject controller is instantiated.
 		 * @public
 		 */
 		onInit : function () {
-			// Model used to manipulate controlstates. The chosen values make sure,
+			// Model used to manipulate control states. The chosen values make sure,
 			// detail page shows busy indication immediately so there is no break in
 			// between the busy indication for loading the view's meta data
 			var oViewModel = new JSONModel({
 					busy : true,
 					delay : 0
 				});
-			this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
-			this.setModel(oViewModel, "midObjectView");
-			
-			this.setModel(new ManagedModel(), "master");
-			this.setModel(new ManagedListModel(), "details");
-		}, 
+			this.getRouter().getRoute("mainObject").attachPatternMatched(this._onObjectMatched, this);
+			this.setModel(oViewModel, "mainObjectView");
+		},
 
 		/* =========================================================== */
 		/* event handlers                                              */
 		/* =========================================================== */
 
+
 		/**
-		 * Event handler for Enter Full Screen Button pressed
+		 * Event handler  for navigating back.
+		 * It there is a history entry we go one step back in the browser history
+		 * If not, it will replace the current entry of the browser history with the miainList route.
 		 * @public
 		 */
-		onPageEnterFullScreenButtonPress: function () {
-			var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
-			this.getRouter().navTo("midPage", {
-				layout: sNextLayout, 
-				tenantId: this._sTenantId,
-				controlOptionCode: this._sControlOptionCode
-			});
-		},
-		/**
-		 * Event handler for Exit Full Screen Button pressed
-		 * @public
-		 */
-		onPageExitFullScreenButtonPress: function () {
-			var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
-			this.getRouter().navTo("midPage", {
-				layout: sNextLayout, 
-				tenantId: this._sTenantId,
-				controlOptionCode: this._sControlOptionCode
-			});
-		},
-		/**
-		 * Event handler for Nav Back Button pressed
-		 * @public
-		 */
-		onPageNavBackButtonPress: function () {
-			var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
-            this.getRouter().navTo("mainPage", {layout: sNextLayout});
+		onPageNavBackButtonPress : function() {
+			var sPreviousHash = History.getInstance().getPreviousHash();
+			if (sPreviousHash !== undefined) {
+				// eslint-disable-next-line sap-no-history-manipulation
+				history.go(-1);
+			} else {
+				this.getRouter().navTo("mainList", {}, true);
+			}
 		},
 
 		/**
@@ -92,6 +71,7 @@ sap.ui.define([
         onPageDeleteButtonPress: function(){
 			var oView = this.getView(),
 				me = this;
+
 			MessageBox.confirm("Are you sure to delete?", {
 				title : "Comfirmation",
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -105,6 +85,7 @@ sap.ui.define([
 					};
 				}
 			});
+
 		},
 		
 		/**
@@ -113,19 +94,25 @@ sap.ui.define([
 		 */
         onPageSaveButtonPress: function(){
 			var oView = this.getView(),
-				me = this;
+				me = this,
+				oMessageContents = this.byId("inputMessageContents");
+
+			if(!oMessageContents.getValue()) {
+				oMessageContents.setValueState(sap.ui.core.ValueState.Error);
+				return;
+			}
 			MessageBox.confirm("Are you sure ?", {
 				title : "Comfirmation",
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
 						oView.setBusy(true);
-						oView.getModel("master").submitChanges({
-							success: function(ok){
-								me._toShowMode();
-								oView.setBusy(false);
-								MessageToast.show("Success to save.");
-							}
+						oView.getModel().submitBatch("odataGroupIdForUpdate").then(function(ok){
+							me._toShowMode();
+							oView.setBusy(false);
+                            MessageToast.show("Success to save.");
+						}).catch(function(err){
+                            MessageBox.error("Error while saving.");
 						});
 					};
 				}
@@ -147,39 +134,18 @@ sap.ui.define([
 		/* =========================================================== */
 
 		/**
-		 * When it routed to this page from the other page.
+		 * Binds the view to the data path.
+		 * @function
 		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
 		 * @private
 		 */
-		_onRoutedThisPage: function(oEvent){
+		_onObjectMatched : function (oEvent) {
 			var oArgs = oEvent.getParameter("arguments"),
-				oView = this.getView();
-			this._sTenantId = oArgs.tenantId;
-			this._sControlOptionCode = oArgs.controlOptionCode;
-
-			if(oArgs.tenantId == "new" && oArgs.controlOptionCode == "code"){
-				//It comes Add button pressed from the before page.
-				var oMasterModel = this.getModel("master");
-				oMasterModel.setData({
-					tenant_id: "L2100"
-				});
-				this._toEditMode();
-			}else{
-				this._bindView("/ControlOptionMasters(tenant_id='" + this._sTenantId + "',control_option_code='" + this._sControlOptionCode + "')");
-				oView.setBusy(true);
-				var oDetailModel = this.getModel("details");
-				oDetailModel.setTransactionModel(this.getModel());
-				oDetailModel.read("/ControlOptionDetails", {
-					filters: [
-						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-						new Filter("control_option_code", FilterOperator.EQ, this._sControlOptionCode),
-					],
-					success: function(oData){
-						oView.setBusy(false);
-					}
-				});
-				this._toShowMode();
-			}
+				sTenantId = oArgs.tenantId,
+				sLanguageCode = oArgs.languageCode,
+				sMessageCode = oArgs.messageCode;
+			this._bindView("/Message(tenant_id='" + sTenantId + "',language_code='" + sLanguageCode + "',message_code='" + sMessageCode + "')");
+			this._toShowMode();
 		},
 
 		/**
@@ -189,19 +155,36 @@ sap.ui.define([
 		 * @private
 		 */
 		_bindView : function (sObjectPath) {
-			var oView = this.getView(),
-				oModel = this.getModel("master");
-			oView.setBusy(true);
-			oModel.setTransactionModel(this.getModel());
-			oModel.read(sObjectPath, {
-				success: function(oData){
-					oView.setBusy(false);
+			var oViewModel = this.getModel("mainObjectView");
+
+			this.getView().bindElement({
+				path: sObjectPath,
+				events: {
+					change: this._onBindingChange.bind(this),
+					dataRequested: function () {
+						oViewModel.setProperty("/busy", true);
+					},
+					dataReceived: function () {
+						oViewModel.setProperty("/busy", false);
+					}
 				}
 			});
 		},
 
+		_onBindingChange : function () {
+			var oView = this.getView(),
+				oViewModel = this.getModel("mainObjectView"),
+				oElementBinding = oView.getElementBinding();
+			// No data for the binding
+			if (!oElementBinding.getBoundContext()) {
+				this.getRouter().getTargets().display("mainObjectNotFound");
+				return;
+			}
+			oViewModel.setProperty("/busy", false);
+		},
+
 		_toEditMode: function(){
-            this._showFormFragment('MidObject_Edit');
+            this._showFormFragment('MainObject_Edit');
 			this.byId("page").setSelectedSection("pageSectionMain");
 			this.byId("page").setProperty("showFooter", true);
 			this.byId("pageEditButton").setEnabled(false);
@@ -210,7 +193,7 @@ sap.ui.define([
 		},
 
 		_toShowMode: function(){
-			this._showFormFragment('MidObject_Show');
+			this._showFormFragment('MainObject_Show');
 			this.byId("page").setSelectedSection("pageSectionMain");
 			this.byId("page").setProperty("showFooter", false);
 			this.byId("pageEditButton").setEnabled(true);

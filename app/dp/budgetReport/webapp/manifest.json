@@ -13,7 +13,7 @@
     "resources": "resources.json",
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v2/cm.ControlOptionMgrService/",
+        "uri": "srv-api/odata/v2/xx.TemplateService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -67,7 +67,6 @@
       "compact": true,
       "cozy": true
     },
-    "handleValidation": true,
     "models": {
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
@@ -96,6 +95,13 @@
         }
       }
     },
+    "resources": {
+        "css": [
+            {
+                "uri": "css/style.css"
+            }
+        ]
+    },
     "resourceRoots": {
       "ext.lib": "../../../lib"
     },
@@ -104,8 +110,8 @@
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
         "viewPath": "dp.budgetReport.view",
-        "controlId": "fcl",
-				"transition": "slide",
+        "controlId": "app",
+        "controlAggregation": "pages",
         "bypassed": {
           "target": [
             "notFound"
@@ -114,35 +120,39 @@
         "async": true
       },
       "routes": [
-          {
-              "pattern": ":layout:",
-              "name": "mainPage",
-              "target": [
-                  "mainObject"
-              ]
-          },
-          {
-              "pattern": "midObject/{layout}/{tenantId}/{controlOptionCode}",
-              "name": "midPage",
-              "target": [
-                  "mainObject",
-                  "midObject"
-              ]
-          }
+        {
+          "pattern": "",
+          "name": "mainList",
+          "target": [
+            "mainList"
+          ]
+        },
+        {
+          "pattern": "Message/{tenantId}/{messageCode}/{languageCode}",
+          "name": "mainObject",
+          "target": [
+            "mainObject"
+          ]
+        }
       ],
       "targets": {
-          "mainObject": {
-              "viewName": "MainList",
-              "controlAggregation": "beginColumnPages"
-          },
-          "midObject": {
-              "viewName": "MidObject",
-              "controlAggregation": "midColumnPages"
-          },
-          "notFound": {
-            "viewName": "MidObjectNotFound",
-            "viewId": "notFound"
-          }
+        "mainList": {
+          "viewName": "MainList",
+          "viewId": "mainList",
+          "viewLevel": 1,
+          "title": "{i18n>mainListViewTitle}"
+        },
+        "mainObject": {
+          "viewName": "MainObject",
+          "viewId": "mainObject",
+          "viewLevel": 2,
+          "title": "{i18n>mainObjectViewTitle}"
+        },
+        "notFound": {
+          "viewName": "NotFound",
+          "viewPath": "ext.lib.view",
+          "viewId": "notFound"
+        }
       }
     }
   },
