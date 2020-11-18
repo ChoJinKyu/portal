@@ -13,18 +13,18 @@
     "resources": "resources.json",
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v4/xx.MessageMgrService/",
+        "uri": "srv-api/odata/v2/xx.MessageMgrService/",
         "type": "OData",
         "settings": {
-          "odataVersion": "4.0",
+          "odataVersion": "2.0",
           "localUri": "localService/metadata.xml"
         }
       },
       "commonUtilService": {
-        "uri": "srv-api/odata/v4/util.CommonService/",
+        "uri": "srv-api/odata/v2/util.CommonService/",
         "type": "OData",
         "settings": {
-          "odataVersion": "4.0"
+          "odataVersion": "2.0"
         }
       }
     }
@@ -97,7 +97,7 @@
       }
     },
     "resourceRoots": {
-        "ext.lib": "../../../lib"
+      "ext.lib": "../../../lib"
     },
     "routing": {
       "config": {
@@ -116,9 +116,9 @@
       "routes": [
         {
           "pattern": "",
-          "name": "mainList",
+          "name": "main",
           "target": [
-            "mainList"
+            "mainObject"
           ]
         },
         {
