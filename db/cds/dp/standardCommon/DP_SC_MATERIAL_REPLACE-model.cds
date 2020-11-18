@@ -8,7 +8,7 @@ entity Sc_Material_Replace {
   key org_type_code : String(30)  not null @title: '구매운영조직유형' ;	
   key org_code : String(10)  not null @title: '구매운영조직코드' ;	
   key replace_group_code : String(200)  not null @title: '대치그룹코드' ;	
-  key replace_seq : Decimal(201) default 0 not null @title: '대치순번' ;	
+  key replace_seq : Decimal default 0 not null @title: '대치순번' ;	
     material_code : String(40)   @title: '부품 번호' ;	
 }	
 extend Sc_Material_Replace with util.Managed;
