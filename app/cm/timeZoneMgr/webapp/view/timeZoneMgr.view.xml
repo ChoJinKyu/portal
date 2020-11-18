@@ -10,7 +10,7 @@
   displayBlock="true"
   height="100%">
 	<App id="app">
-    <f:DynamicPage id="page" toggleHeaderOnTitleClick="true" headerExpanded="true">
+    <f:DynamicPage id="page" toggleHeaderOnTitleClick="false" headerExpanded="true">
       <!--DynamicPage Title -->
       <f:title>
         <f:DynamicPageTitle>
@@ -29,7 +29,7 @@
       </f:title>
       <!--DynamicPage Header -->
       <f:header>
-        <f:DynamicPageHeader pinnable="true">
+        <f:DynamicPageHeader pinnable="false">
           <layout:HorizontalLayout>
             <form:Form id="searchForm" editable="true" width="auto">
               <form:formContainers>
