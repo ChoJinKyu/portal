@@ -40,6 +40,12 @@ sap.ui.define(["jquery.sap.global"],
                 visible: true
             },
             {
+                id: "controlOptionMgr-mainList-mainColumnRoleFlag",
+                order: 5,
+                text: "Role",
+                visible: true
+            },
+            {
                 id: "controlOptionMgr-mainList-mainColumnOrganizationFlag",
                 order: 6,
                 text: "Organization",

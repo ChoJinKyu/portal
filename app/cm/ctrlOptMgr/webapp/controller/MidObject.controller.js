@@ -63,7 +63,7 @@ sap.ui.define([
 			oTransactionManager.addDataModel(this.getModel("master"));
 			oTransactionManager.addDataModel(this.getModel("details"));
 
-			this.getModel("master").attachPropertyChange(this._onMasterDataChanged);
+			this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
 
 			this._initTableTemplates();
 		}, 
@@ -138,7 +138,6 @@ sap.ui.define([
 		onMidTableAddButtonPress: function(){
 			var oTable = this.byId("midTable"),
 				oModel = this.getModel("details");
-				debugger;
 			oModel.addRecord({
 				"tenant_id": this._sTenantId,
 				"control_option_code": this._sControlOptionCode,
@@ -207,7 +206,18 @@ sap.ui.define([
 		/* =========================================================== */
 
 		_onMasterDataChanged: function(oEvent){
-debugger;
+			if(this.getModel("midObjectView").getProperty("/isAddedMode") == true){
+				var oMasterModel = this.getModel("master");
+				var oDetailsModel = this.getModel("details");
+				var sTenantId = oMasterModel.getProperty("/tenant_id");
+				var sControlOPtionCode = oMasterModel.getProperty("/control_option_code");
+				var oDetailsData = oDetailsModel.getData();
+				oDetailsData.forEach(function(oItem, nIndex){
+					oDetailsModel.setProperty("/"+nIndex+"/tenant_id", sTenantId);
+					oDetailsModel.setProperty("/"+nIndex+"/control_option_code", sControlOPtionCode);
+				});
+				oDetailsModel.setData(oDetailsData);
+			}
 		},
 
 		/**
@@ -223,11 +233,21 @@ debugger;
 
 			if(oArgs.tenantId == "new" && oArgs.controlOptionCode == "code"){
 				//It comes Add button pressed from the before page.
-				this._isAddMode = true;
+				this.getModel("midObjectView").setProperty("/isAddedMode", true);
+
 				var oMasterModel = this.getModel("master");
 				oMasterModel.setData({
-					tenant_id: "L2100"
-				});
+					"tenant_id": "L2100",
+					"site_flag": false,
+					"company_flag": false,
+					"role_flag": false,
+					"organization_flag": false,
+					"user_flag": false,
+					"start_date": new Date(),
+					"end_date": new Date(9999, 11, 31),
+					"local_create_dtm": new Date(),
+					"local_update_dtm": new Date()
+				}, "/ControlOptionMasters");
 				var oDetailModel = this.getModel("details");
 				oDetailModel.setTransactionModel(this.getModel());
 				oDetailModel.setData([]);
@@ -242,6 +262,8 @@ debugger;
 				});
 				this._toEditMode();
 			}else{
+				this.getModel("midObjectView").setProperty("/isAddedMode", false);
+
 				this._bindView("/ControlOptionMasters(tenant_id='" + this._sTenantId + "',control_option_code='" + this._sControlOptionCode + "')");
 				oView.setBusy(true);
 				var oDetailModel = this.getModel("details");
@@ -319,6 +341,9 @@ debugger;
 						text: "{details>_row_state_}"
 					}), 
 					new ObjectIdentifier({
+						text: "{details>control_option_code}"
+					}), 
+					new ObjectIdentifier({
 						text: "{details>control_option_level_code}"
 					}), 
 					new Text({
@@ -350,6 +375,9 @@ debugger;
 				cells: [
 					new Text({
 						text: "{details>_row_state_}"
+					}), 
+					new Text({
+						text: "{details>control_option_code}"
 					}), 
 					oLevelCodeCombo, 
 					new Input({

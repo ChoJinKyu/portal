@@ -6,10 +6,10 @@
 	<form:SimpleForm id="midObjectForm1Show" editable="false">
 
 		<core:Title text="Normal" />
-		<Label text="Chain"/>
-		<Text text="{master>/chain_code}"/>
 		<Label text="Code"/>
 		<Text text="{master>/control_option_code}"/>
+		<Label text="Chain"/>
+		<Text text="{master>/chain_code}"/>
 		<Label text="Name"/>
 		<Text text="{master>/control_option_name}"/>
 
@@ -30,6 +30,8 @@
 		<Text text="{path: 'master>/site_flag', formatter: '.formatter.toYesNo'}"></Text>
 		<Label text="Company"/>
 		<Text text="{path: 'master>/company_flag', formatter: '.formatter.toYesNo'}"></Text>
+		<Label text="Role"/>
+		<Text text="{path: 'master>/role_flag', formatter: '.formatter.toYesNo'}"></Text>
 		<Label text="Organization"/>
 		<Text text="{path: 'master>/organization_flag', formatter: '.formatter.toYesNo'}"></Text>
 		<Label text="User"/>

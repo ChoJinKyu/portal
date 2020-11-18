@@ -111,22 +111,25 @@
                         <Column id="mainColumnName" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
                             <Text text="Name" />
                         </Column>
-                        <Column id="mainColumnStartDate" minScreenWidth="Tablet" hAlign="Center">
+                        <Column id="mainColumnStartDate" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
                             <Text text="Start Date" />
                         </Column>
-                        <Column id="mainColumnEndDate" minScreenWidth="Tablet" hAlign="Center">
+                        <Column id="mainColumnEndDate" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
                             <Text text="End Date" />
                         </Column>
-                        <Column id="mainColumnSiteFlag" minScreenWidth="Tablet" hAlign="Center" width="3rem" demandPopin="true" popinDisplay="Inline">
+                        <Column id="mainColumnSiteFlag" minScreenWidth="Tablet" hAlign="Center" width="3rem">
                             <Text text="Site" />
                         </Column>
-                        <Column id="mainColumnCompanyFlag" minScreenWidth="Tablet" hAlign="Center" width="3rem" demandPopin="true" popinDisplay="Inline">
+                        <Column id="mainColumnCompanyFlag" minScreenWidth="Tablet" hAlign="Center" width="3rem">
                             <Text text="Company" />
                         </Column>
-                        <Column id="mainColumnOrganizationFlag" minScreenWidth="Tablet" hAlign="Center" width="3rem" demandPopin="true" popinDisplay="Inline">
+                        <Column id="mainColumnRoleFlag" minScreenWidth="Tablet" hAlign="Center" width="3rem">
+                            <Text text="Role" />
+                        </Column>
+                        <Column id="mainColumnOrganizationFlag" minScreenWidth="Tablet" hAlign="Center" width="3rem">
                             <Text text="Org." />
                         </Column>
-                        <Column id="mainColumnUserFlag" minScreenWidth="Tablet" hAlign="Center" width="3rem" demandPopin="true" popinDisplay="Inline">
+                        <Column id="mainColumnUserFlag" minScreenWidth="Tablet" hAlign="Center" width="3rem">
                             <Text text="User" />
                         </Column>
                     </columns>
@@ -147,6 +150,8 @@
                                     icon="{= ${list>site_flag} === true ? 'sap-icon://accept' : ''}"/>
                                 <ObjectStatus 
                                     icon="{= ${list>company_flag} === true ? 'sap-icon://accept' : ''}"/>
+                                <ObjectStatus 
+                                    icon="{= ${list>role_flag} === true ? 'sap-icon://accept' : ''}"/>
                                 <ObjectStatus 
                                     icon="{= ${list>organization_flag} === true ? 'sap-icon://accept' : ''}"/>
                                 <ObjectStatus 

@@ -76,7 +76,7 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			<uxap:ObjectPageSection titleUppercase="false" title="Managed Values">
+			<uxap:ObjectPageSection titleUppercase="false" title="Managed Values" visible="{= !${midObjectView>/isAddedMode}}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<form:SimpleForm editable="false">
@@ -126,6 +126,9 @@
 								<Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="40px" >
 									<Text text="S" />
 								</Column>
+								<Column id="mainColumnCode" minScreenWidth="Tablet" hAlign="Center" >
+									<Text text="Code" />
+								</Column>
 								<Column id="midColumnLevelCode" minScreenWidth="Tablet" hAlign="Center">
 									<Text text="Level" />
 								</Column>
@@ -140,6 +143,7 @@
 								<ColumnListItem type="Inactive" press=".onMidTableItemPress">
 									<cells>
 										<Text text="{details>_row_state_}"/>
+										<Text text="{details>control_option_code}"/>
 										<Input value="{details>control_option_level_code}"/>
 										<Input value="{details>control_option_level_val}"/>
 										<Input value="{details>control_option_val}"/>

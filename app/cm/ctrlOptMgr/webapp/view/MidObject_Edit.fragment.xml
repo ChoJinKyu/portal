@@ -6,6 +6,8 @@
 	<form:SimpleForm id="midObjectForm1Edit" editable="false" >
 		
 		<core:Title text="Normal" />
+		<Label text="Code" required="true"/>
+		<Input value="{master>/control_option_code}" editable="{midObjectView>/isAddedMode}"/>
 		<Label text="Chain" required="true"/>
 		<ComboBox id="searchChain" width="100%" selectedKey="{master>/chain_code}" items="{
 				path: 'util>/CodeDetails',
@@ -19,16 +21,14 @@
 				<core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
 			</items>
 		</ComboBox>
-		<Label text="Code" required="true"/>
-		<Input value="{master>/control_option_code}"/>
 		<Label text="Name" required="true"/>
 		<Input value="{master>/control_option_name}"/>
 
 		<core:Title text="Effect" />
 		<Label text="From" required="true"/>
-		<DatePicker placeholder="Starts From" value="{master>/start_date}"/>
+		<DatePicker placeholder="Starts From" value="{master>/start_date}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
 		<Label text="To" required="true"/>
-		<DatePicker placeholder="Ends To" value="{master>/end_date}"/>
+		<DatePicker placeholder="Ends To" value="{master>/end_date}"  valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
 		
 		<core:Title text="Boundry" />
 		<Label text="Site"/>
@@ -39,6 +39,12 @@
 		</Switch>
 		<Label text="Company"/>
 		<Switch state="{master>/company_flag}" customTextOn="Yes" customTextOff="No">
+			<layoutData>
+				<FlexItemData growFactor="1" />
+			</layoutData>
+		</Switch>
+		<Label text="Role"/>
+		<Switch state="{master>/role_flag}" customTextOn="Yes" customTextOff="No">
 			<layoutData>
 				<FlexItemData growFactor="1" />
 			</layoutData>

@@ -3,6 +3,8 @@ sap.ui.define([
 ], function (JSONModel) {
     "use strict";
 
+    var STATE_COL = "_state_";
+
     var ManagedModel = JSONModel.extend("ext.lib.model.ManagedModel", {
 
         /**
@@ -11,11 +13,14 @@ sap.ui.define([
          * @param {boolean} [bMerge=false] whether to merge the data instead of replacing it
          * @public
          */
-        setData: function(oData, bMerge){
+        setData: function(oData, sEntity, bMerge){
             var sPath = this._transactionPath;
             oData = oData || {};
             if(oData.__metadata && oData.__metadata.uri){
                 oData.__entity = oData.__metadata.uri.substring(oData.__metadata.uri.indexOf(sPath));
+            } else if(!!sEntity){
+                oData.__entity = sEntity;
+                oData[STATE_COL] = "C";
             }
             JSONModel.prototype.setData.call(this, oData, bMerge);
         },
@@ -38,13 +43,35 @@ sap.ui.define([
             var oItem = this.getData(),
                 sEntity = oItem.__entity;
             delete oItem.__entity;
-            this._oTransactionModel.update(sEntity, oItem,{
-                groupId: sGroupId,
-                success: function(){
-                    oItem.__entity = sEntity;
-                    console.log("Updated a record that changed by origin model.");
+            if(!!oItem[STATE_COL]){
+                var state = oItem[STATE_COL];
+                delete oItem[STATE_COL];
+                if(state == "C"){
+                    this._oTransactionModel.create(sEntity, oItem,{
+                        groupId: sGroupId,
+                        success: function(){
+                            oItem.__entity = sEntity;
+                            console.log("Created a data to entity : " + sEntity);
+                        }
+                    });
+                }else if(state == "D"){
+                    this._oTransactionModel.delete(sEntity, oItem,{
+                        groupId: sGroupId,
+                        success: function(){
+                            oItem.__entity = sEntity;
+                            console.log("Deleted a data to entity : " + sEntity);
+                        }
+                    });
                 }
-            });
+            }else{
+                this._oTransactionModel.update(sEntity, oItem,{
+                    groupId: sGroupId,
+                    success: function(){
+                        oItem.__entity = sEntity;
+                        console.log("Updated a data to entity : " + sEntity);
+                    }
+                });
+            }
         }
 
     });
