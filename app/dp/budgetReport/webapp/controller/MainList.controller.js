@@ -1,9 +1,6 @@
 sap.ui.define([
-	"./BaseController",
-	"sap/ui/core/routing/History",
+	"ext/lib/controller/BaseController",
 	"sap/ui/model/json/JSONModel",
-	"ext/lib/model/ManagedListModel",
-	"ext/lib/formatter/DateFormatter",
 	"sap/m/TablePersoController",
 	"./MainListPersoService",
 	"sap/ui/model/Filter",
@@ -16,12 +13,10 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+], function (BaseController, JSONModel, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
 	"use strict";
 
 	return BaseController.extend("dp.budgetReport.controller.MainList", {
-
-		dateFormatter: DateFormatter,
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -37,7 +32,6 @@ sap.ui.define([
 
 			// Model used to manipulate control states
 			oViewModel = new JSONModel({
-				headerExpanded: true,
 				mainListTableTitle : oResourceBundle.getText("mainListTableTitle"),
 				tableNoDataText : oResourceBundle.getText("tableNoDataText")
 			});
@@ -48,17 +42,13 @@ sap.ui.define([
 				title: oResourceBundle.getText("mainListViewTitle"),
 				icon: "sap-icon://table-view",
 				intent: "#Template-display"
-			}, true);
-			
-			this.setModel(new ManagedListModel(), "list");
-			
-			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
+            }, true);
 
+			this._doInitTable();
 			this._doInitTablePerso();
         },
         
         onAfterRendering : function () {
-			this.byId("pageSearchButton").firePress();
 			return;
         },
 
@@ -75,7 +65,7 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent the update finished event
 		 * @public
 		 */
-		onMainTableUpdateFinished : function (oEvent) {
+		onListMainTableUpdateFinished : function (oEvent) {
 			// update the mainList's object counter after the table update
 			var sTitle,
 				oTable = oEvent.getSource(),
@@ -90,37 +80,42 @@ sap.ui.define([
 			this.getModel("mainListView").setProperty("/mainListTableTitle", sTitle);
 		},
 
+		onListMainTablePersoButtonPressed: function(oEvent){
+			this._oTPC.openDialog();
+		},
+
+		onListMainTablePersoRefresh : function() {
+			MainListPersoService.resetPersData();
+			this._oTPC.refresh();
+		},
+
+		onListMainTableFilterPress: function(oEvent){
+			var oTableFilterState = [],
+				sQuery = oEvent.getParameter("query");
+
+			if (sQuery && sQuery.length > 0) {
+				oTableFilterState = [
+					new Filter({
+						filters: [
+							new Filter("message_code", FilterOperator.Contains, sQuery),
+							new Filter("message_contents", FilterOperator.Contains, sQuery)
+						],
+						and: false
+					})
+				];
+			}
+
+			this.getView().byId("mainTable").getBinding("items").filter(oTableFilterState, "Application");
+		},
+
 		/**
 		 * Event handler when a table item gets pressed
 		 * @param {sap.ui.base.Event} oEvent the table selectionChange event
 		 * @public
 		 */
-		onMainTablePersoButtonPressed: function(oEvent){
-			this._oTPC.openDialog();
-		},
-
-		/**
-		 * Event handler when a table personalization refresh
-		 * @param {sap.ui.base.Event} oEvent the table selectionChange event
-		 * @public
-		 */
-		onMainTablePersoRefresh : function() {
-			MainListPersoService.resetPersData();
-			this._oTPC.refresh();
-		},
-
-		/**
-		 * Event handler when a table add button pressed
-		 * @param {sap.ui.base.Event} oEvent
-		 * @public
-		 */
-		onMainTableAddButtonPress: function(){
-			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-			this.getRouter().navTo("midPage", {
-				layout: oNextUIState.layout, 
-				tenantId: "new",
-				controlOptionCode: "code"
-			});
+		onListMainTableItemPress : function (oEvent) {
+			// The source is the list item that got pressed
+			this._showMainObject(oEvent.getSource());
 		},
 
 		/**
@@ -136,111 +131,148 @@ sap.ui.define([
 				// refresh the list binding.
 				this.onRefresh();
 			} else {
-				var aSearchFilters = this._getSearchStates();
-				this._applySearch(aSearchFilters);
+				var aTableSearchState = this._getSearchStates();
+				this._applySearch(aTableSearchState);
 			}
 		},
 
+		_getSearchStates: function(){
+			var chain = this.getView().byId("searchChainS").getSelectedKey(),
+				language = this.getView().byId("searchLanguageS").getSelectedKey(),
+				keyword = this.getView().byId("searchKeywordS").getValue();
+				
+			var aTableSearchState = [];
+			if (chain && chain.length > 0) {
+				aTableSearchState.push(new Filter("chain_code", FilterOperator.EQ, chain));
+			}
+			if (language && language.length > 0) {
+				aTableSearchState.push(new Filter("language_code", FilterOperator.EQ, language));
+			}
+			if (keyword && keyword.length > 0) {
+				aTableSearchState.push(new Filter({
+					filters: [
+						new Filter("message_code", FilterOperator.Contains, keyword),
+						new Filter("message_contents", FilterOperator.Contains, keyword)
+					],
+					and: false
+				}));
+			}
+			return aTableSearchState;
+		},
+
 		/**
-		 * Event handler when pressed the item of table
-		 * @param {sap.ui.base.Event} oEvent
+		 * Event handler for page edit button press
 		 * @public
 		 */
-		onMainTableItemPress: function(oEvent) {
-			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
-				sPath = oEvent.getSource().getBindingContext("list").getPath(),
-				oRecord = this.getModel("list").getProperty(sPath);
-
-			this.getRouter().navTo("midPage", {
-				layout: oNextUIState.layout, 
-				tenantId: oRecord.tenant_id,
-				controlOptionCode: oRecord.control_option_code
-			});
-
-            if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
-                this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
-            }
-
-			var oItem = oEvent.getSource();
-			oItem.setNavigated(true);
-			var oParent = oItem.getParent();
-			// store index of the item clicked, which can be used later in the columnResize event
-			this.iIndex = oParent.indexOfItem(oItem);
+		onListMainTableEditButtonPress: function(){
+			this._toEditMode();
 		},
+
+       
+        onListMainTableAddtButtonPress: function(){
+			var oTable = this.byId("mainTable"),
+                oBinding = oTable.getBinding("items");
+
+            var oContext = oBinding.create({
+                "tenant_id": "L2100",
+                "chain_code": "CM",
+                "language_code": "",
+                "message_code": "",
+                "message_type_code": "",
+                "message_contents": "",
+                "local_create_dtm": "2020-10-13T00:00:00Z",
+                "local_update_dtm": "2020-10-13T00:00:00Z"
+            });
+
+            oContext.created().then(function (oEvent) {
+                oTable.refresh();
+                MessageToast.show("Success to create.");
+            }).catch(function(oEvent){
+                MessageBox.error("Error while creating.");
+            });
+		},
+        
+		/**
+		 * Event handler for refresh event. Keeps filter, sort
+		 * and group settings and refreshes the list binding.
+		 * @public
+		 */
+		onRefreshPress : function () {
+			var oTable = this.byId("mainTable");
+			oTable.getBinding("items").refresh();
+		},
+
 
 		/* =========================================================== */
 		/* internal methods                                            */
 		/* =========================================================== */
 
 		/**
-		 * When it routed to this page from the other page.
-		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
+		 * Shows the selected item on the object page
+		 * On phones a additional history entry is created
+		 * @param {sap.m.ObjectListItem} oItem selected Item
 		 * @private
 		 */
-		_onRoutedThisPage: function(){
-			this.getModel("mainListView").setProperty("/headerExpanded", true);
+		_showMainObject : function (oItem) {
+			var that = this;
+			that.getRouter().navTo("mainObject", {
+				tenantId: oItem.getBindingContext().getProperty("tenant_id"),
+				messageCode: oItem.getBindingContext().getProperty("message_code"),
+				languageCode: oItem.getBindingContext().getProperty("language_code")
+			});
 		},
 
 		/**
 		 * Internal helper method to apply both filter and search state together on the list binding
-		 * @param {sap.ui.model.Filter[]} aSearchFilters An array of filters for the search
+		 * @param {sap.ui.model.Filter[]} aTableSearchState An array of filters for the search
 		 * @private
 		 */
-		_applySearch: function(aSearchFilters) {
-			var oView = this.getView(),
-				oModel = this.getModel("list");
-			oView.setBusy(true);
-			oModel.setTransactionModel(this.getModel());
-			oModel.read("/ControlOptionMasters", {
-				filters: aSearchFilters,
-				success: function(oData){
-					oView.setBusy(false);
-				}
+		_applySearch: function(aTableSearchState) {
+			var oTable = this.byId("mainTable"),
+				oViewModel = this.getModel("mainListView");
+
+			oTable.getBinding("items").filter(aTableSearchState, "Application");
+			// changes the noDataText of the list in case there are no filter results
+			if (aTableSearchState.length !== 0) {
+				oViewModel.setProperty("/tableNoDataText", this.getResourceBundle().getText("mainListNoDataWithSearchText"));
+			}
+		},
+
+		_doInitTable: function(){
+
+			this.oReadOnlyTemplate = new ColumnListItem({
+				cells: [
+					new ObjectIdentifier({
+						text: "{chain_code}"
+					}), new ObjectIdentifier({
+						text: "{language_code}"
+					}), new ObjectIdentifier({
+						text: "{message_code}"
+					}), new Text({
+						text: "{message_contents}", hAlign: "Right"
+					}), new Text({
+						text: "{message_type_code}", hAlign: "Right"
+					})
+				],
+				type: sap.m.ListType.Navigation
 			});
+			this.oReadOnlyTemplate.attachPress(this.onListMainTableItemPress.bind(this));
+
+			var aFilters = this._getSearchStates();
+			this.byId("mainTable").bindItems({
+				path: "/Message",
+				filters: aFilters,
+				template: this.oReadOnlyTemplate,
+				templateShareable: true,
+				key: "message_code"
+			}).setKeyboardMode("Navigation");
 		},
-		
-		_getSearchStates: function(){
-			var sChain = this.getView().byId("searchChain").getSelectedKey(),
-				sKeyword = this.getView().byId("searchKeyword").getValue(),
-				sUsage = this.getView().byId("searchUsageSegmentButton").getSelectedKey();
-			
-			var aSearchFilters = [];
-			if (sChain && sChain.length > 0) {
-				aSearchFilters.push(new Filter("chain_code", FilterOperator.EQ, sChain));
-			}
-			if (sKeyword && sKeyword.length > 0) {
-				aSearchFilters.push(new Filter({
-					filters: [
-						new Filter("control_option_code", FilterOperator.Contains, sKeyword),
-						new Filter("control_option_name", FilterOperator.Contains, sKeyword)
-					],
-					and: false
-				}));
-			}
-			if(sUsage != "all"){
-				switch (sUsage) {
-					case "site":
-					aSearchFilters.push(new Filter("site_flag", FilterOperator.EQ, "true"));
-					break;
-					case "company":
-					aSearchFilters.push(new Filter("company_flag", FilterOperator.EQ, "true"));
-					break;
-					case "org":
-					aSearchFilters.push(new Filter("organization_flag", FilterOperator.EQ, "true"));
-					break;
-					case "user":
-					aSearchFilters.push(new Filter("user_flag", FilterOperator.EQ, "true"));
-					break;
-				}
-			}
-			return aSearchFilters;
-		},
-		
+
 		_doInitTablePerso: function(){
 			// init and activate controller
 			this._oTPC = new TablePersoController({
 				table: this.byId("mainTable"),
-				componentName: "controlOptionMgr",
+				componentName: "templateListViewAndObjectEdit",
 				persoService: MainListPersoService,
 				hasGrouping: true
 			}).activate();

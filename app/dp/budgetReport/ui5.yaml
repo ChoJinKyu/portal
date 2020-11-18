@@ -1,6 +1,6 @@
 specVersion: '1.0'
 metadata:
-  name: controlOptionMgr
+  name: templateListViewAndObjectEdit
 type: application
 resources:
   configuration:
