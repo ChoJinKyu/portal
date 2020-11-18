@@ -119,17 +119,23 @@ sap.ui.define([
 		 */
         onPageDeleteButtonPress: function(){
 			var oView = this.getView(),
-				me = this;
-			MessageBox.confirm("Are you sure to delete?", {
+				oMasterModel = this.getModel("master"),
+				that = this;
+			MessageBox.confirm("Are you sure to delete this control option and details?", {
 				title : "Comfirmation",
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
-						me.getView().getBindingContext().delete('$direct').then(function () {
-								me.onNavBack();
-							}, function (oError) {
-								MessageBox.error(oError.message);
-							});
+						debugger;
+						oView.setBusy(true);
+						oMasterModel.removeData();
+						oMasterModel.setTransactionModel(that.getModel());
+						oMasterModel.submitChanges({
+							success: function(ok){
+								oView.setBusy(false);
+								MessageToast.show("Success to delete.");
+							}
+						});
 					};
 				}
 			});
@@ -137,8 +143,8 @@ sap.ui.define([
 
 		onMidTableAddButtonPress: function(){
 			var oTable = this.byId("midTable"),
-				oModel = this.getModel("details");
-			oModel.addRecord({
+				oDetailsModel = this.getModel("details");
+			oDetailsModel.addRecord({
 				"tenant_id": this._sTenantId,
 				"control_option_code": this._sControlOptionCode,
 				"control_option_level_code": "",
@@ -171,7 +177,7 @@ sap.ui.define([
 		 */
         onPageSaveButtonPress: function(){
 			var oView = this.getView(),
-				me = this;
+				that = this;
 			MessageBox.confirm("Are you sure ?", {
 				title : "Comfirmation",
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -181,7 +187,7 @@ sap.ui.define([
 						oTransactionManager.submit({
 						// oView.getModel("master").submitChanges({
 							success: function(ok){
-								me._toShowMode();
+								that._toShowMode();
 								oView.setBusy(false);
 								MessageToast.show("Success to save.");
 							}
@@ -248,10 +254,10 @@ sap.ui.define([
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
 				}, "/ControlOptionMasters");
-				var oDetailModel = this.getModel("details");
-				oDetailModel.setTransactionModel(this.getModel());
-				oDetailModel.setData([]);
-				oDetailModel.addRecord({
+				var oDetailsModel = this.getModel("details");
+				oDetailsModel.setTransactionModel(this.getModel());
+				oDetailsModel.setData([]);
+				oDetailsModel.addRecord({
 					"tenant_id": this._sTenantId,
 					"control_option_code": this._sControlOptionCode,
 					"control_option_level_code": "",
@@ -266,9 +272,9 @@ sap.ui.define([
 
 				this._bindView("/ControlOptionMasters(tenant_id='" + this._sTenantId + "',control_option_code='" + this._sControlOptionCode + "')");
 				oView.setBusy(true);
-				var oDetailModel = this.getModel("details");
-				oDetailModel.setTransactionModel(this.getModel());
-				oDetailModel.read("/ControlOptionDetails", {
+				var oDetailsModel = this.getModel("details");
+				oDetailsModel.setTransactionModel(this.getModel());
+				oDetailsModel.read("/ControlOptionDetails", {
 					filters: [
 						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
 						new Filter("control_option_code", FilterOperator.EQ, this._sControlOptionCode),

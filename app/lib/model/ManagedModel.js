@@ -25,6 +25,12 @@ sap.ui.define([
             JSONModel.prototype.setData.call(this, oData, bMerge);
         },
 
+        removeData: function(){
+            var oData = this.getObject("/");
+            oData[STATE_COL] = "D";
+            JSONModel.prototype.setProperty.call(this, "/", oData);
+        },
+
         read: function(sPath, oParameters){
             var that = this,
                 successHandler = oParameters.success;
@@ -47,7 +53,7 @@ sap.ui.define([
                 var state = oItem[STATE_COL];
                 delete oItem[STATE_COL];
                 if(state == "C"){
-                    this._oTransactionModel.create(sEntity, oItem,{
+                    this._oTransactionModel.create(sEntity, oItem, {
                         groupId: sGroupId,
                         success: function(){
                             oItem.__entity = sEntity;
@@ -55,11 +61,11 @@ sap.ui.define([
                         }
                     });
                 }else if(state == "D"){
-                    this._oTransactionModel.delete(sEntity, oItem,{
+                    this._oTransactionModel.remove(sEntity, {
                         groupId: sGroupId,
                         success: function(){
                             oItem.__entity = sEntity;
-                            console.log("Deleted a data to entity : " + sEntity);
+                            console.log("Removed a data from entity : " + sEntity);
                         }
                     });
                 }
@@ -68,7 +74,7 @@ sap.ui.define([
                     groupId: sGroupId,
                     success: function(){
                         oItem.__entity = sEntity;
-                        console.log("Updated a data to entity : " + sEntity);
+                        console.log("Updated a data from entity : " + sEntity);
                     }
                 });
             }
