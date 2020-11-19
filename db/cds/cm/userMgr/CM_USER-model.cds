@@ -11,15 +11,15 @@ entity User {
     employee_name : String(240)  not null @title: '사원명';
     english_employee_name : String(240)  not null @title: '영문사원명';
     employee_status_code : String(30)  not null @title: '사원상태코드';
-    language_code : String(4)  not null @title: '언어코드';
+    language_code : String(30)  not null @title: '언어코드';
     timezone_code : String(30)  not null @title: '타임존코드';
     date_format_type_code : String(30)  not null @title: '일자서식유형코드';
     digits_format_type_code : String(30)  not null @title: '숫자서식유형코드';
     currency_code : String(30)  not null @title: '통화코드';
     password : String(4000)  not null @title: '비밀번호';
     email : String(240)  not null @title: '이메일';
-    start_date : String(8)  not null @title: '시작일자';
-    end_date : String(8)  not null @title: '종료일자';
+    start_date : Date  not null @title: '시작일자';
+    end_date : Date not null @title: '종료일자';
     use_flag : Boolean  not null @title: '사용여부';
 }
 

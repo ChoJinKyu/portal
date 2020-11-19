@@ -1,0 +1,17 @@
+<mvc:View
+	controllerName="cm.currencyMgr.controller.App"
+	displayBlock="true"
+	xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc"
+    xmlns:f="sap.f"
+    height="100%">
+
+	<App id="app">
+        <f:FlexibleColumnLayout
+                id="flexibleColumnLayout"
+                stateChange=".onStateChanged"
+                backgroundDesign="Translucent"
+                layout="{flexibleColumnLayout>/layout}"/>
+    </App>
+
+</mvc:View>

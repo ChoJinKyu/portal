@@ -52,7 +52,6 @@ sap.ui.define([
                 
             },
             _onRouteMatched: function (oEvent) {
-                debugger;
                 var oArgs, oView, oQuery;
                 oArgs = oEvent.getParameter("arguments");
                 oView = this.getView();

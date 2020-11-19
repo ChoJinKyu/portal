@@ -1,5 +1,6 @@
 sap.ui.define([
-	"dp/developmentReceipt/test/unit/controller/developmentReceipt.controller"
-], function () {
+"./model/formatter",
+"./model/models"
+], function() {
 	"use strict";
 });

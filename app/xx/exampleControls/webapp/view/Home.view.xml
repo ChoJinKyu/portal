@@ -1,0 +1,31 @@
+<mvc:View controllerName="xx.exampleControls.controller.Home" 
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core" 
+    xmlns:lib-m="ext.lib.m" 
+    height="100%">
+
+    <Page id="page" title="UI5 Examples">
+        <content>
+            <VBox>
+                <MessageStrip class="sapUiMediumMarginBottom"
+                    text="하단의 목록을 확장하여 각종 예제를 참조하세요."
+                    showIcon="true"
+                    showCloseButton="false">
+                </MessageStrip>
+                
+                <List headerText="Examples" items="{examples>/}" >
+                    <StandardListItem title="{examples>name}" type="Navigation" press=".onListItemPress" />
+                </List>
+            </VBox>
+        </content>
+        <footer>
+            <OverflowToolbar>
+                <!-- <Button icon="sap-icon://message-popup" text="123123" type="Emphasized" press=".onMessageButtonPress" /> -->
+                <ToolbarSpacer />
+				<Button text="SAPUI5 API" type="Transparent" press=".onSAPUI5APIButtonPress" />
+				<Button text="Thanks" type="Emphasized" press=".onThanksButtonPress"/>
+            </OverflowToolbar>
+        </footer>
+    </Page>
+</mvc:View>

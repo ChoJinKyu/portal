@@ -53,7 +53,7 @@
             <tnt:SideNavigation id="sideNavigation" selectedKey="subItem3">
                 <tnt:NavigationList width="320px" selectedKey="subItem3" items="{/menus}">
                     <tnt:NavigationListItem text="{name}" key="rootItem1" icon="{icon}" items="{subMenus}">
-                        <tnt:NavigationListItem text="{name}" select=".onAppPress"/>
+                        <tnt:NavigationListItem text="{name}" select=".onAppPress" visible="{visible}" />
                     </tnt:NavigationListItem>
                 </tnt:NavigationList>
 				<tnt:fixedItem>

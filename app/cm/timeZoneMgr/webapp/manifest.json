@@ -17,18 +17,34 @@
     },
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v4/cm.TimeZoneMgrService/",
+        "uri": "srv-api/odata/v2/cm.TimeZoneMgrService/",
         "type": "OData",
         "settings": {
-          "odataVersion": "4.0",
+          "odataVersion": "2.0",
           "localUri": "localService/metadata.xml"
         }
       },
-      "countryMgrSources": {
-        "uri": "../../../cm/countryMgr/srv-api/odata/v4/cm.CountryMgrService/",
+      "orgMgrService": {
+        "uri": "../../../cm/codeMgr/srv-api/odata/v2/cm.OrgMgrService/",
         "type": "OData",
         "settings": {
-          "odataVersion": "4.0",
+          "odataVersion": "2.0",
+          "localUri": "localService/metadata.xml"
+        }
+      },
+      "codeMgrService": {
+        "uri": "../../../cm/codeMgr/srv-api/odata/v2/cm.CodeMgrService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0",
+          "localUri": "localService/metadata.xml"
+        }
+      },
+      "countryMgrService": {
+        "uri": "../../../cm/countryMgr/srv-api/odata/v2/cm.CountryMgrService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0",
           "localUri": "localService/metadata.xml"
         }
       }
@@ -57,10 +73,10 @@
   "sap.ui5": {
     "flexEnabled": false,
     "rootView": {
-      "viewName": "cm.timeZoneMgr.view.timeZoneMgr",
+      "viewName": "cm.timeZoneMgr.view.App",
       "type": "XML",
       "async": true,
-      "id": "timeZoneMgr"
+      "id": "app"
     },
     "dependencies": {
       "minUI5Version": "1.60.1",
@@ -91,8 +107,28 @@
           "autoExpandSelect": true
         }
       },
+      "org": {
+        "dataSource": "orgMgrService",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "groupId": "$direct",
+          "synchronizationMode": "None",
+          "autoExpandSelect": true
+        }
+      },
+      "code": {
+        "dataSource": "codeMgrService",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "groupId": "$direct",
+          "synchronizationMode": "None",
+          "autoExpandSelect": true
+        }
+      },
       "country": {
-        "dataSource": "countryMgrSources",
+        "dataSource": "countryMgrService",
         "preload": true,
         "settings": {
           "operationMode": "Server",
@@ -109,6 +145,9 @@
         }
       ]
     },
+    "resourceRoots": {
+      "ext.lib": "../../../lib"
+    },
     "routing": {
       "config": {
         "routerClass": "sap.m.routing.Router",
@@ -121,20 +160,18 @@
       },
       "routes": [
         {
-          "name": "RoutetimeZoneMgr",
-          "pattern": "RoutetimeZoneMgr",
+          "pattern": "",
+          "name": "timeZoneMgr",
           "target": [
-            "TargettimeZoneMgr"
+            "timeZoneMgr"
           ]
         }
       ],
       "targets": {
-        "TargettimeZoneMgr": {
-          "viewType": "XML",
-          "transition": "slide",
-          "clearControlAggregation": false,
+        "timeZoneMgr": {
           "viewId": "timeZoneMgr",
-          "viewName": "timeZoneMgr"
+          "viewName": "timeZoneMgr",
+          "viewLevel": 1
         }
       }
     }

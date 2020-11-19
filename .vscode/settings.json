@@ -1,4 +1,5 @@
 {
     "sqltools.connections": [],
-    "actions": []
+    "actions": [],
+    "java.configuration.updateBuildConfiguration": "automatic"
 }

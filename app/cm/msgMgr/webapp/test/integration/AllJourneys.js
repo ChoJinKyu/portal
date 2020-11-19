@@ -1,13 +1,13 @@
 sap.ui.define([
 	"sap/ui/test/Opa5",
 	"./arrangements/Startup",
-	"./NavigationJourney"
+	"./NavigationJourney",
+	"sap/ui/test/opaQunit"
 ], function (Opa5, Startup) {
 	"use strict";
-
 	Opa5.extendConfig({
 		arrangements: new Startup(),
-		viewNamespace: "cm.msgMgr.view.",
-		autoWait: true
+		viewNamespace: "cm.msgMgr.view."
 	});
+
 });

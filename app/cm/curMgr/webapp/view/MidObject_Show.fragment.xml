@@ -1,0 +1,30 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<form:SimpleForm id="midObjectForm1Show" editable="false">
+
+		<core:Title text="기본정보" />
+		<Label text="통화코드"/>
+		<Text text="{master>/currency_code}"/>
+		<Label text="소수점자리"/>
+		<Text text="{master>/scale}"/>
+		<Label text="확장소수점자리"/>
+		<Text text="{master>/extension_scale}"/>
+
+		<core:Title text="유효여부" />
+		<Label text="유효시작일자"/>
+        <!-- <DatePicker width="auto" id="endDate" value="{master>/effective_start_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/> -->
+		<Text text="{master>/effective_start_date}"/>
+        <Label text="유효종료일자"/>
+		<Text text="{master>/effective_end_date}"/>
+        <!-- <DatePicker width="auto" id="endDate" value="{master>/effective_end_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/> -->
+		<Label text="사용여부"/>
+		<Text text="{
+				path: 'master>/use_flag',
+				formatter: '.formatter.toYesNo'
+			}"/>
+
+	</form:SimpleForm>
+</core:FragmentDefinition>

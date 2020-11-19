@@ -1,8 +1,16 @@
 sap.ui.define([
-	"sap/ui/core/UIComponent",
-	"sap/ui/Device",
-	"cm/currencyMgr/model/models"
-], function (UIComponent, Device, models) {
+    
+	"ext/lib/UIComponent",
+	"ext/lib/model/models",
+    "ext/lib/controller/ErrorHandler",
+    
+	// "sap/ui/core/UIComponent",
+	// "sap/ui/Device",
+	// "cm/currencyMgr/model/models",
+	'sap/f/library',
+    'sap/ui/model/json/JSONModel',
+    'sap/f/FlexibleColumnLayoutSemanticHelper'
+], function (UIComponent, Device, models, fioriLibrary, JSONModel, FlexibleColumnLayoutSemanticHelper, ErrorHandler) {
 	"use strict";
 
 	return UIComponent.extend("cm.currencyMgr.Component", {
@@ -17,14 +25,50 @@ sap.ui.define([
 		 * @override
 		 */
 		init: function () {
+            var oModel,
+				oProductsModel,
+                oRouter,
+                oVisible;
 			// call the base component's init function
-			UIComponent.prototype.init.apply(this, arguments);
+            UIComponent.prototype.init.apply(this, arguments);
+            
+            
+            oModel = new JSONModel({
+                            true1 : true,
+                            true2 : false,
+                            true3 : true,
+                            true4 : false,
+                            true5 : false,
+                            LiveChange : "",
+                            newCheck : "",
+                            true6 : true,
+                        });
+            this.setModel(oModel, "Currency");
+            this.setModel(new JSONModel(), "flexibleColumnLayout");
+             
+		},
 
-			// enable routing
-			this.getRouter().initialize();
+        getHelper: function () {
+			return this._getFcl().then(function(oFCL) {
+				var oSettings = {
+					defaultTwoColumnLayoutType: fioriLibrary.LayoutType.TwoColumnsMidExpanded,
+					//defaultThreeColumnLayoutType: fioriLibrary.LayoutType.ThreeColumnsMidExpanded
+				};
+				return (FlexibleColumnLayoutSemanticHelper.getInstanceFor(oFCL, oSettings));
+			});
+        },
+        _getFcl: function () {
+			return new Promise(function(resolve, reject) {
+				var oFCL = this.getRootControl().byId('flexibleColumnLayout');
+				if (!oFCL) {
+					this.getRootControl().attachAfterInit(function(oEvent) {
+						resolve(oEvent.getSource().byId('flexibleColumnLayout'));
+					}, this);
+					return;
+				}
+				resolve(oFCL);
 
-			// set the device model
-			this.setModel(models.createDeviceModel(), "device");
+			}.bind(this));
 		}
 	});
 });

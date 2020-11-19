@@ -1,5 +1,6 @@
 sap.ui.define([
-	"cm/msgMgr/test/unit/controller/mainView.controller"
-], function () {
+"./model/formatter",
+"./model/models"
+], function() {
 	"use strict";
 });

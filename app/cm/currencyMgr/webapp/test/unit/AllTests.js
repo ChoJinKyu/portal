@@ -1,5 +1,5 @@
 sap.ui.define([
-	"cm/currencyMgr/test/unit/controller/currencyMgr.controller"
+	"cm/currencyMgr/test/unit/controller/currencyMainView.controller"
 ], function () {
 	"use strict";
 });
