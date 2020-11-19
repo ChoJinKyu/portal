@@ -9,7 +9,7 @@ SELECT '['||a.company_code||'] '||(select company_name from cm_org_company where
     , a.org_code                        
     , a.part_number                     
     , a.mold_sequence                   
-    , a.mold_id                         
+                
     , a.spec_name                       
     , a.model                           
     , a.asset_number                    
@@ -55,7 +55,7 @@ SELECT '['||a.company_code||'] '||(select company_name from cm_org_company where
     , a.accounting_department_code      
     , a.acq_department_code             
     , a.production_vendor_id            
-    , a.remark                          
+    , a.remark as remark_mst                          
     , a.develope_request_code           
     , a.develope_request_empno          
     , a.pdm_id                          
@@ -112,68 +112,7 @@ SELECT '['||a.company_code||'] '||(select company_name from cm_org_company where
     , a.acq_date                        
     , a.acq_amount                      
     , a.use_department_code             
-    , b.use_material_value            
-    , b.inspection_flag               
-    , b.assembly_approval_flag        
-    , b.request_life_shot_count       
-    , b.order_qty                     
-    , b.cavity_process_qty            
-    , b.mold_tonnage                  
-    , b.die_form                      
-    , b.mold_outform_spec_name        
-    , b.mold_runnerout_spec_name      
-    , b.mold_undercut_spec_name       
-    , b.mold_hot_runner_spec_name     
-    , b.mold_gate_spec_name           
-    , b.mold_return_type_name         
-    , b.mold_formout_method           
-    , b.mold_sample_qty               
-    , b.mold_hot_runner_qty           
-    , b.mold_cavity_material_name     
-    , b.mold_core_material_name       
-    , b.mold_slide_core_material_name 
-    , b.mold_slope_material_name      
-    , b.press_die_material_name       
-    , b.press_punch_material_name     
-    , b.remark as remark_spec                   
-    , b.top_circle_material_name      
-    , b.bottom_circle_material_name   
-    , b.top_core_material_name        
-    , b.bottom_core_material_name     
-    , b.middle_core_material_name     
-    , b.core_material_name            
-    , b.slide_core_material_name      
-    , b.cycle_time                    
-    , b.inject_machine_name           
-    , b.top_holder_material_name      
-    , b.bottom_holder_material_name   
-    , b.die_material_name             
-    , b.stripper_material_name        
-    , b.punch_holder_material_name    
-    , b.punch_material_name           
-    , b.pad_valve_material_name       
-    , b.pad_material_name             
-    , b.spare_part_eyebolt_count      
-    , b.spare_part_ejslave_count      
-    , b.spare_part_ejector_pin_count  
-    , b.spare_part_heater_count       
-    , b.spare_part_speaker_core_count 
-    , b.spare_part_etc_count          
-    , b.spare_part_p_punch_count      
-    , b.spare_part_b_punch_count      
-    , b.spare_part_spring_count       
-    , b.spare_part_die_button_count   
-    , b.spare_part_steam_cap_count    
-    , b.spare_part_feeder_count       
-    , b.spare_part_ejector_count      
-    , b.mold_size                     
-    , b.mold_weight                   
-    , b.hot_runner_maker_name         
-    , b.mold_size_2                   
-    , b.press_open_size               
-    , b.press_material_thickness      
-    , b.press_material_size           
-    , b.mold_spec_status_code         
+    , b.*        
 
 from dp_mold_mst a
 left join dp_mold_spec b

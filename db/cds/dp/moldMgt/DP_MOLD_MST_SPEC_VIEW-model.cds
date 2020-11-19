@@ -61,7 +61,7 @@ entity Mold_Mst_Spec_View {
         accounting_department_code      : String(30)            @title:'회계부서코드';
         acq_department_code             : String(30)            @title:'취득부서코드';
         production_vendor_id            : String(100)           @title:'제작협력사ID';
-        remark                          : String(3000)          @title:'비고';
+        remark_mst                          : String(3000)          @title:'비고';
         develope_request_code           : String(30)            @title:'개발요청코드';
         develope_request_empno          : String(50)            @title:'개발요청사번';
         pdm_id                          : String(100)           @title:'PDMID';
@@ -141,7 +141,7 @@ entity Mold_Mst_Spec_View {
         mold_slope_material_name      : String(240)   @title : '사출슬롭재질명';
         press_die_material_name       : String(240)   @title : '프레스다이재질명';
         press_punch_material_name     : String(240)   @title : '프레스펀치재질명';
-        remark_spec                        : String(3000)  @title : '비고';
+        remark                        : String(3000)  @title : '비고';
         top_circle_material_name      : String(240)   @title : '상원판재질명';
         bottom_circle_material_name   : String(240)   @title : '하원판재질명';
         top_core_material_name        : String(240)   @title : '상코어재질명';
