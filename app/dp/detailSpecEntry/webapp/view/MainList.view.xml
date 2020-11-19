@@ -130,15 +130,15 @@
                 <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="Model" labelFor="searchPopup1"></Label>
-                            <Input id="searchPopup1" showValueHelp="true"></Input>
+                            <Label text="Model" labelFor="searchModel"></Label>
+                            <Input id="searchModel" showValueHelp="true"></Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Part No" labelFor="searchPopup2"></Label>
-                            <Input id="searchPopup2" showValueHelp="true"></Input>
+                            <Label text="Part No" labelFor="searchPart"></Label>
+                            <Input id="searchPart" showValueHelp="true"></Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
@@ -217,16 +217,16 @@
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>
-                                <ObjectIdentifier text="{list>company_code}" />
-                                <ObjectIdentifier text="{list>org_code}" />
+                                <ObjectIdentifier text="{list>company_name}" />
+                                <ObjectIdentifier text="{list>org_name}" />
                                 <ObjectIdentifier text="{list>model}" />
                                 <ObjectIdentifier text="{list>part_number}" />
                                 <ObjectIdentifier text="{list>mold_sequence}" />
                                 <ObjectIdentifier text="{list>spec_name}" />
                                 <ObjectIdentifier text="{list>po_status_code}" />
-                                <ObjectIdentifier text="{list>mold_item_type_code}" />
-                                <ObjectIdentifier text="{list>create_user_id}" />
-                                <ObjectIdentifier text="{list>local_update_dtm}" />
+                                <ObjectIdentifier text="{list>mold_item_type_name}" />
+                                <ObjectIdentifier text="{list>user_name}" />
+                                <ObjectIdentifier text="{list>last_update_date}" />
                                 <ObjectIdentifier text="{list>family_part_number_1} {list>family_part_number_2} {list>family_part_number_3} {list>family_part_number_4} {list>family_part_number_5}" />
                             </cells>
                         </ColumnListItem>

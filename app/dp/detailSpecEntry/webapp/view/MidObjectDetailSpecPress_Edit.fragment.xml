@@ -16,10 +16,10 @@
         emptySpanM="0"
         columnsL="3"
         columnsM="3">
-            <VBox> 
+            <VBox>
 
                 <Label text="Mold Test"/>
-                <Input value="무슨 컬럼?"/>
+                <Input value="{spec>/inspection_flag}"/>
                 <Label text="Order Qty"/>
                 <Input value="{spec>/order_qty}"/>
                 <Label text="Demand Life"/>
@@ -32,7 +32,7 @@
                 <Label text="Assembly Approval"/> 
                 <Input value="{spec>/assembly_approval_flag}"/>
                 <Label text="Mold Structure"/>
-                <Input value="무슨 컬럼?"/>
+                <Input value="{spec>/die_form}"/>
                 <Label text="Mold Weight"/>
                 <Input value="{spec>/mold_weight}"/>
                 <Label text="Open Size"/>

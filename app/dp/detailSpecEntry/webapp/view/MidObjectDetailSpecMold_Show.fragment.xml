@@ -29,7 +29,7 @@
                 <Label text="Size"/>
                 <Text text="{spec>/mold_size}"></Text>
                 <Label text="Runner"/>
-                <Text text="{spec>/mold_runnerout_spec_name}"></Text>
+                <Text text="{spec>/mold_hot_runner_spec_name}"></Text>
 
                 <Label text="Return Type"/>
                 <Text text="{spec>/mold_return_type_name}"></Text>
@@ -54,7 +54,7 @@
                 <Label text="Form Out"/>
                 <Text text="{spec>/mold_formout_method}"></Text>
                 <Label text="Use Machine"/>
-                <Text text="{spec>/inject_machine_name}"></Text>
+                <Text text="{spec>/mold_tonnage}"></Text>
 
             </VBox>            
             <VBox >
@@ -63,9 +63,9 @@
                 <Label text="Sample Qty"/>
                 <Text text="{spec>/mold_sample_qty}"/>
                 <Label text="Mold Type"/>
-                <Text text="{spec>/mold_return_type_name}"></Text>
+                <Text text="{master>/mold_type_code}"></Text>
                 <Label text="Mold Structure"/>
-                <Text text="{spec>/order_vendor_id}"></Text>
+                <Text text="{spec>/die_form}"></Text>
                 <Label text=""/>
                 <Text text=""></Text>
                 <Label text="Under Cut"/>
@@ -123,16 +123,15 @@
             <core:Title text="Mold Meterial" />
             <VBox>
                 <Label text="Cavity/Punch"/>
-                <Text text="{spec>/punch_material_name}"/>
+                <Text text="{spec>/mold_cavity_material_name}"/>
                 <Label text="Taper Pin"/>
-                <!-- <Text text="{spec>/cavity_process_qty}"/> -->
-                <Text text="무슨 컬럼?"/>
+                <Text text="{spec>/mold_slope_material_name}"/>
                 <Label text="Cycle Time"/>
                 <Text text="{spec>/cycle_time}"/>
             </VBox>            
             <VBox >
                 <Label text="Core/Die"/> 
-                <Text text="{spec>/die_material_name}"/>
+                <Text text="{spec>/mold_core_material_name}"/>
                 <Label text="Top Circle"/>
                 <Text text="{spec>/top_circle_material_name}"/>
 

@@ -29,7 +29,7 @@
                 <Label text="Size"/>
                 <Input value="{spec>/mold_size}"/>
                 <Label text="Runner"/>
-                <Input value="{spec>/mold_runnerout_spec_name}"/>
+                <Input value="{spec>/mold_hot_runner_spec_name}"/>
                 <Label text="Return Type"/>
                 <Input value="{spec>/mold_return_type_name}"/>
                 <Label text="Runner Out"/>
@@ -53,7 +53,7 @@
                 <Label text="Form Out"/>
                 <Input value="{spec>/mold_formout_method}"/>
                 <Label text="Use Machine"/>
-                <Input value="{spec>/inject_machine_name}"/>
+                <Input value="{spec>/mold_tonnage}"/>
 
             </VBox>            
             <VBox >
@@ -62,9 +62,9 @@
                 <Label text="Sample Qty"/>
                 <Input value="{spec>/mold_sample_qty}"/>
                 <Label text="Mold Type"/>
-                <Input value="{spec>/mold_return_type_name}"/>
+                <Input value="{master>/mold_type_code}"/>
                 <Label text="Mold Structure"/>
-                <Input value="{spec>/order_vendor_id}"/>
+                <Input value="{spec>/die_form}"/>
                 <Label text=""/>
                 <Input value=""/>
                 <Label text="Under Cut"/>
@@ -122,15 +122,15 @@
             <core:Title text="Mold Meterial" />
             <VBox>
                 <Label text="Cavity/Punch"/>
-                <Input value="{spec>/punch_material_name}"/>
+                <Input value="{spec>/mold_cavity_material_name}"/>
                 <Label text="Taper Pin"/>
-                <Input value="무슨 컬럼?"/>
+                <Input value="{spec>/mold_slope_material_name}"/>
                 <Label text="Cycle Time"/>
                 <Input value="{spec>/cycle_time}"/>
             </VBox>            
             <VBox >
                 <Label text="Core/Die"/> 
-                <Input value="{spec>/die_material_name}"/>
+                <Input value="{spec>/mold_core_material_name}"/>
                 <Label text="Top Circle"/>
                 <Input value="{spec>/top_circle_material_name}"/>
 
