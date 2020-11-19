@@ -1,4 +1,4 @@
-<mvc:View controllerName="dp.budgetReport.controller.BudgetReportObject" 
+<mvc:View controllerName="dp.moldApprovalList.controller.ParticipatingSupplierSelectionApprovalObject" 
 	xmlns:mvc="sap.ui.core.mvc" 
 	xmlns="sap.m" 
 	xmlns:uxap="sap.uxap" 
@@ -15,11 +15,11 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="Message Details" wrapping="true" />
+					<Title text="Participating Supplier Selection Approval" wrapping="true" />
 				</uxap:expandedHeading>
 
 				<uxap:snappedHeading>
-					<Title text="Message Details" wrapping="true" />
+					<Title text="Participating Supplier Selection Approval" wrapping="true" />
 				</uxap:snappedHeading>
 
 				<uxap:expandedContent>

@@ -11,7 +11,7 @@ sap.ui.define([
 ], function (BaseController, JSONModel, History, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
 	"use strict";
 
-	return BaseController.extend("dp.budgetReport.controller.MainObject", {
+	return BaseController.extend("dp.moldApprovalList.controller.ParticipatingSupplierSelectionApprovalObject", {
 
 		dateFormatter: DateFormatter,
 
@@ -23,7 +23,8 @@ sap.ui.define([
 		 * Called when the mainObject controller is instantiated.
 		 * @public
 		 */
-		onInit : function () {
+		onInit : function () { 
+              console.log("ParticipatingSupplierSelectionApprovalObject Controller 호출");
 			// Model used to manipulate control states. The chosen values make sure,
 			// detail page shows busy indication immediately so there is no break in
 			// between the busy indication for loading the view's meta data
@@ -31,8 +32,8 @@ sap.ui.define([
 					busy : true,
 					delay : 0
 				});
-			this.getRouter().getRoute("mainObject").attachPatternMatched(this._onObjectMatched, this);
-			this.setModel(oViewModel, "mainObjectView");
+			this.getRouter().getRoute("participatingSupplierSelectionApprovalObject").attachPatternMatched(this._onObjectMatched, this);
+			this.setModel(oViewModel, "participatingSupplierSelectionApprovalObjectView");
 		},
 
 		/* =========================================================== */
@@ -141,10 +142,9 @@ sap.ui.define([
 		 */
 		_onObjectMatched : function (oEvent) {
 			var oArgs = oEvent.getParameter("arguments"),
-				sTenantId = oArgs.tenantId,
-				sLanguageCode = oArgs.languageCode,
-				sMessageCode = oArgs.messageCode;
-			this._bindView("/Message(tenant_id='" + sTenantId + "',language_code='" + sLanguageCode + "',message_code='" + sMessageCode + "')");
+                sMoldId = oArgs.moldId;
+            console.log(oArgs);
+			this._bindView("/MoldSpec(mold_id=" + sMoldId + ")");
 			this._toShowMode();
 		},
 
@@ -155,7 +155,7 @@ sap.ui.define([
 		 * @private
 		 */
 		_bindView : function (sObjectPath) {
-			var oViewModel = this.getModel("mainObjectView");
+			var oViewModel = this.getModel("budgetReportObjectView");
 
 			this.getView().bindElement({
 				path: sObjectPath,
@@ -173,7 +173,7 @@ sap.ui.define([
 
 		_onBindingChange : function () {
 			var oView = this.getView(),
-				oViewModel = this.getModel("mainObjectView"),
+				oViewModel = this.getModel("budgetReportObjectView"),
 				oElementBinding = oView.getElementBinding();
 			// No data for the binding
 			if (!oElementBinding.getBoundContext()) {

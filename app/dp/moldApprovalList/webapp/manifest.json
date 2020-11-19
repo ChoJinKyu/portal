@@ -147,6 +147,13 @@
           "target": [
             "budgetReportObject"
           ]
+        },
+        {
+          "pattern": "ParticipatingSupplierSelectionApproval/{moldId}",
+          "name": "participatingSupplierSelectionApprovalObject",
+          "target": [
+            "participatingSupplierSelectionApprovalObject"
+          ]
         }
       ],
       "targets": {
@@ -167,6 +174,12 @@
           "viewId": "budgetReportObject",
           "viewLevel": 2,
           "title": "{i18n>budgetReportObjectTitle}"
+        },
+         "participatingSupplierSelectionApprovalObject": {
+          "viewName": "ParticipatingSupplierSelectionApprovalObject",
+          "viewId": "participatingSupplierSelectionApprovalObject",
+          "viewLevel": 2,
+          "title": "{i18n>viewObjectTitle3}"
         },
         "notFound": {
           "viewName": "NotFound",
