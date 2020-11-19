@@ -109,7 +109,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="Keyword" labelFor="searchKeywordE"></Label>
-                                <Input id="searchKeywordE" placeholder="Keywords of the Code or Content"></Input>
+                                <Input id="searchKeywordE" placeholder="Search Keywords"></Input>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
@@ -138,8 +138,7 @@
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
                         items="{list>/}"
-                        mode="SingleSelectMaster"
-                        selectionChange=".onRowClick"
+                        mode="SingleSelectLeft"
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
@@ -158,7 +157,7 @@
                     </headerToolbar>
                     <columns>
                         <Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="40px" >
-                            <Text text="S" />
+                            <ObjectStatus icon="sap-icon://document" />
                         </Column>
                         <Column id="mainColumnChainCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="12em" >
                             <Text text="Chain" />
@@ -179,14 +178,17 @@
                     <items>
                         <ColumnListItem>
                             <cells>
-                                <HBox align="Center">
-                                    <Text text="{list>_row_state_}"></Text>
+                                <HBox>
+                                    <ObjectStatus icon="{
+                                        path: 'list>_row_state_',
+                                        formatter: '.formatter.toModelStateColumnIcon'
+                                    }" />
                                 </HBox>
                                 <HBox>
-                                    <Text text="{list>chain_code}" visible="true"></Text>
+                                    <!-- <Text text="{list>chain_code}" visible="true"></Text> -->
                                     <ComboBox selectedKey="{list>chain_code}" 
                                                 width="100%" 
-                                                visible="false" 
+                                                visible="true" 
                                                 items="{
                                                     path: 'util>/CodeDetails',
                                                     filters: [
@@ -200,9 +202,9 @@
                                         </items>
                                     </ComboBox>
                                 </HBox>
-                                <HBox align="Center">
-                                    <Text text="{list>language_code}" visible="true"></Text>
-                                    <ComboBox selectedKey="{list>language_code}" width="100%" visible="false" items="{
+                                <HBox>
+                                    <!-- <Text text="{list>language_code}" visible="true"></Text> -->
+                                    <ComboBox selectedKey="{list>language_code}" width="100%" visible="true" items="{
                                             path: 'util>/CodeDetails',
                                             filters: [
                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
@@ -216,16 +218,16 @@
                                     </ComboBox>
                                 </HBox>
                                 <HBox align="Center">
-                                    <Text text="{list>message_code}" visible="true"></Text>
-                                    <Input value="{list>message_code}" visible="false"></Input>
+                                    <!-- <Text text="{list>message_code}" visible="true"></Text> -->
+                                    <Input value="{list>message_code}" visible="true"></Input>
                                 </HBox>
                                 <HBox align="Center">
-                                    <Text text="{list>message_contents}" visible="true"></Text>
-                                    <Input value="{list>message_contents}" visible="false"></Input>
+                                    <!-- <Text text="{list>message_contents}" visible="true"></Text> -->
+                                    <Input value="{list>message_contents}" visible="true"></Input>
                                 </HBox>
                                 <HBox align="Center">
-                                    <Text text="{list>message_type_code}" visible="true"></Text>
-                                    <ComboBox selectedKey="{list>message_type_code}" width="100%" visible="false" items="{
+                                    <!-- <Text text="{list>message_type_code}" visible="true"></Text> -->
+                                    <ComboBox selectedKey="{list>message_type_code}" width="100%" visible="true" items="{
                                             path: 'util>/CodeDetails',
                                             filters: [
                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},

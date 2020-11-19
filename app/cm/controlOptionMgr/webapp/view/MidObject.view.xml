@@ -1,4 +1,4 @@
-<mvc:View controllerName="xx.templateFlexibleColumns.controller.MidObject" 
+<mvc:View controllerName="cm.controlOptionMgr.controller.MidObject" 
 	xmlns:mvc="sap.ui.core.mvc" 
 	xmlns="sap.m" 
 	xmlns:uxap="sap.uxap" 

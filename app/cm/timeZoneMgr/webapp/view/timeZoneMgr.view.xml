@@ -110,7 +110,6 @@
         </f:DynamicPageHeader>
       </f:header>
       <f:content>
-      <FlexBox fitContainer="true">
         <t:Table id="mainTable"
           selectionMode="MultiToggle"
           rows="{
@@ -297,7 +296,6 @@
             </t:Column>
           </t:columns>
         </t:Table>
-        </FlexBox>
       </f:content>
     </f:DynamicPage>
   </App>

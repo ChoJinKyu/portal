@@ -7,13 +7,14 @@ entity Mold_Mst_Spec_View {
         org_name : String;
         user_name : String;
         last_update_date : String;
+        mold_item_type_name : String;
         tenant_id                       : String(5)   not null  @title:'테넌트ID';
         company_code                    : String(10)  not null  @title:'회사코드';
         org_type_code                   : String(10)  not null  @title:'조직유형코드';
         org_code                        : String(10)  not null  @title:'조직코드';
         part_number                     : String(40)  not null  @title:'부품번호';
         mold_sequence                   : Integer     not null  @title:'금형순번';
-    key mold_id                         : Integer64   not null  @title:'금형ID';
+    key mold_id                         : Integer   not null  @title:'금형ID';
         spec_name                       : String(500)           @title:'규격명';
         model                           : String(100)           @title:'모델';
         asset_number                    : String(100)           @title:'자산번호';

@@ -13,7 +13,7 @@ sap.ui.define([
 
 	return Controller.extend("ext.lib.controller.BaseController", {
 
-		enableValidator: function(){
+		enableMessagePopover: function(oEventName){
 			sap.ui.getCore().attachValidationError(function (oEvent) {
 				debugger;
 				oEvent.getParameter("element").setValueState(sap.ui.core.ValueState.Error);
@@ -23,29 +23,38 @@ sap.ui.define([
 				oEvent.getParameter("element").setValueState(sap.ui.core.ValueState.None);
 			});
 			oMessageManager = sap.ui.getCore().getMessageManager();
-            this.getView().setModel(oMessageManager.getMessageModel(), "message");
+            this.getView().setModel(oMessageManager.getMessageModel(),  "message");
             oMessageManager.registerObject(this.getView(), true);
+
+            // oEventName = oEventName || "onMessagePopoverPress";
+            // this[oEventName] = function(oEvent){
+            //     var oSource = oEvent.getSource();
+            //     this._getMessagePopover(function(oPopover){
+            //         oPopover.openBy(oSource);
+            //     });
+            // }.bind(this);
 		},
 		
-        onValidatorMessagePopoverPress : function (oEvent) {
+        onMessagePopoverPress : function (oEvent) {
 			var oSource = oEvent.getSource();
-            this._getValidatorMessagePopover(function(oPopover){
-				oPopover.openBy(oSource);
+            this._getMessagePopover(function(oPopover){
+				oPopover.toggle(oSource);
 			});
-		},
+        },
 		
-        _getValidatorMessagePopover : function (oHandler) {
-            if (!this._oValidatorMessagePopover) {
+        _getMessagePopover : function (oHandler) {
+            if (!this._oMessagePopover) {
 				Fragment.load({
 					id: this.getView().getId(),
-					name: "ext.lib.view.ValidatorMessagePopover",
-					controller: this
+					name: "ext.lib.view.MessagePopover",
+					controller: this.getView()
 				}).then(function(oFragment){
-					this._oValidatorMessagePopover = oFragment;
+                    this.getView().addDependent(oFragment);
+                    this._oMessagePopover = oFragment;
 					if(oHandler) oHandler(oFragment);
 				}.bind(this));
             }else{
-				if(oHandler) oHandler(this._oValidatorMessagePopover);
+				if(oHandler) oHandler(this._oMessagePopover);
 			}
 		},
 		
