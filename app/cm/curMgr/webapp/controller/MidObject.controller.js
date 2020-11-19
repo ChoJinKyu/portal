@@ -196,6 +196,7 @@ sap.ui.define([
 		 * @public
 		 */
         onPageSaveButtonPress: function(){
+            debugger;
 			var oView = this.getView(),
 				that = this;
 			MessageBox.confirm("Are you sure ?", {
@@ -271,7 +272,7 @@ sap.ui.define([
 					"scale": null,
 					"extension_scale": null,
                     "effective_start_date": new Date(),
-                    "effective_end_date" : new Date(2099, 12, 31),
+                    "effective_end_date" : new Date(2999, 11, 31),
 					"use_flag": false,
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
