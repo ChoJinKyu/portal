@@ -17,7 +17,7 @@
         <Label text="Description"/>
         <Text text="{master>/uom_class_desc}"/>
         <Label text="Disable Date"/>
-        <Text text="{path: 'master>/disable_date',formatter: '.dateFormatter.toDateTimeString'}"/>
+        <Text text="{path: 'master>/disable_date',formatter: '.dateFormatter.toDateString'}"/>
         
 	</form:SimpleForm>
 </core:FragmentDefinition>
