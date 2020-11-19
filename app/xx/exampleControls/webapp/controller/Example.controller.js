@@ -24,7 +24,18 @@ sap.ui.define([
 				oResourceBundle = this.getResourceBundle();
 
 			this.setModel(new JSONModel({
-				currency: 102485361.56
+				currency: 102485361.56,
+				list: [{
+					value1: null,
+					value2: null,
+					value3: null,
+					value4: null,
+				}, {
+					value1: null,
+					value2: null,
+					value3: null,
+					value4: null,
+				}]
 			}), "form");
 
 			sap.ui.getCore().attachValidationError(function (oEvent) {

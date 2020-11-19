@@ -72,6 +72,52 @@
                     </form:content>
                 </form:SimpleForm>
 
+                <Table id="midTable" 
+                        sticky="HeaderToolbar,ColumnHeaders" 
+                        inset="false" 
+                        items="{form>/list}"
+                        class="sapFDynamicPageAlignContent" 
+                        updateFinished=".onMidTableUpdateFinished"
+                        mode="SingleSelectLeft" 
+                        width="auto">
+                    <columns>
+                        <Column minScreenWidth="Tablet" hAlign="Center">
+                            <Text text="Level" />
+                        </Column>
+                        <Column minScreenWidth="Tablet" hAlign="Center">
+                            <Text text="Level Value" />
+                        </Column>
+                        <Column minScreenWidth="Tablet" hAlign="Center" >
+                            <Text text="eMail" />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem type="Inactive" press=".onMidTableItemPress">
+                            <cells>
+                                <Input value="{
+                                        path: 'form>value2', 
+                                        constraints: {
+
+                                        }
+                                    }"/>
+                                <Input value="{
+                                        path: 'form>value3', 
+                                        type: 'sap.ui.model.type.String',
+                                        constraints: {
+                                            search: '\\S+@\\S+\\.\\S+'
+                                        }
+                                    }"/>
+                                <Input value="{
+                                        path: 'form>value4', 
+                                        type: 'sap.ui.model.type.String',
+                                        constraints: {
+                                            search: '\\S+@\\S+\\.\\S+'
+                                        }
+                                    }"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
 
             </VBox>
         </content>
