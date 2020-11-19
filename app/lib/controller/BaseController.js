@@ -1,14 +1,64 @@
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/ui/core/UIComponent",
+	"sap/ui/core/Fragment",
 	"sap/m/library"
-], function (Controller, UIComponent, mobileLibrary) {
+], function (Controller, UIComponent, Fragment, mobileLibrary) {
 	"use strict";
 
 	// shortcut for sap.m.URLHelper
 	var URLHelper = mobileLibrary.URLHelper;
+	var _nRenderedFirstRun = 0;
+	var oMessageManager;
 
 	return Controller.extend("ext.lib.controller.BaseController", {
+
+		enableValidator: function(){
+			sap.ui.getCore().attachValidationError(function (oEvent) {
+				debugger;
+				oEvent.getParameter("element").setValueState(sap.ui.core.ValueState.Error);
+			});
+			sap.ui.getCore().attachValidationSuccess(function (oEvent) {
+				debugger;
+				oEvent.getParameter("element").setValueState(sap.ui.core.ValueState.None);
+			});
+			oMessageManager = sap.ui.getCore().getMessageManager();
+            this.getView().setModel(oMessageManager.getMessageModel(), "message");
+            oMessageManager.registerObject(this.getView(), true);
+		},
+		
+        onValidatorMessagePopoverPress : function (oEvent) {
+			var oSource = oEvent.getSource();
+            this._getValidatorMessagePopover(function(oPopover){
+				oPopover.openBy(oSource);
+			});
+		},
+		
+        _getValidatorMessagePopover : function (oHandler) {
+            if (!this._oValidatorMessagePopover) {
+				Fragment.load({
+					id: this.getView().getId(),
+					name: "ext.lib.view.ValidatorMessagePopover",
+					controller: this
+				}).then(function(oFragment){
+					this._oValidatorMessagePopover = oFragment;
+					if(oHandler) oHandler(oFragment);
+				}.bind(this));
+            }else{
+				if(oHandler) oHandler(this._oValidatorMessagePopover);
+			}
+		},
+		
+
+
+		/**
+		 * @public
+		 */
+		onAfterRendering: function(){
+			if(!!this.onRenderedFirst && _nRenderedFirstRun++ === 0){
+				this.onRenderedFirst.call(this);
+			}
+		},
 		
 		/**
 		 * Convenience method for accessing the router.

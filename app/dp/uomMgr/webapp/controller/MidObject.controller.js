@@ -1,6 +1,6 @@
 sap.ui.define([
-	"ext/lib/controller/BaseController",
-	"ext/lib/util/ValidatorUtil",
+	"./BaseController",
+	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
 	"ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedModel",
@@ -17,7 +17,7 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
+], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
 	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
 	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
 		
@@ -25,7 +25,7 @@ sap.ui.define([
 
 	var oTransactionManager;
 
-	return BaseController.extend("cm.controlOptionMgr.controller.MidObject", {
+	return BaseController.extend("dp.uomMgr.controller.MidObject", {
 
 		dateFormatter: DateFormatter,
 
@@ -66,9 +66,6 @@ sap.ui.define([
 			this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
 
 			this._initTableTemplates();
-
-			this.enableValidator();
-
 		}, 
 
 		/* =========================================================== */
@@ -84,7 +81,7 @@ sap.ui.define([
 			this.getRouter().navTo("midPage", {
 				layout: sNextLayout, 
 				tenantId: this._sTenantId,
-				controlOptionCode: this._sControlOptionCode
+				uomClassCode: this._sUomClassCode
 			});
 		},
 		/**
@@ -96,7 +93,7 @@ sap.ui.define([
 			this.getRouter().navTo("midPage", {
 				layout: sNextLayout, 
 				tenantId: this._sTenantId,
-				controlOptionCode: this._sControlOptionCode
+				uomClassCode: this._sUomClassCode
 			});
 		},
 		/**
@@ -124,7 +121,7 @@ sap.ui.define([
 			var oView = this.getView(),
 				oMasterModel = this.getModel("master"),
 				that = this;
-			MessageBox.confirm("Are you sure to delete this control option and details?", {
+			MessageBox.confirm("Are you sure to delete?", {
 				title : "Comfirmation",
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
@@ -149,10 +146,10 @@ sap.ui.define([
 				oDetailsModel = this.getModel("details");
 			oDetailsModel.addRecord({
 				"tenant_id": this._sTenantId,
-				"control_option_code": this._sControlOptionCode,
-				"control_option_level_code": "",
-				"control_option_level_val": "",
-				"control_option_val": "",
+				"uom_class_code": this._sUomClassCode,
+				"language_code": "",
+				"uom_class_name": "",
+				"uom_class_desc": "",
 				"local_create_dtm": new Date(),
 				"local_update_dtm": new Date()
 			});
@@ -181,7 +178,6 @@ sap.ui.define([
         onPageSaveButtonPress: function(){
 			var oView = this.getView(),
 				that = this;
-				debugger;
 			MessageBox.confirm("Are you sure ?", {
 				title : "Comfirmation",
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -189,10 +185,10 @@ sap.ui.define([
 					if (sButton === MessageBox.Action.OK) {
 						oView.setBusy(true);
 						oTransactionManager.submit({
+						// oView.getModel("master").submitChanges({
 							success: function(ok){
 								that._toShowMode();
 								oView.setBusy(false);
-								that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
 								MessageToast.show("Success to save.");
 							}
 						});
@@ -202,16 +198,13 @@ sap.ui.define([
 
 		},
 		
+		
 		/**
 		 * Event handler for cancel page editing
 		 * @public
 		 */
         onPageCancelEditButtonPress: function(){
-			if(this.getModel("midObjectView").getProperty("/isAddedMode") == true){
-				this.onPageNavBackButtonPress.call(this);
-			}else{
-				this._toShowMode();
-			}
+			this._toShowMode();
         },
 
 		/* =========================================================== */
@@ -223,11 +216,11 @@ sap.ui.define([
 				var oMasterModel = this.getModel("master");
 				var oDetailsModel = this.getModel("details");
 				var sTenantId = oMasterModel.getProperty("/tenant_id");
-				var sControlOPtionCode = oMasterModel.getProperty("/control_option_code");
+				var sUomClassCode = oMasterModel.getProperty("/uom_class_code");
 				var oDetailsData = oDetailsModel.getData();
 				oDetailsData.forEach(function(oItem, nIndex){
 					oDetailsModel.setProperty("/"+nIndex+"/tenant_id", sTenantId);
-					oDetailsModel.setProperty("/"+nIndex+"/control_option_code", sControlOPtionCode);
+					oDetailsModel.setProperty("/"+nIndex+"/uom_class_code", sUomClassCode);
 				});
 				oDetailsModel.setData(oDetailsData);
 			}
@@ -242,49 +235,43 @@ sap.ui.define([
 			var oArgs = oEvent.getParameter("arguments"),
 				oView = this.getView();
 			this._sTenantId = oArgs.tenantId;
-			this._sControlOptionCode = oArgs.controlOptionCode;
+			this._sUomClassCode = oArgs.uomClassCode;
 
-			if(oArgs.tenantId == "new" && oArgs.controlOptionCode == "code"){
+			if(oArgs.tenantId == "new" && oArgs.uomClassCode == "code"){
 				//It comes Add button pressed from the before page.
 				this.getModel("midObjectView").setProperty("/isAddedMode", true);
 
 				var oMasterModel = this.getModel("master");
 				oMasterModel.setData({
-					"tenant_id": "L2100",
-					"site_flag": false,
-					"company_flag": false,
-					"role_flag": false,
-					"organization_flag": false,
-					"user_flag": false,
-					"start_date": new Date(),
-					"end_date": new Date(9999, 11, 31),
+					"tenant_id": "L2600",					
+					"disable_date": new Date(),					
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
-				}, "/ControlOptionMasters");
+				}, "/UomClass");
 				var oDetailsModel = this.getModel("details");
 				oDetailsModel.setTransactionModel(this.getModel());
 				oDetailsModel.setData([]);
 				oDetailsModel.addRecord({
 					"tenant_id": this._sTenantId,
-					"control_option_code": this._sControlOptionCode,
-					"control_option_level_code": "",
-					"control_option_level_val": "",
-					"control_option_val": "",
+					"uom_class_code": this._sUomClassCode,
+					"language_code": "",
+					"uom_class_name": "",
+					"uom_class_desc": "",
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
-				}, "/ControlOptionDetails");
+				}, "/UomClassLng");
 				this._toEditMode();
 			}else{
 				this.getModel("midObjectView").setProperty("/isAddedMode", false);
 
-				this._bindView("/ControlOptionMasters(tenant_id='" + this._sTenantId + "',control_option_code='" + this._sControlOptionCode + "')");
+				this._bindView("/UomClass(tenant_id='" + this._sTenantId + "',uom_class_code='" + this._sUomClassCode + "')");
 				oView.setBusy(true);
 				var oDetailsModel = this.getModel("details");
 				oDetailsModel.setTransactionModel(this.getModel());
-				oDetailsModel.read("/ControlOptionDetails", {
+				oDetailsModel.read("/UomClassLng", {
 					filters: [
 						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-						new Filter("control_option_code", FilterOperator.EQ, this._sControlOptionCode),
+						new Filter("uom_class_code", FilterOperator.EQ, this._sUomClassCode),
 					],
 					success: function(oData){
 						oView.setBusy(false);
@@ -354,28 +341,23 @@ sap.ui.define([
 						text: "{details>_row_state_}"
 					}), 
 					new ObjectIdentifier({
-						text: "{details>control_option_code}"
+						text: "{details>language_code}"
 					}), 
 					new ObjectIdentifier({
-						text: "{details>control_option_level_code}"
+						text: "{details>uom_class_name}"
 					}), 
 					new Text({
-						text: "{details>control_option_level_val}"
-					}), 
-					new Text({
-						text: "{details>control_option_val}"
+						text: "{details>uom_class_desc}"
 					})
 				],
 				type: sap.m.ListType.Inactive
 			});
 
-            var oLevelCodeCombo = new ComboBox({
-					required: true,
-					selectedKey: "{details>control_option_level_code}"
+            var oLanguageCode = new ComboBox({
+                    selectedKey: "{details>language_code}"
                 });
-                oLevelCodeCombo.bindItems({
-					id: "testCombo1",
-					path: 'util>/CodeDetails',
+                oLanguageCode.bindItems({
+                    path: 'util>/CodeDetails',
                     filters: [
                         new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
                         new Filter("company_code", FilterOperator.EQ, 'G100'),
@@ -385,35 +367,18 @@ sap.ui.define([
                         key: "{util>code}",
                         text: "{util>code_description}"
                     })
-				});
+                });
 			this.oEditableTemplate = new ColumnListItem({
 				cells: [
 					new Text({
 						text: "{details>_row_state_}"
-					}), 
-					new Text({
-						text: "{details>control_option_code}"
-					}), 
-					oLevelCodeCombo, 
-					new Input({
-						value: {
-							path: "details>control_option_level_val",
-							constraints: {
-								minLength: 4,
-								maxLength: 100
-							}
-						},
-						required: true
 					}),
+					oLanguageCode, 
 					new Input({
-						value: {
-							path: "details>control_option_val",
-							constraints: {
-								minLength: 4,
-								maxLength: 100
-							}
-						},
-						required: true
+						value: "{details>uom_class_name}"
+					}), 
+					new Input({
+						value: "{details>uom_class_desc}"
 					})
 				]
             });
@@ -440,7 +405,7 @@ sap.ui.define([
 			if(!this._oFragments[sFragmentName]){
 				Fragment.load({
 					id: this.getView().getId(),
-					name: "cm.controlOptionMgr.view." + sFragmentName,
+					name: "dp.uomMgr.view." + sFragmentName,
 					controller: this
 				}).then(function(oFragment){
 					this._oFragments[sFragmentName] = oFragment;

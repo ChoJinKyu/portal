@@ -1,7 +1,7 @@
 {
   "_version": "1.12.0",
   "sap.app": {
-    "id": "xx.exampleControls",
+    "id": "dp.uomMgr",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "title": "{{appTitle}}",
@@ -13,7 +13,7 @@
     "resources": "resources.json",
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v2/xx.TemplateService/",
+        "uri": "srv-api/odata/v2/dp.UomClassMgrService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -50,7 +50,7 @@
   },
   "sap.ui5": {
     "rootView": {
-      "viewName": "xx.exampleControls.view.App",
+      "viewName": "dp.uomMgr.view.App",
       "type": "XML",
       "async": true,
       "id": "app"
@@ -72,7 +72,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "xx.exampleControls.i18n.i18n"
+          "bundleName": "dp.uomMgr.i18n.i18n"
         }
       },
       "util": {
@@ -96,23 +96,16 @@
         }
       }
     },
-    "resources": {
-        "css": [
-            {
-                "uri": "css/style.css"
-            }
-        ]
-    },
     "resourceRoots": {
-        "ext.lib": "../../../lib"
+      "ext.lib": "../../../lib"
     },
     "routing": {
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
-        "viewPath": "xx.exampleControls.view",
-        "controlId": "app",
-        "controlAggregation": "pages",
+        "viewPath": "dp.uomMgr.view",
+        "controlId": "fcl",
+				"transition": "slide",
         "bypassed": {
           "target": [
             "notFound"
@@ -121,46 +114,35 @@
         "async": true
       },
       "routes": [
-        {
-          "pattern": "",
-          "name": "home",
-          "target": [
-            "home"
-          ]
-        },
-        {
-          "pattern": "example1",
-          "name": "example1",
-          "target": [
-            "example1"
-          ]
-        },
-        {
-          "pattern": "example2",
-          "name": "example2",
-          "target": [
-            "example2"
-          ]
-        }
+          {
+              "pattern": ":layout:",
+              "name": "mainPage",
+              "target": [
+                  "mainObject"
+              ]
+          },
+          {
+              "pattern": "midObject/{layout}/{tenantId}/{uomClassCode}",
+              "name": "midPage",
+              "target": [
+                  "mainObject",
+                  "midObject"
+              ]
+          }
       ],
       "targets": {
-        "home": {
-          "viewName": "Home",
-          "viewId": "home"
-        },
-        "example1": {
-          "viewName": "SearchAreaControls",
-          "viewId": "example1"
-        },
-        "example2": {
-          "viewName": "ControlValidation",
-          "viewId": "example2"
-        },
-        "notFound": {
-          "viewName": "NotFound",
-          "viewPath": "ext.lib.view",
-          "viewId": "notFound"
-        }
+          "mainObject": {
+              "viewName": "MainList",
+              "controlAggregation": "beginColumnPages"
+          },
+          "midObject": {
+              "viewName": "MidObject",
+              "controlAggregation": "midColumnPages"
+          },
+          "notFound": {
+            "viewName": "MidObjectNotFound",
+            "viewId": "notFound"
+          }
       }
     }
   },

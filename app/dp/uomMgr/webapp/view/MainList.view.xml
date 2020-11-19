@@ -1,4 +1,4 @@
-<mvc:View controllerName="cm.controlOptionMgr.controller.MainList"
+<mvc:View controllerName="dp.uomMgr.controller.MainList"
     xmlns:mvc="sap.ui.core.mvc" 
     xmlns="sap.m" 
     xmlns:f="sap.f" 
@@ -31,7 +31,8 @@
         </f:title>
         <!-- DynamicPage Header -->
         <f:header>
-            <f:DynamicPageHeader pinnable="true">
+            <!-- <f:DynamicPageHeader pinnable="true">
+
                 <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
@@ -54,7 +55,7 @@
                         </VBox>
                         <VBox>
                             <Label text="Keyword:" labelFor="searchKeyword"></Label>
-                            <Input id="searchKeyword" placeholder="Code or Content"></Input>
+                            <Input id="searchKeyword" placeholder="Keywords of the Code or Content"></Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
@@ -76,7 +77,7 @@
                         </VBox>
                     </form:content>
                 </form:SimpleForm>
-            </f:DynamicPageHeader>
+            </f:DynamicPageHeader> -->
         </f:header>
         <f:content>
             <VBox>
@@ -92,7 +93,8 @@
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="Control Options ({= ${list>/}.length || 0})" level="H2"/>
+                            <!-- <Title text="Control Options ({= ${list>/}.length || 0})" level="H2"/> -->
+                            <Title text="UOM Class" level="H2"/>
                             <ToolbarSpacer/>
                             <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
                             <ToolbarSeparator/>
@@ -104,57 +106,42 @@
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
-                        <Column id="mainColumnCode" minScreenWidth="Tablet" hAlign="Center">
-                            <Text text="Code" />
+                        <Column id="mainColumnClass" minScreenWidth="Tablet" hAlign="Center">
+                            <Text text="Class" />
                         </Column>
-                        <Column id="mainColumnName" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="Name" />
+                        <Column id="mainColumnText" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                            <Text text="Class Text" />
                         </Column>
-                        <Column id="mainColumnStartDate" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
-                            <Text text="Start Date" />
+                        <Column id="mainColumnBaseUom" minScreenWidth="Tablet" hAlign="Center">
+                            <Text text="Base UOM" />
                         </Column>
-                        <Column id="mainColumnEndDate" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
-                            <Text text="End Date" />
-                        </Column>
-                        <Column id="mainColumnSiteFlag" minScreenWidth="Tablet" hAlign="Center" width="3rem">
-                            <Text text="Site" />
-                        </Column>
-                        <Column id="mainColumnCompanyFlag" minScreenWidth="Tablet" hAlign="Center" width="3rem">
-                            <Text text="Company" />
-                        </Column>
-                        <Column id="mainColumnRoleFlag" minScreenWidth="Tablet" hAlign="Center" width="3rem">
-                            <Text text="Role" />
-                        </Column>
-                        <Column id="mainColumnOrganizationFlag" minScreenWidth="Tablet" hAlign="Center" width="3rem">
-                            <Text text="Org." />
-                        </Column>
-                        <Column id="mainColumnUserFlag" minScreenWidth="Tablet" hAlign="Center" width="3rem">
-                            <Text text="User" />
-                        </Column>
+                        <Column id="mainColumnBaseUomText" minScreenWidth="Tablet" hAlign="Center">
+                            <Text text="Base UOM Text" />
+                        </Column>                        
                     </columns>
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>
-                                <ObjectIdentifier text="{list>control_option_code}"/>
-                                <ObjectIdentifier text="{list>control_option_name}"/>
-                                <ObjectIdentifier text="{
+                                <ObjectIdentifier text="{list>uom_class_code}"/>
+                                <ObjectIdentifier text="{list>uom_class_name}"/>
+                                <ObjectIdentifier text="{list>base_uom_code}"/>
+                                <ObjectIdentifier text="{list>base_uom_name}"/>
+                                <!-- <ObjectIdentifier text="{
                                         path: 'list>start_date',
                                         formatter: '.dateFormatter.toDateString'
                                     }"/>
                                 <ObjectIdentifier text="{
                                         path: 'list>end_date',
                                         formatter: '.dateFormatter.toDateString'
-                                    }"/>
-                                <ObjectStatus
+                                    }"/> -->
+                                <!-- <ObjectStatus
                                     icon="{= ${list>site_flag} === true ? 'sap-icon://accept' : ''}"/>
                                 <ObjectStatus 
                                     icon="{= ${list>company_flag} === true ? 'sap-icon://accept' : ''}"/>
                                 <ObjectStatus 
-                                    icon="{= ${list>role_flag} === true ? 'sap-icon://accept' : ''}"/>
-                                <ObjectStatus 
                                     icon="{= ${list>organization_flag} === true ? 'sap-icon://accept' : ''}"/>
                                 <ObjectStatus 
-                                    icon="{= ${list>user_flag} === true ? 'sap-icon://accept' : ''}"/>
+                                    icon="{= ${list>user_flag} === true ? 'sap-icon://accept' : ''}"/> -->
                             </cells>
                         </ColumnListItem>
                     </items>

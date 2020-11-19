@@ -1,5 +1,5 @@
 sap.ui.define([
-	"ext/lib/controller/BaseController",
+	"./BaseController",
 	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
 	"ext/lib/model/ManagedListModel",
@@ -19,7 +19,7 @@ sap.ui.define([
 ], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
 	"use strict";
 
-	return BaseController.extend("cm.controlOptionMgr.controller.MainList", {
+	return BaseController.extend("dp.uomMgr.controller.MainList", {
 
 		dateFormatter: DateFormatter,
 
@@ -56,9 +56,9 @@ sap.ui.define([
 
 			this._doInitTablePerso();
         },
-		
-        onRenderedFirst : function () {
-			this.byId("pageSearchButton").firePress();
+
+        onAfterRendering : function () {
+			return;
         },
 
 		/* =========================================================== */
@@ -118,7 +118,7 @@ sap.ui.define([
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
 				tenantId: "new",
-				controlOptionCode: "code"
+				uomClassCode: "code"
 			});
 		},
 
@@ -153,7 +153,7 @@ sap.ui.define([
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
 				tenantId: oRecord.tenant_id,
-				controlOptionCode: oRecord.control_option_code
+				uomClassCode: oRecord.uom_class_code
 			});
 
             if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
@@ -176,8 +176,9 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
 		 * @private
 		 */
-		_onRoutedThisPage: function(){
-			this.getModel("mainListView").setProperty("/headerExpanded", true);
+		_onRoutedThisPage: function(){            
+            this.getModel("mainListView").setProperty("/headerExpanded", true);
+            this.byId("pageSearchButton").firePress();
 		},
 
 		/**
@@ -190,7 +191,7 @@ sap.ui.define([
 				oModel = this.getModel("list");
 			oView.setBusy(true);
 			oModel.setTransactionModel(this.getModel());
-			oModel.read("/ControlOptionMasters", {
+			oModel.read("/UomClass", {
 				filters: aSearchFilters,
 				success: function(oData){
 					oView.setBusy(false);
@@ -199,39 +200,40 @@ sap.ui.define([
 		},
 		
 		_getSearchStates: function(){
-			var sChain = this.getView().byId("searchChain").getSelectedKey(),
-				sKeyword = this.getView().byId("searchKeyword").getValue(),
-				sUsage = this.getView().byId("searchUsageSegmentButton").getSelectedKey();
+			// var sChain = this.getView().byId("searchChain").getSelectedKey(),
+			// 	sKeyword = this.getView().byId("searchKeyword").getValue(),
+			// 	sUsage = this.getView().byId("searchUsageSegmentButton").getSelectedKey();
 			
 			var aSearchFilters = [];
-			if (sChain && sChain.length > 0) {
-				aSearchFilters.push(new Filter("chain_code", FilterOperator.EQ, sChain));
-			}
-			if (sKeyword && sKeyword.length > 0) {
-				aSearchFilters.push(new Filter({
-					filters: [
-						new Filter("control_option_code", FilterOperator.Contains, sKeyword),
-						new Filter("control_option_name", FilterOperator.Contains, sKeyword)
-					],
-					and: false
-				}));
-			}
-			if(sUsage != "all"){
-				switch (sUsage) {
-					case "site":
-					aSearchFilters.push(new Filter("site_flag", FilterOperator.EQ, "true"));
-					break;
-					case "company":
-					aSearchFilters.push(new Filter("company_flag", FilterOperator.EQ, "true"));
-					break;
-					case "org":
-					aSearchFilters.push(new Filter("organization_flag", FilterOperator.EQ, "true"));
-					break;
-					case "user":
-					aSearchFilters.push(new Filter("user_flag", FilterOperator.EQ, "true"));
-					break;
-				}
-			}
+			// if (sChain && sChain.length > 0) {
+			// 	aSearchFilters.push(new Filter("chain_code", FilterOperator.EQ, sChain));
+			// }
+			// if (sKeyword && sKeyword.length > 0) {
+			// 	aSearchFilters.push(new Filter({
+			// 		filters: [
+			// 			new Filter("control_option_code", FilterOperator.Contains, sKeyword),
+			// 			new Filter("control_option_name", FilterOperator.Contains, sKeyword)
+			// 		],
+			// 		and: false
+			// 	}));
+			// }
+			// if(sUsage != "all"){
+			// 	switch (sUsage) {
+			// 		case "site":
+			// 		aSearchFilters.push(new Filter("site_flag", FilterOperator.EQ, "true"));
+			// 		break;
+			// 		case "company":
+			// 		aSearchFilters.push(new Filter("company_flag", FilterOperator.EQ, "true"));
+			// 		break;
+			// 		case "org":
+			// 		aSearchFilters.push(new Filter("organization_flag", FilterOperator.EQ, "true"));
+			// 		break;
+			// 		case "user":
+			// 		aSearchFilters.push(new Filter("user_flag", FilterOperator.EQ, "true"));
+			// 		break;
+			// 	}
+            // }
+            
 			return aSearchFilters;
 		},
 		
@@ -239,7 +241,7 @@ sap.ui.define([
 			// init and activate controller
 			this._oTPC = new TablePersoController({
 				table: this.byId("mainTable"),
-				componentName: "controlOptionMgr",
+				componentName: "uomMgr",
 				persoService: MainListPersoService,
 				hasGrouping: true
 			}).activate();
