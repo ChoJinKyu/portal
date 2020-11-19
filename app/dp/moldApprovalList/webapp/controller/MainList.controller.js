@@ -12,11 +12,12 @@ sap.ui.define([
     "sap/m/MessageToast",
 	"sap/m/ColumnListItem",
 	"sap/m/ObjectIdentifier",
-	"sap/m/Text",
+    "sap/m/Text",
+    "sap/m/Token",
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item) {
 	"use strict";
 
 	return BaseController.extend("dp.moldApprovalList.controller.MainList", {
@@ -54,7 +55,8 @@ sap.ui.define([
 			
 			this.getRouter().getRoute("mainList").attachPatternMatched(this._onRoutedThisPage, this);
 
-			this._doInitTablePerso();
+            this._doInitTablePerso();
+            this._doInitSearch();
         },
         
         onAfterRendering : function () {
@@ -166,6 +168,108 @@ sap.ui.define([
 			// store index of the item clicked, which can be used later in the columnResize event
 			this.iIndex = oParent.indexOfItem(oItem);
 		},
+
+        /* Affiliate Start */
+        /**
+         * @private
+         * @see 검색을 위한 컨트롤에 대하여 필요 초기화를 진행 합니다. 
+         */
+		_doInitSearch: function(){
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S";
+
+			this._oMultiInput = this.getView().byId("searchCompany"+sSurffix);
+            this._oMultiInput.setTokens(this._getDefaultTokens());
+
+            this.oColModel = new JSONModel(sap.ui.require.toUrl("dp/moldApprovalList/localService/mockdata") + "/columnsModel.json");
+            this.oAffiliateModel = new JSONModel(sap.ui.require.toUrl("dp/moldApprovalList/localService/mockdata") + "/affiliate.json");
+            this.setModel("affiliateModel", this.oAffiliateModel);
+
+            // /** Receipt Date */
+            // var today = new Date();
+            
+            // this.getView().byId("searchReceiptDate"+sSurffix).setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
+            // this.getView().byId("searchReceiptDate"+sSurffix).setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+        },
+        /**
+         * @private 
+         * @see searchAffiliate setTokens
+         */
+        _getDefaultTokens: function () {
+            
+            var oToken = new Token({
+                key: "EKHQ",
+                text: "[LGEKR] LG Electronics Inc."
+            });
+
+            return [oToken];
+        },
+
+        /**
+         * @public 
+         * @see searchAffiliate Fragment View 컨트롤 valueHelp
+         */
+        onValueHelpRequested : function () {
+            console.group("onValueHelpRequested");
+
+            var aCols = this.oColModel.getData().cols;
+
+            this._oValueHelpDialog = sap.ui.xmlfragment("dp.moldApprovalList.view.ValueHelpDialogAffiliate", this);
+            this.getView().addDependent(this._oValueHelpDialog);
+
+            this._oValueHelpDialog.getTableAsync().then(function (oTable) {
+                oTable.setModel(this.oAffiliateModel);
+                oTable.setModel(this.oColModel, "columns");
+
+                if (oTable.bindRows) {
+                    oTable.bindAggregation("rows", "/AffiliateCollection");
+                }
+
+                if (oTable.bindItems) {
+                    oTable.bindAggregation("items", "/AffiliateCollection", function () {
+                        return new ColumnListItem({
+                            cells: aCols.map(function (column) {
+                                return new Label({ text: "{" + column.template + "}" });
+                            })
+                        });
+                    });
+                }
+                this._oValueHelpDialog.update();
+            }.bind(this));
+
+            this._oValueHelpDialog.setTokens(this._oMultiInput.getTokens());
+            this._oValueHelpDialog.open();
+                console.groupEnd();
+        },
+
+        /**
+         * @public 
+         * @see 사용처 ValueHelpDialogAffiliate Fragment 선택후 확인 이벤트
+         */
+        onValueHelpOkPress : function (oEvent) {
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S",
+                aTokens = oEvent.getParameter("tokens");
+
+            this.searchAffiliate = this.getView().byId("searchCompany"+sSurffix);
+            this.searchAffiliate.setTokens(aTokens);
+            this._oValueHelpDialog.close();
+        },
+
+        /**
+         * @public 
+         * @see 사용처 ValueHelpDialogAffiliate Fragment 취소 이벤트
+         */
+        onValueHelpCancelPress: function () {
+            this._oValueHelpDialog.close();
+        },
+
+        /**
+         * @public
+         * @see 사용처 ValueHelpDialogAffiliate Fragment window.close after 이벤트
+         */
+        onValueHelpAfterClose: function () {
+            this._oValueHelpDialog.destroy();
+        },
+        /* Affiliate End */
 
 		/* =========================================================== */
 		/* internal methods                                            */
