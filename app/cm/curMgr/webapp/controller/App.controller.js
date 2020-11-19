@@ -54,21 +54,20 @@ sap.ui.define([
 
 			// Save the current route name
 			this.sCurrentRouteName = sRouteName;
-			this.sCurrentTenantId = oArguments.tenantId;
-			this.sCurrentControlOptionCode = oArguments.supplier;
+            this.sCurrentTenantId = oArguments.tenantId;
+			this.sCurrentcurrencyCode = oArguments.currencyCode;
 		},
 
 		onStateChanged: function (oEvent) {
 			var bIsNavigationArrow = oEvent.getParameter("isNavigationArrow"),
-				sLayout = oEvent.getParameter("layout");
-
+                sLayout = oEvent.getParameter("layout");
 			this._updateUIElements();
 			// Replace the URL with the new layout if a navigation arrow was used
 			if (bIsNavigationArrow) {
 				this.oRouter.navTo(this.sCurrentRouteName, {
 					layout: sLayout, 
 					tenantId: this.sCurrentTenantId, 
-					controlOptionCode: this.sCurrentControlOptionCode
+					currencyCode: this.sCurrentcurrencyCode
 				}, true);
 			}
 		},

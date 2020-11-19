@@ -18,6 +18,7 @@
                     <Title text="{i18n>appTitle}" />
                 </f:heading>
                 <f:snappedContent>
+                    <!--  폼시작 -->
                     <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
@@ -30,9 +31,9 @@
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                                         ]
                                     }">
-                                    <items>
-                                        <core:Item key="{util>code}" text="{util>code} :{util>code_description}" />
-                                    </items>
+                                  
+                                       <items>  <core:Item key="{util>code}" text="{util>code} :{util>code_description}" /> </items>
+                                   
                                 </ComboBox>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
@@ -66,6 +67,7 @@
                             </VBox>
                         </form:content>
                     </form:SimpleForm>
+
                 </f:snappedContent>
                 <f:expandedContent>
                     <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
@@ -137,15 +139,19 @@
                     showIcon="true"
                     showCloseButton="false">
 			    </MessageStrip>
-                <Table id="mainTable" 
+
+                <Table  id="mainTable" 
                         sticky="HeaderToolbar,ColumnHeaders" 
                         inset="false" 
                         mode="None" 
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onListMainTableUpdateFinished"
-                        width="auto">
+                        width="auto"
+                        items="{list>/}"
+                        >
                     <headerToolbar>
                         <OverflowToolbar>
+                            <ToolbarSpacer/>
                             <Title text="Messages" level="H2"/>
                             <ToolbarSpacer/>
                             <SearchField width="17.5rem" search=".onListMainTableFilterPress" />
@@ -158,13 +164,13 @@
                                 </layoutData>
                             </Button>
                         </OverflowToolbar>
-                    </headerToolbar>
+                    </headerToolbar>         
                     <columns>
                         <Column id="mainColumnChainCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
-                            <Text text="Chain" />
+                           <Text text="Chain"/>           
                         </Column>
                         <Column id="mainColumnLanguageCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
-                            <Text text="Language" />
+                             <Text text="Language"/>           
                         </Column>
                         <Column id="mainColumnMessageCode" minScreenWidth="Tablet" hAlign="Right" width="12em" >
                             <Text text="Code" />
@@ -177,6 +183,31 @@
                         </Column>
                     </columns>
                     <items>
+                        <ColumnListItem type="Navigation" press=".onListMainTableItemPress">
+                            <cells>
+                                <ObjectIdentifier text="{list>control_option_code}"/>
+                                <ObjectIdentifier text="{list>language_code}"/>
+                                <ObjectIdentifier text="{list>message_code}"/>
+                                <ObjectIdentifier text="{list>message_contents}"/>
+                                <ObjectIdentifier text="{list>message_type_code}"/>
+                            </cells>
+                        </ColumnListItem>
+                        <!-- <Column id="id1" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
+                           <Text text="{list>/control_option_code}"/>           
+                        </Column>
+                        <Column id="id2" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
+                             <Text text="{list>/language_code}"/>           
+                        </Column>
+                        <Column id="id3" minScreenWidth="Tablet" hAlign="Right" width="12em" >
+                            <Text text="{list>/message_contents}" />
+                        </Column>
+                        <Column id="id4" minScreenWidth="Tablet" hAlign="Left">
+                            <Text text="{list>/message_contents}" />
+                        </Column>
+                        <Column id="" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                            <Text text="{list>/message_type_code}" />
+                        </Column>  -->
+
                     </items>
                 </Table>
             </VBox>

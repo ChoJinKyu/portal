@@ -1,6 +1,6 @@
 specVersion: '1.0'
 metadata:
-  name: templateListViewAndObjectEdit
+  name: budgetReport
 type: application
 resources:
   configuration:

@@ -37,7 +37,7 @@
                 },
                 {
                     "name": "통화 관리",
-                    "url": "../cm/currencyMgr/webapp",
+                    "url": "../cm/curMgr/webapp",
                     "component": "cm.currencyMgr"
                 },
                 {

@@ -3,8 +3,8 @@ sap.ui.define([
 	"sap/ui/core/UIComponent",
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/Device",
-	"./model/models",
-	"./controller/ErrorHandler",
+	"ext/lib/model/models",
+	"ext/lib/controller/ErrorHandler",
 	"sap/f/FlexibleColumnLayoutSemanticHelper"
 ], function (jQuery, UIComponent, JSONModel, Device, models, ErrorHandler, FlexibleColumnLayoutSemanticHelper) {
 	"use strict";

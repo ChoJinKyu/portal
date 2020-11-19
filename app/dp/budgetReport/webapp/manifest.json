@@ -128,10 +128,10 @@
           ]
         },
         {
-          "pattern": "Message/{tenantId}/{messageCode}/{languageCode}",
-          "name": "mainObject",
+          "pattern": "view/{message_code}/{chain_code}/{language_code}",
+          "name": "budgetReportObject",
           "target": [
-            "mainObject"
+            "budgetReportObject"
           ]
         }
       ],
@@ -142,9 +142,9 @@
           "viewLevel": 1,
           "title": "{i18n>mainListViewTitle}"
         },
-        "mainObject": {
-          "viewName": "MainObject",
-          "viewId": "mainObject",
+        "budgetReportObject": {
+          "viewName": "BudgetReportObject",
+          "viewId": "budgetReportObject",
           "viewLevel": 2,
           "title": "{i18n>mainObjectViewTitle}"
         },
