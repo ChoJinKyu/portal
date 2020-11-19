@@ -67,7 +67,7 @@ entity Mold_Spec {
         press_open_size               : String(100)   @title : '프레스오픈크기';
         press_material_thickness      : String(100)   @title : '프레스재질두께';
         press_material_size           : String(100)   @title : '프레스재질크기';
-
+        mold_spec_status_code         : String(30)    @title : '금형규격상태코드';
 
 }
 
