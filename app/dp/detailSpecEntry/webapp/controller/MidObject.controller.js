@@ -40,6 +40,7 @@ sap.ui.define([
 			this.setModel(oViewModel, "midObjectView");
 			
             this.setModel(new ManagedModel(), "master");
+            this.setModel(new ManagedModel(), "mstSpecView");
 			this.setModel(new ManagedListModel(), "schedule");
             this.setModel(new ManagedModel(), "spec");
 
@@ -181,6 +182,10 @@ sap.ui.define([
                     self._toShowMode();
                 });
 
+                this._bindView("/MoldMasterSpec(" + this._sMoldId + ")", "mstSpecView", [], function(oData){
+                    
+                });
+
                 var schFilter = [new Filter("mold_id", FilterOperator.EQ, this._sMoldId)];
                 this._bindView("/MoldSchedule", "schedule", schFilter, function(oData){
                     
@@ -257,13 +262,13 @@ sap.ui.define([
             var master = this.getModel("master");
             var itemType = master.oData.mold_item_type_code;
 
-            if(itemType === 'M'){
-                this._loadFragment("MidObjectDetailSpecMold_"+mode, function(oFragment){
-                    oPageSubSection3.addBlock(oFragment);
-                })  
-            }else{
+            if(itemType == 'P' || itemType == 'E'){
                 this._loadFragment("MidObjectDetailSpecPress_"+mode, function(oFragment){
                     oPageSubSection4.addBlock(oFragment);
+                })  
+            }else{
+                this._loadFragment("MidObjectDetailSpecMold_"+mode, function(oFragment){
+                    oPageSubSection3.addBlock(oFragment);
                 })  
             }
         },

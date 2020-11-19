@@ -2,7 +2,7 @@ sap.ui.define([
 	"ext/lib/controller/BaseController",
 	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
-	"../model/formatter",
+	"ext/lib/formatter/Formatter",
 	"ext/lib/model/ManagedListModel",
 	"sap/m/TablePersoController",
 	"./MainListPersoService",
@@ -16,15 +16,15 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, formatter, ManagedListModel, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+], function (BaseController, History, JSONModel, Formatter, ManagedListModel, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
     "use strict";
 
-    var lastRowIndex;
+    // var lastRowIndex;
     
 
 	return BaseController.extend("cm.msgMgr.controller.MainList", {
 
-		formatter: formatter,
+		formatter: Formatter,
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -142,17 +142,17 @@ sap.ui.define([
                 "local_update_dtm": new Date()
             }, 0);
             
-            oTable.getAggregation('items')[0].getCells()[1].getItems()[0].setVisible(false);
-            oTable.getAggregation('items')[0].getCells()[1].getItems()[0].setVisible(false);
-            oTable.getAggregation('items')[0].getCells()[1].getItems()[1].setVisible(true);
-            oTable.getAggregation('items')[0].getCells()[2].getItems()[0].setVisible(false);
-            oTable.getAggregation('items')[0].getCells()[2].getItems()[1].setVisible(true);
-            oTable.getAggregation('items')[0].getCells()[3].getItems()[0].setVisible(false);
-            oTable.getAggregation('items')[0].getCells()[3].getItems()[1].setVisible(true);
-            oTable.getAggregation('items')[0].getCells()[4].getItems()[0].setVisible(false);
-            oTable.getAggregation('items')[0].getCells()[4].getItems()[1].setVisible(true);
-            oTable.getAggregation('items')[0].getCells()[5].getItems()[0].setVisible(false);
-            oTable.getAggregation('items')[0].getCells()[5].getItems()[1].setVisible(true);
+            // oTable.getAggregation('items')[0].getCells()[1].getItems()[0].setVisible(false);
+            // oTable.getAggregation('items')[0].getCells()[1].getItems()[0].setVisible(false);
+            // oTable.getAggregation('items')[0].getCells()[1].getItems()[1].setVisible(true);
+            // oTable.getAggregation('items')[0].getCells()[2].getItems()[0].setVisible(false);
+            // oTable.getAggregation('items')[0].getCells()[2].getItems()[1].setVisible(true);
+            // oTable.getAggregation('items')[0].getCells()[3].getItems()[0].setVisible(false);
+            // oTable.getAggregation('items')[0].getCells()[3].getItems()[1].setVisible(true);
+            // oTable.getAggregation('items')[0].getCells()[4].getItems()[0].setVisible(false);
+            // oTable.getAggregation('items')[0].getCells()[4].getItems()[1].setVisible(true);
+            // oTable.getAggregation('items')[0].getCells()[5].getItems()[0].setVisible(false);
+            // oTable.getAggregation('items')[0].getCells()[5].getItems()[1].setVisible(true);
             
 		},
 
@@ -194,36 +194,36 @@ sap.ui.define([
 			
         }, 
 
-        onRowClick: function(oEvent) {
-            var tableRowCells,
-                selectRowCell=oEvent.getSource().getSelectedItem().getCells();
-            if(lastRowIndex != null){
-                tableRowCells = this.byId("mainTable").getAggregation('items')[lastRowIndex].getCells();
-                tableRowCells[1].getItems()[0].setVisible(true);
-                tableRowCells[1].getItems()[1].setVisible(false);
-                tableRowCells[2].getItems()[0].setVisible(true);
-                tableRowCells[2].getItems()[1].setVisible(false);
-                tableRowCells[3].getItems()[0].setVisible(true);
-                tableRowCells[3].getItems()[1].setVisible(false);
-                tableRowCells[4].getItems()[0].setVisible(true);
-                tableRowCells[4].getItems()[1].setVisible(false);
-                tableRowCells[5].getItems()[0].setVisible(true);
-                tableRowCells[5].getItems()[1].setVisible(false);
-            }
-            selectRowCell[1].getItems()[0].setVisible(false);
-            selectRowCell[1].getItems()[1].setVisible(true);
-            selectRowCell[2].getItems()[0].setVisible(false);
-            selectRowCell[2].getItems()[1].setVisible(true);
-            selectRowCell[3].getItems()[0].setVisible(false);
-            selectRowCell[3].getItems()[1].setVisible(true);
-            selectRowCell[4].getItems()[0].setVisible(false);
-            selectRowCell[4].getItems()[1].setVisible(true);
-            selectRowCell[5].getItems()[0].setVisible(false);
-            selectRowCell[5].getItems()[1].setVisible(true);
+        // onSelectionChange: function(oEvent) {
+        //     var tableRowCells,
+        //         selectRowCell=oEvent.getSource().getSelectedItem().getCells();
+        //     if(lastRowIndex != null){
+        //         tableRowCells = this.byId("mainTable").getAggregation('items')[lastRowIndex].getCells();
+        //         tableRowCells[1].getItems()[0].setVisible(true);
+        //         tableRowCells[1].getItems()[1].setVisible(false);
+        //         tableRowCells[2].getItems()[0].setVisible(true);
+        //         tableRowCells[2].getItems()[1].setVisible(false);
+        //         tableRowCells[3].getItems()[0].setVisible(true);
+        //         tableRowCells[3].getItems()[1].setVisible(false);
+        //         tableRowCells[4].getItems()[0].setVisible(true);
+        //         tableRowCells[4].getItems()[1].setVisible(false);
+        //         tableRowCells[5].getItems()[0].setVisible(true);
+        //         tableRowCells[5].getItems()[1].setVisible(false);
+        //     }
+        //     selectRowCell[1].getItems()[0].setVisible(false);
+        //     selectRowCell[1].getItems()[1].setVisible(true);
+        //     selectRowCell[2].getItems()[0].setVisible(false);
+        //     selectRowCell[2].getItems()[1].setVisible(true);
+        //     selectRowCell[3].getItems()[0].setVisible(false);
+        //     selectRowCell[3].getItems()[1].setVisible(true);
+        //     selectRowCell[4].getItems()[0].setVisible(false);
+        //     selectRowCell[4].getItems()[1].setVisible(true);
+        //     selectRowCell[5].getItems()[0].setVisible(false);
+        //     selectRowCell[5].getItems()[1].setVisible(true);
           
-            var sPath = oEvent.getSource()._aSelectedPaths[0].toString();
-            lastRowIndex = sPath.substring(1);
-        },
+        //     var sPath = oEvent.getSource()._aSelectedPaths[0].toString();
+        //     lastRowIndex = sPath.substring(1);
+        // },
 
 		/* =========================================================== */
 		/* internal methods                                            */

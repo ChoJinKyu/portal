@@ -3,6 +3,7 @@ SELECT '['||a.company_code||'] '||(select company_name from cm_org_company where
     , '['||a.org_code||'] '||(select plant_name from CM_ORG_PLANT where au_code=a.org_code and company_code=a.company_code) org_name 
     , ifnull((select USER_KOREAN_NAME from CM_HR_EMPLOYEE where EMPLOYEE_NUMBER=b.CREATE_USER_ID),'-')||'['||b.CREATE_USER_ID||']' user_name 
     , TO_VARCHAR(b.LOCAL_UPDATE_DTM,'YYYY-MM-DD') last_update_date 
+    ,(select code_description from cm_code_dtl where group_code ='DP_MD_ITEM_TYPE' and code=a.mold_item_type_code) mold_item_type_name
     , a.tenant_id                       
     , a.company_code                    
     , a.org_type_code                   

@@ -18,7 +18,7 @@
             <Label text="Part No"/> 
             <Text text="{master>/part_number}"/>
             <Label text="Item Type"/>
-            <Text text="{master>/mold_item_type_code}"/>
+            <Text text="{mstSpecView>/mold_item_type_name}"/>
             <Label text="Order Supplier"/>
             <Text text="{master>/order_vendor_id}"></Text>
         </l:VerticalLayout>            

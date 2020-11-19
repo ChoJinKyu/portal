@@ -5,7 +5,7 @@ using {dp as mst} from './DP_MOLD_MST-model';
 
 entity Mold_Schedule {
 
-    key mold_id                       : Integer64 @title : '금형ID';
+    key mold_id                       : Integer @title : '금형ID';
 
     parent: Association to mst.Mold_Mst
         on parent.mold_id = mold_id ;

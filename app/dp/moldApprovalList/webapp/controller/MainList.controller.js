@@ -160,11 +160,14 @@ sap.ui.define([
                 oRecord = this.getModel("list").getProperty(sPath);
             console.log("oRecord >>>  " , oRecord );
 		    var that = this; 
-            if(oRecord.mold_id % 2 == 0){
+            if(oRecord.mold_id % 3 == 0){
                 that.getRouter().navTo("budgetReportObject", { 
                     moldId: oRecord.mold_id
                 });
-
+            }else if(oRecord.mold_id % 3 == 2){
+                that.getRouter().navTo("participatingSupplierSelectionApprovalObject", { 
+                    moldId: oRecord.mold_id
+                });
             }else{
                  that.getRouter().navTo("mainObject", {
                   moldId : oRecord.mold_id
@@ -213,8 +216,8 @@ sap.ui.define([
          * @public 
          * @see searchAffiliate Fragment View 컨트롤 valueHelp
          */
-        onValueHelpRequested : function () {
-            console.group("onValueHelpRequested");
+        onValueHelpRequestedAffiliate : function () {
+            console.group("onValueHelpRequestedAffiliate");
 
             var aCols = this.oColModel.getData().cols;
 
@@ -273,6 +276,43 @@ sap.ui.define([
          */
         onValueHelpAfterClose: function () {
             this._oValueHelpDialog.destroy();
+        },
+
+         /**
+         * @public
+         * @see 사용처 ValueHelpDialogAffiliate Fragment window.close after 이벤트
+         */
+        onValueHelpRequestedCreate: function (){
+            console.group("onValueHelpRequestedAffiliate");
+
+            var aCols = this.oColModel.getData().cols;
+
+            this._oValueHelpDialog = sap.ui.xmlfragment("dp.moldApprovalList.view.ValueHelpDialogApprovalCreate", this);
+            this.getView().addDependent(this._oValueHelpDialog);
+
+            this._oValueHelpDialog.getTableAsync().then(function (oTable) {
+                oTable.setModel(this.oAffiliateModel);
+                oTable.setModel(this.oColModel, "columns");
+
+                if (oTable.bindRows) {
+                    oTable.bindAggregation("rows", "/AffiliateCollection");
+                }
+
+                if (oTable.bindItems) {
+                    oTable.bindAggregation("items", "/AffiliateCollection", function () {
+                        return new ColumnListItem({
+                            cells: aCols.map(function (column) {
+                                return new Label({ text: "{" + column.template + "}" });
+                            })
+                        });
+                    });
+                }
+                this._oValueHelpDialog.update();
+            }.bind(this));
+
+            this._oValueHelpDialog.setTokens(this._oMultiInput.getTokens());
+            this._oValueHelpDialog.open();
+                console.groupEnd();
         },
         /* Affiliate End */
 
