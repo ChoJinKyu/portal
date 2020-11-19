@@ -3,7 +3,6 @@ sap.ui.define([], function () {
 	return {
 
         setCount : function (oValue) {
-            debugger;
             return oValue;
         }
     };

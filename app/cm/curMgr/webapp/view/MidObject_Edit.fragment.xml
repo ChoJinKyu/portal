@@ -7,7 +7,7 @@
 		
 		<core:Title text="기본정보" />
 		<Label text="통화코드" required="true"/>
-        <Input value="{master>/currency_code}"/>
+        <Input value="{master>/currency_code}" liveChange=".onLiveChange"/>
 		<Label text="소수점자리" required="true"/>
 		<Input value="{master>/scale}"/>
 		<Label text="확장소수점자리" required="true"/>
@@ -15,10 +15,15 @@
 
 		<core:Title text="유효여부" />
 		<Label text="유효시작일자" required="true"/>
-		<DatePicker placeholder="Starts From" value="{master>/effective_start_date}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
+		<DatePicker placeholder="Starts From" value="{
+				path: 'master>/effective_start_date',
+				formatter: '.dateFormatter.toDateTimeString'
+			}" displayFormat="yyyy-MM-dd"/>
 		<Label text="유효종료일자" required="true"/>
-		<DatePicker placeholder="Ends To" value="{master>/effective_end_date}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
-
+		<DatePicker placeholder="Ends To" value="{
+				path: 'master>/effective_end_date',
+				formatter: '.dateFormatter.toDateTimeString'
+			}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
         <Label text="사용여부"/>
 		<Switch state="{master>/use_flag}" customTextOn="Yes" customTextOff="No">
 			<layoutData>
