@@ -155,7 +155,7 @@ sap.ui.define([
 		 * @private
 		 */
 		_bindView : function (sObjectPath) {
-			var oViewModel = this.getModel("budgetReportObjectView");
+			var oViewModel = this.getModel("participatingSupplierSelectionApprovalObjectView");
 
 			this.getView().bindElement({
 				path: sObjectPath,
@@ -173,7 +173,7 @@ sap.ui.define([
 
 		_onBindingChange : function () {
 			var oView = this.getView(),
-				oViewModel = this.getModel("budgetReportObjectView"),
+				oViewModel = this.getModel("participatingSupplierSelectionApprovalObjectView"),
 				oElementBinding = oView.getElementBinding();
 			// No data for the binding
 			if (!oElementBinding.getBoundContext()) {
@@ -187,8 +187,8 @@ sap.ui.define([
             this._showFormFragment('MainObject_Edit');
 			this.byId("page").setSelectedSection("pageSectionMain");
 			this.byId("page").setProperty("showFooter", true);
-			this.byId("pageEditButton").setEnabled(false);
-			this.byId("pageDeleteButton").setEnabled(false);
+			//this.byId("pageEditButton").setEnabled(false);
+			//this.byId("pageDeleteButton").setEnabled(false);
 			this.byId("pageNavBackButton").setEnabled(false);
 		},
 
@@ -196,8 +196,8 @@ sap.ui.define([
 			this._showFormFragment('MainObject_Show');
 			this.byId("page").setSelectedSection("pageSectionMain");
 			this.byId("page").setProperty("showFooter", false);
-			this.byId("pageEditButton").setEnabled(true);
-			this.byId("pageDeleteButton").setEnabled(true);
+			//this.byId("pageEditButton").setEnabled(true);
+			//this.byId("pageDeleteButton").setEnabled(true);
 			this.byId("pageNavBackButton").setEnabled(true);
 		},
 
@@ -213,7 +213,7 @@ sap.ui.define([
 			if(!this._oFragments[sFragmentName]){
 				Fragment.load({
 					id: this.getView().getId(),
-					name: "dp.budgetReport.view." + sFragmentName,
+					name: "dp.moldApprovalList.view." + sFragmentName,
 					controller: this
 				}).then(function(oFragment){
 					this._oFragments[sFragmentName] = oFragment;
