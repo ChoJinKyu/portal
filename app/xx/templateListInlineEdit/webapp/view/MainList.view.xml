@@ -109,7 +109,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="Keyword" labelFor="searchKeywordE"></Label>
-                                <Input id="searchKeywordE" placeholder="Keywords of the Code or Content"></Input>
+                                <Input id="searchKeywordE" placeholder="Search Keywords"></Input>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>

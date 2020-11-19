@@ -109,7 +109,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="Keyword" labelFor="searchKeywordE"></Label>
-                                <Input id="searchKeywordE" placeholder="Keywords of the Code or Content"></Input>
+                                <Input id="searchKeywordE" placeholder="Search Keywords"></Input>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
@@ -138,8 +138,8 @@
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
                         items="{list>/}"
-                        mode="SingleSelectMaster"
-                        selectionChange=".onRowClick"
+                        mode="SingleSelectLeft"
+                        selectionChange=".onSelectionChange"
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
@@ -158,7 +158,7 @@
                     </headerToolbar>
                     <columns>
                         <Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="40px" >
-                            <Text text="S" />
+                            <ObjectStatus icon="sap-icon://document" />
                         </Column>
                         <Column id="mainColumnChainCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="12em" >
                             <Text text="Chain" />
@@ -180,7 +180,10 @@
                         <ColumnListItem>
                             <cells>
                                 <HBox align="Center">
-                                    <Text text="{list>_row_state_}"></Text>
+                                    <ObjectStatus icon="{
+                                        path: 'list>_row_state_',
+                                        formatter: '.formatter.toModelStateColumnIcon'
+                                    }" />
                                 </HBox>
                                 <HBox>
                                     <Text text="{list>chain_code}" visible="true"></Text>

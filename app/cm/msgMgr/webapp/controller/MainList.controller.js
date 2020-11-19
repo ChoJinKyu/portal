@@ -2,7 +2,7 @@ sap.ui.define([
 	"ext/lib/controller/BaseController",
 	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
-	"../model/formatter",
+	"ext/lib/formatter/Formatter",
 	"ext/lib/model/ManagedListModel",
 	"sap/m/TablePersoController",
 	"./MainListPersoService",
@@ -16,7 +16,7 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, formatter, ManagedListModel, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+], function (BaseController, History, JSONModel, Formatter, ManagedListModel, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
     "use strict";
 
     var lastRowIndex;
@@ -24,7 +24,7 @@ sap.ui.define([
 
 	return BaseController.extend("cm.msgMgr.controller.MainList", {
 
-		formatter: formatter,
+		formatter: Formatter,
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -194,7 +194,7 @@ sap.ui.define([
 			
         }, 
 
-        onRowClick: function(oEvent) {
+        onSelectionChange: function(oEvent) {
             var tableRowCells,
                 selectRowCell=oEvent.getSource().getSelectedItem().getCells();
             if(lastRowIndex != null){
