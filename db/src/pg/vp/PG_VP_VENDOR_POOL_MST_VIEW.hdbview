@@ -13,8 +13,8 @@ SELECT PARENT_ID
       ,VENDOR_POOL_ENGLISH_NAME
       ,REPR_DEPARTMENT_CODE
       ,'구매팀' REPR_DEPARTMENT_NAME    /*부서 테이블 정보*/  
-      ,EVALUATION_OPERATION_UNIT_CODE
-      ,'Raw Material' EVALUATION_OPERATION_UNIT_NAME /*코드 테이블 정보*/
+      ,OPERATION_UNIT_CODE
+      ,'Raw Material' OPERATION_UNIT_NAME /*코드 테이블 정보*/
       ,INP_TYPE_CODE
       ,'물동' INP_TYPE_NAME       /*코드 테이블 정보*/
       ,MTLMOB_BASE_CODE
@@ -23,9 +23,9 @@ SELECT PARENT_ID
       ,INDUSTRY_CLASS_CODE
       ,null INDUSTRY_CLASS_NAME   /*코드 테이블 정보*/
       ,SD_EXCEPTION_FLAG
-      ,VENDOR_POOL_EXCEPTION_FLAG
-      ,SITE_INTERNAL_RATE
-      ,SITE_EXTERNAL_RATE
+      ,VENDOR_POOL_APPLY_EXCEPTION_FLAG
+      ,DOMESTIC_NET_PRICE_DIFF_RATE
+      ,DOM_OVERSEA_NETPRICE_DIFF_RATE
       ,EQUIPMENT_GRADE_CODE
       ,EQUIPMENT_TYPE_CODE
       ,VENDOR_POOL_USE_FLAG
@@ -34,9 +34,9 @@ SELECT PARENT_ID
       ,PARENT_VENDOR_POOL_CODE
       ,LEAF_FLAG
       ,LEVEL_NUMBER
-      ,MARK_SEQUENCE
-      ,REGISTER_REASON_TEXT
-      ,APPROVAL_REQUEST_NUMBER
+      ,DISPLAY_SEQUENCE
+      ,REGISTER_REASON
+      ,APPROVAL_NUMBER
       ,hierarchy_rank            /*현재node의 순번(sibling order by에 의한)*/
       ,hierarchy_tree_size       /*현재node포함 하위node 갯수(1이면 leaf node(마지막node))*/
       ,hierarchy_parent_rank     /*부모node의 순번*/
@@ -53,15 +53,15 @@ FROM   HIERARCHY (
                                  ,A.VENDOR_POOL_LOCAL_NAME
                                  ,A.VENDOR_POOL_ENGLISH_NAME
                                  ,A.REPR_DEPARTMENT_CODE
-                                 ,A.EVALUATION_OPERATION_UNIT_CODE
+                                 ,A.OPERATION_UNIT_CODE
                                  ,A.INP_TYPE_CODE
                                  ,A.MTLMOB_BASE_CODE
                                  ,A.REGULAR_EVALUATION_FLAG
                                  ,A.INDUSTRY_CLASS_CODE
                                  ,A.SD_EXCEPTION_FLAG
-                                 ,A.VENDOR_POOL_EXCEPTION_FLAG
-                                 ,A.SITE_INTERNAL_RATE
-                                 ,A.SITE_EXTERNAL_RATE
+                                 ,A.VENDOR_POOL_APPLY_EXCEPTION_FLAG
+                                 ,A.DOMESTIC_NET_PRICE_DIFF_RATE
+                                 ,A.DOM_OVERSEA_NETPRICE_DIFF_RATE
                                  ,A.EQUIPMENT_GRADE_CODE
                                  ,A.EQUIPMENT_TYPE_CODE
                                  ,A.VENDOR_POOL_USE_FLAG
@@ -70,13 +70,13 @@ FROM   HIERARCHY (
                                  ,A.PARENT_VENDOR_POOL_CODE
                                  ,A.LEAF_FLAG
                                  ,A.LEVEL_NUMBER
-                                 ,A.MARK_SEQUENCE
-                                 ,A.REGISTER_REASON_TEXT
-                                 ,A.APPROVAL_REQUEST_NUMBER
+                                 ,A.DISPLAY_SEQUENCE
+                                 ,A.REGISTER_REASON
+                                 ,A.APPROVAL_NUMBER
                                  ,HIERARCHY_COMPOSITE_ID(A.TENANT_ID, A.COMPANY_CODE, A.ORG_TYPE_CODE, A.ORG_CODE, A.PARENT_VENDOR_POOL_CODE) AS PARENT_ID
                                  ,HIERARCHY_COMPOSITE_ID(A.TENANT_ID, A.COMPANY_CODE, A.ORG_TYPE_CODE, A.ORG_CODE, A.VENDOR_POOL_CODE) AS NODE_ID
                           FROM   PG_VP_VENDOR_POOL_MST A)
                   START WHERE PARENT_VENDOR_POOL_CODE IS NULL
-                  SIBLING ORDER BY MARK_SEQUENCE, NODE_ID)
+                  SIBLING ORDER BY DISPLAY_SEQUENCE, NODE_ID)
 ORDER BY HIERARCHY_RANK
 ;
