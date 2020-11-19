@@ -56,10 +56,9 @@ sap.ui.define([
 
 			this._doInitTablePerso();
         },
-        
-        onAfterRendering : function () {
+		
+        onRenderedFirst : function () {
 			this.byId("pageSearchButton").firePress();
-			return;
         },
 
 		/* =========================================================== */

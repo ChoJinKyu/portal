@@ -11,7 +11,6 @@
 			path: 'master>/control_option_code',
 			type: 'sap.ui.model.type.String',
 			constraints: {
-				minLength: 5,
 				maxLength: 30
 			}
 		}" required="true" editable="{midObjectView>/isAddedMode}"/>
@@ -33,7 +32,7 @@
 				path: 'master>/control_option_name',
 				type: 'sap.ui.model.type.String',
 				constraints: {
-					maxLength: 240
+				    maxLength: 240
 				}
 			}" required="true"/>
 

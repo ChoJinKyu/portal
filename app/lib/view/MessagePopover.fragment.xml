@@ -8,6 +8,8 @@
             type="{message>type}"
             title="{message>message}"
             subtitle="{message>additionalText}"
+            activeTitle="{message>active}"
+            counter="{message>counter}"
             description="{message>description}"/>
     </MessagePopover>
 </core:FragmentDefinition>

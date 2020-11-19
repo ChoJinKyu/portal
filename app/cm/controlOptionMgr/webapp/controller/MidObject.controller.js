@@ -20,7 +20,7 @@ sap.ui.define([
 ], function (BaseController, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
 	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
 	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
-		
+        
 	"use strict";
 
 	var oTransactionManager;
@@ -66,9 +66,7 @@ sap.ui.define([
 			this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
 
 			this._initTableTemplates();
-
-			this.enableValidator();
-
+            this.enableMessagePopover();
 		}, 
 
 		/* =========================================================== */
@@ -181,7 +179,6 @@ sap.ui.define([
         onPageSaveButtonPress: function(){
 			var oView = this.getView(),
 				that = this;
-				debugger;
 			MessageBox.confirm("Are you sure ?", {
 				title : "Comfirmation",
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -369,23 +366,6 @@ sap.ui.define([
 				type: sap.m.ListType.Inactive
 			});
 
-            var oLevelCodeCombo = new ComboBox({
-					required: true,
-					selectedKey: "{details>control_option_level_code}"
-                });
-                oLevelCodeCombo.bindItems({
-					id: "testCombo1",
-					path: 'util>/CodeDetails',
-                    filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
-                        new Filter("company_code", FilterOperator.EQ, 'G100'),
-                        new Filter("group_code", FilterOperator.EQ, 'TEST')
-                    ],
-                    template: new Item({
-                        key: "{util>code}",
-                        text: "{util>code_description}"
-                    })
-				});
 			this.oEditableTemplate = new ColumnListItem({
 				cells: [
 					new Text({
@@ -394,24 +374,38 @@ sap.ui.define([
 					new Text({
 						text: "{details>control_option_code}"
 					}), 
-					oLevelCodeCombo, 
+					new ComboBox({
+                        selectedKey: "{details>control_option_level_code}",
+                        items: {
+                            id: "testCombo1",
+                            path: 'util>/CodeDetails',
+                            filters: [
+                                new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
+                                new Filter("company_code", FilterOperator.EQ, 'G100'),
+                                new Filter("group_code", FilterOperator.EQ, 'TEST')
+                            ],
+                            template: new Item({
+                                key: "{util>code}",
+                                text: "{util>code_description}"
+                            })
+                        },
+                        required: true
+                    }), 
 					new Input({
 						value: {
 							path: "details>control_option_level_val",
-							constraints: {
-								minLength: 4,
+                            type: new sap.ui.model.type.String(null, {
 								maxLength: 100
-							}
+							}),
 						},
 						required: true
 					}),
 					new Input({
 						value: {
 							path: "details>control_option_val",
-							constraints: {
-								minLength: 4,
+                            type: new sap.ui.model.type.String(null, {
 								maxLength: 100
-							}
+							})
 						},
 						required: true
 					})
@@ -422,9 +416,7 @@ sap.ui.define([
 		_bindMidTable: function(oTemplate, sKeyboardMode){
 			this.byId("midTable").bindItems({
 				path: "details>/",
-				template: oTemplate,
-				templateShareable: true,
-				key: "control_option_level_val"
+				template: oTemplate
 			}).setKeyboardMode(sKeyboardMode);
 		},
 
