@@ -8,6 +8,7 @@ sap.ui.define([
 	"./MainListPersoService",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
+    'sap/ui/core/Fragment',
     "sap/m/MessageBox",
     "sap/m/MessageToast",
 	"sap/m/ColumnListItem",
@@ -17,7 +18,7 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item) {
+], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item) {
 	"use strict";
    /**
     * @description 품의 목록 (총 품의 공통)
@@ -283,37 +284,31 @@ sap.ui.define([
          * @see 사용처 ValueHelpDialogAffiliate Fragment window.close after 이벤트
          */
         onValueHelpRequestedCreate: function (){
-            console.group("onValueHelpRequestedAffiliate");
-
-            var aCols = this.oColModel.getData().cols;
-
-            this._oValueHelpDialog = sap.ui.xmlfragment("dp.moldApprovalList.view.ValueHelpDialogApprovalCreate", this);
-            this.getView().addDependent(this._oValueHelpDialog);
-
-            this._oValueHelpDialog.getTableAsync().then(function (oTable) {
-                oTable.setModel(this.oAffiliateModel);
-                oTable.setModel(this.oColModel, "columns");
-
-                if (oTable.bindRows) {
-                    oTable.bindAggregation("rows", "/AffiliateCollection");
-                }
-
-                if (oTable.bindItems) {
-                    oTable.bindAggregation("items", "/AffiliateCollection", function () {
-                        return new ColumnListItem({
-                            cells: aCols.map(function (column) {
-                                return new Label({ text: "{" + column.template + "}" });
-                            })
-                        });
-                    });
-                }
-                this._oValueHelpDialog.update();
-            }.bind(this));
-
-            this._oValueHelpDialog.setTokens(this._oMultiInput.getTokens());
-            this._oValueHelpDialog.open();
-                console.groupEnd();
+			if (this._oDialog) {
+				this._oDialog.destroy();
+				this._oDialog = null;
+			}
+			if (!this._oDialogSingleCustomTab) {
+				Fragment.load({
+					name: "dp.moldApprovalList.view.ValueHelpDialogApprovalCreate",
+					controller: this
+				}).then(function(oDialog){
+					this._oDialogSingleCustomTab = oDialog;
+					this._oDialogSingleCustomTab.setModel(this.getView().getModel());
+					this._oDialogSingleCustomTab.open();
+				}.bind(this));
+			} else {
+				this._oDialogSingleCustomTab.setModel(this.getView().getModel());
+				this._oDialogSingleCustomTab.open();
+			}
+		
         },
+
+        handleConfirm: function (oEvent) {
+			if (oEvent.getParameters().filterString) {
+				MessageToast.show(oEvent.getParameters().filterString);
+			}
+		},
         /* Affiliate End */
 
 		/* =========================================================== */
