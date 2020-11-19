@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html style="height: 100%;">
+    <head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>SAPUI5 Navigation</title>
+
+		<script
+				id="sap-ui-bootstrap"
+				src="https://sapui5.hana.ondemand.com/resources/sap-ui-core.js"
+                data-sap-ui-theme="sap_fiori_3"
+				data-sap-ui-bindingSyntax="complex"
+                data-sap-ui-compatVersion="edge"
+                data-sap-ui-async="true"
+                data-sap-ui-frameOptions="allow"
+				data-sap-ui-resourceroots='{
+					"dp.detailSpecEntry": "./"
+                }'>
+		</script>
+
+		<script>
+			sap.ui.getCore().attachInit(function () {
+				sap.ui.require([
+					"sap/ui/core/ComponentContainer"
+				], function (ComponentContainer) {
+
+					new ComponentContainer({
+						name : 'dp.detailSpecEntry',
+						height : "100%",
+						settings : {
+							id : "dp.detailSpecEntry"
+						}
+					}).placeAt('content');
+				});
+			});
+		</script>
+
+	</head>
+	<body class="sapUiBody sapUiSizeCompact" id="content">
+        <div data-sap-ui-component data-name="cm.msgMgr" data-id="container" data-settings='{"id" : "detailSpecEntry"}'></div>
+	</body>
+</html>

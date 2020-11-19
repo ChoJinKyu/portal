@@ -138,7 +138,8 @@
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
                         items="{list>/}"
-                        mode="MultiSelect" 
+                        mode="SingleSelectMaster"
+                        selectionChange=".onRowClick"
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
@@ -159,10 +160,10 @@
                         <Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="40px" >
                             <Text text="S" />
                         </Column>
-                        <Column id="mainColumnChainCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
+                        <Column id="mainColumnChainCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="12em" >
                             <Text text="Chain" />
                         </Column>
-                        <Column id="mainColumnLanguageCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
+                        <Column id="mainColumnLanguageCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="12em" >
                             <Text text="Language" />
                         </Column>
                         <Column id="mainColumnMessageCode" minScreenWidth="Tablet" hAlign="Center" width="12em" >
@@ -178,45 +179,65 @@
                     <items>
                         <ColumnListItem>
                             <cells>
-                                <Text text="{list>_row_state_}"></Text>
-                                <ComboBox selectedKey="{list>chain_code}" width="100%" items="{
-                                        path: 'util>/CodeDetails',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                            {path: 'company_code', operator: 'EQ', value1: '*'},
-                                            {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
-                                        ]
-                                    }">
-                                    <items>
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
-                                    </items>
-                                </ComboBox>
-                                <ComboBox selectedKey="{list>language_code}" width="100%" items="{
-                                        path: 'util>/CodeDetails',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                            {path: 'company_code', operator: 'EQ', value1: '*'},
-                                            {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
-                                        ]
-                                    }">
-                                    <items>
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
-                                    </items>
-                                </ComboBox>
-                                <Input value="{list>message_code}"></Input>
-                                <Input value="{list>message_contents}"></Input>
-                                <ComboBox selectedKey="{list>message_type_code}" width="100%" items="{
-                                        path: 'util>/CodeDetails',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                            {path: 'company_code', operator: 'EQ', value1: '*'},
-                                            {path: 'group_code', operator: 'EQ', value1: 'CM_MESSAGE_TYPE_CODE'}
-                                        ]
-                                    }">
-                                    <items>
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
-                                    </items>
-                                </ComboBox>
+                                <HBox align="Center">
+                                    <Text text="{list>_row_state_}"></Text>
+                                </HBox>
+                                <HBox>
+                                    <Text text="{list>chain_code}" visible="true"></Text>
+                                    <ComboBox selectedKey="{list>chain_code}" 
+                                                width="100%" 
+                                                visible="false" 
+                                                items="{
+                                                    path: 'util>/CodeDetails',
+                                                    filters: [
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                        {path: 'company_code', operator: 'EQ', value1: '*'},
+                                                        {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
+                                                    ]
+                                        }">
+                                        <items>
+                                            <core:Item key="{util>code}" text="{util>code_description}" />
+                                        </items>
+                                    </ComboBox>
+                                </HBox>
+                                <HBox align="Center">
+                                    <Text text="{list>language_code}" visible="true"></Text>
+                                    <ComboBox selectedKey="{list>language_code}" width="100%" visible="false" items="{
+                                            path: 'util>/CodeDetails',
+                                            filters: [
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                {path: 'company_code', operator: 'EQ', value1: '*'},
+                                                {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
+                                            ]
+                                        }">
+                                        <items>
+                                            <core:Item key="{util>code}" text="{util>code_description}" />
+                                        </items>
+                                    </ComboBox>
+                                </HBox>
+                                <HBox align="Center">
+                                    <Text text="{list>message_code}" visible="true"></Text>
+                                    <Input value="{list>message_code}" visible="false"></Input>
+                                </HBox>
+                                <HBox align="Center">
+                                    <Text text="{list>message_contents}" visible="true"></Text>
+                                    <Input value="{list>message_contents}" visible="false"></Input>
+                                </HBox>
+                                <HBox align="Center">
+                                    <Text text="{list>message_type_code}" visible="true"></Text>
+                                    <ComboBox selectedKey="{list>message_type_code}" width="100%" visible="false" items="{
+                                            path: 'util>/CodeDetails',
+                                            filters: [
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                {path: 'company_code', operator: 'EQ', value1: '*'},
+                                                {path: 'group_code', operator: 'EQ', value1: 'CM_MESSAGE_TYPE_CODE'}
+                                            ]
+                                        }">
+                                        <items>
+                                            <core:Item key="{util>code}" text="{util>code_description}" />
+                                        </items>
+                                    </ComboBox>
+                                </HBox>
                             </cells>
                         </ColumnListItem>
                     </items>
