@@ -160,7 +160,7 @@ sap.ui.define([
                 oRecord = this.getModel("list").getProperty(sPath);
             console.log("oRecord >>>  " , oRecord );
 		    var that = this; 
-            if(oRecord.mold_id == "577289"){
+            if(oRecord.mold_id % 2 == 0){
                 that.getRouter().navTo("budgetReportObject", { 
                     moldId: oRecord.mold_id
                 });

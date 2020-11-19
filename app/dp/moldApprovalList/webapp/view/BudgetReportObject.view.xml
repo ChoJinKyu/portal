@@ -1,4 +1,4 @@
-<mvc:View controllerName="dp.budgetReport.controller.BudgetReportObject" 
+<mvc:View controllerName="dp.moldApprovalList.controller.BudgetReportObject" 
 	xmlns:mvc="sap.ui.core.mvc" 
 	xmlns="sap.m" 
 	xmlns:uxap="sap.uxap" 
