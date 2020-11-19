@@ -8,5 +8,15 @@
         "name": "Control Validations",
         "icon": "sap-icon://source-code",
         "viewName": "example2"
+    },
+    {
+        "name": "Smart Table",
+        "icon": "sap-icon://source-code",
+        "viewName": "example3"
+    },
+    {
+        "name": "Inline Edit Table for ext.lib.model.v2.ODataModel",
+        "icon": "sap-icon://source-code",
+        "viewName": "example4"
     }
 ]

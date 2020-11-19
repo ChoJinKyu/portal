@@ -77,6 +77,7 @@
       },
       "util": {
         "dataSource": "commonUtilService",
+        "type": "ext.lib.model.v2.ODataModel",
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",
@@ -87,6 +88,7 @@
       },
       "": {
         "dataSource": "mainService",
+        "type": "ext.lib.model.v2.ODataModel",
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",
@@ -141,6 +143,20 @@
           "target": [
             "example2"
           ]
+        },
+        {
+          "pattern": "example3",
+          "name": "example3",
+          "target": [
+            "example3"
+          ]
+        },
+        {
+          "pattern": "example4",
+          "name": "example4",
+          "target": [
+            "example4"
+          ]
         }
       ],
       "targets": {
@@ -155,6 +171,14 @@
         "example2": {
           "viewName": "ControlValidation",
           "viewId": "example2"
+        },
+        "example3": {
+          "viewName": "SmartTable",
+          "viewId": "example3"
+        },
+        "example4": {
+          "viewName": "InlineEditTable",
+          "viewId": "example4"
         },
         "notFound": {
           "viewName": "NotFound",
