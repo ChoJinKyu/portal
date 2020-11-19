@@ -1,4 +1,4 @@
-<mvc:View controllerName="dp.moldApprovalList.controller.MainObject" 
+<mvc:View controllerName="dp.budgetReport.controller.BudgetReportObject" 
 	xmlns:mvc="sap.ui.core.mvc" 
 	xmlns="sap.m" 
 	xmlns:uxap="sap.uxap" 
@@ -15,11 +15,11 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="{i18n>mainObjectViewTitle}" wrapping="true" />
+					<Title text="{i18n>budgetReportObjectTitle}" wrapping="true" />
 				</uxap:expandedHeading>
 
 				<uxap:snappedHeading>
-					<Title text="{i18n>mainObjectViewTitle}" wrapping="true" />
+					<Title text="{i18n>budgetReportObjectTitle}" wrapping="true" />
 				</uxap:snappedHeading>
 
 				<uxap:expandedContent>

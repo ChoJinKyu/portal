@@ -49,10 +49,8 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
-            console.log("  여기 왔나??? 1");
             var oViewModel,
                 oResourceBundle = this.getResourceBundle();
-            console.log("  여기 왔나??? 2");
             // Model used to manipulate control states
             oViewModel = new JSONModel({
                 mainListTableTitle: oResourceBundle.getText("mainListTableTitle"),
@@ -147,8 +145,34 @@ sap.ui.define([
 		 * @public
 		 */
 		onListMainTableItemPress : function (oEvent) {
-			// The source is the list item that got pressed
-			this._showMainObject(oEvent.getSource());
+            // The source is the list item that got pressed 
+            
+	
+			var	sPath = oEvent.getSource().getBindingContext("list").getPath(),
+                oRecord = this.getModel("list").getProperty(sPath); 
+                
+               
+                console.log("sPath >>>  " , sPath );
+                console.log("oRecord >>>  " , oRecord );
+ 
+            var that = this; 
+            if(oRecord.language_code == 'EN'){
+                that.getRouter().navTo("budgetReportObject", { 
+
+	            tenantId: oRecord.tenant_id,
+				messageCode: oRecord.message_code,
+				languageCode: oRecord.language_code
+                });
+
+            }else{
+                 that.getRouter().navTo("mainObject", {
+                              tenantId: oRecord.tenant_id,
+				messageCode: oRecord.message_code,
+				languageCode: oRecord.language_code
+                });  
+            }
+
+
 		},
 
 		/**
@@ -245,7 +269,18 @@ sap.ui.define([
 		 * @param {sap.m.ObjectListItem} oItem selected Item
 		 * @private
 		 */
-		_showMainObject : function (oItem) {
+		_showMainObject : function (oItem) { 
+
+            console.log("oItem >>>>> " , oItem.getBindingContext());
+/**
+ * 	
+			oItem.getBindingContext().requestCanonicalPath().then(function (sObjectPath) {
+				that.getRouter().navTo("object", {
+					objectId_Old: oItem.getBindingContext().getProperty("header_id"),
+					objectId : sObjectPath.slice("/SampleMgrView".length) // /Products(3)->(3)
+				});
+			});
+ */
 			var that = this;
 			that.getRouter().navTo("budgetReportObject", {
                 message_code: "01" 

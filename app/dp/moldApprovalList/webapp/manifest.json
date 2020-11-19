@@ -140,6 +140,13 @@
           "target": [
             "mainObject"
           ]
+        },
+        {
+          "pattern": "BudgetReport/{moldId}",
+          "name": "budgetReportObject",
+          "target": [
+            "budgetReportObject"
+          ]
         }
       ],
       "targets": {
@@ -154,6 +161,12 @@
           "viewId": "mainObject",
           "viewLevel": 2,
           "title": "{i18n>mainObjectViewTitle}"
+        },
+         "budgetReportObject": {
+          "viewName": "BudgetReportObject",
+          "viewId": "budgetReportObject",
+          "viewLevel": 2,
+          "title": "{i18n>budgetReportObjectTitle}"
         },
         "notFound": {
           "viewName": "NotFound",

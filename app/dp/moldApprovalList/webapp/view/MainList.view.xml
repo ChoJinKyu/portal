@@ -54,28 +54,28 @@
                 <f:expandedContent>
                     <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
-                            <VBox>
-                                <Label text="Affiliate" labelFor="searchAffiliateE" required="true"></Label>
-                                <MultiInput id="searchAffiliateE" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>
+                             <VBox>
+                                <Label text="Company" labelFor="searchCompanyE" required="true"></Label>
+                                <MultiInput id="searchCompanyE" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Division" labelFor="searchDivisionE" required="true"></Label>
-                                <MultiInput id="searchDivisionE" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>
+                                <Label text="Plant" labelFor="searchPlantE" required="true"></Label>
+                                <MultiInput id="searchPlantE" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Receipt Date" labelFor="searchReceiptDateE" required="true"></Label>
-                                    <DateRangeSelection id="searchReceiptDateE" width="100%" change="handleChange"/>
+                                <Label text="Request Date" labelFor="searchRequestDateE" required="true"></Label>
+                                <DateRangeSelection id="searchRequestDateE" width="100%" change="handleChange"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
-                            <VBox>
+                             <VBox>
                                 <Label text="Approval Category" labelFor="searchApprovalCategoryE" required="true"></Label>
                                 <MultiInput id="searchApprovalCategoryE" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>
                                 <layoutData>

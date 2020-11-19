@@ -19,7 +19,11 @@ sap.ui.define([
 	"sap/ui/core/Item",
 ], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item) {
 	"use strict";
-
+   /**
+    * @description 품의 목록 (총 품의 공통)
+    * @date 2020.11.19 
+    * @author jinseon.lee , daun.lee 
+    */
 	return BaseController.extend("dp.moldApprovalList.controller.MainList", {
 
 		dateFormatter: DateFormatter,
@@ -145,28 +149,29 @@ sap.ui.define([
 		},
 
 		/**
-		 * Event handler when pressed the item of table
-		 * @param {sap.ui.base.Event} oEvent
+		 * Event handler when pressed the item of table 
+         * @description 목록 클릭시 이벤트 
+		 * @param {sap.ui.base.Event} oEvent 
 		 * @public
 		 */
 		onMainTableItemPress: function(oEvent) {
-            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
-			    sPath = oEvent.getSource().getBindingContext("list").getPath(),
+ 
+			var sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
-            
-			this.getRouter().navTo("mainObject", {
-                moldId: oRecord.mold_id
-			});
+            console.log("oRecord >>>  " , oRecord );
+		    var that = this; 
+            if(oRecord.mold_id == "577289"){
+                that.getRouter().navTo("budgetReportObject", { 
+                    moldId: oRecord.mold_id
+                });
 
-            if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
-                this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
+            }else{
+                 that.getRouter().navTo("mainObject", {
+                  moldId : oRecord.mold_id
+                });  
             }
 
-			var oItem = oEvent.getSource();
-			oItem.setNavigated(true);
-			var oParent = oItem.getParent();
-			// store index of the item clicked, which can be used later in the columnResize event
-			this.iIndex = oParent.indexOfItem(oItem);
+
 		},
 
         /* Affiliate Start */
