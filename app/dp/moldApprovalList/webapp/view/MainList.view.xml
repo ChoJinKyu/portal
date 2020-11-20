@@ -1,0 +1,233 @@
+<mvc:View controllerName="dp.moldApprovalList.controller.MainList" 
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m" 
+    xmlns:f="sap.f" 
+    xmlns:form="sap.ui.layout.form" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:core="sap.ui.core" 
+    xmlns:lib-m="ext.lib.m"
+    height="100%">
+
+    <f:DynamicPage id="page"
+        headerExpanded="false" 
+        toggleHeaderOnTitleClick="true">
+        <!-- DynamicPage Title -->
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:heading>
+                    <Title text="{i18n>appTitle}" />
+                </f:heading>
+                <f:snappedContent>
+                    <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                        <form:content>
+                            <VBox>
+                                <Label text="Company" labelFor="searchCompanyS" required="true"></Label>
+                                <MultiInput id="searchCompanyS" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="Plant" labelFor="searchPlantS" required="true"></Label>
+                                <MultiInput id="searchPlantS" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="Request Date" labelFor="searchRequestDateS" required="true"></Label>
+                                <DateRangeSelection id="searchRequestDateS" width="100%" change="handleChange"/>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                             <VBox>
+                                <Label text="Approval Category" labelFor="searchApprovalCategoryS" required="true"></Label>
+                                <MultiInput id="searchApprovalCategoryS" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                        </form:content>
+                    </form:SimpleForm>
+                </f:snappedContent>
+                <f:expandedContent>
+                    <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                        <form:content>
+                             <VBox>
+                                <Label text="Company" labelFor="searchCompanyE" required="true"></Label>
+                                <MultiInput id="searchCompanyE" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="Plant" labelFor="searchPlantE" required="true"></Label>
+                                <MultiInput id="searchPlantE" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="Request Date" labelFor="searchRequestDateE" required="true"></Label>
+                                <DateRangeSelection id="searchRequestDateE" width="100%" change="handleChange"/>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                             <VBox>
+                                <Label text="Approval Category" labelFor="searchApprovalCategoryE" required="true"></Label>
+                                <MultiInput id="searchApprovalCategoryE" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                        </form:content>
+                    </form:SimpleForm>
+                </f:expandedContent>
+                <f:actions>
+                    <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onPageSearchButtonPress" />
+                </f:actions>
+                <f:navigationActions>
+                    <Button icon="sap-icon://unfavorite" type="Transparent" />
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <!-- DynamicPage Header -->
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <form:SimpleForm maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                    <form:content>
+                        <VBox>
+                            <Label text="Model " labelFor="searchModel"></Label>
+                            <MultiInput id="searchModel" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Mold Part No " labelFor="searchMoldPartNo"></Label>
+                            <MultiInput id="searchMoldPartNo" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Subject" labelFor="searchSubject"></Label>
+                            <SearchField />
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Requester" labelFor="searchRequester"></Label>
+                            <MultiInput id="searchRequester" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                                <Label text="Status"></Label>
+                                <SegmentedButton id="searchStatusS" selectedKey="" class="sapUiSmallMarginBottom" width="100%">
+                                    <items>
+                                        <SegmentedButtonItem text="All" key="" />
+                                        <SegmentedButtonItem text="Saved" width="5em" />
+                                        <SegmentedButtonItem text="In-Appr" width="5em" />
+                                        <SegmentedButtonItem text="Apprvd" width="5em" />
+                                        <SegmentedButtonItem text="Rejected" width="5em" />
+                                    </items>
+                                </SegmentedButton>
+                                <layoutData>
+                                    <layout:GridData span="XL10 L9 M6 S12" />
+                                </layoutData>
+                        </VBox>
+                    </form:content>
+                </form:SimpleForm>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <VBox>
+                <Table id="mainTable"       
+                        growing="true"
+                        growingThreshold="20"
+                        class="sapFDynamicPageAlignContent" 
+                        updateFinished=".onListMainTableUpdateFinished"
+                        cellClick=".onCellClick"
+                        rowSelectionChange = ".onCheck"
+                        mode="MultiSelect"
+                        width="auto"
+                        items="{list>/}">
+                    <headerToolbar>
+                        <OverflowToolbar>
+                            <Title text="Approval List ({= ${list>/}.length || 0})" level="H2"/>
+                            <ToolbarSpacer/>
+                            <!-- Add the Personalization button -->
+                            <Button id="mainTableCreateButton" text="Create" type="Emphasized" press=".onValueHelpRequestedCreate" />
+                            <Button id="mainTableDeleteButton" text="Delete" type="Transparent" press=".onListMainTableDeleteButtonPress" />
+                            <ToolbarSeparator/>
+                            <Button icon="sap-icon://excel-attachment" press=".onListMainTablePersoButtonPressed" >
+                                <layoutData>
+                                    <OverflowToolbarLayoutData priority="NeverOverflow" />
+                                </layoutData>
+                            </Button>
+                            <Button icon="sap-icon://action-settings" press=".onListMainTablePersoButtonPressed" >
+                                <layoutData>
+                                    <OverflowToolbarLayoutData priority="NeverOverflow" />
+                                </layoutData>
+                            </Button>                            
+                        </OverflowToolbar>
+                    </headerToolbar>
+                    <columns>
+                        <Column id="mainColumnApprovalCategory" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
+                            <Text text="Approval&#10;Category" />
+                        </Column>
+                        <Column id="mainColumnCompany" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
+                            <Text text="Company" />
+                        </Column>
+                        <Column id="mainColumnPlant" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                            <Text text="Plant" />
+                        </Column>
+                        <Column id="mainColumnApprovalNo" minScreenWidth="Tablet" hAlign="Center" width="12em">
+                            <Text text="Approval No" />
+                        </Column>
+                        <Column id="mainColumnSubject" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                            <Text text="Subject" />
+                        </Column>
+                        <Column id="mainColumnRequester" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                            <Text text="Requester" />
+                        </Column>
+                        <Column id="mainColumnRequestDate" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                            <Text text="Request Date" />
+                        </Column>
+                        <Column id="mainColumnStatus" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                            <Text text="Status" />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem type="Navigation" press=".onMainTableItemPress">
+                            <cells>
+                                <ObjectIdentifier text="{list>mold_id}"/>
+                                <ObjectIdentifier text="{list>use_material_value}"/>
+                                <ObjectIdentifier text="{list>inspection_flag}"/>
+                                <ObjectIdentifier text="{list>assembly_approval_flag}"/>
+                                <ObjectIdentifier text="{list>request_life_shot_count}"/>
+                                <ObjectIdentifier text="{list>order_qty}"/>
+                                <ObjectIdentifier text="{list>cavity_process_qty}"/>
+                                <ObjectIdentifier text="{list>mold_tonnage}"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </VBox>
+        </f:content>
+        <!-- DynamicPage Footer -->
+        <f:footer>
+            <OverflowToolbar>
+                <!-- <Button icon="sap-icon://message-popup" text="123123" type="Emphasized" press=".onMessageButtonPress" /> -->
+                <ToolbarSpacer />
+				<Button text="Save" type="Emphasized" press=".onPageSaveButtonPress" />
+				<Button text="Cancel" type="Transparent" press=".onPageCancelEditButtonPress"/>
+            </OverflowToolbar>
+        </f:footer>
+    </f:DynamicPage>
+</mvc:View>

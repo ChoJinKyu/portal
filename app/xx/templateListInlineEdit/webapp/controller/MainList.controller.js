@@ -2,6 +2,7 @@ sap.ui.define([
 	"ext/lib/controller/BaseController",
 	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
+	"ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedListModel",
 	"sap/m/TablePersoController",
 	"./MainListPersoService",
@@ -15,8 +16,10 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, ManagedListModel, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+], function (BaseController, History, JSONModel, TransactionManager, ManagedListModel, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
 	"use strict";
+
+	// var oTransactionManager;
 
 	return BaseController.extend("xx.templateListInlineEdit.controller.MainList", {
 
@@ -47,6 +50,9 @@ sap.ui.define([
 			}, true);
 			
 			this.setModel(new ManagedListModel(), "list");
+
+			// oTransactionManager = new TransactionManager();
+			// oTransactionManager.addDataModel(this.getModel("list"));
 
 			this._doInitTablePerso();
         },
@@ -168,6 +174,12 @@ sap.ui.define([
 								MessageToast.show("Success to save.");
 							}
 						});
+						//oTransactionManager.submit({
+						// 	success: function(oEvent){
+						// 		oView.setBusy(false);
+						// 		MessageToast.show("Success to save.");
+						// 	}
+						// });
 					};
 				}
 			});
@@ -194,6 +206,8 @@ sap.ui.define([
 					oView.setBusy(false);
 				}
 			});
+
+			// oTransactionManager.setServiceModel(this.getModel());
 		},
 		
 		_getSearchStates: function(){

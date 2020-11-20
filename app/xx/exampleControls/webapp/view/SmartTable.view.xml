@@ -1,0 +1,69 @@
+<mvc:View controllerName="xx.exampleControls.controller.SmartTable" 
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m" 
+    xmlns:core="sap.ui.core" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:lib-m="ext.lib.m"
+	xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+	xmlns:smartTable="sap.ui.comp.smarttable"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+    height="100%">
+
+    <Page id="page" title="Example #3" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
+        <content>
+
+            <smartTable:SmartTable id="smartTreeTable"
+                tableBindingPath="{Books}"
+                entitySet="Books" tableType="Table" useExportToExcel="true"
+                useVariantManagement="true" useTablePersonalisation="true" header="Hierarchy"
+                showRowCount="false" enableAutoBinding="true" beforeRebindTable="onBeforeRebindTable">
+
+        <Table>
+			<columns>
+				<Column id="value1" width="100px" hAlign="Begin">
+					<customData>
+						<core:CustomData key="p13nData"
+							value='\{"columnKey": "value1", "maxLength": "5","columnIndex":"4", "isCurrency": true, "leadingProperty": "value1", "sortProperty": "value1", "type": "numeric", "unit": "Hwaer"}' />
+					</customData>
+					<Text text="Header1" />
+				</Column>
+				<Column id="value2" width="100px" hAlign="Begin">
+					<customData>
+						<core:CustomData key="p13nData"
+							value='\{"columnKey": "value2", "maxLength": "5","columnIndex":"4", "isCurrency": true, "leadingProperty": "value2", "sortProperty": "value2", "type": "numeric", "unit": "Hwaer"}' />
+					</customData>
+					<Text text="Header2" />
+				</Column>
+				<Column id="value3" width="100px" hAlign="Begin">
+					<customData>
+						<core:CustomData key="p13nData"
+							value='\{"columnKey": "value3", "maxLength": "5","columnIndex":"4", "isCurrency": true, "leadingProperty": "value3", "sortProperty": "value3", "type": "numeric", "unit": "Hwaer"}' />
+					</customData>
+					<Text text="Header3" />
+				</Column>
+				<Column id="value4" width="100px" hAlign="Begin">
+					<customData>
+						<core:CustomData key="p13nData"
+							value='\{"columnKey": "value4", "maxLength": "5","columnIndex":"4", "isCurrency": true, "leadingProperty": "value4", "sortProperty": "value4", "type": "numeric", "unit": "Hwaer"}' />
+					</customData>
+					<Text text="Header4" />
+				</Column>
+			</columns>
+			<items>
+				<ColumnListItem>
+					<cells>
+						<Input value="{value1}" />
+						<Input value="{value2}" />
+						<Input value="{value3}" />
+						<Input value="{value4}" />
+					</cells>
+				</ColumnListItem>
+			</items>
+		</Table>
+
+            </smartTable:SmartTable>
+
+        </content>
+    </Page>
+</mvc:View>

@@ -2,23 +2,21 @@ package lg.sppCap.handlers.xx;
 
 import java.util.List;
 
-import com.sap.cds.ql.Select;
-import com.sap.cds.ql.cqn.CqnSelect;
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.ServiceException;
-import com.sap.cds.services.cds.CdsReadEventContext;
 import com.sap.cds.services.cds.CdsService;
 import com.sap.cds.services.handler.annotations.Before;
-import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.persistence.PersistenceService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import cds.gen.xx.templateservice.ControlOptionMasters;
+import cds.gen.xx.templateservice.ControlOptionMasters_;
 import cds.gen.xx.templateservice.Message;
-import cds.gen.xx.templateservice.TemplateService_;
 import cds.gen.xx.templateservice.Message_;
+import cds.gen.xx.templateservice.TemplateService_;
 import lg.sppCap.handlers.base.BaseEventHandler;
 
 @Component
@@ -47,6 +45,24 @@ public class TemplateService extends BaseEventHandler {
     
             if(messageContents == null)
                 throw new ServiceException(ErrorStatuses.BAD_REQUEST, "messageContents shouldn't be empty.");
+    
+        }
+    }
+
+    
+    @Before(event = CdsService.EVENT_CREATE, entity = ControlOptionMasters_.CDS_NAME)
+    public void validateControlOptionMasterContents(List<ControlOptionMasters> items) {
+        for (ControlOptionMasters item : items) {
+            String tenantId = item.getTenantId();
+            String messageCode = item.getChainCode();
+            String controlOptionName = item.getControlOptionName();
+
+            if(!this.getTenantId().equals(tenantId))
+                throw new ServiceException(ErrorStatuses.SERVER_ERROR, "tenantId is not matches with this session.");
+
+            if(controlOptionName == null || controlOptionName.length() < 10)
+                throw new ServiceException(ErrorStatuses.BAD_REQUEST, "Not supported controlOptionName. null or very short.");
+
     
         }
     }

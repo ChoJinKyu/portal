@@ -1,10 +1,9 @@
 sap.ui.define([
-	"ext/lib/UIComponent",
-	"ext/lib/model/models",
-	"ext/lib/controller/ErrorHandler",
 	"jquery.sap.global",
+	"ext/lib/UIComponent",
+	"sap/ui/model/json/JSONModel",
 	"sap/f/FlexibleColumnLayoutSemanticHelper"
-], function (UIComponent, models, ErrorHandler, jQuery, FlexibleColumnLayoutSemanticHelper) {
+], function (jQuery, UIComponent, JSONModel, FlexibleColumnLayoutSemanticHelper) {
 	"use strict";
 
 	return UIComponent.extend("xx.templateFlexibleColumns.Component", {
@@ -23,7 +22,10 @@ sap.ui.define([
 			// call the base component's init function
 			UIComponent.prototype.init.apply(this, arguments);
 			
-			this.setModel(models.createModel(), "fcl");
+			this.setModel(new JSONModel(), "fcl");
+
+			// create the views based on the url/hash
+			this.getRouter().initialize();
 		},
 
 		/**

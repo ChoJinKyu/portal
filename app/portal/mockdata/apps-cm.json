@@ -11,7 +11,7 @@
                 },
                 {
                     "name": "제어옵션관리",
-                    "url": "../cm/ctrlOptMgr/webapp",
+                    "url": "../cm/controlOptionMgr/webapp",
                     "component": "cm.controlOptionMgr"
                 }
             ]
@@ -37,7 +37,7 @@
                 },
                 {
                     "name": "통화 관리",
-                    "url": "../cm/currencyMgr/webapp",
+                    "url": "../cm/curMgr/webapp",
                     "component": "cm.currencyMgr"
                 },
                 {

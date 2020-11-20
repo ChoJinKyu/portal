@@ -10,9 +10,19 @@
                     "component": "dp.developmentReceipt"
                 },
                 {
+                    "name": "Mold Approval List",
+                    "url": "../dp/moldApprovalList/webapp",
+                    "component": "dp.moldApprovalList"
+                },
+                {
                     "name": "App #2",
                     "url": "../cm/controlOptionMgr/webapp",
                     "component": "cm.controlOptionMgr"
+                },
+                {
+                    "name": "Detail Spec Entry",
+                    "url": "../dp/detailSpecEntry/webapp",
+                    "component": "dp.detailSpecEntry"
                 }
             ]
         },

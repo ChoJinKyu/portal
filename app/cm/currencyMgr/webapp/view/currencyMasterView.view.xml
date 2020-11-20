@@ -57,7 +57,8 @@
                     </layout:HorizontalLayout>
                     <HBox width="100%" alignItems="Center" alignContent="End" justifyContent="End">
                         <items>
-                            <Button text="Search" type="Emphasized" press="onSearch"/>
+                            <Button text="New" type="Transparent" press="onCreateAdd" enabled="{Currency>/true6}"/>
+                            <Button text="Search" type="Emphasized" press="onSearch" enabled="{Currency>/true6}"/>
                         </items>
                     </HBox>
                 </f:DynamicPageHeader>
@@ -127,7 +128,6 @@
                                 <Text id="currency_suffix" text="{currency_suffix}"/>
                                 <Text id="effective_start_date" text="{effective_start_date}"/>
                                 <Text id="effective_end_date" text="{effective_end_date}"/>
-								
 							</cells>
 						</ColumnListItem>
 					</items>

@@ -6,7 +6,9 @@ sap.ui.define([
   "sap/ui/model/FilterOperator",
   "sap/m/MessageToast",
   "sap/m/MessageBox",
-  "../model/formatter"
+  "sap/ui/table/TablePersoController",
+  //"../model/formatter",
+  "./timeZonePersoService"
 ],
   function (
     BaseController,
@@ -16,16 +18,41 @@ sap.ui.define([
     FilterOperator,
     MessageToast,
     MessageBox,
-    formatter
-  ) {
+    TablePersoController,
+    //formatter,
+    timeZonePersoService) {
     "use strict";
 
     return BaseController.extend("cm.timeZoneMgr.controller.timeZoneMgr", {
 
-      formatter: formatter,
+      //formatter: formatter,
 
       onInit: function () {
         this.getView().setModel(new ManagedListModel(), "list");
+        // 개인화 - UI 테이블의 경우만 해당
+        this._oTPC = new TablePersoController({
+          customDataKey: "timeZoneMgr",
+          persoService: timeZonePersoService
+          // persoService: {
+          //   getPersData: function () {
+          //     var oDeferred = new $.Deferred();
+          //     return oDeferred.promise();
+          //   },
+          //   setPersData: function (oBundle) {
+          //     var oDeferred = new $.Deferred();
+          //     oDeferred.resolve();
+          //     return oDeferred.promise();
+          //   },
+          //   delPersData: function () {
+          //     var oDeferred = new $.Deferred();
+          //     oDeferred.resolve();
+          //     return oDeferred.promise();
+          //   }
+          // }
+        }).setTable(this.byId("mainTable"));
+      },
+      onMainTablePersoButtonPressed: function (event) {
+        this._oTPC.openDialog();
       },
       // Display row number without changing data
       onAfterRendering: function () {
@@ -86,18 +113,20 @@ sap.ui.define([
         MessageBox.confirm("Are you sure ?", {
           title: "Comfirmation",
           initialFocus: sap.m.MessageBox.Action.CANCEL,
-          onClose: function (sButton) {
+          onClose: (function (sButton) {
             if (sButton === MessageBox.Action.OK) {
               view.setBusy(true);
               model.submitChanges({
-                success: function (oEvent) {
+                success: (function (oEvent) {
                   view.setBusy(false);
                   MessageToast.show("Success to save.");
-                }
+                  this.onSearch();
+                }).bind(this)
               });
-            };
-          }
-        });
+            }
+          }).bind(this)
+        })
       }
     });
-  });
+  }
+);

@@ -150,7 +150,8 @@ sap.ui.define([
 				// This is visible if you select any master list item.
 				// In this case no new search is triggered, we only
 				// refresh the list binding.
-				this.onRefresh();
+                this.onRefresh();
+                MessageToast.show("refreshButtonPressed");
 			} else {
 				var aTableSearchState = this._getSearchStates();
 				this._applySearch(aTableSearchState);
@@ -231,7 +232,7 @@ sap.ui.define([
             var oModel = this.getModel("list"),
 				oView = this.getView();
 			
-			MessageBox.confirm("Are you sure ?", {
+			MessageBox.confirm("Receipt 하시 겠습니까?", {
 				title : "Comfirmation",
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
@@ -240,7 +241,7 @@ sap.ui.define([
 						oModel.submitChanges({
 							success: function(oEvent){
 								oView.setBusy(false);
-								MessageToast.show("Success to save.");
+                                MessageToast.show("Success to Receipt.");
 							}
 						});
 					};
@@ -312,7 +313,7 @@ sap.ui.define([
 			oModel.read("/MoldMasters", {
 				filters: aTableSearchState,
 				success: function(oData){
-					oView.setBusy(false);
+                    oView.setBusy(false);
 				}
 			});
         },
@@ -325,8 +326,12 @@ sap.ui.define([
                 status = Element.registry.get(statusSelectedItemId).getText(),
                 receiptFromDate = this.getView().byId("searchReceiptDate"+sSurffix).getDateValue(),
                 receiptToDate = this.getView().byId("searchReceiptDate"+sSurffix).getSecondDateValue(),
-                searchEDType = this.getView().byId("searchEDType").getSelectedKey(),
+                itemType = this.getView().byId("searchItemType").getSelectedKey(),
+                productionType = this.getView().byId("searchProductionType").getSelectedKey(),
+                eDType = this.getView().byId("searchEDType").getSelectedKey(),
                 description = this.getView().byId("searchDescription").getValue(),
+                model = this.getView().byId("searchModel").getValue(),
+                partNo = this.getView().byId("searchPartNo").getValue(),
                 familyPartNo = this.getView().byId("searchFamilyPartNo").getValue();
 				
             var aTableSearchState = [];
@@ -335,25 +340,41 @@ sap.ui.define([
 				aTableSearchState.push(new Filter("mold_receipt_flag", FilterOperator.EQ, (status == "Received" ? true : false)));
 
 				if (status == "Received") {
-					if (receiptFromDate && receiptFromDate.length > 0) {
+					if (receiptFromDate === null) {
+                        MessageToast.show("Receipt Date를 입력해 주세요");
+                    } else {
 						var fromDate = receiptFromDate.getFullYear()+""+(receiptFromDate.getMonth()+1)+""+receiptFromDate.getDate(),
 							toDate = receiptToDate.getFullYear()+""+(receiptToDate.getMonth()+1)+""+receiptToDate.getDate();
 
 						aTableSearchState.push(new Filter({
 							filters: [
-								new Filter("receiving_report_date", FilterOperator.GE, fromDate),
-								new Filter("receiving_report_date", FilterOperator.LE, toDate)
+								new Filter("receiving_report_date", FilterOperator.LE, receiptFromDate),
+								new Filter("receiving_report_date", FilterOperator.GE, receiptToDate)
 							],
 							and: false
 						}));
 					}
 				}
 			}
-			if (searchEDType && searchEDType.length > 0) {
-				aTableSearchState.push(new Filter("export_domestic_type_code", FilterOperator.EQ, searchEDType));
+			if (itemType && itemType.length > 0) {
+				aTableSearchState.push(new Filter("mold_item_type_code", FilterOperator.EQ, itemType));
+			}
+			if (productionType && productionType.length > 0) {
+				aTableSearchState.push(new Filter("mold_production_type_code", FilterOperator.EQ, productionType));
+			}
+			if (eDType && eDType.length > 0) {
+				aTableSearchState.push(new Filter("export_domestic_type_code", FilterOperator.EQ, eDType));
+			}
+			if (model && model.length > 0) {
+                //aTableSearchState.push(new Filter("tolower(model)", FilterOperator.Contains, model.toLowerCase()));
+                aTableSearchState.push( this.createFilter("model", FilterOperator.Contains, model) );
+
+			}
+			if (partNo && partNo.length > 0) {
+                aTableSearchState.push(new Filter("part_number", FilterOperator.Contains, partNo.toUpperCase()));
 			}
 			if (description && description.length > 0) {
-                aTableSearchState.push(new Filter("spec_name", FilterOperator.Contains, description));
+                aTableSearchState.push(new Filter("tolower(spec_name)", FilterOperator.Contains, "'" + description.toLowerCase() + "'"));
 			}
 			if (familyPartNo && familyPartNo.length > 0) {
 				aTableSearchState.push(new Filter({
@@ -368,7 +389,11 @@ sap.ui.define([
 				}));
 			}
 			return aTableSearchState;
-		},
+        },
+        
+        createFilter: function(key, operator, value) {
+            return new Filter("tolower(" + key + ")", operator, "'" + value.toLowerCase() + "'");
+        },
 
         /*
 		_applySearch: function(aTableSearchState) {
@@ -438,6 +463,8 @@ sap.ui.define([
             
             this.getView().byId("searchReceiptDate"+sSurffix).setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
             this.getView().byId("searchReceiptDate"+sSurffix).setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+            this.getView().byId("searchReceiptDateE").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
+            this.getView().byId("searchReceiptDateE").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
         },
         /**
          * @private 
