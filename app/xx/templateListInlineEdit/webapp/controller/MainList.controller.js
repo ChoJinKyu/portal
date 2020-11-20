@@ -3,7 +3,7 @@ sap.ui.define([
 	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
 	"ext/lib/model/TransactionManager",
-	"ext/lib/model/ManagedListModel",
+	"ext/lib/model/DelegateModel",
 	"sap/m/TablePersoController",
 	"./MainListPersoService",
 	"sap/ui/model/Filter",
@@ -16,7 +16,7 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, TransactionManager, ManagedListModel, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+], function (BaseController, History, JSONModel, TransactionManager, DelegateModel, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
 	"use strict";
 
 	// var oTransactionManager;
@@ -49,7 +49,7 @@ sap.ui.define([
 				intent: "#Template-display"
 			}, true);
 			
-			this.setModel(new ManagedListModel(), "list");
+			this.setModel(new DelegateModel(), "list");
 
 			// oTransactionManager = new TransactionManager();
 			// oTransactionManager.addDataModel(this.getModel("list"));
@@ -148,7 +148,7 @@ sap.ui.define([
 				aItems = oTable.getSelectedItems(),
 				aIndices = [];
 			aItems.forEach(function(oItem){
-				aIndices.push(oModel.getData().indexOf(oItem.getBindingContext("list").getObject()));
+				aIndices.push(oModel.getProperty("/Message").indexOf(oItem.getBindingContext("list").getObject()));
 			});
 			aIndices = aIndices.sort(function(a, b){return b-a;});
 			aIndices.forEach(function(nIndex){
