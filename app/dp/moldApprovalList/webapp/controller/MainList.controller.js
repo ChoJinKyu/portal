@@ -162,16 +162,18 @@ sap.ui.define([
             console.log("oRecord >>>  " , oRecord );
 		    var that = this; 
             if(oRecord.mold_id % 3 == 0){
-                that.getRouter().navTo("budgetReportObject", { 
-                    moldId: oRecord.mold_id
-                });
+               that.getRouter().navTo("participatingSupplierSelectionApprovalCreateObject", {
+                  company : "[LGEKR] LG Electronics Inc." 
+                  , plant : "[DFZ] Washing Machine"
+                });  
             }else if(oRecord.mold_id % 3 == 2){
                 that.getRouter().navTo("participatingSupplierSelectionApprovalObject", { 
                     moldId: oRecord.mold_id
                 });
             }else{
-                 that.getRouter().navTo("mainObject", {
-                  moldId : oRecord.mold_id
+                 that.getRouter().navTo("participatingSupplierSelectionApprovalCreateObject", {
+                  company : "[LGEKR] LG Electronics Inc." 
+                  , plant : "[DFZ] Washing Machine"
                 });  
             }
 
@@ -277,6 +279,11 @@ sap.ui.define([
          */
         onValueHelpAfterClose: function () {
             this._oValueHelpDialog.destroy();
+        },
+
+        onToggleHandleChange: function (){
+            var pressed = this.getView().byId("categoriBudget").getSelectedKey();
+            console.log(pressed);
         },
 
          /**
@@ -389,6 +396,7 @@ sap.ui.define([
 			}).activate();
 		}
 
+        
 
 	});
 });
