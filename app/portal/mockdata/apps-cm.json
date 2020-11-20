@@ -1,94 +1,93 @@
 {
-    "menus": [
+  "menus": [
+    {
+      "name": "Master Data",
+      "icon": "sap-icon://source-code",
+      "subMenus": [
         {
-            "name": "Master Data",
-            "icon": "sap-icon://source-code",
-            "subMenus": [
-                {
-                    "name": "코드관리",
-                    "url": "../cm/codeMgr/webapp",
-                    "component": "cm.codeMgr"
-                },
-                {
-                    "name": "제어옵션관리",
-                    "url": "../cm/ctrlOptMgr/webapp",
-                    "component": "cm.controlOptionMgr"
-                }
-            ]
+          "name": "코드관리",
+          "url": "../cm/codeMgr/webapp",
+          "component": "cm.codeMgr"
         },
         {
-            "name": "Localization",
-            "icon": "sap-icon://locate-me",
-            "subMenus": [
-                {
-                    "name": "국가 관리",
-                    "url": "../cm/codeMgr/webapp",
-                    "component": "cm.countryMgr"
-                },
-                {
-                    "name": "타임존 관리",
-                    "url": "../cm/timeZoneMgr/webapp",
-                    "component": "cm.timeZoneMgr"
-                },
-                {
-                    "name": "메시지 관리",
-                    "url": "../cm/msgMgr/webapp",
-                    "component": "cm.msgMgr"
-                },
-                {
-                    "name": "통화 관리",
-                    "url": "../cm/curMgr/webapp",
-                    "component": "cm.currencyMgr"
-                },
-                {
-                    "name": "조직 관리",
-                    "url": "../cm/orgMgr/webapp",
-                    "component": "cm.orgMgr"
-                },
-                {
-                    "name": "구매 관리",
-                    "url": "../cm/purOrgMgr/webapp",
-                    "component": "cm.purOrgMgr"
-                }
-            ]
-        },
-        {
-            "name": "Services",
-            "icon": "sap-icon://official-service",
-            "subMenus": [
-                {
-                    "name": "메일관리",
-                    "url": "../cm/codeMgr/webapp",
-                    "component": "cm.codeMgr"
-                },
-                {
-                    "name": "SMS 관리",
-                    "url": "../cm/controlOptionMgr/webapp",
-                    "component": "cm.controlOptionMgr"
-                }
-            ]
-        },
-        {
-            "name": "Sys. Admin",
-            "icon": "sap-icon://action-settings",
-            "subMenus": [
-                {
-                    "name": "사용자 관리",
-                    "url": "../cm/codeMgr/webapp",
-                    "component": "cm.codeMgr"
-                },
-                {
-                    "name": "권한관리",
-                    "url": "../cm/controlOptionMgr/webapp",
-                    "component": "cm.controlOptionMgr"
-                },
-                {
-                    "name": "메뉴관리",
-                    "url": "../cm/controlOptionMgr/webapp",
-                    "component": "cm.controlOptionMgr"
-                }
-            ]
+          "name": "제어옵션관리",
+          "url": "../cm/controlOptionMgr/webapp",
+          "component": "cm.controlOptionMgr"
         }
-    ]
-    
+      ]
+    },
+    {
+      "name": "Localization",
+      "icon": "sap-icon://locate-me",
+      "subMenus": [
+        {
+          "name": "국가 관리",
+          "url": "../cm/codeMgr/webapp",
+          "component": "cm.countryMgr"
+        },
+        {
+          "name": "타임존 관리",
+          "url": "../cm/timeZoneMgr/webapp",
+          "component": "cm.timeZoneMgr"
+        },
+        {
+          "name": "메시지 관리",
+          "url": "../cm/msgMgr/webapp",
+          "component": "cm.msgMgr"
+        },
+        {
+          "name": "통화 관리",
+          "url": "../cm/curMgr/webapp",
+          "component": "cm.currencyMgr"
+        },
+        {
+          "name": "조직 관리",
+          "url": "../cm/orgMgr/webapp",
+          "component": "cm.orgMgr"
+        },
+        {
+          "name": "구매 관리 (TBD)",
+          "url": "../cm/purOrgMgr/webapp",
+          "component": "cm.purOrgMgr"
+        }
+      ]
+    },
+    {
+      "name": "Services",
+      "icon": "sap-icon://official-service",
+      "subMenus": [
+        {
+          "name": "메일관리",
+          "url": "../cm/codeMgr/webapp",
+          "component": "cm.codeMgr"
+        },
+        {
+          "name": "SMS 관리",
+          "url": "../cm/controlOptionMgr/webapp",
+          "component": "cm.controlOptionMgr"
+        }
+      ]
+    },
+    {
+      "name": "Sys. Admin",
+      "icon": "sap-icon://action-settings",
+      "subMenus": [
+        {
+          "name": "사용자 관리",
+          "url": "../cm/codeMgr/webapp",
+          "component": "cm.codeMgr"
+        },
+        {
+          "name": "권한관리",
+          "url": "../cm/controlOptionMgr/webapp",
+          "component": "cm.controlOptionMgr"
+        },
+        {
+          "name": "메뉴관리",
+          "url": "../cm/controlOptionMgr/webapp",
+          "component": "cm.controlOptionMgr"
+        }
+      ]
+    }
+  ]
 }

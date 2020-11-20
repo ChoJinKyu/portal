@@ -165,7 +165,15 @@ sap.ui.define([
 				"local_create_dtm": new Date(),
 				"local_update_dtm": new Date()
 			});
-		},
+        },
+        
+        onLiveChange: function (oEvent) {
+            // debugger;
+            // var sNewValue = oEvent.getParameter("value");
+            // var oModel = this.getModel("details");
+            // this.setModel("details").oData.currency_code = sNewValue;
+			
+        },
 
 		onMidTableDeleteButtonPress: function(){
 			var oTable = this.byId("midTable"),
@@ -188,6 +196,7 @@ sap.ui.define([
 		 * @public
 		 */
         onPageSaveButtonPress: function(){
+            debugger;
 			var oView = this.getView(),
 				that = this;
 			MessageBox.confirm("Are you sure ?", {
@@ -216,7 +225,11 @@ sap.ui.define([
 		 * @public
 		 */
         onPageCancelEditButtonPress: function(){
-			this._toShowMode();
+            this._toShowMode();
+            var sTenantId = this._sTenantId;
+            if (sTenantId === "new"){
+                this.onPageNavBackButtonPress();
+            }
         },
 
 		/* =========================================================== */
@@ -228,11 +241,11 @@ sap.ui.define([
 				var oMasterModel = this.getModel("master");
 				var oDetailsModel = this.getModel("details");
 				var sTenantId = oMasterModel.getProperty("/tenant_id");
-				var sCurrencyCode = oMasterModel.getProperty("/control_option_code");
+				var sCurrencyCode = oMasterModel.getProperty("/currency_code");
 				var oDetailsData = oDetailsModel.getData();
 				oDetailsData.forEach(function(oItem, nIndex){
 					oDetailsModel.setProperty("/"+nIndex+"/tenant_id", sTenantId);
-					oDetailsModel.setProperty("/"+nIndex+"/control_option_code", sCurrencyCode);
+					oDetailsModel.setProperty("/"+nIndex+"/currency_code", sCurrencyCode);
 				});
 				oDetailsModel.setData(oDetailsData);
 			}
@@ -259,7 +272,7 @@ sap.ui.define([
 					"scale": null,
 					"extension_scale": null,
                     "effective_start_date": new Date(),
-                    "effective_end_date" : new Date(2099, 12, 31),
+                    "effective_end_date" : new Date(2999, 11, 31),
 					"use_flag": false,
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
@@ -270,7 +283,7 @@ sap.ui.define([
 				oDetailsModel.addRecord({
                     "tenant_id": this._sTenantId,
                     "language_code" : "KO",
-					"currency_code": "PO",
+					"currency_code": this._sCurrencyCode,
 					"currency_code_name": "",
 					"currency_code_desc": "",
                     "currency_prefix": null,
@@ -395,22 +408,6 @@ sap.ui.define([
 				],
 				type: sap.m.ListType.Inactive
 			});
-
-            // var oLevelCodeCombo = new ComboBox({
-            //         selectedKey: "{details>control_option_level_code}"
-            //     });
-            //     oLevelCodeCombo.bindItems({
-            //         path: 'util>/CodeDetails',
-            //         filters: [
-            //             new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
-            //             new Filter("company_code", FilterOperator.EQ, 'G100'),
-            //             new Filter("group_code", FilterOperator.EQ, 'TEST')
-            //         ],
-            //         template: new Item({
-            //             key: "{util>code}",
-            //             text: "{util>code_description}"
-            //         })
-            //     });
 			this.oEditableTemplate = new ColumnListItem({
 				cells: [
 					new Text({

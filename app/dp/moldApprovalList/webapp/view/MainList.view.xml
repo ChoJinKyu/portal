@@ -22,14 +22,14 @@
                         <form:content>
                             <VBox>
                                 <Label text="Company" labelFor="searchCompanyS" required="true"></Label>
-                                <MultiInput id="searchCompanyS" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>
+                                <MultiInput id="searchCompanyS" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                             <VBox>
                                 <Label text="Plant" labelFor="searchPlantS" required="true"></Label>
-                                <MultiInput id="searchPlantS" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>
+                                <MultiInput id="searchPlantS" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
@@ -43,7 +43,7 @@
                             </VBox>
                              <VBox>
                                 <Label text="Approval Category" labelFor="searchApprovalCategoryS" required="true"></Label>
-                                <MultiInput id="searchApprovalCategoryS" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>
+                                <MultiInput id="searchApprovalCategoryS" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
@@ -54,30 +54,30 @@
                 <f:expandedContent>
                     <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
-                            <VBox>
-                                <Label text="Affiliate" labelFor="searchAffiliateE" required="true"></Label>
-                                <MultiInput id="searchAffiliateE" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>
+                             <VBox>
+                                <Label text="Company" labelFor="searchCompanyE" required="true"></Label>
+                                <MultiInput id="searchCompanyE" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Division" labelFor="searchDivisionE" required="true"></Label>
-                                <MultiInput id="searchDivisionE" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>
+                                <Label text="Plant" labelFor="searchPlantE" required="true"></Label>
+                                <MultiInput id="searchPlantE" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Receipt Date" labelFor="searchReceiptDateE" required="true"></Label>
-                                    <DateRangeSelection id="searchReceiptDateE" width="100%" change="handleChange"/>
+                                <Label text="Request Date" labelFor="searchRequestDateE" required="true"></Label>
+                                <DateRangeSelection id="searchRequestDateE" width="100%" change="handleChange"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
-                            <VBox>
+                             <VBox>
                                 <Label text="Approval Category" labelFor="searchApprovalCategoryE" required="true"></Label>
-                                <MultiInput id="searchApprovalCategoryE" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>
+                                <MultiInput id="searchApprovalCategoryE" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
@@ -100,14 +100,14 @@
                     <form:content>
                         <VBox>
                             <Label text="Model " labelFor="searchModel"></Label>
-                            <MultiInput id="searchModel" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>
+                            <MultiInput id="searchModel" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="Mold Part No " labelFor="searchMoldPartNo"></Label>
-                            <MultiInput id="searchMoldPartNo" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>
+                            <MultiInput id="searchMoldPartNo" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -121,7 +121,7 @@
                         </VBox>
                         <VBox>
                             <Label text="Requester" labelFor="searchRequester"></Label>
-                            <MultiInput id="searchRequester" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>
+                            <MultiInput id="searchRequester" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -147,29 +147,34 @@
         </f:header>
         <f:content>
             <VBox>
-                <Table id="mainTable" 
-                        sticky="HeaderToolbar,ColumnHeaders" 
-                        inset="false" 
+                <Table id="mainTable"       
                         growing="true"
                         growingThreshold="20"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onListMainTableUpdateFinished"
-                        mode="None" 
+                        cellClick=".onCellClick"
+                        rowSelectionChange = ".onCheck"
+                        mode="MultiSelect"
                         width="auto"
                         items="{list>/}">
                     <headerToolbar>
                         <OverflowToolbar>
                             <Title text="Approval List ({= ${list>/}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
-                            <SearchField width="17.5rem" search=".onListMainTableFilterPress" />
                             <!-- Add the Personalization button -->
-                            <Button id="mainTableAddButton" text="Add" type="Emphasized" press=".onListMainTableAddButtonPress" />
+                            <Button id="mainTableCreateButton" text="Create" type="Emphasized" press=".onValueHelpRequestedCreate" />
+                            <Button id="mainTableDeleteButton" text="Delete" type="Transparent" press=".onListMainTableDeleteButtonPress" />
                             <ToolbarSeparator/>
-                            <Button icon="sap-icon://action-settings" press=".onListMainTablePersoButtonPressed" >
+                            <Button icon="sap-icon://excel-attachment" press=".onListMainTablePersoButtonPressed" >
                                 <layoutData>
                                     <OverflowToolbarLayoutData priority="NeverOverflow" />
                                 </layoutData>
                             </Button>
+                            <Button icon="sap-icon://action-settings" press=".onListMainTablePersoButtonPressed" >
+                                <layoutData>
+                                    <OverflowToolbarLayoutData priority="NeverOverflow" />
+                                </layoutData>
+                            </Button>                            
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>

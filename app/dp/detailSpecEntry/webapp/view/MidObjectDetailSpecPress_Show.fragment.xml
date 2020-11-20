@@ -19,7 +19,7 @@
             <VBox> 
 
                 <Label text="Mold Test"/>
-                <Text text="무슨 컬럼?"/>
+                <Text text="{spec>/inspection_flag}"/>
                 <Label text="Order Qty"/>
                 <Text text="{spec>/order_qty}"/>
                 <Label text="Demand Life"/>
@@ -32,7 +32,7 @@
                 <Label text="Assembly Approval"/> 
                 <Text text="{spec>/assembly_approval_flag}"/>
                 <Label text="Mold Structure"/>
-                <Text text="무슨 컬럼?"/>
+                <Text text="{spec>/die_form}"/>
                 <Label text="Mold Weight"/>
                 <Text text="{spec>/mold_weight}"></Text>
                 <Label text="Open Size"/>

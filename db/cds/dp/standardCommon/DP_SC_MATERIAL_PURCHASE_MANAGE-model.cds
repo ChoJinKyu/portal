@@ -5,7 +5,7 @@ using util from '../../util/util-model';
 entity Sc_Material_Purchase_Manage {	
   key tenant_id : String(5)  not null;	
   key company_code : String(10)  not null @title: '회사코드' ;	
-  key org_type_code : String(30)  not null @title: '구매운영조직유형' ;	
+  key org_type_code : String(2)  not null @title: '구매운영조직유형' ;	
   key org_code : String(10)  not null @title: '구매운영조직코드' ;	
   key material_code : String(40)  not null @title: '부품 번호' ;	
     status_code : String(10)   @title: '상태 코드' ;	

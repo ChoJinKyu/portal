@@ -6,4 +6,5 @@ namespace dp;
 service DevelopmentReceiptService {
 
     entity MoldMasters as projection on moldMst.Mold_Mst;
+    
 }

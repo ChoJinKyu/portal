@@ -140,6 +140,20 @@
           "target": [
             "mainObject"
           ]
+        },
+        {
+          "pattern": "PssaCreateObject/{company}/{plant}",
+          "name": "pssaCreateObject",
+          "target": [
+            "pssaCreateObject"
+          ]
+        },
+        {
+          "pattern": "PssaObject/{moldId}",
+          "name": "pssaObject",
+          "target": [
+            "pssaObject"
+          ]
         }
       ],
       "targets": {
@@ -154,6 +168,24 @@
           "viewId": "mainObject",
           "viewLevel": 2,
           "title": "{i18n>mainObjectViewTitle}"
+        },
+         "budgetReportObject": {
+          "viewName": "BudgetReportObject",
+          "viewId": "budgetReportObject",
+          "viewLevel": 2,
+          "title": "{i18n>budgetReportObjectTitle}"
+        },
+         "pssaCreateObject": {
+          "viewName": "PssaCreateObject", 
+          "viewId": "pssaCreateObject",
+          "viewLevel": 2,
+          "title": "{i18n>viewObjectTitle3}"
+        },
+         "pssaObject": {
+          "viewName": "PssaObject",
+          "viewId": "pssaObject",
+          "viewLevel": 2,
+          "title": "{i18n>viewObjectTitle3}"
         },
         "notFound": {
           "viewName": "NotFound",

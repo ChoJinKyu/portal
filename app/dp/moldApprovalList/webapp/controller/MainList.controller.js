@@ -8,6 +8,7 @@ sap.ui.define([
 	"./MainListPersoService",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
+    'sap/ui/core/Fragment',
     "sap/m/MessageBox",
     "sap/m/MessageToast",
 	"sap/m/ColumnListItem",
@@ -17,9 +18,13 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item) {
+], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item) {
 	"use strict";
-
+   /**
+    * @description 품의 목록 (총 품의 공통)
+    * @date 2020.11.19 
+    * @author jinseon.lee , daun.lee 
+    */
 	return BaseController.extend("dp.moldApprovalList.controller.MainList", {
 
 		dateFormatter: DateFormatter,
@@ -145,28 +150,33 @@ sap.ui.define([
 		},
 
 		/**
-		 * Event handler when pressed the item of table
-		 * @param {sap.ui.base.Event} oEvent
+		 * Event handler when pressed the item of table 
+         * @description 목록 클릭시 이벤트 
+		 * @param {sap.ui.base.Event} oEvent 
 		 * @public
 		 */
 		onMainTableItemPress: function(oEvent) {
-            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
-			    sPath = oEvent.getSource().getBindingContext("list").getPath(),
-                oRecord = this.getModel("list").getProperty(sPath);
-            
-			this.getRouter().navTo("mainObject", {
-                moldId: oRecord.mold_id
-			});
 
-            if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
-                this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
+            var sPath = oEvent.getSource().getBindingContext("list").getPath(),
+                oRecord = this.getModel("list").getProperty(sPath);
+            console.log("oRecord >>>  ", oRecord);
+            var that = this;
+            if (oRecord.mold_id % 3 == 0) {
+                that.getRouter().navTo("pssaCreateObject", {
+                    company: "[LGEKR] LG Electronics Inc."
+                    , plant: "[DFZ] Washing Machine"
+                });
+            } else if (oRecord.mold_id % 3 == 2) {
+                that.getRouter().navTo("pssaObject", {
+                    moldId: oRecord.mold_id
+                });
+            } else {
+                that.getRouter().navTo("pssaCreateObject", {
+                    company: "[LGEKR] LG Electronics Inc."
+                    , plant: "[DFZ] Washing Machine"
+                });
             }
 
-			var oItem = oEvent.getSource();
-			oItem.setNavigated(true);
-			var oParent = oItem.getParent();
-			// store index of the item clicked, which can be used later in the columnResize event
-			this.iIndex = oParent.indexOfItem(oItem);
 		},
 
         /* Affiliate Start */
@@ -208,8 +218,8 @@ sap.ui.define([
          * @public 
          * @see searchAffiliate Fragment View 컨트롤 valueHelp
          */
-        onValueHelpRequested : function () {
-            console.group("onValueHelpRequested");
+        onValueHelpRequestedAffiliate : function () {
+            console.group("onValueHelpRequestedAffiliate");
 
             var aCols = this.oColModel.getData().cols;
 
@@ -269,6 +279,41 @@ sap.ui.define([
         onValueHelpAfterClose: function () {
             this._oValueHelpDialog.destroy();
         },
+        
+         /**
+         * @public
+         * @see 사용처 ValueHelpDialogAffiliate Fragment window.close after 이벤트
+         */
+        onValueHelpRequestedCreate: function (){
+            var oView = this.getView();
+
+			if (!this.pDialog) {
+				this.pDialog = Fragment.load({
+					id: oView.getId(),
+					name: "dp.moldApprovalList.view.dialogApprovalCategory",
+					controller: this
+				}).then(function (oDialog) {
+					// connect dialog to the root view of this component (models, lifecycle)
+					oView.addDependent(oDialog);
+					return oDialog;
+				});
+			} 
+			this.pDialog.then(function(oDialog) {
+				oDialog.open();
+			});
+		
+        },
+        
+        createPopupClose: function (oEvent){
+            this.byId("dialogApprovalCategory").close();
+        },
+
+        handleConfirm: function (oEvent) {
+            console.log(this.byId("VSDThemeButtons").mAggregations);
+			if (oEvent.getParameters().filterString) {
+				MessageToast.show(oEvent.getParameters().filterString);
+			}
+		},
         /* Affiliate End */
 
 		/* =========================================================== */
@@ -349,6 +394,7 @@ sap.ui.define([
 			}).activate();
 		}
 
+        
 
 	});
 });

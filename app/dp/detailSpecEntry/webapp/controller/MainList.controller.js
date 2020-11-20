@@ -136,8 +136,7 @@ sap.ui.define([
 				// refresh the list binding.
 				this.onRefresh();
 			} else {
-                // var aSearchFilters = this._getSearchStates();
-                var aSearchFilters = [];
+                var aSearchFilters = this._getSearchStates();
 				this._applySearch(aSearchFilters);
 			}
 		},
@@ -192,7 +191,7 @@ sap.ui.define([
 				oModel = this.getModel("list");
 			oView.setBusy(true);
 			oModel.setTransactionModel(this.getModel());
-			oModel.read("/MoldMasters", {
+			oModel.read("/MoldMasterSpec", {
 				filters: aSearchFilters,
 				success: function(oData){
 					oView.setBusy(false);
@@ -201,39 +200,44 @@ sap.ui.define([
 		},
 		
 		_getSearchStates: function(){
-			var sChain = this.getView().byId("searchChain").getSelectedKey(),
-				sKeyword = this.getView().byId("searchKeyword").getValue(),
-				sUsage = this.getView().byId("searchUsageSegmentButton").getSelectedKey();
+			var sModel = this.getView().byId("searchModel").getValue();
+			var	sPart = this.getView().byId("searchPart").getValue();
+			// var	sUsage = this.getView().byId("searchUsageSegmentButton").getSelectedKey();
 			
-			var aSearchFilters = [];
-			if (sChain && sChain.length > 0) {
-				aSearchFilters.push(new Filter("chain_code", FilterOperator.EQ, sChain));
+            var aSearchFilters = [];
+            
+			if (sModel && sModel.length > 0) {
+				aSearchFilters.push(new Filter("model", FilterOperator.Contains, sModel));
+            }
+            
+            if (sPart && sPart.length > 0) {
+				aSearchFilters.push(new Filter("part_number", FilterOperator.Contains, sPart));
 			}
-			if (sKeyword && sKeyword.length > 0) {
-				aSearchFilters.push(new Filter({
-					filters: [
-						new Filter("control_option_code", FilterOperator.Contains, sKeyword),
-						new Filter("control_option_name", FilterOperator.Contains, sKeyword)
-					],
-					and: false
-				}));
-			}
-			if(sUsage != "all"){
-				switch (sUsage) {
-					case "site":
-					aSearchFilters.push(new Filter("site_flag", FilterOperator.EQ, "true"));
-					break;
-					case "company":
-					aSearchFilters.push(new Filter("company_flag", FilterOperator.EQ, "true"));
-					break;
-					case "org":
-					aSearchFilters.push(new Filter("organization_flag", FilterOperator.EQ, "true"));
-					break;
-					case "user":
-					aSearchFilters.push(new Filter("user_flag", FilterOperator.EQ, "true"));
-					break;
-				}
-			}
+			// if (sKeyword && sKeyword.length > 0) {
+			// 	aSearchFilters.push(new Filter({
+			// 		filters: [
+			// 			new Filter("control_option_code", FilterOperator.Contains, sKeyword),
+			// 			new Filter("control_option_name", FilterOperator.Contains, sKeyword)
+			// 		],
+			// 		and: false
+			// 	}));
+			// }
+			// if(sUsage != "all"){
+			// 	switch (sUsage) {
+			// 		case "site":
+			// 		aSearchFilters.push(new Filter("site_flag", FilterOperator.EQ, "true"));
+			// 		break;
+			// 		case "company":
+			// 		aSearchFilters.push(new Filter("company_flag", FilterOperator.EQ, "true"));
+			// 		break;
+			// 		case "org":
+			// 		aSearchFilters.push(new Filter("organization_flag", FilterOperator.EQ, "true"));
+			// 		break;
+			// 		case "user":
+			// 		aSearchFilters.push(new Filter("user_flag", FilterOperator.EQ, "true"));
+			// 		break;
+			// 	}
+			// }
 			return aSearchFilters;
 		},
 		
