@@ -73,10 +73,10 @@
   "sap.ui5": {
     "flexEnabled": false,
     "rootView": {
-      "viewName": "cm.timeZoneMgr.view.timeZoneMgr",
+      "viewName": "cm.timeZoneMgr.view.App",
       "type": "XML",
       "async": true,
-      "id": "timeZoneMgr"
+      "id": "app"
     },
     "dependencies": {
       "minUI5Version": "1.60.1",
@@ -160,20 +160,18 @@
       },
       "routes": [
         {
-          "name": "RoutetimeZoneMgr",
-          "pattern": "RoutetimeZoneMgr",
+          "pattern": "",
+          "name": "timeZoneMgr",
           "target": [
-            "TargettimeZoneMgr"
+            "timeZoneMgr"
           ]
         }
       ],
       "targets": {
-        "TargettimeZoneMgr": {
-          "viewType": "XML",
-          "transition": "slide",
-          "clearControlAggregation": false,
+        "timeZoneMgr": {
           "viewId": "timeZoneMgr",
-          "viewName": "timeZoneMgr"
+          "viewName": "timeZoneMgr",
+          "viewLevel": 1
         }
       }
     }

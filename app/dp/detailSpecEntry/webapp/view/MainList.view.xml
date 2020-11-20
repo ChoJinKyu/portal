@@ -1,0 +1,246 @@
+<mvc:View controllerName="dp.detailSpecEntry.controller.MainList"
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m" 
+    xmlns:f="sap.f" 
+    xmlns:form="sap.ui.layout.form" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:core="sap.ui.core" 
+    xmlns:lib-m="ext.lib.m"
+    height="100%">
+
+    <f:DynamicPage id="page"
+        headerExpanded="{mainListView>/headerExpanded}" 
+        toggleHeaderOnTitleClick="true">
+        <!-- DynamicPage Title -->
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:heading>
+                    <Title text="{i18n>appTitle}" />
+                </f:heading>
+                <f:snappedContent>
+                    <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                        <form:content>
+                            <VBox>
+                                <Label text="LG Company" required="true"></Label>
+                                <MultiComboBox>
+                                    <core:Item text="[LGEKR] LG Electronics Inc." />
+                                    <core:Item text="[LGEKR] LG Electronics Inc." />
+                                    <core:Item text="[LGEKR] LG Electronics Inc." />
+                                </MultiComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="LG Division" required="true"></Label>
+                                <MultiComboBox>
+                                    <core:Item text="[DFZ] Washing Machine" />
+                                    <core:Item text="[DFZ] Washing Machine" />
+                                    <core:Item text="[DFZ] Washing Machine" />
+                                </MultiComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="Date" required="true"></Label>
+                                    <DateRangeSelection displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="Status"></Label>
+                                <SegmentedButton selectedKey="all" class="sapUiSmallMarginBottom" width="100%">
+                                    <items>
+                                        <SegmentedButtonItem text="All" key="all"/>
+                                        <SegmentedButtonItem text="Saved" width="4em"/>
+                                        <SegmentedButtonItem text="Confirmed" width="6em"/>
+                                    </items>
+                                </SegmentedButton>
+                                <layoutData>
+                                    <layout:GridData
+                                        span="XL2 L3 M6 S12"/>
+                                </layoutData>
+                            </VBox>
+                        </form:content>
+                    </form:SimpleForm>
+                </f:snappedContent>
+                <f:expandedContent>
+                    <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                        <form:content>
+                            <VBox>
+                                <Label text="LG Company" required="true"></Label>
+                                <MultiComboBox>
+                                    <core:Item text="[LGEKR] LG Electronics Inc." />
+                                    <core:Item text="[LGEKR] LG Electronics Inc." />
+                                    <core:Item text="[LGEKR] LG Electronics Inc." />
+                                </MultiComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="LG Division" required="true"></Label>
+                                <MultiComboBox>
+                                    <core:Item text="[DFZ] Washing Machine" />
+                                    <core:Item text="[DFZ] Washing Machine" />
+                                    <core:Item text="[DFZ] Washing Machine" />
+                                </MultiComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="Date" required="true"></Label>
+                                    <DateRangeSelection displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="Status"></Label>
+                                <SegmentedButton selectedKey="all" class="sapUiSmallMarginBottom" width="100%">
+                                    <items>
+                                        <SegmentedButtonItem text="All" key="all"/>
+                                        <SegmentedButtonItem text="Saved" width="4em"/>
+                                        <SegmentedButtonItem text="Confirmed" width="6em"/>
+                                    </items>
+                                </SegmentedButton>
+                                <layoutData>
+                                    <layout:GridData
+                                        span="XL2 L3 M6 S12"/>
+                                </layoutData>
+                            </VBox>
+                        </form:content>
+                    </form:SimpleForm>
+                </f:expandedContent>
+                <f:actions>
+                    <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onPageSearchButtonPress" />
+                </f:actions>
+                <f:navigationActions>
+                    <Button icon="sap-icon://unfavorite" type="Transparent" />
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <!-- DynamicPage Header -->
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+
+                <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                    <form:content>
+                        <VBox>
+                            <Label text="Model" labelFor="searchModel"></Label>
+                            <Input id="searchModel" showValueHelp="true"></Input>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Part No" labelFor="searchPart"></Label>
+                            <Input id="searchPart" showValueHelp="true"></Input>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Family Part No" labelFor="searchKeywordS"></Label>
+                            <Input id="searchKeywordS" placeholder="Input data"></Input>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                    </form:content>
+                </form:SimpleForm>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <VBox>
+                <Table id="mainTable" 
+                        sticky="HeaderToolbar,ColumnHeaders" 
+                        inset="false" 
+                        growing="true"
+                        growingThreshold="10"
+                        class="sapFDynamicPageAlignContent" 
+                        updateFinished=".onMainTableUpdateFinished"
+                        items="{list>/}"
+                        mode="None" 
+                        width="auto">
+                    <headerToolbar>
+                        <OverflowToolbar>
+                            <Title text="List ({= ${list>/}.length || 0})" level="H2"/>
+                            <ToolbarSpacer/>
+                            <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
+                            <ToolbarSeparator/>
+                            <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+                                <layoutData>
+                                    <OverflowToolbarLayoutData priority="NeverOverflow" />
+                                </layoutData>
+                            </Button>
+                        </OverflowToolbar>
+                    </headerToolbar>
+                    <columns>
+                        <Column>
+                            <Text text="LG Company" />
+                        </Column>
+                        <Column>
+                            <Text text="LG Division"/>
+                        </Column>
+                        <Column>
+                            <Text text="Model" />
+                        </Column>
+                        <Column>
+                            <Text text="Mold Part No" />
+                        </Column>
+                        <Column>
+                            <Text text="Seq" />
+                        </Column>
+                        <Column minScreenWidth="Desktop" demandPopin="false">
+                            <Text text="Description" />
+                        </Column>
+                        <Column minScreenWidth="Desktop" demandPopin="true">
+                            <Text text="Status" />
+                        </Column>
+                        <Column minScreenWidth="Desktop" demandPopin="true">
+                            <Text text="Item Type" />
+                        </Column>
+                        <Column minScreenWidth="Desktop" demandPopin="false">
+                            <Text text="User" />
+                        </Column>
+                        <Column minScreenWidth="Desktop" demandPopin="false">
+                            <Text text="Date" />
+                        </Column>
+                        <Column minScreenWidth="Desktop" demandPopin="false">
+                            <Text text="Family Part No" />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem type="Navigation" press=".onMainTableItemPress">
+                            <cells>
+                                <ObjectIdentifier text="{list>company_name}" />
+                                <ObjectIdentifier text="{list>org_name}" />
+                                <ObjectIdentifier text="{list>model}" />
+                                <ObjectIdentifier text="{list>part_number}" />
+                                <ObjectIdentifier text="{list>mold_sequence}" />
+                                <ObjectIdentifier text="{list>spec_name}" />
+                                <ObjectIdentifier text="{list>po_status_code}" />
+                                <ObjectIdentifier text="{list>mold_item_type_name}" />
+                                <ObjectIdentifier text="{list>user_name}" />
+                                <ObjectIdentifier text="{list>last_update_date}" />
+                                <ObjectIdentifier text="{list>family_part_number_1} {list>family_part_number_2} {list>family_part_number_3} {list>family_part_number_4} {list>family_part_number_5}" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </VBox>
+        </f:content>
+        <!-- DynamicPage Footer -->
+        <f:footer>
+            <OverflowToolbar>
+                <ToolbarSpacer />
+				<Button type="Accept" text="Accept"/>
+				<Button type="Reject" text="Reject"/>
+            </OverflowToolbar>
+        </f:footer>
+    </f:DynamicPage>
+</mvc:View>

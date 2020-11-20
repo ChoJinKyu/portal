@@ -15,26 +15,26 @@ service VpSearchService {
            s.org_type_code,
            s.org_code,
            s.vendor_pool_code,
-           s.vendor_code,
-           s.evaluation_target_flag,
-           s.review_pass_flag,
-           s.evaluation_control_flag,
-           s.evaluation_control_start_date,
-           s.evaluation_control_end_date,
-           s.evaluation_restrict_start_date,
-           s.evaluation_restrict_end_date,
+           s.supplier_code,
+           s.supeval_target_flag,
+           s.supplier_op_plan_review_flag,
+           s.supeval_control_flag,
+           s.supeval_control_start_date,
+           s.supeval_control_end_date,
+           s.supeval_restrict_start_date,
+           s.supeval_restrict_end_date,
            s.inp_code,
-           s.rm_control_flag,
+           s.supplier_rm_control_flag,
            s.supplier_base_portion_rate,
-           s.use_flag,
-           s.register_reason_text,
-           s.register_approval_request_number,
-           m.vendor_name,
-           m.vendor_englis_name
+           s.vendor_pool_mapping_use_flag,
+           s.register_reason,
+           s.approval_number,
+           m.supplier_local_name,
+           m.supplier_english_name
     from   vpSupplier.Vp_Vendor_Pool_Supplier_Dtl s,
            vpSupplierMst.Vp_Vendor_Mst_View m
     where  s.tenant_id = m.tenant_id
-    and    s.vendor_code = m.vendor_code
+    and    s.supplier_code = m.supplier_code
     ;
            
 }

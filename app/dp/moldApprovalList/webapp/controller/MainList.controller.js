@@ -8,17 +8,23 @@ sap.ui.define([
 	"./MainListPersoService",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
+    'sap/ui/core/Fragment',
     "sap/m/MessageBox",
     "sap/m/MessageToast",
 	"sap/m/ColumnListItem",
 	"sap/m/ObjectIdentifier",
-	"sap/m/Text",
+    "sap/m/Text",
+    "sap/m/Token",
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item) {
 	"use strict";
-
+   /**
+    * @description 품의 목록 (총 품의 공통)
+    * @date 2020.11.19 
+    * @author jinseon.lee , daun.lee 
+    */
 	return BaseController.extend("dp.moldApprovalList.controller.MainList", {
 
 		dateFormatter: DateFormatter,
@@ -54,7 +60,8 @@ sap.ui.define([
 			
 			this.getRouter().getRoute("mainList").attachPatternMatched(this._onRoutedThisPage, this);
 
-			this._doInitTablePerso();
+            this._doInitTablePerso();
+            this._doInitSearch();
         },
         
         onAfterRendering : function () {
@@ -143,29 +150,173 @@ sap.ui.define([
 		},
 
 		/**
-		 * Event handler when pressed the item of table
-		 * @param {sap.ui.base.Event} oEvent
+		 * Event handler when pressed the item of table 
+         * @description 목록 클릭시 이벤트 
+		 * @param {sap.ui.base.Event} oEvent 
 		 * @public
 		 */
 		onMainTableItemPress: function(oEvent) {
-            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
-			    sPath = oEvent.getSource().getBindingContext("list").getPath(),
+ 
+			var sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
-            
-			this.getRouter().navTo("mainObject", {
-                moldId: oRecord.mold_id
-			});
-
-            if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
-                this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
+            console.log("oRecord >>>  " , oRecord );
+		    var that = this; 
+            if(oRecord.mold_id % 3 == 0){
+               that.getRouter().navTo("participatingSupplierSelectionApprovalCreateObject", {
+                  company : "[LGEKR] LG Electronics Inc." 
+                  , plant : "[DFZ] Washing Machine"
+                });  
+            }else if(oRecord.mold_id % 3 == 2){
+                that.getRouter().navTo("participatingSupplierSelectionApprovalObject", { 
+                    moldId: oRecord.mold_id
+                });
+            }else{
+                 that.getRouter().navTo("participatingSupplierSelectionApprovalCreateObject", {
+                  company : "[LGEKR] LG Electronics Inc." 
+                  , plant : "[DFZ] Washing Machine"
+                });  
             }
 
-			var oItem = oEvent.getSource();
-			oItem.setNavigated(true);
-			var oParent = oItem.getParent();
-			// store index of the item clicked, which can be used later in the columnResize event
-			this.iIndex = oParent.indexOfItem(oItem);
+
 		},
+
+        /* Affiliate Start */
+        /**
+         * @private
+         * @see 검색을 위한 컨트롤에 대하여 필요 초기화를 진행 합니다. 
+         */
+		_doInitSearch: function(){
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S";
+
+			this._oMultiInput = this.getView().byId("searchCompany"+sSurffix);
+            this._oMultiInput.setTokens(this._getDefaultTokens());
+
+            this.oColModel = new JSONModel(sap.ui.require.toUrl("dp/moldApprovalList/localService/mockdata") + "/columnsModel.json");
+            this.oAffiliateModel = new JSONModel(sap.ui.require.toUrl("dp/moldApprovalList/localService/mockdata") + "/affiliate.json");
+            this.setModel("affiliateModel", this.oAffiliateModel);
+
+            // /** Receipt Date */
+            // var today = new Date();
+            
+            // this.getView().byId("searchReceiptDate"+sSurffix).setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
+            // this.getView().byId("searchReceiptDate"+sSurffix).setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+        },
+        /**
+         * @private 
+         * @see searchAffiliate setTokens
+         */
+        _getDefaultTokens: function () {
+            
+            var oToken = new Token({
+                key: "EKHQ",
+                text: "[LGEKR] LG Electronics Inc."
+            });
+
+            return [oToken];
+        },
+
+        /**
+         * @public 
+         * @see searchAffiliate Fragment View 컨트롤 valueHelp
+         */
+        onValueHelpRequestedAffiliate : function () {
+            console.group("onValueHelpRequestedAffiliate");
+
+            var aCols = this.oColModel.getData().cols;
+
+            this._oValueHelpDialog = sap.ui.xmlfragment("dp.moldApprovalList.view.ValueHelpDialogAffiliate", this);
+            this.getView().addDependent(this._oValueHelpDialog);
+
+            this._oValueHelpDialog.getTableAsync().then(function (oTable) {
+                oTable.setModel(this.oAffiliateModel);
+                oTable.setModel(this.oColModel, "columns");
+
+                if (oTable.bindRows) {
+                    oTable.bindAggregation("rows", "/AffiliateCollection");
+                }
+
+                if (oTable.bindItems) {
+                    oTable.bindAggregation("items", "/AffiliateCollection", function () {
+                        return new ColumnListItem({
+                            cells: aCols.map(function (column) {
+                                return new Label({ text: "{" + column.template + "}" });
+                            })
+                        });
+                    });
+                }
+                this._oValueHelpDialog.update();
+            }.bind(this));
+
+            this._oValueHelpDialog.setTokens(this._oMultiInput.getTokens());
+            this._oValueHelpDialog.open();
+                console.groupEnd();
+        },
+
+        /**
+         * @public 
+         * @see 사용처 ValueHelpDialogAffiliate Fragment 선택후 확인 이벤트
+         */
+        onValueHelpOkPress : function (oEvent) {
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S",
+                aTokens = oEvent.getParameter("tokens");
+
+            this.searchAffiliate = this.getView().byId("searchCompany"+sSurffix);
+            this.searchAffiliate.setTokens(aTokens);
+            this._oValueHelpDialog.close();
+        },
+
+        /**
+         * @public 
+         * @see 사용처 ValueHelpDialogAffiliate Fragment 취소 이벤트
+         */
+        onValueHelpCancelPress: function () {
+            this._oValueHelpDialog.close();
+        },
+
+        /**
+         * @public
+         * @see 사용처 ValueHelpDialogAffiliate Fragment window.close after 이벤트
+         */
+        onValueHelpAfterClose: function () {
+            this._oValueHelpDialog.destroy();
+        },
+
+        onToggleHandleChange: function (){
+            var pressed = this.getView();
+            console.log(pressed);
+        },
+
+         /**
+         * @public
+         * @see 사용처 ValueHelpDialogAffiliate Fragment window.close after 이벤트
+         */
+        onValueHelpRequestedCreate: function (){
+			if (this._oDialog) {
+				this._oDialog.destroy();
+				this._oDialog = null;
+			}
+			if (!this._oDialogSingleCustomTab) {
+				Fragment.load({
+					name: "dp.moldApprovalList.view.ValueHelpDialogApprovalCreate",
+					controller: this
+				}).then(function(oDialog){
+					this._oDialogSingleCustomTab = oDialog;
+					this._oDialogSingleCustomTab.setModel(this.getView().getModel());
+					this._oDialogSingleCustomTab.open();
+				}.bind(this));
+			} else {
+				this._oDialogSingleCustomTab.setModel(this.getView().getModel());
+				this._oDialogSingleCustomTab.open();
+			}
+		
+        },
+
+        handleConfirm: function (oEvent) {
+			if (oEvent.getParameters().filterString) {
+				MessageToast.show(oEvent.getParameters().filterString);
+			}
+		},
+        /* Affiliate End */
 
 		/* =========================================================== */
 		/* internal methods                                            */
@@ -245,6 +396,7 @@ sap.ui.define([
 			}).activate();
 		}
 
+        
 
 	});
 });

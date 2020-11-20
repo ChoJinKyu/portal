@@ -15,11 +15,11 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="Message Details" wrapping="true" />
+					<Title text="{i18n>mainObjectViewTitle}" wrapping="true" />
 				</uxap:expandedHeading>
 
 				<uxap:snappedHeading>
-					<Title text="Message Details" wrapping="true" />
+					<Title text="{i18n>mainObjectViewTitle}" wrapping="true" />
 				</uxap:snappedHeading>
 
 				<uxap:expandedContent>

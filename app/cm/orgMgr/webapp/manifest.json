@@ -17,10 +17,10 @@
     },
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v4/cm.OrgMgrService/",
+        "uri": "srv-api/odata/v2/cm.OrgMgrService/",
         "type": "OData",
         "settings": {
-          "odataVersion": "4.0",
+          "odataVersion": "2.0",
           "localUri": "localService/metadata.xml"
         }
       }

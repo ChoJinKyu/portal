@@ -51,7 +51,9 @@ sap.ui.define([
 			// between the busy indication for loading the view's meta data
 			var oViewModel = new JSONModel({
 					busy : true,
-					delay : 0
+                    delay : 0,
+                    screen : "",
+                    editMode : "",
 				});
 			this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
 			this.setModel(oViewModel, "midObjectView");
@@ -77,32 +79,40 @@ sap.ui.define([
 		 * @public
 		 */
 		onPageEnterFullScreenButtonPress: function () {
-			var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
+            var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
+            var oViewModel = this.getModel("midObjectView");
 			this.getRouter().navTo("midPage", {
 				layout: sNextLayout, 
 				tenantId: this._sTenantId,
-				currencyCode: this._sCurrencyCode
-			});
+                currencyCode: this._sCurrencyCode
+            });
+            oViewModel.setProperty("/screen", "fullScreen");
+            
+            
 		},
 		/**
 		 * Event handler for Exit Full Screen Button pressed
 		 * @public
 		 */
 		onPageExitFullScreenButtonPress: function () {
-			var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
+            var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
+            var oViewModel = this.getModel("midObjectView");
 			this.getRouter().navTo("midPage", {
 				layout: sNextLayout, 
 				tenantId: this._sTenantId,
 				currencyCode: this._sCurrencyCode
-			});
+            });
+            oViewModel.setProperty("/screen", "exitFullScreen");
 		},
 		/**
 		 * Event handler for Nav Back Button pressed
 		 * @public
 		 */
 		onPageNavBackButtonPress: function () {
-			var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+            var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+            var oViewModel = this.getModel("midObjectView");
             this.getRouter().navTo("mainPage", {layout: sNextLayout});
+            oViewModel.setProperty("/screen", "");
 		},
 
 		/**
@@ -155,7 +165,15 @@ sap.ui.define([
 				"local_create_dtm": new Date(),
 				"local_update_dtm": new Date()
 			});
-		},
+        },
+        
+        onLiveChange: function (oEvent) {
+            // debugger;
+            // var sNewValue = oEvent.getParameter("value");
+            // var oModel = this.getModel("details");
+            // this.setModel("details").oData.currency_code = sNewValue;
+			
+        },
 
 		onMidTableDeleteButtonPress: function(){
 			var oTable = this.byId("midTable"),
@@ -178,6 +196,7 @@ sap.ui.define([
 		 * @public
 		 */
         onPageSaveButtonPress: function(){
+            debugger;
 			var oView = this.getView(),
 				that = this;
 			MessageBox.confirm("Are you sure ?", {
@@ -206,7 +225,11 @@ sap.ui.define([
 		 * @public
 		 */
         onPageCancelEditButtonPress: function(){
-			this._toShowMode();
+            this._toShowMode();
+            var sTenantId = this._sTenantId;
+            if (sTenantId === "new"){
+                this.onPageNavBackButtonPress();
+            }
         },
 
 		/* =========================================================== */
@@ -218,11 +241,11 @@ sap.ui.define([
 				var oMasterModel = this.getModel("master");
 				var oDetailsModel = this.getModel("details");
 				var sTenantId = oMasterModel.getProperty("/tenant_id");
-				var sCurrencyCode = oMasterModel.getProperty("/control_option_code");
+				var sCurrencyCode = oMasterModel.getProperty("/currency_code");
 				var oDetailsData = oDetailsModel.getData();
 				oDetailsData.forEach(function(oItem, nIndex){
 					oDetailsModel.setProperty("/"+nIndex+"/tenant_id", sTenantId);
-					oDetailsModel.setProperty("/"+nIndex+"/control_option_code", sCurrencyCode);
+					oDetailsModel.setProperty("/"+nIndex+"/currency_code", sCurrencyCode);
 				});
 				oDetailsModel.setData(oDetailsData);
 			}
@@ -246,10 +269,10 @@ sap.ui.define([
 				oMasterModel.setData({
                     "tenant_id": "L2100",
 					"currency_code": "",
-					"scale": "",
-					"extension_scale": "",
+					"scale": null,
+					"extension_scale": null,
                     "effective_start_date": new Date(),
-                    "effective_end_date" : new Date(9999, 11, 31),
+                    "effective_end_date" : new Date(2999, 11, 31),
 					"use_flag": false,
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
@@ -260,11 +283,11 @@ sap.ui.define([
 				oDetailsModel.addRecord({
                     "tenant_id": this._sTenantId,
                     "language_code" : "KO",
-					"currency_code": "PO",
+					"currency_code": this._sCurrencyCode,
 					"currency_code_name": "",
 					"currency_code_desc": "",
-                    "currency_prefix": "",
-                    "currency_suffix" : "",
+                    "currency_prefix": null,
+                    "currency_suffix" : null,
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
 				}, "/CurrencyLng");
@@ -308,14 +331,18 @@ sap.ui.define([
 		},
 
 		_toEditMode: function(){
-			var FALSE = false;
+            var FALSE = false;
+            var oViewModel = this.getModel("midObjectView");
+            oViewModel.setProperty("/editMode", "edit");
             this._showFormFragment('MidObject_Edit');
 			this.byId("page").setSelectedSection("pageSectionMain");
 			this.byId("page").setProperty("showFooter", !FALSE);
 			this.byId("pageEditButton").setEnabled(FALSE);
 			this.byId("pageDeleteButton").setEnabled(FALSE);
-			this.byId("pageNavBackButton").setEnabled(FALSE);
+            this.byId("pageNavBackButton").setEnabled(FALSE);
 
+            this.byId("pageExitFullScreenButton").setVisible(false); 
+            this.byId("pageEnterFullScreenButton").setVisible(false);
 			this.byId("midTableAddButton").setEnabled(!FALSE);
 			this.byId("midTableDeleteButton").setEnabled(!FALSE);
 			this.byId("midTableSearchField").setEnabled(FALSE);
@@ -325,20 +352,36 @@ sap.ui.define([
 		},
 
 		_toShowMode: function(){
-			var TRUE = true;
+            var TRUE = true;
+            var oViewModel = this.getModel("midObjectView");
 			this._showFormFragment('MidObject_Show');
 			this.byId("page").setSelectedSection("pageSectionMain");
 			this.byId("page").setProperty("showFooter", !TRUE);
 			this.byId("pageEditButton").setEnabled(TRUE);
 			this.byId("pageDeleteButton").setEnabled(TRUE);
-			this.byId("pageNavBackButton").setEnabled(TRUE);
+            this.byId("pageNavBackButton").setEnabled(TRUE);
+            switch(oViewModel.getProperty("/screen")){
+                case "exitFullScreen" :
+                    this.byId("pageExitFullScreenButton").setVisible(false); 
+                    this.byId("pageEnterFullScreenButton").setVisible(true);
+                    break;
+                case "fullScreen" :
+                    this.byId("pageExitFullScreenButton").setVisible(true); 
+                    this.byId("pageEnterFullScreenButton").setVisible(false);
+                    break;
+                case "" :
+                    this.byId("pageExitFullScreenButton").setVisible(false); 
+                    this.byId("pageEnterFullScreenButton").setVisible(true); 
+                    break;
+            }
 
 			this.byId("midTableAddButton").setEnabled(!TRUE);
 			this.byId("midTableDeleteButton").setEnabled(!TRUE);
 			this.byId("midTableSearchField").setEnabled(TRUE);
 			this.byId("midTableApplyFilterButton").setEnabled(TRUE);
 			this.byId("midTable").setMode(sap.m.ListMode.None);
-			this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
+            this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
+            oViewModel.setProperty("/editMode", "");
 		},
 
 		_initTableTemplates: function(){
@@ -365,22 +408,6 @@ sap.ui.define([
 				],
 				type: sap.m.ListType.Inactive
 			});
-
-            // var oLevelCodeCombo = new ComboBox({
-            //         selectedKey: "{details>control_option_level_code}"
-            //     });
-            //     oLevelCodeCombo.bindItems({
-            //         path: 'util>/CodeDetails',
-            //         filters: [
-            //             new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
-            //             new Filter("company_code", FilterOperator.EQ, 'G100'),
-            //             new Filter("group_code", FilterOperator.EQ, 'TEST')
-            //         ],
-            //         template: new Item({
-            //             key: "{util>code}",
-            //             text: "{util>code_description}"
-            //         })
-            //     });
 			this.oEditableTemplate = new ColumnListItem({
 				cells: [
 					new Text({

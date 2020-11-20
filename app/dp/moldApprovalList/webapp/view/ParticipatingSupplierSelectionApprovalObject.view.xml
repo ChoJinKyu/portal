@@ -1,0 +1,239 @@
+<mvc:View controllerName="dp.moldApprovalList.controller.ParticipatingSupplierSelectionApprovalObject" 
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:uxap="sap.uxap"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:layout="sap.ui.layout"
+    xmlns:tnt="sap.tnt"
+    xmlns:co="sap.suite.ui.commons"
+    xmlns:si="sap.suite.ui.commons.statusindicator"
+    xmlns:u="sap.ui.unified" 
+    xmlns="sap.m"
+	height="100%">
+
+	<uxap:ObjectPageLayout 
+        id="page"
+		showTitleInHeaderContent="true"
+		showEditHeaderButton="true" 
+        upperCaseAnchorBar="false"
+		showFooter="true"
+		editHeaderButtonPress="handleEditBtnPress" >
+		<uxap:headerTitle>
+			<uxap:ObjectPageDynamicHeaderTitle>
+				<uxap:expandedHeading>
+					<Title text="Participating Supplier Selection Approval" wrapping="true" />
+				</uxap:expandedHeading>
+
+				<uxap:snappedHeading>
+                    <FlexBox fitContainer="true" alignItems="Center">
+						<Title text="Participating Supplier Selection Approval" wrapping="true"/>
+					</FlexBox>
+				</uxap:snappedHeading>
+
+			    <uxap:expandedContent>
+				</uxap:expandedContent>
+
+				<uxap:snappedContent>
+				</uxap:snappedContent>
+
+				<uxap:snappedTitleOnMobile>
+				</uxap:snappedTitleOnMobile>
+
+				<uxap:actions>
+                    <!-- 상단 버튼 영역 -->
+				</uxap:actions>
+
+                <uxap:navigationActions>
+					<OverflowToolbarButton id="pageNavBackButton" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" />
+                </uxap:navigationActions>
+			</uxap:ObjectPageDynamicHeaderTitle>
+		</uxap:headerTitle>
+
+		<uxap:headerContent>
+			<FlexBox wrap="Wrap" >
+				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                    <ObjectStatus
+                        title="Report No"
+                        text="332424-20B-00144"/>
+                    <ObjectStatus
+                        title="Requester"
+                        text="김갑수[ks.kim]"/>
+                    <ObjectStatus
+                        title="Request Date"
+                        text="2020-07-02"/>
+				</layout:VerticalLayout>
+
+				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+				    <ObjectStatus
+                        title="Affiliate"
+                        text="EKHQ"/>
+                    <ObjectStatus
+                        title="Division"
+                        text="DFZ"/>
+				</layout:VerticalLayout> 
+
+                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+					<Label text="Status :"/>
+                    <ObjectStatus
+                        class="sapMObjectStatusLarge"
+                        text="Veiw"
+                        state="Error" />
+				</layout:VerticalLayout>
+
+                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                      <HBox>
+                        <Title text="Process"/>
+                    </HBox>
+                    <HBox>
+                        <co:MicroProcessFlow>
+                            <co:content>
+                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <co:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
+                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                            </co:content>
+                        </co:MicroProcessFlow>
+                    </HBox>
+                      <HBox>
+                        <Text text=" PR" renderWhitespace="true" />
+                        <Text text="Budget" width="6em" textAlign="Right" />
+                        <Text text="RFQ" width="6em" textAlign="Center" />
+                        <Text text="   Mold&#10;   Spec" renderWhitespace="true" />
+                        <Text text="Purchase&#10; Contract" width="8em" textAlign="Center" />
+                        <Text text="PO" renderWhitespace="true" />
+                        <Text text="RCV" width="5em" textAlign="Right" />
+                        <Text text="Lease&#10;Contract" width="7.5em" textAlign="Center" />
+                        <Text text="Invoice" />
+                    </HBox>
+                </layout:VerticalLayout>
+			</FlexBox>
+		</uxap:headerContent>
+
+		<uxap:sections id="pss">
+
+			<uxap:ObjectPageSection  id="pageSectionMain" titleUppercase="true" title="General Info">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+                        <layout:VerticalLayout class="sapUiSmallMarginBeginEnd"> 
+                                <HBox alignItems="Center">
+                                    <Label
+                                        text="Subject "
+                                        design="Normal"
+                                        class="sapUiTinyMarginEnd"
+                                        textAlign="Left"
+                                        labelFor="input"
+                                        required="true"/>
+                                    <Text
+                                        text="Input data"
+                                        visible="true">
+                                    </Text>
+                                </HBox>
+
+                            <Label text="Description" labelFor="input" required="true"></Label> 
+                            <Text text="Description!!!" />
+                        </layout:VerticalLayout> 						
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+			<uxap:ObjectPageSection titleUppercase="false" title="Attachments">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection >
+                    <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+				    <ObjectStatus
+                        title="Affiliate"
+                        text="EKHQ"/>
+                    <ObjectStatus
+                        title="Division"
+                        text="DFZ"/>
+				    </layout:VerticalLayout> 
+
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+			<uxap:ObjectPageSection titleUppercase="false" title="Participating Supplier">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+                    <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+				    <ObjectStatus
+                        title="Affiliate"
+                        text="EKHQ"/>
+
+				    </layout:VerticalLayout> 
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+			<uxap:ObjectPageSection titleUppercase="false" title="Approval Line">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+							
+                    <Table id="appTable"       
+                        growing="true"
+                        growingThreshold="20"
+                        class="sapFDynamicPageAlignContent" 
+                        updateFinished=".onListMainTableUpdateFinished"
+                        rowSelectionChange = ".onCheck"
+                        mode="MultiSelect"
+                        width="auto"
+                     
+						>
+                    <headerToolbar>
+                        <OverflowToolbar>
+                          <Label text="Approval Line"/>
+                        </OverflowToolbar>
+                    </headerToolbar>
+                    <columns>
+                        <Column id="no" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
+                            <Text text="No" />
+                        </Column>
+                        <Column id="type" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
+                            <Text text="Type" />
+                        </Column>
+                        <Column id="nameDept" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                            <Text text="Name/Dept" />
+                        </Column>
+                         <Column id="status" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                            <Text text="Status" />
+                        </Column> 
+						<Column id="comment" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                            <Text text="Comment" />
+                        </Column> 						
+                    </columns>
+                    <items>
+                        <ColumnListItem type="Navigation">
+                         <!-- 
+                            <cells>
+                                <ObjectIdentifier text="{list>mold_id}"/>
+                                <ObjectIdentifier text="{list>use_material_value}"/>
+                                <ObjectIdentifier text="{list>inspection_flag}"/>
+                                <ObjectIdentifier text="{list>assembly_approval_flag}"/>
+                                <ObjectIdentifier text="{list>request_life_shot_count}"/>
+                                <ObjectIdentifier text="{list>order_qty}"/>
+                                <ObjectIdentifier text="{list>cavity_process_qty}"/>
+                                <ObjectIdentifier text="{list>mold_tonnage}"/>
+                            </cells> 
+                            -->
+                        </ColumnListItem>
+                    </items>
+                </Table>
+                            
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+		</uxap:sections>
+		<uxap:footer>
+			<OverflowToolbar>
+				<ToolbarSpacer />
+				<Button type="Emphasized" text="Save" press=".onPageSaveButtonPress" />
+				<Button type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
+			</OverflowToolbar>
+		</uxap:footer>
+	</uxap:ObjectPageLayout>
+</mvc:View>

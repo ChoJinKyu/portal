@@ -149,22 +149,31 @@ sap.ui.define([
 		onMainTableItemPress: function(oEvent) {
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
 				sPath = oEvent.getSource().getBindingContext("list").getPath(),
-				oRecord = this.getModel("list").getProperty(sPath);
-			this.getRouter().navTo("midPage", {
+                oRecord = this.getModel("list").getProperty(sPath);
+            // var oViewModel = this.getModel("midObjectView");
+            // if(oViewModel.getProperty("/editMode") === "edit"){
+            //     sap.m.MessageToast.show("수정을 완료해 주세요.");
+            // }
+            // else
+            // {
+                this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
 				tenantId: oRecord.tenant_id,
 				currencyCode: oRecord.currency_code
-			});
+                });
 
-            if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
-                this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
-            }
+                if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
+                    this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
+                }
 
-			var oItem = oEvent.getSource();
-			oItem.setNavigated(true);
-			var oParent = oItem.getParent();
-			// store index of the item clicked, which can be used later in the columnResize event
-			this.iIndex = oParent.indexOfItem(oItem);
+                var oItem = oEvent.getSource();
+                oItem.setNavigated(true);
+                var oParent = oItem.getParent();
+                // store index of the item clicked, which can be used later in the columnResize event
+                this.iIndex = oParent.indexOfItem(oItem);
+            // }
+                
+			
 		},
 
 		/* =========================================================== */

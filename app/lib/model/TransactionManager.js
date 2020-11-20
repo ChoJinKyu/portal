@@ -45,13 +45,16 @@ sap.ui.define([
                 that = this;
             this.oServiceModel.submitChanges(jQuery.extend({
                 success: function(oEvent){
-                    console.groupEnd();
                     that.aDataModels.forEach(function(oModel){
                         if(oModel._onSuccessSubmitChanges)
                             oModel._onSuccessSubmitChanges();
                     }.bind(this));
                     if(successHandler)
-                        successHandler.apply(that._oTransactionModel, arguments);
+                        successHandler.apply(that.oServiceModel, arguments);
+                    console.groupEnd();
+                },
+                error: function(){
+                    debugger;
                 }
             }));
         }

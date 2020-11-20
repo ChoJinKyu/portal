@@ -140,6 +140,20 @@
           "target": [
             "mainObject"
           ]
+        },
+        {
+          "pattern": "ParticipatingSupplierSelectionCreateApproval/{company}/{plant}",
+          "name": "participatingSupplierSelectionApprovalCreateObject",
+          "target": [
+            "participatingSupplierSelectionApprovalCreateObject"
+          ]
+        },
+        {
+          "pattern": "ParticipatingSupplierSelectionApproval/{moldId}",
+          "name": "participatingSupplierSelectionApprovalObject",
+          "target": [
+            "participatingSupplierSelectionApprovalObject"
+          ]
         }
       ],
       "targets": {
@@ -154,6 +168,24 @@
           "viewId": "mainObject",
           "viewLevel": 2,
           "title": "{i18n>mainObjectViewTitle}"
+        },
+         "budgetReportObject": {
+          "viewName": "BudgetReportObject",
+          "viewId": "budgetReportObject",
+          "viewLevel": 2,
+          "title": "{i18n>budgetReportObjectTitle}"
+        },
+         "participatingSupplierSelectionApprovalCreateObject": {
+          "viewName": "ParticipatingSupplierSelectionApprovalCreateObject", 
+          "viewId": "participatingSupplierSelectionApprovalCreateObject",
+          "viewLevel": 2,
+          "title": "{i18n>viewObjectTitle3}"
+        },
+         "participatingSupplierSelectionApprovalObject": {
+          "viewName": "ParticipatingSupplierSelectionApprovalObject",
+          "viewId": "participatingSupplierSelectionApprovalObject",
+          "viewLevel": 2,
+          "title": "{i18n>viewObjectTitle3}"
         },
         "notFound": {
           "viewName": "NotFound",
