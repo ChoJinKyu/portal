@@ -22,7 +22,7 @@ entity Vp_Vendor_Pool_Search_View {
   equipment_grade_name: String @title: '심의등급';
   equipment_type_code: String(30) @title: '장비구분코드';
   equipment_type_name: String @title: '장비구분';
-  key supplier_code: String(15) @title: '협력사 코드';
+  supplier_code: String(15) @title: '협력사 코드';
   supplier_local_name: String @title: '협력사 명'; 
   supplier_english_name: String @title: '협력사 영문명';
   company_name: String @title: '법인명';
