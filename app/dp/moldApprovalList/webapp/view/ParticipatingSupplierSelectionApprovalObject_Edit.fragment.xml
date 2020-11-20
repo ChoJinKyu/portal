@@ -1,4 +1,4 @@
-<mvc:View controllerName="dp.moldApprovalList.controller.ParticipatingSupplierSelectionApprovalObject" 
+<mvc:View 
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:uxap="sap.uxap"
     xmlns:form="sap.ui.layout.form"
@@ -75,7 +75,7 @@
 					<Label text="Status :"/>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
-                        text="Veiw"
+                        text="New"
                         state="Error" />
 				</layout:VerticalLayout>
 

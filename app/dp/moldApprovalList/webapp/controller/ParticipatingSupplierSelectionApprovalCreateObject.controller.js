@@ -11,7 +11,7 @@ sap.ui.define([
 ], function (BaseController, JSONModel, History, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
 	"use strict";
 
-	return BaseController.extend("dp.moldApprovalList.controller.ParticipatingSupplierSelectionApprovalObject", {
+	return BaseController.extend("dp.moldApprovalList.controller.ParticipatingSupplierSelectionApprovalCreateObject", {
 
 		dateFormatter: DateFormatter,
 
@@ -24,7 +24,7 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () { 
-              console.log("ParticipatingSupplierSelectionApprovalObject Controller 호출");
+              console.log("ParticipatingSupplierSelectionApprovalCreateObject Controller 호출");
 			// Model used to manipulate control states. The chosen values make sure,
 			// detail page shows busy indication immediately so there is no break in
 			// between the busy indication for loading the view's meta data
@@ -32,8 +32,8 @@ sap.ui.define([
 					busy : true,
 					delay : 0
 				});
-			this.getRouter().getRoute("participatingSupplierSelectionApprovalObject").attachPatternMatched(this._onObjectMatched, this);
-			this.setModel(oViewModel, "participatingSupplierSelectionApprovalObjectView");
+			this.getRouter().getRoute("participatingSupplierSelectionApprovalCreateObject").attachPatternMatched(this._onObjectMatched, this);
+			this.setModel(oViewModel, "ParticipatingSupplierSelectionApprovalCreateObjectView");
 		},
 
 		/* =========================================================== */
@@ -142,12 +142,12 @@ sap.ui.define([
 		 */
 		_onObjectMatched : function (oEvent) {
 			var oArgs = oEvent.getParameter("arguments"),
-                sMoldId = oArgs.moldId;
+                sCompany = oArgs.company , sPlant = oArgs.plant;
             console.log(oArgs);
-            this._bindView("/MoldSpec(mold_id=" + sMoldId + ")"); 
+            this._bindView("/MoldSpec(company=" + sCompany + ",plant="+sPlant+")"); 
             
             this._toShowMode(); 
-            //this._toEditMode();
+          
 		},
 
 		/**

@@ -1,4 +1,4 @@
-<mvc:View controllerName="dp.moldApprovalList.controller.ParticipatingSupplierSelectionApprovalObject" 
+<mvc:View controllerName="dp.moldApprovalList.controller.ParticipatingSupplierSelectionApprovalCreateObject" 
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:uxap="sap.uxap"
     xmlns:form="sap.ui.layout.form"
@@ -65,17 +65,17 @@
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
 				    <ObjectStatus
                         title="Affiliate"
-                        text="EKHQ"/>
+                        text="{company}"/>
                     <ObjectStatus
                         title="Division"
-                        text="DFZ"/>
+                        text="{plant}"/>
 				</layout:VerticalLayout> 
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
 					<Label text="Status :"/>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
-                        text="Veiw"
+                        text="New"
                         state="Error" />
 				</layout:VerticalLayout>
 

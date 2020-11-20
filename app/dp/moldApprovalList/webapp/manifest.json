@@ -142,10 +142,10 @@
           ]
         },
         {
-          "pattern": "BudgetReport/{moldId}",
-          "name": "budgetReportObject",
+          "pattern": "ParticipatingSupplierSelectionCreateApproval/{company}/{plant}",
+          "name": "participatingSupplierSelectionApprovalCreateObject",
           "target": [
-            "budgetReportObject"
+            "participatingSupplierSelectionApprovalCreateObject"
           ]
         },
         {
@@ -174,6 +174,12 @@
           "viewId": "budgetReportObject",
           "viewLevel": 2,
           "title": "{i18n>budgetReportObjectTitle}"
+        },
+         "participatingSupplierSelectionApprovalCreateObject": {
+          "viewName": "ParticipatingSupplierSelectionApprovalCreateObject", 
+          "viewId": "participatingSupplierSelectionApprovalCreateObject",
+          "viewLevel": 2,
+          "title": "{i18n>viewObjectTitle3}"
         },
          "participatingSupplierSelectionApprovalObject": {
           "viewName": "ParticipatingSupplierSelectionApprovalObject",
