@@ -282,7 +282,7 @@ sap.ui.define([
         },
 
         onToggleHandleChange: function (){
-            var pressed = this.getView().byId("categoriBudget").getSelectedKey();
+            var pressed = this.getView();
             console.log(pressed);
         },
 
