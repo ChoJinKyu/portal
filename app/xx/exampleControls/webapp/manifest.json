@@ -86,9 +86,8 @@
           "useBatch": true
         }
       },
-      "": {
+      "odata": {
         "dataSource": "mainService",
-        "type": "ext.lib.model.v2.ODataModel",
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",

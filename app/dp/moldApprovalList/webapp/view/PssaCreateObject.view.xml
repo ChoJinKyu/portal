@@ -62,15 +62,6 @@
                         text="2020-11-20"/>
 				</layout:VerticalLayout>
 
-				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-				    <ObjectStatus
-                        title="Affiliate"
-                        text="{pssaCreateObjectView>/company}"/>
-                    <ObjectStatus
-                        title="Division"
-                        text="{pssaCreateObjectView>/plant}"/>
-				</layout:VerticalLayout> 
-
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
 					<Label text="Status :"/>
                     <ObjectStatus
@@ -135,9 +126,11 @@
                                         >
                                     </Input>
                                 </HBox>
-
-                            <Label text="Description" labelFor="input" required="true"></Label> 
-                            <layout:VerticalLayout id="idVerticalLayout" class="sapUiContentPadding" width="100%"></layout:VerticalLayout>
+                            <VBox>
+                                <Label text="Description" labelFor="input" required="true"></Label> 
+                                <layout:VerticalLayout id="idVerticalLayout" class="sapUiContentPadding" width="100%">
+                                </layout:VerticalLayout>
+                            </VBox>
                         </layout:VerticalLayout> 						
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
@@ -162,6 +155,7 @@
 			<uxap:ObjectPageSection titleUppercase="false" title="Participating Supplier">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
+                       <HBox>
                          <VBox>
                             <Label text="Affiliate" />
                             <ObjectStatus
@@ -176,6 +170,67 @@
                                 state="Error"
                                 />
                          </VBox>
+                        </HBox>
+                    </uxap:ObjectPageSubSection>
+                    <uxap:ObjectPageSubSection>
+                        <Table id="psTable"       
+                            growing="true"
+                            growingThreshold="20"
+                            class="sapFDynamicPageAlignContent" 
+                            updateFinished=".onListMainTableUpdateFinished"
+                            rowSelectionChange = ".onCheck"
+                            mode="MultiSelect"
+                            width="auto"
+                        
+                            >
+                            <headerToolbar>
+                                <OverflowToolbar>
+                                <!-- <Label text="Approval Line"/> -->
+                                </OverflowToolbar>
+                            </headerToolbar>
+                            <columns>
+                                <Column id="model" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
+                                    <Text text="Model" />
+                                </Column>
+                                <Column id="moldPartNo" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
+                                    <Text text="Mold&#10;Part No" />
+                                </Column>
+                                <Column id="seq" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                                    <Text text="Seq" />
+                                </Column>
+                                <Column id="description" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                                    <Text text="Description" />
+                                </Column> 
+                                <Column id="moldItem" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                                    <Text text="Mold Item&#10;Type" />
+                                </Column> 
+                                <Column id="bookCurrency" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                                    <Text text="Book&#10;Currency" />
+                                </Column>	
+                                <Column id="bugetMount" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                                    <Text text="Budget&#10;Mount" />
+                                </Column>					
+                            </columns>
+                            <items>
+                                <ColumnListItem type="Navigation">
+                                <!-- 
+                                    <cells>
+                                        <ObjectIdentifier text="{list>mold_id}"/>
+                                        <ObjectIdentifier text="{list>use_material_value}"/>
+                                        <ObjectIdentifier text="{list>inspection_flag}"/>
+                                        <ObjectIdentifier text="{list>assembly_approval_flag}"/>
+                                        <ObjectIdentifier text="{list>request_life_shot_count}"/>
+                                        <ObjectIdentifier text="{list>order_qty}"/>
+                                        <ObjectIdentifier text="{list>cavity_process_qty}"/>
+                                        <ObjectIdentifier text="{list>mold_tonnage}"/>
+                                    </cells> 
+                                    -->
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    
+
+
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
