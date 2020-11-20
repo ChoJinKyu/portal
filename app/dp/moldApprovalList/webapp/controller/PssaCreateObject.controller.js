@@ -10,21 +10,25 @@ sap.ui.define([
     "sap/m/MessageToast",
 ], function (BaseController, JSONModel, History, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
 	"use strict";
-
-	return BaseController.extend("dp.moldApprovalList.controller.ParticipatingSupplierSelectionApprovalObject", {
+    /**
+     * @description 입찰대상 협력사 선정 품의 등록화면
+     * @date 2020.11.20
+     * @author jinseon.lee 
+     */
+  
+	return BaseController.extend("dp.moldApprovalList.controller.PssaCreateObject", {
 
 		dateFormatter: DateFormatter,
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
 		/* =========================================================== */
-
 		/**
 		 * Called when the mainObject controller is instantiated.
 		 * @public
 		 */
 		onInit : function () { 
-              console.log("ParticipatingSupplierSelectionApprovalObject Controller 호출");
+              console.log("PssaCreateObject Controller 호출");
 			// Model used to manipulate control states. The chosen values make sure,
 			// detail page shows busy indication immediately so there is no break in
 			// between the busy indication for loading the view's meta data
@@ -32,8 +36,8 @@ sap.ui.define([
 					busy : true,
 					delay : 0
 				});
-			this.getRouter().getRoute("participatingSupplierSelectionApprovalObject").attachPatternMatched(this._onObjectMatched, this);
-			this.setModel(oViewModel, "participatingSupplierSelectionApprovalObjectView");
+			this.getRouter().getRoute("pssaCreateObject").attachPatternMatched(this._onObjectMatched, this);
+			this.setModel(oViewModel, "pssaCreateObjectView");
 		},
 
 		/* =========================================================== */
@@ -141,14 +145,28 @@ sap.ui.define([
 		 * @private
 		 */
 		_onObjectMatched : function (oEvent) {
-			var oArgs = oEvent.getParameter("arguments"),
-                sMoldId = oArgs.moldId;
-            console.log(oArgs);
-            this._bindView("/MoldSpec(mold_id=" + sMoldId + ")"); 
-            
-            this._toShowMode(); 
-            //this._toEditMode();
-		},
+			var oArgs = oEvent.getParameter("arguments"); 
+            console.log("oArgs>>>>>>" , oArgs);
+            this._createViewBindData(oArgs); 
+          //  this._toShowMode(); 
+        },
+        /**
+         * @description 초기 생성시 파라미터를 받고 들어옴 
+         * @param {*} args : company , plant   
+         */
+        _createViewBindData : function(args){ 
+            var appInfoModel = this.setModel("approvalInfo");
+             console.log("args >>>>>>" , args);
+            /**oViewModel.setProperty("/busy", true); */
+                appInfoModel.setProperty("company", args.company);
+                appInfoModel.setProperty("plant", args.plant);
+
+            console.log("oMasterModel >>> " , appInfoModel);
+				// oMasterModel.setData({
+                //     company: args.company 
+                //   , plant : args.plant 
+				// });
+        } ,
 
 		/**
 		 * Binds the view to the object path.
@@ -157,7 +175,11 @@ sap.ui.define([
 		 * @private
 		 */
 		_bindView : function (sObjectPath) {
-			var oViewModel = this.getModel("participatingSupplierSelectionApprovalObjectView");
+
+
+				this._toEditMode();
+
+			var oViewModel = this.getModel("pssaCreateObjectView");
 
 			this.getView().bindElement({
 				path: sObjectPath,
@@ -175,7 +197,7 @@ sap.ui.define([
 
 		_onBindingChange : function () {
 			var oView = this.getView(),
-				oViewModel = this.getModel("participatingSupplierSelectionApprovalObjectView"),
+				oViewModel = this.getModel("pssaCreateObjectView"),
 				oElementBinding = oView.getElementBinding();
 			// No data for the binding
 			if (!oElementBinding.getBoundContext()) {
