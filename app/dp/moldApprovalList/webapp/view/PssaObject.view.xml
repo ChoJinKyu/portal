@@ -1,4 +1,4 @@
-<mvc:View controllerName="dp.moldApprovalList.controller.ParticipatingSupplierSelectionApprovalObject" 
+<mvc:View controllerName="dp.moldApprovalList.controller.PssaObject" 
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:uxap="sap.uxap"
     xmlns:form="sap.ui.layout.form"
