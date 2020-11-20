@@ -14,7 +14,7 @@ entity Code_Mst {
     
     chain_code: String(30) not null @title: '체인코드';
     group_name: String(240) not null @title: '그룹명';
-    group_description: String not null @title: '그룹설명';
+    group_description: String(500) not null @title: '그룹설명';
     use_flag: Boolean not null @title: '사용 여부';
 
 }
