@@ -142,17 +142,17 @@
           ]
         },
         {
-          "pattern": "ParticipatingSupplierSelectionCreateApproval/{company}/{plant}",
-          "name": "participatingSupplierSelectionApprovalCreateObject",
+          "pattern": "PssaCreateObject/{company}/{plant}",
+          "name": "pssaCreateObject",
           "target": [
-            "participatingSupplierSelectionApprovalCreateObject"
+            "pssaCreateObject"
           ]
         },
         {
-          "pattern": "ParticipatingSupplierSelectionApproval/{moldId}",
-          "name": "participatingSupplierSelectionApprovalObject",
+          "pattern": "PssaObject/{moldId}",
+          "name": "pssaObject",
           "target": [
-            "participatingSupplierSelectionApprovalObject"
+            "pssaObject"
           ]
         }
       ],
@@ -175,15 +175,15 @@
           "viewLevel": 2,
           "title": "{i18n>budgetReportObjectTitle}"
         },
-         "participatingSupplierSelectionApprovalCreateObject": {
-          "viewName": "ParticipatingSupplierSelectionApprovalCreateObject", 
-          "viewId": "participatingSupplierSelectionApprovalCreateObject",
+         "pssaCreateObject": {
+          "viewName": "PssaCreateObject", 
+          "viewId": "pssaCreateObject",
           "viewLevel": 2,
           "title": "{i18n>viewObjectTitle3}"
         },
-         "participatingSupplierSelectionApprovalObject": {
-          "viewName": "ParticipatingSupplierSelectionApprovalObject",
-          "viewId": "participatingSupplierSelectionApprovalObject",
+         "pssaObject": {
+          "viewName": "PssaObject",
+          "viewId": "pssaObject",
           "viewLevel": 2,
           "title": "{i18n>viewObjectTitle3}"
         },

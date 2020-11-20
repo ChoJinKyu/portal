@@ -2,7 +2,7 @@
     xmlns="sap.m"
     xmlns:core="sap.ui.core"
     xmlns:form="sap.ui.layout.form">
-    <Dialog id="approvalCategoryDialog" class="sapUiSmallMargin" title="Approval Category" contentWidth="50%" >
+    <Dialog id="dialogApprovalCategory" class="sapUiSmallMargin" title="Approval Category" contentWidth="50%" >
         <content>
             <form:SimpleForm 
             editable="false"
@@ -19,11 +19,20 @@
                 <!-- <Label text = "1.Local"/> -->
                 <!-- <HBox alignItems="Center" justifyContent="Center" > -->
                     <!-- <VBox>  -->
-                    <ToggleButton id="categoriBudget" class="sapUiSmallMargin" text="Budget" enabled="true" pressed="false" press=".onToggleHandleChange" width="10em"/>
+                    <!-- <ToggleButton id="categoriBudget" class="sapUiSmallMargin" text="Budget" enabled="true" pressed="false" press=".onToggleHandleChange" value='1' width="10em"/> -->
                     <!-- </VBox>
                     <VBox>  -->
-                    <ToggleButton id="categoriPressed" class="sapUiSmallMargin" text="Pressed" enabled="true" pressed="false" press=".onToggleHandleChange" width="10em"/>
+                    <!-- <ToggleButton id="categoriPressed" class="sapUiSmallMargin" text="Pressed" enabled="true" pressed="false" press=".onToggleHandleChange" width="10em"/> -->
                     <!-- </VBox> -->
+                    <SegmentedButton
+								class="vsdSetting"
+								selectedButton="none"
+								id="VSDThemeButtons"
+								width="100%" >
+							<Button text="Budget" id="categoriBudget" />
+							<Button text="Pressed Light" id="createPopupClose" />
+					</SegmentedButton>
+                    
             <!--   </HBox> -->
                     <!-- <Label text = "2.Export"/>
                 <HBox alignItems="Center" justifyContent="Center" >
@@ -47,10 +56,10 @@
                 </HBox> -->
             </form:SimpleForm>
         </content>
-        <ToolbarSpacer/>
-        <HBox alignItems="Center" justifyContent="Center" >
-            <Button text="Cancel" class="sapUiSmallMargin" press=".onCloseDialog"/>
-            <Button text="Select" class="sapUiSmallMargin" type="Emphasized" press=".onSelectCategori"/>
-        </HBox>
+            <ToolbarSpacer/>
+            <HBox alignItems="Center" justifyContent="Center" >
+                <Button text="Cancel" class="sapUiSmallMargin" press=".onCloseDialog"/>
+                <Button text="Select" class="sapUiSmallMargin" type="Emphasized" press=".handleConfirm"/>
+            </HBox>
     </Dialog>
 </core:FragmentDefinition>

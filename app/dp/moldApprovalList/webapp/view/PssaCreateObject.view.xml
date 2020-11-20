@@ -1,4 +1,4 @@
-<mvc:View controllerName="dp.moldApprovalList.controller.ParticipatingSupplierSelectionApprovalCreateObject" 
+<mvc:View controllerName="dp.moldApprovalList.controller.PssaCreateObject" 
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:uxap="sap.uxap"
     xmlns:form="sap.ui.layout.form"
@@ -59,16 +59,16 @@
                         text="김갑수[ks.kim]"/>
                     <ObjectStatus
                         title="Request Date"
-                        text="2020-07-02"/>
+                        text="2020-11-20"/>
 				</layout:VerticalLayout>
 
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
 				    <ObjectStatus
                         title="Affiliate"
-                        text="{company}"/>
+                        text="{/>company}"/>
                     <ObjectStatus
                         title="Division"
-                        text="{plant}"/>
+                        text="{>/plant}"/>
 				</layout:VerticalLayout> 
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">

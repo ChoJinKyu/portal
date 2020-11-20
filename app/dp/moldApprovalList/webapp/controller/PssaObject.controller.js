@@ -11,7 +11,7 @@ sap.ui.define([
 ], function (BaseController, JSONModel, History, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
 	"use strict";
 
-	return BaseController.extend("dp.moldApprovalList.controller.ParticipatingSupplierSelectionApprovalCreateObject", {
+	return BaseController.extend("dp.moldApprovalList.controller.PssaObject", {
 
 		dateFormatter: DateFormatter,
 
@@ -24,7 +24,7 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () { 
-              console.log("ParticipatingSupplierSelectionApprovalCreateObject Controller 호출");
+              console.log("PssaObject Controller 호출");
 			// Model used to manipulate control states. The chosen values make sure,
 			// detail page shows busy indication immediately so there is no break in
 			// between the busy indication for loading the view's meta data
@@ -32,8 +32,8 @@ sap.ui.define([
 					busy : true,
 					delay : 0
 				});
-			this.getRouter().getRoute("participatingSupplierSelectionApprovalCreateObject").attachPatternMatched(this._onObjectMatched, this);
-			this.setModel(oViewModel, "ParticipatingSupplierSelectionApprovalCreateObjectView");
+			this.getRouter().getRoute("pssaObject").attachPatternMatched(this._onObjectMatched, this);
+			this.setModel(oViewModel, "pssaObjectView");
 		},
 
 		/* =========================================================== */
@@ -142,12 +142,12 @@ sap.ui.define([
 		 */
 		_onObjectMatched : function (oEvent) {
 			var oArgs = oEvent.getParameter("arguments"),
-                sCompany = oArgs.company , sPlant = oArgs.plant;
+                sMoldId = oArgs.moldId;
             console.log(oArgs);
-            this._bindView("/MoldSpec(company=" + sCompany + ",plant="+sPlant+")"); 
+            this._bindView("/MoldSpec(mold_id=" + sMoldId + ")"); 
             
             this._toShowMode(); 
-          
+            //this._toEditMode();
 		},
 
 		/**
@@ -157,7 +157,7 @@ sap.ui.define([
 		 * @private
 		 */
 		_bindView : function (sObjectPath) {
-			var oViewModel = this.getModel("participatingSupplierSelectionApprovalObjectView");
+			var oViewModel = this.getModel("pssaObjectView");
 
 			this.getView().bindElement({
 				path: sObjectPath,
@@ -175,7 +175,7 @@ sap.ui.define([
 
 		_onBindingChange : function () {
 			var oView = this.getView(),
-				oViewModel = this.getModel("participatingSupplierSelectionApprovalObjectView"),
+				oViewModel = this.getModel("pssaObjectView"),
 				oElementBinding = oView.getElementBinding();
 			// No data for the binding
 			if (!oElementBinding.getBoundContext()) {

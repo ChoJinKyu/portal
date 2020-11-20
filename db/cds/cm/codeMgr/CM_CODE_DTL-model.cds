@@ -19,7 +19,7 @@ entity Code_Dtl {
         and children.code = code;
 
     key code: String(30) not null @title: '코드';
-    code_description: String(240) not null @title: '코드설명';
+    code_description: String(300) not null @title: '코드설명';
     sort_no: Decimal not null @title: '정렬번호';
     start_date: Date not null @title: '시작일';
     end_date: Date not null @title: '종료일';
