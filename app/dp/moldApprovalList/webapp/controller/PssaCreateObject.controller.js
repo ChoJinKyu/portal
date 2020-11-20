@@ -2,15 +2,13 @@ sap.ui.define([
 	"ext/lib/controller/BaseController",
 	"sap/ui/model/json/JSONModel",
     "sap/ui/core/routing/History",
-    "sap/ui/richtexteditor/EditorType",
-    "sap/ui/richtexteditor/RichTextEditor",
 	"ext/lib/formatter/DateFormatter",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
 	"sap/ui/core/Fragment",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-], function (BaseController, JSONModel, History,EditorType, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
+], function (BaseController, JSONModel, History, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
 	"use strict";
     /**
      * @description 입찰대상 협력사 선정 품의 등록화면
