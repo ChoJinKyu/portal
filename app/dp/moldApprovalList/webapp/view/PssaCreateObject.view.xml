@@ -65,10 +65,10 @@
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
 				    <ObjectStatus
                         title="Affiliate"
-                        text="{/>company}"/>
+                        text="{pssaCreateObjectView>/company}"/>
                     <ObjectStatus
                         title="Division"
-                        text="{>/plant}"/>
+                        text="{pssaCreateObjectView>/plant}"/>
 				</layout:VerticalLayout> 
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
@@ -127,14 +127,17 @@
                                         textAlign="Left"
                                         labelFor="input"
                                         required="true"/>
-                                    <Text
-                                        text="Input data"
-                                        visible="true">
-                                    </Text>
+                                    <Input
+                                        value="Input data"
+                                        visible="true"
+                                        width="40em" 
+                                        placeholder="필수"
+                                        >
+                                    </Input>
                                 </HBox>
 
                             <Label text="Description" labelFor="input" required="true"></Label> 
-                            <Text text="Description!!!" />
+                            <layout:VerticalLayout id="idVerticalLayout" class="sapUiContentPadding" width="100%"></layout:VerticalLayout>
                         </layout:VerticalLayout> 						
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
@@ -145,11 +148,11 @@
 					<uxap:ObjectPageSubSection >
                     <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
 				    <ObjectStatus
-                        title="Affiliate"
-                        text="EKHQ"/>
+                        title="///"
+                        text="///"/>
                     <ObjectStatus
-                        title="Division"
-                        text="DFZ"/>
+                        title="///"
+                        text="///"/>
 				    </layout:VerticalLayout> 
 
 					</uxap:ObjectPageSubSection>
@@ -159,12 +162,20 @@
 			<uxap:ObjectPageSection titleUppercase="false" title="Participating Supplier">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
-                    <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-				    <ObjectStatus
-                        title="Affiliate"
-                        text="EKHQ"/>
-
-				    </layout:VerticalLayout> 
+                         <VBox>
+                            <Label text="Affiliate" />
+                            <ObjectStatus
+                                text="{pssaCreateObjectView>/company}" 
+                                state="Error"
+                                />
+                         </VBox>
+                         <VBox>
+                            <Label text="Division" />
+                            <ObjectStatus
+                                text="{pssaCreateObjectView>/plant}" 
+                                state="Error"
+                                />
+                         </VBox>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
