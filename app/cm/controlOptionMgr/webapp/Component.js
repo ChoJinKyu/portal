@@ -23,7 +23,7 @@ sap.ui.define([
 			UIComponent.prototype.init.apply(this, arguments);
 			
 			this.setModel(new JSONModel(), "fcl");
-
+            
 			// create the views based on the url/hash
 			this.getRouter().initialize();
 		},

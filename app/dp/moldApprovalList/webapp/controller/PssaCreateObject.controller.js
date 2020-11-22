@@ -1,7 +1,8 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
 	"sap/ui/model/json/JSONModel",
-	"sap/ui/core/routing/History",
+    "sap/ui/core/routing/History",
+    "sap/ui/richtexteditor/RichTextEditor",
 	"ext/lib/formatter/DateFormatter",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
@@ -10,31 +11,64 @@ sap.ui.define([
     "sap/m/MessageToast",
 ], function (BaseController, JSONModel, History, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
 	"use strict";
-
-	return BaseController.extend("dp.moldApprovalList.controller.ParticipatingSupplierSelectionApprovalObject", {
+    /**
+     * @description 입찰대상 협력사 선정 품의 등록화면
+     * @date 2020.11.20
+     * @author jinseon.lee 
+     */
+  
+	return BaseController.extend("dp.moldApprovalList.controller.PssaCreateObject", {
 
 		dateFormatter: DateFormatter,
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
 		/* =========================================================== */
-
 		/**
 		 * Called when the mainObject controller is instantiated.
 		 * @public
 		 */
 		onInit : function () { 
-              console.log("ParticipatingSupplierSelectionApprovalObject Controller 호출");
+              console.log("PssaCreateObject Controller 호출");
 			// Model used to manipulate control states. The chosen values make sure,
 			// detail page shows busy indication immediately so there is no break in
-			// between the busy indication for loading the view's meta data
+            // between the busy indication for loading the view's meta data 
+
 			var oViewModel = new JSONModel({
 					busy : true,
 					delay : 0
 				});
-			this.getRouter().getRoute("participatingSupplierSelectionApprovalObject").attachPatternMatched(this._onObjectMatched, this);
-			this.setModel(oViewModel, "participatingSupplierSelectionApprovalObjectView");
+			this.getRouter().getRoute("pssaCreateObject").attachPatternMatched(this._onObjectMatched, this);
+            this.setModel(oViewModel, "pssaCreateObjectView"); 
+            
 		},
+        onAfterRendering : function () {
+            console.log("  call onAfterRendering ");
+            this.setRichEditor();
+        },
+        setRichEditor : function (){
+        var that = this,
+			sHtmlValue = ''
+            sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
+				function (RTE, EditorType) {
+					var oRichTextEditor = new RTE("myRTE", {
+						editorType: EditorType.TinyMCE4,
+						width: "100%",
+						height: "600px",
+						customToolbar: true,
+						showGroupFont: true,
+						showGroupLink: true,
+						showGroupInsert: true,
+						value: sHtmlValue,
+						ready: function () {
+							this.addButtonGroup("styleselect").addButtonGroup("table");
+						}
+					});
+
+					that.getView().byId("idVerticalLayout").addContent(oRichTextEditor);
+			});
+        },
+
 
 		/* =========================================================== */
 		/* event handlers                                              */
@@ -141,14 +175,30 @@ sap.ui.define([
 		 * @private
 		 */
 		_onObjectMatched : function (oEvent) {
-			var oArgs = oEvent.getParameter("arguments"),
-                sMoldId = oArgs.moldId;
-            console.log(oArgs);
-            this._bindView("/MoldSpec(mold_id=" + sMoldId + ")"); 
+			var oArgs = oEvent.getParameter("arguments"); 
+            console.log("oArgs>>>>>>" , oArgs);
+            this._createViewBindData(oArgs); 
+          //  this._toShowMode(); 
+        },
+        /**
+         * @description 초기 생성시 파라미터를 받고 들어옴 
+         * @param {*} args : company , plant   
+         */
+        _createViewBindData : function(args){ 
+            var appInfoModel = this.getModel("pssaCreateObjectView");
+             console.log("args >>>>>>" , args);
             
-            this._toShowMode(); 
-            //this._toEditMode();
-		},
+            appInfoModel.setData({ company : args.company 
+                    ,  plant : args.plant
+                    });
+               
+
+            console.log("oMasterModel >>> " , appInfoModel);
+				// oMasterModel.setData({
+                //     company: args.company 
+                //   , plant : args.plant 
+				// });
+        } ,
 
 		/**
 		 * Binds the view to the object path.
@@ -157,7 +207,11 @@ sap.ui.define([
 		 * @private
 		 */
 		_bindView : function (sObjectPath) {
-			var oViewModel = this.getModel("participatingSupplierSelectionApprovalObjectView");
+
+
+				this._toEditMode();
+
+			var oViewModel = this.getModel("pssaCreateObjectView");
 
 			this.getView().bindElement({
 				path: sObjectPath,
@@ -175,7 +229,7 @@ sap.ui.define([
 
 		_onBindingChange : function () {
 			var oView = this.getView(),
-				oViewModel = this.getModel("participatingSupplierSelectionApprovalObjectView"),
+				oViewModel = this.getModel("pssaCreateObjectView"),
 				oElementBinding = oView.getElementBinding();
 			// No data for the binding
 			if (!oElementBinding.getBoundContext()) {

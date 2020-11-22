@@ -10,7 +10,6 @@
     xmlns:form="sap.ui.layout.form"
     displayBlock="true">
 
-  <!-- <Shell id="shell"> -->
     <App id="app">
         <f:DynamicPage id="codeMgrPage" toggleHeaderOnTitleClick="true" headerExpanded="true">
             <f:title>
@@ -31,16 +30,14 @@
                                             <form:fields>
                                                 <ComboBox   id="search_tenant_id"
                                                             items="{
-                                                                        path : '/CodeCombo',
+                                                                        path : 'util>/CodeDetails',
                                                                         filters : [
-                                                                            {path : 'tenant_id', operator : 'EQ', value1 : '1000'},
-                                                                            {path : 'company_code', operator : 'EQ', value1 : 'G100'},
-                                                                            {path : 'group_code', operator : 'EQ', value1 : 'CM_TENANT_CD'},
-                                                                            {path : 'language_cd', operator : 'EQ', value1 : 'KO'}                                                                        
+                                                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                                            {path : 'group_code', operator : 'EQ', value1 : 'CM_TENANT_CD'}                                                               
                                                                         ]
                                                                     }"
                                                 >
-                                                    <core:Item key="{code}" text="{code_name}" />
+                                                    <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
                                                 </ComboBox>
                                             </form:fields>
                                         </form:FormElement>
@@ -53,20 +50,18 @@
                                 </form:FormContainer>
                                 <form:FormContainer>
                                     <form:formElements>
-                                        <form:FormElement label="Company">
+                                        <form:FormElement label="Chain">
                                             <form:fields>
-                                                <ComboBox   id="search_company_code"
+                                                <ComboBox   id="search_chain_code"
                                                             items="{
-                                                                        path : '/CodeCombo',
+                                                                        path : 'util>/CodeDetails',
                                                                         filters : [
-                                                                            {path : 'tenant_id', operator : 'EQ', value1 : '1000'},
-                                                                            {path : 'company_code', operator : 'EQ', value1 : 'G100'},
-                                                                            {path : 'group_code', operator : 'EQ', value1 : 'CM_COMPANY_CD'},
-                                                                            {path : 'language_cd', operator : 'EQ', value1 : 'KO'}                                                                        
+                                                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                                            {path : 'group_code', operator : 'EQ', value1 : 'CM_CHAIN_CD'}                                                               
                                                                         ]
                                                                     }"
                                                 >
-                                                    <core:Item key="{code}" text="{code_name}" />
+                                                    <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
                                                 </ComboBox>
                                             </form:fields>
                                         </form:FormElement>
@@ -79,20 +74,18 @@
                                 </form:FormContainer>
                                 <form:FormContainer>
                                     <form:formElements>
-                                        <form:FormElement label="Chain">
+                                        <form:FormElement label="사용여부">
                                             <form:fields>
-                                                <ComboBox   id="search_chain_code"
+                                                <ComboBox   id="search_use_yn"    
                                                             items="{
-                                                                        path : '/CodeCombo',
+                                                                        path : 'util>/CodeDetails',
                                                                         filters : [
-                                                                            {path : 'tenant_id', operator : 'EQ', value1 : '1000'},
-                                                                            {path : 'company_code', operator : 'EQ', value1 : 'G100'},
-                                                                            {path : 'group_code', operator : 'EQ', value1 : 'CM_CHAIN_CD'},
-                                                                            {path : 'language_cd', operator : 'EQ', value1 : 'KO'}                                                                        
+                                                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                                            {path : 'group_code', operator : 'EQ', value1 : 'CM_TF_FLAG'}                                                                     
                                                                         ]
                                                                     }"
                                                 >
-                                                    <core:Item key="{code}" text="{code_name}" />
+                                                    <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
                                                 </ComboBox>
                                             </form:fields>
                                         </form:FormElement>
@@ -103,30 +96,9 @@
                                         </form:FormElement>
                                     </form:formElements>
                                 </form:FormContainer>
-                                <form:FormContainer>
-                                    <form:formElements>
-                                        <form:FormElement label="사용여부">
-                                            <form:fields>
-                                                <ComboBox   id="search_use_yn"    
-                                                            items="{
-                                                                        path : '/CodeCombo',
-                                                                        filters : [
-                                                                            {path : 'tenant_id', operator : 'EQ', value1 : '1000'},
-                                                                            {path : 'company_code', operator : 'EQ', value1 : 'G100'},
-                                                                            {path : 'group_code', operator : 'EQ', value1 : 'CM_YN'},
-                                                                            {path : 'language_cd', operator : 'EQ', value1 : 'KO'}                                                                        
-                                                                        ]
-                                                                    }"
-                                                >
-                                                    <core:Item key="{code}" text="{code_name}" />
-                                                </ComboBox>
-                                            </form:fields>
-                                        </form:FormElement>
-                                    </form:formElements>
-                                </form:FormContainer>
                             </form:formContainers>
                             <form:layout>
-                            <form:ResponsiveGridLayout columnsM="4" columnsL="4" columnsXL="4"/>
+                            <form:ResponsiveGridLayout columnsM="3" columnsL="3" columnsXL="3"/>
                             </form:layout>
                         </form:Form>
                     </layout:HorizontalLayout>
@@ -141,12 +113,10 @@
                 <layout:Splitter orientation="Vertical">
                         <Table  id="codeMstTable"
                                 items="{
-                                            path : '/CodeMasters',
+                                            path : 'CodeMasters>/',
                                             parameters: {
                                                 $$updateGroupId : 'codeMstUpdateGroup'
-                                            },
-                                            filters : [{path : 'tenant_id', operator : 'EQ', value1 : '0000'}],
-                                            sorter: { path: 'group_code'}
+                                            }
                                         }"
                                 mode="MultiSelect"
                                 updateFinished="onMstUpdateFinished"
@@ -161,13 +131,17 @@
                                         <Title text="코드 마스터" level="H2"/>
                                         <ToolbarSpacer/>
                                         <Button text="행추가" icon="sap-icon://add"  type="Accept" press="onMstAddRow"/>
-                                        <Button text="행복사" icon="sap-icon://copy" type="Accept" press="onMstCopyRow"/>
                                         <Button text="행삭제" icon="sap-icon://delete" type="Reject" press="onMstDeleteRow"/>
                                         <Button text="저장"   icon="sap-icon://save" type="Attention" press="onMstSave"/>
                                     </content>
                                 </OverflowToolbar>
                             </headerToolbar>
                             <columns>
+                                <Column hAlign="Center" width="50px">
+                                    <header>
+                                        <Label text=""/>
+                                    </header>
+                                </Column>
                                 <Column hAlign="Center" width="100px">
                                     <header>
                                         <Label text="Tenant"/>
@@ -175,15 +149,10 @@
                                 </Column>
                                 <Column hAlign="Center" width="100px">
                                     <header>
-                                        <Label text="Company"/>
-                                    </header>
-                                </Column>
-                                <Column hAlign="Center" width="100px">
-                                    <header>
                                         <Label text="Chanin"/>
                                     </header>
                                 </Column>
-                                <Column hAlign="Center" width="200px">
+                                <Column hAlign="Center" width="300px">
                                     <header>
                                         <Label text="그룹 코드"/>
                                     </header>
@@ -213,22 +182,22 @@
                                         <Label text="수정자"/>
                                     </header>
                                 </Column>
-                                <Column hAlign="Center" width="200px">
+                                <Column hAlign="Center" width="450px">
                                     <header>
                                         <Label text="생성 시간"/>
                                     </header>
                                 </Column>
-                                <Column hAlign="Center" width="200px">
+                                <Column hAlign="Center" width="450px">
                                     <header>
                                         <Label text="수정 시간"/>
                                     </header>
                                 </Column>
-                                <Column hAlign="Center" width="200px">
+                                <Column hAlign="Center" width="450px">
                                     <header>
                                         <Label text="시스템 생성 시간"/>
                                     </header>
                                 </Column>
-                                <Column hAlign="Center" width="200px">
+                                <Column hAlign="Center" width="450px">
                                     <header>
                                         <Label text="시스템 수정 시간"/>
                                     </header>
@@ -237,19 +206,19 @@
                             <items>
                                 <ColumnListItem type="Active" id="codeMstColumnListItem" press="onMstTableItemPress">
                                     <cells>
-                                        <Input id="mst_tenant_id" value="{tenant_id}"/>
-                                        <Input id="mst_company_code" value="{company_code}"/>
-                                        <Input id="mst_chain_code" value="{chain_code}"/>
-                                        <Input id="mst_group_code" value="{group_code}"/>
-                                        <Input id="mst_group_name" value="{group_name}"/>
-                                        <Input id="mst_group_description" value="{group_description}"/>
-                                        <Input id="mst_use_yn" value="{use_yn}"/>
-                                        <Text id="mst_create_user_id" text="{create_user_id}"/>
-                                        <Text id="mst_update_user_id" text="{update_user_id}"/>
-                                        <Text id="mst_local_create_dtm" text="{local_create_dtm}"/>
-                                        <Text id="mst_local_update_dtm" text="{local_update_dtm}"/>
-                                        <Text id="mst_system_create_dtm" text="{system_create_dtm}"/>
-                                        <Text id="mst_system_update_dtm" text="{system_update_dtm}"/>
+                                        <Text id="mst_row_state_" text="{CodeMasters>_row_state_}"/>
+                                        <Input id="mst_tenant_id" value="{CodeMasters>tenant_id}"/>
+                                        <Input id="mst_chain_code" value="{CodeMasters>chain_code}"/>
+                                        <Input id="mst_group_code" value="{CodeMasters>group_code}"/>
+                                        <Input id="mst_group_name" value="{CodeMasters>group_name}"/>
+                                        <Input id="mst_group_description" value="{CodeMasters>group_description}"/>
+                                        <Input id="mst_use_yn" value="{CodeMasters>use_yn}"/>
+                                        <Text id="mst_create_user_id" text="{CodeMasters>create_user_id}"/>
+                                        <Text id="mst_update_user_id" text="{CodeMasters>update_user_id}"/>
+                                        <Text id="mst_local_create_dtm" text="{CodeMasters>local_create_dtm}"/>
+                                        <Text id="mst_local_update_dtm" text="{CodeMasters>local_update_dtm}"/>
+                                        <Text id="mst_system_create_dtm" text="{CodeMasters>system_create_dtm}"/>
+                                        <Text id="mst_system_update_dtm" text="{CodeMasters>system_update_dtm}"/>
                                     </cells>
                                 </ColumnListItem>
                             </items>
@@ -258,12 +227,10 @@
                         <layout:Splitter>
                             <Table  id="codeDtlTable"
                                     items= "{   
-                                                path : '/CodeDetails',
+                                                path : 'CodeDetails>/',
                                                 parameters: {
                                                     $$updateGroupId : 'codeDtlUpdateGroup'
-                                                },
-                                                filters : [{path : 'tenant_id', operator : 'EQ', value1 : '0000'}],
-                                                sorter: { path: 'sort_no'}
+                                                }
                                             }"
                                     mode="MultiSelect"
                                     updateFinished="onDtlUpdateFinished"
@@ -277,24 +244,23 @@
                                             <Title text="코드" level="H2"/>
                                             <ToolbarSpacer/>
                                             <Button text="행추가" icon="sap-icon://add"  type="Accept" press="onDtlAddRow"/>
-                                            <Button text="행복사" icon="sap-icon://copy" type="Accept" press="onDtlCopyRow"/>
                                             <Button text="행삭제" icon="sap-icon://delete" type="Reject" press="onDtlDeleteRow"/>
                                             <Button text="저장"   icon="sap-icon://save" type="Attention" press="onDtlSave"/>
                                         </content>
                                     </OverflowToolbar>
                                 </headerToolbar>
                                 <columns>
+                                    <Column hAlign="Center" width="50px">
+                                        <header>
+                                            <Label text=""/>
+                                        </header>
+                                    </Column>
                                     <Column hAlign="Center" width="80px">
                                         <header>
                                             <Label text="Tenant"/>
                                         </header>
                                     </Column>
-                                    <Column hAlign="Center" width="80px">
-                                        <header>
-                                            <Label text="Company"/>
-                                        </header>
-                                    </Column>
-                                    <Column hAlign="Center" width="150px">
+                                    <Column hAlign="Center" width="300px">
                                         <header>
                                             <Label text="그룹 코드"/>
                                         </header>
@@ -334,22 +300,22 @@
                                             <Label text="수정자"/>
                                         </header>
                                     </Column>
-                                    <Column hAlign="Center" width="200px">
+                                    <Column hAlign="Center" width="450px">
                                         <header>
                                             <Label text="생성 시간"/>
                                         </header>
                                     </Column>
-                                    <Column hAlign="Center" width="200px">
+                                    <Column hAlign="Center" width="450px">
                                         <header>
                                             <Label text="수정 시간"/>
                                         </header>
                                     </Column>
-                                    <Column hAlign="Center" width="200px">
+                                    <Column hAlign="Center" width="450px">
                                         <header>
                                             <Label text="시스템 생성 시간"/>
                                         </header>
                                     </Column>
-                                    <Column hAlign="Center" width="200px">
+                                    <Column hAlign="Center" width="450px">
                                         <header>
                                             <Label text="시스템 수정 시간"/>
                                         </header>
@@ -358,22 +324,20 @@
                                 <items>
                                     <ColumnListItem type="Active" id="codeDtlColumnListItem" press="onDtlTableItemPress">
                                         <cells>
-                                            <Text id="dtl_tenant_id" text="{tenant_id}"/>
-                                            <Text id="dtl_company_code" text="{company_code}"/>
-                                            <Text id="dtl_group_code" text="{group_code}"/>
-                                            <Input id="dtl_code" value="{code}"/>
-                                            <Input id="dtl_code_description" value="{code_description}"/>
-                                            <Input id="dtl_sort_no" value="{sort_no}"/>
-                                            <!-- <Input id="dtl_start_date" value="{start_date}"/> -->
-                                            <DatePicker dateValue="{path : 'start_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/>
-                                            <!-- <Input id="dtl_end_date" value="{end_date}"/> -->
-                                            <DatePicker dateValue="{path : 'end_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/>
-                                            <Text id="dtl_create_user_id" text="{create_user_id}"/>
-                                            <Text id="dtl_update_user_id" text="{update_user_id}"/>
-                                            <Text id="dtl_local_create_dtm" text="{local_create_dtm}"/>
-                                            <Text id="dtl_local_update_dtm" text="{local_update_dtm}"/>
-                                            <Text id="dtl_system_create_dtm" text="{system_create_dtm}"/>
-                                            <Text id="dtl_system_update_dtm" text="{system_update_dtm}"/>
+                                            <Text id="dtl_row_state_" text="{CodeDetails>_row_state_}"/>
+                                            <Text id="dtl_tenant_id" text="{CodeDetails>tenant_id}"/>
+                                            <Text id="dtl_group_code" text="{CodeDetails>group_code}"/>
+                                            <Input id="dtl_code" value="{CodeDetails>code}"/>
+                                            <Input id="dtl_code_description" value="{CodeDetails>code_description}"/>
+                                            <Input id="dtl_sort_no" value="{CodeDetails>sort_no}"/>
+                                            <DatePicker dateValue="{path : 'CodeDetails>start_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/>
+                                            <DatePicker dateValue="{path : 'CodeDetails>end_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/>
+                                            <Text id="dtl_create_user_id" text="{CodeDetails>create_user_id}"/>
+                                            <Text id="dtl_update_user_id" text="{CodeDetails>update_user_id}"/>
+                                            <Text id="dtl_local_create_dtm" text="{CodeDetails>local_create_dtm}"/>
+                                            <Text id="dtl_local_update_dtm" text="{CodeDetails>local_update_dtm}"/>
+                                            <Text id="dtl_system_create_dtm" text="{CodeDetails>system_create_dtm}"/>
+                                            <Text id="dtl_system_update_dtm" text="{CodeDetails>system_update_dtm}"/>
                                         </cells>
                                     </ColumnListItem>
                                 </items>
@@ -381,12 +345,10 @@
 
                             <Table  id="codeLngTable"
                                     items= "{   
-                                                path : '/CodeLanguages',
+                                                path : 'CodeLanguages>/',
                                                 parameters: {
                                                     $$updateGroupId : 'codeLngUpdateGroup'
-                                                },
-                                                filters : [{path : 'tenant_id', operator : 'EQ', value1 : '0000'}],
-                                                sorter: { path: 'language_cd'}
+                                                }
                                             }"
                                     mode="MultiSelect"
                             >
@@ -399,24 +361,23 @@
                                             <Title text="코드 명" level="H2"/>
                                             <ToolbarSpacer/>
                                             <Button text="행추가" icon="sap-icon://add"  type="Accept" press="onLngAddRow"/>
-                                            <Button text="행복사" icon="sap-icon://copy" type="Accept" press="onLngCopyRow"/>
                                             <Button text="행삭제" icon="sap-icon://delete" type="Reject" press="onLngDeleteRow"/>
                                             <Button text="저장"   icon="sap-icon://save" type="Attention" press="onLngSave"/>
                                         </content>
                                     </OverflowToolbar>
                                 </headerToolbar>
                                 <columns>
+                                    <Column hAlign="Center" width="50px">
+                                        <header>
+                                            <Label text=""/>
+                                        </header>
+                                    </Column>
                                     <Column hAlign="Center" width="80px">
                                         <header>
                                             <Label text="Tenant"/>
                                         </header>
                                     </Column>
-                                    <Column hAlign="Center" width="80px">
-                                        <header>
-                                            <Label text="Company"/>
-                                        </header>
-                                    </Column>
-                                    <Column hAlign="Center" width="150px">
+                                    <Column hAlign="Center" width="300px">
                                         <header>
                                             <Label text="그룹 코드"/>
                                         </header>
@@ -446,22 +407,22 @@
                                             <Label text="수정자"/>
                                         </header>
                                     </Column>
-                                    <Column hAlign="Center" width="200px">
+                                    <Column hAlign="Center" width="450px">
                                         <header>
                                             <Label text="생성 시간"/>
                                         </header>
                                     </Column>
-                                    <Column hAlign="Center" width="200px">
+                                    <Column hAlign="Center" width="450px">
                                         <header>
                                             <Label text="수정 시간"/>
                                         </header>
                                     </Column>
-                                    <Column hAlign="Center" width="200px">
+                                    <Column hAlign="Center" width="450px">
                                         <header>
                                             <Label text="시스템 생성 시간"/>
                                         </header>
                                     </Column>
-                                    <Column hAlign="Center" width="200px">
+                                    <Column hAlign="Center" width="450px">
                                         <header>
                                             <Label text="시스템 수정 시간"/>
                                         </header>
@@ -470,18 +431,18 @@
                                 <items>
                                     <ColumnListItem type="Active" id="codeLngColumnListItem">
                                         <cells>
-                                            <Text id="lng_tenant_id" text="{tenant_id}"/>
-                                            <Text id="lng_company_code" text="{company_code}"/>
-                                            <Text id="lng_group_code" text="{group_code}"/>
-                                            <Text id="lng_code" text="{code}"/>
-                                            <Input id="lng_language_cd" value="{language_cd}"/>
-                                            <Input id="lng_code_name" value="{code_name}"/>
-                                            <Text id="lng_create_user_id" text="{create_user_id}"/>
-                                            <Text id="lng_update_user_id" text="{update_user_id}"/>
-                                            <Text id="lng_local_create_dtm" text="{local_create_dtm}"/>
-                                            <Text id="lng_local_update_dtm" text="{local_update_dtm}"/>
-                                            <Text id="lng_system_create_dtm" text="{system_create_dtm}"/>
-                                            <Text id="lng_system_update_dtm" text="{system_update_dtm}"/>
+                                            <Text id="lgn_row_state_" text="{CodeLanguages>_row_state_}"/>
+                                            <Text id="lng_tenant_id" text="{CodeLanguages>tenant_id}"/>
+                                            <Text id="lng_group_code" text="{CodeLanguages>group_code}"/>
+                                            <Text id="lng_code" text="{CodeLanguages>code}"/>
+                                            <Input id="lng_language_cd" value="{CodeLanguages>language_cd}"/>
+                                            <Input id="lng_code_name" value="{CodeLanguages>code_name}"/>
+                                            <Text id="lng_create_user_id" text="{CodeLanguages>create_user_id}"/>
+                                            <Text id="lng_update_user_id" text="{CodeLanguages>update_user_id}"/>
+                                            <Text id="lng_local_create_dtm" text="{CodeLanguages>local_create_dtm}"/>
+                                            <Text id="lng_local_update_dtm" text="{CodeLanguages>local_update_dtm}"/>
+                                            <Text id="lng_system_create_dtm" text="{CodeLanguages>system_create_dtm}"/>
+                                            <Text id="lng_system_update_dtm" text="{CodeLanguages>system_update_dtm}"/>
                                         </cells>
                                     </ColumnListItem>
                                 </items>
@@ -491,5 +452,4 @@
             </f:content>
         </f:DynamicPage>
     </App>
-  <!-- </Shell> -->
 </mvc:View>

@@ -115,6 +115,7 @@
                                     width="20em"
                                     placeholder="필수"
                                     value="Hisen2 에너지 1등급 금형 발주품의"
+                                    readMode="true"
                                     visible="{contModel>/editMode}">
                                 </Input>
                             </HBox>

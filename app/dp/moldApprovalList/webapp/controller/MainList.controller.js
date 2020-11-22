@@ -156,27 +156,26 @@ sap.ui.define([
 		 * @public
 		 */
 		onMainTableItemPress: function(oEvent) {
- 
-			var sPath = oEvent.getSource().getBindingContext("list").getPath(),
+
+            var sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
-            console.log("oRecord >>>  " , oRecord );
-		    var that = this; 
-            if(oRecord.mold_id % 3 == 0){
-               that.getRouter().navTo("participatingSupplierSelectionApprovalCreateObject", {
-                  company : "[LGEKR] LG Electronics Inc." 
-                  , plant : "[DFZ] Washing Machine"
-                });  
-            }else if(oRecord.mold_id % 3 == 2){
-                that.getRouter().navTo("participatingSupplierSelectionApprovalObject", { 
+            console.log("oRecord >>>  ", oRecord);
+            var that = this;
+            if (oRecord.mold_id % 3 == 0) {
+                that.getRouter().navTo("pssaCreateObject", {
+                    company: "[LGEKR] LG Electronics Inc."
+                    , plant: "[DFZ] Washing Machine"
+                });
+            } else if (oRecord.mold_id % 3 == 2) {
+                that.getRouter().navTo("pssaObject", {
                     moldId: oRecord.mold_id
                 });
-            }else{
-                 that.getRouter().navTo("participatingSupplierSelectionApprovalCreateObject", {
-                  company : "[LGEKR] LG Electronics Inc." 
-                  , plant : "[DFZ] Washing Machine"
-                });  
+            } else {
+                that.getRouter().navTo("pssaCreateObject", {
+                    company: "[LGEKR] LG Electronics Inc."
+                    , plant: "[DFZ] Washing Machine"
+                });
             }
-
 
 		},
 
@@ -280,38 +279,37 @@ sap.ui.define([
         onValueHelpAfterClose: function () {
             this._oValueHelpDialog.destroy();
         },
-
-        onToggleHandleChange: function (){
-            var pressed = this.getView();
-            console.log(pressed);
-        },
-
+        
          /**
          * @public
          * @see 사용처 ValueHelpDialogAffiliate Fragment window.close after 이벤트
          */
         onValueHelpRequestedCreate: function (){
-			if (this._oDialog) {
-				this._oDialog.destroy();
-				this._oDialog = null;
-			}
-			if (!this._oDialogSingleCustomTab) {
-				Fragment.load({
-					name: "dp.moldApprovalList.view.ValueHelpDialogApprovalCreate",
+            var oView = this.getView();
+
+			if (!this.pDialog) {
+				this.pDialog = Fragment.load({
+					id: oView.getId(),
+					name: "dp.moldApprovalList.view.dialogApprovalCategory",
 					controller: this
-				}).then(function(oDialog){
-					this._oDialogSingleCustomTab = oDialog;
-					this._oDialogSingleCustomTab.setModel(this.getView().getModel());
-					this._oDialogSingleCustomTab.open();
-				}.bind(this));
-			} else {
-				this._oDialogSingleCustomTab.setModel(this.getView().getModel());
-				this._oDialogSingleCustomTab.open();
-			}
+				}).then(function (oDialog) {
+					// connect dialog to the root view of this component (models, lifecycle)
+					oView.addDependent(oDialog);
+					return oDialog;
+				});
+			} 
+			this.pDialog.then(function(oDialog) {
+				oDialog.open();
+			});
 		
+        },
+        
+        createPopupClose: function (oEvent){
+            this.byId("dialogApprovalCategory").close();
         },
 
         handleConfirm: function (oEvent) {
+            console.log(this.byId("VSDThemeButtons").mAggregations);
 			if (oEvent.getParameters().filterString) {
 				MessageToast.show(oEvent.getParameters().filterString);
 			}

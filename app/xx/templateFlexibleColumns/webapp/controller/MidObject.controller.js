@@ -4,7 +4,7 @@ sap.ui.define([
 	"sap/ui/model/json/JSONModel",
 	"ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedModel",
-	"ext/lib/model/ManagedListModel",
+	"ext/lib/model/DelegateModel",
 	"ext/lib/formatter/DateFormatter",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
@@ -17,7 +17,7 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
+], function (BaseController, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, DelegateModel, DateFormatter, 
 	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
 	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
         
@@ -56,8 +56,8 @@ sap.ui.define([
 			this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
 			this.setModel(oViewModel, "midObjectView");
 			
-			this.setModel(new ManagedModel(), "master");
-			this.setModel(new ManagedListModel(), "details");
+			this.setModel(new DelegateModel(), "master");
+			this.setModel(new DelegateModel(), "details");
 
 			oTransactionManager = new TransactionManager();
 			oTransactionManager.addDataModel(this.getModel("master"));
@@ -158,16 +158,16 @@ sap.ui.define([
 
 		onMidTableDeleteButtonPress: function(){
 			var oTable = this.byId("midTable"),
-				oModel = this.getModel("details"),
+				oDetailsModel = this.getModel("details"),
 				aItems = oTable.getSelectedItems(),
 				aIndices = [];
 			aItems.forEach(function(oItem){
-				aIndices.push(oModel.getData().indexOf(oItem.getBindingContext("details").getObject()));
+				aIndices.push(oDetailsModel.getProperty("/ControlOptionDetails").indexOf(oItem.getBindingContext("details").getObject()));
 			});
 			aIndices = aIndices.sort(function(a, b){return b-a;});
 			aIndices.forEach(function(nIndex){
-				//oModel.removeRecord(nIndex);
-				oModel.markRemoved(nIndex);
+				//oDetailsModel.removeRecord(nIndex);
+				oDetailsModel.markRemoved(nIndex);
 			});
 			oTable.removeSelections(true);
 		},
@@ -273,7 +273,6 @@ sap.ui.define([
 				this._toEditMode();
 			}else{
 				this.getModel("midObjectView").setProperty("/isAddedMode", false);
-
 				this._bindView("/ControlOptionMasters(tenant_id='" + this._sTenantId + "',control_option_code='" + this._sControlOptionCode + "')");
 				oView.setBusy(true);
 				var oDetailsModel = this.getModel("details");
@@ -381,7 +380,6 @@ sap.ui.define([
                             path: 'util>/CodeDetails',
                             filters: [
                                 new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
-                                new Filter("company_code", FilterOperator.EQ, 'G100'),
                                 new Filter("group_code", FilterOperator.EQ, 'TEST')
                             ],
                             template: new Item({
@@ -415,7 +413,7 @@ sap.ui.define([
 
 		_bindMidTable: function(oTemplate, sKeyboardMode){
 			this.byId("midTable").bindItems({
-				path: "details>/",
+				path: "details>/ControlOptionDetails",
 				template: oTemplate
 			}).setKeyboardMode(sKeyboardMode);
 		},
