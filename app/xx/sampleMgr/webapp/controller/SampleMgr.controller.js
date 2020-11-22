@@ -23,6 +23,8 @@ sap.ui.define([
 
 
             onSearch: function() {
+                
+                debugger
                 var oView = this.getView();
                 var oModel = this.getModel("headerList");
                 oView.setBusy(true);
