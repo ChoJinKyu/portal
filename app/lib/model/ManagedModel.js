@@ -7,12 +7,6 @@ sap.ui.define([
 
     var ManagedModel = JSONModel.extend("ext.lib.model.ManagedModel", {
 
-        /**
-         * Sets the data, passed as a JS object tree, to the model.
-         * @param {object} oData the data to set on the model
-         * @param {boolean} [bMerge=false] whether to merge the data instead of replacing it
-         * @public
-         */
         setData: function(oData, sEntity, bMerge){
             var sPath = this._transactionPath;
             oData = oData || {};
@@ -57,7 +51,6 @@ sap.ui.define([
                         groupId: sGroupId,
                         success: function(){
                             oItem.__entity = sEntity;
-                            console.log("Created a data to entity : " + sEntity);
                         }
                     });
                 }else if(state == "D"){
@@ -65,7 +58,6 @@ sap.ui.define([
                         groupId: sGroupId,
                         success: function(){
                             oItem.__entity = sEntity;
-                            console.log("Removed a data from entity : " + sEntity);
                         }
                     });
                 }
@@ -74,7 +66,6 @@ sap.ui.define([
                     groupId: sGroupId,
                     success: function(){
                         oItem.__entity = sEntity;
-                        console.log("Updated a data from entity : " + sEntity);
                     }
                 });
             }

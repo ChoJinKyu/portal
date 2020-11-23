@@ -224,6 +224,9 @@ sap.ui.define([
 					case "company":
 					aSearchFilters.push(new Filter("company_flag", FilterOperator.EQ, "true"));
 					break;
+					case "role":
+					aSearchFilters.push(new Filter("role_flag", FilterOperator.EQ, "true"));
+					break;
 					case "org":
 					aSearchFilters.push(new Filter("organization_flag", FilterOperator.EQ, "true"));
 					break;

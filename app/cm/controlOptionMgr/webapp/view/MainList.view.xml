@@ -40,7 +40,6 @@
                                     path: 'util>/CodeDetails',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                        {path: 'company_code', operator: 'EQ', value1: '*'},
                                         {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                                     ]
                                 }">
@@ -66,6 +65,7 @@
                                     <SegmentedButtonItem text="All" key="all" width="4.1rem" />
                                     <SegmentedButtonItem text="Site" key="site" width="4.1rem" />
                                     <SegmentedButtonItem text="Company" key="company" width="5rem" />
+                                    <SegmentedButtonItem text="Role" key="role" width="4.1rem" />
                                     <SegmentedButtonItem text="Org." key="org" width="4.1rem" />
                                     <SegmentedButtonItem text="User" key="user" width="4.1rem" />
                                 </items>
@@ -87,7 +87,7 @@
                         growingThreshold="10"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
-                        items="{list>/}"
+                        items="{list>/ControlOptionMasters}"
                         mode="None" 
                         width="auto">
                     <headerToolbar>

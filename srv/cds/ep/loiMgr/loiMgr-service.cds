@@ -19,9 +19,9 @@ service LoiMgrService {
             dtl.company_code,	
             dtl.loi_write_number,	
             dtl.loi_item_number,	
-            pub.purchase_manager_id,	
+            pub.buyer_empno,	
             pub.publish_date,	
-            pub.vendor_code	
+            pub.supplier_code	
         from loiPub.Loi_Publish as pub		
         join loiDtl.Loi_Dtl as dtl		
             on pub.tenant_id = dtl.tenant_id
@@ -29,21 +29,23 @@ service LoiMgrService {
             and pub.loi_publish_number = dtl.loi_publish_number	
 	;
 
+
 	view LOIRequestView as
         select 
             mst.tenant_id,
             mst.company_code,
             mst.loi_write_number,
             mst.loi_number,
-            mst.loi_request_ttl,
-            mst.progress_status_code,
-            pub.purchase_manager_id,	
+            mst.loi_request_title,
+            mst.loi_request_status_code,
+            pub.buyer_empno,	
             pub.publish_date,	
-            pub.vendor_code	
+            pub.supplier_code	
         from loiMst.Loi_Mst as mst
         left outer join LOIPublishItemView as pub on mst.tenant_id = pub.tenant_id
                 and mst.company_code = pub.company_code
                 and mst.loi_write_number = pub.loi_write_number           
 	;
+
 	
 }

@@ -32,6 +32,20 @@
         "settings": {
           "odataVersion": "2.0"
         }
+      }, 
+      "orgMgrService": {
+        "uri": "srv-api/odata/v2/cm.OrgMgrService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
+      },
+      "purOrgMgrService": {
+        "uri": "srv-api/odata/v2/cm.PurOrgMgrService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
       }
     }
   },
@@ -91,6 +105,26 @@
           "useBatch": true
         }
       },
+       "org": {
+        "dataSource": "orgMgrService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": true,
+          "useBatch": true
+        }
+      },
+      "purOrg": {
+        "dataSource": "purOrgMgrService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "useBatch": true
+        }
+      },
       "": {
         "dataSource": "moldService",
         "preload": true,
@@ -129,9 +163,9 @@
       "routes": [
         {
           "pattern": "",
-          "name": "mainList",
+          "name": "approvalList",
           "target": [
-            "mainList"
+            "approvalList"
           ]
         },
         {
@@ -157,11 +191,11 @@
         }
       ],
       "targets": {
-        "mainList": {
-          "viewName": "MainList",
-          "viewId": "mainList",
+        "approvalList": {
+          "viewName": "ApprovalList",
+          "viewId": "approvalList",
           "viewLevel": 1,
-          "title": "{i18n>mainListViewTitle}"
+          "title": "{i18n>approvalListViewTitle}"
         },
         "mainObject": {
           "viewName": "MainObject",

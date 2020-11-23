@@ -105,14 +105,14 @@
 						<Table id="midTable" 
 								sticky="HeaderToolbar,ColumnHeaders" 
 								inset="false" 
-								items="{details>/}"
+								items="{details>/CurrencyLng}"
 								class="sapFDynamicPageAlignContent" 
 								updateFinished=".onMidTableUpdateFinished"
 								mode="SingleSelectLeft" 
 								width="auto">
 							<headerToolbar>
 								<OverflowToolbar>
-									<Title text="Level and Values" level="H2"/>
+									<Title text="Cruuency_Lng" level="H2"/>
 									<ToolbarSpacer/>
 									<!-- Add the Personalization button -->
 									<Button id="midTableAddButton" text="Add" type="Transparent" press=".onMidTableAddButtonPress" />
@@ -126,32 +126,24 @@
 								<Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="40px" >
 									<Text text="S" />
 								</Column>
-								<Column id="midColumnLevelCode" minScreenWidth="Tablet" hAlign="Center">
+								<Column id="midColumnLanguageCode" minScreenWidth="Tablet" hAlign="Center">
 									<Text text="언어" />
 								</Column>
-								<Column id="midColumnLevelValue" minScreenWidth="Tablet" hAlign="Center">
+								<Column id="midColumnCurrencyCodeName" minScreenWidth="Tablet" hAlign="Center">
 									<Text text="통화코드명" />
 								</Column>
-								<Column id="midColumnValue" minScreenWidth="Tablet" hAlign="Center" >
+								<Column id="midColumnCurrencyCodeDesc" minScreenWidth="Tablet" hAlign="Center" >
 									<Text text="통화코드설명" />
 								</Column>
-                                <Column id="midColumnLevelValue1" minScreenWidth="Tablet" hAlign="Center">
+                                <Column id="midColumnCurrencyPrefix" minScreenWidth="Tablet" hAlign="Center">
 									<Text text="Prefix" />
 								</Column>
-								<Column id="midColumnValue1" minScreenWidth="Tablet" hAlign="Center" >
+								<Column id="midColumnCurrencySuffix" minScreenWidth="Tablet" hAlign="Center" >
 									<Text text="Suffix" />
 								</Column>
 							</columns>
 							<items>
 								<ColumnListItem type="Inactive" press=".onMidTableItemPress">
-									<cells>
-										<Text text="{details>_row_state_}"/>
-										<Input value="{details>language_code}"/>
-										<Input value="{details>currency_code_name}"/>
-										<Input value="{details>currency_code_desc}"/>
-                                        <Input value="{details>currency_prefix}"/>
-										<Input value="{details>currency_suffix}"/>
-									</cells>
 								</ColumnListItem>
 							</items>
 						</Table>

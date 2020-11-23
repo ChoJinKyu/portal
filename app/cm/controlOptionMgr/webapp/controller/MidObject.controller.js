@@ -209,7 +209,7 @@ sap.ui.define([
 			}else{
 				this._toShowMode();
 			}
-        },
+		},
 
 		/* =========================================================== */
 		/* internal methods                                            */
@@ -321,8 +321,6 @@ sap.ui.define([
 
 			this.byId("midTableAddButton").setEnabled(!FALSE);
 			this.byId("midTableDeleteButton").setEnabled(!FALSE);
-			this.byId("midTableSearchField").setEnabled(FALSE);
-			this.byId("midTableApplyFilterButton").setEnabled(FALSE);
 			this.byId("midTable").setMode(sap.m.ListMode.SingleSelectLeft);
 			this._bindMidTable(this.oEditableTemplate, "Edit");
 		},
@@ -338,8 +336,6 @@ sap.ui.define([
 
 			this.byId("midTableAddButton").setEnabled(!TRUE);
 			this.byId("midTableDeleteButton").setEnabled(!TRUE);
-			this.byId("midTableSearchField").setEnabled(TRUE);
-			this.byId("midTableApplyFilterButton").setEnabled(TRUE);
 			this.byId("midTable").setMode(sap.m.ListMode.None);
 			this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
 		},
@@ -381,7 +377,6 @@ sap.ui.define([
                             path: 'util>/CodeDetails',
                             filters: [
                                 new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
-                                new Filter("company_code", FilterOperator.EQ, 'G100'),
                                 new Filter("group_code", FilterOperator.EQ, 'TEST')
                             ],
                             template: new Item({
@@ -389,6 +384,7 @@ sap.ui.define([
                                 text: "{util>code_description}"
                             })
                         },
+						editable: "{= ${details>_row_state_} === 'C' }",
                         required: true
                     }), 
 					new Input({
@@ -398,6 +394,7 @@ sap.ui.define([
 								maxLength: 100
 							}),
 						},
+						editable: "{= ${details>_row_state_} === 'C' }",
 						required: true
 					}),
 					new Input({
@@ -415,7 +412,7 @@ sap.ui.define([
 
 		_bindMidTable: function(oTemplate, sKeyboardMode){
 			this.byId("midTable").bindItems({
-				path: "details>/",
+				path: "details>/ControlOptionDetails",
 				template: oTemplate
 			}).setKeyboardMode(sKeyboardMode);
 		},

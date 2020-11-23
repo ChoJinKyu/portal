@@ -1,5 +1,5 @@
 sap.ui.define([
-    "./AbstractModel"
+  "./AbstractModel"
 ], function (JSONModel) {
     "use strict";
 
@@ -12,21 +12,21 @@ sap.ui.define([
             this._aRemovedRows = [];
         },
 
-        /**
-         * Sets the data, passed as a JS object tree, to the model.
-         * @param {object} oData the data to set on the model
-         * @param {boolean} [bMerge=false] whether to merge the data instead of replacing it
-         * @public
-         */
         setData: function (oData, bMerge) {
-            var aResults = oData.results || oData || [],
-                sPath = this._transactionPath;
-            aResults.forEach(function (oResult) {
-                if (oResult.__metadata && oResult.__metadata.uri) {
-                    oResult.__entity = oResult.__metadata.uri.substring(oResult.__metadata.uri.indexOf(sPath));
+            var aRecords = oData.results || oData || [],
+                sPath = this._transactionPath,
+                oResult = {};
+            aRecords.forEach(function (oItem) {
+                if (oItem.__metadata && oItem.__metadata.uri) {
+                    var sType = oItem.__metadata.type,
+                        sUrl = oItem.__metadata.uri;
+                    sType = sType.substring(0, sType.lastIndexOf("."));
+                    oItem.__entity = sUrl.substring(sUrl.indexOf(sType) + sType.length);
                 }
             });
-            JSONModel.prototype.setData.call(this, aResults, bMerge);
+            oResult.entityName = sPath.substring(1);
+            oResult[oResult.entityName] = aRecords;
+            JSONModel.prototype.setData.call(this, oResult, bMerge);
         },
 
         setProperty: function (sPath, oValue, oContext, bAsyncUpdate) {
@@ -38,29 +38,34 @@ sap.ui.define([
         },
 
         addRecord: function (oRecord, sPath, nIndex) {
+            var sEntityName = this.getProperty("/entityName"),
+                aRecords = this.getProperty("/" + sEntityName);
             if(typeof sPath == "number") nIndex = sPath;
-            if (nIndex == undefined) nIndex = this.oData.length;
+            if (nIndex == undefined) nIndex = aRecords.length;
             if(!!sPath) oRecord.__entity = sPath;
             oRecord[STATE_COL] = "C";
-            this.oData.splice(nIndex || 0, 0, oRecord);
-            JSONModel.prototype.setProperty.call(this, "/", this.oData);
+            aRecords.splice(nIndex || 0, 0, oRecord);
+            JSONModel.prototype.setProperty.call(this, "/" + sEntityName, aRecords);
         },
 
         markRemoved: function (nIndex) {
-            var _oRecord = this.oData[nIndex];
+            var sEntityName = this.getProperty("/entityName"),
+                aRecords = this.getProperty("/" + sEntityName);
+            var _oRecord = aRecords[nIndex];
             if (_oRecord[STATE_COL] == "C") {
                 this.removeRecord(nIndex);
             } else {
                 _oRecord[STATE_COL] = "D";
-                JSONModel.prototype.setProperty.call(this, "/" + nIndex, _oRecord);
+                JSONModel.prototype.setProperty.call(this, "/" + sEntityName + "/" + nIndex, _oRecord);
             }
         },
 
         removeRecord: function (nIndex) {
-            var oData = this.getData(),
-                oRemoved = oData.splice(nIndex, 1);
+            var sEntityName = this.getProperty("/entityName"),
+                aRecords = this.getProperty("/" + sEntityName),
+                oRemoved = aRecords.splice(nIndex, 1);
             this._addRemoved(oRemoved[0]);
-            JSONModel.prototype.setProperty.call(this, "/", oData);
+            JSONModel.prototype.setProperty.call(this, "/" + sEntityName, aRecords);
         },
 
         getChanges: function () {
@@ -84,6 +89,7 @@ sap.ui.define([
         },
 
         read: function (sPath, oParameters) {
+            oParameters = oParameters || {};
             var that = this,
                 successHandler = oParameters.success;
             this._oTransactionModel.read(sPath, jQuery.extend(oParameters, {
@@ -110,7 +116,7 @@ sap.ui.define([
                 oServiceModel.create(sPath, oItem, {
                     groupId: sGroupId,
                     success: function (oData) {
-                        console.log("Added a new record that created by origin model.", "oData V2 Transaction submitBatch");
+                        oItem.__entity = sPath;
                     }
                 });
             });
@@ -119,7 +125,6 @@ sap.ui.define([
                 oServiceModel.remove(oItem.__entity, {
                     groupId: sGroupId,
                     success: function () {
-                        console.log("Removed a record that deleted from origin model.", "oData V2 Transaction submitBatch");
                     }
                 });
             });
@@ -130,7 +135,7 @@ sap.ui.define([
                 oServiceModel.update(sEntity, oItem, {
                     groupId: sGroupId,
                     success: function () {
-                        console.log("Updated a record that changed by origin model.");
+                        oItem.__entity = sEntity;
                     }
                 });
             });
@@ -141,10 +146,11 @@ sap.ui.define([
         },
 
         commit: function () {
-            var oRecords = this.getObject("/"),
+            var sEntityName = this.getProperty("/entityName"),
+                aRecords = this.getProperty("/" + sEntityName),
                 aIndices = [];
 
-            oRecords.forEach(function (oRecord, nIndex) {
+            aRecords.forEach(function (oRecord, nIndex) {
                 if (oRecord[STATE_COL] == "D") {
                     aIndices.push(nIndex);
                 } else {
@@ -152,15 +158,16 @@ sap.ui.define([
                 }
             });
             aIndices.reverse().forEach(function (nIndex) {
-                oRecords.splice(nIndex, 1);
+                aRecords.splice(nIndex, 1);
             });
-            JSONModel.prototype.setProperty.call(this, "/", oRecords);
+            JSONModel.prototype.setProperty.call(this, "/" + sEntityName, aRecords);
         },
 
         _getRecordsByState: function (sStates) {
-            var oData = this.getObject("/"),
+            var sEntityName = this.getProperty("/entityName"),
+                aRecords = this.getProperty("/" + sEntityName),
                 aResults = [];
-            oData.forEach(function (oRecord) {
+            aRecords.forEach(function (oRecord) {
                 if (sStates.indexOf(oRecord[STATE_COL]) > -1) aResults.push(oRecord);
             });
             return aResults;
@@ -170,7 +177,6 @@ sap.ui.define([
             oRecord[STATE_COL] = "D";
             this._aRemovedRows.push(oRecord);
         }
-
     });
 
     return ManagedListModel;

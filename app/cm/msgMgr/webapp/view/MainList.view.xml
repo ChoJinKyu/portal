@@ -26,7 +26,6 @@
                                         path: 'util>/CodeDetails',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                            {path: 'company_code', operator: 'EQ', value1: '*'},
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                                         ]
                                     }">
@@ -44,7 +43,6 @@
                                         path: 'util>/CodeDetails',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                            {path: 'company_code', operator: 'EQ', value1: '*'},
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
                                         ]
                                     }">
@@ -76,7 +74,6 @@
                                         path: 'util>/CodeDetails',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                            {path: 'company_code', operator: 'EQ', value1: '*'},
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                                         ]
                                     }">
@@ -94,7 +91,6 @@
                                         path: 'util>/CodeDetails',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                            {path: 'company_code', operator: 'EQ', value1: '*'},
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
                                         ]
                                     }">
@@ -137,7 +133,7 @@
                         inset="false" 
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
-                        items="{list>/}"
+                        items="{list>/Message}"
                         mode="SingleSelectLeft"
                         width="auto">
                     <headerToolbar>
@@ -178,82 +174,50 @@
                     <items>
                         <ColumnListItem>
                             <cells>
-                                <HBox>
-                                    <ObjectStatus icon="{
-                                        path: 'list>_row_state_',
-                                        formatter: '.formatter.toModelStateColumnIcon'
-                                    }" />
-                                </HBox>
-                                <HBox>
-                                    <!-- <Text text="{list>chain_code}" visible="true"></Text> -->
-                                    <ComboBox selectedKey="{list>chain_code}" 
-                                                width="100%" 
-                                                visible="true" 
-                                                items="{
-                                                    path: 'util>/CodeDetails',
-                                                    filters: [
-                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                                        {path: 'company_code', operator: 'EQ', value1: '*'},
-                                                        {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
-                                                    ]
-                                        }">
-                                        <items>
-                                            <core:Item key="{util>code}" text="{util>code_description}" />
-                                        </items>
-                                    </ComboBox>
-                                </HBox>
-                                <HBox>
-                                    <!-- <Text text="{list>language_code}" visible="true"></Text> -->
-                                    <ComboBox selectedKey="{list>language_code}" width="100%" visible="true" items="{
-                                            path: 'util>/CodeDetails',
-                                            filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                                {path: 'company_code', operator: 'EQ', value1: '*'},
-                                                {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
-                                            ]
-                                        }">
-                                        <items>
-                                            <core:Item key="{util>code}" text="{util>code_description}" />
-                                        </items>
-                                    </ComboBox>
-                                </HBox>
-                                <HBox align="Center">
-                                    <!-- <Text text="{list>message_code}" visible="true"></Text> -->
-                                    <Input value="{list>message_code}" visible="true"></Input>
-                                </HBox>
-                                <HBox align="Center">
-                                    <!-- <Text text="{list>message_contents}" visible="true"></Text> -->
-                                    <Input value="{list>message_contents}" visible="true"></Input>
-                                </HBox>
-                                <HBox align="Center">
-                                    <!-- <Text text="{list>message_type_code}" visible="true"></Text> -->
-                                    <ComboBox selectedKey="{list>message_type_code}" width="100%" visible="true" items="{
-                                            path: 'util>/CodeDetails',
-                                            filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                                {path: 'company_code', operator: 'EQ', value1: '*'},
-                                                {path: 'group_code', operator: 'EQ', value1: 'CM_MESSAGE_TYPE_CODE'}
-                                            ]
-                                        }">
-                                        <items>
-                                            <core:Item key="{util>code}" text="{util>code_description}" />
-                                        </items>
-                                    </ComboBox>
-                                </HBox>
+                                <ObjectStatus icon="{
+                                    path: 'list>_row_state_',
+                                    formatter: '.formatter.toModelStateColumnIcon'
+                                }" />
+                                <ComboBox selectedKey="{list>chain_code}" width="100%" items="{
+                                        path: 'util>/CodeDetails',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                            {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
+                                        ]
+                                    }" editable="{= ${list>_row_state_} === 'C' }">
+                                    <items>
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </items>
+                                </ComboBox>
+                                <ComboBox selectedKey="{list>language_code}" width="100%" items="{
+                                        path: 'util>/CodeDetails',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                            {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
+                                        ]
+                                    }" editable="{= ${list>_row_state_} === 'C' }">
+                                    <items>
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </items>
+                                </ComboBox>
+                                <Input value="{list>message_code}" editable="{= ${list>_row_state_} === 'C' }" />
+                                <Input value="{list>message_contents}"></Input>
+                                <ComboBox selectedKey="{list>message_type_code}" width="100%" items="{
+                                        path: 'util>/CodeDetails',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                            {path: 'group_code', operator: 'EQ', value1: 'CM_MESSAGE_TYPE_CODE'}
+                                        ]
+                                    }">
+                                    <items>
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </items>
+                                </ComboBox>
                             </cells>
                         </ColumnListItem>
                     </items>
                 </Table>
             </VBox>
         </f:content>
-        <!-- DynamicPage Footer -->
-        <f:footer>
-            <OverflowToolbar>
-                <!-- <Button icon="sap-icon://message-popup" text="123123" type="Emphasized" press=".onMessageButtonPress" /> -->
-                <ToolbarSpacer />
-				<Button text="Save" type="Emphasized" press=".onPageSaveButtonPress" />
-				<Button text="Cancel" type="Transparent" press=".onPageCancelEditButtonPress"/>
-            </OverflowToolbar>
-        </f:footer>
     </f:DynamicPage>
 </mvc:View>

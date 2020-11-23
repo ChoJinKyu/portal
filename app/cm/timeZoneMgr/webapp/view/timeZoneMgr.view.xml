@@ -113,7 +113,7 @@
         <t:Table id="mainTable"
           selectionMode="MultiToggle"
           rows="{
-            path: 'list>/',
+            path: 'list>/TimeZone',
             filters: [
               {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
             ]
@@ -126,7 +126,7 @@
             <OverflowToolbar class="sapFDynamicPageAlignContent">
               <Title text="Time Zone" level="H2"/>
               <ToolbarSpacer/>
-              <Button text="Add" id="buttonMainCreateRow" press=".onAdd('mainTable', 'list', ['tenant_id', 'timezone_code', 'timezone_name'])"  type="Transparent"/>
+              <Button text="Add" id="buttonMainCreateRow" press=".onAdd('mainTable', 'list', 'TimeZone', ['tenant_id', 'timezone_code', 'timezone_name'])"  type="Transparent"/>
               <Button text="Delete" id="buttonMainDeleteRow" press=".onDelete('mainTable', 'list')"   type="Transparent"/>
               <Button text="Save" id="buttonMainSaveRow" press=".onSave('mainTable', 'list')"   type="Emphasized"/>
               <ToolbarSeparator/>
