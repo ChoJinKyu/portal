@@ -27,4 +27,4 @@ entity Loi_Mst {
     org_type_code : String(2)  ;	
     org_code : String(10)  ;	
 }	
-extend  Loi_Mst with util.Managed;	
+extend Loi_Mst with util.Managed;	

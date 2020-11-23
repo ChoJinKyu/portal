@@ -19,4 +19,4 @@ entity Loi_Vendor {
     vendor_pool_code : String(20)  ;	
     remark : String(3000)  ;		
 }	
-extend  Loi_Vendor with util.Managed;	
+extend Loi_Vendor with util.Managed;	

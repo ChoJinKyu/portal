@@ -49,4 +49,4 @@ entity Loi_Dtl {
     po_item_number : String(10)  ;	
     remark : String(3000)  ;		
 }	
-extend  Loi_Dtl with util.Managed;	
+extend Loi_Dtl with util.Managed;	

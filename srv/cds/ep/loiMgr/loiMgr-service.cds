@@ -29,6 +29,7 @@ service LoiMgrService {
             and pub.loi_publish_number = dtl.loi_publish_number	
 	;
 
+
 	view LOIRequestView as
         select 
             mst.tenant_id,
@@ -45,5 +46,6 @@ service LoiMgrService {
                 and mst.company_code = pub.company_code
                 and mst.loi_write_number = pub.loi_write_number           
 	;
+
 	
 }

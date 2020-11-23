@@ -29,4 +29,4 @@ entity Loi_Publish {
     org_type_code : String(2)  ;	
     org_code : String(10)  ;		
 }	
-extend  Loi_Publish with util.Managed;		
+extend Loi_Publish with util.Managed;		

@@ -24,4 +24,4 @@ entity Loi_Vendor_Selection {
     org_type_code : String(2)  ;	
     org_code : String(10)  ;		
 }	
-extend  Loi_Vendor_Selection with util.Managed;	
+extend Loi_Vendor_Selection with util.Managed;	
