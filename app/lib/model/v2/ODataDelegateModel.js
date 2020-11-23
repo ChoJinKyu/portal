@@ -1,5 +1,5 @@
 sap.ui.define([
-    "./AbstractModel"
+    "../AbstractModel"
 ], function (JSONModel) {
     "use strict";
 
