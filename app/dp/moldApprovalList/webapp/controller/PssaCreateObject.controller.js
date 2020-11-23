@@ -12,7 +12,7 @@ sap.ui.define([
     "sap/m/MessageToast", 
     "sap/m/UploadCollectionParameter",
     "sap/ui/Device" // fileupload 
-], function (BaseController, JSONModel, History, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment
+], function (BaseController, JSONModel, History, ManagedListModel, RichTextEditor , DateFormatter, Filter, FilterOperator, Fragment
             , MessageBox, MessageToast,  UploadCollectionParameter, Device ) {
 	"use strict";
     /**

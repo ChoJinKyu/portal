@@ -26,7 +26,7 @@ sap.ui.define([
     * @date 2020.11.19 
     * @author jinseon.lee , daun.lee 
     */
-    var dialogCategori;
+
 	return BaseController.extend("dp.moldApprovalList.controller.MainList", {
 
 		dateFormatter: DateFormatter,
