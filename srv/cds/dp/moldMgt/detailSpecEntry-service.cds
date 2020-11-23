@@ -15,7 +15,7 @@ service DetailSpecEntryService {
     entity MoldMasters as projection on moldMst.Mold_Mst;
     entity MoldMasterSpec as projection on moldMstSpecView.Mold_Mst_Spec_View;
 
-    view Divisions (tenant_id: String) as
+    view Divisions as
     select key a.tenant_id       
             ,key a.company_code  
             ,key a.org_type_code 
@@ -29,10 +29,10 @@ service DetailSpecEntryService {
                 ,a.au_code           
                 ,a.hq_au_code        
                 ,a.use_flag  
-    from Org.Pur_Operation_Org a   
-    where a.tenant_id=:tenant_id
-    and a.org_type_code=(select b.org_type_code 
-                        from orgMapping.Pur_Org_Type_Mapping b 
-                        where b.tenant_id=:tenant_id 
-                        and b.process_type_code='DP05')
+    from Org.Pur_Operation_Org a  
+    left join orgMapping.Pur_Org_Type_Mapping b
+    on a.tenant_id=b.tenant_id
+    and a.org_type_code=b.org_type_code
+
+    where b.process_type_code='DP05'
 }

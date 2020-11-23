@@ -22,7 +22,7 @@
                         <form:content>
                             <VBox>
                                 <Label text="LG Company" labelFor="searchCompanyS" required="true"></Label>
-                                <MultiComboBox id="searchCompanyS" width="100%" selectedKey="" items="{
+                                <MultiComboBox id="searchCompanyS" width="100%" selectedKey="" selectionFinish="handleSelectionFinishComp" items="{
                                     path: 'org>/Org_Company',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
@@ -39,9 +39,15 @@
                             </VBox>
                             <VBox>
                                 <Label text="LG Division" labelFor="searchDivisionS" required="true"></Label>
-                                <MultiComboBox id="searchDivisionS" width="100%" selectedKey="" items="{division>/}">
+                                <MultiComboBox id="searchDivisionS" width="100%" selectedKey="" selectionFinish="handleSelectionFinishDiv" items="{
+                                    path: '/Divisions',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                    ],
+                                    sorter: { path: 'org_code'}
+                                }">
                                     <items>
-                                        <core:Item key="{division>org_code}" text="[{division>org_code}] {division>org_name}" />
+                                        <core:Item key="{org_code}" text="[{org_code}] {org_name}" />
                                     </items>
                                 </MultiComboBox>
                                 <layoutData>
@@ -63,7 +69,7 @@
                         <form:content>
                             <VBox>
                                 <Label text="LG Company" labelFor="searchCompanyE"  required="true"></Label>
-                                <MultiComboBox id="searchCompanyE" width="100%" selectedKey="" items="{
+                                <MultiComboBox id="searchCompanyE" width="100%" selectedKey="" selectionFinish="handleSelectionFinishComp" items="{
                                     path: 'org>/Org_Company',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
@@ -80,9 +86,15 @@
                             </VBox>
                             <VBox>
                                 <Label text="LG Division" labelFor="searchDivisionE" required="true"></Label>
-                                <MultiComboBox id="searchDivisionE" width="100%" selectedKey="" items="{division>/}">
+                                <MultiComboBox id="searchDivisionE" width="100%" selectedKey="" selectionFinish="handleSelectionFinishDiv" items="{
+                                    path: '/Divisions',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                    ],
+                                    sorter: { path: 'org_code'}
+                                }">
                                     <items>
-                                        <core:Item key="{division>org_code}" text="[{division>org_code}] {division>org_name}" />
+                                        <core:Item key="{org_code}" text="[{org_code}] {org_name}" />
                                     </items>
                                 </MultiComboBox>
                                 <layoutData>
