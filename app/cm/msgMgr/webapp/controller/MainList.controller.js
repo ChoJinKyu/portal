@@ -141,19 +141,7 @@ sap.ui.define([
 				"local_create_dtm": new Date(),
                 "local_update_dtm": new Date()
             }, 0);
-            
-            // oTable.getAggregation('items')[0].getCells()[1].getItems()[0].setVisible(false);
-            // oTable.getAggregation('items')[0].getCells()[1].getItems()[0].setVisible(false);
-            // oTable.getAggregation('items')[0].getCells()[1].getItems()[1].setVisible(true);
-            // oTable.getAggregation('items')[0].getCells()[2].getItems()[0].setVisible(false);
-            // oTable.getAggregation('items')[0].getCells()[2].getItems()[1].setVisible(true);
-            // oTable.getAggregation('items')[0].getCells()[3].getItems()[0].setVisible(false);
-            // oTable.getAggregation('items')[0].getCells()[3].getItems()[1].setVisible(true);
-            // oTable.getAggregation('items')[0].getCells()[4].getItems()[0].setVisible(false);
-            // oTable.getAggregation('items')[0].getCells()[4].getItems()[1].setVisible(true);
-            // oTable.getAggregation('items')[0].getCells()[5].getItems()[0].setVisible(false);
-            // oTable.getAggregation('items')[0].getCells()[5].getItems()[1].setVisible(true);
-            
+ 
 		},
 
 		onMainTableDeleteButtonPress: function(){
@@ -193,37 +181,6 @@ sap.ui.define([
 			});
 			
         }, 
-
-        // onSelectionChange: function(oEvent) {
-        //     var tableRowCells,
-        //         selectRowCell=oEvent.getSource().getSelectedItem().getCells();
-        //     if(lastRowIndex != null){
-        //         tableRowCells = this.byId("mainTable").getAggregation('items')[lastRowIndex].getCells();
-        //         tableRowCells[1].getItems()[0].setVisible(true);
-        //         tableRowCells[1].getItems()[1].setVisible(false);
-        //         tableRowCells[2].getItems()[0].setVisible(true);
-        //         tableRowCells[2].getItems()[1].setVisible(false);
-        //         tableRowCells[3].getItems()[0].setVisible(true);
-        //         tableRowCells[3].getItems()[1].setVisible(false);
-        //         tableRowCells[4].getItems()[0].setVisible(true);
-        //         tableRowCells[4].getItems()[1].setVisible(false);
-        //         tableRowCells[5].getItems()[0].setVisible(true);
-        //         tableRowCells[5].getItems()[1].setVisible(false);
-        //     }
-        //     selectRowCell[1].getItems()[0].setVisible(false);
-        //     selectRowCell[1].getItems()[1].setVisible(true);
-        //     selectRowCell[2].getItems()[0].setVisible(false);
-        //     selectRowCell[2].getItems()[1].setVisible(true);
-        //     selectRowCell[3].getItems()[0].setVisible(false);
-        //     selectRowCell[3].getItems()[1].setVisible(true);
-        //     selectRowCell[4].getItems()[0].setVisible(false);
-        //     selectRowCell[4].getItems()[1].setVisible(true);
-        //     selectRowCell[5].getItems()[0].setVisible(false);
-        //     selectRowCell[5].getItems()[1].setVisible(true);
-          
-        //     var sPath = oEvent.getSource()._aSelectedPaths[0].toString();
-        //     lastRowIndex = sPath.substring(1);
-        // },
 
 		/* =========================================================== */
 		/* internal methods                                            */
