@@ -17,8 +17,9 @@ sap.ui.define([
     "sap/m/Token",
 	"sap/m/Input",
 	"sap/m/ComboBox",
-	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item) {
+    "sap/ui/core/Item",
+    'sap/ui/core/Element'
+], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item, Element) {
 	"use strict";
    /**
     * @description 품의 목록 (총 품의 공통)
@@ -61,7 +62,7 @@ sap.ui.define([
 			this.getRouter().getRoute("mainList").attachPatternMatched(this._onRoutedThisPage, this);
 
             this._doInitTablePerso();
-            this._doInitSearch();
+            //this._doInitSearch();
         },
         
         onAfterRendering : function () {
@@ -304,16 +305,37 @@ sap.ui.define([
 		
         },
         
+        
+         /**
+         * @public
+         * @see 사용처 create 팝업에서 나머지 버튼 비활성화 시키는 작업수행
+         */ 
+        onToggleHandleChange : function(oEvent){
+            var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
+            var isPressed;
+            var isPressedId;
+            isPressedId =oEvent.getSource().getId();
+            for(var i=0; i<groupId.length; i++){
+                if(groupId[i].getId() != isPressedId){
+                    groupId[i].setPressed(false);
+                }
+            }
+           
+        },
+
+        handleConfirm : function(targetControl){
+            var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
+            for(var i=0; i<groupId.length; i++){
+                if(groupId[i].getPressed() == true){
+                    console.log(groupId[i].mProperties.text);
+                }    
+            }
+        },
+
         createPopupClose: function (oEvent){
             this.byId("dialogApprovalCategory").close();
         },
 
-        handleConfirm: function (oEvent) {
-            console.log(this.byId("VSDThemeButtons").mAggregations);
-			if (oEvent.getParameters().filterString) {
-				MessageToast.show(oEvent.getParameters().filterString);
-			}
-		},
         /* Affiliate End */
 
 		/* =========================================================== */
