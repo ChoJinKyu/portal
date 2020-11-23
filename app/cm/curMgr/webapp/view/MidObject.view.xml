@@ -112,7 +112,7 @@
 								width="auto">
 							<headerToolbar>
 								<OverflowToolbar>
-									<Title text="Level and Values" level="H2"/>
+									<Title text="Cruuency_Lng" level="H2"/>
 									<ToolbarSpacer/>
 									<!-- Add the Personalization button -->
 									<Button id="midTableAddButton" text="Add" type="Transparent" press=".onMidTableAddButtonPress" />
@@ -144,14 +144,6 @@
 							</columns>
 							<items>
 								<ColumnListItem type="Inactive" press=".onMidTableItemPress">
-									<cells>
-										<Text text="{details>_row_state_}"/>
-										<Input value="{details>language_code}"/>
-										<Input value="{details>currency_code_name}"/>
-										<Input value="{details>currency_code_desc}"/>
-                                        <Input value="{details>currency_prefix}"/>
-										<Input value="{details>currency_suffix}"/>
-									</cells>
 								</ColumnListItem>
 							</items>
 						</Table>

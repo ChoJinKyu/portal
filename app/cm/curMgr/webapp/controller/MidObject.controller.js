@@ -83,13 +83,12 @@ sap.ui.define([
 		 */
 		onPageEnterFullScreenButtonPress: function () {
             var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
-            var oViewModel = this.getModel("midObjectView");
 			this.getRouter().navTo("midPage", {
 				layout: sNextLayout, 
 				tenantId: this._sTenantId,
                 currencyCode: this._sCurrencyCode
             });
-            oViewModel.setProperty("/screen", "fullScreen");
+            this._setScreen(sNextLayout);
             
             
 		},
@@ -99,25 +98,29 @@ sap.ui.define([
 		 */
 		onPageExitFullScreenButtonPress: function () {
             var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
-            var oViewModel = this.getModel("midObjectView");
 			this.getRouter().navTo("midPage", {
 				layout: sNextLayout, 
 				tenantId: this._sTenantId,
 				currencyCode: this._sCurrencyCode
             });
-            oViewModel.setProperty("/screen", "exitFullScreen");
-		},
+            this._setScreen(sNextLayout);
+        },
+        
 		/**
 		 * Event handler for Nav Back Button pressed
 		 * @public
 		 */
 		onPageNavBackButtonPress: function () {
             var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
-            var oViewModel = this.getModel("midObjectView");
             this.getRouter().navTo("mainPage", {layout: sNextLayout});
-            oViewModel.setProperty("/screen", "");
+            this._setScreen(sNextLayout);
             this._setModelEditCancelMode();
-		},
+        },
+        
+        _setScreen: function (screen){
+            var oViewModel = this.getModel("midObjectView");
+            oViewModel.setProperty("/screen", screen);
+        },
 
 		/**
 		 * Event handler for page edit button press
@@ -169,19 +172,11 @@ sap.ui.define([
 				"currency_code": this._sCurrencyCode,
 				"currency_code_name": "",
 				"currency_code_desc": "",
-                "currency_prefix": "",
-                "currency_suffix" : "",
+                "currency_prefix": null,
+                "currency_suffix" : null,
 				"local_create_dtm": new Date(),
 				"local_update_dtm": new Date()
 			});
-        },
-        
-        onLiveChange: function (oEvent) {
-            // debugger;
-            // var sNewValue = oEvent.getParameter("value");
-            // var oModel = this.getModel("details");
-            // this.setModel("details").oData.currency_code = sNewValue;
-			
         },
 
 		onMidTableDeleteButtonPress: function(){
@@ -379,15 +374,19 @@ sap.ui.define([
             
 
             switch(oViewModel.getProperty("/screen")){
-            case "exitFullScreen" :
+            case "TwoColumnsBeginExpanded" :
                 this.byId("pageExitFullScreenButton").setVisible(false); 
                 this.byId("pageEnterFullScreenButton").setVisible(true);
                 break;
-            case "fullScreen" :
+            case "TwoColumnsMidExpanded" :
+                this.byId("pageExitFullScreenButton").setVisible(false); 
+                this.byId("pageEnterFullScreenButton").setVisible(true);
+                break;
+            case "MidColumnFullScreen" :
                 this.byId("pageExitFullScreenButton").setVisible(true); 
                 this.byId("pageEnterFullScreenButton").setVisible(false);
                 break;
-            case "" :
+            case "OneColumn" :
                 this.byId("pageExitFullScreenButton").setVisible(false); 
                 this.byId("pageEnterFullScreenButton").setVisible(true); 
                 break;
