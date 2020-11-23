@@ -105,7 +105,7 @@
 						<Table id="midTable" 
 								sticky="HeaderToolbar,ColumnHeaders" 
 								inset="false" 
-								items="{details>/}"
+								items="{details>/ControlOptionDetails}"
 								class="sapFDynamicPageAlignContent" 
 								updateFinished=".onMidTableUpdateFinished"
 								mode="SingleSelectLeft" 
@@ -117,9 +117,6 @@
 									<!-- Add the Personalization button -->
 									<Button id="midTableAddButton" text="Add" type="Transparent" press=".onMidTableAddButtonPress" />
 									<Button id="midTableDeleteButton" text="Delete" type="Transparent" press=".onMidTableDeleteButtonPress" />
-									<ToolbarSeparator/>
-									<SearchField id="midTableSearchField" width="10rem" search=".onMidTableFilterPress" />
-									<Button id="midTableApplyFilterButton" text="Apply" type="Transparent" press=".onMidTableApplyFilterButton" />
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
@@ -133,7 +130,7 @@
 									<Text text="Level" />
 								</Column>
 								<Column id="midColumnLevelValue" minScreenWidth="Tablet" hAlign="Center">
-									<Text text="Level Value" />
+									<Text text="Level Value" required="true" />
 								</Column>
 								<Column id="midColumnValue" minScreenWidth="Tablet" hAlign="Center" >
 									<Text text="Value" />

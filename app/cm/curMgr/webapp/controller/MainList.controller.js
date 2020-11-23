@@ -150,12 +150,12 @@ sap.ui.define([
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
 				sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
-            // var oViewModel = this.getModel("midObjectView");
-            // if(oViewModel.getProperty("/editMode") === "edit"){
-            //     sap.m.MessageToast.show("수정을 완료해 주세요.");
-            // }
-            // else
-            // {
+                var oViewModel = this.getModel("editMode");
+            if(oViewModel.getProperty("/editMode") === "edit"){
+                sap.m.MessageToast.show("수정을 완료해 주세요.");
+            }
+            else
+            {
                 this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
 				tenantId: oRecord.tenant_id,
@@ -171,7 +171,7 @@ sap.ui.define([
                 var oParent = oItem.getParent();
                 // store index of the item clicked, which can be used later in the columnResize event
                 this.iIndex = oParent.indexOfItem(oItem);
-            // }
+            }
                 
 			
 		},

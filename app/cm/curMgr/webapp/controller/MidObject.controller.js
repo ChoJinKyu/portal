@@ -7,7 +7,7 @@ sap.ui.define([
 	"ext/lib/model/ManagedListModel",
 	"ext/lib/formatter/DateFormatter",
 	"sap/ui/model/Filter",
-	"sap/ui/model/FilterOperator",
+    "sap/ui/model/FilterOperator",
 	"sap/ui/core/Fragment",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
@@ -18,7 +18,7 @@ sap.ui.define([
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
 ], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
-	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
+	Filter, FilterOperator, Fragment, MessageBox, MessageToast,
 	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
 		
 	"use strict";
@@ -26,6 +26,8 @@ sap.ui.define([
 	var oTransactionManager;
 
 	return BaseController.extend("cm.currencyMgr.controller.MidObject", {
+
+            // "sap/ui/model/FilterType", 사용불가??
 
 		dateFormatter: DateFormatter,
 
@@ -67,7 +69,8 @@ sap.ui.define([
 
 			this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
 
-			this._initTableTemplates();
+            this._initTableTemplates();
+            this.enableMessagePopover();
 		}, 
 
 		/* =========================================================== */
@@ -80,13 +83,12 @@ sap.ui.define([
 		 */
 		onPageEnterFullScreenButtonPress: function () {
             var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
-            var oViewModel = this.getModel("midObjectView");
 			this.getRouter().navTo("midPage", {
 				layout: sNextLayout, 
 				tenantId: this._sTenantId,
                 currencyCode: this._sCurrencyCode
             });
-            oViewModel.setProperty("/screen", "fullScreen");
+            this._setScreen(sNextLayout);
             
             
 		},
@@ -96,24 +98,29 @@ sap.ui.define([
 		 */
 		onPageExitFullScreenButtonPress: function () {
             var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
-            var oViewModel = this.getModel("midObjectView");
 			this.getRouter().navTo("midPage", {
 				layout: sNextLayout, 
 				tenantId: this._sTenantId,
 				currencyCode: this._sCurrencyCode
             });
-            oViewModel.setProperty("/screen", "exitFullScreen");
-		},
+            this._setScreen(sNextLayout);
+        },
+        
 		/**
 		 * Event handler for Nav Back Button pressed
 		 * @public
 		 */
 		onPageNavBackButtonPress: function () {
             var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
-            var oViewModel = this.getModel("midObjectView");
             this.getRouter().navTo("mainPage", {layout: sNextLayout});
-            oViewModel.setProperty("/screen", "");
-		},
+            this._setScreen(sNextLayout);
+            this._setModelEditCancelMode();
+        },
+        
+        _setScreen: function (screen){
+            var oViewModel = this.getModel("midObjectView");
+            oViewModel.setProperty("/screen", screen);
+        },
 
 		/**
 		 * Event handler for page edit button press
@@ -121,7 +128,12 @@ sap.ui.define([
 		 */
 		onPageEditButtonPress: function(){
 			this._toEditMode();
-		},
+        },
+        
+        _setModelEditCancelMode: function() {
+            var oEditModel = this.getModel("editMode");
+            oEditModel.setProperty("/editMode", "");
+        },
 		
 		/**
 		 * Event handler for delete page entity
@@ -160,19 +172,11 @@ sap.ui.define([
 				"currency_code": this._sCurrencyCode,
 				"currency_code_name": "",
 				"currency_code_desc": "",
-                "currency_prefix": "",
-                "currency_suffix" : "",
+                "currency_prefix": null,
+                "currency_suffix" : null,
 				"local_create_dtm": new Date(),
 				"local_update_dtm": new Date()
 			});
-        },
-        
-        onLiveChange: function (oEvent) {
-            // debugger;
-            // var sNewValue = oEvent.getParameter("value");
-            // var oModel = this.getModel("details");
-            // this.setModel("details").oData.currency_code = sNewValue;
-			
         },
 
 		onMidTableDeleteButtonPress: function(){
@@ -196,7 +200,6 @@ sap.ui.define([
 		 * @public
 		 */
         onPageSaveButtonPress: function(){
-            debugger;
 			var oView = this.getView(),
 				that = this;
 			MessageBox.confirm("Are you sure ?", {
@@ -208,7 +211,8 @@ sap.ui.define([
 						oTransactionManager.submit({
 						// oView.getModel("master").submitChanges({
 							success: function(ok){
-								that._toShowMode();
+                                that._setModelEditCancelMode();
+                                that._toShowMode();
 								oView.setBusy(false);
 								MessageToast.show("Success to save.");
 							}
@@ -225,6 +229,7 @@ sap.ui.define([
 		 * @public
 		 */
         onPageCancelEditButtonPress: function(){
+            this._setModelEditCancelMode();
             this._toShowMode();
             var sTenantId = this._sTenantId;
             if (sTenantId === "new"){
@@ -332,8 +337,9 @@ sap.ui.define([
 
 		_toEditMode: function(){
             var FALSE = false;
-            var oViewModel = this.getModel("midObjectView");
-            oViewModel.setProperty("/editMode", "edit");
+            var oViewModel = this.getModel("midObjectView"),
+                oEditModel = this.getModel("editMode");
+            oEditModel.setProperty("/editMode", "edit");
             this._showFormFragment('MidObject_Edit');
 			this.byId("page").setSelectedSection("pageSectionMain");
 			this.byId("page").setProperty("showFooter", !FALSE);
@@ -341,8 +347,6 @@ sap.ui.define([
 			this.byId("pageDeleteButton").setEnabled(FALSE);
             this.byId("pageNavBackButton").setEnabled(FALSE);
 
-            this.byId("pageExitFullScreenButton").setVisible(false); 
-            this.byId("pageEnterFullScreenButton").setVisible(false);
 			this.byId("midTableAddButton").setEnabled(!FALSE);
 			this.byId("midTableDeleteButton").setEnabled(!FALSE);
 			this.byId("midTableSearchField").setEnabled(FALSE);
@@ -353,35 +357,48 @@ sap.ui.define([
 
 		_toShowMode: function(){
             var TRUE = true;
-            var oViewModel = this.getModel("midObjectView");
-			this._showFormFragment('MidObject_Show');
-			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("page").setProperty("showFooter", !TRUE);
-			this.byId("pageEditButton").setEnabled(TRUE);
-			this.byId("pageDeleteButton").setEnabled(TRUE);
-            this.byId("pageNavBackButton").setEnabled(TRUE);
+            var oViewModel = this.getModel("midObjectView"),
+                oEditModel = this.getModel("editMode");
+
+            if(oEditModel.getProperty("/editMode") !== "edit"){
+                this._showFormFragment('MidObject_Show');
+                this.byId("page").setProperty("showFooter", !TRUE);
+                this.byId("pageEditButton").setEnabled(TRUE);
+                this.byId("pageDeleteButton").setEnabled(TRUE);
+                this.byId("pageNavBackButton").setEnabled(TRUE);
+                
+            }	
+            
+            this.byId("page").setSelectedSection("pageSectionMain");
+            
+            
+
             switch(oViewModel.getProperty("/screen")){
-                case "exitFullScreen" :
-                    this.byId("pageExitFullScreenButton").setVisible(false); 
-                    this.byId("pageEnterFullScreenButton").setVisible(true);
-                    break;
-                case "fullScreen" :
-                    this.byId("pageExitFullScreenButton").setVisible(true); 
-                    this.byId("pageEnterFullScreenButton").setVisible(false);
-                    break;
-                case "" :
-                    this.byId("pageExitFullScreenButton").setVisible(false); 
-                    this.byId("pageEnterFullScreenButton").setVisible(true); 
-                    break;
+            case "TwoColumnsBeginExpanded" :
+                this.byId("pageExitFullScreenButton").setVisible(false); 
+                this.byId("pageEnterFullScreenButton").setVisible(true);
+                break;
+            case "TwoColumnsMidExpanded" :
+                this.byId("pageExitFullScreenButton").setVisible(false); 
+                this.byId("pageEnterFullScreenButton").setVisible(true);
+                break;
+            case "MidColumnFullScreen" :
+                this.byId("pageExitFullScreenButton").setVisible(true); 
+                this.byId("pageEnterFullScreenButton").setVisible(false);
+                break;
+            case "OneColumn" :
+                this.byId("pageExitFullScreenButton").setVisible(false); 
+                this.byId("pageEnterFullScreenButton").setVisible(true); 
+                break;
             }
 
-			this.byId("midTableAddButton").setEnabled(!TRUE);
-			this.byId("midTableDeleteButton").setEnabled(!TRUE);
-			this.byId("midTableSearchField").setEnabled(TRUE);
-			this.byId("midTableApplyFilterButton").setEnabled(TRUE);
-			this.byId("midTable").setMode(sap.m.ListMode.None);
+            this.byId("midTableAddButton").setEnabled(!TRUE);
+            this.byId("midTableDeleteButton").setEnabled(!TRUE);
+            this.byId("midTableSearchField").setEnabled(TRUE);
+            this.byId("midTableApplyFilterButton").setEnabled(TRUE);
+            this.byId("midTable").setMode(sap.m.ListMode.None);
             this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
-            oViewModel.setProperty("/editMode", "");
+            
 		},
 
 		_initTableTemplates: function(){
@@ -463,8 +480,26 @@ sap.ui.define([
 			}else{
 				if(oHandler) oHandler(this._oFragments[sFragmentName]);
 			}
-		}
+        },
 
+        onMidTableFilterPress: function() {
+            this._MidTableApplyFilter();
+        },
+
+        _MidTableApplyFilter: function() {
+
+            var oView = this.getView(),
+				sValue = oView.byId("midTableSearchField").getValue(),
+				oFilter = new Filter("currency_code_name", FilterOperator.Contains, sValue);
+
+			oView.byId("midTable").getBinding("items").filter(oFilter, sap.ui.model.FilterType.Application);
+
+        },
+
+        onMidTableApplyFilterButton: function() {
+            this._MidTableApplyFilter();
+        },
+        
 
 	});
 });
