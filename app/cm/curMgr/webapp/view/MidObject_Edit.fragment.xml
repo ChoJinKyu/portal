@@ -8,9 +8,9 @@
 		<core:Title text="기본정보" />
 		<Label text="통화코드" required="true"/>
         <Input value="{master>/currency_code}" liveChange=".onLiveChange"/>
-		<Label text="소수점자리" required="true"/>
+		<Label text="소수점자리" />
 		<Input value="{master>/scale}"/>
-		<Label text="확장소수점자리" required="true"/>
+		<Label text="확장소수점자리" />
 		<Input value="{master>/extension_scale}"/>
 
 		<core:Title text="유효여부" />
