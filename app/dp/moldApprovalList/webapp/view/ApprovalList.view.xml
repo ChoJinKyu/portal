@@ -1,4 +1,4 @@
-<mvc:View controllerName="dp.moldApprovalList.controller.MainList" 
+<mvc:View controllerName="dp.moldApprovalList.controller.ApprovalList" 
     xmlns:mvc="sap.ui.core.mvc" 
     xmlns="sap.m" 
     xmlns:f="sap.f" 

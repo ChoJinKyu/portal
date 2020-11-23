@@ -163,9 +163,9 @@
       "routes": [
         {
           "pattern": "",
-          "name": "mainList",
+          "name": "approvalList",
           "target": [
-            "mainList"
+            "approvalList"
           ]
         },
         {
@@ -191,11 +191,11 @@
         }
       ],
       "targets": {
-        "mainList": {
-          "viewName": "MainList",
-          "viewId": "mainList",
+        "approvalList": {
+          "viewName": "ApprovalList",
+          "viewId": "approvalList",
           "viewLevel": 1,
-          "title": "{i18n>mainListViewTitle}"
+          "title": "{i18n>approvalListViewTitle}"
         },
         "mainObject": {
           "viewName": "MainObject",

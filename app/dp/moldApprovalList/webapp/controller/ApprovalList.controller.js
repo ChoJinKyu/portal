@@ -5,7 +5,7 @@ sap.ui.define([
 	"ext/lib/model/ManagedListModel",
 	"ext/lib/formatter/DateFormatter",
 	"sap/m/TablePersoController",
-	"./MainListPersoService",
+	"./ApprovalListPersoService",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     'sap/ui/core/Fragment',
@@ -19,7 +19,7 @@ sap.ui.define([
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
     'sap/ui/core/Element'
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item, Element) {
+], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item, Element) {
 	"use strict";
    /**
     * @description 품의 목록 (총 품의 공통)
@@ -27,7 +27,7 @@ sap.ui.define([
     * @author jinseon.lee , daun.lee 
     */
 
-	return BaseController.extend("dp.moldApprovalList.controller.MainList", {
+	return BaseController.extend("dp.moldApprovalList.controller.ApprovalList", {
 
 		dateFormatter: DateFormatter,
 		/* =========================================================== */
@@ -35,7 +35,7 @@ sap.ui.define([
 		/* =========================================================== */
 
 		/**
-		 * Called when the mainList controller is instantiated.
+		 * Called when the approvalList controller is instantiated.
 		 * @public
 		 */
 		onInit : function () {
@@ -45,21 +45,21 @@ sap.ui.define([
 			// Model used to manipulate control states
 			oViewModel = new JSONModel({
 				headerExpanded: true,
-				mainListTableTitle : oResourceBundle.getText("mainListTableTitle"),
+				approvalListTableTitle : oResourceBundle.getText("approvalListTableTitle"),
 				tableNoDataText : oResourceBundle.getText("tableNoDataText")
 			});
-			this.setModel(oViewModel, "mainListView");
+			this.setModel(oViewModel, "approvalListView");
 
-			// Add the mainList page to the flp routing history
+			// Add the approvalList page to the flp routing history
 			this.addHistoryEntry({
-				title: oResourceBundle.getText("mainListViewTitle"),
+				title: oResourceBundle.getText("approvalListViewTitle"),
 				icon: "sap-icon://table-view",
 				intent: "#Template-display"
 			}, true);
 			
 			this.setModel(new ManagedListModel(), "list");
 			
-			this.getRouter().getRoute("mainList").attachPatternMatched(this._onRoutedThisPage, this);
+			this.getRouter().getRoute("approvalList").attachPatternMatched(this._onRoutedThisPage, this);
 
             this._doInitTablePerso();
             //this._doInitSearch();
@@ -84,18 +84,18 @@ sap.ui.define([
 		 * @public
 		 */
 		onMainTableUpdateFinished : function (oEvent) {
-			// update the mainList's object counter after the table update
+			// update the approvalList's object counter after the table update
 			var sTitle,
 				oTable = oEvent.getSource(),
 				iTotalItems = oEvent.getParameter("total");
 			// only update the counter if the length is final and
 			// the table is not empty
 			if (iTotalItems && oTable.getBinding("items").isLengthFinal()) {
-				sTitle = this.getResourceBundle().getText("mainListTableTitleCount", [iTotalItems]);
+				sTitle = this.getResourceBundle().getText("approvalListTableTitleCount", [iTotalItems]);
 			} else {
-				sTitle = this.getResourceBundle().getText("mainListTableTitle");
+				sTitle = this.getResourceBundle().getText("approvalListTableTitle");
 			}
-			this.getModel("mainListView").setProperty("/mainListTableTitle", sTitle);
+			this.getModel("approvalListView").setProperty("/approvalListTableTitle", sTitle);
 		},
 
 		/**
@@ -113,7 +113,7 @@ sap.ui.define([
 		 * @public
 		 */
 		onMainTablePersoRefresh : function() {
-			MainListPersoService.resetPersData();
+			ApprovalListPersoService.resetPersData();
 			this._oTPC.refresh();
 		},
 
@@ -356,7 +356,7 @@ sap.ui.define([
 		 * @private
 		 */
 		_onRoutedThisPage: function(){
-			this.getModel("mainListView").setProperty("/headerExpanded", true);
+			this.getModel("approvalListView").setProperty("/headerExpanded", true);
 		},
 
 		/**
@@ -419,7 +419,7 @@ sap.ui.define([
 			this._oTPC = new TablePersoController({
 				table: this.byId("mainTable"),
 				componentName: "moldApprovalList",
-				persoService: MainListPersoService,
+				persoService: ApprovalListPersoService,
 				hasGrouping: true
 			}).activate();
 		}
