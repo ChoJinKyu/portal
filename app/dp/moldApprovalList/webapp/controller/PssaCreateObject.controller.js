@@ -1,7 +1,8 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
 	"sap/ui/model/json/JSONModel",
-	"sap/ui/core/routing/History",
+    "sap/ui/core/routing/History",
+    "sap/ui/richtexteditor/RichTextEditor",
 	"ext/lib/formatter/DateFormatter",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
@@ -31,14 +32,43 @@ sap.ui.define([
               console.log("PssaCreateObject Controller 호출");
 			// Model used to manipulate control states. The chosen values make sure,
 			// detail page shows busy indication immediately so there is no break in
-			// between the busy indication for loading the view's meta data
+            // between the busy indication for loading the view's meta data 
+
 			var oViewModel = new JSONModel({
 					busy : true,
 					delay : 0
 				});
 			this.getRouter().getRoute("pssaCreateObject").attachPatternMatched(this._onObjectMatched, this);
-			this.setModel(oViewModel, "pssaCreateObjectView");
+            this.setModel(oViewModel, "pssaCreateObjectView"); 
+            
 		},
+        onAfterRendering : function () {
+            console.log("  call onAfterRendering ");
+            this.setRichEditor();
+        },
+        setRichEditor : function (){
+        var that = this,
+			sHtmlValue = ''
+            sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
+				function (RTE, EditorType) {
+					var oRichTextEditor = new RTE("myRTE", {
+						editorType: EditorType.TinyMCE4,
+						width: "100%",
+						height: "600px",
+						customToolbar: true,
+						showGroupFont: true,
+						showGroupLink: true,
+						showGroupInsert: true,
+						value: sHtmlValue,
+						ready: function () {
+							this.addButtonGroup("styleselect").addButtonGroup("table");
+						}
+					});
+
+					that.getView().byId("idVerticalLayout").addContent(oRichTextEditor);
+			});
+        },
+
 
 		/* =========================================================== */
 		/* event handlers                                              */
@@ -155,11 +185,13 @@ sap.ui.define([
          * @param {*} args : company , plant   
          */
         _createViewBindData : function(args){ 
-            var appInfoModel = this.setModel("approvalInfo");
+            var appInfoModel = this.getModel("pssaCreateObjectView");
              console.log("args >>>>>>" , args);
-            /**oViewModel.setProperty("/busy", true); */
-                appInfoModel.setProperty("company", args.company);
-                appInfoModel.setProperty("plant", args.plant);
+            
+            appInfoModel.setData({ company : args.company 
+                    ,  plant : args.plant
+                    });
+               
 
             console.log("oMasterModel >>> " , appInfoModel);
 				// oMasterModel.setData({

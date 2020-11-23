@@ -1,16 +1,18 @@
 sap.ui.define([
-        "sap/ui/core/mvc/Controller",
+	    "ext/lib/controller/BaseController",
         "sap/ui/model/json/JSONModel",
         "sap/m/MessageToast",
         "sap/m/MessageBox",
         "sap/ui/model/Filter",
-        "sap/ui/model/FilterOperator"
+        "sap/ui/model/FilterOperator",
+        "ext/lib/model/ManagedListModel",
+        "sap/ui/core/mvc/Controller",
 	],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (BaseController, JSONModel, MessageToast, MessageBox, Filter, FilterOperator) {
-		"use strict";
+	function (BaseController, JSONModel, MessageToast, MessageBox, Filter, FilterOperator, ManagedListModel) {
+        "use strict";
 
 		return BaseController.extend("cm.codeMgr.controller.CodeMgr", {
 
@@ -27,46 +29,44 @@ sap.ui.define([
                     mstParam : "",
                     dtlParam : "",
                     lngParam : ""
-                }); 
-                
-                this.getView().setModel(this._comboModel, "comboModel");
+                });
+
+                this.getView().setModel(new ManagedListModel(), "CodeMasters");
+                this.getView().setModel(new ManagedListModel(), "CodeDetails");
+                this.getView().setModel(new ManagedListModel(), "CodeLanguages");
+
             },
 
             onAfterRendering: function () {
 
-                //debugger
-                // search_use_yn
-                // this.byId("search_use_yn").getBinding("items")
 
             },
 
 			onSearch: function () {
+                
+                var oView = this.getView();
+                var oModel = oView.getModel("CodeMasters");
 
                 var filters = [];
 
                 var search_tenant_id = "";
-                var search_company_code = "";
                 var search_chain_code = "";
                 var search_use_yn = "";
-                var search_group_code = this.getView().byId("search_group_code").getValue();
-                var search_group_name = this.getView().byId("search_group_name").getValue();
-                var search_group_description = this.getView().byId("search_group_description").getValue();
+                var search_group_code = oView.byId("search_group_code").getValue();
+                var search_group_name = oView.byId("search_group_name").getValue();
+                var search_group_description = oView.byId("search_group_description").getValue();
                 
 
-                if(this.byId("search_tenant_id").getSelectedItem()){
-                    search_tenant_id = this.byId("search_tenant_id").getSelectedItem().getKey();
+                if(oView.byId("search_tenant_id").getSelectedItem()){
+                    search_tenant_id = oView.byId("search_tenant_id").getSelectedItem().getKey();
                 }
 
-                if(this.byId("search_company_code").getSelectedItem()){
-                    search_company_code = this.byId("search_company_code").getSelectedItem().getKey();
+                if(oView.byId("search_chain_code").getSelectedItem()){
+                    search_chain_code = oView.byId("search_chain_code").getSelectedItem().getKey();
                 }
 
-                if(this.byId("search_chain_code").getSelectedItem()){
-                    search_chain_code = this.byId("search_chain_code").getSelectedItem().getKey();
-                }
-
-                if(this.byId("search_use_yn").getSelectedItem()){
-                    search_use_yn = this.byId("search_use_yn").getSelectedItem().getKey();
+                if(oView.byId("search_use_yn").getSelectedItem()){
+                    search_use_yn = oView.byId("search_use_yn").getSelectedItem().getKey();
                 }
 
                 // 필터 추가 
@@ -74,16 +74,12 @@ sap.ui.define([
                     filters.push(new Filter("tenant_id", FilterOperator.Contains, search_tenant_id));
                 }
 
-                if(!this.isValNull(search_company_code)){
-                    filters.push(new Filter("company_code", FilterOperator.Contains, search_company_code));
-                }
-
                 if(!this.isValNull(search_chain_code)){
                     filters.push(new Filter("chain_code", FilterOperator.Contains, search_chain_code));
                 }
 
                 if(!this.isValNull(search_use_yn)){
-                    //filters.push(new Filter("use_yn", FilterOperator.Contains, search_use_yn));
+                    filters.push(new Filter("use_yn", FilterOperator.Contains, search_use_yn));
                 }
 
                 if(!this.isValNull(search_group_code)){
@@ -98,16 +94,18 @@ sap.ui.define([
                     filters.push(new Filter("group_description", FilterOperator.Contains, search_group_description));
                 }
 
-                var mstBinding = this.byId("codeMstTable").getBinding("items");
-                //var mstBinding = this.byId("codeMstTable").getBinding("rows");
-                mstBinding.resetChanges();
                 this._retrieveParam.mstParam = "";
                 this._retrieveParam.dtlParam = "";
                 this._retrieveParam.lngParam = "";
 
-                this.getView().setBusy(true);
-                mstBinding.filter(filters);
-                this.getView().setBusy(false);
+                oView.setBusy(true);
+                oModel.setTransactionModel(oView.getModel());
+                oModel.read("/CodeMasters", {
+                    filters: filters,
+                    success: function(oData){
+                        oView.setBusy(false);
+                    }
+                });
 
             },
 
@@ -116,86 +114,39 @@ sap.ui.define([
              */
 			onMstAddRow : function () {
                 
-                var mstBinding = this.byId("codeMstTable").getBinding("items");
-                var oContext = mstBinding.create({
-                        "tenant_id" : "1000",
-                        "company_code" : "G100",
-                        "group_code" : "",
-                        "chain_code" : "",
-                        "group_name" : "",
-                        "group_description" : "",
-                        "use_yn" : true
-                    });
-
-                      /*
-                        ,
-                        "local_create_dtm" : "2020-10-13T00:00:00Z",
-                        "local_update_dtm" : "2020-10-13T00:00:00Z",
-                        "create_user_id" : "Admin",
-                        "update_user_id" : "Admin",
-                        "system_create_dtm" : "2020-10-13T00:00:00Z",
-                        "system_update_dtm" : "2020-10-13T00:00:00Z"
-                        */
+                var oTable = this.byId("codeMstTable");
+                var oModel = this.getModel("CodeMasters");
+                oModel.addRecord({
+                    "tenant_id" : "1000",
+                    "group_code" : "",
+                    "chain_code" : "",
+                    "group_name" : "",
+                    "group_description" : "",
+                    "use_yn" : true
+                }, 0);
 
             },
 
-			onMstCopyRow : function () {
-
-            },
-
-			onMstDeleteRow : function () {
-
-                var oSelected  = this.byId("codeMstTable").getSelectedContexts();
-                //this.byId("codeMstTable").getSelectedItems()
-
-                if (oSelected.length > 0) {
-
-                    for(var idx = 0; idx < oSelected.length; idx++){
-                        //oSelected[idx].delete("$auto");
-
-                        var oView = this.getView();
-                        oView.setBusy(true);
-
-                        oSelected[idx].delete("$auto").then(function () {
-                            oView.setBusy(false);
-                            MessageToast.show("삭제 되었습니다.");
-                            this.onSearch();
-                        }.bind(this), function (oError) {
-                            oView.setBusy(false);
-                            MessageBox.error(oError.message);
-                        });
-
-                    }
-
-                    /*
-                    var oView = this.getView();
-                    oView.setBusy(true);
-
-                    oSelected.getBindingContext().delete("$auto").then(function () {
-                        oView.setBusy(false);
-                        MessageToast.show("삭제 되었습니다.");
-                        this.onRefresh();
-                    }.bind(this), function (oError) {
-                        oView.setBusy(false);
-                        MessageBox.error(oError.message);
-                    });
-                    */
-                    
-                }else{
-                    MessageBox.error("선택된 행이 없습니다.");
-                }
+            onMstDeleteRow : function () {
+                var oTable = this.byId("codeMstTable");
+                var oModel = this.getModel("CodeMasters");
+                var aItems = oTable.getSelectedItems();
+                var aIndices = [];
+                aItems.forEach(function(oItem){
+                    aIndices.push(oModel.getProperty("/").indexOf(oItem.getBindingContext("CodeMasters").getObject()));
+                });
+                aIndices = aIndices.sort(function(a, b){return b-a;});
+                aIndices.forEach(function(nIndex){
+                    oModel.markRemoved(nIndex);
+                });
+                oTable.removeSelections(true);
             },
 
 			onMstSave : function () {
 
-                var mstBinding = this.byId("codeMstTable").getBinding("items");
-
-                if (!mstBinding.hasPendingChanges()) {
-                    MessageBox.error("수정한 내용이 없습니다.");
-                    return;
-                }
-
                 var oView = this.getView();
+                var oModel = this.getModel("CodeMasters");
+
                 var fnSuccess = function () {
                     oView.setBusy(false);
                     MessageToast.show("저장 되었습니다.");
@@ -214,7 +165,16 @@ sap.ui.define([
                     onClose : function(sButton) {
                         if (sButton === MessageBox.Action.OK) {
                             oView.setBusy(true);
-                            oView.getModel().submitBatch("codeMstUpdateGroup").then(fnSuccess, fnError);
+                            //oView.getModel().submitBatch("codeMstUpdateGroup").then(fnSuccess, fnError);
+                            oModel.submitChanges({
+                                success: function(oEvent){
+                                    oView.setBusy(false);
+                                    MessageToast.show("저장 되었습니다.");
+                                },error: function (oError) {
+                                    oView.setBusy(false);
+                                    MessageBox.error(oError.message);
+                                }
+                            });
                         } else if (sButton === MessageBox.Action.CANCEL) {
                             
                         };
@@ -224,33 +184,31 @@ sap.ui.define([
             },
 
             onMstRefresh : function () {
+                /*
                 //var mstBinding = this.byId("codeMstTable").getBinding("rows");
                 var mstBinding = this.byId("codeMstTable").getBinding("items");
                 this.getView().setBusy(true);
                 mstBinding.refresh();
                 this.getView().setBusy(false);
+                */
             },
 
 			onMstTableItemPress : function (oEvent) {
-
                 var v_searchCond = {
-                    tenant_id : oEvent.getSource().getBindingContext().getValue('tenant_id'),
-                    company_code : oEvent.getSource().getBindingContext().getValue('company_code'),
-                    group_code : oEvent.getSource().getBindingContext().getValue('group_code')
+                    tenant_id : oEvent.getSource().getBindingContext("CodeMasters").getProperty('tenant_id'),
+                    group_code : oEvent.getSource().getBindingContext("CodeMasters").getProperty('group_code')
                 };
 
                 this.fn_searchCodeDtl(v_searchCond);
-
             },            
 
 			onMstUpdateFinished : function (oEvent) {
-                
+
                 if(oEvent.getSource().getItems().length > 0){
                     var v_item = oEvent.getSource().getItems()[0];
                     var v_searchCond = {
-                        tenant_id : v_item.getBindingContext().getValue('tenant_id'),
-                        company_code : v_item.getBindingContext().getValue('company_code'),
-                        group_code : v_item.getBindingContext().getValue('group_code')
+                        tenant_id : v_item.getBindingContext("CodeMasters").getProperty('tenant_id'),
+                        group_code : v_item.getBindingContext("CodeMasters").getProperty('group_code')
                     };
 
                     this.fn_searchCodeDtl(v_searchCond);
@@ -262,23 +220,26 @@ sap.ui.define([
              * Code DTL Button Event
              */
 
-			fn_searchCodeDtl : function (p_searchCond) {                
+			fn_searchCodeDtl : function (p_searchCond) {
 
                 var v_tenant_id = p_searchCond.tenant_id;
-                var v_company_code = p_searchCond.company_code;
                 var v_group_code = p_searchCond.group_code;
+                var oView = this.getView();
+                var oModel = oView.getModel("CodeDetails");
 
-                if(!this.isValNull(v_tenant_id) && !this.isValNull(v_company_code) && !this.isValNull(v_group_code)){
+                if(!this.isValNull(v_tenant_id) && !this.isValNull(v_group_code)){
                     var filters = [];
                     filters.push(new Filter("tenant_id"   , FilterOperator.EQ, v_tenant_id));
-                    filters.push(new Filter("company_code", FilterOperator.EQ, v_company_code));
                     filters.push(new Filter("group_code"  , FilterOperator.EQ, v_group_code));
 
-                    var dtlBinding = this.byId("codeDtlTable").getBinding("items");
-                    dtlBinding.resetChanges();
-                    this.getView().setBusy(true);
-                    dtlBinding.filter(filters);
-                    this.getView().setBusy(false);
+                    oView.setBusy(true);
+                    oModel.setTransactionModel(oView.getModel());
+                    oModel.read("/CodeDetails", {
+                        filters: filters,
+                        success: function(oData){
+                            oView.setBusy(false);
+                        }
+                    });
 
                 }
 
@@ -287,70 +248,43 @@ sap.ui.define([
             },
 
 			onDtlAddRow : function () {
-                
+
                 var dtlVal = this._retrieveParam.dtlParam;
 
-                var dtlBinding = this.byId("codeDtlTable").getBinding("items");
-                var oContext = dtlBinding.create({
-                        "tenant_id" : dtlVal.tenant_id,
-                        "company_code" : dtlVal.company_code,
-                        "group_code" : dtlVal.group_code,
-                        "code" : "",
-                        "code_description" : "",
-                        "sort_no" : "",
-                        "start_date" : "",
-                        "end_date" : ""
-                    });
-
-                        /*
-                        ,
-                        "local_create_dtm" : "2020-10-13T00:00:00Z",
-                        "local_update_dtm" : "2020-10-13T00:00:00Z",
-                        "create_user_id" : "Admin",
-                        "update_user_id" : "Admin",
-                        "system_create_dtm" : "2020-10-13T00:00:00Z",
-                        "system_update_dtm" : "2020-10-13T00:00:00Z"
-                        */
+                var oTable = this.byId("codeDtlTable");
+                var oModel = this.getModel("CodeDetails");
+                oModel.addRecord({
+                    "tenant_id" : dtlVal.tenant_id,
+                    "group_code" : dtlVal.group_code,
+                    "code" : "",
+                    "code_description" : "",
+                    "sort_no" : "",
+                    "start_date" : "",
+                    "end_date" : ""
+                }, 0);
             },
 
-			onDtlCopyRow : function () {
-
-            },
 
 			onDtlDeleteRow : function () {
-                var oSelected  = this.byId("codeDtlTable").getSelectedContexts();
-
-                if (oSelected.length > 0) {
-
-                    for(var idx = 0; idx < oSelected.length; idx++){
-
-                        var oView = this.getView();
-                        oView.setBusy(true);
-
-                        oSelected[idx].delete("$auto").then(function () {
-                            oView.setBusy(false);
-                            MessageToast.show("삭제 되었습니다.");
-                            this.onDtlRefresh();
-                        }.bind(this), function (oError) {
-                            oView.setBusy(false);
-                            MessageBox.error(oError.message);
-                        });
-
-                    }
-                }else{
-                    MessageBox.error("선택된 행이 없습니다.");
-                }
+                var oTable = this.byId("codeDtlTable");
+                var oModel = this.getModel("CodeDetails");
+                var aItems = oTable.getSelectedItems();
+                var aIndices = [];
+                aItems.forEach(function(oItem){
+                    aIndices.push(oModel.getProperty("/CodeDetails").indexOf(oItem.getBindingContext("CodeDetails").getObject()));
+                });
+                aIndices = aIndices.sort(function(a, b){return b-a;});
+                aIndices.forEach(function(nIndex){
+                    oModel.markRemoved(nIndex);
+                });
+                oTable.removeSelections(true);
             },
 
 			onDtlSave : function () {
-                var dtlBinding = this.byId("codeDtlTable").getBinding("items");
-
-                if (!dtlBinding.hasPendingChanges()) {
-                    MessageBox.error("수정한 내용이 없습니다.");
-                    return;
-                }
 
                 var oView = this.getView();
+                var oModel = this.getModel("CodeDetails");
+
                 var fnSuccess = function () {
                     oView.setBusy(false);
                     MessageToast.show("저장 되었습니다.");
@@ -369,7 +303,16 @@ sap.ui.define([
                     onClose : function(sButton) {
                         if (sButton === MessageBox.Action.OK) {
                             oView.setBusy(true);
-                            oView.getModel().submitBatch("codeDtlUpdateGroup").then(fnSuccess, fnError);
+                            //oView.getModel().submitBatch("codeDtlUpdateGroup").then(fnSuccess, fnError);
+                            oModel.submitChanges({
+                                success: function(oEvent){
+                                    oView.setBusy(false);
+                                    MessageToast.show("저장 되었습니다.");
+                                },error: function (oError) {
+                                    oView.setBusy(false);
+                                    MessageBox.error(oError.message);
+                                }
+                            });
                         } else if (sButton === MessageBox.Action.CANCEL) {
                             
                         };
@@ -389,10 +332,9 @@ sap.ui.define([
                 if(oEvent.getSource().getItems().length > 0){
                     var v_item = oEvent.getSource().getItems()[0];
                     var v_searchCond = {
-                        tenant_id : v_item.getBindingContext().getValue('tenant_id'),
-                        company_code : v_item.getBindingContext().getValue('company_code'),
-                        group_code : v_item.getBindingContext().getValue('group_code'),
-                        code : v_item.getBindingContext().getValue('code')
+                        tenant_id : v_item.getBindingContext("CodeDetails").getProperty('tenant_id'),
+                        group_code : v_item.getBindingContext("CodeDetails").getProperty('group_code'),
+                        code : v_item.getBindingContext("CodeDetails").getProperty('code')
                     };
 
                     this.fn_searchCodeLng(v_searchCond);
@@ -403,10 +345,9 @@ sap.ui.define([
 			onDtlTableItemPress : function (oEvent) {
                 
                 var v_searchCond = {
-                    tenant_id : oEvent.getSource().getBindingContext().getValue('tenant_id'),
-                    company_code : oEvent.getSource().getBindingContext().getValue('company_code'),
-                    group_code : oEvent.getSource().getBindingContext().getValue('group_code'),
-                    code : oEvent.getSource().getBindingContext().getValue('code')
+                    tenant_id : oEvent.getSource().getBindingContext("CodeDetails").getProperty('tenant_id'),
+                    group_code : oEvent.getSource().getBindingContext("CodeDetails").getProperty('group_code'),
+                    code : oEvent.getSource().getBindingContext("CodeDetails").getProperty('code')
                 };
 
                 this.fn_searchCodeLng(v_searchCond);
@@ -420,21 +361,28 @@ sap.ui.define([
 			fn_searchCodeLng : function (p_searchCond) {
 
                 var v_tenant_id = p_searchCond.tenant_id;
-                var v_company_code = p_searchCond.company_code;
                 var v_group_code = p_searchCond.group_code;
                 var v_code = p_searchCond.code;
 
-                var filters = [];
-                filters.push(new Filter("tenant_id"   , FilterOperator.EQ, v_tenant_id));
-                filters.push(new Filter("company_code", FilterOperator.EQ, v_company_code));
-                filters.push(new Filter("group_code"  , FilterOperator.EQ, v_group_code));
-                filters.push(new Filter("code"  , FilterOperator.EQ, v_code));
+                var oView = this.getView();
+                var oModel = oView.getModel("CodeLanguages");
 
-                var lngBinding = this.byId("codeLngTable").getBinding("items");
-                lngBinding.resetChanges();
-                this.getView().setBusy(true);
-                lngBinding.filter(filters);
-                this.getView().setBusy(false);
+                if(!this.isValNull(v_tenant_id) && !this.isValNull(v_group_code) && !this.isValNull(v_code)){
+                    var filters = [];
+                    filters.push(new Filter("tenant_id"   , FilterOperator.EQ, v_tenant_id));
+                    filters.push(new Filter("group_code"  , FilterOperator.EQ, v_group_code));
+                    filters.push(new Filter("code"  , FilterOperator.EQ, v_code));
+
+
+                    oView.setBusy(true);
+                    oModel.setTransactionModel(oView.getModel());
+                    oModel.read("/CodeLanguages", {
+                        filters: filters,
+                        success: function(oData){
+                            oView.setBusy(false);
+                        }
+                    });
+                }
 
                 this._retrieveParam.lngParam = p_searchCond;
 
@@ -443,65 +391,40 @@ sap.ui.define([
 			onLngAddRow : function () {
                 var lngVal = this._retrieveParam.lngParam;
 
-                var lngBinding = this.byId("codeLngTable").getBinding("items");
-                var oContext = lngBinding.create({
-                        "tenant_id" : lngVal.tenant_id,
-                        "company_code" : lngVal.company_code,
-                        "group_code" : lngVal.group_code,
-                        "code" :lngVal.code,
-                        "language_cd" : "",
-                        "code_name" : ""
-                    });
-
-                        /*
-                        ,
-                        "local_create_dtm" : "2020-10-13T00:00:00Z",
-                        "local_update_dtm" : "2020-10-13T00:00:00Z",
-                        "create_user_id" : "Admin",
-                        "update_user_id" : "Admin",
-                        "system_create_dtm" : "2020-10-13T00:00:00Z",
-                        "system_update_dtm" : "2020-10-13T00:00:00Z"
-                        */
+                var oTable = this.byId("codeLngTable");
+                var oModel = this.getModel("CodeLanguages");
+                oModel.addRecord({
+                    "tenant_id" : lngVal.tenant_id,
+                    "group_code" : lngVal.group_code,
+                    "code" :lngVal.code,
+                    "language_cd" : "",
+                    "code_name" : ""
+                }, 0);
             },
 
-			onLngCopyRow : function () {
-
-            },
 
 			onLngDeleteRow : function () {
-                var oSelected  = this.byId("codeLngTable").getSelectedContexts();
 
-                if (oSelected.length > 0) {
+                var oTable = this.byId("codeLngTable");
+                var oModel = this.getModel("CodeLanguages");
+                var aItems = oTable.getSelectedItems();
+                var aIndices = [];
+                aItems.forEach(function(oItem){
+                    aIndices.push(oModel.getProperty("/CodeLanguages").indexOf(oItem.getBindingContext("CodeLanguages").getObject()));
+                });
+                aIndices = aIndices.sort(function(a, b){return b-a;});
+                aIndices.forEach(function(nIndex){
+                    oModel.markRemoved(nIndex);
+                });
+                oTable.removeSelections(true);
 
-                    for(var idx = 0; idx < oSelected.length; idx++){
-
-                        var oView = this.getView();
-                        oView.setBusy(true);
-
-                        oSelected[idx].delete("$auto").then(function () {
-                            oView.setBusy(false);
-                            MessageToast.show("삭제 되었습니다.");
-                            this.onLngRefresh();
-                        }.bind(this), function (oError) {
-                            oView.setBusy(false);
-                            MessageBox.error(oError.message);
-                        });
-
-                    }
-                }else{
-                    MessageBox.error("선택된 행이 없습니다.");
-                }
             },
 
 			onLngSave : function () {
-                var lngBinding = this.byId("codeLngTable").getBinding("items");
-
-                if (!lngBinding.hasPendingChanges()) {
-                    MessageBox.error("수정한 내용이 없습니다.");
-                    return;
-                }
 
                 var oView = this.getView();
+                var oModel = this.getModel("CodeLanguages");
+
                 var fnSuccess = function () {
                     oView.setBusy(false);
                     MessageToast.show("저장 되었습니다.");
@@ -513,6 +436,7 @@ sap.ui.define([
                     MessageBox.error(oError.message);
                 }.bind(this);
 
+                        
 
                 MessageBox.confirm("저장 하시 겠습니까?", {
                     title : "Comfirmation",
@@ -520,7 +444,17 @@ sap.ui.define([
                     onClose : function(sButton) {
                         if (sButton === MessageBox.Action.OK) {
                             oView.setBusy(true);
-                            oView.getModel().submitBatch("codeLngUpdateGroup").then(fnSuccess, fnError);
+                            //oView.getModel().submitBatch("codeLngUpdateGroup").then(fnSuccess, fnError);
+
+                            oModel.submitChanges({
+                                success: function(oEvent){
+                                    oView.setBusy(false);
+                                    MessageToast.show("저장 되었습니다.");
+                                },error: function (oError) {
+                                    oView.setBusy(false);
+                                    MessageBox.error(oError.message);
+                                }
+                            });
                         } else if (sButton === MessageBox.Action.CANCEL) {
                             
                         };

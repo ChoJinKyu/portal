@@ -1,5 +1,5 @@
 sap.ui.define([
-	"./BaseController",
+	"ext/lib/controller/BaseController",
 	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
 	"ext/lib/model/TransactionManager",
@@ -311,8 +311,8 @@ sap.ui.define([
 
 			this.byId("midTableAddButton").setEnabled(!FALSE);
 			this.byId("midTableDeleteButton").setEnabled(!FALSE);
-			this.byId("midTableSearchField").setEnabled(FALSE);
-			this.byId("midTableApplyFilterButton").setEnabled(FALSE);
+			//this.byId("midTableSearchField").setEnabled(FALSE);
+			//this.byId("midTableApplyFilterButton").setEnabled(FALSE);
 			this.byId("midTable").setMode(sap.m.ListMode.SingleSelectLeft);
 			this._bindMidTable(this.oEditableTemplate, "Edit");
 		},
@@ -328,8 +328,8 @@ sap.ui.define([
 
 			this.byId("midTableAddButton").setEnabled(!TRUE);
 			this.byId("midTableDeleteButton").setEnabled(!TRUE);
-			this.byId("midTableSearchField").setEnabled(TRUE);
-			this.byId("midTableApplyFilterButton").setEnabled(TRUE);
+			//this.byId("midTableSearchField").setEnabled(TRUE);
+			//this.byId("midTableApplyFilterButton").setEnabled(TRUE);
 			this.byId("midTable").setMode(sap.m.ListMode.None);
 			this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
 		},

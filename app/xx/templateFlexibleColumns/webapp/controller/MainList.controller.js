@@ -2,7 +2,7 @@ sap.ui.define([
 	"ext/lib/controller/BaseController",
 	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
-	"ext/lib/model/ManagedListModel",
+	"ext/lib/model/DelegateModel",
 	"ext/lib/formatter/DateFormatter",
 	"sap/m/TablePersoController",
 	"./MainListPersoService",
@@ -16,7 +16,7 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+], function (BaseController, History, JSONModel, DelegateModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
 	"use strict";
 
 	return BaseController.extend("xx.templateFlexibleColumns.controller.MainList", {
@@ -50,7 +50,7 @@ sap.ui.define([
 				intent: "#Template-display"
 			}, true);
 			
-			this.setModel(new ManagedListModel(), "list");
+			this.setModel(new DelegateModel(), "list");
 			
 			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 

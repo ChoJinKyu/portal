@@ -1,5 +1,5 @@
 <mvc:View controllerName="xx.sampleMgr.controller.SampleMgr" xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m">
-	<Shell id="shell">
+	<!-- <Shell id="shell"> -->
 		<App id="app">
 			<pages>
                 <Page id="listPage" title="{i18n>title}" showNavButton="true" navButtonPress="onNavBack">
@@ -120,5 +120,5 @@
                 </Page>
 			</pages>
 		</App>
-	</Shell>
+	<!-- </Shell> -->
 </mvc:View>
