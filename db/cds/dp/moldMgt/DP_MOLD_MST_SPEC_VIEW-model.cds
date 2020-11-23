@@ -1,5 +1,7 @@
 namespace dp;
 
+using util from '../../util/util-model';
+
 @cds.persistence.exists
 entity Mold_Mst_Spec_View {
 
@@ -182,3 +184,5 @@ entity Mold_Mst_Spec_View {
         press_material_size           : String(100)   @title : '프레스재질크기';
         mold_spec_status_code         : String(30)    @title : '금형규격상태코드';
 }
+
+extend Mold_Mst_Spec_View with util.Managed;

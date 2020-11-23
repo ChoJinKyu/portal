@@ -177,6 +177,12 @@ SELECT '['||a.company_code||'] '||(select company_name from cm_org_company where
     , b.press_material_thickness      
     , b.press_material_size           
     , b.mold_spec_status_code  
+    , b.local_create_dtm
+    , b.local_update_dtm
+    , b.create_user_id
+    , b.update_user_id
+    , b.system_create_dtm
+    , b.system_update_dtm
 
 from dp_mold_mst a
 left join dp_mold_spec b
