@@ -32,6 +32,13 @@
         "settings": {
           "odataVersion": "2.0"
         }
+      },
+      "purOrgMgrService": {
+        "uri": "srv-api/odata/v2/cm.PurOrgMgrService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
       }
     }
   },
@@ -83,6 +90,16 @@
       },
       "util": {
         "dataSource": "commonUtilService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "useBatch": true
+        }
+      },
+      "purOrgMgr": {
+        "dataSource": "purOrgMgrService",
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",

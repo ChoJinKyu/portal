@@ -31,6 +31,7 @@
             "db/cds/cm/timeZoneMgr",
             "db/cds/cm/hrDeptMgr", 
             "db/cds/cm/hrEmployeeMgr",     
+            "db/cds/cm/orgCodeMgr",    
             "db/cds/cm/roleMgr",    
             "db/cds/cm/menuMgr",                    
             "db/cds/dp",
