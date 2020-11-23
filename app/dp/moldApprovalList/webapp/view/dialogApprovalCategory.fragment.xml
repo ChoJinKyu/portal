@@ -77,7 +77,35 @@
             columnsL="2"
             columnsM="2"
             > 
+                
+
                <form:content>
+                    <Label text = "Company" /> 
+                    <ComboBox id="searchCompanyF" width="50%" selectedKey="" items="{
+                        path: 'org>/Org_Company',
+                        filters: [
+                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                        ],
+                        sorter: { path: 'company_code'}
+                    }">
+                        <items>
+                            <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                        </items>
+                    </ComboBox>
+                    <Label text = "Plant"/> 
+                    <ComboBox id="searchPlantF" width="50%" selectedKey="" items="{
+                        path: 'purOrg>/Pur_Operation_Org',
+                        filters: [
+                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
+                            {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
+                            {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
+                        ]
+                    }">
+                        <items>
+                            <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
+                        </items>
+                    </ComboBox>
+                   
                     <VBox>
                         <Label text = "1.Local"/> 
                         <HBox alignItems="Center" justifyContent="Center" >

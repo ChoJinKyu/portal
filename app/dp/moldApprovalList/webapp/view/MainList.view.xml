@@ -30,7 +30,7 @@
                             <VBox>
                                 <Label text="Plant" labelFor="searchPlantS" required="true"></Label>
                                 <ComboBox id="searchPlantS" width="100%" selectedKey="L1100" items="{
-                                        path: 'purOrgMgr>/Pur_Operation_Org',
+                                        path: 'purOrg>/Pur_Operation_Org',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
                                             {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
@@ -38,7 +38,7 @@
                                         ]
                                     }">
                                     <items>
-                                        <core:Item key="{purOrgMgr>org_code}" text="[{purOrgMgr>org_code}]{purOrgMgr>org_name}" />
+                                        <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
                                     </items>
                                 </ComboBox>
                             </VBox>

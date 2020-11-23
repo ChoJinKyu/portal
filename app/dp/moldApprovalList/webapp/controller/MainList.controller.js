@@ -26,10 +26,10 @@ sap.ui.define([
     * @date 2020.11.19 
     * @author jinseon.lee , daun.lee 
     */
+    var dialogCategori;
 	return BaseController.extend("dp.moldApprovalList.controller.MainList", {
 
 		dateFormatter: DateFormatter,
-
 		/* =========================================================== */
 		/* lifecycle methods                                           */
 		/* =========================================================== */
@@ -162,21 +162,22 @@ sap.ui.define([
                 oRecord = this.getModel("list").getProperty(sPath);
             console.log("oRecord >>>  ", oRecord);
             var that = this;
-            if (oRecord.mold_id % 3 == 0) {
-                that.getRouter().navTo("pssaCreateObject", {
-                    company: "[LGEKR] LG Electronics Inc."
-                    , plant: "[DFZ] Washing Machine"
-                });
-            } else if (oRecord.mold_id % 3 == 2) {
-                that.getRouter().navTo("pssaObject", {
-                    moldId: oRecord.mold_id
-                });
-            } else {
-                that.getRouter().navTo("pssaCreateObject", {
-                    company: "[LGEKR] LG Electronics Inc."
-                    , plant: "[DFZ] Washing Machine"
-                });
-            }
+            that.getRouter().navTo("pssaObject", {
+                moldId: oRecord.mold_id          
+            });
+            // if (oRecord.mold_id % 3 == 0) {
+            //     that.getRouter().navTo("pssaCreateObject", {
+            //         company: "[LGEKR] LG Electronics Inc."
+            //         , plant: "[DFZ] Washing Machine"
+            //     });
+            // } else if (oRecord.mold_id % 3 == 2) {
+                
+            // } else {
+            //     that.getRouter().navTo("pssaCreateObject", {
+            //         company: "[LGEKR] LG Electronics Inc."
+            //         , plant: "[DFZ] Washing Machine"
+            //     });
+            // }
 
 		},
 
@@ -328,6 +329,13 @@ sap.ui.define([
             for(var i=0; i<groupId.length; i++){
                 if(groupId[i].getPressed() == true){
                     console.log(groupId[i].mProperties.text);
+                    console.log(this.byId("searchCompanyF").getValue());
+                    console.log(this.byId("searchPlantF").getValue());
+                    this.getRouter().navTo("pssaCreateObject", {
+                        company: this.byId("searchCompanyF").getValue()
+                        , plant: this.byId("searchPlantF").getValue()
+                        , 
+                    });
                 }    
             }
         },
