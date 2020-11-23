@@ -43,7 +43,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="사용여부" labelFor="searchChain" required="true"></Label>
+                            <Label text="사용여부" labelFor="searchChain"></Label>
                             <ComboBox id="searchChain" selectedKey=""
                                                     width="100%">
                                                     <core:Item key="true" text="Yes"/>                                                            

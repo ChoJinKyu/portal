@@ -126,19 +126,19 @@
 								<Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="40px" >
 									<Text text="S" />
 								</Column>
-								<Column id="midColumnLevelCode" minScreenWidth="Tablet" hAlign="Center">
+								<Column id="midColumnLanguageCode" minScreenWidth="Tablet" hAlign="Center">
 									<Text text="언어" />
 								</Column>
-								<Column id="midColumnLevelValue" minScreenWidth="Tablet" hAlign="Center">
+								<Column id="midColumnCurrencyCodeName" minScreenWidth="Tablet" hAlign="Center">
 									<Text text="통화코드명" />
 								</Column>
-								<Column id="midColumnValue" minScreenWidth="Tablet" hAlign="Center" >
+								<Column id="midColumnCurrencyCodeDesc" minScreenWidth="Tablet" hAlign="Center" >
 									<Text text="통화코드설명" />
 								</Column>
-                                <Column id="midColumnLevelValue1" minScreenWidth="Tablet" hAlign="Center">
+                                <Column id="midColumnCurrencyPrefix" minScreenWidth="Tablet" hAlign="Center">
 									<Text text="Prefix" />
 								</Column>
-								<Column id="midColumnValue1" minScreenWidth="Tablet" hAlign="Center" >
+								<Column id="midColumnCurrencySuffix" minScreenWidth="Tablet" hAlign="Center" >
 									<Text text="Suffix" />
 								</Column>
 							</columns>

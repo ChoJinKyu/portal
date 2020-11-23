@@ -34,7 +34,15 @@ sap.ui.define([
 			this.setModel(new JSONModel(), "fcl");
 
 			// create the views based on the url/hash
-			this.getRouter().initialize();
+            this.getRouter().initialize();
+            
+            var oModel;
+            oModel = new JSONModel({
+                            editMode : "",
+                        });
+            this.setModel(oModel, "editMode");
+            
+           
 		},
 
 		/**
