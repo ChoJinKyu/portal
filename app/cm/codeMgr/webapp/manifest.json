@@ -17,11 +17,17 @@
         },
         "dataSources": {
             "mainService": {
-                "uri": "srv-api/odata/v4/cm.CodeMgrService/",
+                "uri": "srv-api/odata/v2/cm.CodeMgrService/",
                 "type": "OData",
                 "settings": {
-                    "odataVersion": "4.0",
-                    "localUri": "localService/metadata.xml"
+                    "odataVersion": "2.0"
+                }
+            },
+            "commonUtilService": {
+                "uri": "srv-api/odata/v2/util.CommonService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
                 }
             }
         },
@@ -84,6 +90,16 @@
                 "type": "sap.ui.model.resource.ResourceModel",
                 "settings": {
                     "bundleName": "cm.codeMgr.i18n.i18n"
+                }
+            },
+            "util": {
+                "dataSource": "commonUtilService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false,
+                    "useBatch": true
                 }
             },
             "": {

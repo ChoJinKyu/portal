@@ -38,6 +38,10 @@ sap.ui.define([
                             true2 : false,
                             true3 : true,
                             true4 : false,
+                            true5 : false,
+                            LiveChange : "",
+                            newCheck : "",
+                            true6 : true,
                         });
             this.setModel(oModel, "Currency");
             this.setModel(new JSONModel(), "flexibleColumnLayout");

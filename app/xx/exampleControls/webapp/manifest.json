@@ -77,6 +77,7 @@
       },
       "util": {
         "dataSource": "commonUtilService",
+        "type": "ext.lib.model.v2.ODataModel",
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",
@@ -85,7 +86,7 @@
           "useBatch": true
         }
       },
-      "": {
+      "odata": {
         "dataSource": "mainService",
         "preload": true,
         "settings": {
@@ -134,20 +135,49 @@
           "target": [
             "example1"
           ]
+        },
+        {
+          "pattern": "example2",
+          "name": "example2",
+          "target": [
+            "example2"
+          ]
+        },
+        {
+          "pattern": "example3",
+          "name": "example3",
+          "target": [
+            "example3"
+          ]
+        },
+        {
+          "pattern": "example4",
+          "name": "example4",
+          "target": [
+            "example4"
+          ]
         }
       ],
       "targets": {
         "home": {
           "viewName": "Home",
-          "viewId": "home",
-          "viewLevel": 1,
-          "title": "{i18n>homeViewTitle}"
+          "viewId": "home"
         },
         "example1": {
           "viewName": "SearchAreaControls",
-          "viewId": "example1",
-          "viewLevel": 2,
-          "title": "{i18n>exampleViewTitle}"
+          "viewId": "example1"
+        },
+        "example2": {
+          "viewName": "ControlValidation",
+          "viewId": "example2"
+        },
+        "example3": {
+          "viewName": "SmartTable",
+          "viewId": "example3"
+        },
+        "example4": {
+          "viewName": "InlineEditTable",
+          "viewId": "example4"
         },
         "notFound": {
           "viewName": "NotFound",

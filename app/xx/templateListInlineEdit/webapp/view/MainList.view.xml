@@ -26,7 +26,6 @@
                                         path: 'util>/CodeDetails',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                            {path: 'company_code', operator: 'EQ', value1: '*'},
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                                         ]
                                     }">
@@ -44,7 +43,6 @@
                                         path: 'util>/CodeDetails',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                            {path: 'company_code', operator: 'EQ', value1: '*'},
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
                                         ]
                                     }">
@@ -76,7 +74,6 @@
                                         path: 'util>/CodeDetails',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                            {path: 'company_code', operator: 'EQ', value1: '*'},
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                                         ]
                                     }">
@@ -94,7 +91,6 @@
                                         path: 'util>/CodeDetails',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                            {path: 'company_code', operator: 'EQ', value1: '*'},
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
                                         ]
                                     }">
@@ -109,7 +105,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="Keyword" labelFor="searchKeywordE"></Label>
-                                <Input id="searchKeywordE" placeholder="Keywords of the Code or Content"></Input>
+                                <Input id="searchKeywordE" placeholder="Search Keywords"></Input>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
@@ -131,97 +127,92 @@
             </f:DynamicPageHeader>
         </f:header>
         <f:content>
-            <VBox>
-                <Table id="mainTable" 
-                        sticky="HeaderToolbar,ColumnHeaders" 
-                        inset="false" 
-                        class="sapFDynamicPageAlignContent" 
-                        updateFinished=".onMainTableUpdateFinished"
-                        items="{list>/}"
-                        mode="MultiSelect" 
-                        width="auto">
-                    <headerToolbar>
-                        <OverflowToolbar>
-                            <Title text="Messages" level="H2"/>
-                            <ToolbarSpacer/>
-                            <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
-                            <Button id="mainTableDeleteButton" text="Delete" type="Transparent" press=".onMainTableDeleteButtonPress" />
-                            <Button id="mainTableSaveButton" text="Save" type="Emphasized" press=".onMainTableSaveButtonPress" />
-                            <ToolbarSeparator/>
-                            <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
-                                <layoutData>
-                                    <OverflowToolbarLayoutData priority="NeverOverflow" />
-                                </layoutData>
-                            </Button>
-                        </OverflowToolbar>
-                    </headerToolbar>
-                    <columns>
-                        <Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="40px" >
-                            <Text text="S" />
-                        </Column>
-                        <Column id="mainColumnChainCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
-                            <Text text="Chain" />
-                        </Column>
-                        <Column id="mainColumnLanguageCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
-                            <Text text="Language" />
-                        </Column>
-                        <Column id="mainColumnMessageCode" minScreenWidth="Tablet" hAlign="Center" width="12em" >
-                            <Text text="Code" />
-                        </Column>
-                        <Column id="mainColumnMessageContents" minScreenWidth="Tablet" hAlign="Center">
-                            <Text text="Content" />
-                        </Column>
-                        <Column id="mainColumnMessageTypeCode" minScreenWidth="Tablet" hAlign="Center" width="12em" >
-                            <Text text="Type" />
-                        </Column>
-                    </columns>
-                    <items>
-                        <ColumnListItem>
-                            <cells>
-                                <Text text="{list>_row_state_}"></Text>
-                                <ComboBox selectedKey="{list>chain_code}" width="100%" items="{
-                                        path: 'util>/CodeDetails',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                            {path: 'company_code', operator: 'EQ', value1: '*'},
-                                            {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
-                                        ]
-                                    }">
-                                    <items>
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
-                                    </items>
-                                </ComboBox>
-                                <ComboBox selectedKey="{list>language_code}" width="100%" items="{
-                                        path: 'util>/CodeDetails',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                            {path: 'company_code', operator: 'EQ', value1: '*'},
-                                            {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
-                                        ]
-                                    }">
-                                    <items>
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
-                                    </items>
-                                </ComboBox>
-                                <Input value="{list>message_code}"></Input>
-                                <Input value="{list>message_contents}"></Input>
-                                <ComboBox selectedKey="{list>message_type_code}" width="100%" items="{
-                                        path: 'util>/CodeDetails',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                            {path: 'company_code', operator: 'EQ', value1: '*'},
-                                            {path: 'group_code', operator: 'EQ', value1: 'CM_MESSAGE_TYPE_CODE'}
-                                        ]
-                                    }">
-                                    <items>
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
-                                    </items>
-                                </ComboBox>
-                            </cells>
-                        </ColumnListItem>
-                    </items>
-                </Table>
-            </VBox>
+            <Table id="mainTable" 
+                    sticky="HeaderToolbar,ColumnHeaders" 
+                    inset="false" 
+                    class="sapFDynamicPageAlignContent" 
+                    updateFinished=".onMainTableUpdateFinished"
+                    items="{list>/Message}"
+                    mode="MultiSelect" 
+                    width="auto">
+                <headerToolbar>
+                    <OverflowToolbar>
+                        <Title text="Messages" level="H2"/>
+                        <ToolbarSpacer/>
+                        <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
+                        <Button id="mainTableDeleteButton" text="Delete" type="Transparent" press=".onMainTableDeleteButtonPress" />
+                        <Button id="mainTableSaveButton" text="Save" type="Emphasized" press=".onMainTableSaveButtonPress" />
+                        <ToolbarSeparator/>
+                        <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+                            <layoutData>
+                                <OverflowToolbarLayoutData priority="NeverOverflow" />
+                            </layoutData>
+                        </Button>
+                    </OverflowToolbar>
+                </headerToolbar>
+                <columns>
+                    <Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="40px" >
+                        <Text text="S" />
+                    </Column>
+                    <Column id="mainColumnChainCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
+                        <Text text="Chain" />
+                    </Column>
+                    <Column id="mainColumnLanguageCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
+                        <Text text="Language" />
+                    </Column>
+                    <Column id="mainColumnMessageCode" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                        <Text text="Code" />
+                    </Column>
+                    <Column id="mainColumnMessageContents" minScreenWidth="Tablet" hAlign="Center">
+                        <Text text="Content" />
+                    </Column>
+                    <Column id="mainColumnMessageTypeCode" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                        <Text text="Type" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <Text text="{list>_row_state_}"></Text>
+                            <ComboBox selectedKey="{list>chain_code}" width="100%" items="{
+                                    path: 'util>/CodeDetails',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
+                                    ]
+                                }">
+                                <items>
+                                    <core:Item key="{util>code}" text="{util>code_description}" />
+                                </items>
+                            </ComboBox>
+                            <ComboBox selectedKey="{list>language_code}" width="100%" items="{
+                                    path: 'util>/CodeDetails',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
+                                    ]
+                                }">
+                                <items>
+                                    <core:Item key="{util>code}" text="{util>code_description}" />
+                                </items>
+                            </ComboBox>
+                            <Input value="{list>message_code}"></Input>
+                            <Input value="{list>message_contents}"></Input>
+                            <ComboBox selectedKey="{list>message_type_code}" width="100%" items="{
+                                    path: 'util>/CodeDetails',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'group_code', operator: 'EQ', value1: 'CM_MESSAGE_TYPE_CODE'}
+                                    ]
+                                }">
+                                <items>
+                                    <core:Item key="{util>code}" text="{util>code_description}" />
+                                </items>
+                            </ComboBox>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
         </f:content>
         <!-- DynamicPage Footer -->
         <f:footer>

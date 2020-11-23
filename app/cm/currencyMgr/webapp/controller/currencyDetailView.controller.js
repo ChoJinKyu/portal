@@ -8,15 +8,19 @@ sap.ui.define([
     "sap/m/TablePersoController",
     "ext/lib/model/ManagedModel",
     "ext/lib/controller/BaseController",
-    "./MainListPersoService",
-], function (BaseController, JSONModel, Filter, FilterOperator, ManagedModel, ManagedListModel, TablePersoController, MainListPersoService ) {
+	"sap/m/MessageBox",
+	"sap/m/MessageToast"
+], function (BaseController, JSONModel, Filter, FilterOperator, ManagedModel, ManagedListModel, TablePersoController, MainListPersoService, MessageBox, MessageToast) {
 	"use strict";
 
 	return BaseController.extend("cm.currencyMgr.controller.currencyDetailView", {  
         onInit: function () {
             // debugger;
             // var oViewModel,
-			// 	oResourceBundle = this.getResourceBundle();
+            // 	oResourceBundle = this.getResourceBundle();
+            
+            var component = this.getOwnerComponent();
+            
             
 
 			this.oOwnerComponent = this.getOwnerComponent();
@@ -26,53 +30,48 @@ sap.ui.define([
 
 			this.oRouter.getRoute("master").attachPatternMatched(this._onProductMatched, this);
             this.oRouter.getRoute("detail").attachPatternMatched(this._onProductMatched, this);
+            this.getView().setModel(new ext.lib.model.ManagedModel(), "master");
             this.getView().setModel(new ManagedListModel(), "list");
-            //
-            //this.onSearch();
-
-            //this._doInitTablePerso();
             
-            
-
-			// Model used to manipulate control states
-			// oViewModel = new JSONModel({
-			// 	headerExpanded: true,
-			// 	mainListTableTitle : oResourceBundle.getText("mainListTableTitle"),
-			// 	tableNoDataText : oResourceBundle.getText("tableNoDataText")
-			// });
-			// this.setModel(oViewModel, "mainListView");
             
         },
         
         _onProductMatched: function (oEvent) {
-            
             var currencyViewPath;
-            this._currency = oEvent.getParameter("arguments").currency || this._currency || "0";
-            currencyViewPath = this._currency.split("CurrencyView").slice(-1).pop();
-            currencyViewPath = "Currency" + currencyViewPath;
-            this.getView().byId("CurrencyViewObjectPageSection").bindElement({
-                path: "/" + currencyViewPath
-            });
-
-            this._applySearch();
-
-            
-
-            // var oTableSearchState = [],
-			// 	sQuery = oEvent.getParameter("query");
-            // this.ocurrencysTable = this.oView.byId("CurrencyLngTable");
-			// if (sQuery && sQuery.length > 0) {
-			// 	oTableSearchState = [new Filter("Name", FilterOperator.Contains, sQuery)];
-			// }
-
-			// this.ocurrencysTable.getBinding("items").filter(oTableSearchState, "Application");
-
-            //this.getView().getModel('Currency').setProperty("/layout",oEvent.getParameter("arguments").layout);
-            // currency = currencyPath.split("/").slice(-1).pop();
-
-            // CurrencyView
-            
-		},
+            var currencyCode;
+            var oUiModel = this.getView().getModel("Currency");
+            var oView = this.getView();
+            if (oEvent.getParameter("arguments").currency === "new")
+            {
+			    var oObjectPage = this.getView().byId("ObjectPageLayout"),
+				bCurrentShowFooterState = oObjectPage.getShowFooter();
+                oUiModel.setProperty("/true4", !bCurrentShowFooterState);
+                oUiModel.setProperty("/true5", !bCurrentShowFooterState);
+                this._resetInputValue();
+                this.onEditToggleButtonPress();
+                oObjectPage.setShowFooter(!bCurrentShowFooterState);
+                var oMasterModel = this.getView().getModel("master");
+				oMasterModel.setData({
+					tenant_id: "L2100"
+                });
+                oUiModel.setProperty("/LiveChange", "New"); //네이밍 설정
+                oUiModel.setProperty("/newCheck", "New"); 
+                this._applySearch();
+                
+            }else{
+                this._currency = oEvent.getParameter("arguments").currency || this._currency || "0";
+                currencyViewPath = this._currency.split("CurrencyView").slice(-1).pop();
+                currencyViewPath = "Currency" + currencyViewPath;
+                this.getView().byId("CurrencyViewObjectPageSection").bindElement({
+                    path: "/" + currencyViewPath
+                });
+                currencyCode = oEvent.getParameter("arguments").currency || this._currency || "0";
+                currencyCode = currencyCode.split("code='").slice(-1).pop();
+                currencyCode = currencyCode.split("'").slice(0)[0];
+                oUiModel.setProperty("/LiveChange", currencyCode);
+                this._applySearch();
+            }
+        },
 
 
 		onEditToggleButtonPress: function() {
@@ -80,6 +79,13 @@ sap.ui.define([
 			    oObjectPage = this.getView().byId("ObjectPageLayout"),
 				bCurrentShowFooterState = oObjectPage.getShowFooter();
             oUiModel.setProperty("/true4", !bCurrentShowFooterState);
+            oUiModel.setProperty("/true6", bCurrentShowFooterState);
+            oUiModel.setProperty("/newCheck", "NewNew");
+            if(this.getView().byId(""))
+            {
+                oUiModel.setProperty("/true5", !bCurrentShowFooterState);
+            }
+            
             oObjectPage.setShowFooter(!bCurrentShowFooterState);
         },
 
@@ -117,18 +123,40 @@ sap.ui.define([
             oUiModel.setProperty("/true1", true);
             oUiModel.setProperty("/true2", false);
             oUiModel.setProperty("/true4", false);
+            oUiModel.setProperty("/true5", false);
             oObjectPage.setShowFooter(false);
                 
 			var sNextLayout = "closeColumn";
 			this.oRouter.navTo("master", {layout: sNextLayout});
         },
         
-        onFooterCancelButton: function () {
+        onFooterCancelButton: function (oEvent) {
             var oUiModel = this.getView().getModel("Currency"),
                 oObjectPage = this.getView().byId("ObjectPageLayout");
 
             oUiModel.setProperty("/true4", false);
+            oUiModel.setProperty("/true5", false);
+            oUiModel.setProperty("/true6", true);
             oObjectPage.setShowFooter(false);
+
+            if(oUiModel.getProperty("/newCheck") === "New")
+            {
+
+                this.handleClose();
+                sap.m.MessageToast.show("Close");
+                // sap.m.MessageBox.confirm("Are you sure ?", {
+                //     title: "Comfirmation",
+                //     initialFocus: sap.m.MessageBox.Action.CANCEL,
+                //     onClose: function (sButton) {
+                //         if (sButton === sap.m.MessageBox.Action.OK) {
+                            
+                //         };
+                //     }
+                // });
+                
+            }
+
+            
         },
 
         _doInitTablePerso: function(){
@@ -140,13 +168,24 @@ sap.ui.define([
 				hasGrouping: true
 			}).activate();
         },
+        onLiveChange: function(oEvent) {
+            var sNewValue = oEvent.getParameter("value");
+            var oUiModel = this.getView().getModel("Currency");
+            // this.byId("getValue").setText(sNewValue);
+            oUiModel.setProperty("/LiveChange", sNewValue);
+        },
 
         onLngAddRow: function(){
+            var oUiModel = this.getView().getModel("Currency");
 			var oTable = this.byId("CurrencyLngTable"),
-				oModel = this.getView().getModel("list");
+                oModel = this.getView().getModel("list"),
+                currencyCode;
+                //currencyCode = this.getView().byId("ipCurCode").mProperties.value;
+                currencyCode = oUiModel.getProperty("/LiveChange");
 			    oModel.addRecord({
 				"tenant_id": "L2100",
-				"language_code": "",
+                "language_code": "",
+                "currency_code" : currencyCode,
 				"currency_code_name": "",
 				"currency_code_desc": "",
 				"currency_prefix": "",
@@ -155,31 +194,60 @@ sap.ui.define([
 				"local_update_dtm": new Date()
 			}, 0);
         },
+        onLngSave: function () {
 
-        onSearch: function () {
-            var predicates = [];
-            //predicates.push(new Filter("language_code", FilterOperator.EQ, ""));
-            this.getView()
-            .setBusy(true)
-            .getModel("list")
-            .setTransactionModel(this.getView().getModel())
-            .read("/CurrencyLng", {
-                filters: predicates,
-                success: (function (oData) {
-                this.getView().setBusy(false);
-                }).bind(this)
+            // this.oOwnerComponent = this.getOwnerComponent();
+			// this.oRouter = this.oOwnerComponent.getRouter();
+            //var [tId, mName] = arguments;
+            var view = this.getView();
+            var model = view.getModel("list");
+            // Validation
+            if (model.getChanges() <= 0) {
+                sap.m.MessageBox.alert("변경사항이 없습니다.");
+                reutn;
+            }
+            sap.m.MessageBox.confirm("Are you sure ?", {
+                title: "Comfirmation",
+                initialFocus: sap.m.MessageBox.Action.CANCEL,
+                onClose: function (sButton) {
+                    if (sButton === sap.m.MessageBox.Action.OK) {
+                        view.setBusy(true);
+                        model.submitChanges({
+                            success: function (oEvent) {
+                                view.setBusy(false);
+                                sap.m.MessageToast.show("Success to save.");
+                            }
+                        });
+                    };
+                }
             });
+            this.oRouter.getRoute("master").attachPatternMatched(this._onProductMatched, this);
+            
         },
 
-        _applySearch: function(oEvent) {
-            var predicates = [];
-            //predicates.push(new Filter("tenant_id", FilterOperator.EQ, "L2100"));
-            // var oTableSearchState = [],
-			// 	sQuery = oEvent.getParameter("query");
+        onLngDeleteRow: function(){
+			var oTable = this.byId("CurrencyLngTable"),
+				oModel = this.getView().getModel("list"),
+				aItems = oTable.getSelectedItems(),
+				aIndices = [];
+			aItems.forEach(function(oItem){
+				aIndices.push(oModel.getData().indexOf(oItem.getBindingContext("list").getObject()));
+			});
+			aIndices = aIndices.sort(function(a, b){return b-a;});
+			aIndices.forEach(function(nIndex){
+				//oModel.removeRecord(nIndex);
+				oModel.markRemoved(nIndex);
+			});
+            oTable.removeSelections(true);
+            this.oRouter.navTo("master", {refresh: "refresh"});
+		},
 
-			// if (sQuery && sQuery.length > 0) {
-			// 	oTableSearchState = [new Filter("currency_code_name", FilterOperator.Contains, sQuery)];
-			// }
+        _applySearch: function() {
+            var oUiModel = this.getView().getModel("Currency");
+            var currencyCode;
+            currencyCode = oUiModel.getProperty("/LiveChange");
+            var predicates = [];
+            predicates.push(new Filter("currency_code", FilterOperator.EQ, currencyCode));
 			var oView = this.getView(),
 				oModel = this.getView().getModel("list");
                 oView.setBusy(true);
@@ -195,30 +263,9 @@ sap.ui.define([
 
   
         _getSearchStates: function(){
-			// var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S",
-			// 	chain = this.getView().byId("searchChain"+sSurffix).getSelectedKey(),
-			// 	language = this.getView().byId("searchLanguage"+sSurffix).getSelectedKey(),
-			// 	keyword = this.getView().byId("searchKeyword"+sSurffix).getValue();
-				
             var aTableSearchState = [];
             
             aTableSearchState.push(new Filter("tenant_id", FilterOperator.EQ, "L2100"));
-
-			// if (chain && chain.length > 0) {
-			// 	aTableSearchState.push(new Filter("chain_code", FilterOperator.EQ, chain));
-			// }
-			// if (language && language.length > 0) {
-			// 	aTableSearchState.push(new Filter("language_code", FilterOperator.EQ, language));
-			// }
-			// if (keyword && keyword.length > 0) {
-			// 	aTableSearchState.push(new Filter({
-			// 		filters: [
-			// 			new Filter("message_code", FilterOperator.Contains, keyword),
-			// 			new Filter("message_contents", FilterOperator.Contains, keyword)
-			// 		],
-			// 		and: false
-			// 	}));
-			// }
 			return aTableSearchState;
         },
         onPageSearchButtonPress : function (oEvent) {
@@ -233,20 +280,15 @@ sap.ui.define([
 				this._applySearch(aTableSearchState);
 			}
         },
-        
-        // onMainTableUpdateFinished : function (oEvent) {
-		// 	// update the mainList's object counter after the table update
-		// 	var sTitle,
-		// 		oTable = oEvent.getSource(),
-		// 		iTotalItems = oEvent.getParameter("total");
-		// 	// only update the counter if the length is final and
-		// 	// the table is not empty
-		// 	if (iTotalItems && oTable.getBinding("items").isLengthFinal()) {
-		// 		sTitle = this.getResourceBundle().getText("mainListTableTitleCount", [iTotalItems]);
-		// 	} else {
-		// 		sTitle = this.getResourceBundle().getText("mainListTableTitle");
-		// 	}
-		// 	this.getModel("mainListView").setProperty("/mainListTableTitle", sTitle);
-		// },
+
+        _resetInputValue: function() {
+            var oView = this.getView();
+            oView.byId("ipCurCode").setValue("");
+            oView.byId("ipScale").setValue("");
+            oView.byId("ipExScale").setValue("");
+            oView.byId("strtDate").setValue("");
+            oView.byId("endDate").setValue("");
+            oView.byId("ipUseFlag").setValue("");
+        },
 	});
 });

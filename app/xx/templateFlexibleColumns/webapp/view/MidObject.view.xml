@@ -76,7 +76,7 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			<uxap:ObjectPageSection titleUppercase="false" title="Managed Values">
+			<uxap:ObjectPageSection titleUppercase="false" title="Managed Values" visible="{= !${midObjectView>/isAddedMode}}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<form:SimpleForm editable="false">
@@ -105,10 +105,10 @@
 						<Table id="midTable" 
 								sticky="HeaderToolbar,ColumnHeaders" 
 								inset="false" 
-								mode="None" 
-								items="{details>/}"
+								items="{details>/ControlOptionDetails}"
 								class="sapFDynamicPageAlignContent" 
 								updateFinished=".onMidTableUpdateFinished"
+								mode="SingleSelectLeft" 
 								width="auto">
 							<headerToolbar>
 								<OverflowToolbar>
@@ -117,15 +117,17 @@
 									<!-- Add the Personalization button -->
 									<Button id="midTableAddButton" text="Add" type="Transparent" press=".onMidTableAddButtonPress" />
 									<Button id="midTableDeleteButton" text="Delete" type="Transparent" press=".onMidTableDeleteButtonPress" />
-									<Button id="midTableSaveButton" text="Save" type="Emphasized" press=".onMidTableSaveButtonPress" />
 									<ToolbarSeparator/>
-									<SearchField width="10rem" search=".onMidTableFilterPress" />
-									<Button id="midTableApplyFilterButton" text="Apply" type="Transparent" press=".onMidTableSaveButtonPress" />
+									<SearchField id="midTableSearchField" width="10rem" search=".onMidTableFilterPress" />
+									<Button id="midTableApplyFilterButton" text="Apply" type="Transparent" press=".onMidTableApplyFilterButton" />
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
 								<Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="40px" >
 									<Text text="S" />
+								</Column>
+								<Column id="mainColumnCode" minScreenWidth="Tablet" hAlign="Center" >
+									<Text text="Code" />
 								</Column>
 								<Column id="midColumnLevelCode" minScreenWidth="Tablet" hAlign="Center">
 									<Text text="Level" />
@@ -138,9 +140,10 @@
 								</Column>
 							</columns>
 							<items>
-								<ColumnListItem type="Navigation" press=".onMidTableItemPress">
+								<ColumnListItem type="Inactive" press=".onMidTableItemPress">
 									<cells>
 										<Text text="{details>_row_state_}"/>
+										<Text text="{details>control_option_code}"/>
 										<Input value="{details>control_option_level_code}"/>
 										<Input value="{details>control_option_level_val}"/>
 										<Input value="{details>control_option_val}"/>
@@ -156,6 +159,13 @@
 		
 		<uxap:footer>
 			<OverflowToolbar>
+                <Button
+                    icon="sap-icon://alert"
+                    type="Emphasized"
+                    text="{= ${message>/}.length }"
+                    visible="{= ${message>/}.length > 0 }"
+                    ariaHasPopup="Dialog"
+                    press=".onMessagePopoverPress" />
 				<ToolbarSpacer />
 				<Button type="Emphasized" text="Save" press=".onPageSaveButtonPress" />
 				<Button type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>

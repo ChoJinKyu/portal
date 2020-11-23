@@ -1,0 +1,659 @@
+<mvc:View displayBlock="true" controllerName="dp.detailSpecEntry.controller.Detail" height="100%"
+		xmlns="sap.uxap"
+		xmlns:mvc="sap.ui.core.mvc"
+		xmlns:f="sap.f"
+        xmlns:form="sap.ui.layout.form"
+        xmlns:layout="sap.ui.layout"
+        xmlns:tnt="sap.tnt"
+        xmlns:co="sap.suite.ui.commons"
+        xmlns:u="sap.ui.unified"
+        xmlns:m="sap.m">
+
+	<ObjectPageLayout id="ObjectPageLayout"
+        showFooter="true"
+        toggleHeaderOnTitleClick="true"
+        headerExpanded="true"
+        showTitleInHeaderContent = "true"
+        alwaysShowContentHeader = "true"
+					preserveHeaderStateOnScroll="false"
+					headerContentPinnable="true"
+					isChildPage="true"
+					upperCaseAnchorBar="false">
+				<headerTitle>
+					<ObjectPageDynamicHeaderTitle>
+						<!-- <expandedHeading>
+							<m:Title text="{moldMst>part_number}" wrapping="true" class="sapUiSmallMarginEnd"/>
+                            
+						</expandedHeading> -->
+
+						<navigationActions>
+							<m:OverflowToolbarButton type="Transparent" icon="sap-icon://full-screen" press="handleFullScreen" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
+							<m:OverflowToolbarButton type="Transparent" icon="sap-icon://exit-full-screen" press="handleExitFullScreen" tooltip="Exit Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
+							<m:OverflowToolbarButton type="Transparent" icon="sap-icon://decline" press="handleClose"  tooltip="Close column" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+						</navigationActions>
+
+					</ObjectPageDynamicHeaderTitle>
+				</headerTitle>
+
+				<headerContent>
+			<m:FlexBox wrap="Wrap">
+				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+					<m:Label text="Process : "/>
+                    <co:MicroProcessFlow>
+                        <co:content>
+                            <co:MicroProcessFlowItem icon="sap-icon://complete" stepWidth="3em"/>
+                            <co:MicroProcessFlowItem icon="sap-icon://complete" stepWidth="3em"/>
+                            <co:MicroProcessFlowItem icon="sap-icon://complete" stepWidth="3em"/>
+                            <co:MicroProcessFlowItem icon="sap-icon://complete" stepWidth="3em"/>
+                            <co:MicroProcessFlowItem icon="sap-icon://complete" stepWidth="3em"/>
+                            <co:MicroProcessFlowItem state="Error" icon="sap-icon://circle-task" stepWidth="3em"/>
+                            <co:MicroProcessFlowItem stepWidth="3em"/>
+                            <co:MicroProcessFlowItem stepWidth="3em"/>
+                            <co:MicroProcessFlowItem stepWidth="3em"/>
+                        </co:content>
+			        </co:MicroProcessFlow>
+                    <layout:HorizontalLayout>
+                        <m:Text text="PR" width="4em" textAlign="Center"/>
+                        <m:Text text="Budget" width="4em" textAlign="Center"/>
+                        <m:Text text="RFQ" width="5em" textAlign="Center"/>
+                        <m:Text text="Mold Spec" width="5em" textAlign="Center"/>
+                        <m:Text text="Purchase Contract" width="5em" textAlign="Center"/>
+                        <m:Text text="PO" width="5em" textAlign="Center"/>
+                        <m:Text text="RCV" width="5em" textAlign="Center"/>
+                        <m:Text text="Lease Contract" width="5em" textAlign="Center"/>
+                        <m:Text text="Invoice" width="5em" textAlign="Center"/>
+                    </layout:HorizontalLayout>
+                </layout:VerticalLayout>
+			</m:FlexBox>
+		</headerContent>
+
+		<sections>
+			<ObjectPageSection titleUppercase="false" id="goalsSection" title="General Info">
+				<subSections>
+					<ObjectPageSubSection>
+						<blocks>
+                            <form:SimpleForm
+                                maxContainerCols="2"
+                                editable="true"
+                                layout="ResponsiveGridLayout"
+                                adjustLabelSpan="false"
+                                labelSpanL="4"
+                                labelSpanM="4"
+                                emptySpanL="0"
+                                emptySpanM="0"
+                                columnsL="2"
+                                columnsM="2">
+                                <form:content>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Model"/>
+                                        <m:Text
+                                            text="{moldMst>model}">
+                                        </m:Text>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Part No"/>
+                                        <m:Text
+                                            text="{moldMst>part_number}">
+                                        </m:Text>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Seq"/>
+                                        <m:Text
+                                            text="{moldMst>mold_sequence}">
+                                        </m:Text>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Prod Type"/>
+                                        <m:Text
+                                            text="{moldMst>mold_production_type_code}">
+                                        </m:Text>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Item Type"/>
+                                        <m:Text id="itemType"
+                                            text="{moldMst>mold_item_type_code}"
+                                            value="{moldMst>mold_item_type_code}">
+                                        </m:Text>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Description"/>
+                                        <m:Text
+                                            text="{moldMst>spec_name}">
+                                        </m:Text>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Mold Supplier"/>
+                                        <m:Input
+                                            value="{moldMst>mold_vendor_id}"
+                                            placeholder="필수"
+                                            showValueHelp="true">
+                                        </m:Input>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Order Supplier"/>
+                                        <m:Text
+                                            text="{moldMst>order_vendor_id}">
+                                        </m:Text>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Prod Supplier"/>
+                                        <m:Input
+                                            value="{moldMst>production_vendor_id}"
+                                            placeholder="필수"
+                                            showValueHelp="true">
+                                        </m:Input>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Mold ID"/>
+                                        <m:Text
+                                            text="{moldMst>mold_id}">
+                                        </m:Text>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                </form:content>
+                            </form:SimpleForm>
+						</blocks>
+					</ObjectPageSubSection>
+
+				</subSections>
+			</ObjectPageSection>
+
+			<ObjectPageSection titleUppercase="false" id="employmentSection" title="Ship Plan">
+				<subSections>
+					<ObjectPageSubSection titleUppercase="false"  showTitle="false">
+						<blocks>
+                            <layout:VerticalLayout class="sapUiContentPadding">
+                            <m:Table id="scheduleTable1"
+                                    mode="None"
+                                    sticky="HeaderToolbar,ColumnHeaders"
+                                    inset="false"
+                                    class="sapFDynamicPageAlignContent"
+                                    width="auto"
+                                    items= "{   
+                                                path : 'moldSpec>/MoldSchedule',
+                                                parameters: {
+                                                    $$updateGroupId : 'codeDtlUpdateGroup'
+                                                },
+                                                filters : [{path : 'mold_id', operator : 'EQ', value1 : '577290'}]
+                                            }"
+                                    >
+                                <m:columns>
+                                    <m:Column>
+                                        <m:Text text="Type" />
+                                    </m:Column>
+                                    <m:Column>
+                                        <m:Text text="Drawing Consent" />
+                                    </m:Column>
+                                    <m:Column>
+                                        <m:Text text="Settled Drawing" />
+                                    </m:Column>
+                                    <m:Column>
+                                        <m:Text text="1st Prod Date" />
+                                    </m:Column>
+                                    <m:Column>
+                                        <m:Text text="Complete Date" />
+                                    </m:Column>
+                                    <m:Column>
+                                        <m:Text text="Inspection Date" />
+                                    </m:Column>
+                                </m:columns>
+                                <m:items>
+                                    <m:ColumnListItem>
+                                        <m:cells>
+                                            <m:Text text="{moldSpec>mold_develope_date_type_code}" />
+                                            <m:DatePicker value="{moldSpec>drawing_agreement_date}" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" />
+                                            <m:DatePicker value="{moldSpec>drawing_confirmed_date}" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" />
+                                            <m:DatePicker value="{moldSpec>first_production_date}" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" />
+                                            <m:DatePicker value="{moldSpec>production_complete_date}" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" />
+                                            <m:DatePicker value="{moldSpec>inspection_date}" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" />
+                                        </m:cells>
+                                    </m:ColumnListItem>
+                                </m:items>
+                                
+                            </m:Table>
+                            
+                            <m:Table id="scheduleTable2"
+                                    mode="None"
+                                    sticky="HeaderToolbar,ColumnHeaders"
+                                    inset="false"
+                                    class="sapFDynamicPageAlignContent"
+                                    width="auto"
+                                    items= "{   
+                                                path : 'moldSpec>/MoldSchedule',
+                                                parameters: {
+                                                    $$updateGroupId : 'codeDtlUpdateGroup'
+                                                },
+                                                filters : [{path : 'mold_id', operator : 'EQ', value1 : '577290'}]
+                                            }"
+                                    >
+                                <m:columns>
+                                    <m:Column>
+                                        <m:Text text="Type" />
+                                    </m:Column>
+                                    <m:Column>
+                                        <m:Text text="1st Production Changed Date" />
+                                    </m:Column>
+                                    <m:Column>
+                                        <m:Text text="2nd Production Changed Date" />
+                                    </m:Column>
+                                    <m:Column>
+                                        <m:Text text="3rd Production Changed Date" />
+                                    </m:Column>
+                                    <m:Column>
+                                        <m:Text text="4th Production Changed Date" />
+                                    </m:Column>
+                                    <m:Column>
+                                        <m:Text text="5th Production Changed Date" />
+                                    </m:Column>
+                                </m:columns>
+                                <m:items>
+                                    <m:ColumnListItem>
+                                        <m:cells>
+                                            <m:Text text="{moldSpec>mold_develope_date_type_code}" />
+                                            <m:DatePicker value="{moldSpec/first_production_update_date}" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
+                                            <m:DatePicker value="{moldSpec/second_production_update_date}" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" />
+                                            <m:DatePicker value="{moldSpec/third_production_update_date}" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
+                                            <m:DatePicker value="{moldSpec/fourth_production_update_date}" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" />
+                                            <m:DatePicker value="{moldSpec/fifth_production_update_date}" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
+                                        </m:cells>
+                                    </m:ColumnListItem>
+                                </m:items>
+                                
+                            </m:Table>
+                            </layout:VerticalLayout>
+						</blocks>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+
+			<ObjectPageSection titleUppercase="false" title="Detail Spec">
+				<subSections>
+					<ObjectPageSubSection titleUppercase="false" title="Detail Spec : Mold" id="moldSection">
+                    
+                        <blocks>
+                            <form:SimpleForm
+                                maxContainerCols="2"
+                                editable="true"
+                                layout="ResponsiveGridLayout"
+                                adjustLabelSpan="false"
+                                labelSpanL="4"
+                                labelSpanM="4"
+                                emptySpanL="0"
+                                emptySpanM="0"
+                                columnsL="2"
+                                columnsM="2">
+                                <form:content>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Assembly Approval"/>
+                                        <m:Text
+                                            text="{moldMst>part_number}">
+                                        </m:Text>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Use Material"/>
+                                        <m:Text
+                                            text="{moldMst>mold_sequence}">
+                                        </m:Text>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Cavity Qty"/>
+                                        <m:Text
+                                            text="{moldMst>mold_production_type_code}">
+                                        </m:Text>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Order Qty"/>
+                                        <m:Text
+                                            text="{moldMst>mold_item_type_code}">
+                                        </m:Text>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Sample Qty"/>
+                                        <m:Text
+                                            text="{moldMst>spec_name}">
+                                        </m:Text>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Demand Life"/>
+                                        <m:Input
+                                            value="{moldMst>mold_vendor_id}"
+                                            placeholder="">
+                                        </m:Input>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Mold Weight"/>
+                                        <m:Text
+                                            text="{moldMst>order_vendor_id}">
+                                        </m:Text>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Mold Type"/>
+                                        <m:Input
+                                            value="{moldMst>production_vendor_id}"
+                                            placeholder="">
+                                        </m:Input>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Hot Runner Valve Qty"/>
+                                        <m:Input
+                                            value="{moldMst>production_vendor_id}"
+                                            placeholder="">
+                                        </m:Input>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Hot Runner Maker"/>
+                                        <m:Input
+                                            value="{moldMst>production_vendor_id}"
+                                            placeholder="">
+                                        </m:Input>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Mold Structure"/>
+                                        <m:Input
+                                            value="{moldMst>production_vendor_id}"
+                                            placeholder="">
+                                        </m:Input>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Size"/>
+                                        <m:Input
+                                            value="{moldMst>production_vendor_id}"
+                                            placeholder="">
+                                        </m:Input>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Mold Size"/>
+                                        <m:Input
+                                            value="{moldMst>production_vendor_id}"
+                                            placeholder="">
+                                        </m:Input>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Runner"/>
+                                        <m:Input
+                                            value="{moldMst>production_vendor_id}"
+                                            placeholder="">
+                                        </m:Input>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Gate"/>
+                                        <m:Input
+                                            value="{moldMst>production_vendor_id}"
+                                            placeholder="">
+                                        </m:Input>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Under Cut"/>
+                                        <m:Input
+                                            value="{moldMst>production_vendor_id}"
+                                            placeholder="">
+                                        </m:Input>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                </form:content>
+                            </form:SimpleForm>
+						</blocks>
+					</ObjectPageSubSection>
+
+                    <ObjectPageSubSection titleUppercase="false" title="Detail Spec : Press" id="pressSection">
+                    
+                        <blocks>
+                            <form:SimpleForm
+                                maxContainerCols="2"
+                                editable="true"
+                                layout="ResponsiveGridLayout"
+                                adjustLabelSpan="false"
+                                labelSpanL="4"
+                                labelSpanM="4"
+                                emptySpanL="0"
+                                emptySpanM="0"
+                                columnsL="2"
+                                columnsM="2">
+                                <form:content>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Model"/>
+                                        <m:Text
+                                            text="{moldMst>model}">
+                                        </m:Text>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Part No"/>
+                                        <m:Text
+                                            text="{moldMst>part_number}">
+                                        </m:Text>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Seq"/>
+                                        <m:Text
+                                            text="{moldMst>mold_sequence}">
+                                        </m:Text>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Prod Type"/>
+                                        <m:Text
+                                            text="{moldMst>mold_production_type_code}">
+                                        </m:Text>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Item Type"/>
+                                        <m:Text
+                                            text="{moldMst>mold_item_type_code}">
+                                        </m:Text>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Description"/>
+                                        <m:Text
+                                            text="{moldMst>spec_name}">
+                                        </m:Text>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Mold Supplier"/>
+                                        <m:Input
+                                            value="{moldMst>mold_vendor_id}"
+                                            placeholder="필수">
+                                        </m:Input>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Order Supplier"/>
+                                        <m:Text
+                                            text="{moldMst>order_vendor_id}">
+                                        </m:Text>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Prod Supplier"/>
+                                        <m:Input
+                                            value="{moldMst>production_vendor_id}"
+                                            placeholder="필수">
+                                        </m:Input>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                </form:content>
+                            </form:SimpleForm>
+						</blocks>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+		</sections>
+		<footer>
+			<m:OverflowToolbar>
+				<m:ToolbarSpacer />
+				<m:Button type="Transparent" text="Cancel" press=".doCancelMode"/>
+				<m:Button type="Emphasized" text="Save"/>
+			</m:OverflowToolbar>
+		</footer>
+	</ObjectPageLayout>
+</mvc:View>

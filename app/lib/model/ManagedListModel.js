@@ -30,13 +30,17 @@ sap.ui.define([
         },
 
         setProperty: function (sPath, oValue, oContext, bAsyncUpdate) {
-            var _oRecord = this.getObject(oContext.getPath());
-            if (!_oRecord[STATE_COL]) _oRecord[STATE_COL] = "U";
+            if(!!oContext){
+                var _oRecord = this.getObject(oContext.getPath());
+                if (typeof _oRecord == "object" && !_oRecord[STATE_COL]) _oRecord[STATE_COL] = "U";
+            }
             JSONModel.prototype.setProperty.call(this, sPath, oValue, oContext, bAsyncUpdate);
         },
 
-        addRecord: function (oRecord, nIndex) {
+        addRecord: function (oRecord, sPath, nIndex) {
+            if(typeof sPath == "number") nIndex = sPath;
             if (nIndex == undefined) nIndex = this.oData.length;
+            if(!!sPath) oRecord.__entity = sPath;
             oRecord[STATE_COL] = "C";
             this.oData.splice(nIndex || 0, 0, oRecord);
             JSONModel.prototype.setProperty.call(this, "/", this.oData);
@@ -89,20 +93,21 @@ sap.ui.define([
                     if (successHandler)
                         successHandler.apply(that._oTransactionModel, arguments);
                 }
-            })
-            );
+            }));
         },
 
-        _executeBatch: function(oServiceModel, sGroupId){
-            var oService = this._oTransactionModel,
+        _executeBatch: function(sGroupId){
+            var oServiceModel = this._oTransactionModel,
                 sTransactionPath = this._transactionPath,
                 cs = this.getCreatedRecords(),
                 us = this.getUpdatedRecords(),
                 ds = this.getDeletedRecords();
                 
             (cs || []).forEach(function (oItem) {
+                var sPath = oItem.__entity || sTransactionPath;
                 delete oItem[STATE_COL];
-                oServiceModel.create(sTransactionPath, oItem, {
+                delete oItem.__entity;
+                oServiceModel.create(sPath, oItem, {
                     groupId: sGroupId,
                     success: function (oData) {
                         console.log("Added a new record that created by origin model.", "oData V2 Transaction submitBatch");

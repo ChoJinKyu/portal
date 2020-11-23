@@ -5,26 +5,29 @@ sap.ui.define([
 ], function (EventProvider, jQuery, AbstractModel) {
     "use strict";
 
+    var DEFAULT_GROUP_ID = "changes";
+
     var TransactionManager = EventProvider.extend("ext.lib.model.TransactionManager", {
 
-        transactionModel: null,
+        oServiceModel: null,
 
-        models: [],
+        aDataModels: [],
 
-        constructor: function(){
-            EventProvider.prototype.constructor.apply(this, arguments);
+        setServiceModel: function(oModel){
+            this.oServiceModel = oModel;
+            return this;
         },
 
         addDataModel: function (oModel) {
-            this._oTransactionModel = oModel;
+            this.aDataModels.push(oModel);
             return this;
         },
 
         addTransactionGroup: function (sGroup) {
-            if (this._oTransactionModel) {
-                var aDeferredGroups = this._oTransactionModel.getDeferredGroups();
+            if (this.oServiceModel) {
+                var aDeferredGroups = this.oServiceModel.getDeferredGroups();
                 aDeferredGroups = aDeferredGroups.concat([sGroup]);
-                this._oTransactionModel.setDeferredGroups(aDeferredGroups);
+                this.oServiceModel.setDeferredGroups(aDeferredGroups);
             }
             return this;
         },
@@ -32,18 +35,26 @@ sap.ui.define([
         submit: function(oParameters){
             console.group("Submit all batches of OData Service by TransactionManager.");
 
-            models.forEach(function(oModel){
-                oModel._executeBatch();
+            this.aDataModels.forEach(function(oModel){
+                oModel.setTransactionModel(this.oServiceModel);
+                oModel._executeBatch(DEFAULT_GROUP_ID);
                 console.log("Batches are executed on one of model.");
-            });
+            }.bind(this));
             
             var successHandler = oParameters.success,
                 that = this;
-            oService.submitChanges(jQuery.extend({
+            this.oServiceModel.submitChanges(jQuery.extend({
                 success: function(oEvent){
-                    console.groupEnd();
+                    that.aDataModels.forEach(function(oModel){
+                        if(oModel._onSuccessSubmitChanges)
+                            oModel._onSuccessSubmitChanges();
+                    }.bind(this));
                     if(successHandler)
-                        successHandler.apply(that._oTransactionModel, arguments);
+                        successHandler.apply(that.oServiceModel, arguments);
+                    console.groupEnd();
+                },
+                error: function(){
+                    debugger;
                 }
             }));
         }

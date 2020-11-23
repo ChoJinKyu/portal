@@ -5,5 +5,6 @@ namespace dp;
 @path : '/dp.DevelopmentReceiptService'
 service DevelopmentReceiptService {
 
-    entity MoldMasters as projection on moldMstView.Mold_Mst_View;
+    entity MoldMasters as projection on moldMst.Mold_Mst;
+    
 }

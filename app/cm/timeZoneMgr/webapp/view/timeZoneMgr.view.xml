@@ -9,8 +9,8 @@
   class="sapUiSizeCompact"
   displayBlock="true"
   height="100%">
-	<App id="app">
-    <f:DynamicPage id="page" toggleHeaderOnTitleClick="true" headerExpanded="true">
+  <App id="app">
+    <f:DynamicPage id="page" toggleHeaderOnTitleClick="false" headerExpanded="true" fitContent="true">
       <!--DynamicPage Title -->
       <f:title>
         <f:DynamicPageTitle>
@@ -29,7 +29,7 @@
       </f:title>
       <!--DynamicPage Header -->
       <f:header>
-        <f:DynamicPageHeader pinnable="true">
+        <f:DynamicPageHeader pinnable="false">
           <layout:HorizontalLayout>
             <form:Form id="searchForm" editable="true" width="auto">
               <form:formContainers>
@@ -102,7 +102,8 @@
                 </form:FormContainer>
               </form:formContainers>
               <form:layout>
-                <form:ResponsiveGridLayout columnsM="3" columnsL="3" columnsXL="3"/>
+                <!-- <form:ResponsiveGridLayout columnsM="3" columnsL="3" columnsXL="3"/> -->
+                <form:ResponsiveGridLayout columnsS="12" columnsM="6" columnsL="3" columnsXL="2"/>
               </form:layout>
             </form:Form>
           </layout:HorizontalLayout>
@@ -141,7 +142,7 @@
             <!-- <t:RowSettings highlight="Success"/> -->
           </t:rowSettingsTemplate>
           <t:columns>
-            <t:Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="40px">
+            <t:Column id="mainStateColumn" minScreenWidth="Tablet" hAlign="Center" width="40px">
               <Label text="S" textAlign="Center" width="100%"/>
               <t:template>
                 <Text text="{list>_row_state_}"></Text>

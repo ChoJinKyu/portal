@@ -22,9 +22,9 @@
                 <content>
                     <Title text="Org_Purchasing" level="H2"/>
                     <ToolbarSpacer/>
-                    <Button text="행추가" icon="sap-icon://add"  type="Accept" press="onAddRow"/>                                            
+                    <!-- <Button text="행추가" icon="sap-icon://add"  type="Accept" press="onAddRow"/>                                            
                     <Button text="행삭제" icon="sap-icon://delete" type="Reject" press="onDeleteRow"/>
-                    <Button text="저장"   icon="sap-icon://save" type="Attention" press="onSave"/>
+                    <Button text="저장"   icon="sap-icon://save" type="Attention" press="onSave"/> -->
                     <Button icon="sap-icon://synchronize" type="Attention" press="onRefresh"/>
                 </content>
             </OverflowToolbar>

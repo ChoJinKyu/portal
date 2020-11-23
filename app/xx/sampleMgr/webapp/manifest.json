@@ -17,10 +17,10 @@
         },
         "dataSources": {
             "mainService": {
-                "uri": "srv-api/odata/v4/xx.SampleMgrService/",
+                "uri": "srv-api/odata/v2/xx.SampleMgrService/",
                 "type": "OData",
                 "settings": {
-                    "odataVersion": "4.0",
+                    "odataVersion": "2.0",
                     "localUri": "localService/metadata.xml"
                 }
             }
@@ -90,10 +90,10 @@
                 "dataSource": "mainService",
                 "preload": true,
                 "settings": {
-                    "operationMode": "Server",
-                    "groupId": "$direct",
-                    "synchronizationMode": "None",
-                    "autoExpandSelect": true
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": true,
+                    "useBatch": true
                 }
             }
         },

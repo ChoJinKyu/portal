@@ -3,9 +3,9 @@ sap.ui.define([
 ], function (JSONModel) {
     "use strict";
 
-    var AbstractModel = JSONModel.extend("ext.lib.model.AbstractModel", {
+    var DEFAULT_GROUP_ID = "changes";
 
-        DEFAULT_GROUP_ID: "changes",
+    var AbstractModel = JSONModel.extend("ext.lib.model.AbstractModel", {
 
         setTransactionModel: function (oModel) {
             this._oTransactionModel = oModel;
@@ -25,29 +25,28 @@ sap.ui.define([
             oParameters = oParameters || {};
 
             var oServiceModel = this._oTransactionModel,
-                sGroupId = oParameters.groupId || this.DEFAULT_GROUP_ID,
+                sGroupId = oParameters.groupId || DEFAULT_GROUP_ID,
                 successHandler = oParameters.success,
                 that = this;
 
             console.group("Submit all batches of OData Service by ManagedModel.");
-            this._executeBatch(oServiceModel, sGroupId);
+            if(this._executeBatch)
+                this._executeBatch(sGroupId);
 
             oServiceModel.submitChanges(jQuery.extend({
                 groupId: sGroupId,
                 success: function(oEvent){
                     console.groupEnd();
-                    that._onSuccessSubmitChanges();
+                    if(that._onSuccessSubmitChanges)
+                        that._onSuccessSubmitChanges();
                     if(successHandler)
                         successHandler.apply(that._oTransactionModel, arguments);
                 }
             }));
         },
 
-        _executeBatch: function(){
-        },
-        
-        _onSuccessSubmitChanges: function(){
-        }
+        _executeBatch: null,
+        _onSuccessSubmitChanges: null
 
     });
 

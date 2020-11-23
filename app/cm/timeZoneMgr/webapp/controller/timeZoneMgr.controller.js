@@ -1,26 +1,62 @@
 sap.ui.define([
-  "sap/ui/core/mvc/Controller",
-  "ext/lib/model/ManagedListModel",
-  "sap/ui/core/Fragment",
+  "ext/lib/controller/BaseController",
   "sap/ui/model/json/JSONModel",
+  "ext/lib/model/ManagedListModel",
   "sap/ui/model/Filter",
   "sap/ui/model/FilterOperator",
-  "sap/ui/model/FilterType",
   "sap/m/MessageToast",
   "sap/m/MessageBox",
-  "sap/ui/core/format/DateFormat",
-  "sap/ui/model/ChangeReason"
+  "sap/ui/table/TablePersoController",
+  //"../model/formatter",
+  "./timeZonePersoService"
 ],
-  function (Controller, ManagedListModel, Fragment, JSONModel, Filter, FilterOperator, FilterType, MessageToast, MessageBox, DateFormat, ChangeReason) {
+  function (
+    BaseController,
+    JSONModel,
+    ManagedListModel,
+    Filter,
+    FilterOperator,
+    MessageToast,
+    MessageBox,
+    TablePersoController,
+    //formatter,
+    timeZonePersoService) {
     "use strict";
 
-    return Controller.extend("cm.timeZoneMgr.controller.timeZoneMgr", {
+    return BaseController.extend("cm.timeZoneMgr.controller.timeZoneMgr", {
+
+      //formatter: formatter,
+
       onInit: function () {
         this.getView().setModel(new ManagedListModel(), "list");
-        this.onSearch();
+        // 개인화 - UI 테이블의 경우만 해당
+        this._oTPC = new TablePersoController({
+          customDataKey: "timeZoneMgr",
+          persoService: timeZonePersoService
+          // persoService: {
+          //   getPersData: function () {
+          //     var oDeferred = new $.Deferred();
+          //     return oDeferred.promise();
+          //   },
+          //   setPersData: function (oBundle) {
+          //     var oDeferred = new $.Deferred();
+          //     oDeferred.resolve();
+          //     return oDeferred.promise();
+          //   },
+          //   delPersData: function () {
+          //     var oDeferred = new $.Deferred();
+          //     oDeferred.resolve();
+          //     return oDeferred.promise();
+          //   }
+          // }
+        }).setTable(this.byId("mainTable"));
+      },
+      onMainTablePersoButtonPressed: function (event) {
+        this._oTPC.openDialog();
       },
       // Display row number without changing data
       onAfterRendering: function () {
+        this.onSearch();
       },
       onSearch: function () {
         var predicates = [];
@@ -77,18 +113,20 @@ sap.ui.define([
         MessageBox.confirm("Are you sure ?", {
           title: "Comfirmation",
           initialFocus: sap.m.MessageBox.Action.CANCEL,
-          onClose: function (sButton) {
+          onClose: (function (sButton) {
             if (sButton === MessageBox.Action.OK) {
               view.setBusy(true);
               model.submitChanges({
-                success: function (oEvent) {
+                success: (function (oEvent) {
                   view.setBusy(false);
                   MessageToast.show("Success to save.");
-                }
+                  this.onSearch();
+                }).bind(this)
               });
-            };
-          }
-        });
+            }
+          }).bind(this)
+        })
       }
     });
-  });
+  }
+);

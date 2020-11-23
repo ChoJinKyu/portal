@@ -1,0 +1,31 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<form:SimpleForm id="midObjectForm1Edit" editable="false" >
+		
+		<core:Title text="기본정보" />
+		<Label text="통화코드" required="true"/>
+        <Input value="{master>/currency_code}" liveChange=".onLiveChange"/>
+		<Label text="소수점자리" required="true"/>
+		<Input value="{master>/scale}"/>
+		<Label text="확장소수점자리" required="true"/>
+		<Input value="{master>/extension_scale}"/>
+
+		<core:Title text="유효여부" />
+		<Label text="유효시작일자" required="true"/>
+		<DatePicker  placeholder="Date" value="{path: 'master>/effective_start_date',type: 'sap.ui.model.odata.type.DateTime'}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
+        <!-- placeholder="Starts From" -->
+		<Label text="유효종료일자" required="true"/>
+		<DatePicker placeholder="Date" value="{path: 'master>/effective_end_date',type: 'sap.ui.model.odata.type.DateTime'}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
+        <!-- placeholder="Ends To"  -->
+        <Label text="사용여부"/>
+		<Switch state="{master>/use_flag}" customTextOn="Yes" customTextOff="No">
+			<layoutData>
+				<FlexItemData growFactor="1" />
+			</layoutData>
+		</Switch>
+
+	</form:SimpleForm>
+</core:FragmentDefinition>

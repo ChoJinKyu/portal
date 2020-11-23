@@ -2,7 +2,7 @@ sap.ui.define([
 	"ext/lib/controller/BaseController",
 	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
-	"../model/formatter",
+	"ext/lib/formatter/Formatter",
 	"ext/lib/model/ManagedListModel",
 	"sap/m/TablePersoController",
 	"./MainListPersoService",
@@ -16,30 +16,34 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, formatter, ManagedListModel, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
-	"use strict";
+], function (BaseController, History, JSONModel, Formatter, ManagedListModel, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+    "use strict";
+
+    // var lastRowIndex;
+    
 
 	return BaseController.extend("cm.msgMgr.controller.MainList", {
 
-		formatter: formatter,
+		formatter: Formatter,
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
 		/* =========================================================== */
-
+        
 		/**
 		 * Called when the mainList controller is instantiated.
 		 * @public
 		 */
 		onInit : function () {
-			var oViewModel,
+            var oViewModel,
 				oResourceBundle = this.getResourceBundle();
 
 			// Model used to manipulate control states
 			oViewModel = new JSONModel({
 				mainListTableTitle : oResourceBundle.getText("mainListTableTitle"),
 				tableNoDataText : oResourceBundle.getText("tableNoDataText")
-			});
+            });
+            
 			this.setModel(oViewModel, "mainListView");
 
 			// Add the mainList page to the flp routing history
@@ -124,8 +128,8 @@ sap.ui.define([
 			}
 		},
 
-		onMainTableAddButtonPress: function(){
-			var oTable = this.byId("mainTable"),
+		onMainTableAddButtonPress: function(oEvent){
+            var oTable = this.byId("mainTable"),
 				oModel = this.getModel("list");
 			oModel.addRecord({
 				"tenant_id": "L2100",
@@ -135,8 +139,9 @@ sap.ui.define([
 				"message_type_code": "LBL",
 				"message_contents": "",
 				"local_create_dtm": new Date(),
-				"local_update_dtm": new Date()
-			}, 0);
+                "local_update_dtm": new Date()
+            }, 0);
+ 
 		},
 
 		onMainTableDeleteButtonPress: function(){
@@ -232,8 +237,6 @@ sap.ui.define([
 				persoService: MainListPersoService,
 				hasGrouping: true
 			}).activate();
-		}
-
-
+        }
 	});
 });

@@ -1,21 +1,41 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
-	"sap/ui/core/routing/History",
+	"ext/lib/util/ValidatorUtil",
 	"sap/ui/model/json/JSONModel",
+	"ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedModel",
-	"ext/lib/model/ManagedListModel",
+	"ext/lib/model/DelegateModel",
 	"ext/lib/formatter/DateFormatter",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
 	"sap/ui/core/Fragment",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-], function (BaseController, History, JSONModel, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
+	"sap/m/ColumnListItem",
+	"sap/m/ObjectIdentifier",
+	"sap/m/Text",
+	"sap/m/Input",
+	"sap/m/ComboBox",
+	"sap/ui/core/Item",
+], function (BaseController, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, DelegateModel, DateFormatter, 
+	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
+	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+        
 	"use strict";
+
+	var oTransactionManager;
 
 	return BaseController.extend("xx.templateFlexibleColumns.controller.MidObject", {
 
 		dateFormatter: DateFormatter,
+
+		formatter: (function(){
+			return {
+				toYesNo: function(oData){
+					return oData === true ? "YES" : "NO"
+				},
+			}
+		})(),
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -36,8 +56,17 @@ sap.ui.define([
 			this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
 			this.setModel(oViewModel, "midObjectView");
 			
-			this.setModel(new ManagedModel(), "master");
-			this.setModel(new ManagedListModel(), "details");
+			this.setModel(new DelegateModel(), "master");
+			this.setModel(new DelegateModel(), "details");
+
+			oTransactionManager = new TransactionManager();
+			oTransactionManager.addDataModel(this.getModel("master"));
+			oTransactionManager.addDataModel(this.getModel("details"));
+
+			this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
+
+			this._initTableTemplates();
+            this.enableMessagePopover();
 		}, 
 
 		/* =========================================================== */
@@ -91,20 +120,56 @@ sap.ui.define([
 		 */
         onPageDeleteButtonPress: function(){
 			var oView = this.getView(),
-				me = this;
-			MessageBox.confirm("Are you sure to delete?", {
+				oMasterModel = this.getModel("master"),
+				that = this;
+			MessageBox.confirm("Are you sure to delete this control option and details?", {
 				title : "Comfirmation",
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
-						me.getView().getBindingContext().delete('$direct').then(function () {
-								me.onNavBack();
-							}, function (oError) {
-								MessageBox.error(oError.message);
-							});
+						oView.setBusy(true);
+						oMasterModel.removeData();
+						oMasterModel.setTransactionModel(that.getModel());
+						oMasterModel.submitChanges({
+							success: function(ok){
+								oView.setBusy(false);
+								that.onPageNavBackButtonPress.call(that);
+								MessageToast.show("Success to delete.");
+							}
+						});
 					};
 				}
 			});
+		},
+
+		onMidTableAddButtonPress: function(){
+			var oTable = this.byId("midTable"),
+				oDetailsModel = this.getModel("details");
+			oDetailsModel.addRecord({
+				"tenant_id": this._sTenantId,
+				"control_option_code": this._sControlOptionCode,
+				"control_option_level_code": "",
+				"control_option_level_val": "",
+				"control_option_val": "",
+				"local_create_dtm": new Date(),
+				"local_update_dtm": new Date()
+			});
+		},
+
+		onMidTableDeleteButtonPress: function(){
+			var oTable = this.byId("midTable"),
+				oDetailsModel = this.getModel("details"),
+				aItems = oTable.getSelectedItems(),
+				aIndices = [];
+			aItems.forEach(function(oItem){
+				aIndices.push(oDetailsModel.getProperty("/ControlOptionDetails").indexOf(oItem.getBindingContext("details").getObject()));
+			});
+			aIndices = aIndices.sort(function(a, b){return b-a;});
+			aIndices.forEach(function(nIndex){
+				//oDetailsModel.removeRecord(nIndex);
+				oDetailsModel.markRemoved(nIndex);
+			});
+			oTable.removeSelections(true);
 		},
 		
 		/**
@@ -113,17 +178,18 @@ sap.ui.define([
 		 */
         onPageSaveButtonPress: function(){
 			var oView = this.getView(),
-				me = this;
+				that = this;
 			MessageBox.confirm("Are you sure ?", {
 				title : "Comfirmation",
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
 						oView.setBusy(true);
-						oView.getModel("master").submitChanges({
+						oTransactionManager.submit({
 							success: function(ok){
-								me._toShowMode();
+								that._toShowMode();
 								oView.setBusy(false);
+								that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
 								MessageToast.show("Success to save.");
 							}
 						});
@@ -133,18 +199,36 @@ sap.ui.define([
 
 		},
 		
-		
 		/**
 		 * Event handler for cancel page editing
 		 * @public
 		 */
         onPageCancelEditButtonPress: function(){
-			this._toShowMode();
+			if(this.getModel("midObjectView").getProperty("/isAddedMode") == true){
+				this.onPageNavBackButtonPress.call(this);
+			}else{
+				this._toShowMode();
+			}
         },
 
 		/* =========================================================== */
 		/* internal methods                                            */
 		/* =========================================================== */
+
+		_onMasterDataChanged: function(oEvent){
+			if(this.getModel("midObjectView").getProperty("/isAddedMode") == true){
+				var oMasterModel = this.getModel("master");
+				var oDetailsModel = this.getModel("details");
+				var sTenantId = oMasterModel.getProperty("/tenant_id");
+				var sControlOPtionCode = oMasterModel.getProperty("/control_option_code");
+				var oDetailsData = oDetailsModel.getData();
+				oDetailsData.forEach(function(oItem, nIndex){
+					oDetailsModel.setProperty("/"+nIndex+"/tenant_id", sTenantId);
+					oDetailsModel.setProperty("/"+nIndex+"/control_option_code", sControlOPtionCode);
+				});
+				oDetailsModel.setData(oDetailsData);
+			}
+		},
 
 		/**
 		 * When it routed to this page from the other page.
@@ -159,17 +243,41 @@ sap.ui.define([
 
 			if(oArgs.tenantId == "new" && oArgs.controlOptionCode == "code"){
 				//It comes Add button pressed from the before page.
+				this.getModel("midObjectView").setProperty("/isAddedMode", true);
+
 				var oMasterModel = this.getModel("master");
 				oMasterModel.setData({
-					tenant_id: "L2100"
-				});
+					"tenant_id": "L2100",
+					"site_flag": false,
+					"company_flag": false,
+					"role_flag": false,
+					"organization_flag": false,
+					"user_flag": false,
+					"start_date": new Date(),
+					"end_date": new Date(9999, 11, 31),
+					"local_create_dtm": new Date(),
+					"local_update_dtm": new Date()
+				}, "/ControlOptionMasters");
+				var oDetailsModel = this.getModel("details");
+				oDetailsModel.setTransactionModel(this.getModel());
+				oDetailsModel.setData([]);
+				oDetailsModel.addRecord({
+					"tenant_id": this._sTenantId,
+					"control_option_code": this._sControlOptionCode,
+					"control_option_level_code": "",
+					"control_option_level_val": "",
+					"control_option_val": "",
+					"local_create_dtm": new Date(),
+					"local_update_dtm": new Date()
+				}, "/ControlOptionDetails");
 				this._toEditMode();
 			}else{
+				this.getModel("midObjectView").setProperty("/isAddedMode", false);
 				this._bindView("/ControlOptionMasters(tenant_id='" + this._sTenantId + "',control_option_code='" + this._sControlOptionCode + "')");
 				oView.setBusy(true);
-				var oDetailModel = this.getModel("details");
-				oDetailModel.setTransactionModel(this.getModel());
-				oDetailModel.read("/ControlOptionDetails", {
+				var oDetailsModel = this.getModel("details");
+				oDetailsModel.setTransactionModel(this.getModel());
+				oDetailsModel.read("/ControlOptionDetails", {
 					filters: [
 						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
 						new Filter("control_option_code", FilterOperator.EQ, this._sControlOptionCode),
@@ -180,6 +288,7 @@ sap.ui.define([
 				});
 				this._toShowMode();
 			}
+			oTransactionManager.setServiceModel(this.getModel());
 		},
 
 		/**
@@ -190,10 +299,10 @@ sap.ui.define([
 		 */
 		_bindView : function (sObjectPath) {
 			var oView = this.getView(),
-				oModel = this.getModel("master");
+				oMasterModel = this.getModel("master");
 			oView.setBusy(true);
-			oModel.setTransactionModel(this.getModel());
-			oModel.read(sObjectPath, {
+			oMasterModel.setTransactionModel(this.getModel());
+			oMasterModel.read(sObjectPath, {
 				success: function(oData){
 					oView.setBusy(false);
 				}
@@ -201,21 +310,112 @@ sap.ui.define([
 		},
 
 		_toEditMode: function(){
+			var FALSE = false;
             this._showFormFragment('MidObject_Edit');
 			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("page").setProperty("showFooter", true);
-			this.byId("pageEditButton").setEnabled(false);
-			this.byId("pageDeleteButton").setEnabled(false);
-			this.byId("pageNavBackButton").setEnabled(false);
+			this.byId("page").setProperty("showFooter", !FALSE);
+			this.byId("pageEditButton").setEnabled(FALSE);
+			this.byId("pageDeleteButton").setEnabled(FALSE);
+			this.byId("pageNavBackButton").setEnabled(FALSE);
+
+			this.byId("midTableAddButton").setEnabled(!FALSE);
+			this.byId("midTableDeleteButton").setEnabled(!FALSE);
+			this.byId("midTableSearchField").setEnabled(FALSE);
+			this.byId("midTableApplyFilterButton").setEnabled(FALSE);
+			this.byId("midTable").setMode(sap.m.ListMode.SingleSelectLeft);
+			this._bindMidTable(this.oEditableTemplate, "Edit");
 		},
 
 		_toShowMode: function(){
+			var TRUE = true;
 			this._showFormFragment('MidObject_Show');
 			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("page").setProperty("showFooter", false);
-			this.byId("pageEditButton").setEnabled(true);
-			this.byId("pageDeleteButton").setEnabled(true);
-			this.byId("pageNavBackButton").setEnabled(true);
+			this.byId("page").setProperty("showFooter", !TRUE);
+			this.byId("pageEditButton").setEnabled(TRUE);
+			this.byId("pageDeleteButton").setEnabled(TRUE);
+			this.byId("pageNavBackButton").setEnabled(TRUE);
+
+			this.byId("midTableAddButton").setEnabled(!TRUE);
+			this.byId("midTableDeleteButton").setEnabled(!TRUE);
+			this.byId("midTableSearchField").setEnabled(TRUE);
+			this.byId("midTableApplyFilterButton").setEnabled(TRUE);
+			this.byId("midTable").setMode(sap.m.ListMode.None);
+			this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
+		},
+
+		_initTableTemplates: function(){
+			this.oReadOnlyTemplate = new ColumnListItem({
+				cells: [
+					new Text({
+						text: "{details>_row_state_}"
+					}), 
+					new ObjectIdentifier({
+						text: "{details>control_option_code}"
+					}), 
+					new ObjectIdentifier({
+						text: "{details>control_option_level_code}"
+					}), 
+					new Text({
+						text: "{details>control_option_level_val}"
+					}), 
+					new Text({
+						text: "{details>control_option_val}"
+					})
+				],
+				type: sap.m.ListType.Inactive
+			});
+
+			this.oEditableTemplate = new ColumnListItem({
+				cells: [
+					new Text({
+						text: "{details>_row_state_}"
+					}), 
+					new Text({
+						text: "{details>control_option_code}"
+					}), 
+					new ComboBox({
+                        selectedKey: "{details>control_option_level_code}",
+                        items: {
+                            id: "testCombo1",
+                            path: 'util>/CodeDetails',
+                            filters: [
+                                new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
+                                new Filter("group_code", FilterOperator.EQ, 'TEST')
+                            ],
+                            template: new Item({
+                                key: "{util>code}",
+                                text: "{util>code_description}"
+                            })
+                        },
+                        required: true
+                    }), 
+					new Input({
+						value: {
+							path: "details>control_option_level_val",
+                            type: new sap.ui.model.type.String(null, {
+								maxLength: 100
+							}),
+						},
+						required: true
+					}),
+					new Input({
+						value: {
+							path: "details>control_option_val",
+                            type: new sap.ui.model.type.String(null, {
+								maxLength: 100
+							})
+						},
+						required: true
+					})
+				]
+            });
+		},
+
+		_bindMidTable: function(oTemplate, sKeyboardMode){
+			this.byId("midTable").bindItems({
+				path: "details>/ControlOptionDetails",
+				template: oTemplate
+			}).setKeyboardMode(sKeyboardMode);
 		},
 
 		_oFragments: {},

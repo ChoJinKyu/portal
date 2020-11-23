@@ -5,14 +5,15 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "sap/ui/model/FilterType",
 	'sap/ui/model/Sorter',
-    'sap/m/MessageBox',
+	"sap/m/MessageBox",
+	"sap/m/MessageToast",
     "sap/ui/thirdparty/jquery",
     'sap/f/library',
     "ext/lib/controller/BaseController",
     "sap/m/TablePersoController",
     "ext/lib/model/ManagedModel",
     "ext/lib/model/ManagedListModel",
-], function (JSONModel, BaseController, Filter, FilterOperator, Sorter, MessageBox, fioriLibrary ,FilterType, jquery, TablePersoController, MainListPersoService, ManagedListModel) {
+], function (JSONModel, BaseController, Filter, FilterOperator, Sorter, MessageBox, MessageToast, fioriLibrary ,FilterType, jquery, TablePersoController, MainListPersoService, ManagedListModel) {
 	"use strict";
 
 	return BaseController.extend("cm.currency.controller.currencyMasterView", {
@@ -39,7 +40,13 @@ sap.ui.define([
 
 		onAdd: function () {
 			MessageBox.information("This functionality is not ready yet.", {title: "Aw, Snap!"});
-		},
+        },
+        onCreateAdd: function () {
+            this.oRouter.navTo("detail", {layout: "TwoColumnsMidExpanded" , currency: "new"});
+            var oFCL = this.oView.getParent().getParent();
+                    oFCL.setLayout("TwoColumnsMidExpanded");
+        },
+
 
 		onSort: function () {
 			this._bDescendingSort = !this._bDescendingSort;
@@ -50,8 +57,10 @@ sap.ui.define([
 		},
 
 		onListItemPress: function (oEvent) {
+            var oCheck = this.getView().getModel("Currency").getProperty("/true6");
             
-			var currencyPath = oEvent.getSource().getBindingContextPath(),
+            if(oCheck){
+                var currencyPath = oEvent.getSource().getBindingContextPath(),
                 currency = currencyPath.split("/").slice(-1).pop(),
                 oNextUIState,
                 view ;
@@ -61,16 +70,6 @@ sap.ui.define([
                 if (sQuery && sQuery.length > 0) {
 				    oTableSearchState = [new Filter("currency_code_name", FilterOperator.Contains, sQuery)];
                 }
-                
-
-                this.getOwnerComponent().getHelper().then(function (oHelper) {
-				oNextUIState = oHelper.getNextUIState(1);
-				this.oRouter.navTo("detail", {
-					layout: oNextUIState.layout,
-                    currency: currency,
-                    view : view,
-                    });
-                }.bind(this));
                 var layout = this.oView.getParent().getParent().getLayout();
 
                 if ( this.oView.getParent().getParent().getLayout() === "TwoColumnsMidExpanded" || 
@@ -79,37 +78,11 @@ sap.ui.define([
                     var oFCL = this.oView.getParent().getParent();
                     oFCL.setLayout("TwoColumnsMidExpanded");
                 }
-                //debugger;
-
-                //this._applySearch(oTableSearchState);
-                
-                
-                // currencyPath = oEvent.getSource().getBindingContext("currencys").getPath(),
-                // currency = "Currency(tenant_id='L2100',currency_code='AED')"
-
 			    this.oRouter.navTo("detail", {layout: "TwoColumnsMidExpanded" , currency: currency});
+            }
+            else{
+                 sap.m.MessageToast.show("수정을 완료해 주세요.");
+            }
         },
-        _applySearch: function(oTableSearchState) {
-          
-            var predicates = [];
-            //predicates.push(new Filter("tenant_id", FilterOperator.EQ, "L2100"));
-            // var oTableSearchState = [],
-			// 	sQuery = oEvent.getParameter("query");
-
-			// if (sQuery && sQuery.length > 0) {
-			// 	oTableSearchState = [new Filter("currency_code_name", FilterOperator.Contains, sQuery)];
-			// }
-            var oView = this.getView(),
-				oModel = this.getView().getModel("list");
-                oView.setBusy(true);
-                oModel.setTransactionModel(this.getView().getModel());
-                oModel.read("/CurrencyLng", {
-				filters: predicates,
-				success: function(oData){
-					oView.setBusy(false);
-                    }
-                });
-
-        }
 	});
 });

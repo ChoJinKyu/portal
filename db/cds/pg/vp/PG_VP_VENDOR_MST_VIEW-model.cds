@@ -2,8 +2,8 @@ namespace pg;
  
 @cds.persistence.exists
 entity Vp_Vendor_Mst_View {	
-  tenant_id: String(5) @title: '테넌트ID';
-  vendor_code: String(40) @title: '협력사코드';
-  vendor_name: String(400) @title: '협력사명';
-  vendor_englis_name: String(400) @title: '협력사영문명';
+  key tenant_id: String(5) @title: '테넌트ID';
+  key supplier_code: String(40) @title: '공급업체코드';
+  supplier_local_name: String(400) @title: '공급업체명';
+  supplier_english_name: String(400) @title: '공급업체영문명';
 }

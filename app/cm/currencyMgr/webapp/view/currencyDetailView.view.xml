@@ -36,14 +36,15 @@
 						icon="sap-icon://decline"
 						press=".handleClose"
 						tooltip="Close column"
-						visible="{Currency>/true3}"/>
+						visible="{Currency>/true6}"/>
 				</uxap:navigationActions>
 
 				<uxap:actions>
 					<ToggleButton
 						text="Edit"
 						type="Emphasized"
-                        press=".onEditToggleButtonPress"/>
+                        press=".onEditToggleButtonPress"
+                        enabled="{Currency>/true6}"/>
 					<!-- <Button
 						text="Delete"
 						type="Transparent"/>
@@ -101,7 +102,7 @@
                                             <form:formElements>
                                                     <form:FormElement label="* 통화코드" >
                                                         <form:fields>
-                                                            <Input width="auto" id="ipCurCode" value="{currency_code}" editable="false" />                                                        
+                                                            <Input width="auto" id="ipCurCode" value="{currency_code}" liveChange=".onLiveChange" editable="{Currency>/true5}"/>                                                        
                                                         </form:fields>
                                                     </form:FormElement>
                                                     <!-- <form:FormElement label="ISO통화">
@@ -175,9 +176,9 @@
                                     <OverflowToolbar>
                                         <content>
                                             <ToolbarSpacer/>
-                                            <Button text="Create" type="Transparent" press="onLngAddRow"/>                                            
-                                            <Button text="Delete" type="Transparent" press="onLngDeleteRow"/>
-                                            <Button text="Save" type="Emphasized" press="onLngSave"/>
+                                            <Button text="Create" type="Transparent" press="onLngAddRow" enabled="{Currency>/true4}"/>                                            
+                                            <Button text="Delete" type="Transparent" press="onLngDeleteRow" enabled="{Currency>/true4}"/>
+                                            <!-- <Button text="Save" type="Emphasized" press="onLngSave"/> -->
                                         </content>
                                     </OverflowToolbar>
                                 </headerToolbar>
@@ -186,7 +187,7 @@
                                         <Text text="S" />
                                     </Column>
 									<Column width="auto">
-							        <Text text="언어"/>
+							            <Text text="언어"/>
                                     </Column>
                                     <Column	hAlign="End" >
                                         <Text text="통화코드명"/>
@@ -205,11 +206,11 @@
 									<ColumnListItem >
 										<cells>
                                             <Text text="{list>_row_state_}"></Text>
-											<Text id="language_code" text="{list>language_code}"/>
-                                            <Text id="currency_code_name" text="{list>currency_code_name}"/>
-                                            <Text id="currency_code_desc" text="{list>currency_code_desc}"/>
-                                            <Text id="currency_prefix" text="{list>currency_prefix}"/>
-                                            <Text id="currency_suffix" text="{list>currency_suffix}"/>
+											<Input id="language_code" value="{list>language_code}" editable="{Currency>/true4}"/>
+                                            <Input id="currency_code_name" value="{list>currency_code_name}" editable="{Currency>/true4}"/>
+                                            <Input id="currency_code_desc" value="{list>currency_code_desc}" editable="{Currency>/true4}"/>
+                                            <Input id="currency_prefix" value="{list>currency_prefix}" editable="{Currency>/true4}"/>
+                                            <Input id="currency_suffix" value="{list>currency_suffix}" editable="{Currency>/true4}"/>
 										</cells>
 									</ColumnListItem>
 								</items>
