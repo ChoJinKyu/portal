@@ -40,8 +40,7 @@
                             <ComboBox id="searchChain" width="100%" selectedKey="CM" items="{
                                     path: 'util>/CodeDetails',
                                     filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                        {path: 'company_code', operator: 'EQ', value1: '*'},
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},                                      
                                         {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                                     ]
                                 }">
@@ -55,7 +54,7 @@
                         </VBox>
                         <VBox>
                             <Label text="Keyword:" labelFor="searchKeyword"></Label>
-                            <Input id="searchKeyword" placeholder="Search Keywords"></Input>
+                            <Input id="searchKeyword" placeholder="Keywords of the Code or Content"></Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
@@ -88,7 +87,7 @@
                         growingThreshold="10"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
-                        items="{list>/}"
+                        items="{list>/CountryView}"
                         mode="None" 
                         width="auto">
                     <headerToolbar>
@@ -105,40 +104,40 @@
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
-                        <Column id="listMainColumnTenant_id" minScreenWidth="Tablet" hAlign="Center"  >
+                        <Column id="listMainColumnTenant_id"  minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline"   >
                             <Text text="{i18n>TblHdTenant_id}" />
                         </Column>
-                        <Column id="listMainColumnCountry_code" minScreenWidth="Tablet" hAlign="Center"  >
+                        <Column id="listMainColumnCountry_code" minScreenWidth="Desktop" importance="High" demandPopin="true" popinDisplay="Inline"   >
                             <Text text="{i18n>TblHdCountry_code}" />
                         </Column>
-                        <Column id="listMainColumnIso_name" minScreenWidth="Tablet" hAlign="Center"   >
+                        <Column id="listMainColumnIso_name" minScreenWidth="Desktop"  demandPopin="true" popinDisplay="Inline" >
                             <Text text="{i18n>TblHdCountry_name}" />
                         </Column>
-                        <Column id="listMainColumnIso_code" minScreenWidth="Tablet" hAlign="Center"   >
+                        <Column id="listMainColumnIso_code"  minScreenWidth="Desktop"   demandPopin="true" popinDisplay="Inline" >
                             <Text text="{i18n>TblHdIso_code}" />
                         </Column>
-                        <Column id="listMainColumnEu_code" minScreenWidth="Tablet" hAlign="Center"  >
+                        <Column id="listMainColumnEu_code"   minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline" >
                             <Text text="{i18n>TblHdEu_code}" />
                         </Column>
-                        <Column id="listMainColumnLanguage_code" minScreenWidth="Tablet" hAlign="Center">
+                        <Column id="listMainColumnLanguage_code"   minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline" >
                             <Text text="{i18n>TblHdLanguage_code}" />
                         </Column>
-                        <Column id="listMainColumnnNumber_format_code" minScreenWidth="Tablet" hAlign="Center"  >
+                        <Column id="listMainColumnnNumber_format_code"  minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline" >
                             <Text text="{i18n>TblHdNnmber_format_code}" />
                         </Column>
-                        <Column id="listMainColumnnCurrency_code" minScreenWidth="Tablet" hAlign="Center"  >
+                        <Column id="listMainColumnnCurrency_code"  minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline"   >
                             <Text text="{i18n>TblHdCurrency_code}" />
                         </Column>
-                        <Column id="listMainColumnnLocal_create_dtm" minScreenWidth="Tablet" hAlign="Center"  width="20em">
+                        <Column id="listMainColumnnLocal_create_dtm"   minScreenWidth="Desktop"   >
                             <Text text="{i18n>TblHdLocal_create_dtm}" />
                         </Column>
-                        <Column id="listMainColumnnCreate_user_id" minScreenWidth="Tablet" hAlign="Center" >
+                        <Column id="listMainColumnnCreate_user_id"  minScreenWidth="Desktop" >
                             <Text text="{i18n>TblHdCreate_user_id}" />
                         </Column>
-                        <Column id="listMainColumnnLocal_update_dtm" minScreenWidth="Tablet" hAlign="Center" width="20em" >
+                        <Column id="listMainColumnnLocal_update_dtm"   minScreenWidth="Desktop"    >
                             <Text text="{i18n>TblHdLocal_update_dtm}" />
                         </Column>
-                        <Column id="listMainColumnnUpdate_user_id" minScreenWidth="Tablet" hAlign="Center"  >
+                        <Column id="listMainColumnnUpdate_user_id"   minScreenWidth="Desktop"  >
                             <Text text="{i18n>TblHdUpdate_user_id}" />
                         </Column>
                     </columns>
@@ -151,11 +150,17 @@
                                 <ObjectIdentifier text="{list>iso_code}"/>
                                 <ObjectIdentifier text="{list>eu_code}"/>
                                 <ObjectIdentifier text="{list>language_code}"/>
-                                <ObjectIdentifier text="{list>number_format_code}"/>
+                                <ObjectIdentifier text="{list>date_format_code}"/>
                                 <ObjectIdentifier text="{list>currency_code}"/>
-                                <ObjectIdentifier text="{list>system_create_dtm}"/>
+                                <ObjectIdentifier text="{
+									path: 'list>system_create_dtm',
+									formatter: '.dateFormatter.toUTCDateTimeString'
+								}" />
                                 <ObjectIdentifier text="{list>create_user_id}"/>
-                                <ObjectIdentifier text="{list>local_update_dtm}"/>
+                                <ObjectIdentifier  text="{
+									path: 'list>local_update_dtm',
+									formatter: '.dateFormatter.toUTCDateTimeString'
+								}" />
                                 <ObjectIdentifier text="{list>update_user_id}"/>
                             </cells>
                         </ColumnListItem>

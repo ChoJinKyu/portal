@@ -90,13 +90,17 @@ sap.ui.define([
           .removeSelections(true);
       },
       onAdd: function () {
-        var [tId, mName, aCol] = arguments;
+        var [tId, mName, sEntity, aCol] = arguments;
         var model = this.getView().getModel(mName);
         // 레코드추가
         model.addRecord(aCol.reduce((function (acc, col) {
           acc[col] = (this || {})[0][col] || "";
           return acc;
-        }).bind(model.getData()), {
+        }).bind(
+          (typeof sEntity == "string") && !!sEntity
+            ? model.getData()[sEntity]
+            : model.getData()
+        ), {
           "local_create_dtm": new Date(),
           "local_update_dtm": new Date()
         }), 0);
@@ -108,7 +112,7 @@ sap.ui.define([
         // Validation
         if (model.getChanges() <= 0) {
           MessageBox.alert("변경사항이 없습니다.");
-          reutn;
+          return;
         }
         MessageBox.confirm("Are you sure ?", {
           title: "Comfirmation",

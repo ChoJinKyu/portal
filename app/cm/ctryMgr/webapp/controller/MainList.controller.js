@@ -118,8 +118,8 @@ sap.ui.define([
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
-				tenantId: "new",
-				controlOptionCode: "code"
+				tenant_id: "new",
+				country_code: "code"
 			});
 		},
 
