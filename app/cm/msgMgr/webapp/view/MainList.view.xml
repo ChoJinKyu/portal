@@ -183,8 +183,7 @@
                                     formatter: '.formatter.toModelStateColumnIcon'
                                 }" />
                                 <ComboBox selectedKey="{list>chain_code}" 
-                                            width="100%" 
-                                            visible="true" 
+                                            width="100%"
                                             items="{
                                                 path: 'util>/CodeDetails',
                                                 filters: [
@@ -197,7 +196,7 @@
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </items>
                                 </ComboBox>
-                                <ComboBox selectedKey="{list>language_code}" width="100%" visible="true" items="{
+                                <ComboBox selectedKey="{list>language_code}" width="100%" items="{
                                         path: 'util>/CodeDetails',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
@@ -209,9 +208,9 @@
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </items>
                                 </ComboBox>
-                                <Input value="{list>message_code}" visible="true"></Input>
-                                <Input value="{list>message_contents}" visible="true"></Input>
-                                <ComboBox selectedKey="{list>message_type_code}" width="100%" visible="true" items="{
+                                <Input value="{list>message_code}"></Input>
+                                <Input value="{list>message_contents}"></Input>
+                                <ComboBox selectedKey="{list>message_type_code}" width="100%" items="{
                                         path: 'util>/CodeDetails',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
