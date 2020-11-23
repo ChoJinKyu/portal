@@ -108,7 +108,7 @@ sap.ui.define([
         // Validation
         if (model.getChanges() <= 0) {
           MessageBox.alert("변경사항이 없습니다.");
-          reutn;
+          return;
         }
         MessageBox.confirm("Are you sure ?", {
           title: "Comfirmation",
