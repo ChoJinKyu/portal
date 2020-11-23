@@ -72,7 +72,7 @@
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="Control Options ({= ${list>/}.length || 0})" level="H2"/>
+                            <Title text="Currency ({= ${list>/}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
                             <ToolbarSeparator/>
@@ -123,9 +123,8 @@
                                 <Text id="extension_scale" text="{list>extension_scale}"/>
                                 <Text id="currency_prefix" text="{list>currency_prefix}"/>
                                 <Text id="currency_suffix" text="{list>currency_suffix}"/>
-                                <Text id="effective_start_date" text="{list>effective_start_date}"/>
-                                <Text id="effective_end_date" text="{list>effective_end_date}"/>
-								
+                                <Text id="effective_start_date" text="{path: 'list>effective_start_date', formatter: '.dateFormatter.toUTCDateTimeString'}"/>
+                                <Text id="effective_end_date" text="{path: 'list>effective_end_date', formatter: '.dateFormatter.toUTCDateTimeString'}"/>
 							</cells>
                         </ColumnListItem>
                     </items>
