@@ -176,7 +176,7 @@ sap.ui.define([
                 "currency_suffix" : null,
 				"local_create_dtm": new Date(),
 				"local_update_dtm": new Date()
-			});
+			}, "/CurrencyLng", 0);
         },
 
 		onMidTableDeleteButtonPress: function(){
@@ -185,7 +185,7 @@ sap.ui.define([
 				aItems = oTable.getSelectedItems(),
 				aIndices = [];
 			aItems.forEach(function(oItem){
-				aIndices.push(oModel.getData().indexOf(oItem.getBindingContext("details").getObject()));
+				aIndices.push(oModel.getProperty("/CurrencyLng").indexOf(oItem.getBindingContext("details").getObject()));
 			});
 			aIndices = aIndices.sort(function(a, b){return b-a;});
 			aIndices.forEach(function(nIndex){
@@ -281,7 +281,7 @@ sap.ui.define([
 					"use_flag": false,
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
-				}, "/Currency");
+				},0);
 				var oDetailsModel = this.getModel("details");
 				oDetailsModel.setTransactionModel(this.getModel());
 				oDetailsModel.setData([]);
@@ -295,9 +295,10 @@ sap.ui.define([
                     "currency_suffix" : null,
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
-				}, "/CurrencyLng");
+				},0);
 				this._toEditMode();
 			}else{
+                debugger;
                 this.getModel("midObjectView").setProperty("/isAddedMode", false);
 				this._bindView("/Currency(tenant_id='" + this._sTenantId + "',currency_code='" + this._sCurrencyCode + "')");
 				oView.setBusy(true);
@@ -324,6 +325,7 @@ sap.ui.define([
 		 * @private
 		 */
 		_bindView : function (sObjectPath) {
+            debugger;
 			var oView = this.getView(),
 				oMasterModel = this.getModel("master");
 			oView.setBusy(true);
@@ -452,10 +454,10 @@ sap.ui.define([
 
 		_bindMidTable: function(oTemplate, sKeyboardMode){
 			this.byId("midTable").bindItems({
-				path: "details>/",
+				path: "details>/CurrencyLng",
 				template: oTemplate,
 				templateShareable: true,
-				key: "control_option_level_val"
+				key: ""
 			}).setKeyboardMode(sKeyboardMode);
 		},
 

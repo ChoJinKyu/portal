@@ -105,7 +105,7 @@
 						<Table id="midTable" 
 								sticky="HeaderToolbar,ColumnHeaders" 
 								inset="false" 
-								items="{details>/}"
+								items="{details>/CurrencyLng}"
 								class="sapFDynamicPageAlignContent" 
 								updateFinished=".onMidTableUpdateFinished"
 								mode="SingleSelectLeft" 

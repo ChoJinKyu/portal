@@ -67,7 +67,7 @@
                         growingThreshold="10"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
-                        items="{list>/}"
+                        items="{list>/CurrencyView}"
                         mode="None" 
                         width="auto">
                     <headerToolbar>
