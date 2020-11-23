@@ -21,46 +21,44 @@
                     <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
-                                <Label text="LG Company" required="true"></Label>
-                                <MultiComboBox>
-                                    <core:Item text="[LGEKR] LG Electronics Inc." />
-                                    <core:Item text="[LGEKR] LG Electronics Inc." />
-                                    <core:Item text="[LGEKR] LG Electronics Inc." />
-                                </MultiComboBox>
-                                <layoutData>
-                                    <layout:GridData span="XL2 L3 M6 S12" />
-                                </layoutData>
-                            </VBox>
-                            <VBox>
-                                <Label text="LG Division" required="true"></Label>
-                                <MultiComboBox>
-                                    <core:Item text="[DFZ] Washing Machine" />
-                                    <core:Item text="[DFZ] Washing Machine" />
-                                    <core:Item text="[DFZ] Washing Machine" />
-                                </MultiComboBox>
-                                <layoutData>
-                                    <layout:GridData span="XL2 L3 M6 S12" />
-                                </layoutData>
-                            </VBox>
-                            <VBox>
-                                <Label text="Date" required="true"></Label>
-                                    <DateRangeSelection displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
-                                <layoutData>
-                                    <layout:GridData span="XL2 L3 M6 S12" />
-                                </layoutData>
-                            </VBox>
-                            <VBox>
-                                <Label text="Status"></Label>
-                                <SegmentedButton selectedKey="all" class="sapUiSmallMarginBottom" width="100%">
+                                <Label text="LG Company" labelFor="searchCompanyS" required="true"></Label>
+                                <MultiComboBox id="searchCompanyS" width="100%" selectedKey="" selectionFinish="handleSelectionFinishComp" items="{
+                                    path: 'org>/Org_Company',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                    ],
+                                    sorter: { path: 'company_code'}
+                                }">
                                     <items>
-                                        <SegmentedButtonItem text="All" key="all"/>
-                                        <SegmentedButtonItem text="Saved" width="4em"/>
-                                        <SegmentedButtonItem text="Confirmed" width="6em"/>
+                                        <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                     </items>
-                                </SegmentedButton>
+                                </MultiComboBox>
                                 <layoutData>
-                                    <layout:GridData
-                                        span="XL2 L3 M6 S12"/>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="LG Division" labelFor="searchDivisionS" required="true"></Label>
+                                <MultiComboBox id="searchDivisionS" width="100%" selectedKey="" selectionFinish="handleSelectionFinishDiv" items="{
+                                    path: '/Divisions',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                    ],
+                                    sorter: { path: 'org_code'}
+                                }">
+                                    <items>
+                                        <core:Item key="{org_code}" text="[{org_code}] {org_name}" />
+                                    </items>
+                                </MultiComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="Date" labelFor="searchDateS" required="true"></Label>
+                                <DateRangeSelection id="searchDateS" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD"/>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                         </form:content>
@@ -70,48 +68,47 @@
                     <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
-                                <Label text="LG Company" required="true"></Label>
-                                <MultiComboBox>
-                                    <core:Item text="[LGEKR] LG Electronics Inc." />
-                                    <core:Item text="[LGEKR] LG Electronics Inc." />
-                                    <core:Item text="[LGEKR] LG Electronics Inc." />
-                                </MultiComboBox>
-                                <layoutData>
-                                    <layout:GridData span="XL2 L3 M6 S12" />
-                                </layoutData>
-                            </VBox>
-                            <VBox>
-                                <Label text="LG Division" required="true"></Label>
-                                <MultiComboBox>
-                                    <core:Item text="[DFZ] Washing Machine" />
-                                    <core:Item text="[DFZ] Washing Machine" />
-                                    <core:Item text="[DFZ] Washing Machine" />
-                                </MultiComboBox>
-                                <layoutData>
-                                    <layout:GridData span="XL2 L3 M6 S12" />
-                                </layoutData>
-                            </VBox>
-                            <VBox>
-                                <Label text="Date" required="true"></Label>
-                                    <DateRangeSelection displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
-                                <layoutData>
-                                    <layout:GridData span="XL2 L3 M6 S12" />
-                                </layoutData>
-                            </VBox>
-                            <VBox>
-                                <Label text="Status"></Label>
-                                <SegmentedButton selectedKey="all" class="sapUiSmallMarginBottom" width="100%">
+                                <Label text="LG Company" labelFor="searchCompanyE"  required="true"></Label>
+                                <MultiComboBox id="searchCompanyE" width="100%" selectedKey="" selectionFinish="handleSelectionFinishComp" items="{
+                                    path: 'org>/Org_Company',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                    ],
+                                    sorter: { path: 'company_code'}
+                                }">
                                     <items>
-                                        <SegmentedButtonItem text="All" key="all"/>
-                                        <SegmentedButtonItem text="Saved" width="4em"/>
-                                        <SegmentedButtonItem text="Confirmed" width="6em"/>
+                                        <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                     </items>
-                                </SegmentedButton>
+                                </MultiComboBox>
                                 <layoutData>
-                                    <layout:GridData
-                                        span="XL2 L3 M6 S12"/>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
+                            <VBox>
+                                <Label text="LG Division" labelFor="searchDivisionE" required="true"></Label>
+                                <MultiComboBox id="searchDivisionE" width="100%" selectedKey="" selectionFinish="handleSelectionFinishDiv" items="{
+                                    path: '/Divisions',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                    ],
+                                    sorter: { path: 'org_code'}
+                                }">
+                                    <items>
+                                        <core:Item key="{org_code}" text="[{org_code}] {org_name}" />
+                                    </items>
+                                </MultiComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="Date" labelFor="searchDateE" required="true"></Label>
+                                <DateRangeSelection id="searchDateE" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD"/>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            
                         </form:content>
                     </form:SimpleForm>
                 </f:expandedContent>
@@ -144,10 +141,24 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Family Part No" labelFor="searchKeywordS"></Label>
-                            <Input id="searchKeywordS" placeholder="Input data"></Input>
+                            <Label text="Family Part No" labelFor="searchFamilyPart"></Label>
+                            <Input id="searchFamilyPart" placeholder="Input data"></Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Status" labelFor="searchStatus"></Label>
+                            <SegmentedButton id="searchStatus" selectedKey="" class="sapUiSmallMarginBottom" width="100%">
+                                <items>
+                                    <SegmentedButtonItem text="All" key=""/>
+                                    <SegmentedButtonItem text="Draft" key="D" width="4em"/>
+                                    <SegmentedButtonItem text="Confirmed" key="C" width="6em"/>
+                                </items>
+                            </SegmentedButton>
+                            <layoutData>
+                                <layout:GridData
+                                    span="XL2 L3 M6 S12"/>
                             </layoutData>
                         </VBox>
                     </form:content>
@@ -223,11 +234,11 @@
                                 <ObjectIdentifier text="{list>part_number}" />
                                 <ObjectIdentifier text="{list>mold_sequence}" />
                                 <ObjectIdentifier text="{list>spec_name}" />
-                                <ObjectIdentifier text="{list>po_status_code}" />
+                                <ObjectIdentifier text="{list>mold_spec_status_name}" />
                                 <ObjectIdentifier text="{list>mold_item_type_name}" />
                                 <ObjectIdentifier text="{list>user_name}" />
                                 <ObjectIdentifier text="{list>last_update_date}" />
-                                <ObjectIdentifier text="{list>family_part_number_1} {list>family_part_number_2} {list>family_part_number_3} {list>family_part_number_4} {list>family_part_number_5}" />
+                                <ObjectIdentifier text="{list>family_part_numbers}" />
                             </cells>
                         </ColumnListItem>
                     </items>

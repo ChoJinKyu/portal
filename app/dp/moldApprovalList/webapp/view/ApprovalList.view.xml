@@ -1,4 +1,4 @@
-<mvc:View controllerName="dp.moldApprovalList.controller.MainList" 
+<mvc:View controllerName="dp.moldApprovalList.controller.ApprovalList" 
     xmlns:mvc="sap.ui.core.mvc" 
     xmlns="sap.m" 
     xmlns:f="sap.f" 
@@ -21,7 +21,7 @@
                     <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
-                                <Label text="Company" labelFor="searchCompanyS" required="true"></Label>
+                                <Label text="Company" labelFor="searchCompanyS" required="true"></Label>     
                                 <MultiInput id="searchCompanyS" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
@@ -29,10 +29,18 @@
                             </VBox>
                             <VBox>
                                 <Label text="Plant" labelFor="searchPlantS" required="true"></Label>
-                                <MultiInput id="searchPlantS" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
-                                <layoutData>
-                                    <layout:GridData span="XL3 L3 M6 S12" />
-                                </layoutData>
+                                <ComboBox id="searchPlantS" width="100%" selectedKey="L1100" items="{
+                                        path: 'purOrg>/Pur_Operation_Org',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
+                                            {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
+                                            {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
+                                        ]
+                                    }">
+                                    <items>
+                                        <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
+                                    </items>
+                                </ComboBox>
                             </VBox>
                             <VBox>
                                 <Label text="Request Date" labelFor="searchRequestDateS" required="true"></Label>

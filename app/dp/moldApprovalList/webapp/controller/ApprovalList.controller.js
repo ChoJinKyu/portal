@@ -5,7 +5,7 @@ sap.ui.define([
 	"ext/lib/model/ManagedListModel",
 	"ext/lib/formatter/DateFormatter",
 	"sap/m/TablePersoController",
-	"./MainListPersoService",
+	"./ApprovalListPersoService",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     'sap/ui/core/Fragment',
@@ -17,24 +17,25 @@ sap.ui.define([
     "sap/m/Token",
 	"sap/m/Input",
 	"sap/m/ComboBox",
-	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item) {
+    "sap/ui/core/Item",
+    'sap/ui/core/Element'
+], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item, Element) {
 	"use strict";
    /**
     * @description 품의 목록 (총 품의 공통)
     * @date 2020.11.19 
     * @author jinseon.lee , daun.lee 
     */
-	return BaseController.extend("dp.moldApprovalList.controller.MainList", {
+
+	return BaseController.extend("dp.moldApprovalList.controller.ApprovalList", {
 
 		dateFormatter: DateFormatter,
-
 		/* =========================================================== */
 		/* lifecycle methods                                           */
 		/* =========================================================== */
 
 		/**
-		 * Called when the mainList controller is instantiated.
+		 * Called when the approvalList controller is instantiated.
 		 * @public
 		 */
 		onInit : function () {
@@ -44,24 +45,24 @@ sap.ui.define([
 			// Model used to manipulate control states
 			oViewModel = new JSONModel({
 				headerExpanded: true,
-				mainListTableTitle : oResourceBundle.getText("mainListTableTitle"),
+				approvalListTableTitle : oResourceBundle.getText("approvalListTableTitle"),
 				tableNoDataText : oResourceBundle.getText("tableNoDataText")
 			});
-			this.setModel(oViewModel, "mainListView");
+			this.setModel(oViewModel, "approvalListView");
 
-			// Add the mainList page to the flp routing history
+			// Add the approvalList page to the flp routing history
 			this.addHistoryEntry({
-				title: oResourceBundle.getText("mainListViewTitle"),
+				title: oResourceBundle.getText("approvalListViewTitle"),
 				icon: "sap-icon://table-view",
 				intent: "#Template-display"
 			}, true);
 			
 			this.setModel(new ManagedListModel(), "list");
 			
-			this.getRouter().getRoute("mainList").attachPatternMatched(this._onRoutedThisPage, this);
+			this.getRouter().getRoute("approvalList").attachPatternMatched(this._onRoutedThisPage, this);
 
             this._doInitTablePerso();
-            this._doInitSearch();
+            //this._doInitSearch();
         },
         
         onAfterRendering : function () {
@@ -83,18 +84,18 @@ sap.ui.define([
 		 * @public
 		 */
 		onMainTableUpdateFinished : function (oEvent) {
-			// update the mainList's object counter after the table update
+			// update the approvalList's object counter after the table update
 			var sTitle,
 				oTable = oEvent.getSource(),
 				iTotalItems = oEvent.getParameter("total");
 			// only update the counter if the length is final and
 			// the table is not empty
 			if (iTotalItems && oTable.getBinding("items").isLengthFinal()) {
-				sTitle = this.getResourceBundle().getText("mainListTableTitleCount", [iTotalItems]);
+				sTitle = this.getResourceBundle().getText("approvalListTableTitleCount", [iTotalItems]);
 			} else {
-				sTitle = this.getResourceBundle().getText("mainListTableTitle");
+				sTitle = this.getResourceBundle().getText("approvalListTableTitle");
 			}
-			this.getModel("mainListView").setProperty("/mainListTableTitle", sTitle);
+			this.getModel("approvalListView").setProperty("/approvalListTableTitle", sTitle);
 		},
 
 		/**
@@ -112,7 +113,7 @@ sap.ui.define([
 		 * @public
 		 */
 		onMainTablePersoRefresh : function() {
-			MainListPersoService.resetPersData();
+			ApprovalListPersoService.resetPersData();
 			this._oTPC.refresh();
 		},
 
@@ -161,21 +162,22 @@ sap.ui.define([
                 oRecord = this.getModel("list").getProperty(sPath);
             console.log("oRecord >>>  ", oRecord);
             var that = this;
-            if (oRecord.mold_id % 3 == 0) {
-                that.getRouter().navTo("pssaCreateObject", {
-                    company: "[LGEKR] LG Electronics Inc."
-                    , plant: "[DFZ] Washing Machine"
-                });
-            } else if (oRecord.mold_id % 3 == 2) {
-                that.getRouter().navTo("pssaObject", {
-                    moldId: oRecord.mold_id
-                });
-            } else {
-                that.getRouter().navTo("pssaCreateObject", {
-                    company: "[LGEKR] LG Electronics Inc."
-                    , plant: "[DFZ] Washing Machine"
-                });
-            }
+            that.getRouter().navTo("pssaObject", {
+                moldId: oRecord.mold_id          
+            });
+            // if (oRecord.mold_id % 3 == 0) {
+            //     that.getRouter().navTo("pssaCreateObject", {
+            //         company: "[LGEKR] LG Electronics Inc."
+            //         , plant: "[DFZ] Washing Machine"
+            //     });
+            // } else if (oRecord.mold_id % 3 == 2) {
+                
+            // } else {
+            //     that.getRouter().navTo("pssaCreateObject", {
+            //         company: "[LGEKR] LG Electronics Inc."
+            //         , plant: "[DFZ] Washing Machine"
+            //     });
+            // }
 
 		},
 
@@ -304,16 +306,44 @@ sap.ui.define([
 		
         },
         
+        
+         /**
+         * @public
+         * @see 사용처 create 팝업에서 나머지 버튼 비활성화 시키는 작업수행
+         */ 
+        onToggleHandleChange : function(oEvent){
+            var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
+            var isPressed;
+            var isPressedId;
+            isPressedId =oEvent.getSource().getId();
+            for(var i=0; i<groupId.length; i++){
+                if(groupId[i].getId() != isPressedId){
+                    groupId[i].setPressed(false);
+                }
+            }
+           
+        },
+
+        handleConfirm : function(targetControl){
+            var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
+            for(var i=0; i<groupId.length; i++){
+                if(groupId[i].getPressed() == true){
+                    console.log(groupId[i].mProperties.text);
+                    console.log(this.byId("searchCompanyF").getValue());
+                    console.log(this.byId("searchPlantF").getValue());
+                    this.getRouter().navTo("pssaCreateObject", {
+                        company: this.byId("searchCompanyF").getValue()
+                        , plant: this.byId("searchPlantF").getValue()
+                        , 
+                    });
+                }    
+            }
+        },
+
         createPopupClose: function (oEvent){
             this.byId("dialogApprovalCategory").close();
         },
 
-        handleConfirm: function (oEvent) {
-            console.log(this.byId("VSDThemeButtons").mAggregations);
-			if (oEvent.getParameters().filterString) {
-				MessageToast.show(oEvent.getParameters().filterString);
-			}
-		},
         /* Affiliate End */
 
 		/* =========================================================== */
@@ -326,7 +356,7 @@ sap.ui.define([
 		 * @private
 		 */
 		_onRoutedThisPage: function(){
-			this.getModel("mainListView").setProperty("/headerExpanded", true);
+			this.getModel("approvalListView").setProperty("/headerExpanded", true);
 		},
 
 		/**
@@ -389,7 +419,7 @@ sap.ui.define([
 			this._oTPC = new TablePersoController({
 				table: this.byId("mainTable"),
 				componentName: "moldApprovalList",
-				persoService: MainListPersoService,
+				persoService: ApprovalListPersoService,
 				hasGrouping: true
 			}).activate();
 		}

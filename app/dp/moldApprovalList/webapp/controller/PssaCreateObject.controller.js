@@ -1,15 +1,19 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
-	"sap/ui/model/json/JSONModel",
+    "sap/ui/model/json/JSONModel", 
     "sap/ui/core/routing/History",
+    "ext/lib/model/ManagedListModel",
     "sap/ui/richtexteditor/RichTextEditor",
 	"ext/lib/formatter/DateFormatter",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
 	"sap/ui/core/Fragment",
     "sap/m/MessageBox",
-    "sap/m/MessageToast",
-], function (BaseController, JSONModel, History, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
+    "sap/m/MessageToast", 
+    "sap/m/UploadCollectionParameter",
+    "sap/ui/Device" // fileupload 
+], function (BaseController, JSONModel, History, ManagedListModel, RichTextEditor , DateFormatter, Filter, FilterOperator, Fragment
+            , MessageBox, MessageToast,  UploadCollectionParameter, Device ) {
 	"use strict";
     /**
      * @description 입찰대상 협력사 선정 품의 등록화면
@@ -33,15 +37,17 @@ sap.ui.define([
 			// Model used to manipulate control states. The chosen values make sure,
 			// detail page shows busy indication immediately so there is no break in
             // between the busy indication for loading the view's meta data 
-
 			var oViewModel = new JSONModel({
 					busy : true,
 					delay : 0
 				});
-			this.getRouter().getRoute("pssaCreateObject").attachPatternMatched(this._onObjectMatched, this);
+            this.getRouter().getRoute("pssaCreateObject").attachPatternMatched(this._onObjectMatched, this);
             this.setModel(oViewModel, "pssaCreateObjectView"); 
-            
-		},
+          
+            this.setModel(new ManagedListModel(), "createlist");
+            this.getView().setModel(new JSONModel(Device), "device"); // file upload      
+        },
+        
         onAfterRendering : function () {
             console.log("  call onAfterRendering ");
             this.setRichEditor();
@@ -69,12 +75,9 @@ sap.ui.define([
 			});
         },
 
-
 		/* =========================================================== */
 		/* event handlers                                              */
 		/* =========================================================== */
-
-
 		/**
 		 * Event handler  for navigating back.
 		 * It there is a history entry we go one step back in the browser history
@@ -87,7 +90,7 @@ sap.ui.define([
 				// eslint-disable-next-line sap-no-history-manipulation
 				history.go(-1);
 			} else {
-				this.getRouter().navTo("mainList", {}, true);
+				this.getRouter().navTo("approvalList", {}, true);
 			}
 		},
 
@@ -97,30 +100,6 @@ sap.ui.define([
 		 */
 		onPageEditButtonPress: function(){
 			this._toEditMode();
-		},
-		
-		/**
-		 * Event handler for delete page entity
-		 * @public
-		 */
-        onPageDeleteButtonPress: function(){
-			var oView = this.getView(),
-				me = this;
-
-			MessageBox.confirm("Are you sure to delete?", {
-				title : "Comfirmation",
-				initialFocus : sap.m.MessageBox.Action.CANCEL,
-				onClose : function(sButton) {
-					if (sButton === MessageBox.Action.OK) {
-						me.getView().getBindingContext().delete('$direct').then(function () {
-								me.onNavBack();
-							}, function (oError) {
-								MessageBox.error(oError.message);
-							});
-					};
-				}
-			});
-
 		},
 		
 		/**
@@ -152,9 +131,7 @@ sap.ui.define([
 					};
 				}
 			});
-
 		},
-		
 		
 		/**
 		 * Event handler for cancel page editing
@@ -178,7 +155,6 @@ sap.ui.define([
 			var oArgs = oEvent.getParameter("arguments"); 
             console.log("oArgs>>>>>>" , oArgs);
             this._createViewBindData(oArgs); 
-          //  this._toShowMode(); 
         },
         /**
          * @description 초기 생성시 파라미터를 받고 들어옴 
@@ -186,18 +162,10 @@ sap.ui.define([
          */
         _createViewBindData : function(args){ 
             var appInfoModel = this.getModel("pssaCreateObjectView");
-             console.log("args >>>>>>" , args);
-            
             appInfoModel.setData({ company : args.company 
-                    ,  plant : args.plant
-                    });
-               
+                                ,  plant : args.plant });   
 
             console.log("oMasterModel >>> " , appInfoModel);
-				// oMasterModel.setData({
-                //     company: args.company 
-                //   , plant : args.plant 
-				// });
         } ,
 
 		/**
@@ -208,11 +176,8 @@ sap.ui.define([
 		 */
 		_bindView : function (sObjectPath) {
 
-
-				this._toEditMode();
-
+			this._toEditMode();
 			var oViewModel = this.getModel("pssaCreateObjectView");
-
 			this.getView().bindElement({
 				path: sObjectPath,
 				events: {
@@ -237,48 +202,104 @@ sap.ui.define([
 				return;
 			}
 			oViewModel.setProperty("/busy", false);
-		},
-
-		_toEditMode: function(){
-            this._showFormFragment('MainObject_Edit');
-			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("page").setProperty("showFooter", true);
-			//this.byId("pageEditButton").setEnabled(false);
-			//this.byId("pageDeleteButton").setEnabled(false);
-			this.byId("pageNavBackButton").setEnabled(false);
-		},
-
-		_toShowMode: function(){
-			this._showFormFragment('MainObject_Show');
-			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("page").setProperty("showFooter", false);
-			//this.byId("pageEditButton").setEnabled(true);
-			//this.byId("pageDeleteButton").setEnabled(true);
-			this.byId("pageNavBackButton").setEnabled(true);
-		},
+        },
+        
+        onPsAddRow : function(){
+            
+        },
+        onPsDelRow : function(){},
+        onPsSupplier : function(){},
 
 		_oFragments: {},
-		_showFormFragment : function (sFragmentName) {
-            var oPageSubSection = this.byId("pageSubSection1");
-            this._loadFragment(sFragmentName, function(oFragment){
-				oPageSubSection.removeAllBlocks();
-				oPageSubSection.addBlock(oFragment);
-			})
-        },
-        _loadFragment: function (sFragmentName, oHandler) {
-			if(!this._oFragments[sFragmentName]){
-				Fragment.load({
-					id: this.getView().getId(),
-					name: "dp.moldApprovalList.view." + sFragmentName,
-					controller: this
-				}).then(function(oFragment){
-					this._oFragments[sFragmentName] = oFragment;
-					if(oHandler) oHandler(oFragment);
-				}.bind(this));
-			}else{
-				if(oHandler) oHandler(this._oFragments[sFragmentName]);
+	    onCheck : function(){ console.log("onCheck") },
+        /**
+         * @description file upload 관련 
+         * @date 2020-11-23
+         * @param {*} oEvent 
+         */
+        onChange: function(oEvent) {
+			var oUploadCollection = oEvent.getSource();
+			// Header Token
+			var oCustomerHeaderToken = new UploadCollectionParameter({
+				name: "x-csrf-token",
+				value: "securityTokenFromModel"
+			});
+			oUploadCollection.addHeaderParameter(oCustomerHeaderToken);
+			MessageToast.show("Event change triggered");
+		},
+
+		onFileDeleted: function(oEvent) {
+			MessageToast.show("Event fileDeleted triggered");
+		},
+
+		onFilenameLengthExceed: function(oEvent) {
+			MessageToast.show("Event filenameLengthExceed triggered");
+		},
+
+		onFileSizeExceed: function(oEvent) {
+			MessageToast.show("Event fileSizeExceed triggered");
+		},
+
+		onTypeMissmatch: function(oEvent) {
+			MessageToast.show("Event typeMissmatch triggered");
+		},
+
+		onStartUpload: function(oEvent) {
+			var oUploadCollection = this.byId("UploadCollection");
+			var oTextArea = this.byId("TextArea");
+			var cFiles = oUploadCollection.getItems().length;
+			var uploadInfo = cFiles + " file(s)";
+
+			if (cFiles > 0) {
+				oUploadCollection.upload();
+
+				if (oTextArea.getValue().length === 0) {
+					uploadInfo = uploadInfo + " without notes";
+				} else {
+					uploadInfo = uploadInfo + " with notes";
+				}
+
+				MessageToast.show("Method Upload is called (" + uploadInfo + ")");
+				MessageBox.information("Uploaded " + uploadInfo);
+				oTextArea.setValue("");
 			}
+		},
+
+		onBeforeUploadStarts: function(oEvent) {
+			// Header Slug
+			var oCustomerHeaderSlug = new UploadCollectionParameter({
+				name: "slug",
+				value: oEvent.getParameter("fileName")
+			});
+			oEvent.getParameters().addHeaderParameter(oCustomerHeaderSlug);
+			setTimeout(function() {
+				MessageToast.show("Event beforeUploadStarts triggered");
+			}, 4000);
+		},
+
+		onUploadComplete: function(oEvent) {
+			var sUploadedFileName = oEvent.getParameter("files")[0].fileName;
+			setTimeout(function() {
+				var oUploadCollection = this.byId("UploadCollection");
+
+				for (var i = 0; i < oUploadCollection.getItems().length; i++) {
+					if (oUploadCollection.getItems()[i].getFileName() === sUploadedFileName) {
+						oUploadCollection.removeItem(oUploadCollection.getItems()[i]);
+						break;
+					}
+				}
+
+				// delay the success message in order to see other messages before
+				MessageToast.show("Event uploadComplete triggered");
+			}.bind(this), 8000);
+		},
+
+		onSelectChange: function(oEvent) {
+			var oUploadCollection = this.byId("UploadCollection");
+			oUploadCollection.setShowSeparators(oEvent.getParameters().selectedItem.getProperty("key"));
 		}
+
+
 
 
 	});

@@ -8,6 +8,7 @@ sap.ui.define([
 	"./MainListPersoService",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
+    'sap/ui/model/Sorter',
     "sap/m/MessageBox",
     "sap/m/MessageToast",
 	"sap/m/ColumnListItem",
@@ -16,7 +17,7 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, Sorter, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
 	"use strict";
 
 	return BaseController.extend("dp.detailSpecEntry.controller.MainList", {
@@ -50,8 +51,10 @@ sap.ui.define([
 				intent: "#Template-display"
 			}, true);
 			
-			this.setModel(new ManagedListModel(), "list");
-			
+            this.setModel(new ManagedListModel(), "list");
+            this.setModel(new ManagedListModel(), "orgMap");
+            this.setModel(new ManagedListModel(), "division");
+
 			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
 			this._doInitTablePerso();
@@ -178,7 +181,34 @@ sap.ui.define([
 		 * @private
 		 */
 		_onRoutedThisPage: function(){
-			this.getModel("mainListView").setProperty("/headerExpanded", true);
+            this.getModel("mainListView").setProperty("/headerExpanded", true);
+            
+            var self = this;
+            var oModel = this.getModel('orgMap');
+            oModel.setTransactionModel(this.getModel('purOrg'));
+            // oModel.read("/Pur_Org_Type_Mapping", {
+            //     filters: [
+            //         new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
+            //         new Filter("process_type_code", FilterOperator.EQ, 'DP05') //금형 DP05
+            //     ],
+            //     success: function(oData){
+
+            //         var oModelDiv = self.getModel('division');
+            //         oModelDiv.setTransactionModel(self.getModel('purOrg'));
+            //         oModelDiv.read("/Pur_Operation_Org", {
+            //             filters: [
+            //                 new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
+            //                 new Filter("org_type_code", FilterOperator.EQ, oData.results[0].org_type_code)
+            //             ],
+            //             sorters: [
+            //                 new Sorter("org_code", false)
+            //             ],
+            //             success: function(oData){
+                            
+            //             }
+            //         });
+            //     }
+            // });
 		},
 
 		/**
@@ -200,18 +230,57 @@ sap.ui.define([
 		},
 		
 		_getSearchStates: function(){
-			var sModel = this.getView().byId("searchModel").getValue();
-			var	sPart = this.getView().byId("searchPart").getValue();
-			// var	sUsage = this.getView().byId("searchUsageSegmentButton").getSelectedKey();
-			
-            var aSearchFilters = [];
+
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S"
             
-			if (sModel && sModel.length > 0) {
-				aSearchFilters.push(new Filter("model", FilterOperator.Contains, sModel));
+            var aCompany = this.getView().byId("searchCompany"+sSurffix).getSelectedItems();
+            var sDateFrom = this.getView().byId("searchDate"+sSurffix).getDateValue();
+            var sDateTo = this.getView().byId("searchDate"+sSurffix).getSecondDateValue();
+			var sModel = this.getView().byId("searchModel").getValue().trim();
+            var	sPart = this.getView().byId("searchPart").getValue().trim();
+            var	sFamilyPart = this.getView().byId("searchFamilyPart").getValue().trim();
+            var	sStatus = this.getView().byId("searchStatus").getSelectedKey();
+            
+            var aSearchFilters = [];
+            var companyFilters = [];
+            
+            if(aCompany.length > 0){
+
+                aCompany.forEach(function(item, idx, arr){
+                    companyFilters.push(new Filter("company_code", FilterOperator.EQ, item.mProperties.key ));
+                });
+
+                aSearchFilters.push(
+                    new Filter({
+                        filters: companyFilters,
+                        and: false
+                    })
+                );
             }
             
-            if (sPart && sPart.length > 0) {
-				aSearchFilters.push(new Filter("part_number", FilterOperator.Contains, sPart));
+            
+            // if (sDateFrom) {
+			// 	aSearchFilters.push(new Filter("last_update_date", FilterOperator.GE, sDateFrom));
+            // }
+
+            // if (sDateTo) {
+			// 	aSearchFilters.push(new Filter("last_update_date", FilterOperator.LE, sDateTo));
+            // }
+
+			if (sModel) {
+				aSearchFilters.push(new Filter("model", FilterOperator.StartsWith, sModel));
+            }
+            
+            if (sPart) {
+				aSearchFilters.push(new Filter("part_number", FilterOperator.StartsWith, sPart));
+            }
+            
+            if (sFamilyPart) {
+				aSearchFilters.push(new Filter("family_part_numbers", FilterOperator.Contains, sFamilyPart));
+            }
+            
+            if (sStatus) {
+				aSearchFilters.push(new Filter("mold_spec_status_code", FilterOperator.EQ, sStatus));
 			}
 			// if (sKeyword && sKeyword.length > 0) {
 			// 	aSearchFilters.push(new Filter({
@@ -237,7 +306,10 @@ sap.ui.define([
 			// 		aSearchFilters.push(new Filter("user_flag", FilterOperator.EQ, "true"));
 			// 		break;
 			// 	}
-			// }
+            // }
+            
+            console.log('aSearchFilters',aSearchFilters);
+
 			return aSearchFilters;
 		},
 		
@@ -249,7 +321,49 @@ sap.ui.define([
 				persoService: MainListPersoService,
 				hasGrouping: true
 			}).activate();
-		}
+        },
+        
+        handleSelectionFinishComp: function(oEvent){
+
+            this.copyMultiSelected(oEvent);
+
+            var params = oEvent.getParameters();
+            var selectedKeys = [];
+            var divisionFilters = [];
+
+            params.selectedItems.forEach(function(item, idx, arr){
+                selectedKeys.push(item.getKey());
+                divisionFilters.push(new Filter("company_code", FilterOperator.EQ, item.getKey() ));
+            });
+
+            var filter = new Filter({
+                            filters: divisionFilters,
+                            and: false
+                        });
+
+            this.getView().byId("searchDivisionE").getBinding("items").filter(filter, "Application");
+            this.getView().byId("searchDivisionS").getBinding("items").filter(filter, "Application");
+        },
+
+        handleSelectionFinishDiv: function(oEvent){
+            this.copyMultiSelected(oEvent);
+        },
+
+        copyMultiSelected: function(oEvent){
+            var source = oEvent.getSource();
+            var params = oEvent.getParameters();
+
+            var id = source.sId.split('--')[1];
+            var idPreFix = id.substr(0, id.length-1);
+            var selectedKeys = [];
+
+            params.selectedItems.forEach(function(item, idx, arr){
+                selectedKeys.push(item.getKey());
+            });
+
+            this.getView().byId(idPreFix+'S').setSelectedKeys(selectedKeys);
+            this.getView().byId(idPreFix+'E').setSelectedKeys(selectedKeys);
+        }
 
 
 	});

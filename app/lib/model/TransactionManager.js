@@ -33,12 +33,10 @@ sap.ui.define([
         },
 
         submit: function(oParameters){
-            console.group("Submit all batches of OData Service by TransactionManager.");
 
             this.aDataModels.forEach(function(oModel){
                 oModel.setTransactionModel(this.oServiceModel);
                 oModel._executeBatch(DEFAULT_GROUP_ID);
-                console.log("Batches are executed on one of model.");
             }.bind(this));
             
             var successHandler = oParameters.success,

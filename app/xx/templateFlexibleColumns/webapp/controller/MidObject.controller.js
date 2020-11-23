@@ -4,7 +4,7 @@ sap.ui.define([
 	"sap/ui/model/json/JSONModel",
 	"ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedModel",
-	"ext/lib/model/DelegateModel",
+	"ext/lib/model/ManagedListModel",
 	"ext/lib/formatter/DateFormatter",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
@@ -17,7 +17,7 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, DelegateModel, DateFormatter, 
+], function (BaseController, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
 	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
 	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
         
@@ -56,8 +56,8 @@ sap.ui.define([
 			this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
 			this.setModel(oViewModel, "midObjectView");
 			
-			this.setModel(new DelegateModel(), "master");
-			this.setModel(new DelegateModel(), "details");
+			this.setModel(new ManagedModel(), "master");
+			this.setModel(new ManagedListModel(), "details");
 
 			oTransactionManager = new TransactionManager();
 			oTransactionManager.addDataModel(this.getModel("master"));
@@ -153,7 +153,7 @@ sap.ui.define([
 				"control_option_val": "",
 				"local_create_dtm": new Date(),
 				"local_update_dtm": new Date()
-			});
+			}, "/ControlOptionMasters");
 		},
 
 		onMidTableDeleteButtonPress: function(){
@@ -258,6 +258,7 @@ sap.ui.define([
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
 				}, "/ControlOptionMasters");
+
 				var oDetailsModel = this.getModel("details");
 				oDetailsModel.setTransactionModel(this.getModel());
 				oDetailsModel.setData([]);
@@ -273,7 +274,17 @@ sap.ui.define([
 				this._toEditMode();
 			}else{
 				this.getModel("midObjectView").setProperty("/isAddedMode", false);
-				this._bindView("/ControlOptionMasters(tenant_id='" + this._sTenantId + "',control_option_code='" + this._sControlOptionCode + "')");
+				
+				var sObjectPath = "/ControlOptionMasters(tenant_id='" + this._sTenantId + "',control_option_code='" + this._sControlOptionCode + "')";
+				var oMasterModel = this.getModel("master");
+				oView.setBusy(true);
+				oMasterModel.setTransactionModel(this.getModel());
+				oMasterModel.read(sObjectPath, {
+					success: function(oData){
+						oView.setBusy(false);
+					}
+				});
+			
 				oView.setBusy(true);
 				var oDetailsModel = this.getModel("details");
 				oDetailsModel.setTransactionModel(this.getModel());
@@ -289,24 +300,6 @@ sap.ui.define([
 				this._toShowMode();
 			}
 			oTransactionManager.setServiceModel(this.getModel());
-		},
-
-		/**
-		 * Binds the view to the object path.
-		 * @function
-		 * @param {string} sObjectPath path to the object to be bound
-		 * @private
-		 */
-		_bindView : function (sObjectPath) {
-			var oView = this.getView(),
-				oMasterModel = this.getModel("master");
-			oView.setBusy(true);
-			oMasterModel.setTransactionModel(this.getModel());
-			oMasterModel.read(sObjectPath, {
-				success: function(oData){
-					oView.setBusy(false);
-				}
-			});
 		},
 
 		_toEditMode: function(){
