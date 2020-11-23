@@ -45,15 +45,17 @@ sap.ui.define([
             this.setModel(oViewModel, "pssaCreateObjectView"); 
           
             this.setModel(new ManagedListModel(), "createlist");
+            var appModel = new JSONModel();
+
+            this.setModel(appModel, "applist");
             this.getView().setModel(new JSONModel(Device), "device"); // file upload      
         },
         
         onAfterRendering : function () {
-            console.log("  call onAfterRendering ");
-            this.setRichEditor();
+         
         },
         setRichEditor : function (){
-        var that = this,
+            var that = this,
 			sHtmlValue = ''
             sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
 				function (RTE, EditorType) {
@@ -101,7 +103,19 @@ sap.ui.define([
 		onPageEditButtonPress: function(){
 			this._toEditMode();
 		},
-		
+        
+         _onLoadApprovalRow : function () {
+            var oTable = this.byId("psTable"),
+				oModel = this.getModel("applist");
+			oModel.addRecord({
+				"no": "1",
+				"type": "CM",
+				"nameDept": "",
+				"status": "",
+				"comment": "LBL"
+			}, 0);
+        } ,
+
 		/**
 		 * Event handler for saving page changes
 		 * @public
@@ -151,10 +165,12 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
 		 * @private
 		 */
-		_onObjectMatched : function (oEvent) {
+		_onObjectMatched : function (oEvent) { 
+            this.setRichEditor();
 			var oArgs = oEvent.getParameter("arguments"); 
             console.log("oArgs>>>>>>" , oArgs);
             this._createViewBindData(oArgs); 
+            this._onLoadApprovalRow();
         },
         /**
          * @description 초기 생성시 파라미터를 받고 들어옴 
