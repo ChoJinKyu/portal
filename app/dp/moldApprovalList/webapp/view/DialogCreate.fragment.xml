@@ -1,0 +1,189 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:layout="sap.ui.layout" >
+    
+    <Dialog id="dialogApprovalCategory" class="sapUiSmallMargin" title="" contentWidth="35%" >
+        <content>  
+            <VBox class="sapUiSmallMargin">
+                <form:SimpleForm
+                    editable="false"
+                    layout="ResponsiveGridLayout"
+                    labelSpanXL="4"
+                    labelSpanL="3"
+                    labelSpanM="4"
+                    labelSpanS="12"
+                    adjustLabelSpan="false"
+                    emptySpanXL="0"
+                    emptySpanL="4"
+                    emptySpanM="0"
+                    emptySpanS="0"
+                    columnsXL="2"
+                    columnsL="1"
+                    columnsM="1"
+                    singleContainerFullSize="false" >
+                    <form:content>
+                        <!-- 팝업 콤보박스 영역 -->
+                        <VBox>
+                            <Label text = "Company" /> 
+                            <ComboBox id="searchCompanyF" width="70%" selectedKey="L1100" items="{
+                                path: 'org>/Org_Company',
+                                filters: [
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                ],
+                                sorter: { path: 'company_code'}
+                            }">
+                                <items>
+                                    <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                                </items>
+                            </ComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL6 L3 M6 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox>
+                            <Label text = "Plant"/> 
+                            <ComboBox id="searchPlantF" width="70%" selectedKey="" items="{
+                                path: 'purOrg>/Pur_Operation_Org',
+                                filters: [
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
+                                    {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
+                                    {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
+                                ]
+                            }">
+                                <items>
+                                    <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
+                                </items>
+                            </ComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL6 L3 M6 S12" />
+                            </layoutData> 
+                        </VBox>
+                        
+                        <!-- Approval Category 버튼 영역 -->
+                        <core:Title text="Approval Category" />
+                        <VBox>
+                            <Label text = "1. Local"/> 
+                            <layoutData>
+                                <layout:GridData span="XL12 L12 M12 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox alignItems="Center" justifyContent="Center">
+                            <ToggleButton id="categoriLocalBudget" fieldGroupIds="toggleButtons" text="Budget" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
+                            <layoutData>
+                                <layout:GridData span="XL6 L3 M6 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox alignItems="Center" justifyContent="Center">
+                            <ToggleButton id="categoriSupplierSelection" fieldGroupIds="toggleButtons" text="Supplier Selection" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
+                            <layoutData>
+                                <layout:GridData span="XL6 L3 M6 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox alignItems="Center" justifyContent="Center">
+                            <ToggleButton id="categoriLocalOrder" fieldGroupIds="toggleButtons" text="Order" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
+                            <layoutData>
+                                <layout:GridData span="XL6 L3 M6 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox alignItems="Center" justifyContent="Center">
+                            <ToggleButton id="categoriReceipt" fieldGroupIds="toggleButtons" text="Receipt" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
+                            <layoutData>
+                                <layout:GridData span="XL6 L3 M6 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox>
+                            <Label text = "2. Export"/> 
+                            <layoutData>
+                                <layout:GridData span="XL12 L12 M12 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox alignItems="Center" justifyContent="Center">
+                            <ToggleButton id="categoriExport" fieldGroupIds="toggleButtons" text="Export" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
+                            <layoutData>
+                                <layout:GridData span="XL6 L3 M6 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox alignItems="Center" justifyContent="Center">
+                            <layoutData>
+                                <layout:GridData span="XL6 L3 M6 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox>
+                            <Label text = "3. Import"/> 
+                            <layoutData>
+                                    <layout:GridData span="XL12 L12 M12 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox alignItems="Center" justifyContent="Center">
+                             <ToggleButton id="categoriImportBudget" fieldGroupIds="toggleButtons" text="Budget" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
+                            <layoutData>
+                                <layout:GridData span="XL6 L3 M6 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox alignItems="Center" justifyContent="Center">
+                            <ToggleButton id="categoriImportCompletion" fieldGroupIds="toggleButtons" text="Import Completion" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
+                            <layoutData>
+                                <layout:GridData span="XL6 L3 M6 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox>
+                            <Label text = "4. Repair/Modification"/> 
+                            <layoutData>
+                                <layout:GridData span="XL12 L12 M12 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox alignItems="Center" justifyContent="Center">
+                            <ToggleButton id="categoriRepModCompletion" fieldGroupIds="toggleButtons" text="Repair/Modifi. Completion" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
+                            <layoutData>
+                                <layout:GridData span="XL6 L3 M6 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox alignItems="Center" justifyContent="Center">
+                            <layoutData>
+                                <layout:GridData span="XL6 L3 M6 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox>
+                            <Label text = "5. Etc"/> 
+                            <layoutData>
+                                <layout:GridData span="XL12 L12 M12 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox alignItems="Center" justifyContent="Center">
+                            <ToggleButton id="categoriOtherIn" fieldGroupIds="toggleButtons" text="Other In" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
+                            <layoutData>
+                                <layout:GridData span="XL6 L3 M6 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox alignItems="Center" justifyContent="Center">
+                            <ToggleButton id="categoriOtherOut" fieldGroupIds="toggleButtons" text="Other Out" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
+                            <layoutData>
+                                <layout:GridData span="XL6 L3 M6 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox alignItems="Center" justifyContent="Center">
+                            <ToggleButton id="categoriProdSupplierAmend" fieldGroupIds="toggleButtons" text="Prod Supplier Amend" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
+                            <layoutData>
+                                <layout:GridData span="XL6 L3 M6 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox alignItems="Center" justifyContent="Center">
+                            <ToggleButton id="categoriItemCancel" fieldGroupIds="toggleButtons" text="Item Cancel" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
+                            <layoutData>
+                                <layout:GridData span="XL6 L3 M6 S12" />
+                            </layoutData> 
+                        </VBox>
+                    </form:content>
+                </form:SimpleForm>
+            </VBox>       
+        </content>
+        
+        <ToolbarSpacer/>
+        <HBox alignItems="Center" justifyContent="Center" >
+            <Button text="Cancel" class="sapUiSmallMargin" press=".createPopupClose"/>
+            <Button text="Select" class="sapUiSmallMargin" type="Emphasized" press=".handleConfirm"/>
+        </HBox>
+    </Dialog>
+</core:FragmentDefinition>

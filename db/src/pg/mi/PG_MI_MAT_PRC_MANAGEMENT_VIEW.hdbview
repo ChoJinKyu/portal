@@ -1,0 +1,30 @@
+view pg_MI_Mat_Prc_Management_View as
+select
+		main.mi_material_code		as mi_material_code,
+		mat.mi_material_code_name	as mi_material_code_name,
+        main.category_code			as category_code,
+        catg.category_name			as category_name,
+		main.currency_unit			as currency_unit,
+		main.quantity_unit			as quantity_unit,
+		main.exchange_unit			as exchange_unit,
+		main.exchange				as exchange,
+		main.termsdelv				as termsdelv,
+		main.sourcing_group_code	as sourcing_group_code,
+		main.delivery_mm			as delivery_mm,
+		main.mi_date				as mi_date,
+		main.amount					as amount
+from pg_mi_material_price_management as main
+left join pg_mi_material_code_lng as mat
+	on  main.tenant_id			= mat.tenant_id
+	and main.company_code		= mat.company_code
+    and main.org_type_code		= mat.org_type_code
+	and main.org_code			= mat.org_code
+	and main.mi_material_code	= mat.mi_material_code
+	and mat.language_code		= 'KO'
+left join pg_mi_category_lng as catg
+	on  main.tenant_id    	= catg.tenant_id
+	and main.company_code 	= catg.company_code
+    and main.org_type_code	= catg.org_type_code
+	and main.org_code	    = catg.org_code
+	and main.category_code	= catg.category_code
+	and catg.language_code	= 'KO';

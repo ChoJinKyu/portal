@@ -13,7 +13,7 @@
     "resources": "resources.json",
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v2/xx.TemplateService/",
+        "uri": "srv-api/odata/v2/cm.MsgMgrService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -117,6 +117,16 @@
       },
       "purOrg": {
         "dataSource": "purOrgMgrService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "useBatch": true
+        }
+      },
+      "msg": {
+        "dataSource": "mainService",
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",
