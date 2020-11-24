@@ -183,7 +183,7 @@
           ]
         },
         {
-          "pattern": "PssaObject/{moldId}",
+          "pattern": "PssaObject",
           "name": "pssaObject",
           "target": [
             "pssaObject"

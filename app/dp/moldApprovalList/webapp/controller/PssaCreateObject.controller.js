@@ -20,9 +20,9 @@ sap.ui.define([
      * @date 2020.11.20
      * @author jinseon.lee 
      */
-  
-	return BaseController.extend("dp.moldApprovalList.controller.PssaCreateObject", {
 
+	return BaseController.extend("dp.moldApprovalList.controller.PssaCreateObject", {
+        
 		dateFormatter: DateFormatter,
 
 		/* =========================================================== */
@@ -52,7 +52,7 @@ sap.ui.define([
 				intent: "#Template-display"
             }, true);
             
-            this.getView().setModel(new ManagedListModel(),"appList");
+            this.getView().setModel(new ManagedListModel(),"appList"); // apporval list 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload      
         },   
         onAfterRendering : function () {
@@ -108,17 +108,19 @@ sap.ui.define([
 			this._toEditMode();
 		},
         
-         _onLoadApprovalRow : function () { 
+        _onLoadApprovalRow : function () { // 파일 찾는 row 추가 
             var oTable = this.byId("ApprovalTable"),
-                oModel =  this.getModel("appList"); 
-            oModel.addRecord({
-                "no": "1",
-                "type": "",
-                "nameDept": "",
-                "status": "",
-                "comment": ""  
-            });
-            console.log("oModel,,," , oModel);
+                oModel = this.getModel("appList"); 
+                console.log("model >>> " , oModel) 
+                if(oModel.oData.undefined == undefined || oModel.oData.undefined == null){
+                    oModel.addRecord({
+                        "no": "1",
+                        "type": "",
+                        "nameDept": "",
+                        "status": "",
+                        "comment": ""  
+                    });
+                }
         } ,
 
 		/**
@@ -157,7 +159,7 @@ sap.ui.define([
 		 * @public
 		 */
         onPageCancelEditButtonPress: function(){
-			this._toShowMode();
+			
         },
 
 		/* =========================================================== */
@@ -231,7 +233,8 @@ sap.ui.define([
         onPsSupplier : function(){},
 
 		_oFragments: {},
-	    onCheck : function(){ console.log("onCheck") },
+        onCheck : function(){ console.log("onCheck") },
+        
         /**
          * @description file upload 관련 
          * @date 2020-11-23

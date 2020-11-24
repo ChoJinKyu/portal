@@ -386,9 +386,9 @@
                                         items="{
                                                     path : 'util>/CodeDetails',
                                                     filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : ''},
                                                         {path : 'company_code', operator : 'EQ', value1 : '*'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
+                                                        {path : 'group_code', operator : 'EQ', value1 : ''}
                                                     ]
                                                 }"
                                     ><core:Item key="{util>code}" text="{util>code_description}" />
@@ -401,6 +401,7 @@
                                 </cells>
                             </ColumnListItem>   
                         </items>
+                        
                     </Table>
                             
 					</uxap:ObjectPageSubSection> 
