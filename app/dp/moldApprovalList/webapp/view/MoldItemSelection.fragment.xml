@@ -8,22 +8,20 @@
     xmlns:layout="sap.ui.layout" >
     <Dialog id="dialogMolItemSelection" class="sapUiSmallMargin" title="" contentWidth="35%" >
         <VBox class="sapUiSmallMargin">
-           <form:SimpleForm
-                    editable="false"
-                    layout="ResponsiveGridLayout"
-                    labelSpanXL="4"
-                    labelSpanL="3"
-                    labelSpanM="4"
-                    labelSpanS="12"
-                    adjustLabelSpan="false"
-                    emptySpanXL="0"
-                    emptySpanL="4"
-                    emptySpanM="0"
-                    emptySpanS="0"
-                    columnsXL="2"
-                    columnsL="1"
-                    columnsM="1"
-                    singleContainerFullSize="false" >
+            <form:SimpleForm
+                editable="false"
+                layout="ResponsiveGridLayout"
+                labelSpanXL="4"
+                labelSpanL="3"
+                labelSpanM="4"
+                labelSpanS="12"
+                adjustLabelSpan="false"
+                emptySpanXL="0"
+                emptySpanL="4"
+                emptySpanM="0"
+                emptySpanS="0"
+     
+                singleContainerFullSize="false" >
                     <form:content>
                         <VBox>
                             <Label text = "Company" /> 
@@ -60,10 +58,12 @@
                                 <layout:GridData span="XL6 L3 M6 S12" />
                             </layoutData> 
                         </VBox>
-                        <HBox>
+                       </form:content>
+                    <form:content>
+                    <HBox>
                         <Table id="moldItemSelectTable"       
                             growing="true"
-                            growingThreshold="20"
+                            growingThreshold="10"
                             class="sapFDynamicPageAlignContent" 
                             updateFinished=".onListMainTableUpdateFinished2"
                             mode="MultiSelect"
@@ -72,30 +72,30 @@
                             >
                         <headerToolbar>
                             <OverflowToolbar>
-                            <Label text="Approval Line"/>
+                                <Label text="Approval Line"/>
                             </OverflowToolbar>
                         </headerToolbar>
                         <columns>
-                            <Column id="no2" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="5em" >
-                                <Text text="No." />
+                            <Column id="no2" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true"  >
+                                <Text text="Model" />
                             </Column>
-                            <Column id="type2" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
-                                <Text text="Type" />
+                            <Column id="type2" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" >
+                                <Text text="Model Part No" />
                             </Column>
-                            <Column id="nameDept2" minScreenWidth="Tablet" hAlign="Center" width="12em" >
-                                <Text text="Name/Dept" />
+                            <Column id="nameDept2" minScreenWidth="Tablet" hAlign="Center"  >
+                                <Text text="Seq" />
                             </Column>
-                            <Column id="status2" minScreenWidth="Tablet" hAlign="Center" width="12em" >
-                                <Text text="Status" />
+                            <Column id="status2" minScreenWidth="Tablet" hAlign="Center"  >
+                                <Text text="Description" />
                             </Column> 
-                            <Column id="comment2" minScreenWidth="Tablet" hAlign="Center" width="12em" >
-                                <Text text="Comment" />
+                            <Column id="comment2" minScreenWidth="Tablet" hAlign="Center"  >
+                                <Text text="Mold Item Type" />
                             </Column>
-                            <Column id="sort2" minScreenWidth="Tablet" hAlign="Center" width="3em" >
-                                  <Text text="" />
+                            <Column id="sort2" minScreenWidth="Tablet" hAlign="Center"  >
+                                  <Text text="Book Currency" />
                             </Column>					
-                            <Column id="action2" minScreenWidth="Tablet" hAlign="Center" width="3em" >
-                                  <Text text="" />
+                            <Column id="action2" minScreenWidth="Tablet" hAlign="Center"  >
+                                  <Text text="Budget Amount" />
                             </Column>					
                         </columns>
                         <items>
@@ -114,9 +114,12 @@
                             </items>
                             
                         </Table>
-                        </HBox>
-                 </form:content>
-                </form:SimpleForm>
+                         <layoutData>
+                                <layout:GridData span="XL12 L12 M12 S12" />
+                        </layoutData> 
+                       </HBox>
+                         </form:content>
+                  </form:SimpleForm>
             </VBox>       
       
         <ToolbarSpacer/>
