@@ -1,0 +1,134 @@
+<core:FragmentDefinition
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:uxap="sap.uxap"
+    xmlns:layout="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:core="sap.ui.core">
+	<uxap:ObjectPageLayout                    
+                    toggleHeaderOnTitleClick="true"
+                    alwaysShowContentHeader="true"
+                    preserveHeaderStateOnScroll="false"
+                    headerContentPinnable="true"
+                    isChildPage="true"
+                    upperCaseAnchorBar="false"
+                    showTitleInHeaderContent="true"
+                    showEditHeaderButton="true"
+                    showFooter="false">
+                    <uxap:headerTitle>
+                        <uxap:ObjectPageDynamicHeaderTitle>
+                            <uxap:expandedHeading>
+                                <Title text="{i18n>appTitle}" wrapping="true"/>
+                            </uxap:expandedHeading>
+                            <uxap:snappedHeading>
+                                <Title text="{i18n>appTitle}" wrapping="true"/>
+                            </uxap:snappedHeading>
+                            <uxap:snappedTitleOnMobile>
+                                <Title text="{i18n>appTitle}"/>
+                            </uxap:snappedTitleOnMobile>
+
+                            <uxap:navigationActions>
+                                <OverflowToolbarButton
+                                    id="pageEnterFullScreenDisplayButton"
+                                    type="Transparent"
+                                    icon="sap-icon://full-screen"
+                                    press="onPageEnterFullScreenDisplayButtonPress"
+                                    tooltip="Enter Full Screen Mode"
+                                    visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
+                                <OverflowToolbarButton
+                                    id="pageExitFullScreenDisplayButton"
+                                    type="Transparent"
+                                    icon="sap-icon://exit-full-screen"
+                                    press="onPageExitFullScreenButtonPress"
+                                    tooltip="Exit Full Screen Mode"
+                                    visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
+                                <OverflowToolbarButton
+                                    id="pageNavBackDisplayButton"
+                                    type="Transparent"
+                                    icon="sap-icon://decline"
+                                    text="back"
+                                    tooltip="back to the list"
+                                    press=".onPageNavBackButtonPress"
+                                    visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                            </uxap:navigationActions>
+                        </uxap:ObjectPageDynamicHeaderTitle>
+                    </uxap:headerTitle>
+                    <uxap:headerContent></uxap:headerContent>
+                    <uxap:sections>
+                        <uxap:ObjectPageSection
+							id="pageSectionDisplayMain"
+                            titleUppercase="false"
+                            title="{i18n>appTitle}">
+                            <uxap:subSections>
+                                <uxap:ObjectPageSubSection ></uxap:ObjectPageSubSection>
+                            </uxap:subSections>
+                        </uxap:ObjectPageSection>
+                    </uxap:sections>
+                    <uxap:sections>
+                        <uxap:ObjectPageSection titleUppercase="false" title="Material Property">
+                            <uxap:subSections>
+                                <uxap:ObjectPageSubSection>                                       
+                                       <!-- <core:Fragment id="midChange" fragmentName="pg.mi.view.Change" type="XML"/>  -->
+                                       <!-- <core:Fragment id="midDisplay" fragmentName="pg.mi.view.Display" type="XML" visible="false"/>  -->
+									   
+                                    <form:SimpleForm
+										id="mainObjectForm1Display"
+                                        editable="true"
+                                        layout="ColumnLayout"
+                                        columnsM="2"
+                                        columnsL="3"
+                                        columnsXL="4">
+                                        <Label text="시황자재코드" design="Bold" class="sapMLabelNoText"/>
+										<Text id="textMaterialCode" class="sapMLabelNoText"/>                                     
+
+                                        <Label text="Category 명" design="Bold" class="sapMLabelNoText"/>
+										<Text id="textCategoryName" class="sapMLabelNoText"/> 
+                                       
+                                        <Label text="사용여부" design="Bold" class="sapMLabelNoText"/>
+										<Text id="textUse_flag" class="sapMLabelNoText"/>
+										
+                                        </form:SimpleForm>                                       
+                                </uxap:ObjectPageSubSection>
+                            </uxap:subSections>
+                        </uxap:ObjectPageSection>
+                    </uxap:sections>
+                    <uxap:sections>
+                        <uxap:ObjectPageSection title="Material Language Manage">
+                            <uxap:subSections>
+                                <uxap:ObjectPageSubSection>
+                                    <uxap:blocks>
+                                       
+                                            <Table
+                                                id="midTableDisplay" 
+                                                items="{path : '/MIMaterialCodeText'}"
+                                                width="100%"> 
+                                                <columns>
+                                                    <Column hAlign="Center" width="80px">
+                                                        <header>
+                                                            <Label text="Language"/>
+                                                        </header>
+                                                    </Column>
+                                                    <Column hAlign="Center" width="80px">
+                                                        <header>
+                                                            <Label text="자재명"/>
+                                                        </header>
+                                                    </Column>
+                                                </columns>
+                                                <items>
+                                                    <ColumnListItem>
+                                                        <cells>
+															<Text text="{language_code}"/>                                                            
+                                                            <Text text="{mi_material_code_text}"/>
+                                                        </cells>
+                                                    </ColumnListItem>
+                                                </items>
+                                            </Table>    
+                                        
+                                    </uxap:blocks>
+                                </uxap:ObjectPageSubSection>
+                            </uxap:subSections>
+                        </uxap:ObjectPageSection>
+                    </uxap:sections>
+                </uxap:ObjectPageLayout>
+
+</core:FragmentDefinition>
