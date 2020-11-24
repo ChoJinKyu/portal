@@ -26,5 +26,3 @@ service TimeZoneMgrService {
 }
 
   entity TimeZone as projection on timeZoneMgr.Time_Zone;
-
-}
