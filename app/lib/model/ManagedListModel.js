@@ -40,6 +40,7 @@ sap.ui.define([
         addRecord: function (oRecord, sPath, nIndex) {
             var sEntityName = this.getProperty("/entityName"),
                 aRecords = this.getProperty("/" + sEntityName);
+            if(!aRecords) aRecords = [];
             if(typeof sPath == "number") nIndex = sPath;
             if (nIndex == undefined) nIndex = aRecords.length;
             if(!!sPath) oRecord.__entity = sPath;
