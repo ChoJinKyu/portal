@@ -5,7 +5,8 @@ using { cm as GetdateFromDayofweekFunc } from '../../../../db/cds/cm/timeZoneMgr
 
 // using {xx as Master} from '../../../db/cds/xx/sampleMstMgr/XX_SAMPLE_MASTER-model';
 // using {xx as MasterF} from '../../../db/cds/xx/sampleMstMgr/XX_SAMPLE_MASTER_FUNC-model';
-// using {xx as MasterP} from '../../../db/cds/xx/sampleMstMgr/XX_SAMPLE_MASTER_PROC-model';
+// // using {xx as MasterP} from '../../../db/cds/xx/sampleMstMgr/XX_SAMPLE_MASTER_PROC-model';
+// using {cm as timeZoneMgr} from '../../../../db/cds/cm/timeZoneMgr/CM_TIME_ZONE-model';
 
 namespace cm;
 
@@ -21,5 +22,9 @@ service TimeZoneMgrService {
                                                                 p_sysdate: :p_sysdate,
                                                                 p_from_time_zone: :p_from_time_zone,
                                                                 p_to_time_zone: :p_to_time_zone );
+
+}
+
+  entity TimeZone as projection on timeZoneMgr.Time_Zone;
 
 }

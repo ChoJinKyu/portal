@@ -57,8 +57,8 @@ sap.ui.define([
 			this._doInitTablePerso();
         },
 
-        onAfterRendering : function () {
-			return;
+        onRenderedFirst : function () {
+			this.byId("pageSearchButton").firePress();
         },
 
 		/* =========================================================== */
@@ -177,8 +177,7 @@ sap.ui.define([
 		 * @private
 		 */
 		_onRoutedThisPage: function(){            
-            this.getModel("mainListView").setProperty("/headerExpanded", true);
-            this.byId("pageSearchButton").firePress();
+            this.getModel("mainListView").setProperty("/headerExpanded", true);            
 		},
 
 		/**

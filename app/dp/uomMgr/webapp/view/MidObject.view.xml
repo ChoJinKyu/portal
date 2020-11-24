@@ -36,7 +36,7 @@
 				</uxap:snappedTitleOnMobile>
 				<uxap:actions>
 					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" />
-					<Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" />
+					<!-- <Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" /> -->
 				</uxap:actions>
                 <uxap:navigationActions>
 					<OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press="onPageEnterFullScreenButtonPress" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
@@ -105,14 +105,14 @@
 						<Table id="midTable" 
 								sticky="HeaderToolbar,ColumnHeaders" 
 								inset="false"								
-								items="{details>/}"
+								items="{details>/UomClassLng}"
 								class="sapFDynamicPageAlignContent" 
 								updateFinished=".onMidTableUpdateFinished"
                                 mode="SingleSelectLeft"
 								width="auto">
 							<headerToolbar>
 								<OverflowToolbar>
-									<!-- <Title text="Level and Values" level="H2"/> -->
+									<!-- <Title text="Langauage" level="H2"/> -->
 									<ToolbarSpacer/>
 									<!-- Add the Personalization button -->
 									<Button id="midTableAddButton" text="Add" type="Transparent" press=".onMidTableAddButtonPress" />

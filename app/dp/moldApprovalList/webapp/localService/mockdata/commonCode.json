@@ -1,0 +1,64 @@
+{
+	"dpCommonCode": [
+		{
+			"groupCode": "CURR",
+			"codeName": "KRW",
+			"code": "KRW"
+        },
+        {
+			"groupCode": "CURR",
+			"codeName": "USD",
+			"code": "USD"
+        },
+        {
+			"groupCode": "APPR",
+			"codeName": "selectType",
+			"code": "A01"
+        },
+        {
+			"groupCode": "APPR",
+			"codeName": "approver",
+			"code": "A02"
+        }
+	],
+	"dpCommonCodeStats": {
+		"Counts": {
+			"Total": 15
+		},
+		"Groups": {
+			"groupCode": {
+				"MEDIA" : 4,
+				"Type" : 4
+			},
+			"Name": {
+				"Titanium": 21,
+				"Technocom": 22,
+				"Red Point Stores": 7,
+				"Very Best Screens": 14,
+				"Smartcards": 2,
+				"Alpha Printers": 5,
+				"Printer for All": 8,
+				"Oxynum": 8,
+				"Fasttech": 15,
+				"Ultrasonic United": 15,
+				"Speaker Experts": 3,
+				"Brainsoft": 3
+			}
+		},
+		"Filters": [
+			{
+				"type": "groupCode",
+				"values": [
+					{
+						"text": "Type",
+						"data": 4
+					},
+					{
+						"text": "MEDIA",
+						"data": 4
+					}
+				]
+			}
+		]
+	}
+}

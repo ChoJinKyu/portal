@@ -1,0 +1,97 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:table="sap.ui.table"
+    class="sapUiSizeCompact">
+
+    <Dialog title="Category 선택" contentHeight="100%" contentWidth="100%">
+
+        <content>
+            <Panel>
+                <f:SimpleForm
+                    editable="true"
+                    layout="ResponsiveGridLayout"
+                    labelSpanL="1"
+                    labelSpanM="1"
+                    emptySpanL="0"
+                    emptySpanM="0"
+                    columnsL="1"
+                    columnsM="1"
+                    singleContainerFullSize="false"
+                    class="sapUiSizeCompact">
+
+                    <f:content>
+                        <Label text="Category Code">
+                            <layoutData>
+                                <l:GridData span="L3 M3 S12"/>
+                            </layoutData>
+                        </Label>
+                        <Input editable="true" id="category_pop_code" submit="onCategory_pop_search">
+                            <layoutData>
+                                <l:GridData span="L3 M3 S12"/>
+                            </layoutData>
+                        </Input>
+
+                        <Label text="Category Name">
+                            <layoutData>
+                                <l:GridData span="L3 M3 S12"/>
+                            </layoutData>
+                        </Label>
+
+                        <Input editable="true" id="category_pop_text" submit="onCategory_pop_search">
+                            <layoutData>
+                                <l:GridData span="L3 M3 S12"/>
+                            </layoutData>
+                        </Input>
+                        <VBox>
+                            <layoutData>
+                                <l:GridData span="L12 M12 S12"/>
+                            </layoutData>
+
+                            <table:Table
+                                id="category_table"
+                                rows="{path:'/'}"
+                                selectionMode="Single"
+                                selectionBehavior="Row"
+                                width="100%"
+                                rowSelectionChange="onCategory_select_close">
+
+                                <table:columns>
+                                    <table:Column width="10rem">
+                                        <Label text="Category Code"/>
+                                        <table:template>
+                                            <Text text="{Code}"/>
+                                        </table:template>
+                                    </table:Column>
+
+                                    <table:Column>
+                                        <Label text="Category Name"/>
+                                        <table:template>
+                                            <Text text="{Text}"/>
+                                        </table:template>
+                                    </table:Column>
+                                </table:columns>
+                            </table:Table>
+                        </VBox>
+                    </f:content>
+
+                    <f:toolbar>
+                        <Toolbar>
+                            <content>
+                                <ToolbarSpacer/>
+                                <Button icon="sap-icon://search" text="Search" press="onCategory_pop_search"/>
+                            </content>
+                        </Toolbar>
+                    </f:toolbar>
+
+                </f:SimpleForm>
+            </Panel>
+        </content>
+
+        <beginButton>
+            <Button text="Close" press="onCategory_pop_close"/>
+        </beginButton>
+    </Dialog>
+</core:FragmentDefinition>
