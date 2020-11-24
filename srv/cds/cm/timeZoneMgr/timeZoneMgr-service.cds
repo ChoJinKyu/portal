@@ -24,5 +24,3 @@ service TimeZoneMgrService {
                                                                 p_to_time_zone: :p_to_time_zone );
 
 }
-
-  entity TimeZone as projection on timeZoneMgr.Time_Zone;
