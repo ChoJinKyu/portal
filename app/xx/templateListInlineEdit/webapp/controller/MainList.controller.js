@@ -43,19 +43,7 @@ sap.ui.define([
 				oResourceBundle = this.getResourceBundle();
 
 			// Model used to manipulate control states
-			oViewModel = new JSONModel({
-				mainListTableTitle : oResourceBundle.getText("mainListTableTitle"),
-				tableNoDataText : "No data."
-			});
-			this.setModel(oViewModel, "mainListView");
-			
-			// Add the mainList page to the flp routing history
-			this.addHistoryEntry({
-				title: oResourceBundle.getText("mainListViewTitle"),
-				icon: "sap-icon://table-view",
-				intent: "#Template-display"
-			}, true);
-				
+			this.setModel(new JSONModel({}), "mainListView");
 			this.setModel(new I18nModel(), "i18nd");
 			this.setModel(new ManagedListModel(), "list");
 
@@ -70,7 +58,14 @@ sap.ui.define([
 				.setTransactionModel(this.getModel("util"))
 				.attachEvent("loaded", function(oEvent){
 
-				})
+					// Add the mainList page to the flp routing history
+					this.addHistoryEntry({
+						title: this.getModel("i18nd").getText("/templateListInlineEdit.title"),
+						icon: "sap-icon://table-view",
+						intent: "#Template-display"
+					}, true);
+
+				}.bind(this))
 				//.load(this.getOwnerComponent().getManifestEntry("sap.app").id)
 				.load("cm.templateListInlineEdit");
 				
@@ -91,18 +86,6 @@ sap.ui.define([
 		 * @public
 		 */
 		onMainTableUpdateFinished : function (oEvent) {
-			// update the mainList's object counter after the table update
-			var sTitle,
-				oTable = oEvent.getSource(),
-				iTotalItems = oEvent.getParameter("total");
-			// only update the counter if the length is final and
-			// the table is not empty
-			if (iTotalItems && oTable.getBinding("items").isLengthFinal()) {
-				sTitle = this.getResourceBundle().getText("mainListTableTitleCount", [iTotalItems]);
-			} else {
-				sTitle = this.getResourceBundle().getText("mainListTableTitle");
-			}
-			this.getModel("mainListView").setProperty("/mainListTableTitle", sTitle);
 		},
 
 		/**
