@@ -1,95 +1,130 @@
-view pg_monitor_master_view as
-    select
-            main.tenant_id                        as tenant_id,
-            main.company_code                     as company_code,
-            main.scenario_code                    as scenario_code,
-            main.separated                        as separated_code,
-            sprt.language_code                    as separated_langu,
-            sprt.separated_text                   as separated_text,
-            main.type_management_header           as type_management_header,
-            type.type_management_item             as type_management_item,
-            type.type                             as type,
-            type.language_code                    as type_langu,
-            type.type_text                        as type_text,
-            main.bizdivision_code                 as bizdivision_code,
-            main.manager_management_header        as manager_management_header,
-            mng.manager_management_item           as manager_management_item,
-            mng.manager                           as manager,
-            mng.user_korean_name                  as user_korean_name,
-            mng.user_english_name                 as user_english_name,
-            main.operation_mode_management_header as operation_mode_management_header,
-            oprmd.operation_mode_management_item  as operation_mode_management_item,
-            oprmd.operation                       as operation,
-            oprmd.language_code                   as operation_langu,
-            oprmd.operation_text                  as operation_text,
-            main.cycle_management_header          as cycle_management_header,
-            cle.cycle_management_item             as cycle_management_item,
-            cle.cycle                             as cycle,
-            cle.language_code                     as cycle_langu,
-            cle.cycle_text                        as cycle_text,
-            main.activate_inactivate_flag         as activate_inactivate_flag,
-            main.monitoring_purpose               as monitoring_purpose,
-            main.scenario_description             as scenario_description,
-            main.source_system_management_header  as source_system_management_header,
-            src.source_system_management_item     as source_system_management_item,
-            src.source_system                     as source_system,
-            src.language_code                     as source_system_langu,
-            src.source_system_text                as source_system_text,
-            main.source_system_detail_description as source_system_detail_description,
-            main.indicator_management_header      as indicator_management_header,
-            inmg.indicator_management_item        as indicator_management_item,
-            inmg.indicator                        as indicator,
-            inmg.language_code                    as indicator_langu,
-            inmg.indicator_text                   as indicator_text,
-            inmg.indicator_sequence               as indicator_sequence,
-            inmg.indicator_condition              as indicator_condition,
-            inmg.indicator_start_value            as indicator_start_value,
-            inmg.indicator_last_value             as indicator_last_value,
-            inmg.indicator_grade                  as indicator_grade,
-            inmg.indicator_comparison_basic       as indicator_comparison_basic,
-            main.attachments_management_header    as attachments_management_header,
-            attc.attachments_management_item      as attachments_management_item,
-            attc.attachments                      as attachments,
-            attc.attachments_type                 as attachments_type,
-            attc.attachments_name                 as attachments_name,
-            attc.attachments_size                 as attachments_size
-    from pg_monitor_mntr_mst as main
-    left join pg_monitor_mntr_sprt_mst as sprt
-        on  main.tenant_id    = sprt.tenant_id
-        and main.company_code = sprt.company_code
-        and main.separated    = sprt.separated
-    left join pg_Monitor_Mntr_Type_Mngt as type
-        on  main.tenant_id                 = type.tenant_id
-        and main.company_code              = type.company_code
-        and main.scenario_code             = type.scenario_code
-        and main.type_management_header    = type.type_management_header
-    left join pg_monitor_mntr_manager_mngt as mng
-        on  main.tenant_id                 = mng.tenant_id
-        and main.company_code              = mng.company_code
-        and main.scenario_code             = mng.scenario_code
-        and main.manager_management_header = mng.manager_management_header
-    left join pg_monitor_mntr_oprtmd_mngt as oprmd
-        on  main.tenant_id                        = oprmd.tenant_id
-        and main.company_code                     = oprmd.company_code
-        and main.scenario_code                    = oprmd.scenario_code
-        and main.operation_mode_management_header = oprmd.operation_mode_management_header
-    left join pg_monitor_mntr_cycle_mngt as cle
-        on  main.tenant_id               = cle.tenant_id
-        and main.company_code            = cle.company_code
-        and main.scenario_code           = cle.scenario_code
-        and main.cycle_management_header = cle.cycle_management_header
-    left join pg_monitor_mntr_src_sys_mngt as src
-        on  main.tenant_id                       = src.tenant_id
-        and main.company_code                    = src.company_code
-        and main.scenario_code                   = src.scenario_code
-        and main.source_system_management_header = src.source_system_management_header
-    left join pg_monitor_mntr_idc_mngt as inmg
-        on  main.tenant_id                   = inmg.tenant_id
-        and main.company_code                = inmg.company_code
-        and main.scenario_code               = inmg.scenario_code
-        and main.indicator_management_header = inmg.indicator_management_header
-    left join pg_monitor_mntr_attcm_mngt as attc
-        on  main.tenant_id                     = attc.tenant_id
-        and main.company_code                  = attc.company_code
-        and main.scenario_code                 = attc.scenario_code
-        and main.attachments_management_header = attc.attachments_management_header;
+view pg_Monitor_Master_View as
+select  x.separated_code											as separated_code,
+        x.separated_name											as separated_name,
+        x.scenario											    	as scenario,
+        x.scenario_name									        	as scenario_name,
+        x.tenant_id													as tenant_id,
+        x.tenant_name												as tenant_name,
+        x.company_code												as company_code,
+        x.company_name												as company_name,
+        x.bizunit_code                                          	as bizunit_code,
+        x.bizunit_name                                          	as bizunit_name,
+        string_agg(x.manager, ';' order by x.manager)				as manager,
+        string_agg(x.manager_korean_name, ';' order by x.manager)	as manager_korean_name,
+        x.enrollment_date											as enrollment_date,
+        x.operation_mode_display_flag								as operation_mode_display_flag,
+        x.operation_mode_calling_flag								as operation_mode_calling_flag,
+        x.operation_mode_alram_flag									as operation_mode_alram_flag,
+        x.active_flag												as active_flag,
+		x.type_code													as type_code,
+		x.type_name													as type_name,
+		x.cycle_code												as cycle_code,
+		x.cycle_name												as cycle_name
+
+
+from (
+		select
+				main.separated_code                        																			as separated_code,
+				sprt.code_name                   																					as separated_name,
+				main.scenario                    																				    as scenario,
+				snr.scenario_name																								    as scenario_name,
+				main.tenant_id                        																				as tenant_id,
+				org_t.tenant_name                     																				as tenant_name,
+				main.company_code                     																				as company_code,
+				org_c.company_name                    																				as company_name,
+                main.bizunit_code                                                                                                   as bizunit_code,
+                org_u.bizunit_name                                                                                                  as bizunit_name,
+				mng.manager,
+				mng.manager_korean_name,
+				case when main.local_update_dtm = main.local_create_dtm then main.local_create_dtm else main.local_update_dtm end	as enrollment_date,
+				oprmd.operation_mode_display_flag                                                                                   as operation_mode_display_flag,
+				oprmd.operation_mode_calling_flag                                                                                   as operation_mode_calling_flag,
+				oprmd.operation_mode_alram_flag                                                                                     as operation_mode_alram_flag,
+				main.activate_inactivate_flag																						as active_flag,
+				tp.type_code																										as type_code,
+				tp.type_name																										as type_name,
+				cyc.cycle_code																										as cycle_code,
+				cyc.cycle_name																										as cycle_name
+		from pg_monitor_master as main
+		left join pg_monitor_scenario as snr
+			on  main.tenant_id    	= snr.tenant_id
+			and main.company_code 	= snr.company_code
+            and main.bizunit_code   = snr.bizunit_code
+			and main.scenario	    = snr.scenario
+		left join cm_Code_Lng as sprt
+			on  main.tenant_id      = sprt.tenant_id
+			and main.separated_code		= sprt.code
+            and sprt.group_code		= 'PG_MONITOR_SEPARATED'
+            and sprt.language_cd	= 'KO'
+		left join pg_monitor_manager as mng
+			on  main.tenant_id		= mng.tenant_id
+			and main.company_code	= mng.company_code
+            and main.bizunit_code   = mng.bizunit_code
+			and main.scenario	    = mng.scenario
+		left join pg_monitor_operation_mode as oprmd
+			on  main.tenant_id		= oprmd.tenant_id
+			and main.company_code	= oprmd.company_code
+            and main.bizunit_code   = oprmd.bizunit_code
+			and main.scenario	    = oprmd.scenario
+		left join cm_org_tenant as org_t
+			on  main.tenant_id	= org_t.tenant_id
+		left join cm_org_company as org_c
+			on  main.tenant_id		= org_c.tenant_id
+			and main.company_code	= org_c.company_code
+        left join cm_org_unit as org_u
+            on  main.tenant_id      = org_u.tenant_id
+            and main.bizunit_code   = org_u.bizunit_code
+		left join pg_monitor_type as tp
+			on  main.tenant_id		= tp.tenant_id
+			and main.company_code	= tp.company_code
+            and main.bizunit_code   = tp.bizunit_code
+			and main.scenario	    = tp.scenario
+		left join pg_monitor_cycle as cyc
+			on  main.tenant_id		= cyc.tenant_id
+			and main.company_code	= cyc.company_code
+            and main.bizunit_code   = cyc.bizunit_code
+			and main.scenario	    = cyc.scenario
+		group by
+			main.separated_code	,
+			sprt.code_name,
+			main.scenario,
+			snr.scenario_name,
+			main.tenant_id,
+			org_t.tenant_name,
+			main.company_code,
+			org_c.company_name,
+            main.bizunit_code,
+            org_u.bizunit_name,
+            mng.manager,
+            mng.manager_korean_name,
+			case when main.local_update_dtm = main.local_create_dtm then main.local_create_dtm else main.local_update_dtm end,
+            oprmd.operation_mode_display_flag,
+            oprmd.operation_mode_calling_flag,
+            oprmd.operation_mode_alram_flag,
+			main.activate_inactivate_flag,
+			tp.type_code,
+			tp.type_name,
+			cyc.cycle_code,
+			cyc.cycle_name
+	)	as x
+group by
+	x.separated_code,
+	x.separated_name,
+	x.scenario,
+	x.scenario_name,
+	x.tenant_id,
+	x.tenant_name,
+	x.company_code,
+	x.company_name,
+    x.bizunit_code,
+    x.bizunit_name,
+	x.enrollment_date,
+	x.operation_mode_display_flag,
+	x.operation_mode_calling_flag,
+	x.operation_mode_alram_flag,
+	x.active_flag,
+	x.type_code,
+	x.type_name,
+    x.cycle_code,
+    x.cycle_name
+;

@@ -40,17 +40,21 @@ sap.ui.define([
 			var oViewModel = new JSONModel({
 					busy : true,
 					delay : 0
-				});
+                });
+            var oResourceBundle = this.getResourceBundle();
             this.getRouter().getRoute("pssaCreateObject").attachPatternMatched(this._onObjectMatched, this);
             this.setModel(oViewModel, "pssaCreateObjectView"); 
           
             this.setModel(new ManagedListModel(), "createlist");
-            var appModel = new JSONModel();
-
-            this.setModel(appModel, "applist");
+       	    this.addHistoryEntry({
+				title: oResourceBundle.getText("budgetReportObjectTitle"),
+				icon: "sap-icon://table-view",
+				intent: "#Template-display"
+            }, true);
+            
+            this.getView().setModel(new ManagedListModel(),"appList");
             this.getView().setModel(new JSONModel(Device), "device"); // file upload      
-        },
-        
+        },   
         onAfterRendering : function () {
          
         },
@@ -104,16 +108,17 @@ sap.ui.define([
 			this._toEditMode();
 		},
         
-         _onLoadApprovalRow : function () {
-            var oTable = this.byId("psTable"),
-				oModel = this.getModel("applist");
-			oModel.addRecord({
-				"no": "1",
-				"type": "CM",
-				"nameDept": "",
-				"status": "",
-				"comment": "LBL"
-			}, 0);
+         _onLoadApprovalRow : function () { 
+            var oTable = this.byId("ApprovalTable"),
+                oModel =  this.getModel("appList"); 
+            oModel.addRecord({
+                "no": "1",
+                "type": "",
+                "nameDept": "",
+                "status": "",
+                "comment": ""  
+            });
+            console.log("oModel,,," , oModel);
         } ,
 
 		/**
@@ -168,7 +173,6 @@ sap.ui.define([
 		_onObjectMatched : function (oEvent) { 
             this.setRichEditor();
 			var oArgs = oEvent.getParameter("arguments"); 
-            console.log("oArgs>>>>>>" , oArgs);
             this._createViewBindData(oArgs); 
             this._onLoadApprovalRow();
         },
