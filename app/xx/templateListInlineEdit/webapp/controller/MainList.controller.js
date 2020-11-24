@@ -1,9 +1,9 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
-	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
 	"ext/lib/model/TransactionManager",
-	"ext/lib/model/DelegateModel",
+	"ext/lib/model/ManagedListModel",
+	"ext/lib/formatter/Formatter",
 	"sap/m/TablePersoController",
 	"./MainListPersoService",
 	"sap/ui/model/Filter",
@@ -16,12 +16,14 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, TransactionManager, DelegateModel, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+], function (BaseController, JSONModel, TransactionManager, ManagedListModel, Formatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
 	"use strict";
 
 	// var oTransactionManager;
 
 	return BaseController.extend("xx.templateListInlineEdit.controller.MainList", {
+
+		formatter: Formatter,
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -38,7 +40,7 @@ sap.ui.define([
 			// Model used to manipulate control states
 			oViewModel = new JSONModel({
 				mainListTableTitle : oResourceBundle.getText("mainListTableTitle"),
-				tableNoDataText : oResourceBundle.getText("tableNoDataText")
+				tableNoDataText : "No data."
 			});
 			this.setModel(oViewModel, "mainListView");
 
@@ -49,7 +51,7 @@ sap.ui.define([
 				intent: "#Template-display"
 			}, true);
 			
-			this.setModel(new DelegateModel(), "list");
+			this.setModel(new ManagedListModel(), "list");
 
 			// oTransactionManager = new TransactionManager();
 			// oTransactionManager.addDataModel(this.getModel("list"));
@@ -139,7 +141,7 @@ sap.ui.define([
 				"message_contents": "",
 				"local_create_dtm": new Date(),
 				"local_update_dtm": new Date()
-			}, 0);
+			}, "/Message", 0);
 		},
 
 		onMainTableDeleteButtonPress: function(){

@@ -26,7 +26,6 @@
                   path: 'util>/CodeDetails',
                   filters: [
                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                    {path: 'company_code', operator: 'EQ', value1: '*'},
                     {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                   ]
                 }">
@@ -44,7 +43,6 @@
                   path: 'util>/CodeDetails',
                   filters: [
                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                    {path: 'company_code', operator: 'EQ', value1: '*'},
                     {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
                   ]
                 }">
@@ -76,7 +74,6 @@
                   path: 'util>/CodeDetails',
                   filters: [
                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                    {path: 'company_code', operator: 'EQ', value1: '*'},
                     {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                   ]
                 }">
@@ -94,7 +91,6 @@
                   path: 'util>/CodeDetails',
                   filters: [
                       {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                      {path: 'company_code', operator: 'EQ', value1: '*'},
                       {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
                   ]
                 }">
@@ -361,7 +357,6 @@
                     path: 'util>/CodeDetails',
                     filters: [
                       {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                      {path: 'company_code', operator: 'EQ', value1: '*'},
                       {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                     ]
                   }">
@@ -373,7 +368,6 @@
                     path: 'util>/CodeDetails',
                     filters: [
                       {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                      {path: 'company_code', operator: 'EQ', value1: '*'},
                       {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
                     ]
                   }">
@@ -387,7 +381,6 @@
                     path: 'util>/CodeDetails',
                     filters: [
                       {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                      {path: 'company_code', operator: 'EQ', value1: '*'},
                       {path: 'group_code', operator: 'EQ', value1: 'CM_MESSAGE_TYPE_CODE'}
                     ]
                   }">

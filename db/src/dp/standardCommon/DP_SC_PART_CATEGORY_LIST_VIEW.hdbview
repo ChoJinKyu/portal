@@ -6,7 +6,7 @@ SELECT ca.hierarchy_rank,            /*현재node의 순번(sibling order by에 
       ca.seq,
       ca.category_name,
       ca.status_code,
-      STRING_AGG( au.auth_code, ',')
+      STRING_AGG( au.auth_code, ',') as auth_name
        FROM HIERARCHY (
 				    SOURCE (
 				        SELECT  tenant_id,

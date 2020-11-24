@@ -105,7 +105,8 @@
 						<Table id="midTable" 
 								sticky="HeaderToolbar,ColumnHeaders" 
 								inset="false" 
-								mode="None" 
+								mode="SingleSelectLeft"
+                                selectionChange=".onMidTableSelectionChange" 
 								items="{details>/}"
 								class="sapFDynamicPageAlignContent" 
 								updateFinished=".onMidTableUpdateFinished"
@@ -117,33 +118,43 @@
 									<!-- Add the Personalization button -->
 									<Button id="midTableAddButton" text="Add" type="Transparent" press=".onMidTableAddButtonPress" />
 									<Button id="midTableDeleteButton" text="Delete" type="Transparent" press=".onMidTableDeleteButtonPress" />
-									<Button id="midTableSaveButton" text="Save" type="Emphasized" press=".onMidTableSaveButtonPress" />
-									<ToolbarSeparator/>
-									<SearchField width="10rem" search=".onMidTableFilterPress" />
-									<Button id="midTableApplyFilterButton" text="Apply" type="Transparent" press=".onMidTableSaveButtonPress" />
-								</OverflowToolbar>
+									</OverflowToolbar>
 							</headerToolbar>
 							<columns>
-								<Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="40px" >
+								<Column id="mainColumnState" minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline"  hAlign="Center" width="40px" >
 									<Text text="S" />
 								</Column>
-								<Column id="midColumnLevelCode" minScreenWidth="Tablet" hAlign="Center">
-									<Text text="Level" />
+								<Column id="midColumnLevelCode" minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline"  hAlign="Center">
+									<Text text="{i18n>TblSHdLanguage_code}" />
 								</Column>
-								<Column id="midColumnLevelValue" minScreenWidth="Tablet" hAlign="Center">
-									<Text text="Level Value" />
+								<Column id="midColumnLevelValue" minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline"  hAlign="Center">
+									<Text text="{i18n>TblHdSCountry_name}" />
 								</Column>
-								<Column id="midColumnValue" minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="Value" />
+								<Column id="midColumnValue" minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline"  hAlign="Center" >
+									<Text text="{i18n>TblHSDescription}" />
 								</Column>
 							</columns>
 							<items>
 								<ColumnListItem type="Navigation" press=".onMidTableItemPress">
 									<cells>
 										<Text text="{details>_row_state_}"/>
-										<Input value="{details>control_option_level_code}"/>
-										<Input value="{details>control_option_level_val}"/>
-										<Input value="{details>control_option_val}"/>
+                                        <ComboBox 
+                                                    width="100%" 
+                                                    selectedKey="{details>language_code}"
+                                                    items="{
+                                                        path: 'util>/CodeDetails',
+                                                        filters: [
+                                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},                                                          
+                                                            {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
+                                                        ]
+                                                    }">
+                                                    <items>
+                                                        <core:Item key="" text="Choose a Language" />
+                                                        <core:Item key="{util>code}" text="{util>code} :{util>code_description}" />
+                                                    </items>
+                                                </ComboBox>
+										<Input value="{details>country_name}"/>
+										<Input value="{details>description}"/>
 									</cells>
 								</ColumnListItem>
 							</items>

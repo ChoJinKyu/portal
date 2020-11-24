@@ -4,31 +4,31 @@ sap.ui.define(["jquery.sap.global"],
 
         var _columns = [
             {
-                id: "moldApprovalList-mainList-mainColumnChainCode",
+                id: "moldApprovalList-approvalList-mainColumnChainCode",
                 order: 0,
                 text: "Chain",
                 visible: true
             },
             {
-                id: "moldApprovalList-mainList-mainColumnLanguageCode",
+                id: "moldApprovalList-approvalList-mainColumnLanguageCode",
                 order: 1,
                 text: "Language",
                 visible: false
             },
             {
-                id: "moldApprovalList-mainList-mainColumnMessageCode",
+                id: "moldApprovalList-approvalList-mainColumnMessageCode",
                 order: 4,
                 text: "Code",
                 visible: false
             },
             {
-                id: "moldApprovalList-mainList-mainColumnMessageContents",
+                id: "moldApprovalList-approvalList-mainColumnMessageContents",
                 order: 2,
                 text: "Contents",
                 visible: true
             },
             {
-                id: "moldApprovalList-mainList-mainColumnMessageTypeCode",
+                id: "moldApprovalList-approvalList-mainColumnMessageTypeCode",
                 order: 3,
                 text: "Type",
                 visible: true
@@ -36,7 +36,7 @@ sap.ui.define(["jquery.sap.global"],
         ];
         // Very simple page-context personalization
         // persistence service, not for productive use!
-        var MainListPersoService = {
+        var ApprovalListPersoService = {
 
             oData: {
                 _persoSchemaVersion: "1.0",
@@ -96,6 +96,6 @@ sap.ui.define(["jquery.sap.global"],
             }
         };
 
-        return MainListPersoService;
+        return ApprovalListPersoService;
 
     });

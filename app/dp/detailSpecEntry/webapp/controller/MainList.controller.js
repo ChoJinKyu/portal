@@ -186,27 +186,29 @@ sap.ui.define([
             var self = this;
             var oModel = this.getModel('orgMap');
             oModel.setTransactionModel(this.getModel('purOrg'));
-            oModel.read("/Pur_Org_Type_Mapping", {
-                filters: [
-                    new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
-                    new Filter("process_type_code", FilterOperator.EQ, 'DP05') //금형 DP05
-                ],
-                success: function(oData){
+            // oModel.read("/Pur_Org_Type_Mapping", {
+            //     filters: [
+            //         new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
+            //         new Filter("process_type_code", FilterOperator.EQ, 'DP05') //금형 DP05
+            //     ],
+            //     success: function(oData){
 
-                    var oModelDiv = self.getModel('division');
-                    oModelDiv.setTransactionModel(self.getModel('purOrg'));
-                    oModelDiv.read("/Pur_Operation_Org", {
-                        filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
-                            new Filter("org_type_code", FilterOperator.EQ, oData.results[0].org_type_code)
-                        ],
-                        sorter: new Sorter("org_type_code", false),
-                        success: function(oData){
-                            console.log(oData);
-                        }
-                    });
-                }
-            });
+            //         var oModelDiv = self.getModel('division');
+            //         oModelDiv.setTransactionModel(self.getModel('purOrg'));
+            //         oModelDiv.read("/Pur_Operation_Org", {
+            //             filters: [
+            //                 new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
+            //                 new Filter("org_type_code", FilterOperator.EQ, oData.results[0].org_type_code)
+            //             ],
+            //             sorters: [
+            //                 new Sorter("org_code", false)
+            //             ],
+            //             success: function(oData){
+                            
+            //             }
+            //         });
+            //     }
+            // });
 		},
 
 		/**
@@ -232,8 +234,10 @@ sap.ui.define([
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S"
             
             var aCompany = this.getView().byId("searchCompany"+sSurffix).getSelectedItems();
+
             var sDateFrom = this.getView().byId("searchDate"+sSurffix).getDateValue();
             var sDateTo = this.getView().byId("searchDate"+sSurffix).getSecondDateValue();
+
 			var sModel = this.getView().byId("searchModel").getValue().trim();
             var	sPart = this.getView().byId("searchPart").getValue().trim();
             var	sFamilyPart = this.getView().byId("searchFamilyPart").getValue().trim();
@@ -255,15 +259,25 @@ sap.ui.define([
                     })
                 );
             }
-            
-            
-            // if (sDateFrom) {
-			// 	aSearchFilters.push(new Filter("last_update_date", FilterOperator.GE, sDateFrom));
-            // }
 
-            // if (sDateTo) {
-			// 	aSearchFilters.push(new Filter("last_update_date", FilterOperator.LE, sDateTo));
-            // }
+            var dateFilters = [];
+
+            if (sDateFrom) {
+				dateFilters.push(new Filter("local_update_dtm", FilterOperator.GE, sDateFrom));
+            }
+
+            if (sDateTo) {
+				dateFilters.push(new Filter("local_update_dtm", FilterOperator.LE, sDateTo));
+            }
+
+            if(dateFilters.length > 0){
+                aSearchFilters.push(
+                    new Filter({
+                        filters: dateFilters,
+                        and: true
+                    })
+                );
+            }
 
 			if (sModel) {
 				aSearchFilters.push(new Filter("model", FilterOperator.StartsWith, sModel));
@@ -319,8 +333,83 @@ sap.ui.define([
 				persoService: MainListPersoService,
 				hasGrouping: true
 			}).activate();
-		}
+        },
+        
+        handleSelectionFinishComp: function(oEvent){
 
+            this.copyMultiSelected(oEvent);
+
+            var params = oEvent.getParameters();
+            var selectedKeys = [];
+            var divisionFilters = [];
+
+            params.selectedItems.forEach(function(item, idx, arr){
+                selectedKeys.push(item.getKey());
+                divisionFilters.push(new Filter("company_code", FilterOperator.EQ, item.getKey() ));
+            });
+
+            var filter = new Filter({
+                            filters: divisionFilters,
+                            and: false
+                        });
+
+            this.getView().byId("searchDivisionE").getBinding("items").filter(filter, "Application");
+            this.getView().byId("searchDivisionS").getBinding("items").filter(filter, "Application");
+        },
+
+        handleSelectionFinishDiv: function(oEvent){
+            this.copyMultiSelected(oEvent);
+        },
+
+        copyMultiSelected: function(oEvent){
+            var source = oEvent.getSource();
+            var params = oEvent.getParameters();
+
+            var id = source.sId.split('--')[1];
+            var idPreFix = id.substr(0, id.length-1);
+            var selectedKeys = [];
+
+            params.selectedItems.forEach(function(item, idx, arr){
+                selectedKeys.push(item.getKey());
+            });
+
+            this.getView().byId(idPreFix+'S').setSelectedKeys(selectedKeys);
+            this.getView().byId(idPreFix+'E').setSelectedKeys(selectedKeys);
+        },
+
+        onValueHelpRequested : function () {
+            console.group("onValueHelpRequested");
+
+            // var aCols = this.oColModel.getData().cols;
+
+            this._oValueHelpDialog = sap.ui.xmlfragment("dp.detailSpecEntry.view.ValueHelpDialogAffiliate", this);
+            this.getView().addDependent(this._oValueHelpDialog);
+
+            this._oValueHelpDialog.getTableAsync().then(function (oTable) {
+                oTable.setModel(this.oAffiliateModel);
+                oTable.setModel(this.oColModel, "columns");
+
+                if (oTable.bindRows) {
+                    oTable.bindAggregation("rows", "/AffiliateCollection");
+                }
+
+                if (oTable.bindItems) {
+                    oTable.bindAggregation("items", "/AffiliateCollection", function () {
+                        return new ColumnListItem({
+                            // cells: aCols.map(function (column) {
+                            //     return new Label({ text: "{" + column.template + "}" });
+                            // })
+                        });
+                    });
+                }
+                this._oValueHelpDialog.update();
+            }.bind(this));
+
+            this._oValueHelpDialog.setTokens(this._oMultiInput.getTokens());
+            this._oValueHelpDialog.open();
+
+                console.groupEnd();
+        }
 
 	});
 });
