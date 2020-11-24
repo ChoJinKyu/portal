@@ -1,24 +1,32 @@
-using {pg as idcCmpBsc} from '../../../../db/cds/pg/monitor/PG_MONITOR_IDC_CMP_BSC-model';
-using {pg as idcCond} from '../../../../db/cds/pg/monitor/PG_MONITOR_IDC_COND-model';
-using {pg as idcGrd} from '../../../../db/cds/pg/monitor/PG_MONITOR_IDC_GRD-model';
-using {pg as mntrAttcmMngt} from '../../../../db/cds/pg/monitor/PG_MONITOR_MNTR_ATTCM_MNGT-model';
-using {pg as mntrCycleMngt} from '../../../../db/cds/pg/monitor/PG_MONITOR_MNTR_CYCLE_MNGT-model';
-using {pg as mntrIdcMngt} from '../../../../db/cds/pg/monitor/PG_MONITOR_MNTR_IDC_MNGT-model';
-using {pg as mntrManagerMngt} from '../../../../db/cds/pg/monitor/PG_MONITOR_MNTR_MANAGER_MNGT-model';
-using {pg as mntrMaster} from '../../../../db/cds/pg/monitor/PG_MONITOR_MNTR_MASTER-model';
-using {pg as mntrOprtmdMngt} from '../../../../db/cds/pg/monitor/PG_MONITOR_MNTR_OPRTMD_MNGT-model';
-using {pg as mntrSprt} from '../../../../db/cds/pg/monitor/PG_MONITOR_MNTR_SPRT-model';
-using {pg as mntrSrcSysMngt} from '../../../../db/cds/pg/monitor/PG_MONITOR_MNTR_SRC_SYS_MNGT-model';
-using {pg as mntrTypeMngt} from '../../../../db/cds/pg/monitor/PG_MONITOR_MNTR_TYPE_MNGT-model';
-using {pg as mntrSnar} from '../../../../db/cds/pg/monitor/PG_MONITOR_MNTR_SNR-model';
+using {pg as idcCmpBsc} from '../../../../db/cds/pg/monitor/PG_MONITOR_INDICATOR_COMPARISON_BASIC-model';
+using {pg as idcCond} from '../../../../db/cds/pg/monitor/PG_MONITOR_INDICATOR_CONDITION-model';
+using {pg as idcGrd} from '../../../../db/cds/pg/monitor/PG_MONITOR_INDICATOR_GRADE-model';
+using {pg as mntrAttcm} from '../../../../db/cds/pg/monitor/PG_MONITOR_ATTACHMENTS-model';
+using {pg as mntrCycle} from '../../../../db/cds/pg/monitor/PG_MONITOR_CYCLE-model';
+using {pg as mntrIdc} from '../../../../db/cds/pg/monitor/PG_MONITOR_INDICATOR-model';
+using {pg as mntrManager} from '../../../../db/cds/pg/monitor/PG_MONITOR_MANAGER-model';
+using {pg as mntrMaster} from '../../../../db/cds/pg/monitor/PG_MONITOR_MASTER-model';
+using {pg as mntrOprtmd} from '../../../../db/cds/pg/monitor/PG_MONITOR_OPERATION_MODE-model';
+using {pg as mntrSprt} from '../../../../db/cds/pg/monitor/PG_MONITOR_SEPARATED-model';
+using {pg as mntrType} from '../../../../db/cds/pg/monitor/PG_MONITOR_TYPE-model';
+using {pg as mntrSnar} from '../../../../db/cds/pg/monitor/PG_MONITOR_SCENARIO-model';
 using {pg as mntrMasterView} from '../../../../db/cds/pg/monitor/PG_MONITOR_MASTER_VIEW';
-using {pg as mntrMasterView_02} from '../../../../db/cds/pg/monitor/PG_MONITOR_MASTER_VIEW_02-model';
-//Test
-using {pg as mntrTest} from '../../../../db/cds/pg/monitor/PG_MONITOR_TEST-model';
+using {pg as mntrFullMaster} from '../../../../db/cds/pg/monitor/PG_MONITOR_FULL_MASTER-model';
 //CM ORG
 using {cm.Org_Tenant as OrgTenant} from '../../../../db/cds/cm/orgMgr/CM_ORG_TENANT-model';
 using {cm.Org_Company as OrgCompany} from '../../../../db/cds/cm/orgMgr/CM_ORG_COMPANY-model';
 using {cm.Org_Unit as OrgUnit} from '../../../../db/cds/cm/orgMgr/CM_ORG_UNIT-model';
+//CM Code
+using {cm.Code_Mst as codeMst} from '../../../../db/cds/cm/codeMgr/CM_CODE_MST-model';
+using {cm.Code_Dtl as codeDtl} from '../../../../db/cds/cm/codeMgr/CM_CODE_DTL-model';
+using {cm.Code_Lng as codeLng} from '../../../../db/cds/cm/codeMgr/CM_CODE_LNG-model';
+//Filte View
+using {pg as MngView} from '../../../../db/cds/pg/monitor/PG_MONITOR_MANAGER_VIEW';
+using {pg as EmpView} from '../../../../db/cds/pg/monitor/PG_MONITOR_EMPLOYEE_VIEW';
+using {pg as JobTView} from '../../../../db/cds/pg/monitor/PG_MONITOR_JOB_TITLE_VIEW';
+using {pg as MPNumbView} from '../../../../db/cds/pg/monitor/PG_MONITOR_MOBILE_PHONE_NUMBER_VIEW';
+using {pg as DepartView} from '../../../../db/cds/pg/monitor/PG_MONITOR_DEPARTMENT_VIEW';
+using {pg as OperatMdView} from '../../../../db/cds/pg/monitor/PG_MONITOR_OPERATION_MODE_VIEW';
 
 namespace pg;
 
@@ -26,49 +34,128 @@ namespace pg;
 service monitorService {
 
     // Entity List
-    entity IndicatorComparisonBasic           as projection on idcCmpBsc.Monitor_Idc_Cmp_Bsc_Mst;
-    entity IndicatorCondition                 as projection on idcCond.Monitor_Idc_Cond_Mst;
-    entity IndicatorGrade                     as projection on idcGrd.Monitor_Idc_Grd_Mst;
-    entity MonitoringAttachmentsManagement    as projection on mntrAttcmMngt.Monitor_Mntr_Attcm_Mngt;
-    entity MonitoringCycleManagement          as projection on mntrCycleMngt.Monitor_Mntr_Cycle_Mngt;
-    entity MonitoringIndicatorManagement      as projection on mntrIdcMngt.Monitor_Mntr_Idc_Mngt;
-    entity MonitoringManagerManagement        as projection on mntrManagerMngt.Monitor_Mntr_Manager_Mngt;
-    entity MonitoringMaster                   as projection on mntrMaster.Monitor_Mntr_Mst;
-    entity MonitoringOperationMode_Management as projection on mntrOprtmdMngt.Monitor_Mntr_Oprtmd_Mngt;
-    entity MonitoringSeparated                as projection on mntrSprt.Monitor_Mntr_Sprt_Mst;
-    entity MonitoringSourceSystemManagement   as projection on mntrSrcSysMngt.Monitor_Mntr_Src_Sys_Mngt;
-    entity MonitoringTypeManagement           as projection on mntrTypeMngt.Monitor_Mntr_Type_Mngt;
-    entity MonitoringSenario                  as projection on mntrSnar.Monitor_Mntr_Snr_Mst;
-    // Test Entry List
-    entity MonitorTest                        as projection on mntrTest.Monitor_Test;
+    entity IndicatorComparisonBasic @(title : '모니터링 지표 비교기준') as projection on idcCmpBsc.Monitor_Indicator_Comparison_Basic;
+    entity IndicatorCondition @(title : '모니터링 지표 조건')         as projection on idcCond.Monitor_Indicator_Condition;
+    entity IndicatorGrade @(title : '모니터링 지표 등급')             as projection on idcGrd.Monitor_Indicator_Grade;
+    entity MonitoringAttachments @(title : '모니터링 첨부파일')       as projection on mntrAttcm.Monitor_Attachments;
+    entity MonitoringCycle @(title : '모니터링 주기')               as projection on mntrCycle.Monitor_Cycle;
+    entity MonitoringIndicator @(title : '모니터링 지표')           as projection on mntrIdc.Monitor_Indicator;
+    entity MonitoringManager @(title : '모니터링 담당자')            as projection on mntrManager.Monitor_Manager;
+    entity MonitoringMaster @(title : '모니터링 마스터')             as projection on mntrMaster.Monitor_Master;
+    entity MonitoringOperationMode @(title : '모니터링 운영방식')     as projection on mntrOprtmd.Monitor_Operation_Mode;
+    entity MonitoringSeparated @(title : '모니터링 구분')           as projection on mntrSprt.Monitor_Separated;
+    entity MonitoringType @(title : '모니터링 유형')                as projection on mntrType.Monitor_Type;
+    entity MonitoringSenario @(title : '모니터링 시나리오')           as projection on mntrSnar.Monitor_Scenario;
+    entity MonitoringFullMaster @(title : '모니터링 전체 마스터')      as projection on mntrFullMaster.Monitor_Full_Master;
     // View List
-    view MonitoringMasterView as select from mntrMasterView.monitor_master_view;
+    view MonitoringMasterView @(title : '모니터링 마스터 View') as select from mntrMasterView.monitor_master_view;
+    view ManagerView @(title : '담당자 전체 View') as select from MngView.Monitor_Manager_View;
+    view EmployeeView @(title : '담당자 View') as select from EmpView.Monitor_Employee_View;
+    view JobTitleView @(title : '직무 View') as select from JobTView.Monitor_Job_Title_View;
+    view MobilePhoneNumberView @(title : '휴대폰번호 View') as select from MPNumbView.Monitor_Mobile_Phone_Number_View;
+    view DepartmentView @(title : '부서 View') as select from DepartView.Monitor_Department_View;
+    view OperationModeView @(title : '운영모드 View') as select from OperatMdView.Monitor_Operation_Mode_View;
 
-    // Tenant View
-    view OrgTenantView as
+    // Tenant View: 회사
+    view OrgTenantView @(title : '회사 마스터 View') as
         select
             key tenant_id,
                 tenant_name
         from OrgTenant;
 
-    // Company View
-    view OrgCompanyView as
+    // Company View: 법인
+    view OrgCompanyView @(title : '법인 마스터 View') as
         select
             key tenant_id,
             key company_code,
                 company_name
         from OrgCompany;
 
-    // Unit View
-    view OrgUnitView as
+    // Unit View: 사업부분
+    view OrgUnitView @(title : '사업부분 마스터 View') as
         select
             key tenant_id,
             key bizunit_code,
                 bizunit_name
         from OrgUnit;
 
-    // Temp View List
-    view MonitoringMasterView_02 as select from mntrMasterView_02.monitor_master_view_02;
+    // Separated View: 구분
+    view MonitoringSeparatedView @(title : '모니터링 구분 View') as
+        select
+            key tenant_id,
+            key code,
+                code_name
+        from codeLng
+        where
+                group_code  = 'PG_MONITOR_SEPARATED'
+            and language_cd = 'KO';
+
+    // Type View: 유형
+    view MonitoringTypeView @(title : '모니터링 유형 View') as
+        select
+            key tenant_id,
+            key code,
+                code_name
+        from codeLng
+        where
+                group_code  = 'PG_MONITOR_TYPE'
+            and language_cd = 'KO';
+
+    // Activate/Inactivate View: 활성화/비활성화
+    view MonitoringActInactView @(title : '모니터링 활성화/비활성화 View') as
+        select
+            key tenant_id,
+            key code,
+                code_name
+        from codeLng
+        where
+                group_code  = 'PG_MONITOR_ACT_INACT_FLAG'
+            and language_cd = 'KO';
+
+    // Cycle View: 주기
+    view MonitoringCycleView @(title : '모니터링 주기 View') as
+        select
+            key tenant_id,
+            key code,
+                code_name
+        from codeLng
+        where
+                group_code  = 'PG_MONITOR_CYCLE'
+            and language_cd = 'KO';
+
+    // Indicate Comparision Basic View: 지표 비교기준
+    view MonitoringIndCompBasicView @(title : '모니터링 지표 비교기준 View') as
+        select
+            key tenant_id,
+            key code,
+                code_name
+        from codeLng
+        where
+                group_code  = 'PG_MONITOR_IND_COMP_BASIC'
+            and language_cd = 'KO';
+
+    // Indicate Comparision Condition View: 지표 조건
+    view MonitoringIndCompCondView @(title : '모니터링 지표 조건 View') as
+        select
+            key tenant_id,
+            key code,
+                code_name
+        from codeLng
+        where
+                group_code  = 'PG_MONITOR_IND_COMP_CONDITION'
+            and language_cd = 'KO';
+
+    // Indicate Comparision Grade View: 지표 등급
+    view MonitoringIndCompGradeView @(title : '모니터링 지표 등급 View') as
+        select
+            key tenant_id,
+            key code,
+                code_name
+        from codeLng
+        where
+                group_code  = 'PG_MONITOR_IND_COMP_GRADE'
+            and language_cd = 'KO';
+
 
 // annotate monitorService.IndicatorComparisonBasic with @(UI : {
 //     HeaderInfo      : {

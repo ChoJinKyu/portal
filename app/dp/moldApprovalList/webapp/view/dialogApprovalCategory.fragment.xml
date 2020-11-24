@@ -24,6 +24,7 @@
                     columnsM="1"
                     singleContainerFullSize="false" >
                     <form:content>
+                        <!-- 팝업 콤보박스 영역 -->
                         <VBox>
                             <Label text = "Company" /> 
                             <ComboBox id="searchCompanyF" width="70%" selectedKey="L1100" items="{
@@ -59,6 +60,8 @@
                                 <layout:GridData span="XL6 L3 M6 S12" />
                             </layoutData> 
                         </VBox>
+                        
+                        <!-- Approval Category 버튼 영역 -->
                         <core:Title text="Approval Category" />
                         <VBox>
                             <Label text = "1. Local"/> 
@@ -176,6 +179,7 @@
                 </form:SimpleForm>
             </VBox>       
         </content>
+        
         <ToolbarSpacer/>
         <HBox alignItems="Center" justifyContent="Center" >
             <Button text="Cancel" class="sapUiSmallMargin" press=".createPopupClose"/>
