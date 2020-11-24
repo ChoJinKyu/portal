@@ -85,10 +85,10 @@
                         sticky="HeaderToolbar,ColumnHeaders" 
                         inset="false" 
                         growing="true"
-                        growingThreshold="10"
+                        growingThreshold="15"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
-                        items="{list>/}"
+                        items="{list>/UomClass}"
                         mode="None" 
                         width="auto">
                     <headerToolbar>
@@ -112,10 +112,10 @@
                         <Column id="mainColumnText" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
                             <Text text="Class Text" />
                         </Column>
-                        <Column id="mainColumnBaseUom" minScreenWidth="Tablet" hAlign="Center">
+                        <Column id="mainColumnBaseUom" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
                             <Text text="Base UOM" />
                         </Column>
-                        <Column id="mainColumnBaseUomText" minScreenWidth="Tablet" hAlign="Center">
+                        <Column id="mainColumnBaseUomText" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
                             <Text text="Base UOM Text" />
                         </Column>                        
                     </columns>
