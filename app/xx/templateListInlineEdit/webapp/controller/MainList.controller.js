@@ -1,6 +1,7 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
 	"sap/ui/model/json/JSONModel",
+	"ext/lib/model/I18nModel",
 	"ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedListModel",
 	"ext/lib/formatter/Formatter",
@@ -8,6 +9,7 @@ sap.ui.define([
 	"./MainListPersoService",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
+    "sap/ui/model/Sorter",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
 	"sap/m/ColumnListItem",
@@ -16,7 +18,9 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, JSONModel, TransactionManager, ManagedListModel, Formatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+], function (BaseController, JSONModel, I18nModel, TransactionManager, ManagedListModel, Formatter, TablePersoController, MainListPersoService, 
+		Filter, FilterOperator, Sorter,
+		MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
 	"use strict";
 
 	// var oTransactionManager;
@@ -34,7 +38,8 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {
-			var oViewModel,
+			var oViewModel, 
+				oI18ndModel,
 				oResourceBundle = this.getResourceBundle();
 
 			// Model used to manipulate control states
@@ -43,14 +48,15 @@ sap.ui.define([
 				tableNoDataText : "No data."
 			});
 			this.setModel(oViewModel, "mainListView");
-
+			
 			// Add the mainList page to the flp routing history
 			this.addHistoryEntry({
 				title: oResourceBundle.getText("mainListViewTitle"),
 				icon: "sap-icon://table-view",
 				intent: "#Template-display"
 			}, true);
-			
+				
+			this.setModel(new I18nModel(), "i18nd");
 			this.setModel(new ManagedListModel(), "list");
 
 			// oTransactionManager = new TransactionManager();
@@ -59,9 +65,16 @@ sap.ui.define([
 			this._doInitTablePerso();
         },
         
-        onAfterRendering : function () {
+        onRenderedFirst : function () {
+			this.getModel("i18nd")
+				.setTransactionModel(this.getModel("util"))
+				.attachEvent("loaded", function(oEvent){
+
+				})
+				//.load(this.getOwnerComponent().getManifestEntry("sap.app").id)
+				.load("cm.templateListInlineEdit");
+				
 			this.byId("pageSearchButton").firePress();
-			return;
         },
 
 		/* =========================================================== */
@@ -124,8 +137,24 @@ sap.ui.define([
 				// refresh the list binding.
 				this.onRefresh();
 			} else {
-				var aTableSearchState = this._getSearchStates();
-				this._applySearch(aTableSearchState);
+				var forceSearch = function(){
+					var aTableSearchState = this._getSearchStates();
+					this._applySearch(aTableSearchState);
+				}.bind(this);
+				
+				if(this.getModel("list").isChanged() === true){
+					MessageBox.confirm(this.getModel("i18nd").getText("/msgConfirmForceSearch"), {
+						title : this.getModel("i18nd").getText("/lblConfirmation"),
+						initialFocus : sap.m.MessageBox.Action.CANCEL,
+						onClose : function(sButton) {
+							if (sButton === MessageBox.Action.OK) {
+								forceSearch();
+							}
+						}.bind(this)
+					});
+				}else{
+					forceSearch();
+				}
 			}
 		},
 
@@ -164,8 +193,12 @@ sap.ui.define([
 			var oModel = this.getModel("list"),
 				oView = this.getView();
 			
-			MessageBox.confirm("Are you sure ?", {
-				title : "Comfirmation",
+			if(!oModel.isChanged()) {
+				MessageToast.show(this.getModel("i18nd").getText("/msgNoChanges"));
+				return;
+			}
+			MessageBox.confirm(this.getModel("i18nd").getText("/msgConfirmSave?"), {
+				title : this.getModel("i18nd").getText("/lblConfirmation"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
@@ -204,6 +237,12 @@ sap.ui.define([
 			oModel.setTransactionModel(this.getModel());
 			oModel.read("/Message", {
 				filters: aTableSearchState,
+				sorters: [
+					new Sorter("chain_code"),
+					new Sorter("message_code"),
+					new Sorter("language_code", true),
+					new Sorter("group_code")
+				],
 				success: function(oData){
 					oView.setBusy(false);
 				}
@@ -216,11 +255,15 @@ sap.ui.define([
 			var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S",
 				chain = this.getView().byId("searchChain"+sSurffix).getSelectedKey(),
 				language = this.getView().byId("searchLanguage"+sSurffix).getSelectedKey(),
+				group = this.getView().byId("searchGroup"+sSurffix).getValue(),
 				keyword = this.getView().byId("searchKeyword"+sSurffix).getValue();
 				
 			var aTableSearchState = [];
 			if (chain && chain.length > 0) {
 				aTableSearchState.push(new Filter("chain_code", FilterOperator.EQ, chain));
+			}
+			if (group && group.length > 0) {
+				aTableSearchState.push(new Filter("group_code", FilterOperator.Contains, group));
 			}
 			if (language && language.length > 0) {
 				aTableSearchState.push(new Filter("language_code", FilterOperator.EQ, language));
