@@ -198,7 +198,11 @@
                                 <OverflowToolbar>
                                     <ToolbarSpacer/>
                                     <!-- Add the Personalization button -->
-                                    <Button id="btnPsAdd"     type="Transparent" text="Add" press=".onPsAddRow" />
+                                    <Button id="btnPsAdd"     type="Transparent" text="Add" press=".handleTableSelectDialogPress" >
+                                    	<customData>
+                                            <core:CustomData key="multi" value="true" />
+                                        </customData>
+                                    </Button>
                                     <Button id="btnPsDelete"   type="Transparent" text="Delete"  press=".onPsDelRow" />
                                     <Button id="btnPsSuplierSel"  type="Emphasized"  text="Supplier Select"   press=".onPsSupplier" />
                                     <!-- <ToolbarSeparator/>
@@ -383,14 +387,7 @@
                                     <Text text="{appList>no}" />
                                     <ComboBox   id="searchItemType" width="100%"
                                         selectedKey=""
-                                        items="{
-                                                    path : 'util>/CodeDetails',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : ''},
-                                                        {path : 'company_code', operator : 'EQ', value1 : '*'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : ''}
-                                                    ]
-                                                }"
+                                        items="{}"
                                     ><core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>
                                     <SearchField placeholder="Search employee" search="onFilter"/>

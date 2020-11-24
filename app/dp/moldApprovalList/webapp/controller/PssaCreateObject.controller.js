@@ -12,8 +12,9 @@ sap.ui.define([
     "sap/m/MessageToast", 
     "sap/m/UploadCollectionParameter",
     "sap/ui/Device" // fileupload 
+    ,"sap/ui/core/syncStyleClass"
 ], function (BaseController, JSONModel, History, ManagedListModel, RichTextEditor , DateFormatter, Filter, FilterOperator, Fragment
-            , MessageBox, MessageToast,  UploadCollectionParameter, Device ) {
+            , MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass) {
 	"use strict";
     /**
      * @description 입찰대상 협력사 선정 품의 등록화면
@@ -177,6 +178,7 @@ sap.ui.define([
 			var oArgs = oEvent.getParameter("arguments"); 
             this._createViewBindData(oArgs); 
             this._onLoadApprovalRow();
+            this._doInitPariciptingSupplerPop();
         },
         /**
          * @description 초기 생성시 파라미터를 받고 들어옴 
@@ -320,10 +322,64 @@ sap.ui.define([
 		onSelectChange: function(oEvent) {
 			var oUploadCollection = this.byId("UploadCollection");
 			oUploadCollection.setShowSeparators(oEvent.getParameters().selectedItem.getProperty("key"));
+        } ,
+
+        /**
+         * @description : Popup 창 : 품의서 Participating Supplier 항목의 Add 버튼 클릭
+         */
+
+        handleTableSelectDialogPress : function (oEvent) {
+            console.group("handleTableSelectDialogPress");    
+            var oView = this.getView();
+            var oButton = oEvent.getSource();
+			if (!this._oDialog) {
+				this._oDialog = Fragment.load({ 
+                    id: oView.getId(),
+					name: "dp.moldApprovalList.view.MoldItemSelection",
+					controller: this
+				}).then(function (oDialog) {
+				    oView.addDependent(oDialog);
+					return oDialog;
+				}.bind(this));
+            } 
+            
+            this._oDialog.then(function(oDialog) {
+				oDialog.open();
+			});
+        },
+
+        _doInitPariciptingSupplerPop : function () {
+            // this.oColModel = new JSONModel(sap.ui.require.toUrl("dp/moldApprovalList/localService/mockdata") + "/commonCodeColum.json");
+           //  this.oCommonCodeModel = new JSONModel(sap.ui.require.toUrl("dp/moldApprovalList/localService/mockdata") + "/commonCode.json");
+           //  console.log(" table pop >>> " , this.oCommonCodeModel );
+             
+             this.setModel( new ManagedListModel() , "CommonCodeModel");
+        },
+        /**
+         * @public 
+         * @see 사용처 Participating Supplier Fragment 취소 이벤트
+         */
+        onExit: function () {
+			this.byId("dialogMolItemSelection").close();
+		},
+
+      _configDialog: function (oButton) {
+		
+		    var bMultiSelect = !!oButton.data("multi");
+			this._oDialog.setMultiSelect(bMultiSelect);
+
+			
+			var sResponsiveStyleClasses = "sapUiResponsivePadding--header sapUiResponsivePadding--subHeader sapUiResponsivePadding--content sapUiResponsivePadding--footer";
+            this._oDialog.addStyleClass(sResponsiveStyleClasses);
+
+			// Set custom text for the confirmation button
+		//	var sCustomConfirmButtonText = oButton.data("confirmButtonText");
+		//	this._oDialog.setConfirmButtonText(sCustomConfirmButtonText);
+
+			this.getView().addDependent(this._oDialog);
+
+			// toggle compact style
+			syncStyleClass("sapUiSizeCompact", this.getView(), this._oDialog);
 		}
-
-
-
-
 	});
 });
