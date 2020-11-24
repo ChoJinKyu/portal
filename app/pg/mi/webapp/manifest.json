@@ -121,8 +121,8 @@
                   "mainObject"
               ]
           },
-          {
-              "pattern": "midObject/{layout}/{tenant_id}/{company_code}/{org_type_code}/{org_code}/{category_name}/{category_code}/{mi_material_code}/{mi_material_code_name}/{use_flag}",
+          {  
+              "pattern": "midObject/{layout}/{tenant_id}/{company_code}/{org_type_code}/{org_code}/{mi_material_code}",
               "name": "midPage",
               "target": [
                   "mainObject",

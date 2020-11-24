@@ -79,13 +79,13 @@
                                         columnsL="3"
                                         columnsXL="4">
                                         <Label text="시황자재코드" design="Bold" class="sapMLabelNoText"/>
-										<Text id="textMaterialCode" class="sapMLabelNoText"/>                                     
+										<Text id="textMaterialCode"  class="sapMLabelNoText"/>                                     
 
                                         <Label text="Category 명" design="Bold" class="sapMLabelNoText"/>
-										<Text id="textCategoryName" class="sapMLabelNoText"/> 
+										<Text id="textcategoryName" class="sapMLabelNoText"/> 
                                        
                                         <Label text="사용여부" design="Bold" class="sapMLabelNoText"/>
-										<Text id="textUse_flag" class="sapMLabelNoText"/>
+										<Text id="textUseflag" class="sapMLabelNoText"/>
 										
                                         </form:SimpleForm>                                       
                                 </uxap:ObjectPageSubSection>

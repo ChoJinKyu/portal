@@ -19,6 +19,51 @@ var midObjectData = new JSONModel({
     filters : []            
 });
 
+
+if(sFragmentName=="Change"){
+                            
+                
+    
+}else{
+    sap.ui.core.Fragment.byId("Change_id","account_pop_code").getValue();
+    oView.byId("textMaterialCode").setText(midObjectData.getProperty("/mi_material_code"));
+    oView.byId("textcategory_codeName").setText(midObjectData.getProperty("/category_code"));
+    oView.byId("textUse_flag").setText(midObjectData.getProperty("/use_flag") == "true" ? "사용" : "미사용" );
+
+    
+    textMaterialCode
+}
+
+
+
+            //sap.ui.core.Fragment.byId("account_pop_id","account_pop_code").getValue();
+            this._showFormFragment("Display");
+  
+            //this.byId("page").setSelectedSection("pageSectionMain");
+            //this.byId("page").setProperty("showFooter", false);
+            // this.byId("pageEditButton").setEnabled(true);
+            // this.byId("pageDeleteButton").setEnabled(true);
+            // this.byId("pageNavBackButton").setEnabled(true);
+
+            this._setTableFilters("midTableDisplay", midObjectData.getProperty("/mi_material_code")); 
+
+            
+           // this._midTable = this.getView().byId("midTable");
+
+            //this.byId("page").setSelectedSection("pageSectionMain");
+            //this.byId("page").setProperty("showFooter", true);
+            // this.byId("pageEditButton").setEnabled(false);
+            // this.byId("pageDeleteButton").setEnabled(false);
+            // this.byId("pageNavBackButton").setEnabled(false);
+
+            oView.byId("inputMaterialCode").setValue(midObjectData.getProperty("/mi_material_code"));
+            oView.byId("comboBoxcategory_code_code").setSelectedKey(midObjectData.getProperty("/category_code_code"));           
+            oView.byId("switchUse_flag").setState(midObjectData.getProperty("/use_flag")=="true" ? true : false );
+           
+            //this._setTableFilters("midTableChange", midObjectData.getProperty("/mi_material_code"));       
+           
+
+
 MIMatListView(tenant_id='L2100',company_code='*',
 org_type_code='BU',org_code='BIZ00100',
 mi_material_code='ALU-001-01')

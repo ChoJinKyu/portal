@@ -48,6 +48,7 @@ sap.ui.define([
                 filters : []            
             });
            
+    
             this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
 
             this.setModel(midObjectView, "midObjectView");            
@@ -100,27 +101,40 @@ sap.ui.define([
 			if (oFormFragment) {
 				return oFormFragment;
             }
-            
-			oFormFragment = sap.ui.xmlfragment(this.getView().getId(), "pg.mi.view." + sFragmentName);
 
-			this._formFragments[sFragmentName] = oFormFragment;
+            oFormFragment = sap.ui.xmlfragment(sFragmentName+"_id", "pg.mi.view." + sFragmentName);
+
+            this._formFragments[sFragmentName] = oFormFragment;
+            
             return this._formFragments[sFragmentName];
 
 		},
 
 		_showFormFragment : function (sFragmentName) {
             console.group("_showFormFragment");
-           
 
-			//var oObjectPageSubSection = this.getView().byId("ObjectPageSubSection");
-
-			//oObjectPageSubSection.removeAllBlocks();
-            //oObjectPageSubSection.insertBlock(this._getFormFragment(sFragmentName));
-
-			var oPage = this.byId("page");
-			oPage.removeAllContent();
+            var oPage = this.byId("page"),
+                midObjectData = this.getModel("midObjectData");
+            
+            oPage.removeAllContent();
+            
             oPage.insertContent(this._getFormFragment(sFragmentName));
             
+
+            if(sFragmentName=="Change"){
+                sap.ui.core.Fragment.byId("Change_id","inputMaterialCode").setText(midObjectData.getProperty("/mi_material_code"));
+                sap.ui.core.Fragment.byId("Change_id","comboBoxCategory_code").setkey(midObjectData.getProperty("/category_code"));
+                sap.ui.core.Fragment.byId("Change_id","switchUse_flag").setState(midObjectData.getProperty("/use_flag"));
+            }else{
+
+                debugger;
+                var vUseFlag = "미사용";
+                if(midObjectData.getProperty("/use_flag")=="true") { vUseFlag = "사용";}
+                sap.ui.core.Fragment.byId("Display_id","textMaterialCode").setText(midObjectData.getProperty("/mi_material_code"));
+                sap.ui.core.Fragment.byId("Display_id","textcategoryName").setText(midObjectData.getProperty("/category_name"));
+                sap.ui.core.Fragment.byId("Display_id","textUseflag").setText(vUseFlag);
+            }
+
             this.getModel("midObjectView").setProperty("/mode", false);
 
             console.groupEnd();
@@ -300,6 +314,7 @@ sap.ui.define([
         _onRoutedThisPage: function (oEvent) {
             console.group("[mid] _onRoutedThisPage"); 
             
+      
             var oArgs = oEvent.getParameter("arguments"),
             midObjectData = this.getModel("midObjectData"),
                 oView = this.getView(),
@@ -318,30 +333,11 @@ sap.ui.define([
                     filters : []            
                 });
 
-                midObjectData.setProperty("/tenant_id", oArgs.tenant_id);
-                midObjectData.setProperty("/company_code", oArgs.company_code);
-                midObjectData.setProperty("/org_type_code", oArgs.org_type_code);
-                midObjectData.setProperty("/org_code", oArgs.org_code);
-                midObjectData.setProperty("/category_name", oArgs.category_name);
-                midObjectData.setProperty("/category_code", oArgs.category_code);
-                midObjectData.setProperty("/mi_material_code", oArgs.mi_material_code);                
-                midObjectData.setProperty("/mi_material_code_name", oArgs.mi_material_code_name);                
-                midObjectData.setProperty("/use_flag", oArgs.use_flag);
 
-                console.log("tenant_id", oArgs.tenant_id);
-                console.log("company_code", oArgs.company_code);
-                console.log("org_type_code", oArgs.org_type_code);
-                console.log("org_code", oArgs.org_code);
-                console.log("org_code", oArgs.category_name);
-                console.log("org_code", oArgs.category_code);
-                console.log("org_code", oArgs.mi_material_code);
-                console.log("mi_material_code", oArgs.mi_material_code_name);
-                console.log("use_flag", oArgs.use_flag);
-            
-                that._onPageMode(false);
+              
 
                 //var sServiceUrl = "/MIMaterialCodeList(tenant_id='"+oArgs.tenant_id+"',company_code='"+oArgs.company_code+"',org_type_code='"+oArgs.org_type_cod+"',org_code='"+oArgs.org_code+"',mi_material_code='"+oArgs.mi_material_code+"')";
-                //var sServiceUrl = "/MIMaterialCodeList(tenant_id='"+oArgs.tenant_id+"',company_code='"+oArgs.company_code+"',org_type_code='"+oArgs.org_type_code+"',org_code='"+oArgs.org_code+"',mi_material_code='"+oArgs.mi_material_code+"')";
+                var sServiceUrl = "/MIMaterialCodeList(tenant_id='"+oArgs.tenant_id+"',company_code='"+oArgs.company_code+"',org_type_code='"+oArgs.org_type_code+"',org_code='"+oArgs.org_code+"',mi_material_code='"+oArgs.mi_material_code+"')";
                 
                 // MIMaterialCodeList(tenant_id='L2100',company_code='%2A',org_type_code='BU',org_code='BIZ00100'
                 // ,mi_material_code='LED-001-01')
@@ -351,23 +347,28 @@ sap.ui.define([
                 midObjectDataModel = this.getModel("midObjectData"),
                 that = this;
 
+               
                 oModel.read(sServiceUrl, {
                     success: function (oData) {
 
                         console.log("oData~~~~~~~"+JSON.stringify(oData));  
                         debugger;
-                        
-                        midObjectDataModel.setProperty("mi_material_code", oData.mi_material_code)
-                        midObjectDataModel.setProperty("company_code", oData.company_code)
-                        midObjectDataModel.setProperty("org_type_code", oData.org_type_code)
-                        midObjectDataModel.setProperty("org_code", oData.org_code)
-                        midObjectDataModel.setProperty("mi_material_code", oData.mi_material_code)
-                        midObjectDataModel.setProperty("use_flag", oData.use_flag)
-       
+                        midObjectData.setProperty("/tenant_id", oData.tenant_id);
+                        midObjectData.setProperty("/company_code", oData.company_code);
+                        midObjectData.setProperty("/org_type_code", oData.org_type_code);
+                        midObjectData.setProperty("/org_code", oData.org_code);
+                        midObjectData.setProperty("/category_name", oData.category_name);
+                        midObjectData.setProperty("/category_code", oData.category_code);
+                        midObjectData.setProperty("/mi_material_code", oData.mi_material_code);                
+                        midObjectData.setProperty("/mi_material_code_name", oData.mi_material_code_name);                
+                        midObjectData.setProperty("/use_flag", oData.use_flag);
+                   
                         that._onPageMode(false);
                     }
                     
                 });
+
+               // that._onPageMode(false);
 
             console.groupEnd();
         },
@@ -406,7 +407,7 @@ sap.ui.define([
             var oModel = new sap.ui.model.odata.ODataModel(sServiceUrl, true);
             oModel.read(sServiceUrl, {
                 success: function (oData) {
-                    debugger;
+                   
                     //oView.setBusy(false);
                     //this.setLog("oData~~~~~~~"+JSON.stringify(oData));
                     this.getView().byId("inputMaterialCode").setValue( oData.mi_material_code_text );
@@ -443,25 +444,7 @@ sap.ui.define([
          */
         _toEditMode: function () {
             console.group("_toEditMode");
-            var oView = this.getView(),
-                midObjectData = this.getModel("midObjectData");
-
             this._showFormFragment("Change");
-
-           // this._midTable = this.getView().byId("midTable");
-
-            //this.byId("page").setSelectedSection("pageSectionMain");
-            //this.byId("page").setProperty("showFooter", true);
-            // this.byId("pageEditButton").setEnabled(false);
-            // this.byId("pageDeleteButton").setEnabled(false);
-            // this.byId("pageNavBackButton").setEnabled(false);
-
-            oView.byId("inputMaterialCode").setValue(midObjectData.getProperty("/mi_material_code"));
-            oView.byId("comboBoxcategory_code_code").setSelectedKey(midObjectData.getProperty("/category_code_code"));           
-            oView.byId("switchUse_flag").setState(midObjectData.getProperty("/use_flag")=="true" ? true : false );
-           
-            this._setTableFilters("midTableChange", midObjectData.getProperty("/mi_material_code"));       
-           
             this.getModel("midObjectView").setProperty("/mode", true);
             console.groupEnd();
         },
@@ -472,24 +455,8 @@ sap.ui.define([
          */
         _toShowMode: function () {
             console.group("_toShowMode");
-            var oView = this.getView(),
-            midObjectData = this.getModel("midObjectData");
-            
             this._showFormFragment("Display");
-            this.byId("textMaterialCode").setValue(midObjectData.getProperty("/mi_material_code"));
-            this.byId("textcategory_codeName").setValue(midObjectData.getProperty("/category_code"));
-            this.byId("textUse_flag").setValue(midObjectData.getProperty("/use_flag") == "true" ? "사용" : "미사용" );
-
-            //this.byId("page").setSelectedSection("pageSectionMain");
-            //this.byId("page").setProperty("showFooter", false);
-            // this.byId("pageEditButton").setEnabled(true);
-            // this.byId("pageDeleteButton").setEnabled(true);
-            // this.byId("pageNavBackButton").setEnabled(true);
-
-            this._setTableFilters("midTableDisplay", midObjectData.getProperty("/mi_material_code")); 
-
             this.getModel("midObjectView").setProperty("/mode", false);
-            
             console.groupEnd();
         },
         
