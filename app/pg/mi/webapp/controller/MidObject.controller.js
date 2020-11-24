@@ -346,27 +346,28 @@ sap.ui.define([
                 // MIMaterialCodeList(tenant_id='L2100',company_code='%2A',org_type_code='BU',org_code='BIZ00100'
                 // ,mi_material_code='LED-001-01')
 
-                // var oModel = this.getOwnerComponent().getModel(),
-                // oView = this.getView(),
-                // midObjectDataModel = this.getModel("midObjectData"),
-                // that = this;
+                var oModel = this.getOwnerComponent().getModel(),
+                oView = this.getView(),
+                midObjectDataModel = this.getModel("midObjectData"),
+                that = this;
 
-                // oModel.read(sServiceUrl, {
-                //     success: function (oData) {
+                oModel.read(sServiceUrl, {
+                    success: function (oData) {
 
-                //         console.log("oData~~~~~~~"+JSON.stringify(oData));  
+                        console.log("oData~~~~~~~"+JSON.stringify(oData));  
+                        debugger;
                         
-                //         midObjectDataModel.setProperty("mi_material_code", oData.mi_material_code)
-                //         midObjectDataModel.setProperty("company_code", oData.company_code)
-                //         midObjectDataModel.setProperty("org_type_code", oData.org_type_code)
-                //         midObjectDataModel.setProperty("org_code", oData.org_code)
-                //         midObjectDataModel.setProperty("mi_material_code", oData.mi_material_code)
-                //         midObjectDataModel.setProperty("use_flag", oData.use_flag)
+                        midObjectDataModel.setProperty("mi_material_code", oData.mi_material_code)
+                        midObjectDataModel.setProperty("company_code", oData.company_code)
+                        midObjectDataModel.setProperty("org_type_code", oData.org_type_code)
+                        midObjectDataModel.setProperty("org_code", oData.org_code)
+                        midObjectDataModel.setProperty("mi_material_code", oData.mi_material_code)
+                        midObjectDataModel.setProperty("use_flag", oData.use_flag)
        
-                //         that._onPageMode(false);
-                //     }
+                        that._onPageMode(false);
+                    }
                     
-                // });
+                });
 
             console.groupEnd();
         },
