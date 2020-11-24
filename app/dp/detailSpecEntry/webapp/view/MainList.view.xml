@@ -128,14 +128,14 @@
                     <form:content>
                         <VBox>
                             <Label text="Model" labelFor="searchModel"></Label>
-                            <Input id="searchModel" showValueHelp="true"></Input>
+                            <Input id="searchModel" showValueHelp="true"  valueHelpRequest=".onValueHelpRequested"></Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="Part No" labelFor="searchPart"></Label>
-                            <Input id="searchPart" showValueHelp="true"></Input>
+                            <Input id="searchPart" showValueHelp="true"  valueHelpRequest=".onValueHelpRequested"></Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
@@ -174,12 +174,12 @@
                         growingThreshold="10"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
-                        items="{list>/}"
+                        items="{list>/MoldMasterSpec}"
                         mode="None" 
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="List ({= ${list>/}.length || 0})" level="H2"/>
+                            <Title text="List ({= ${list>/MoldMasterSpec}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
                             <ToolbarSeparator/>

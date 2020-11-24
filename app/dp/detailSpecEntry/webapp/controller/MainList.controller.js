@@ -234,8 +234,10 @@ sap.ui.define([
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S"
             
             var aCompany = this.getView().byId("searchCompany"+sSurffix).getSelectedItems();
+
             var sDateFrom = this.getView().byId("searchDate"+sSurffix).getDateValue();
             var sDateTo = this.getView().byId("searchDate"+sSurffix).getSecondDateValue();
+
 			var sModel = this.getView().byId("searchModel").getValue().trim();
             var	sPart = this.getView().byId("searchPart").getValue().trim();
             var	sFamilyPart = this.getView().byId("searchFamilyPart").getValue().trim();
@@ -257,15 +259,25 @@ sap.ui.define([
                     })
                 );
             }
-            
-            
-            // if (sDateFrom) {
-			// 	aSearchFilters.push(new Filter("last_update_date", FilterOperator.GE, sDateFrom));
-            // }
 
-            // if (sDateTo) {
-			// 	aSearchFilters.push(new Filter("last_update_date", FilterOperator.LE, sDateTo));
-            // }
+            var dateFilters = [];
+
+            if (sDateFrom) {
+				dateFilters.push(new Filter("local_update_dtm", FilterOperator.GE, sDateFrom));
+            }
+
+            if (sDateTo) {
+				dateFilters.push(new Filter("local_update_dtm", FilterOperator.LE, sDateTo));
+            }
+
+            if(dateFilters.length > 0){
+                aSearchFilters.push(
+                    new Filter({
+                        filters: dateFilters,
+                        and: true
+                    })
+                );
+            }
 
 			if (sModel) {
 				aSearchFilters.push(new Filter("model", FilterOperator.StartsWith, sModel));
@@ -363,8 +375,41 @@ sap.ui.define([
 
             this.getView().byId(idPreFix+'S').setSelectedKeys(selectedKeys);
             this.getView().byId(idPreFix+'E').setSelectedKeys(selectedKeys);
-        }
+        },
 
+        onValueHelpRequested : function () {
+            console.group("onValueHelpRequested");
+
+            // var aCols = this.oColModel.getData().cols;
+
+            this._oValueHelpDialog = sap.ui.xmlfragment("dp.detailSpecEntry.view.ValueHelpDialogAffiliate", this);
+            this.getView().addDependent(this._oValueHelpDialog);
+
+            this._oValueHelpDialog.getTableAsync().then(function (oTable) {
+                oTable.setModel(this.oAffiliateModel);
+                oTable.setModel(this.oColModel, "columns");
+
+                if (oTable.bindRows) {
+                    oTable.bindAggregation("rows", "/AffiliateCollection");
+                }
+
+                if (oTable.bindItems) {
+                    oTable.bindAggregation("items", "/AffiliateCollection", function () {
+                        return new ColumnListItem({
+                            // cells: aCols.map(function (column) {
+                            //     return new Label({ text: "{" + column.template + "}" });
+                            // })
+                        });
+                    });
+                }
+                this._oValueHelpDialog.update();
+            }.bind(this));
+
+            this._oValueHelpDialog.setTokens(this._oMultiInput.getTokens());
+            this._oValueHelpDialog.open();
+
+                console.groupEnd();
+        }
 
 	});
 });
