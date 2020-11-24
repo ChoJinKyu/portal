@@ -13,6 +13,7 @@ entity Control_Option_Dtl {
         and parent.control_option_code = control_option_code;
 
     key control_option_level_code: String(30) not null @title: '제어옵션레벨코드';
+    key org_type_code: String(30) not null @title: '조직유형코드';
     key control_option_level_val: String(100) not null @title: '제어옵션레벨값';
     control_option_val: String(100) not null @title: '제어옵션값';
     
