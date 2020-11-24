@@ -18,8 +18,9 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
-    'sap/ui/core/Element'
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item, Element) {
+    'sap/ui/core/Element',
+	"sap/ui/core/syncStyleClass"
+], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item, Element, syncStyleClass) {
 	"use strict";
    /**
     * @description 품의 목록 (총 품의 공통)
@@ -63,6 +64,7 @@ sap.ui.define([
 
             this._doInitTablePerso();
             //this._doInitSearch();
+            
         },
         
         onAfterRendering : function () {
@@ -70,6 +72,7 @@ sap.ui.define([
 			return;
         },
 
+        
 		/* =========================================================== */
 		/* event handlers                                              */
 		/* =========================================================== */
@@ -163,7 +166,7 @@ sap.ui.define([
             console.log("oRecord >>>  ", oRecord);
             var that = this;
             that.getRouter().navTo("pssaObject", {
-                moldId: oRecord.mold_id          
+         
             });
             // if (oRecord.mold_id % 3 == 0) {
             //     that.getRouter().navTo("pssaCreateObject", {
@@ -189,7 +192,7 @@ sap.ui.define([
 		_doInitSearch: function(){
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S";
 
-			this._oMultiInput = this.getView().byId("searchCompany"+sSurffix);
+			this._oMultiInput = this.getView().byId("searchApprovalCategory"+sSurffix);
             this._oMultiInput.setTokens(this._getDefaultTokens());
 
             this.oColModel = new JSONModel(sap.ui.require.toUrl("dp/moldApprovalList/localService/mockdata") + "/columnsModel.json");
@@ -201,6 +204,7 @@ sap.ui.define([
             
             // this.getView().byId("searchReceiptDate"+sSurffix).setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
             // this.getView().byId("searchReceiptDate"+sSurffix).setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+           
         },
         /**
          * @private 
@@ -216,83 +220,79 @@ sap.ui.define([
             return [oToken];
         },
 
-        /**
-         * @public 
-         * @see searchAffiliate Fragment View 컨트롤 valueHelp
-         */
-        onValueHelpRequestedAffiliate : function () {
-            console.group("onValueHelpRequestedAffiliate");
-
-            var aCols = this.oColModel.getData().cols;
-
-            this._oValueHelpDialog = sap.ui.xmlfragment("dp.moldApprovalList.view.ValueHelpDialogAffiliate", this);
-            this.getView().addDependent(this._oValueHelpDialog);
-
-            this._oValueHelpDialog.getTableAsync().then(function (oTable) {
-                oTable.setModel(this.oAffiliateModel);
-                oTable.setModel(this.oColModel, "columns");
-
-                if (oTable.bindRows) {
-                    oTable.bindAggregation("rows", "/AffiliateCollection");
-                }
-
-                if (oTable.bindItems) {
-                    oTable.bindAggregation("items", "/AffiliateCollection", function () {
-                        return new ColumnListItem({
-                            cells: aCols.map(function (column) {
-                                return new Label({ text: "{" + column.template + "}" });
-                            })
-                        });
-                    });
-                }
-                this._oValueHelpDialog.update();
+        approvalDialogOpen: function (oEvent) {
+            
+            var oButton = oEvent.getSource();
+            var id = oButton.getId();
+            var page ="";
+            if(id.indexOf("Model") != -1){
+                page = "dp.moldApprovalList.view.DialogModel";
+            }else if(id.indexOf("MoldPartNo") != -1){
+                page = "dp.moldApprovalList.view.DialogMoldPartNo";
+            }else if(id.indexOf("Requester") != -1){
+                page = "dp.moldApprovalList.view.DialogRequester";
+            }
+            //console.log(oButton.getBindingContext("msg").getPath())
+            console.log("page >>>", page);
+            Fragment.load({
+                name: page,
+                controller: this
+            }).then(function (oDialog) {
+                this._oDialog = oDialog;
+                this._configDialog(oButton);
+                this._oDialog.open();
             }.bind(this));
+			
+		},
 
-            this._oValueHelpDialog.setTokens(this._oMultiInput.getTokens());
-            this._oValueHelpDialog.open();
-                console.groupEnd();
-        },
+		_configDialog: function (oButton) {
+			// Set draggable property
+			var bDraggable = oButton.data("draggable");
+			this._oDialog.setDraggable(bDraggable == "true");
 
-        /**
-         * @public 
-         * @see 사용처 ValueHelpDialogAffiliate Fragment 선택후 확인 이벤트
-         */
-        onValueHelpOkPress : function (oEvent) {
-            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S",
-                aTokens = oEvent.getParameter("tokens");
+			// Set resizable property
+			var bResizable = oButton.data("resizable");
+			this._oDialog.setResizable(bResizable == "true");
 
-            this.searchAffiliate = this.getView().byId("searchCompany"+sSurffix);
-            this.searchAffiliate.setTokens(aTokens);
-            this._oValueHelpDialog.close();
-        },
+			// Multi-select if required
+			var bMultiSelect = !!oButton.data("multi");
+			this._oDialog.setMultiSelect(bMultiSelect);
 
-        /**
-         * @public 
-         * @see 사용처 ValueHelpDialogAffiliate Fragment 취소 이벤트
-         */
-        onValueHelpCancelPress: function () {
-            this._oValueHelpDialog.close();
-        },
+			// Remember selections if required
+			var bRemember = !!oButton.data("remember");
+			this._oDialog.setRememberSelections(bRemember);
 
-        /**
-         * @public
-         * @see 사용처 ValueHelpDialogAffiliate Fragment window.close after 이벤트
-         */
-        onValueHelpAfterClose: function () {
-            this._oValueHelpDialog.destroy();
-        },
+			var sResponsivePadding = oButton.data("responsivePadding");
+			var sResponsiveStyleClasses = "sapUiResponsivePadding--header sapUiResponsivePadding--subHeader sapUiResponsivePadding--content sapUiResponsivePadding--footer";
+
+			if (sResponsivePadding) {
+				this._oDialog.addStyleClass(sResponsiveStyleClasses);
+			} else {
+				this._oDialog.removeStyleClass(sResponsiveStyleClasses);
+			}
+
+			// Set custom text for the confirmation button
+			var sCustomConfirmButtonText = oButton.data("confirmButtonText");
+			this._oDialog.setConfirmButtonText(sCustomConfirmButtonText);
+
+			this.getView().addDependent(this._oDialog);
+
+			// toggle compact style
+			syncStyleClass("sapUiSizeCompact", this.getView(), this._oDialog);
+		},
+
         
          /**
          * @public
          * @see 사용처 ValueHelpDialogAffiliate Fragment window.close after 이벤트
          */
-        onValueHelpRequestedCreate: function (){
+        onDialogCreate: function (){
             var oView = this.getView();
 
 			if (!this.pDialog) {
 				this.pDialog = Fragment.load({
 					id: oView.getId(),
-					name: "dp.moldApprovalList.view.dialogApprovalCategory",
+					name: "dp.moldApprovalList.view.DialogCreate",
 					controller: this
 				}).then(function (oDialog) {
 					// connect dialog to the root view of this component (models, lifecycle)
@@ -306,7 +306,7 @@ sap.ui.define([
 		
         },
         
-        
+
          /**
          * @public
          * @see 사용처 create 팝업에서 나머지 버튼 비활성화 시키는 작업수행
