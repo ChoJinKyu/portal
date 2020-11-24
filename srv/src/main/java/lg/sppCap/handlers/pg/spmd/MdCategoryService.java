@@ -1,4 +1,4 @@
-package lg.sppCap.handlers.pg.spend.md;
+package lg.sppCap.handlers.pg.spmd;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;

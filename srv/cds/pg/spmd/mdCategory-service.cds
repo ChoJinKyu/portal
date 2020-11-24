@@ -1,8 +1,8 @@
-using { pg as cateId } from '../../../../../db/cds/pg/spend_md/PG_MD_CATEGORY_ID-model.cds';
-using { pg as cateItem } from '../../../../../db/cds/pg/spend_md/PG_MD_CATEGORY_ITEM-model.cds';
-using { pg as partNoItemValue } from '../../../../../db/cds/pg/spend_md/PG_MD_PART_NO_ITEM_VALUE-model.cds';
-using { pg as vpItemMappHeader } from '../../../../../db/cds/pg/spend_md/PG_MD_VP_ITEM_MAPPING_H-model.cds';
-using { pg as vpItemMappDetail } from '../../../../../db/cds/pg/spend_md/PG_MD_VP_ITEM_MAPPING_D-model.cds';
+using { pg as cateId } from '../../../../db/cds/pg/spmd/PG_MD_CATEGORY_ID-model.cds';
+using { pg as cateItem } from '../../../../db/cds/pg/spmd/PG_MD_CATEGORY_ITEM-model.cds';
+using { pg as partNoItemValue } from '../../../../db/cds/pg/spmd/PG_MD_PART_NO_ITEM_VALUE-model.cds';
+using { pg as vpItemMappHeader } from '../../../../db/cds/pg/spmd/PG_MD_VP_ITEM_MAPPING_H-model.cds';
+using { pg as vpItemMappDetail } from '../../../../db/cds/pg/spmd/PG_MD_VP_ITEM_MAPPING_D-model.cds';
 
 namespace pg;
 
