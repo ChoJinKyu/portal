@@ -32,7 +32,7 @@
                                     id="pageEnterFullScreenDisplayButton"
                                     type="Transparent"
                                     icon="sap-icon://full-screen"
-                                    press="onPageEnterFullScreenDisplayButtonPress"
+                                    press="onPageEnterFullScreenButtonPress"
                                     tooltip="Enter Full Screen Mode"
                                     visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
                                 <OverflowToolbarButton
