@@ -56,8 +56,10 @@
                             </ComboBox>
                           </VBox>
                           <VBox>
-                            <Label text="타임존" labelFor="searchTimeZoneCombo"></Label>
-                            <ComboBox
+                            <Label text="타임존" labelFor="searchTimeZoneInput"></Label>
+                            <Input id="searchTimeZoneInput"/>
+                            <!-- <Label text="타임존" labelFor="searchTimeZoneCombo"></Label> -->
+                            <!-- <ComboBox
                               id="searchTimeZoneCombo"
                               width="100%"
                               items="{
@@ -69,7 +71,7 @@
                               <items>
                                 <core:Item key="{timezone_code}" text="{timezone_code} : {timezone_name}" />
                               </items>
-                            </ComboBox>
+                            </ComboBox> -->
                           </VBox>
                           <VBox>
                             <Label text="국가" labelFor="searchCountryCombo"></Label>
@@ -169,7 +171,6 @@
             <t:Column id="mainCountryCodeColumn">
               <Label text="국가" textAlign="Center" width="100%"/>
               <t:template>
-                <!-- {path: 'org', operator: 'EQ', value1: 'tenant_id'} -->
                 <ComboBox
                   width="100%"
                   items="{
