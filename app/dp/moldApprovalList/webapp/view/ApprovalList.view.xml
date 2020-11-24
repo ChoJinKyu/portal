@@ -22,7 +22,7 @@
                         <form:content>
                             <VBox>
                                 <Label text="Company" labelFor="searchCompanyS" required="true"></Label>     
-                                <ComboBox id="searchCompanyS" width="100%" selectedKey="L1100" items="{
+                                <MultiComboBox id="searchCompanyS" width="100%" selectedKey="L1100" items="{
                                         path: 'org>/Org_Company',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
@@ -32,14 +32,14 @@
                                     <items>
                                         <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                     </items>
-                                </ComboBox>
+                                </MultiComboBox>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                             <VBox>
                                 <Label text="Plant" labelFor="searchPlantS" required="true"></Label>
-                                <ComboBox id="searchPlantS" width="100%" selectedKey="L1100" items="{
+                                <MultiComboBox id="searchPlantS" width="100%" selectedKey="L1100" items="{
                                         path: 'purOrg>/Pur_Operation_Org',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
@@ -50,7 +50,7 @@
                                     <items>
                                         <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
                                     </items>
-                                </ComboBox>
+                                </MultiComboBox>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
@@ -77,7 +77,7 @@
                         <form:content>
                             <VBox>
                                 <Label text="Company" labelFor="searchCompanyE" required="true"></Label>     
-                                <ComboBox id="searchCompanyE" width="100%" selectedKey="L1100" items="{
+                                <MultiComboBox id="searchCompanyE" width="100%" selectedKey="L1100" items="{
                                         path: 'org>/Org_Company',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
@@ -87,14 +87,14 @@
                                     <items>
                                         <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                     </items>
-                                </ComboBox>
+                                </MultiComboBox>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                             <VBox>
                                 <Label text="Plant" labelFor="searchPlantE" required="true"></Label>
-                                <ComboBox id="searchPlantE" width="100%" selectedKey="L1100" items="{
+                                <MultiComboBox id="searchPlantE" width="100%" selectedKey="L1100" items="{
                                         path: 'purOrg>/Pur_Operation_Org',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
@@ -105,7 +105,7 @@
                                     <items>
                                         <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
                                     </items>
-                                </ComboBox>
+                                </MultiComboBox>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
