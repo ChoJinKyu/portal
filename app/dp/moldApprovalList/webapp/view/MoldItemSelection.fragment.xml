@@ -1,0 +1,128 @@
+<!-- 
+   description : 품의서 Participating Supplier 항목의 Add 버튼 클릭
+-->
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:layout="sap.ui.layout" >
+    <Dialog id="dialogMolItemSelection" class="sapUiSmallMargin" title="" contentWidth="35%" >
+        <VBox class="sapUiSmallMargin">
+           <form:SimpleForm
+                    editable="false"
+                    layout="ResponsiveGridLayout"
+                    labelSpanXL="4"
+                    labelSpanL="3"
+                    labelSpanM="4"
+                    labelSpanS="12"
+                    adjustLabelSpan="false"
+                    emptySpanXL="0"
+                    emptySpanL="4"
+                    emptySpanM="0"
+                    emptySpanS="0"
+                    columnsXL="2"
+                    columnsL="1"
+                    columnsM="1"
+                    singleContainerFullSize="false" >
+                    <form:content>
+                        <VBox>
+                            <Label text = "Company" /> 
+                            <ComboBox id="searchCompanyF" width="70%" selectedKey="L1100" items="{
+                                path: 'org>/Org_Company',
+                                filters: [
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                ],
+                                sorter: { path: 'company_code'}
+                            }">
+                                <items>
+                                    <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                                </items>
+                            </ComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL6 L3 M6 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox>
+                            <Label text = "Plant"/> 
+                            <ComboBox id="searchPlantF" width="70%" selectedKey="" items="{
+                                path: 'purOrg>/Pur_Operation_Org',
+                                filters: [
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
+                                    {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
+                                    {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
+                                ]
+                            }">
+                                <items>
+                                    <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
+                                </items>
+                            </ComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL6 L3 M6 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <HBox>
+                        <Table id="moldItemSelectTable"       
+                            growing="true"
+                            growingThreshold="20"
+                            class="sapFDynamicPageAlignContent" 
+                            updateFinished=".onListMainTableUpdateFinished2"
+                            mode="MultiSelect"
+                            width="auto"
+                            items="{purOrg>/Pur_Operation_Org}"
+                            >
+                        <headerToolbar>
+                            <OverflowToolbar>
+                            <Label text="Approval Line"/>
+                            </OverflowToolbar>
+                        </headerToolbar>
+                        <columns>
+                            <Column id="no2" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="5em" >
+                                <Text text="No." />
+                            </Column>
+                            <Column id="type2" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
+                                <Text text="Type" />
+                            </Column>
+                            <Column id="nameDept2" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                                <Text text="Name/Dept" />
+                            </Column>
+                            <Column id="status2" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                                <Text text="Status" />
+                            </Column> 
+                            <Column id="comment2" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                                <Text text="Comment" />
+                            </Column>
+                            <Column id="sort2" minScreenWidth="Tablet" hAlign="Center" width="3em" >
+                                  <Text text="" />
+                            </Column>					
+                            <Column id="action2" minScreenWidth="Tablet" hAlign="Center" width="3em" >
+                                  <Text text="" />
+                            </Column>					
+                        </columns>
+                        <items>
+                             <ColumnListItem>
+                                <cells>
+                                    <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
+                                    <Text text="{purOrg>org_name}" />
+                                    <Text text="{purOrg>plant_code}" />
+                                    <Text text="{purOrg>affiliate_code}" />
+                                    <Text text="{purOrg>bizdivision_code}" />
+                                    <Text text="{purOrg>bizunit_code}" />
+                                    <Text text="{purOrg>au_code}" />
+                                    <Text text="{purOrg>hq_au_code}" />
+                                </cells>
+                            </ColumnListItem>   
+                            </items>
+                            
+                        </Table>
+                        </HBox>
+                 </form:content>
+                </form:SimpleForm>
+            </VBox>       
+      
+        <ToolbarSpacer/>
+        <HBox alignItems="Center" justifyContent="Center" >
+            <Button text="Cancel" class="sapUiSmallMargin" press=".onExit"/>
+            <Button text="Select" class="sapUiSmallMargin" type="Emphasized" press=".handleConfirm"/>
+        </HBox>
+    </Dialog>
+</core:FragmentDefinition>
