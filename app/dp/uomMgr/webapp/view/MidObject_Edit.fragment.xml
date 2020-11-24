@@ -11,14 +11,14 @@
         <Label text="Class Text" required="true"/>
 		<Input value="{master>/uom_class_name}"/>
         <Label text="Base UOM" required="false"/>
-		<Input value="{master>/base_uom_code}"/>
+		<Text text="{master>/base_uom_code}"/>
         <Label text="Base UOM Text" required="false"/>
-		<Input value="{master>/base_uom_name}"/>
+		<Text text="{master>/base_uom_name}"/>
         <Label text="Description" required="false"/>
 		<Input value="{master>/uom_class_desc}"/>
         <Label text="Disable Date" required="false"/>
         <!-- <DatePicker placeholder="Date" value="{path: 'master>/disable_date',type: 'sap.ui.model.odata.type.Date'}" displayFormat="Date"/> -->
-		<DatePicker placeholder="Disable Date" value="{master>/disable_date}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
+		<DatePicker placeholder="Disable Date" dateValue="{master>/disable_date}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
 		<!-- <Label text="Chain" required="true"/>
 		<ComboBox id="searchChain" width="100%" selectedKey="{master>/chain_code}" items="{
 				path: 'util>/CodeDetails',

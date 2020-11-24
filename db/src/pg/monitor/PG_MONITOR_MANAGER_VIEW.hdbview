@@ -1,0 +1,11 @@
+view pg_Monitor_Manager_View as
+select
+	tenant_id,
+	employee_number,
+	user_korean_name||'('||user_english_name||')' as employee_name,
+	job_title,
+	mobile_phone_number,
+	department_id
+from cm_hr_employee
+order by 
+    employee_number;

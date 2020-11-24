@@ -1,7 +1,8 @@
 <mvc:View controllerName="dp.moldApprovalList.controller.PssaCreateObject" 
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:uxap="sap.uxap"
-    xmlns:form="sap.ui.layout.form"
+    xmlns:form="sap.ui.layout.form" 
+    xmlns:core="sap.ui.core" 
     xmlns:layout="sap.ui.layout"
     xmlns:tnt="sap.tnt"
     xmlns:co="sap.suite.ui.commons"
@@ -345,7 +346,7 @@
                             rowSelectionChange = ".onCheck"
                             mode="MultiSelect"
                             width="auto"
-                        
+                            items="{appList>/undefined}"
                             >
                         <headerToolbar>
                             <OverflowToolbar>
@@ -353,8 +354,8 @@
                             </OverflowToolbar>
                         </headerToolbar>
                         <columns>
-                            <Column id="no" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
-                                <Text text="No" />
+                            <Column id="no" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="5em" >
+                                <Text text="No." />
                             </Column>
                             <Column id="type" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
                                 <Text text="Type" />
@@ -367,20 +368,38 @@
                             </Column> 
                             <Column id="comment" minScreenWidth="Tablet" hAlign="Center" width="12em" >
                                 <Text text="Comment" />
-                            </Column> 						
+                            </Column>
+                            <Column id="sort" minScreenWidth="Tablet" hAlign="Center" width="3em" >
+                                  <Text text="" />
+                            </Column>					
+                            <Column id="action" minScreenWidth="Tablet" hAlign="Center" width="3em" >
+                                  <Text text="" />
+                            </Column>					
                         </columns>
                         <items>
-                            <!-- <ColumnListItem>
-                                            <cells>
-                                                <ObjectIdentifier title="{Name}" text="{ProductId}"/>
-                                                <Text text="{SupplierName}" />
-                                                <Text text="" />
-                                                <Text text="" />
-                                                <Text text="" />
-                                                <Text text="" />
-                                                <Text text="" />
-                                            </cells>
-                                        </ColumnListItem>   -->
+                             <ColumnListItem>
+                                <cells>
+                                    <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
+                                    <Text text="{appList>no}" />
+                                    <ComboBox   id="searchItemType" width="100%"
+                                        selectedKey=""
+                                        items="{
+                                                    path : 'util>/CodeDetails',
+                                                    filters : [
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                        {path : 'company_code', operator : 'EQ', value1 : '*'},
+                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
+                                                    ]
+                                                }"
+                                    ><core:Item key="{util>code}" text="{util>code_description}" />
+                                    </ComboBox>
+                                    <SearchField placeholder="Search employee" search="onFilter"/>
+                                    <Text text="{appList>status}" />
+                                    <Text text="{appList>comment}" />
+                                    <Button id="btnSort" icon="sap-icon://sort" press="onSort" tooltip="sort"></Button>
+                                    <Button id="btnDelete" icon="sap-icon://delete" press="onDelete" tooltip="삭제"></Button>
+                                </cells>
+                            </ColumnListItem>   
                         </items>
                     </Table>
                             
@@ -400,7 +419,7 @@
 				<ToolbarSpacer />
 				<Button type="Transparent" text="Draft" press=".onPageSaveButtonPress" />
 				<Button type="Transparent" text="Preview" press=".onPageSaveButtonPress" />
-				<Button type="Transparent" text="Delete" press=".onPageSaveButtonPress" />
+				<!-- <Button type="Transparent" text="Delete" press=".onPageSaveButtonPress" /> -->
 				<Button type="Emphasized" text="Request" press=".onPageCancelEditButtonPress"/>
 			</OverflowToolbar>
 		</uxap:footer>

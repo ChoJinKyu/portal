@@ -61,7 +61,23 @@ sap.ui.define([
       onSearch: function () {
         var predicates = [];
         if (!!this.byId("searchTenantCombo").getSelectedKey()) predicates.push(new Filter("tenant_id", FilterOperator.Contains, this.byId("searchTenantCombo").getSelectedKey()));
-        if (!!this.byId("searchTimeZoneCombo").getSelectedKey()) predicates.push(new Filter("timezone_code", FilterOperator.Contains, this.byId("searchTimeZoneCombo").getSelectedKey()));
+        //if (!!this.byId("searchTimeZoneCombo").getSelectedKey()) predicates.push(new Filter("timezone_code", FilterOperator.Contains, this.byId("searchTimeZoneCombo").getSelectedKey()));
+        if (!!this.byId("searchTimeZoneInput").getValue()) {
+          predicates.push(new Filter({
+            filters: [
+              new Filter("timezone_code", FilterOperator.Contains, this.byId("searchTimeZoneInput").getValue()),
+              new Filter("timezone_name", FilterOperator.Contains, this.byId("searchTimeZoneInput").getValue())
+            ],
+            and: false
+          }));
+        }
+        // new Filter({
+        //   filters: [
+        //     new Filter("receiving_report_date", FilterOperator.Contains, "20200825"),
+        //     new Filter("receiving_report_date", FilterOperator.Contains, "20200901")
+        //   ],
+        //   and: true
+        // });
         if (!!this.byId("searchCountryCombo").getSelectedKey()) predicates.push(new Filter("country_code", FilterOperator.Contains, this.byId("searchCountryCombo").getSelectedKey()));
         this.getView()
           .setBusy(true)

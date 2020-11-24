@@ -82,7 +82,7 @@
           "defaultBindingMode": "TwoWay",
           "defaultCountMode": "Inline",
           "refreshAfterChange": false,
-          "useBatch": true
+          "useBatch": false
         }
       },
       "": {
@@ -127,13 +127,6 @@
           "target": [
             "mainList"
           ]
-        },
-        {
-          "pattern": "Message/{tenantId}/{messageCode}/{languageCode}",
-          "name": "mainObject",
-          "target": [
-            "mainObject"
-          ]
         }
       ],
       "targets": {
@@ -143,18 +136,9 @@
           "viewLevel": 1,
           "title": "{i18n>mainListViewTitle}"
         },
-        "mainObject": {
-          "viewName": "MainObject",
-          "viewId": "mainObject",
-          "viewLevel": 2,
-          "title": "{i18n>mainObjectViewTitle}"
-        },
-        "mainObjectNotFound": {
-          "viewName": "MainObjectNotFound",
-          "viewId": "mainObjectNotFound"
-        },
         "notFound": {
           "viewName": "NotFound",
+          "viewPath": "ext.lib.view",
           "viewId": "notFound"
         }
       }
