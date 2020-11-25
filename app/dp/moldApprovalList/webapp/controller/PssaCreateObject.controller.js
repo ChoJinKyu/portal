@@ -53,6 +53,7 @@ sap.ui.define([
 				intent: "#Template-display"
             }, true);
             
+            this.getView().setModel(new ManagedListModel(), "createlist");
             this.getView().setModel(new ManagedListModel(),"appList"); // apporval list 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload      
         },   
@@ -178,7 +179,6 @@ sap.ui.define([
 			var oArgs = oEvent.getParameter("arguments"); 
             this._createViewBindData(oArgs); 
             this._onLoadApprovalRow();
-            this._doInitPariciptingSupplerPop();
         },
         /**
          * @description 초기 생성시 파라미터를 받고 들어옴 
@@ -191,30 +191,6 @@ sap.ui.define([
 
             console.log("oMasterModel >>> " , appInfoModel);
         } ,
-
-		/**
-		 * Binds the view to the object path.
-		 * @function
-		 * @param {string} sObjectPath path to the object to be bound
-		 * @private
-		 */
-		_bindView : function (sObjectPath) {
-
-			this._toEditMode();
-			var oViewModel = this.getModel("pssaCreateObjectView");
-			this.getView().bindElement({
-				path: sObjectPath,
-				events: {
-					change: this._onBindingChange.bind(this),
-					dataRequested: function () {
-						oViewModel.setProperty("/busy", true);
-					},
-					dataReceived: function () {
-						oViewModel.setProperty("/busy", false);
-					}
-				}
-			});
-		},
 
 		_onBindingChange : function () {
 			var oView = this.getView(),
@@ -324,10 +300,10 @@ sap.ui.define([
 			oUploadCollection.setShowSeparators(oEvent.getParameters().selectedItem.getProperty("key"));
         } ,
 
+
         /**
          * @description : Popup 창 : 품의서 Participating Supplier 항목의 Add 버튼 클릭
          */
-
         handleTableSelectDialogPress : function (oEvent) {
             console.group("handleTableSelectDialogPress");    
             var oView = this.getView();
@@ -347,39 +323,50 @@ sap.ui.define([
 				oDialog.open();
 			});
         },
-
-        _doInitPariciptingSupplerPop : function () {
-            // this.oColModel = new JSONModel(sap.ui.require.toUrl("dp/moldApprovalList/localService/mockdata") + "/commonCodeColum.json");
-           //  this.oCommonCodeModel = new JSONModel(sap.ui.require.toUrl("dp/moldApprovalList/localService/mockdata") + "/commonCode.json");
-           //  console.log(" table pop >>> " , this.oCommonCodeModel );
-             
-             this.setModel( new ManagedListModel() , "CommonCodeModel");
-        },
         /**
          * @public 
          * @see 사용처 Participating Supplier Fragment 취소 이벤트
          */
         onExit: function () {
 			this.byId("dialogMolItemSelection").close();
-		},
+        },
+         /**
+         * @description  Participating Supplier Fragment Apply 버튼 클릭시 
+         */
+        onMoldItemSelectionApply : function(oEvent){
+            var oTable = this.byId("moldItemSelectTable");
+            var aItems = oTable.getSelectedItems();
+            var that = this;
+            aItems.forEach(function(oItem){   
+                var obj = new JSONModel({
+                    model : oItem.getCells()[0].getText()
+                    , moldPartNo : oItem.getCells()[1].getText()
+                });
+              
+ 
+                console.log(" nItem >>>>> getText 1 " ,  oItem.getCells()[0].getText());   
+                console.log(" nItem >>>>> getText 2 " ,  oItem.getCells()[1].getText());   
+                console.log(" nItem >>>>> getText 3 " ,  oItem.getCells()[2].getText());   
+                console.log(" nItem >>>>> obj " ,  obj); 
+                that._addPsTable(obj);  
+                // oItem.getCells().forEach(function(nItem){ 
+                //      console.log(" nItem >>>>> getText " , nItem.getText());    
+                // });     
+            });
+            this.onExit();
+        },
+        /**
+         * @description participating row 추가 
+         * @param {*} data 
+         */
+        _addPsTable : function (data){     
+            var oTable = this.byId("psTable"),
+                oModel = this.getModel("createlist");
+                oModel.addRecord({
+                    "model": data.oData.model,
+                    "moldPartNo": data.oData.moldPartNo,
+                });
+        }
 
-      _configDialog: function (oButton) {
-		
-		    var bMultiSelect = !!oButton.data("multi");
-			this._oDialog.setMultiSelect(bMultiSelect);
-
-			
-			var sResponsiveStyleClasses = "sapUiResponsivePadding--header sapUiResponsivePadding--subHeader sapUiResponsivePadding--content sapUiResponsivePadding--footer";
-            this._oDialog.addStyleClass(sResponsiveStyleClasses);
-
-			// Set custom text for the confirmation button
-		//	var sCustomConfirmButtonText = oButton.data("confirmButtonText");
-		//	this._oDialog.setConfirmButtonText(sCustomConfirmButtonText);
-
-			this.getView().addDependent(this._oDialog);
-
-			// toggle compact style
-			syncStyleClass("sapUiSizeCompact", this.getView(), this._oDialog);
-		}
 	});
 });
