@@ -11,27 +11,25 @@
   entity 위에 @cds.persistence.exists 명시  
   
   5. namespace : db
-  6. entity : Mm_Uom_Class_Lng
-  7. entity description : UOM 클래스(언어)
+  6. entity : Mm_Material_Desc_Lng
+  7. entity description : 자재마스터 자재내역(언어별)
   8. history
   -. 2020.11.25 : 최미희 최초작성
 *************************************************/
 namespace dp;	
-using util from '../../../util/util-model';  	
-using { dp as uomclass } from './DP_MM_UOM_CLASS-model';
-	
-entity Mm_Uom_Class_Lng {	
+using util from '../../../util/util-model';	
+using { dp as materialMst } from './DP_MM_MATERIAL_MST-model';
+
+entity Mm_Material_Desc_Lng {	
   key tenant_id : String(5)  not null @title: 'Tenant ID' ;	
-  key uom_class_code : String(10)  not null @title: 'UOM Class Code' ;
+  key material_code : String(40) not null  @title: '자재코드' ;
 
-    parent: Association to uomclass.Mm_Uom_Class
+    parent: Association to materialMst.Mm_Material_Mst
         on parent.tenant_id = tenant_id 
-        and parent.uom_class_code = uom_class_code;
+        and parent.material_code = material_code;
 
-  key language_code : String(4)  not null @title: 'Language' ;	
-    uom_class_name : String(20)  not null @title: 'UOM Class Name' ;	
-    uom_class_desc : String(50)   @title: 'UOM클래스설명' ;	
-}	
+  key  language_code : String(4)  not null @title: '언어코드' ;	
+    material_description : String(300) not null  @title: '자재설명' ;	
+}
 
-
-extend Mm_Uom_Class_Lng with util.Managed;
+extend Mm_Material_Desc_Lng with util.Managed;
