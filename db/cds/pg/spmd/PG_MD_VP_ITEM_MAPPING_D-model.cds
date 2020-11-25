@@ -10,7 +10,7 @@ entity Md_Vp_Item_Mapping_D {
     key org_code                 : String(10) not null @title : '조직코드';
     key vendor_pool_code         : String(20) not null @title : '협력사풀코드';
     key spmd_character_code      : String(4) not null  @title : 'SPMD특성코드';
-        spmd_cateogry_code       : String(4) not null  @title : 'SPMD범주코드';
+        spmd_category_code       : String(4) not null  @title : 'SPMD범주코드';
         spmd_character_serial_no : Integer64 not null  @title : 'SPMD특성일련번호';
 
 
