@@ -8,7 +8,6 @@ sap.ui.define([
 
 	// shortcut for sap.m.URLHelper
 	var URLHelper = mobileLibrary.URLHelper;
-	var _nRenderedFirstRun = 0;
 	var oMessageManager;
 
 	return Controller.extend("ext.lib.controller.BaseController", {
@@ -64,7 +63,8 @@ sap.ui.define([
 		 * @public
 		 */
 		onAfterRendering: function(){
-			if(!!this.onRenderedFirst && _nRenderedFirstRun++ === 0){
+            if(this._nRenderedFirstRun == undefined) this._nRenderedFirstRun = 0;
+			if(!!this.onRenderedFirst && this._nRenderedFirstRun++ === 0){
 				this.onRenderedFirst.call(this);
 			}
 		},

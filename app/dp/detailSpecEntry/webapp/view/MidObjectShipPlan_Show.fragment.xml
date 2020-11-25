@@ -12,7 +12,7 @@
                     inset="false"
                     class="sapFDynamicPageAlignContent"
                     width="auto"
-                    items= "{schedule>/}"
+                    items= "{schedule>/MoldSchedule}"
                     >
                 <columns>
                     <Column>
@@ -37,12 +37,26 @@
                 <items>
                     <ColumnListItem>
                         <cells>
-                            <Text text="{schedule>mold_develope_date_type_code}" />
-                            <Text text="{schedule>drawing_agreement_date}" />
-                            <Text text="{schedule>drawing_confirmed_date}" />
-                            <Text text="{schedule>first_production_date}" />
-                            <Text text="{schedule>production_complete_date}" />
-                            <Text text="{schedule>inspection_date}" />
+                            <ComboBox   width="100%"
+                                        selectedKey="{schedule>mold_develope_date_type_code}"
+                                        items="{
+                                                    path : 'util>/CodeDetails',
+                                                    filters : [
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_DEV_DATE_TYPE'}
+                                                    ]
+                                                }"
+                                        editable="false"
+                                        class="readonlyField"
+                            >
+                                <core:Item key="{util>code}" text="{util>code_description}" />
+                            </ComboBox>
+                            
+                            <DatePicker value="{schedule>drawing_agreement_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
+                            <DatePicker value="{schedule>drawing_confirmed_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
+                            <DatePicker value="{schedule>first_production_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
+                            <DatePicker value="{schedule>production_complete_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
+                            <DatePicker value="{schedule>inspection_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
                         </cells>
                     </ColumnListItem>
                 </items>
@@ -55,7 +69,7 @@
                     inset="false"
                     class="sapFDynamicPageAlignContent"
                     width="auto"
-                    items= "{schedule>/}"
+                    items= "{schedule>/MoldSchedule}"
                     >
                 <columns>
                     <Column>
@@ -80,12 +94,25 @@
                 <items>
                     <ColumnListItem>
                         <cells>
-                            <Text text="{schedule>mold_develope_date_type_code}" />
-                            <Text text="{schedule/first_production_update_date}" placeholder="YYYY-MM-DD"/>
-                            <Text text="{schedule/second_production_update_date}" />
-                            <Text text="{schedule/third_production_update_date}" placeholder="YYYY-MM-DD"/>
-                            <Text text="{schedule/fourth_production_update_date}" />
-                            <Text text="{schedule/fifth_production_update_date}" placeholder="YYYY-MM-DD"/>
+                            <ComboBox   width="100%"
+                                        selectedKey="{schedule>mold_develope_date_type_code}"
+                                        items="{
+                                                    path : 'util>/CodeDetails',
+                                                    filters : [
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_DEV_DATE_TYPE'}
+                                                    ]
+                                                }"
+                                        editable="false"
+                                        class="readonlyField"
+                            >
+                                <core:Item key="{util>code}" text="{util>code_description}" />
+                            </ComboBox>
+                            <DatePicker value="{schedule/first_production_update_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
+                            <DatePicker value="{schedule/second_production_update_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
+                            <DatePicker value="{schedule/third_production_update_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
+                            <DatePicker value="{schedule/fourth_production_update_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
+                            <DatePicker value="{schedule/fifth_production_update_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
                         </cells>
                     </ColumnListItem>
                 </items>
