@@ -8,8 +8,8 @@ entity Md_Category_Id {
     key company_code                : String(10) not null           @title : '회사코드';
     key org_type_code               : String(30) not null           @title : '조직유형코드';
     key org_code                    : String(10) not null           @title : '조직코드';
-    key spmd_cateogry_code          : String(4) not null            @title : 'SPMD범주코드';
-        spmd_cateogry_code_name     : String(50) not null           @title : 'SPMD범주코드명';
+    key spmd_category_code          : String(4) not null            @title : 'SPMD범주코드';
+        spmd_category_code_name     : String(50) not null           @title : 'SPMD범주코드명';
         rgb_font_color_code         : String(7) default '#000000'   @title : 'RGB글꼴색상코드';
         rgb_cell_clolor_code        : String(7) default '#FFFFFF'   @title : 'RGB셀색상코드';
         spmd_category_sort_sequence : Integer64 not null            @title : 'SPMD범주정렬순서';
@@ -17,11 +17,11 @@ entity Md_Category_Id {
 
 
         items                       : Association to many items
-                                          on  items.tenant_id      = tenant_id
-                                          and items.company_code   = company_code
-                                          and items.org_type_code  = org_type_code
-                                          and items.org_code       = org_code
-                                          and items.spmd_cateogry_code  = spmd_cateogry_code ;
+                                          on  items.tenant_id          = tenant_id
+                                          and items.company_code       = company_code
+                                          and items.org_type_code      = org_type_code
+                                          and items.org_code           = org_code
+                                          and items.spmd_category_code = spmd_category_code;
 }
 
 extend Md_Category_Id with util.Managed;

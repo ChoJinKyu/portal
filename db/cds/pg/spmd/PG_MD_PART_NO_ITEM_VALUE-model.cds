@@ -17,7 +17,7 @@ entity Md_Part_No_Item_Value {
         spmd_character_value_text  : String(100)         @title : 'SPMD특성값텍스트';
         spmd_character_value_digit : Decimal             @title : 'SPMD특성값숫자';
         spmd_character_value_unit  : String(3)           @title : 'SPMD특성값단위';
-        spmd_cateogry_code         : String(4) not null  @title : 'SPMD범주코드';
+        spmd_category_code         : String(4) not null  @title : 'SPMD범주코드';
 
 
 }
