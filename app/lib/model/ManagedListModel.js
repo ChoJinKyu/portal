@@ -38,7 +38,7 @@ sap.ui.define([
         },
 
         addRecord: function (oRecord, sPath, nIndex) {
-            var sEntityName = this.getProperty("/entityName"),
+            var sEntityName = this.getProperty("/entityName") || (sPath && sPath.startsWith("/") ? sPath.substring(1) : sPath),
                 aRecords = this.getProperty("/" + sEntityName);
             if(!aRecords) aRecords = [];
             if(typeof sPath == "number") nIndex = sPath;
