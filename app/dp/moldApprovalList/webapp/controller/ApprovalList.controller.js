@@ -28,6 +28,7 @@ sap.ui.define([
     * @author jinseon.lee , daun.lee 
     */
     var toggleButtonId ="";
+    var dialogId = "";
 
 	return BaseController.extend("dp.moldApprovalList.controller.ApprovalList", {
 
@@ -233,134 +234,71 @@ sap.ui.define([
             return [oToken];
         },
 
-        approvalDialogOpen: function (oEvent) {
-            
+        /**
+         * @private 
+         * @see 리스트에서 create 버튼을 제외한 각각의 팝업 오픈
+         */
+        approvalDialogOpen: function (oEvent){
+            var oView = this.getView();
             var oButton = oEvent.getSource();
             var id = oButton.getId();
             var page ="";
             if(id.indexOf("Model") != -1){
                 page = "dp.moldApprovalList.view.DialogModel";
+                dialogId = "DialogModel";
             }else if(id.indexOf("MoldPartNo") != -1){
                 page = "dp.moldApprovalList.view.DialogMoldPartNo";
+                dialogId = "DialogMoldPartNo";
             }else if(id.indexOf("Requester") != -1){
                 page = "dp.moldApprovalList.view.DialogRequester";
+                dialogId = "DialogRequester";
             }
-            //console.log(oButton.getBindingContext("msg").getPath())
-            console.log("page >>>", page);
-            Fragment.load({
-                name: page,
+            this._oDialog = Fragment.load({
+                id: oView.getId(),
+                name: ""+page,
                 controller: this
             }).then(function (oDialog) {
-                this._oDialog = oDialog;
-                this._configDialog(oButton);
-                this._oDialog.open();
-            }.bind(this));
-			
-		},
-
-		_configDialog: function (oButton) {
-			// Set draggable property
-			var bDraggable = oButton.data("draggable");
-			this._oDialog.setDraggable(bDraggable == "true");
-
-			// Set resizable property
-			var bResizable = oButton.data("resizable");
-			this._oDialog.setResizable(bResizable == "true");
-
-			// Multi-select if required
-			var bMultiSelect = !!oButton.data("multi");
-			this._oDialog.setMultiSelect(bMultiSelect);
-
-			// Remember selections if required
-			var bRemember = !!oButton.data("remember");
-			this._oDialog.setRememberSelections(bRemember);
-
-			var sResponsivePadding = oButton.data("responsivePadding");
-			var sResponsiveStyleClasses = "sapUiResponsivePadding--header sapUiResponsivePadding--subHeader sapUiResponsivePadding--content sapUiResponsivePadding--footer";
-
-			if (sResponsivePadding) {
-				this._oDialog.addStyleClass(sResponsiveStyleClasses);
-			} else {
-				this._oDialog.removeStyleClass(sResponsiveStyleClasses);
-			}
-
-			// Set custom text for the confirmation button
-			var sCustomConfirmButtonText = oButton.data("confirmButtonText");
-			this._oDialog.setConfirmButtonText(sCustomConfirmButtonText);
-
-			this.getView().addDependent(this._oDialog);
-
-			// toggle compact style
-			syncStyleClass("sapUiSizeCompact", this.getView(), this._oDialog);
-        },
-
-        onHandleApply : function (oEvent) {
-            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S",
-            aTokens = oEvent.getParameter("tokens");
-            console.log(oEvent.getParameter());
-
-            this.searchAffiliate = this.getView().byId("searchAffiliate"+sSurffix);
-            this.searchAffiliate.setTokens(aTokens);
-            this._oValueHelpDialog.close();
-        },
-		// 	var oButton = oEvent.getSource();
-        //     var id = oButton.getId();
-        //     var page ="";
-        //     if(id.indexOf("Model") != -1){
-        //         page = "dp.moldApprovalList.view.DialogModel";
-        //     }else if(id.indexOf("MoldPartNo") != -1){
-        //         page = "dp.moldApprovalList.view.DialogMoldPartNo";
-        //     }else if(id.indexOf("Requester") != -1){
-        //         page = "dp.moldApprovalList.view.DialogRequester";
-        //     }
-        //     //console.log(oButton.getBindingContext("msg").getPath())
-        //     console.log("page >>>", page);
-        //     Fragment.load({
-        //         name: page,
-        //         controller: this
-        //     }).then(function (oValueHelpDialog) {
-        //         this._oValueHelpDialog = oValueHelpDialog;
-        //         this.getView().addDependent(this._oValueHelpDialog);
-        //         this._configValueHelpDialog();
-        //         this._oValueHelpDialog.open();
-        //     }.bind(this));
-			
-		// },
-
-		// _configValueHelpDialog: function () {
-		// 	var sInputValue = this.byId("searchModel").getValue(),
-		// 		oModel = this.getView().getModel(),
-        //         aProducts = oModel.getProperty("/MoldSpec");
+                // connect dialog to the root view of this component (models, lifecycle)
+                oView.addDependent(oDialog);
+                return oDialog;
+            });
+            this._oDialog.then(function(oDialog) {
+                oDialog.open();
                 
-        //         console.log("oModel >>>", oModel);
-        //         console.log("sInputValue >>>", sInputValue);
-
-		// 	aProducts.forEach(function (oProduct) {
-		// 		oProduct.selected = (oProduct.Name === sInputValue);
-		// 	});
-		// 	oModel.setProperty("/MoldSpec", aProducts);
-		// },
-
-
-		handleValueHelpClose: function () {
-            console.log(this.getView());
-            var oModel = this.getView().getModel(),
-				aProducts = oModel.getProperty("msg>message_contents"),
-				oInput = this.byId("searchModel");
-                console.log(oModel);
-                console.log(oModel.getBinding());
-                console.log(aProducts);
-			var bHasSelected = aProducts.some(function (oProduct) {
-				if (oProduct.selected) {
-					oInput.setValue(oProduct.Name);
-					return true;
-				}
 			});
+		
+        },
 
-			if (!bHasSelected) {
-				oInput.setValue(null);
-			}
-		},
+        /**
+         * @private 
+         * @see approvalDialogOpen 함수에서 오픈한 팝업 닫기
+         */
+        onHandleClose: function (){
+            this.byId(dialogId).close();
+            this.byId(dialogId).destroy();
+        },
+
+        /**
+         * @private 
+         * @see approvalDialogOpen 팝업에서 apply버튼 클릭시
+         */
+        onHandleApply : function () {
+
+            var oTable = this.byId("modelTable");
+            var aItems = oTable.getSelectedItems();
+            var oInput = this.byId("searchModel");
+            console.log(aItems);
+            if(aItems != ""){
+                aItems.forEach(function(oItem){   
+                    console.log(" nItem >>>>> getText 1 " ,  oItem.getCells()[0].getText());  
+                    oInput.setValue(oItem.getCells()[0].getText());
+                });
+            }else{
+                oInput.setValue("");
+            }
+            this.byId(dialogId).close();
+            this.byId(dialogId).destroy();
+        },
 
          /**
          * @public
@@ -368,7 +306,7 @@ sap.ui.define([
          */
         handleSearch: function (oEvent) {
 			var sValue = oEvent.getParameter("value");
-			var oFilter = new Filter("message_contents", FilterOperator.Contains, sValue);
+			var oFilter = new Filter("org_name", FilterOperator.Contains, sValue);
 			var oBinding = oEvent.getSource().getBinding("items");
 			oBinding.filter([oFilter]);
         },
@@ -438,8 +376,11 @@ sap.ui.define([
         },
 
         createPopupClose: function (oEvent){
+            console.log(oEvent);
             this.byId("dialogApprovalCategory").close();
         },
+
+       
 
         /* Affiliate End */
 
