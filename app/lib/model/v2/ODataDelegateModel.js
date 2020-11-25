@@ -1,15 +1,22 @@
 sap.ui.define([
-    "../AbstractModel"
-], function (JSONModel) {
+    "../SuperModel"
+], function (SuperModel) {
     "use strict";
 
     var STATE_COL = "_row_state_";
 
-    var DelegateModel = JSONModel.extend("ext.lib.model.DelegateModel", {
+    var DelegateModel = SuperModel.extend("ext.lib.model.DelegateModel", {
 
-        constructor: function (oData, bObserve) {
-            JSONModel.prototype.constructor.apply(this, arguments);
+        constructor: function (oData, entityName, bObserve) {
             this._aRemovedRows = [];
+            this._entityName = entityName;
+            SuperModel.prototype.constructor.apply(this, arguments);
+        },
+
+        getEntityName: function(sPath){
+            return this._entityName
+                || (this._transactionPath && this._transactionPath.startsWith("/") ? this._transactionPath.substring(1) : null)
+                || (sPath && sPath.startsWith("/") ? sPath.substring(1) : null);
         },
 
         /**
@@ -46,7 +53,7 @@ sap.ui.define([
                 oResult.entityName = sPath.substring(1);
                 oResult[oResult.entityName] = [oData];
             }
-            JSONModel.prototype.setData.call(this, oResult, bMerge);
+            SuperModel.prototype.setData.call(this, oResult, bMerge);
         },
 
         setProperty: function (sPath, oValue, oContext, bAsyncUpdate) {
@@ -54,18 +61,19 @@ sap.ui.define([
                 var _oRecord = this.getObject(oContext.getPath());
                 if (typeof _oRecord == "object" && !_oRecord[STATE_COL]) _oRecord[STATE_COL] = "U";
             }
-            JSONModel.prototype.setProperty.call(this, sPath, oValue, oContext, bAsyncUpdate);
+            SuperModel.prototype.setProperty.call(this, sPath, oValue, oContext, bAsyncUpdate);
         },
 
         addRecord: function (oRecord, sPath, nIndex) {
             var sEntityName = this.getProperty("/entityName"),
                 aRecords = this.getProperty("/" + sEntityName);
+            if(!aRecords) aRecords = [];
             if(typeof sPath == "number") nIndex = sPath;
             if (nIndex == undefined) nIndex = aRecords.length;
             if(!!sPath) oRecord.__entity = sPath;
             oRecord[STATE_COL] = "C";
             aRecords.splice(nIndex || 0, 0, oRecord);
-            JSONModel.prototype.setProperty.call(this, "/" + sEntityName, aRecords);
+            SuperModel.prototype.setProperty.call(this, "/" + sEntityName, aRecords);
         },
 
         markRemoved: function (nIndex) {
@@ -76,7 +84,7 @@ sap.ui.define([
                 this.removeRecord(nIndex);
             } else {
                 _oRecord[STATE_COL] = "D";
-                JSONModel.prototype.setProperty.call(this, "/" + sEntityName + "/" + nIndex, _oRecord);
+                SuperModel.prototype.setProperty.call(this, "/" + sEntityName + "/" + nIndex, _oRecord);
             }
         },
 
@@ -85,7 +93,11 @@ sap.ui.define([
                 aRecords = this.getProperty("/" + sEntityName),
                 oRemoved = aRecords.splice(nIndex, 1);
             this._addRemoved(oRemoved[0]);
-            JSONModel.prototype.setProperty.call(this, "/" + sEntityName, aRecords);
+            SuperModel.prototype.setProperty.call(this, "/" + sEntityName, aRecords);
+        },
+
+        isChanged: function(){
+            return this.getChanges().length > 0;
         },
 
         getChanges: function () {
@@ -136,7 +148,7 @@ sap.ui.define([
                 oServiceModel.create(sPath, oItem, {
                     groupId: sGroupId,
                     success: function (oData) {
-                        console.log("Added a new record that created by origin model.", "oData V2 Transaction submitBatch");
+                        oItem.__entity = sPath;
                     }
                 });
             });
@@ -145,7 +157,6 @@ sap.ui.define([
                 oServiceModel.remove(oItem.__entity, {
                     groupId: sGroupId,
                     success: function () {
-                        console.log("Removed a record that deleted from origin model.", "oData V2 Transaction submitBatch");
                     }
                 });
             });
@@ -156,7 +167,7 @@ sap.ui.define([
                 oServiceModel.update(sEntity, oItem, {
                     groupId: sGroupId,
                     success: function () {
-                        console.log("Updated a record that changed by origin model.");
+                        oItem.__entity = sEntity;
                     }
                 });
             });
@@ -181,7 +192,7 @@ sap.ui.define([
             aIndices.reverse().forEach(function (nIndex) {
                 aRecords.splice(nIndex, 1);
             });
-            JSONModel.prototype.setProperty.call(this, "/" + sEntityName, aRecords);
+            SuperModel.prototype.setProperty.call(this, "/" + sEntityName, aRecords);
         },
 
         _getRecordsByState: function (sStates) {

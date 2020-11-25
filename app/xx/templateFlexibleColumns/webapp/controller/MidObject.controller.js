@@ -260,7 +260,8 @@ sap.ui.define([
 				}, "/ControlOptionMasters");
 
 				var oDetailsModel = this.getModel("details");
-				oDetailsModel.setTransactionModel(this.getModel());
+                oDetailsModel.setTransactionModel(this.getModel());
+                oDetailsModel.setData([], "/ControlOptionDetails");
 				oDetailsModel.addRecord({
 					"tenant_id": this._sTenantId,
 					"control_option_code": this._sControlOptionCode,
