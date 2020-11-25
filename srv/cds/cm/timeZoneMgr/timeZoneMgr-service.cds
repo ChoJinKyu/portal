@@ -2,17 +2,13 @@ using { cm as timeZoneMgr } from '../../../../db/cds/cm/timeZoneMgr/CM_TIME_ZONE
 using { cm as DbSysdateMtzFunc } from '../../../../db/cds/cm/timeZoneMgr/CM_DB_SYSDATE_MTZ_FUNC-model';
 using { cm as GetdateFromDayofweekFunc } from '../../../../db/cds/cm/timeZoneMgr/CM_GETDATE_FROM_DAYOFWEEK_FUNC-model';
 
-
-// using {xx as Master} from '../../../db/cds/xx/sampleMstMgr/XX_SAMPLE_MASTER-model';
-// using {xx as MasterF} from '../../../db/cds/xx/sampleMstMgr/XX_SAMPLE_MASTER_FUNC-model';
-// // using {xx as MasterP} from '../../../db/cds/xx/sampleMstMgr/XX_SAMPLE_MASTER_PROC-model';
-// using {cm as timeZoneMgr} from '../../../../db/cds/cm/timeZoneMgr/CM_TIME_ZONE-model';
-
 namespace cm;
 
 service TimeZoneMgrService {
     
     entity TimeZone as projection on timeZoneMgr.Time_Zone; 
+
+    // v2 서비스 펑션 생성 버그 보류 v4 는 현재 가능
 
     entity TimeZoneFunc(p_tenant_id: String(5),
                     p_sysdate: Date, 
