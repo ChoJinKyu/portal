@@ -167,12 +167,12 @@
                     <form:content>
                         <VBox>
                             <Label text="Model " labelFor="searchModel"></Label>
-                            <MultiInput id="searchModel" valueHelpOnly="true" width="100%" valueHelpRequest=".approvalDialogOpen">
-                                <customData>
+                            <Input id="searchModel" showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".approvalDialogOpen"  width="100%">
+                                <!-- <customData>
                                     <core:CustomData key="multi" value="true" />
                                     <core:CustomData key="confirmButtonText" value="Apply" />
-                                </customData>
-                            </MultiInput>
+                                </customData> -->
+                            </Input>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -213,7 +213,7 @@
                                 <SegmentedButton id="searchStatusS" selectedKey="" class="sapUiSmallMarginBottom" width="100%">
                                     <items>
                                         <SegmentedButtonItem text="All" key="" />
-                                        <SegmentedButtonItem text="Saved" width="5em" />
+                                        <SegmentedButtonItem text="Draft" width="5em" />
                                         <SegmentedButtonItem text="In-Appr" width="5em" />
                                         <SegmentedButtonItem text="Apprvd" width="5em" />
                                         <SegmentedButtonItem text="Rejected" width="5em" />

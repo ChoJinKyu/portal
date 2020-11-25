@@ -27,6 +27,7 @@ sap.ui.define([
     * @date 2020.11.19 
     * @author jinseon.lee , daun.lee 
     */
+    var toggleButtonId ="";
 
 	return BaseController.extend("dp.moldApprovalList.controller.ApprovalList", {
 
@@ -183,7 +184,19 @@ sap.ui.define([
             // }
 
 		},
+        onDblClick  : function(oEvent) {
+            console.log(oEvent);
+            window.clicks = window.clicks + 1;
+                
+            if(window.clicks == 1) {
+                setTimeout(sap.ui.controller(this).clearClicks, 500);
+            } else if(window.clicks == 2) {
+                console.log("더블클릭");
+            }
+        },
 
+        
+        
         /* Affiliate Start */
         /**
          * @private
@@ -279,12 +292,91 @@ sap.ui.define([
 
 			// toggle compact style
 			syncStyleClass("sapUiSizeCompact", this.getView(), this._oDialog);
+        },
+
+        onHandleApply : function (oEvent) {
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S",
+            aTokens = oEvent.getParameter("tokens");
+            console.log(oEvent.getParameter());
+
+            this.searchAffiliate = this.getView().byId("searchAffiliate"+sSurffix);
+            this.searchAffiliate.setTokens(aTokens);
+            this._oValueHelpDialog.close();
+        },
+		// 	var oButton = oEvent.getSource();
+        //     var id = oButton.getId();
+        //     var page ="";
+        //     if(id.indexOf("Model") != -1){
+        //         page = "dp.moldApprovalList.view.DialogModel";
+        //     }else if(id.indexOf("MoldPartNo") != -1){
+        //         page = "dp.moldApprovalList.view.DialogMoldPartNo";
+        //     }else if(id.indexOf("Requester") != -1){
+        //         page = "dp.moldApprovalList.view.DialogRequester";
+        //     }
+        //     //console.log(oButton.getBindingContext("msg").getPath())
+        //     console.log("page >>>", page);
+        //     Fragment.load({
+        //         name: page,
+        //         controller: this
+        //     }).then(function (oValueHelpDialog) {
+        //         this._oValueHelpDialog = oValueHelpDialog;
+        //         this.getView().addDependent(this._oValueHelpDialog);
+        //         this._configValueHelpDialog();
+        //         this._oValueHelpDialog.open();
+        //     }.bind(this));
+			
+		// },
+
+		// _configValueHelpDialog: function () {
+		// 	var sInputValue = this.byId("searchModel").getValue(),
+		// 		oModel = this.getView().getModel(),
+        //         aProducts = oModel.getProperty("/MoldSpec");
+                
+        //         console.log("oModel >>>", oModel);
+        //         console.log("sInputValue >>>", sInputValue);
+
+		// 	aProducts.forEach(function (oProduct) {
+		// 		oProduct.selected = (oProduct.Name === sInputValue);
+		// 	});
+		// 	oModel.setProperty("/MoldSpec", aProducts);
+		// },
+
+
+		handleValueHelpClose: function () {
+            console.log(this.getView());
+            var oModel = this.getView().getModel(),
+				aProducts = oModel.getProperty("msg>message_contents"),
+				oInput = this.byId("searchModel");
+                console.log(oModel);
+                console.log(oModel.getBinding());
+                console.log(aProducts);
+			var bHasSelected = aProducts.some(function (oProduct) {
+				if (oProduct.selected) {
+					oInput.setValue(oProduct.Name);
+					return true;
+				}
+			});
+
+			if (!bHasSelected) {
+				oInput.setValue(null);
+			}
 		},
+
+         /**
+         * @public
+         * @see 사용처 DialogModel, DialogMoldPartNo, DialogRequester Search 이벤트
+         */
+        handleSearch: function (oEvent) {
+			var sValue = oEvent.getParameter("value");
+			var oFilter = new Filter("message_contents", FilterOperator.Contains, sValue);
+			var oBinding = oEvent.getSource().getBinding("items");
+			oBinding.filter([oFilter]);
+        },
 
         
          /**
          * @public
-         * @see 사용처 ValueHelpDialogAffiliate Fragment window.close after 이벤트
+         * @see 사용처 DialogCreate Fragment Open 이벤트
          */
         onDialogCreate: function (){
             var oView = this.getView();
@@ -313,9 +405,9 @@ sap.ui.define([
          */ 
         onToggleHandleChange : function(oEvent){
             var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
-            var isPressed;
             var isPressedId;
             isPressedId =oEvent.getSource().getId();
+            toggleButtonId = isPressedId;
             for(var i=0; i<groupId.length; i++){
                 if(groupId[i].getId() != isPressedId){
                     groupId[i].setPressed(false);
@@ -324,7 +416,12 @@ sap.ui.define([
            
         },
 
+         /**
+         * @public
+         * @see 사용처 create 팝업에서 select 버튼 press시 Object로 이동
+         */ 
         handleConfirm : function(targetControl){
+            console.log(toggleButtonId);
             var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
             for(var i=0; i<groupId.length; i++){
                 if(groupId[i].getPressed() == true){

@@ -2,7 +2,7 @@
 	xmlns="sap.m"
 	xmlns:core="sap.ui.core">
     	<TableSelectDialog
-		noDataText="No Products Found"
+		noDataText="No Requester Found"
 		title="Requester Selection"
 		search=".handleSearch"
 		confirm=".handleValueHelpClose"
