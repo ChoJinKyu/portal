@@ -31,14 +31,14 @@ namespace pg;
 service marketIntelligenceService {
 
     // Entity List
-    entity MICategory @(title : '카테고리속성') as projection on MICateg.MI_Category;
-    entity MICategoryText @(title : '카테고리명') as projection on MICategText.MI_Category_Lng;
-    entity MICategoryList @(title : '카테고리 List') as projection on MICategList.MI_Category_List;
-    entity MIMaterialCode @(title : '시황자재 속성') as projection on MIMatCode.MI_Material_Code;
-    entity MIMaterialCodeText @(title : '시황자재명') as projection on MIMatCodetext.MI_Material_Code_Lng;
-    entity MIMaterialCodeList @(title : '시황자재 List') as projection on MIMatCodeList.MI_Material_Code_List;
-    entity MIMaterialPriceManagement @(title : '시황자재 가격관리') as projection on MIMatPrcMngt.MI_Material_Price_Management;
-    entity MICategoryHierarchyStructure @(title : 'Category 계층구조') as projection on MICategHierStru.MI_Category_Hichy_Stru;
+    entity MICategory @(title : '카테고리속성')                           as projection on MICateg.MI_Category;
+    entity MICategoryText @(title : '카테고리명')                        as projection on MICategText.MI_Category_Lng;
+    entity MICategoryList @(title : '카테고리 List')                    as projection on MICategList.MI_Category_List;
+    entity MIMaterialCode @(title : '시황자재 속성')                      as projection on MIMatCode.MI_Material_Code;
+    entity MIMaterialCodeText @(title : '시황자재명')                    as projection on MIMatCodetext.MI_Material_Code_Lng;
+    entity MIMaterialCodeList @(title : '시황자재 List')                as projection on MIMatCodeList.MI_Material_Code_List;
+    entity MIMaterialPriceManagement @(title : '시황자재 가격관리')         as projection on MIMatPrcMngt.MI_Material_Price_Management;
+    entity MICategoryHierarchyStructure @(title : 'Category 계층구조')  as projection on MICategHierStru.MI_Category_Hichy_Stru;
     entity MIMaterialCodeBOMManagement @(title : '자제별 시황자재 BOM 관리') as projection on MIMatCdBOMMngt.MI_Material_Code_Bom_Mngt;
     // View List
     view MIMaterialPriceManagementView @(title : '시황자재 가격관리 View') as select from MIMatPrcMngtView.MI_Mat_Prc_Management_View;
@@ -111,7 +111,7 @@ service marketIntelligenceService {
             and main.org_code      = catg.org_code
             and main.category_code = catg.category_code
         where
-                main.language_code = 'KO'
+                main.language_code        =  'KO'
             and catg.parent_category_code is null
         group by
             main.tenant_id,
@@ -138,7 +138,7 @@ service marketIntelligenceService {
             and main.org_code      = catg.org_code
             and main.category_code = catg.category_code
         where
-                main.language_code = 'KO'
+                main.language_code        =      'KO'
             and catg.parent_category_code is not null
         group by
             main.tenant_id,
@@ -275,16 +275,16 @@ service marketIntelligenceService {
     // Category&MI Material View: 카테고리&시황자재 View
     view CategoryMIMaterialView @(title : '카테고리&시황자재 View') as
         select
-            mi_mat_cd.tenant_id                  as tenant_id,
-            mi_mat_cd.company_code               as company_code,
-            mi_mat_cd.org_type_code              as org_type_code,
-            mi_mat_cd.org_code                   as org_code,
-            mi_mat_cd.mi_material_code           as mi_material_code,
-            mi_mat_cd_lang.language_code         as mi_material_language_code,
-            mi_mat_cd_lang.mi_material_code_name as mi_material_code_name,
-            mi_mat_cd.category_code              as category_code,
-            mi_cat_lang.language_code            as category_code_language_code,
-            mi_cat_lang.category_name            as category_name
+            key mi_mat_cd.tenant_id                  as tenant_id,
+            key mi_mat_cd.company_code               as company_code,
+            key mi_mat_cd.org_type_code              as org_type_code,
+            key mi_mat_cd.org_code                   as org_code,
+            key mi_mat_cd.mi_material_code           as mi_material_code,
+                mi_mat_cd_lang.language_code         as mi_material_language_code,
+                mi_mat_cd_lang.mi_material_code_name as mi_material_code_name,
+                mi_mat_cd.category_code              as category_code,
+                mi_cat_lang.language_code            as category_code_language_code,
+                mi_cat_lang.category_name            as category_name
         from MIMaterialCode as mi_mat_cd
         left join MIMaterialCodeText as mi_mat_cd_lang
             on  mi_mat_cd.tenant_id        = mi_mat_cd_lang.tenant_id
