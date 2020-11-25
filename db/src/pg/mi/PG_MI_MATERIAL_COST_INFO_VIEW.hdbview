@@ -1,0 +1,27 @@
+view pg_MI_Material_Cost_Info_View as
+    select
+        tenant_id,
+        company_code,
+        org_type_code,
+        org_code,
+        mi_material_code,
+        mi_material_code_name,
+        currency_unit,
+        quantity_unit,
+        exchange,
+        termsdelv,
+        cast(max(mi_date) as Date) mi_date,
+        amount
+    from pg_mi_material_price_management
+    group by
+        tenant_id,
+        company_code,
+        org_type_code,
+        org_code,
+        mi_material_code,
+        mi_material_code_name,
+        currency_unit,
+        quantity_unit,
+        exchange,
+        termsdelv,
+        amount;

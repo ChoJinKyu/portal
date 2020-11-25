@@ -16,15 +16,18 @@ entity Vp_Vendor_Pool_Search_View {
   vendor_pool_level3_name: String @title: 'V/P(Level3)';
   vendor_pool_level4_name: String @title: 'V/P(Level4)';
   vendor_pool_level5_name: String @title: 'V/P(Level5)';
+  higher_level: String @title: '상위레벨경로';
+  info_change_status: String @title: '정보변경상태';
   inp_type_code: String(30) @title: '품목속성코드';
   inp_type_name: String @title: '품목속성';
   equipment_grade_code: String(30) @title: '심의등급코드';
   equipment_grade_name: String @title: '심의등급';
   equipment_type_code: String(30) @title: '장비구분코드';
   equipment_type_name: String @title: '장비구분';
-  supplier_code: String(15) @title: '협력사 코드';
-  supplier_local_name: String @title: '협력사 명'; 
-  supplier_english_name: String @title: '협력사 영문명';
+  supplier_quantity: Integer64 @title: '공급업체수';
+  supplier_code: String(15) @title: '공급업체 코드';
+  supplier_local_name: String @title: '공급업체 명'; 
+  supplier_english_name: String @title: '공급업체 영문명';
   company_name: String @title: '법인명';
   supplier_type_name: String @title: '분류';
   supplier_flag: Boolean @title: '공급유형(Supplier)';
@@ -46,4 +49,6 @@ entity Vp_Vendor_Pool_Search_View {
   hierarchy_parent_rank: Integer64;
   hierarchy_level: Integer;
   hierarchy_root_rank: Integer64;
+  delete_flag: Boolean @title: '삭제가능여부';
+  drill_state: String @title: 'expand/leaf';
 }

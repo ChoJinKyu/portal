@@ -2,13 +2,14 @@
 	xmlns="sap.ui.comp.valuehelpdialog"
 	xmlns:core="sap.ui.core">
 	<ValueHelpDialog
-		title="Affiliate"
+        id="valueHelpDialog"
+		title="Model"
 		ok=".onValueHelpOkPress"
-        valueHelpRequest=".onValueHelpRequested"
 		cancel=".onValueHelpCancelPress"
 		afterClose=".onValueHelpAfterClose"
-		key="AffiliateCode"
-		descriptionKey="Name"
+        supportMultiselect="false"
+		key="part_number"
+		descriptionKey="part_number"
 	>
 	</ValueHelpDialog>
 </core:FragmentDefinition>
