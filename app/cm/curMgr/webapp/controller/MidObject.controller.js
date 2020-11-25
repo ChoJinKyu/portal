@@ -287,7 +287,7 @@ sap.ui.define([
 				},"/Currency",0);
 				var oDetailsModel = this.getModel("details");
 				oDetailsModel.setTransactionModel(this.getModel());
-				// oDetailsModel.setData([]);
+				oDetailsModel.setData([]);
 				oDetailsModel.addRecord({
                     "tenant_id": this._sTenantId,
                     "language_code" : "KO",
