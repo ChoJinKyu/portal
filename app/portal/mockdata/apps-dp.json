@@ -28,7 +28,7 @@
         },
         {
             "name": "PSD",
-            "icon": "sap-icon://locate-me",
+            "icon": "sap-icon://source-code",
             "subMenus": [
                 {
                     "name": "UOM Class",
