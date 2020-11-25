@@ -19,7 +19,10 @@
             <VBox> 
 
                 <Label text="Mold Test"/>
-                <Text text="{spec>/inspection_flag}"/>
+                <RadioButtonGroup columns="2" width="100%" editable="false">
+                    <RadioButton text="Yes" selected = "{spec>/inspection_flag}"/>
+                    <RadioButton text="No" selected = "{=!${spec>/inspection_flag}}"/>
+                </RadioButtonGroup>
                 <Label text="Order Qty"/>
                 <Text text="{spec>/order_qty}"/>
                 <Label text="Demand Life"/>
@@ -30,7 +33,10 @@
              </VBox>            
             <VBox >
                 <Label text="Assembly Approval"/> 
-                <Text text="{spec>/assembly_approval_flag}"/>
+                <RadioButtonGroup columns="2" width="100%" editable="false">
+                    <RadioButton text="Yes" selected = "{spec>/assembly_approval_flag}"/>
+                    <RadioButton text="No" selected = "{=!${spec>/assembly_approval_flag}}"/>
+                </RadioButtonGroup>
                 <Label text="Mold Structure"/>
                 <Text text="{spec>/die_form}"/>
                 <Label text="Mold Weight"/>
