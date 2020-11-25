@@ -17,17 +17,16 @@
                     <Button 
                         id="buttonMidEdit" 
                         text="Edit" 
-                        press=".onEdit"/>
+                        press=".onEdit"
+                        />
                     <Button
-                        id="buttonMidDelete"
+                        id="buttonMidDelete" 
                         text="Delete"
-                        press=".onMidDelete"
-                        enabled="{=${midObjectView>/mode}}"/>                                      
+                        press=".onMidDelete"/>                                      
                     <Button
                         id="buttonSave"
                         text="Save"
-                        press=".onMidUpdate"
-                        enabled="{=${midObjectView>/mode}}"/>
+                        press=".onMidUpdate"/>
                 </OverflowToolbar>
             </footer>
         </Page>

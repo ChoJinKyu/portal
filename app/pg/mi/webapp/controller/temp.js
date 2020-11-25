@@ -1,3 +1,22 @@
+
+MidObject.controller.js:159 _showFormFragment
+남은작업  11월 23일에 진행해야할 작업 ===============================
+-main page
+팬딩 처리 안되고있음 (삭제나 수정을 담아 둘수 있기만함...)
+CRUD 테스트 완료. 
+필터 -전체- 처리.
+초기 (검색) 리스트 실행 처리 
+스마트 필터 콤보박스 리스트 확인
+ 
+-mid page
+팬딩처리 안되고있음 
+CRUD 테트스 완료. 
+Language 리스트에서 저장한 값 셀렉트 작업
+Fragment 작업
+
+
+수정시 수정 화면에서 오브젝트들 값 채워주어야 한다. 
+state = "{midObjectData>/use_flag}"
 main page
 > onMainTableItemPress
 
@@ -62,27 +81,17 @@ if(sFragmentName=="Change"){
            
             //this._setTableFilters("midTableChange", midObjectData.getProperty("/mi_material_code"));       
            
+            this.getView().byId("inputMaterialCode").setValue( oData.mi_material_code_text );
+            this.getView().byId("buttonMaterialCheck").setEnable(false);
 
-
+            
+83
 MIMatListView(tenant_id='L2100',company_code='*',
 org_type_code='BU',org_code='BIZ00100',
 mi_material_code='ALU-001-01')
 http://127.0.0.1:8080/odata/v2/pg.marketIntelligenceService/MIMaterialCodeList(tenant_id='L2100',company_code='*',org_type_code='BU',org_code='BIZ00100',mi_material_code='LED-001-01')/?$format=json
 
 
-남은작업  11월 23일에 진행해야할 작업 ===============================
--main page
-팬딩 처리 안되고있음 (삭제나 수정을 담아 둘수 있기만함...)
-CRUD 테스트 완료. 
-필터 -전체- 처리.
-초기 (검색) 리스트 실행 처리 
-스마트 필터 콤보박스 리스트 확인
- 
--mid page
-팬딩처리 안되고있음 
-CRUD 테트스 완료. 
-Language 리스트에서 저장한 값 셀렉트 작업
-Fragment 작업
 oEvent.getSource().getCells()[0].mAggregations.customData[0]
 onEdit
 this._showFormFragment("Display");
@@ -1022,3 +1031,422 @@ UseYNView(tenant_id='L2100',code='TRUE'): {__metadata: {…}, tenant_id: "L2100"
                 }
             });
         });
+
+
+
+        items="{
+            path : 'cc>/CodeCombo',
+            filters : [
+                {path : 'tenant_id', operator : 'EQ', value1 : '1000'},
+                {path : 'company_code', operator : 'EQ', value1 : 'G100'},
+                {path : 'group_code', operator : 'EQ', value1 : 'CM_CHAIN_CD'},
+                {path : 'language_cd', operator : 'EQ', value1 : 'KO'}                                                                        
+            ]
+        }"
+        
+
+        _onCreateModeMetadataLoaded: function() {
+			console.group("_onCreateModeMetadataLoaded");
+			this.getView().getModel().setUseBatch(true);
+			this.getView().getModel().setDeferredGroups(["updateGroup","deleteGroup","createGroup"]);
+            
+            this.getView().getModel().setChangeGroups({
+			  "MIMaterialCodeList": {
+			    groupId: "updateGroup",
+			    changeSetId: "updateGroup"
+			  }
+			});
+            this.getView().getModel().attachPropertyChange(this._propertyChanged.bind(this));
+            
+			console.groupEnd();
+        },
+        
+
+        신규라인 
+        https://blogs.sap.com/2016/06/15/create-an-add-item-in-a-table-with-sapui5/
+
+        oModel.setDeferredGroups(oModel.getDeferredGroups().concat(["taleGroupId"]));
+
+
+        onMidTableCreate : function () {
+            
+            console.group("onMidTableCreate");
+
+            var midObjectData = this.getModel("midObjectData"),
+                oModel = this.getView().getModel();
+        
+            oModel.setDeferredGroups(oModel.getDeferredGroups().concat(["tableGroupId"]));
+
+	        var mParameters = {
+	        	"groupId":"tableGroupId",
+	        	"properties" : {
+                    "tenant_id": midObjectData.getProperty("/tenant_id"),
+                    "company_code":  midObjectData.getProperty("/company_code"),
+                    "org_type_code": midObjectData.getProperty("/org_type_code"),
+                    "org_code": midObjectData.getProperty("/org_code"),
+                    "mi_material_code": midObjectData.getProperty("/mi_material_code"),
+                    "language_code": "KO",
+                    "mi_material_code_name": "",
+                    "local_create_dtm": new Date(),
+                    "local_update_dtm": new Date(),
+                    "create_user_id": "Admin",
+                    "update_user_id": "Admin",
+                    "system_create_dtm": new Date(),
+                    "system_update_dtm": new Date()
+                } 
+            };           
+   
+            
+            //에러는 나지 않지만 행추가는 되지 않음 2
+            //this.getModel().createEntry("/MIMaterialCodeText", mParameters);      
+            // this.getModel().refresh(true);
+            // create/createEntry
+
+
+            /*데이타를 바로 등록 1*/
+            this.getModel().create("/MIMaterialCodeText", mParameters);             
+			this.getModel().setUseBatch(true);
+	    	this.getModel().submitChanges({
+			    groupId: "tableGroupId", 
+                success: this._handleCreateSuccess.bind(this),
+                error: this._handleCreateError.bind(this)
+            });
+            //submitBatch
+
+            /*행추가 후 등록 테스트중 
+            https://blogs.sap.com/2016/06/15/create-an-add-item-in-a-table-with-sapui5/
+            var retContext = oModel.createEntry("/MIMaterialCodeText", {
+                properties: mParameters,
+                success: this._handleCreateSuccess.bind(this),
+                error: this._handleCreateError.bind(this)                
+            });
+
+
+            var midTable = sap.ui.core.Fragment.byId("Change_id","midTableChange", this);
+
+            //var lisItemForTable = midTable.clone();
+
+            //var lisItemForTable.setBindingContext(retContext);
+            midTable.setBindingContext(retContext);
+            midTable.addItem(lisItemForTable);
+
+            // this.byId("lineItemsList").addItem( new sap.m.ColumnListItem(XXXX));
+            // this.byId("lineItemsList").removeItem(oEvent.getParameter("listItem"));
+
+            //return;
+            //this.getView().byId("midTable").setBindingContext(oEntry);
+            */
+                         
+			console.groupEnd();
+        } ,
+        "https://lgcommondev-workspaces-ws-k8gvf-app1.jp10.applicationstudio.cloud.sap:443/odata/
+        v2/pg.marketIntelligenceService/
+        MIMaterialCodeText(tenant_id='L2100',company_code='%2A',org_type_code='BU',org_code='BIZ00100',mi_material_code='ALU-001-01',language_code='EN')",
+
+        http://127.0.0.1:8080/odata/v2/pg.marketIntelligenceService/MIMaterialCodeText/?$format=json
+
+        http://127.0.0.1:8080/odata/v2/pg.marketIntelligenceService/MIMaterialCodeText/?$filter=mi_material_code%20eq%20%27ALU-001-01%27
+
+        "tenant_id": midObjectData.getProperty("/tenant_id"),
+        "company_code":  midObjectData.getProperty("/company_code"),
+        "org_type_code": midObjectData.getProperty("/org_type_code"),
+        "org_code": midObjectData.getProperty("/org_code"),
+        "mi_material_code": midObjectData.getProperty("/mi_material_code"),
+        "language_code": "CO",
+        "mi_material_code_name": "",
+        "local_create_dtm": new Date(),
+        "local_update_dtm": new Date(),
+        "create_user_id": "Admin",
+        "update_user_id": "Admin",
+        "system_create_dtm": new Date(),
+        "system_update_dtm": new Date()
+
+
+
+        var aFilters = [
+            new sap.ui.model.Filter("tenant_id", sap.ui.model.FilterOperator.EQ,  oArgs.tenant_id),
+            new sap.ui.model.Filter("company_code", sap.ui.model.FilterOperator.EQ,  oArgs.company_code),
+            new sap.ui.model.Filter("org_type_code", sap.ui.model.FilterOperator.EQ,  oArgs.org_type_code),
+            new sap.ui.model.Filter("org_code", sap.ui.model.FilterOperator.EQ,  oArgs.org_code),
+            new sap.ui.model.Filter("mi_material_code", sap.ui.model.FilterOperator.EQ,  oArgs.mi_material_code)
+        ];
+
+        //var sServiceUrl = "+oArgs.org_type_cod+"',org_code='"+oArgs.org_code+"',mi_material_code='"+oArgs.mi_material_code+"')";
+        //var sServiceUrl = "/MIMaterialCodeList/?$f(tenant_id='"+oArgs.tenant_id+"',company_code='"+oArgs.company_code+"',org_type_code='"+oArgs.org_type_code+"',org_code='"+oArgs.org_code+"',mi_material_code='"+oArgs.mi_material_code+"')";
+
+        // MIMaterialCodeList(tenant_id='L2100',company_code='%2A',org_type_code='BU',org_code='BIZ00100'
+        // ,mi_material_code='LED-001-01')
+
+        var sServiceUrl ="/MIMaterialCodeList";
+
+        var oModel = this.getOwnerComponent().getModel(),
+        oView = this.getView(),
+        midObjectDataModel = this.getModel("midObjectData"),
+        that = this;
+       
+        midObjectView.setProperty("pageMode", false);
+
+        //var sServiceUrl = "/MIMaterialCodeList(tenant_id='"+oArgs.tenant_id+"',company_code='"+oArgs.company_code+"',org_type_code='"+oArgs.org_type_code+"',org_code='"+oArgs.org_code+"',mi_material_code='"+oArgs.mi_material_code+"')";
+
+        var oModel = this.getOwnerComponent().getModel();
+
+        var aFilters = [
+            new sap.ui.model.Filter("tenant_id", sap.ui.model.FilterOperator.EQ,  oArgs.tenant_id),
+            new sap.ui.model.Filter("company_code", sap.ui.model.FilterOperator.EQ,  oArgs.company_code),
+            new sap.ui.model.Filter("org_type_code", sap.ui.model.FilterOperator.EQ,  oArgs.org_type_code),
+            new sap.ui.model.Filter("org_code", sap.ui.model.FilterOperator.EQ,  oArgs.org_code),
+            new sap.ui.model.Filter("mi_material_code", sap.ui.model.FilterOperator.EQ,  oArgs.mi_material_code)
+        ];
+
+        var sServiceUrl ="/MIMaterialCodeList";
+
+        oModel.read(sServiceUrl, {
+            async : false,
+            filters : aFilters,
+            success: function (oData, reponse) {
+
+                console.log("oData~~~~~~~"+JSON.stringify(reponse.data.results));  
+
+                var odata = reponse.data.results;
+           
+                midObjectData.setProperty("/tenant_id", odata.tenant_id);
+                midObjectData.setProperty("/company_code", odata.company_code);
+                midObjectData.setProperty("/org_type_code", odata.org_type_code);
+                midObjectData.setProperty("/org_code", odata.org_code);
+                midObjectData.setProperty("/category_name", odata.category_name);
+                midObjectData.setProperty("/category_code", odata.category_code);
+                midObjectData.setProperty("/mi_material_code", odata.mi_material_code);                
+                midObjectData.setProperty("/mi_material_code_name", odata.mi_material_code_name);                
+                midObjectData.setProperty("/use_flag", odata.use_flag);
+           
+
+                debugger;
+                //show
+                that._onPageMode(false);
+            }
+            
+        });
+
+
+                var bFilters = [
+                    new sap.ui.model.Filter("tenant_id", sap.ui.model.FilterOperator.EQ,  oArgs.tenant_id),
+                    new sap.ui.model.Filter("company_code", sap.ui.model.FilterOperator.EQ,  oArgs.company_code),
+                    new sap.ui.model.Filter("org_type_code", sap.ui.model.FilterOperator.EQ,  oArgs.org_type_code),
+                    new sap.ui.model.Filter("org_code", sap.ui.model.FilterOperator.EQ,  oArgs.org_code),
+                    new sap.ui.model.Filter("mi_material_code", sap.ui.model.FilterOperator.EQ,  oArgs.mi_material_code)
+                ];                
+
+
+
+
+                var oModel = this.getOwnerComponent().getModel("jCodeText"),
+                oTable = sap.ui.core.Fragment.byId("Change_id","midTableChange"),
+                that = this;
+                
+
+
+                ar aBatch = [];
+
+                var oModel = this.getView().getModel();
+                
+                var mNewAccessoryItem = {
+                
+                "AccessoryId" : 12345,
+                
+                "SerialNo" : 444444444444444444,
+                
+                };
+                
+                aBatch.push(oModel.createBatchOperation("/AccessoryItemSet", "POST", mNewAccessoryItem));
+                
+                oModel.addBatchChangeOperations(aBatch);
+                
+                ...
+                
+                // Add more batch operations...
+                
+                ...
+                
+                // Submit
+                
+                oModel.submitBatch(
+                
+                jQuery.proxy(function(mResponse){ //succes
+                
+                ...
+                
+                }, this),
+                
+                jQuery.proxy(function(mResponse){ //failure
+                
+                ...
+                
+                }, this)
+                
+                );
+                
+                
+
+
+
+                var sGroupId =(newDate()).getTime();
+var requestParams ={};
+requestParams.groupId = sGroupId;
+
+oModel.setDeferredGroups([sGroupId]);
+
+var calls = items.length;
+
+for(var i=0;i< itemsToSave.length; i++){
+	var item = itemsToSave[i];
+	oModel.update("/" + entityName + ("(" + item.getId() + ")"), item, requestParams);
+}
+oModel.submitChanges({
+			groupId: sGroupId,
+			success:function(){...},
+			error:function(){...}
+
+});
+
+
+oDataModel.setChangeGroups({
+    sPath: { groupId: sGroupId } });
+
+
+oDataModel.setDeferredGroups([sGroupId]);
+
+aFormObject.forEach(function(element, index, array) {
+     oDataModel.update(sPath + "("+ID+")", element, {groupId: sGroupId});
+});
+
+
+oDataModel.submitChanges({ groupId: sGroupId, success: function() {}, error : function() {} });
+
+
+
+https://lgcommondev-workspaces-ws-k8gvf-app1.jp10.applicationstudio.cloud.sap/pg/mi/webapp/srv-api/odata/v2/pg.marketIntelligenceService/MIMaterialCodeText/?$format=json
+
+
+
+debugger;
+var aTableItems = this._getSmartTableById().getTable().getItems();
+var aPartnerIDs = [];
+
+// test code
+// aTableItems.forEach(function(oItem){
+// 	aPartnerIDs.push(oItem.getCells()[0].getValue());
+// });
+
+// 주석 제거 사용가능 
+/*stat
+var mi_material_code = "BIZ00121";
+var mParameters = {
+    "groupId":"createGroup",
+    "properties" : {
+        "tenant_id": "L2100",
+        "company_code": "*",
+        "org_type_code": "BU",
+        "org_code": "BIZ00100",
+        "mi_material_code": mi_material_code,
+        "mi_material_code_name": "",
+        "category_code": "Non-Ferrous Metal",
+        "category_name": "비철금속",
+        "use_flag": true,
+        "local_create_dtm": new Date(),
+        "local_update_dtm": new Date(),
+        "create_user_id": "Admin",
+        "update_user_id": "Admin",
+        "system_create_dtm": new Date(),
+        "system_update_dtm": new Date()
+    }
+};					
+var oEntry1 = this.getModel().createEntry("/MIMaterialCodeList", mParameters);
+this.getView().byId("mainTable").setBindingContext(oEntry3);
+
+// this.getModel().setUseBatch(true);
+// this.getModel().submitChanges({
+// 	groupId: "createGroup", 
+//   success: this._handleCreateSuccess.bind(this),
+//   error: this._handleCreateError.bind(this)
+// });
+            
+*/
+//"midObject/{layout}/{tenant_id}/{company_code}/{org_type_code}/{org_code}/{mi_material_code}",
+debugger;
+this.getRouter().navTo("midPage", {
+    layout: oNextUIState.layout, 
+    tenant_id: "L2100",
+    company_code: "*",
+    org_type_code: "BU",
+    org_code: "BIZ00100",
+    mi_material_code: "new"				
+});
+
+var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
+if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
+    this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
+}
+
+var oItem = oEvent.getSource();
+oItem.setNavigated(true);
+var oParent = oItem.getParent();
+// store index of the item clicked, which can be used later in the columnResize event
+this.iIndex = oParent.indexOfItem(oItem);
+
+
+
+
+
+
+
+=================mainContrl
+
+
+			
+	        //var aTableItems = this._getSmartTableById().getTable().getItems();
+			//var aPartnerIDs = [];
+
+			// test code
+	        // aTableItems.forEach(function(oItem){
+	        // 	aPartnerIDs.push(oItem.getCells()[0].getValue());
+			// });
+			
+			// 주석 제거 사용가능 
+			/*stat
+			var mi_material_code = "BIZ00121";
+	        var mParameters = {
+	        	"groupId":"createGroup",
+	        	"properties" : {
+					"tenant_id": "L2100",
+					"company_code": "*",
+					"org_type_code": "BU",
+					"org_code": "BIZ00100",
+					"mi_material_code": mi_material_code,
+					"mi_material_code_name": "",
+					"category_code": "Non-Ferrous Metal",
+					"category_name": "비철금속",
+					"use_flag": true,
+					"local_create_dtm": new Date(),
+					"local_update_dtm": new Date(),
+					"create_user_id": "Admin",
+					"update_user_id": "Admin",
+					"system_create_dtm": new Date(),
+					"system_update_dtm": new Date()
+	        	}
+			};					
+			var oEntry1 = this.getModel().createEntry("/MIMaterialCodeList", mParameters);
+			this.getView().byId("mainTable").setBindingContext(oEntry3);
+
+			// this.getModel().setUseBatch(true);
+	    	// this.getModel().submitChanges({
+			// 	groupId: "createGroup", 
+			//   success: this._handleCreateSuccess.bind(this),
+			//   error: this._handleCreateError.bind(this)
+			// });
+						
+			*/
+			//"midObject/{layout}/{tenant_id}/{company_code}/{org_type_code}/{org_code}/{mi_material_code}",
+
+
+
+
