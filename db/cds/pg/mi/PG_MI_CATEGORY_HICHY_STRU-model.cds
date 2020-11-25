@@ -21,8 +21,8 @@ using util from '../../util/util-model';
 using {pg as Categ_Hier_Str} from '../mi/PG_MI_CATEGORY_HICHY_STRU-model';
 
 entity MI_Category_Hichy_Stru {
-    key tenant_id       : String(5) not null  @title : '테넌트ID';
-    key company_code    : String(10) not null @title : '회사코드';
+    key tenant_id       : String(5) not null  @title : '회사코드';
+    key company_code    : String(10) not null @title : '법인코드';
     key org_type_code   : String(30) not null @title : '조직유형코드';
     key org_code        : String(10) not null @title : '조직코드';
     key node_id         : Integer not null    @title : '노드ID';

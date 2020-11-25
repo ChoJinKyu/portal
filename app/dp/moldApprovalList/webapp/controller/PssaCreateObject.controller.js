@@ -55,7 +55,8 @@ sap.ui.define([
             
             this.getView().setModel(new ManagedListModel(), "createlist");
             this.getView().setModel(new ManagedListModel(),"appList"); // apporval list 
-            this.getView().setModel(new JSONModel(Device), "device"); // file upload      
+            this.getView().setModel(new JSONModel(Device), "device"); // file upload 
+                 
         },   
         onAfterRendering : function () {
          
@@ -85,7 +86,19 @@ sap.ui.define([
 
 		/* =========================================================== */
 		/* event handlers                                              */
-		/* =========================================================== */
+        /* =========================================================== */
+        
+        onSearch: function (event) {
+			var oItem = event.getParameter("suggestionItem");
+			this.handleEmployeeSelectDialogPress(event);
+		},
+
+		onSuggest: function (event) {
+			var sValue = event.getParameter("suggestValue"),
+                aFilters = [];
+                console.log("sValue>>> " , sValue ,"this.oSF>>" , this.oSF);
+			
+		},
 		/**
 		 * Event handler  for navigating back.
 		 * It there is a history entry we go one step back in the browser history
@@ -120,7 +133,8 @@ sap.ui.define([
                         "type": "",
                         "nameDept": "",
                         "status": "",
-                        "comment": ""  
+                        "comment": "" ,
+                        "editMode": true 
                     });
                 }
         } ,
@@ -179,6 +193,7 @@ sap.ui.define([
 			var oArgs = oEvent.getParameter("arguments"); 
             this._createViewBindData(oArgs); 
             this._onLoadApprovalRow();
+            this.oSF = this.getView().byId("searchField");
         },
         /**
          * @description 초기 생성시 파라미터를 받고 들어옴 
@@ -366,7 +381,31 @@ sap.ui.define([
                     "model": data.oData.model,
                     "moldPartNo": data.oData.moldPartNo,
                 });
-        }
+        },
+
+         onExitEmployee: function () {
+			this.byId("dialogEmployeeSelection").close();
+        },
+
+        handleEmployeeSelectDialogPress : function (oEvent) {
+            console.group("handleEmployeeSelectDialogPress");    
+            var oView = this.getView();
+            var oButton = oEvent.getSource();
+			if (!this._oDialog) {
+				this._oDialog = Fragment.load({ 
+                    id: oView.getId(),
+					name: "dp.moldApprovalList.view.Employee",
+					controller: this
+				}).then(function (oDialog) {
+				    oView.addDependent(oDialog);
+					return oDialog;
+				}.bind(this));
+            } 
+            
+            this._oDialog.then(function(oDialog) {
+				oDialog.open();
+			});
+        },
 
 	});
 });

@@ -16,8 +16,10 @@ sap.ui.define([
 	"sap/m/Text",
 	"sap/m/Input",
 	"sap/m/ComboBox",
-	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, Sorter, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+    "sap/ui/core/Item",
+    'sap/m/Label',
+    'sap/m/Token'
+], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, Sorter, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, Label, Token) {
 	"use strict";
 
 	return BaseController.extend("dp.detailSpecEntry.controller.MainList", {
@@ -49,7 +51,9 @@ sap.ui.define([
 				title: oResourceBundle.getText("mainListViewTitle"),
 				icon: "sap-icon://table-view",
 				intent: "#Template-display"
-			}, true);
+            }, true);
+            
+            this._doInitSearch();
 			
             this.setModel(new ManagedListModel(), "list");
             this.setModel(new ManagedListModel(), "orgMap");
@@ -63,6 +67,24 @@ sap.ui.define([
         onAfterRendering : function () {
 			this.byId("pageSearchButton").firePress();
 			return;
+        },
+
+        /**
+         * @private
+         * @see 검색을 위한 컨트롤에 대하여 필요 초기화를 진행 합니다. 
+         */
+		_doInitSearch: function(){
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S";
+
+            this.getView().setModel(this.getOwnerComponent().getModel());
+
+            /** Date */
+            var today = new Date();
+            
+            this.getView().byId("searchDateS").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
+            this.getView().byId("searchDateS").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+            this.getView().byId("searchDateE").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
+            this.getView().byId("searchDateE").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
         },
 
 		/* =========================================================== */
@@ -377,39 +399,108 @@ sap.ui.define([
             this.getView().byId(idPreFix+'E').setSelectedKeys(selectedKeys);
         },
 
-        onValueHelpRequested : function () {
-            console.group("onValueHelpRequested");
+        onValueHelpRequested : function (oEvent) {
 
-            // var aCols = this.oColModel.getData().cols;
+            var path = '';
+            this._oValueHelpDialog = sap.ui.xmlfragment("dp.detailSpecEntry.view.ValueHelpDialogModel", this);
 
-            this._oValueHelpDialog = sap.ui.xmlfragment("dp.detailSpecEntry.view.ValueHelpDialogAffiliate", this);
+            if(oEvent.getSource().sId.indexOf("searchModel") > -1){
+                //model
+                this._oInputModel = this.getView().byId("searchModel");
+
+                this.oColModel = new JSONModel({
+                    "cols": [
+                        {
+                            "label": "Model",
+                            "template": "model"
+                        }
+                    ]
+                });
+
+                path = '/Models';
+                
+                this._oValueHelpDialog.setTitle('Model');
+                this._oValueHelpDialog.setKey('model');
+                this._oValueHelpDialog.setDescriptionKey('model');
+
+            }else if(oEvent.getSource().sId.indexOf("searchPart") > -1){
+                //part
+                this._oInputModel = this.getView().byId("searchPart");
+
+                this.oColModel = new JSONModel({
+                    "cols": [
+                        {
+                            "label": "Part No",
+                            "template": "part_number"
+                        },
+                        {
+                            "label": "Description",
+                            "template": "spec_name"
+                        }
+                    ]
+                });
+
+                path = '/PartNumbers';
+
+                this._oValueHelpDialog.setTitle('Part No');
+                this._oValueHelpDialog.setKey('part_number');
+                this._oValueHelpDialog.setDescriptionKey('spec_name');
+            }
+
+            var aCols = this.oColModel.getData().cols;
+
+            console.log('this._oValueHelpDialog.getKey()',this._oValueHelpDialog.getKey());
+            
             this.getView().addDependent(this._oValueHelpDialog);
 
             this._oValueHelpDialog.getTableAsync().then(function (oTable) {
-                oTable.setModel(this.oAffiliateModel);
+                
+                oTable.setModel(this.getOwnerComponent().getModel());
                 oTable.setModel(this.oColModel, "columns");
-
+                
                 if (oTable.bindRows) {
-                    oTable.bindAggregation("rows", "/AffiliateCollection");
+                    oTable.bindAggregation("rows", path);
                 }
 
                 if (oTable.bindItems) {
-                    oTable.bindAggregation("items", "/AffiliateCollection", function () {
+                    oTable.bindAggregation("items", path, function () {
                         return new ColumnListItem({
-                            // cells: aCols.map(function (column) {
-                            //     return new Label({ text: "{" + column.template + "}" });
-                            // })
+                            cells: aCols.map(function (column) {
+                                return new Label({ text: "{" + column.template + "}" });
+                            })
                         });
                     });
                 }
                 this._oValueHelpDialog.update();
+
             }.bind(this));
 
-            this._oValueHelpDialog.setTokens(this._oMultiInput.getTokens());
-            this._oValueHelpDialog.open();
+            
 
-                console.groupEnd();
-        }
+            // debugger
+
+            var oToken = new Token();
+			oToken.setKey(this._oInputModel.getSelectedKey());
+			oToken.setText(this._oInputModel.getValue());
+			this._oValueHelpDialog.setTokens([oToken]);
+            this._oValueHelpDialog.open();
+            
+
+        },
+
+        onValueHelpOkPress: function (oEvent) {
+			var aTokens = oEvent.getParameter("tokens");
+			this._oInputModel.setSelectedKey(aTokens[0].getKey());
+			this._oValueHelpDialog.close();
+		},
+
+		onValueHelpCancelPress: function () {
+			this._oValueHelpDialog.close();
+		},
+
+		onValueHelpAfterClose: function () {
+			this._oValueHelpDialog.destroy();
+		}
 
 	});
 });
