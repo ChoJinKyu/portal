@@ -33,6 +33,15 @@ service DetailSpecEntryService {
     left join orgMapping.Pur_Org_Type_Mapping b
     on a.tenant_id=b.tenant_id
     and a.org_type_code=b.org_type_code
+    where b.process_type_code='DP05';
 
-    where b.process_type_code='DP05'
+    view Models as
+    select distinct key a.tenant_id, key a.model
+    from moldMst.Mold_Mst a
+    where a.model is not null;
+
+    view PartNumbers as
+    select distinct key a.tenant_id, key a.part_number
+    from moldMst.Mold_Mst a
+    where a.part_number is not null;
 }
