@@ -11,27 +11,23 @@
   entity 위에 @cds.persistence.exists 명시  
   
   5. namespace : db
-  6. entity : Mm_Uom_Class_Lng
-  7. entity description : UOM 클래스(언어)
+  6. entity : Mm_Unit_Of_Measure_Lng
+  7. entity description : UOM(언어)
   8. history
   -. 2020.11.25 : 최미희 최초작성
 *************************************************/
 namespace dp;	
-using util from '../../../util/util-model';  	
-using { dp as uomclass } from './DP_MM_UOM_CLASS-model';
+using util from '../../../util/util-model'; 	
 	
-entity Mm_Uom_Class_Lng {	
+entity Mm_Unit_Of_Measure_Lng {	
   key tenant_id : String(5)  not null @title: 'Tenant ID' ;	
-  key uom_class_code : String(10)  not null @title: 'UOM Class Code' ;
-
-    parent: Association to uomclass.Mm_Uom_Class
-        on parent.tenant_id = tenant_id 
-        and parent.uom_class_code = uom_class_code;
-
+  key uom_code : String(5)  not null @title: 'UOM코드' ;	
   key language_code : String(4)  not null @title: 'Language' ;	
-    uom_class_name : String(20)  not null @title: 'UOM Class Name' ;	
-    uom_class_desc : String(50)   @title: 'UOM클래스설명' ;	
+    comercial_uom_code : String(3)  not null @title: '상업UOM코드' ;	
+    technical_uom_code : String(6)  not null @title: '기술UOM코드' ;	
+    comercial_uom_name : String(30)   @title: '상업UOM명' ;	
+    technical_uom_name : String(30)   @title: '기술UOM명' ;	
+    uom_description : String(50)   @title: 'UOM설명' ;	
 }	
 
-
-extend Mm_Uom_Class_Lng with util.Managed;
+extend Mm_Unit_Of_Measure_Lng with util.Managed;
