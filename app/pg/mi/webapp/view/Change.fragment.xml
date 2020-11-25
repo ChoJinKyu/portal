@@ -79,19 +79,17 @@
                                         columnsM="2"
                                         columnsL="3"
                                         columnsXL="4">
-                                        <!-- {midObjectData>/mi_material_code} -->
+                                        <!-- {midObjectData>/mi_material_code} enabled="{midObjectView>/pageMode}"-->
                                         <Label text="시황자재코드" design="Bold" class="sapMLabelNoText"/>
-                                        <Input id="inputMaterialCode" 
-                                        value="" 
+                                        <Input id="inputMaterialCode"
                                         placeholder="자재코드 입력"
                                         class="sapUiSmallMarginEnd" 
-                                        enabled="{midObjectView>/pageMode}"/>
+                                        />
                                         <Button
                                             id="buttonMaterialCheck"
                                             width="9em"
                                             text="중복Check"
-                                            press=".onMaterialCodeCheckOpen" 
-                                            visible="{!=${midObjectView>/pageMode}}"/> 
+                                            press=".onMaterialCodeCheckOpen"/> 
 
                                         <Label text="Category 명" design="Bold" class="sapMLabelNoText"/>
                                         <ComboBox
@@ -139,11 +137,7 @@
                                                     </OverflowToolbar>
                                                 </headerToolbar>
                                                 <columns>
-                                                    <Column hAlign="Center" width="80px">
-                                                        <header>
-                                                            <Label text="상태"/>
-                                                        </header>
-                                                    </Column>                                                
+                                                                                             
                                                     <Column hAlign="Center">
                                                         <header>
                                                             <Label text="Language"/>
@@ -159,7 +153,7 @@
                                                     <ColumnListItem>
                                                     <!--   MIMaterialCodeText-->
                                                         <cells>
-                                                            <Label text="{jCodeText>state}"/>
+                                                            
                                                             <ComboBox
                                                                 selectedKey="{jCodeText>language_code}"
                                                                 items="{

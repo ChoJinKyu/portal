@@ -38,10 +38,16 @@ var midObjectData = new JSONModel({
     filters : []            
 });
 
-
+buttonSave buttonMidDelete buttonMidEdit
 if(sFragmentName=="Change"){
                             
-                
+                 //var buttonSave = sap.ui.core.Fragment.byId("Change_id","buttonSave");
+                 var buttonMidDelete = sap.ui.core.Fragment.byId("Change_id","buttonMidDelete");
+                 var buttonMidEdit = sap.ui.core.Fragment.byId("Change_id","buttonMidEdit");
+                     
+                 buttonMidDelete.setVisible(true);
+                 buttonMidEdit.setVisible(false);
+         
     
 }else{
     sap.ui.core.Fragment.byId("Change_id","account_pop_code").getValue();
@@ -53,7 +59,8 @@ if(sFragmentName=="Change"){
     textMaterialCode
 }
 
-
+259
+679
 
             //sap.ui.core.Fragment.byId("account_pop_id","account_pop_code").getValue();
             this._showFormFragment("Display");
