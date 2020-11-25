@@ -1,0 +1,14 @@
+{
+	"cols": [
+	
+		{
+			"label": "Code",
+			"template": "code",
+			"width": "8rem"
+		},
+		{
+			"label": "Name",
+			"template": "codeName"
+		}
+	]
+}

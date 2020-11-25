@@ -22,13 +22,13 @@ namespace pg;
 service marketIntelligenceService {
 
     // Entity List
-    entity MICategory @(title : 'Category 속성')                     as projection on MICateg.MI_Category;
-    entity MICategoryText @(title : 'Category명')                   as projection on MICategText.MI_Category_Lng;
-    entity MICategoryList @(title : 'Category List')               as projection on MICategList.MI_Category_List;
-    entity MIMaterialCode @(title : '시황자재 속성')                     as projection on MIMatCode.MI_Material_Code;
-    entity MIMaterialCodeText @(title : '시황자재명')                   as projection on MIMatCodetext.MI_Material_Code_Lng;
-    entity MIMaterialCodeList @(title : '시황자재 List')               as projection on MIMatCodeList.MI_Material_Code_List;
-    entity MIMaterialPriceManagement @(title : '시황자재 가격관리')        as projection on MIMatPrcMngt.MI_Material_Price_Management;
+    entity MICategory @(title : 'Category 속성') as projection on MICateg.MI_Category;
+    entity MICategoryText @(title : 'Category명') as projection on MICategText.MI_Category_Lng;
+    entity MICategoryList @(title : 'Category List') as projection on MICategList.MI_Category_List;
+    entity MIMaterialCode @(title : '시황자재 속성') as projection on MIMatCode.MI_Material_Code;
+    entity MIMaterialCodeText @(title : '시황자재명') as projection on MIMatCodetext.MI_Material_Code_Lng;
+    entity MIMaterialCodeList @(title : '시황자재 List') as projection on MIMatCodeList.MI_Material_Code_List;
+    entity MIMaterialPriceManagement @(title : '시황자재 가격관리') as projection on MIMatPrcMngt.MI_Material_Price_Management;
     entity MICategoryHierarchyStructure @(title : 'Category 계층구조') as projection on MICategHierStru.MI_Category_Hichy_Stru;
     // View List
     view MIMaterialPriceManagementView @(title : '시황자재 가격관리 View') as select from MIMatPrcMngtView.MI_Mat_Prc_Management_View;
@@ -99,7 +99,7 @@ service marketIntelligenceService {
             and main.org_code      = catg.org_code
             and main.category_code = catg.category_code
         where
-                main.language_code        = 'KO'
+                main.language_code        =  'KO'
             and catg.parent_category_code is null
         group by
             main.tenant_id,
@@ -126,7 +126,7 @@ service marketIntelligenceService {
             and main.org_code      = catg.org_code
             and main.category_code = catg.category_code
         where
-                main.language_code        =  'KO'
+                main.language_code        =      'KO'
             and catg.parent_category_code is not null
         group by
             main.tenant_id,

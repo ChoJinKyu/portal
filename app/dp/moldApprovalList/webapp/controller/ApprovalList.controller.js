@@ -18,14 +18,16 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
-    'sap/ui/core/Element'
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item, Element) {
+    'sap/ui/core/Element',
+	"sap/ui/core/syncStyleClass"
+], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item, Element, syncStyleClass) {
 	"use strict";
    /**
     * @description 품의 목록 (총 품의 공통)
     * @date 2020.11.19 
     * @author jinseon.lee , daun.lee 
     */
+    var toggleButtonId ="";
 
 	return BaseController.extend("dp.moldApprovalList.controller.ApprovalList", {
 
@@ -63,6 +65,7 @@ sap.ui.define([
 
             this._doInitTablePerso();
             //this._doInitSearch();
+            
         },
         
         onAfterRendering : function () {
@@ -70,6 +73,7 @@ sap.ui.define([
 			return;
         },
 
+        
 		/* =========================================================== */
 		/* event handlers                                              */
 		/* =========================================================== */
@@ -163,7 +167,7 @@ sap.ui.define([
             console.log("oRecord >>>  ", oRecord);
             var that = this;
             that.getRouter().navTo("pssaObject", {
-                moldId: oRecord.mold_id          
+         
             });
             // if (oRecord.mold_id % 3 == 0) {
             //     that.getRouter().navTo("pssaCreateObject", {
@@ -180,7 +184,19 @@ sap.ui.define([
             // }
 
 		},
+        onDblClick  : function(oEvent) {
+            console.log(oEvent);
+            window.clicks = window.clicks + 1;
+                
+            if(window.clicks == 1) {
+                setTimeout(sap.ui.controller(this).clearClicks, 500);
+            } else if(window.clicks == 2) {
+                console.log("더블클릭");
+            }
+        },
 
+        
+        
         /* Affiliate Start */
         /**
          * @private
@@ -189,7 +205,7 @@ sap.ui.define([
 		_doInitSearch: function(){
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S";
 
-			this._oMultiInput = this.getView().byId("searchCompany"+sSurffix);
+			this._oMultiInput = this.getView().byId("searchApprovalCategory"+sSurffix);
             this._oMultiInput.setTokens(this._getDefaultTokens());
 
             this.oColModel = new JSONModel(sap.ui.require.toUrl("dp/moldApprovalList/localService/mockdata") + "/columnsModel.json");
@@ -201,6 +217,7 @@ sap.ui.define([
             
             // this.getView().byId("searchReceiptDate"+sSurffix).setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
             // this.getView().byId("searchReceiptDate"+sSurffix).setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+           
         },
         /**
          * @private 
@@ -216,83 +233,158 @@ sap.ui.define([
             return [oToken];
         },
 
-        /**
-         * @public 
-         * @see searchAffiliate Fragment View 컨트롤 valueHelp
-         */
-        onValueHelpRequestedAffiliate : function () {
-            console.group("onValueHelpRequestedAffiliate");
-
-            var aCols = this.oColModel.getData().cols;
-
-            this._oValueHelpDialog = sap.ui.xmlfragment("dp.moldApprovalList.view.ValueHelpDialogAffiliate", this);
-            this.getView().addDependent(this._oValueHelpDialog);
-
-            this._oValueHelpDialog.getTableAsync().then(function (oTable) {
-                oTable.setModel(this.oAffiliateModel);
-                oTable.setModel(this.oColModel, "columns");
-
-                if (oTable.bindRows) {
-                    oTable.bindAggregation("rows", "/AffiliateCollection");
-                }
-
-                if (oTable.bindItems) {
-                    oTable.bindAggregation("items", "/AffiliateCollection", function () {
-                        return new ColumnListItem({
-                            cells: aCols.map(function (column) {
-                                return new Label({ text: "{" + column.template + "}" });
-                            })
-                        });
-                    });
-                }
-                this._oValueHelpDialog.update();
+        approvalDialogOpen: function (oEvent) {
+            
+            var oButton = oEvent.getSource();
+            var id = oButton.getId();
+            var page ="";
+            if(id.indexOf("Model") != -1){
+                page = "dp.moldApprovalList.view.DialogModel";
+            }else if(id.indexOf("MoldPartNo") != -1){
+                page = "dp.moldApprovalList.view.DialogMoldPartNo";
+            }else if(id.indexOf("Requester") != -1){
+                page = "dp.moldApprovalList.view.DialogRequester";
+            }
+            //console.log(oButton.getBindingContext("msg").getPath())
+            console.log("page >>>", page);
+            Fragment.load({
+                name: page,
+                controller: this
+            }).then(function (oDialog) {
+                this._oDialog = oDialog;
+                this._configDialog(oButton);
+                this._oDialog.open();
             }.bind(this));
+			
+		},
 
-            this._oValueHelpDialog.setTokens(this._oMultiInput.getTokens());
-            this._oValueHelpDialog.open();
-                console.groupEnd();
+		_configDialog: function (oButton) {
+			// Set draggable property
+			var bDraggable = oButton.data("draggable");
+			this._oDialog.setDraggable(bDraggable == "true");
+
+			// Set resizable property
+			var bResizable = oButton.data("resizable");
+			this._oDialog.setResizable(bResizable == "true");
+
+			// Multi-select if required
+			var bMultiSelect = !!oButton.data("multi");
+			this._oDialog.setMultiSelect(bMultiSelect);
+
+			// Remember selections if required
+			var bRemember = !!oButton.data("remember");
+			this._oDialog.setRememberSelections(bRemember);
+
+			var sResponsivePadding = oButton.data("responsivePadding");
+			var sResponsiveStyleClasses = "sapUiResponsivePadding--header sapUiResponsivePadding--subHeader sapUiResponsivePadding--content sapUiResponsivePadding--footer";
+
+			if (sResponsivePadding) {
+				this._oDialog.addStyleClass(sResponsiveStyleClasses);
+			} else {
+				this._oDialog.removeStyleClass(sResponsiveStyleClasses);
+			}
+
+			// Set custom text for the confirmation button
+			var sCustomConfirmButtonText = oButton.data("confirmButtonText");
+			this._oDialog.setConfirmButtonText(sCustomConfirmButtonText);
+
+			this.getView().addDependent(this._oDialog);
+
+			// toggle compact style
+			syncStyleClass("sapUiSizeCompact", this.getView(), this._oDialog);
         },
 
-        /**
-         * @public 
-         * @see 사용처 ValueHelpDialogAffiliate Fragment 선택후 확인 이벤트
-         */
-        onValueHelpOkPress : function (oEvent) {
+        onHandleApply : function (oEvent) {
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S",
-                aTokens = oEvent.getParameter("tokens");
+            aTokens = oEvent.getParameter("tokens");
+            console.log(oEvent.getParameter());
 
-            this.searchAffiliate = this.getView().byId("searchCompany"+sSurffix);
+            this.searchAffiliate = this.getView().byId("searchAffiliate"+sSurffix);
             this.searchAffiliate.setTokens(aTokens);
             this._oValueHelpDialog.close();
         },
+		// 	var oButton = oEvent.getSource();
+        //     var id = oButton.getId();
+        //     var page ="";
+        //     if(id.indexOf("Model") != -1){
+        //         page = "dp.moldApprovalList.view.DialogModel";
+        //     }else if(id.indexOf("MoldPartNo") != -1){
+        //         page = "dp.moldApprovalList.view.DialogMoldPartNo";
+        //     }else if(id.indexOf("Requester") != -1){
+        //         page = "dp.moldApprovalList.view.DialogRequester";
+        //     }
+        //     //console.log(oButton.getBindingContext("msg").getPath())
+        //     console.log("page >>>", page);
+        //     Fragment.load({
+        //         name: page,
+        //         controller: this
+        //     }).then(function (oValueHelpDialog) {
+        //         this._oValueHelpDialog = oValueHelpDialog;
+        //         this.getView().addDependent(this._oValueHelpDialog);
+        //         this._configValueHelpDialog();
+        //         this._oValueHelpDialog.open();
+        //     }.bind(this));
+			
+		// },
 
-        /**
-         * @public 
-         * @see 사용처 ValueHelpDialogAffiliate Fragment 취소 이벤트
-         */
-        onValueHelpCancelPress: function () {
-            this._oValueHelpDialog.close();
-        },
+		// _configValueHelpDialog: function () {
+		// 	var sInputValue = this.byId("searchModel").getValue(),
+		// 		oModel = this.getView().getModel(),
+        //         aProducts = oModel.getProperty("/MoldSpec");
+                
+        //         console.log("oModel >>>", oModel);
+        //         console.log("sInputValue >>>", sInputValue);
 
-        /**
+		// 	aProducts.forEach(function (oProduct) {
+		// 		oProduct.selected = (oProduct.Name === sInputValue);
+		// 	});
+		// 	oModel.setProperty("/MoldSpec", aProducts);
+		// },
+
+
+		handleValueHelpClose: function () {
+            console.log(this.getView());
+            var oModel = this.getView().getModel(),
+				aProducts = oModel.getProperty("msg>message_contents"),
+				oInput = this.byId("searchModel");
+                console.log(oModel);
+                console.log(oModel.getBinding());
+                console.log(aProducts);
+			var bHasSelected = aProducts.some(function (oProduct) {
+				if (oProduct.selected) {
+					oInput.setValue(oProduct.Name);
+					return true;
+				}
+			});
+
+			if (!bHasSelected) {
+				oInput.setValue(null);
+			}
+		},
+
+         /**
          * @public
-         * @see 사용처 ValueHelpDialogAffiliate Fragment window.close after 이벤트
+         * @see 사용처 DialogModel, DialogMoldPartNo, DialogRequester Search 이벤트
          */
-        onValueHelpAfterClose: function () {
-            this._oValueHelpDialog.destroy();
+        handleSearch: function (oEvent) {
+			var sValue = oEvent.getParameter("value");
+			var oFilter = new Filter("message_contents", FilterOperator.Contains, sValue);
+			var oBinding = oEvent.getSource().getBinding("items");
+			oBinding.filter([oFilter]);
         },
+
         
          /**
          * @public
-         * @see 사용처 ValueHelpDialogAffiliate Fragment window.close after 이벤트
+         * @see 사용처 DialogCreate Fragment Open 이벤트
          */
-        onValueHelpRequestedCreate: function (){
+        onDialogCreate: function (){
             var oView = this.getView();
 
 			if (!this.pDialog) {
 				this.pDialog = Fragment.load({
 					id: oView.getId(),
-					name: "dp.moldApprovalList.view.dialogApprovalCategory",
+					name: "dp.moldApprovalList.view.DialogCreate",
 					controller: this
 				}).then(function (oDialog) {
 					// connect dialog to the root view of this component (models, lifecycle)
@@ -306,16 +398,16 @@ sap.ui.define([
 		
         },
         
-        
+
          /**
          * @public
          * @see 사용처 create 팝업에서 나머지 버튼 비활성화 시키는 작업수행
          */ 
         onToggleHandleChange : function(oEvent){
             var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
-            var isPressed;
             var isPressedId;
             isPressedId =oEvent.getSource().getId();
+            toggleButtonId = isPressedId;
             for(var i=0; i<groupId.length; i++){
                 if(groupId[i].getId() != isPressedId){
                     groupId[i].setPressed(false);
@@ -324,7 +416,12 @@ sap.ui.define([
            
         },
 
+         /**
+         * @public
+         * @see 사용처 create 팝업에서 select 버튼 press시 Object로 이동
+         */ 
         handleConfirm : function(targetControl){
+            console.log(toggleButtonId);
             var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
             for(var i=0; i<groupId.length; i++){
                 if(groupId[i].getPressed() == true){

@@ -164,19 +164,20 @@ sap.ui.define([
 		},
 
 		onMidTableAddButtonPress: function(){
+            debugger;
 			var oTable = this.byId("midTable"),
 				oDetailsModel = this.getModel("details");
 			oDetailsModel.addRecord({
-                "tenant_id": this._sTenantId,
+                "tenant_id": "",
                 "language_code" : "",
-				"currency_code": this._sCurrencyCode,
+				"currency_code": "",
 				"currency_code_name": "",
 				"currency_code_desc": "",
                 "currency_prefix": null,
                 "currency_suffix" : null,
 				"local_create_dtm": new Date(),
 				"local_update_dtm": new Date()
-			}, "/CurrencyLng", 0);
+			}, 0);
         },
 
 		onMidTableDeleteButtonPress: function(){
@@ -245,13 +246,14 @@ sap.ui.define([
             if(this.getModel("midObjectView").getProperty("/isAddedMode") == true){
 				var oMasterModel = this.getModel("master");
 				var oDetailsModel = this.getModel("details");
-				var sTenantId = oMasterModel.getProperty("/tenant_id");
-				var sCurrencyCode = oMasterModel.getProperty("/currency_code");
-				var oDetailsData = oDetailsModel.getData();
-				oDetailsData.forEach(function(oItem, nIndex){
-					oDetailsModel.setProperty("/"+nIndex+"/tenant_id", sTenantId);
-					oDetailsModel.setProperty("/"+nIndex+"/currency_code", sCurrencyCode);
-				});
+				// var sTenantId = oMasterModel.getProperty("/tenant_id");
+				// var sCurrencyCode = oMasterModel.getProperty("/currency_code");
+                // var oDetailsData = oDetailsModel.getData();
+                // debugger;
+				// oDetailsData.forEach(function(oItem, nIndex){
+				// 	oDetailsModel.setProperty("/"+nIndex+"/tenant_id", sTenantId);
+				// 	oDetailsModel.setProperty("/"+nIndex+"/currency_code", sCurrencyCode);
+				// });
 				oDetailsModel.setData(oDetailsData);
 			}
 		},
@@ -268,6 +270,7 @@ sap.ui.define([
             this._sCurrencyCode = oArgs.currencyCode;
 
 			if(oArgs.tenantId == "new" && oArgs.currencyCode == "code"){
+                debugger;
 				//It comes Add button pressed from the before page.
 				this.getModel("midObjectView").setProperty("/isAddedMode", true);
 				var oMasterModel = this.getModel("master");
@@ -281,7 +284,7 @@ sap.ui.define([
 					"use_flag": false,
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
-				},0);
+				},"/Currency",0);
 				var oDetailsModel = this.getModel("details");
 				oDetailsModel.setTransactionModel(this.getModel());
 				oDetailsModel.setData([]);
@@ -295,10 +298,10 @@ sap.ui.define([
                     "currency_suffix" : null,
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
-				},0);
+				},"/CurrencyLng",0);
 				this._toEditMode();
 			}else{
-                debugger;
+                
                 this.getModel("midObjectView").setProperty("/isAddedMode", false);
 				this._bindView("/Currency(tenant_id='" + this._sTenantId + "',currency_code='" + this._sCurrencyCode + "')");
 				oView.setBusy(true);

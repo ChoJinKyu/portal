@@ -20,8 +20,4 @@ entity monitor_master_view {
         operation_mode_calling_flag : Boolean    @title : '소명';
         operation_mode_alram_flag   : Boolean    @title : '알람';
         active_flag                 : Boolean    @title : 'Active';
-        type_code                   : String(10) @title : '유형코드';
-        type_name                   : String(240)@title : '유형명';
-        cycle_code                  : String(10) @title : '주기코드';
-        cycle_name                  : String(240)@title : '주기명';
 }

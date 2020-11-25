@@ -34,7 +34,7 @@ sap.ui.define([
 			// between the busy indication for loading the view's meta data
 			var oViewModel = new JSONModel({
 					busy : true,
-					delay : 0
+                    delay : 0
 				});
 			this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
 			this.setModel(oViewModel, "midObjectView");
@@ -219,7 +219,8 @@ sap.ui.define([
 			});
 		},
 
-		_toEditMode: function(){
+        
+        _toEditMode: function(){
             this._showFormFragment('MidObject_Edit');
 			this.byId("page").setSelectedSection("pageSectionMain");
 			this.byId("page").setProperty("showFooter", true);

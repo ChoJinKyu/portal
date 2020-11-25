@@ -19,20 +19,49 @@
             <VBox>
 
                 <Label text="Mold Test"/>
-                <Input value="{spec>/inspection_flag}"/>
+                <RadioButtonGroup columns="2" width="100%" editable="true">
+                    <RadioButton text="Yes" selected = "{spec>/inspection_flag}"/>
+                    <RadioButton text="No" selected = "{=!${spec>/inspection_flag}}"/>
+                </RadioButtonGroup>
                 <Label text="Order Qty"/>
                 <Input value="{spec>/order_qty}"/>
                 <Label text="Demand Life"/>
                 <Input value="{spec>/request_life_shot_count}"/>
                 <Label text="Size"/>
-                <Input value="{spec>/mold_size}"/>
-
+                <ComboBox   width="100%"
+                            selectedKey="{spec>/mold_size}"
+                            items="{
+                                        path : 'util>/CodeDetails',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SIZE'}
+                                        ]
+                                    }"
+                            editable="true"
+                >
+                    <core:Item key="{util>code}" text="{util>code_description}" />
+                </ComboBox>
              </VBox>            
             <VBox >
                 <Label text="Assembly Approval"/> 
-                <Input value="{spec>/assembly_approval_flag}"/>
+                <RadioButtonGroup columns="2" width="100%" editable="true">
+                    <RadioButton text="Yes" selected = "{spec>/assembly_approval_flag}"/>
+                    <RadioButton text="No" selected = "{=!${spec>/assembly_approval_flag}}"/>
+                </RadioButtonGroup>
                 <Label text="Mold Structure"/>
-                <Input value="{spec>/die_form}"/>
+                <ComboBox   width="100%"
+                            selectedKey="{spec>/die_form}"
+                            items="{
+                                        path : 'util>/CodeDetails',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_STRUCTURE'}
+                                        ]
+                                    }"
+                            editable="true"
+                >
+                    <core:Item key="{util>code}" text="{util>code_description}" />
+                </ComboBox>
                 <Label text="Mold Weight"/>
                 <Input value="{spec>/mold_weight}"/>
                 <Label text="Open Size"/>

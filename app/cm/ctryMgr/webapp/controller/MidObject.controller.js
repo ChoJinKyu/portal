@@ -240,14 +240,14 @@ sap.ui.define([
 		_onMasterDataChanged: function(oEvent){
 			if(this.getModel("midObjectView").getProperty("/isAddedMode") == true){
 				var oMasterModel = this.getModel("master");
-				var oDetailsModel = this.getModel("details>CountryLng");
-				//var sTenantId = oMasterModel.getProperty("/tenant_id");
-				// var sControlOPtionCode = oMasterModel.getProperty("/control_option_code");
-				// var oDetailsData = oDetailsModel.getData();
-				// oDetailsData.forEach(function(oItem, nIndex){
-				// 	oDetailsModel.setProperty("/"+nIndex+"/tenant_id", sTenantId);
-				// 	oDetailsModel.setProperty("/"+nIndex+"/control_option_code", sControlOPtionCode);
-				// });
+				var oDetailsModel = this.getModel("details");
+				var sTenantId = oMasterModel.getProperty("/tenant_id");
+				var sCountry_code = oMasterModel.getProperty("/country_code");
+				var oDetailsData = oDetailsModel.getData();
+				oDetailsData.forEach(function(oItem, nIndex){
+					oDetailsModel.setProperty("/"+nIndex+"/tenant_id", sTenantId);
+					oDetailsModel.setProperty("/"+nIndex+"/country_code", sCountry_code);
+				});
 				oDetailsModel.setData(oDetailsData);
 			}
 		},
@@ -269,7 +269,9 @@ sap.ui.define([
 
 			if(oArgs.tenant_id == "new" && oArgs.country_code == "code"){
                //It comes Add button pressed from the before page.
-				this.getModel("midObjectView").setProperty("/isAddedMode", true);
+                this.getModel("midObjectView").setProperty("/isAddedMode", true);
+                
+                this._sTenantId = "L2100";
 
 				var oMasterModel = this.getModel("master");
 				oMasterModel.setData({
@@ -284,20 +286,21 @@ sap.ui.define([
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
 				}, "/Country");
-				var oDetailsModel = this.getModel("details");
+                var oDetailsModel = this.getModel("details");                 
 				oDetailsModel.setTransactionModel(this.getModel());
 				oDetailsModel.setData([]);
 				oDetailsModel.addRecord({
 					"tenant_id": this._sTenantId,
 					"country_code": "",
-					"language_code": "KO",
+					"language_code": "",
 					"country_name": "",
 					"description": "",
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
-				}, "/CountryLng");
+                }, "/CountryLng");                
 				this._toCreateMode();
 			}else{
+                this.getModel("midObjectView").setProperty("/isAddedMode", false);
 				this._bindView("/Country(tenant_id='" + this._sTenantId + "',country_code='" + this._sCountry_code + "')");
 				oView.setBusy(true);
 				var oDetailModel = this.getModel("details");
@@ -362,7 +365,7 @@ sap.ui.define([
 			this.byId("pageEditButton").setEnabled(FALSE);
 			this.byId("pageDeleteButton").setEnabled(FALSE);
 			this.byId("pageNavBackButton").setEnabled(FALSE);
-
+            this.byId("midObjectCountry_code").setEnabled(FALSE);
 			this.byId("midTableAddButton").setEnabled(!FALSE);
 			this.byId("midTableDeleteButton").setEnabled(!FALSE);
 			//this.byId("midTableSearchField").setEnabled(FALSE);
@@ -411,6 +414,7 @@ sap.ui.define([
           
             var oCountryCombo = new ComboBox({
                     selectedKey: "{details>language_code}"
+                    , width : "100%"
                     , editable: "{= ${details>_row_state_} === 'C' ? true : false}"  
                     , selectionChange: function (oEvent) {
                         this._CountryComboChange(oEvent);
@@ -475,7 +479,9 @@ sap.ui.define([
         _setKeyMidTable: function(sKeyboardMode){
 
             var oTable = this.byId("midTable") ;
-            var oKey = this.byId("searchLanguageE").getSelectedKey();
+            //var oKey = this.byId("searchLanguageE").getSelectedKey();
+            //var oKey = this.getModel("master").oData.language_code ;
+            var oKey = this.getModel("master").getProperty("/language_code");
 
             if (sKeyboardMode === "Create")
             {
