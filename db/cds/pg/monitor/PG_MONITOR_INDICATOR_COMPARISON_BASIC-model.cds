@@ -21,7 +21,7 @@ using util from '../../util/util-model';
 using {pg as Indicator_Comparison_Basic} from '../monitor/PG_MONITOR_INDICATOR_COMPARISON_BASIC-model';
 
 entity Monitor_Indicator_Comparison_Basic {
-    key tenant_id                      : String(5) not null  @title : '테넌트ID';
+    key tenant_id                      : String(5) not null  @title : '회사코드';
     key indicator_comparison_base_code : String(10) not null @title : '지표비교기준코드';
     key language_code                  : String(10) not null @title : '언어코드';
         indicator_comparison_base_name : String(240)         @title : '지표비교기준명';

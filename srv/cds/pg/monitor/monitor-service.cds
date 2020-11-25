@@ -1,3 +1,4 @@
+//Table
 using {pg as idcCmpBsc} from '../../../../db/cds/pg/monitor/PG_MONITOR_INDICATOR_COMPARISON_BASIC-model';
 using {pg as idcCond} from '../../../../db/cds/pg/monitor/PG_MONITOR_INDICATOR_CONDITION-model';
 using {pg as idcGrd} from '../../../../db/cds/pg/monitor/PG_MONITOR_INDICATOR_GRADE-model';
@@ -10,8 +11,10 @@ using {pg as mntrOprtmd} from '../../../../db/cds/pg/monitor/PG_MONITOR_OPERATIO
 using {pg as mntrSprt} from '../../../../db/cds/pg/monitor/PG_MONITOR_SEPARATED-model';
 using {pg as mntrType} from '../../../../db/cds/pg/monitor/PG_MONITOR_TYPE-model';
 using {pg as mntrSnar} from '../../../../db/cds/pg/monitor/PG_MONITOR_SCENARIO-model';
-using {pg as mntrMasterView} from '../../../../db/cds/pg/monitor/PG_MONITOR_MASTER_VIEW';
+using {pg as mntrMasterHistMngt} from '../../../../db/cds/pg/monitor/PG_MONITOR_MASTER_HISTORY_MNGT-model';
 using {pg as mntrFullMaster} from '../../../../db/cds/pg/monitor/PG_MONITOR_FULL_MASTER-model';
+//View
+using {pg as mntrMasterView} from '../../../../db/cds/pg/monitor/PG_MONITOR_MASTER_VIEW';
 //CM ORG
 using {cm.Org_Tenant as OrgTenant} from '../../../../db/cds/cm/orgMgr/CM_ORG_TENANT-model';
 using {cm.Org_Company as OrgCompany} from '../../../../db/cds/cm/orgMgr/CM_ORG_COMPANY-model';
@@ -34,19 +37,20 @@ namespace pg;
 service monitorService {
 
     // Entity List
-    entity IndicatorComparisonBasic @(title : '모니터링 지표 비교기준') as projection on idcCmpBsc.Monitor_Indicator_Comparison_Basic;
-    entity IndicatorCondition @(title : '모니터링 지표 조건')         as projection on idcCond.Monitor_Indicator_Condition;
-    entity IndicatorGrade @(title : '모니터링 지표 등급')             as projection on idcGrd.Monitor_Indicator_Grade;
-    entity MonitoringAttachments @(title : '모니터링 첨부파일')       as projection on mntrAttcm.Monitor_Attachments;
-    entity MonitoringCycle @(title : '모니터링 주기')               as projection on mntrCycle.Monitor_Cycle;
-    entity MonitoringIndicator @(title : '모니터링 지표')           as projection on mntrIdc.Monitor_Indicator;
-    entity MonitoringManager @(title : '모니터링 담당자')            as projection on mntrManager.Monitor_Manager;
-    entity MonitoringMaster @(title : '모니터링 마스터')             as projection on mntrMaster.Monitor_Master;
-    entity MonitoringOperationMode @(title : '모니터링 운영방식')     as projection on mntrOprtmd.Monitor_Operation_Mode;
-    entity MonitoringSeparated @(title : '모니터링 구분')           as projection on mntrSprt.Monitor_Separated;
-    entity MonitoringType @(title : '모니터링 유형')                as projection on mntrType.Monitor_Type;
-    entity MonitoringSenario @(title : '모니터링 시나리오')           as projection on mntrSnar.Monitor_Scenario;
-    entity MonitoringFullMaster @(title : '모니터링 전체 마스터')      as projection on mntrFullMaster.Monitor_Full_Master;
+    entity IndicatorComparisonBasic @(title : '모니터링 지표 비교기준')            as projection on idcCmpBsc.Monitor_Indicator_Comparison_Basic;
+    entity IndicatorCondition @(title : '모니터링 지표 조건')                    as projection on idcCond.Monitor_Indicator_Condition;
+    entity IndicatorGrade @(title : '모니터링 지표 등급')                        as projection on idcGrd.Monitor_Indicator_Grade;
+    entity MonitoringAttachments @(title : '모니터링 첨부파일')                  as projection on mntrAttcm.Monitor_Attachments;
+    entity MonitoringCycle @(title : '모니터링 주기')                          as projection on mntrCycle.Monitor_Cycle;
+    entity MonitoringIndicator @(title : '모니터링 지표')                      as projection on mntrIdc.Monitor_Indicator;
+    entity MonitoringManager @(title : '모니터링 담당자')                       as projection on mntrManager.Monitor_Manager;
+    entity MonitoringMaster @(title : '모니터링 마스터')                        as projection on mntrMaster.Monitor_Master;
+    entity MonitoringOperationMode @(title : '모니터링 운영방식')                as projection on mntrOprtmd.Monitor_Operation_Mode;
+    entity MonitoringSeparated @(title : '모니터링 구분')                      as projection on mntrSprt.Monitor_Separated;
+    entity MonitoringType @(title : '모니터링 유형')                           as projection on mntrType.Monitor_Type;
+    entity MonitoringSenario @(title : '모니터링 시나리오')                      as projection on mntrSnar.Monitor_Scenario;
+    entity MonitoringFullMaster @(title : '모니터링 전체 마스터')                 as projection on mntrFullMaster.Monitor_Full_Master;
+    entity MonitoringMasterHistoryManagement @(title : '모니터링 마스터 이력 관리') as projection on mntrMasterHistMngt.Monitor_Master_History_Mngt;
     // View List
     view MonitoringMasterView @(title : '모니터링 마스터 View') as select from mntrMasterView.monitor_master_view;
     view ManagerView @(title : '담당자 전체 View') as select from MngView.Monitor_Manager_View;
