@@ -397,12 +397,20 @@
                                 <cells>
                                     <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
                                     <Text text="{appList>no}" />
-                                    <ComboBox   id="searchItemType" width="100%"
-                                        selectedKey=""
-                                        items="{}"
-                                    ><core:Item key="{util>code}" text="{util>code_description}" />
+                                    <ComboBox  id="searchItemType" width="100%"
+                                        selectedKey="{appList>type}" 
+                                        enabled="{appList>editMode}"
+                                        items="{
+                                            path: 'org>/Org_Company',
+                                            filters: [
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                            ],
+                                            sorter: { path: 'company_code'}
+                                        }"
+                                        >
+                                    <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                     </ComboBox>
-                                    <SearchField placeholder="Search employee" search="onFilter"/>
+                                    <SearchField id="searchField" enabled="{appList>editMode}" enableSuggestions="true" search=".onSearch" suggest=".onSuggest" width="100%" placeholder="Search employee" text="{appList>name}"/>
                                     <Text text="{appList>status}" />
                                     <Text text="{appList>comment}" />
                                     <Button id="btnSort" icon="sap-icon://sort" press="onSort" tooltip="sort"></Button>
