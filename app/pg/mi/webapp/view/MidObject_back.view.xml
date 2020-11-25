@@ -1,0 +1,452 @@
+<mvc:View
+    controllerName="pg.mi.controller.MidObject"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:uxap="sap.uxap"
+    xmlns:layout="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    height="100%">
+    <App>
+        <Page title="Monitoring management system">
+            <content>
+                <uxap:ObjectPageLayout
+                    id="page"
+                    toggleHeaderOnTitleClick="true"
+                    alwaysShowContentHeader="true"
+                    preserveHeaderStateOnScroll="false"
+                    headerContentPinnable="true"
+                    isChildPage="true"
+                    upperCaseAnchorBar="false"
+                    showTitleInHeaderContent="true"
+                    showEditHeaderButton="true"
+                    showFooter="false">
+                    <uxap:headerTitle>
+                        <uxap:ObjectPageDynamicHeaderTitle>
+                            <uxap:expandedHeading>
+                                <Title text="{i18n>appTitle}" wrapping="true"/>
+                            </uxap:expandedHeading>
+                            <uxap:snappedHeading>
+                                <Title text="{i18n>appTitle}" wrapping="true"/>
+                            </uxap:snappedHeading>
+                            <uxap:snappedTitleOnMobile>
+                                <Title text="{i18n>appTitle}"/>
+                            </uxap:snappedTitleOnMobile>
+
+                            <uxap:navigationActions>
+                                <OverflowToolbarButton
+                                    id="pageEnterFullScreenButton"
+                                    type="Transparent"
+                                    icon="sap-icon://full-screen"
+                                    press="onPageEnterFullScreenButtonPress"
+                                    tooltip="Enter Full Screen Mode"
+                                    visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
+                                <OverflowToolbarButton
+                                    id="pageExitFullScreenButton"
+                                    type="Transparent"
+                                    icon="sap-icon://exit-full-screen"
+                                    press="onPageExitFullScreenButtonPress"
+                                    tooltip="Exit Full Screen Mode"
+                                    visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
+                                <OverflowToolbarButton
+                                    id="pageNavBackButton"
+                                    type="Transparent"
+                                    icon="sap-icon://decline"
+                                    text="back"
+                                    tooltip="back to the list"
+                                    press=".onPageNavBackButtonPress"
+                                    visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                            </uxap:navigationActions>
+                        </uxap:ObjectPageDynamicHeaderTitle>
+                    </uxap:headerTitle>
+                    <uxap:headerContent></uxap:headerContent>
+                    <uxap:sections>
+                        <uxap:ObjectPageSection
+                            id="pageSectionMain"
+                            titleUppercase="false"
+                            title="{i18n>appTitle}">
+                            <uxap:subSections>
+                                <uxap:ObjectPageSubSection id="pageSubSection1"></uxap:ObjectPageSubSection>
+                            </uxap:subSections>
+                        </uxap:ObjectPageSection>
+                    </uxap:sections>
+                    <uxap:sections>
+                        <uxap:ObjectPageSection titleUppercase="false" title="Material Property">
+                            <uxap:subSections>
+                                <uxap:ObjectPageSubSection>
+                                    <form:SimpleForm
+                                        id="mainObjectForm1Edit"
+                                        editable="true"
+                                        layout="ColumnLayout"
+                                        columnsM="2"
+                                        columnsL="3"
+                                        columnsXL="4">
+
+                                        <Label text="시황자재코드" design="Bold" class="sapMLabelNoText"/>
+                                        <Input id="inputMaterialCode" class="sapUiSmallMarginEnd"/>
+                                        <Button
+                                            id="buttonMaterialCheck"
+                                            width="9em"
+                                            text="중복Check"
+                                            press=".onMaterialCodeCheckOpen"/>
+
+                                        <Label text="Category 명" design="Bold" class="sapMLabelNoText"/>
+                                        <ComboBox
+                                            id="comboBoxCategory_code"
+                                            items="{path: '/MICategoryView', templateShareable:true}">
+                                            <core:Item key="{category}" text="{category_text}"/>
+                                        </ComboBox>
+                                        <Label text="사용여부" design="Bold" class="sapMLabelNoText"/>
+                                        <Switch id="switchUse_flag" state="true">
+                                            <layoutData>
+                                                <FlexItemData growFactor="1"/>
+                                            </layoutData>
+                                        </Switch>
+
+                                    </form:SimpleForm>
+                                </uxap:ObjectPageSubSection>
+                            </uxap:subSections>
+                        </uxap:ObjectPageSection>
+                    </uxap:sections>
+                    <uxap:sections>
+                        <uxap:ObjectPageSection title="Material Language Manage">
+                            <uxap:subSections>
+                                <uxap:ObjectPageSubSection>
+                                    <uxap:blocks>
+                                        <VBox>
+                                            <Table
+                                                id="midTable"
+                                                items="{path : '/MIMaterialCodeText'}"
+                                                mode="MultiSelect"
+                                                updateFinished="onMitTableUpdateFinished"
+                                                width="100%">
+                                                <headerToolbar>
+                                                    <OverflowToolbar>
+                                                        <content>
+                                                            <ToolbarSpacer/>
+                                                            <Button text="Create" type="Transparent" press=".onMidCreate"/>
+                                                            <Button text="Delete" type="Transparent" press=".onMidDelete"/>
+                                                        </content>
+                                                    </OverflowToolbar>
+                                                </headerToolbar>
+                                                <columns>
+                                                    <Column hAlign="Center" width="80px">
+                                                        <header>
+                                                            <Label text="Language"/>
+                                                        </header>
+                                                    </Column>
+                                                    <Column hAlign="Center" width="80px">
+                                                        <header>
+                                                            <Label text="자재명"/>
+                                                        </header>
+                                                    </Column>
+                                                </columns>
+                                                <items>
+                                                    <ColumnListItem>
+                                                        <cells>
+                                                            <ComboBox
+                                                                id="language_code"
+                                                                items="{path: '/LanguageView', templateShareable:false}"
+                                                                >
+                                                                <core:Item key="{code}" text="{code_name}" />
+                                                            </ComboBox>
+                                                            <Text id="mi_material_code_text" text="{mi_material_code_text}"/>
+                                                        </cells>
+                                                    </ColumnListItem>
+                                                </items>
+                                            </Table>    
+                                        </VBox>
+                                    </uxap:blocks>
+                                </uxap:ObjectPageSubSection>
+                            </uxap:subSections>
+                        </uxap:ObjectPageSection>
+                    </uxap:sections>
+                </uxap:ObjectPageLayout>
+            </content>
+            <footer>
+                <OverflowToolbar id="otbFooter">
+                    <ToolbarSpacer/>
+                    <!-- <Button id="buttonTest" text="test" press=".onTest"/> -->
+                    <Button id="buttonMidEdit" text="Edit" press=".onEdit"/>
+                    <Button
+                        id="buttonMidDelete"
+                        text="Delete"
+                        press=".onMidDelete"
+                        enabled="{=${ui>/bMidEditMode}}"/>
+                    <Button
+                        id="buttonSave"
+                        text="Save"
+                        press=".onMidSave"
+                        enabled="{=${ui>/bMidEditMode}}"/>
+                </OverflowToolbar>
+            </footer>
+        </Page>
+    </App>
+
+</mvc:View>
+
+
+
+                var that = this.getView().getController();
+                
+                var deleteGroup = [];
+                var updateGroup = [];
+                var createGroup = [];
+                var batchChanges = [];  
+
+
+                //var mi_material_code = "LED-001-01";
+
+                /**언어 삭제 */
+                oTable.getSelectedItems().forEach(function(oItem){
+
+                    var sPath = oItem.getBindingContextPath();	
+                    var mParameters = {"groupId":"deleteGroup"};
+
+                    debugger;
+
+                    oItem.getBindingContext().getModel().remove(sPath, mParameters);
+
+                });
+                
+                //var oModel = this.getView().getModel();
+                oModel.setHeaders({  
+                    "X-Requested-With": "XMLHttpRequest",
+                    "Content-Type": "application/json", 
+                    "DataServiceVersion": "2.0",
+                    "Accept": "application/atom+xml,application/atomsvc+xml,application/xml"
+                    });   
+
+                oModel.submitChanges({
+                    groupId: "deleteGroup", 
+                    success: this._handleDeleteSuccess.bind(this),
+                    error: this._handleDeleteError.bind(this)
+                });
+
+
+            /**언어 수정  실패
+                * The request dispatcher does not allow the HTTP method used for the request.
+                * 
+            */
+            /*
+                oModel.setDeferredGroups(oModel.getDeferredGroups().concat(["taleGroupId"]));
+                //content type application/atom+xml 
+
+                // var headers= {   
+                //     "X-Requested-With": "XMLHttpRequest",  
+                //     "Content-Type": "application/atom+xml",  
+                //     "DataServiceVersion": "2.0",   
+                //     "Accept": "application/atom+xml,application/atomsvc+xml,application/xml",  
+                //     "X-CSRF-Token": header_xcsrf_token  
+                //    };
+                oModel.setHeaders({  
+                    "X-Requested-With": "XMLHttpRequest",
+                    "Content-Type": "application/xml", 
+                    "DataServiceVersion": "2.0",
+                    "Accept": "application/atom+xml,application/atomsvc+xml,application/xml"
+                    });  
+                var mParameters = {
+        
+                        "tenant_id": "L2100",
+                        "company_code": "*",
+                        "org_type_code": "BU",
+                        "org_code": "BIZ00100",
+                        "mi_material_code": "LED-001-01",
+                        "language_code": "AA",
+                        "mi_material_code_name": "테스트 자제1",
+                        "local_create_dtm": new Date(),
+                        "local_update_dtm": new Date(),
+                        "create_user_id": "Admin",
+                        "update_user_id": "Admin",
+                        "system_create_dtm": new Date(),
+                        "system_update_dtm": new Date()
+                
+                };           
+
+                //데이타를 바로 등록 
+                oModel.update("/MIMaterialCodeText", mParameters);    
+                oModel.setUseBatch(true);
+                oModel.submitChanges({
+                    groupId: "taleGroupId", 
+                    success: this._handleCreateSuccess.bind(this),
+                    error: this._handleCreateError.bind(this)
+                });
+                oModel.refresh();  
+
+                return;
+    */
+
+
+                /**언어 등록 성공 */
+                /*
+                oModel.setDeferredGroups(oModel.getDeferredGroups().concat(["taleGroupId"]));
+
+                var mParameters = {
+        
+                        "tenant_id": "L2100",
+                        "company_code": "*",
+                        "org_type_code": "BU",
+                        "org_code": "BIZ00100",
+                        "mi_material_code": "LED-001-01",
+                        "language_code": "AA",
+                        "mi_material_code_name": "테스트 자제",
+                        "local_create_dtm": new Date(),
+                        "local_update_dtm": new Date(),
+                        "create_user_id": "Admin",
+                        "update_user_id": "Admin",
+                        "system_create_dtm": new Date(),
+                        "system_update_dtm": new Date()
+                
+                };           
+
+                //데이타를 바로 등록 
+                oModel.create("/MIMaterialCodeText", mParameters);    
+                oModel.setUseBatch(true);
+                oModel.submitChanges({
+                    groupId: "taleGroupId", 
+                    success: this._handleCreateSuccess.bind(this),
+                    error: this._handleCreateError.bind(this)
+                });
+                oModel.refresh();  
+
+                return;
+
+                */
+                //MIMaterialCodeList 성공 
+                /*
+                var mi_material_code = "BIZ00122";
+                var mParameters = {
+                    "groupId":"createGroup",
+                    "properties" : {
+                        "tenant_id": "L2100",
+                        "company_code": "*",
+                        "org_type_code": "BU",
+                        "org_code": "BIZ00100",
+                        "mi_material_code": mi_material_code,
+                        "mi_material_code_name": "",
+                        "category_code": "Non-Ferrous Metal",
+                        "category_name": "비철금속",
+                        "use_flag": true,
+                        "local_create_dtm": new Date(),
+                        "local_update_dtm": new Date(),
+                        "create_user_id": "Admin",
+                        "update_user_id": "Admin",
+                        "system_create_dtm": new Date(),
+                        "system_update_dtm": new Date()
+                    }
+                };					
+                this.getModel().createEntry("/MIMaterialCodeList", mParameters);
+                //this.getView().byId("mainTable").setBindingContext(oEntry1);
+
+                this.getModel().setUseBatch(true);
+                this.getModel().submitChanges({
+                    groupId: "createGroup", 
+                success: this._handleCreateSuccess.bind(this),
+                error: this._handleCreateError.bind(this)
+                });
+                */
+
+
+
+                //실패
+                /*
+                oModel.setDeferredGroups(oModel.getDeferredGroups().concat(["tableGroupId"]));
+                oModel.setChangeGroups({
+                    "MIMaterialCodeText": {
+                        groupId: "tableGroupId", 
+                        single: true
+                    }
+                });
+                var mParameters = {
+                    "groupId":"tableGroupId",
+                    "properties" : {
+                            "tenant_id": midObjectData.getProperty("/tenant_id"),
+                            "company_code": midObjectData.getProperty("/company_code"),
+                            "org_type_code": midObjectData.getProperty("/tenant_id"),
+                            "org_code": midObjectData.getProperty("/org_code"),
+                            "mi_material_code": midObjectData.getProperty("/mi_material_code"),
+                            "language_code": "CN",
+                            "mi_material_code_name": "CNA",
+                            "local_create_dtm": new Date(),
+                            "local_update_dtm": new Date(),
+                            "create_user_id": "Admin",
+                            "update_user_id": "Admin",
+                            "system_create_dtm": new Date(),
+                            "system_update_dtm": new Date()    
+                    } 
+                };           
+
+                debugger;
+                this.getModel().create("/MIMaterialCodeText", mParameters);             
+                this.getModel().setUseBatch(true);
+                this.getModel().submitChanges({
+                    groupId: "tableGroupId", 
+                    success: this._handleCreateSuccess.bind(this),
+                    error: this._handleCreateError.bind(this)
+                });
+                return;
+                */
+                //언어별 테이블 내용을 각 타입별로 저장한다. 
+                for (var idx = 0; idx < oTable.getItems().length; idx++){
+                    var groupType  = "updateGroup";
+                    var items = oTable.getItems()[idx];
+                    var state = items.getCells()[0].mProperties.text;
+                    var language_code = items.getCells()[1].mProperties.selectedKey;
+                    var mi_material_code_name = items.getCells()[1].mProperties.value;
+
+                    var odataMethod = "PUT";
+
+                    if (state=="D") { groupType="deleteGroup"; odataMethod ="DELETE" }
+                    else if (state=="C") { groupType="createGroup"; odataMethod ="POST"}
+
+                    var mParameters = {
+                                        
+                            "tenant_id": midObjectData.getProperty("/tenant_id"),
+                            "company_code": midObjectData.getProperty("/company_code"),
+                            "org_type_code": midObjectData.getProperty("/tenant_id"),
+                            "org_code": midObjectData.getProperty("/org_code"),
+                            "mi_material_code": midObjectData.getProperty("/mi_material_code"),
+                            "language_code": language_code,
+                            "mi_material_code_name": mi_material_code_name,
+                            "local_create_dtm": new Date(),
+                            "local_update_dtm": new Date(),
+                            "create_user_id": "Admin",
+                            "update_user_id": "Admin",
+                            "system_create_dtm": new Date(),
+                            "system_update_dtm": new Date()    
+                                
+                    };
+
+                    // var oContext = oModel.createEntry("/Products", 
+                    // { properties: { ID:99, Name:"Product", Description:"new Product", ReleaseDate:new Date(), Price:"10.1", Rating:1} }
+                    // );
+
+                    oModel.setChangeGroups({
+                        "MIMaterialCodeText": {
+                            groupId: "updateGroup", 
+                            single: true
+                        }
+                    });
+
+                
+                    if(state=="R"){
+                    // this.getModel().update("/MIMaterialCodeText", mParameters);    
+                    }
+                    else if(state=="C"){
+                    //  this.getModel().create("/MIMaterialCodeText", mParameters);    
+                    }
+                    else if(state=="D"){
+                    // this.getModel().delete("/MIMaterialCodeText", mParameters);    
+                    }
+                    //this.getModel().update("/MIMaterialCodeTexttenant_id='L2100',company_code='*',org_type_code='BU',org_code='BIZ00100',mi_material_code='"+ midObjectData.getProperty("/mi_material_code") +"',language_code='EN')", mParameters);   
+                    this.getModel().update("/MIMaterialCodeText", mParameters); 
+                
+                };
+
+                this.getModel().setUseBatch(true);
+                this.getModel().submitChanges({
+                    groupId: ["updateGroup"], 
+                    success: this._handleUpdateSuccess.bind(this),
+                    error: this._handleUpdateError.bind(this)
+                });
+                

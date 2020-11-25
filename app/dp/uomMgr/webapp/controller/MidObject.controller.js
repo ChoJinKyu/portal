@@ -1,6 +1,6 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
-	"sap/ui/core/routing/History",
+	"ext/lib/util/ValidatorUtil",
 	"sap/ui/model/json/JSONModel",
 	"ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedModel",
@@ -17,7 +17,7 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
+], function (BaseController, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
 	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
 	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
 		
@@ -65,7 +65,8 @@ sap.ui.define([
 
 			this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
 
-			this._initTableTemplates();
+            this._initTableTemplates();
+            this.enableMessagePopover();
 		}, 
 
 		/* =========================================================== */
@@ -152,7 +153,7 @@ sap.ui.define([
 				"uom_class_desc": "",
 				"local_create_dtm": new Date(),
 				"local_update_dtm": new Date()
-			});
+			}, "/UomClassLng");
 		},
 
 		onMidTableDeleteButtonPress: function(){
@@ -161,7 +162,7 @@ sap.ui.define([
 				aItems = oTable.getSelectedItems(),
 				aIndices = [];
 			aItems.forEach(function(oItem){
-				aIndices.push(oModel.getData().indexOf(oItem.getBindingContext("details").getObject()));
+				aIndices.push(oModel.getProperty("/UomClassLng").indexOf(oItem.getBindingContext("details").getObject()));
 			});
 			aIndices = aIndices.sort(function(a, b){return b-a;});
 			aIndices.forEach(function(nIndex){
@@ -188,7 +189,8 @@ sap.ui.define([
 						// oView.getModel("master").submitChanges({
 							success: function(ok){
 								that._toShowMode();
-								oView.setBusy(false);
+                                oView.setBusy(false);
+                                that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
 								MessageToast.show("Success to save.");
 							}
 						});
@@ -204,7 +206,11 @@ sap.ui.define([
 		 * @public
 		 */
         onPageCancelEditButtonPress: function(){
-			this._toShowMode();
+			if(this.getModel("midObjectView").getProperty("/isAddedMode") == true){
+				this.onPageNavBackButtonPress.call(this);
+			}else{
+				this._toShowMode();
+			}
         },
 
 		/* =========================================================== */
@@ -306,7 +312,7 @@ sap.ui.define([
 			this.byId("page").setSelectedSection("pageSectionMain");
 			this.byId("page").setProperty("showFooter", !FALSE);
 			this.byId("pageEditButton").setEnabled(FALSE);
-			this.byId("pageDeleteButton").setEnabled(FALSE);
+			//this.byId("pageDeleteButton").setEnabled(FALSE);
 			this.byId("pageNavBackButton").setEnabled(FALSE);
 
 			this.byId("midTableAddButton").setEnabled(!FALSE);
@@ -323,7 +329,7 @@ sap.ui.define([
 			this.byId("page").setSelectedSection("pageSectionMain");
 			this.byId("page").setProperty("showFooter", !TRUE);
 			this.byId("pageEditButton").setEnabled(TRUE);
-			this.byId("pageDeleteButton").setEnabled(TRUE);
+			//this.byId("pageDeleteButton").setEnabled(TRUE);
 			this.byId("pageNavBackButton").setEnabled(TRUE);
 
 			this.byId("midTableAddButton").setEnabled(!TRUE);
@@ -340,10 +346,10 @@ sap.ui.define([
 					new Text({
 						text: "{details>_row_state_}"
 					}), 
-					new ObjectIdentifier({
+					new Text({
 						text: "{details>language_code}"
 					}), 
-					new ObjectIdentifier({
+					new Text({
 						text: "{details>uom_class_name}"
 					}), 
 					new Text({
@@ -386,10 +392,10 @@ sap.ui.define([
 
 		_bindMidTable: function(oTemplate, sKeyboardMode){
 			this.byId("midTable").bindItems({
-				path: "details>/",
-				template: oTemplate,
-				templateShareable: true,
-				key: "control_option_level_val"
+				path: "details>/UomClassLng",
+				template: oTemplate
+				// templateShareable: true,
+				// key: ""
 			}).setKeyboardMode(sKeyboardMode);
 		},
 

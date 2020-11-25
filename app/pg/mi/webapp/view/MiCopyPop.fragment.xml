@@ -1,0 +1,59 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:table="sap.ui.table"
+    class="sapUiSizeCompact">
+
+    <Dialog title="Category Choose" contentHeight="100%" contentWidth="100%">
+
+        <content>
+            <Panel>
+                <f:SimpleForm
+                    editable="true"
+                    layout="ResponsiveGridLayout"
+                    labelSpanL="1"
+                    labelSpanM="1"
+                    emptySpanL="0"
+                    emptySpanM="0"
+                    columnsL="1"
+                    columnsM="1"
+                    singleContainerFullSize="false"
+                    class="sapUiSizeCompact">
+
+                    <f:content>
+                        <Label text="Category Code">
+                            <layoutData>
+                                <l:GridData span="L3 M3 S12"/>
+                            </layoutData>
+                        </Label>
+                        <ComboBox
+                            id="company_combo"
+                            items="{/OrgTenantView}"
+                            change="onCategory_pop_search">
+                            <core:Item key="{tenant_id}" text="{tenant_name}"/>
+                            <layoutData>
+                                <l:GridData span="L3 M3 S12"/>
+                            </layoutData>
+                        </ComboBox>
+                    </f:content>
+				<f:toolbar>
+					<Toolbar>
+						<content>
+							<ToolbarSpacer/>
+							<Button icon="sap-icon://search" text="Search"  press="onCategory_pop_search" />
+						</content>
+					</Toolbar>
+				</f:toolbar>                    
+                </f:SimpleForm>
+            </Panel>
+        </content>
+
+        <beginButton>
+            <Button text="Close" press="onCategory_pop_close"/>
+        </beginButton>
+
+    </Dialog>
+
+</core:FragmentDefinition>

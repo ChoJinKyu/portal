@@ -1,6 +1,6 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
-	"sap/ui/model/json/JSONModel",
+	"ext/lib/util/Multilingual",
 	"ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedListModel",
 	"ext/lib/formatter/Formatter",
@@ -8,6 +8,7 @@ sap.ui.define([
 	"./MainListPersoService",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
+    "sap/ui/model/Sorter",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
 	"sap/m/ColumnListItem",
@@ -16,7 +17,9 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, JSONModel, TransactionManager, ManagedListModel, Formatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Formatter, TablePersoController, MainListPersoService, 
+		Filter, FilterOperator, Sorter,
+		MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
 	"use strict";
 
 	// var oTransactionManager;
@@ -34,23 +37,11 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {
-			var oViewModel,
+			var oViewModel, 
+				oI18ndModel,
 				oResourceBundle = this.getResourceBundle();
 
-			// Model used to manipulate control states
-			oViewModel = new JSONModel({
-				mainListTableTitle : oResourceBundle.getText("mainListTableTitle"),
-				tableNoDataText : "No data."
-			});
-			this.setModel(oViewModel, "mainListView");
-
-			// Add the mainList page to the flp routing history
-			this.addHistoryEntry({
-				title: oResourceBundle.getText("mainListViewTitle"),
-				icon: "sap-icon://table-view",
-				intent: "#Template-display"
-			}, true);
-			
+			this.setModel(Multilingual.getInstance().getModel(), "i18nd");
 			this.setModel(new ManagedListModel(), "list");
 
 			// oTransactionManager = new TransactionManager();
@@ -59,37 +50,46 @@ sap.ui.define([
 			this._doInitTablePerso();
         },
         
-        onAfterRendering : function () {
+        onRenderedFirst : function () {
+			// this.getModel("i18nd")
+			// 	.setTransactionModel(this.getModel("util"))
+			// 	.attachEvent("loaded", function(oEvent){
+
+			// 		// Add the mainList page to the flp routing history
+			// 		this.addHistoryEntry({
+			// 			title: this.getModel("i18nd").getText("/templateListInlineEdit.title"),
+			// 			icon: "sap-icon://table-view",
+			// 			intent: "#Template-display"
+			// 		}, true);
+
+			// 	}.bind(this))
+			// 	//.load(this.getOwnerComponent().getManifestEntry("sap.app").id)
+			// 	.load("cm.templateListInlineEdit");
+				
 			this.byId("pageSearchButton").firePress();
-			return;
         },
 
 		/* =========================================================== */
 		/* event handlers                                              */
 		/* =========================================================== */
 
+
 		/**
-		 * Triggered by the table's 'updateFinished' event: after new table
-		 * data is available, this handler method updates the table counter.
-		 * This should only happen if the update was successful, which is
-		 * why this handler is attached to 'updateFinished' and not to the
-		 * table's list binding's 'dataReceived' method.
-		 * @param {sap.ui.base.Event} oEvent the update finished event
+		 * Event handler when a page state changed
+		 * @param {sap.ui.base.Event} oEvent the page stateChange event
+		 * @public
+		 */
+		onPageStateChange: function(oEvent){
+			debugger;
+		},
+
+
+		/**
+		 * Event handler when a table item gets pressed
+		 * @param {sap.ui.base.Event} oEvent the table updateFinished event
 		 * @public
 		 */
 		onMainTableUpdateFinished : function (oEvent) {
-			// update the mainList's object counter after the table update
-			var sTitle,
-				oTable = oEvent.getSource(),
-				iTotalItems = oEvent.getParameter("total");
-			// only update the counter if the length is final and
-			// the table is not empty
-			if (iTotalItems && oTable.getBinding("items").isLengthFinal()) {
-				sTitle = this.getResourceBundle().getText("mainListTableTitleCount", [iTotalItems]);
-			} else {
-				sTitle = this.getResourceBundle().getText("mainListTableTitle");
-			}
-			this.getModel("mainListView").setProperty("/mainListTableTitle", sTitle);
 		},
 
 		/**
@@ -124,8 +124,24 @@ sap.ui.define([
 				// refresh the list binding.
 				this.onRefresh();
 			} else {
-				var aTableSearchState = this._getSearchStates();
-				this._applySearch(aTableSearchState);
+				var forceSearch = function(){
+					var aTableSearchState = this._getSearchStates();
+					this._applySearch(aTableSearchState);
+				}.bind(this);
+				
+				if(this.getModel("list").isChanged() === true){
+					MessageBox.confirm(this.getModel("i18nd").getText("/msgConfirmForceSearch"), {
+						title : this.getModel("i18nd").getText("/lblConfirmation"),
+						initialFocus : sap.m.MessageBox.Action.CANCEL,
+						onClose : function(sButton) {
+							if (sButton === MessageBox.Action.OK) {
+								forceSearch();
+							}
+						}.bind(this)
+					});
+				}else{
+					forceSearch();
+				}
 			}
 		},
 
@@ -164,8 +180,12 @@ sap.ui.define([
 			var oModel = this.getModel("list"),
 				oView = this.getView();
 			
-			MessageBox.confirm("Are you sure ?", {
-				title : "Comfirmation",
+			if(!oModel.isChanged()) {
+				MessageToast.show(this.getModel("i18nd").getText("/msgNoChanges"));
+				return;
+			}
+			MessageBox.confirm(this.getModel("i18nd").getText("/msgConfirmSave?"), {
+				title : this.getModel("i18nd").getText("/lblConfirmation"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
@@ -204,6 +224,12 @@ sap.ui.define([
 			oModel.setTransactionModel(this.getModel());
 			oModel.read("/Message", {
 				filters: aTableSearchState,
+				sorters: [
+					new Sorter("chain_code"),
+					new Sorter("message_code"),
+					new Sorter("language_code", true),
+					new Sorter("group_code")
+				],
 				success: function(oData){
 					oView.setBusy(false);
 				}
@@ -241,7 +267,7 @@ sap.ui.define([
 			// init and activate controller
 			this._oTPC = new TablePersoController({
 				table: this.byId("mainTable"),
-				componentName: "templateListInlineEdit",
+				componentName: "xx.templateListInlineEdit",
 				persoService: MainListPersoService,
 				hasGrouping: true
 			}).activate();

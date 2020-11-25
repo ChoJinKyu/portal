@@ -61,6 +61,7 @@
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
+                            
                         </form:content>
                     </form:SimpleForm>
                 </f:snappedContent>
@@ -128,14 +129,36 @@
                     <form:content>
                         <VBox>
                             <Label text="Model" labelFor="searchModel"></Label>
-                            <Input id="searchModel" showValueHelp="true"></Input>
+                            <Input id="searchModel" 
+                                    showValueHelp="true"  
+                                    valueHelpRequest=".onValueHelpRequested"
+                                    suggestionItems="{
+                                        path: '/Models',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                        ],
+                                        sorter: { path: 'model' }
+                            }">
+                                <core:Item key="{model}" text="{model}" />
+                            </Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="Part No" labelFor="searchPart"></Label>
-                            <Input id="searchPart" showValueHelp="true"></Input>
+                            <Input id="searchPart" 
+                                    showValueHelp="true"  
+                                    valueHelpRequest=".onValueHelpRequested"
+                                    suggestionItems="{
+                                        path: '/PartNumbers',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                        ],
+                                        sorter: { path: 'part_number' }
+                            }">
+                                <core:Item key="{part_number}" text="{part_number}" />
+                            </Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
@@ -174,12 +197,12 @@
                         growingThreshold="10"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
-                        items="{list>/}"
+                        items="{list>/MoldMasterSpec}"
                         mode="None" 
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="List ({= ${list>/}.length || 0})" level="H2"/>
+                            <Title text="List ({= ${list>/MoldMasterSpec}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
                             <ToolbarSeparator/>

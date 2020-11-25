@@ -22,14 +22,24 @@
                         <form:content>
                             <VBox>
                                 <Label text="Company" labelFor="searchCompanyS" required="true"></Label>     
-                                <MultiInput id="searchCompanyS" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
+                                <MultiComboBox id="searchCompanyS" width="100%" selectedKey="L1100" items="{
+                                        path: 'org>/Org_Company',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                        ],
+                                        sorter: { path: 'company_code'}
+                                    }">
+                                    <items>
+                                        <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                                    </items>
+                                </MultiComboBox>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                             <VBox>
                                 <Label text="Plant" labelFor="searchPlantS" required="true"></Label>
-                                <ComboBox id="searchPlantS" width="100%" selectedKey="L1100" items="{
+                                <MultiComboBox id="searchPlantS" width="100%" selectedKey="L1100" items="{
                                         path: 'purOrg>/Pur_Operation_Org',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
@@ -40,7 +50,10 @@
                                     <items>
                                         <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
                                     </items>
-                                </ComboBox>
+                                </MultiComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
                             </VBox>
                             <VBox>
                                 <Label text="Request Date" labelFor="searchRequestDateS" required="true"></Label>
@@ -51,7 +64,19 @@
                             </VBox>
                              <VBox>
                                 <Label text="Approval Category" labelFor="searchApprovalCategoryS" required="true"></Label>
-                                <MultiInput id="searchApprovalCategoryS" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
+                                <MultiComboBox id="searchApprovalCategoryS" width="100%">
+                                    <core:Item key="Budget" text="Budget" />
+                                    <core:Item key="Supplier Selection" text="Supplier Selection" />
+                                    <core:Item key="Order" text="Order" />
+                                    <core:Item key="Receipt" text="Receipt" />
+                                    <core:Item key="Export" text="Export" />
+                                    <core:Item key="Import Completion" text="Import Completion" />
+                                    <core:Item key="Repair/Modifi. Completion" text="Repair/Modifi. Completion" />
+                                    <core:Item key="Other In" text="Other In" />
+                                    <core:Item key="Other Out" text="Other Out" />
+                                    <core:Item key="Prod Supplier Amend" text="Prod Supplier Amend" />
+                                    <core:Item key="Prod Supplier Amend" text="Item Cancel" />
+                                </MultiComboBox>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
@@ -62,16 +87,37 @@
                 <f:expandedContent>
                     <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
-                             <VBox>
-                                <Label text="Company" labelFor="searchCompanyE" required="true"></Label>
-                                <MultiInput id="searchCompanyE" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
+                            <VBox>
+                                <Label text="Company" labelFor="searchCompanyE" required="true"></Label>     
+                                <MultiComboBox id="searchCompanyE" width="100%" selectedKey="L1100" items="{
+                                        path: 'org>/Org_Company',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                        ],
+                                        sorter: { path: 'company_code'}
+                                    }">
+                                    <items>
+                                        <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                                    </items>
+                                </MultiComboBox>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                             <VBox>
                                 <Label text="Plant" labelFor="searchPlantE" required="true"></Label>
-                                <MultiInput id="searchPlantE" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
+                                <MultiComboBox id="searchPlantE" width="100%" selectedKey="L1100" items="{
+                                        path: 'purOrg>/Pur_Operation_Org',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
+                                            {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
+                                            {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
+                                        ]
+                                    }">
+                                    <items>
+                                        <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
+                                    </items>
+                                </MultiComboBox>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
@@ -85,7 +131,20 @@
                             </VBox>
                              <VBox>
                                 <Label text="Approval Category" labelFor="searchApprovalCategoryE" required="true"></Label>
-                                <MultiInput id="searchApprovalCategoryE" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
+                                <MultiComboBox id="searchApprovalCategoryE" width="100%">
+                                    <core:Item key="Budget" text="Budget" />
+                                    <core:Item key="Supplier Selection" text="Supplier Selection" />
+                                    <core:Item key="Order" text="Order" />
+                                    <core:Item key="Receipt" text="Receipt" />
+                                    <core:Item key="Export" text="Export" />
+                                    <core:Item key="Import Completion" text="Import Completion" />
+                                    <core:Item key="Repair/Modifi. Completion" text="Repair/Modifi. Completion" />
+                                    <core:Item key="Other In" text="Other In" />
+                                    <core:Item key="Other Out" text="Other Out" />
+                                    <core:Item key="Prod Supplier Amend" text="Prod Supplier Amend" />
+                                    <core:Item key="Prod Supplier Amend" text="Item Cancel" />
+                                </MultiComboBox>
+                                
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
@@ -94,7 +153,7 @@
                     </form:SimpleForm>
                 </f:expandedContent>
                 <f:actions>
-                    <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onPageSearchButtonPress" />
+                    <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onSelectDialogPress" />
                 </f:actions>
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -108,14 +167,24 @@
                     <form:content>
                         <VBox>
                             <Label text="Model " labelFor="searchModel"></Label>
-                            <MultiInput id="searchModel" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
+                            <Input id="searchModel" showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".approvalDialogOpen"  width="100%">
+                                <!-- <customData>
+                                    <core:CustomData key="multi" value="true" />
+                                    <core:CustomData key="confirmButtonText" value="Apply" />
+                                </customData> -->
+                            </Input>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="Mold Part No " labelFor="searchMoldPartNo"></Label>
-                            <MultiInput id="searchMoldPartNo" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
+                            <MultiInput id="searchMoldPartNo" valueHelpOnly="true" width="100%" valueHelpRequest=".approvalDialogOpen">
+                                <customData>
+                                    <core:CustomData key="multi" value="true" />
+                                    <core:CustomData key="confirmButtonText" value="Apply" />
+                                </customData>
+                            </MultiInput>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -129,7 +198,12 @@
                         </VBox>
                         <VBox>
                             <Label text="Requester" labelFor="searchRequester"></Label>
-                            <MultiInput id="searchRequester" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequestedAffiliate"/>
+                            <MultiInput id="searchRequester" valueHelpOnly="true" width="100%" valueHelpRequest=".approvalDialogOpen">
+                                <customData>
+                                    <core:CustomData key="multi" value="true" />
+                                    <core:CustomData key="confirmButtonText" value="Apply" />
+                                </customData>
+                            </MultiInput>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -139,7 +213,7 @@
                                 <SegmentedButton id="searchStatusS" selectedKey="" class="sapUiSmallMarginBottom" width="100%">
                                     <items>
                                         <SegmentedButtonItem text="All" key="" />
-                                        <SegmentedButtonItem text="Saved" width="5em" />
+                                        <SegmentedButtonItem text="Draft" width="5em" />
                                         <SegmentedButtonItem text="In-Appr" width="5em" />
                                         <SegmentedButtonItem text="Apprvd" width="5em" />
                                         <SegmentedButtonItem text="Rejected" width="5em" />
@@ -170,7 +244,7 @@
                             <Title text="Approval List ({= ${list>/}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <!-- Add the Personalization button -->
-                            <Button id="mainTableCreateButton" text="Create" type="Emphasized" press=".onValueHelpRequestedCreate" />
+                            <Button id="mainTableCreateButton" text="Create" type="Emphasized" press=".onDialogCreate" />
                             <Button id="mainTableDeleteButton" text="Delete" type="Transparent" press=".onListMainTableDeleteButtonPress" />
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://excel-attachment" press=".onListMainTablePersoButtonPressed" >

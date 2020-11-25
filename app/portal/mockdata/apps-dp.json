@@ -27,6 +27,17 @@
             ]
         },
         {
+            "name": "PSD",
+            "icon": "sap-icon://source-code",
+            "subMenus": [
+                {
+                    "name": "UOM Class",
+                    "url": "../dp/uomMgr/webapp",
+                    "component": "dp.uomMgr"
+                }               
+            ]
+        },
+        {
             "name": "Exam2",
             "icon": "sap-icon://locate-me",
             "subMenus": [

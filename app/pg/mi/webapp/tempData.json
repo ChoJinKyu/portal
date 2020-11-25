@@ -1,0 +1,51 @@
+{
+    "MIMaterialCodeText": [
+        {
+        "tenant_id": "L2100",
+        "company_code": "*",
+        "org_type_code": "BU",
+        "org_code": "BIZ00100",
+        "mi_material_code": "ALU-001-01",
+        "language_code": "EN",
+        "mi_material_code_name": "Aluminum",
+        "local_create_dtm": "/Date(1605629880000)/",
+        "local_update_dtm": "/Date(1605629880000)/",
+        "create_user_id": "Admin",
+        "update_user_id": "Admin",
+        "system_create_dtm": "/Date(1605629880000)/",
+        "system_update_dtm": "/Date(1605629880000)/"
+        }
+    ],
+    "MIMaterialCodeList" : [
+    {
+        "tenant_id": "L2100",
+        "company_code": "*",
+        "org_type_code": "BU",
+        "org_code": "BIZ00130",
+        "mi_material_code": "BIZ00121",
+        "mi_material_code_name": null,
+        "category_code": "Non-Ferrous Metal",
+        "category_name": "비철금속",
+        "use_flag": true,
+        "local_create_dtm": "/Date(1606046940000)/",
+        "local_update_dtm": "/Date(1606046940000)/",
+        "create_user_id": "anonymous",
+        "update_user_id": "anonymous",
+        "system_create_dtm": "/Date(1606046940000)/",
+        "system_update_dtm": "/Date(1606046940000)/"
+    }],
+    "LanguageView" : [
+        {           
+            "tenant_id": "L2100",
+            "code": "KO",
+            "code_name": "한국어"
+        }
+    ]
+    
+]      
+}
+// ,
+//       "jdata": {
+//         "uri": "tempData.json",
+//         "type": "JSON"
+//       }

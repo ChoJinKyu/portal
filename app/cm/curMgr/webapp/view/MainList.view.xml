@@ -37,7 +37,7 @@
                     <form:content>
                         <VBox>
                             <Label text="통화코드" labelFor="searchKeyword"></Label>
-                            <Input id="searchKeyword" placeholder="Code or Content"></Input>
+                            <Input id="searchKeyword" placeholder="통화코드"></Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
@@ -46,6 +46,7 @@
                             <Label text="사용여부" labelFor="searchChain"></Label>
                             <ComboBox id="searchChain" selectedKey=""
                                                     width="100%">
+                                                    <core:Item key="" text="All"/>
                                                     <core:Item key="true" text="Yes"/>                                                            
                                                     <core:Item key="false" text="No"/>
                             </ComboBox>
@@ -72,7 +73,7 @@
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="Currency ({= ${list>/}.length || 0})" level="H2"/>
+                            <Title text="통화관리 : ({= ${list>/CurrencyView}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
                             <ToolbarSeparator/>

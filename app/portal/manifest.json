@@ -76,27 +76,27 @@
                 "routerClass": "sap.m.routing.Router",
                 "viewType": "XML",
                 "async": true,
-                "viewPath": "cm.codeMgr.view",
+                "viewPath": "spp.portal.view",
                 "controlAggregation": "pages",
                 "controlId": "app",
                 "clearControlAggregation": false
             },
             "routes": [
                 {
-                    "name": "RouteCodeMgr",
-                    "pattern": "RouteCodeMgr",
+                    "pattern": "home",
+                    "name": "home",
                     "target": [
-                        "TargetCodeMgr"
+                        "home"
                     ]
                 }
             ],
             "targets": {
-                "TargetCodeMgr": {
+                "home": {
                     "viewType": "XML",
                     "transition": "slide",
                     "clearControlAggregation": false,
-                    "viewId": "CodeMgr",
-                    "viewName": "CodeMgr"
+                    "viewId": "home",
+                    "viewName": "Launchpad"
                 }
             }
         }

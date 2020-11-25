@@ -2,35 +2,41 @@ sap.ui.define(["jquery.sap.global"],
     function (jQuery) {
         "use strict";
 
-        var _columns = [
+        var _aColunns = [
             {
-                id: "templateListInlineEdit-mainList-listMainColumnChainCode",
+                id: "templateListInlineEdit-mainList-mainColumnState",
                 order: 0,
-                text: "Chain",
+                text: "State",
+                visible: false
+            },
+            {
+                id: "templateListInlineEdit-mainList-mainColumnChainCode",
+                order: 0,
+                text: "{i18nd>/lblChain}",
                 visible: true
             },
             {
-                id: "templateListInlineEdit-mainList-listMainColumnLanguageCode",
+                id: "templateListInlineEdit-mainList-mainColumnLanguageCode",
                 order: 1,
-                text: "Language",
+                text: "{i18nd>/lblLanguage}",
                 visible: false
             },
             {
-                id: "templateListInlineEdit-mainList-listMainColumnMessageCode",
-                order: 4,
-                text: "Code",
-                visible: false
-            },
-            {
-                id: "templateListInlineEdit-mainList-listMainColumnMessageContents",
+                id: "templateListInlineEdit-mainList-mainColumnMessageCode",
                 order: 2,
-                text: "Contents",
+                text: "{i18nd>/lblCode}",
+                visible: false
+            },
+            {
+                id: "templateListInlineEdit-mainList-mainColumnMessageContents",
+                order: 3,
+                text: "{i18nd>/lblContents}",
                 visible: true
             },
             {
-                id: "templateListInlineEdit-mainList-listMainColumnMessageTypeCode",
-                order: 3,
-                text: "Type",
+                id: "templateListInlineEdit-mainList-mainColumnMessageTypeCode",
+                order: 5,
+                text: "{i18nd>/lblType}",
                 visible: true
             }
         ];
@@ -40,7 +46,7 @@ sap.ui.define(["jquery.sap.global"],
 
             oData: {
                 _persoSchemaVersion: "1.0",
-                aColumns: _columns
+                aColumns: _aColunns
             },
 
             getPersData: function () {
@@ -55,6 +61,7 @@ sap.ui.define(["jquery.sap.global"],
 
             setPersData: function (oBundle) {
                 var oDeferred = new jQuery.Deferred();
+                debugger;
                 this._oBundle = oBundle;
                 oDeferred.resolve();
                 return oDeferred.promise();
@@ -64,7 +71,7 @@ sap.ui.define(["jquery.sap.global"],
                 var oDeferred = new jQuery.Deferred();
                 var oInitialData = {
                     _persoSchemaVersion: "1.0",
-                    aColumns: _columns
+                    aColumns: _aColunns
                 };
 
                 //set personalization
@@ -87,9 +94,9 @@ sap.ui.define(["jquery.sap.global"],
 
             getGroup: function (oColumn) {
                 var sId = oColumn.getId();
-                if (sId.indexOf("listMainColumnChainCode") != -1 ||
-                    sId.indexOf("listMainColumnLanguageCode") != -1 ||
-                    sId.indexOf("listMainColumnMessageCode") != -1) {
+                if (sId.indexOf("mainColumnChainCode") != -1 ||
+                    sId.indexOf("mainColumnLanguageCode") != -1 ||
+                    sId.indexOf("mainColumnMessageCode") != -1) {
                     return "Keys";
                 }
                 return "Others";

@@ -12,31 +12,33 @@
   6. entity : MI_Material_Price_Management
   7. entity description : 시황자재 가격관리
   8. history
-  -. 2020.11.11 : 디포커스 김종현 최초작성
+  -. 2020.11.16 : 디포커스 김종현 최초작성
 *************************************************/
 
 namespace pg;
 
 using util from '../../util/util-model';
-using {pg as MI_Mat_Code_Attr} from '../mi/PG_MI_MATERIAL_PRICE_MANAGEMENT-model';
+using {pg as MI_Mat_Prc_Mngt} from '../mi/PG_MI_MATERIAL_PRICE_MANAGEMENT-model';
 
-entity Mi_Material_Price_Management {
-    key tenant_id        : String(5) not null  @title : '테넌트ID';
-    key company_code     : String(10) not null @title : '회사코드';
-    key org_type_code    : String(30) not null @title : '조직유형코드';
-    key org_code         : String(10) not null @title : '조직코드';
-    key mi_material_code : String(10) not null @title : '시황자재코드';
-    key category         : String(10) not null @title : '범주';
-        use_flag         : Boolean not null    @title : '사용여부';
-        exchange         : String(10)          @title : '거래소';
-        currency_unit    : String(30)          @title : '통화단위';
-        quantity_unit    : String(10)          @title : '수량단위';
-        exchange_unit    : String(40)          @title : '거래소단위';
-        terms            : String(10)          @title : '인도조건';
-        sourcing_group   : String(10)          @title : '소싱그룹';
-        delivery_month   : String(6)           @title : '인도월';
-        mi_date          : Date                @title : '시황일자';
-        amount           : Decimal(17, 3)      @title : '금액';
+entity MI_Material_Price_Management {
+    key tenant_id             : String(5) not null  @title : '회사코드';
+    key company_code          : String(10) not null @title : '법인코드';
+    key org_type_code         : String(30) not null @title : '조직유형코드';
+    key org_code              : String(10) not null @title : '조직코드';
+    key mi_material_code      : String(40) not null @title : '시황자재코드';
+        mi_material_code_name : String(240)         @title : '시황자재코드명';
+    key category_code         : String(40) not null @title : '카테고리코드';
+        category_name         : String(240)         @title : '카테고리명';
+        use_flag              : Boolean             @title : '사용여부';
+    key exchange              : String(10) not null @title : '거래소';
+    key currency_unit         : String(30) not null @title : '통화단위';
+    key quantity_unit         : String(10) not null @title : '수량단위';
+        exchange_unit         : String(40)          @title : '거래소단위';
+    key termsdelv             : String(10) not null @title : '인도조건';
+        sourcing_group_code   : String(10)          @title : '소싱그룹코드';
+        delivery_mm           : String(10)          @title : '인도월';
+    key mi_date               : Date not null       @title : '시황일자';
+        amount                : Decimal(17, 3)      @title : '금액';
 }
 
-extend Mi_Material_Price_Management with util.Managed;
+extend MI_Material_Price_Management with util.Managed;

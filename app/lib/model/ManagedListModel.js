@@ -40,6 +40,7 @@ sap.ui.define([
         addRecord: function (oRecord, sPath, nIndex) {
             var sEntityName = this.getProperty("/entityName"),
                 aRecords = this.getProperty("/" + sEntityName);
+            if(!aRecords) aRecords = [];
             if(typeof sPath == "number") nIndex = sPath;
             if (nIndex == undefined) nIndex = aRecords.length;
             if(!!sPath) oRecord.__entity = sPath;
@@ -66,6 +67,10 @@ sap.ui.define([
                 oRemoved = aRecords.splice(nIndex, 1);
             this._addRemoved(oRemoved[0]);
             JSONModel.prototype.setProperty.call(this, "/" + sEntityName, aRecords);
+        },
+
+        isChanged: function(){
+            return this.getChanges().length > 0;
         },
 
         getChanges: function () {
@@ -165,7 +170,7 @@ sap.ui.define([
 
         _getRecordsByState: function (sStates) {
             var sEntityName = this.getProperty("/entityName"),
-                aRecords = this.getProperty("/" + sEntityName),
+                aRecords = this.getProperty("/" + sEntityName) || [],
                 aResults = [];
             aRecords.forEach(function (oRecord) {
                 if (sStates.indexOf(oRecord[STATE_COL]) > -1) aResults.push(oRecord);

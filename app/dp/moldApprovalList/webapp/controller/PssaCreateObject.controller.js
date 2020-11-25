@@ -12,17 +12,18 @@ sap.ui.define([
     "sap/m/MessageToast", 
     "sap/m/UploadCollectionParameter",
     "sap/ui/Device" // fileupload 
+    ,"sap/ui/core/syncStyleClass"
 ], function (BaseController, JSONModel, History, ManagedListModel, RichTextEditor , DateFormatter, Filter, FilterOperator, Fragment
-            , MessageBox, MessageToast,  UploadCollectionParameter, Device ) {
+            , MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass) {
 	"use strict";
     /**
      * @description 입찰대상 협력사 선정 품의 등록화면
      * @date 2020.11.20
      * @author jinseon.lee 
      */
-  
-	return BaseController.extend("dp.moldApprovalList.controller.PssaCreateObject", {
 
+	return BaseController.extend("dp.moldApprovalList.controller.PssaCreateObject", {
+        
 		dateFormatter: DateFormatter,
 
 		/* =========================================================== */
@@ -40,17 +41,23 @@ sap.ui.define([
 			var oViewModel = new JSONModel({
 					busy : true,
 					delay : 0
-				});
+                });
+            var oResourceBundle = this.getResourceBundle();
             this.getRouter().getRoute("pssaCreateObject").attachPatternMatched(this._onObjectMatched, this);
             this.setModel(oViewModel, "pssaCreateObjectView"); 
           
             this.setModel(new ManagedListModel(), "createlist");
-            var appModel = new JSONModel();
-
-            this.setModel(appModel, "applist");
-            this.getView().setModel(new JSONModel(Device), "device"); // file upload      
-        },
-        
+       	    this.addHistoryEntry({
+				title: oResourceBundle.getText("budgetReportObjectTitle"),
+				icon: "sap-icon://table-view",
+				intent: "#Template-display"
+            }, true);
+            
+            this.getView().setModel(new ManagedListModel(), "createlist");
+            this.getView().setModel(new ManagedListModel(),"appList"); // apporval list 
+            this.getView().setModel(new JSONModel(Device), "device"); // file upload 
+                 
+        },   
         onAfterRendering : function () {
          
         },
@@ -79,7 +86,19 @@ sap.ui.define([
 
 		/* =========================================================== */
 		/* event handlers                                              */
-		/* =========================================================== */
+        /* =========================================================== */
+        
+        onSearch: function (event) {
+			var oItem = event.getParameter("suggestionItem");
+			this.handleEmployeeSelectDialogPress(event);
+		},
+
+		onSuggest: function (event) {
+			var sValue = event.getParameter("suggestValue"),
+                aFilters = [];
+                console.log("sValue>>> " , sValue ,"this.oSF>>" , this.oSF);
+			
+		},
 		/**
 		 * Event handler  for navigating back.
 		 * It there is a history entry we go one step back in the browser history
@@ -104,16 +123,20 @@ sap.ui.define([
 			this._toEditMode();
 		},
         
-         _onLoadApprovalRow : function () {
-            var oTable = this.byId("psTable"),
-				oModel = this.getModel("applist");
-			oModel.addRecord({
-				"no": "1",
-				"type": "CM",
-				"nameDept": "",
-				"status": "",
-				"comment": "LBL"
-			}, 0);
+        _onLoadApprovalRow : function () { // 파일 찾는 row 추가 
+            var oTable = this.byId("ApprovalTable"),
+                oModel = this.getModel("appList"); 
+                console.log("model >>> " , oModel) 
+                if(oModel.oData.undefined == undefined || oModel.oData.undefined == null){
+                    oModel.addRecord({
+                        "no": "1",
+                        "type": "",
+                        "nameDept": "",
+                        "status": "",
+                        "comment": "" ,
+                        "editMode": true 
+                    });
+                }
         } ,
 
 		/**
@@ -152,7 +175,7 @@ sap.ui.define([
 		 * @public
 		 */
         onPageCancelEditButtonPress: function(){
-			this._toShowMode();
+			
         },
 
 		/* =========================================================== */
@@ -168,9 +191,9 @@ sap.ui.define([
 		_onObjectMatched : function (oEvent) { 
             this.setRichEditor();
 			var oArgs = oEvent.getParameter("arguments"); 
-            console.log("oArgs>>>>>>" , oArgs);
             this._createViewBindData(oArgs); 
             this._onLoadApprovalRow();
+            this.oSF = this.getView().byId("searchField");
         },
         /**
          * @description 초기 생성시 파라미터를 받고 들어옴 
@@ -183,30 +206,6 @@ sap.ui.define([
 
             console.log("oMasterModel >>> " , appInfoModel);
         } ,
-
-		/**
-		 * Binds the view to the object path.
-		 * @function
-		 * @param {string} sObjectPath path to the object to be bound
-		 * @private
-		 */
-		_bindView : function (sObjectPath) {
-
-			this._toEditMode();
-			var oViewModel = this.getModel("pssaCreateObjectView");
-			this.getView().bindElement({
-				path: sObjectPath,
-				events: {
-					change: this._onBindingChange.bind(this),
-					dataRequested: function () {
-						oViewModel.setProperty("/busy", true);
-					},
-					dataReceived: function () {
-						oViewModel.setProperty("/busy", false);
-					}
-				}
-			});
-		},
 
 		_onBindingChange : function () {
 			var oView = this.getView(),
@@ -227,7 +226,8 @@ sap.ui.define([
         onPsSupplier : function(){},
 
 		_oFragments: {},
-	    onCheck : function(){ console.log("onCheck") },
+        onCheck : function(){ console.log("onCheck") },
+        
         /**
          * @description file upload 관련 
          * @date 2020-11-23
@@ -313,10 +313,99 @@ sap.ui.define([
 		onSelectChange: function(oEvent) {
 			var oUploadCollection = this.byId("UploadCollection");
 			oUploadCollection.setShowSeparators(oEvent.getParameters().selectedItem.getProperty("key"));
-		}
+        } ,
 
 
+        /**
+         * @description : Popup 창 : 품의서 Participating Supplier 항목의 Add 버튼 클릭
+         */
+        handleTableSelectDialogPress : function (oEvent) {
+            console.group("handleTableSelectDialogPress");    
+            var oView = this.getView();
+            var oButton = oEvent.getSource();
+			if (!this._oDialog) {
+				this._oDialog = Fragment.load({ 
+                    id: oView.getId(),
+					name: "dp.moldApprovalList.view.MoldItemSelection",
+					controller: this
+				}).then(function (oDialog) {
+				    oView.addDependent(oDialog);
+					return oDialog;
+				}.bind(this));
+            } 
+            
+            this._oDialog.then(function(oDialog) {
+				oDialog.open();
+			});
+        },
+        /**
+         * @public 
+         * @see 사용처 Participating Supplier Fragment 취소 이벤트
+         */
+        onExit: function () {
+			this.byId("dialogMolItemSelection").close();
+        },
+         /**
+         * @description  Participating Supplier Fragment Apply 버튼 클릭시 
+         */
+        onMoldItemSelectionApply : function(oEvent){
+            var oTable = this.byId("moldItemSelectTable");
+            var aItems = oTable.getSelectedItems();
+            var that = this;
+            aItems.forEach(function(oItem){   
+                var obj = new JSONModel({
+                    model : oItem.getCells()[0].getText()
+                    , moldPartNo : oItem.getCells()[1].getText()
+                });
+              
+ 
+                console.log(" nItem >>>>> getText 1 " ,  oItem.getCells()[0].getText());   
+                console.log(" nItem >>>>> getText 2 " ,  oItem.getCells()[1].getText());   
+                console.log(" nItem >>>>> getText 3 " ,  oItem.getCells()[2].getText());   
+                console.log(" nItem >>>>> obj " ,  obj); 
+                that._addPsTable(obj);  
+                // oItem.getCells().forEach(function(nItem){ 
+                //      console.log(" nItem >>>>> getText " , nItem.getText());    
+                // });     
+            });
+            this.onExit();
+        },
+        /**
+         * @description participating row 추가 
+         * @param {*} data 
+         */
+        _addPsTable : function (data){     
+            var oTable = this.byId("psTable"),
+                oModel = this.getModel("createlist");
+                oModel.addRecord({
+                    "model": data.oData.model,
+                    "moldPartNo": data.oData.moldPartNo,
+                });
+        },
 
+         onExitEmployee: function () {
+			this.byId("dialogEmployeeSelection").close();
+        },
+
+        handleEmployeeSelectDialogPress : function (oEvent) {
+            console.group("handleEmployeeSelectDialogPress");    
+            var oView = this.getView();
+            var oButton = oEvent.getSource();
+			if (!this._oDialog) {
+				this._oDialog = Fragment.load({ 
+                    id: oView.getId(),
+					name: "dp.moldApprovalList.view.Employee",
+					controller: this
+				}).then(function (oDialog) {
+				    oView.addDependent(oDialog);
+					return oDialog;
+				}.bind(this));
+            } 
+            
+            this._oDialog.then(function(oDialog) {
+				oDialog.open();
+			});
+        },
 
 	});
 });

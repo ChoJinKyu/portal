@@ -1,6 +1,6 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
-	"ext/lib/model/DelegateModel",
+	"ext/lib/model/v2/ODataDelegateModel",
 	"sap/ui/model/json/JSONModel",
 	"sap/m/MessageBox",
 	"sap/m/MessageToast"
