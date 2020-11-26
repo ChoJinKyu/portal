@@ -62,12 +62,13 @@ sap.ui.define([
 				intent: "#Template-display"
 			}, true);
 			
+            //this._doInitSearch();
+
 			this.setModel(new ManagedListModel(), "list");
 			
 			this.getRouter().getRoute("approvalList").attachPatternMatched(this._onRoutedThisPage, this);
 
             this._doInitTablePerso();
-            //this._doInitSearch();
             
         },
         
@@ -75,6 +76,8 @@ sap.ui.define([
 			this.byId("pageSearchButton").firePress();
 			return;
         },
+
+        
 
         
 		/* =========================================================== */
@@ -104,7 +107,7 @@ sap.ui.define([
 			}
 			this.getModel("approvalListView").setProperty("/approvalListTableTitle", sTitle);
 		},
-
+        
 		/**
 		 * Event handler when a table item gets pressed
 		 * @param {sap.ui.base.Event} oEvent the table selectionChange event
@@ -155,8 +158,8 @@ sap.ui.define([
 				var aSearchFilters = this._getSearchStates();
 				this._applySearch(aSearchFilters);
 			}
-		},
-
+        },
+       
 		/**
 		 * Event handler when pressed the item of table 
          * @description 목록 클릭시 이벤트 
@@ -566,7 +569,7 @@ sap.ui.define([
 				oModel = this.getModel("list");
 			oView.setBusy(true);
 			oModel.setTransactionModel(this.getModel());
-			oModel.read("/MoldSpec", {
+			oModel.read("/MoldMasterSpec", {
 				filters: aSearchFilters,
 				success: function(oData){
 					oView.setBusy(false);
