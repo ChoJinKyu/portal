@@ -244,7 +244,21 @@ sap.ui.define([
 				persoService: MainListPersoService,
 				hasGrouping: true
 			}).activate();
-		}
+        },
+        
+        onMainTableFilterPress: function() {
+            this._MainTableApplyFilter();
+        },
+
+        _MainTableApplyFilter: function() {
+
+            var oView = this.getView(),
+				sValue = oView.byId("mainTableSearchField").getValue(),
+				oFilter = new Filter("uom_class_code", FilterOperator.Contains, sValue);
+
+			oView.byId("mainTable").getBinding("items").filter(oFilter, sap.ui.model.FilterType.Application);
+
+        }
 
 
 	});

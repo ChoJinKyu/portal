@@ -185,8 +185,7 @@ sap.ui.define([
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
 						oView.setBusy(true);
-						oTransactionManager.submit({
-						// oView.getModel("master").submitChanges({
+						oTransactionManager.submit({						
 							success: function(ok){
 								that._toShowMode();
                                 oView.setBusy(false);
@@ -197,7 +196,6 @@ sap.ui.define([
 					};
 				}
 			});
-
 		},
 		
 		
@@ -317,7 +315,7 @@ sap.ui.define([
 
 			this.byId("midTableAddButton").setEnabled(!FALSE);
 			this.byId("midTableDeleteButton").setEnabled(!FALSE);
-			//this.byId("midTableSearchField").setEnabled(FALSE);
+			this.byId("midTableSearchField").setEnabled(FALSE);
 			//this.byId("midTableApplyFilterButton").setEnabled(FALSE);
 			this.byId("midTable").setMode(sap.m.ListMode.SingleSelectLeft);
 			this._bindMidTable(this.oEditableTemplate, "Edit");
@@ -334,7 +332,7 @@ sap.ui.define([
 
 			this.byId("midTableAddButton").setEnabled(!TRUE);
 			this.byId("midTableDeleteButton").setEnabled(!TRUE);
-			//this.byId("midTableSearchField").setEnabled(TRUE);
+			this.byId("midTableSearchField").setEnabled(TRUE);
 			//this.byId("midTableApplyFilterButton").setEnabled(TRUE);
 			this.byId("midTable").setMode(sap.m.ListMode.None);
 			this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
@@ -420,8 +418,21 @@ sap.ui.define([
 			}else{
 				if(oHandler) oHandler(this._oFragments[sFragmentName]);
 			}
-		}
+        },
+        
+        onMidTableFilterPress: function() {
+            this._MidTableApplyFilter();
+        },
 
+        _MidTableApplyFilter: function() {
+
+            var oView = this.getView(),
+				sValue = oView.byId("midTableSearchField").getValue(),
+				oFilter = new Filter("uom_class_name", FilterOperator.Contains, sValue);
+
+			oView.byId("midTable").getBinding("items").filter(oFilter, sap.ui.model.FilterType.Application);
+
+        }
 
 	});
 });
