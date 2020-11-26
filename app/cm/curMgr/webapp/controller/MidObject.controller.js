@@ -6,6 +6,7 @@ sap.ui.define([
 	"ext/lib/model/ManagedModel",
 	"ext/lib/model/ManagedListModel",
     "ext/lib/formatter/DateFormatter",
+    "ext/lib/util/ValidatorUtil",
     "ext/lib/formatter/Formatter",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
@@ -19,7 +20,7 @@ sap.ui.define([
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
     "sap/m/ObjectStatus",
-], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Formatter,
+], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Formatter, ValidatorUtil,
 	Filter, FilterOperator, Fragment, MessageBox, MessageToast,
 	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus) {
 		
@@ -33,9 +34,7 @@ sap.ui.define([
 
         dateFormatter: DateFormatter,
 
-        formatter: Formatter,
-
-		formatter123: (function(){
+		formatter: (function(){
 			return {
 				toYesNo: function(oData){
 					return oData === true ? "YES" : "NO"
@@ -77,7 +76,22 @@ sap.ui.define([
 
             this._initTableTemplates();
             this.enableMessagePopover();
-		}, 
+        }, 
+        
+        formattericon: function(sState){
+            switch(sState){
+                case "D":
+                    return "sap-icon://decline";
+                break;
+                case "U": 
+                    return "sap-icon://accept";
+                break;
+                case "C": 
+                    return "sap-icon://add";
+                break;
+            }
+            return "";
+        },
 
 		/* =========================================================== */
 		/* event handlers                                              */
@@ -173,9 +187,9 @@ sap.ui.define([
 			var oTable = this.byId("midTable"),
 				oDetailsModel = this.getModel("details");
 			oDetailsModel.addRecord({
-                "tenant_id": "",
+                "tenant_id": this._sTenantId,
                 "language_code" : "",
-				"currency_code": "",
+				"currency_code": this._sCurrencyCode,
 				"currency_code_name": "",
 				"currency_code_desc": "",
                 "currency_prefix": null,
@@ -430,33 +444,14 @@ sap.ui.define([
 		},
 
 		_initTableTemplates: function(){
-            // var test;
-            // var label5 = new sap.m.ObjectStatus().bindObject({
-            //     path: 'C',
-            //     formatter: this.formatter.toModelStateColumnIcon
-                
-            // });
-            // label5.bindAggregation
-            // label5.bindContext
-            // label5.bindProperty
-            // label5.bindObject
-            // test = label5.bindObject({
-            //     path: 'details>_row_state_t',
-            //     formatter: this.formatter.toModelStateColumnIcon
-                
-            // });
+            var test;
+            var label5 = new ObjectStatus().setIcon;
+
+
 			this.oReadOnlyTemplate = new ColumnListItem({   
 				cells: [
-                    // new Text({
-                    //     text: "{details>_row_state_}"
-                    // }),
-                    // new sap.m.ObjectStatus({
-                    //     icon:"{ path:'details>_row_state_' , formatter: '.formatter.toModelStateColumnIcon'}"                                  
-                    // }),
-
-                    // var oLabel = new c.Label({text:"Hello Mr. {path:'/singleEntry/firstName', formatter:'.myFormatter'}, {/singleEntry/lastName}"}, oController);
-                    new sap.m.ObjectStatus({
-                        icon:"sap-icon://add",visible:"{= ${details>_row_state_} === 'C' }"                                 
+                    new Text({
+                        text: "{details>_row_state_}"
                     }),
 					new ObjectIdentifier({
 						text: "{details>language_code}"
@@ -475,28 +470,36 @@ sap.ui.define([
 					})
 				],
 				type: sap.m.ListType.Inactive
-			});
+            });
+            var oCountryCombo = new ComboBox({
+                    selectedKey: "{details>language_code}"
+                    , width : "100%"
+                    , editable: "{= ${details>_row_state_} === 'C' ? true : false}"  
+                    , selectionChange: function (oEvent) {
+                        this._CountryComboChange(oEvent);
+                            }.bind(this)     
+                });
+                oCountryCombo.bindItems({
+                    path: 'util>/CodeDetails',
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, 'L2100'),                       
+                        new Filter("group_code", FilterOperator.EQ, 'CM_LANG_CODE')
+                    ],
+                    template: new Item({
+                        key: "{util>code}",
+                        text: "{util>code_description}"                        
+                    })                   
+                });
 			this.oEditableTemplate = new ColumnListItem({
 				cells: [
-                    // new Text({
-                    //     text: "{details>_row_state_}"
-                    // }),
-					// new sap.m.ObjectStatus({
-                    //     icon:"{ path:'details>_row_state_', formatter: '.formatter.toModelStateColumnIcon'}"                                 
-                    // }), 
-                    // {= ${details>_row_state_} === 'C' ? true : false}
-                    // test,
-                    // new sap.m.ObjectStatus().bindContext({
-                    //     path: 'details>_row_state_t'
-                        
-                    // }),
-                    new sap.m.ObjectStatus({
-                        icon:"{ path:'details>_row_state_' , formatter: '.formatter.toModelStateColumnIcon'}"                                  
-                    }),
-					// oLevelCodeCombo, 
+					new ObjectStatus({
+                        icon:{ path:'details>_row_state_', formatter: this.formattericon
+                                }                              
+                    }), 
+                   
 					new Input({
 						value: "{details>language_code}"
-					}), 
+                    }),  
 					new Input({
 						value: "{details>currency_code_name}"
                     }),
