@@ -18,4 +18,5 @@ entity Vp_Vendor_pool_Popup_View {
   hierarchy_parent_rank: Integer64;
   hierarchy_level: Integer;
   hierarchy_root_rank: Integer64;
+  drill_state: String @title: 'expanded/leaf';
 }
