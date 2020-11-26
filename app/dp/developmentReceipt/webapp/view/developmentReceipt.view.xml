@@ -278,13 +278,13 @@
                     <OverflowToolbar>
                         <Title text="List ({= ${list>/MoldMasters}.length || 0})" level="H2"/>
                         <ToolbarSpacer/>
-                        <Button id="moldMstTableEditButton" text="Edit" type="Emphasized" press=".onMoldMstTableEditButtonPress" />
+                        <Button id="moldMstTableEditButton"     type="Transparent" text="Edit"               press=".onMoldMstTableEditButtonPress"     enabled="{mode>/viewFlag}" />
                         <ToolbarSeparator/>
                         <!-- Add the Personalization button -->
-                        <Button id="moldMstTableBindButton"     type="Transparent" text="Bind &amp; Receipt" press=".onMoldMstTableBindButtonPress" />
-                        <Button id="moldMstTableCancelButton"   type="Transparent" text="Cancel Bind"   press=".onMoldMstTableCancelButtonPress" />
-                        <Button id="moldMstTableDeleteButton"   type="Transparent" text="Delete"        press=".onMoldMstTableDeleteButtonPress" />
-                        <Button id="moldMstTableReceiptButton"  type="Emphasized"  text="Receipt"       press=".onMoldMstTableReceiptButtonPress" />
+                        <Button id="moldMstTableBindButton"     type="Transparent" text="Bind &amp; Receipt" press=".onMoldMstTableBindButtonPress"     enabled="{mode>/viewFlag}" />
+                        <Button id="moldMstTableCancelButton"   type="Transparent" text="Cancel Bind"        press=".onMoldMstTableCancelButtonPress"   enabled="{mode>/viewFlag}" />
+                        <Button id="moldMstTableDeleteButton"   type="Transparent" text="Delete"             press=".onMoldMstTableDeleteButtonPress"   enabled="{mode>/viewFlag}" />
+                        <Button id="moldMstTableReceiptButton"  type="Emphasized"  text="Receipt"            press=".onMoldMstTableReceiptButtonPress"  enabled="{mode>/viewFlag}" />
                         <!--
                         <ToolbarSeparator/>
                         <Button icon="sap-icon://action-settings" press=".onMoldMstTablePersoButtonPressed" >
@@ -342,7 +342,7 @@
                             </ComboBox>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnFamilyFlag" width="5em" hAlign="Center">
+                    <table:Column id="moldMstColumnFamilyFlag" width="5.5em" hAlign="Center">
                         <VBox>
                         <Label text="Family"/>
                         <Label text="Y/N"/>
@@ -452,7 +452,12 @@
                         <Label text="Use Y/N"/>
                         </VBox>
                         <table:template>
-                            <CheckBox selected="{list>t_est_use_flag}" editable="{mode>/editFlag}" />
+                            <Switch state="{list>t_est_use_flag}" customTextOn="Yes" customTextOff="No">
+                                <layoutData>
+                                    <FlexItemData growFactor="1" />
+                                </layoutData>
+                            </Switch>
+                            <!--<CheckBox selected="{list>t_est_use_flag}" editable="{mode>/editFlag}" />-->
                             <!--<ComboBox   id="t_est_use_flag"    
                                         selectedKey="{list>t_est_use_flag}"
                                         items="{
