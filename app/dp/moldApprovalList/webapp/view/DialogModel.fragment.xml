@@ -1,4 +1,4 @@
-<core:FragmentDefinition
+<!-- <core:FragmentDefinition
     xmlns="sap.m"
     xmlns:table="sap.ui.table"
     xmlns:core="sap.ui.core"
@@ -44,4 +44,20 @@
             <Button text="Apply" class="sapUiSmallMargin" type="Emphasized" press=".onHandleApply"/>
         </HBox>
     </Dialog>
+</core:FragmentDefinition> -->
+
+<core:FragmentDefinition
+	xmlns="sap.ui.comp.valuehelpdialog"
+	xmlns:core="sap.ui.core">
+	<ValueHelpDialog
+        id="valueHelpDialog"
+		title="Model"
+		ok=".onValueHelpOkPress"
+		cancel=".onValueHelpCancelPress"
+		afterClose=".onValueHelpAfterClose"
+        supportMultiselect="false"
+		key="part_number"
+		descriptionKey="part_number"
+	>
+	</ValueHelpDialog>
 </core:FragmentDefinition>

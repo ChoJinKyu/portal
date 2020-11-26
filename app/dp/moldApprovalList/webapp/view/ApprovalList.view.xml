@@ -167,7 +167,7 @@
                     <form:content>
                         <VBox>
                             <Label text="Model " labelFor="searchModel"></Label>
-                            <Input id="searchModel" showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".approvalDialogOpen"  width="100%">
+                            <Input id="searchModel" showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".onValueHelpRequested"  width="100%">
                                 <!-- <customData>
                                     <core:CustomData key="multi" value="true" />
                                     <core:CustomData key="confirmButtonText" value="Apply" />

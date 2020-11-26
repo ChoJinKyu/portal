@@ -233,7 +233,7 @@ sap.ui.define([
 
             return [oToken];
         },
-
+        ///////////////////////////// sap.ui table version ////////////////////////
         /**
          * @private 
          * @see 리스트에서 create 버튼을 제외한 각각의 팝업 오픈
@@ -300,18 +300,129 @@ sap.ui.define([
             this.byId(dialogId).destroy();
         },
 
-         /**
-         * @public
-         * @see 사용처 DialogModel, DialogMoldPartNo, DialogRequester Search 이벤트
+        ///////////////////////////// sap.ui table version end ////////////////////////
+
+
+        /**
+         * @private 
+         * @see 리스트에서 create 버튼을 제외한 각각의 팝업 오픈
          */
-        handleSearch: function (oEvent) {
-			var sValue = oEvent.getParameter("value");
-			var oFilter = new Filter("org_name", FilterOperator.Contains, sValue);
-			var oBinding = oEvent.getSource().getBinding("items");
-			oBinding.filter([oFilter]);
+        onValueHelpRequested : function (oEvent) {
+
+            var path = '';
+            this._oValueHelpDialog = sap.ui.xmlfragment("dp.detailSpecEntry.view.ValueHelpDialogModel", this);
+
+            if(oEvent.getSource().sId.indexOf("searchModel") > -1){
+                //model
+                this._oInputModel = this.getView().byId("searchModel");
+
+                this.oColModel = new JSONModel({
+                    "cols": [
+                        {
+                            "label": "Model",
+             
+
+                                    }
+                    ]
+                });
+
+                path = '/Models';
+                
+                this._oValueHelpDialog.setTitle('Model');
+                this._oValueHelpDialog.setKey('model');
+                this._oValueHelpDialog.setDescriptionKey('model');
+
+            }else if(oEvent.getSource().sId.indexOf("searchPart") > -1){
+                //part
+                this._oInputModel = this.getView().byId("searchPart");
+
+                this.oColModel = new JSONModel({
+                    "cols": [
+                        {
+                            "label": "Part No",
+                            "template": "part_number"
+                        },
+                        {
+                            "label": "Description",
+                            "template": "spec_name"
+                        }
+                    ]
+                });
+
+                path = '/PartNumbers';
+
+                this._oValueHelpDialog.setTitle('Part No');
+                this._oValueHelpDialog.setKey('part_number');
+                this._oValueHelpDialog.setDescriptionKey('spec_name');
+            }
+
+            var aCols = this.oColModel.getData().cols;
+
+            console.log('this._oValueHelpDialog.getKey()',this._oValueHelpDialog.getKey());
+            
+            this.getView().addDependent(this._oValueHelpDialog);
+
+            this._oValueHelpDialog.getTableAsync().then(function (oTable) {
+                
+                oTable.setModel(this.getOwnerComponent().getModel());
+                oTable.setModel(this.oColModel, "columns");
+                
+                if (oTable.bindRows) {
+                    oTable.bindAggregation("rows", path);
+                }
+
+                if (oTable.bindItems) {
+                    oTable.bindAggregation("items", path, function () {
+                        return new ColumnListItem({
+                            cells: aCols.map(function (column) {
+                                return new Label({ text: "{" + column.template + "}" });
+                            })
+                        });
+                    });
+                }
+                this._oValueHelpDialog.update();
+
+            }.bind(this));
+
+            
+
+            // debugger
+
+            var oToken = new Token();
+			oToken.setKey(this._oInputModel.getSelectedKey());
+			oToken.setText(this._oInputModel.getValue());
+			this._oValueHelpDialog.setTokens([oToken]);
+            this._oValueHelpDialog.open();
+            
+
         },
 
-        
+        /**
+         * @private 
+         * @see approvalDialogOpen 함수에서 오픈한 팝업 닫기
+         */
+        onHandleClose: function (){
+            this.byId(dialogId).close();
+            this.byId(dialogId).destroy();
+        },
+
+        /**
+         * @private 
+         * @see approvalDialogOpen 팝업에서 apply버튼 클릭시
+         */
+        onValueHelpOkPress: function (oEvent) {
+			var aTokens = oEvent.getParameter("tokens");
+			this._oInputModel.setSelectedKey(aTokens[0].getKey());
+			this._oValueHelpDialog.close();
+		},
+
+		onValueHelpCancelPress: function () {
+			this._oValueHelpDialog.close();
+		},
+
+		onValueHelpAfterClose: function () {
+			this._oValueHelpDialog.destroy();
+		},
          /**
          * @public
          * @see 사용처 DialogCreate Fragment Open 이벤트
