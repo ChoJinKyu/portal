@@ -134,7 +134,7 @@
           "viewName": "MainList",
           "viewId": "mainList",
           "viewLevel": 1,
-          "title": "{i18n>mainListViewTitle}"
+          "title": "{i18n>appTitle}"
         },
         "notFound": {
           "viewName": "NotFound",

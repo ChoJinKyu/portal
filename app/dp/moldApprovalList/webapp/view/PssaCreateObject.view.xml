@@ -192,13 +192,17 @@
                                 selectionMode="MultiToggle"
                                 fixedColumnCount="4"
                                 visibleRowCountMode="Auto"
-                                rows="{createlist>/}"
+                                rows="{createlist>/undefined}"
                                 >
                              <table:extension>
                                 <OverflowToolbar>
                                     <ToolbarSpacer/>
                                     <!-- Add the Personalization button -->
-                                    <Button id="btnPsAdd"     type="Transparent" text="Add" press=".onPsAddRow" />
+                                    <Button id="btnPsAdd"     type="Transparent" text="Add" press=".handleTableSelectDialogPress" >
+                                    	<customData>
+                                            <core:CustomData key="multi" value="true" />
+                                        </customData>
+                                    </Button>
                                     <Button id="btnPsDelete"   type="Transparent" text="Delete"  press=".onPsDelRow" />
                                     <Button id="btnPsSuplierSel"  type="Emphasized"  text="Supplier Select"   press=".onPsSupplier" />
                                     <!-- <ToolbarSeparator/>
@@ -214,19 +218,19 @@
                                     <table:Column id="c_model" width="5em" hAlign="Center">
                                         <Label text="Model"/>           
                                         <table:template>
-                                            <Text id="mold_receipt_flag" text=""/>
+                                            <Text id="t_model" text="{createlist>model}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_moldPartNo" width="10em" hAlign="Center">
                                         <Label text="Mold&#10;Part No"/>           
                                         <table:template>
-                                            <Text id="mold_part_no" text=""/>
+                                            <Text id="t_mold_part_no" text="{createlist>moldPartNo}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_seq" width="10em" hAlign="Center">
                                         <Label text="Seq"/>           
                                         <table:template>
-                                            <Text id="seq" text=""/>
+                                            <Text id="t_seq" text=""/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_description" width="10em" hAlign="Center">
@@ -256,13 +260,25 @@
                                     <table:Column id="c_currency" width="10em" hAlign="Center">
                                         <Label text="Currency"/>           
                                         <table:template>
-                                            <Text id="currency" text=""/>
+                                              <ComboBox   id="currency"    
+                                                            selectedKey="{= ${list>family_part_number_1}.length > 0 ? 'Y' : 'N' }"
+                                                            items="{
+                                                                        path : 'util>/CodeDetails',
+                                                                        filters : [
+                                                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                                            {path : 'company_code', operator : 'EQ', value1 : '*'},
+                                                                            {path : 'group_code', operator : 'EQ', value1 : 'CM_YN'}
+                                                                        ]
+                                                                    }"
+                                                >
+                                                    <core:Item key="{util>code}" text="{util>code_description}" />
+                                            </ComboBox>
                                         </table:template>
                                     </table:Column>                                     
                                     <table:Column id="c_targetAmount" width="10em" hAlign="Center">
                                         <Label text="Target Amount"/>           
                                         <table:template>
-                                            <Text id="targetAmount" text=""/>
+                                            <Input id="targetAmount" value=""/>
                                         </table:template>
                                     </table:Column>                                     
                                     <table:Column id="c_moldSupplier1" width="10em" hAlign="Center">
@@ -381,19 +397,20 @@
                                 <cells>
                                     <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
                                     <Text text="{appList>no}" />
-                                    <ComboBox   id="searchItemType" width="100%"
-                                        selectedKey=""
+                                    <ComboBox  id="searchItemType" width="100%"
+                                        selectedKey="{appList>type}" 
+                                        enabled="{appList>editMode}"
                                         items="{
-                                                    path : 'util>/CodeDetails',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                        {path : 'company_code', operator : 'EQ', value1 : '*'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
-                                                    ]
-                                                }"
-                                    ><core:Item key="{util>code}" text="{util>code_description}" />
+                                            path: 'org>/Org_Company',
+                                            filters: [
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                            ],
+                                            sorter: { path: 'company_code'}
+                                        }"
+                                        >
+                                    <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                     </ComboBox>
-                                    <SearchField placeholder="Search employee" search="onFilter"/>
+                                    <SearchField id="searchField" enabled="{appList>editMode}" enableSuggestions="true" search=".onSearch" suggest=".onSuggest" width="100%" placeholder="Search employee" text="{appList>name}"/>
                                     <Text text="{appList>status}" />
                                     <Text text="{appList>comment}" />
                                     <Button id="btnSort" icon="sap-icon://sort" press="onSort" tooltip="sort"></Button>
@@ -401,6 +418,7 @@
                                 </cells>
                             </ColumnListItem>   
                         </items>
+                        
                     </Table>
                             
 					</uxap:ObjectPageSubSection> 

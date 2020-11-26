@@ -15,13 +15,7 @@ select  x.separated_code											as separated_code,
         x.operation_mode_display_flag								as operation_mode_display_flag,
         x.operation_mode_calling_flag								as operation_mode_calling_flag,
         x.operation_mode_alram_flag									as operation_mode_alram_flag,
-        x.active_flag												as active_flag,
-		x.type_code													as type_code,
-		x.type_name													as type_name,
-		x.cycle_code												as cycle_code,
-		x.cycle_name												as cycle_name
-
-
+        x.active_flag												as active_flag
 from (
 		select
 				main.separated_code                        																			as separated_code,
@@ -40,11 +34,7 @@ from (
 				oprmd.operation_mode_display_flag                                                                                   as operation_mode_display_flag,
 				oprmd.operation_mode_calling_flag                                                                                   as operation_mode_calling_flag,
 				oprmd.operation_mode_alram_flag                                                                                     as operation_mode_alram_flag,
-				main.activate_inactivate_flag																						as active_flag,
-				tp.type_code																										as type_code,
-				tp.type_name																										as type_name,
-				cyc.cycle_code																										as cycle_code,
-				cyc.cycle_name																										as cycle_name
+				main.activate_inactivate_flag																						as active_flag
 		from pg_monitor_master as main
 		left join pg_monitor_scenario as snr
 			on  main.tenant_id    	= snr.tenant_id
@@ -74,16 +64,6 @@ from (
         left join cm_org_unit as org_u
             on  main.tenant_id      = org_u.tenant_id
             and main.bizunit_code   = org_u.bizunit_code
-		left join pg_monitor_type as tp
-			on  main.tenant_id		= tp.tenant_id
-			and main.company_code	= tp.company_code
-            and main.bizunit_code   = tp.bizunit_code
-			and main.scenario	    = tp.scenario
-		left join pg_monitor_cycle as cyc
-			on  main.tenant_id		= cyc.tenant_id
-			and main.company_code	= cyc.company_code
-            and main.bizunit_code   = cyc.bizunit_code
-			and main.scenario	    = cyc.scenario
 		group by
 			main.separated_code	,
 			sprt.code_name,
@@ -101,11 +81,7 @@ from (
             oprmd.operation_mode_display_flag,
             oprmd.operation_mode_calling_flag,
             oprmd.operation_mode_alram_flag,
-			main.activate_inactivate_flag,
-			tp.type_code,
-			tp.type_name,
-			cyc.cycle_code,
-			cyc.cycle_name
+			main.activate_inactivate_flag
 	)	as x
 group by
 	x.separated_code,
@@ -122,9 +98,5 @@ group by
 	x.operation_mode_display_flag,
 	x.operation_mode_calling_flag,
 	x.operation_mode_alram_flag,
-	x.active_flag,
-	x.type_code,
-	x.type_name,
-    x.cycle_code,
-    x.cycle_name
+	x.active_flag
 ;

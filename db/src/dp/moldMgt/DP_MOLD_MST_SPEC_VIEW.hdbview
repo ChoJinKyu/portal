@@ -183,6 +183,7 @@ SELECT '['||a.company_code||'] '||(select company_name from cm_org_company where
     , b.update_user_id
     , b.system_create_dtm
     , b.system_update_dtm
+    , b.mold_spec_register_date
 
 from dp_mold_mst a
 left join dp_mold_spec b

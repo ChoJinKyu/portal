@@ -105,7 +105,7 @@
         "viewType": "XML",
         "viewPath": "cm.ctryMgr.view",
         "controlId": "fcl",
-				"transition": "slide",
+        "transition": "slide",
         "bypassed": {
           "target": [
             "notFound"
@@ -114,35 +114,35 @@
         "async": true
       },
       "routes": [
-          {
-              "pattern": ":layout:",
-              "name": "mainPage",
-              "target": [
-                  "mainObject"
-              ]
-          },
-          {
-              "pattern": "midObject/{layout}/{tenant_id}/{country_code}",
-              "name": "midPage",
-              "target": [
-                  "mainObject",
-                  "midObject"
-              ]
-          }
+        {
+          "pattern": ":layout:",
+          "name": "mainPage",
+          "target": [
+            "mainObject"
+          ]
+        },
+        {
+          "pattern": "midObject/{layout}/{tenant_id}/{country_code}",
+          "name": "midPage",
+          "target": [
+            "mainObject",
+            "midObject"
+          ]
+        }
       ],
       "targets": {
-          "mainObject": {
-              "viewName": "MainList",
-              "controlAggregation": "beginColumnPages"
-          },
-          "midObject": {
-              "viewName": "MidObject",
-              "controlAggregation": "midColumnPages"
-          },
-          "notFound": {
-            "viewName": "MidObjectNotFound",
-            "viewId": "notFound"
-          }
+        "mainObject": {
+          "viewName": "MainList",
+          "controlAggregation": "beginColumnPages"
+        },
+        "midObject": {
+          "viewName": "MidObject",
+          "controlAggregation": "midColumnPages"
+        },
+        "notFound": {
+          "viewName": "MidObjectNotFound",
+          "viewId": "notFound"
+        }
       }
     }
   },

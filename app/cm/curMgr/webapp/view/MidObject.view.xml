@@ -20,19 +20,19 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="Currency Details" wrapping="true" />
+					<Title text="통화관리 상세" wrapping="true" />
 				</uxap:expandedHeading>
 				<uxap:snappedHeading>
-					<Title text="Currency Details" wrapping="true" />
+					<Title text="통화관리 상세" wrapping="true" />
 				</uxap:snappedHeading>
 				<uxap:expandedContent>
-					<Text text="Details for Currency {currency_code}" />
+					<Text text="통화코드 : {master>/currency_code}" />
 				</uxap:expandedContent>
 				<uxap:snappedContent>
-					<Text text="Details for Currency {currency_code}" />
+					<Text text="통화코드 : {master>/currency_code}" />
 				</uxap:snappedContent>
 				<uxap:snappedTitleOnMobile>
-					<Title text="Currency Details" />
+					<Title text="통화 상세" />
 				</uxap:snappedTitleOnMobile>
 				<uxap:actions>
 					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" />
@@ -76,7 +76,7 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			<uxap:ObjectPageSection titleUppercase="false" title="Managed Values">
+			<uxap:ObjectPageSection titleUppercase="false" title="시스템관리 정보">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<form:SimpleForm editable="false">
@@ -99,7 +99,7 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			<uxap:ObjectPageSection titleUppercase="false" title="Currency Values">
+			<uxap:ObjectPageSection titleUppercase="false" title="통화 언어 정보">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<Table id="midTable" 
@@ -112,7 +112,7 @@
 								width="auto">
 							<headerToolbar>
 								<OverflowToolbar>
-									<Title text="Cruuency_Lng" level="H2"/>
+									<Title text="통화 언어 리스트" level="H2"/>
 									<ToolbarSpacer/>
 									<!-- Add the Personalization button -->
 									<Button id="midTableAddButton" text="Add" type="Transparent" press=".onMidTableAddButtonPress" />

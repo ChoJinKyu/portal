@@ -38,7 +38,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{i18n>appTitle}"/>
+                    <Title text="시황자재 Master"/>
                 </f:heading>
                 <f:snappedContent></f:snappedContent>
                 <f:expandedContent></f:expandedContent>
@@ -63,6 +63,17 @@
                     considerSelectionVariants="true" 
                     enableBasicSearch="false" >
                         <smartFilterBar:controlConfiguration>
+                            <!-- 관리조직 -->
+                            <smartFilterBar:ControlConfiguration  key="tenant_id" groupId="_BASIC" index="1" label="관리조직"
+                            visibleInAdvancedArea="true">
+                                <smartFilterBar:customControl>
+                                        <ComboBox id="sf_tenant_id" items="{path: '/OrgTenantView', templateShareable:true}" placeholder="선택하세요.">
+                                        <core:Item key="{tenant_id}" text="{tenant_name}"/>
+                                    </ComboBox>
+                                </smartFilterBar:customControl>
+                                
+                            </smartFilterBar:ControlConfiguration>
+
                             <!-- 시황자재코드 -->
                             <smartFilterBar:ControlConfiguration  key="mi_material_code" groupId="_BASIC" index="1" label="시황자재코드"
                             visibleInAdvancedArea="true">
@@ -147,7 +158,7 @@
                         <OverflowToolbar design="Transparent">
                             <ToolbarSpacer/>
                             <Button text="Create" id="buttonMainTableCreate" type="Transparent" press=".onMainTableCreate"/>                            
-                            <Button text="Copy" id="buttonMainTableCopy"  type="Transparent" enabled="false" press=".onMainTableCopy"/>
+                            <!-- <Button text="Copy" id="buttonMainTableCopy"  type="Transparent" enabled="false" press=".onMainTableCopy"/> -->
                             <Button text="Delete" id="buttonMainTableDelete" type="Transparent" enabled="false" press=".onMainTableDelete"/>
                             <OverflowToolbarButton
                                 icon="sap-icon://sort"

@@ -69,6 +69,10 @@ sap.ui.define([
             JSONModel.prototype.setProperty.call(this, "/" + sEntityName, aRecords);
         },
 
+        isChanged: function(){
+            return this.getChanges().length > 0;
+        },
+
         getChanges: function () {
             return this._getRecordsByState("C,U,D");
         },
@@ -166,7 +170,7 @@ sap.ui.define([
 
         _getRecordsByState: function (sStates) {
             var sEntityName = this.getProperty("/entityName"),
-                aRecords = this.getProperty("/" + sEntityName),
+                aRecords = this.getProperty("/" + sEntityName) || [],
                 aResults = [];
             aRecords.forEach(function (oRecord) {
                 if (sStates.indexOf(oRecord[STATE_COL]) > -1) aResults.push(oRecord);

@@ -1,6 +1,7 @@
 sap.ui.define([
 	"sap/ui/Device",
     "./BaseController",
+    "sap/ui/core/routing/HashChanger",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
     "sap/m/MessageBox",
@@ -8,8 +9,7 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "sap/uxap/ObjectPageSection",
     "sap/ui/core/ComponentContainer"
-],
-    function (Device, BaseController, JSONModel, MessageToast, MessageBox, Filter, FilterOperator, ObjectPageSection, ComponentContainer) {
+], function (Device, BaseController, HashChanger, JSONModel, MessageToast, MessageBox, Filter, FilterOperator, ObjectPageSection, ComponentContainer) {
         "use strict";
 
         return BaseController.extend("spp.portal.controller.Launchpad", {
@@ -81,6 +81,8 @@ sap.ui.define([
                     sUrl = oModel.getProperty(sPath + "/url"),
                     sComponent = oModel.getProperty(sPath + "/component");
 
+                HashChanger.getInstance().replaceHash("");
+                
                 oToolPage.removeMainContent(0);
                 oToolPage.addMainContent(new ComponentContainer({
                     name: sComponent,

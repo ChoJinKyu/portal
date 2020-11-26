@@ -20,7 +20,7 @@
         }
       },
       "commonUtilService": {
-        "uri": "srv-api/odata/v2/util.CommonService/",
+        "uri": "srv-api/odata/v2/xx.util.CommonService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -140,14 +140,12 @@
         "mainList": {
           "viewName": "MainList",
           "viewId": "mainList",
-          "viewLevel": 1,
-          "title": "{i18n>mainListViewTitle}"
+          "viewLevel": 1
         },
         "mainObject": {
           "viewName": "MainObject",
           "viewId": "mainObject",
-          "viewLevel": 2,
-          "title": "{i18n>mainObjectViewTitle}"
+          "viewLevel": 2
         },
         "notFound": {
           "viewName": "NotFound",
