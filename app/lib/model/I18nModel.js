@@ -29,7 +29,21 @@ sap.ui.define([
             return this.getProperty(sPath)
         },
 
-        load: function(aGroups){
+        load: function(){
+            var sTenantId = "L2100",
+                sLanguageCode = sap.ui.getCore().getConfiguration().getLanguage().toUpperCase();
+            if(sLanguageCode.length > 2) sLanguageCode = sLanguageCode.substring(0, 2);
+
+            //load all CM chain messages
+            this._load([
+                new Filter("tenant_id", FilterOperator.EQ, sTenantId),
+                new Filter("language_code", FilterOperator.EQ, sLanguageCode)
+            ]);
+
+            return this;
+        },
+
+        loadBy: function(aGroups){
             var sTenantId = "L2100",
                 sLanguageCode = sap.ui.getCore().getConfiguration().getLanguage().toUpperCase();
             if(sLanguageCode.length > 2) sLanguageCode = sLanguageCode.substring(0, 2);
@@ -67,7 +81,7 @@ sap.ui.define([
 			this._oTransactionModel.read("/Message", {
                     filters: filters,
                     urlParameters: {
-                        "$select": "message_code,message_contents,message_type_code"
+                        "$select": "message_code,message_contents" //,message_type_code
                     },
                     success: function(oData){
                         this._setDataParsedFrom(oData);

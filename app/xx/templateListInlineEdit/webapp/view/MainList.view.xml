@@ -38,13 +38,6 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="{i18nd>/lblGroup}: " labelFor="searchGroupS"></Label>
-                                <Input id="searchGroupS" change=".onPageSearchButtonPress"></Input>
-                                <layoutData>
-                                    <layout:GridData span="XL2 L3 M6 S12" />
-                                </layoutData>
-                            </VBox>
-                            <VBox>
                                 <Label text="{i18nd>/lblLanguage}: " labelFor="searchLanguageS"></Label>
                                 <ComboBox id="searchLanguageS" width="100%" items="{
                                         path: 'util>/CodeDetails',
@@ -88,13 +81,6 @@
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </items>
                                 </ComboBox>
-                                <layoutData>
-                                    <layout:GridData span="XL2 L3 M6 S12" />
-                                </layoutData>
-                            </VBox>
-                            <VBox>
-                                <Label text="{i18nd>/lblGroup}: " labelFor="searchGroupE"></Label>
-                                <Input id="searchGroupE"></Input>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
@@ -181,9 +167,6 @@
                     <Column id="mainColumnMessageContents" minScreenWidth="Tablet" hAlign="Center">
                         <Text text="{i18nd>/lblContent}" />
                     </Column>
-                    <Column id="mainColumnGroupCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="13em" >
-                        <Text text="{i18nd>/lblGroup}" />
-                    </Column>
                     <Column id="mainColumnMessageTypeCode" minScreenWidth="Tablet" hAlign="Center" width="10em" >
                         <Text text="{i18nd>/lblType}" />
                     </Column>
@@ -219,7 +202,6 @@
                             </ComboBox>
                             <Input value="{list>message_code}" editable="{= ${list>_row_state_} === 'C' }"></Input>
                             <Input value="{list>message_contents}"></Input>
-                            <Input value="{list>group_code}"></Input>
                             <ComboBox selectedKey="{list>message_type_code}" width="100%" items="{
                                     path: 'util>/CodeDetails',
                                     filters: [
