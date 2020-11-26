@@ -10,8 +10,10 @@ sap.ui.define([
     "sap/ui/core/Fragment",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
+    "sap/ui/core/ValueState",
+    "./Validator",
     "sap/base/Log"
-], function (BaseController, History, JSONModel, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, Log) {
+], function (BaseController, History, JSONModel, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ValueState, Validator, Log) {
     "use strict";
 
     return BaseController.extend("pg.mi.controller.MidObject", {
@@ -24,6 +26,14 @@ sap.ui.define([
 		 */
         onInit: function () {
             console.group("[mid] onInit");
+
+            // Attaches validation handlers
+            sap.ui.getCore().attachValidationError(function (oEvent) {
+                oEvent.getParameter("element").setValueState(ValueState.Error);
+            });
+            sap.ui.getCore().attachValidationSuccess(function (oEvent) {
+                oEvent.getParameter("element").setValueState(ValueState.None);
+            });
 
             //mode = 수정화면에서의 (true 수정, false 보기 )
             //pageMode 등록화면에서의 (true 신규, false 수정화면)
@@ -48,6 +58,16 @@ sap.ui.define([
                 filters : []            
             });
 
+            // JSON dummy data
+            var oData = {
+                text   : null,
+                number : 0,
+                date   : null
+            };
+            var jsonoModel = new JSONModel();
+            jsonoModel.setData(oData);
+
+            this.getView().setModel(jsonoModel);
 
             var midTaleData = new JSONModel({
                 items : []
@@ -161,6 +181,7 @@ sap.ui.define([
          */
         onMaterialCodeCheckOpen : function () {
             console.group("onMaterialCodeCheckOpen");
+
             var midObjectData = this.getModel("midObjectData"),
                 midObjectView = this.getModel("midObjectView"),
                 oModel = this.getOwnerComponent().getModel(),            
@@ -170,6 +191,7 @@ sap.ui.define([
             var bMaterialCode = false;
 
             if(this.isValNull(inputMaterialCode)){
+               
                 MessageBox.show("자재코드를 먼저 입력 하셔야 합니다.", {
                     icon: MessageBox.Icon.WARNING,
                     title: "자재 코드 확인",
@@ -204,6 +226,15 @@ sap.ui.define([
                             midObjectView.setProperty("/mcheck", true);
                             midObjectView.setProperty("/mode", false);
 
+                            inputMaterialCode.setValueState("Success");
+                            inputMaterialCode.setValueStateText("사용할수 있는 자재 코드 입니다.");
+                            MessageToast.show("사용할수 있는 자재 코드 입니다.");
+                            inputMaterialCode.openValueStateMessage();
+                            //inputMaterialCode.setValueState("Error");
+                            //MessageToast.show("사용할수 있는 자재 코드 입니다..");
+                            //inputMaterialCode.setValueStateText("중복된 자재코드 입니다.");
+
+/*
                             MessageBox.show(
                                 '사용가능한 시황자재 코드 입니다.',
                                 {
@@ -227,11 +258,13 @@ sap.ui.define([
                                     styleClass: sResponsivePaddingClasses
                                 }
                             );
+                            */
                         }else{
                        
                             inputMaterialCode.setValueState("Error");
-                            MessageToast.show("중복된 자재코드 입니다.");
+                            //MessageToast.show("중복된 자재코드 입니다.");
                             inputMaterialCode.setValueStateText("중복된 자재코드 입니다.");
+                            inputMaterialCode.openValueStateMessage();
                         }                             
                         
                     }
@@ -269,7 +302,7 @@ sap.ui.define([
 		 * @public
 		 */
         onPageEnterFullScreenButtonPress: function () {
-            var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
+            var sNextLayout = this.getOwnerComponent().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
             this.getRouter().navTo("midPage", {
                 layout: sNextLayout,
                 tenant_id: this._stenant_id,
@@ -281,7 +314,7 @@ sap.ui.define([
 		 * @public
 		 */
         onPageExitFullScreenButtonPress: function () {
-            var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
+            var sNextLayout = this.getOwnerComponent().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
             this.getRouter().navTo("midPage", {
                 layout: sNextLayout,
                 tenant_id: this._stenant_id,
@@ -293,7 +326,7 @@ sap.ui.define([
 		 * @public
 		 */
         onPageNavBackButtonPress: function () {
-            var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+            var sNextLayout = this.getOwnerComponent().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
             
             this._onExit();
             
@@ -560,6 +593,25 @@ sap.ui.define([
                 }
             });
 
+
+            var jMICategoryView = new JSONModel();
+            var lFilters = [
+                new sap.ui.model.Filter("tenant_id", sap.ui.model.FilterOperator.EQ,  oArgs.tenant_id),
+                new sap.ui.model.Filter("company_code", sap.ui.model.FilterOperator.EQ,  oArgs.company_code),
+                new sap.ui.model.Filter("org_type_code", sap.ui.model.FilterOperator.EQ,  oArgs.org_type_code),
+                new sap.ui.model.Filter("org_code", sap.ui.model.FilterOperator.EQ,  oArgs.org_code)
+            ];
+            sServiceUrl = "/MICategoryView"; 
+            oModel.read(sServiceUrl, {
+                async : false,
+                filters : lFilters,                    
+                success: function (rData, reponse) {
+                    console.log("MICategoryView to json oData~~~~~~~"+JSON.stringify(reponse.data.results[0]));  
+                    jMICategoryView.setData(reponse.data.results);                    
+                    that.getOwnerComponent().setModel(jMICategoryView,"jMICategoryView");
+                }
+            });
+
             this.getView().setBusy(false);
 
             console.groupEnd();
@@ -718,18 +770,31 @@ sap.ui.define([
                 that = this;
             
             var oSelected  = oTable.getSelectedContexts();
+
+                  //Edit 작업시 진행할 삭제된 행 정보를 담는다. 
+                
+            var deleteOModel = new JSONModel();
+           
+
             if (oSelected.length > 0) {
     
-                for ( var i = oSelected.length - 1; i >= 0; i--) {
+                for ( var i = 0;i<oSelected.length ; i++) {
                     var idx = parseInt(oSelected[0].sPath.substring(oSelected[0].sPath.lastIndexOf('/') + 1));
                     
-                    //json 데이타 바로 삭제일때.    
+                    //json 데이타 바로 삭제일때.   
+
                     //oModel.splice(idx, 1);
+                    deleteOModel.oData[idx] = oModel.oData[idx];
+                    oModel.oData.splice(idx, 1);
+                    oModel.refresh();
 
                     //json 업데이트 
-                    oModel.oData[idx].state="D"
+                    //oModel.oData[idx].state="D"
                 }
+            
 
+                that.setModel(deleteOModel, "deleteOModel");
+        
                 that.getView().setBusy(false);                       
                 oTable.removeSelections();
                 oModel.refresh(true);  
@@ -923,8 +988,13 @@ sap.ui.define([
          */
 		onMidUpdate : function () {
 
-            console.group("onMidUpdate");
+            console.log("call function ========== onMidUpdate");
 
+            var validator = new Validator();
+  
+            
+              validator.validate(this.byId("page"));
+              
             var mode = this.getView().getModel("midObjectView").getProperty("/mode"),
                 ojCodeTextModel = this.getOwnerComponent().getModel("jCodeText"),
                 midObjectData = this.getModel("midObjectData"),
@@ -934,6 +1004,7 @@ sap.ui.define([
                 mcheck = midObjectView.getProperty("/mcheck"),
                 bFlag = false;
 
+       
 
             if(!mcheck){
 
@@ -948,8 +1019,7 @@ sap.ui.define([
                 }); 
             }else {
 
-                oModel.setDeferredGroups(oModel.getDeferredGroups().concat(["createGroupId"]));
-
+    
                 var inputMaterialCode = sap.ui.core.Fragment.byId("Change_id","inputMaterialCode"); 
                 var comboBoxCategory_code = sap.ui.core.Fragment.byId("Change_id","comboBoxCategory_code"); 
                 var switchUse_flag = sap.ui.core.Fragment.byId("Change_id","switchUse_flag"); 
@@ -957,96 +1027,231 @@ sap.ui.define([
                 var categorySelectedKey = comboBoxCategory_code.getSelectedKey();
                 var categoryValue = comboBoxCategory_code.getValue();
                 var bNullFlag = true;
-                var msg;
+                var msg="";
 
-                if(this.isValNull(categorySelectedKey)){
-                    msg = "카테고리를 선택 해야 합니다.";
+
+                if(this.isValNull(inputMaterialCode.getValue())){
+                       
+                    inputMaterialCode.setValueState("Error");                    
+                    inputMaterialCode.setValueStateText("자재코드는 필수 입니다.");
+                    inputMaterialCode.openValueStateMessage();
+
                 }
 
-                //.....
+                if(this.isValNull(categorySelectedKey)){
+               
+                    // var allItem = comboBoxCategory_code.getItems();
+                    // var arr = [];
+                    // var value = comboBoxCategory_code.getValue().trim();
+                    // for (var i = 0; i < allItem.length; i++) {
+                    //     arr.push(allItem[i].getText())}
+                    // if (arr.indexOf(value) < 0) {
+                    //     comboBoxCategory_code.setValueState("Error")
+                    //     comboBoxCategory_code.setValueStateText("카테고리를 선택 해야 합니다..");
+                    //     comboBoxCategory_code.setValue();
+                    // } else {
+                    //     comboBoxCategory_code.setValueState("None")
+                    // } 
 
-                // MessageBox.show("필수값을 모두 작성해야 합니다.", {
-                //     icon: MessageBox.Icon.ERROR,
-                //     title: msg,
-                //     actions: [MessageBox.Action.OK],
-                //     styleClass: "sapUiSizeCompact"
-                // });   
+                    comboBoxCategory_code.setValueState("Error")
+                    comboBoxCategory_code.openValueStateMessage();                  
+                    comboBoxCategory_code.setValueStateText("카테고리를 선택 해야 합니다..");
+                    
+                    msg += "카테고리를 선택 해야 합니다.\n";
+                }
+
+                if(oTable.getItems().length<1){
+                    msg += "언어정보를 한건이라도 등록 해야 합니다.";               
+                }
+                
+                if(msg!=""){
+                    MessageBox.show(msg, {
+                        icon: MessageBox.Icon.ERROR,
+                        title: "입력값 확인",
+                        actions: [MessageBox.Action.OK],
+                        styleClass: "sapUiSizeCompact"
+                    });   
+                    return;
+                }
 
                 var groupID = "createGroup";
 
                 //if( oModel.hasPendingChanges() ) {
                 //신규가 아니라면 
+
+                var operationMode = "create";
+                //업데이트
                 if(!midObjectView.getProperty("/pageMode")){
-                    groupID = "updateGroup"    
+                    groupID = "updateGroup";   
+                    operationMode = "update"; 
+
+                    //deleteOModel.oData
+
+                    //삭제 정보가 등록된 모델을 참조한다.
+                    //이후 정보는 업데이트 진행한다. 
+
+
                 }
-                // var mParameters = {
-                //     "groupId": groupID,
-                //     "properties" : {
-                //         "tenant_id": midObjectData.getProperty("/tenant_id"),
-                //         "company_code": midObjectData.getProperty("/company_code"),
-                //         "org_type_code": midObjectData.getProperty("/org_type_code"),
-                //         "org_code": midObjectData.getProperty("/org_code"),
-                //         "mi_material_code": inputMaterialCode.getValue(),
-                //         "mi_material_code_name": inputMaterialCode.getValue(),
-                //         "category_code": categorySelectedKey,
-                //         "category_name": categoryValue,
-                //         "use_flag": switchUse_flag.getState(),
-                //         "local_create_dtm": new Date(),
-                //         "local_update_dtm": new Date(),
-                //         "create_user_id": "Admin",
-                //         "update_user_id": "Admin",
-                //         "system_create_dtm": new Date(),
-                //         "system_update_dtm": new Date()
-                //     }
-                // };	               
-                //oModel.createEntry("/MIMaterialCodeList", mParameters);
 
-                //this.getView().byId("mainTable").setBindingContext(oEntry1);
+                oModel.setDeferredGroups(oModel.getDeferredGroups().concat([groupID]));
+                var mi_material_code_name, 
+                vMi_material_code_name="";
 
+         
+                var arrTParameters= [];
                 //언어별 테이블 내용을 각 타입별로 저장한다.     
                 for (var idx = 0; idx < oTable.getItems().length; idx++){
 
                     var items = oTable.getItems()[idx];
                     var state = items.getCells()[0].mProperties.text;
 
-                    var language_code = items.getCells()[1].mProperties.selectedKey;
-                    var mi_material_code_name = items.getCells()[1].mProperties.value;
+                    var language_code = items.getCells()[0].mProperties.selectedKey;
+                    mi_material_code_name = items.getCells()[1].mProperties.value;
+                
+                    if(language_code=="KO"){
+                        vMi_material_code_name = mi_material_code_name;
+                    }
 
-                    var tParameters = {
-                        "groupId": groupID,
-                        "properties" : {   
-                            "tenant_id": midObjectData.getProperty("/tenant_id"),
-                            "company_code": midObjectData.getProperty("/company_code"),
-                            "org_type_code": midObjectData.getProperty("/tenant_id"),
-                            "org_code": midObjectData.getProperty("/org_code"),
-                            "mi_material_code": midObjectData.getProperty("/mi_material_code"),
-                            "language_code": language_code,
+
+                    //키 값은 제외 한다. 
+                    var tParameters = {                        
                             "mi_material_code_name": mi_material_code_name,
                             "local_create_dtm": new Date(),
                             "local_update_dtm": new Date(),
                             "create_user_id": "Admin",
                             "update_user_id": "Admin",
                             "system_create_dtm": new Date(),
-                            "system_update_dtm": new Date()  
-                        }  
+                            "system_update_dtm": new Date()                          
                     };
 
-                    oModel.createEntry("/MIMaterialCodeText", tParameters); 
-
+                    if(operationMode=="update"){
+                        arrTParameters.push(tParameters);
+                    }else{
+                        oModel.createEntry("/MIMaterialCodeText", tParameters); 
+                    }
                 }
-                   
-                debugger;
 
-                oModel.setUseBatch(true);
-                oModel.submitChanges({
-                    groupId: groupID, 
-                    success: this._handleCreateSuccess.bind(this),
-                    error: this._handleCreateError.bind(this)
-                });
+                //KO가 없다면 한건이라도 등록한다. 
+                if(vMi_material_code_name==""){
+                    vMi_material_code_name = mi_material_code_name;
+                }
+                
+                var mParameters = {
+                    "groupId": groupID,
+                    "properties" : {
+                        "tenant_id": midObjectData.getProperty("/tenant_id"),
+                        "company_code": midObjectData.getProperty("/company_code"),
+                        "org_type_code": midObjectData.getProperty("/org_type_code"),
+                        "org_code": midObjectData.getProperty("/org_code"),
+                        "mi_material_code": inputMaterialCode.getValue(),
+                        "mi_material_code_name": inputMaterialCode.getValue(),
+                        "category_code": categorySelectedKey,
+                        "category_name": categoryValue,
+                        "use_flag": switchUse_flag.getState(),
+                        "local_create_dtm": new Date(),
+                        "local_update_dtm": new Date(),
+                        "create_user_id": "Admin",
+                        "update_user_id": "Admin",
+                        "system_create_dtm": new Date(),
+                        "system_update_dtm": new Date()
+                    }
+                };	      
+               
+                if(operationMode=="update"){
+               
+                    var oData = new JSONModel();
+                    oData.setData(ojCodeTextModel.getData()); 
+
+                    for (var idx = 0; idx < oTable.getItems().length; idx++){
+
+                        var sPath = oTable.getItems()[idx].getBindingContextPath();
+                        var replaceSPatch = sPath.replace("/","");
+                        var sServicePath = oData.oData[replaceSPatch].__metadata.uri;
+                        var arrS = sServicePath.split("pg.marketIntelligenceService");
+                        var sUrl = arrS[1];    
+                        
+                        oModel.update(sUrl, arrTParameters[idx], {groupId: groupID});
+
+                       // oModel.update(sUrl, arrTParameters[idx]);                   
+                       
+                    }
+
+                    // oTable.getItems().forEach(function(oItem){
+                    //     var sPath = oItem.getBindingContextPath();	
+                        
+
+                    //     var replaceSPatch = sPath.replace("/","");
+                        
+                    //     var sServicePath = ojCodeTextModel.oData[replaceSPatch].__metadata.uri;
+                        
+                    //     var arrS = sServicePath.split("pg.marketIntelligenceService");
+                    //     debugger;
+                    //     var sUrl = arrS[1];
+                    //     //삭제나 키를 모두 비교하지 않고 그냥 업데이트 했을경우                         
+                    //     oModel.update(sUrl, arrTParameters[i]);
+
+                    //     i++;
+                    //     // var aRecords = oData.results || oData || [],
+                    //     //     sPath = arrS[1],
+                    //     //     oResult = {};
+                    //     // aRecords.forEach(function (oItem) {
+                    //     //     if (oItem.__metadata && oItem.__metadata.uri) {
+                    //     //         var sType = oItem.__metadata.type,
+                    //     //             sUrl = oItem.__metadata.uri;
+                    //     //         sType = sType.substring(0, sType.lastIndexOf("."));
+                    //     //         oItem.__entity = sUrl.substring(sUrl.indexOf(sType) + sType.length);
+                    //     //     }
+                    //     // });
+                    //     // debugger;
+                    //     // oResult.entityName = sPath.substring(1);
+                    //     // oResult[oResult.entityName] = aRecords;
+                    //     // JSONModel.prototype.setData.call(this, oResult, true);
+
+                    //     //pg.marketIntelligenceService/
+                    //     //MIMaterialCodeText(tenant_id='L2100',company_code='%2A',org_type_code='BU',org_code='BIZ00100',mi_material_code='NIC-001-03',language_code='EN')"
+
+ 
+
+                        
+                    //     //oModel.update("/Products(999)", oData, {success: mySuccessHandler, error: myErrorHandler});
+
+                    // });
+                    
+                   // var oModel = this.getView().get Model();
+
+                    // oModel.setChangeGroups({
+                    //     "MIMaterialCodeText": {
+                    //         groupId: groupID,  
+                    //         changeSetId: "ID",
+                    //         single: true,
+                    //     }
+                    // )};
+
+                    oModel.submitChanges({
+                        groupId: groupID, 
+                        success: this._handleUpdateSuccess.bind(this),
+                        error: this._handleUpdateError.bind(this)
+                    });
+                                     
+                    
+                }else{
+
+                    oModel.createEntry("/MIMaterialCodeList", mParameters);
+                    
+                    oModel.setUseBatch(true);
+                    oModel.submitChanges({
+                        groupId: groupID, 
+                        success: this._handleCreateSuccess.bind(this),
+                        error: this._handleCreateError.bind(this)
+                    });                    
+                }
+
+                //oModel.setDeferredGroups(oModel.getDeferredGroups().concat([groupID]));
+
                 oModel.refresh(); 
             }
 
-	        console.groupEnd();
+	 
         },
 
 
@@ -1109,7 +1314,9 @@ sap.ui.define([
                 actions: [MessageBox.Action.OK],
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
-                        this.onPageNavBackButtonPress();
+                        var sNextLayout = this.getOwnerComponent().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+                        this._onExit();
+                        this.getRouter().navTo("mainPage", { layout: sNextLayout });
                     }
                 }
             });            

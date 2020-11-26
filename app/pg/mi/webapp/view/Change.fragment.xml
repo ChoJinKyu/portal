@@ -80,10 +80,17 @@
                                         columnsL="3"
                                         columnsXL="4">
                                         <!-- {midObjectData>/mi_material_code} enabled="{midObjectView>/pageMode}"-->
-                                        <Label text="시황자재코드" design="Bold" class="sapMLabelNoText"/>
+                                        <Label text="시황자재코드" design="Bold" class="sapMLabelNoText" required="true" labelFor="inputMaterialCode"/>
                                         <Input id="inputMaterialCode"
                                         placeholder="자재코드 입력"
-                                        class="sapUiSmallMarginEnd" 
+                                        value="{ 
+                                            path : '/text', 
+                                            type : 'sap.ui.model.type.String', 
+                                            constraints : { 
+                                                minLength : 1, 
+                                                maxLength : 40 
+                                        }}"
+                                        class="sapUiSmallMarginEnd"
                                         />
                                         <Button
                                             id="buttonMaterialCheck"
@@ -91,13 +98,14 @@
                                             text="중복Check"
                                             press=".onMaterialCodeCheckOpen"/> 
 
-                                        <Label text="Category 명" design="Bold" class="sapMLabelNoText"/>
+                                        <Label text="Category 명" design="Bold" class="sapMLabelNoText" required="true" labelFor="comboBoxCategory_code"/>
                                         <ComboBox
                                             id="comboBoxCategory_code"
                                             selectedKey="{midObjectData>/category_code}"
-                                            items="{path: '/MICategoryView', templateShareable:false}" 
+                                            items="{path: 'jMICategoryView>/', templateShareable:false}" 
+                                            required="true"
                                             placeholder="선택하세요.">
-                                            <core:Item key="{category_code}" text="{category_text}" />
+                                            <core:Item key="{jMICategoryView>category_code}" text="{jMICategoryView>category_text}" />
                                         </ComboBox>
                                         <Label text="사용여부" design="Bold" class="sapMLabelNoText"/>
                                         <Switch 
@@ -131,7 +139,7 @@
                                                     <OverflowToolbar>
                                                         <content>
                                                             <ToolbarSpacer/>
-                                                            <Button id="buttonMidTableCreate" text="Create" type="Transparent" press="onMidTableCreate"/>
+                                                            <Button id="buttonMidTableCreate" text="Add" type="Transparent" press="onMidTableCreate"/>
                                                             <Button id="buttonMidTableDelete" text="Delete" type="Transparent" press="onMidTableDelete"/>
                                                         </content>
                                                     </OverflowToolbar>
@@ -162,7 +170,7 @@
                                                                 placeholder="선택하세요.">
                                                                 <core:Item key="{jLanguageView>code}" text="{jLanguageView>code_name}" />
                                                             </ComboBox>
-                                                            <Input  value="{jCodeText>mi_material_code_name}"/>
+                                                            <Input value="{jCodeText>mi_material_code_name}" />
                                                         </cells>
                                                     </ColumnListItem>
                                                 </items>
