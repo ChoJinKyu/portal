@@ -19,8 +19,9 @@ sap.ui.define([
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
     'sap/ui/core/Element',
-	"sap/ui/core/syncStyleClass"
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item, Element, syncStyleClass) {
+    "sap/ui/core/syncStyleClass",
+    'sap/m/Label',
+], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item, Element, syncStyleClass, Label) {
 	"use strict";
    /**
     * @description 품의 목록 (총 품의 공통)
@@ -184,55 +185,8 @@ sap.ui.define([
             //     });
             // }
 
-		},
-        onDblClick  : function(oEvent) {
-            console.log(oEvent);
-            window.clicks = window.clicks + 1;
-                
-            if(window.clicks == 1) {
-                setTimeout(sap.ui.controller(this).clearClicks, 500);
-            } else if(window.clicks == 2) {
-                console.log("더블클릭");
-            }
         },
-
         
-        
-        /* Affiliate Start */
-        /**
-         * @private
-         * @see 검색을 위한 컨트롤에 대하여 필요 초기화를 진행 합니다. 
-         */
-		_doInitSearch: function(){
-            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S";
-
-			this._oMultiInput = this.getView().byId("searchApprovalCategory"+sSurffix);
-            this._oMultiInput.setTokens(this._getDefaultTokens());
-
-            this.oColModel = new JSONModel(sap.ui.require.toUrl("dp/moldApprovalList/localService/mockdata") + "/columnsModel.json");
-            this.oAffiliateModel = new JSONModel(sap.ui.require.toUrl("dp/moldApprovalList/localService/mockdata") + "/affiliate.json");
-            this.setModel("affiliateModel", this.oAffiliateModel);
-
-            // /** Receipt Date */
-            // var today = new Date();
-            
-            // this.getView().byId("searchReceiptDate"+sSurffix).setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
-            // this.getView().byId("searchReceiptDate"+sSurffix).setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
-           
-        },
-        /**
-         * @private 
-         * @see searchAffiliate setTokens
-         */
-        _getDefaultTokens: function () {
-            
-            var oToken = new Token({
-                key: "EKHQ",
-                text: "[LGEKR] LG Electronics Inc."
-            });
-
-            return [oToken];
-        },
         ///////////////////////////// sap.ui table version ////////////////////////
         /**
          * @private 
@@ -303,14 +257,128 @@ sap.ui.define([
         ///////////////////////////// sap.ui table version end ////////////////////////
 
 
-        /**
-         * @private 
-         * @see 리스트에서 create 버튼을 제외한 각각의 팝업 오픈
-         */
-        onValueHelpRequested : function (oEvent) {
+        // /**
+        //  * @private 
+        //  * @see 리스트에서 create 버튼을 제외한 각각의 팝업 오픈
+        //  */
+        // onValueHelpRequested : function (oEvent) {
+        //     var oView = this.getView();
+        //     var oButton = oEvent.getSource();
+        //     var id = oButton.getId();
+        //     var page ="";
+        //     if(id.indexOf("Model") != -1){
+        //         page = "dp.moldApprovalList.view.DialogModel";
+        //         dialogId = "DialogModel";
+        //     }else if(id.indexOf("MoldPartNo") != -1){
+        //         page = "dp.moldApprovalList.view.DialogMoldPartNo";
+        //         dialogId = "DialogMoldPartNo";
+        //     }else if(id.indexOf("Requester") != -1){
+        //         page = "dp.moldApprovalList.view.DialogRequester";
+        //         dialogId = "DialogRequester";
+        //     }
+            
+        //     var path = '';
+        //     this._oValueHelpDialog = sap.ui.xmlfragment(page, this);
 
+        //     if(oEvent.getSource().sId.indexOf("searchModel") > -1){
+        //         //model
+        //         this._oInputModel = this.getView().byId("searchModel");
+
+        //         this.oColModel = new JSONModel({
+        //             "cols": [
+        //                 {
+        //                     "label": "Model",
+        //                 }
+        //             ]
+        //         });
+
+        //         path = '/Models';
+                
+        //         this._oValueHelpDialog.setTitle('Model');
+        //         this._oValueHelpDialog.setKey('model');
+        //         this._oValueHelpDialog.setDescriptionKey('model');
+
+        //     }else if(oEvent.getSource().sId.indexOf("searchPart") > -1){
+        //         //part
+        //         this._oInputModel = this.getView().byId("searchPart");
+
+        //         this.oColModel = new JSONModel({
+        //             "cols": [
+        //                 {
+        //                     "label": "Part No",
+        //                     "template": "part_number"
+        //                 },
+        //                 {
+        //                     "label": "Description",
+        //                     "template": "spec_name"
+        //                 }
+        //             ]
+        //         });
+
+        //         path = '/PartNumbers';
+
+        //         this._oValueHelpDialog.setTitle('Part No');
+        //         this._oValueHelpDialog.setKey('part_number');
+        //         this._oValueHelpDialog.setDescriptionKey('spec_name');
+        //     }
+
+        //     var aCols = this.oColModel.getData().cols;
+
+        //     console.log('this._oValueHelpDialog.getKey()',this._oValueHelpDialog.getKey());
+            
+        //     this.getView().addDependent(this._oValueHelpDialog);
+
+        //     this._oValueHelpDialog.getTableAsync().then(function (oTable) {
+                
+        //         oTable.setModel(this.getOwnerComponent().getModel());
+        //         oTable.setModel(this.oColModel, "columns");
+                
+        //         if (oTable.bindRows) {
+        //             oTable.bindAggregation("rows", path);
+        //         }
+
+        //         if (oTable.bindItems) {
+        //             oTable.bindAggregation("items", path, function () {
+        //                 return new ColumnListItem({
+        //                     cells: aCols.map(function (column) {
+        //                         return new Label({ text: "{" + column.template + "}" });
+        //                     })
+        //                 });
+        //             });
+        //         }
+        //         this._oValueHelpDialog.update();
+                
+        //     }.bind(this));
+            
+            
+        //     // debugger
+            
+        //     var oToken = new Token();
+		// 	oToken.setKey(this._oInputModel.getSelectedKey());
+		// 	oToken.setText(this._oInputModel.getValue());
+		// 	this._oValueHelpDialog.setTokens([oToken]);
+        //     this._oValueHelpDialog.open();
+            
+
+        // },
+
+        onValueHelpRequested : function (oEvent) {
+            var oView = this.getView();
+            var oButton = oEvent.getSource();
+            var id = oButton.getId();
+            var page ="";
             var path = '';
-            this._oValueHelpDialog = sap.ui.xmlfragment("dp.detailSpecEntry.view.ValueHelpDialogModel", this);
+            if(id.indexOf("Model") != -1){
+                page = "dp.moldApprovalList.view.DialogModel";
+                dialogId = "DialogModel";
+            }else if(id.indexOf("MoldPartNo") != -1){
+                page = "dp.moldApprovalList.view.DialogMoldPartNo";
+                dialogId = "DialogMoldPartNo";
+            }else if(id.indexOf("Requester") != -1){
+                page = "dp.moldApprovalList.view.DialogRequester";
+                dialogId = "DialogRequester";
+            }
+            this._oValueHelpDialog = sap.ui.xmlfragment(page, this);
 
             if(oEvent.getSource().sId.indexOf("searchModel") > -1){
                 //model
@@ -320,9 +388,8 @@ sap.ui.define([
                     "cols": [
                         {
                             "label": "Model",
-             
-
-                                    }
+                            "template": "model"
+                        }
                     ]
                 });
 
@@ -397,21 +464,14 @@ sap.ui.define([
 
         },
 
-        /**
-         * @private 
-         * @see approvalDialogOpen 함수에서 오픈한 팝업 닫기
-         */
-        onHandleClose: function (){
-            this.byId(dialogId).close();
-            this.byId(dialogId).destroy();
-        },
-
+        
         /**
          * @private 
          * @see approvalDialogOpen 팝업에서 apply버튼 클릭시
          */
         onValueHelpOkPress: function (oEvent) {
-			var aTokens = oEvent.getParameter("tokens");
+            var aTokens = oEvent.getParameter("tokens");
+            console.log(aTokens[0].getKey());
 			this._oInputModel.setSelectedKey(aTokens[0].getKey());
 			this._oValueHelpDialog.close();
 		},
