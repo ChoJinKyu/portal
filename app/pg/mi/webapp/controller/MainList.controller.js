@@ -157,11 +157,11 @@ sap.ui.define([
             this.getView().byId("buttonMainTableDelete").setEnabled(bDeleteEnabled);
 
             
-            if(oItemLength > 1 ){
-                 this.getView().byId("buttonMainTableCopy").setEnabled(false);
-            }else{
-                this.getView().byId("buttonMainTableCopy").setEnabled(bDeleteEnabled);
-			}
+            // if(oItemLength > 1 ){
+            //      this.getView().byId("buttonMainTableCopy").setEnabled(false);
+            // }else{
+            //     this.getView().byId("buttonMainTableCopy").setEnabled(bDeleteEnabled);
+			// }
 			console.groupEnd();
         },
 
@@ -355,65 +355,30 @@ sap.ui.define([
 		 */
 		onMainTableCreate: function(){
 			console.group("onMainTableCreate");
-			
-	        var aTableItems = this._getSmartTableById().getTable().getItems();
-			var aPartnerIDs = [];
 
-			// test code
-	        // aTableItems.forEach(function(oItem){
-	        // 	aPartnerIDs.push(oItem.getCells()[0].getValue());
-			// });
-			
-			// 주석 제거 사용가능 
-			/*stat
-			var mi_material_code = "BIZ00121";
-	        var mParameters = {
-	        	"groupId":"createGroup",
-	        	"properties" : {
-					"tenant_id": "L2100",
-					"company_code": "*",
-					"org_type_code": "BU",
-					"org_code": "BIZ00100",
-					"mi_material_code": mi_material_code,
-					"mi_material_code_name": "",
-					"category_code": "Non-Ferrous Metal",
-					"category_name": "비철금속",
-					"use_flag": true,
-					"local_create_dtm": new Date(),
-					"local_update_dtm": new Date(),
-					"create_user_id": "Admin",
-					"update_user_id": "Admin",
-					"system_create_dtm": new Date(),
-					"system_update_dtm": new Date()
-	        	}
-			};					
-			var oEntry1 = this.getModel().createEntry("/MIMaterialCodeList", mParameters);
-			this.getView().byId("mainTable").setBindingContext(oEntry3);
-
-			// this.getModel().setUseBatch(true);
-	    	// this.getModel().submitChanges({
-			// 	groupId: "createGroup", 
-			//   success: this._handleCreateSuccess.bind(this),
-			//   error: this._handleCreateError.bind(this)
-			// });
-						
-			*/
-					
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-
+			
+			//note수정 검색한 값을 기준으로 데이타를 수정해야한다. 
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
-				tenant_id:"",
-                company_code:"",
-				org_type_code: "",
-				org_code :"",
-				category_name :"",
-				category_code : "",
-				mi_material_code: "",
-				use_flag: true
+				tenant_id: "L2100",
+				company_code: "*",
+				org_type_code: "BU",
+				org_code: "BIZ00100",
+				mi_material_code: "new"				
             });
 			
-            console.groupEnd();
+            if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
+                this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
+            }
+
+			//var oItem = oEvent.getSource();
+			//oItem.setNavigated(true);
+			//var oParent = oItem.getParent();
+			//this.iIndex = oParent.indexOfItem(oItem);
+			
+			console.groupEnd();
+			
 		},
 
 		/**
@@ -440,6 +405,7 @@ sap.ui.define([
 		 * @public
 		 */
 		onMainTableItemPress: function(oEvent) {
+			console.group("onMainTableItemPress");
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
 				sPath = oEvent.getSource().getBindingContext().getPath(),
 				oRecord = this.getModel().getProperty(sPath);
@@ -502,6 +468,7 @@ use_flag: true
 			var oParent = oItem.getParent();
 			// store index of the item clicked, which can be used later in the columnResize event
 			this.iIndex = oParent.indexOfItem(oItem);
+			console.groupEnd();
 		},
 
 		/**
@@ -510,7 +477,9 @@ use_flag: true
 		 * @private
 		 */
 		_onRoutedThisPage: function(){
+			console.group("_onRoutedThisPage");
 			this.getModel("mainListView").setProperty("/headerExpanded", true);
+			console.groupEnd();
 		},
 
 		/**

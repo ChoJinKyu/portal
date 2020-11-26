@@ -34,12 +34,6 @@ sap.ui.define(["jquery.sap.global"],
                 visible: true
             },
             {
-                id: "templateListInlineEdit-mainList-mainColumnGroupCode",
-                order: 4,
-                text: "{i18nd>/lblGroup}",
-                visible: true
-            },
-            {
                 id: "templateListInlineEdit-mainList-mainColumnMessageTypeCode",
                 order: 5,
                 text: "{i18nd>/lblType}",

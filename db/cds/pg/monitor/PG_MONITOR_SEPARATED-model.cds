@@ -21,9 +21,9 @@ using util from '../../util/util-model';
 using {pg as Monitoring_Separated} from '../monitor/PG_MONITOR_SEPARATED-model';
 
 entity Monitor_Separated {
-    key tenant_id      : String(5) not null  @title : '테넌트ID';
-    key company_code   : String(10) not null @title : '회사코드';
-    key bizunit_code   : String(10) not null @title : '사업본부코드';
+    key tenant_id      : String(5) not null  @title : '회사코드';
+    key company_code   : String(10) not null @title : '법인코드';
+    key bizunit_code   : String(10) not null @title : '사업부분코드';
     key separated_code : String(10) not null @title : '구분코드';
         language_code  : String(10)          @title : '언어코드';
         separated_name : String(240)         @title : '구분명';

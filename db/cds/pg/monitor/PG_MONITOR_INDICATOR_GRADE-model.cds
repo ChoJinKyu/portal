@@ -21,7 +21,7 @@ using util from '../../util/util-model';
 using {pg as Indicator_Grade} from '../monitor/PG_MONITOR_INDICATOR_GRADE-model';
 
 entity Monitor_Indicator_Grade {
-    key tenant_id            : String(5) not null  @title : '테넌트ID';
+    key tenant_id            : String(5) not null  @title : '회사코드';
     key indicator_grade      : String(10) not null @title : '지표등급';
     key language_code        : String(10) not null @title : '언어코드';
         indicator_grade_name : String(240)         @title : '지표등급명';

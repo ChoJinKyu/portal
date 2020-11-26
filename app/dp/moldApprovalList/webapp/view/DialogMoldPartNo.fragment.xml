@@ -2,7 +2,7 @@
 	xmlns="sap.m"
 	xmlns:core="sap.ui.core">
     	<TableSelectDialog
-		noDataText="No Products Found"
+		noDataText="No Mold Part No Found"
 		title="Mold Part No Selection"
 		search=".handleSearch"
 		confirm=".handleValueHelpClose"

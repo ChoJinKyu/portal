@@ -27,6 +27,8 @@ sap.ui.define([
     * @date 2020.11.19 
     * @author jinseon.lee , daun.lee 
     */
+    var toggleButtonId ="";
+    var dialogId = "";
 
 	return BaseController.extend("dp.moldApprovalList.controller.ApprovalList", {
 
@@ -183,7 +185,19 @@ sap.ui.define([
             // }
 
 		},
+        onDblClick  : function(oEvent) {
+            console.log(oEvent);
+            window.clicks = window.clicks + 1;
+                
+            if(window.clicks == 1) {
+                setTimeout(sap.ui.controller(this).clearClicks, 500);
+            } else if(window.clicks == 2) {
+                console.log("더블클릭");
+            }
+        },
 
+        
+        
         /* Affiliate Start */
         /**
          * @private
@@ -220,71 +234,87 @@ sap.ui.define([
             return [oToken];
         },
 
-        approvalDialogOpen: function (oEvent) {
-            
+        /**
+         * @private 
+         * @see 리스트에서 create 버튼을 제외한 각각의 팝업 오픈
+         */
+        approvalDialogOpen: function (oEvent){
+            var oView = this.getView();
             var oButton = oEvent.getSource();
             var id = oButton.getId();
             var page ="";
             if(id.indexOf("Model") != -1){
                 page = "dp.moldApprovalList.view.DialogModel";
+                dialogId = "DialogModel";
             }else if(id.indexOf("MoldPartNo") != -1){
                 page = "dp.moldApprovalList.view.DialogMoldPartNo";
+                dialogId = "DialogMoldPartNo";
             }else if(id.indexOf("Requester") != -1){
                 page = "dp.moldApprovalList.view.DialogRequester";
+                dialogId = "DialogRequester";
             }
-            //console.log(oButton.getBindingContext("msg").getPath())
-            console.log("page >>>", page);
-            Fragment.load({
-                name: page,
+            this._oDialog = Fragment.load({
+                id: oView.getId(),
+                name: ""+page,
                 controller: this
             }).then(function (oDialog) {
-                this._oDialog = oDialog;
-                this._configDialog(oButton);
-                this._oDialog.open();
-            }.bind(this));
-			
-		},
+                // connect dialog to the root view of this component (models, lifecycle)
+                oView.addDependent(oDialog);
+                return oDialog;
+            });
+            this._oDialog.then(function(oDialog) {
+                oDialog.open();
+                
+			});
+		
+        },
 
-		_configDialog: function (oButton) {
-			// Set draggable property
-			var bDraggable = oButton.data("draggable");
-			this._oDialog.setDraggable(bDraggable == "true");
+        /**
+         * @private 
+         * @see approvalDialogOpen 함수에서 오픈한 팝업 닫기
+         */
+        onHandleClose: function (){
+            this.byId(dialogId).close();
+            this.byId(dialogId).destroy();
+        },
 
-			// Set resizable property
-			var bResizable = oButton.data("resizable");
-			this._oDialog.setResizable(bResizable == "true");
+        /**
+         * @private 
+         * @see approvalDialogOpen 팝업에서 apply버튼 클릭시
+         */
+        onHandleApply : function () {
 
-			// Multi-select if required
-			var bMultiSelect = !!oButton.data("multi");
-			this._oDialog.setMultiSelect(bMultiSelect);
+            var oTable = this.byId("modelTable");
+            var aItems = oTable.getSelectedItems();
+            var oInput = this.byId("searchModel");
+            console.log(aItems);
+            if(aItems != ""){
+                aItems.forEach(function(oItem){   
+                    console.log(" nItem >>>>> getText 1 " ,  oItem.getCells()[0].getText());  
+                    oInput.setValue(oItem.getCells()[0].getText());
+                });
+            }else{
+                oInput.setValue("");
+            }
+            this.byId(dialogId).close();
+            this.byId(dialogId).destroy();
+        },
 
-			// Remember selections if required
-			var bRemember = !!oButton.data("remember");
-			this._oDialog.setRememberSelections(bRemember);
-
-			var sResponsivePadding = oButton.data("responsivePadding");
-			var sResponsiveStyleClasses = "sapUiResponsivePadding--header sapUiResponsivePadding--subHeader sapUiResponsivePadding--content sapUiResponsivePadding--footer";
-
-			if (sResponsivePadding) {
-				this._oDialog.addStyleClass(sResponsiveStyleClasses);
-			} else {
-				this._oDialog.removeStyleClass(sResponsiveStyleClasses);
-			}
-
-			// Set custom text for the confirmation button
-			var sCustomConfirmButtonText = oButton.data("confirmButtonText");
-			this._oDialog.setConfirmButtonText(sCustomConfirmButtonText);
-
-			this.getView().addDependent(this._oDialog);
-
-			// toggle compact style
-			syncStyleClass("sapUiSizeCompact", this.getView(), this._oDialog);
-		},
+         /**
+         * @public
+         * @see 사용처 DialogModel, DialogMoldPartNo, DialogRequester Search 이벤트
+         */
+        handleSearch: function (oEvent) {
+			var sValue = oEvent.getParameter("value");
+			var oFilter = new Filter("org_name", FilterOperator.Contains, sValue);
+			var oBinding = oEvent.getSource().getBinding("items");
+			oBinding.filter([oFilter]);
+        },
 
         
          /**
          * @public
-         * @see 사용처 ValueHelpDialogAffiliate Fragment window.close after 이벤트
+         * @see 사용처 DialogCreate Fragment Open 이벤트
          */
         onDialogCreate: function (){
             var oView = this.getView();
@@ -313,9 +343,9 @@ sap.ui.define([
          */ 
         onToggleHandleChange : function(oEvent){
             var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
-            var isPressed;
             var isPressedId;
             isPressedId =oEvent.getSource().getId();
+            toggleButtonId = isPressedId;
             for(var i=0; i<groupId.length; i++){
                 if(groupId[i].getId() != isPressedId){
                     groupId[i].setPressed(false);
@@ -324,7 +354,12 @@ sap.ui.define([
            
         },
 
+         /**
+         * @public
+         * @see 사용처 create 팝업에서 select 버튼 press시 Object로 이동
+         */ 
         handleConfirm : function(targetControl){
+            console.log(toggleButtonId);
             var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
             for(var i=0; i<groupId.length; i++){
                 if(groupId[i].getPressed() == true){
@@ -341,8 +376,11 @@ sap.ui.define([
         },
 
         createPopupClose: function (oEvent){
+            console.log(oEvent);
             this.byId("dialogApprovalCategory").close();
         },
+
+       
 
         /* Affiliate End */
 

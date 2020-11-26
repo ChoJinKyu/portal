@@ -1,7 +1,6 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
-	"sap/ui/model/json/JSONModel",
-	"ext/lib/model/I18nModel",
+	"ext/lib/util/Multilingual",
 	"ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedListModel",
 	"ext/lib/formatter/Formatter",
@@ -18,7 +17,7 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, JSONModel, I18nModel, TransactionManager, ManagedListModel, Formatter, TablePersoController, MainListPersoService, 
+], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Formatter, TablePersoController, MainListPersoService, 
 		Filter, FilterOperator, Sorter,
 		MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
 	"use strict";
@@ -42,9 +41,7 @@ sap.ui.define([
 				oI18ndModel,
 				oResourceBundle = this.getResourceBundle();
 
-			// Model used to manipulate control states
-			this.setModel(new JSONModel({}), "mainListView");
-			this.setModel(new I18nModel(), "i18nd");
+			this.setModel(Multilingual.getInstance().getModel(), "i18nd");
 			this.setModel(new ManagedListModel(), "list");
 
 			// oTransactionManager = new TransactionManager();
@@ -54,20 +51,20 @@ sap.ui.define([
         },
         
         onRenderedFirst : function () {
-			this.getModel("i18nd")
-				.setTransactionModel(this.getModel("util"))
-				.attachEvent("loaded", function(oEvent){
+			// this.getModel("i18nd")
+			// 	.setTransactionModel(this.getModel("util"))
+			// 	.attachEvent("loaded", function(oEvent){
 
-					// Add the mainList page to the flp routing history
-					this.addHistoryEntry({
-						title: this.getModel("i18nd").getText("/templateListInlineEdit.title"),
-						icon: "sap-icon://table-view",
-						intent: "#Template-display"
-					}, true);
+			// 		// Add the mainList page to the flp routing history
+			// 		this.addHistoryEntry({
+			// 			title: this.getModel("i18nd").getText("/templateListInlineEdit.title"),
+			// 			icon: "sap-icon://table-view",
+			// 			intent: "#Template-display"
+			// 		}, true);
 
-				}.bind(this))
-				//.load(this.getOwnerComponent().getManifestEntry("sap.app").id)
-				.load("cm.templateListInlineEdit");
+			// 	}.bind(this))
+			// 	//.load(this.getOwnerComponent().getManifestEntry("sap.app").id)
+			// 	.load("cm.templateListInlineEdit");
 				
 			this.byId("pageSearchButton").firePress();
         },
@@ -76,13 +73,20 @@ sap.ui.define([
 		/* event handlers                                              */
 		/* =========================================================== */
 
+
 		/**
-		 * Triggered by the table's 'updateFinished' event: after new table
-		 * data is available, this handler method updates the table counter.
-		 * This should only happen if the update was successful, which is
-		 * why this handler is attached to 'updateFinished' and not to the
-		 * table's list binding's 'dataReceived' method.
-		 * @param {sap.ui.base.Event} oEvent the update finished event
+		 * Event handler when a page state changed
+		 * @param {sap.ui.base.Event} oEvent the page stateChange event
+		 * @public
+		 */
+		onPageStateChange: function(oEvent){
+			debugger;
+		},
+
+
+		/**
+		 * Event handler when a table item gets pressed
+		 * @param {sap.ui.base.Event} oEvent the table updateFinished event
 		 * @public
 		 */
 		onMainTableUpdateFinished : function (oEvent) {
@@ -238,15 +242,11 @@ sap.ui.define([
 			var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S",
 				chain = this.getView().byId("searchChain"+sSurffix).getSelectedKey(),
 				language = this.getView().byId("searchLanguage"+sSurffix).getSelectedKey(),
-				group = this.getView().byId("searchGroup"+sSurffix).getValue(),
 				keyword = this.getView().byId("searchKeyword"+sSurffix).getValue();
 				
 			var aTableSearchState = [];
 			if (chain && chain.length > 0) {
 				aTableSearchState.push(new Filter("chain_code", FilterOperator.EQ, chain));
-			}
-			if (group && group.length > 0) {
-				aTableSearchState.push(new Filter("group_code", FilterOperator.Contains, group));
 			}
 			if (language && language.length > 0) {
 				aTableSearchState.push(new Filter("language_code", FilterOperator.EQ, language));
@@ -267,7 +267,7 @@ sap.ui.define([
 			// init and activate controller
 			this._oTPC = new TablePersoController({
 				table: this.byId("mainTable"),
-				componentName: "templateListInlineEdit",
+				componentName: "xx.templateListInlineEdit",
 				persoService: MainListPersoService,
 				hasGrouping: true
 			}).activate();
