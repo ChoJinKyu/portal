@@ -8,10 +8,10 @@
 	height="100%">
 
 	<uxap:ObjectPageLayout id="page"
-		toggleHeaderOnTitleClick="true"
+		toggleHeaderOnTitleClick="false"
 		alwaysShowContentHeader = "true"
 		preserveHeaderStateOnScroll="false"
-		headerContentPinnable="true"
+		headerContentPinnable="false"
 		isChildPage="true"
 		upperCaseAnchorBar="false"
 		showTitleInHeaderContent="true"
@@ -119,8 +119,8 @@
 									<Button id="midTableDeleteButton" text="Delete" type="Transparent" press=".onMidTableDeleteButtonPress" />
 									<!-- <Button id="midTableSaveButton" text="Save" type="Emphasized" press=".onMidTableSaveButtonPress" /> -->
 									<ToolbarSeparator/>
-									<!-- <SearchField id="midTableSearchField" width="10rem" search=".onMidTableFilterPress" />
-									<Button id="midTableApplyFilterButton" text="Apply" type="Transparent" press=".onMidTableApplyFilterButton" /> -->
+									<SearchField id="midTableSearchField" placeholder="Class Text" width="10rem" search=".onMidTableFilterPress" />
+									<!-- <Button id="midTableApplyFilterButton" text="Apply" type="Transparent" press=".onMidTableApplyFilterButton" /> -->
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>

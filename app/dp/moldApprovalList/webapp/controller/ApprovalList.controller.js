@@ -291,115 +291,19 @@ sap.ui.define([
         ///////////////////////////// sap.ui table version end ////////////////////////
 
 
-        // /**
-        //  * @private 
-        //  * @see 리스트에서 create 버튼을 제외한 각각의 팝업 오픈
-        //  */
-        // onValueHelpRequested : function (oEvent) {
-        //     var oView = this.getView();
-        //     var oButton = oEvent.getSource();
-        //     var id = oButton.getId();
-        //     var page ="";
-        //     if(id.indexOf("Model") != -1){
-        //         page = "dp.moldApprovalList.view.DialogModel";
-        //         dialogId = "DialogModel";
-        //     }else if(id.indexOf("MoldPartNo") != -1){
-        //         page = "dp.moldApprovalList.view.DialogMoldPartNo";
-        //         dialogId = "DialogMoldPartNo";
-        //     }else if(id.indexOf("Requester") != -1){
-        //         page = "dp.moldApprovalList.view.DialogRequester";
-        //         dialogId = "DialogRequester";
-        //     }
-            
-        //     var path = '';
-        //     this._oValueHelpDialog = sap.ui.xmlfragment(page, this);
-
-        //     if(oEvent.getSource().sId.indexOf("searchModel") > -1){
-        //         //model
-        //         this._oInputModel = this.getView().byId("searchModel");
-
-        //         this.oColModel = new JSONModel({
-        //             "cols": [
-        //                 {
-        //                     "label": "Model",
-        //                 }
-        //             ]
-        //         });
-
-        //         path = '/Models';
-                
-        //         this._oValueHelpDialog.setTitle('Model');
-        //         this._oValueHelpDialog.setKey('model');
-        //         this._oValueHelpDialog.setDescriptionKey('model');
-
-        //     }else if(oEvent.getSource().sId.indexOf("searchPart") > -1){
-        //         //part
-        //         this._oInputModel = this.getView().byId("searchPart");
-
-        //         this.oColModel = new JSONModel({
-        //             "cols": [
-        //                 {
-        //                     "label": "Part No",
-        //                     "template": "part_number"
-        //                 },
-        //                 {
-        //                     "label": "Description",
-        //                     "template": "spec_name"
-        //                 }
-        //             ]
-        //         });
-
-        //         path = '/PartNumbers';
-
-        //         this._oValueHelpDialog.setTitle('Part No');
-        //         this._oValueHelpDialog.setKey('part_number');
-        //         this._oValueHelpDialog.setDescriptionKey('spec_name');
-        //     }
-
-        //     var aCols = this.oColModel.getData().cols;
-
-        //     console.log('this._oValueHelpDialog.getKey()',this._oValueHelpDialog.getKey());
-            
-        //     this.getView().addDependent(this._oValueHelpDialog);
-
-        //     this._oValueHelpDialog.getTableAsync().then(function (oTable) {
-                
-        //         oTable.setModel(this.getOwnerComponent().getModel());
-        //         oTable.setModel(this.oColModel, "columns");
-                
-        //         if (oTable.bindRows) {
-        //             oTable.bindAggregation("rows", path);
-        //         }
-
-        //         if (oTable.bindItems) {
-        //             oTable.bindAggregation("items", path, function () {
-        //                 return new ColumnListItem({
-        //                     cells: aCols.map(function (column) {
-        //                         return new Label({ text: "{" + column.template + "}" });
-        //                     })
-        //                 });
-        //             });
-        //         }
-        //         this._oValueHelpDialog.update();
-                
-        //     }.bind(this));
-            
-            
-        //     // debugger
-            
-        //     var oToken = new Token();
-		// 	oToken.setKey(this._oInputModel.getSelectedKey());
-		// 	oToken.setText(this._oInputModel.getValue());
-		// 	this._oValueHelpDialog.setTokens([oToken]);
-        //     this._oValueHelpDialog.open();
-            
-
-        // },
-
         onValueHelpRequested : function (oEvent) {
       
             var path = '';
+           
+            this._oBasicSearchField = new SearchField({
+				showSearchButton: true
+            });
+
             this._oValueHelpDialog = sap.ui.xmlfragment("dp.moldApprovalList.view.ValueHelpDialog", this);
+
+            var oFilterBar = this._oValueHelpDialog.getFilterBar();
+			oFilterBar.setFilterBarExpanded(false);
+			oFilterBar.setBasicSearch(this._oBasicSearchField);
 
             if(oEvent.getSource().sId.indexOf("searchModel") > -1){
                 //model
@@ -503,7 +407,55 @@ sap.ui.define([
 
 		onValueHelpAfterClose: function () {
 			this._oValueHelpDialog.destroy();
+        },
+        
+        onFilterBarSearch: function (oEvent) {
+			var sSearchQuery = this._oBasicSearchField.getValue(),
+				aSelectionSet = oEvent.getParameter("selectionSet");
+			var aFilters = aSelectionSet.reduce(function (aResult, oControl) {
+				if (oControl.getValue()) {
+					aResult.push(new Filter({
+						path: oControl.getName(),
+						operator: FilterOperator.Contains,
+						value1: oControl.getValue()
+					}));
+				}
+
+				return aResult;
+			}, []);
+
+			aFilters.push(new Filter({
+				filters: [
+					new Filter({ path: "model", operator: FilterOperator.Contains, value1: sSearchQuery })
+					// new Filter({ path: "Name", operator: FilterOperator.Contains, value1: sSearchQuery }),
+					// new Filter({ path: "Category", operator: FilterOperator.Contains, value1: sSearchQuery })
+				],
+				and: false
+			}));
+
+			this._filterTable(new Filter({
+				filters: aFilters,
+				and: true
+			}));
+        },
+
+
+		_filterTable: function (oFilter) {
+			var oValueHelpDialog = this._oValueHelpDialog;
+
+			oValueHelpDialog.getTableAsync().then(function (oTable) {
+				if (oTable.bindRows) {
+					oTable.getBinding("rows").filter(oFilter);
+				}
+
+				if (oTable.bindItems) {
+					oTable.getBinding("items").filter(oFilter);
+				}
+
+				oValueHelpDialog.update();
+			});
 		},
+        
          /**
          * @public
          * @see 사용처 DialogCreate Fragment Open 이벤트

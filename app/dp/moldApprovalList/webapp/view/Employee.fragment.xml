@@ -52,25 +52,25 @@
                             </OverflowToolbar>
                         </headerToolbar> -->
                         <columns>
-                            <Column id="modelItem_model" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true"  >
+                            <Column id="modelItem_model2" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true"  >
                                 <Text text="Model" />
                             </Column>
-                            <Column id="modelItem_modelPartNo" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" >
+                            <Column id="modelItem_modelPartNo2" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" >
                                 <Text text="Model Part No" />
                             </Column>
-                            <Column id="modelItem_seq" minScreenWidth="Tablet" hAlign="Center"  >
+                            <Column id="modelItem_seq2" minScreenWidth="Tablet" hAlign="Center"  >
                                 <Text text="Seq" />
                             </Column>
-                            <Column id="modelItem_description" minScreenWidth="Tablet" hAlign="Center"  >
+                            <Column id="modelItem_description2" minScreenWidth="Tablet" hAlign="Center"  >
                                 <Text text="Description" />
                             </Column> 
-                            <Column id="modelItem_moldItemType" minScreenWidth="Tablet" hAlign="Center"  >
+                            <Column id="modelItem_moldItemType2" minScreenWidth="Tablet" hAlign="Center"  >
                                 <Text text="Mold Item Type" />
                             </Column>
-                            <Column id="modelItem_bookCurrency" minScreenWidth="Tablet" hAlign="Center"  >
+                            <Column id="modelItem_bookCurrency2" minScreenWidth="Tablet" hAlign="Center"  >
                                   <Text text="Book Currency" />
                             </Column>					
-                            <Column id="modelItem_budgetAmount" minScreenWidth="Tablet" hAlign="Center"  >
+                            <Column id="modelItem_budgetAmount2" minScreenWidth="Tablet" hAlign="Center"  >
                                   <Text text="Budget Amount" />
                             </Column>					
                         </columns>
