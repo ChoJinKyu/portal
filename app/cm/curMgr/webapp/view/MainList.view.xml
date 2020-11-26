@@ -22,7 +22,7 @@
                 <f:expandedContent>
                 </f:expandedContent>
                 <f:actions>
-                    <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onPageSearchButtonPress" />
+                    <Button id="pageSearchButton" text="조회" type="Emphasized" press=".onPageSearchButtonPress" />
                 </f:actions>
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -75,7 +75,7 @@
                         <OverflowToolbar>
                             <Title text="통화관리 : ({= ${list>/CurrencyView}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
-                            <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
+                            <Button id="mainTableAddButton" text="생성" type="Transparent" press=".onMainTableAddButtonPress" />
                             <ToolbarSeparator/>
                             <!-- <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                                 <layoutData>

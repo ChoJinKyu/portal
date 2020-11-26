@@ -25,7 +25,7 @@
 		<Label text="사용여부"/>
 		<Text text="{
 				path: 'master>/use_flag',
-				formatter: '.formatter123.toYesNo'
+				formatter: '.formatter.toYesNo'
 			}"/>
 
 	</form:SimpleForm>
