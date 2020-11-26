@@ -62,7 +62,7 @@ sap.ui.define([
 				intent: "#Template-display"
 			}, true);
 			
-            //this._doInitSearch();
+            this._doInitSearch();
 
 			this.setModel(new ManagedListModel(), "list");
 			
@@ -71,12 +71,42 @@ sap.ui.define([
             this._doInitTablePerso();
             
         },
-        
+
+        _doInitTablePerso: function(){
+			// init and activate controller
+			this._oTPC = new TablePersoController({
+				table: this.byId("mainTable"),
+				componentName: "moldApprovalList",
+				persoService: ApprovalListPersoService,
+				hasGrouping: true
+			}).activate();
+		},
+        /**
+         * @private
+         * @see init 이후 바로 실행됨
+         */       
         onAfterRendering : function () {
 			this.byId("pageSearchButton").firePress();
 			return;
         },
 
+        /**
+         * @private
+         * @see 검색을 위한 컨트롤에 대하여 필요 초기화를 진행 합니다. 
+         */
+		_doInitSearch: function(){
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S";
+
+            this.getView().setModel(this.getOwnerComponent().getModel());
+
+            /** Date */
+            var today = new Date();
+            
+            this.getView().byId("searchRequestDateS").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
+            this.getView().byId("searchRequestDateS").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+            this.getView().byId("searchRequestDateE").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
+            this.getView().byId("searchRequestDateE").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+        },
         
 
         
@@ -578,53 +608,87 @@ sap.ui.define([
 		},
 		
 		_getSearchStates: function(){
-			// var sChain = this.getView().byId("searchChain").getSelectedKey(),
-			// 	sKeyword = this.getView().byId("searchKeyword").getValue(),
-			// 	sUsage = this.getView().byId("searchUsageSegmentButton").getSelectedKey();
-			
-			var aSearchFilters = [];
-			// if (sChain && sChain.length > 0) {
-			// 	aSearchFilters.push(new Filter("chain_code", FilterOperator.EQ, sChain));
-			// }
-			// if (sKeyword && sKeyword.length > 0) {
-			// 	aSearchFilters.push(new Filter({
-			// 		filters: [
-			// 			new Filter("control_option_code", FilterOperator.Contains, sKeyword),
-			// 			new Filter("control_option_name", FilterOperator.Contains, sKeyword)
-			// 		],
-			// 		and: false
-			// 	}));
-			// }
-			// if(sUsage != "all"){
-			// 	switch (sUsage) {
-			// 		case "site":
-			// 		aSearchFilters.push(new Filter("site_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 		case "company":
-			// 		aSearchFilters.push(new Filter("company_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 		case "org":
-			// 		aSearchFilters.push(new Filter("organization_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 		case "user":
-			// 		aSearchFilters.push(new Filter("user_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 	}
-			// }
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S"
+            
+            var aCompany = this.getView().byId("searchCompany"+sSurffix).getSelectedItems();
+
+            var sDateFrom = this.getView().byId("searchRequestDate"+sSurffix).getDateValue();
+            var sDateTo = this.getView().byId("searchRequestDate"+sSurffix).getSecondDateValue();
+
+			var sModel = this.getView().byId("searchModel").getValue().trim();
+            var	sPart = this.getView().byId("searchMoldPartNo").getValue().trim();
+            // var	sFamilyPart = this.getView().byId("searchFamilyPart").getValue().trim();
+            // var	sStatus = this.getView().byId("searchStatus").getSelectedKey();
+            
+            var aSearchFilters = [];
+            var companyFilters = [];
+            
+            if(aCompany.length > 0){
+
+                aCompany.forEach(function(item, idx, arr){
+                    companyFilters.push(new Filter("company_code", FilterOperator.EQ, item.mProperties.key ));
+                });
+
+                aSearchFilters.push(
+                    new Filter({
+                        filters: companyFilters,
+                        and: false
+                    })
+                );
+            }
+
+            var dateFilters = [];
+
+            dateFilters.push(
+                new Filter({
+                    path: "mold_spec_register_date",
+                    operator: FilterOperator.BT,
+                    value1: this.getFormatDate(sDateFrom),
+                    value2: this.getFormatDate(sDateTo)
+                })
+            );
+
+            dateFilters.push(new Filter("mold_spec_register_date", FilterOperator.EQ, ''));
+            dateFilters.push(new Filter("mold_spec_register_date", FilterOperator.EQ, null));
+
+            aSearchFilters.push(
+                new Filter({
+                    filters: dateFilters,
+                    and: false
+                })
+            );
+
+			if (sModel) {
+				aSearchFilters.push(new Filter("model", FilterOperator.StartsWith, sModel));
+            }
+            
+            if (sPart) {
+				aSearchFilters.push(new Filter("part_number", FilterOperator.StartsWith, sPart));
+            }
+            
+            // if (sFamilyPart) {
+			// 	aSearchFilters.push(new Filter("family_part_numbers", FilterOperator.Contains, sFamilyPart));
+            // }
+            
+            // if (sStatus) {
+			// 	aSearchFilters.push(new Filter("mold_spec_status_code", FilterOperator.EQ, sStatus));
+            // }
+            
+            console.log(aSearchFilters);
+
 			return aSearchFilters;
 		},
 		
-		_doInitTablePerso: function(){
-			// init and activate controller
-			this._oTPC = new TablePersoController({
-				table: this.byId("mainTable"),
-				componentName: "moldApprovalList",
-				persoService: ApprovalListPersoService,
-				hasGrouping: true
-			}).activate();
-		}
-
-        
+		
+        getFormatDate: function (date){
+            console.log(date);
+            var year = date.getFullYear();              //yyyy
+            var month = (1 + date.getMonth());          //M
+            month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+            var day = date.getDate();                   //d
+            day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+            return  year + '' + month + '' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+        }
 
 	});
 });
