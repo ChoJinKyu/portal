@@ -1193,6 +1193,7 @@ sap.ui.define([
                     }
                 };	      
                
+                //작업할부분
                 if(operationMode=="update"){
                
                     if(bUpdate){
