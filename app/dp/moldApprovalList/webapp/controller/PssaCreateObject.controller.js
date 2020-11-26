@@ -42,20 +42,12 @@ sap.ui.define([
 					busy : true,
 					delay : 0
                 });
-            var oResourceBundle = this.getResourceBundle();
-            this.getRouter().getRoute("pssaCreateObject").attachPatternMatched(this._onObjectMatched, this);
+           
             this.setModel(oViewModel, "pssaCreateObjectView"); 
-          
-            
-       	    this.addHistoryEntry({
-				title: oResourceBundle.getText("budgetReportObjectTitle"),
-				icon: "sap-icon://table-view",
-				intent: "#Template-display"
-            }, true);
-            
-            this.getView().setModel(new ManagedListModel(), "createlist");
+            this.getView().setModel(new ManagedListModel(),"createlist");
             this.getView().setModel(new ManagedListModel(),"appList"); // apporval list 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
+            this.getRouter().getRoute("pssaCreateObject").attachPatternMatched(this._onObjectMatched, this);
                  
         },   
         onAfterRendering : function () {
@@ -133,7 +125,10 @@ sap.ui.define([
                         "nameDept": "",
                         "status": "",
                         "comment": "" ,
-                        "editMode": true 
+                        "arrowUp": "" ,
+                        "arrowDown": "" ,
+                        "editMode": true , 
+                        "trashShow" : false 
                     });
                 }
         } ,
@@ -356,12 +351,10 @@ sap.ui.define([
                     model : oItem.getCells()[0].getText()
                     , moldPartNo : oItem.getCells()[1].getText()
                 });
-              
- 
-                console.log(" nItem >>>>> getText 1 " ,  oItem.getCells()[0].getText());   
-                console.log(" nItem >>>>> getText 2 " ,  oItem.getCells()[1].getText());   
-                console.log(" nItem >>>>> getText 3 " ,  oItem.getCells()[2].getText());   
-                console.log(" nItem >>>>> obj " ,  obj); 
+                // console.log(" nItem >>>>> getText 1 " ,  oItem.getCells()[0].getText());   
+                // console.log(" nItem >>>>> getText 2 " ,  oItem.getCells()[1].getText());   
+                // console.log(" nItem >>>>> getText 3 " ,  oItem.getCells()[2].getText());   
+                // console.log(" nItem >>>>> obj " ,  obj); 
                 that._addPsTable(obj);  
                 // oItem.getCells().forEach(function(nItem){ 
                 //      console.log(" nItem >>>>> getText " , nItem.getText());    
@@ -382,10 +375,15 @@ sap.ui.define([
                 });
         },
 
-         onExitEmployee: function () {
+        /**
+         * @description employee 팝업 닫기 
+         */
+        onExitEmployee: function () {
 			this.byId("dialogEmployeeSelection").close();
         },
-
+        /**
+         * @description employee 팝업 열기 
+         */
         handleEmployeeSelectDialogPress : function (oEvent) {
             console.group("handleEmployeeSelectDialogPress");    
             var oView = this.getView();
@@ -405,7 +403,9 @@ sap.ui.define([
 				oDialog.open();
 			});
         },
-
+        /**
+         * @description employee 팝업에서 apply 버튼 누르기 
+         */
         onEmploySelectionApply : function(){
             var oTable = this.byId("employeeSelectTable");
             var aItems = oTable.getSelectedItems();
@@ -416,15 +416,12 @@ sap.ui.define([
                     , moldPartNo : oItem.getCells()[1].getText()
                 });
                 that._approvalRowAdd(obj);
-                // oItem.getCells().forEach(function(nItem){ 
-                //      console.log(" nItem >>>>> getText " , nItem.getText());    
-                // });     
             });
             this.onExitEmployee();
         },
 
         /**
-         * @description Approval Row add 
+         * @description Approval Row에 add 하기 
          */
         _approvalRowAdd : function (obj){
             var oTable = this.byId("ApprovalTable"),
@@ -433,41 +430,63 @@ sap.ui.define([
             var oldItems = [];
             var that = this;
             aItems.forEach(function(oItem){ 
-                 console.log("oItem >>> " , oItem.mAggregations.cells[0].mProperties.text);
-                 console.log("oItem >>> " , oItem.mAggregations.cells[1].mProperties.selectedKey);
-                 console.log("oItem >>> " , oItem.mAggregations.cells[2].mProperties.value);
+               //  console.log("oItem >>> " , oItem.mAggregations.cells[0].mProperties.text);
+               //  console.log("oItem >>> " , oItem.mAggregations.cells[1].mProperties.selectedKey);
+               //  console.log("oItem >>> " , oItem.mAggregations.cells[2].mProperties.value);
                var item = { "no" : oItem.mAggregations.cells[0].mProperties.text ,
                             "type": oItem.mAggregations.cells[1].mProperties.selectedKey,
-                            "nameDept": oItem.mAggregations.cells[2].mProperties.value,
-                           
-                         } 
+                            "nameDept": oItem.mAggregations.cells[2].mProperties.value, } 
                 oldItems.push(item);
             });
-            
-            this.getView().setModel(new ManagedListModel(),"appList"); // reset 
+
+            this.getView().setModel(new ManagedListModel(),"appList"); // oldItems 에 기존 데이터를 담아 놓고 나서 다시 모델을 리셋해서 다시 담는 작업을 함 
             oModel = this.getModel("appList");
-            console.log("oldItems >>> " , oldItems);
+          //  console.log("oldItems >>> " , oldItems);
+
+           /** 기존 데이터를 새로 담는 작업 */
             var noCnt = 1;
-            for(var i = 0 ; i < oldItems.length-1 ; i++){
-                oModel.addRecord({
+            for(var i = 0 ; i < oldItems.length-1 ; i++){ 
+                if(oldItems.length > 1 && i == 0){ // 첫줄은 bottom 으로 가는 화살표만 , 생성되는 1줄만일 경우는 화살표 없기 때문에 1 보다 큰지 비교 
+                    oModel.addRecord({
                         "no": noCnt,
                         "type": oldItems[i].type,
                         "nameDept": oldItems[i].nameDept,
                         "status": "",
                         "comment": "" ,
-                        "editMode": false 
-                });
+                        "arrowUp": "" ,
+                        "arrowDown": "sap-icon://arrow-bottom" ,
+                        "editMode": false ,
+                        "trashShow" : true
+                    });
+                }else{
+                    oModel.addRecord({ // 중간 꺼는 위아래 화살표 모두 
+                        "no": noCnt,
+                        "type": oldItems[i].type,
+                        "nameDept": oldItems[i].nameDept,
+                        "status": "",
+                        "comment": "" ,
+                        "arrowUp": "sap-icon://arrow-top" ,
+                        "arrowDown": "sap-icon://arrow-bottom" ,
+                        "editMode": false,
+                        "trashShow" : true  
+                    });
+                }
                 noCnt++;
             }
 
+            /** 신규 데이터를 담는 작업 */
             oModel.addRecord({
                         "no": noCnt,
-                        "type": oldItems[oldItems.length-1].type,
+                        "type": oldItems[oldItems.length-1].type, // 마지막에 select 한 내용으로 담음 
                         "nameDept": obj.oData.moldPartNo,
                         "status": "",
                         "comment": "" ,
-                        "editMode": false 
+                        "arrowUp": noCnt == 1? "":"sap-icon://arrow-top" , // 생성되는 1줄만일 경우는 화살표 없기 때문에 1 보다 큰지 비교
+                        "arrowDown": "" ,
+                        "editMode": false ,
+                        "trashShow" : true 
                     });
+            /** 마지막 Search 하는 Row 담는 작업 */        
             noCnt++;       
             oModel.addRecord({
                         "no": noCnt,
@@ -475,9 +494,197 @@ sap.ui.define([
                         "nameDept": "",
                         "status": "",
                         "comment": "" ,
-                        "editMode": true 
+                        "arrowUp": "" ,
+                        "arrowDown": "" ,
+                        "editMode": true ,
+                        "trashShow" : false 
                     });
             
+        } ,
+        onSortUp : function(oParam){
+           // console.log(" btn onSortUp >>> ", oParam);
+      
+            var oTable = this.byId("ApprovalTable");
+            var aItems = oTable.getItems();
+            var oldItems = [];
+            var that = this;
+            aItems.forEach(function(oItem){ 
+               var item = { "no" : oItem.mAggregations.cells[0].mProperties.text ,
+                            "type": oItem.mAggregations.cells[1].mProperties.selectedKey,
+                            "nameDept": oItem.mAggregations.cells[2].mProperties.value, } 
+                oldItems.push(item);
+            });
+            console.log(" btn onSortUp >>> ", oldItems);
+            var actionData = {};
+            var reciveData = {};
+
+            for(var i = 0 ; i < oldItems.length -1 ; i++){
+                if(oParam == oldItems[i].no){
+                    actionData = {
+                        "no": (Number(oldItems[i].no)-1) + "" ,
+                        "type": oldItems[i].type,
+                        "nameDept": oldItems[i].nameDept,   
+                    };
+                    reciveData = {
+                        "no": (Number(oldItems[i-1].no)+1)+"" ,
+                        "type": oldItems[i-1].type,
+                        "nameDept": oldItems[i-1].nameDept,   
+                    } 
+                }
+            }
+
+            var nArray = [];
+            for(var i = 0 ; i < oldItems.length-1 ; i++){
+                if(oldItems[i].no == actionData.no ){
+                    nArray.push(actionData);
+                }else if( oldItems[i].no == reciveData.no){
+                    nArray.push(reciveData);
+                }else{
+                    nArray.push(oldItems[i])
+                }
+            }  
+            
+            this.setApprovalData(nArray);
+        } ,
+        onSortDown : function(oParam){
+            console.log(" btn onSortDown >>> ", oParam);
+       
+            var oTable = this.byId("ApprovalTable");
+            var aItems = oTable.getItems();
+            var oldItems = [];
+            var that = this;
+            aItems.forEach(function(oItem){ 
+               var item = { "no" : oItem.mAggregations.cells[0].mProperties.text ,
+                            "type": oItem.mAggregations.cells[1].mProperties.selectedKey,
+                            "nameDept": oItem.mAggregations.cells[2].mProperties.value, } 
+                oldItems.push(item);
+            });
+            console.log(" btn onSortUp >>> ", oldItems);
+            var actionData = {};
+            var reciveData = {};
+
+            for(var i = 0 ; i < oldItems.length -1 ; i++){
+                if(oParam == oldItems[i].no){
+                    actionData = {
+                        "no": (Number(oldItems[i].no)+1) + "" ,
+                        "type": oldItems[i].type,
+                        "nameDept": oldItems[i].nameDept,   
+                    };
+                    reciveData = {
+                        "no": (Number(oldItems[i+1].no)-1)+"" ,
+                        "type": oldItems[i+1].type,
+                        "nameDept": oldItems[i+1].nameDept,   
+                    } 
+                }
+            }
+
+            var nArray = [];
+            for(var i = 0 ; i < oldItems.length-1 ; i++){
+                if(oldItems[i].no == actionData.no ){
+                    nArray.push(actionData);
+                }else if( oldItems[i].no == reciveData.no){
+                    nArray.push(reciveData);
+                }else{
+                    nArray.push(oldItems[i])
+                }
+            }  
+            
+            this.setApprovalData(nArray);
+        },
+        setApprovalRemoveRow : function(oParam){ 
+            var that = this;
+            var oView = this.getView();
+            MessageBox.confirm("Are you sure ?", { // 삭제라서 컨펌창 띄움 
+				title : "Comfirmation",
+				initialFocus : sap.m.MessageBox.Action.CANCEL,
+				onClose : function(sButton) {
+					if (sButton === MessageBox.Action.OK) {
+						oView.setBusy(true);
+						console.log(" btn remove >>> ", oldItems);
+                        var oTable = that.byId("ApprovalTable");
+                        var aItems = oTable.getItems();
+                        var oldItems = [];
+                       
+                        aItems.forEach(function(oItem){ 
+                        var item = { "no" : oItem.mAggregations.cells[0].mProperties.text ,
+                                        "type": oItem.mAggregations.cells[1].mProperties.selectedKey,
+                                        "nameDept": oItem.mAggregations.cells[2].mProperties.value, } 
+                            oldItems.push(item);
+                        });
+                        var nArray = [];
+                        for(var i = 0 ; i < oldItems.length -1 ; i++){
+                            if(oParam != oldItems[i].no){
+                            nArray.push(oldItems[i]);
+                            }
+                        }
+                        that.setApprovalData(nArray);
+                        oView.setBusy(false);
+                         MessageToast.show("Success to delete.");
+					};
+				}
+			});
+        }, 
+        setApprovalData : function(dataList){ 
+            console.log("dataList " , dataList);
+            this.getView().setModel(new ManagedListModel(),"appList"); // oldItems 에 기존 데이터를 담아 놓고 나서 다시 모델을 리셋해서 다시 담는 작업을 함 
+            var oModel = this.getModel("appList");
+            var noCnt = 1;
+            for(var i = 0 ; i < dataList.length ; i++){ 
+                if(dataList.length > 0 && i == 0){ // 첫줄은 bottom 으로 가는 화살표만 , 생성되는 1줄만일 경우는 화살표 없기 때문에 1 보다 큰지 비교 
+                    oModel.addRecord({
+                        "no": noCnt,
+                        "type": dataList[i].type,
+                        "nameDept": dataList[i].nameDept,
+                        "status": "",
+                        "comment": "" ,
+                        "arrowUp": "" ,
+                        "arrowDown": "sap-icon://arrow-bottom" ,
+                        "editMode": false ,
+                        "trashShow" : true
+                    });
+                }else if(i == dataList.length-1){
+                    oModel.addRecord({ // 마지막 꺼는 밑으로 가는거 없음  
+                        "no": noCnt,
+                        "type": dataList[i].type,
+                        "nameDept": dataList[i].nameDept,
+                        "status": "",
+                        "comment": "" ,
+                        "arrowUp": "sap-icon://arrow-top" ,
+                        "arrowDown": "" ,
+                        "editMode": false,
+                        "trashShow" : true  
+                    });
+                
+                }else{
+                    oModel.addRecord({ // 중간 꺼는 위아래 화살표 모두 
+                        "no": noCnt,
+                        "type": dataList[i].type,
+                        "nameDept": dataList[i].nameDept,
+                        "status": "",
+                        "comment": "" ,
+                        "arrowUp": "sap-icon://arrow-top" ,
+                        "arrowDown": "sap-icon://arrow-bottom" ,
+                        "editMode": false,
+                        "trashShow" : true  
+                    });
+                }
+                noCnt++;
+            }
+
+             /** 마지막 Search 하는 Row 담는 작업 */            
+            oModel.addRecord({
+                        "no": noCnt,
+                        "type": "",
+                        "nameDept": "",
+                        "status": "",
+                        "comment": "" ,
+                        "arrowUp": "" ,
+                        "arrowDown": "" ,
+                        "editMode": true ,
+                        "trashShow" : false 
+                    });
         }
+
+
 	});
 });

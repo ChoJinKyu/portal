@@ -360,7 +360,7 @@
                             class="sapFDynamicPageAlignContent" 
                             updateFinished=".onListMainTableUpdateFinished"
                             rowSelectionChange = ".onCheck"
-                            mode="MultiSelect"
+                            mode="None"
                             width="auto"
                             items="{appList>/undefined}"
                             >
@@ -370,7 +370,7 @@
                             </OverflowToolbar>
                         </headerToolbar>
                         <columns>
-                            <Column id="no" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="5em" >
+                            <Column id="no" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="1.5em" >
                                 <Text text="No." />
                             </Column>
                             <Column id="type" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
@@ -385,10 +385,13 @@
                             <Column id="comment" minScreenWidth="Tablet" hAlign="Center" width="12em" >
                                 <Text text="Comment" />
                             </Column>
-                            <Column id="sort" minScreenWidth="Tablet" hAlign="Center" width="3em" >
+                            <Column id="up" minScreenWidth="Tablet" hAlign="Center" width="1.5em" >
                                   <Text text="" />
                             </Column>					
-                            <Column id="action" minScreenWidth="Tablet" hAlign="Center" width="3em" >
+                            <Column id="down" minScreenWidth="Tablet" hAlign="Center" width="1.5em" >
+                                  <Text text="" />
+                            </Column>					
+                            <Column id="action" minScreenWidth="Tablet" hAlign="Center" width="1.5em" >
                                   <Text text="" />
                             </Column>					
                         </columns>
@@ -413,8 +416,9 @@
                                     <SearchField id="searchField" enabled="{appList>editMode}" search=".onSearch" width="100%" placeholder="Search employee" value="{appList>nameDept}"/>
                                     <Text text="{appList>status}" />
                                     <Text text="{appList>comment}" />
-                                    <Button id="btnSort" icon="sap-icon://sort" press="onSort" tooltip="sort"></Button>
-                                    <Button id="btnDelete" icon="sap-icon://delete" press="onDelete" tooltip="삭제"></Button>
+                                    <Button id="btnSortUp" icon="{appList>arrowUp}" press=".onSortUp(${appList>no})" tooltip="sort" visible="{= ${appList>arrowUp}===''?false:true }"></Button>
+                                    <Button id="btnSortDown" icon="{appList>arrowDown}" press=".onSortDown(${appList>no})"  visible="{= ${appList>arrowDown}===''?false:true }" tooltip="sort"></Button>
+                                    <Button id="btnDelete" icon="sap-icon://delete" press=".setApprovalRemoveRow(${appList>no})" tooltip="삭제" visible="{appList>trashShow}"></Button>
                                 </cells>
                             </ColumnListItem>   
                         </items>
