@@ -79,17 +79,18 @@
                                         columnsM="2"
                                         columnsL="3"
                                         columnsXL="4">
-                                        <!-- {midObjectData>/mi_material_code} enabled="{midObjectView>/pageMode}"-->
+
                                         <Label text="시황자재코드" design="Bold" class="sapMLabelNoText"/>
-                                        <Input id="inputMaterialCode"
-                                        placeholder="자재코드 입력"
+                                        <Input id="inputMaterialCode" 
+                                        value="{midObjectData>/mi_material_code}" 
                                         class="sapUiSmallMarginEnd" 
-                                        />
+                                        enabled="{midObjectView>/pageMode}"/>
                                         <Button
                                             id="buttonMaterialCheck"
                                             width="9em"
                                             text="중복Check"
-                                            press=".onMaterialCodeCheckOpen"/> 
+                                            press=".onMaterialCodeCheckOpen" 
+                                            visible="{midObjectView>/pageMode}"/> 
 
                                         <Label text="Category 명" design="Bold" class="sapMLabelNoText"/>
                                         <ComboBox
@@ -101,7 +102,8 @@
                                         </ComboBox>
                                         <Label text="사용여부" design="Bold" class="sapMLabelNoText"/>
                                         <Switch 
-                                        id="switchUse_flag" >
+                                        id="switchUse_flag" 
+                                        state = "{midObjectData>/use_flag}">
                                             <layoutData>
                                                 <FlexItemData growFactor="1"/>
                                             </layoutData>
@@ -121,10 +123,11 @@
                                         <!-- items="{path : '/MIMaterialCodeText',filters: [{path: 'mi_material_code', operator: 'EQ', value1: '{= ${midObjectData>/mi_material_code}'}]}"
                                         updateFinished="onMitTableUpdateFinished"
                                         Note : mi_material_code 전달 받은 값으로 수정 
-                                         -->  
-                                         <Table
+                                         -->
+
+                                            <Table
                                                 id="midTableChange" 
-                                                items="{jCodeText>/}"
+                                                items="{path : '/MIMaterialCodeText',templateShareable:true}"
                                                 mode="MultiSelect"
                                                 width="100%">
                                                 <headerToolbar>
@@ -137,13 +140,12 @@
                                                     </OverflowToolbar>
                                                 </headerToolbar>
                                                 <columns>
-                                                                                             
-                                                    <Column hAlign="Center">
+                                                    <Column hAlign="Center" width="80px">
                                                         <header>
                                                             <Label text="Language"/>
                                                         </header>
                                                     </Column>
-                                                    <Column hAlign="Center">
+                                                    <Column hAlign="Center" width="80px">
                                                         <header>
                                                             <Label text="자재명"/>
                                                         </header>
@@ -153,16 +155,59 @@
                                                     <ColumnListItem>
                                                     <!--   MIMaterialCodeText-->
                                                         <cells>
-                                                            
                                                             <ComboBox
-                                                                selectedKey="{jCodeText>language_code}"
+                                                                id="language_code"
+                                                                selectedKey="{language_code}"
                                                                 items="{
-                                                                    path: 'jLanguageView>/',                                                                                                                            
+                                                                    path: '/LanguageView',                                                                                                                            
                                                                     templateShareable:false}"
                                                                 placeholder="선택하세요.">
-                                                                <core:Item key="{jLanguageView>code}" text="{jLanguageView>code_name}" />
+                                                                <core:Item key="{code}" text="{code_name}" />
                                                             </ComboBox>
-                                                            <Input  value="{jCodeText>mi_material_code_name}"/>
+                                                             <Input id="mi_material_code_name" value="{mi_material_code_name}"/>
+                                                        </cells>
+                                                    </ColumnListItem>
+                                                </items>
+                                            </Table>    
+                                         <Table
+                                                id="midTableChangeaa" 
+                                                items="{jCodeText}"
+                                                mode="MultiSelect"
+                                                width="100%">
+                                                <headerToolbar>
+                                                    <OverflowToolbar>
+                                                        <content>
+                                                            <ToolbarSpacer/>
+                                                            <Button id="buttonMidTableCreatej" text="Create" type="Transparent" press="onMidTableCreate"/>
+                                                            <Button id="buttonMidTableDeletej" text="Delete" type="Transparent" press="onMidTableDelete"/>
+                                                        </content>
+                                                    </OverflowToolbar>
+                                                </headerToolbar>
+                                                <columns>
+                                                    <Column hAlign="Center" width="80px">
+                                                        <header>
+                                                            <Label text="Language"/>
+                                                        </header>
+                                                    </Column>
+                                                    <Column hAlign="Center" width="80px">
+                                                        <header>
+                                                            <Label text="자재명"/>
+                                                        </header>
+                                                    </Column>
+                                                </columns>
+                                                <items>
+                                                    <ColumnListItem>
+                                                    <!--   MIMaterialCodeText-->
+                                                        <cells>
+                                                            <ComboBox
+                                                                selectedKey="{language_code}"
+                                                                items="{
+                                                                    path: '/jsonModelLanguage',                                                                                                                            
+                                                                    templateShareable:false}"
+                                                                placeholder="선택하세요.">
+                                                                <core:Item key="{code}" text="{code_name}" />
+                                                            </ComboBox>
+                                                             <Input  value="{mi_material_code_name}"/>
                                                         </cells>
                                                     </ColumnListItem>
                                                 </items>

@@ -7,17 +7,11 @@
 <VBox class="sapUiSmallMargin">
     <form:SimpleForm 
         editable="false"
-        maxContainerCols="3"
-        layout="ResponsiveGridLayout"
-        adjustLabelSpan="false"
-        labelSpanL="3"
-        labelSpanM="3"
-        emptySpanL="0"
-        emptySpanM="0"
+        layout="ColumnLayout"
+        columnsM="2"
         columnsL="3"
-        columnsM="3">
-            <VBox> 
-
+        columnsXL="3" >
+        <form:content>
                 <Label text="Inspection"/>
                 <RadioButtonGroup columns="2" width="100%" editable="false">
                     <RadioButton text="Yes" selected = "{spec>/inspection_flag}"/>
@@ -90,8 +84,8 @@
                     <core:Item key="{util>code}" text="{util>code_description}" />
                 </ComboBox>
 
-             </VBox>            
-            <VBox >
+             <!-- </VBox>            
+            <VBox > -->
                 <Label text="Assembly Approval"/> 
                 <RadioButtonGroup columns="2" width="100%" editable="false">
                     <RadioButton text="Yes" selected = "{spec>/assembly_approval_flag}"/>
@@ -151,8 +145,8 @@
                 <Label text="Use Machine"/>
                 <Input value="{spec>/mold_tonnage}" editable="false" class="readonlyField"/>
 
-            </VBox>            
-            <VBox >
+            <!-- </VBox>            
+            <VBox > -->
                 <Label text="Use Material"/> 
                 <Input value="{spec>/use_material_value}" editable="false" class="readonlyField"/>
                 <Label text="Sample Qty"/>
@@ -220,55 +214,50 @@
                 >
                     <core:Item key="{util>code}" text="{util>code_description}" />
                 </ComboBox>
-             </VBox>
+             <!-- </VBox> -->
+        </form:content>
     </form:SimpleForm>
         <form:SimpleForm 
             editable="false"
-            maxContainerCols="3"
-            layout="ResponsiveGridLayout"
-            adjustLabelSpan="false"
-            labelSpanL="3"
-            labelSpanM="3"
-            emptySpanL="0"
-            emptySpanM="0"
+            layout="ColumnLayout"
+            columnsM="2"
             columnsL="3"
-            columnsM="3">
+            columnsXL="3">
+            <form:content>
             <core:Title text="Spare Parts" />
-            <VBox>
+            <!-- <VBox> -->
                 <Label text="Eye-Bolt"/>
                 <Input value="{spec>/spare_part_eyebolt_count}" editable="false" class="readonlyField"/>
                 <Label text="Heater"/>
                 <Input value="{spec>/spare_part_heater_count}" editable="false" class="readonlyField"/>
 
-            </VBox>            
-            <VBox >
+            <!-- </VBox>            
+            <VBox > -->
                 <Label text="Ej-Sleeve"/> 
                 <Input value="{spec>/spare_part_ejslave_count}" editable="false" class="readonlyField"/>
                 <Label text="Speaker Core"/>
                 <Input value="{spec>/spare_part_speaker_core_count}" editable="false" class="readonlyField"/>
 
-            </VBox>            
-            <VBox >
+            <!-- </VBox>            
+            <VBox > -->
                 <Label text="Ejector-Pin"/> 
                 <Input value="{spec>/spare_part_ejector_pin_count}" editable="false" class="readonlyField"/>
                 <Label text="Etc."/>
                 <Input value="{spec>/spare_part_etc_count}" editable="false" class="readonlyField"/>
-            </VBox>
+            <!-- </VBox> -->
+            </form:content>
     </form:SimpleForm>
 
     <form:SimpleForm 
             editable="false"
-            maxContainerCols="3"
-            layout="ResponsiveGridLayout"
+            layout="ColumnLayout"
             adjustLabelSpan="false"
-            labelSpanL="3"
-            labelSpanM="3"
-            emptySpanL="0"
-            emptySpanM="0"
+            columnsM="2"
             columnsL="3"
-            columnsM="3">
+            columnsXL="3">
+            <form:content>
             <core:Title text="Mold Meterial" />
-            <VBox>
+            <!-- <VBox> -->
                 <Label text="Cavity/Punch"/>
                 <ComboBox   width="100%"
                             selectedKey="{spec>/mold_cavity_material_name}"
@@ -301,8 +290,8 @@
                 </ComboBox>
                 <Label text="Cycle Time"/>
                 <Input value="{spec>/cycle_time}" editable="false" class="readonlyField"/>
-            </VBox>            
-            <VBox >
+            <!-- </VBox>            
+            <VBox > -->
                 <Label text="Core/Die"/> 
                 <ComboBox   width="100%"
                             selectedKey="{spec>/mold_core_material_name}"
@@ -334,8 +323,8 @@
                     <core:Item key="{util>code}" text="{util>code_description}" />
                 </ComboBox>
 
-            </VBox>            
-            <VBox >
+            <!-- </VBox>            
+            <VBox > -->
                 <Label text="Slide Core"/> 
                 <ComboBox   width="100%"
                             selectedKey="{spec>/slide_core_material_name}"
@@ -366,7 +355,8 @@
                 >
                     <core:Item key="{util>code}" text="{util>code_description}" />
                 </ComboBox>
-            </VBox>
+            <!-- </VBox> -->
+        </form:content>
     </form:SimpleForm>
 	</VBox>
 </core:FragmentDefinition>

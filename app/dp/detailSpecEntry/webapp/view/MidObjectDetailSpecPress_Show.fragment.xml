@@ -7,16 +7,11 @@
 <VBox class="sapUiSmallMargin">
     <form:SimpleForm 
         editable="false"
-        maxContainerCols="3"
-        layout="ResponsiveGridLayout"
-        adjustLabelSpan="false"
-        labelSpanL="3"
-        labelSpanM="3"
-        emptySpanL="0"
-        emptySpanM="0"
+        layout="ColumnLayout"
+        columnsM="2"
         columnsL="3"
-        columnsM="3">
-            <VBox> 
+        columnsXL="3" >
+        <form:content>
 
                 <Label text="Mold Test"/>
                 <RadioButtonGroup columns="2" width="100%" editable="false">
@@ -30,8 +25,8 @@
                 <Label text="Size"/>
                 <Text text="{spec>/mold_size}"></Text>
 
-             </VBox>            
-            <VBox >
+             <!-- </VBox>            
+            <VBox > -->
                 <Label text="Assembly Approval"/> 
                 <RadioButtonGroup columns="2" width="100%" editable="false">
                     <RadioButton text="Yes" selected = "{spec>/assembly_approval_flag}"/>
@@ -45,8 +40,8 @@
                 <Text text="{spec>/press_open_size}"></Text>
 
 
-            </VBox>            
-            <VBox >
+            <!-- </VBox>            
+            <VBox > -->
                 <Label text="Use Material"/> 
                 <Text text="{spec>/use_material_value}"/>
                 <Label text="Process Qty"/>
@@ -55,76 +50,71 @@
                 <Text text="{spec>/press_material_thickness}"></Text>
                 <Label text="Material Size"/>
                 <Text text="{spec>/press_material_size}"></Text>
-             </VBox>
+             <!-- </VBox> -->
+        </form:content>
     </form:SimpleForm>
-        <form:SimpleForm 
-            editable="false"
-            maxContainerCols="3"
-            layout="ResponsiveGridLayout"
-            adjustLabelSpan="false"
-            labelSpanL="3"
-            labelSpanM="3"
-            emptySpanL="0"
-            emptySpanM="0"
-            columnsL="3"
-            columnsM="3">
+    <form:SimpleForm 
+        editable="false"
+        layout="ColumnLayout"
+        columnsM="2"
+        columnsL="3"
+        columnsXL="3" >
+        <form:content>
             <core:Title text="Spare Parts" />
-            <VBox>
+            <!-- <VBox> -->
                 <Label text="P-Punch"/>
                 <Text text="{spec>/spare_part_p_punch_count}"/>
                 <Label text="Die Button"/>
                 <Text text="{spec>/spare_part_die_button_count}"/>
 
-            </VBox>            
-            <VBox >
+            <!-- </VBox>            
+            <VBox > -->
                 <Label text="B-Punch"/> 
                 <Text text="{spec>/spare_part_b_punch_count}"/>
                 <Label text="Ejector Pin"/>
                 <Text text="{spec>/spare_part_ejector_pin_count}"/>
 
-            </VBox>            
-            <VBox >
+            <!-- </VBox>            
+            <VBox > -->
                 <Label text="Spring"/> 
                 <Text text="{spec>/spare_part_spring_count}"/>
                 <Label text="Etc. Press"/>
                 <Text text="{spec>/spare_part_etc_count}"/>
-            </VBox>
+            <!-- </VBox> -->
+        </form:content>
     </form:SimpleForm>
 
     <form:SimpleForm 
-            editable="false"
-            maxContainerCols="3"
-            layout="ResponsiveGridLayout"
-            adjustLabelSpan="false"
-            labelSpanL="3"
-            labelSpanM="3"
-            emptySpanL="0"
-            emptySpanM="0"
-            columnsL="3"
-            columnsM="3">
+        editable="false"
+        layout="ColumnLayout"
+        columnsM="2"
+        columnsL="3"
+        columnsXL="3" >
+        <form:content>
             <core:Title text="Press Meterial" />
-            <VBox>
+            <!-- <VBox> -->
                 <Label text="Top Holder"/>
                 <Text text="{spec>/top_holder_material_name}"/>
                 <Label text="Stripper"/>
                 <Text text="{spec>/stripper_material_name}"/>
                 <Label text="Pad Valve"/>
                 <Text text="{spec>/pad_valve_material_name}"/>
-            </VBox>            
-            <VBox >
+            <!-- </VBox>            
+            <VBox > -->
                 <Label text="Bottom Holder"/> 
                 <Text text="{spec>/bottom_holder_material_name}"/>
                 <Label text="Punch Holder"/>
                 <Text text="{spec>/punch_holder_material_name}"/>
                 <Label text="Pad"/>
                 <Text text="{spec>/pad_material_name}"/>
-            </VBox>            
-            <VBox >
+            <!-- </VBox>            
+            <VBox > -->
                 <Label text="Die"/> 
                 <Text text="{spec>/die_material_name}"/>
                 <Label text="Punch"/>
                 <Text text="{spec>/punch_material_name}"/>
-            </VBox>
+            <!-- </VBox> -->
+        </form:content>
     </form:SimpleForm>
 	</VBox>
 </core:FragmentDefinition>

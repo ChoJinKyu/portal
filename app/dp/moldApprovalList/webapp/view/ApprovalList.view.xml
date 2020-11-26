@@ -153,7 +153,7 @@
                     </form:SimpleForm>
                 </f:expandedContent>
                 <f:actions>
-                    <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onSelectDialogPress" />
+                    <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onPageSearchButtonPress" />
                 </f:actions>
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -167,11 +167,17 @@
                     <form:content>
                         <VBox>
                             <Label text="Model " labelFor="searchModel"></Label>
-                            <Input id="searchModel" showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".approvalDialogOpen"  width="100%">
-                                <!-- <customData>
-                                    <core:CustomData key="multi" value="true" />
-                                    <core:CustomData key="confirmButtonText" value="Apply" />
-                                </customData> -->
+                            <Input id="searchModel" 
+                                    showValueHelp="true"  
+                                    valueHelpRequest=".onValueHelpRequested"
+                                    suggestionItems="{
+                                        path: '/Models',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                        ],
+                                        sorter: { path: 'model' }
+                            }">
+                                <core:Item key="{model}" text="{model}" />
                             </Input>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
@@ -179,12 +185,18 @@
                         </VBox>
                         <VBox>
                             <Label text="Mold Part No " labelFor="searchMoldPartNo"></Label>
-                            <MultiInput id="searchMoldPartNo" valueHelpOnly="true" width="100%" valueHelpRequest=".approvalDialogOpen">
-                                <customData>
-                                    <core:CustomData key="multi" value="true" />
-                                    <core:CustomData key="confirmButtonText" value="Apply" />
-                                </customData>
-                            </MultiInput>
+                            <Input id="searchMoldPartNo" 
+                                    showValueHelp="true"  
+                                    valueHelpRequest=".onValueHelpRequested"
+                                    suggestionItems="{
+                                        path: '/PartNumbers',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                        ],
+                                        sorter: { path: 'part_number' }
+                            }">
+                                <core:Item key="{part_number}" text="{part_number}" />
+                            </Input>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -238,7 +250,7 @@
                         rowSelectionChange = ".onCheck"
                         mode="MultiSelect"
                         width="auto"
-                        items="{list>/}">
+                        items="{list>/MoldMasterSpec}">
                     <headerToolbar>
                         <OverflowToolbar>
                             <Title text="Approval List ({= ${list>/}.length || 0})" level="H2"/>
@@ -288,14 +300,14 @@
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>
-                                <ObjectIdentifier text="{list>mold_id}"/>
-                                <ObjectIdentifier text="{list>use_material_value}"/>
-                                <ObjectIdentifier text="{list>inspection_flag}"/>
-                                <ObjectIdentifier text="{list>assembly_approval_flag}"/>
-                                <ObjectIdentifier text="{list>request_life_shot_count}"/>
-                                <ObjectIdentifier text="{list>order_qty}"/>
-                                <ObjectIdentifier text="{list>cavity_process_qty}"/>
-                                <ObjectIdentifier text="{list>mold_tonnage}"/>
+                                <ObjectIdentifier text="{list>company_name}" />
+                                <ObjectIdentifier text="{list>org_name}" />
+                                <ObjectIdentifier text="{list>model}" />
+                                <ObjectIdentifier text="{list>part_number}" />
+                                <ObjectIdentifier text="{list>mold_sequence}" />
+                                <ObjectIdentifier text="{list>spec_name}" />
+                                <ObjectIdentifier text="{list>mold_spec_status_name}" />
+                                <ObjectIdentifier text="{list>mold_item_type_name}" />
                             </cells>
                         </ColumnListItem>
                     </items>
