@@ -217,7 +217,46 @@ sap.ui.define([
             
         },
         onPsDelRow : function(){},
-        onPsSupplier : function(){},
+        /**
+         * @description Participating Supplier 의 Supplier Select 버튼 누를시 나오는 팝업 
+         *              , 테이블의 row 가 선택되어 있지 않으면 supplier 세팅 안됨 
+         */
+        onPsSupplier : function(){
+	        this._oSupplierDialog = sap.ui.xmlfragment("dp.moldApprovalList.view.SuplierSelect", this);
+			this.getView().addDependent(this._oSupplierDialog);
+
+			this._oSupplierDialog.getTableAsync().then(function (oTable) {
+				oTable.setModel(this.oProductsModel);
+				oTable.setModel(this.oColModel, "columns");
+
+				if (oTable.bindRows) {
+					oTable.bindAggregation("rows", "purOrg>/Pur_Operation_Org");
+				}
+
+				if (oTable.bindItems) {
+					oTable.bindAggregation("items", "purOrg>/Pur_Operation_Org", function () {
+						return new ColumnListItem({
+							cells: aCols.map(function (column) {
+								return new Label({ text: "{" + column.template + "}" });
+							})
+						});
+					});
+				}
+				this._oSupplierDialog.update();
+			}.bind(this));
+
+		//	this._oSupplierDialog.setTokens(this._oMultiInput.getTokens());
+			this._oSupplierDialog.open();
+        },
+	    onValueHelpOkPress: function (oEvent) {
+			var aTokens = oEvent.getParameter("tokens");
+		//	this._oMultiInput.setTokens(aTokens);
+			this._oSupplierDialog.close();
+		},
+
+		onValueHelpCancelPress: function () {
+			this._oSupplierDialog.close();
+		},
 
 		_oFragments: {},
         onCheck : function(){ console.log("onCheck") },
@@ -362,6 +401,7 @@ sap.ui.define([
             });
             this.onExit();
         },
+
         /**
          * @description participating row 추가 
          * @param {*} data 
@@ -374,7 +414,6 @@ sap.ui.define([
                     "moldPartNo": data.oData.moldPartNo,
                 });
         },
-
         /**
          * @description employee 팝업 닫기 
          */
@@ -385,23 +424,32 @@ sap.ui.define([
          * @description employee 팝업 열기 
          */
         handleEmployeeSelectDialogPress : function (oEvent) {
-            console.group("handleEmployeeSelectDialogPress");    
-            var oView = this.getView();
-            var oButton = oEvent.getSource();
-			if (!this._oDialog) {
-				this._oDialog = Fragment.load({ 
-                    id: oView.getId(),
-					name: "dp.moldApprovalList.view.Employee",
-					controller: this
-				}).then(function (oDialog) {
-				    oView.addDependent(oDialog);
-					return oDialog;
-				}.bind(this));
-            } 
-            
-            this._oDialog.then(function(oDialog) {
-				oDialog.open();
-			});
+
+            var oTable = this.byId("ApprovalTable"),
+                oModel = this.getModel("appList"); 
+            var aItems = oTable.getItems();
+            if(aItems[aItems.length-1].mAggregations.cells[1].mProperties.selectedKey == undefined 
+                || aItems[aItems.length-1].mAggregations.cells[1].mProperties.selectedKey == ""){
+                MessageToast.show("Type 을 먼저 선택해주세요.");
+            }else{
+                console.group("handleEmployeeSelectDialogPress");    
+                var oView = this.getView();
+                var oButton = oEvent.getSource();
+                if (!this._oDialog) {
+                    this._oDialog = Fragment.load({ 
+                        id: oView.getId(),
+                        name: "dp.moldApprovalList.view.Employee",
+                        controller: this
+                    }).then(function (oDialog) {
+                        oView.addDependent(oDialog);
+                        return oDialog;
+                    }.bind(this));
+                } 
+                
+                this._oDialog.then(function(oDialog) {
+                    oDialog.open();
+                });
+            }           
         },
         /**
          * @description employee 팝업에서 apply 버튼 누르기 
@@ -683,7 +731,7 @@ sap.ui.define([
                         "editMode": true ,
                         "trashShow" : false 
                     });
-        }
+        } , 
 
 
 	});
