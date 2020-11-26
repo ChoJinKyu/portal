@@ -139,8 +139,8 @@
                                                     <OverflowToolbar>
                                                         <content>
                                                             <ToolbarSpacer/>
-                                                            <Button id="buttonMidTableCreate" text="Add" type="Transparent" press="onMidTableCreate"/>
-                                                            <Button id="buttonMidTableDelete" text="Delete" type="Transparent" press="onMidTableDelete"/>
+                                                            <Button id="buttonMidTableCreate" text="Add" type="Transparent" press=".onMidTableCreate"/>
+                                                            <Button id="buttonMidTableDelete" text="Delete" type="Transparent" press=".onMidTableDelete"/>
                                                         </content>
                                                     </OverflowToolbar>
                                                 </headerToolbar>

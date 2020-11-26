@@ -771,29 +771,43 @@ sap.ui.define([
             
             var oSelected  = oTable.getSelectedContexts();
 
-                  //Edit 작업시 진행할 삭제된 행 정보를 담는다. 
+            //Edit 작업시 진행할 삭제된 행 정보를 담는다. 
                 
             var deleteOModel = new JSONModel();
-           
-
+            deleteOModel = {
+                item : [],
+                flag : false
+            };
+  
             if (oSelected.length > 0) {
     
                 for ( var i = 0;i<oSelected.length ; i++) {
                     var idx = parseInt(oSelected[0].sPath.substring(oSelected[0].sPath.lastIndexOf('/') + 1));
-                    
-                    //json 데이타 바로 삭제일때.   
 
-                    //oModel.splice(idx, 1);
-                    deleteOModel.oData[idx] = oModel.oData[idx];
-                    oModel.oData.splice(idx, 1);
+                    //property
+                    if(oSelected[0].sPath.length>4){
+                        var sServicePath = oModel.oData[idx].__metadata.uri;
+                        var arrS = sServicePath.split("pg.marketIntelligenceService");
+                        var sUrl = arrS[1];    
+
+                        deleteOModel.item.push(sUrl);
+                        deleteOModel.setProperty("/flag" , true);
+                        oModel.oData.splice(idx, 1);
+                    }else{
+                        oModel.oData.splice(idx, 1);
+                    }
+                       
+
+
+  
+
                     oModel.refresh();
 
                     //json 업데이트 
                     //oModel.oData[idx].state="D"
                 }
             
-
-                that.setModel(deleteOModel, "deleteOModel");
+                this.getOwnerComponent().setModel(deleteOModel, "deleteOModel");
         
                 that.getView().setBusy(false);                       
                 oTable.removeSelections();
@@ -924,8 +938,10 @@ sap.ui.define([
             var oMi_material_code = midObjectData.getProperty("/mi_material_code");
 
             //신규
+            var mode = "U";
             if(!midObjectView.getProperty("/pageMode")){
-                oMi_material_code = sap.ui.core.Fragment.byId("Change_id","inputMaterialCode"); 
+                oMi_material_code = sap.ui.core.Fragment.byId("Change_id","inputMaterialCode"); []
+                mode = "C";
             }
 
             var items = {
@@ -941,7 +957,8 @@ sap.ui.define([
                     "create_user_id": "Admin",
                     "update_user_id": "Admin",
                     "system_create_dtm": new Date(),
-                    "system_update_dtm": new Date()
+                    "system_update_dtm": new Date(),
+                    "mode" : mode
             };
  
             oModel.oData.push(items);
@@ -1085,12 +1102,6 @@ sap.ui.define([
                     groupID = "updateGroup";   
                     operationMode = "update"; 
 
-                    //deleteOModel.oData
-
-                    //삭제 정보가 등록된 모델을 참조한다.
-                    //이후 정보는 업데이트 진행한다. 
-
-
                 }
 
                 oModel.setDeferredGroups(oModel.getDeferredGroups().concat([groupID]));
@@ -1098,7 +1109,9 @@ sap.ui.define([
                 vMi_material_code_name="";
 
          
+                var bUpdate = false;
                 var arrTParameters= [];
+                var carrTParameters= [];
                 //언어별 테이블 내용을 각 타입별로 저장한다.     
                 for (var idx = 0; idx < oTable.getItems().length; idx++){
 
@@ -1112,8 +1125,7 @@ sap.ui.define([
                         vMi_material_code_name = mi_material_code_name;
                     }
 
-
-                    //키 값은 제외 한다. 
+                    //키 값은 제외 한다.
                     var tParameters = {                        
                             "mi_material_code_name": mi_material_code_name,
                             "local_create_dtm": new Date(),
@@ -1124,10 +1136,34 @@ sap.ui.define([
                             "system_update_dtm": new Date()                          
                     };
 
+                    //테이블 아이템 등록일때.
+                    var cParameters = {
+                        "groupId": groupID,
+                        "properties" : {   
+                            "tenant_id": midObjectData.getProperty("/tenant_id"),
+                            "company_code": midObjectData.getProperty("/company_code"),
+                            "org_type_code": midObjectData.getProperty("/org_type_code"),
+                            "org_code": midObjectData.getProperty("/org_code"),
+                            "mi_material_code": midObjectData.getProperty("/mi_material_code"),
+                            "language_code": language_code,
+                            "mi_material_code_name": mi_material_code_name,
+                            "local_create_dtm": new Date(),
+                            "local_update_dtm": new Date(),
+                            "create_user_id": "Admin",
+                            "update_user_id": "Admin",
+                            "system_create_dtm": new Date(),
+                            "system_update_dtm": new Date()  
+                        }  
+                    };
+
                     if(operationMode=="update"){
                         arrTParameters.push(tParameters);
+
+                        //업데이트 모드에서 행 추가 
+                        carrTParameters.push(cParameters);
+                        bUpdate = true;
                     }else{
-                        oModel.createEntry("/MIMaterialCodeText", tParameters); 
+                        oModel.createEntry("/MIMaterialCodeText", cParameters); 
                     }
                 }
 
@@ -1159,73 +1195,47 @@ sap.ui.define([
                
                 if(operationMode=="update"){
                
-                    var oData = new JSONModel();
-                    oData.setData(ojCodeTextModel.getData()); 
-
-                    for (var idx = 0; idx < oTable.getItems().length; idx++){
-
-                        var sPath = oTable.getItems()[idx].getBindingContextPath();
-                        var replaceSPatch = sPath.replace("/","");
-                        var sServicePath = oData.oData[replaceSPatch].__metadata.uri;
-                        var arrS = sServicePath.split("pg.marketIntelligenceService");
-                        var sUrl = arrS[1];    
+                    if(bUpdate){
+                        var oData = new JSONModel();
+                        oData.setData(ojCodeTextModel.getData()); 
                         
-                        oModel.update(sUrl, arrTParameters[idx], {groupId: groupID});
+                        for (var idx = 0; idx < oTable.getItems().length; idx++){
 
-                       // oModel.update(sUrl, arrTParameters[idx]);                   
-                       
-                    }
+                            var sPath = oTable.getItems()[idx].getBindingContextPath();
+                            var replaceSPatch = sPath.replace("/","");
+                  
+                            if(oData.oData[replaceSPatch].hasOwnProperty("__metadata")){
+                                var sServicePath = oData.oData[replaceSPatch].__metadata.uri;
+                                var arrS = sServicePath.split("pg.marketIntelligenceService");
+                                var sUrl = arrS[1];                                    
+                                oModel.update(sUrl, arrTParameters[idx], {groupId: groupID});
+                            }
+                        }
 
-                    // oTable.getItems().forEach(function(oItem){
-                    //     var sPath = oItem.getBindingContextPath();	
-                        
+                        for (var idx = 0; idx < oTable.getItems().length; idx++){
+                           
+                        }
 
-                    //     var replaceSPatch = sPath.replace("/","");
-                        
-                    //     var sServicePath = ojCodeTextModel.oData[replaceSPatch].__metadata.uri;
-                        
-                    //     var arrS = sServicePath.split("pg.marketIntelligenceService");
-                    //     debugger;
-                    //     var sUrl = arrS[1];
-                    //     //삭제나 키를 모두 비교하지 않고 그냥 업데이트 했을경우                         
-                    //     oModel.update(sUrl, arrTParameters[i]);
-
-                    //     i++;
-                    //     // var aRecords = oData.results || oData || [],
-                    //     //     sPath = arrS[1],
-                    //     //     oResult = {};
-                    //     // aRecords.forEach(function (oItem) {
-                    //     //     if (oItem.__metadata && oItem.__metadata.uri) {
-                    //     //         var sType = oItem.__metadata.type,
-                    //     //             sUrl = oItem.__metadata.uri;
-                    //     //         sType = sType.substring(0, sType.lastIndexOf("."));
-                    //     //         oItem.__entity = sUrl.substring(sUrl.indexOf(sType) + sType.length);
-                    //     //     }
-                    //     // });
-                    //     // debugger;
-                    //     // oResult.entityName = sPath.substring(1);
-                    //     // oResult[oResult.entityName] = aRecords;
-                    //     // JSONModel.prototype.setData.call(this, oResult, true);
-
-                    //     //pg.marketIntelligenceService/
-                    //     //MIMaterialCodeText(tenant_id='L2100',company_code='%2A',org_type_code='BU',org_code='BIZ00100',mi_material_code='NIC-001-03',language_code='EN')"
-
- 
-
-                        
-                    //     //oModel.update("/Products(999)", oData, {success: mySuccessHandler, error: myErrorHandler});
-
-                    // });
+                        //작업을 완료하고 비워 준다. 
+                        arrTParameters = null;
+                 
+                    //삭제에 담아둔 행을 삭제 한다. 
+                    var deleteOModel = this.getOwnerComponent().getModel("deleteOModel");
                     
-                   // var oModel = this.getView().get Model();
+                    if(typeof deleteOModel!=="undefined"){
+                        
+                        if(deleteOModel.flag){
+                            if(deleteOModel.item.length>0){
+                                for(var idx =0; idx< deleteOModel.item.length;idx++){
+                                    var sServicePath = deleteOModel.item[idx];
+                                    oModel.remove(sServicePath, {groupId: groupID});
+                                }
+                                //작업을 마치고 비워준다. 
+                                deleteOModel.setData([]);
+                            }
 
-                    // oModel.setChangeGroups({
-                    //     "MIMaterialCodeText": {
-                    //         groupId: groupID,  
-                    //         changeSetId: "ID",
-                    //         single: true,
-                    //     }
-                    // )};
+                        }
+                    }
 
                     oModel.submitChanges({
                         groupId: groupID, 
