@@ -204,11 +204,33 @@ sap.ui.define([
 		 * @public
 		 */
         onPageCancelEditButtonPress: function(){
-			if(this.getModel("midObjectView").getProperty("/isAddedMode") == true){
-				this.onPageNavBackButtonPress.call(this);
-			}else{
-				this._toShowMode();
-			}
+			// if(this.getModel("midObjectView").getProperty("/isAddedMode") == true){
+			// 	this.onPageNavBackButtonPress.call(this);
+			// }else{
+			// 	this._toShowMode();
+            // }
+            var oView = this.getView();
+            var sTenantId = this._sTenantId;
+            if (sTenantId === "new"){
+                this.onPageNavBackButtonPress();
+            }else if (sTenantId !== "new"){
+                
+                this.getModel("midObjectView").setProperty("/isAddedMode", false);                
+                this._bindView("/UomClass(tenant_id='" + this._sTenantId + "',uom_class_code='" + this._sUomClassCode + "')");
+				oView.setBusy(true);
+				var oDetailsModel = this.getModel("details");
+				oDetailsModel.setTransactionModel(this.getModel());				
+                oDetailsModel.read("/UomClassLng", {
+					filters: [
+						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+						new Filter("uom_class_code", FilterOperator.EQ, this._sUomClassCode),
+					],
+					success: function(oData){
+						oView.setBusy(false);
+					}
+				});
+                this._toShowMode();
+            }
         },
 
 		/* =========================================================== */
