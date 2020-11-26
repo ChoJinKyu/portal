@@ -18,7 +18,7 @@
                     <Title text="{i18n>appTitle}" />
                 </f:heading>
                 <f:snappedContent>
-                    <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                    <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="3">
                         <form:content>
                             <VBox>
                                 <Label text="LG Company" labelFor="searchCompanyS" required="true"></Label>
@@ -66,7 +66,7 @@
                     </form:SimpleForm>
                 </f:snappedContent>
                 <f:expandedContent>
-                    <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                    <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="3">
                         <form:content>
                             <VBox>
                                 <Label text="LG Company" labelFor="searchCompanyE"  required="true"></Label>
@@ -104,7 +104,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="Date" labelFor="searchDateE" required="true"></Label>
-                                <DateRangeSelection id="searchDateE" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD"/>
+                                <DateRangeSelection id="searchDateE" valueFormat = "yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD"/>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
@@ -125,18 +125,40 @@
         <f:header>
             <f:DynamicPageHeader pinnable="true">
 
-                <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="3">
                     <form:content>
                         <VBox>
                             <Label text="Model" labelFor="searchModel"></Label>
-                            <Input id="searchModel" showValueHelp="true"  valueHelpRequest=".onValueHelpRequested"></Input>
+                            <Input id="searchModel" 
+                                    showValueHelp="true"  
+                                    valueHelpRequest=".onValueHelpRequested"
+                                    suggestionItems="{
+                                        path: '/Models',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                        ],
+                                        sorter: { path: 'model' }
+                            }">
+                                <core:Item key="{model}" text="{model}" />
+                            </Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="Part No" labelFor="searchPart"></Label>
-                            <Input id="searchPart" showValueHelp="true"  valueHelpRequest=".onValueHelpRequested"></Input>
+                            <Input id="searchPart" 
+                                    showValueHelp="true"  
+                                    valueHelpRequest=".onValueHelpRequested"
+                                    suggestionItems="{
+                                        path: '/PartNumbers',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                        ],
+                                        sorter: { path: 'part_number' }
+                            }">
+                                <core:Item key="{part_number}" text="{part_number}" />
+                            </Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
@@ -238,7 +260,8 @@
                                 <ObjectIdentifier text="{list>mold_spec_status_name}" />
                                 <ObjectIdentifier text="{list>mold_item_type_name}" />
                                 <ObjectIdentifier text="{list>user_name}" />
-                                <ObjectIdentifier text="{list>last_update_date}" />
+                                <!-- <ObjectIdentifier text="{list>mold_spec_register_date}"/> -->
+                                <DatePicker value="{list>mold_spec_register_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
                                 <ObjectIdentifier text="{list>family_part_numbers}" />
                             </cells>
                         </ColumnListItem>

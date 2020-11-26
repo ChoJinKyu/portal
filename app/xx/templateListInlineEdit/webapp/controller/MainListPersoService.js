@@ -5,44 +5,38 @@ sap.ui.define(["jquery.sap.global"],
         var _aColunns = [
             {
                 id: "templateListInlineEdit-mainList-mainColumnState",
-                order: 0,
+                order: 9,
                 text: "State",
                 visible: false
             },
             {
                 id: "templateListInlineEdit-mainList-mainColumnChainCode",
-                order: 0,
-                text: "{i18nd>/lblChain}",
+                order: 1,
+                text: "{I18N>/CHAIN}",
                 visible: true
             },
             {
                 id: "templateListInlineEdit-mainList-mainColumnLanguageCode",
-                order: 1,
-                text: "{i18nd>/lblLanguage}",
-                visible: false
-            },
-            {
-                id: "templateListInlineEdit-mainList-mainColumnMessageCode",
                 order: 2,
-                text: "{i18nd>/lblCode}",
-                visible: false
-            },
-            {
-                id: "templateListInlineEdit-mainList-mainColumnMessageContents",
-                order: 3,
-                text: "{i18nd>/lblContents}",
+                text: "{I18N>/LANGUAGE}",
                 visible: true
             },
             {
-                id: "templateListInlineEdit-mainList-mainColumnGroupCode",
+                id: "templateListInlineEdit-mainList-mainColumnMessageCode",
+                order: 3,
+                text: "{I18N>/CODE}",
+                visible: true
+            },
+            {
+                id: "templateListInlineEdit-mainList-mainColumnMessageContents",
                 order: 4,
-                text: "{i18nd>/lblGroup}",
+                text: "{I18N>/CONTENTS}",
                 visible: true
             },
             {
                 id: "templateListInlineEdit-mainList-mainColumnMessageTypeCode",
                 order: 5,
-                text: "{i18nd>/lblType}",
+                text: "{I18N>/TYPE}",
                 visible: true
             }
         ];
@@ -92,7 +86,7 @@ sap.ui.define(["jquery.sap.global"],
             getCaption: function (oColumn) {
                 if (oColumn.getHeader() && oColumn.getHeader().getText) {
                     if (oColumn.getHeader().getText() === "Code") {
-                        return "Code (Important!)";
+                        return oColumn.getHeader().getText() + " (Important!)";
                     }
                 }
                 return null;

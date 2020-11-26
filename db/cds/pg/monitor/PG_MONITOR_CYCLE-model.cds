@@ -21,9 +21,9 @@ using util from '../../util/util-model';
 using {pg as Monitoring_Cycle} from '../monitor/PG_MONITOR_CYCLE-model';
 
 entity Monitor_Cycle {
-    key tenant_id     : String(5) not null  @title : '테넌트ID';
-    key company_code  : String(10) not null @title : '회사코드';
-    key bizunit_code  : String(10) not null @title : '사업본부코드';
+    key tenant_id     : String(5) not null  @title : '회사코드';
+    key company_code  : String(10) not null @title : '법인코드';
+    key bizunit_code  : String(10) not null @title : '사업부분코드';
     key scenario      : Integer64 not null  @title : '시나리오';
     key cycle_code    : String(10) not null @title : '주기코드';
         language_code : String(10)          @title : '언어코드';

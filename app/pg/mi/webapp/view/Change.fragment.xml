@@ -79,23 +79,29 @@
                                         columnsM="2"
                                         columnsL="3"
                                         columnsXL="4">
-
+                                        <!-- {midObjectData>/mi_material_code} enabled="{midObjectView>/pageMode}"-->
                                         <Label text="시황자재코드" design="Bold" class="sapMLabelNoText"/>
-                                        <Input id="inputMaterialCode" class="sapUiSmallMarginEnd"/>
+                                        <Input id="inputMaterialCode"
+                                        placeholder="자재코드 입력"
+                                        class="sapUiSmallMarginEnd" 
+                                        />
                                         <Button
                                             id="buttonMaterialCheck"
                                             width="9em"
                                             text="중복Check"
-                                            press=".onMaterialCodeCheckOpen"/>
+                                            press=".onMaterialCodeCheckOpen"/> 
 
                                         <Label text="Category 명" design="Bold" class="sapMLabelNoText"/>
                                         <ComboBox
                                             id="comboBoxCategory_code"
-                                            items="{path: '/MICategoryView', templateShareable:true}" placeholder="선택하세요.">
-                                            <core:Item key="{category_code}" text="{category_name}" />
+                                            selectedKey="{midObjectData>/category_code}"
+                                            items="{path: '/MICategoryView', templateShareable:false}" 
+                                            placeholder="선택하세요.">
+                                            <core:Item key="{category_code}" text="{category_text}" />
                                         </ComboBox>
                                         <Label text="사용여부" design="Bold" class="sapMLabelNoText"/>
-                                        <Switch id="switchUse_flag" state="true">
+                                        <Switch 
+                                        id="switchUse_flag" >
                                             <layoutData>
                                                 <FlexItemData growFactor="1"/>
                                             </layoutData>
@@ -115,29 +121,29 @@
                                         <!-- items="{path : '/MIMaterialCodeText',filters: [{path: 'mi_material_code', operator: 'EQ', value1: '{= ${midObjectData>/mi_material_code}'}]}"
                                         updateFinished="onMitTableUpdateFinished"
                                         Note : mi_material_code 전달 받은 값으로 수정 
-                                         -->
-
-                                            <Table
+                                         -->  
+                                         <Table
                                                 id="midTableChange" 
-                                                items="{path : '/MIMaterialCodeText'}"
+                                                items="{jCodeText>/}"
                                                 mode="MultiSelect"
                                                 width="100%">
                                                 <headerToolbar>
                                                     <OverflowToolbar>
                                                         <content>
                                                             <ToolbarSpacer/>
-                                                            <Button text="Create" type="Transparent" press=".onMidTableCreate"/>
-                                                            <Button text="Delete" type="Transparent" press=".onMidTableDelete"/>
+                                                            <Button id="buttonMidTableCreate" text="Create" type="Transparent" press="onMidTableCreate"/>
+                                                            <Button id="buttonMidTableDelete" text="Delete" type="Transparent" press="onMidTableDelete"/>
                                                         </content>
                                                     </OverflowToolbar>
                                                 </headerToolbar>
                                                 <columns>
-                                                    <Column hAlign="Center" width="80px">
+                                                                                             
+                                                    <Column hAlign="Center">
                                                         <header>
                                                             <Label text="Language"/>
                                                         </header>
                                                     </Column>
-                                                    <Column hAlign="Center" width="80px">
+                                                    <Column hAlign="Center">
                                                         <header>
                                                             <Label text="자재명"/>
                                                         </header>
@@ -145,19 +151,22 @@
                                                 </columns>
                                                 <items>
                                                     <ColumnListItem>
+                                                    <!--   MIMaterialCodeText-->
                                                         <cells>
+                                                            
                                                             <ComboBox
-                                                                id="language_code"
-                                                                items="{path: '/LanguageView', templateShareable:false}"
+                                                                selectedKey="{jCodeText>language_code}"
+                                                                items="{
+                                                                    path: 'jLanguageView>/',                                                                                                                            
+                                                                    templateShareable:false}"
                                                                 placeholder="선택하세요.">
-                                                                <core:Item key="{code}" text="{code_name}" />
+                                                                <core:Item key="{jLanguageView>code}" text="{jLanguageView>code_name}" />
                                                             </ComboBox>
-                                                            <Input id="mi_material_code_text" value="{mi_material_code_text}"/>
+                                                            <Input  value="{jCodeText>mi_material_code_name}"/>
                                                         </cells>
                                                     </ColumnListItem>
                                                 </items>
-                                            </Table>    
-                                        
+                                            </Table>  
                                     </uxap:blocks>
                                 </uxap:ObjectPageSubSection>
                             </uxap:subSections>

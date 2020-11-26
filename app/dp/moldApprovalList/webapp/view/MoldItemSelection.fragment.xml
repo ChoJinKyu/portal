@@ -3,7 +3,8 @@
 -->
 <core:FragmentDefinition
     xmlns="sap.m"
-    xmlns:core="sap.ui.core"
+    xmlns:core="sap.ui.core" 
+    xmlns:f="sap.f"
     xmlns:form="sap.ui.layout.form"
     xmlns:layout="sap.ui.layout" >
     <Dialog id="dialogMolItemSelection" class="sapUiSmallMargin" title="" contentWidth="35%" >
@@ -22,10 +23,11 @@
                 emptySpanS="0"
      
                 singleContainerFullSize="false" >
+                    
                     <form:content>
                         <VBox>
-                            <Label text = "Company" /> 
-                            <ComboBox id="searchCompanyF" width="70%" selectedKey="L1100" items="{
+                            <Label text = "Company" required="true"/> 
+                            <ComboBox id="MoldItemSearchCompany"  width="100%" selectedKey="{pssaCreateObjectView>/company}" enabled="false" items="{
                                 path: 'org>/Org_Company',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
@@ -33,16 +35,17 @@
                                 sorter: { path: 'company_code'}
                             }">
                                 <items>
-                                    <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                                    <core:Item key="[{org>company_code}] {org>company_name}"  text="[{org>company_code}] {org>company_name}" />
                                 </items>
                             </ComboBox>
                             <layoutData>
-                                <layout:GridData span="XL6 L3 M6 S12" />
+                                <layout:GridData span="XL5 L5 M5 S5" />
                             </layoutData> 
                         </VBox>
+                        
                         <VBox>
-                            <Label text = "Plant"/> 
-                            <ComboBox id="searchPlantF" width="70%" selectedKey="" items="{
+                            <Label text = "Plant" required="true"/> 
+                            <ComboBox id="MoldItemSearchPlant"  width="100%" selectedKey="{pssaCreateObjectView>/plant}" enabled="false" items="{
                                 path: 'purOrg>/Pur_Operation_Org',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
@@ -51,11 +54,31 @@
                                 ]
                             }">
                                 <items>
-                                    <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
+                                    <core:Item key="[{purOrg>org_code}]{purOrg>org_name}" text="[{purOrg>org_code}]{purOrg>org_name}" />
                                 </items>
                             </ComboBox>
                             <layoutData>
-                                <layout:GridData span="XL6 L3 M6 S12" />
+                                <layout:GridData span="XL5 L5 M5 S5" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox>
+                            <Button text="Search" class="sapUiSmallMargin" type="Emphasized" press=".onMoldItemSelection"/>
+                               <layoutData>
+                                <layout:GridData span="XL2 L2 M2 S2" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox>
+                            <Label text = "Model"/> 
+                             <Input id="moldItemModel" width="100%"/>
+                             <layoutData>
+                                <layout:GridData span="XL5 L5 M5 S5" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox>
+                            <Label text = "Part No"/>
+                             <Input id="moldItemPartNo" width="100%"/> 
+                             <layoutData>
+                                <layout:GridData span="XL5 L5 M5 S5" />
                             </layoutData> 
                         </VBox>
                        </form:content>
@@ -63,38 +86,39 @@
                     <HBox>
                         <Table id="moldItemSelectTable"       
                             growing="true"
-                            growingThreshold="10"
+                            growingThreshold="3"
                             class="sapFDynamicPageAlignContent" 
-                            updateFinished=".onListMainTableUpdateFinished2"
+                            updateFinished="" 
+                            selectionChange="" 
                             mode="MultiSelect"
                             width="auto"
                             items="{purOrg>/Pur_Operation_Org}"
                             >
-                        <headerToolbar>
+                        <!-- <headerToolbar>
                             <OverflowToolbar>
                                 <Label text="Approval Line"/>
                             </OverflowToolbar>
-                        </headerToolbar>
+                        </headerToolbar> -->
                         <columns>
-                            <Column id="no2" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true"  >
+                            <Column id="modelItem_model" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true"  >
                                 <Text text="Model" />
                             </Column>
-                            <Column id="type2" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" >
+                            <Column id="modelItem_modelPartNo" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" >
                                 <Text text="Model Part No" />
                             </Column>
-                            <Column id="nameDept2" minScreenWidth="Tablet" hAlign="Center"  >
+                            <Column id="modelItem_seq" minScreenWidth="Tablet" hAlign="Center"  >
                                 <Text text="Seq" />
                             </Column>
-                            <Column id="status2" minScreenWidth="Tablet" hAlign="Center"  >
+                            <Column id="modelItem_description" minScreenWidth="Tablet" hAlign="Center"  >
                                 <Text text="Description" />
                             </Column> 
-                            <Column id="comment2" minScreenWidth="Tablet" hAlign="Center"  >
+                            <Column id="modelItem_moldItemType" minScreenWidth="Tablet" hAlign="Center"  >
                                 <Text text="Mold Item Type" />
                             </Column>
-                            <Column id="sort2" minScreenWidth="Tablet" hAlign="Center"  >
+                            <Column id="modelItem_bookCurrency" minScreenWidth="Tablet" hAlign="Center"  >
                                   <Text text="Book Currency" />
                             </Column>					
-                            <Column id="action2" minScreenWidth="Tablet" hAlign="Center"  >
+                            <Column id="modelItem_budgetAmount" minScreenWidth="Tablet" hAlign="Center"  >
                                   <Text text="Budget Amount" />
                             </Column>					
                         </columns>
@@ -125,7 +149,7 @@
         <ToolbarSpacer/>
         <HBox alignItems="Center" justifyContent="Center" >
             <Button text="Cancel" class="sapUiSmallMargin" press=".onExit"/>
-            <Button text="Select" class="sapUiSmallMargin" type="Emphasized" press=".handleConfirm"/>
+            <Button text="Apply" class="sapUiSmallMargin" type="Emphasized" press=".onMoldItemSelectionApply"/>
         </HBox>
     </Dialog>
 </core:FragmentDefinition>

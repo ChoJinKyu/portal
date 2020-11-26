@@ -1,120 +1,51 @@
 {
-	"UserCollection": [  
-		{
-			"manager": "손흥민(hungmin.son)",
-			"title": "책임연구원",
-            "mobile": "010-1234-5678",
-            "dept": "회로부품개발구매팀" 
-		},
-		{
-			"manager": "황의찬(2chan.hwang)",
-			"title": "책임연구원",
-            "mobile": "010-2124-5678",
-            "dept": "회로부품개발구매팀"
-		},
-		{
-			"manager": "이강인(kangin12.lee)",
-			"title": "수석연구원",
-            "mobile": "010-2134-5678",
-            "dept": "회로부품개발구매팀"
-		},
-		{
-			"manager": "베컴",
-			"title": "은퇴",
-            "mobile": "010-2154-5678",
-            "dept": "회로부품개발구매팀"
-		}
+    "MIMaterialCodeText": [
+        {
+        "tenant_id": "L2100",
+        "company_code": "*",
+        "org_type_code": "BU",
+        "org_code": "BIZ00100",
+        "mi_material_code": "ALU-001-01",
+        "language_code": "EN",
+        "mi_material_code_name": "Aluminum",
+        "local_create_dtm": "/Date(1605629880000)/",
+        "local_update_dtm": "/Date(1605629880000)/",
+        "create_user_id": "Admin",
+        "update_user_id": "Admin",
+        "system_create_dtm": "/Date(1605629880000)/",
+        "system_update_dtm": "/Date(1605629880000)/"
+        }
     ],
-    "SignalCollection": [ 
-		{
-            "sid": "0000",
-			"condition": "LessThen",
-			"value1": "90",
-            "value2": "",
-            "status": "A"
-		}
-    ],
-    "KeysSelected": ["1","2"],
-    "comboBoxType" : "100",
-    "comboboxScenario" : "300",
-    "radioActive" : "1",
-    "comboBoxRawMaterials" : "200",
-    "comboboxOffice" : "1200",
-    "conboBoxNatioinStatus" : "200",
-    "multiinputUser" : [
-        {
-            "key" : "001",
-            "name" : "손홍민"
-        },
-        {
-            "key" : "002",
-            "name" : "안정환"
-        },
-        {
-            "key" : "003",
-            "name" : "황의찬"
-        },
-        {
-            "key" : "004",
-            "name" : "이강인"
-        },      
-        {
-            "key" : "005",
-            "name" : "배컴"
-        }        
-    ],
-    "reMonitoringPurpose" : "모니터링 목적",
-    "reMonitoringPurposeDetail" : "시나리오 설명",
-    "reSourceSystem" : "소스시스템",
-    "reSourceSystemDetail" : "소스시스템 상세설명",
-    "HistoryData" : [
-                        {
-                            "name": "손흥민(hungmin.son)",
-                            "title": "책임연구원",
-                            "team" : "회로부품개발구매팀",
-                            "office" : "토트넘",
-                            "old_date" : "2020-10-28 15:30 20",
-                            "new_date" : "2020-10-29 09:15 40",  
-                            "regdate": "2020-10-29 09:15 40" ,                        
-                            "modifyHistory": [
-                                {   
-                                    "number" : "0001",                  
-                                    "item" : "구분",
-                                    "old_content" : "계약관리",
-                                    "change_content" :"PR/PO관리"
-                                },
-                                {
-                                    "number" : "0002", 
-                                    "item" : "시나리오",
-                                    "old_content" : "수입PO생성지연",
-                                    "change_content" :"PR미진행"
-                                }              
-                            ]             
-
-                        },
-                        {
-                            "name": "안정환(An)",
-                            "title": "수석연구원",
-                            "team" : "뭉처야산다",
-                            "office" : "부산",
-                            "old_date" : "2020-10-28 15:30 20",
-                            "new_date" : "2020-10-29 09:15 40",  
-                            "regdate": "2020-10-29 09:15 40" ,                        
-                            "modifyHistory": [
-                                {   
-                                    "number" : "0001",                  
-                                    "item" : "구분",
-                                    "old_content" : "계약관리",
-                                    "change_content" :"PR/PO관리"
-                                },
-                                {
-                                    "number" : "0002", 
-                                    "item" : "시나리오",
-                                    "old_content" : "수입PO생성지연",
-                                    "change_content" :"PR미진행"
-                                }              
-                            ]             
-
-                        }        
+    "MIMaterialCodeList" : [
+    {
+        "tenant_id": "L2100",
+        "company_code": "*",
+        "org_type_code": "BU",
+        "org_code": "BIZ00130",
+        "mi_material_code": "BIZ00121",
+        "mi_material_code_name": null,
+        "category_code": "Non-Ferrous Metal",
+        "category_name": "비철금속",
+        "use_flag": true,
+        "local_create_dtm": "/Date(1606046940000)/",
+        "local_update_dtm": "/Date(1606046940000)/",
+        "create_user_id": "anonymous",
+        "update_user_id": "anonymous",
+        "system_create_dtm": "/Date(1606046940000)/",
+        "system_update_dtm": "/Date(1606046940000)/"
+    }],
+    "LanguageView" : [
+        {           
+            "tenant_id": "L2100",
+            "code": "KO",
+            "code_name": "한국어"
+        }
+    ]
+    
 ]      
 }
+// ,
+//       "jdata": {
+//         "uri": "tempData.json",
+//         "type": "JSON"
+//       }

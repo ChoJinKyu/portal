@@ -1,7 +1,6 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
-	"sap/ui/model/json/JSONModel",
-	"ext/lib/model/I18nModel",
+	"ext/lib/util/Multilingual",
 	"ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedListModel",
 	"ext/lib/formatter/Formatter",
@@ -18,7 +17,7 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, JSONModel, I18nModel, TransactionManager, ManagedListModel, Formatter, TablePersoController, MainListPersoService, 
+], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Formatter, TablePersoController, MainListPersoService, 
 		Filter, FilterOperator, Sorter,
 		MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
 	"use strict";
@@ -38,37 +37,23 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {
-			var oViewModel, 
-				oI18ndModel,
-				oResourceBundle = this.getResourceBundle();
-
-			// Model used to manipulate control states
-			this.setModel(new JSONModel({}), "mainListView");
-			this.setModel(new I18nModel(), "i18nd");
+			var oMultilingual = new Multilingual();
+			this.setModel(oMultilingual.getModel(), "I18N");
 			this.setModel(new ManagedListModel(), "list");
 
-			// oTransactionManager = new TransactionManager();
-			// oTransactionManager.addDataModel(this.getModel("list"));
+			oMultilingual.attachEvent("ready", function(oEvent){
+				var oi18nModel = oEvent.getParameter("model");
+				this.addHistoryEntry({
+					title: oi18nModel.getText("/MESSAGE_MANAGEMENT"),
+					icon: "sap-icon://table-view",
+					intent: "#Template-display"
+				}, true);
+			}.bind(this));
 
 			this._doInitTablePerso();
         },
         
         onRenderedFirst : function () {
-			this.getModel("i18nd")
-				.setTransactionModel(this.getModel("util"))
-				.attachEvent("loaded", function(oEvent){
-
-					// Add the mainList page to the flp routing history
-					this.addHistoryEntry({
-						title: this.getModel("i18nd").getText("/templateListInlineEdit.title"),
-						icon: "sap-icon://table-view",
-						intent: "#Template-display"
-					}, true);
-
-				}.bind(this))
-				//.load(this.getOwnerComponent().getManifestEntry("sap.app").id)
-				.load("cm.templateListInlineEdit");
-				
 			this.byId("pageSearchButton").firePress();
         },
 
@@ -76,13 +61,20 @@ sap.ui.define([
 		/* event handlers                                              */
 		/* =========================================================== */
 
+
 		/**
-		 * Triggered by the table's 'updateFinished' event: after new table
-		 * data is available, this handler method updates the table counter.
-		 * This should only happen if the update was successful, which is
-		 * why this handler is attached to 'updateFinished' and not to the
-		 * table's list binding's 'dataReceived' method.
-		 * @param {sap.ui.base.Event} oEvent the update finished event
+		 * Event handler when a page state changed
+		 * @param {sap.ui.base.Event} oEvent the page stateChange event
+		 * @public
+		 */
+		onPageStateChange: function(oEvent){
+			debugger;
+		},
+
+
+		/**
+		 * Event handler when a table item gets pressed
+		 * @param {sap.ui.base.Event} oEvent the table updateFinished event
 		 * @public
 		 */
 		onMainTableUpdateFinished : function (oEvent) {
@@ -113,31 +105,23 @@ sap.ui.define([
 		 * @public
 		 */
 		onPageSearchButtonPress : function (oEvent) {
-			if (oEvent.getParameters().refreshButtonPressed) {
-				// Search field's 'refresh' button has been pressed.
-				// This is visible if you select any master list item.
-				// In this case no new search is triggered, we only
-				// refresh the list binding.
-				this.onRefresh();
-			} else {
-				var forceSearch = function(){
-					var aTableSearchState = this._getSearchStates();
-					this._applySearch(aTableSearchState);
-				}.bind(this);
-				
-				if(this.getModel("list").isChanged() === true){
-					MessageBox.confirm(this.getModel("i18nd").getText("/msgConfirmForceSearch"), {
-						title : this.getModel("i18nd").getText("/lblConfirmation"),
-						initialFocus : sap.m.MessageBox.Action.CANCEL,
-						onClose : function(sButton) {
-							if (sButton === MessageBox.Action.OK) {
-								forceSearch();
-							}
-						}.bind(this)
-					});
-				}else{
-					forceSearch();
-				}
+			var forceSearch = function(){
+				var aTableSearchState = this._getSearchStates();
+				this._applySearch(aTableSearchState);
+			}.bind(this);
+			
+			if(this.getModel("list").isChanged() === true){
+				MessageBox.confirm(this.getModel("I18N").getText("/NCM0003"), {
+					title : this.getModel("I18N").getText("/SEARCH"),
+					initialFocus : sap.m.MessageBox.Action.CANCEL,
+					onClose : function(sButton) {
+						if (sButton === MessageBox.Action.OK) {
+							forceSearch();
+						}
+					}.bind(this)
+				});
+			}else{
+				forceSearch();
 			}
 		},
 
@@ -177,11 +161,11 @@ sap.ui.define([
 				oView = this.getView();
 			
 			if(!oModel.isChanged()) {
-				MessageToast.show(this.getModel("i18nd").getText("/msgNoChanges"));
+				MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
 				return;
 			}
-			MessageBox.confirm(this.getModel("i18nd").getText("/msgConfirmSave?"), {
-				title : this.getModel("i18nd").getText("/lblConfirmation"),
+			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
+				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
@@ -223,8 +207,7 @@ sap.ui.define([
 				sorters: [
 					new Sorter("chain_code"),
 					new Sorter("message_code"),
-					new Sorter("language_code", true),
-					new Sorter("group_code")
+					new Sorter("language_code", true)
 				],
 				success: function(oData){
 					oView.setBusy(false);
@@ -238,15 +221,11 @@ sap.ui.define([
 			var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S",
 				chain = this.getView().byId("searchChain"+sSurffix).getSelectedKey(),
 				language = this.getView().byId("searchLanguage"+sSurffix).getSelectedKey(),
-				group = this.getView().byId("searchGroup"+sSurffix).getValue(),
 				keyword = this.getView().byId("searchKeyword"+sSurffix).getValue();
 				
 			var aTableSearchState = [];
 			if (chain && chain.length > 0) {
 				aTableSearchState.push(new Filter("chain_code", FilterOperator.EQ, chain));
-			}
-			if (group && group.length > 0) {
-				aTableSearchState.push(new Filter("group_code", FilterOperator.Contains, group));
 			}
 			if (language && language.length > 0) {
 				aTableSearchState.push(new Filter("language_code", FilterOperator.EQ, language));
@@ -254,8 +233,8 @@ sap.ui.define([
 			if (keyword && keyword.length > 0) {
 				aTableSearchState.push(new Filter({
 					filters: [
-						new Filter("message_code", FilterOperator.Contains, keyword),
-						new Filter("message_contents", FilterOperator.Contains, keyword)
+						new Filter("tolower(message_code)", FilterOperator.Contains, "'" + keyword.toLowerCase().replace("'","''") + "'"),
+						new Filter("tolower(message_contents)", FilterOperator.Contains, "'" + keyword.toLowerCase().replace("'","''") + "'")
 					],
 					and: false
 				}));
@@ -267,7 +246,7 @@ sap.ui.define([
 			// init and activate controller
 			this._oTPC = new TablePersoController({
 				table: this.byId("mainTable"),
-				componentName: "templateListInlineEdit",
+				componentName: "xx.templateListInlineEdit",
 				persoService: MainListPersoService,
 				hasGrouping: true
 			}).activate();
