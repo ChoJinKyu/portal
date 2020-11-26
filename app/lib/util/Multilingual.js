@@ -1,52 +1,61 @@
 sap.ui.define([
+    "sap/ui/base/EventProvider",
 	"ext/lib/model/I18nModel",
 	"sap/ui/model/odata/v2/ODataModel"
-], function (I18nModel, ODataModel) {
+], function (EventProvider, I18nModel, ODataModel) {
     "use strict";
+
+    var oServiceModel = new ODataModel({
+        serviceUrl: "srv-api/odata/v2/util.CommonService/",
+        defaultBindingMode: "OneWay",
+        defaultCountMode: "Inline",
+        refreshAfterChange: false,
+        useBatch: true
+    });
     
-    var Multilingual = function(){
-            // Do not use the constructor
-            throw new Error();
+    var Multilingual = EventProvider.extend("ext.lib.util.Multilingual", {
+
+		metadata: {
+            events: {
+                ready: {
+                    parameters : {
+                        model : {type : "object"}
+                    }
+                }
+            }
         },
-        MultilingualClass = function(){
-            this.oServiceModel = new ODataModel({
-                serviceUrl: "srv-api/odata/v2/xx.TemplateService/",
-                defaultBindingMode: "OneWay",
-                defaultCountMode: "Inline",
-                refreshAfterChange: false,
-                useBatch: true
-            });
-            this.oModel = new I18nModel();
-			this.oModel
-                .setTransactionModel(this.oServiceModel)
-                .attachEvent("loaded", function(oEvent){
 
-                    // Add the mainList page to the flp routing history
-                    this.addHistoryEntry({
-                        title: this.getModel("i18nd").getText("/templateListInlineEdit.title"),
-                        icon: "sap-icon://table-view",
-                        intent: "#Template-display"
-                    }, true);
+        constructor: function(){
+            this.oModel = sap.ui.getCore().getModel("MultilingualModel");
+            if(this.oModel == null){
+                this.oModel = new I18nModel();
+                this.oModel
+                    .setTransactionModel(oServiceModel)
+                    .attachEvent("loaded", function(oEvent){
+                        this.isReady = true;
+                        this.fireEvent("ready", {
+                            model: this.oModel
+                        });
+                    }.bind(this))
+                    //.load(this.getOwnerComponent().getManifestEntry("sap.app").id)
+                    // .load("cm.templateListInlineEdit");
+                    .load();
+                sap.ui.getCore().setModel(this.oModel, "MultilingualModel");
+            }else{
+                setTimeout(function(){
+                    this.fireEvent("ready", {
+                        model: this.oModel
+                    });
+                }.bind(this), 10);
+            }
 
-                }.bind(this))
-                //.load(this.getOwnerComponent().getManifestEntry("sap.app").id)
-                // .load("cm.templateListInlineEdit");
-                .load();
-
+            EventProvider.prototype.constructor.apply(this, arguments);
         },
-        oSingleton;
 
-    Multilingual.getInstance = function(){
-        if(!oSingleton)
-            oSingleton = new MultilingualClass();
-        return oSingleton;
-    };
-
-    MultilingualClass.prototype = {
         getModel: function(){
             return this.oModel;
         }
-    }
+    });
 
     return Multilingual;
 });
