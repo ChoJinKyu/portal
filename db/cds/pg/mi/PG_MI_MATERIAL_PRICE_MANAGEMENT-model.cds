@@ -21,6 +21,7 @@ using util from '../../util/util-model';
 using {pg as MI_Mat_Prc_Mngt} from '../mi/PG_MI_MATERIAL_PRICE_MANAGEMENT-model';
 
 entity MI_Material_Price_Management {
+        status                : String(1)           @title : '구분';
     key tenant_id             : String(5) not null  @title : '회사코드';
     key company_code          : String(10) not null @title : '법인코드';
     key org_type_code         : String(30) not null @title : '조직유형코드';
