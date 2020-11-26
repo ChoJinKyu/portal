@@ -284,22 +284,24 @@ sap.ui.define([
 
             var dateFilters = [];
 
-            if (sDateFrom) {
-				dateFilters.push(new Filter("local_update_dtm", FilterOperator.GE, sDateFrom));
-            }
+            dateFilters.push(
+                new Filter({
+                    path: "mold_spec_register_date",
+                    operator: FilterOperator.BT,
+                    value1: this.getFormatDate(sDateFrom),
+                    value2: this.getFormatDate(sDateTo)
+                })
+            );
 
-            if (sDateTo) {
-				dateFilters.push(new Filter("local_update_dtm", FilterOperator.LE, sDateTo));
-            }
+            dateFilters.push(new Filter("mold_spec_register_date", FilterOperator.EQ, ''));
+            dateFilters.push(new Filter("mold_spec_register_date", FilterOperator.EQ, null));
 
-            if(dateFilters.length > 0){
-                aSearchFilters.push(
-                    new Filter({
-                        filters: dateFilters,
-                        and: true
-                    })
-                );
-            }
+            aSearchFilters.push(
+                new Filter({
+                    filters: dateFilters,
+                    and: false
+                })
+            );
 
 			if (sModel) {
 				aSearchFilters.push(new Filter("model", FilterOperator.StartsWith, sModel));
@@ -315,34 +317,9 @@ sap.ui.define([
             
             if (sStatus) {
 				aSearchFilters.push(new Filter("mold_spec_status_code", FilterOperator.EQ, sStatus));
-			}
-			// if (sKeyword && sKeyword.length > 0) {
-			// 	aSearchFilters.push(new Filter({
-			// 		filters: [
-			// 			new Filter("control_option_code", FilterOperator.Contains, sKeyword),
-			// 			new Filter("control_option_name", FilterOperator.Contains, sKeyword)
-			// 		],
-			// 		and: false
-			// 	}));
-			// }
-			// if(sUsage != "all"){
-			// 	switch (sUsage) {
-			// 		case "site":
-			// 		aSearchFilters.push(new Filter("site_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 		case "company":
-			// 		aSearchFilters.push(new Filter("company_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 		case "org":
-			// 		aSearchFilters.push(new Filter("organization_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 		case "user":
-			// 		aSearchFilters.push(new Filter("user_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 	}
-            // }
+            }
             
-            console.log('aSearchFilters',aSearchFilters);
+            console.log(aSearchFilters);
 
 			return aSearchFilters;
 		},
@@ -365,6 +342,8 @@ sap.ui.define([
             var selectedKeys = [];
             var divisionFilters = [];
 
+            divisionFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100' ));
+
             params.selectedItems.forEach(function(item, idx, arr){
                 selectedKeys.push(item.getKey());
                 divisionFilters.push(new Filter("company_code", FilterOperator.EQ, item.getKey() ));
@@ -372,7 +351,7 @@ sap.ui.define([
 
             var filter = new Filter({
                             filters: divisionFilters,
-                            and: false
+                            and: true
                         });
 
             this.getView().byId("searchDivisionE").getBinding("items").filter(filter, "Application");
@@ -500,7 +479,16 @@ sap.ui.define([
 
 		onValueHelpAfterClose: function () {
 			this._oValueHelpDialog.destroy();
-		}
+        },
+        
+        getFormatDate: function (date){
+            var year = date.getFullYear();              //yyyy
+            var month = (1 + date.getMonth());          //M
+            month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+            var day = date.getDate();                   //d
+            day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+            return  year + '' + month + '' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+        }
 
 	});
 });

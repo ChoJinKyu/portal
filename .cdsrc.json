@@ -35,6 +35,7 @@
             "db/cds/cm/roleMgr",    
             "db/cds/cm/menuMgr",                    
             "db/cds/dp",
+            "db/cds/dp/pd",
             "db/cds/dp/standardCommon",
             "db/cds/dp/standardCommon/categoryMgr",
             "db/cds/dp/materialMgr/materialMasterMgr",

@@ -185,8 +185,7 @@ sap.ui.define([
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
 						oView.setBusy(true);
-						oTransactionManager.submit({
-						// oView.getModel("master").submitChanges({
+						oTransactionManager.submit({						
 							success: function(ok){
 								that._toShowMode();
                                 oView.setBusy(false);
@@ -197,7 +196,6 @@ sap.ui.define([
 					};
 				}
 			});
-
 		},
 		
 		
@@ -206,11 +204,33 @@ sap.ui.define([
 		 * @public
 		 */
         onPageCancelEditButtonPress: function(){
-			if(this.getModel("midObjectView").getProperty("/isAddedMode") == true){
-				this.onPageNavBackButtonPress.call(this);
-			}else{
-				this._toShowMode();
-			}
+			// if(this.getModel("midObjectView").getProperty("/isAddedMode") == true){
+			// 	this.onPageNavBackButtonPress.call(this);
+			// }else{
+			// 	this._toShowMode();
+            // }
+            var oView = this.getView();
+            var sTenantId = this._sTenantId;
+            if (sTenantId === "new"){
+                this.onPageNavBackButtonPress();
+            }else if (sTenantId !== "new"){
+                
+                this.getModel("midObjectView").setProperty("/isAddedMode", false);                
+                this._bindView("/UomClass(tenant_id='" + this._sTenantId + "',uom_class_code='" + this._sUomClassCode + "')");
+				oView.setBusy(true);
+				var oDetailsModel = this.getModel("details");
+				oDetailsModel.setTransactionModel(this.getModel());				
+                oDetailsModel.read("/UomClassLng", {
+					filters: [
+						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+						new Filter("uom_class_code", FilterOperator.EQ, this._sUomClassCode),
+					],
+					success: function(oData){
+						oView.setBusy(false);
+					}
+				});
+                this._toShowMode();
+            }
         },
 
 		/* =========================================================== */
@@ -317,7 +337,7 @@ sap.ui.define([
 
 			this.byId("midTableAddButton").setEnabled(!FALSE);
 			this.byId("midTableDeleteButton").setEnabled(!FALSE);
-			//this.byId("midTableSearchField").setEnabled(FALSE);
+			this.byId("midTableSearchField").setEnabled(FALSE);
 			//this.byId("midTableApplyFilterButton").setEnabled(FALSE);
 			this.byId("midTable").setMode(sap.m.ListMode.SingleSelectLeft);
 			this._bindMidTable(this.oEditableTemplate, "Edit");
@@ -334,7 +354,7 @@ sap.ui.define([
 
 			this.byId("midTableAddButton").setEnabled(!TRUE);
 			this.byId("midTableDeleteButton").setEnabled(!TRUE);
-			//this.byId("midTableSearchField").setEnabled(TRUE);
+			this.byId("midTableSearchField").setEnabled(TRUE);
 			//this.byId("midTableApplyFilterButton").setEnabled(TRUE);
 			this.byId("midTable").setMode(sap.m.ListMode.None);
 			this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
@@ -420,8 +440,21 @@ sap.ui.define([
 			}else{
 				if(oHandler) oHandler(this._oFragments[sFragmentName]);
 			}
-		}
+        },
+        
+        onMidTableFilterPress: function() {
+            this._MidTableApplyFilter();
+        },
 
+        _MidTableApplyFilter: function() {
+
+            var oView = this.getView(),
+				sValue = oView.byId("midTableSearchField").getValue(),
+				oFilter = new Filter("uom_class_name", FilterOperator.Contains, sValue);
+
+			oView.byId("midTable").getBinding("items").filter(oFilter, sap.ui.model.FilterType.Application);
+
+        }
 
 	});
 });

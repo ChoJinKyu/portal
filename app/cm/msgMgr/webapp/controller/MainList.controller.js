@@ -1,13 +1,14 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
-	"sap/ui/core/routing/History",
-	"sap/ui/model/json/JSONModel",
-	"ext/lib/formatter/Formatter",
+	"ext/lib/util/Multilingual",
+	"ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedListModel",
+	"ext/lib/formatter/Formatter",
 	"sap/m/TablePersoController",
 	"./MainListPersoService",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
+    "sap/ui/model/Sorter",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
 	"sap/m/ColumnListItem",
@@ -16,11 +17,12 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, Formatter, ManagedListModel, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
-    "use strict";
+], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Formatter, TablePersoController, MainListPersoService, 
+		Filter, FilterOperator, Sorter,
+		MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+	"use strict";
 
-    // var lastRowIndex;
-    
+	// var oTransactionManager;
 
 	return BaseController.extend("cm.msgMgr.controller.MainList", {
 
@@ -29,66 +31,53 @@ sap.ui.define([
 		/* =========================================================== */
 		/* lifecycle methods                                           */
 		/* =========================================================== */
-        
+
 		/**
 		 * Called when the mainList controller is instantiated.
 		 * @public
 		 */
 		onInit : function () {
-            var oViewModel,
-				oResourceBundle = this.getResourceBundle();
-
-			// Model used to manipulate control states
-			oViewModel = new JSONModel({
-				mainListTableTitle : oResourceBundle.getText("mainListTableTitle"),
-				tableNoDataText : oResourceBundle.getText("tableNoDataText")
-            });
-            
-			this.setModel(oViewModel, "mainListView");
-
-			// Add the mainList page to the flp routing history
-			this.addHistoryEntry({
-				title: oResourceBundle.getText("mainListViewTitle"),
-				icon: "sap-icon://table-view",
-				intent: "#Template-display"
-			}, true);
-			
+			var oMultilingual = new Multilingual();
+			this.setModel(oMultilingual.getModel(), "I18N");
 			this.setModel(new ManagedListModel(), "list");
+
+			oMultilingual.attachEvent("ready", function(oEvent){
+				var oi18nModel = oEvent.getParameter("model");
+				this.addHistoryEntry({
+					title: oi18nModel.getText("/MESSAGE_MANAGEMENT"),
+					icon: "sap-icon://table-view",
+					intent: "#Template-display"
+				}, true);
+			}.bind(this));
 
 			this._doInitTablePerso();
         },
         
-        onAfterRendering : function () {
+        onRenderedFirst : function () {
 			this.byId("pageSearchButton").firePress();
-			return;
         },
 
 		/* =========================================================== */
 		/* event handlers                                              */
 		/* =========================================================== */
 
+
 		/**
-		 * Triggered by the table's 'updateFinished' event: after new table
-		 * data is available, this handler method updates the table counter.
-		 * This should only happen if the update was successful, which is
-		 * why this handler is attached to 'updateFinished' and not to the
-		 * table's list binding's 'dataReceived' method.
-		 * @param {sap.ui.base.Event} oEvent the update finished event
+		 * Event handler when a page state changed
+		 * @param {sap.ui.base.Event} oEvent the page stateChange event
+		 * @public
+		 */
+		onPageStateChange: function(oEvent){
+			debugger;
+		},
+
+
+		/**
+		 * Event handler when a table item gets pressed
+		 * @param {sap.ui.base.Event} oEvent the table updateFinished event
 		 * @public
 		 */
 		onMainTableUpdateFinished : function (oEvent) {
-			// update the mainList's object counter after the table update
-			var sTitle,
-				oTable = oEvent.getSource(),
-				iTotalItems = oEvent.getParameter("total");
-			// only update the counter if the length is final and
-			// the table is not empty
-			if (iTotalItems && oTable.getBinding("items").isLengthFinal()) {
-				sTitle = this.getResourceBundle().getText("mainListTableTitleCount", [iTotalItems]);
-			} else {
-				sTitle = this.getResourceBundle().getText("mainListTableTitle");
-			}
-			this.getModel("mainListView").setProperty("/mainListTableTitle", sTitle);
 		},
 
 		/**
@@ -116,20 +105,28 @@ sap.ui.define([
 		 * @public
 		 */
 		onPageSearchButtonPress : function (oEvent) {
-			if (oEvent.getParameters().refreshButtonPressed) {
-				// Search field's 'refresh' button has been pressed.
-				// This is visible if you select any master list item.
-				// In this case no new search is triggered, we only
-				// refresh the list binding.
-				this.onRefresh();
-			} else {
+			var forceSearch = function(){
 				var aTableSearchState = this._getSearchStates();
 				this._applySearch(aTableSearchState);
+			}.bind(this);
+			
+			if(this.getModel("list").isChanged() === true){
+				MessageBox.confirm(this.getModel("I18N").getText("/NCM0003"), {
+					title : this.getModel("I18N").getText("/SEARCH"),
+					initialFocus : sap.m.MessageBox.Action.CANCEL,
+					onClose : function(sButton) {
+						if (sButton === MessageBox.Action.OK) {
+							forceSearch();
+						}
+					}.bind(this)
+				});
+			}else{
+				forceSearch();
 			}
 		},
 
-		onMainTableAddButtonPress: function(oEvent){
-            var oTable = this.byId("mainTable"),
+		onMainTableAddButtonPress: function(){
+			var oTable = this.byId("mainTable"),
 				oModel = this.getModel("list");
 			oModel.addRecord({
 				"tenant_id": "L2100",
@@ -139,9 +136,8 @@ sap.ui.define([
 				"message_type_code": "LBL",
 				"message_contents": "",
 				"local_create_dtm": new Date(),
-                "local_update_dtm": new Date()
-            }, 0);
- 
+				"local_update_dtm": new Date()
+			}, "/Message", 0);
 		},
 
 		onMainTableDeleteButtonPress: function(){
@@ -150,7 +146,7 @@ sap.ui.define([
 				aItems = oTable.getSelectedItems(),
 				aIndices = [];
 			aItems.forEach(function(oItem){
-				aIndices.push(oModel.getData().indexOf(oItem.getBindingContext("list").getObject()));
+				aIndices.push(oModel.getProperty("/Message").indexOf(oItem.getBindingContext("list").getObject()));
 			});
 			aIndices = aIndices.sort(function(a, b){return b-a;});
 			aIndices.forEach(function(nIndex){
@@ -164,8 +160,12 @@ sap.ui.define([
 			var oModel = this.getModel("list"),
 				oView = this.getView();
 			
-			MessageBox.confirm("Are you sure ?", {
-				title : "Comfirmation",
+			if(!oModel.isChanged()) {
+				MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
+				return;
+			}
+			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
+				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
@@ -176,6 +176,12 @@ sap.ui.define([
 								MessageToast.show("Success to save.");
 							}
 						});
+						//oTransactionManager.submit({
+						// 	success: function(oEvent){
+						// 		oView.setBusy(false);
+						// 		MessageToast.show("Success to save.");
+						// 	}
+						// });
 					};
 				}
 			});
@@ -198,10 +204,17 @@ sap.ui.define([
 			oModel.setTransactionModel(this.getModel());
 			oModel.read("/Message", {
 				filters: aTableSearchState,
+				sorters: [
+					new Sorter("chain_code"),
+					new Sorter("message_code"),
+					new Sorter("language_code", true)
+				],
 				success: function(oData){
 					oView.setBusy(false);
 				}
 			});
+
+			// oTransactionManager.setServiceModel(this.getModel());
 		},
 		
 		_getSearchStates: function(){
@@ -220,8 +233,8 @@ sap.ui.define([
 			if (keyword && keyword.length > 0) {
 				aTableSearchState.push(new Filter({
 					filters: [
-						new Filter("message_code", FilterOperator.Contains, keyword),
-						new Filter("message_contents", FilterOperator.Contains, keyword)
+						new Filter("tolower(message_code)", FilterOperator.Contains, "'" + keyword.toLowerCase().replace("'","''") + "'"),
+						new Filter("tolower(message_contents)", FilterOperator.Contains, "'" + keyword.toLowerCase().replace("'","''") + "'")
 					],
 					and: false
 				}));
@@ -233,10 +246,12 @@ sap.ui.define([
 			// init and activate controller
 			this._oTPC = new TablePersoController({
 				table: this.byId("mainTable"),
-				componentName: "msgMgr",
+				componentName: "cm.msgMgr",
 				persoService: MainListPersoService,
 				hasGrouping: true
 			}).activate();
-        }
+		}
+
+
 	});
 });

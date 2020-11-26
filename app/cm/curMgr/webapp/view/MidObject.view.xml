@@ -16,7 +16,7 @@
 		upperCaseAnchorBar="false"
 		showTitleInHeaderContent="true"
 		showEditHeaderButton="true" 
-		showFooter="false">
+		showFooter="true">
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
@@ -34,10 +34,7 @@
 				<uxap:snappedTitleOnMobile>
 					<Title text="통화 상세" />
 				</uxap:snappedTitleOnMobile>
-				<uxap:actions>
-					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" />
-					<Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" />
-				</uxap:actions>
+				
                 <uxap:navigationActions>
 					<OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press="onPageEnterFullScreenButtonPress" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
 					<OverflowToolbarButton id="pageExitFullScreenButton" type="Transparent" icon="sap-icon://exit-full-screen" press="onPageExitFullScreenButtonPress" tooltip="Exit Full Screen Mode" visible="false"/>
@@ -69,7 +66,7 @@
 		</uxap:headerContent>
 
 		<uxap:sections>
-			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="Currency Details">
+			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="통화 상세">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection1" >
 					</uxap:ObjectPageSubSection>
@@ -80,16 +77,16 @@
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<form:SimpleForm editable="false">
-							<Label text="Created by"/>
+							<Label text="생성자"/>
 							<Text text="{master>/create_user_id}"/>
-							<Label text="Created At"/>
+							<Label text="생성일"/>
 							<Text text="{
 									path: 'master>/system_create_dtm',
 									formatter: '.dateFormatter.toUTCDateTimeString'
 								}"/>
-							<Label text="Updated by"/>
+							<Label text="수정자"/>
 							<Text text="{master>/update_user_id}"/>
-							<Label text="Updated At"/>
+							<Label text="수정일"/>
 							<Text text="{
 									path: 'master>/system_update_dtm',
 									formatter: '.dateFormatter.toUTCDateTimeString'
@@ -112,14 +109,14 @@
 								width="auto">
 							<headerToolbar>
 								<OverflowToolbar>
-									<Title text="통화 언어 리스트" level="H2"/>
+									<Title text="통화 언어 목록" level="H2"/>
 									<ToolbarSpacer/>
 									<!-- Add the Personalization button -->
-									<Button id="midTableAddButton" text="Add" type="Transparent" press=".onMidTableAddButtonPress" />
-									<Button id="midTableDeleteButton" text="Delete" type="Transparent" press=".onMidTableDeleteButtonPress" />
+									<Button id="midTableAddButton" text="행생성" type="Transparent" press=".onMidTableAddButtonPress" />
+									<Button id="midTableDeleteButton" text="행삭제" type="Transparent" press=".onMidTableDeleteButtonPress" />
 									<ToolbarSeparator/>
 									<SearchField id="midTableSearchField" width="10rem" search=".onMidTableFilterPress" />
-									<Button id="midTableApplyFilterButton" text="Apply" type="Transparent" press=".onMidTableApplyFilterButton" />
+									<Button id="midTableApplyFilterButton" text="조회" type="Transparent" press=".onMidTableApplyFilterButton" />
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
@@ -144,6 +141,54 @@
 							</columns>
 							<items>
 								<ColumnListItem type="Inactive" press=".onMidTableItemPress">
+                                <!-- <cells>
+                                    <ObjectStatus icon="{
+                                    path: 'details>_row_state_',
+                                    formatter: '.formatter.toModelStateColumnIcon'
+                                    }" />
+                                    </cells> -->
+
+                                                    <!-- <cells>
+                                                <ObjectStatus icon="{
+                                                    path: 'list>_row_state_',
+                                                    formatter: '.formatter.toModelStateColumnIcon'
+                                                }" />
+                                                <ComboBox selectedKey="{list>chain_code}" width="100%" items="{
+                                                        path: 'util>/CodeDetails',
+                                                        filters: [
+                                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                            {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
+                                                        ]
+                                                    }" editable="{= ${list>_row_state_} === 'C' }">
+                                                    <items>
+                                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                                    </items>
+                                                </ComboBox>
+                                                <ComboBox selectedKey="{list>language_code}" width="100%" items="{
+                                                        path: 'util>/CodeDetails',
+                                                        filters: [
+                                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                            {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
+                                                        ]
+                                                    }" editable="{= ${list>_row_state_} === 'C' }">
+                                                    <items>
+                                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                                    </items>
+                                                </ComboBox>
+                                                <Input value="{list>message_code}" editable="{= ${list>_row_state_} === 'C' }" />
+                                                <Input value="{list>message_contents}"></Input>
+                                                <ComboBox selectedKey="{list>message_type_code}" width="100%" items="{
+                                                        path: 'util>/CodeDetails',
+                                                        filters: [
+                                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                            {path: 'group_code', operator: 'EQ', value1: 'CM_MESSAGE_TYPE_CODE'}
+                                                        ]
+                                                    }">
+                                                    <items>
+                                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                                    </items>
+                                                </ComboBox> -->
+                                            <!-- </cells> -->
 								</ColumnListItem>
 							</items>
 						</Table>
@@ -153,11 +198,13 @@
 
 		</uxap:sections>
 		
-		<uxap:footer>
-			<OverflowToolbar>
+		<uxap:footer visible="true">
+			<OverflowToolbar visible="true">
 				<ToolbarSpacer />
-				<Button type="Emphasized" text="Save" press=".onPageSaveButtonPress" />
-				<Button type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
+                <Button id="pageEditButton" text="Edit" type="Transparent" press=".onPageEditButtonPress" />
+                <Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" />
+				<Button id="pageSaveButton" type="Emphasized" text="Save" press=".onPageSaveButtonPress" />
+				<Button id="pageCancelButton" type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>
