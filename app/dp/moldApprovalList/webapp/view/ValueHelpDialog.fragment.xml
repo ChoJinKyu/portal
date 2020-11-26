@@ -70,5 +70,9 @@
 		key="part_number"
 		descriptionKey="part_number"
 	>
+    <filterBar>
+			<fb:FilterBar advancedMode="true" search=".onFilterBarSearch">
+			</fb:FilterBar>
+		</filterBar>
 	</ValueHelpDialog>
 </core:FragmentDefinition>
