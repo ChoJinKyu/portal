@@ -356,8 +356,8 @@ sap.ui.define([
             console.group("handleTableSelectDialogPress");    
             var oView = this.getView();
             var oButton = oEvent.getSource();
-			if (!this._oDialog) {
-				this._oDialog = Fragment.load({ 
+			if (!this._oDialogTableSelect) {
+				this._oDialogTableSelect = Fragment.load({ 
                     id: oView.getId(),
 					name: "dp.moldApprovalList.view.MoldItemSelection",
 					controller: this
@@ -367,7 +367,7 @@ sap.ui.define([
 				}.bind(this));
             } 
             
-            this._oDialog.then(function(oDialog) {
+            this._oDialogTableSelect.then(function(oDialog) {
 				oDialog.open();
 			});
         },
@@ -376,7 +376,8 @@ sap.ui.define([
          * @see 사용처 Participating Supplier Fragment 취소 이벤트
          */
         onExit: function () {
-			this.byId("dialogMolItemSelection").close();
+            this.byId("dialogMolItemSelection").close();
+          //  this.byId("dialogMolItemSelection").destroy();
         },
          /**
          * @description  Participating Supplier Fragment Apply 버튼 클릭시 
@@ -418,7 +419,8 @@ sap.ui.define([
          * @description employee 팝업 닫기 
          */
         onExitEmployee: function () {
-			this.byId("dialogEmployeeSelection").close();
+            this.byId("dialogEmployeeSelection").close();
+           // this.byId("dialogEmployeeSelection").destroy();
         },
         /**
          * @description employee 팝업 열기 
