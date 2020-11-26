@@ -298,7 +298,7 @@ sap.ui.define([
             this._oBasicSearchField = new SearchField({
 				showSearchButton: true
             });
-            
+
             this._oValueHelpDialog = sap.ui.xmlfragment("dp.moldApprovalList.view.ValueHelpDialog", this);
 
             var oFilterBar = this._oValueHelpDialog.getFilterBar();
