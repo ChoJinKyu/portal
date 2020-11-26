@@ -46,7 +46,7 @@ sap.ui.define([
             this.getRouter().getRoute("pssaCreateObject").attachPatternMatched(this._onObjectMatched, this);
             this.setModel(oViewModel, "pssaCreateObjectView"); 
           
-            this.setModel(new ManagedListModel(), "createlist");
+            
        	    this.addHistoryEntry({
 				title: oResourceBundle.getText("budgetReportObjectTitle"),
 				icon: "sap-icon://table-view",
@@ -126,7 +126,6 @@ sap.ui.define([
         _onLoadApprovalRow : function () { // 파일 찾는 row 추가 
             var oTable = this.byId("ApprovalTable"),
                 oModel = this.getModel("appList"); 
-                console.log("model >>> " , oModel) 
                 if(oModel.oData.undefined == undefined || oModel.oData.undefined == null){
                     oModel.addRecord({
                         "no": "1",
@@ -407,5 +406,78 @@ sap.ui.define([
 			});
         },
 
+        onEmploySelectionApply : function(){
+            var oTable = this.byId("employeeSelectTable");
+            var aItems = oTable.getSelectedItems();
+            var that = this;
+            aItems.forEach(function(oItem){   
+                var obj = new JSONModel({
+                    model : oItem.getCells()[0].getText()
+                    , moldPartNo : oItem.getCells()[1].getText()
+                });
+                that._approvalRowAdd(obj);
+                // oItem.getCells().forEach(function(nItem){ 
+                //      console.log(" nItem >>>>> getText " , nItem.getText());    
+                // });     
+            });
+            this.onExitEmployee();
+        },
+
+        /**
+         * @description Approval Row add 
+         */
+        _approvalRowAdd : function (obj){
+            var oTable = this.byId("ApprovalTable"),
+                oModel = this.getModel("appList"); 
+            var aItems = oTable.getItems();
+            var oldItems = [];
+            var that = this;
+            aItems.forEach(function(oItem){ 
+                 console.log("oItem >>> " , oItem.mAggregations.cells[0].mProperties.text);
+                 console.log("oItem >>> " , oItem.mAggregations.cells[1].mProperties.selectedKey);
+                 console.log("oItem >>> " , oItem.mAggregations.cells[2].mProperties.value);
+               var item = { "no" : oItem.mAggregations.cells[0].mProperties.text ,
+                            "type": oItem.mAggregations.cells[1].mProperties.selectedKey,
+                            "nameDept": oItem.mAggregations.cells[2].mProperties.value,
+                           
+                         } 
+                oldItems.push(item);
+            });
+            
+            this.getView().setModel(new ManagedListModel(),"appList"); // reset 
+            oModel = this.getModel("appList");
+            console.log("oldItems >>> " , oldItems);
+            var noCnt = 1;
+            for(var i = 0 ; i < oldItems.length-1 ; i++){
+                oModel.addRecord({
+                        "no": noCnt,
+                        "type": oldItems[i].type,
+                        "nameDept": oldItems[i].nameDept,
+                        "status": "",
+                        "comment": "" ,
+                        "editMode": false 
+                });
+                noCnt++;
+            }
+
+            oModel.addRecord({
+                        "no": noCnt,
+                        "type": oldItems[oldItems.length-1].type,
+                        "nameDept": obj.oData.moldPartNo,
+                        "status": "",
+                        "comment": "" ,
+                        "editMode": false 
+                    });
+            noCnt++;       
+            oModel.addRecord({
+                        "no": noCnt,
+                        "type": "",
+                        "nameDept": "",
+                        "status": "",
+                        "comment": "" ,
+                        "editMode": true 
+                    });
+            
+        }
 	});
 });

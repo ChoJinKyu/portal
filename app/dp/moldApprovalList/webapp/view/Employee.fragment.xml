@@ -41,8 +41,8 @@
                             growingThreshold="3"
                             class="sapFDynamicPageAlignContent" 
                             updateFinished="" 
-                            selectionChange="" 
-                            mode="SingleSelect"
+                            selectionChange="vendorSelect" 
+                            mode="SingleSelectMaster"
                             width="auto"
                             items="{purOrg>/Pur_Operation_Org}"
                             >

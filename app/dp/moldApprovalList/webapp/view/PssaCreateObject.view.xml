@@ -410,7 +410,7 @@
                                         >
                                     <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                     </ComboBox>
-                                    <SearchField id="searchField" enabled="{appList>editMode}" enableSuggestions="true" search=".onSearch" suggest=".onSuggest" width="100%" placeholder="Search employee" text="{appList>name}"/>
+                                    <SearchField id="searchField" enabled="{appList>editMode}" search=".onSearch" width="100%" placeholder="Search employee" value="{appList>nameDept}"/>
                                     <Text text="{appList>status}" />
                                     <Text text="{appList>comment}" />
                                     <Button id="btnSort" icon="sap-icon://sort" press="onSort" tooltip="sort"></Button>
