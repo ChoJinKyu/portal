@@ -5,7 +5,9 @@ sap.ui.define([
 	"ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedModel",
 	"ext/lib/model/ManagedListModel",
-	"ext/lib/formatter/DateFormatter",
+    "ext/lib/formatter/DateFormatter",
+    "ext/lib/util/ValidatorUtil",
+    "ext/lib/formatter/Formatter",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
 	"sap/ui/core/Fragment",
@@ -16,10 +18,11 @@ sap.ui.define([
 	"sap/m/Text",
 	"sap/m/Input",
 	"sap/m/ComboBox",
-	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
+    "sap/ui/core/Item",
+    "sap/m/ObjectStatus",
+], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Formatter, ValidatorUtil,
 	Filter, FilterOperator, Fragment, MessageBox, MessageToast,
-	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus) {
 		
 	"use strict";
 
@@ -29,7 +32,7 @@ sap.ui.define([
 
             // "sap/ui/model/FilterType", 사용불가??
 
-		dateFormatter: DateFormatter,
+        dateFormatter: DateFormatter,
 
 		formatter: (function(){
 			return {
@@ -37,7 +40,8 @@ sap.ui.define([
 					return oData === true ? "YES" : "NO"
 				},
 			}
-		})(),
+        })(),
+
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -56,6 +60,7 @@ sap.ui.define([
                     delay : 0,
                     screen : "",
                     editMode : "",
+                    newcheck : "",
 				});
 			this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
 			this.setModel(oViewModel, "midObjectView");
@@ -71,7 +76,22 @@ sap.ui.define([
 
             this._initTableTemplates();
             this.enableMessagePopover();
-		}, 
+        }, 
+        
+        formattericon: function(sState){
+            switch(sState){
+                case "D":
+                    return "sap-icon://decline";
+                break;
+                case "U": 
+                    return "sap-icon://accept";
+                break;
+                case "C": 
+                    return "sap-icon://add";
+                break;
+            }
+            return "";
+        },
 
 		/* =========================================================== */
 		/* event handlers                                              */
@@ -164,13 +184,12 @@ sap.ui.define([
 		},
 
 		onMidTableAddButtonPress: function(){
-            debugger;
 			var oTable = this.byId("midTable"),
 				oDetailsModel = this.getModel("details");
 			oDetailsModel.addRecord({
-                "tenant_id": "",
+                "tenant_id": this._sTenantId,
                 "language_code" : "",
-				"currency_code": "",
+				"currency_code": this._sCurrencyCode,
 				"currency_code_name": "",
 				"currency_code_desc": "",
                 "currency_prefix": null,
@@ -230,11 +249,27 @@ sap.ui.define([
 		 * @public
 		 */
         onPageCancelEditButtonPress: function(){
-            this._setModelEditCancelMode();
-            this._toShowMode();
+            var oView = this.getView();
             var sTenantId = this._sTenantId;
             if (sTenantId === "new"){
                 this.onPageNavBackButtonPress();
+            }else if (sTenantId !== "new"){
+                this._setModelEditCancelMode();
+                this.getModel("midObjectView").setProperty("/isAddedMode", false);
+				this._bindView("/Currency(tenant_id='" + this._sTenantId + "',currency_code='" + this._sCurrencyCode + "')");
+				oView.setBusy(true);
+				var oDetailsModel = this.getModel("details");
+				oDetailsModel.setTransactionModel(this.getModel());
+				oDetailsModel.read("/CurrencyLng", {
+					filters: [
+						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+						new Filter("currency_code", FilterOperator.EQ, this._sCurrencyCode),
+					],
+					success: function(oData){
+						oView.setBusy(false);
+					}
+				});
+                this._toShowMode();
             }
         },
 
@@ -246,15 +281,14 @@ sap.ui.define([
             if(this.getModel("midObjectView").getProperty("/isAddedMode") == true){
 				var oMasterModel = this.getModel("master");
 				var oDetailsModel = this.getModel("details");
-				// var sTenantId = oMasterModel.getProperty("/tenant_id");
-				// var sCurrencyCode = oMasterModel.getProperty("/currency_code");
-                // var oDetailsData = oDetailsModel.getData();
-                // debugger;
-				// oDetailsData.forEach(function(oItem, nIndex){
-				// 	oDetailsModel.setProperty("/"+nIndex+"/tenant_id", sTenantId);
-				// 	oDetailsModel.setProperty("/"+nIndex+"/currency_code", sCurrencyCode);
-				// });
-				oDetailsModel.setData(oDetailsData);
+				var sTenantId = oMasterModel.getProperty("/tenant_id");
+				var sCurrencyCode = oMasterModel.getProperty("/currency_code");
+                var oDetailsData = oDetailsModel.getData();
+				oDetailsData.CurrencyLng.forEach(function(oItem, nIndex){
+					oDetailsModel.setProperty("/CurrencyLng/"+nIndex+"/tenant_id", sTenantId);
+					oDetailsModel.setProperty("/CurrencyLng/"+nIndex+"/currency_code", sCurrencyCode);
+				});
+				//oDetailsModel.setData(oDetailsData);
 			}
 		},
 
@@ -270,9 +304,8 @@ sap.ui.define([
             this._sCurrencyCode = oArgs.currencyCode;
 
 			if(oArgs.tenantId == "new" && oArgs.currencyCode == "code"){
-                debugger;
-				//It comes Add button pressed from the before page.
-				this.getModel("midObjectView").setProperty("/isAddedMode", true);
+                //It comes Add button pressed from the before page.
+                this.getModel("midObjectView").setProperty("/isAddedMode", true);
 				var oMasterModel = this.getModel("master");
 				oMasterModel.setData({
                     "tenant_id": "L2100",
@@ -298,7 +331,7 @@ sap.ui.define([
                     "currency_suffix" : null,
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
-				},"/CurrencyLng",0);
+                },"/CurrencyLng",0);
 				this._toEditMode();
 			}else{
                 
@@ -328,7 +361,6 @@ sap.ui.define([
 		 * @private
 		 */
 		_bindView : function (sObjectPath) {
-            debugger;
 			var oView = this.getView(),
 				oMasterModel = this.getModel("master");
 			oView.setBusy(true);
@@ -345,12 +377,19 @@ sap.ui.define([
             var oViewModel = this.getModel("midObjectView"),
                 oEditModel = this.getModel("editMode");
             oEditModel.setProperty("/editMode", "edit");
+            this.byId("pageDeleteButton").setEnabled(!FALSE);
+            if(this._sTenantId === "new")
+            {
+                this.byId("pageDeleteButton").setEnabled(FALSE);
+            }
             this._showFormFragment('MidObject_Edit');
 			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("page").setProperty("showFooter", !FALSE);
+			//this.byId("page").setProperty("showFooter", !FALSE);
 			this.byId("pageEditButton").setEnabled(FALSE);
-			this.byId("pageDeleteButton").setEnabled(FALSE);
+			
             this.byId("pageNavBackButton").setEnabled(FALSE);
+            this.byId("pageSaveButton").setEnabled(!FALSE);
+            this.byId("pageCancelButton").setEnabled(!FALSE);
 
 			this.byId("midTableAddButton").setEnabled(!FALSE);
 			this.byId("midTableDeleteButton").setEnabled(!FALSE);
@@ -364,20 +403,18 @@ sap.ui.define([
             var TRUE = true;
             var oViewModel = this.getModel("midObjectView"),
                 oEditModel = this.getModel("editMode");
-
             if(oEditModel.getProperty("/editMode") !== "edit"){
                 this._showFormFragment('MidObject_Show');
-                this.byId("page").setProperty("showFooter", !TRUE);
+                //this.byId("page").setProperty("showFooter", !TRUE);
                 this.byId("pageEditButton").setEnabled(TRUE);
-                this.byId("pageDeleteButton").setEnabled(TRUE);
+                this.byId("pageDeleteButton").setEnabled(!TRUE);
                 this.byId("pageNavBackButton").setEnabled(TRUE);
-                
+                this.byId("pageSaveButton").setEnabled(!TRUE);
+                this.byId("pageCancelButton").setEnabled(!TRUE);
             }	
             
             this.byId("page").setSelectedSection("pageSectionMain");
-            
-            
-
+        
             switch(oViewModel.getProperty("/screen")){
             case "TwoColumnsBeginExpanded" :
                 this.byId("pageExitFullScreenButton").setVisible(false); 
@@ -407,11 +444,15 @@ sap.ui.define([
 		},
 
 		_initTableTemplates: function(){
-			this.oReadOnlyTemplate = new ColumnListItem({
+            var test;
+            var label5 = new ObjectStatus().setIcon;
+
+
+			this.oReadOnlyTemplate = new ColumnListItem({   
 				cells: [
-					new Text({
-						text: "{details>_row_state_}"
-					}), 
+                    new Text({
+                        text: "{details>_row_state_}"
+                    }),
 					new ObjectIdentifier({
 						text: "{details>language_code}"
 					}), 
@@ -429,16 +470,36 @@ sap.ui.define([
 					})
 				],
 				type: sap.m.ListType.Inactive
-			});
+            });
+            var oCountryCombo = new ComboBox({
+                    selectedKey: "{details>language_code}"
+                    , width : "100%"
+                    , editable: "{= ${details>_row_state_} === 'C' ? true : false}"  
+                    , selectionChange: function (oEvent) {
+                        this._CountryComboChange(oEvent);
+                            }.bind(this)     
+                });
+                oCountryCombo.bindItems({
+                    path: 'util>/CodeDetails',
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, 'L2100'),                       
+                        new Filter("group_code", FilterOperator.EQ, 'CM_LANG_CODE')
+                    ],
+                    template: new Item({
+                        key: "{util>code}",
+                        text: "{util>code_description}"                        
+                    })                   
+                });
 			this.oEditableTemplate = new ColumnListItem({
 				cells: [
-					new Text({
-						text: "{details>_row_state_}"
-					}), 
-					// oLevelCodeCombo, 
+					new ObjectStatus({
+                        icon:{ path:'details>_row_state_', formatter: this.formattericon
+                                }                              
+                    }), 
+                   
 					new Input({
 						value: "{details>language_code}"
-					}), 
+                    }),  
 					new Input({
 						value: "{details>currency_code_name}"
                     }),
@@ -504,7 +565,7 @@ sap.ui.define([
         onMidTableApplyFilterButton: function() {
             this._MidTableApplyFilter();
         },
-        
+
 
 	});
 });

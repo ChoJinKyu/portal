@@ -1,5 +1,6 @@
 sap.ui.define([
-	"./BaseController",
+    //"./BaseController",
+    "ext/lib/controller/BaseController",
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/core/routing/History",
 	"../model/formatter",
@@ -10,15 +11,17 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-	"sap/m/ColumnListItem",
+	"sap/ui/table/Column",
+	"sap/ui/table/Row",
 	"sap/m/ObjectIdentifier",
 	"sap/m/Text",
 	"sap/m/Input",
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
     "sap/m/Token",
-    'sap/ui/core/Element'
-], function (BaseController, JSONModel, History, formatter, ManagedListModel, TablePersoController, developmentReceiptPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, Token, Element) {
+    "sap/ui/core/Element",
+    "sap/ui/base/ManagedObject"
+], function (BaseController, JSONModel, History, formatter, ManagedListModel, TablePersoController, developmentReceiptPersoService, Filter, FilterOperator, MessageBox, MessageToast, Column, Row, ObjectIdentifier, Text, Input, ComboBox, Item, Token, Element, ManagedObject) {
 	"use strict";
 
 	return BaseController.extend("dp.developmentReceipt.controller.developmentReceipt", {
@@ -52,13 +55,16 @@ sap.ui.define([
             }, true);
 
             this._doInitSearch();
-			//this._doInitTable();
             //this._doInitTablePerso();
             
             this.setModel(new ManagedListModel(), "list");
+
+            //this._initTableTemplates();
+            //this._toShowMode();
         },
         
         onAfterRendering : function () {
+            this.getModel().setDeferredGroups(["delete", "receipt"]);
 			this.byId("pageSearchButton").firePress();
 			return;
         },
@@ -109,26 +115,7 @@ sap.ui.define([
 			developmentReceiptPersoService.resetPersData();
 			this._oTPC.refresh();
 		},
-/*
-		onMoldMstTableFilterPress: function(oEvent){
-			var oTableFilterState = [],
-				sQuery = oEvent.getParameter("query");
 
-			if (sQuery && sQuery.length > 0) {
-				oTableFilterState = [
-					new Filter({
-						filters: [
-							new Filter("message_code", FilterOperator.Contains, sQuery),
-							new Filter("message_contents", FilterOperator.Contains, sQuery)
-						],
-						and: false
-					})
-				];
-			}
-
-			this.getView().byId("moldMstTable").getBinding("items").filter(oTableFilterState, "Application");
-		},
-*/
 		/**
 		 * Event handler when a table item gets pressed
 		 * @param {sap.ui.base.Event} oEvent the table selectionChange event
@@ -144,70 +131,74 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent the button press event
 		 * @public
 		 */
-		onPageSearchButtonPress : function (oEvent) {
-			if (oEvent.getParameters().refreshButtonPressed) {
-				// Search field's 'refresh' button has been pressed.
-				// This is visible if you select any master list item.
-				// In this case no new search is triggered, we only
-				// refresh the list binding.
-                this.onRefresh();
-                MessageToast.show("refreshButtonPressed");
-			} else {
-				var aTableSearchState = this._getSearchStates();
-				this._applySearch(aTableSearchState);
-			}
+		onPageSearchButtonPress : function () {
+            var aTableSearchState = this._getSearchStates();
+            this._applySearch(aTableSearchState);
 		},
 
 		/**
 		 * Event handler for page edit button press
 		 * @public
 		 */
-		onMoldMstTableCancelButtonPress: function(){
+        onMoldMstTableEditButtonPress: function(){
 			this._toEditMode();
+        },
+        
+		onMoldMstTableCancelButtonPress: function(){
+			
 		},
 
        
         onMoldMstTableBindButtonPress: function(){
-			var oTable = this.byId("moldMstTable"),
-                oBinding = oTable.getBinding("items");
-
-            var oContext = oBinding.create({
-                "tenant_id": "L2100",
-                "chain_code": "CM",
-                "language_code": "",
-                "message_code": "",
-                "message_type_code": "",
-                "message_contents": "",
-                "local_create_dtm": "2020-10-13T00:00:00Z",
-                "local_update_dtm": "2020-10-13T00:00:00Z"
-            });
-
-            oContext.created().then(function (oEvent) {
-                oTable.refresh();
-                MessageToast.show("Success to create.");
-            }).catch(function(oEvent){
-                MessageBox.error("Error while creating.");
-            });
+			
         },
 		
 		/**
 		 * Event handler for cancel page editing
 		 * @public
 		 */
+        /** Unreceipt 가능. Receipt 상태의 금형 중, 예산 집행품의 또는 입찰대상 협력사 선정 품의 결재 요청 이전 금형에 대해서만 Delete 가능 */
         onMoldMstTableDeleteButtonPress: function(){
-			var oTable = this.byId("moldMstTable"),
-				oModel = this.getModel("list"),
-				aItems = oTable.getSelectedItems(),
-				aIndices = [];
-			aItems.forEach(function(oItem){
-				aIndices.push(oModel.getData().indexOf(oItem.getBindingContext("list").getObject()));
-			});
-			aIndices = aIndices.sort(function(a, b){return b-a;});
-			aIndices.forEach(function(nIndex){
-				//oModel.removeRecord(nIndex);
-				oModel.markRemoved(nIndex);
-			});
-			oTable.removeSelections(true);
+
+            var oTable = this.byId("moldMstTable"),
+                oModel = this.getModel(),
+                lModel = this.getModel("list"),
+                oView = this.getView(),
+                oSelected  = oTable.getSelectedIndices().reverse();
+                
+            if (oSelected.length > 0) {
+                MessageBox.confirm("삭제 하시겠습니까?", {
+                    title : "Comfirmation",
+                    initialFocus : sap.m.MessageBox.Action.CANCEL,
+                    onClose : function(sButton) {
+                        if (sButton === MessageBox.Action.OK) {
+                            oSelected.forEach(function (idx) {
+                                oModel.remove(lModel.getData().MoldMasters[idx].__entity, {
+                                    groupId: "delete"
+                                });
+                            });
+                            
+                            oModel.submitChanges({
+                                groupId: "delete",
+                                success: function(){
+                                    oView.setBusy(false);
+                                    MessageToast.show("Success to Delete.");
+                                    this.onPageSearchButtonPress();
+                                }.bind(this), error: function(oError){
+                                    oView.setBusy(false);
+                                    MessageBox.error(oError.message);
+                                }
+                            });
+                        };
+                    }.bind(this)
+                });
+
+                oTable.clearSelection();
+
+            }else{
+                MessageBox.error("선택된 행이 없습니다.");
+            }
+
         },
         
         onMoldMstTableReceiptButtonPress: function(){
@@ -229,24 +220,72 @@ sap.ui.define([
 					};
 				}
             });*/
-            var oModel = this.getModel("list"),
-				oView = this.getView();
-			
-			MessageBox.confirm("Receipt 하시 겠습니까?", {
+
+            var oTable = this.byId("moldMstTable"),
+                oModel = this.getModel(),
+                lModel = this.getModel("list"),
+                oView = this.getView(),
+                oSelected  = oTable.getSelectedIndices();
+            
+			MessageBox.confirm("Receipt 하시겠습니까?", {
+                title : "Comfirmation",
+                initialFocus : sap.m.MessageBox.Action.CANCEL,
+                onClose : function(sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        oSelected.forEach(function (idx) {console.log(lModel.getData().MoldMasters[idx]);console.log(oModel.oData);
+                            var sEntity = lModel.getData().MoldMasters[idx].__entity;
+                            delete lModel.getData().MoldMasters[idx].__entity;
+                            oModel.update(sEntity, lModel.getData().MoldMasters[idx], {
+                                groupId: "receipt"
+                            });
+                        });
+                        
+                        oModel.submitChanges({
+                            groupId: "receipt",
+                            success: function(){
+                                oView.setBusy(false);
+                                MessageToast.show("Success to Receipt.");
+                                this.onPageSearchButtonPress();
+                            }.bind(this), error: function(oError){MessageToast.show("oError");
+                                oView.setBusy(false);
+                                MessageBox.error(oError.message);
+                            }
+                        });
+                    };
+                }.bind(this)
+            });
+
+            oTable.clearSelection();
+
+/*
+			MessageBox.confirm("Receipt 하시겠습니까?", {
 				title : "Comfirmation",
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
 						oView.setBusy(true);
-						oModel.submitChanges({
-							success: function(oEvent){
+						lModel.submitChanges({
+							success: function(){
 								oView.setBusy(false);
                                 MessageToast.show("Success to Receipt.");
 							}
 						});
 					};
 				}
-			});
+            });
+            
+            oTable.clearSelection();*/
+        },
+/*
+        inputFieldChange : function (oEvent) {
+            this.byId("moldMstTable").setSelectedIndex([oEvent.getSource().getParent().getIndex()]);
+        },
+*/
+        onRefresh : function () {
+            var oBinding = this.byId("moldMstTable").getBinding("rows");
+            this.getView().setBusy(true);
+            oBinding.refresh();
+            this.getView().setBusy(false);
         },
 
 		/**
@@ -262,7 +301,7 @@ sap.ui.define([
 		 * @public
 		 */
         onPageCancelEditButtonPress: function(){
-			this.onMoldMstTableDeleteButtonPress.apply(this, arguments);
+			this._toShowMode();
         },
 
 		/**
@@ -272,12 +311,68 @@ sap.ui.define([
 		 */
 		onRefreshPress : function () {
 			var oTable = this.byId("moldMstTable");
-			oTable.getBinding("items").refresh();
+            oTable.getBinding("rows").refresh();
+            
+        },
+
+        receiptDateChange : function (oEvent) {
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S",
+                seSurffix = sSurffix === "E" ? "S" : "E",
+                sFrom = oEvent.getParameter("from"),
+				sTo = oEvent.getParameter("to");
+
+			this.getView().byId("searchReceiptDate"+seSurffix).setDateValue(new Date(sFrom.getFullYear(), sFrom.getMonth(), sFrom.getDate()));
+            this.getView().byId("searchReceiptDate"+seSurffix).setSecondDateValue(new Date(sTo.getFullYear(), sTo.getMonth(), sTo.getDate()));
+		},
+        
+        onStatusSelectionChange : function (oEvent) {
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S",
+                seSurffix = sSurffix === "E" ? "S" : "E",
+                oSearchStatus = this.getView().byId("searchStatus"+seSurffix);
+
+            oSearchStatus.setSelectedKey(oEvent.getParameter("item").getKey());
+            
+            /** Receipt Date */
+            var today = new Date();
+            if(oEvent.getParameter("item").getKey() === 'received'){
+                this.getView().byId("searchReceiptDate"+sSurffix).setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
+                this.getView().byId("searchReceiptDate"+sSurffix).setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+                this.getView().byId("searchReceiptDate"+seSurffix).setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
+                this.getView().byId("searchReceiptDate"+seSurffix).setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+            }else{
+                this.getView().byId("searchReceiptDate"+sSurffix).setDateValue(null);
+                this.getView().byId("searchReceiptDate"+sSurffix).setSecondDateValue(null);
+                this.getView().byId("searchReceiptDate"+seSurffix).setDateValue(null);
+                this.getView().byId("searchReceiptDate"+seSurffix).setSecondDateValue(null);
+            }
 		},
 
+        familyFlagChange : function (oEvent) {
+			var sSelectedKey = oEvent.getSource().getSelectedKey();
 
+			if (sSelectedKey === 'Y') {
+                oEvent.getSource().getParent().getCells()[23].setEditable(true);
+                oEvent.getSource().getParent().getCells()[24].setEditable(true);
+                oEvent.getSource().getParent().getCells()[25].setEditable(true);
+                oEvent.getSource().getParent().getCells()[26].setEditable(true);
+                oEvent.getSource().getParent().getCells()[27].setEditable(true);
+			} else {
+				oEvent.getSource().getParent().getCells()[23].setEditable(false);
+                oEvent.getSource().getParent().getCells()[24].setEditable(false);
+                oEvent.getSource().getParent().getCells()[25].setEditable(false);
+                oEvent.getSource().getParent().getCells()[26].setEditable(false);
+                oEvent.getSource().getParent().getCells()[27].setEditable(false);
+			}
+		},
 
-
+        getFormatDate : function (date) {
+			var year = date.getFullYear();              //yyyy
+            var month = (1 + date.getMonth());          //M
+            month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+            var day = date.getDate();                   //d
+            day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+            return  year + '' + month + '' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+		},
 
 		/* =========================================================== */
 		/* internal methods                                            */
@@ -335,7 +430,7 @@ sap.ui.define([
                 familyPartNo = this.getView().byId("searchFamilyPartNo").getValue();
 				
             var aTableSearchState = [];
-            
+            //MessageToast.show("조회");
 			if (status !== "All") {
 				aTableSearchState.push(new Filter("mold_receipt_flag", FilterOperator.EQ, (status == "Received" ? true : false)));
 
@@ -343,16 +438,7 @@ sap.ui.define([
 					if (receiptFromDate === null) {
                         MessageToast.show("Receipt Date를 입력해 주세요");
                     } else {
-						var fromDate = receiptFromDate.getFullYear()+""+(receiptFromDate.getMonth()+1)+""+receiptFromDate.getDate(),
-							toDate = receiptToDate.getFullYear()+""+(receiptToDate.getMonth()+1)+""+receiptToDate.getDate();
-
-						aTableSearchState.push(new Filter({
-							filters: [
-								new Filter("receiving_report_date", FilterOperator.LE, receiptFromDate),
-								new Filter("receiving_report_date", FilterOperator.GE, receiptToDate)
-							],
-							and: false
-						}));
+                        aTableSearchState.push(new Filter("receiving_report_date", FilterOperator.BT, this.getFormatDate(receiptFromDate), this.getFormatDate(receiptToDate)));
 					}
 				}
 			}
@@ -366,9 +452,7 @@ sap.ui.define([
 				aTableSearchState.push(new Filter("export_domestic_type_code", FilterOperator.EQ, eDType));
 			}
 			if (model && model.length > 0) {
-                //aTableSearchState.push(new Filter("tolower(model)", FilterOperator.Contains, model.toLowerCase()));
-                aTableSearchState.push( this.createFilter("model", FilterOperator.Contains, model) );
-
+                aTableSearchState.push(new Filter("tolower(model)", FilterOperator.Contains, "'" + model.toLowerCase() + "'"));
 			}
 			if (partNo && partNo.length > 0) {
                 aTableSearchState.push(new Filter("part_number", FilterOperator.Contains, partNo.toUpperCase()));
@@ -391,10 +475,6 @@ sap.ui.define([
 			return aTableSearchState;
         },
         
-        createFilter: function(key, operator, value) {
-            return new Filter("tolower(" + key + ")", operator, "'" + value.toLowerCase() + "'");
-        },
-
         /*
 		_applySearch: function(aTableSearchState) {
 			var oTable = this.byId("moldMstTable"),
@@ -421,26 +501,142 @@ sap.ui.define([
 		},
 */
 
+		_initTableTemplates: function(){
+			this.oReadOnlyTemplate = new Column({
+				template: [
+					new Text({
+						text: "{list>company_code}"
+					}), 
+					new Text({
+						text: "{list>org_code}"
+					}), 
+					new Text({
+						text: "{list>model}"
+					}), 
+					new Text({
+						text: "{list>part_number}"
+					}), 
+					new Text({
+						text: "{list>mold_sequence}"
+					})
+				]
+			});
+
+			this.oEditableTemplate = new Column({
+				template: [
+					new Text({
+						text: "{list>company_code}"
+					}), 
+					new Text({
+						text: "{list>org_code}"
+                    }), 
+                    new Text({
+						text: "{list>model}"
+					}), 
+					new Text({
+						text: "{list>part_number}"
+					}), 
+					new Text({
+						text: "{list>mold_sequence}"
+					})
+					/*new ComboBox({
+                        selectedKey: "{details>control_option_level_code}",
+                        items: {
+                            id: "testCombo1",
+                            path: 'util>/CodeDetails',
+                            filters: [
+                                new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
+                                new Filter("company_code", FilterOperator.EQ, 'G100'),
+                                new Filter("group_code", FilterOperator.EQ, 'TEST')
+                            ],
+                            template: new Item({
+                                key: "{util>code}",
+                                text: "{util>code_description}"
+                            })
+                        },
+                        required: true
+                    }), 
+					new Input({
+						value: {
+							path: "details>control_option_level_val",
+                            type: new sap.ui.model.type.String(null, {
+								maxLength: 100
+							}),
+						},
+						required: true
+					}),
+					new Input({
+						value: {
+							path: "details>control_option_val",
+                            type: new sap.ui.model.type.String(null, {
+								maxLength: 100
+							})
+						},
+						required: true
+					})*/
+				]
+            });
+		},
+
+		_bindMoldMstTable: function(oTemplate, sKeyboardMode){
+			this.byId("moldMstTable").bindRows({
+				path: "list>/MoldMasters",
+				template: oTemplate
+			});//.setKeyboardMode(sKeyboardMode);
+		},
+
 		_toEditMode: function(){
+            var oRows = this.byId("moldMstTable").getRows(),
+                oUiModel = this.getView().getModel("mode");
+                oUiModel.setProperty("/editFlag", true);
+                oUiModel.setProperty("/viewFlag", false);
+
+            oRows.forEach(function (oRow) {
+                var oCells = oRow.getCells();
+
+                oCells.forEach(function (oCell, jdx) {
+                    if(jdx > 6 && jdx < 22){
+                        oCell.removeStyleClass("readonlyField");
+                    }
+                });
+            });
+            
             var FALSE = false;
-			this.byId("pageSearchFormS").setEditable(FALSE);
-			this.byId("pageSearchButton").setEnabled(FALSE);
-			this.byId("moldMstTableBindButton").setEnabled(!FALSE);
+            this.byId("page").setProperty("showFooter", !FALSE);
+			this.byId("moldMstTableEditButton").setEnabled(FALSE);
+			this.byId("moldMstTableBindButton").setEnabled(FALSE);
 			this.byId("moldMstTableCancelButton").setEnabled(FALSE);
-			this.byId("moldMstTableDeleteButton").setEnabled(!FALSE);
-			this.byId("moldMstTableReceiptButton").setEnabled(!FALSE);
-			this._rebindTable(this.oEditableTemplate, "Edit");
+			this.byId("moldMstTableDeleteButton").setEnabled(FALSE);
+			this.byId("moldMstTableReceiptButton").setEnabled(FALSE);
+            this.byId("moldMstTable").setSelectionMode(sap.ui.table.SelectionMode.None);
+			//this._bindMoldMstTable(this.oEditableTemplate, "Edit");
 		},
 
 		_toShowMode: function(){
+            var oRows = this.byId("moldMstTable").getRows(),
+                oUiModel = this.getView().getModel("mode");
+                oUiModel.setProperty("/editFlag", false);
+                oUiModel.setProperty("/viewFlag", true);
+
+            oRows.forEach(function (oRow) {
+                var oCells = oRow.getCells();
+
+                oCells.forEach(function (oCell, jdx) {
+                    if(jdx > 6 && jdx < 22){
+                        oCell.addStyleClass("readonlyField");
+                    }
+                });
+            });
+            
             var TRUE = true;
-			this._rebindTable(this.oReadOnlyTemplate, "Navigation");
-			this.byId("pageSearchFormS").setEditable(TRUE);
-			this.byId("pageSearchButton").setEnabled(TRUE);
-			this.byId("moldMstTableBindButton").setEnabled(!TRUE);
+            this.byId("page").setProperty("showFooter", !TRUE);
+			this.byId("moldMstTableEditButton").setEnabled(TRUE);
+			this.byId("moldMstTableBindButton").setEnabled(TRUE);
 			this.byId("moldMstTableCancelButton").setEnabled(TRUE);
-			this.byId("moldMstTableDeleteButton").setEnabled(!TRUE);
-			this.byId("moldMstTableReceiptButton").setEnabled(!TRUE);
+			this.byId("moldMstTableDeleteButton").setEnabled(TRUE);
+            this.byId("moldMstTableReceiptButton").setEnabled(TRUE);
+			this.byId("moldMstTable").setSelectionMode(sap.ui.table.SelectionMode.MultiToggle);
+			//this._bindMoldMstTable(this.oReadOnlyTemplate, "Navigation");
 		},
 
         /* Affiliate Start */
@@ -457,15 +653,8 @@ sap.ui.define([
             this.oColModel = new JSONModel(sap.ui.require.toUrl("dp/developmentReceipt/localService/mockdata") + "/columnsModel.json");
             this.oAffiliateModel = new JSONModel(sap.ui.require.toUrl("dp/developmentReceipt/localService/mockdata") + "/affiliate.json");
             this.setModel("affiliateModel", this.oAffiliateModel);
-
-            /** Receipt Date */
-            var today = new Date();
-            
-            this.getView().byId("searchReceiptDate"+sSurffix).setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
-            this.getView().byId("searchReceiptDate"+sSurffix).setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
-            this.getView().byId("searchReceiptDateE").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
-            this.getView().byId("searchReceiptDateE").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
         },
+
         /**
          * @private 
          * @see searchAffiliate setTokens
@@ -546,59 +735,7 @@ sap.ui.define([
             this._oValueHelpDialog.destroy();
         },
         /* Affiliate End */
-/*
-		_doInitTable: function(){
 
-			this.oReadOnlyTemplate = new ColumnListItem({
-				cells: [
-					new ObjectIdentifier({
-						text: "{chain_code}"
-					}), new ObjectIdentifier({
-						text: "{language_code}"
-					}), new ObjectIdentifier({
-						text: "{message_code}"
-					}), new Text({
-						text: "{message_contents}", hAlign: "Right"
-					}), new Text({
-						text: "{message_type_code}", hAlign: "Right"
-					})
-				],
-				type: sap.m.ListType.Navigation
-			});
-			this.oReadOnlyTemplate.attachPress(this.onMoldMstTableItemPress.bind(this));
-
-            var oMessageTypeComboBox = new ComboBox({
-                    selectedKey: "{message_type_code}"
-                });
-                oMessageTypeComboBox.bindItems({
-                    path: 'util>/CodeDetails',
-                    filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
-                        new Filter("company_code", FilterOperator.EQ, '*'),
-                        new Filter("group_code", FilterOperator.EQ, 'CM_MESSAGE_TYPE_CODE')
-                    ],
-                    template: new Item({
-                        key: "{util>code}",
-                        text: "{util>code_description}"
-                    })
-                });
-			this.oEditableTemplate = new ColumnListItem({
-				cells: [
-					new Input({
-						value: "{chain_code}"
-					}), new Input({
-						value: "{language_code}"
-					}), new Input({
-						value: "{message_code}"
-					}), new Input({
-						value: "{message_contents}"
-					}), oMessageTypeComboBox
-				]
-            });
-
-			this._toShowMode();
-		},
-*/
 		_doInitTablePerso: function(){
 			// init and activate controller
 			this._oTPC = new TablePersoController({

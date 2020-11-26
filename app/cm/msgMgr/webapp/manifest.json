@@ -82,7 +82,7 @@
           "defaultBindingMode": "TwoWay",
           "defaultCountMode": "Inline",
           "refreshAfterChange": false,
-          "useBatch": false
+          "useBatch": true
         }
       },
       "": {
@@ -127,14 +127,25 @@
           "target": [
             "mainList"
           ]
+        },
+        {
+          "pattern": "Message/{tenantId}/{messageCode}/{languageCode}",
+          "name": "mainObject",
+          "target": [
+            "mainObject"
+          ]
         }
       ],
       "targets": {
         "mainList": {
           "viewName": "MainList",
           "viewId": "mainList",
-          "viewLevel": 1,
-          "title": "{i18n>appTitle}"
+          "viewLevel": 1
+        },
+        "mainObject": {
+          "viewName": "MainObject",
+          "viewId": "mainObject",
+          "viewLevel": 2
         },
         "notFound": {
           "viewName": "NotFound",

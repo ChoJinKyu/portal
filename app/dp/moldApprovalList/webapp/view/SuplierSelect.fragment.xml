@@ -1,0 +1,23 @@
+<!-- 
+   description : 품의서 Participating Supplier 항목의 Supplier Select 버튼 클릭
+-->
+
+<core:FragmentDefinition
+	xmlns:vDialog="sap.ui.comp.valuehelpdialog"
+	xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:layout="sap.ui.layout"
+    >
+	<vDialog:ValueHelpDialog
+		title="Product"
+		ok=".onValueHelpOkPress"
+		cancel=".onValueHelpCancelPress"
+		afterClose=".onValueHelpAfterClose"
+		key="ProductId"
+		descriptionKey="Name"
+	>
+	</vDialog:ValueHelpDialog>
+</core:FragmentDefinition>
+

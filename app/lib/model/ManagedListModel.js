@@ -8,13 +8,13 @@ sap.ui.define([
     var ManagedListModel = JSONModel.extend("ext.lib.model.ManagedListModel", {
 
         constructor: function (oData, bObserve) {
-            JSONModel.prototype.constructor.apply(this, arguments);
             this._aRemovedRows = [];
+            JSONModel.prototype.constructor.call(this, oData, bObserve);
         },
 
-        setData: function (oData, bMerge) {
+        setData: function (oData, sPath, bMerge) {
             var aRecords = oData.results || oData || [],
-                sPath = this._transactionPath,
+                sPath = sPath || this._transactionPath,
                 oResult = {};
             aRecords.forEach(function (oItem) {
                 if (oItem.__metadata && oItem.__metadata.uri) {
@@ -38,7 +38,7 @@ sap.ui.define([
         },
 
         addRecord: function (oRecord, sPath, nIndex) {
-            var sEntityName = this.getProperty("/entityName"),
+            var sEntityName = this.getProperty("/entityName") || (sPath && sPath.startsWith("/") ? sPath.substring(1) : sPath),
                 aRecords = this.getProperty("/" + sEntityName);
             if(!aRecords) aRecords = [];
             if(typeof sPath == "number") nIndex = sPath;
