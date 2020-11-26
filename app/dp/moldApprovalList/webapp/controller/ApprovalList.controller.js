@@ -21,7 +21,8 @@ sap.ui.define([
     'sap/ui/core/Element',
     "sap/ui/core/syncStyleClass",
     'sap/m/Label',
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item, Element, syncStyleClass, Label) {
+    'sap/m/SearchField',
+], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item, Element, syncStyleClass, Label, SearchField) {
 	"use strict";
    /**
     * @description 품의 목록 (총 품의 공통)
@@ -363,22 +364,9 @@ sap.ui.define([
         // },
 
         onValueHelpRequested : function (oEvent) {
-            var oView = this.getView();
-            var oButton = oEvent.getSource();
-            var id = oButton.getId();
-            var page ="";
+      
             var path = '';
-            if(id.indexOf("Model") != -1){
-                page = "dp.moldApprovalList.view.DialogModel";
-                dialogId = "DialogModel";
-            }else if(id.indexOf("MoldPartNo") != -1){
-                page = "dp.moldApprovalList.view.DialogMoldPartNo";
-                dialogId = "DialogMoldPartNo";
-            }else if(id.indexOf("Requester") != -1){
-                page = "dp.moldApprovalList.view.DialogRequester";
-                dialogId = "DialogRequester";
-            }
-            this._oValueHelpDialog = sap.ui.xmlfragment(page, this);
+            this._oValueHelpDialog = sap.ui.xmlfragment("dp.moldApprovalList.view.ValueHelpDialog", this);
 
             if(oEvent.getSource().sId.indexOf("searchModel") > -1){
                 //model
@@ -399,9 +387,9 @@ sap.ui.define([
                 this._oValueHelpDialog.setKey('model');
                 this._oValueHelpDialog.setDescriptionKey('model');
 
-            }else if(oEvent.getSource().sId.indexOf("searchPart") > -1){
+            }else if(oEvent.getSource().sId.indexOf("searchMoldPartNo") > -1){
                 //part
-                this._oInputModel = this.getView().byId("searchPart");
+                this._oInputModel = this.getView().byId("searchMoldPartNo");
 
                 this.oColModel = new JSONModel({
                     "cols": [

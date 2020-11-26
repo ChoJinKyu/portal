@@ -185,12 +185,18 @@
                         </VBox>
                         <VBox>
                             <Label text="Mold Part No " labelFor="searchMoldPartNo"></Label>
-                            <MultiInput id="searchMoldPartNo" valueHelpOnly="true" width="100%" valueHelpRequest=".approvalDialogOpen">
-                                <customData>
-                                    <core:CustomData key="multi" value="true" />
-                                    <core:CustomData key="confirmButtonText" value="Apply" />
-                                </customData>
-                            </MultiInput>
+                            <Input id="searchMoldPartNo" 
+                                    showValueHelp="true"  
+                                    valueHelpRequest=".onValueHelpRequested"
+                                    suggestionItems="{
+                                        path: '/PartNumbers',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                        ],
+                                        sorter: { path: 'part_number' }
+                            }">
+                                <core:Item key="{part_number}" text="{part_number}" />
+                            </Input>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
