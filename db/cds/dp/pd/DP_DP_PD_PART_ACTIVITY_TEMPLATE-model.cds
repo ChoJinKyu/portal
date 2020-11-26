@@ -12,8 +12,8 @@ entity Pd_Part_Activity_Template {
     seq : Decimal default 1  @title: '순번' ;	
     actual_role : String(40)   @title: '실적 역할' ;	
     actual_type : String(10)   @title: '실적 유형' ;	
-    doc_mandatory_flag : Boolean default 1  @title: '산출물필수여부' ;	
-    self_approve_flag : Boolean default 1  @title: '자가결재 여부' ;	
+    doc_mandatory_flag : Boolean   @title: '산출물필수여부' ;	
+    self_approve_flag : Boolean   @title: '자가결재 여부' ;	
     desc : String(2000)   @title: '설명' ;	
     status_code : String(10)   @title: '상태코드' ;	
 }	
