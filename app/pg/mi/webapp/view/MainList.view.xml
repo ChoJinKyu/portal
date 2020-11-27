@@ -64,10 +64,16 @@
                     enableBasicSearch="false" >
                         <smartFilterBar:controlConfiguration>
                             <!-- 관리조직 -->
-                            <smartFilterBar:ControlConfiguration  key="tenant_id" groupId="_BASIC" index="1" label="관리조직"
+                            <smartFilterBar:ControlConfiguration  
+                            key="tenant_id" 
+                            groupId="_BASIC" 
+                            index="1" 
+                            label="관리조직"
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
-                                        <ComboBox id="sf_tenant_id" items="{path: '/OrgTenantView', templateShareable:true}" placeholder="선택하세요.">
+                                        <ComboBox id="sf_tenant_id" 
+                                        items="{path: '/OrgTenantView', templateShareable:true}" 
+                                        placeholder="선택하세요.">
                                         <core:Item key="{tenant_id}" text="{tenant_name}"/>
                                     </ComboBox>
                                 </smartFilterBar:customControl>
@@ -100,16 +106,16 @@
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
                                         <ComboBox id="sf_category_code" items="{path: '/MICategoryView', templateShareable:true}" placeholder="선택하세요.">
-                                        <core:Item key="{category_code}" text="{category_name}"/>
+                                        <core:Item key="{category_code}" text="{category_text}"/>
                                     </ComboBox>
                                 </smartFilterBar:customControl>
                             </smartFilterBar:ControlConfiguration>
 
                              <!-- 사용여부 -->    
-                          <smartFilterBar:ControlConfiguration key="code" groupId="_BASIC" index="4" label="사용여부" 
+                          <smartFilterBar:ControlConfiguration key="use_flag" groupId="_BASIC" index="4" label="사용여부" 
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
-                                        <ComboBox id="sf_code" items="{path: '/UseYNView', templateShareable:true}" placeholder="선택하세요.">
+                                        <ComboBox id="sf_use_flag" items="{path: '/UseYNView', templateShareable:true}" placeholder="선택하세요.">
                                         <core:Item key="{code}" text="{code_name}"/>
                                     </ComboBox>
                                 </smartFilterBar:customControl>

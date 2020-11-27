@@ -179,27 +179,44 @@ sap.ui.define([
          * @param {sap.ui.base.Event} oEvent 
          */
 		onBeforeRebindTable: function (oEvent) {
-			return;
-			console.group("onBeforeRebindTable");
-			/*
+		
+            console.group("onBeforeRebindTable");
+
+            // Object.keys(data.multi || {}).forEach(k => {
+            // var f = [];
+            // data.multi[k].forEach(v => {
+            //     if (v) f.push(new Filter(k, FilterOperator.EQ, v));
+            // });
+
+            // if (f.length > 0) {
+            //     this.aFilters.push(new Filter(f));
+            // }
+            // });
+
 			var mBindingParams = oEvent.getParameter("bindingParams");
 			var oSmtFilter = this.getView().byId("smartFilterBar");             //smart filter
 			
-			//combobox value
-			var oMi_material_code = oSmtFilter.getControlByKey("mi_material_code").getValue();     
-			var omi_material_code_name = oSmtFilter.getControlByKey("mi_mi_material_code_name").getValue();               
-			var oCategory_code = oSmtFilter.getControlByKey("category_code").getValue();   
-            var oCode = oSmtFilter.getControlByKey("code").getSelectedKey();   
-            var fOcode = oCode =="FALSE" ? false : true;
+            //combobox value
+            var oMi_tenant_id = oSmtFilter.getControlByKey("tenant_id").getSelectedKey();    
+			var oMi_material_code = oSmtFilter.getControlByKey("mi_material_code").getSelectedKey();   
+			var oMi_material_code_name = oSmtFilter.getControlByKey("mi_material_code_name").getSelectedKey();            
+			var oCategory_code = oSmtFilter.getControlByKey("category_code").getSelectedKey();    
+            var oUse_flag = oSmtFilter.getControlByKey("use_flag").getSelectedKey();   
+            var fOcode = oUse_flag =="FALSE" ? false : true;
+
+			if (oMi_tenant_id.length > 0) {
+				var oMi_tenant_idFilter = new Filter("tenant_id", FilterOperator.EQ, oMi_tenant_id);
+				mBindingParams.filters.push(oMi_tenant_idFilter);
+            }
             
 			if (oMi_material_code.length > 0) {
 				var oMi_material_codeFilter = new Filter("mi_material_code", FilterOperator.EQ, oMi_material_code);
 				mBindingParams.filters.push(oMi_material_codeFilter);
 			}
 
-			if (oMi_mi_material_code_name.length > 0) {
-				var oMi_mi_material_code_nameFilter = new Filter("mi_mi_material_code_name", FilterOperator.EQ, oMi_mi_material_code_name);
-				mBindingParams.filters.push(oMi_mi_material_code_nameFilter);
+			if (oMi_material_code_name.length > 0) {
+				var oMi_material_code_nameFilter = new Filter("mi_material_code_name", FilterOperator.EQ, oMi_material_code_name);
+				mBindingParams.filters.push(oMi_material_code_nameFilter);
 			}
 
 			if (oCategory_code.length > 0) {
@@ -207,11 +224,11 @@ sap.ui.define([
 				mBindingParams.filters.push(oCategory_codeFilter);
 			}
 			
-			if (oCode.length > 0) {
+			if (oUse_flag.length > 0) {
 				var oCodeFilter = new Filter("use_flag", FilterOperator.EQ, fOcode);
 				mBindingParams.filters.push(oCodeFilter);
 			}  
-			*/
+			
 			console.groupEnd();              
 		},
 
