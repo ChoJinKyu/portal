@@ -17,7 +17,7 @@
             <Label text="Model"/>
             <Text text="{master>/model}"/>
             <Label text="Production Type"/>
-            <Text text="{master>/mold_production_type_name}"/>
+            <Text text="{mstSpecView>/mold_production_type_name}"/>
             <Label text="Mold Supplier"/>
             <Text text="{master>/mold_vendor_id}"></Text>
         <!-- </l:VerticalLayout>            
@@ -30,7 +30,7 @@
             <Text text="{master>/order_vendor_id}"></Text>
         <!-- </l:VerticalLayout>            
         <l:VerticalLayout > -->
-            <Label text="Seq"/>
+            <Label text="Mold Seq"/>
             <Text text="{master>/mold_sequence}"/>
             <Label text="Description"/>
             <Text text="{master>/spec_name}"></Text>
