@@ -360,8 +360,7 @@ sap.ui.define([
 
         familyFlagChange : function (oEvent) {
             var sSelectedKey = oEvent.getSource().getSelectedKey();
-            console.log(oEvent.getSource().getParent().getCells()[22]);
-console.log(oEvent.getSource().getParent().getCells()[23].getChildren());
+            
 			if (sSelectedKey === 'Y') {
                 oEvent.getSource().getParent().getCells()[23].setEditable(true);
                 oEvent.getSource().getParent().getCells()[24].setEditable(true);
@@ -553,7 +552,7 @@ console.log(oEvent.getSource().getParent().getCells()[23].getChildren());
                 var oCells = oRow.getCells();
 
                 oCells.forEach(function (oCell, jdx) {
-                    if(jdx > 6 && jdx < 22){
+                    if(jdx > 6 && jdx !== 12){
                         oCell.removeStyleClass("readonlyField");
                     }
                 });
@@ -574,7 +573,7 @@ console.log(oEvent.getSource().getParent().getCells()[23].getChildren());
                 var oCells = oRow.getCells();
 
                 oCells.forEach(function (oCell, jdx) {
-                    if(jdx > 6 && jdx < 22){
+                    if(jdx > 6 && jdx !== 12){
                         oCell.addStyleClass("readonlyField");
                     }
                 });

@@ -629,10 +629,7 @@
                         <Label text="Part No(1)"/>
                         </VBox>
                         <table:template>
-                            <HBox>
-                            <Input id="family_part_number_1" value="{list>family_part_number_1}" maxLength="11" visible="{mode>/editFlag}" editable="{= ${list>family_part_number_1} !== null ? true : false }" />
-                            <Text text="{list>family_part_number_1}" visible="{mode>/viewFlag}" />
-                            </HBox>
+                            <Input id="family_part_number_1" value="{list>family_part_number_1}" maxLength="11" editable="{= ${list>family_part_number_1} !== null ? ${mode>/editFlag} : false }" class="readonlyField" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldFamilyPartNo2Column" width="12em" hAlign="Center">
@@ -641,10 +638,7 @@
                         <Label text="Part No(2)"/>
                         </VBox>
                         <table:template>
-                            <HBox>
-                            <Input id="family_part_number_2" value="{list>family_part_number_2}" maxLength="11" visible="{mode>/editFlag}" editable="{= ${list>family_part_number_1} !== null ? true : false }" />
-                            <Text text="{list>family_part_number_2}" visible="{mode>/viewFlag}" />
-                            </HBox>
+                            <Input id="family_part_number_2" value="{list>family_part_number_2}" maxLength="11" editable="{= ${list>family_part_number_1} !== null ? ${mode>/editFlag} : false }" class="readonlyField" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldFamilyPartNo3Column" width="12em" hAlign="Center">
@@ -653,10 +647,7 @@
                         <Label text="Part No(3)"/>
                         </VBox>
                         <table:template>
-                            <HBox>
-                            <Input id="family_part_number_3" value="{list>family_part_number_3}" maxLength="11" visible="{mode>/editFlag}" editable="{= ${list>family_part_number_1} !== null ? true : false }" />
-                            <Text text="{list>family_part_number_3}" visible="{mode>/viewFlag}" />
-                            </HBox>
+                            <Input id="family_part_number_3" value="{list>family_part_number_3}" maxLength="11" editable="{= ${list>family_part_number_1} !== null ? ${mode>/editFlag} : false }" class="readonlyField" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldFamilyPartNo4Column" width="12em" hAlign="Center">
@@ -665,10 +656,7 @@
                         <Label text="Part No(4)"/>
                         </VBox>
                         <table:template>
-                            <HBox>
-                            <Input id="family_part_number_4" value="{list>family_part_number_4}" maxLength="11" visible="{mode>/editFlag}" editable="{= ${list>family_part_number_1} !== null ? true : false }" />
-                            <Text text="{list>family_part_number_4}" visible="{mode>/viewFlag}" />
-                            </HBox>
+                            <Input id="family_part_number_4" value="{list>family_part_number_4}" maxLength="11" editable="{= ${list>family_part_number_1} !== null ? ${mode>/editFlag} : false }" class="readonlyField" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldFamilyPartNo5Column" width="12em" hAlign="Center">
@@ -677,10 +665,7 @@
                         <Label text="Part No(5)"/>
                         </VBox>
                         <table:template>
-                            <HBox>
-                            <Input id="family_part_number_5" value="{list>family_part_number_5}" maxLength="11" visible="{mode>/editFlag}" editable="{= ${list>family_part_number_1} !== null ? true : false }" />
-                            <Text text="{list>family_part_number_5}" visible="{mode>/viewFlag}" />
-                            </HBox>
+                            <Input id="family_part_number_5" value="{list>family_part_number_5}" maxLength="11" editable="{= ${list>family_part_number_1} !== null ? ${mode>/editFlag} : false }" class="readonlyField" />
                         </table:template>
                     </table:Column>
                 </table:columns>
