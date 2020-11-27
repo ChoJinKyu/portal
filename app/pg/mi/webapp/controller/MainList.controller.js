@@ -310,10 +310,12 @@ sap.ui.define([
          */
 		_deleteAction: function(oAction) {
             console.group("_deleteAction");
+            
 			if(oAction === sap.m.MessageBox.Action.DELETE) {
 				this._getSmartTableById().getTable().getSelectedItems().forEach(function(oItem){
                     var sPath = oItem.getBindingContextPath();	
               
+                  
 					var mParameters = {"groupId":"deleteGroup"};
 					oItem.getBindingContext().getModel().remove(sPath, mParameters);
 				});
@@ -324,7 +326,7 @@ sap.ui.define([
 		        	success: this._handleDeleteSuccess.bind(this),
 		        	error: this._handleDeleteError.bind(this)
 		     	});
-            }
+            } 
             console.groupEnd();
 		},
    
