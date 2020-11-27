@@ -8,6 +8,7 @@ entity Mold_Mst_Spec_View {
         user_name                       : String;
         last_update_date                : String;
         mold_item_type_name             : String;
+        mold_production_type_name       : String;
         mold_spec_status_name           : String;
         family_part_numbers             : String;
         tenant_id                       : String(5) not null  @title : '테넌트ID';
