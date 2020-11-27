@@ -145,7 +145,11 @@
                                                     </OverflowToolbar>
                                                 </headerToolbar>
                                                 <columns>
-                                                                                             
+                                                    <Column hAlign="Center">
+                                                        <header>
+                                                            <Label text="상태"/>
+                                                        </header>
+                                                    </Column>                                                                           
                                                     <Column hAlign="Center">
                                                         <header>
                                                             <Label text="Language"/>
@@ -160,15 +164,15 @@
                                                 <items>
                                                     <ColumnListItem>
                                                     <!--   MIMaterialCodeText-->
-                                                        <cells>
-                                                            
+                                                        <cells>   
+                                                            <Label text="{jCodeText>opmode}" />                                          
                                                             <ComboBox
                                                                 selectedKey="{jCodeText>language_code}"
                                                                 items="{
                                                                     path: 'jLanguageView>/',                                                                                                                            
                                                                     templateShareable:false}"
                                                                 placeholder="선택하세요.">
-                                                                <core:Item key="{jLanguageView>code}" text="{jLanguageView>code_name}" />
+                                                                <core:Item key="{jLanguageView>code}" text="{jLanguageView>code_name}" />                                                                    
                                                             </ComboBox>
                                                             <Input value="{jCodeText>mi_material_code_name}" />
                                                         </cells>
