@@ -138,35 +138,7 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			<uxap:ObjectPageSection titleUppercase="false" title="Attachments">
-				<uxap:subSections>
-					<uxap:ObjectPageSubSection >
-                        <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" width="100%">
-                    
-                            <UploadCollection
-                                id="UploadCollection"
-                                maximumFilenameLength="55"
-                                maximumFileSize="10"
-                                multiple="true"
-                                sameFilenameAllowed="true"
-                                instantUpload="false"
-                                noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
-                                change="onChange"
-                                fileDeleted="onFileDeleted"
-                                filenameLengthExceed="onFilenameLengthExceed"
-                                fileSizeExceed="onFileSizeExceed"
-                                typeMissmatch="onTypeMissmatch"
-                                uploadComplete="onUploadComplete"
-                                beforeUploadStarts="onBeforeUploadStarts" />
-                                
-                            <Button id="Button" text="Upload Now" press="onStartUpload" />
-                        </layout:VerticalLayout> 
-
-					</uxap:ObjectPageSubSection>
-				</uxap:subSections>
-			</uxap:ObjectPageSection>
-
-			<uxap:ObjectPageSection titleUppercase="false" title="Participating Supplier">
+            <uxap:ObjectPageSection titleUppercase="false" title="Participating Supplier">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
                        <HBox>
@@ -349,6 +321,36 @@
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
+
+			<uxap:ObjectPageSection titleUppercase="false" title="Attachments">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection >
+                        <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" width="100%">
+                    
+                            <UploadCollection
+                                id="UploadCollection"
+                                maximumFilenameLength="55"
+                                maximumFileSize="10"
+                                multiple="true"
+                                sameFilenameAllowed="true"
+                                instantUpload="false"
+                                noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
+                                change="onChange"
+                                fileDeleted="onFileDeleted"
+                                filenameLengthExceed="onFilenameLengthExceed"
+                                fileSizeExceed="onFileSizeExceed"
+                                typeMissmatch="onTypeMissmatch"
+                                uploadComplete="onUploadComplete"
+                                beforeUploadStarts="onBeforeUploadStarts" />
+                                
+                            <Button id="Button" text="Upload Now" press="onStartUpload" />
+                        </layout:VerticalLayout> 
+
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+			
 
 			<uxap:ObjectPageSection titleUppercase="false" title="Approval Line">
 				<uxap:subSections>
