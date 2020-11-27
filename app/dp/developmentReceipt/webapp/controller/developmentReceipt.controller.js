@@ -58,9 +58,7 @@ sap.ui.define([
             //this._doInitTablePerso();
             
             this.setModel(new ManagedListModel(), "list");
-
-            //this._initTableTemplates();
-            //this._toShowMode();
+            
         },
         
         onAfterRendering : function () {
@@ -501,90 +499,6 @@ sap.ui.define([
 		},
 */
 
-		_initTableTemplates: function(){
-			this.oReadOnlyTemplate = new Column({
-				template: [
-					new Text({
-						text: "{list>company_code}"
-					}), 
-					new Text({
-						text: "{list>org_code}"
-					}), 
-					new Text({
-						text: "{list>model}"
-					}), 
-					new Text({
-						text: "{list>part_number}"
-					}), 
-					new Text({
-						text: "{list>mold_sequence}"
-					})
-				]
-			});
-
-			this.oEditableTemplate = new Column({
-				template: [
-					new Text({
-						text: "{list>company_code}"
-					}), 
-					new Text({
-						text: "{list>org_code}"
-                    }), 
-                    new Text({
-						text: "{list>model}"
-					}), 
-					new Text({
-						text: "{list>part_number}"
-					}), 
-					new Text({
-						text: "{list>mold_sequence}"
-					})
-					/*new ComboBox({
-                        selectedKey: "{details>control_option_level_code}",
-                        items: {
-                            id: "testCombo1",
-                            path: 'util>/CodeDetails',
-                            filters: [
-                                new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
-                                new Filter("company_code", FilterOperator.EQ, 'G100'),
-                                new Filter("group_code", FilterOperator.EQ, 'TEST')
-                            ],
-                            template: new Item({
-                                key: "{util>code}",
-                                text: "{util>code_description}"
-                            })
-                        },
-                        required: true
-                    }), 
-					new Input({
-						value: {
-							path: "details>control_option_level_val",
-                            type: new sap.ui.model.type.String(null, {
-								maxLength: 100
-							}),
-						},
-						required: true
-					}),
-					new Input({
-						value: {
-							path: "details>control_option_val",
-                            type: new sap.ui.model.type.String(null, {
-								maxLength: 100
-							})
-						},
-						required: true
-					})*/
-				]
-            });
-		},
-
-		_bindMoldMstTable: function(oTemplate, sKeyboardMode){
-			this.byId("moldMstTable").bindRows({
-				path: "list>/MoldMasters",
-				template: oTemplate
-			});//.setKeyboardMode(sKeyboardMode);
-		},
-
 		_toEditMode: function(){
             var oRows = this.byId("moldMstTable").getRows(),
                 oUiModel = this.getView().getModel("mode");
@@ -603,13 +517,7 @@ sap.ui.define([
             
             var FALSE = false;
             this.byId("page").setProperty("showFooter", !FALSE);
-			this.byId("moldMstTableEditButton").setEnabled(FALSE);
-			this.byId("moldMstTableBindButton").setEnabled(FALSE);
-			this.byId("moldMstTableCancelButton").setEnabled(FALSE);
-			this.byId("moldMstTableDeleteButton").setEnabled(FALSE);
-			this.byId("moldMstTableReceiptButton").setEnabled(FALSE);
             this.byId("moldMstTable").setSelectionMode(sap.ui.table.SelectionMode.None);
-			//this._bindMoldMstTable(this.oEditableTemplate, "Edit");
 		},
 
 		_toShowMode: function(){
@@ -630,13 +538,7 @@ sap.ui.define([
             
             var TRUE = true;
             this.byId("page").setProperty("showFooter", !TRUE);
-			this.byId("moldMstTableEditButton").setEnabled(TRUE);
-			this.byId("moldMstTableBindButton").setEnabled(TRUE);
-			this.byId("moldMstTableCancelButton").setEnabled(TRUE);
-			this.byId("moldMstTableDeleteButton").setEnabled(TRUE);
-            this.byId("moldMstTableReceiptButton").setEnabled(TRUE);
 			this.byId("moldMstTable").setSelectionMode(sap.ui.table.SelectionMode.MultiToggle);
-			//this._bindMoldMstTable(this.oReadOnlyTemplate, "Navigation");
 		},
 
         /* Affiliate Start */
