@@ -496,10 +496,16 @@ sap.ui.define([
 
                 that._onPageMode(true);
 
+                var oData = {
+                    text: null,
+                    number: 0,
+                    date: null
+                };
+                var jsonoModel = new JSONModel();
+                jsonoModel.setData(oData);
+                this.getView().setModel(jsonoModel);
 
-                //  var inputMaterialCode = sap.ui.core.Fragment.byId("Change_id", "inputMaterialCode");
-                //  inputMaterialCode.setValue(null);
-                //  inputMaterialCode.setValueState("None");
+            
 
             } else {
 
@@ -656,6 +662,7 @@ sap.ui.define([
             if (!mode) {
 
                 this._onPageMode(true);
+                
                 oView.byId("buttonMidEdit").setVisible(true);
                 oView.byId("buttonMidEdit").setText("Show");
                 oView.byId("buttonMidDelete").setVisible(true);
