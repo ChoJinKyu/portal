@@ -43,13 +43,5 @@ entity Vp_Vendor_Pool_Search_View {
   repr_department_code: String(50) @title: '구매부서코드';
   repr_department_name: String @title: '구매부서';
   managers_name: String @title: '담당자';
-  node_id: String @title: 'node id';
-  parent_id: String @title: 'parent node id';
   hierarchy_rank: Integer64;
-  hierarchy_tree_size: Integer64;
-  hierarchy_parent_rank: Integer64;
-  hierarchy_level: Integer;
-  hierarchy_root_rank: Integer64;
-  delete_flag: Boolean @title: '삭제가능여부';
-  drill_state: String @title: 'expand/leaf';
 }
