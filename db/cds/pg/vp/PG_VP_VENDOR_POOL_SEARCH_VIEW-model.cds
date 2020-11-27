@@ -6,6 +6,7 @@ entity Vp_Vendor_Pool_Search_View {
   key company_code: String(10) @title: '회사코드';
   key org_type_code: String(2) @title: '조직유형코드';
   key org_code: String(10) @title: '조작코드';
+  language_cd: String(2) @title: '다국어적용코드';
   key operation_unit_code: String(30) @title: '평가운영단위코드';
   operation_unit_name: String @title: '평가운영단위';
   key vendor_pool_code: String(30) @title: '협력사풀코드';
