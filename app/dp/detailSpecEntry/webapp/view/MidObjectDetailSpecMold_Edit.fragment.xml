@@ -22,6 +22,11 @@
                 <Input value="{spec>/cavity_process_qty}"/>
                 <Label text="Demand Life"/>
                 <Input value="{spec>/request_life_shot_count}"/>
+                <Text text="Shot">
+                    <layoutData>
+						<form:ColumnElementData cellsSmall="2" cellsLarge="1" />
+					</layoutData>
+                </Text>
                 <Label text="Hot Runner Valve Qty"/>
                 <Input value="{spec>/mold_hot_runner_qty}"/>
                 <Label text="Size"/>
