@@ -331,8 +331,6 @@ sap.ui.define([
 			if(oAction === sap.m.MessageBox.Action.DELETE) {
 				this._getSmartTableById().getTable().getSelectedItems().forEach(function(oItem){
                     var sPath = oItem.getBindingContextPath();	
-              
-                  
 					var mParameters = {"groupId":"deleteGroup"};
 					oItem.getBindingContext().getModel().remove(sPath, mParameters);
 				});

@@ -145,7 +145,7 @@
                                                     </OverflowToolbar>
                                                 </headerToolbar>
                                                 <columns>
-                                                    <Column hAlign="Center">
+                                                    <Column hAlign="Center" width="50px">
                                                         <header>
                                                             <Label text="상태"/>
                                                         </header>

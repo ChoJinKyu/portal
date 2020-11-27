@@ -502,10 +502,8 @@ sap.ui.define([
                     date: null
                 };
                 var jsonoModel = new JSONModel();
-                jsonoModel.setData(oData);
+                    jsonoModel.setData(oData);
                 this.getView().setModel(jsonoModel);
-
-            
 
             } else {
 
@@ -518,10 +516,7 @@ sap.ui.define([
                 this.getView().byId("buttonMidDelete").setVisible(false);
                 this.getView().byId("buttonSave").setVisible(false);
 
-
                 that._onPageMode(false);
-
-
             }
             var sServiceUrl = "/MIMaterialCodeList";
 
