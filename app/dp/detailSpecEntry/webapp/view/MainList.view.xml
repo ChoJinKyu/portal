@@ -9,8 +9,10 @@
     height="100%">
 
     <f:DynamicPage id="page"
-        headerExpanded="{mainListView>/headerExpanded}" 
-        toggleHeaderOnTitleClick="true">
+        headerExpanded="false" 
+        toggleHeaderOnTitleClick="true"
+        preserveHeaderStateOnScroll="true"
+        >
         <!-- DynamicPage Title -->
         <f:title>
             <f:DynamicPageTitle>
