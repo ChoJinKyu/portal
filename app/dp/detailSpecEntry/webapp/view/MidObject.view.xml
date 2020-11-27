@@ -20,10 +20,10 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="{master>/mold_id}" wrapping="true" />
+					<!-- <Title text="{master>/mold_id}" wrapping="true" /> -->
 				</uxap:expandedHeading>
 				<uxap:snappedHeading>
-					<Title text="{master>/mold_id}" wrapping="true" />
+					<!-- <Title text="{master>/mold_id}" wrapping="true" /> -->
 				</uxap:snappedHeading>
 				<uxap:actions>
 					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" />
@@ -67,7 +67,7 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			<uxap:ObjectPageSection titleUppercase="false" title="Ship Plan">
+			<uxap:ObjectPageSection titleUppercase="false" title="Development Plan">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection2">
 					</uxap:ObjectPageSubSection>

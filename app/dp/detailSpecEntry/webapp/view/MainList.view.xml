@@ -227,7 +227,7 @@
                             <Text text="Mold Part No" />
                         </Column>
                         <Column>
-                            <Text text="Seq" />
+                            <Text text="Mold Seq" />
                         </Column>
                         <Column minScreenWidth="Desktop" demandPopin="false">
                             <Text text="Description" />
