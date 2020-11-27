@@ -361,24 +361,29 @@ sap.ui.define([
             var params = oEvent.getParameters();
             var divisionFilters = [];
 
-            params.selectedItems.forEach(function(item, idx, arr){
+            if(params.selectedItems.length > 0){
 
-                divisionFilters.push(new Filter({
-                            filters: [
-                                new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
-                                new Filter("company_code", FilterOperator.EQ, item.getKey() )
-                            ],
-                            and: true
-                        }));
-            });
+                params.selectedItems.forEach(function(item, idx, arr){
+
+                    divisionFilters.push(new Filter({
+                                filters: [
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                    new Filter("company_code", FilterOperator.EQ, item.getKey() )
+                                ],
+                                and: true
+                            }));
+                });
+            }else{
+                divisionFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100' ));
+            }
 
             var filter = new Filter({
                             filters: divisionFilters,
                             and: false
                         });
-
-            this.getView().byId("searchDivisionE").getBinding("items").filter(filter, "Application");
+            
             this.getView().byId("searchDivisionS").getBinding("items").filter(filter, "Application");
+            this.getView().byId("searchDivisionE").getBinding("items").filter(filter, "Application");
         },
 
         handleSelectionFinishDiv: function(oEvent){
