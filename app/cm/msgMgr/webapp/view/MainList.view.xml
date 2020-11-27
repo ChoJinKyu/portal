@@ -21,8 +21,8 @@
                     <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
-                                <Label text="{I18N>/CHAIN}: " labelFor="searchChainS" required="true"></Label>
-                                <ComboBox id="searchChainS" width="100%" selectedKey="CM" items="{
+                                <Label text="{I18N>/CHAIN}: " labelFor="searchChainS" ></Label>
+                                <ComboBox id="searchChainS" width="100%" items="{
                                         path: 'util>/CodeDetails',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
@@ -69,8 +69,8 @@
                     <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
-                                <Label text="{I18N>/CHAIN}: " labelFor="searchChainE" required="true"></Label>
-                                <ComboBox id="searchChainE" width="100%" selectedKey="CM" items="{
+                                <Label text="{I18N>/CHAIN}: " labelFor="searchChainE"></Label>
+                                <ComboBox id="searchChainE" width="100%" items="{
                                         path: 'util>/CodeDetails',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
