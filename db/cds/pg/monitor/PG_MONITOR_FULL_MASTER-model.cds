@@ -23,7 +23,7 @@ entity Attachments {
     key tenant_id           : String(5) not null  @title : '회사코드';
     key company_code        : String(10) not null @title : '법인코드';
     key bizunit_code        : String(10) not null @title : '사업부분코드';
-    key scenario            : Integer64 not null  @title : '시나리오';
+    key scenario_code       : Integer64 not null  @title : '시나리오';
         attch               : LargeBinary         @title : '첨부파일';
         attch_type_code     : String(100)         @title : '첨부파일유형코드';
         attch_name          : String(240)         @title : '첨부파일명';
@@ -38,7 +38,7 @@ entity Cycles {
     key tenant_id           : String(5) not null  @title : '회사코드';
     key company_code        : String(10) not null @title : '법인코드';
     key bizunit_code        : String(10) not null @title : '사업부분코드';
-    key scenario            : Integer64 not null  @title : '시나리오';
+    key scenario_code       : Integer64 not null  @title : '시나리오';
     key cycle_code          : String(10) not null @title : '주기코드';
         language_code       : String(10)          @title : '언어코드';
         cycle_name          : String(240)         @title : '주기명';
@@ -52,7 +52,7 @@ entity Indicators {
     key tenant_id                      : String(5) not null  @title : '회사코드';
     key company_code                   : String(10) not null @title : '법인코드';
     key bizunit_code                   : String(10) not null @title : '사업부분코드';
-    key scenario                       : Integer64 not null  @title : '시나리오';
+    key scenario_code                  : Integer64 not null  @title : '시나리오';
     key indicator                      : String(10) not null @title : '지표';
         language_code                  : String(10)          @title : '언어코드';
         indicator_name                 : String(240)         @title : '지표명';
@@ -72,7 +72,7 @@ entity Managers {
     key tenant_id                   : String(5) not null  @title : '회사코드';
     key company_code                : String(10) not null @title : '법인코드';
     key bizunit_code                : String(10) not null @title : '사업부분코드';
-    key scenario                    : Integer64 not null  @title : '시나리오';
+    key scenario_code               : Integer64 not null  @title : '시나리오';
     key manager                     : String(30) not null @title : '관리자';
         manager_korean_name         : String(240)         @title : '관리자한국어명';
         manager_english_name        : String(240)         @title : '관리자영문명';
@@ -89,7 +89,7 @@ entity MasterHistorys {
     key tenant_id           : String(5) not null  @title : '회사코드';
     key company_code        : String(10) not null @title : '법인코드';
     key bizunit_code        : String(10) not null @title : '사업부분코드';
-    key scenario            : Integer64 not null  @title : '시나리오';
+    key scenario_code       : Integer64 not null  @title : '시나리오';
         update_contents     : String(3000)        @title : '수정내용';
         Monitor_Full_Master : Association to many Monitor_Full_Master
                                   on Monitor_Full_Master.MasterHistory = $self;
@@ -101,7 +101,7 @@ entity OperationModes {
     key tenant_id                   : String(5) not null  @title : '회사코드';
     key company_code                : String(10) not null @title : '법인코드';
     key bizunit_code                : String(10) not null @title : '사업부분코드';
-    key scenario                    : Integer64 not null  @title : '시나리오';
+    key scenario_code               : Integer64 not null  @title : '시나리오';
         operation_mode_display_flag : Boolean             @title : '운영방식조회여부';
         operation_mode_calling_flag : Boolean             @title : '운영방식소명여부';
         operation_mode_alram_flag   : Boolean             @title : '운영방식알람여부';
@@ -115,7 +115,7 @@ entity Scenarios {
     key tenant_id           : String(5) not null  @title : '회사코드';
     key company_code        : String(10) not null @title : '법인코드';
     key bizunit_code        : String(10) not null @title : '사업부분코드';
-    key scenario            : Integer64 not null  @title : '시나리오';
+    key scenario_code       : Integer64 not null  @title : '시나리오';
         language_code       : String(10)          @title : '언어코드';
         scenario_name       : String(240)         @title : '시나리오명';
         Monitor_Full_Master : Association to many Monitor_Full_Master
@@ -141,7 +141,7 @@ entity Types {
     key tenant_id           : String(5) not null  @title : '회사코드';
     key company_code        : String(10) not null @title : '법인코드';
     key bizunit_code        : String(10) not null @title : '사업부분코드';
-    key scenario            : Integer64 not null  @title : '시나리오';
+    key scenario_code       : Integer64 not null  @title : '시나리오';
     key type_code           : String(10) not null @title : '유형코드';
         language_code       : String(10)          @title : '언어코드';
         type_name           : String(240)         @title : '유형명';
