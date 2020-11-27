@@ -359,19 +359,22 @@ sap.ui.define([
             this.copyMultiSelected(oEvent);
 
             var params = oEvent.getParameters();
-            var selectedKeys = [];
             var divisionFilters = [];
 
-            divisionFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100' ));
-
             params.selectedItems.forEach(function(item, idx, arr){
-                selectedKeys.push(item.getKey());
-                divisionFilters.push(new Filter("company_code", FilterOperator.EQ, item.getKey() ));
+
+                divisionFilters.push(new Filter({
+                            filters: [
+                                new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                new Filter("company_code", FilterOperator.EQ, item.getKey() )
+                            ],
+                            and: true
+                        }));
             });
 
             var filter = new Filter({
                             filters: divisionFilters,
-                            and: true
+                            and: false
                         });
 
             this.getView().byId("searchDivisionE").getBinding("items").filter(filter, "Application");
