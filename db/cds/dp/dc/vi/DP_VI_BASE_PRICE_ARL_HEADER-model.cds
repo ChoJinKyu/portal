@@ -8,18 +8,18 @@ using {cm.Org_Company as comp} from '../../../cm/orgMgr/CM_ORG_COMPANY-model';
 using {cm.Hr_Employee as employee} from '../../../cm/hrEmployeeMgr/CM_HR_EMPLOYEE-model';
 
 entity VI_Base_Price_Arl_Header {
-    key tenant_id                   : String(5) not null  @title : '테넌트ID';
-    key approval_number             : String(50) not null @title : '품의번호';
-        company_code                : String(10) not null @title : '회사코드';
-        org_type_code               : String(2) not null  @title : '조직유형코드';
-        org_code                    : String(10) not null @title : '조직코드';
-        approval_type_code          : String(30) not null @title : '품의유형코드';
-        new_change_code             : String(30) not null @title : '신규변경코드';
-        approval_status_code        : String(30) not null @title : '품의상태코드';
-        approval_request_desc       : String(1000)        @title : '승인요청설명';
-        approval_requestor_empno    : String(30) not null @title : '승인요청자사번';
-        approval_request_date       : Date                @title : '승인요청일자';
-        attch_group_number          : String(100)         @title : '첨부파일그룹번호';
+    key tenant_id                   : String(5) not null;
+    key approval_number             : String(50) not null;
+        company_code                : String(10) not null;
+        org_type_code               : String(2) not null;
+        org_code                    : String(10) not null;
+        approval_type_code          : String(30) not null;
+        new_change_code             : String(30) not null;
+        approval_status_code        : String(30) not null;
+        approval_request_desc       : String(1000);
+        approval_requestor_empno    : String(30) not null;
+        approval_request_date       : Date;
+        attch_group_number          : String(100);
 
         lines                       : Composition of many line
                                           on  lines.tenant_id       = tenant_id
@@ -48,3 +48,20 @@ entity VI_Base_Price_Arl_Header {
 }
 
 extend VI_Base_Price_Arl_Header with util.Managed;
+
+annotate VI_Base_Price_Arl_Header with @title : '개발단가품의헤더'  @description : '개발단가품의헤더';
+
+annotate VI_Base_Price_Arl_Header with {
+    tenant_id                @title : '테넌트ID'  @description    : '테넌트ID';
+    approval_number          @title : '품의번호'  @description     : '품의번호';
+    company_code             @title : '회사코드'  @description     : '회사코드';
+    org_type_code            @title : '조직유형코드'  @description   : '조직유형코드';
+    org_code                 @title : '조직코드'  @description     : '조직코드';
+    approval_type_code       @title : '품의유형코드'  @description   : '공통코드(CM_CODE_DTL) : 10(개발기준단가품의)';
+    new_change_code          @title : '신규변경코드'  @description   : '공통코드(CM_CODE_DTL) : 10(신규), 20(변경)';
+    approval_status_code     @title : '품의상태코드'  @description   : '공통코드(CM_CODE_DTL) : 10(작성중), 20(결재진행중), 30(승인), 40(반려)';
+    approval_request_desc    @title : '승인요청설명'  @description   : '승인요청설명';
+    approval_requestor_empno @title : '승인요청자사번'  @description  : '승인요청자사번';
+    approval_request_date    @title : '승인요청일자'  @description   : '승인요청일자';
+    attch_group_number       @title : '첨부파일그룹번호'  @description : '첨부파일그룹번호';
+}

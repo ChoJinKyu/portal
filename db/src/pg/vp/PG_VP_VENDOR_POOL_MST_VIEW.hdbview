@@ -3,22 +3,15 @@ SELECT PARENT_ID
       ,NODE_ID
       ,TENANT_ID
       ,COMPANY_CODE 
-      ,'LGC' COMPANY_NAME     /*조직 테이블 정보*/
       ,ORG_TYPE_CODE
-      ,NULL ORG_TYPE_NAME     /*조직 테이블 정보*/
       ,ORG_CODE
-      ,'석유화학' ORG_NAME     /*조직 테이블 정보*/
       ,VENDOR_POOL_CODE
       ,VENDOR_POOL_LOCAL_NAME
       ,VENDOR_POOL_ENGLISH_NAME
       ,REPR_DEPARTMENT_CODE
-      ,'구매팀' REPR_DEPARTMENT_NAME    /*부서 테이블 정보*/  
       ,OPERATION_UNIT_CODE
-      ,'Raw Material' OPERATION_UNIT_NAME /*코드 테이블 정보*/
       ,INP_TYPE_CODE
-      ,'물동' INP_TYPE_NAME       /*코드 테이블 정보*/
       ,MTLMOB_BASE_CODE
-      ,'Amount' MTLMOB_BASIC_NAME /*코드 테이블 정보*/
       ,REGULAR_EVALUATION_FLAG
       ,INDUSTRY_CLASS_CODE
       ,null INDUSTRY_CLASS_NAME   /*코드 테이블 정보*/
