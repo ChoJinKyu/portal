@@ -142,6 +142,8 @@ sap.ui.define([
 
             return this._formFragments[sFragmentName];
 
+            console.groupEnd();
+
         },
 
         _showFormFragment: function (sFragmentName) {
@@ -315,11 +317,12 @@ sap.ui.define([
 		 * @public
 		 */
         onPageExitFullScreenButtonPress: function () {
-            var sNextLayout = this.getOwnerComponent().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
-            this.getRouter().navTo("midPage", {
+            var that = this;
+            var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
+            that.getRouter().navTo("midPage", {
                 layout: sNextLayout,
-                tenant_id: this._stenant_id,
-                controlOptionCode: this._sControlOptionCode
+                tenant_id: that._stenant_id,
+                controlOptionCode: that._sControlOptionCode
             });
         },
 		/**
@@ -327,11 +330,13 @@ sap.ui.define([
 		 * @public
 		 */
         onPageNavBackButtonPress: function () {
+            console.group("onPageNavBackButtonPress");
             var sNextLayout = this.getOwnerComponent().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
 
             this._onExit();
 
             this.getRouter().navTo("mainPage", { layout: sNextLayout });
+            console.groupEnd();
         },
 
 		/**
@@ -485,13 +490,19 @@ sap.ui.define([
                 midObjectData.setProperty("/org_code", oArgs.org_code);
 
                 //버튼 감추기 
+
                 this.getView().byId("buttonMidEdit").setVisible(false);
                 this.getView().byId("buttonMidDelete").setVisible(false);
 
                 that._onPageMode(true);
 
+
+                //  var inputMaterialCode = sap.ui.core.Fragment.byId("Change_id", "inputMaterialCode");
+                //  inputMaterialCode.setValue(null);
+                //  inputMaterialCode.setValueState("None");
+
             } else {
-                //자재중복 체크 가정
+
                 midObjectView.setProperty("/mcheck", true);
                 midObjectView.setProperty("/pageMode", false);
 
@@ -636,13 +647,13 @@ sap.ui.define([
         onEdit: function () {
             var midObjectView = this.getModel("midObjectView"),
                 midObjectData = this.getModel("midObjectData"),
-                pageMode = midObjectView.getProperty("/mode"),
+                mode = midObjectView.getProperty("/mode"),
+                pageMode = midObjectView.getProperty("/pageMode"),                
                 oView = this.getView();
 
 
-
             //false edit true show
-            if (!pageMode) {
+            if (!mode) {
 
                 this._onPageMode(true);
                 oView.byId("buttonMidEdit").setVisible(true);
@@ -654,7 +665,10 @@ sap.ui.define([
                 var buttonMaterialCheck = sap.ui.core.Fragment.byId("Change_id", "buttonMaterialCheck");
                 var switchUse_flag = sap.ui.core.Fragment.byId("Change_id", "switchUse_flag");
 
-                inputMaterialCode.setValue(midObjectData.getProperty("/mi_material_code"));
+                //신규일때에는 할당하지 않는다. 
+                if(!pageMode){
+                    inputMaterialCode.setValue(midObjectData.getProperty("/mi_material_code"));
+                }
                 inputMaterialCode.setEnabled(false);
                 buttonMaterialCheck.setVisible(false);
                 switchUse_flag.setState(midObjectData.getProperty("/use_flag"));
@@ -1141,6 +1155,7 @@ sap.ui.define([
                         vMi_material_code_name = mi_material_code_name;
                     }
 
+    
                     //var oData = new JSONModel();
                     //oData.setData(ojCodeTextModel.getData());
 
@@ -1204,9 +1219,7 @@ sap.ui.define([
                         vMi_material_code_name = mi_material_code_name;
                     }
                 } //end for
-
-                //vMi_material_code_name
-
+      
                 //MIMaterialCodeList create, update
                 //MIMaterialCodeList(tenant_id='L2100',company_code='%2A',org_type_code='BU',
                 //org_code='BIZ00100',mi_material_code='NIC-001-01')",
@@ -1238,7 +1251,11 @@ sap.ui.define([
                     oModel.update(sUrl, uParameters, { groupId: groupID });  
 ///MIMaterialCodeList(tenant_id='L2100',company_code='*',org_type_code='BU',org_code='BIZ00100',mi_material_code='NIC-001-01',use_flag='true')
                 }else{
-
+         
+                    if(vMi_material_code_name==""){
+                            vMi_material_code_name = mi_material_code_name;
+                    }
+                    
                     var mParameters = {
                         "groupId": groupID,
                         "properties": {
@@ -1327,15 +1344,16 @@ sap.ui.define([
 
 
         _handleCreateSuccess: function (oData) {
+            var that = this;
             MessageBox.show("저장 확인", {
                 icon: MessageBox.Icon.SUCCESS,
                 title: "저장에 성공 하였습니다.",
                 actions: [MessageBox.Action.OK],
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
-                        var sNextLayout = this.getOwnerComponent().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
-                        this._onExit();
-                        this.getRouter().navTo("mainPage", { layout: sNextLayout });
+                        var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+                        that._onExit();
+                        that.getRouter().navTo("mainPage", { layout: sNextLayout });
                     }
                 }
             });
