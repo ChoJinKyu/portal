@@ -25,6 +25,20 @@
         "settings": {
           "odataVersion": "2.0"
         }
+      },
+      "orgMgrService": {
+        "uri": "srv-api/odata/v2/cm.OrgMgrService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
+      },
+      "purOrgMgrService": {
+        "uri": "srv-api/odata/v2/cm.PurOrgMgrService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
       }
     }
   },
@@ -75,6 +89,16 @@
           "bundleName": "dp.developmentReceipt.i18n.i18n"
         }
       },
+      "": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": true,
+          "useBatch": true
+        }
+      },
       "util": {
         "dataSource": "commonUtilService",
         "preload": true,
@@ -85,8 +109,18 @@
           "useBatch": true
         }
       },
-      "": {
-        "dataSource": "mainService",
+      "org": {
+        "dataSource": "orgMgrService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": true,
+          "useBatch": true
+        }
+      },
+      "purOrg": {
+        "dataSource": "purOrgMgrService",
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",
