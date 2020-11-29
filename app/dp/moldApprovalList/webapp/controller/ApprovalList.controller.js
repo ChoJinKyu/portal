@@ -290,13 +290,58 @@ sap.ui.define([
 
         ///////////////////////////// sap.ui table version end ////////////////////////
 
+        handleSelectionFinishComp: function(oEvent){
+
+            this.copyMultiSelected(oEvent);
+
+            var params = oEvent.getParameters();
+            var selectedKeys = [];
+            var divisionFilters = [];
+
+            divisionFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100' ));
+
+            params.selectedItems.forEach(function(item, idx, arr){
+                selectedKeys.push(item.getKey());
+                divisionFilters.push(new Filter("company_code", FilterOperator.EQ, item.getKey() ));
+            });
+
+            var filter = new Filter({
+                            filters: divisionFilters,
+                            and: true
+                        });
+
+            this.getView().byId("searchPlantE").getBinding("items").filter(filter, "Application");
+            this.getView().byId("searchPlantS").getBinding("items").filter(filter, "Application");
+        },
+
+        handleSelectionFinishDiv: function(oEvent){
+            this.copyMultiSelected(oEvent);
+        },
+
+        copyMultiSelected: function(oEvent){
+            var source = oEvent.getSource();
+            var params = oEvent.getParameters();
+
+            var id = source.sId.split('--')[1];
+            var idPreFix = id.substr(0, id.length-1);
+            console.log(id);
+            console.log(idPreFix);
+            var selectedKeys = [];
+
+            params.selectedItems.forEach(function(item, idx, arr){
+                selectedKeys.push(item.getKey());
+            });
+
+            this.getView().byId("searchPlantE").setSelectedKeys(selectedKeys);
+            this.getView().byId("searchPlantS").setSelectedKeys(selectedKeys);
+        },
 
         onValueHelpRequested : function (oEvent) {
       
             var path = '';
            
             this._oBasicSearchField = new SearchField({
-				showSearchButton: true
+				showSearchButton: false
             });
 
             this._oValueHelpDialog = sap.ui.xmlfragment("dp.moldApprovalList.view.ValueHelpDialog", this);
@@ -570,7 +615,7 @@ sap.ui.define([
 			var sModel = this.getView().byId("searchModel").getValue().trim();
             var	sPart = this.getView().byId("searchMoldPartNo").getValue().trim();
             // var	sFamilyPart = this.getView().byId("searchFamilyPart").getValue().trim();
-            // var	sStatus = this.getView().byId("searchStatus").getSelectedKey();
+            var	sStatus = this.getView().byId("searchStatus").getSelectedKey();
             
             var aSearchFilters = [];
             var companyFilters = [];
@@ -622,9 +667,9 @@ sap.ui.define([
 			// 	aSearchFilters.push(new Filter("family_part_numbers", FilterOperator.Contains, sFamilyPart));
             // }
             
-            // if (sStatus) {
-			// 	aSearchFilters.push(new Filter("mold_spec_status_code", FilterOperator.EQ, sStatus));
-            // }
+            if (sStatus) {
+				aSearchFilters.push(new Filter("mold_spec_status_code", FilterOperator.EQ, sStatus));
+            }
             
             console.log(aSearchFilters);
 

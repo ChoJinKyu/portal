@@ -22,7 +22,7 @@
                         <form:content>
                             <VBox>
                                 <Label text="Company" labelFor="searchCompanyS" required="true"></Label>     
-                                <MultiComboBox id="searchCompanyS" width="100%" selectedKey="L1100" items="{
+                                <MultiComboBox id="searchCompanyS" width="100%" selectedKey="L1100" selectionFinish="handleSelectionFinishComp" items="{
                                         path: 'org>/Org_Company',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
@@ -89,7 +89,7 @@
                         <form:content>
                             <VBox>
                                 <Label text="Company" labelFor="searchCompanyE" required="true"></Label>     
-                                <MultiComboBox id="searchCompanyE" width="100%" selectedKey="L1100" items="{
+                                <MultiComboBox id="searchCompanyE" width="100%" selectedKey="L1100" selectionFinish="handleSelectionFinishComp" items="{
                                         path: 'org>/Org_Company',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
@@ -165,7 +165,7 @@
             <f:DynamicPageHeader pinnable="true">
                 <form:SimpleForm maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
-                        <VBox>
+                        <!-- <VBox>
                             <Label text="Model " labelFor="searchModel"></Label>
                             <Input id="searchModel" 
                                     showValueHelp="true"  
@@ -200,7 +200,7 @@
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
-                        </VBox>
+                        </VBox> -->
                         <VBox>
                             <Label text="Subject" labelFor="searchSubject"></Label>
                             <SearchField />
@@ -221,19 +221,19 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                                <Label text="Status"></Label>
-                                <SegmentedButton id="searchStatusS" selectedKey="" class="sapUiSmallMarginBottom" width="100%">
-                                    <items>
-                                        <SegmentedButtonItem text="All" key="" />
-                                        <SegmentedButtonItem text="Draft" width="5em" />
-                                        <SegmentedButtonItem text="In-Appr" width="5em" />
-                                        <SegmentedButtonItem text="Apprvd" width="5em" />
-                                        <SegmentedButtonItem text="Rejected" width="5em" />
-                                    </items>
-                                </SegmentedButton>
-                                <layoutData>
-                                    <layout:GridData span="XL10 L9 M6 S12" />
-                                </layoutData>
+                            <Label text="Status" class="sapUiSmallMarginTop"></Label>
+                            <SegmentedButton id="searchStatus" selectedKey="" width="100%">
+                                <items>
+                                    <SegmentedButtonItem text="All" key="" />
+                                    <SegmentedButtonItem text="Draft" key="D" width="5em" />
+                                    <SegmentedButtonItem text="In-Appr" width="5em" />
+                                    <SegmentedButtonItem text="Apprvd" width="5em" />
+                                    <SegmentedButtonItem text="Rejected" width="5em" />
+                                </items>
+                            </SegmentedButton>
+                            <layoutData>
+                                <layout:GridData span="XL10 L9 M6 S12" />
+                            </layoutData>
                         </VBox>
                     </form:content>
                 </form:SimpleForm>
@@ -253,7 +253,7 @@
                         items="{list>/MoldMasterSpec}">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="Approval List ({= ${list>/}.length || 0})" level="H2"/>
+                            <Title text="Approval List ({= ${list>/MoldMasterSpec}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <!-- Add the Personalization button -->
                             <Button id="mainTableCreateButton" text="Create" type="Emphasized" press=".onDialogCreate" />
@@ -272,10 +272,10 @@
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
-                        <Column id="mainColumnApprovalCategory" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
+                        <Column id="mainColumnApprovalCategory" minScreenWidth="Tablet" hAlign="Center"  width="12em" >
                             <Text text="Approval&#10;Category" />
                         </Column>
-                        <Column id="mainColumnCompany" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
+                        <Column id="mainColumnCompany" minScreenWidth="Tablet" hAlign="Center" width="12em" >
                             <Text text="Company" />
                         </Column>
                         <Column id="mainColumnPlant" minScreenWidth="Tablet" hAlign="Center" width="12em" >
@@ -300,14 +300,14 @@
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>
+                                <ObjectIdentifier text="{list>model}" />
                                 <ObjectIdentifier text="{list>company_name}" />
                                 <ObjectIdentifier text="{list>org_name}" />
-                                <ObjectIdentifier text="{list>model}" />
                                 <ObjectIdentifier text="{list>part_number}" />
                                 <ObjectIdentifier text="{list>mold_sequence}" />
                                 <ObjectIdentifier text="{list>spec_name}" />
-                                <ObjectIdentifier text="{list>mold_spec_status_name}" />
                                 <ObjectIdentifier text="{list>mold_item_type_name}" />
+                                <ObjectIdentifier text="{list>mold_spec_status_name}" />
                             </cells>
                         </ColumnListItem>
                     </items>
