@@ -248,7 +248,7 @@ service marketIntelligenceService {
 
     // Material View: 자재
     view MaterialView @(title : '자재 View') as
-        select
+        select distinct
             key tenant_id,
             key material_code,
                 material_description
@@ -259,7 +259,7 @@ service marketIntelligenceService {
 
     // // Supplier View: 공급업체
     view SupplierView @(title : '공급업체 View') as
-        select
+        select distinct
             key tenant_id,
             key supplier_code,
                 supplier_local_name,
