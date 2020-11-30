@@ -23,6 +23,11 @@
                     "name": "Detail Spec Entry",
                     "url": "../dp/detailSpecEntry/webapp",
                     "component": "dp.detailSpecEntry"
+                },
+                {
+                    "name": "Detail Spec Confirm",
+                    "url": "../dp/detailSpecConfirm/webapp",
+                    "component": "dp.detailSpecConfirm"
                 }
             ]
         },
