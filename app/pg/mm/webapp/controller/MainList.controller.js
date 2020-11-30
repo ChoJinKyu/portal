@@ -127,7 +127,7 @@ sap.ui.define([
 			console.groupEnd();
         },
 
-		
+		   
         /**
          * Smart Table Filter Event onBeforeRebindTable
          * @param {sap.ui.base.Event} oEvent 
