@@ -1,5 +1,5 @@
 <mvc:View
-    controllerName="pg.mm.controller.MainList"
+    controllerName="pg.mi.controller.MainList"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
     xmlns:f="sap.f"
