@@ -26,7 +26,7 @@
                     <form:content>
                         <!-- 팝업 콤보박스 영역 -->
                         <VBox>
-                            <Label text = "Company" /> 
+                            <Label text = "Company" design="Bold"/> 
                             <ComboBox id="searchCompanyF" width="70%" selectedKey="L1100" items="{
                                 path: 'org>/Org_Company',
                                 filters: [
@@ -43,7 +43,7 @@
                             </layoutData> 
                         </VBox>
                         <VBox>
-                            <Label text = "Plant"/> 
+                            <Label text = "Plant" design="Bold"/> 
                             <ComboBox id="searchPlantF" width="70%" selectedKey="" items="{
                                 path: 'purOrg>/Pur_Operation_Org',
                                 filters: [
@@ -123,6 +123,12 @@
                             </layoutData> 
                         </VBox>
                         <VBox alignItems="Center" justifyContent="Center">
+                             <ToggleButton id="categoriImportOrder" fieldGroupIds="toggleButtons" text="Order" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
+                            <layoutData>
+                                <layout:GridData span="XL6 L3 M6 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox alignItems="Center" justifyContent="Center">
                             <ToggleButton id="categoriImportCompletion" fieldGroupIds="toggleButtons" text="Import Completion" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
                             <layoutData>
                                 <layout:GridData span="XL6 L3 M6 S12" />
@@ -181,9 +187,9 @@
         </content>
         
         <ToolbarSpacer/>
-        <HBox alignItems="Center" justifyContent="Center" >
-            <Button text="Cancel" class="sapUiSmallMargin" press=".createPopupClose"/>
-            <Button text="Select" class="sapUiSmallMargin" type="Emphasized" press=".handleConfirm"/>
+        <HBox justifyContent="End" >
+            <Button text="Cancel" type="Transparent" press=".createPopupClose"/>
+            <Button text="Select" class="sapUiSmallMarginBeginEnd" type="Emphasized" press=".handleConfirm"/>
         </HBox>
     </Dialog>
 </core:FragmentDefinition>

@@ -64,7 +64,8 @@ sap.ui.define([
 			
             this._doInitSearch();
 
-			this.setModel(new ManagedListModel(), "list");
+            this.setModel(new ManagedListModel(), "list");
+            this.setModel(new ManagedListModel(), "orgMap");
 			
 			this.getRouter().getRoute("approvalList").attachPatternMatched(this._onRoutedThisPage, this);
 
@@ -295,24 +296,33 @@ sap.ui.define([
             this.copyMultiSelected(oEvent);
 
             var params = oEvent.getParameters();
-            var selectedKeys = [];
-            var divisionFilters = [];
+            var plantFilters = [];
 
-            divisionFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100' ));
+            if(params.selectedItems.length > 0){
 
-            params.selectedItems.forEach(function(item, idx, arr){
-                selectedKeys.push(item.getKey());
-                divisionFilters.push(new Filter("company_code", FilterOperator.EQ, item.getKey() ));
-            });
+                params.selectedItems.forEach(function(item, idx, arr){
+
+                    plantFilters.push(new Filter({
+                                filters: [
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                    new Filter("company_code", FilterOperator.EQ, item.getKey() )
+                                ],
+                                and: true
+                            }));
+                });
+            }else{
+                plantFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100' ));
+            }
 
             var filter = new Filter({
-                            filters: divisionFilters,
-                            and: true
+                            filters: plantFilters,
+                            and: false
                         });
-
-            this.getView().byId("searchPlantE").getBinding("items").filter(filter, "Application");
+            
             this.getView().byId("searchPlantS").getBinding("items").filter(filter, "Application");
+            this.getView().byId("searchPlantE").getBinding("items").filter(filter, "Application");
         },
+
 
         handleSelectionFinishDiv: function(oEvent){
             this.copyMultiSelected(oEvent);
@@ -322,18 +332,19 @@ sap.ui.define([
             var source = oEvent.getSource();
             var params = oEvent.getParameters();
 
-            var id = source.sId.split('--')[1];
+            var id = source.sId.split('--')[2];
             var idPreFix = id.substr(0, id.length-1);
-            console.log(id);
+            console.log(source);
             console.log(idPreFix);
             var selectedKeys = [];
+            
 
             params.selectedItems.forEach(function(item, idx, arr){
                 selectedKeys.push(item.getKey());
             });
 
-            this.getView().byId("searchPlantE").setSelectedKeys(selectedKeys);
-            this.getView().byId("searchPlantS").setSelectedKeys(selectedKeys);
+            this.getView().byId(idPreFix+"E").setSelectedKeys(selectedKeys);
+            this.getView().byId(idPreFix+"S").setSelectedKeys(selectedKeys);
         },
 
         onValueHelpRequested : function (oEvent) {
@@ -583,7 +594,8 @@ sap.ui.define([
 		 * @private
 		 */
 		_onRoutedThisPage: function(){
-			this.getModel("approvalListView").setProperty("/headerExpanded", true);
+            this.getModel("approvalListView").setProperty("/headerExpanded", true);
+            this.setModel(new ManagedListModel(), "orgMap");
 		},
 
 		/**
