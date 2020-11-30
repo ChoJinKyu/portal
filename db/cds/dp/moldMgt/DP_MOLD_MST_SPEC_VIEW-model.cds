@@ -5,8 +5,8 @@ entity Mold_Mst_Spec_View {
 
         company_name                    : String;
         org_name                        : String;
-        user_name                       : String;
-        user_name_id                    : String;
+        create_user_name                : String;
+        create_user                     : String;
         last_update_date                : String;
         mold_item_type_name             : String;
         mold_production_type_name       : String;
