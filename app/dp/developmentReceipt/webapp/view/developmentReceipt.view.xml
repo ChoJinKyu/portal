@@ -214,7 +214,7 @@
                     </form:SimpleForm>
                 </f:expandedContent>
                 <f:actions>
-                    <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onPageSearchButtonPress" />
+                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
                 </f:actions>
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -675,8 +675,8 @@
         <f:footer>
             <OverflowToolbar>
                 <ToolbarSpacer />
-				<Button text="Save" type="Emphasized" press=".onPageSaveButtonPress" />
-				<Button text="Cancel" type="Transparent" press=".onPageCancelEditButtonPress"/>
+				<Button text="{I18N>/SAVE}" type="Emphasized" press=".onPageSaveButtonPress" />
+				<Button text="{I18N>/CANCEL}" type="Transparent" press=".onPageCancelEditButtonPress"/>
             </OverflowToolbar>
         </f:footer>
     </f:DynamicPage>

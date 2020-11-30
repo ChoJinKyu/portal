@@ -1,6 +1,7 @@
 sap.ui.define([
     "ext/lib/controller/BaseController",
-	"ext/lib/model/ManagedListModel",
+    "ext/lib/model/ManagedListModel",
+    "ext/lib/util/Multilingual",
 	"../model/formatter",
 	"./developmentReceiptPersoService",
     "sap/ui/base/ManagedObject",
@@ -22,7 +23,7 @@ sap.ui.define([
 	"sap/m/ObjectIdentifier",
 	"sap/m/Text",
     "sap/m/Token"
-], function (BaseController, ManagedListModel, formatter, developmentReceiptPersoService, 
+], function (BaseController, ManagedListModel, Multilingual, formatter, developmentReceiptPersoService, 
     ManagedObject, History, Element, JSONModel, Filter, FilterOperator, Sorter, Column, Row, TablePersoController, Item, 
     ComboBox, ColumnListItem, Input, MessageBox, MessageToast, ObjectIdentifier, Text, Token) {
 	"use strict";
@@ -60,13 +61,15 @@ sap.ui.define([
             //this._doInitSearch();
             //this._doInitTablePerso();
             
+            var oMultilingual = new Multilingual();
+			this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedListModel(), "list");
             
             this._oTPC = new TablePersoController({
                 customDataKey: "developmentReceipt",
                 persoService: developmentReceiptPersoService
             }).setTable(this.byId("moldMstTable"));
-            console.log(this.byId("moldMstTable"));
+            //console.log(this.byId("moldMstTable"));
         },
         
         onMainTablePersoButtonPressed: function (event) {
@@ -243,7 +246,7 @@ sap.ui.define([
                 initialFocus : sap.m.MessageBox.Action.CANCEL,
                 onClose : function(sButton) {
                     if (sButton === MessageBox.Action.OK) {
-                        oSelected.forEach(function (idx) {console.log(lModel.getData().MoldMasters[idx]);console.log(oModel.oData);
+                        oSelected.forEach(function (idx) {//console.log(lModel.getData().MoldMasters[idx]);console.log(oModel.oData);
                             var sEntity = lModel.getData().MoldMasters[idx].__entity;
                             delete lModel.getData().MoldMasters[idx].__entity;
                             oModel.update(sEntity, lModel.getData().MoldMasters[idx], {
