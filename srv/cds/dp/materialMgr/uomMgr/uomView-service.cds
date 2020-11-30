@@ -16,7 +16,7 @@
   8. history
   -. 2020.11.26 : 최미희 최초작성
 *************************************************/
-using { dp as uom } from '../../../../../db/cds/dp/materialMgr/uomMgr/DP_MM_UNIT_OF_MEASURE-model';
+using { dp as uom }    from '../../../../../db/cds/dp/materialMgr/uomMgr/DP_MM_UNIT_OF_MEASURE-model';
 using { dp as uomLng } from '../../../../../db/cds/dp/materialMgr/uomMgr/DP_MM_UNIT_OF_MEASURE_LNG-model';
 namespace dp;
 @path : '/dp.UomMgrService'
@@ -25,8 +25,8 @@ service UomMgrService {
     view uomView(language_code: String) as
     select u.tenant_id
           ,u.uom_code
-          ,ifnull(l.comercial_uom_code, u.comercial_uom_code) as comercial_uom_code
-          ,ifnull(l.comercial_uom_name, u.comercial_uom_name) as comercial_uom_name
+          ,ifnull(l.commercial_uom_code, u.commercial_uom_code) as commercial_uom_code
+          ,ifnull(l.commercial_uom_name, u.commercial_uom_name) as commercial_uom_name
           ,ifnull(l.technical_uom_code, u.technical_uom_code) as technical_uom_code
           ,ifnull(l.technical_uom_name, u.technical_uom_name) as technical_uom_name
           ,u.uom_class_code
@@ -43,14 +43,14 @@ service UomMgrService {
           ,u.family_unit_flag
           ,u.uom_iso_code
           ,u.uom_iso_primary_code_flag
-          ,u.comercial_unit_flag
+          ,u.commercial_unit_flag
           ,u.value_base_commitment_flag
           ,u.disable_date 
     from  uom.Mm_Unit_Of_Measure  u
     left join uomLng.Mm_Unit_Of_Measure_Lng l
     on l.tenant_id = u.tenant_id
-    and l.uom_code = u.uom_code
-    where l.language_code = :language_code
+      and l.uom_code = u.uom_code
+      and l.language_code = :language_code
     ;
 
 }
