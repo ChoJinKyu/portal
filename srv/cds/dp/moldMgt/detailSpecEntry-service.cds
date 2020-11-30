@@ -44,9 +44,5 @@ service DetailSpecEntryService {
     select distinct key a.tenant_id, key a.part_number, a.spec_name, a.mold_item_type_name
     from moldMstSpecView.Mold_Mst_Spec_View a
     where a.part_number is not null;
-
-    view CreateUsers as
-    select distinct key a.tenant_id, key a.create_user_id, a.create_user_name
-    from moldMstSpecView.Mold_Mst_Spec_View a
-    where a.create_user_id is not null;
+    
 }
