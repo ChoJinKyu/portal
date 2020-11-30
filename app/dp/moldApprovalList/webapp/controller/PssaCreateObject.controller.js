@@ -12,9 +12,11 @@ sap.ui.define([
     "sap/m/MessageToast", 
     "sap/m/UploadCollectionParameter",
     "sap/ui/Device" // fileupload 
-    ,"sap/ui/core/syncStyleClass"
+    ,"sap/ui/core/syncStyleClass" 
+    , "sap/m/ColumnListItem" 
+    , "sap/m/Label"
 ], function (BaseController, JSONModel, History, ManagedListModel, RichTextEditor , DateFormatter, Filter, FilterOperator, Fragment
-            , MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass) {
+            , MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label) {
 	"use strict";
     /**
      * @description 입찰대상 협력사 선정 품의 등록화면
@@ -48,7 +50,7 @@ sap.ui.define([
             this.getView().setModel(new ManagedListModel(),"appList"); // apporval list 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
             this.getRouter().getRoute("pssaCreateObject").attachPatternMatched(this._onObjectMatched, this);
-                 
+
         },   
         onAfterRendering : function () {
          
@@ -212,52 +214,126 @@ sap.ui.define([
 			}
 			oViewModel.setProperty("/busy", false);
         },
-        
-        onPsAddRow : function(){
-            
+        /**
+         * @description Participating Supplier 의 delete 버튼 누를시 
+         */
+        onPsDelRow : function(){
+            var psTable = this.byId("psTable")
+                , psModel = this.getModel("createlist") 
+                , oSelected = psTable.getSelectedIndices()
+            ;
+            if(oSelected.length > 0){
+                MessageBox.confirm("삭제 하시겠습니까?", {
+                    title : "Comfirmation",
+                    initialFocus : sap.m.MessageBox.Action.CANCEL,
+                    onClose : function(sButton) {
+                        if (sButton === MessageBox.Action.OK) {
+                            oSelected.forEach(function (idx) {
+                                psModel.markRemoved(idx)
+                            });  
+                        };
+                    }.bind(this)
+                });
+
+                psTable.clearSelection();
+            }else{
+                 MessageBox.error("삭제할 목록을 선택해주세요.");
+            }
         },
-        onPsDelRow : function(){},
         /**
          * @description Participating Supplier 의 Supplier Select 버튼 누를시 나오는 팝업 
          *              , 테이블의 row 가 선택되어 있지 않으면 supplier 세팅 안됨 
          */
-        onPsSupplier : function(){
-	        this._oSupplierDialog = sap.ui.xmlfragment("dp.moldApprovalList.view.SuplierSelect", this);
-			this.getView().addDependent(this._oSupplierDialog);
+        onPsSupplier : function(){ 
+            
+            var psTable = this.byId("psTable")
+                , psModel = this.getModel("createlist") 
+                , oSelected = psTable.getSelectedIndices()
+            ;
 
-			this._oSupplierDialog.getTableAsync().then(function (oTable) {
-				oTable.setModel(this.oProductsModel);
-				oTable.setModel(this.oColModel, "columns");
+            if(oSelected.length > 0){
+                    this._oSupplierDialog = sap.ui.xmlfragment("dp.moldApprovalList.view.SuplierSelect", this);
+                    
+                    this.oSupplierModel = new JSONModel({
+                        "cols": [  {
+                                "label": "Supplier Code",
+                                    "template": "org>company_code",
+                                    "width": "25rem"
+                                },
+                                {
+                                    "label": "Supplier Local Name",
+                                    "template": "org>company_name"
+                                }
+                            ]
+                    });
+                    var path = 'org>/Org_Company';
 
-				if (oTable.bindRows) {
-					oTable.bindAggregation("rows", "purOrg>/Pur_Operation_Org");
-				}
+                    this._oSupplierDialog.setTitle('Mold Item Selection');
+                    this._oSupplierDialog.setKey('company_code');
+                    this._oSupplierDialog.setDescriptionKey('company_name');
+                    var aCols = this.oSupplierModel.getData().cols;
+                    this.getView().addDependent(this._oSupplierDialog);
 
-				if (oTable.bindItems) {
-					oTable.bindAggregation("items", "purOrg>/Pur_Operation_Org", function () {
-						return new ColumnListItem({
-							cells: aCols.map(function (column) {
-								return new Label({ text: "{" + column.template + "}" });
-							})
-						});
-					});
-				}
-				this._oSupplierDialog.update();
-			}.bind(this));
+                    this._oSupplierDialog.getTableAsync().then(function (oTable) {
+                        oTable.setModel(this.getOwnerComponent().getModel());
+                        oTable.setModel(this.oSupplierModel, "columns");
+                        if (oTable.bindRows) {
+                            oTable.bindAggregation("rows", path);
+                        }
+                        if (oTable.bindItems) {
+                        
+                            oTable.bindAggregation("items", path, function () { 
+                                return new ColumnListItem({
+                                    cells: aCols.map(function (column) { 
+                                        console.log(column);
+                                        return new Label({ text: "{" + column.template + "}" });
+                                    })
+                                });
+                            });
+                        }
+                        
+                        this._oSupplierDialog.update();
+                    }.bind(this));
 
-		//	this._oSupplierDialog.setTokens(this._oMultiInput.getTokens());
-			this._oSupplierDialog.open();
+                //	this._oSupplierDialog.setTokens(this._oMultiInput.getTokens());
+                    this._oSupplierDialog.open();
+            }else{
+                MessageBox.error("Participating Supplier 목록을 선택해주세요.");
+            }
         },
-	    onValueHelpOkPress: function (oEvent) {
-			var aTokens = oEvent.getParameter("tokens");
-		//	this._oMultiInput.setTokens(aTokens);
-			this._oSupplierDialog.close();
-		},
+	    onValueHelpOkPress: function (oEvent) { // row 에 데이터 세팅 
+            var aTokens = oEvent.getParameter("tokens");
+            var psTable = this.byId("psTable")
+                , psModel = this.getModel("createlist") 
+                , oSelected = psTable.getSelectedIndices()
+            ;
+            if(aTokens.length == 0){
+                MessageBox.error("Supplier를 하나이상 선택해주세요.");
+            }else{
+                oSelected.forEach(function (idx) { 
+                    psModel.getData().undefined[idx].moldSupplier1 = (aTokens[0] == undefined ?"":aTokens[0].mProperties.text);
+                    psModel.getData().undefined[idx].moldSupplier2 = (aTokens[1] == undefined ?"":aTokens[1].mProperties.text);
+                    psModel.getData().undefined[idx].moldSupplier3 = (aTokens[2] == undefined ?"":aTokens[2].mProperties.text);
+                    psModel.getData().undefined[idx].moldSupplier4 = (aTokens[3] == undefined ?"":aTokens[3].mProperties.text);
+                    psModel.getData().undefined[idx].moldSupplier5 = (aTokens[4] == undefined ?"":aTokens[4].mProperties.text);
+                    psModel.getData().undefined[idx].moldSupplier6 = (aTokens[5] == undefined ?"":aTokens[5].mProperties.text);
+                    psModel.getData().undefined[idx].moldSupplier7 = (aTokens[6] == undefined ?"":aTokens[6].mProperties.text);
+                    psModel.getData().undefined[idx].moldSupplier8 = (aTokens[7] == undefined ?"":aTokens[7].mProperties.text);
+                    psModel.getData().undefined[idx].moldSupplier9 = (aTokens[8] == undefined ?"":aTokens[8].mProperties.text);
+                    psModel.getData().undefined[idx].moldSupplier10 = (aTokens[9] == undefined ?"":aTokens[9].mProperties.text);
+                    
+                });
 
+                psTable.getModel("createlist").refresh(true); 
+                this._oSupplierDialog.close();
+            }
+         
+         console.log("psModel >>" , psModel);
+		//	this._oMultiInput.setTokens(aTokens);	
+		},
 		onValueHelpCancelPress: function () {
 			this._oSupplierDialog.close();
 		},
-
 		_oFragments: {},
         onCheck : function(){ console.log("onCheck") },
         
@@ -353,7 +429,8 @@ sap.ui.define([
          * @description : Popup 창 : 품의서 Participating Supplier 항목의 Add 버튼 클릭
          */
         handleTableSelectDialogPress : function (oEvent) {
-            console.group("handleTableSelectDialogPress");    
+            console.group("handleTableSelectDialogPress");   
+        
             var oView = this.getView();
             var oButton = oEvent.getSource();
 			if (!this._oDialogTableSelect) {
@@ -367,8 +444,8 @@ sap.ui.define([
 				}.bind(this));
             } 
             
-            this._oDialogTableSelect.then(function(oDialog) {
-				oDialog.open();
+            this._oDialogTableSelect.then(function(oDialog) { 
+                oDialog.open();
 			});
         },
         /**
@@ -403,6 +480,13 @@ sap.ui.define([
             this.onExit();
         },
 
+        selectMoldItemChange : function(oEvent){
+            var oTable = this.byId("moldItemSelectTable");
+            var aItems = oTable.getSelectedItems(); 
+            var appInfoModel = this.getModel("pssaCreateObjectView");
+            appInfoModel.setData({ moldItemLength : aItems == undefined ? 0 : aItems.length }); 
+        },
+
         /**
          * @description participating row 추가 
          * @param {*} data 
@@ -413,6 +497,16 @@ sap.ui.define([
                 oModel.addRecord({
                     "model": data.oData.model,
                     "moldPartNo": data.oData.moldPartNo,
+                    "moldSupplier1" : "",
+                    "moldSupplier2" : "",
+                    "moldSupplier3" : "",
+                    "moldSupplier4" : "",
+                    "moldSupplier5" : "",
+                    "moldSupplier6" : "",
+                    "moldSupplier7" : "",
+                    "moldSupplier8" : "",
+                    "moldSupplier9" : "",
+                    "moldSupplier10" : "",
                 });
         },
         /**
@@ -735,6 +829,37 @@ sap.ui.define([
                     });
         } , 
 
+	    handleSelectionChangeReferrer: function(oEvent) { // Referrer 
+			var changedItem = oEvent.getParameter("changedItem");
+			var isSelected = oEvent.getParameter("selected");
+
+			var state = "Selected";
+			if (!isSelected) {
+				state = "Deselected";
+			}
+
+			MessageToast.show("Event 'selectionChange': " + state + " '" + changedItem.getText() + "'", {
+				width: "auto"
+			});
+		},
+
+		handleSelectionFinishReferrer: function(oEvent) { // Referrer 
+			var selectedItems = oEvent.getParameter("selectedItems");
+			var messageText = "Event 'selectionFinished': [";
+
+			for (var i = 0; i < selectedItems.length; i++) {
+				messageText += "'" + selectedItems[i].getText() + "'";
+				if (i != selectedItems.length - 1) {
+					messageText += ",";
+				}
+			}
+
+			messageText += "]";
+
+			MessageToast.show(messageText, {
+				width: "auto"
+			});
+		}
 
 	});
 });
