@@ -886,61 +886,53 @@ sap.ui.define([
         },
 
         /**
-          * 행 삭제 Odata v2 Verson
-          * Note :행삭제
-          */
-        xonMidTableDelete: function () {
-            console.group("[mid] onMidTableDelete");
-
-            var oModel = this.getOwnerComponent().getModel("jCodeText"),
-                oView = this.getView(),
-                oTable = oView.byId("midTableChange"),
-                oData = oModel.getData(),
-                oPath,
-                that = this;
-
-            var oSelected = oTable.getSelectedContexts();
-            if (oSelected.length > 0) {
-
+         * 시황자제 삭제
+         */
+        onMidDelete : function () {
+            console.group("onMidDelete");
+            //호출만 예제)
+            //sap.ui.controller("pg.mi.controller.MainList").onMainTableDelete();
+            var that = this, 
+                midObjectData = this.getOwnerComponent().getModel("midObjectData"),
+                mimaterialEntirySetName="/MIMaterialCodeList";
+            
                 MessageBox.confirm("선택한 항목을 삭제 하시겠습니까?", {
-                    title: "삭제 확인",
-                    onClose: this._deleteAction.bind(this),
+                    title: "삭제 확인",                                    
+                    onClose: function (sButton) {
+                        if (sButton === MessageBox.Action.DELETE) {
+
+                            //delete 오류 수정중
+                            var sUrl = mimaterialEntirySetName + "(";                    
+                            sUrl = sUrl.concat("tenant_id='"+midObjectData.getProperty("/tenant_id")+"'");
+                            sUrl = sUrl.concat(",company_code='"+midObjectData.getProperty("/company_code")+"'");
+                            sUrl = sUrl.concat(",org_type_code='"+midObjectData.getProperty("/org_type_code")+"'");
+                            sUrl = sUrl.concat(",org_code='"+midObjectData.getProperty("/org_code")+"'");
+                            sUrl = sUrl.concat(",mi_material_code='"+midObjectData.getProperty("/mi_material_code")+"')");
+
+                            console.log("sUrl : ", sUrl);
+
+                            oModel.remove(sUrl, { groupId: "deleteGroup" });
+
+                            var oModel = that.getOwnerComponent().getView().getModel();
+                            oModel.submitChanges({
+                                groupId: "deleteGroup", 
+                                success: that._handleDeleteSuccess.bind(this),
+                                error: this._handleDeleteError.bind(this)
+                            });                            
+
+                            that._onExit();
+                            var sNextLayout = this.getOwnerComponent().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
+                            that.getRouter().navTo("mainPage", { layout: sNextLayout });
+                        }
+                    },                                    
                     actions: [sap.m.MessageBox.Action.DELETE, sap.m.MessageBox.Action.CANCEL],
-                    textDirection: sap.ui.core.TextDirection.Inherit
+                    textDirection: sap.ui.core.TextDirection.Inherit    
                 });
 
-            }
             console.groupEnd();
         },
 
-        /**
-          * table 삭제 액션 Odata v2 Version 
-          * @param {sap.m.MessageBox.Action} oAction 
-          */
-        _deleteAction: function (oAction) {
-            console.group("_deleteAction");
-            var oView = this.getView(),
-                oTable = oView.byId("midTableChange");
-
-            if (oAction === sap.m.MessageBox.Action.DELETE) {
-                oTable.getSelectedItems().forEach(function (oItem) {
-                    var sPath = oItem.getBindingContextPath();
-
-                    var mParameters = { "groupId": "deleteGroup" };
-                    oItem.getBindingContext().getModel().remove(sPath, mParameters);
-                });
-
-                var oModel = this.getView().getModel();
-                oModel.submitChanges({
-                    groupId: "deleteGroup",
-                    success: this._handleDeleteSuccess,
-                    error: this._handleDeleteError
-                });
-            }
-            console.groupEnd();
-        },
-
-
+        
         onComboBoxLanguageChange : function (oEvent){
             console.log("onComboBoxLanguageChange");
             var oTable = sap.ui.core.Fragment.byId("Change_id", "midTableChange");
@@ -1132,8 +1124,31 @@ sap.ui.define([
                     msg += "카테고리를 선택 해야 합니다.\n"; 
                 }
 
-                if (oTable.getItems().length < 1) {
+                var oTableLength = oTable.getItems().length;
+                if (oTableLength < 1) {
                     msg += "언어정보를 한건이라도 등록 해야 합니다.";
+                }
+                
+                //oTable.getItems(0)[0].getCells()[1].getSelectedKey() = EN
+
+                var bNull = true;
+                for(var i=0; i<oTableLength;i++) {
+                    if(oTable.getItems()[i].getCells()[2].getValue().length<1){
+
+                        bNull = false;
+                        break;
+                    }
+                }
+
+                if(!bNull){
+                    MessageBox.show("자재명은 빈값일수 없습니다. ", {
+                        icon: MessageBox.Icon.ERROR,
+                        title: "입력값 확인",
+                        actions: [MessageBox.Action.OK],
+                        styleClass: "sapUiSizeCompact"
+                    }); 
+                    
+                    return;
                 }
 
                 if (msg != "") {
@@ -1148,8 +1163,6 @@ sap.ui.define([
 
                 //언어 값을 등록하지 않을때(텍스트)
                 //note : 보류.
-
-                //언어 등록정보가 한건이라도 있어야 한다. 
 
                 var groupID = "pgmiGroup";
                 //var groupMode = "create";
