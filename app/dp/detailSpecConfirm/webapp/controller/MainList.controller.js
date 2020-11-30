@@ -266,6 +266,7 @@ sap.ui.define([
 			var sModel = this.getView().byId("searchModel").getValue().trim();
             var	sPart = this.getView().byId("searchPart").getValue().trim();
             var	sFamilyPart = this.getView().byId("searchFamilyPart").getValue().trim();
+            var	sRequester = this.getView().byId("searchRequester").getValue().trim();
             var	sStatus = this.getView().byId("searchStatus").getSelectedKey();
             
             var aSearchFilters = [];
@@ -335,6 +336,10 @@ sap.ui.define([
             
             if (sFamilyPart) {
 				aSearchFilters.push(new Filter("tolower(family_part_numbers)", FilterOperator.Contains, "'"+sFamilyPart.toLowerCase()+"'"));
+            }
+
+            if(sRequester){
+                aSearchFilters.push(new Filter("tolower(create_user_id)", FilterOperator.Contains, "'"+sRequester.toLowerCase()+"'"));
             }
             
             if (sStatus) {
@@ -417,7 +422,53 @@ sap.ui.define([
             
             var oFilterBar = this._oValueHelpDialog.getFilterBar();
 			oFilterBar.setFilterBarExpanded(false);
-			oFilterBar.setBasicSearch(this._oBasicSearchField);
+            oFilterBar.setBasicSearch(this._oBasicSearchField);
+            
+            this.setValuHelpDialog(oEvent);
+
+            
+
+            var aCols = this.oColModel.getData().cols;
+
+            
+            this.getView().addDependent(this._oValueHelpDialog);
+
+            this._oValueHelpDialog.getTableAsync().then(function (oTable) {
+                
+                oTable.setModel(this.getOwnerComponent().getModel(this.modelName));
+                oTable.setModel(this.oColModel, "columns");
+
+                if (oTable.bindRows) {
+                    oTable.bindAggregation("rows", this.vhdPath);
+                }
+
+                if (oTable.bindItems) {
+                    oTable.bindAggregation("items", this.vhdPath, function () {
+                        return new ColumnListItem({
+                            cells: aCols.map(function (column) {
+                                return new Label({ text: "{" + column.template + "}" });
+                            })
+                        });
+                    });
+                }
+                this._oValueHelpDialog.update();
+
+            }.bind(this));
+
+            
+
+            // debugger
+
+            var oToken = new Token();
+			oToken.setKey(this._oInputModel.getSelectedKey());
+			oToken.setText(this._oInputModel.getValue());
+			this._oValueHelpDialog.setTokens([oToken]);
+            this._oValueHelpDialog.open();
+            
+
+        },
+
+        setValuHelpDialog: function(oEvent){
 
             if(oEvent.getSource().sId.indexOf("searchModel") > -1){
                 //model
@@ -432,7 +483,8 @@ sap.ui.define([
                     ]
                 });
 
-                path = '/Models';
+                this.modelName = '';
+                this.vhdPath = '/Models';
                 
                 this._oValueHelpDialog.setTitle('Model');
                 this._oValueHelpDialog.setKey('model');
@@ -459,56 +511,40 @@ sap.ui.define([
                     ]
                 });
 
-                path = '/PartNumbers';
-
+                this.modelName = '';
+                this.vhdPath = '/PartNumbers';
                 this._oValueHelpDialog.setTitle('Part No');
                 this._oValueHelpDialog.setKey('part_number');
                 this._oValueHelpDialog.setDescriptionKey('spec_name');
+
+            }else if(oEvent.getSource().sId.indexOf("searchRequester") > -1){
+
+                this._oInputModel = this.getView().byId("searchRequester");
+
+                this.oColModel = new JSONModel({
+                    "cols": [
+                        {
+                            "label": "Name",
+                            "template": "create_user_name"
+                        },
+                        {
+                            "label": "ID",
+                            "template": "create_user_id"
+                        }
+                    ]
+                });
+
+                this.modelName = 'dsc';
+                this.vhdPath = '/CreateUsers';
+                this._oValueHelpDialog.setTitle('Requester');
+                this._oValueHelpDialog.setKey('create_user_id');
+                this._oValueHelpDialog.setDescriptionKey('create_user_id');
             }
-
-            var aCols = this.oColModel.getData().cols;
-
-            
-            this.getView().addDependent(this._oValueHelpDialog);
-
-            this._oValueHelpDialog.getTableAsync().then(function (oTable) {
-                
-                oTable.setModel(this.getOwnerComponent().getModel());
-                oTable.setModel(this.oColModel, "columns");
-                
-                if (oTable.bindRows) {
-                    oTable.bindAggregation("rows", path);
-                }
-
-                if (oTable.bindItems) {
-                    oTable.bindAggregation("items", path, function () {
-                        return new ColumnListItem({
-                            cells: aCols.map(function (column) {
-                                return new Label({ text: "{" + column.template + "}" });
-                            })
-                        });
-                    });
-                }
-                this._oValueHelpDialog.update();
-
-            }.bind(this));
-
-            
-
-            // debugger
-
-            var oToken = new Token();
-			oToken.setKey(this._oInputModel.getSelectedKey());
-			oToken.setText(this._oInputModel.getValue());
-			this._oValueHelpDialog.setTokens([oToken]);
-            this._oValueHelpDialog.open();
-            
-
         },
 
         onValueHelpOkPress: function (oEvent) {
-			var aTokens = oEvent.getParameter("tokens");
-			this._oInputModel.setSelectedKey(aTokens[0].getKey());
+            var aTokens = oEvent.getParameter("tokens");
+            this._oInputModel.setSelectedKey(aTokens[0].getKey());
 			this._oValueHelpDialog.close();
 		},
 
@@ -521,8 +557,8 @@ sap.ui.define([
         },
 
         onFilterBarSearch: function (oEvent) {
-			var sSearchQuery = this._oBasicSearchField.getValue(),
-				aSelectionSet = oEvent.getParameter("selectionSet");
+			
+			var	aSelectionSet = oEvent.getParameter("selectionSet");
 			var aFilters = aSelectionSet.reduce(function (aResult, oControl) {
 				if (oControl.getValue()) {
 					aResult.push(new Filter({
@@ -535,6 +571,22 @@ sap.ui.define([
 				return aResult;
             }, []);
             
+            var _tempFilters = this.getFiltersFilterBar();
+
+			aFilters.push(new Filter({
+				filters: _tempFilters,
+				and: false
+			}));
+
+			this._filterTable(new Filter({
+				filters: aFilters,
+				and: true
+			}));
+        },
+
+        getFiltersFilterBar: function(){
+
+            var sSearchQuery = this._oBasicSearchField.getValue();
             var _tempFilters = [];
 
             if(this._oValueHelpDialog.oRows.sPath.indexOf('/Models') > -1){
@@ -546,17 +598,12 @@ sap.ui.define([
                 _tempFilters.push(new Filter({ path: "tolower(part_number)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
                 _tempFilters.push(new Filter({ path: "tolower(mold_item_type_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
                 _tempFilters.push(new Filter({ path: "tolower(spec_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
+            }else if(this._oValueHelpDialog.oRows.sPath.indexOf('/CreateUsers') > -1){
+                _tempFilters.push(new Filter({ path: "tolower(create_user_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
+                _tempFilters.push(new Filter({ path: "tolower(create_user_id)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
             }
 
-			aFilters.push(new Filter({
-				filters: _tempFilters,
-				and: false
-			}));
-
-			this._filterTable(new Filter({
-				filters: aFilters,
-				and: true
-			}));
+            return _tempFilters;
         },
         
         _filterTable: function (oFilter) {
