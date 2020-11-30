@@ -7,7 +7,6 @@
     class="sapUiSizeCompact">
 
     <Dialog title="Category Choose" contentHeight="100%" contentWidth="100%">
-
         <content>
             <Panel>
                 <f:SimpleForm
