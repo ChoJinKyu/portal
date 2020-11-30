@@ -4,5 +4,8 @@ using from './moldMgt/orderApproval-service';
 using from './moldMgt/detailSpecConfirm-service';
 using from './materialMgr/uomMgr/uomClass-service';
 using from './materialMgr/uomMgr/uomMgr-service';
+using from './materialMgr/basicDataMgr/hsCodeMgr-service';
+using from './materialMgr/basicDataMgr/materialClassMgr-service';
+using from './materialMgr/basicDataMgr/materialGroupMgr-service';
 using from './standardCommon/categoryMgr/category-service';
 using from './dc/vi/basePriceArl-service';

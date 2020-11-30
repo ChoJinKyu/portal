@@ -29,7 +29,7 @@ entity Mm_Material_Class_Lng {
         and parent.material_class_code = material_class_code;
 
   key language_code : String(4)  not null @title: '언어코드' ;	
-    materail_class_name : String(100)  not null @title: '자재클래스명' ;	
+    material_class_name : String(100)  not null @title: '자재클래스명' ;	
     material_class_desc : String(1000)   @title: '자재클래스설명' ;	
 }
 
