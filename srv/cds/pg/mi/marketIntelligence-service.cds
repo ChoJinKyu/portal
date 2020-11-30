@@ -13,7 +13,7 @@ using {pg as MIMatPrcMngtView} from '../../../../db/cds/pg/mi/PG_MI_MAT_PRC_MANA
 using {pg as MICategDetlView} from '../../../../db/cds/pg/mi/PG_MI_CATEGORY_DETAIL_VIEW';
 using {pg as MIMatCostInfoView} from '../../../../db/cds/pg/mi/PG_MI_MATERIAL_COST_INFO_VIEW';
 //Material
-//using {dp. as MaterialDesc} from '../../../'
+using {dp.Mm_Material_Desc_Lng as MaterialDesc} from '../../../../db/cds/dp/materialMgr/materialMasterMgr/DP_MM_MATERIAL_DESC_LNG-model';
 //Supplier
 //using
 //CM ORG
@@ -247,17 +247,17 @@ service marketIntelligenceService {
             main.use_flag;
 
     // Material View: 자재
-    // view MaterialView @(title: '자재 View') as
-    // 	select
-    // 			tenant_id,
-    // 			material_code,
-    // 			language_code,
-    // 			material_description
-    // 	from 	dp_mm_material_desc_lng
-    // 	order by
-    // 			tenant_id,
-    // 			material_code
-    // 	;
+    view MaterialView @(title: '자재 View') as
+    	select
+    			tenant_id,
+    			material_code,
+    			language_code,
+    			material_description
+    	from 	MaterialDesc
+    	order by
+    			tenant_id,
+    			material_code
+    	;
 
     // // Supplier View: 공급업체
     // view SupplierView @(title: '공급업체 View') as
