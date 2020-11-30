@@ -1,90 +1,90 @@
 sap.ui.define([
-	"ext/lib/controller/BaseController"
+  "ext/lib/controller/BaseController"
 ], function (BaseController) {
-	"use strict";
+  "use strict";
 
-	return BaseController.extend("cm.controlOptionMgr.controller.App", {
+  return BaseController.extend("cm.controlOptionMgr.controller.App", {
 
-		onInit : function () {
-			// apply content density mode to root view
-			this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
-			this.oRouter = this.getOwnerComponent().getRouter();
-			this.oRouter.attachRouteMatched(this.onRouteMatched, this);
-            this.oRouter.attachBeforeRouteMatched(this.onBeforeRouteMatched, this);
-		},
+    onInit: function () {
+      // apply content density mode to root view
+      this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
+      this.oRouter = this.getOwnerComponent().getRouter();
+      this.oRouter.attachRouteMatched(this.onRouteMatched, this);
+      this.oRouter.attachBeforeRouteMatched(this.onBeforeRouteMatched, this);
+    },
 
-		onBeforeRouteMatched: function(oEvent) {
-			var oModel = this.getOwnerComponent().getModel("fcl");
+    onBeforeRouteMatched: function (oEvent) {
+      var oModel = this.getOwnerComponent().getModel("fcl");
 
-			var sLayout = oEvent.getParameters().arguments.layout;
+      var sLayout = oEvent.getParameters().arguments.layout;
 
-			// If there is no layout parameter, query for the default level 0 layout (normally OneColumn)
-			if (!sLayout) {
-				var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(0);
-				sLayout = oNextUIState.layout;
-			}
+      // If there is no layout parameter, query for the default level 0 layout (normally OneColumn)
+      if (!sLayout) {
+        var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(0);
+        sLayout = oNextUIState.layout;
+      }
 
-			// Update the layout of the FlexibleColumnLayout
-			if (sLayout) {
-				oModel.setProperty("/layout", sLayout);
-			}
-		},
+      // Update the layout of the FlexibleColumnLayout
+      if (sLayout) {
+        oModel.setProperty("/layout", sLayout);
+      }
+    },
 
-		onColumnResize: function(oEvent) {
-            // This event is ideal to call scrollToIndex function of the Table
-            var oMasterView = oEvent.getSource().getBeginColumnPages()[0];
-			// if (oMasterView.getController().iIndex) {
-			// 	var oTable = oMasterView.byId("productsTable");
-			// 	oTable.scrollToIndex(oMasterView.getController().iIndex);
-            // }
-            
-            var sLayout = this.getView().getModel("fcl").getProperty("/layout");
-			if (sLayout !== 'TwoColumnsMidExpanded') {
-				// var oTable = oMasterView.byId("productsTable");
-				// oTable.scrollToIndex(0);
-			}
+    onColumnResize: function (oEvent) {
+      // This event is ideal to call scrollToIndex function of the Table
+      var oMasterView = oEvent.getSource().getBeginColumnPages()[0];
+      // if (oMasterView.getController().iIndex) {
+      // 	var oTable = oMasterView.byId("productsTable");
+      // 	oTable.scrollToIndex(oMasterView.getController().iIndex);
+      // }
 
-		},
+      var sLayout = this.getView().getModel("fcl").getProperty("/layout");
+      if (sLayout !== 'TwoColumnsMidExpanded') {
+        // var oTable = oMasterView.byId("productsTable");
+        // oTable.scrollToIndex(0);
+      }
 
-		onRouteMatched: function (oEvent) {
-			var sRouteName = oEvent.getParameter("name"),
-				oArguments = oEvent.getParameter("arguments");
+    },
 
-			this._updateUIElements();
+    onRouteMatched: function (oEvent) {
+      var sRouteName = oEvent.getParameter("name"),
+        oArguments = oEvent.getParameter("arguments");
 
-			// Save the current route name
-			this.sCurrentRouteName = sRouteName;
-			this.sCurrentTenantId = oArguments.tenantId;
-			this.sCurrentControlOptionCode = oArguments.supplier;
-		},
+      this._updateUIElements();
 
-		onStateChanged: function (oEvent) {
-			var bIsNavigationArrow = oEvent.getParameter("isNavigationArrow"),
-				sLayout = oEvent.getParameter("layout");
+      // Save the current route name
+      this.sCurrentRouteName = sRouteName;
+      this.sCurrentTenantId = oArguments.tenantId;
+      this.sCurrentControlOptionCode = oArguments.supplier;
+    },
 
-			this._updateUIElements();
-			// Replace the URL with the new layout if a navigation arrow was used
-			if (bIsNavigationArrow) {
-				this.oRouter.navTo(this.sCurrentRouteName, {
-					layout: sLayout, 
-					tenantId: this.sCurrentTenantId, 
-					controlOptionCode: this.sCurrentControlOptionCode
-				}, true);
-			}
-		},
+    onStateChanged: function (oEvent) {
+      var bIsNavigationArrow = oEvent.getParameter("isNavigationArrow"),
+        sLayout = oEvent.getParameter("layout");
 
-		// Update the close/fullscreen buttons visibility
-		_updateUIElements: function () {
-			var oModel = this.getOwnerComponent().getModel("fcl");
-			var oUIState = this.getOwnerComponent().getHelper().getCurrentUIState();
-			oModel.setData(oUIState);
-		},
+      this._updateUIElements();
+      // Replace the URL with the new layout if a navigation arrow was used
+      if (bIsNavigationArrow) {
+        this.oRouter.navTo(this.sCurrentRouteName, {
+          layout: sLayout,
+          tenantId: this.sCurrentTenantId,
+          controlOptionCode: this.sCurrentControlOptionCode
+        }, true);
+      }
+    },
 
-		onExit: function () {
-			this.oRouter.detachRouteMatched(this.onRouteMatched, this);
-			this.oRouter.detachBeforeRouteMatched(this.onBeforeRouteMatched, this);
-		}
+    // Update the close/fullscreen buttons visibility
+    _updateUIElements: function () {
+      var oModel = this.getOwnerComponent().getModel("fcl");
+      var oUIState = this.getOwnerComponent().getHelper().getCurrentUIState();
+      oModel.setData(oUIState);
+    },
 
-	});
+    onExit: function () {
+      this.oRouter.detachRouteMatched(this.onRouteMatched, this);
+      this.oRouter.detachBeforeRouteMatched(this.onBeforeRouteMatched, this);
+    }
+
+  });
 
 });

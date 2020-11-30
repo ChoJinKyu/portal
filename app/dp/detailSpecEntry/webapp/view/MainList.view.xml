@@ -9,8 +9,10 @@
     height="100%">
 
     <f:DynamicPage id="page"
-        headerExpanded="{mainListView>/headerExpanded}" 
-        toggleHeaderOnTitleClick="true">
+        headerExpanded="false" 
+        toggleHeaderOnTitleClick="true"
+        preserveHeaderStateOnScroll="true"
+        >
         <!-- DynamicPage Title -->
         <f:title>
             <f:DynamicPageTitle>
@@ -18,7 +20,7 @@
                     <Title text="{i18n>appTitle}" />
                 </f:heading>
                 <f:snappedContent>
-                    <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="3">
+                    <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
                                 <Label text="LG Company" labelFor="searchCompanyS" required="true"></Label>
@@ -66,7 +68,7 @@
                     </form:SimpleForm>
                 </f:snappedContent>
                 <f:expandedContent>
-                    <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="3">
+                    <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
                                 <Label text="LG Company" labelFor="searchCompanyE"  required="true"></Label>
@@ -125,7 +127,7 @@
         <f:header>
             <f:DynamicPageHeader pinnable="true">
 
-                <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="3">
+                <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
                             <Label text="Model" labelFor="searchModel"></Label>
@@ -204,8 +206,8 @@
                         <OverflowToolbar>
                             <Title text="List ({= ${list>/MoldMasterSpec}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
-                            <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
-                            <ToolbarSeparator/>
+                            <!-- <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
+                            <ToolbarSeparator/> -->
                             <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                                 <layoutData>
                                     <OverflowToolbarLayoutData priority="NeverOverflow" />
@@ -227,7 +229,7 @@
                             <Text text="Mold Part No" />
                         </Column>
                         <Column>
-                            <Text text="Seq" />
+                            <Text text="Mold Seq" />
                         </Column>
                         <Column minScreenWidth="Desktop" demandPopin="false">
                             <Text text="Description" />
@@ -259,7 +261,7 @@
                                 <ObjectIdentifier text="{list>spec_name}" />
                                 <ObjectIdentifier text="{list>mold_spec_status_name}" />
                                 <ObjectIdentifier text="{list>mold_item_type_name}" />
-                                <ObjectIdentifier text="{list>user_name}" />
+                                <ObjectIdentifier text="{list>create_user}" />
                                 <!-- <ObjectIdentifier text="{list>mold_spec_register_date}"/> -->
                                 <DatePicker value="{list>mold_spec_register_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
                                 <ObjectIdentifier text="{list>family_part_numbers}" />

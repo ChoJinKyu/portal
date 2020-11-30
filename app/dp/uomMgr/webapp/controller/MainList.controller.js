@@ -1,5 +1,6 @@
 sap.ui.define([
-	"ext/lib/controller/BaseController",
+    "ext/lib/controller/BaseController",
+    "ext/lib/util/Multilingual",
 	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
 	"ext/lib/model/ManagedListModel",
@@ -16,7 +17,7 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+], function (BaseController, Multilingual, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
 	"use strict";
 
 	return BaseController.extend("dp.uomMgr.controller.MainList", {
@@ -32,6 +33,8 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {
+            var oMultilingual = new Multilingual();
+			this.setModel(oMultilingual.getModel(), "I18N");
 			var oViewModel,
 				oResourceBundle = this.getResourceBundle();
 
@@ -118,7 +121,7 @@ sap.ui.define([
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
 				tenantId: "new",
-				uomClassCode: "code"
+				uomCode: "code"
 			});
 		},
 
@@ -153,7 +156,7 @@ sap.ui.define([
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
 				tenantId: oRecord.tenant_id,
-				uomClassCode: oRecord.uom_class_code
+				uomCode: oRecord.uom_code
 			});
 
             if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
@@ -190,7 +193,7 @@ sap.ui.define([
 				oModel = this.getModel("list");
 			oView.setBusy(true);
 			oModel.setTransactionModel(this.getModel());
-			oModel.read("/UomClass", {
+			oModel.read("/Uom", {
 				filters: aSearchFilters,
 				success: function(oData){
 					oView.setBusy(false);
@@ -254,7 +257,7 @@ sap.ui.define([
 
             var oView = this.getView(),
 				sValue = oView.byId("mainTableSearchField").getValue(),
-				oFilter = new Filter("uom_class_code", FilterOperator.Contains, sValue);
+				oFilter = new Filter("uom_code", FilterOperator.Contains, sValue);
 
 			oView.byId("mainTable").getBinding("items").filter(oFilter, sap.ui.model.FilterType.Application);
 

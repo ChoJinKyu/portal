@@ -18,20 +18,20 @@
 *************************************************/
 namespace dp;	
 using util from '../../../util/util-model'; 
-using { dp as uom } from './DP_MM_UNIT_OF_MEASURE_LNG-model';	
+using { dp as uom } from './DP_MM_UNIT_OF_MEASURE-model';	
 	
 entity Mm_Unit_Of_Measure_Lng {	
   key tenant_id : String(5)  not null @title: 'Tenant ID' ;	
   key uom_code : String(5)  not null @title: 'UOM코드' ;	
 
-      parent: Association to uom.Mm_Unit_Of_Measure_Lng
+      parent: Association to uom.Mm_Unit_Of_Measure
         on parent.tenant_id = tenant_id 
         and parent.uom_code = uom_code;
 
   key language_code : String(4)  not null @title: 'Language' ;	
-    comercial_uom_code : String(3)  not null @title: '상업UOM코드' ;	
+    commercial_uom_code : String(3)  not null @title: '상업UOM코드' ;	
     technical_uom_code : String(6)  not null @title: '기술UOM코드' ;	
-    comercial_uom_name : String(30)   @title: '상업UOM명' ;	
+    commercial_uom_name : String(30)   @title: '상업UOM명' ;	
     technical_uom_name : String(30)   @title: '기술UOM명' ;	
     uom_description : String(50)   @title: 'UOM설명' ;	
 }	

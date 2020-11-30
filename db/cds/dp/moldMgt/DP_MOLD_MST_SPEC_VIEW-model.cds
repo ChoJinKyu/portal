@@ -1,13 +1,17 @@
 namespace dp;
 
+using {User} from '@sap/cds/common';
+
 @cds.persistence.exists
 entity Mold_Mst_Spec_View {
 
         company_name                    : String;
         org_name                        : String;
-        user_name                       : String;
+        create_user_name                : String;
+        create_user                     : String;
         last_update_date                : String;
         mold_item_type_name             : String;
+        mold_production_type_name       : String;
         mold_spec_status_name           : String;
         family_part_numbers             : String;
         tenant_id                       : String(5) not null  @title : '테넌트ID';
@@ -181,9 +185,11 @@ entity Mold_Mst_Spec_View {
         press_material_thickness        : String(100)         @title : '프레스재질두께';
         press_material_size             : String(100)         @title : '프레스재질크기';
         mold_spec_status_code           : String(30)          @title : '금형규격상태코드';
+        mold_spec_register_date         : String;
         local_create_dtm                : DateTime            @title : '로컬등록시간';
         local_update_dtm                : DateTime            @title : '로컬수정시간';
+        create_user_id                  : User                @title : '등록사용자ID';
+        update_user_id                  : User                @title : '변경사용자ID';
         system_create_dtm               : DateTime            @title : '시스템등록시간';
         system_update_dtm               : DateTime            @title : '시스템수정시간';
-        mold_spec_register_date : String;
 }

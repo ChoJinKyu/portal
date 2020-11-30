@@ -115,8 +115,8 @@
 									<!-- <Title text="Langauage" level="H2"/> -->
 									<ToolbarSpacer/>
 									<!-- Add the Personalization button -->
-									<Button id="midTableAddButton" text="Add" type="Transparent" press=".onMidTableAddButtonPress" />
-									<Button id="midTableDeleteButton" text="Delete" type="Transparent" press=".onMidTableDeleteButtonPress" />
+									<Button id="midTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onMidTableAddButtonPress" />
+									<Button id="midTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMidTableDeleteButtonPress" />
 									<!-- <Button id="midTableSaveButton" text="Save" type="Emphasized" press=".onMidTableSaveButtonPress" /> -->
 									<ToolbarSeparator/>
 									<SearchField id="midTableSearchField" placeholder="Class Text" width="10rem" search=".onMidTableFilterPress" />

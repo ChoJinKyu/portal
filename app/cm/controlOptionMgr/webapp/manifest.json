@@ -19,6 +19,14 @@
           "odataVersion": "2.0"
         }
       },
+      "orgMgrService": {
+        "uri": "../../../cm/codeMgr/srv-api/odata/v2/cm.OrgMgrService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0",
+          "localUri": "localService/metadata.xml"
+        }
+      },
       "commonUtilService": {
         "uri": "srv-api/odata/v2/util.CommonService/",
         "type": "OData",
@@ -85,6 +93,16 @@
           "useBatch": true
         }
       },
+      "org": {
+        "dataSource": "orgMgrService",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "groupId": "$direct",
+          "synchronizationMode": "None",
+          "autoExpandSelect": true
+        }
+      },
       "": {
         "dataSource": "mainService",
         "preload": true,
@@ -97,11 +115,11 @@
       }
     },
     "resources": {
-        "css": [
-            {
-                "uri": "css/style.css"
-            }
-        ]
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
     },
     "resourceRoots": {
       "ext.lib": "../../../lib"
@@ -112,7 +130,7 @@
         "viewType": "XML",
         "viewPath": "cm.controlOptionMgr.view",
         "controlId": "fcl",
-				"transition": "slide",
+        "transition": "slide",
         "bypassed": {
           "target": [
             "notFound"
@@ -121,36 +139,36 @@
         "async": true
       },
       "routes": [
-          {
-              "pattern": ":layout:",
-              "name": "mainPage",
-              "target": [
-                  "mainObject"
-              ]
-          },
-          {
-              "pattern": "midObject/{layout}/{tenantId}/{controlOptionCode}",
-              "name": "midPage",
-              "target": [
-                  "mainObject",
-                  "midObject"
-              ]
-          }
+        {
+          "pattern": ":layout:",
+          "name": "mainPage",
+          "target": [
+            "mainObject"
+          ]
+        },
+        {
+          "pattern": "midObject/{layout}/{tenantId}/{controlOptionCode}/:?query:",
+          "name": "midPage",
+          "target": [
+            "mainObject",
+            "midObject"
+          ]
+        }
       ],
       "targets": {
-          "mainObject": {
-              "viewName": "MainList",
-              "controlAggregation": "beginColumnPages"
-          },
-          "midObject": {
-              "viewName": "MidObject",
-              "controlAggregation": "midColumnPages"
-          },
-          "notFound": {
-            "viewName": "NotFound",
-            "viewPath": "ext.lib.view",
-            "viewId": "notFound"
-          }
+        "mainObject": {
+          "viewName": "MainList",
+          "controlAggregation": "beginColumnPages"
+        },
+        "midObject": {
+          "viewName": "MidObject",
+          "controlAggregation": "midColumnPages"
+        },
+        "notFound": {
+          "viewName": "NotFound",
+          "viewPath": "ext.lib.view",
+          "viewId": "notFound"
+        }
       }
     }
   },

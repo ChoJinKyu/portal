@@ -1,18 +1,3 @@
-<!---
-남은 작업 목록.
-
-논의사항
-- panding 하고 일괄 저장이 현재 안됨..
-- 생성 , (멀티) 삭제는 테스트 해보았음. , 
-
-1. 상세페이지 언어별 자재명 등록
-2. 상세페이지 언어별 삭제
-3. 변경 모드와 뷰 모드 컨트롤
-4. 언어에 선택 기본갑 설정
-5. 사용하는 소스와 사용하지 않는 소스 정리. 
-5. 전체적인 기획서 재 확인.
-
--->
 <mvc:View
     controllerName="pg.mi.controller.MainList"
     xmlns:mvc="sap.ui.core.mvc"
@@ -64,10 +49,16 @@
                     enableBasicSearch="false" >
                         <smartFilterBar:controlConfiguration>
                             <!-- 관리조직 -->
-                            <smartFilterBar:ControlConfiguration  key="tenant_id" groupId="_BASIC" index="1" label="관리조직"
+                            <smartFilterBar:ControlConfiguration  
+                            key="tenant_id" 
+                            groupId="_BASIC" 
+                            index="1" 
+                            label="관리조직"
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
-                                        <ComboBox id="sf_tenant_id" items="{path: '/OrgTenantView', templateShareable:true}" placeholder="선택하세요.">
+                                        <ComboBox id="sf_tenant_id" 
+                                        items="{path: '/OrgTenantView', templateShareable:true}" 
+                                        placeholder="선택하세요.">
                                         <core:Item key="{tenant_id}" text="{tenant_name}"/>
                                     </ComboBox>
                                 </smartFilterBar:customControl>
@@ -100,16 +91,16 @@
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
                                         <ComboBox id="sf_category_code" items="{path: '/MICategoryView', templateShareable:true}" placeholder="선택하세요.">
-                                        <core:Item key="{category_code}" text="{category_name}"/>
+                                        <core:Item key="{category_code}" text="{category_text}"/>
                                     </ComboBox>
                                 </smartFilterBar:customControl>
                             </smartFilterBar:ControlConfiguration>
 
                              <!-- 사용여부 -->    
-                          <smartFilterBar:ControlConfiguration key="code" groupId="_BASIC" index="4" label="사용여부" 
+                          <smartFilterBar:ControlConfiguration key="use_flag" groupId="_BASIC" index="4" label="사용여부" 
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
-                                        <ComboBox id="sf_code" items="{path: '/UseYNView', templateShareable:true}" placeholder="선택하세요.">
+                                        <ComboBox id="sf_use_flag" items="{path: '/UseYNView', templateShareable:true}" placeholder="선택하세요.">
                                         <core:Item key="{code}" text="{code_name}"/>
                                     </ComboBox>
                                 </smartFilterBar:customControl>

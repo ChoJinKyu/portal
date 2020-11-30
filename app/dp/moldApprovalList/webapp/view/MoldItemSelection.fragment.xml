@@ -89,16 +89,16 @@
                             growingThreshold="3"
                             class="sapFDynamicPageAlignContent" 
                             updateFinished="" 
-                            selectionChange="" 
+                            selectionChange=".selectMoldItemChange" 
                             mode="MultiSelect"
                             width="auto"
                             items="{purOrg>/Pur_Operation_Org}"
                             >
-                        <!-- <headerToolbar>
+                         <headerToolbar>
                             <OverflowToolbar>
-                                <Label text="Approval Line"/>
+                                <Label text="{= ${pssaCreateObjectView>/moldItemLength} > 0 ? ( 'Selected : '+${pssaCreateObjectView>/moldItemLength} ) : '' }"/>
                             </OverflowToolbar>
-                        </headerToolbar> -->
+                        </headerToolbar> 
                         <columns>
                             <Column id="modelItem_model" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true"  >
                                 <Text text="Model" />
@@ -147,9 +147,9 @@
             </VBox>       
       
         <ToolbarSpacer/>
-        <HBox alignItems="Center" justifyContent="Center" >
-            <Button text="Cancel" class="sapUiSmallMargin" press=".onExit"/>
-            <Button text="Apply" class="sapUiSmallMargin" type="Emphasized" press=".onMoldItemSelectionApply"/>
+        <HBox alignItems="End" justifyContent="End" >
+            <Button text="Cancel" class="sapUiSmallMarginEnd" press=".onExit"/>
+            <Button text="Apply" class="sapUiSmallMarginEnd" type="Emphasized" press=".onMoldItemSelectionApply"/>
         </HBox>
     </Dialog>
 </core:FragmentDefinition>

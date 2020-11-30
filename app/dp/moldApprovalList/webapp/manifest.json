@@ -193,6 +193,13 @@
           ]
         },
         {
+          "pattern": "PssaCreateObject/{company}/{plant}",
+          "name": "beaCreateObject",
+          "target": [
+            "beaCreateObject"
+          ]
+        },
+        {
           "pattern": "PssaObject",
           "name": "pssaObject",
           "target": [

@@ -1,27 +1,30 @@
 sap.ui.define([
-    //"./BaseController",
     "ext/lib/controller/BaseController",
-	"sap/ui/model/json/JSONModel",
-	"sap/ui/core/routing/History",
-	"../model/formatter",
 	"ext/lib/model/ManagedListModel",
-	"sap/m/TablePersoController",
+	"../model/formatter",
 	"./developmentReceiptPersoService",
+    "sap/ui/base/ManagedObject",
+	"sap/ui/core/routing/History",
+    "sap/ui/core/Element",
+	"sap/ui/model/json/JSONModel",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
-    "sap/m/MessageBox",
-    "sap/m/MessageToast",
+    'sap/ui/model/Sorter',
 	"sap/ui/table/Column",
 	"sap/ui/table/Row",
+	"sap/ui/table/TablePersoController",
+    "sap/ui/core/Item",
+	"sap/m/ComboBox",
+	"sap/m/ColumnListItem",
+	"sap/m/Input",
+    "sap/m/MessageBox",
+    "sap/m/MessageToast",
 	"sap/m/ObjectIdentifier",
 	"sap/m/Text",
-	"sap/m/Input",
-	"sap/m/ComboBox",
-    "sap/ui/core/Item",
-    "sap/m/Token",
-    "sap/ui/core/Element",
-    "sap/ui/base/ManagedObject"
-], function (BaseController, JSONModel, History, formatter, ManagedListModel, TablePersoController, developmentReceiptPersoService, Filter, FilterOperator, MessageBox, MessageToast, Column, Row, ObjectIdentifier, Text, Input, ComboBox, Item, Token, Element, ManagedObject) {
+    "sap/m/Token"
+], function (BaseController, ManagedListModel, formatter, developmentReceiptPersoService, 
+    ManagedObject, History, Element, JSONModel, Filter, FilterOperator, Sorter, Column, Row, TablePersoController, Item, 
+    ComboBox, ColumnListItem, Input, MessageBox, MessageToast, ObjectIdentifier, Text, Token) {
 	"use strict";
 
 	return BaseController.extend("dp.developmentReceipt.controller.developmentReceipt", {
@@ -54,10 +57,20 @@ sap.ui.define([
 				intent: "#Template-display"
             }, true);
 
-            this._doInitSearch();
+            //this._doInitSearch();
             //this._doInitTablePerso();
             
             this.setModel(new ManagedListModel(), "list");
+            
+            this._oTPC = new TablePersoController({
+                customDataKey: "developmentReceipt",
+                persoService: developmentReceiptPersoService
+            }).setTable(this.byId("moldMstTable"));
+            console.log(this.byId("moldMstTable"));
+        },
+        
+        onMainTablePersoButtonPressed: function (event) {
+            this._oTPC.openDialog();
             
         },
         
@@ -346,8 +359,8 @@ sap.ui.define([
 		},
 
         familyFlagChange : function (oEvent) {
-			var sSelectedKey = oEvent.getSource().getSelectedKey();
-
+            var sSelectedKey = oEvent.getSource().getSelectedKey();
+            
 			if (sSelectedKey === 'Y') {
                 oEvent.getSource().getParent().getCells()[23].setEditable(true);
                 oEvent.getSource().getParent().getCells()[24].setEditable(true);
@@ -413,8 +426,8 @@ sap.ui.define([
         
 		_getSearchStates: function(){
 			var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S",
-				//affiliate = this.getView().byId("searchAffiliate"+sSurffix).getSelectedKey(),
-                //division = this.getView().byId("searchDivision"+sSurffix).getSelectedKey(),
+				affiliate = this.getView().byId("searchAffiliate"+sSurffix).getSelectedItems(),
+                division = this.getView().byId("searchDivision"+sSurffix).getSelectedItems(),
                 statusSelectedItemId = this.getView().byId("searchStatus"+sSurffix).getSelectedItem(),
                 status = Element.registry.get(statusSelectedItemId).getText(),
                 receiptFromDate = this.getView().byId("searchReceiptDate"+sSurffix).getDateValue(),
@@ -428,7 +441,37 @@ sap.ui.define([
                 familyPartNo = this.getView().byId("searchFamilyPartNo").getValue();
 				
             var aTableSearchState = [];
-            //MessageToast.show("조회");
+            var affiliateFilters = [];
+            var divisionFilters = [];
+
+            if(affiliate.length > 0){
+
+                affiliate.forEach(function(item){
+                    affiliateFilters.push(new Filter("company_code", FilterOperator.EQ, item.mProperties.key ));
+                });
+
+                aTableSearchState.push(
+                    new Filter({
+                        filters: affiliateFilters,
+                        and: false
+                    })
+                );
+            }
+            
+            if(division.length > 0){
+
+                division.forEach(function(item){
+                    divisionFilters.push(new Filter("org_code", FilterOperator.EQ, item.mProperties.key ));
+                });
+
+                aTableSearchState.push(
+                    new Filter({
+                        filters: divisionFilters,
+                        and: false
+                    })
+                );
+            }
+            
 			if (status !== "All") {
 				aTableSearchState.push(new Filter("mold_receipt_flag", FilterOperator.EQ, (status == "Received" ? true : false)));
 
@@ -509,7 +552,7 @@ sap.ui.define([
                 var oCells = oRow.getCells();
 
                 oCells.forEach(function (oCell, jdx) {
-                    if(jdx > 6 && jdx < 22){
+                    if(jdx > 6 && jdx !== 12){
                         oCell.removeStyleClass("readonlyField");
                     }
                 });
@@ -530,7 +573,7 @@ sap.ui.define([
                 var oCells = oRow.getCells();
 
                 oCells.forEach(function (oCell, jdx) {
-                    if(jdx > 6 && jdx < 22){
+                    if(jdx > 6 && jdx !== 12){
                         oCell.addStyleClass("readonlyField");
                     }
                 });
@@ -541,102 +584,57 @@ sap.ui.define([
 			this.byId("moldMstTable").setSelectionMode(sap.ui.table.SelectionMode.MultiToggle);
 		},
 
-        /* Affiliate Start */
-        /**
-         * @private
-         * @see 검색을 위한 컨트롤에 대하여 필요 초기화를 진행 합니다. 
-         */
-		_doInitSearch: function(){
-            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S";
+        handleSelectionFinishComp: function(oEvent){
 
-			this._oMultiInput = this.getView().byId("searchAffiliate"+sSurffix);
-            this._oMultiInput.setTokens(this._getDefaultTokens());
+            this.copyMultiSelected(oEvent);
 
-            this.oColModel = new JSONModel(sap.ui.require.toUrl("dp/developmentReceipt/localService/mockdata") + "/columnsModel.json");
-            this.oAffiliateModel = new JSONModel(sap.ui.require.toUrl("dp/developmentReceipt/localService/mockdata") + "/affiliate.json");
-            this.setModel("affiliateModel", this.oAffiliateModel);
+            var params = oEvent.getParameters();
+            var divisionFilters = [];
+
+            if(params.selectedItems.length > 0){
+
+                params.selectedItems.forEach(function(item, idx, arr){
+
+                    divisionFilters.push(new Filter({
+                                filters: [
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                    new Filter("company_code", FilterOperator.EQ, item.getKey() )
+                                ],
+                                and: true
+                            }));
+                });
+            }else{
+                divisionFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100' ));
+            }
+
+            var filter = new Filter({
+                            filters: divisionFilters,
+                            and: false
+                        });
+
+            this.getView().byId("searchDivisionS").getBinding("items").filter(filter, "Application");
+            this.getView().byId("searchDivisionE").getBinding("items").filter(filter, "Application");
         },
 
-        /**
-         * @private 
-         * @see searchAffiliate setTokens
-         */
-        _getDefaultTokens: function () {
-            
-            var oToken = new Token({
-                key: "EKHQ",
-                text: "[LGEKR] LG Electronics Inc."
+        handleSelectionFinishDiv: function(oEvent){
+            this.copyMultiSelected(oEvent);
+        },
+
+        copyMultiSelected: function(oEvent){
+            var source = oEvent.getSource();
+            var params = oEvent.getParameters();
+
+            var id = source.sId.split('--')[2];
+            var idPreFix = id.substr(0, id.length-1);
+            var selectedKeys = [];
+
+            params.selectedItems.forEach(function(item, idx, arr){
+                selectedKeys.push(item.getKey());
             });
 
-            return [oToken];
+            this.getView().byId(idPreFix+'S').setSelectedKeys(selectedKeys);
+            this.getView().byId(idPreFix+'E').setSelectedKeys(selectedKeys);
         },
-
-        /**
-         * @public 
-         * @see searchAffiliate Fragment View 컨트롤 valueHelp
-         */
-        onValueHelpRequested : function () {
-            console.group("onValueHelpRequested");
-
-            var aCols = this.oColModel.getData().cols;
-
-            this._oValueHelpDialog = sap.ui.xmlfragment("dp.developmentReceipt.view.ValueHelpDialogAffiliate", this);
-            this.getView().addDependent(this._oValueHelpDialog);
-
-            this._oValueHelpDialog.getTableAsync().then(function (oTable) {
-                oTable.setModel(this.oAffiliateModel);
-                oTable.setModel(this.oColModel, "columns");
-
-                if (oTable.bindRows) {
-                    oTable.bindAggregation("rows", "/AffiliateCollection");
-                }
-
-                if (oTable.bindItems) {
-                    oTable.bindAggregation("items", "/AffiliateCollection", function () {
-                        return new ColumnListItem({
-                            cells: aCols.map(function (column) {
-                                return new Label({ text: "{" + column.template + "}" });
-                            })
-                        });
-                    });
-                }
-                this._oValueHelpDialog.update();
-            }.bind(this));
-
-            this._oValueHelpDialog.setTokens(this._oMultiInput.getTokens());
-            this._oValueHelpDialog.open();
-                console.groupEnd();
-        },
-
-        /**
-         * @public 
-         * @see 사용처 ValueHelpDialogAffiliate Fragment 선택후 확인 이벤트
-         */
-        onValueHelpOkPress : function (oEvent) {
-            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S",
-                aTokens = oEvent.getParameter("tokens");
-
-            this.searchAffiliate = this.getView().byId("searchAffiliate"+sSurffix);
-            this.searchAffiliate.setTokens(aTokens);
-            this._oValueHelpDialog.close();
-        },
-
-        /**
-         * @public 
-         * @see 사용처 ValueHelpDialogAffiliate Fragment 취소 이벤트
-         */
-        onValueHelpCancelPress: function () {
-            this._oValueHelpDialog.close();
-        },
-
-        /**
-         * @public
-         * @see 사용처 ValueHelpDialogAffiliate Fragment window.close after 이벤트
-         */
-        onValueHelpAfterClose: function () {
-            this._oValueHelpDialog.destroy();
-        },
-        /* Affiliate End */
 
 		_doInitTablePerso: function(){
 			// init and activate controller
@@ -647,7 +645,6 @@ sap.ui.define([
 				hasGrouping: true
 			}).activate();
 		}
-
 
 	});
 });
