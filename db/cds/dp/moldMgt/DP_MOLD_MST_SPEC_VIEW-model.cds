@@ -6,6 +6,7 @@ entity Mold_Mst_Spec_View {
         company_name                    : String;
         org_name                        : String;
         user_name                       : String;
+        user_name_id                    : String;
         last_update_date                : String;
         mold_item_type_name             : String;
         mold_production_type_name       : String;
@@ -186,5 +187,5 @@ entity Mold_Mst_Spec_View {
         local_update_dtm                : DateTime            @title : '로컬수정시간';
         system_create_dtm               : DateTime            @title : '시스템등록시간';
         system_update_dtm               : DateTime            @title : '시스템수정시간';
-        mold_spec_register_date : String;
+        mold_spec_register_date         : String;
 }
