@@ -57,6 +57,7 @@
             "db/cds/pg/spmd",
             "db/cds/pg/vp",
             "db/cds/sp",
+            "db/cds/sp/fundingMgr",
             "db/cds/mc",
             "srv"
           ]
