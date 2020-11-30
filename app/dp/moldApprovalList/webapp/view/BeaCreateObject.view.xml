@@ -22,12 +22,12 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="Participating Supplier Selection Approval" wrapping="true" />
+					<Title text="Budget Execution Approval" wrapping="true" />
 				</uxap:expandedHeading>
 
 				<uxap:snappedHeading>
                     <FlexBox fitContainer="true" alignItems="Center">
-						<Title text="Participating Supplier Selection Approval" wrapping="true"/>
+						<Title text="Budget Execution Approval" wrapping="true"/>
 					</FlexBox>
 				</uxap:snappedHeading>
 
@@ -427,9 +427,10 @@
 					</uxap:ObjectPageSubSection> 
                     <uxap:ObjectPageSubSection>
                         <VBox class="sapUiSmallMarginBegin">
-                         <Toolbar>
-                          <Label text="Referrer" />
-                          <ToolbarSpacer/>
+                        <VBox alignItems="Start" justifyContent="Start">
+                            <Label text="Referrer"/>
+                             
+                        </VBox>
                         <HBox alignItems="End" justifyContent="End" >
                             <Label text="Adress Book" class=""/>
                             <core:Icon 
@@ -439,7 +440,6 @@
                             </core:Icon>
                            
                         </HBox>
-                        </Toolbar>
                             <layout:VerticalLayout class="sapUiContentPadding" width="100%">
                                 <MultiComboBox
                                     selectionChange="handleSelectionChangeReferrer"

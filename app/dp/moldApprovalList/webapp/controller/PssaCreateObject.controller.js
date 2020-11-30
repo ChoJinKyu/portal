@@ -46,7 +46,7 @@ sap.ui.define([
                 });
            
             this.setModel(oViewModel, "pssaCreateObjectView"); 
-            this.getView().setModel(new ManagedListModel(),"createlist");
+            this.getView().setModel(new ManagedListModel(),"createlist"); // Participating Supplier
             this.getView().setModel(new ManagedListModel(),"appList"); // apporval list 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
             this.getRouter().getRoute("pssaCreateObject").attachPatternMatched(this._onObjectMatched, this);
@@ -55,7 +55,10 @@ sap.ui.define([
         onAfterRendering : function () {
          
         },
-        setRichEditor : function (){
+        /**
+         * 폅집기 창 
+         */
+        setRichEditor : function (){ 
             var that = this,
 			sHtmlValue = ''
             sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
@@ -81,18 +84,6 @@ sap.ui.define([
 		/* =========================================================== */
 		/* event handlers                                              */
         /* =========================================================== */
-        
-        onSearch: function (event) {
-			var oItem = event.getParameter("suggestionItem");
-			this.handleEmployeeSelectDialogPress(event);
-		},
-
-		onSuggest: function (event) {
-			var sValue = event.getParameter("suggestValue"),
-                aFilters = [];
-                console.log("sValue>>> " , sValue ,"this.oSF>>" , this.oSF);
-			
-		},
 		/**
 		 * Event handler  for navigating back.
 		 * It there is a history entry we go one step back in the browser history
@@ -116,24 +107,7 @@ sap.ui.define([
 		onPageEditButtonPress: function(){
 			this._toEditMode();
 		},
-        
-        _onLoadApprovalRow : function () { // 파일 찾는 row 추가 
-            var oTable = this.byId("ApprovalTable"),
-                oModel = this.getModel("appList"); 
-                if(oModel.oData.undefined == undefined || oModel.oData.undefined == null){
-                    oModel.addRecord({
-                        "no": "1",
-                        "type": "",
-                        "nameDept": "",
-                        "status": "",
-                        "comment": "" ,
-                        "arrowUp": "" ,
-                        "arrowDown": "" ,
-                        "editMode": true , 
-                        "trashShow" : false 
-                    });
-                }
-        } ,
+
 
 		/**
 		 * Event handler for saving page changes
@@ -423,8 +397,6 @@ sap.ui.define([
 			var oUploadCollection = this.byId("UploadCollection");
 			oUploadCollection.setShowSeparators(oEvent.getParameters().selectedItem.getProperty("key"));
         } ,
-
-
         /**
          * @description : Popup 창 : 품의서 Participating Supplier 항목의 Add 버튼 클릭
          */
@@ -454,7 +426,6 @@ sap.ui.define([
          */
         onExit: function () {
             this.byId("dialogMolItemSelection").close();
-          //  this.byId("dialogMolItemSelection").destroy();
         },
          /**
          * @description  Participating Supplier Fragment Apply 버튼 클릭시 
@@ -479,8 +450,10 @@ sap.ui.define([
             });
             this.onExit();
         },
-
-        selectMoldItemChange : function(oEvent){
+        /**
+         * @description  Participating Supplier Fragment 몇개 선택 되어 있는지 표기 하기 위함
+         */
+        selectMoldItemChange : function(oEvent){ 
             var oTable = this.byId("moldItemSelectTable");
             var aItems = oTable.getSelectedItems(); 
             var appInfoModel = this.getModel("pssaCreateObjectView");
@@ -509,6 +482,42 @@ sap.ui.define([
                     "moldSupplier10" : "",
                 });
         },
+
+        /**
+         * @description  // 파일 찾는 row 추가 (employee)
+         */  
+        _onLoadApprovalRow : function () {
+            var oTable = this.byId("ApprovalTable"),
+                oModel = this.getModel("appList"); 
+                if(oModel.oData.undefined == undefined || oModel.oData.undefined == null){
+                    oModel.addRecord({
+                        "no": "1",
+                        "type": "",
+                        "nameDept": "",
+                        "status": "",
+                        "comment": "" ,
+                        "arrowUp": "" ,
+                        "arrowDown": "" ,
+                        "editMode": true , 
+                        "trashShow" : false 
+                    });
+                }
+        } ,
+        /**
+         * @description employee 이벤트 1
+         */        
+        onSearch: function (event) {
+			var oItem = event.getParameter("suggestionItem");
+			this.handleEmployeeSelectDialogPress(event);
+		},
+       /**
+         * @description employee 이벤트 2
+         */ 
+		onSuggest: function (event) {
+			var sValue = event.getParameter("suggestValue"),
+                aFilters = [];
+                console.log("sValue>>> " , sValue ,"this.oSF>>" , this.oSF);
+		},
         /**
          * @description employee 팝업 닫기 
          */
@@ -516,8 +525,9 @@ sap.ui.define([
             this.byId("dialogEmployeeSelection").close();
            // this.byId("dialogEmployeeSelection").destroy();
         },
+
         /**
-         * @description employee 팝업 열기 
+         * @description employee 팝업 열기 (돋보기 버튼 클릭시)
          */
         handleEmployeeSelectDialogPress : function (oEvent) {
 

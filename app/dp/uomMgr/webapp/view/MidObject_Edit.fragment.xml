@@ -1,0 +1,75 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<form:SimpleForm id="midObjectForm1Edit" editable="false" >
+		
+		<!-- <core:Title text="Normal" /> -->
+		<Label text="Class" required="true"/>
+		<Input value="{master>/uom_class_code}" editable="{midObjectView>/isAddedMode}"/>
+        <Label text="Class Text" required="true"/>
+		<Input value="{master>/uom_class_name}"/>
+        <Label text="Base UOM" required="false"/>
+		<Text text="{master>/base_uom_code}"/>
+        <Label text="Base UOM Text" required="false"/>
+		<Text text="{master>/base_uom_name}"/>
+        <Label text="Description" required="false"/>
+		<Input value="{master>/uom_class_desc}"/>
+        <Label text="Disable Date" required="false"/>
+        <!-- <DatePicker placeholder="Date" value="{path: 'master>/disable_date',type: 'sap.ui.model.odata.type.Date'}" displayFormat="Date"/> -->
+		<DatePicker placeholder="Disable Date" dateValue="{master>/disable_date}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
+		<!-- <Label text="Chain" required="true"/>
+		<ComboBox id="searchChain" width="100%" selectedKey="{master>/chain_code}" items="{
+				path: 'util>/CodeDetails',
+				filters: [
+					{path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+					{path: 'company_code', operator: 'EQ', value1: '*'},
+					{path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
+				]
+			}">
+			<items>
+				<core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+			</items>
+		</ComboBox> -->		
+
+		<!-- <core:Title text="Effect" />
+		<Label text="From" required="true"/>
+		<DatePicker placeholder="Starts From" value="{master>/start_date}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
+		<Label text="To" required="true"/>
+		<DatePicker placeholder="Ends To" value="{master>/end_date}"  valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
+		
+		<core:Title text="Boundry" />
+		<Label text="Site"/>
+		<Switch state="{master>/site_flag}" customTextOn="Yes" customTextOff="No">
+			<layoutData>
+				<FlexItemData growFactor="1" />
+			</layoutData>
+		</Switch>
+		<Label text="Company"/>
+		<Switch state="{master>/company_flag}" customTextOn="Yes" customTextOff="No">
+			<layoutData>
+				<FlexItemData growFactor="1" />
+			</layoutData>
+		</Switch>
+		<Label text="Role"/>
+		<Switch state="{master>/role_flag}" customTextOn="Yes" customTextOff="No">
+			<layoutData>
+				<FlexItemData growFactor="1" />
+			</layoutData>
+		</Switch>
+		<Label text="Organization"/>
+		<Switch state="{master>/organization_flag}" customTextOn="Yes" customTextOff="No">
+			<layoutData>
+				<FlexItemData growFactor="1" />
+			</layoutData>
+		</Switch>
+		<Label text="User"/>
+		<Switch state="{master>/user_flag}" customTextOn="Yes" customTextOff="No">
+			<layoutData>
+				<FlexItemData growFactor="1" />
+			</layoutData>
+		</Switch> -->
+
+	</form:SimpleForm>
+</core:FragmentDefinition>
