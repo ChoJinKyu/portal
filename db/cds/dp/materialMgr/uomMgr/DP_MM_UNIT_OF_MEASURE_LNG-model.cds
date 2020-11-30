@@ -29,9 +29,9 @@ entity Mm_Unit_Of_Measure_Lng {
         and parent.uom_code = uom_code;
 
   key language_code : String(4)  not null @title: 'Language' ;	
-    comercial_uom_code : String(3)  not null @title: '상업UOM코드' ;	
+    commercial_uom_code : String(3)  not null @title: '상업UOM코드' ;	
     technical_uom_code : String(6)  not null @title: '기술UOM코드' ;	
-    comercial_uom_name : String(30)   @title: '상업UOM명' ;	
+    commercial_uom_name : String(30)   @title: '상업UOM명' ;	
     technical_uom_name : String(30)   @title: '기술UOM명' ;	
     uom_description : String(50)   @title: 'UOM설명' ;	
 }	

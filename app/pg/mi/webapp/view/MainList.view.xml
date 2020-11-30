@@ -1,20 +1,5 @@
-<!---
-남은 작업 목록.
-
-논의사항
-- panding 하고 일괄 저장이 현재 안됨..
-- 생성 , (멀티) 삭제는 테스트 해보았음. , 
-
-1. 상세페이지 언어별 자재명 등록
-2. 상세페이지 언어별 삭제
-3. 변경 모드와 뷰 모드 컨트롤
-4. 언어에 선택 기본갑 설정
-5. 사용하는 소스와 사용하지 않는 소스 정리. 
-5. 전체적인 기획서 재 확인.
-
--->
 <mvc:View
-    controllerName="pg.mi.controller.MainList"
+    controllerName="pg.mm.controller.MainList"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
     xmlns:f="sap.f"

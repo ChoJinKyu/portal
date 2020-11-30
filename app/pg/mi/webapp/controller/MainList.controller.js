@@ -108,10 +108,16 @@ sap.ui.define([
             
             this.getView().getModel().setChangeGroups({
 			  "MIMaterialCodeList": {
-			    groupId: "updateGroup",
-			    changeSetId: "updateGroup"
+			    groupId: "pgmiGroup",
+			    changeSetId: "pgmiGroup"
+              },
+              "MIMaterialCodeText": {
+			    groupId: "pgmiGroup",
+			    changeSetId: "pgmiGroup"
 			  }
-			});
+            });            
+           
+
             this.getView().getModel().attachPropertyChange(this._propertyChanged.bind(this));
             
 			console.groupEnd();
