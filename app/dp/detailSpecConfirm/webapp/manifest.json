@@ -19,6 +19,13 @@
           "odataVersion": "2.0"
         }
       },
+      "dscService": {
+        "uri": "srv-api/odata/v2/dp.DetailSpecConfirmService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
+      },
       "commonUtilService": {
         "uri": "srv-api/odata/v2/util.CommonService/",
         "type": "OData",
@@ -101,6 +108,16 @@
       },
       "": {
         "dataSource": "mainService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": true,
+          "useBatch": true
+        }
+      },
+      "dsc": {
+        "dataSource": "dscService",
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",

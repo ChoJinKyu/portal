@@ -44,4 +44,5 @@ service DetailSpecEntryService {
     select distinct key a.tenant_id, key a.part_number, a.spec_name, a.mold_item_type_name
     from moldMstSpecView.Mold_Mst_Spec_View a
     where a.part_number is not null;
+    
 }
