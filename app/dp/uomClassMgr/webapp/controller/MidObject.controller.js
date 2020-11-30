@@ -405,7 +405,7 @@ sap.ui.define([
                 oLanguageCode.bindItems({
                     path: 'util>/CodeDetails',
                     filters: [
-                        // new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
+                        new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
                         // new Filter("company_code", FilterOperator.EQ, 'G100'),
                         new Filter("group_code", FilterOperator.EQ, 'CM_LANG_CODE')
                     ],
