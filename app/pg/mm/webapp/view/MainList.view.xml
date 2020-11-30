@@ -138,7 +138,7 @@
                                 press=".onMainTableColumns"/>
                         </OverflowToolbar>
                     </smartTable:customToolbar>
-                            <Table id="mainTable" mode="    " sticky="HeaderToolbar,ColumnHeaders">
+                            <Table id="mainTable" mode="SingleSelectLeft" sticky="HeaderToolbar,ColumnHeaders">
                                  <columns>  
                                        <Column hAlign="Center"  demandPopin="true" importance="High" popinDisplay="WithoutHeader">
                                         <customData>

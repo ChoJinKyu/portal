@@ -42,40 +42,8 @@ sap.ui.define([
 				tableNoDataText : oResourceBundle.getText("tableNoDataText")
 			});
 
-			 this.setModel(oViewModel, "mainListView");
-		
-			// var oModel = this.getOwnerComponent().getModel();
-
-			// var oModelODATA = oModel.getData();
-			// debugger;
-			//  var OdataJsonModel = new sap.ui.model.json.JSONModel();
-			//  OdataJsonModel.setData(oModelODATA);
-
-			//  var oData = this.getView().getModel().oData;
-
-
-			// console.log("====================================================");
-			// console.log("oModelODATA", oModelODATA);
-
+			this.setModel(oViewModel, "mainListView");
 			
-			// this.setModel(oModelODATA, "mainListData");
-			// var testModel = this.getModel("mainListData");
-
-			// var OdataJsonModel = new sap.ui.model.json.JSONModel();
-			// OdataJsonModel.setData(oModelODATA);
-
-			// debugger;
-			// testModel.("MIMaterialCodeList(tenant_id='L2100',company_code='*',org_type_code='BU',org_code='BIZ00100',mi_material_code='LED-001-01')", {
-            //         success: function (odata, oResponse) {
-			// 			console.log("===============");
-			// 			console.log(odata);
-            //         }.bind(this),
-            //         error: function (cc, vv) {
-            //             console.log('error');
-            //         }
-			// 	});
-			// 	debugger;
-
 			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
             this._mainTable = this.getView().byId("mainTable");
@@ -104,7 +72,7 @@ sap.ui.define([
 		_onCreateModeMetadataLoaded: function() {
 			console.group("_onCreateModeMetadataLoaded");
 			this.getView().getModel().setUseBatch(true);
-			this.getView().getModel().setDeferredGroups(["updateGroup","deleteGroup","createGroup"]);
+			this.getView().getModel().setDeferredGroups(["pgmiGroup"]);
             
             this.getView().getModel().setChangeGroups({
 			  "MIMaterialCodeList": {
@@ -172,13 +140,6 @@ sap.ui.define([
         },
 
 		
-        // //사용하지 않음
-		// _editToggled: function() {
-		// 	var oSmartTable = this._getSmartTableById();
-		// 	var sMode = oSmartTable.getEditable() ? "MultiSelect" : "None";
-		// 	oSmartTable.getTable().setMode(sMode);
-		// },
-               
         /**
 		 * note 데이타베이스 변경으로..실행 안됨.
          * Smart Table Filter Event onBeforeRebindTable
