@@ -133,7 +133,7 @@ sap.ui.define([
     		var sPath = oParameters.context.getPath();
     		var oData = {};
     		oData[oParameters.path] = oParameters.value;
-    		var mParameters = {"groupId":"updateGroup"};
+    		var mParameters = {"groupId":"pgmiGroup"};
 			this.getView().getModel().update(sPath, oData, mParameters);
 			console.groupEnd();
 		},

@@ -39,49 +39,14 @@ sap.ui.define([
 				tableNoDataText : oResourceBundle.getText("tableNoDataText")
 			});
 
-			 this.setModel(oViewModel, "mainListView");
-		
-			// var oModel = this.getOwnerComponent().getModel();
-
-			// var oModelODATA = oModel.getData();
-			// debugger;
-			//  var OdataJsonModel = new sap.ui.model.json.JSONModel();
-			//  OdataJsonModel.setData(oModelODATA);
-
-			//  var oData = this.getView().getModel().oData;
-
-
-			// console.log("====================================================");
-			// console.log("oModelODATA", oModelODATA);
-
-			
-			// this.setModel(oModelODATA, "mainListData");
-			// var testModel = this.getModel("mainListData");
-
-			// var OdataJsonModel = new sap.ui.model.json.JSONModel();
-			// OdataJsonModel.setData(oModelODATA);
-
-			// debugger;
-			// testModel.("MIMaterialCodeList(tenant_id='L2100',company_code='*',org_type_code='BU',org_code='BIZ00100',mi_material_code='LED-001-01')", {
-            //         success: function (odata, oResponse) {
-			// 			console.log("===============");
-			// 			console.log(odata);
-            //         }.bind(this),
-            //         error: function (cc, vv) {
-            //             console.log('error');
-            //         }
-			// 	});
-			// 	debugger;
+			this.setModel(oViewModel, "mainListView");
 
 			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
             this._mainTable = this.getView().byId("mainTable");
 		
-            this._getSmartTableById().getTable().attachSelectionChange(this._selectionChanged.bind(this));
+           // this._getSmartTableById().getTable().attachSelectionChange(this._selectionChanged.bind(this));
 
-			//Note : 초기 테이블 실행 
-			// this._mainTable.setModel(oModel);
-			// this._mainTable.rebindTable(); 
 			console.groupEnd();
 		},
 		
@@ -105,12 +70,12 @@ sap.ui.define([
             
             this.getView().getModel().setChangeGroups({
 			  "MIMaterialCodeList": {
-			    groupId: "pgmiGroup",
-			    changeSetId: "pgmiGroup"
+			    groupId: "pgGroup",
+			    changeSetId: "pgGroup"
               },
               "MIMaterialCodeText": {
-			    groupId: "pgmiGroup",
-			    changeSetId: "pgmiGroup"
+			    groupId: "pgGroup",
+			    changeSetId: "pgGroup"
 			  }
             });            
            
@@ -130,7 +95,7 @@ sap.ui.define([
     		var sPath = oParameters.context.getPath();
     		var oData = {};
     		oData[oParameters.path] = oParameters.value;
-    		var mParameters = {"groupId":"updateGroup"};
+    		var mParameters = {"groupId":"pgGroup"};
 			this.getView().getModel().update(sPath, oData, mParameters);
 			console.groupEnd();
 		},
@@ -156,28 +121,14 @@ sap.ui.define([
 
 			console.group("_selectionChanged");
             var oItemLength = this._getSmartTableById().getTable().getSelectedItems().length;
-			var bDeleteEnabled = oItemLength > 0;
-            this.getView().byId("buttonMainTableDelete").setEnabled(bDeleteEnabled);
+			//var bDeleteEnabled = oItemLength > 0;
+            //this.getView().byId("buttonMainTableDelete").setEnabled(bDeleteEnabled);
 
-            
-            // if(oItemLength > 1 ){
-            //      this.getView().byId("buttonMainTableCopy").setEnabled(false);
-            // }else{
-            //     this.getView().byId("buttonMainTableCopy").setEnabled(bDeleteEnabled);
-			// }
 			console.groupEnd();
         },
 
 		
-        // //사용하지 않음
-		// _editToggled: function() {
-		// 	var oSmartTable = this._getSmartTableById();
-		// 	var sMode = oSmartTable.getEditable() ? "MultiSelect" : "None";
-		// 	oSmartTable.getTable().setMode(sMode);
-		// },
-               
         /**
-		 * note 데이타베이스 변경으로..실행 안됨.
          * Smart Table Filter Event onBeforeRebindTable
          * @param {sap.ui.base.Event} oEvent 
          */
@@ -185,52 +136,27 @@ sap.ui.define([
 		
             console.group("onBeforeRebindTable");
 
-            // Object.keys(data.multi || {}).forEach(k => {
-            // var f = [];
-            // data.multi[k].forEach(v => {
-            //     if (v) f.push(new Filter(k, FilterOperator.EQ, v));
-            // });
-
-            // if (f.length > 0) {
-            //     this.aFilters.push(new Filter(f));
-            // }
-            // });
-
 			var mBindingParams = oEvent.getParameter("bindingParams");
 			var oSmtFilter = this.getView().byId("smartFilterBar");             //smart filter
 			
-            //combobox value
-            var oMi_tenant_id = oSmtFilter.getControlByKey("tenant_id").getSelectedKey();    
-			var oMi_material_code = oSmtFilter.getControlByKey("mi_material_code").getSelectedKey();   
-			var oMi_material_code_name = oSmtFilter.getControlByKey("mi_material_code_name").getSelectedKey();            
-			var oCategory_code = oSmtFilter.getControlByKey("category_code").getSelectedKey();    
-            var oUse_flag = oSmtFilter.getControlByKey("use_flag").getSelectedKey();   
-            var fOcode = oUse_flag =="FALSE" ? false : true;
-
-			if (oMi_tenant_id.length > 0) {
-				var oMi_tenant_idFilter = new Filter("tenant_id", FilterOperator.EQ, oMi_tenant_id);
-				mBindingParams.filters.push(oMi_tenant_idFilter);
+            var oTenant_id = oSmtFilter.getControlByKey("tenant_id").getSelectedKey();    
+			var oMaterial_description = oSmtFilter.getControlByKey("material_description").getSelectedKey();   
+			var oSupplier_local_name = oSmtFilter.getControlByKey("supplier_local_name").getSelectedKey();    
+       
+			if (oTenant_id.length > 0) {
+				var oTenant_idFilter = new Filter("tenant_id", FilterOperator.EQ, oTenant_id);
+				mBindingParams.filters.push(oTenant_idFilter);
             }
             
-			if (oMi_material_code.length > 0) {
-				var oMi_material_codeFilter = new Filter("mi_material_code", FilterOperator.EQ, oMi_material_code);
-				mBindingParams.filters.push(oMi_material_codeFilter);
+			if (oMaterial_description.length > 0) {
+				var ooMaterial_descriptionFilter = new Filter("material_description", FilterOperator.EQ, oMaterial_description);
+				mBindingParams.filters.push(ooMaterial_descriptionFilter);
 			}
 
-			if (oMi_material_code_name.length > 0) {
-				var oMi_material_code_nameFilter = new Filter("mi_material_code_name", FilterOperator.EQ, oMi_material_code_name);
-				mBindingParams.filters.push(oMi_material_code_nameFilter);
+			if (oSupplier_local_name.length > 0) {
+				var oSupplier_local_nameFilter = new Filter("supplier_local_name", FilterOperator.EQ, oSupplier_local_name);
+				mBindingParams.filters.push(oSupplier_local_nameFilter);
 			}
-
-			if (oCategory_code.length > 0) {
-				var oCategory_codeFilter = new Filter("category_code", FilterOperator.EQ, oCategory_code);
-				mBindingParams.filters.push(oCategory_codeFilter);
-			}
-			
-			if (oUse_flag.length > 0) {
-				var oCodeFilter = new Filter("use_flag", FilterOperator.EQ, fOcode);
-				mBindingParams.filters.push(oCodeFilter);
-			}  
 			
 			console.groupEnd();              
 		},
@@ -277,96 +203,6 @@ sap.ui.define([
             }
         },
 
-		/**
-		 * 사용하지 않음
-		 * @param {sap.ui.base.Event} oEvent the update finished event
-		 * @public
-		 */
-		onMainTableUpdateFinished : function (oEvent) {
-			// update the mainList's object counter after the table update
-			var sTitle,
-				oTable = oEvent.getSource(),
-				iTotalItems = oEvent.getParameter("total");
-			// only update the counter if the length is final and
-			// the table is not empty
-			if (iTotalItems && oTable.getBinding("items").isLengthFinal()) {
-				sTitle = this.getResourceBundle().getText("mainListTableTitleCount", [iTotalItems]);
-			} else {
-				sTitle = this.getResourceBundle().getText("mainListTableTitle");
-			}
-			this.getModel("mainListView").setProperty("/mainListTableTitle", sTitle);
-		},
-
-
-        /**
-         * mainTable Item Delete
-         * @param {sap.ui.base.Event} oEvent 
-         */
-        onMainTableDelete : function (oEvent){
-            console.group("onMainTableDelete");
-
-            var oModel = this.getOwnerComponent().getModel(),
-                oData = oModel.getData(),
-                oPath,
-                that = this;
-                  
-            var oSelected = this._mainTable.getSelectedContexts();   
-            if (oSelected.length > 0) { 
-                            
-                MessageBox.confirm("선택한 항목을 삭제 하시겠습니까?", {
-                    title: "삭제 확인",                                    
-                    onClose: this._deleteAction.bind(this),                                    
-                    actions: [sap.m.MessageBox.Action.DELETE, sap.m.MessageBox.Action.CANCEL],
-                    textDirection: sap.ui.core.TextDirection.Inherit    
-                });
-              
-            }
-            console.groupEnd();
-        },
-
-        /**
-         * mainTable Delete Action
-         * @param {sap.m.MessageBox.Action} oAction 
-         */
-		_deleteAction: function(oAction) {
-            console.group("_deleteAction");
-            
-			if(oAction === sap.m.MessageBox.Action.DELETE) {
-				this._getSmartTableById().getTable().getSelectedItems().forEach(function(oItem){
-                    var sPath = oItem.getBindingContextPath();	
-					var mParameters = {"groupId":"deleteGroup"};
-					oItem.getBindingContext().getModel().remove(sPath, mParameters);
-				});
-				
-				var oModel = this.getView().getModel();
-				oModel.submitChanges({
-		      		groupId: "deleteGroup", 
-		        	success: this._handleDeleteSuccess.bind(this),
-		        	error: this._handleDeleteError.bind(this)
-		     	});
-            } 
-            console.groupEnd();
-		},
-   
-
-		/**
-		 * Event handler when a table item gets pressed
-		 * @param {sap.ui.base.Event} oEvent the table selectionChange event
-		 * @public
-		 */
-		onMainTablePersoButtonPressed: function(oEvent){
-			this._oTPC.openDialog();
-		},
-
-		/**
-		 * Event handler when a table personalization refresh
-		 * @param {sap.ui.base.Event} oEvent the table selectionChange event
-		 * @public
-		 */
-		onMainTablePersoRefresh : function() {
-			MainListPersoService.resetPersData();
-			this._oTPC.refresh();
-		},
 
 		/**
 		 * Event handler when a table add button pressed
