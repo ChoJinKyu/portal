@@ -1,11 +1,316 @@
-<mvc:View controllerName="pg.mm.controller.MainList" xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m">
-	<Shell id="shell">
-		<App id="app">
-			<pages>
-				<Page id="page" title="{i18n>title}">
-					<content></content>
-				</Page>
-			</pages>
-		</App>
-	</Shell>
+<mvc:View
+    controllerName="pg.mm.controller.MainList"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:layout="sap.ui.layout"
+    xmlns:core="sap.ui.core"
+    xmlns:lib-m="ext.lib.m"
+    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+    xmlns:sv="sap.ui.comp.smartvariants"
+    xmlns:micro="sap.suite.ui.microchart"
+    xmlns:smartVariantManagement="sap.ui.comp.smartvariants"
+    xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+    height="100%">
+
+    <f:DynamicPage
+        id="page"
+        headerExpanded="{mainListView>/headerExpanded}"
+        toggleHeaderOnTitleClick="true">
+        <!-- DynamicPage Title -->
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:heading>
+                    <Title text="자재별 시황자재 BOM"/>
+                </f:heading>
+                <f:snappedContent></f:snappedContent>
+                <f:expandedContent></f:expandedContent>
+                <f:navigationActions>
+                    <Button icon="sap-icon://unfavorite" type="Transparent"/>
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <!-- DynamicPage Header -->
+        <f:header>
+
+            <f:DynamicPageHeader pinnable="false">
+                <f:content>
+                <smartVariantManagement:SmartVariantManagement        
+				             id="pageVariantId"
+				             persistencyKey="PageVariantPKey" />                     
+                    <!-- Smart Filter -->
+                    <smartFilterBar:SmartFilterBar id="smartFilterBar" 
+                    entitySet="MIMaterialCodeList" 
+                    smartVariant="pageVariantId"
+                    persistencyKey="SmartFilterPKey"
+                    considerSelectionVariants="true" 
+                    enableBasicSearch="false" >
+                        <smartFilterBar:controlConfiguration>
+                            <!-- 관리조직 -->
+                            <smartFilterBar:ControlConfiguration  
+                            key="tenant_id" 
+                            groupId="_BASIC" 
+                            index="1" 
+                            label="관리조직"
+                            visibleInAdvancedArea="true">
+                                <smartFilterBar:customControl>
+                                        <ComboBox id="sf_tenant_id" 
+                                        items="{path: '/OrgTenantView', templateShareable:true}" 
+                                        placeholder="선택하세요.">
+                                        <core:Item key="{tenant_id}" text="{tenant_name}"/>
+                                    </ComboBox>
+                                </smartFilterBar:customControl>                                
+                            </smartFilterBar:ControlConfiguration>
+
+                            <!-- 자재명 -->
+                            <smartFilterBar:ControlConfiguration key="mi_material_code_name" groupId="_BASIC" index="2" label="자재명"  
+                            visibleInAdvancedArea="true">
+                                <smartFilterBar:customControl>
+                                    <Input key="sf_mi_material_code_name" tooltip="자재명" liveChange="onLiveChangeInputMaterialName"/>
+                                </smartFilterBar:customControl>
+                            </smartFilterBar:ControlConfiguration>
+                            <!-- 공급업체명 -->
+                            <smartFilterBar:ControlConfiguration key="category_code" groupId="_BASIC" index="3" label="공급업체명" 
+                            visibleInAdvancedArea="true">
+                                <smartFilterBar:customControl>
+                                        <Input key="sf_mi_partner_name" tooltip="공급업체명" liveChange="onLiveChangeInputPartnerName"/>
+                                </smartFilterBar:customControl>
+                            </smartFilterBar:ControlConfiguration>  
+                            <smartFilterBar:ControlConfiguration key="Validated" filterType="single"/>          
+                        </smartFilterBar:controlConfiguration>
+                        <smartFilterBar:layoutData>
+                            <FlexItemData shrinkFactor="0"/>
+                        </smartFilterBar:layoutData>
+                    </smartFilterBar:SmartFilterBar>
+                </f:content>
+            </f:DynamicPageHeader>
+        </f:header>
+
+        <!-- DynamicPage Content -->
+        <f:content>
+        
+
+                <!-- Smart Table -->
+                <smartTable:SmartTable
+                width="100%"
+                    height="100%"
+                    smartVariant="pageVariantId"
+                    id="smartTable_MainTable_ResponsiveTable"
+                    entitySet="MIMaterialCodeList"
+                    tableBindingPath="{MIMaterialCodeList}"
+                    initiallyVisibleFields="mi_material_code,mi_material_code_name,category_code,use_flag"
+                    smartFilterId="smartFilterBar"
+                    ignoreFromPersonalisation="tenant_id,company_code,org_type_code"
+                    tableType="ResponsiveTable"
+                    useExportToExcel="true"
+                    beforeRebindTable=".onBeforeRebindTable"
+                    beforeExport=".onBeforeExport"
+                    useVariantManagement="true"
+                    useTablePersonalisation="true"
+                    showTablePersonalisation="false"
+                    header="자재별 시황자재 BOM List"
+                    showRowCount="true"
+                    editTogglable="false"
+                    persistencyKey="SmartTablePKey"                    
+                    class="sapUiResponsiveContentPadding"
+                    demandPopin="true"
+                    customData:useSmartField="true"
+                    showFullScreenButton="false">
+                    <smartTable:customToolbar>
+                        <OverflowToolbar design="Transparent">
+                            <ToolbarSpacer/>
+                            <Button text="Create" id="buttonMainTableCreate" type="Transparent" press=".onMainTableCreate"/>                            
+                            <!-- <Button text="Copy" id="buttonMainTableCopy"  type="Transparent" enabled="false" press=".onMainTableCopy"/> -->
+                            <Button text="Delete" id="buttonMainTableDelete" type="Transparent" enabled="false" press=".onMainTableDelete"/>
+                            <OverflowToolbarButton
+                                icon="sap-icon://sort"
+                                tooltip="Sort"
+                                text="Sort"
+                                press=".onMainTableSort"/>
+                            <OverflowToolbarButton
+                                icon="sap-icon://filter"
+                                tooltip="Filter"
+                                text="Filter"
+                                press=".onMainTableFilter"/>
+                            <OverflowToolbarButton
+                                icon="sap-icon://action-settings"
+                                tooltip="Column Settings"
+                                text="Column Settings"
+                                press=".onMainTableColumns"/>
+                        </OverflowToolbar>
+                    </smartTable:customToolbar>
+                            <Table id="mainTable" mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders">
+                                 <columns>  
+                                       <Column hAlign="Center"  demandPopin="false" importance="High" popinDisplay="WithoutHeader">
+                                        <customData>
+                                        <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "mi_material_code", "leadingProperty": "mi_material_code", "sortProperty": "mi_material_code", "filterProperty": "mi_material_code", "columnIndex": 1}'/>
+                                        </customData>
+                                            <Text text="자재코드"></Text>
+                                        </Column>
+                                        <Column hAlign="Center" demandPopin="false" importance="High" >
+                                          <customData>
+                                        <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "material_description", "leadingProperty": "material_description", "sortProperty": "material_description", "filterProperty": "material_description", "columnIndex": 2}'/>
+                                        </customData>
+                                             <Text text="자재명"></Text>
+                                        </Column>
+
+                                        <Column hAlign="Center" demandPopin="false" importance="High">
+                                          <customData>
+                                        <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "supplier_code", "leadingProperty": "supplier_code", "sortProperty": "supplier_code", "filterProperty": "supplier_code", "columnIndex": 3}'/>
+                                        </customData>
+                                             <Text text="공급업체코드"></Text>
+                                        </Column>
+
+                                        <Column hAlign="Center" demandPopin="false" importance="High">
+                                          <customData>
+                                        <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "supplier_local_name", "leadingProperty": "supplier_local_name", "sortProperty": "supplier_local_name", "filterProperty": "supplier_local_name", "columnIndex": 4}'/>
+                                        </customData>
+                                             <Text text="공급업체명"></Text>
+                                        </Column>
+
+                                        <Column hAlign="Center" demandPopin="false" importance="High">
+                                          <customData>
+                                        <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "category_code", "leadingProperty": "category_code", "sortProperty": "category_code", "filterProperty": "category_code", "columnIndex": 5}'/>
+                                        </customData>
+                                             <Text text="기준수량"></Text>
+                                        </Column>
+
+                                        <Column hAlign="Center" demandPopin="false" importance="High">
+                                          <customData>
+                                        <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "category_code", "leadingProperty": "category_code", "sortProperty": "category_code", "filterProperty": "category_code", "columnIndex": 6}'/>
+                                        </customData>
+                                             <Text text="가공비"></Text>
+                                        </Column>
+
+                                        <Column hAlign="Center" demandPopin="false" importance="High">
+                                          <customData>
+                                        <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "category_code", "leadingProperty": "category_code", "sortProperty": "category_code", "filterProperty": "category_code", "columnIndex": 7}'/>
+                                        </customData>
+                                             <Text text="가공비통화"></Text>
+                                        </Column>
+
+                                        <Column hAlign="Center" demandPopin="true">
+                                          <customData>
+                                        <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "category_code", "leadingProperty": "category_code", "sortProperty": "category_code", "filterProperty": "category_code", "columnIndex": 8}'/>
+                                        </customData>
+                                             <Text text="시황자재코드"></Text>
+                                        </Column>
+
+                                        <Column hAlign="Center" demandPopin="true">
+                                          <customData>
+                                        <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "category_code", "leadingProperty": "category_code", "sortProperty": "category_code", "filterProperty": "category_code", "columnIndex": 9}'/>
+                                        </customData>
+                                             <Text text="시황자재명"></Text>
+                                        </Column>
+
+                                        <Column hAlign="Center" demandPopin="true">
+                                          <customData>
+                                        <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "category_code", "leadingProperty": "category_code", "sortProperty": "category_code", "filterProperty": "category_code", "columnIndex": 10}'/>
+                                        </customData>
+                                             <Text text="시황자재Category"></Text>
+                                        </Column>
+                                        <Column hAlign="Center" demandPopin="true">
+                                          <customData>
+                                        <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "category_code", "leadingProperty": "category_code", "sortProperty": "category_code", "filterProperty": "category_code", "columnIndex": 11}'/>
+                                        </customData>
+                                             <Text text="소용량 단위"></Text>
+                                        </Column>                                        
+                                        <Column hAlign="Center" demandPopin="true">
+                                          <customData>
+                                        <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "category_code", "leadingProperty": "category_code", "sortProperty": "category_code", "filterProperty": "category_code", "columnIndex": 12}'/>
+                                        </customData>
+                                             <Text text="소용량"></Text>
+                                        </Column>
+
+                                        <Column hAlign="Center" demandPopin="true">
+                                          <customData>
+                                        <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "category_code", "leadingProperty": "category_code", "sortProperty": "category_code", "filterProperty": "category_code", "columnIndex": 13}'/>
+                                        </customData>
+                                             <Text text="화폐단위"></Text>
+                                        </Column>
+
+                                        <Column hAlign="Center" demandPopin="true">
+                                          <customData>
+                                        <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "category_code", "leadingProperty": "category_code", "sortProperty": "category_code", "filterProperty": "category_code", "columnIndex": 14}'/>
+                                        </customData>
+                                             <Text text="시황기준소요량"></Text>
+                                        </Column>
+                                        
+                                        <Column hAlign="Center" demandPopin="true">
+                                          <customData>
+                                        <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "category_code", "leadingProperty": "category_code", "sortProperty": "category_code", "filterProperty": "category_code", "columnIndex": 15}'/>
+                                        </customData>
+                                             <Text text="수량단위"></Text>
+                                        </Column>
+                                        
+                                        <Column hAlign="Center" demandPopin="true">
+                                          <customData>
+                                        <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "category_code", "leadingProperty": "category_code", "sortProperty": "category_code", "filterProperty": "category_code", "columnIndex": 16}'/>
+                                        </customData>
+                                             <Text text="거래소"></Text>
+                                        </Column>
+
+                                        <Column hAlign="Center" demandPopin="true">
+                                          <customData>
+                                        <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "category_code", "leadingProperty": "category_code", "sortProperty": "category_code", "filterProperty": "category_code", "columnIndex": 17}'/>
+                                        </customData>
+                                             <Text text="연도조건"></Text>
+                                        </Column>
+                                        <Column hAlign="Center" demandPopin="true">
+                                          <customData>
+                                        <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "category_code", "leadingProperty": "category_code", "sortProperty": "category_code", "filterProperty": "category_code", "columnIndex": 18}'/>
+                                        </customData>
+                                             <Text text="사용여부"></Text>
+                                        </Column>                                     
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem type="Navigation" hAlign="Middle" press=".onMainTableItemPress">
+                                             <Text text="{mi_material_code}"></Text>
+                                             <Text text="{mi_material_code_name}"></Text>
+                                             <Text text="{category_code}"></Text>
+                                            <Text text="{mi_material_code}"></Text>
+                                             <Text text="{mi_material_code_name}"></Text>
+                                             <Text text="{category_code}"></Text>
+                                            <Text text="{mi_material_code}"></Text>
+                                             <Text text="{mi_material_code_name}"></Text>
+                                             <Text text="{category_code}"></Text>
+                                            <Text text="{mi_material_code}"></Text>
+                                             <Text text="{mi_material_code_name}"></Text>
+                                             <Text text="{category_code}"></Text>
+                                            <Text text="{mi_material_code}"></Text>
+                                             <Text text="{mi_material_code_name}"></Text>
+                                             <Text text="{category_code}"></Text>
+                                            <Text text="{mi_material_code}"></Text>
+                                             <Text text="{mi_material_code_name}"></Text>
+                                             <Text text="{category_code}"></Text>         
+                                             <Text text="{= ${use_flag}===true?'예':'아니오'}"></Text>  
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                </smartTable:SmartTable>
+        
+        </f:content>
+        <!-- DynamicPage Footer -->
+        
+    </f:DynamicPage>
 </mvc:View>
