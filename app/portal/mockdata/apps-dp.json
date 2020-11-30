@@ -37,8 +37,8 @@
             "subMenus": [
                 {
                     "name": "UOM Class",
-                    "url": "../dp/uomMgr/webapp",
-                    "component": "dp.uomMgr"
+                    "url": "../dp/uomClassMgr/webapp",
+                    "component": "dp.uomClassMgr"
                 }               
             ]
         },

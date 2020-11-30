@@ -130,6 +130,10 @@ modules:
       - monitor-content.zip
       name: monitor
       target-path: resources/
+    - artifacts:
+      - mm-content.zip
+      name: mm
+      target-path: resources/
 - name: sampleMstMgr
   type: html5
   path: app/xx/sampleMstMgr
@@ -248,6 +252,14 @@ modules:
 - name: monitor
   type: html5
   path: app/pg/monitor
+  build-parameters:
+    builder: custom
+    commands:
+    - npm run build
+    supported-platforms: []
+- name: mm
+  type: html5
+  path: app/pg/mm
   build-parameters:
     builder: custom
     commands:
