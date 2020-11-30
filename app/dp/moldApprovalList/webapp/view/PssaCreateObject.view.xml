@@ -427,10 +427,9 @@
 					</uxap:ObjectPageSubSection> 
                     <uxap:ObjectPageSubSection>
                         <VBox class="sapUiSmallMarginBegin">
-                        <VBox alignItems="Start" justifyContent="Start">
-                            <Label text="Referrer"/>
-                             
-                        </VBox>
+                         <Toolbar>
+                          <Label text="Referrer" />
+                          <ToolbarSpacer/>
                         <HBox alignItems="End" justifyContent="End" >
                             <Label text="Adress Book" class=""/>
                             <core:Icon 
@@ -440,6 +439,7 @@
                             </core:Icon>
                            
                         </HBox>
+                        </Toolbar>
                             <layout:VerticalLayout class="sapUiContentPadding" width="100%">
                                 <MultiComboBox
                                     selectionChange="handleSelectionChangeReferrer"
