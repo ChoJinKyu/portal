@@ -38,8 +38,6 @@
             "db/cds/dp/pd",
             "db/cds/dp/standardCommon",
             "db/cds/dp/standardCommon/categoryMgr",
-            "db/cds/dp/materialMgr/materialMasterMgr",
-            "db/cds/dp/materialMgr/uomMgr",
             "db/cds/dp/moldMgt",
             "db/cds/dp/detailSpecEntry",
             "db/cds/dp/dc/tmc",
