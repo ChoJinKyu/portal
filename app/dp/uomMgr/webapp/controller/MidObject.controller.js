@@ -1,5 +1,6 @@
 sap.ui.define([
-	"ext/lib/controller/BaseController",
+    "ext/lib/controller/BaseController",
+    "ext/lib/util/Multilingual",
 	"ext/lib/util/ValidatorUtil",
 	"sap/ui/model/json/JSONModel",
 	"ext/lib/model/TransactionManager",
@@ -16,10 +17,11 @@ sap.ui.define([
 	"sap/m/Text",
 	"sap/m/Input",
 	"sap/m/ComboBox",
-	"sap/ui/core/Item",
-], function (BaseController, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
+    "sap/ui/core/Item",
+    "sap/m/ObjectStatus"
+], function (BaseController, Multilingual, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
 	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
-	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus) {
 		
 	"use strict";
 
@@ -46,6 +48,9 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {
+            var oMultilingual = new Multilingual();
+			this.setModel(oMultilingual.getModel(), "I18N");
+			this.setModel(new ManagedListModel(), "list");
 			// Model used to manipulate controlstates. The chosen values make sure,
 			// detail page shows busy indication immediately so there is no break in
 			// between the busy indication for loading the view's meta data
@@ -67,7 +72,22 @@ sap.ui.define([
 
             this._initTableTemplates();
             this.enableMessagePopover();
-		}, 
+        }, 
+
+        formattericon: function(sState){
+            switch(sState){
+                case "D":
+                    return "sap-icon://decline";
+                break;
+                case "U": 
+                    return "sap-icon://accept";
+                break;
+                case "C": 
+                    return "sap-icon://add";
+                break;
+            }
+            return "";
+        },
 
 		/* =========================================================== */
 		/* event handlers                                              */
@@ -396,9 +416,10 @@ sap.ui.define([
                 });
 			this.oEditableTemplate = new ColumnListItem({
 				cells: [
-					new Text({
-						text: "{details>_row_state_}"
-					}),
+					new ObjectStatus({
+                        icon:{ path:'details>_row_state_', formatter: this.formattericon
+                                }                              
+                    }),
 					oLanguageCode, 
 					new Input({
 						value: "{details>uom_class_name}"
