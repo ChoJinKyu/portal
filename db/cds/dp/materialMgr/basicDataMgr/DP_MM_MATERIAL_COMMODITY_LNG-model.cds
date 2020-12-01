@@ -22,15 +22,15 @@ using { dp as mtlCommodity} from './DP_MM_MATERIAL_COMMODITY-model';
 
 entity Mm_Material_Commodity_Lng {	
   key tenant_id : String(5)  not null @title: 'Tenant ID' ;	
-  key material_commodity_code : String(30)  not null @title: '자재COMMODITY코드' ;
+  key commodity_code : String(30)  not null @title: 'COMMODITY코드' ;
 
     parent: Association to mtlCommodity.Mm_Material_Commodity
         on parent.tenant_id = tenant_id 
-        and parent.material_commodity_code = material_commodity_code;
+        and parent.commodity_code = commodity_code;
 
   key language_code : String(4)  not null @title: '언어코드' ;	
-    material_commodity_name : String(100)  not null @title: '자재COMMODITY명' ;	
-    material_class_desc : String(1000)   @title: '자재COMMODITY설명' ;	
+    commodity_name : String(100)  not null @title: 'COMMODITY명' ;	
+    commodity_desc : String(1000)   @title: 'COMMODITY설명' ;	
 
 }
 
