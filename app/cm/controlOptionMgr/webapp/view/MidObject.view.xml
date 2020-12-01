@@ -205,9 +205,13 @@
                     <!-- 제어옵션값 -->
 										<Input value="{details>control_option_val}"/>
                     <!-- 시작일자 -->
-		                <DatePicker placeholder="Starts From" required="true" fieldGroupIds="notnull" value="{details>start_date}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
+		                <!-- <DatePicker placeholder="Starts From" required="true" fieldGroupIds="notnull" value="{details>start_date}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/> -->
+                    <DatePicker value="{ path: 'details>start_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' } }" />
                     <!-- 종료일자 -->
-                    <DatePicker placeholder="Ends To" required="true" fieldGroupIds="notnull" value="{details>end_date}"  valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
+                    <!-- <DatePicker placeholder="Ends To" required="true" fieldGroupIds="notnull" value="{details>end_date}"  valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/> -->
+                    <DatePicker value="{ path: 'details>end_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' } }" />
+                    <!-- <DateTimePicker value="{ path: 'details>local_create_dtm', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true } }" />
+                    <DateTimePicker value="{ path: 'details>local_update_dtm', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: false } }" /> -->
 									</cells>
 								</ColumnListItem>
 							</items>
