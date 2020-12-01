@@ -10,8 +10,12 @@ sap.ui.define([
     "sap/m/MessageToast",
 ], function (BaseController, JSONModel, History, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
 	"use strict";
-
-	return BaseController.extend("dp.moldApprovalList.controller.BudgetReportObject", {
+    /**
+     * @description 예산집행품의 View 화면 
+     * @author jinseon.lee
+     * @date 2020.12.01
+     */
+	return BaseController.extend("dp.moldApprovalList.controller.BeaObject", {
 
 		dateFormatter: DateFormatter,
 
@@ -24,7 +28,7 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () { 
-              console.log("BudgetReportObject Controller 호출");
+              console.log("BeaObject Controller 호출");
 			// Model used to manipulate control states. The chosen values make sure,
 			// detail page shows busy indication immediately so there is no break in
 			// between the busy indication for loading the view's meta data
@@ -32,8 +36,8 @@ sap.ui.define([
 					busy : true,
 					delay : 0
 				});
-			this.getRouter().getRoute("budgetReportObject").attachPatternMatched(this._onObjectMatched, this);
-			this.setModel(oViewModel, "budgetReportObjectView");
+			this.getRouter().getRoute("beaObject").attachPatternMatched(this._onObjectMatched, this);
+			this.setModel(oViewModel, "beaObjectView");
 		},
 
 		/* =========================================================== */
