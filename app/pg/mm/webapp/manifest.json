@@ -115,7 +115,7 @@
       },
       "routes": [
           {
-              "pattern": ":layout:",
+              "pattern": "MidObject",
               "name": "midPage",
               "target": [
                   "mainObject"

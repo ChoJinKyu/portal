@@ -1,27 +1,79 @@
+/*
+MIMaterialCostInformationView 데이타 확인되지 않고 있음
+
+
+팝업 닫기 버튼 필요 
+
+KR00008	이지금
+https://lgcommondev-workspaces-ws-k8gvf-app1.jp10.applicationstudio.cloud.sap/pg/mi/webapp/srv-api/odata/v2/pg.marketIntelligenceService/OrgCodeView?$filter=org_code eq 'KR00008'
 1. 질문 내역 초기 실행시 
 초기 Create의 정보는 어떻게 선택할것인가.? (mi, mm )
 onMainTableCreate
-
 
 maint list view 화면 작성
 수정 예정====
 
 mi, mm 모두 수정해야함 
 -mi 메인에서 항목 삭제시 언어도 삭제해야함 
--
 
 --controller
 
-
-
 --view
-
 controll 파일 작업
 자재별 시황자재 BOM 등록 view ,.controller 작업
 참조 삭제시 json등록 데이타라도 바로 삭제 하지 않는다. 
 
+sap.ui.core.Fragment.byId("Change_id", "inputMaterialCode").getValue();
+
 https://lgcommondev-workspaces-ws-k8gvf-app1.jp10.applicationstudio.cloud.sap/pg/mi/webapp/srv-api/odata/v2/pg.marketIntelligenceService/MIMaterialCodeBOMManagement/?$filter=
 
+
+                       <Label text="{midObjectData>/tenant_name}"  class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                                    <Label text="Create :"  class="sapUiLargeMarginBegin"/>
+                                    <Label text="{midObjectData>/create}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                                    <Label text="Create Data :" class="sapUiLargeMarginBegin" />
+                                    <Label text="{midObjectData>/createdata}"  class="sapUiTinyMarginBegin"  design="Bold"/>    
+
+
+                            <FlexBox height="40px" alignItems="Start" justifyContent="Start">
+                                    <Label text="관리조직 :" />
+                                    <Label text="LGE_MC" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                                    <Label text="Create :" class="sapUiLargeMarginBegin"/>
+                                    <Label text="LGE_MC" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                                    <Label text="Create Data :" class="sapUiLargeMarginBegin" />
+                                    <Label text="2020-08-02" class="sapUiTinyMarginBegin"  design="Bold"/>                                                                                                        
+                            </FlexBox>  
+
+                        <FlexBox
+				class="ne-flexbox2"
+				renderType="List"
+				justifyContent="SpaceBetween"
+				alignItems="Center">
+                            <layout:VerticalLayout>
+                                <ObjectStatus title="관리조직" design="Bold" text="LGE_MC"/>                        
+                            </layout:VerticalLayout>
+                            <layout:VerticalLayout>
+                                <ObjectStatus title="Create" design="Bold" text="Je..."/>                        
+                            </layout:VerticalLayout>
+                            <layout:VerticalLayout>
+                                <ObjectStatus title="Create Date" design="Bold" text="2020-08-02"/>                        
+                            </layout:VerticalLayout>
+                        </FlexBox>           
+
+                                <VBox>   
+                                <HBox>
+                                 <Label text="자재정보" design="Bold" class="sapMLabelNoText" required="true" labelFor="inputMaterialCode"/>                              
+                                </HBox>   
+                                <HBox >  
+                                        	<RadioButtonGroup id="rbg1" columns="3" width="100%">
+                                                <RadioButton id="RB1-1" text="자재명/코드" />
+                                                <RadioButton id="RB1-2" text="공급업체/코드" />
+                                            </RadioButtonGroup>                                            
+                                </HBox>  
+                                 <HBox width="100%">        
+                                            <Input text="ss"/>
+                                        </HBox>
+                                    </VBox>
 $filter=Alias eq 'random' 
 ---data
 자재명 뷰 
