@@ -34,7 +34,7 @@ entity Mm_Material_Mst_Con {
     base_uom_code : String(3)   @title: '기준UOM코드' ;	
     material_group_code : String(10)   @title: '자재그룹코드' ;	
     purchasing_uom_code : String(3)   @title: '구매UOM코드' ;	
-    variable_po_unit_indicator : String(1)   @title: '가변오더단위지시자' ;	
+    variable_po_unit_indicator : String(1)   @title: '가변오더단위지시자' ;
     material_class_code : String(30)   @title: '자재클래스코드' ;	
     commodity_code : String(100)   @title: '커머디티코드' ;	
     maker_part_number : String(40)   @title: '제조자 부품 번호' ;	
