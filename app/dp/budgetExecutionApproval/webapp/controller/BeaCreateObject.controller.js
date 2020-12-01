@@ -3,6 +3,7 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel", 
     "sap/ui/core/routing/History",
     "ext/lib/model/ManagedListModel",
+    "ext/lib/model/ManagedModel",
     "sap/ui/richtexteditor/RichTextEditor",
 	"ext/lib/formatter/DateFormatter",
 	"sap/ui/model/Filter",
@@ -15,7 +16,7 @@ sap.ui.define([
     ,"sap/ui/core/syncStyleClass" 
     , "sap/m/ColumnListItem" 
     , "sap/m/Label"
-], function (BaseController, JSONModel, History, ManagedListModel, RichTextEditor , DateFormatter, Filter, FilterOperator, Fragment
+], function (BaseController, JSONModel, History, ManagedListModel, ManagedModel, RichTextEditor , DateFormatter, Filter, FilterOperator, Fragment
             , MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label) {
 	"use strict";
     /**
@@ -43,9 +44,12 @@ sap.ui.define([
 			var oViewModel = new JSONModel({
 					busy : true,
 					delay : 0
-				});
-			this.getRouter().getRoute("beaCreateObject").attachPatternMatched(this._onObjectMatched, this);
+                });
+                
             this.setModel(oViewModel, "beaCreateObjectView");
+            this.getRouter().getRoute("beaCreateObject").attachPatternMatched(this._onObjectMatched, this);
+            this.getView().setModel(new ManagedListModel(),"company");
+            this.getView().setModel(new ManagedListModel(),"plant");
             this.getView().setModel(new ManagedListModel(),"createlist"); // Participating Supplier
             this.getView().setModel(new ManagedListModel(),"appList"); // apporval list 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
@@ -159,8 +163,8 @@ sap.ui.define([
 		 */
 		_onObjectMatched : function (oEvent) { 
             this.setRichEditor();
-			var oArgs = oEvent.getParameter("arguments"); 
             this._createViewBindData(oArgs); 
+			var oArgs = oEvent.getParameter("arguments"); 
             this._onLoadApprovalRow();
             this.oSF = this.getView().byId("searchField");
         },
@@ -169,11 +173,45 @@ sap.ui.define([
          * @param {*} args : company , plant   
          */
         _createViewBindData : function(args){ 
-            var appInfoModel = this.getModel("beaCreateObjectView");
-            appInfoModel.setData({ company : ""
-                                ,  plant : "" });   
+           /** 초기 데이터 조회 */
+            var company_code = 'LGEKR' , plant_code = 'CCZ' ;
+            var appModel = this.getModel("beaCreateObjectView");
+            appModel.setData({ company_code : company_code 
+                                , company_name : "" 
+                                , plant_code : plant_code 
+                                , plant_name : "" 
+                            }); 
 
-            console.log("oMasterModel >>> " , appInfoModel);
+            var oView = this.getView(),
+				oModel = this.getModel("company");
+	
+			oModel.setTransactionModel(this.getModel("org"));
+            
+            var searchFilter = [];
+            searchFilter.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100'));
+            searchFilter.push(new Filter("company_code", FilterOperator.EQ, company_code));
+
+            oModel.read("/Org_Company", {
+                filters: searchFilter ,
+				success: function(oData){ 
+                   appModel.oData.company_name = oData.results[0].company_name
+				}
+            });
+            
+            var oView = this.getView(),
+				oModel2 = this.getModel("plant");
+                oModel2.setTransactionModel(this.getModel("org"));
+            searchFilter = [];
+            searchFilter.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100'));
+            searchFilter.push(new Filter("plant_code", FilterOperator.EQ, plant_code));
+
+            oModel2.read("/Org_Plant", {
+                filters: searchFilter ,
+				success: function(oData){   
+                   appModel.oData.plant_name = oData.results[0].plant_name;
+				}
+            });
+            console.log("oMasterModel >>> " , appModel );
         } ,
 
 		_onBindingChange : function () {
@@ -407,7 +445,7 @@ sap.ui.define([
 			if (!this._oDialogTableSelect) {
 				this._oDialogTableSelect = Fragment.load({ 
                     id: oView.getId(),
-					name: "dp.bugetExecutionApproval.view.MoldItemSelection",
+					name: "dp.budgetExecutionApproval.view.MoldItemSelection",
 					controller: this
 				}).then(function (oDialog) {
 				    oView.addDependent(oDialog);
@@ -543,7 +581,7 @@ sap.ui.define([
                 if (!this._oDialog) {
                     this._oDialog = Fragment.load({ 
                         id: oView.getId(),
-                        name: "dp.bugetExecutionApproval.view.Employee",
+                        name: "dp.budgetExecutionApproval.view.Employee",
                         controller: this
                     }).then(function (oDialog) {
                         oView.addDependent(oDialog);

@@ -27,15 +27,15 @@
                     <form:content>
                         <VBox>
                             <Label text = "Company" required="true"/> 
-                            <ComboBox id="MoldItemSearchCompany"  width="100%" selectedKey="{pssaCreateObjectView>/company}" enabled="false" items="{
-                                path: 'org>/Org_Company',
-                                filters: [
-                                    {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                ],
-                                sorter: { path: 'company_code'}
-                            }">
+                            <ComboBox id="MoldItemSearchCompany"  width="100%" selectedKey="{beaCreateObjectView>/company_code}" enabled="false" items="{
+                                        path: 'org>/Org_Company',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                        ],
+                                        sorter: { path: 'company_code'}
+                                    }">
                                 <items>
-                                    <core:Item key="[{org>company_code}] {org>company_name}"  text="[{org>company_code}] {org>company_name}" />
+                                    <core:Item key="{org>company_code}"  text="[{org>company_code}] {org>company_name}" />
                                 </items>
                             </ComboBox>
                             <layoutData>
@@ -45,16 +45,16 @@
                         
                         <VBox>
                             <Label text = "Plant" required="true"/> 
-                            <ComboBox id="MoldItemSearchPlant"  width="100%" selectedKey="{pssaCreateObjectView>/plant}" enabled="false" items="{
-                                path: 'purOrg>/Pur_Operation_Org',
-                                filters: [
-                                    {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
-                                    {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
-                                    {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
-                                ]
-                            }">
+                            <ComboBox id="MoldItemSearchPlant"  width="100%" selectedKey="{beaCreateObjectView>/plant_code}" enabled="false" items="{
+                                        path: 'purOrg>/Pur_Operation_Org',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
+                                            {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
+                                            {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
+                                        ]
+                                    }">
                                 <items>
-                                    <core:Item key="[{purOrg>org_code}]{purOrg>org_name}" text="[{purOrg>org_code}]{purOrg>org_name}" />
+                                    <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
                                 </items>
                             </ComboBox>
                             <layoutData>
@@ -92,11 +92,11 @@
                             selectionChange=".selectMoldItemChange" 
                             mode="MultiSelect"
                             width="auto"
-                            items="{purOrg>/Pur_Operation_Org}"
+                            items="{moldMng>/MoldMasters}"
                             >
                          <headerToolbar>
                             <OverflowToolbar>
-                                <Label text="{= ${pssaCreateObjectView>/moldItemLength} > 0 ? ( 'Selected : '+${pssaCreateObjectView>/moldItemLength} ) : '' }"/>
+                               
                             </OverflowToolbar>
                         </headerToolbar> 
                         <columns>
@@ -126,13 +126,13 @@
                              <ColumnListItem>
                                 <cells>
                                     <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
-                                    <Text text="{purOrg>org_name}" />
-                                    <Text text="{purOrg>plant_code}" />
-                                    <Text text="{purOrg>affiliate_code}" />
-                                    <Text text="{purOrg>bizdivision_code}" />
-                                    <Text text="{purOrg>bizunit_code}" />
-                                    <Text text="{purOrg>au_code}" />
-                                    <Text text="{purOrg>hq_au_code}" />
+                                    <Text text="{moldMng>model}" />
+                                    <Text text="{moldMng>part_number}" />
+                                    <Text text="{moldMng>mold_sequence}" />
+                                    <Text text="{moldMng>spec_name}" />
+                                    <Text text="{moldMng>mold_item_type_code}" />
+                                    <Text text="{moldMng>book_currency_code}" />
+                                    <Text text="{moldMng>budget_amount}" />
                                 </cells>
                             </ColumnListItem>   
                             </items>

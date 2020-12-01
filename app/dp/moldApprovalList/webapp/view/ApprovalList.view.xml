@@ -302,7 +302,7 @@
                             <cells>
                                 <ObjectIdentifier text="{list>approval_type_code}" />
                                 <ObjectIdentifier text="{list>company_name}" />
-                                <ObjectIdentifier text="{list>org_name}" />
+                                <ObjectIdentifier text="{list>plant_name}" />
                                 <ObjectIdentifier text="{list>approval_number}" />
                                 <ObjectIdentifier text="{list>approval_title}" />
                                 <ObjectIdentifier text="{list>requestor_empno}" />
