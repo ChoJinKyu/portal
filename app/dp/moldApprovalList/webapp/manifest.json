@@ -13,7 +13,7 @@
     "resources": "resources.json",
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v2/cm.MsgMgrService/",
+        "uri": "srv-api/odata/v2/dp.OrderApprovalService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -125,8 +125,8 @@
           "useBatch": true
         }
       },
-      "msg": {
-        "dataSource": "mainService",
+      "mold": {
+        "dataSource": "moldService",
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",
@@ -136,7 +136,7 @@
         }
       },
       "": {
-        "dataSource": "moldService",
+        "dataSource": "mainService",
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",
@@ -176,13 +176,6 @@
           "name": "approvalList",
           "target": [
             "approvalList"
-          ]
-        },
-        {
-          "pattern": "Message/{moldId}",
-          "name": "mainObject",
-          "target": [
-            "mainObject"
           ]
         },
         {
