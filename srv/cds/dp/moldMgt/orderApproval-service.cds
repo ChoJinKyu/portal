@@ -12,7 +12,7 @@ service OrderApprovalService {
 
     entity ApprovalMasters as projection on approvalMst.Mold_Approval_Mst;
     entity ApprovalDetails as projection on approvalDtl.Mold_Approval_Dtl;
-    
+        
     view Approvals as
     select distinct key a.approval_number
         ,a.approval_type_code
