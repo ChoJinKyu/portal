@@ -1,0 +1,350 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core"
+    xmlns:uxap="sap.uxap" >
+<VBox class="sapUiSmallMargin">
+    <form:SimpleForm 
+        editable="false"
+        layout="ColumnLayout"
+        columnsM="2"
+        columnsL="3"
+        columnsXL="3" >
+        <form:content>
+
+                <Label text="Inspection"/>
+                <RadioButtonGroup columns="2" width="100%" editable="true">
+                    <RadioButton text="Yes" selected = "{spec>/inspection_flag}"/>
+                    <RadioButton text="No" selected = "{=!${spec>/inspection_flag}}"/>
+                </RadioButtonGroup>
+                <Label text="Cavity Qty"/>
+                <Input value="{spec>/cavity_process_qty}"/>
+                <Label text="Demand Life"/>
+                <Input value="{spec>/request_life_shot_count}"/>
+                <Text text="Shot">
+                    <layoutData>
+						<form:ColumnElementData cellsSmall="2" cellsLarge="1" />
+					</layoutData>
+                </Text>
+                <Label text="Hot Runner Valve Qty"/>
+                <Input value="{spec>/mold_hot_runner_qty}"/>
+                <Label text="Size"/>
+                <ComboBox   width="100%"
+                            selectedKey="{spec>/mold_size}"
+                            items="{
+                                        path : 'util>/CodeDetails',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SIZE'}
+                                        ]
+                                    }"
+                            editable="true"
+                >
+                    <core:Item key="{util>code}" text="{util>code_description}" />
+                </ComboBox>
+                <Label text="Runner"/>
+                <ComboBox   width="100%"
+                            selectedKey="{spec>/mold_hot_runner_spec_name}"
+                            items="{
+                                        path : 'util>/CodeDetails',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_RUNNER'}
+                                        ]
+                                    }"
+                            editable="true"
+                >
+                    <core:Item key="{util>code}" text="{util>code_description}" />
+                </ComboBox>
+                <Label text="Return Type"/>
+                <ComboBox   width="100%"
+                            selectedKey="{spec>/mold_return_type_name}"
+                            items="{
+                                        path : 'util>/CodeDetails',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_RETURN_TYPE'}
+                                        ]
+                                    }"
+                            editable="true"
+                >
+                    <core:Item key="{util>code}" text="{util>code_description}" />
+                </ComboBox>
+                <Label text="Runner Out"/>
+                <ComboBox   width="100%"
+                            selectedKey="{spec>/mold_runnerout_spec_name}"
+                            items="{
+                                        path : 'util>/CodeDetails',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_RUNNER_OUT'}
+                                        ]
+                                    }"
+                            editable="true"
+                >
+                    <core:Item key="{util>code}" text="{util>code_description}" />
+                </ComboBox>
+
+             <!-- </VBox>            
+            <VBox > -->
+                <Label text="Assembly Approval"/> 
+                <RadioButtonGroup columns="2" width="100%" editable="true">
+                    <RadioButton text="Yes" selected = "{spec>/assembly_approval_flag}"/>
+                    <RadioButton text="No" selected = "{=!${spec>/assembly_approval_flag}}"/>
+                </RadioButtonGroup>
+                <Label text="Order Qty"/>
+                <Input value="{spec>/order_qty}"/>
+                <Label text="Mold Weight"/>
+                <Input value="{spec>/mold_weight}"/>
+                <Label text="Hot Runner Maker"/>
+                <ComboBox   width="100%"
+                            selectedKey="{spec>/hot_runner_maker_name}"
+                            items="{
+                                        path : 'util>/CodeDetails',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_HR_MAKER'}
+                                        ]
+                                    }"
+                            editable="true"
+                >
+                    <core:Item key="{util>code}" text="{util>code_description}" />
+                </ComboBox>
+
+                <Label text="Mold Size"/>
+                <Input value="{spec>/mold_size_2}"/>
+                <Label text="Gate"/>
+                <ComboBox   width="100%"
+                            selectedKey="{spec>/mold_gate_spec_name}"
+                            items="{
+                                        path : 'util>/CodeDetails',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_GATE'}
+                                        ]
+                                    }"
+                            editable="true"
+                >
+                    <core:Item key="{util>code}" text="{util>code_description}" />
+                </ComboBox>
+                <Label text="Form Out"/>
+                <ComboBox   width="100%"
+                            selectedKey="{spec>/mold_formout_method}"
+                            items="{
+                                        path : 'util>/CodeDetails',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_FORM_OUT'}
+                                        ]
+                                    }"
+                            editable="true"
+                >
+                    <core:Item key="{util>code}" text="{util>code_description}" />
+                </ComboBox>
+                <Label text="Use Machine"/>
+                <Input value="{spec>/mold_tonnage}"/>
+
+            <!-- </VBox>            
+            <VBox > -->
+                <Label text="Use Material"/> 
+                <Input value="{spec>/use_material_value}"/>
+                <Label text="Sample Qty"/>
+                <Input value="{spec>/mold_sample_qty}"/>
+                <Label text="Mold Type"/>
+                <ComboBox   width="100%"
+                            selectedKey="{master>/mold_type_code}"
+                            items="{
+                                        path : 'util>/CodeDetails',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_TYPE'}
+                                        ]
+                                    }"
+                            editable="true"
+                >
+                    <core:Item key="{util>code}" text="{util>code_description}" />
+                </ComboBox>
+                <Label text="Mold Structure"/>
+                <ComboBox   width="100%"
+                            selectedKey="{spec>/die_form}"
+                            items="{
+                                        path : 'util>/CodeDetails',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_STRUCTURE'}
+                                        ]
+                                    }"
+                            editable="true"
+                >
+                    <core:Item key="{util>code}" text="{util>code_description}" />
+                </ComboBox>
+                <Label text=""/>
+                <Text text=""/>
+                <Label text="Under Cut"/>
+                <ComboBox   width="100%"
+                            selectedKey="{spec>/mold_undercut_spec_name}"
+                            items="{
+                                        path : 'util>/CodeDetails',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_UNDER_CUT'}
+                                        ]
+                                    }"
+                            editable="true"
+                >
+                    <core:Item key="{util>code}" text="{util>code_description}" />
+                </ComboBox>
+                <Label text="Out Process"/>
+                <ComboBox   width="100%"
+                            selectedKey="{spec>/mold_outform_spec_name}"
+                            items="{
+                                        path : 'util>/CodeDetails',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_FORM_OUT'}
+                                        ]
+                                    }"
+                            editable="true"
+                >
+                    <core:Item key="{util>code}" text="{util>code_description}" />
+                </ComboBox>
+             <!-- </VBox> -->
+        </form:content>
+    </form:SimpleForm>
+    <form:SimpleForm 
+        editable="false"
+        layout="ColumnLayout"
+        columnsM="2"
+        columnsL="3"
+        columnsXL="3" >
+        <form:content>
+            <core:Title text="Spare Parts" />
+            <!-- <VBox> -->
+                <Label text="Eye-Bolt"/>
+                <Input value="{spec>/spare_part_eyebolt_count}"/>
+                <Label text="Heater"/>
+                <Input value="{spec>/spare_part_heater_count}"/>
+
+            <!-- </VBox>            
+            <VBox > -->
+                <Label text="Ej-Sleeve"/> 
+                <Input value="{spec>/spare_part_ejslave_count}"/>
+                <Label text="Speaker Core"/>
+                <Input value="{spec>/spare_part_speaker_core_count}"/>
+
+            <!-- </VBox>            
+            <VBox > -->
+                <Label text="Ejector-Pin"/> 
+                <Input value="{spec>/spare_part_ejector_pin_count}"/>
+                <Label text="Etc."/>
+                <Input value="{spec>/spare_part_etc_count}"/>
+            <!-- </VBox> -->
+        </form:content>
+    </form:SimpleForm>
+
+    <form:SimpleForm 
+        editable="false"
+        layout="ColumnLayout"
+        columnsM="2"
+        columnsL="3"
+        columnsXL="3" >
+        <form:content>
+            <core:Title text="Mold Meterial" />
+            <!-- <VBox> -->
+                <Label text="Cavity/Punch"/>
+                <ComboBox   width="100%"
+                            selectedKey="{spec>/mold_cavity_material_name}"
+                            items="{
+                                        path : 'util>/CodeDetails',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_CAVITY'}
+                                        ]
+                                    }"
+                            editable="true"
+                >
+                    <core:Item key="{util>code}" text="{util>code_description}" />
+                </ComboBox>
+                <Label text="Taper Pin"/>
+                <ComboBox   width="100%"
+                            selectedKey="{spec>/mold_slope_material_name}"
+                            items="{
+                                        path : 'util>/CodeDetails',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_TAPER_PIN'}
+                                        ]
+                                    }"
+                            editable="true"
+                >
+                    <core:Item key="{util>code}" text="{util>code_description}" />
+                </ComboBox>
+                <Label text="Cycle Time"/>
+                <Input value="{spec>/cycle_time}"/>
+            <!-- </VBox>            
+            <VBox > -->
+                <Label text="Core/Die"/> 
+                <ComboBox   width="100%"
+                            selectedKey="{spec>/mold_core_material_name}"
+                            items="{
+                                        path : 'util>/CodeDetails',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_CORE'}
+                                        ]
+                                    }"
+                            editable="true"
+                >
+                    <core:Item key="{util>code}" text="{util>code_description}" />
+                </ComboBox>
+                <Label text="Top Circle"/>
+                <ComboBox   width="100%"
+                            selectedKey="{spec>/top_circle_material_name}"
+                            items="{
+                                        path : 'util>/CodeDetails',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_CORE'}
+                                        ]
+                                    }"
+                            editable="true"
+                >
+                    <core:Item key="{util>code}" text="{util>code_description}" />
+                </ComboBox>
+
+            <!-- </VBox>            
+            <VBox > -->
+                <Label text="Slide Core"/> 
+                <ComboBox   width="100%"
+                            selectedKey="{spec>/slide_core_material_name}"
+                            items="{
+                                        path : 'util>/CodeDetails',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SCORE'}
+                                        ]
+                                    }"
+                            editable="true"
+                >
+                    <core:Item key="{util>code}" text="{util>code_description}" />
+                </ComboBox>
+                <Label text="Bottom Circle"/>
+                <ComboBox   width="100%"
+                            selectedKey="{spec>/bottom_circle_material_name}"
+                            items="{
+                                        path : 'util>/CodeDetails',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_CORE'}
+                                        ]
+                                    }"
+                            editable="true"
+                >
+                    <core:Item key="{util>code}" text="{util>code_description}" />
+                </ComboBox>
+            <!-- </VBox> -->
+        </form:content>
+    </form:SimpleForm>
+	</VBox>
+</core:FragmentDefinition>

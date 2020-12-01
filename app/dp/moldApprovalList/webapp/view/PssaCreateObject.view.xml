@@ -115,7 +115,7 @@
                                 <HBox alignItems="Center">
                                     <Label
                                         text="Subject "
-                                        design="Normal"
+                                      
                                         class="sapUiTinyMarginEnd"
                                         textAlign="Left"
                                         labelFor="input"
@@ -256,61 +256,61 @@
                                     <table:Column id="c_moldSupplier1" width="10em" hAlign="Center">
                                         <Label text="Mold Supplier1"/>           
                                         <table:template>
-                                            <Text id="moldSupplier1" text=""/>
+                                            <Text id="moldSupplier1" text="{createlist>moldSupplier1}"/>
                                         </table:template>
                                     </table:Column>                                     
                                     <table:Column id="c_moldSupplier2" width="10em" hAlign="Center">
                                         <Label text="Mold Supplier2"/>           
                                         <table:template>
-                                            <Text id="moldSupplier2" text=""/>
+                                            <Text id="moldSupplier2" text="{createlist>moldSupplier2}"/>
                                         </table:template>
                                     </table:Column>                                     
                                     <table:Column id="c_moldSupplier3" width="10em" hAlign="Center">
                                         <Label text="Mold Supplier3"/>           
                                         <table:template>
-                                            <Text id="moldSupplier3" text=""/>
+                                            <Text id="moldSupplier3" text="{createlist>moldSupplier3}"/>
                                         </table:template>
                                     </table:Column>                                     
                                     <table:Column id="c_moldSupplier4" width="10em" hAlign="Center">
                                         <Label text="Mold Supplier4"/>           
                                         <table:template>
-                                            <Text id="moldSupplier4" text=""/>
+                                            <Text id="moldSupplier4" text="{createlist>moldSupplier4}"/>
                                         </table:template>
                                     </table:Column>                                     
                                     <table:Column id="c_moldSupplier5" width="10em" hAlign="Center">
                                         <Label text="Mold Supplier5"/>           
                                         <table:template>
-                                            <Text id="moldSupplier5" text=""/>
+                                            <Text id="moldSupplier5" text="{createlist>moldSupplier5}"/>
                                         </table:template>
                                     </table:Column>                                     
                                     <table:Column id="c_moldSupplier6" width="10em" hAlign="Center">
                                         <Label text="Mold Supplier6"/>           
                                         <table:template>
-                                            <Text id="moldSupplier6" text=""/>
+                                            <Text id="moldSupplier6" text="{createlist>moldSupplier6}"/>
                                         </table:template>
                                     </table:Column>                                     
                                     <table:Column id="c_moldSupplier7" width="10em" hAlign="Center">
                                         <Label text="Mold Supplier7"/>           
                                         <table:template>
-                                            <Text id="moldSupplier7" text=""/>
+                                            <Text id="moldSupplier7" text="{createlist>moldSupplier7}"/>
                                         </table:template>
                                     </table:Column>                                     
                                     <table:Column id="c_moldSupplier8" width="10em" hAlign="Center">
                                         <Label text="Mold Supplier8"/>           
                                         <table:template>
-                                            <Text id="moldSupplier8" text=""/>
+                                            <Text id="moldSupplier8" text="{createlist>moldSupplier8}"/>
                                         </table:template>
                                     </table:Column>                                     
                                     <table:Column id="c_moldSupplier9" width="10em" hAlign="Center">
                                         <Label text="Mold Supplier9"/>           
                                         <table:template>
-                                            <Text id="moldSupplier9" text=""/>
+                                            <Text id="moldSupplier9" text="{createlist>moldSupplier9}"/>
                                         </table:template>
                                     </table:Column>                                     
                                     <table:Column id="c_moldSupplier10" width="10em" hAlign="Center">
                                         <Label text="Mold Supplier10"/>           
                                         <table:template>
-                                            <Text id="moldSupplier10" text=""/>
+                                            <Text id="moldSupplier10" text="{createlist>moldSupplier10}"/>
                                         </table:template>
                                     </table:Column>                                     
                                 </table:columns>
@@ -355,13 +355,12 @@
 			<uxap:ObjectPageSection titleUppercase="false" title="Approval Line">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
-							
                         <Table id="ApprovalTable"       
                             growing="true"
                             growingThreshold="20"
                             class="sapFDynamicPageAlignContent" 
                             updateFinished=".onListMainTableUpdateFinished"
-                            rowSelectionChange = ".onCheck"
+                            rowSelectionChange=".onCheck"
                             mode="None"
                             width="auto"
                             items="{appList>/undefined}"
@@ -424,15 +423,41 @@
                                 </cells>
                             </ColumnListItem>   
                         </items>
-                        
-                    </Table>
-                            
+                        </Table>                           
 					</uxap:ObjectPageSubSection> 
                     <uxap:ObjectPageSubSection>
-                        <Label text="Referrer"/>
-                        <VBox>
-                            <MultiInput id="searchRef" valueHelpOnly="true" width="100%" height="12em" valueHelpRequest=".onValueHelpRequested"/>
-                        </VBox>
+                        <VBox class="sapUiSmallMarginBegin">
+                         <Toolbar>
+                          <Label text="Referrer" />
+                          <ToolbarSpacer/>
+                        <HBox alignItems="End" justifyContent="End" >
+                            <Label text="Adress Book" class=""/>
+                            <core:Icon 
+                                src="sap-icon://contacts"
+                                class="size2 sapUiSmallMarginBeginEnd" 
+                                >
+                            </core:Icon>
+                           
+                        </HBox>
+                        </Toolbar>
+                            <layout:VerticalLayout class="sapUiContentPadding" width="100%">
+                                <MultiComboBox
+                                    selectionChange="handleSelectionChangeReferrer"
+                                    selectionFinish="handleSelectionFinishReferrer"
+                                    width="100%"
+                                    items="{ path: 'org>/Org_Company',
+                                                filters: [
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                                ],
+                                                sorter: { path: 'company_code'}
+                                            }">
+                                    <core:Item key="{org>company_code}" text="{org>company_name}" />
+                                </MultiComboBox>
+                            </layout:VerticalLayout>
+                            <layoutData>
+                                <layout:GridData span="XL12 L12 M12 S12" />
+                            </layoutData> 
+                         </VBox>
                     </uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>

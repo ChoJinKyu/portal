@@ -34,7 +34,7 @@ service UomClassMgrService {
     left join uomClassLng.Mm_Uom_Class_Lng l
     on l.tenant_id = m.tenant_id
     and l.uom_class_code = m.uom_class_code
-    where l.language_code = :language_code
+    and l.language_code = :language_code
     ;
 
 }

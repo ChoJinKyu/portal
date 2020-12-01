@@ -64,7 +64,8 @@ sap.ui.define([
 			
             this._doInitSearch();
 
-			this.setModel(new ManagedListModel(), "list");
+            this.setModel(new ManagedListModel(), "list");
+            this.setModel(new ManagedListModel(), "orgMap");
 			
 			this.getRouter().getRoute("approvalList").attachPatternMatched(this._onRoutedThisPage, this);
 
@@ -220,99 +221,45 @@ sap.ui.define([
             // }
 
         },
-        
-        ///////////////////////////// sap.ui table version ////////////////////////
-        /**
+
+
+        ///////////////////// Multi Combo box event Start //////////////////////////
+         /**
          * @private 
-         * @see 리스트에서 create 버튼을 제외한 각각의 팝업 오픈
+         * @see (멀티박스)Company와 Plant 부분 연관성 포함함
          */
-        approvalDialogOpen: function (oEvent){
-            var oView = this.getView();
-            var oButton = oEvent.getSource();
-            var id = oButton.getId();
-            var page ="";
-            if(id.indexOf("Model") != -1){
-                page = "dp.moldApprovalList.view.DialogModel";
-                dialogId = "DialogModel";
-            }else if(id.indexOf("MoldPartNo") != -1){
-                page = "dp.moldApprovalList.view.DialogMoldPartNo";
-                dialogId = "DialogMoldPartNo";
-            }else if(id.indexOf("Requester") != -1){
-                page = "dp.moldApprovalList.view.DialogRequester";
-                dialogId = "DialogRequester";
-            }
-            this._oDialog = Fragment.load({
-                id: oView.getId(),
-                name: ""+page,
-                controller: this
-            }).then(function (oDialog) {
-                // connect dialog to the root view of this component (models, lifecycle)
-                oView.addDependent(oDialog);
-                return oDialog;
-            });
-            this._oDialog.then(function(oDialog) {
-                oDialog.open();
-                
-			});
-		
-        },
-
-        /**
-         * @private 
-         * @see approvalDialogOpen 함수에서 오픈한 팝업 닫기
-         */
-        onHandleClose: function (){
-            this.byId(dialogId).close();
-            this.byId(dialogId).destroy();
-        },
-
-        /**
-         * @private 
-         * @see approvalDialogOpen 팝업에서 apply버튼 클릭시
-         */
-        onHandleApply : function () {
-
-            var oTable = this.byId("modelTable");
-            var aItems = oTable.getSelectedItems();
-            var oInput = this.byId("searchModel");
-            console.log(aItems);
-            if(aItems != ""){
-                aItems.forEach(function(oItem){   
-                    console.log(" nItem >>>>> getText 1 " ,  oItem.getCells()[0].getText());  
-                    oInput.setValue(oItem.getCells()[0].getText());
-                });
-            }else{
-                oInput.setValue("");
-            }
-            this.byId(dialogId).close();
-            this.byId(dialogId).destroy();
-        },
-
-        ///////////////////////////// sap.ui table version end ////////////////////////
-
         handleSelectionFinishComp: function(oEvent){
 
             this.copyMultiSelected(oEvent);
 
             var params = oEvent.getParameters();
-            var selectedKeys = [];
-            var divisionFilters = [];
+            var plantFilters = [];
 
-            divisionFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100' ));
+            if(params.selectedItems.length > 0){
 
-            params.selectedItems.forEach(function(item, idx, arr){
-                selectedKeys.push(item.getKey());
-                divisionFilters.push(new Filter("company_code", FilterOperator.EQ, item.getKey() ));
-            });
+                params.selectedItems.forEach(function(item, idx, arr){
+
+                    plantFilters.push(new Filter({
+                                filters: [
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                    new Filter("company_code", FilterOperator.EQ, item.getKey() )
+                                ],
+                                and: true
+                            }));
+                });
+            }else{
+                plantFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100' ));
+            }
 
             var filter = new Filter({
-                            filters: divisionFilters,
-                            and: true
+                            filters: plantFilters,
+                            and: false
                         });
-
-            this.getView().byId("searchPlantE").getBinding("items").filter(filter, "Application");
+            
             this.getView().byId("searchPlantS").getBinding("items").filter(filter, "Application");
+            this.getView().byId("searchPlantE").getBinding("items").filter(filter, "Application");
         },
+
 
         handleSelectionFinishDiv: function(oEvent){
             this.copyMultiSelected(oEvent);
@@ -322,19 +269,24 @@ sap.ui.define([
             var source = oEvent.getSource();
             var params = oEvent.getParameters();
 
-            var id = source.sId.split('--')[1];
+            var id = source.sId.split('--')[2];
             var idPreFix = id.substr(0, id.length-1);
-            console.log(id);
-            console.log(idPreFix);
             var selectedKeys = [];
+            console.log(idPreFix);
+        
 
             params.selectedItems.forEach(function(item, idx, arr){
+                console.log(item.getKey());
                 selectedKeys.push(item.getKey());
             });
 
-            this.getView().byId("searchPlantE").setSelectedKeys(selectedKeys);
-            this.getView().byId("searchPlantS").setSelectedKeys(selectedKeys);
+            this.getView().byId(idPreFix+"E").setSelectedKeys(selectedKeys);
+            this.getView().byId(idPreFix+"S").setSelectedKeys(selectedKeys);
         },
+
+        ///////////////////// Multi Combo box event End //////////////////////////
+
+        ///////////////////// ValueHelpDialog section Start //////////////////////////
 
         onValueHelpRequested : function (oEvent) {
       
@@ -433,11 +385,10 @@ sap.ui.define([
             
 
         },
-
-        
+  
         /**
          * @private 
-         * @see approvalDialogOpen 팝업에서 apply버튼 클릭시
+         * @see 리스트 검색영역 팝업에서 확인버튼 클릭시
          */
         onValueHelpOkPress: function (oEvent) {
             var aTokens = oEvent.getParameter("tokens");
@@ -499,8 +450,45 @@ sap.ui.define([
 
 				oValueHelpDialog.update();
 			});
-		},
+        },
         
+        ///////////////////// ValueHelpDialog section Start //////////////////////////
+
+        ///////////////////// List create button pop up event Start //////////////////////////
+        
+        dialogChangeComp: function(oEvent){
+
+            this.copySelected(oEvent);
+
+            var source = oEvent.getSource();
+            var plantFilter = [];
+
+            plantFilter.push(new Filter({
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                            new Filter("company_code", FilterOperator.EQ, source.getSelectedKey() )
+                        ],
+                        and: true
+            }));
+            
+
+            var filter = new Filter({
+                        filters: plantFilter,
+                        and: false
+            });
+            
+            this.getView().byId("searchPlantF").getBinding("items").filter(filter, "Application");
+        },
+
+
+        copySelected: function(oEvent){
+            var source = oEvent.getSource();
+            var selectedKey = source.getSelectedKey();
+            console.log(source.getSelectedKey());
+            this.getView().byId("searchPlantF").setSelectedKey(selectedKey);
+        },
+
+
          /**
          * @public
          * @see 사용처 DialogCreate Fragment Open 이벤트
@@ -548,14 +536,26 @@ sap.ui.define([
          * @see 사용처 create 팝업에서 select 버튼 press시 Object로 이동
          */ 
         handleConfirm : function(targetControl){
-            console.log(toggleButtonId);
+            
+            var id = toggleButtonId.split('--')[2];
+            var page =""
+            console.log(id);
+            if(id != ""){
+                if(id == "localBudget"){
+                    page = "beaCreateObject"
+                }else if(id == "supplierSelection"){
+                    page = "pssaCreateObject"
+                }
+            }
+            console.log("page >>>", page);
+
             var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
             for(var i=0; i<groupId.length; i++){
                 if(groupId[i].getPressed() == true){
                     console.log(groupId[i].mProperties.text);
                     console.log(this.byId("searchCompanyF").getValue());
                     console.log(this.byId("searchPlantF").getValue());
-                    this.getRouter().navTo("pssaCreateObject", {
+                    this.getRouter().navTo(page, {
                         company: this.byId("searchCompanyF").getValue()
                         , plant: this.byId("searchPlantF").getValue()
                         , 
@@ -569,9 +569,9 @@ sap.ui.define([
             this.byId("dialogApprovalCategory").close();
         },
 
-       
+       ///////////////////// List create button pop up event End //////////////////////////
 
-        /* Affiliate End */
+        ///////////////////// List search section Start //////////////////////////
 
 		/* =========================================================== */
 		/* internal methods                                            */
@@ -583,7 +583,8 @@ sap.ui.define([
 		 * @private
 		 */
 		_onRoutedThisPage: function(){
-			this.getModel("approvalListView").setProperty("/headerExpanded", true);
+            this.getModel("approvalListView").setProperty("/headerExpanded", true);
+            this.setModel(new ManagedListModel(), "orgMap");
 		},
 
 		/**
@@ -687,5 +688,6 @@ sap.ui.define([
             return  year + '' + month + '' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
         }
 
-	});
+        ///////////////////// List search section End //////////////////////////
+    });
 });

@@ -1,0 +1,23 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<form:SimpleForm id="midObjectForm1Show" editable="false">
+
+		<!-- <core:Title text="Normal" /> -->
+        <!-- <Label text="Class" required="true"/>
+        <Text text="{master>/uom_class_code}"/> -->
+		<Label text="Class Text" required="true"/>
+        <Text text="{master>/uom_class_name}"/>		
+		<Label text="Base UOM"/>
+        <Text text="{master>/base_uom_code}"/>
+		<Label text="Base UOM Text"/>
+        <Text text="{master>/base_uom_name}"/>
+        <Label text="Description"/>
+        <Text text="{master>/uom_class_desc}"/>
+        <Label text="Disable Date"/>
+        <Text text="{path: 'master>/disable_date',formatter: '.dateFormatter.toDateString'}"/>
+        
+	</form:SimpleForm>
+</core:FragmentDefinition>
