@@ -18,7 +18,7 @@
 *************************************************/
 
 namespace dp;	
-using util from '../../../util/util-model';	
+using util from '../../../cm/util/util-model';	
 
 entity Mm_Material_Mst_Con {	
   key tenant_id : String(5)  not null @title: '테넌트ID' ;	
@@ -34,7 +34,7 @@ entity Mm_Material_Mst_Con {
     base_uom_code : String(3)   @title: '기준UOM코드' ;	
     material_group_code : String(10)   @title: '자재그룹코드' ;	
     purchasing_uom_code : String(3)   @title: '구매UOM코드' ;	
-    variable_order_unit_indicator : String(1)   @title: '가변오더단위지시자' ;	
+    variable_po_unit_indicator : String(1)   @title: '가변오더단위지시자' ;
     material_class_code : String(30)   @title: '자재클래스코드' ;	
     commodity_code : String(100)   @title: '커머디티코드' ;	
     maker_part_number : String(40)   @title: '제조자 부품 번호' ;	
@@ -45,19 +45,19 @@ entity Mm_Material_Mst_Con {
     org_code : String(10)   @title: '조직코드' ;	
     material_status_code : String(10)   @title: '자재상태코드' ;	
     purchasing_group_code : String(3)   @title: '구매그룹코드' ;	
-    batch_management_flag : Boolean  default false  @title: '배치관리여부' ;	
-    automatic_po_allow_flag : Boolean default false  @title: '자동구매오더허용여부' ;	
+    batch_management_flag : Boolean   @title: '배치관리여부' ;	
+    automatic_po_allow_flag : Boolean   @title: '자동구매오더허용여부' ;	
     hs_code : String(17)   @title: 'HS코드' ;	
     import_group_code : String(4)   @title: '수입그룹코드' ;	
     user_item_type_code : String(30)   @title: '사용자품목유형코드' ;	
-    purchasing_item_flag : Boolean  default false @title: '구매품목여부' ;	
-    purchasing_enable_flag : Boolean  default false @title: '구매가능여부' ;	
-    outside_processing_item_flag : Boolean  default false @title: '외주가공품목여부' ;	
+    purchasing_item_flag : Boolean   @title: '구매품목여부' ;	
+    purchasing_enable_flag : Boolean   @title: '구매가능여부' ;	
+    osp_item_flag : Boolean   @title: '외주가공품목여부' ;	
     buyer_empno : String(30)   @title: '구매담당자사번' ;	
-    eng_item_flag : Boolean   default false @title: '설계품목여부' ;	
+    eng_item_flag : Boolean   @title: '설계품목여부' ;	
     develope_person_empno : String(30)   @title: '개발담당자사번' ;	
-    charged_osp_item_flag : Boolean  default false @title: '유상사급품목여부' ;	
-    material_create_stat_code : String(30)   @title: '자재생성상태코드' ;	
+    charged_osp_item_flag : Boolean   @title: '유상사급품목여부' ;	
+    material_create_status_code : String(30)   @title: '자재생성상태코드' ;	
 }	
 
 extend Mm_Material_Mst_Con with util.Managed;

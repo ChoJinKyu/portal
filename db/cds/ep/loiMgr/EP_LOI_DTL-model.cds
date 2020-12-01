@@ -1,6 +1,6 @@
 namespace ep;	
 
-using util from '../../util/util-model'; 
+using util from '../../cm/util/util-model'; 
 using { ep as mst } from './EP_LOI_MST-model';
 using { ep as vdsel } from './EP_LOI_VENDOR_SELECTION-model';
 using { ep as pub } from './EP_LOI_PUBLISH-model';

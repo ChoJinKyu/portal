@@ -199,8 +199,8 @@ sap.ui.define([
         onPageSaveButtonPress: function(){
 			var oView = this.getView(),
 				that = this;
-			MessageBox.confirm("Are you sure ?", {
-				title : "Comfirmation",
+			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
+				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
@@ -210,7 +210,7 @@ sap.ui.define([
 								that._toShowMode();
                                 oView.setBusy(false);
                                 that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-								MessageToast.show("Success to save.");
+								MessageToast.show(that.getModel("I18N").getText("/NCM0005"));
 							}
 						});
 					};

@@ -21,7 +21,7 @@
         }
       },
       "commonUtilService": {
-        "uri": "srv-api/odata/v4/util.CommonService/",
+        "uri": "srv-api/odata/v4/cm.util.CommonService/",
         "type": "OData",
         "settings": {
           "odataVersion": "4.0"

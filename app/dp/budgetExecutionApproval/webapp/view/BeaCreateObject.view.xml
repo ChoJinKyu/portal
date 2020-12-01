@@ -145,14 +145,14 @@
                          <VBox class="sapUiSmallMargin">
                             <Label text="Affiliate" />
                             <ObjectStatus
-                                text="{pssaCreateObjectView>/company}" 
+                                text="{company>/Org_Company/0/company_name}" 
                                 state="Error"
                                 />
                          </VBox>
                          <VBox class="sapUiSmallMargin">
                             <Label text="Division" />
                             <ObjectStatus
-                                text="{pssaCreateObjectView>/plant}" 
+                                text="{plant>/Org_Plant/0/plant_name}" 
                                 state="Error"
                                 />
                          </VBox>

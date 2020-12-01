@@ -1,5 +1,5 @@
 namespace sp;	
-using util from '../../util/util-model';
+using util from '../../cm/util/util-model';
 
 entity Sup_Supplier_Role {	
   key tenant_id : String(5)  not null;	

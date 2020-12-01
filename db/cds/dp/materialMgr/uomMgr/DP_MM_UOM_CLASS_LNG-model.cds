@@ -17,7 +17,7 @@
   -. 2020.11.25 : 최미희 최초작성
 *************************************************/
 namespace dp;	
-using util from '../../../util/util-model';  	
+using util from '../../../cm/util/util-model';  	
 using { dp as uomclass } from './DP_MM_UOM_CLASS-model';
 	
 entity Mm_Uom_Class_Lng {	

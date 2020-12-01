@@ -1,6 +1,6 @@
 namespace cm;
 
-using util from '../../util/util-model';
+using util from '../util/util-model';
 
 entity User {
   key user_id : String(50)  not null @title: '사용자ID';

@@ -1,6 +1,6 @@
 namespace cm;
 using { User } from '@sap/cds/common';
-using util from '../../util/util-model';
+using util from '../util/util-model';
 
 
 entity Org_Division {

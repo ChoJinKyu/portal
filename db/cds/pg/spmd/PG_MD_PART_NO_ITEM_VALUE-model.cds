@@ -1,6 +1,6 @@
 namespace pg;
 
-using util from '../../util/util-model';
+using util from '../../cm/util/util-model';
 
 
 entity Md_Part_No_Item_Value {

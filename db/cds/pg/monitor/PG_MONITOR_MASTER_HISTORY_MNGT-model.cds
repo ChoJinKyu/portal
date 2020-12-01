@@ -17,7 +17,7 @@
 
 namespace pg;
 
-using util from '../../util/util-model';
+using util from '../../cm/util/util-model';
 using {pg as Monitoring_Mst_Hist_Mngt} from '../monitor/PG_MONITOR_MASTER_HISTORY_MNGT-model';
 
 entity Monitor_Master_History_Mngt {

@@ -12,7 +12,7 @@
 *************************************************/
 namespace dp;
 using { User } from '@sap/cds/common';
-using util from '../../../util/util-model';
+using util from '../../../cm/util/util-model';
 using {dp.Dc_Project as pjt} from './DP_DC_PROJECT-model';
 
 entity Dc_Project_Member {

@@ -17,7 +17,7 @@
   -. 2020.11.25 : 최미희 최초작성
 *************************************************/
 namespace dp;	
-using util from '../../../util/util-model';	
+using util from '../../../cm/util/util-model';	
 using { dp as materialMst } from './DP_MM_MATERIAL_MST-model';
 
 entity Mm_Material_Org {	
