@@ -33,6 +33,13 @@
         "settings": {
           "odataVersion": "2.0"
         }
+      },
+      "treeService": {
+        "uri": "srv-api/odata/v2/xx.TestTableService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
       }
     }
   },
@@ -81,6 +88,16 @@
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
           "bundleName": "cm.controlOptionMgr.i18n.i18n"
+        }
+      },
+      "tree": {
+        "dataSource": "treeService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "useBatch": true
         }
       },
       "util": {

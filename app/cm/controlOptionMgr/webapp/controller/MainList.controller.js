@@ -58,7 +58,7 @@ sap.ui.define([
     },
 
     onRenderedFirst: function () {
-      this.byId("pageSearchButton").firePress();
+      //this.byId("pageSearchButton").firePress();
     },
 
     /* =========================================================== */
@@ -199,6 +199,16 @@ sap.ui.define([
           oView.setBusy(false);
         }
       });
+      // (new ManagedListModel())
+      //   .setTransactionModel(this.getModel("tree"))
+      //   .read("/Categories", {
+      //     filters: [],
+      //     success: function (oData) {
+      //       console.log(">>>>>> oTree", oData);
+
+      //       oView.setBusy(false);
+      //     }
+      //   });
     },
 
     _getSearchStates: function () {
