@@ -137,21 +137,34 @@ sap.ui.define([
             console.group("onBeforeRebindTable");
 
 			var mBindingParams = oEvent.getParameter("bindingParams");
-			var oSmtFilter = this.getView().byId("smartFilterBar");             //smart filter
-			
-            var oTenant_id = oSmtFilter.getControlByKey("tenant_id").getSelectedKey();    
-			var oMaterial_description = oSmtFilter.getControlByKey("material_description").getValue();   
-			var oSupplier_local_name = oSmtFilter.getControlByKey("supplier_local_name").getValue();    
+			var oSmtFilter = this.getView().byId("smartFilterBar");         
 
-			if (oTenant_id.length > 0) {
-				mBindingParams.filters.push(new Filter("tenant_id", FilterOperator.EQ, oTenant_id));
-            }
 
-            mBindingParams.filters.push(this._getSearchFilters(oMaterial_description, oSupplier_local_name));
+            //var oTenant_id = oSmtFilter.getControlByKey("tenant_id").getSelectedKey();    
+            var oMaterial_description = oSmtFilter.getControlByKey("material_description").getValue();   
+            
+                var oFilter = new sap.ui.model.Filter("material_description", sap.ui.model.FilterOperator.Contains, oMaterial_description);
+    mBindingParams.filters.push(oFilter);	
+
+			//var oSupplier_local_name = oSmtFilter.getControlByKey("supplier_local_name").getValue();    
+            /*material_code,material_description,supplier_code,supplier_local_name,base_quantity,
+            processing_cost,pcst_currency_unit,mi_material_code,mi_material_code_name,category_name,
+            reqm_quantity_unit,reqm_quantity,currency_unit,mi_base_reqm_quantity,quantity_unit,
+            exchange,termsdelv,use_flag*/
+			// if (oTenant_id.length > 0) {
+			// 	mBindingParams.filters.push(new Filter("tenant_id", FilterOperator.EQ, oTenant_id));
+            // }
+
+            //mBindingParams.filters.push(this._getSearchFilters(oMaterial_description, oSupplier_local_name));
+
+	        // if (oTenant_id.length > 0) {
+			// 	var oTenant_idFilter = new Filter("tenant_id", FilterOperator.EQ, oTenant_id);
+			// 	mBindingParams.filters.push(oTenant_idFilter);
+            // }
 
 			// if (oMaterial_description.length > 0) {
-			// 	var ooMaterial_descriptionFilter = new Filter("material_description", FilterOperator.Contains, oMaterial_description);
-			// 	mBindingParams.filters.push(ooMaterial_descriptionFilter);
+			// 	var oMaterial_descriptionFilter = new Filter("material_description", FilterOperator.Contains, oMaterial_description);
+			// 	mBindingParams.filters.push(oMaterial_descriptionFilter);
 			// }
 
 			// if (oSupplier_local_name.length > 0) {
@@ -159,10 +172,7 @@ sap.ui.define([
 			// 	mBindingParams.filters.push(oSupplier_local_nameFilter);
             // }
                    
-			// if (oTenant_id.length > 0) {
-			// 	var oTenant_idFilter = new Filter("tenant_id", FilterOperator.EQ, oTenant_id);
-			// 	mBindingParams.filters.push(oTenant_idFilter);
-            // }
+		
             
 			// if (oMaterial_description.length > 0) {
 			// 	var ooMaterial_descriptionFilter = new Filter("material_description", FilterOperator.Contains, oMaterial_description);
