@@ -16,9 +16,9 @@ using {pg as mntrFullMaster} from '../../../../db/cds/pg/monitor/PG_MONITOR_FULL
 //View
 using {pg as mntrMasterView} from '../../../../db/cds/pg/monitor/PG_MONITOR_MASTER_VIEW';
 //CM ORG
-using {cm.Org_Tenant as OrgTenant} from '../../../../db/cds/cm/orgMgr/CM_ORG_TENANT-model';
-using {cm.Org_Company as OrgCompany} from '../../../../db/cds/cm/orgMgr/CM_ORG_COMPANY-model';
-using {cm.Org_Unit as OrgUnit} from '../../../../db/cds/cm/orgMgr/CM_ORG_UNIT-model';
+using {cm.Org_Tenant as cmOrgTenant} from '../../../../db/cds/cm/orgMgr/CM_ORG_TENANT-model';
+using {cm.Org_Company as cmOrgCompany} from '../../../../db/cds/cm/orgMgr/CM_ORG_COMPANY-model';
+using {cm.Org_Unit as cmOrgUnit} from '../../../../db/cds/cm/orgMgr/CM_ORG_UNIT-model';
 //CM Code
 using {cm.Code_Mst as codeMst} from '../../../../db/cds/cm/codeMgr/CM_CODE_MST-model';
 using {cm.Code_Dtl as codeDtl} from '../../../../db/cds/cm/codeMgr/CM_CODE_DTL-model';
@@ -61,35 +61,35 @@ service monitorService {
 
     // Test List
     entity MonitoringFullMaster @(title : '모니터링 전체 마스터')                 as projection on mntrFullMaster.Monitor_Full_Master {
-        * , linkToTenantID : redirected to OrgTenantView, linkToCompanyCode : redirected to OrgCompanyView, linkToBizunitCode : redirected to OrgUnitView
+        * , linkToTenantID : redirected to OrgTenant, linkToCompanyCode : redirected to OrgCompany, linkToBizunitCode : redirected to OrgUnit
     };
 
     // Tenant View: 회사
-    view OrgTenantView @(title : '회사 마스터 View') as
+    entity OrgTenant @(title : '회사 마스터 View') as
         select
             key tenant_id,
                 tenant_name
-        from OrgTenant
+        from cmOrgTenant
         where
             use_flag = 'true';
 
     // Company View: 법인
-    view OrgCompanyView @(title : '법인 마스터 View') as
+    entity OrgCompany @(title : '법인 마스터 View') as
         select
             key tenant_id,
             key company_code,
                 company_name
-        from OrgCompany
+        from cmOrgCompany
         where
             use_flag = 'true';
 
     // Unit View: 사업부분
-    view OrgUnitView @(title : '사업부분 마스터 View') as
+    entity OrgUnit @(title : '사업부분 마스터 View') as
         select
             key tenant_id,
             key bizunit_code,
                 bizunit_name
-        from OrgUnit
+        from cmOrgUnit
         where
             use_flag = 'true';
 

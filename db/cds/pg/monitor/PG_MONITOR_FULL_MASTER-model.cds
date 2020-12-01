@@ -18,16 +18,16 @@
 namespace pg;
 
 using util from '../../util/util-model';
-using {cm as orgTenant} from '../../cm/orgMgr/CM_ORG_TENANT-model';
-using {cm as orgCompany} from '../../cm/orgMgr/CM_ORG_COMPANY-model';
-using {cm as orgBizunit} from '../../cm/orgMgr/CM_ORG_UNIT-model';
+using {cm.Org_Tenant as OrgTenant} from '../../cm/orgMgr/CM_ORG_TENANT-model';
+using {cm.Org_Company as OrgCompany} from '../../cm/orgMgr/CM_ORG_COMPANY-model';
+using {cm.Org_Unit as OrgUnit} from '../../cm/orgMgr/CM_ORG_UNIT-model';
 
 entity Monitor_Full_Master {
 
     key scenario_code                    : Integer64 not null @title : '시나리오코드';
-        linkToTenantID                   : Association to orgTenant.Org_Tenant;
-        linkToCompanyCode                : Association to orgCompany.Org_Company;
-        linkToBizunitCode                : Association to orgBizunit.Org_Unit;
+        linkToTenantID                   : Association to OrgTenant;
+        linkToCompanyCode                : Association to OrgCompany;
+        linkToBizunitCode                : Association to OrgUnit;
         separated_code                   : String(10)         @title : '구분코드';
         activate_flag                    : Boolean            @title : '활성화여부';
         monitoring_purpose               : LargeBinary        @title : '모니터링목적';
