@@ -17,7 +17,7 @@
 
 namespace pg;
 
-using util from '../../util/util-model';
+using util from '../../cm/util/util-model';
 using {cm.Org_Tenant as OrgTenant} from '../../cm/orgMgr/CM_ORG_TENANT-model';
 using {cm.Org_Company as OrgCompany} from '../../cm/orgMgr/CM_ORG_COMPANY-model';
 using {cm.Org_Unit as OrgUnit} from '../../cm/orgMgr/CM_ORG_UNIT-model';

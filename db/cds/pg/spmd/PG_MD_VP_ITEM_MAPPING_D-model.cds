@@ -1,6 +1,6 @@
 namespace pg;
 
-using util from '../../util/util-model';
+using util from '../../cm/util/util-model';
 
 
 entity Md_Vp_Item_Mapping_D {

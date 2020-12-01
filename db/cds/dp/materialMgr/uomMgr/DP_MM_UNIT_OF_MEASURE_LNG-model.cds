@@ -17,7 +17,7 @@
   -. 2020.11.25 : 최미희 최초작성
 *************************************************/
 namespace dp;	
-using util from '../../../util/util-model'; 
+using util from '../../../cm/util/util-model'; 
 using { dp as uom } from './DP_MM_UNIT_OF_MEASURE-model';	
 	
 entity Mm_Unit_Of_Measure_Lng {	

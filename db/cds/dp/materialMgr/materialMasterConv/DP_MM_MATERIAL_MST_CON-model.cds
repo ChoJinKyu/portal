@@ -18,7 +18,7 @@
 *************************************************/
 
 namespace dp;	
-using util from '../../../util/util-model';	
+using util from '../../../cm/util/util-model';	
 
 entity Mm_Material_Mst_Con {	
   key tenant_id : String(5)  not null @title: '테넌트ID' ;	

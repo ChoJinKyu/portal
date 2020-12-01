@@ -1,5 +1,5 @@
 namespace dp;	
-using util from '../../util/util-model'; 	
+using util from '../../cm/util/util-model'; 	
 // using {dp as Uri_Link} from '../standardCommon/DP_SC_URI_LINK-model';	
 	
 entity Sc_Uri_Link {	

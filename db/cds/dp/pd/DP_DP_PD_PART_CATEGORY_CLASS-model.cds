@@ -1,5 +1,5 @@
 namespace dp;	
-using util from '../../util/util-model'; 	
+using util from '../../cm/util/util-model'; 	
 // using {dp as categoryClass} from '../pd/DP_PD_PART_CATEGORY_CLASS-model';	
 	
 entity Pd_Part_Category_Class {	

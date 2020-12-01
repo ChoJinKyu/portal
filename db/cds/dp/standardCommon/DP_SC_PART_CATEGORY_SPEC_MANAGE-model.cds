@@ -1,5 +1,5 @@
 namespace dp;	
-using util from '../../util/util-model'; 	
+using util from '../../cm/util/util-model'; 	
 // using {dp as categorySpecManage} from '../standardCommon/DP_SC_PART_CATEGORY_SPEC_MANAGE-model';	
 	
 entity Sc_Part_Category_Spec_Manage {	

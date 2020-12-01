@@ -1,5 +1,5 @@
 namespace ep;	
-using util from '../../util/util-model'; 	
+using util from '../../cm/util/util-model'; 	
 	
 	
 entity Project {	

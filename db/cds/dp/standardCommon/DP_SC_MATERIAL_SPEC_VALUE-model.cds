@@ -1,5 +1,5 @@
 namespace dp;	
-using util from '../../util/util-model';  	
+using util from '../../cm/util/util-model';  	
 // using {dp as materialSpecValue} from '../standardCommon/DP_SC_MATERIAL_SPEC_VALUE-model';	
 	
 entity Sc_Material_Spec_Value {	

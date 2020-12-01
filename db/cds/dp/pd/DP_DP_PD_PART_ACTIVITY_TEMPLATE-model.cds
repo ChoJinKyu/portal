@@ -1,5 +1,5 @@
 namespace dp;	
-using util from '../../util/util-model'; 	
+using util from '../../cm/util/util-model'; 	
 // using { as } from '/DP_PD_PART_ACTIVITY_TEMPLATE-model';	
 	
 entity Pd_Part_Activity_Template {	

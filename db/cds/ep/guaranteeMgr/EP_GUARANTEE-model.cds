@@ -1,6 +1,6 @@
 namespace ep;
 
-using util from '../../util/util-model';
+using util from '../../cm/util/util-model';
 
 entity Guarantee {
     key tenant_id                 : String(5) not null;

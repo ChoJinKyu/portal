@@ -12,7 +12,7 @@
 *************************************************/
 namespace dp;
 using { User } from '@sap/cds/common';
-using util from '../../../util/util-model';
+using util from '../../../cm/util/util-model';
 using {dp.Dc_Project_Target_Cost as pjtTargetCost} from './DP_DC_PROJECT_TARGET_COST-model';
 
 entity Dc_Project_Target_Cost_His {

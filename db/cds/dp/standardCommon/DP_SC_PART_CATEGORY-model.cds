@@ -1,5 +1,5 @@
 namespace dp;	
-using util from '../../util/util-model'; 	
+using util from '../../cm/util/util-model'; 	
 // using {dp as partCategory} from '../standardCommon/DP_SC_PART_CATEGORY-model';
 using {dp as categoryClass} from '../standardCommon/DP_SC_PART_CATEGORY_CLASS-model';
 using {dp as categoryAuth} from '../standardCommon/DP_SC_PART_CATEGORY_AUTH-model';

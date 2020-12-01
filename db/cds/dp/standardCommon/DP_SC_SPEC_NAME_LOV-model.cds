@@ -1,5 +1,5 @@
 namespace dp;	
-using util from '../../util/util-model'; 	
+using util from '../../cm/util/util-model'; 	
 // using {dp as specNameLov} from '../standardCommon/DP_SC_SPEC_NAME_LOV-model';	
 	
 entity Sc_Spec_Name_Lov {	

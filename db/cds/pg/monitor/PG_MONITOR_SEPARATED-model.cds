@@ -17,7 +17,7 @@
 
 namespace pg;
 
-using util from '../../util/util-model';
+using util from '../../cm/util/util-model';
 using {pg as Monitoring_Separated} from '../monitor/PG_MONITOR_SEPARATED-model';
 
 entity Monitor_Separated {

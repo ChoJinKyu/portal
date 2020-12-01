@@ -1,6 +1,6 @@
 namespace dp;
 
-using util from '../../../util/util-model';
+using util from '../../../cm/util/util-model';
 using {dp.VI_Base_Price_Arl_Dtl as detail} from './DP_VI_BASE_PRICE_ARL_DTL-model';
 using {cm.Org_Tenant as tenant} from '../../../cm/orgMgr/CM_ORG_TENANT-model';
 

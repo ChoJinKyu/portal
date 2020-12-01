@@ -17,7 +17,7 @@
 
 namespace pg;
 
-using util from '../../util/util-model';
+using util from '../../cm/util/util-model';
 using {pg as Indicator_Comparison_Basic} from '../monitor/PG_MONITOR_INDICATOR_COMPARISON_BASIC-model';
 
 entity Monitor_Indicator_Comparison_Basic {

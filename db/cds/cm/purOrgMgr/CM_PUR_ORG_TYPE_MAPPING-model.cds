@@ -1,6 +1,6 @@
 namespace cm;
 using { User } from '@sap/cds/common';
-using util from '../../util/util-model';
+using util from '../util/util-model';
 
 entity Pur_Org_Type_Mapping {	
   key tenant_id : String(5)  not null @title: '테넌트ID';

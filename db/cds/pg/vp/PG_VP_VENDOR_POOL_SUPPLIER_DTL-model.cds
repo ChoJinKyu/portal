@@ -1,6 +1,6 @@
 namespace pg;	
  
-using util from '../../util/util-model';
+using util from '../../cm/util/util-model';
 using {pg as mst} from './PG_VP_VENDOR_POOL_MST-model';
 	
 entity Vp_Vendor_Pool_Supplier_Dtl {	
