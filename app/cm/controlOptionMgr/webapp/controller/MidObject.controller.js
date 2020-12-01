@@ -37,9 +37,26 @@ sap.ui.define([
       }
     })(),
 
+    // getFilter: function () {
+    //   console.log(">>>>>>>>>>> arguments", arguments);
+    // },
     /* =========================================================== */
     /* lifecycle methods                                           */
     /* =========================================================== */
+
+    selectionChange: function (event) {
+      var combo = event.getSource().getParent().getCells()[3].getItems()[0];
+      combo.clearSelection();
+      combo.bindItems({
+        path: 'org>/organization',
+        filters: [
+          new Filter('type', FilterOperator.EQ, event.getSource().getSelectedKey())
+        ],
+        template: new Item({
+          key: "{org>code}", text: "{org>code}"
+        })
+      });
+    },
 
 		/**
 		 * Called when the midObject controller is instantiated.

@@ -59,7 +59,7 @@ public class MdCategoryService implements EventHandler {
     }
 
     // 카테고리 Id 저장 후
-    @After(event={CdsService.EVENT_READ, CdsService.EVENT_CREATE}, entity=MdCategory_.CDS_NAME)
+    @After(event={CdsService.EVENT_CREATE}, entity=MdCategory_.CDS_NAME)
     public void createAfterMdCategoryIdProc(List<MdCategory> cateId) {
         log.info("### Id Insert [After] ###");
     }
@@ -109,16 +109,62 @@ public class MdCategoryService implements EventHandler {
 
         log.info("### Item Insert [Before] ###");
         //log.info("###"+items.toString()+"###");
-        
-        Instant current = Instant.now();
 
-        for(MdCategoryItem item : items) {
-            item.setLocalCreateDtm(current);
-            item.setLocalUpdateDtm(current);
-            //item.setCreateUserId("kki");
-            //item.setUpdateUserId("kki");
+        if(!items.isEmpty() && items.size() > 0){
+            
+            Instant current = Instant.now();
+
+            String cateCode = "";
+            String charCode = "";
+            String charSerialNo = "";
+            
+            for (MdCategoryItem item : items) {
+                                
+                //log.info("###"+item.toString()+"###");
+                    
+                item.setLocalCreateDtm(current);
+                item.setLocalUpdateDtm(current);
+                //item.setCreateUserId("guest");
+                //item.setUpdateUserId("guest");
+                
+                cateCode = item.getSpmdCategoryCode();
+                charCode = item.getSpmdCharacterCode();
+
+                if ("".equals(charCode) || charCode == null) {
+
+                    // DB처리
+                    try {
+                        
+                        Connection conn = jdbc.getDataSource().getConnection();
+
+                        // Item SPMD특성코드 생성 Function
+                        String v_sql_get_code_fun = "SELECT PG_SPMD_CHARACTER_CODE_FUNC(?) AS SPMD_CHARACTER_CODE FROM DUMMY";
+                        
+                        PreparedStatement v_statement_select = conn.prepareStatement(v_sql_get_code_fun);
+                        v_statement_select.setObject(1, cateCode);
+
+                        ResultSet rslt = v_statement_select.executeQuery();
+
+                        if(rslt.next()) charCode = rslt.getString("SPMD_CHARACTER_CODE");
+                        
+                    } catch (SQLException sqlE) { 
+                        sqlE.printStackTrace();
+                        log.error("### ErrCode : "+sqlE.getErrorCode()+"###");
+                        log.error("### ErrMesg : "+sqlE.getMessage()+"###");
+                    }
+                }
+
+                //charCode = item.getSpmdCharacterCode();
+
+                charSerialNo = cateCode.substring(1)+""+charCode.substring(1);
+
+                log.info("###[LOG-11]=> ["+charCode+"] ["+charSerialNo+"] ["+Long.valueOf(charSerialNo).longValue()+"]");
+
+                item.setSpmdCharacterCode(charCode);
+                item.setSpmdCharacterSerialNo(Long.valueOf(charSerialNo).longValue());
+
+            }
         }
-
 
     }
      
@@ -130,7 +176,7 @@ public class MdCategoryService implements EventHandler {
     }
  
     // 카테고리 Item 저장 후
-    @After(event={CdsService.EVENT_READ, CdsService.EVENT_CREATE}, entity=MdCategoryItem_.CDS_NAME)
+    @After(event={CdsService.EVENT_CREATE}, entity=MdCategoryItem_.CDS_NAME)
     public void createAfterMdCategoryItemProc(List<MdCategoryItem> items) {
         log.info("### Item Insert [After] ###");
     }
