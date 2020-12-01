@@ -19,6 +19,13 @@
           "odataVersion": "2.0"
         }
       },
+      "uomClassService": {
+        "uri": "srv-api/odata/v2/dp.UomClassMgrService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
+      },
       "commonUtilService": {
         "uri": "srv-api/odata/v2/util.CommonService/",
         "type": "OData",
@@ -77,6 +84,16 @@
       },
       "util": {
         "dataSource": "commonUtilService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "useBatch": true
+        }
+      },
+      "uomClass": {
+        "dataSource": "uomClassService",
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",
