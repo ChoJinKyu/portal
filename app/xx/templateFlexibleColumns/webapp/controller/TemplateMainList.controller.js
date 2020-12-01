@@ -1,25 +1,21 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
-	"sap/ui/core/routing/History",
-	"sap/ui/model/json/JSONModel",
+	"ext/lib/util/Multilingual",
 	"ext/lib/model/ManagedListModel",
+	"sap/ui/model/json/JSONModel",
 	"ext/lib/formatter/DateFormatter",
 	"sap/m/TablePersoController",
-	"./MainListPersoService",
+	"./TemplateMainListPersoService",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
-    "sap/m/MessageToast",
-	"sap/m/ColumnListItem",
-	"sap/m/ObjectIdentifier",
-	"sap/m/Text",
-	"sap/m/Input",
-	"sap/m/ComboBox",
-	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+    "sap/m/MessageToast"
+], function (BaseController, Multilingual, ManagedListModel, JSONModel, DateFormatter, 
+        TablePersoController, MainListPersoService, 
+        Filter, FilterOperator, MessageBox, MessageToast) {
 	"use strict";
 
-	return BaseController.extend("xx.templateFlexibleColumns.controller.MainList", {
+	return BaseController.extend("xx.templateFlexibleColumns.controller.TemplateMainList", {
 
 		dateFormatter: DateFormatter,
 
@@ -32,29 +28,24 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {
-			var oViewModel,
-				oResourceBundle = this.getResourceBundle();
+			var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
+            this.setModel(new ManagedListModel(), "list");
+            this.setModel(new JSONModel(), "mainListViewModel");
 
-			// Model used to manipulate control states
-			oViewModel = new JSONModel({
-				headerExpanded: true,
-				mainListTableTitle : oResourceBundle.getText("mainListTableTitle"),
-				tableNoDataText : oResourceBundle.getText("tableNoDataText")
-			});
-			this.setModel(oViewModel, "mainListView");
-
-			// Add the mainList page to the flp routing history
-			this.addHistoryEntry({
-				title: oResourceBundle.getText("mainListViewTitle"),
-				icon: "sap-icon://table-view",
-				intent: "#Template-display"
-			}, true);
-			
-			this.setModel(new ManagedListModel(), "list");
+			oMultilingual.attachEvent("ready", function(oEvent){
+				var oi18nModel = oEvent.getParameter("model");
+				this.addHistoryEntry({
+					title: oi18nModel.getText("/CONTROL_OPTION_MANAGEMENT"),   //제어옵션관리
+					icon: "sap-icon://table-view",
+					intent: "#Template-display"
+				}, true);
+			}.bind(this));
 			
 			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
 			this._doInitTablePerso();
+            this.enableMessagePopover();
         },
 		
         onRenderedFirst : function () {
@@ -86,7 +77,7 @@ sap.ui.define([
 			} else {
 				sTitle = this.getResourceBundle().getText("mainListTableTitle");
 			}
-			this.getModel("mainListView").setProperty("/mainListTableTitle", sTitle);
+			this.getModel("mainListViewModel").setProperty("/mainListTableTitle", sTitle);
 		},
 
 		/**
@@ -156,8 +147,8 @@ sap.ui.define([
 				controlOptionCode: oRecord.control_option_code
 			});
 
-            if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
-                this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
+            if(oNextUIState.layout === "TwoColumnsMidExpanded"){
+                this.getView().getModel("mainListViewModel").setProperty("/headerExpandFlag", false);
             }
 
 			var oItem = oEvent.getSource();
@@ -177,7 +168,7 @@ sap.ui.define([
 		 * @private
 		 */
 		_onRoutedThisPage: function(){
-			this.getModel("mainListView").setProperty("/headerExpanded", true);
+			this.getModel("mainListViewModel").setProperty("/headerExpanded", true);
 		},
 
 		/**

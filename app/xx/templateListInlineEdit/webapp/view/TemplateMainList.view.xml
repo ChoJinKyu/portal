@@ -1,4 +1,4 @@
-<mvc:View controllerName="xx.templateListInlineEdit.controller.MainList" 
+<mvc:View controllerName="xx.templateListInlineEdit.controller.TemplateMainList" 
     xmlns:mvc="sap.ui.core.mvc" 
     xmlns="sap.m" 
     xmlns:f="sap.f" 
@@ -10,6 +10,7 @@
 
     <f:DynamicPage id="page"
         headerExpanded="false" 
+        showFooter="{= ${message>/}.length > 0 }"
         toggleHeaderOnTitleClick="true">
         <!-- DynamicPage Title -->
         <f:title>
@@ -21,8 +22,8 @@
                     <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
-                                <Label text="{I18N>/CHAIN}: " labelFor="searchChainS" required="true"></Label>
-                                <ComboBox id="searchChainS" width="100%" selectedKey="CM" items="{
+                                <Label text="{I18N>/CHAIN}: " labelFor="searchChainS"></Label>
+                                <ComboBox id="searchChainS" width="100%" items="{
                                         path: 'util>/CodeDetails',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
@@ -184,7 +185,7 @@
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                         {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                                     ]
-                                }" editable="{= ${list>_row_state_} === 'C' }">
+                                }" editable="{= ${list>_row_state_} === 'C' }" required="true">
                                 <items>
                                     <core:Item key="{util>code}" text="{util>code_description}" />
                                 </items>
@@ -195,15 +196,25 @@
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                         {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
                                     ]
-                                }" editable="{= ${list>_row_state_} === 'C' }">
+                                }" editable="{= ${list>_row_state_} === 'C' }" required="true">
                                 <items>
                                     <core:Item key="{util>code}" text="{util>code_description}" />
                                 </items>
                             </ComboBox>
-                            <Input value="{list>message_code}" editable="{= ${list>_row_state_} === 'C' }"></Input>
-                            <Input value="{list>message_contents}"></Input>
+                            <Input value="{
+                                    path: 'list>message_code',
+                                    type: 'sap.ui.model.type.String',
+                                    constraints: {
+                                        maxLength: 30
+                                    }
+                                }" editable="{= ${list>_row_state_} === 'C' }" required="true"></Input>
+                            <Input value="{list>message_contents}" required="true" ></Input>
                             <ComboBox selectedKey="{list>message_type_code}" width="100%" items="{
                                     path: 'util>/CodeDetails',
+                                    type: 'sap.ui.model.type.String',
+                                    constraints: {
+                                        maxLength: 1000
+                                    },
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                         {path: 'group_code', operator: 'EQ', value1: 'CM_MESSAGE_TYPE_CODE'}
@@ -219,5 +230,17 @@
             </Table>
         </f:content>
         <!-- DynamicPage Footer -->
+		<f:footer>
+			<OverflowToolbar>
+                <Button
+                    icon="sap-icon://alert"
+                    type="Reject"
+                    text="{= ${message>/}.length }"
+                    visible="{= ${message>/}.length > 0 }"
+                    ariaHasPopup="Dialog"
+                    press=".onMessagePopoverPress" />
+				<ToolbarSpacer />
+			</OverflowToolbar>
+		</f:footer>
     </f:DynamicPage>
 </mvc:View>

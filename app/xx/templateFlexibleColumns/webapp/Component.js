@@ -2,8 +2,9 @@ sap.ui.define([
 	"jquery.sap.global",
 	"ext/lib/UIComponent",
 	"sap/ui/model/json/JSONModel",
+    "sap/ui/core/routing/HashChanger",
 	"sap/f/FlexibleColumnLayoutSemanticHelper"
-], function (jQuery, UIComponent, JSONModel, FlexibleColumnLayoutSemanticHelper) {
+], function (jQuery, UIComponent, JSONModel, HashChanger, FlexibleColumnLayoutSemanticHelper) {
 	"use strict";
 
 	return UIComponent.extend("xx.templateFlexibleColumns.Component", {
@@ -19,6 +20,8 @@ sap.ui.define([
 		 * @override
 		 */
 		init : function () {
+            HashChanger.getInstance().replaceHash("");
+
 			// call the base component's init function
 			UIComponent.prototype.init.apply(this, arguments);
 			

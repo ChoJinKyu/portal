@@ -1,4 +1,4 @@
-<mvc:View controllerName="xx.templateFlexibleColumns.controller.MidObject" 
+<mvc:View controllerName="xx.templateFlexibleColumns.controller.TemplateMidObject" 
 	xmlns:mvc="sap.ui.core.mvc" 
 	xmlns="sap.m" 
 	xmlns:uxap="sap.uxap" 
@@ -76,7 +76,7 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			<uxap:ObjectPageSection titleUppercase="false" title="Managed Values" visible="{= !${midObjectView>/isAddedMode}}">
+			<uxap:ObjectPageSection titleUppercase="false" title="Managed Values" visible="{= !${midObjectViewModel>/isAddedMode}}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<form:SimpleForm editable="false">

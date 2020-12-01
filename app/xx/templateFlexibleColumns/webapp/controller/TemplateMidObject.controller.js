@@ -1,10 +1,11 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
-	"ext/lib/util/ValidatorUtil",
-	"sap/ui/model/json/JSONModel",
+	"ext/lib/util/Multilingual",
 	"ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedModel",
 	"ext/lib/model/ManagedListModel",
+	"sap/ui/model/json/JSONModel",
+    "ext/lib/util/Validator",
 	"ext/lib/formatter/DateFormatter",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
@@ -17,17 +18,18 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
-	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
-	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
-        
+], function (BaseController, Multilingual, TransactionManager, ManagedModel, ManagedListModel, JSONModel, Validator, DateFormatter, 
+        Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
+        ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
 	"use strict";
 
 	var oTransactionManager;
 
-	return BaseController.extend("xx.templateFlexibleColumns.controller.MidObject", {
+	return BaseController.extend("xx.templateFlexibleColumns.controller.TemplateMidObject", {
 
 		dateFormatter: DateFormatter,
+        
+        validator: new Validator(),
 
 		formatter: (function(){
 			return {
@@ -46,23 +48,18 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {
-			// Model used to manipulate controlstates. The chosen values make sure,
-			// detail page shows busy indication immediately so there is no break in
-			// between the busy indication for loading the view's meta data
-			var oViewModel = new JSONModel({
-					busy : true,
-					delay : 0
-				});
-			this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
-			this.setModel(oViewModel, "midObjectView");
-			
+            var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
 			this.setModel(new ManagedModel(), "master");
 			this.setModel(new ManagedListModel(), "details");
+			this.setModel(new JSONModel(), "midObjectViewModel");
 
 			oTransactionManager = new TransactionManager();
 			oTransactionManager.addDataModel(this.getModel("master"));
 			oTransactionManager.addDataModel(this.getModel("details"));
 
+            this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
+            
 			this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
 
 			this._initTableTemplates();
@@ -154,6 +151,7 @@ sap.ui.define([
 				"local_create_dtm": new Date(),
 				"local_update_dtm": new Date()
 			}, "/ControlOptionMasters");
+            this.validator.clearValueState(this.byId("midTable"));
 		},
 
 		onMidTableDeleteButtonPress: function(){
@@ -170,6 +168,7 @@ sap.ui.define([
 				oDetailsModel.markRemoved(nIndex);
 			});
 			oTable.removeSelections(true);
+            this.validator.clearValueState(this.byId("midTable"));
 		},
 		
 		/**
@@ -178,9 +177,12 @@ sap.ui.define([
 		 */
         onPageSaveButtonPress: function(){
 			var oView = this.getView(),
-				that = this;
-			MessageBox.confirm("Are you sure ?", {
-				title : "Comfirmation",
+                that = this;
+                
+            if(this.validator.validate(this.byId("page")) !== true) return;
+
+			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
+				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
@@ -189,8 +191,8 @@ sap.ui.define([
 							success: function(ok){
 								that._toShowMode();
 								oView.setBusy(false);
-								that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-								MessageToast.show("Success to save.");
+                                that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+								MessageToast.show(this.getModel("I18N").getText("/NCM0005"));
 							}
 						});
 					};
@@ -204,9 +206,10 @@ sap.ui.define([
 		 * @public
 		 */
         onPageCancelEditButtonPress: function(){
-			if(this.getModel("midObjectView").getProperty("/isAddedMode") == true){
+			if(this.getModel("midObjectViewModel").getProperty("/isAddedMode") == true){
 				this.onPageNavBackButtonPress.call(this);
 			}else{
+                this.validator.clearValueState(this.byId("page"));
 				this._toShowMode();
 			}
         },
@@ -216,7 +219,7 @@ sap.ui.define([
 		/* =========================================================== */
 
 		_onMasterDataChanged: function(oEvent){
-			if(this.getModel("midObjectView").getProperty("/isAddedMode") == true){
+			if(this.getModel("midObjectViewModel").getProperty("/isAddedMode") == true){
 				var oMasterModel = this.getModel("master");
 				var oDetailsModel = this.getModel("details");
 				var sTenantId = oMasterModel.getProperty("/tenant_id");
@@ -243,7 +246,7 @@ sap.ui.define([
 
 			if(oArgs.tenantId == "new" && oArgs.controlOptionCode == "code"){
 				//It comes Add button pressed from the before page.
-				this.getModel("midObjectView").setProperty("/isAddedMode", true);
+				this.getModel("midObjectViewModel").setProperty("/isAddedMode", true);
 
 				var oMasterModel = this.getModel("master");
 				oMasterModel.setData({
@@ -273,7 +276,7 @@ sap.ui.define([
 				}, "/ControlOptionDetails");
 				this._toEditMode();
 			}else{
-				this.getModel("midObjectView").setProperty("/isAddedMode", false);
+				this.getModel("midObjectViewModel").setProperty("/isAddedMode", false);
 				
 				var sObjectPath = "/ControlOptionMasters(tenant_id='" + this._sTenantId + "',control_option_code='" + this._sControlOptionCode + "')";
 				var oMasterModel = this.getModel("master");
@@ -304,7 +307,7 @@ sap.ui.define([
 
 		_toEditMode: function(){
 			var FALSE = false;
-            this._showFormFragment('MidObject_Edit');
+            this._showFormFragment('TemplateMidObject_Edit');
 			this.byId("page").setSelectedSection("pageSectionMain");
 			this.byId("page").setProperty("showFooter", !FALSE);
 			this.byId("pageEditButton").setEnabled(FALSE);
@@ -321,7 +324,7 @@ sap.ui.define([
 
 		_toShowMode: function(){
 			var TRUE = true;
-			this._showFormFragment('MidObject_Show');
+			this._showFormFragment('TemplateMidObject_Show');
 			this.byId("page").setSelectedSection("pageSectionMain");
 			this.byId("page").setProperty("showFooter", !TRUE);
 			this.byId("pageEditButton").setEnabled(TRUE);

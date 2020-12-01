@@ -3,9 +3,10 @@ sap.ui.define([
 	"ext/lib/util/Multilingual",
 	"ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedListModel",
+    "ext/lib/util/Validator",
 	"ext/lib/formatter/Formatter",
 	"sap/m/TablePersoController",
-	"./MainListPersoService",
+	"./TemplateMainListPersoService",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/model/Sorter",
@@ -17,16 +18,19 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Formatter, TablePersoController, MainListPersoService, 
+], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Validator, Formatter, 
+        TablePersoController, MainListPersoService,
 		Filter, FilterOperator, Sorter,
 		MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
 	"use strict";
 
 	// var oTransactionManager;
 
-	return BaseController.extend("xx.templateListInlineEdit.controller.MainList", {
+	return BaseController.extend("xx.templateListInlineEdit.controller.TemplateMainList", {
 
-		formatter: Formatter,
+        formatter: Formatter,
+        
+        validator: new Validator(),
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -44,13 +48,14 @@ sap.ui.define([
 			oMultilingual.attachEvent("ready", function(oEvent){
 				var oi18nModel = oEvent.getParameter("model");
 				this.addHistoryEntry({
-					title: oi18nModel.getText("/MESSAGE_MANAGEMENT"),
+					title: oi18nModel.getText("/MESSAGE_MANAGEMENT"),   //메시지관리
 					icon: "sap-icon://table-view",
 					intent: "#Template-display"
 				}, true);
 			}.bind(this));
 
 			this._doInitTablePerso();
+            this.enableMessagePopover();
         },
         
         onRenderedFirst : function () {
@@ -137,7 +142,8 @@ sap.ui.define([
 				"message_contents": "",
 				"local_create_dtm": new Date(),
 				"local_update_dtm": new Date()
-			}, "/Message", 0);
+            }, "/Message", 0);
+            this.validator.clearValueState(this.byId("mainTable"));
 		},
 
 		onMainTableDeleteButtonPress: function(){
@@ -154,6 +160,7 @@ sap.ui.define([
 				oModel.markRemoved(nIndex);
 			});
 			oTable.removeSelections(true);
+            this.validator.clearValueState(this.byId("mainTable"));
 		},
        
         onMainTableSaveButtonPress: function(){
@@ -163,7 +170,11 @@ sap.ui.define([
 			if(!oModel.isChanged()) {
 				MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
 				return;
-			}
+            }
+
+            if(this.validator.validate(this.byId("mainTable")) !== true) return;
+            // if(ValidatorUtil.isValid(this.byId("mainTable")) !== true) return;
+            
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
 				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -173,8 +184,8 @@ sap.ui.define([
 						oModel.submitChanges({
 							success: function(oEvent){
 								oView.setBusy(false);
-								MessageToast.show("Success to save.");
-							}
+								MessageToast.show(this.getModel("I18N").getText("/NCM0005"));
+							}.bind(this)
 						});
 						//oTransactionManager.submit({
 						// 	success: function(oEvent){
@@ -183,7 +194,7 @@ sap.ui.define([
 						// 	}
 						// });
 					};
-				}
+				}.bind(this)
 			});
 			
         }, 
@@ -210,8 +221,16 @@ sap.ui.define([
 					new Sorter("language_code", true)
 				],
 				success: function(oData){
-					oView.setBusy(false);
-				}
+                    this.validator.clearValueState(this.byId("mainTable"));
+                    oView.setBusy(false);
+                    // var oMessage = new sap.ui.core.message.Message({
+                    //     message: "We have received the following response: " + oData,
+                    //     persistent: true, // make message transient
+                    //     type: sap.ui.core.MessageType.Success
+                    // });
+                    // var oMessageManager = sap.ui.getCore().getMessageManager();
+                    // oMessageManager.addMessages(oMessage);
+				}.bind(this)
 			});
 
 			// oTransactionManager.setServiceModel(this.getModel());

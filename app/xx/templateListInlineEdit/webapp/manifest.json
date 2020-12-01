@@ -127,25 +127,13 @@
           "target": [
             "mainList"
           ]
-        },
-        {
-          "pattern": "Message/{tenantId}/{messageCode}/{languageCode}",
-          "name": "mainObject",
-          "target": [
-            "mainObject"
-          ]
         }
       ],
       "targets": {
         "mainList": {
-          "viewName": "MainList",
+          "viewName": "TemplateMainList",
           "viewId": "mainList",
           "viewLevel": 1
-        },
-        "mainObject": {
-          "viewName": "MainObject",
-          "viewId": "mainObject",
-          "viewLevel": 2
         },
         "notFound": {
           "viewName": "NotFound",
