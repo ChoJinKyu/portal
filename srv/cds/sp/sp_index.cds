@@ -1,1 +1,1 @@
-using from './fundingNotifyMgr/fundingNotifyMgr-service';
+using from './fundingMgr/fundingNotifyMgr-service';
