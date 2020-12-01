@@ -51,7 +51,7 @@ sap.ui.define([
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
 		},
 
-	  onAfterRendering : function () {
+	    onAfterRendering : function () {
          
         },
         /**
@@ -90,13 +90,13 @@ sap.ui.define([
 		 * @public
 		 */
 		onPageNavBackButtonPress : function() {
-			var sPreviousHash = History.getInstance().getPreviousHash();
+		/*	var sPreviousHash = History.getInstance().getPreviousHash();
 			if (sPreviousHash !== undefined) {
 				// eslint-disable-next-line sap-no-history-manipulation
 				history.go(-1);
 			} else {
 				this.getRouter().navTo("approvalList", {}, true);
-			}
+			} */
 		},
 
 		/**
@@ -170,8 +170,8 @@ sap.ui.define([
          */
         _createViewBindData : function(args){ 
             var appInfoModel = this.getModel("beaCreateObjectView");
-            appInfoModel.setData({ company : args.company 
-                                ,  plant : args.plant });   
+            appInfoModel.setData({ company : ""
+                                ,  plant : "" });   
 
             console.log("oMasterModel >>> " , appInfoModel);
         } ,
