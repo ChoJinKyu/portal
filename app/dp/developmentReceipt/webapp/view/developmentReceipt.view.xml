@@ -496,7 +496,7 @@
                         <Label text="Use Y/N"/>
                         </VBox>
                         <table:template>
-                            <Switch state="{list>t_est_use_flag}" customTextOn="Yes" customTextOff="No">
+                            <Switch state="{list>t_est_use_flag}" customTextOn="Yes" customTextOff="No" enabled="{mode>/editFlag}">
                                 <layoutData>
                                     <FlexItemData growFactor="1" />
                                 </layoutData>
@@ -602,7 +602,10 @@
                         <Label text="Developer" required="true"/>
                         </VBox>
                         <table:template>
-                            <Text id="mold_developer_id" text="{list>mold_developer_id}"/>
+                            <VBox>
+                            <Text id="mold_developer_id" text="{list>mold_developer_id}" visible="{mode>/viewFlag}" />
+                            <SearchField id="searchField" value="{list>mold_developer_id}" width="100%" placeholder="Search employee" visible="{mode>/editFlag}" search=".onMoldMstTableUserSearch" />
+                            </VBox>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldRemarkColumn" width="20em" hAlign="Center">
