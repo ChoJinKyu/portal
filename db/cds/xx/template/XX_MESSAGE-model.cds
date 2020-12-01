@@ -1,7 +1,7 @@
 namespace xx;
 
 using {User} from '@sap/cds/common';
-using util from '../../util/util-model';
+using util from '../../cm/util/util-model';
 
 entity Message {
   key tenant_id         : String(5) not null  @title: '테넌트ID';

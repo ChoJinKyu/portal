@@ -17,7 +17,7 @@
   -. 2020.11.30 : 최미희 최초작성
 *************************************************/
 namespace dp;	
-using util from '../../../util/util-model';	
+using util from '../../../cm/util/util-model';	
 using { dp as mtlGroup} from './DP_MM_MATERIAL_GROUP-model';
 
 entity Mm_Material_Group_Lng {	

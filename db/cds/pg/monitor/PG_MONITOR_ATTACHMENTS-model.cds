@@ -17,7 +17,7 @@
 
 namespace pg;
 
-using util from '../../util/util-model';
+using util from '../../cm/util/util-model';
 using {pg as Monitoring_Attachments} from '../monitor/PG_MONITOR_ATTACHMENTS-model';
 
 entity Monitor_Attachments {

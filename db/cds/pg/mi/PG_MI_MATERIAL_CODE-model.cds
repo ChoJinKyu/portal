@@ -17,7 +17,7 @@
 
 namespace pg;
 
-using util from '../../util/util-model';
+using util from '../../cm/util/util-model';
 using {pg as MI_Code_Attr} from '../mi/PG_MI_MATERIAL_CODE-model';
 
 entity MI_Material_Code {

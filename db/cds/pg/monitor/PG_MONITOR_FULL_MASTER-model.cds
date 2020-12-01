@@ -17,29 +17,22 @@
 
 namespace pg;
 
-using util from '../../util/util-model';
-using {cm as orgTenant} from '../../cm/orgMgr/CM_ORG_TENANT-model';
-using {cm as orgCompany} from '../../cm/orgMgr/CM_ORG_COMPANY-model';
-using {cm as orgBizunit} from '../../cm/orgMgr/CM_ORG_UNIT-model';
+using util from '../../cm/util/util-model';
+using {cm.Org_Tenant as OrgTenant} from '../../cm/orgMgr/CM_ORG_TENANT-model';
+using {cm.Org_Company as OrgCompany} from '../../cm/orgMgr/CM_ORG_COMPANY-model';
+using {cm.Org_Unit as OrgUnit} from '../../cm/orgMgr/CM_ORG_UNIT-model';
 
 entity Monitor_Full_Master {
-    key tenant_id                        : String(5) not null  @title : '회사코드';
-        tenant                           : Association to orgTenant.Org_Tenant
-                                               on tenant.tenant_id = tenant_id;
-    key company_code                     : String(10) not null @title : '법인코드';
-        comapny                          : Association to orgCompany.Org_Company
-                                               on  comapny.tenant_id    = tenant_id
-                                               and comapny.company_code = company_code;
-    key bizunit_code                     : String(10) not null @title : '사업부분코드';
-        bizunit                          : Association to orgBizunit.Org_Unit
-                                               on  bizunit.tenant_id    = tenant_id
-                                               and bizunit.bizunit_code = bizunit_code;
-    key scenario_code                    : Integer64 not null  @title : '시나리오코드';
-        separated_code                   : String(10)          @title : '구분코드';
-        activate_flag                    : Boolean             @title : '활성화여부';
-        monitoring_purpose               : LargeBinary         @title : '모니터링목적';
-        scenario_desc                    : LargeBinary         @title : '시나리오설명';
-        source_system_detail_description : LargeBinary         @title : '소스시스템상세설명';
+
+    key scenario_code                    : Integer64 not null @title : '시나리오코드';
+        linkToTenantID                   : Association to OrgTenant;
+        linkToCompanyCode                : Association to OrgCompany;
+        linkToBizunitCode                : Association to OrgUnit;
+        separated_code                   : String(10)         @title : '구분코드';
+        activate_flag                    : Boolean            @title : '활성화여부';
+        monitoring_purpose               : LargeBinary        @title : '모니터링목적';
+        scenario_desc                    : LargeBinary        @title : '시나리오설명';
+        source_system_detail_description : LargeBinary        @title : '소스시스템상세설명';
 }
 
 extend Monitor_Full_Master with util.Managed;

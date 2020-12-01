@@ -17,13 +17,13 @@
   -. 2020.11.30 : 최미희 최초작성
 *************************************************/
 namespace dp;	
-using util from '../../../util/util-model';	
+using util from '../../../cm/util/util-model';	
 
 entity Mm_Material_Commodity {	
   key tenant_id : String(5)  not null @title: '테넌트ID' ;	
-  key material_commodity_code : String(30)  not null @title: '자재COMMODITY코드' ;	
-    material_commodity_name : String(100)  not null @title: '자재COMMODITY명' ;	
-    material_commodity_desc : String(1000)   @title: '자재COMMODITY설명' ;	
+  key commodity_code : String(30)  not null @title: 'COMMODITY코드' ;	
+    commodity_name : String(100)  not null @title: 'COMMODITY명' ;	
+    commodity_desc : String(1000)   @title: 'COMMODITY설명' ;	
 }
 
 extend Mm_Material_Commodity with util.Managed;

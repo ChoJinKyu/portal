@@ -250,10 +250,10 @@
                         rowSelectionChange = ".onCheck"
                         mode="MultiSelect"
                         width="auto"
-                        items="{list>/ApprovalMasters}">
+                        items="{list>/Approvals}">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="Approval List ({= ${list>/ApprovalMasters}.length || 0})" level="H2"/>
+                            <Title text="Approval List ({= ${list>/Approvals}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <!-- Add the Personalization button -->
                             <Button id="mainTableCreateButton" text="Create" type="Emphasized" press=".onDialogCreate" />
@@ -302,7 +302,7 @@
                             <cells>
                                 <ObjectIdentifier text="{list>approval_type_code}" />
                                 <ObjectIdentifier text="{list>company_name}" />
-                                <ObjectIdentifier text="{list>org_name}" />
+                                <ObjectIdentifier text="{list>plant_name}" />
                                 <ObjectIdentifier text="{list>approval_number}" />
                                 <ObjectIdentifier text="{list>approval_title}" />
                                 <ObjectIdentifier text="{list>requestor_empno}" />

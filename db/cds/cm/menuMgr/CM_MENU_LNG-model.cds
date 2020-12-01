@@ -1,6 +1,6 @@
 namespace cm;	
 
-using util from '../../util/util-model';
+using util from '../util/util-model';
 
 entity Menu_Lng {	
   key tenent_id : String(5)  not null;	

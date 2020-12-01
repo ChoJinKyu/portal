@@ -1,5 +1,5 @@
 namespace cm;
-using util from '../../util/util-model';
+using util from '../util/util-model';
 
 @cds.persistence.exists 	
 entity Country_View {	

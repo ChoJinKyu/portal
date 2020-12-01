@@ -1,5 +1,5 @@
 namespace dp;	
-using util from '../../util/util-model'; 	
+using util from '../../cm/util/util-model'; 	
 // using {dp as activityMapping} from '../pd/DP_PD_ACTIVITY_MAPPING-model';	
 	
 entity Pd_Activity_Mapping {	

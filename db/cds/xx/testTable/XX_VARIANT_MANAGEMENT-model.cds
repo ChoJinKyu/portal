@@ -1,6 +1,6 @@
 namespace xx;
 
-//using util from '../../util/util-model';
+//using util from '../../cm/util/util-model';
 using {xx as VariantManagement} from './XX_VARIANT_MANAGEMENT-model';
 
 entity Variant_Management_Main {

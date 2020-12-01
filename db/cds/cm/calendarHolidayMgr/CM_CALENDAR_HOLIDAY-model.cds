@@ -1,6 +1,6 @@
 namespace cm;
 
-using util from '../../util/util-model';
+using util from '../util/util-model';
 using { User } from '@sap/cds/common';
 
 entity Calendar_Holiday {

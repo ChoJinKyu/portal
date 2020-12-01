@@ -14,19 +14,19 @@ aspect Managed {
     system_update_dtm: DateTime not null @cds.on.insert: $now  @cds.on.update: $now @title: '시스템수정시간';
 }
 
-annotate managed with {
+annotate Managed with {
   system_create_dtm  @UI.HiddenFilter;
   create_user_id  @UI.HiddenFilter;
   system_update_dtm @UI.HiddenFilter;
   update_user_id @UI.HiddenFilter;
 }
 
-annotate managed with {
+annotate Managed with {
   system_create_dtm  @Core.Immutable;
   create_user_id  @Core.Immutable;
 }
 
-annotate managed with {
+annotate Managed with {
   system_update_dtm @readonly  @odata.on.update : #now;
   system_create_dtm  @readonly  @odata.on.insert : #now;
   create_user_id  @readonly  @odata.on.insert : #user;

@@ -1,6 +1,6 @@
 namespace cm;
 
-using util from '../../util/util-model';
+using util from '../util/util-model';
 using { cm as detail } from './CM_CODE_DTL-model';
 
 entity Code_Mst {
