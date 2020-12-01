@@ -38,14 +38,10 @@
                         <VBox>
                             <Label text="UOM Class :" labelFor="searchUomClass" ></Label>
                             <ComboBox id="searchUomClass" width="100%" selectedKey="" items="{
-                                    path: 'util>/CodeDetails',
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},                                        
-                                        {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
-                                    ]
+                                path: 'uomClass>/UomClass'
                                 }">
                                 <items>
-                                    <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+                                    <core:Item key="{uomClass>uom_class_code}" text="{uomClass>uom_class_code}: {uomClass>uom_class_name}" />
                                 </items>
                             </ComboBox>
                             <layoutData>
@@ -55,14 +51,10 @@
                         <VBox>
                             <Label text="UOM :" labelFor="searchUom" ></Label>
                             <ComboBox id="searchUom" width="100%" selectedKey="" items="{
-                                    path: 'util>/CodeDetails',
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},                                        
-                                        {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
-                                    ]
+                                    path: '/Uom'                                    
                                 }">
                                 <items>
-                                    <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+                                    <core:Item key="{uom_code}" text="{uom_code}" />
                                 </items>
                             </ComboBox>
                             <layoutData>
@@ -73,15 +65,27 @@
                             <Label text="Base Unit :" labelFor="searchBUSegmentButton"></Label>
                             <SegmentedButton id="searchBUSegmentButton" selectedKey="" class="sapUiSmallMarginBottom" width="100%" >
                                 <items>
-                                    <SegmentedButtonItem text="All" key="" width="4.1rem" />
-                                    <SegmentedButtonItem text="Yes" key="Y" width="4.1rem" />
-                                    <SegmentedButtonItem text="No" key="N" width="4.1rem" />                                    
+                                    <SegmentedButtonItem text="All" key="all" width="4.1rem" />
+                                    <SegmentedButtonItem text="Yes" key="true" width="4.1rem" />
+                                    <SegmentedButtonItem text="No" key="false" width="4.1rem" />                                    
                                 </items>
                             </SegmentedButton>
                             <layoutData>
                                 <layout:GridData span="XL6 L6 M12 S12" />
                             </layoutData>
                         </VBox>
+                        <!-- <VBox>
+                            <Label text="Base Unit :" labelFor="searchBUSegmentButton"></Label>
+                            <ComboBox id="searchBUSegmentButton" selectedKey=""
+                                                    width="auto">
+                                                    <core:Item key="" text="All"/>
+                                                    <core:Item key="true" text="Yes"/>                                                            
+                                                    <core:Item key="false" text="No"/>
+                            </ComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL1 L1 M3 S3" />
+                            </layoutData>
+                        </VBox> -->
                     </form:content>
                 </form:SimpleForm>
             </f:DynamicPageHeader>
@@ -144,8 +148,9 @@
                             <cells>
                                 <ObjectIdentifier text="{list>uom_code}"/>
                                 <ObjectIdentifier text="{list>commercial_uom_code}"/>
-                                <ObjectIdentifier text="{list>comercial_uom_name}"/>
-                                <ObjectIdentifier text="{list>base_unit_flag}"/>
+                                <ObjectIdentifier text="{list>comercial_uom_name}"/>                                
+                                <ObjectStatus 
+                                    icon="{= ${list>base_unit_flag} === true ? 'sap-icon://accept' : ''}"/>
                                 <ObjectIdentifier text="{list>uom_class_code}"/>
                                 <ObjectIdentifier text="{list>technical_uom_code}"/>
                                 <ObjectIdentifier text="{list>technical_uom_name}"/>                                
