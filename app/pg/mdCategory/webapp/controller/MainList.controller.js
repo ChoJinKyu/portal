@@ -114,45 +114,43 @@ sap.ui.define([
 		 * @public
 		 */
 		onPageSearchButtonPress : function (oEvent) {
-			// if (oEvent.getParameters().refreshButtonPressed) {
-			// 	// Search field's 'refresh' button has been pressed.
-			// 	// This is visible if you select any master list item.
-			// 	// In this case no new search is triggered, we only
-			// 	// refresh the list binding.
-			// 	this.onRefresh();
-			// } else {
-			// 	var aTableSearchState = this._getSearchStates();
-			// 	this._applySearch(aTableSearchState);
-            // }
+			if (oEvent.getParameters().refreshButtonPressed) {
+				// Search field's 'refresh' button has been pressed.
+				// This is visible if you select any master list item.
+				// In this case no new search is triggered, we only
+				// refresh the list binding.
+				this.onRefresh();
+			} else {
 				var aTableSearchState = this._getSearchStates();
 				this._applySearch(aTableSearchState);
+            }
+				// var aTableSearchState = this._getSearchStates();
+				// this._applySearch(aTableSearchState);
 		},
 
 		onMainTableAddButtonPress: function(oEvent){
-            // var oTable = this.byId("mainTable"),
-			// 	oModel = this.getModel("list");
-			// oModel.addRecord({
-			// 	"tenant_id": "L2100",
-			// 	"chain_code": "CM",
-			// 	"language_code": "",
-			// 	"message_code": "",
-			// 	"message_type_code": "LBL",
-			// 	"message_contents": "",
-			// 	"local_create_dtm": new Date(),
-            //     "local_update_dtm": new Date()
-            // }, 0);
+            var oTable = this.byId("mainTable"),
+				oModel = this.getModel("list");
+			oModel.addRecord({
+				"tenant_id": "L2100",
+				"company_code": "C100",
+				"org_type_code": "BU",
+				"org_code": "L210000000",
+				"spmd_category_code": "",
+				"spmd_character_code": "",
+				"spmd_character_code_name": "TEST",
+				"spmd_character_desc": "TEST_DESC",
+				"spmd_character_type_code": "T",
+				// "system_update_dtm": new Date(),
+                "system_update_dtm": new Date()
+            }, 0);
             
-            // oTable.getAggregation('items')[0].getCells()[1].getItems()[0].setVisible(false);
-            // oTable.getAggregation('items')[0].getCells()[1].getItems()[0].setVisible(false);
-            // oTable.getAggregation('items')[0].getCells()[1].getItems()[1].setVisible(true);
-            // oTable.getAggregation('items')[0].getCells()[2].getItems()[0].setVisible(false);
-            // oTable.getAggregation('items')[0].getCells()[2].getItems()[1].setVisible(true);
-            // oTable.getAggregation('items')[0].getCells()[3].getItems()[0].setVisible(false);
-            // oTable.getAggregation('items')[0].getCells()[3].getItems()[1].setVisible(true);
-            // oTable.getAggregation('items')[0].getCells()[4].getItems()[0].setVisible(false);
-            // oTable.getAggregation('items')[0].getCells()[4].getItems()[1].setVisible(true);
-            // oTable.getAggregation('items')[0].getCells()[5].getItems()[0].setVisible(false);
-            // oTable.getAggregation('items')[0].getCells()[5].getItems()[1].setVisible(true);
+            oTable.getAggregation('items')[0].getCells()[1].getItems()[0].setVisible(false);
+            oTable.getAggregation('items')[0].getCells()[1].getItems()[1].setVisible(true);
+            oTable.getAggregation('items')[0].getCells()[2].getItems()[0].setVisible(false);
+            oTable.getAggregation('items')[0].getCells()[2].getItems()[1].setVisible(true);
+            oTable.getAggregation('items')[0].getCells()[4].getItems()[0].setVisible(false);
+            oTable.getAggregation('items')[0].getCells()[4].getItems()[1].setVisible(true);
             
 		},
         onMainTableSaveButtonPress: function(){
@@ -190,7 +188,7 @@ sap.ui.define([
 			var oView = this.getView(),
 				oModel = this.getModel("list");
             oView.setBusy(true);
-            debugger;
+            
 			oModel.setTransactionModel(this.getModel());
 			oModel.read("/MdCategoryItem", {
 				filters: aTableSearchState,
