@@ -302,9 +302,7 @@
                                             <Text text="{reqm_quantity}"></Text>
                                             <Text text="{currency_unit}"></Text>
                                             <Text text="{mi_base_reqm_quantity}"></Text>
-                                            <Text text="{currency_unit}"></Text>
-                                            <Text text="{mi_base_reqm_quantity}"></Text>
-                                            <Text text="{quantity_unit}"></Text>         
+                                            <Text text="{currency_unit}"></Text>       
                                             <Text text="{exchange}"></Text>         
                                             <Text text="{termsdelv}"></Text>         
                                             <Text text="{= ${use_flag}===true?'예':'아니오'}"></Text>  

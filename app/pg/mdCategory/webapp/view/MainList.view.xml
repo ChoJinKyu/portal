@@ -95,7 +95,7 @@
                         <ColumnListItem>
                             <cells>
                                 <HBox align="Center">
-                                    <Text text="{list>spmd_character_sort_seq}"></Text>
+                                    <Text text="{list>spmd_character_serial_no}"></Text>
                                 </HBox>
                                 <HBox>
                                     <Text text="{list>spmd_character_code_name}" visible="true"></Text>

@@ -1,3 +1,12 @@
+/**
+ * Note : 데이타가 한건도 없을때 시작점 다음 값들을 셋팅해야한다.
+ * tenant_id, company_code, org_type_code, org_code 
+ * 1. 초기 신규 작성시 선택해야할 값들이 정해져 있지 않음.
+ * 
+ * 2. 수정사항 상세페이지에서의 삭제
+ * 3. 상세 페이지에서 다른테이블 batch 작없이 트랜젝션 보장확인 재확인 필요 
+ * 
+ */
 sap.ui.define([
 	"./BaseController",
 	"sap/ui/core/routing/History",
@@ -69,7 +78,7 @@ sap.ui.define([
 		_onCreateModeMetadataLoaded: function() {
 			console.group("_onCreateModeMetadataLoaded");
 			this.getView().getModel().setUseBatch(true);
-			this.getView().getModel().setDeferredGroups(["pgmiGroup"]);
+			this.getView().getModel().setDeferredGroups(["pgmiGroup","deleteGroup"]);
             
             this.getView().getModel().setChangeGroups({
 			  "MIMaterialCodeList": {
@@ -322,8 +331,8 @@ sap.ui.define([
 			console.group("onMainTableCreate");
 
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-			
-			//note수정 검색한 값을 기준으로 데이타를 수정해야한다. 
+
+			//Note : 수정 검색한 값을 기준으로 데이타를 수정해야한다. 
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
 				tenant_id: "L2100",
