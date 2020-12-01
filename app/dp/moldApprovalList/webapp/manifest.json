@@ -193,10 +193,17 @@
           ]
         },
         {
-          "pattern": "PssaCreateObject/{company}/{plant}",
+          "pattern": "BeaCreateObject/{company}/{plant}",
           "name": "beaCreateObject",
           "target": [
             "beaCreateObject"
+          ]
+        },
+        {
+          "pattern": "BeaObject/{approval_number}",
+          "name": "beaObject",
+          "target": [
+            "beaObject"
           ]
         },
         {
@@ -220,11 +227,17 @@
           "viewLevel": 2,
           "title": "{i18n>mainObjectViewTitle}"
         },
-         "budgetReportObject": {
-          "viewName": "BudgetReportObject",
-          "viewId": "budgetReportObject",
+         "beaCreateObject": {
+          "viewName": "BeaCreateObject",
+          "viewId": "beaCreateObject",
           "viewLevel": 2,
-          "title": "{i18n>budgetReportObjectTitle}"
+          "title": "{i18n>beaCreateObjectTitle}"
+        },
+         "beaObject": {
+          "viewName": "BeaObject",
+          "viewId": "beaObject",
+          "viewLevel": 2,
+          "title": "{i18n>beaObjectTitle}"
         },
          "pssaCreateObject": {
           "viewName": "PssaCreateObject", 

@@ -1,0 +1,192 @@
+<core:FragmentDefinition
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:uxap="sap.uxap"
+    xmlns:layout="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:core="sap.ui.core">
+
+
+	<uxap:ObjectPageLayout                    
+                    toggleHeaderOnTitleClick="true"
+                    alwaysShowContentHeader="true"
+                    preserveHeaderStateOnScroll="false"
+                    headerContentPinnable="true"
+                    isChildPage="true"
+                    upperCaseAnchorBar="false"
+                    showTitleInHeaderContent="true"
+                    showEditHeaderButton="true"
+                    showFooter="false">
+                    <uxap:headerTitle>
+                        <uxap:ObjectPageDynamicHeaderTitle>
+                            <uxap:expandedHeading>
+                                <Title text="{i18n>appTitle}" wrapping="true"/>
+                            </uxap:expandedHeading>
+                            <uxap:snappedHeading>
+                                <Title text="{i18n>appTitle}" wrapping="true"/>
+                            </uxap:snappedHeading>
+                            <uxap:snappedTitleOnMobile>
+                                <Title text="{i18n>appTitle}"/>
+                            </uxap:snappedTitleOnMobile>
+
+                            <uxap:navigationActions>
+                                <OverflowToolbarButton
+                                    id="pageEnterFullScreenButton"
+                                    type="Transparent"
+                                    icon="sap-icon://full-screen"
+                                    press="onPageEnterFullScreenButtonPress"
+                                    tooltip="Enter Full Screen Mode"
+                                    visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
+                                <OverflowToolbarButton
+                                    id="pageExitFullScreenButton"
+                                    type="Transparent"
+                                    icon="sap-icon://exit-full-screen"
+                                    press="onPageExitFullScreenButtonPress"
+                                    tooltip="Exit Full Screen Mode"
+                                    visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
+                                <OverflowToolbarButton
+                                    id="pageNavBackButton"
+                                    type="Transparent"
+                                    icon="sap-icon://decline"
+                                    text="back"
+                                    tooltip="back to the list"
+                                    press=".onPageNavBackButtonPress"
+                                    visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                            </uxap:navigationActions>
+                        </uxap:ObjectPageDynamicHeaderTitle>
+                    </uxap:headerTitle>
+                    <uxap:headerContent></uxap:headerContent>
+                    <uxap:sections>
+                        <uxap:ObjectPageSection
+                            id="pageSectionChangeMain"
+                            titleUppercase="false"
+                            title="{i18n>appTitle}">
+                            <uxap:subSections>
+                                <uxap:ObjectPageSubSection id="pageSubSection1"></uxap:ObjectPageSubSection>
+                            </uxap:subSections>
+                        </uxap:ObjectPageSection>
+                    </uxap:sections>
+                    <uxap:sections>
+                        <uxap:ObjectPageSection titleUppercase="false" title="Material Property">
+                            <uxap:subSections>
+                                <uxap:ObjectPageSubSection>                                       
+                                       <!-- <core:Fragment id="midChange" fragmentName="pg.mi.view.Change" type="XML"/>  -->
+                                       <!-- <core:Fragment id="midDisplay" fragmentName="pg.mi.view.Display" type="XML" visible="false"/>  -->
+                                    <form:SimpleForm
+                                        id="mainObjectForm1Edit"
+                                        editable="true"
+                                        layout="ColumnLayout"
+                                        columnsM="2"
+                                        columnsL="3"
+                                        columnsXL="4">
+                                        <!-- {midObjectData>/mi_material_code} enabled="{midObjectView>/pageMode}"-->
+                                        <Label text="시황자재코드" design="Bold" class="sapMLabelNoText" required="true" labelFor="inputMaterialCode"/>
+                                        <Input id="inputMaterialCode"
+                                        placeholder="자재코드 입력"
+                                        value="{ 
+                                            path : '/text', 
+                                            type : 'sap.ui.model.type.String', 
+                                            constraints : { 
+                                                minLength : 1, 
+                                                maxLength : 40 
+                                        }}"
+                                        class="sapUiSmallMarginEnd"
+                                        />
+                                        <Button
+                                            id="buttonMaterialCheck"
+                                            width="9em"
+                                            text="중복Check"
+                                            press=".onMaterialCodeCheckOpen"/> 
+
+                                        <Label text="Category 명" design="Bold" class="sapMLabelNoText" required="true" labelFor="comboBoxCategory_code"/>
+                                        <ComboBox
+                                            id="comboBoxCategory_code"
+                                            selectedKey="{midObjectData>/category_code}"
+                                            items="{path: 'jMICategoryView>/', templateShareable:false}" 
+                                            required="true"
+                                            placeholder="-선택하세요-">
+                                            <core:Item key="{jMICategoryView>category_code}" text="{jMICategoryView>category_text}" />
+                                        </ComboBox>
+                                        <Label text="사용여부" design="Bold" class="sapMLabelNoText"/>
+                                        <Switch 
+                                        id="switchUse_flag" >
+                                            <layoutData>
+                                                <FlexItemData growFactor="1"/>
+                                            </layoutData>
+                                        </Switch>
+
+                                        </form:SimpleForm>                                       
+                                </uxap:ObjectPageSubSection>
+                            </uxap:subSections>
+                        </uxap:ObjectPageSection>
+                    </uxap:sections>
+                    <uxap:sections>
+                        <uxap:ObjectPageSection title="Material Language Manage">
+                            <uxap:subSections>
+                                <uxap:ObjectPageSubSection>
+                                    <uxap:blocks>
+                                        
+                                        <!-- items="{path : '/MIMaterialCodeText',filters: [{path: 'mi_material_code', operator: 'EQ', value1: '{= ${midObjectData>/mi_material_code}'}]}"
+                                        updateFinished="onMitTableUpdateFinished"
+                                        Note : mi_material_code 전달 받은 값으로 수정 
+                                         -->  
+                                         <Table
+                                                id="midTableChange" 
+                                                items="{jCodeText>/}"
+                                                mode="MultiSelect"
+                                                width="100%">
+                                                <headerToolbar>
+                                                    <OverflowToolbar>
+                                                        <content>
+                                                            <ToolbarSpacer/>
+                                                            <Button id="buttonMidTableCreate" text="Add" type="Transparent" press=".onMidTableCreate"/>
+                                                            <Button id="buttonMidTableDelete" text="Delete" type="Transparent" press=".onMidTableDelete"/>
+                                                        </content>
+                                                    </OverflowToolbar>
+                                                </headerToolbar>
+                                                <columns>
+                                                    <Column hAlign="Center" width="50px">
+                                                        <header>
+                                                            <Label text="상태"/>
+                                                        </header>
+                                                    </Column>                                                                           
+                                                    <Column hAlign="Center">
+                                                        <header>
+                                                            <Label text="Language"/>
+                                                        </header>
+                                                    </Column>
+                                                    <Column hAlign="Center">
+                                                        <header>
+                                                            <Label text="자재명"/>
+                                                        </header>
+                                                    </Column>
+                                                </columns>
+                                                <items>
+                                                    <ColumnListItem>
+                                                    <!--   MIMaterialCodeText-->
+                                                        <cells>   
+                                                            <Label text="{jCodeText>opmode}" />                                          
+                                                            <ComboBox
+                                                                id="comboBoxLanguage"
+                                                                selectionChange=".onComboBoxLanguageChange"
+                                                                change=".onComboBoxLanguageChange"
+                                                                selectedKey="{jCodeText>language_code}"
+                                                                items="{
+                                                                    path: 'jLanguageView>/',                                                                                                                            
+                                                                    templateShareable:false}"
+                                                                placeholder="-선택하세요-">
+                                                                <core:Item key="{jLanguageView>code}" text="{jLanguageView>code_name}" />                                                                    
+                                                            </ComboBox>
+                                                            <Input value="{jCodeText>mi_material_code_name}" />
+                                                        </cells>
+                                                    </ColumnListItem>
+                                                </items>
+                                            </Table>  
+                                    </uxap:blocks>
+                                </uxap:ObjectPageSubSection>
+                            </uxap:subSections>
+                        </uxap:ObjectPageSection>
+                    </uxap:sections>
+                </uxap:ObjectPageLayout>
+
+</core:FragmentDefinition>

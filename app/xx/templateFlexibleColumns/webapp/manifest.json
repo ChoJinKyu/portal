@@ -139,11 +139,11 @@
       ],
       "targets": {
           "mainObject": {
-              "viewName": "MainList",
+              "viewName": "TemplateMainList",
               "controlAggregation": "beginColumnPages"
           },
           "midObject": {
-              "viewName": "MidObject",
+              "viewName": "TemplateMidObject",
               "controlAggregation": "midColumnPages"
           },
           "notFound": {

@@ -100,7 +100,7 @@ sap.ui.define([
             this._oTransactionModel.read(sPath, jQuery.extend(oParameters, {
                 success: function (oData) {
                     that._transactionPath = sPath;
-                    that.setData(oData, false, that._oTransactionModel.oData);
+                    that.setData(oData, sPath, false);
                     if (successHandler)
                         successHandler.apply(that._oTransactionModel, arguments);
                 }
