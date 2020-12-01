@@ -50,7 +50,7 @@
   },
   "sap.ui5": {
     "rootView": {
-      "viewName": "pg.mm.view.App",
+      "viewName": "pg.mm.view.MidObject",
       "type": "XML",
       "async": true,
       "id": "app"
@@ -116,7 +116,7 @@
       "routes": [
           {
               "pattern": ":layout:",
-              "name": "mainPage",
+              "name": "midPage",
               "target": [
                   "mainObject"
               ]

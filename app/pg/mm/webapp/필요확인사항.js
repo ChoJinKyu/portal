@@ -30,6 +30,8 @@ sap.m.PopinDisplay.Block Inside the table popin, header is displayed at the firs
 sap.m.PopinDisplay.Inline Inside the table popin, cell content is displayed next to the header in the same line.
 sap.m.PopinDisplay.WithoutHeader Inside the table popin, only the cell content will be visible.
 
+OrgTenantView Tent정보 
+
 테이블 리스트 
 https://lgcommondev-workspaces-ws-k8gvf-app1.jp10.applicationstudio.cloud.sap/pg/mi/webapp/srv-api/odata/v2/pg.marketIntelligenceService/MIMaterialCodeBOMManagement/?$filter=material_description eq 'Cathode Active Material LCH20D' 
 
@@ -62,3 +64,160 @@ entity MI_Material_Code_Bom_Mngt {
 
 
 https://lgcommondev-workspaces-ws-k8gvf-app1.jp10.applicationstudio.cloud.sap/pg/mi/webapp/srv-api/odata/v2/pg.marketIntelligenceService/MIMaterialCodeBOMManagement/?$format=json
+
+
+manifest.json back
+
+{
+  "_version": "1.12.0",
+  "sap.app": {
+    "id": "pg.mm",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "applicationVersion": {
+      "version": "1.0.0"
+    },
+    "ach": "set-ach",
+    "resources": "resources.json",
+    "dataSources": {
+      "mainService": {
+        "uri": "srv-api/odata/v2/pg.marketIntelligenceService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
+      },
+      "commonUtilService": {
+        "uri": "srv-api/odata/v2/util.CommonService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
+      }
+    }
+  },
+  "sap.fiori": {
+    "registrationIds": [],
+    "archeType": "transactional"
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "sap-icon://task",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "rootView": {
+      "viewName": "pg.mm.view.App",
+      "type": "XML",
+      "async": true,
+      "id": "app"
+    },
+    "dependencies": {
+      "minUI5Version": "1.66.0",
+      "libs": {
+        "sap.ui.core": {},
+        "sap.m": {},
+        "sap.f": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "handleValidation": true,
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "pg.mm.i18n.i18n"
+        }
+      },
+      "util": {
+        "dataSource": "commonUtilService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "useBatch": true
+        }
+      },
+      "": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": true,
+          "useBatch": true
+        }
+      }
+    },
+    "resourceRoots": {
+      "ext.lib": "../../../lib"
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "viewPath": "pg.mm.view",
+        "controlId": "fcl",
+				"transition": "slide",
+        "bypassed": {
+          "target": [
+            "notFound"
+          ]
+        },
+        "async": true
+      },
+      "routes": [
+          {
+              "pattern": ":layout:",
+              "name": "mainPage",
+              "target": [
+                  "mainObject"
+              ]
+          },
+          {  
+              "pattern": "midObject/{layout}/{tenant_id}/{company_code}/{org_type_code}/{org_code}/{mi_material_code}",
+              "name": "midPage",
+              "target": [
+                  "mainObject",
+                  "midObject"
+              ]
+          }
+      ],
+      "targets": {
+          "mainObject": {
+              "viewName": "MainList",
+              "controlAggregation": "beginColumnPages"
+          },
+          "midObject": {
+              "viewName": "MidObject",
+              "controlAggregation": "midColumnPages"
+          },
+          "notFound": {
+            "viewName": "MidObjectNotFound",
+            "viewId": "notFound"
+          }
+      }
+    }
+  },
+  "sap.cloud": {
+    "public": true,
+    "service": "sppCap_ui_dev"
+  }
+}

@@ -39,12 +39,7 @@ sap.ui.define([
             //pageMode 등록화면에서의 (true 신규, false 수정화면)
             var midObjectView = new JSONModel({
                 busy: true,
-                delay: 0,
-                mode: false,
-                pageMode: false,
-                mcheck: false,
-                languageLength : 0,
-                textDataLength : 0
+                delay: 0
             });
 
             var midObjectData = new JSONModel({
@@ -56,8 +51,7 @@ sap.ui.define([
                 category_code: "",
                 mi_material_code: "",
                 mi_material_code_name: "",
-                use_flag: true,
-                filters: []
+                use_flag: true
             });
 
             // JSON dummy data
