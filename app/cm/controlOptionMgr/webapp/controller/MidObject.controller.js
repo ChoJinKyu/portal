@@ -163,6 +163,37 @@ sap.ui.define([
     onMidTableAddButtonPress: function () {
       var oTable = this.byId("midTable"),
         oDetailsModel = this.getModel("details");
+
+      var transition = function (f) {
+        return function (v) {
+          return f(v);
+        };
+      };
+
+      var utc = transition(function (lDate) {
+        var yyyy = lDate.getFullYear() + "";
+        var mm = lDate.getMonth() + 1 + "";
+        var dd = lDate.getDate() + "";
+        var hh = lDate.getHours() + "";
+        var mi = lDate.getHours() + "";
+        var ss = lDate.getSeconds() + "";
+        // YYYY-MM-DDTHH:mm:ss.sssZ
+        return new Date([
+          yyyy,
+          mm.length == 1 ? "0" + mm : mm,
+          dd.length == 1 ? "0" + dd : dd
+        ].join("-") + (function () {
+          if (!hh && !mi && !ss) {
+            return "";
+          }
+          return "T" + [
+            hh.length == 1 ? "0" + hh : hh,
+            mi.length == 1 ? "0" + mi : mi,
+            ss.length == 1 ? "0" + ss : ss,
+          ].join(":");
+        })());
+      });
+
       oDetailsModel.addRecord({
         "tenant_id": this._sTenantId || "",
         "control_option_code": this._sControlOptionCode || "",
@@ -170,11 +201,12 @@ sap.ui.define([
         "org_type_code": "*",
         // "control_option_level_val": "",
         // "control_option_val": "",
-        "start_date": new Date(), //"2021-11-20",
-        "end_date": new Date(), //"2021-11-21",
-        "local_create_dtm": new Date(),
-        "local_update_dtm": new Date()
+        "start_date": utc(new Date()),
+        "end_date": utc(new Date()),
+        "local_create_dtm": utc(new Date()),
+        "local_update_dtm": utc(new Date())
       }, 0);
+
     },
 
     onMidTableDeleteButtonPress: function () {
