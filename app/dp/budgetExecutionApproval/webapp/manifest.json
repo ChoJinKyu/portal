@@ -179,13 +179,6 @@
           ]
         },
         {
-          "pattern": "beaCreateObject/{company}/{plant}",
-          "name": "beaCreateObject",
-          "target": [
-            "beaCreateObject"
-          ]
-        },
-        {
           "pattern": "beaObject/{approval_number}",
           "name": "beaObject",
           "target": [
@@ -197,12 +190,6 @@
          "beaCreateObject": {
           "viewName": "BeaCreateObject",
           "viewId": "beaCreateObject",
-          "viewLevel": 1,
-          "title": "{i18n>beaCreateObjectTitle}"
-        },
-         "app": {
-          "viewName": "App",
-          "viewId": "app",
           "viewLevel": 1,
           "title": "{i18n>beaCreateObjectTitle}"
         },
