@@ -597,7 +597,7 @@ sap.ui.define([
 			var oView = this.getView(),
 				oModel = this.getModel("list");
 			oView.setBusy(true);
-			oModel.setTransactionModel(this.getModel());
+            oModel.setTransactionModel(this.getModel());
 			oModel.read("/Approvals", {
 				filters: aSearchFilters,
 				success: function(oData){
@@ -613,14 +613,15 @@ sap.ui.define([
             var aPlant = this.getView().byId("searchPlant"+sSurffix).getSelectedItems();
             var sDateFrom = this.getView().byId("searchRequestDate"+sSurffix).getDateValue();
             var sDateTo = this.getView().byId("searchRequestDate"+sSurffix).getSecondDateValue();
-
+            var sSubject = this.getView().byId("searchSubject").getValue();
 			var sModel = this.getView().byId("searchModel").getValue().trim();
             var	sPart = this.getView().byId("searchMoldPartNo").getValue().trim();
-            
             var	sStatus = this.getView().byId("searchStatus").getSelectedKey();
-            
+
+
             var aSearchFilters = [];
-            var companyFilters = [];
+            console.log(sStatus);
+            console.log(aCompany);
             
             if(aCompany.length > 0){
                 var _tempFilters = [];
@@ -688,14 +689,11 @@ sap.ui.define([
 				aSearchFilters.push(new Filter("mold_spec_status_code", FilterOperator.EQ, sStatus));
             }
             
-            console.log(aSearchFilters);
-
 			return aSearchFilters;
 		},
 		
 		
         getFormatDate: function (date){
-            console.log(date);
             var year = date.getFullYear();              //yyyy
             var month = (1 + date.getMonth());          //M
             month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
