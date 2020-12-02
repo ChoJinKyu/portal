@@ -445,10 +445,23 @@ sap.ui.define([
                     }),
 					oLanguageCode, 
 					new Input({
-                        value: "{details>uom_class_name}"                        
+                        value: {
+                            path: 'details>uom_class_name',
+                            type: 'sap.ui.model.type.String',
+                            constraints: {
+                                maxLength: 20
+                            }
+                        },
+                        required : true                        
 					}), 
 					new Input({
-						value: "{details>uom_class_desc}"
+						value: {
+                            path: 'details>uom_class_desc',
+                            type: 'sap.ui.model.type.String',
+                            constraints: {
+                                maxLength: 50
+                            }
+                        }
 					})
 				]
             });
