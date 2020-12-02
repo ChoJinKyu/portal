@@ -47,7 +47,7 @@ sap.ui.define([
 
                 //this._doInitTablePerso();
                 
-                //oRouter.getRoute("TargetorgMgrMainView").attachMatched(this._onRouteMatched, this);
+                oRouter.getRoute("TargetorgMgrMainView").attachMatched(this._onRouteMatched, this);
 
                 // this.tabModel();
                 var oMessageManager = sap.ui.getCore().getMessageManager(),
@@ -90,7 +90,6 @@ sap.ui.define([
             
             onSelectedKey: function (oEvent){
                 var oCtx = this.getView().getBindingContext();
-                debugger;
                 this.getRouter().navTo("TargetorgMgrMainView", {
                     //tabkeyId: oCtx.getProperty("tabkeyId"),
                     "?query": {

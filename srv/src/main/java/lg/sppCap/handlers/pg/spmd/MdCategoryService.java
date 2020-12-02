@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.time.Instant;
 
+//import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,6 +132,7 @@ public class MdCategoryService implements EventHandler {
                 charCode = item.getSpmdCharacterCode();
 
                 if ("".equals(charCode) || charCode == null) {
+                //if (StringUtils.isEmpty(charCode)) {
 
                     // DB처리
                     try {
@@ -156,7 +158,8 @@ public class MdCategoryService implements EventHandler {
 
                 //charCode = item.getSpmdCharacterCode();
 
-                charSerialNo = cateCode.substring(1)+""+charCode.substring(1);
+                //charSerialNo = cateCode.substring(1)+""+charCode.substring(1);
+                charSerialNo = cateCode.substring(1)+""+getFillZero(String.valueOf(item.getSpmdCharacterSortSeq()), 3);
 
                 log.info("###[LOG-11]=> ["+charCode+"] ["+charSerialNo+"] ["+Long.valueOf(charSerialNo).longValue()+"]");
 
@@ -231,5 +234,38 @@ public class MdCategoryService implements EventHandler {
         log.info("### Item Delete [After] ###");
     }
 
+
+	/**
+	 *
+	 * 전달받은 문자열에 지정된 길이에 맞게 0을 채운다
+	 *
+	 * @param des
+	 * @param size
+	 * @return
+	 */
+	public String getFillZero(String des, int size) {
+		StringBuffer str = new StringBuffer();
+
+		if (des == null) {
+			for (int i = 0; i < size; i++)
+				str.append("0");
+			return str.toString();
+		}
+
+		if (des.trim().length() > size)
+			return des.substring(0, size);
+		else
+			des = des.trim();
+
+		int diffsize = size - des.length();
+
+		for (int i = 0; i < diffsize; i++) {
+			str = str.append("0");
+		}
+
+		str.append(des);
+
+		return str.toString();
+	}
 
 }
