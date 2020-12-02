@@ -1,6 +1,14 @@
-/**1. 테스트 데이타 삭제
- * 2. tenant_id org_code등은 등록화면에서 선택해야한다. 
- */
+/**
+* 1. 화면 레이아웃 추가 작성
+* 2. 데이타 로드 및 테이블 모두 확인
+* 3. 보기 페이지 완성
+* 4. 수정 페이지 테이블 컨트롤 및 Fragment 화면 컨트롤 
+* 5. Fragment 에 대한 리스트 및 연동 작업 
+* 6. 데이타 프로세스 진행 
+* 7. 테스트 데이타 삭제
+* 8. tenant_id org_code등은 등록화면에서 선택해야한다. 
+* 9. 기획서 점검 
+*/
 sap.ui.define([
     "./BaseController",
     "sap/ui/core/routing/History",
@@ -58,8 +66,11 @@ sap.ui.define([
                 org_code : "org_code"
             },
             serviceName : {
-                mIMaterialPriceManagementView: "/MIMaterialPriceManagementView",
-                orgTenantView: "/OrgTenantView",
+                mIMaterialPriceManagement: "/mIMaterialPriceManagement",  //자재리스트
+                mIMaterialCodeBOMManagement: "/MIMaterialCodeBOMManagement",  //mainList
+                orgTenantView: "/OrgTenantView", //관리조직 View
+                currencyUnitView : "/CurrencyUnitView", //통화 View
+                mIMaterialCodeList : "/MIMaterialCodeList" //자재코드 View
             },
             jsonTestData : {
                 values : [{
@@ -80,23 +91,23 @@ sap.ui.define([
                 system_create_dtm: "Admin"
             },
             processMode : {
-                create : "C",
-                view : "V",
-                edit : "E"
+                create : "C", //신규, 
+                view : "V",   //보기
+                edit : "E"    //수정
             },
             pageMode : {
-                edit : "Edit",
-                show : "Show"
+                edit : "Edit", //Change Fragment 호출 상태
+                show : "Show"  //Edit Fragment 호출 상태
             },
             itemMode : {
-                create : "C",
-                read : "R",
-                update : "U",
-                delete : "D"
+                create : "C",  //테이블 아이템 신규등록
+                read : "R",    //테이블 아이템 기존 존재 데이타 로드
+                update : "U",  //업데이트 상태
+                delete : "D"   //삭제 상태 
             },
             odataMode : {
-                yes : "Y",
-                no : "N" 
+                yes : "Y",     //테이블 아이템 이 odata에서 load 한것
+                no : "N"       //json 에서 임으로 생성한 아이템
             },
             midObjectView : {
                 busy: true,
@@ -117,6 +128,32 @@ sap.ui.define([
                 tenant_name : "LG 화확"  
             }          
         },
+
+        /**
+         * Mode : Dev, Qa, Prd  
+         * @private
+         */
+        _controllerMode : function (sMode) {
+            
+            if(sMode == "Dev"){
+                console.log("Dev =======================================")
+                /**
+                 * Note 사용자 세션이나 정보에 다음값이 셋팅 되어 있다는 가정 Test
+                 * Data를 전달 받았을때에는 변경한다. 
+                 */
+                var oUiData = new JSONModel({
+                    tenant_name: this._sso.dept.tenant_name,
+                    create: this._sso.user.name,
+                    createdata: "2020-12-02"
+                });
+                
+                this.setModel(oUiData, "oUiData");
+                this.test_onRoutedThisPage();
+            }else{
+                this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
+            }
+
+        },
         /**
 		 * Called when the midObject controller is instantiated.
 		 * @public
@@ -134,22 +171,13 @@ sap.ui.define([
                 oEvent.getParameter("element").setValueState(ValueState.None);
             });
 
+            
+           
             //pageMode C Create, V View, E Edit
             var oUi = new JSONModel({
                 busy: true,
                 delay: 0,
                 pageMode: this._m.processMode.view
-            });
-
-            /**
-             * Note 사용자 세션이나 정보에 다음값이 셋팅 되어 있다는 가정 Test
-             * Data를 전달 받았을때에는 변경한다. 
-             */
-
-            var oUiData = new JSONModel({
-                tenant_name: this._sso.dept.tenant_name,
-                create: this._sso.user.name,
-                createdata: "2020-12-02"
             });
 
             // JSON dummy data
@@ -167,15 +195,11 @@ sap.ui.define([
                 items: []
             });
 
+            this._controllerMode("Dev");
 
-            //테스트
-            //this.test_onRoutedThisPage();
-
-            //운영
-            //this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
 
             this.setModel(oUi, "oUi");
-            this.setModel(oUiData, "oUiData");
+
 
             console.groupEnd();
         },
@@ -250,12 +274,11 @@ sap.ui.define([
 			// create value help dialog
 			if (!this._valueHelpMaterialDialog) {
 
-                this._valueHelpMaterialDialog = sap.ui.xmlfragment(this._m.fragementId.MaterialDialog, this._m.fragement.MaterialDialog,this);
+                this._valueHelpMaterialDialog = sap.ui.xmlfragment(this._m.fragementId.materialDialog, this._m.fragementPath.materialDialog,this);
                 this.getView().addDependent(this._valueHelpMaterialDialog);
 
 			}                
 			this._openValueHelpMaterialDialog();
-			
 		},
 
 		_openValueHelpMaterialDialog: function () {
@@ -392,18 +415,33 @@ sap.ui.define([
             // this.getView().byId("buttonMidDelete").setEnabled(true);
             // this.getView().byId("buttonSave").setEnabled(true);
 
-           
+           //View Test
+            var oProcessMode = this._m.processMode.view;
+
+            //oArgs tenant_id 를 할당하는 영역.
+            //this._m.midObjectData.tenant_id = oArgs.tenant_id;
+
             oTenant_id = this._m.midObjectData.tenant_id;
+
+            //신규
+            if(oTenant_id.length > 4){
+                oProcessMode = this._m.processMode.create;
+            } else {
+                oProcessMode = this._m.processMode.view;
+            }
+
+
+            // Note : 작업중
 
             var aFilters = [
                 new sap.ui.model.Filter("tenant_id", sap.ui.model.FilterOperator.EQ, oTenant_id)
             ];
 
-            //==================================================================================================================
             this.getView().setBusy(true);
 
             var oMode = this._m.midObjectView.pageMode;
 
+            if( oProcessMode = this._m.processMode.view)
             // if (oArgs.tenant_id == "new") {
             if (oTenant_id == "new") {
                 //신규등록일때 tenant_id, org_code, org_type 를 선택해야한다. 
@@ -456,7 +494,7 @@ sap.ui.define([
             }
 
             //view compoment service load
-
+            //콤보박스 서비스는 xml에서 직접 바인딩 한다. 
             //관리조직 이름 가져오기 
             var sServiceUrl = this._m.serviceName.orgTenantView;
 
@@ -477,30 +515,37 @@ sap.ui.define([
             });
 
 
-            //시황자재 리스트 가져오기 신규가 아닐때에만 로드한다. 
-            var oMIMaterialPriceManagementView = new JSONModel();
+            /*
+            시황자재리스트
+            */
+            var oMIMaterialPriceManagement = new JSONModel();
 
-            if(this._m.processMode!="C"){
-                sServiceUrl = this._m.serviceName.mIMaterialPriceManagementView;
-                oModel.read(sServiceUrl, {
-                    async: false,
-                    filters: aFilters,
-                    success: function (rData, reponse) {
-                        console.log(sServiceUrl + " to json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
-                        
-                        oMIMaterialPriceManagementView.setData(reponse.data.results);
+            // if(this._m.processMode!="C"){
+            sServiceUrl = this._m.serviceName.mIMaterialPriceManagement;
+            oModel.read(sServiceUrl, {
+                async: false,
+                filters: aFilters,
+                success: function (rData, reponse) {
+                    console.log(sServiceUrl + " to json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
+                    
+                    oMIMaterialPriceManagement.setData(reponse.data.results);
 
-                        for(var i=0;i<reponse.data.results.length;i++){
-                            //operation mode : op_mode
-                            //json and odata div  : odata_mode
-                            oMIMaterialPriceManagementView.oData[i].op_mode = this._m.itemMode.read;
-                            oMIMaterialPriceManagementView.oData[i].odata_mode = this._m.odataMode.yes;
-                        }
-
-                        that.getOwnerComponent().setModel(oMIMaterialPriceManagementView, "MIMaterialPriceManagementView");
+                    for(var i=0;i<reponse.data.results.length;i++){
+                        //operation mode : op_mode
+                        //json and odata div  : odata_mode
+                        oMIMaterialPriceManagement.oData[i].op_mode = this._m.itemMode.read;
+                        oMIMaterialPriceManagement.oData[i].odata_mode = this._m.odataMode.yes;
                     }
-                });
-            }
+
+                    that.getOwnerComponent().setModel(oMIMaterialPriceManagement, "MIMaterialPriceManagement");
+                }
+            });
+
+            /*
+            시황자재리스트
+            */
+            var oMIMaterialPriceManagement = new JSONModel();
+    
             //Note 필요 View 자재 선택시에 사용할  벤더, 자재코드, 공급업체(공급업체명), 시황자재 선택, 가격정보 선택 
             //var oMIMaterialPriceManagementView = this.getOwnerComponent().getModel("oMIMaterialPriceManagementView");
 
@@ -511,6 +556,7 @@ sap.ui.define([
                 new sap.ui.model.Filter("org_type_code", sap.ui.model.FilterOperator.EQ, oArgs.org_type_code),
                 new sap.ui.model.Filter("org_code", sap.ui.model.FilterOperator.EQ, oArgs.org_code)
             ];
+
             sServiceUrl = this._m.serviceName.OrgTenantView;
             oModel.read(sServiceUrl, {
                 async: false,
@@ -523,7 +569,6 @@ sap.ui.define([
             });
 
             this.getView().setBusy(false);
-
             console.groupEnd();            
         },
 

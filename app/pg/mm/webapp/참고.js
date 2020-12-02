@@ -37,8 +37,11 @@
                 org_code : "org_code"
             },
             serviceName : {
-                mIMaterialPriceManagementView: "/MIMaterialPriceManagementView",
-                orgTenantView: "/OrgTenantView",
+                mIMaterialPriceManagement: "/mIMaterialPriceManagement",  //자재리스트
+                mIMaterialCodeBOMManagement: "/MIMaterialCodeBOMManagement",  //mainList
+                orgTenantView: "/OrgTenantView", //관리조직 View
+                currencyUnitView : "/CurrencyUnitView", //통화 View
+                mIMaterialCodeList : "/MIMaterialCodeList" //자재코드 View
             },
             jsonTestData : {
                 values : [{
@@ -59,23 +62,23 @@
                 system_create_dtm: "Admin"
             },
             processMode : {
-                create : "C",
-                view : "V",
-                edit : "E"
+                create : "C", //신규, 
+                view : "V",   //보기
+                edit : "E"    //수정
             },
             pageMode : {
-                edit : "Edit",
-                show : "Show"
+                edit : "Edit", //Change Fragment 호출 상태
+                show : "Show"  //Edit Fragment 호출 상태
             },
             itemMode : {
-                create : "C",
-                read : "R",
-                update : "U",
-                delete : "D"
+                create : "C",  //테이블 아이템 신규등록
+                read : "R",    //테이블 아이템 기존 존재 데이타 로드
+                update : "U",  //업데이트 상태
+                delete : "D"   //삭제 상태 
             },
             odataMode : {
-                yes : "Y",
-                no : "N" 
+                yes : "Y",     //테이블 아이템 이 odata에서 load 한것
+                no : "N"       //json 에서 임으로 생성한 아이템
             },
             midObjectView : {
                 busy: true,
