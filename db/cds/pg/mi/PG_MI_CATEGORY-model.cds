@@ -17,7 +17,7 @@
 
 namespace pg;
 
-using util from '../../util/util-model';
+using util from '../../cm/util/util-model';
 using {pg as Categ_Attr} from '../mi/PG_MI_CATEGORY-model';
 
 entity MI_Category {

@@ -1,4 +1,4 @@
 using from './fundingMgr/fundingNotifyMgr-service';
-using from './sup/supplierMaster-service';
-using from './sup/supplierOrg-service';
-using from './sup/supplierRole-service';
+using from './supplierMgr/supplierMaster-service';
+using from './supplierMgr/supplierOrg-service';
+using from './supplierMgr/supplierRole-service';

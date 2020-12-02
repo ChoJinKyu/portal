@@ -17,7 +17,7 @@
 
 namespace pg;
 
-using util from '../../util/util-model';
+using util from '../../cm/util/util-model';
 using {pg as Categ_Hier_Str} from '../mi/PG_MI_CATEGORY_HICHY_STRU-model';
 
 entity MI_Category_Hichy_Stru {

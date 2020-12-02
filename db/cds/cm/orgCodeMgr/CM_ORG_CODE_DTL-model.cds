@@ -1,6 +1,6 @@
 namespace cm;
 
-using util from '../../util/util-model';
+using util from '../util/util-model';
 using { cm as master } from './CM_ORG_CODE_MST-model';
 using { cm as language } from './CM_ORG_CODE_LNG-model';
 

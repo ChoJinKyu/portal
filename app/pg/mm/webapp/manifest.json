@@ -20,7 +20,7 @@
         }
       },
       "commonUtilService": {
-        "uri": "srv-api/odata/v2/util.CommonService/",
+        "uri": "srv-api/odata/v2/cm.util.CommonService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -50,7 +50,7 @@
   },
   "sap.ui5": {
     "rootView": {
-      "viewName": "pg.mm.view.App",
+      "viewName": "pg.mm.view.MidObject",
       "type": "XML",
       "async": true,
       "id": "app"
@@ -115,8 +115,8 @@
       },
       "routes": [
           {
-              "pattern": ":layout:",
-              "name": "mainPage",
+              "pattern": "MidObject",
+              "name": "midPage",
               "target": [
                   "mainObject"
               ]

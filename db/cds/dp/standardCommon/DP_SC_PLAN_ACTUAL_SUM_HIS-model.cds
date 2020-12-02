@@ -1,5 +1,5 @@
 namespace dp;	
-using util from '../../util/util-model';  	
+using util from '../../cm/util/util-model';  	
 // using {dp as planActualHis} from '../standardCommon/DP_SC_PLAN_ACTUAL_SUM_HIS-model';	
 	
 entity Sc_Plan_Actual_Sum_His {	

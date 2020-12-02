@@ -287,7 +287,8 @@ sap.ui.define([
         ///////////////////// Multi Combo box event End //////////////////////////
 
         ///////////////////// ValueHelpDialog section Start //////////////////////////
-
+        /*
+        
         onValueHelpRequested : function (oEvent) {
       
             var path = '';
@@ -310,12 +311,12 @@ sap.ui.define([
                     "cols": [
                         {
                             "label": "Model",
-                            "template": "model"
+                            "template": "mold>model"
                         }
                     ]
                 });
 
-                path = '/Models';
+                path = 'mold>/Models';
                 
                 this._oValueHelpDialog.setTitle('Model');
                 this._oValueHelpDialog.setKey('model');
@@ -338,7 +339,7 @@ sap.ui.define([
                     ]
                 });
 
-                path = '/PartNumbers';
+                path = 'mold>/PartNumbers';
 
                 this._oValueHelpDialog.setTitle('Part No');
                 this._oValueHelpDialog.setKey('part_number');
@@ -385,7 +386,7 @@ sap.ui.define([
             
 
         },
-  
+        */ 
         /**
          * @private 
          * @see 리스트 검색영역 팝업에서 확인버튼 클릭시
@@ -597,7 +598,7 @@ sap.ui.define([
 				oModel = this.getModel("list");
 			oView.setBusy(true);
 			oModel.setTransactionModel(this.getModel());
-			oModel.read("/MoldMasterSpec", {
+			oModel.read("/Approvals", {
 				filters: aSearchFilters,
 				success: function(oData){
 					oView.setBusy(false);
@@ -635,26 +636,26 @@ sap.ui.define([
                 );
             }
 
-            var dateFilters = [];
+            // var dateFilters = [];
 
-            dateFilters.push(
-                new Filter({
-                    path: "mold_spec_register_date",
-                    operator: FilterOperator.BT,
-                    value1: this.getFormatDate(sDateFrom),
-                    value2: this.getFormatDate(sDateTo)
-                })
-            );
+            // dateFilters.push(
+            //     new Filter({
+            //         path: "mold_spec_register_date",
+            //         operator: FilterOperator.BT,
+            //         value1: this.getFormatDate(sDateFrom),
+            //         value2: this.getFormatDate(sDateTo)
+            //     })
+            // );
 
-            dateFilters.push(new Filter("mold_spec_register_date", FilterOperator.EQ, ''));
-            dateFilters.push(new Filter("mold_spec_register_date", FilterOperator.EQ, null));
+            // dateFilters.push(new Filter("mold_spec_register_date", FilterOperator.EQ, ''));
+            // dateFilters.push(new Filter("mold_spec_register_date", FilterOperator.EQ, null));
 
-            aSearchFilters.push(
-                new Filter({
-                    filters: dateFilters,
-                    and: false
-                })
-            );
+            // aSearchFilters.push(
+            //     new Filter({
+            //         filters: dateFilters,
+            //         and: false
+            //     })
+            // );
 
 			if (sModel) {
 				aSearchFilters.push(new Filter("model", FilterOperator.StartsWith, sModel));

@@ -17,7 +17,7 @@
 
 namespace pg;
 
-using util from '../../util/util-model';
+using util from '../../cm/util/util-model';
 using {pg as Indicator_Condition} from '../monitor/PG_MONITOR_INDICATOR_CONDITION-model';
 
 entity Monitor_Indicator_Condition {

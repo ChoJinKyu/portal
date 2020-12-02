@@ -202,13 +202,19 @@ sap.ui.define([
 		},
 		
 		_getSearchStates: function(){
-			// var sChain = this.getView().byId("searchChain").getSelectedKey(),
-			// 	sKeyword = this.getView().byId("searchKeyword").getValue(),
-			// 	sUsage = this.getView().byId("searchUsageSegmentButton").getSelectedKey();
+            var sUomClass = this.getView().byId("searchUomClass").getSelectedKey(),			
+                sUom = this.getView().byId("searchUom").getSelectedKey(),
+			 	sBU = this.getView().byId("searchBUSegmentButton").getSelectedKey();
 			
 			var aSearchFilters = [];
-			// if (sChain && sChain.length > 0) {
-			// 	aSearchFilters.push(new Filter("chain_code", FilterOperator.EQ, sChain));
+			if (sUomClass && sUomClass.length > 0) {
+				aSearchFilters.push(new Filter("uom_class_code", FilterOperator.EQ, sUomClass));
+            }
+            if (sUom && sUom.length > 0) {
+				aSearchFilters.push(new Filter("uom_code", FilterOperator.EQ, sUom));
+            }
+            // if (sBU && sBU.length > 0) {
+			// 	aSearchFilters.push(new Filter("base_unit_flag", FilterOperator.EQ, sBU));
 			// }
 			// if (sKeyword && sKeyword.length > 0) {
 			// 	aSearchFilters.push(new Filter({
@@ -219,22 +225,16 @@ sap.ui.define([
 			// 		and: false
 			// 	}));
 			// }
-			// if(sUsage != "all"){
-			// 	switch (sUsage) {
-			// 		case "site":
-			// 		aSearchFilters.push(new Filter("site_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 		case "company":
-			// 		aSearchFilters.push(new Filter("company_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 		case "org":
-			// 		aSearchFilters.push(new Filter("organization_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 		case "user":
-			// 		aSearchFilters.push(new Filter("user_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 	}
-            // }
+			if(sBU != "all"){
+				switch (sBU) {					
+					case "true":
+					aSearchFilters.push(new Filter("base_unit_flag", FilterOperator.EQ, sBU));
+					break;
+					case "false":
+					aSearchFilters.push(new Filter("base_unit_flag", FilterOperator.EQ, sBU));
+					break;					
+				}
+            }
             
 			return aSearchFilters;
 		},

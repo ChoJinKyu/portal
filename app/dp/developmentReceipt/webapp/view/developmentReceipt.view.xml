@@ -214,7 +214,7 @@
                     </form:SimpleForm>
                 </f:expandedContent>
                 <f:actions>
-                    <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onPageSearchButtonPress" />
+                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
                 </f:actions>
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -496,7 +496,7 @@
                         <Label text="Use Y/N"/>
                         </VBox>
                         <table:template>
-                            <Switch state="{list>t_est_use_flag}" customTextOn="Yes" customTextOff="No">
+                            <Switch state="{list>t_est_use_flag}" customTextOn="Yes" customTextOff="No" enabled="{mode>/editFlag}">
                                 <layoutData>
                                     <FlexItemData growFactor="1" />
                                 </layoutData>
@@ -602,7 +602,10 @@
                         <Label text="Developer" required="true"/>
                         </VBox>
                         <table:template>
-                            <Text id="mold_developer_id" text="{list>mold_developer_id}"/>
+                            <VBox>
+                            <Text id="mold_developer_id" text="{list>mold_developer_id}" visible="{mode>/viewFlag}" />
+                            <SearchField id="searchField" value="{list>mold_developer_id}" width="100%" placeholder="Search employee" visible="{mode>/editFlag}" search=".onMoldMstTableUserSearch" />
+                            </VBox>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldRemarkColumn" width="20em" hAlign="Center">
@@ -675,8 +678,8 @@
         <f:footer>
             <OverflowToolbar>
                 <ToolbarSpacer />
-				<Button text="Save" type="Emphasized" press=".onPageSaveButtonPress" />
-				<Button text="Cancel" type="Transparent" press=".onPageCancelEditButtonPress"/>
+				<Button text="{I18N>/SAVE}" type="Emphasized" press=".onPageSaveButtonPress" />
+				<Button text="{I18N>/CANCEL}" type="Transparent" press=".onPageCancelEditButtonPress"/>
             </OverflowToolbar>
         </f:footer>
     </f:DynamicPage>

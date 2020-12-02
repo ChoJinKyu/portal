@@ -1,5 +1,5 @@
 namespace dp;	
-using util from '../../util/util-model'; 	
+using util from '../../cm/util/util-model'; 	
 // using {dp as categoryMember} from '../pd/DP_PD_PART_CATEGORY_MEMBER-model';	
 	
 entity Pd_Part_Category_Member {	

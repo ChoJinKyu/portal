@@ -256,6 +256,5 @@ sap.ui.define([
       }).activate();
     }
 
-
   });
 });

@@ -18,5 +18,10 @@
         "name": "Inline Edit Table for ext.lib.model.v2.ODataModel",
         "icon": "sap-icon://source-code",
         "viewName": "example4"
+    },
+    {
+        "name": "Extended Controls - e.g. Code Combo",
+        "icon": "sap-icon://source-code",
+        "viewName": "example5"
     }
 ]

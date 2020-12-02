@@ -1,5 +1,5 @@
 namespace dp;	
-using util from '../../util/util-model';  	
+using util from '../../cm/util/util-model';  	
 // using {dp as materialScManage} from '../standardCommon/DP_SC_MATERIAL_SC_MANAGE-model';	
 	
 entity Sc_Material_Sc_Manage {	

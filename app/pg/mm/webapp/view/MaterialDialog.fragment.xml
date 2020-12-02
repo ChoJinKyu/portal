@@ -1,0 +1,108 @@
+<core:FragmentDefinition
+    class="sapUiSizeCompact"
+    controllerName="cm.codeMgr.controller.CodeMgr"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:layout="sap.ui.layout"
+    xmlns:table="sap.ui.table"
+    xmlns:form="sap.ui.layout.form"
+	width 			= "50%"
+	height			= "50%"    
+    displayBlock="true">
+	
+	<Dialog title="Part (자재코드) -> Masterial_Code 사용">
+		<content>
+            <FlexBox height="60px" alignItems="Start" justifyContent="End" class="sapUiSmallMarginTop">
+                <layout:VerticalLayout class="sapUiLargeMarginEnd">
+                    <Label text="Vendor"/>
+                    <ComboBox  
+                        items="{path: '/OrgTenantView', templateShareable:true}" 
+                        placeholder="선택 하세요.">
+                        <core:Item key="{tenant_id}" text="{tenant_name}"/>
+                    </ComboBox>
+                </layout:VerticalLayout>  
+                <layout:VerticalLayout class="sapUiLargeMarginEnd">
+                    <Label text="자재코드"/>
+                <ComboBox  
+                    items="{path: '/OrgTenantView', templateShareable:true}"                     
+                    placeholder="선택 하세요.">
+                    <core:Item key="{tenant_id}" text="{tenant_name}"/>
+                </ComboBox>
+                </layout:VerticalLayout> 
+                <layout:VerticalLayout class="sapUiLargeMarginEnd">
+                    <Label text="자재명"/>
+                    <Input/>
+                </layout:VerticalLayout>  
+                <layout:VerticalLayout class="sapUiTinyMarginEnd">
+                    <Label text="　"/>
+                    <Button text="Search" press=""/>
+                </layout:VerticalLayout>  
+                <layout:VerticalLayout class="sapUiTinyMarginEnd">
+                    <Label text="　"/>
+                    <Button text="Apply" press=""/>
+                </layout:VerticalLayout>  
+            </FlexBox>    
+            <Table  id="materialTable"
+                    items= "{   
+                                path : 'materialTableList>/'
+                            }"
+                    mode="SingleSelect"
+                    updateFinished="onDtlUpdateFinished" 
+                    class="sapUiSmallMarginTop"
+            >
+            <layoutData>
+            </layoutData>
+                <columns>
+                    <Column hAlign="Center" >
+                        <header>
+                            <Label text="가격정보"/>                            
+                        </header>
+                    </Column>
+                    <Column hAlign="Center" >
+                        <header>
+                            <Label text="Vendor"/>                            
+                        </header>
+                    </Column>
+                    <Column hAlign="Center" >
+                        <header>
+                            <Label text="자재코드"/>                            
+                        </header>
+                    </Column>
+                    <Column hAlign="Center" >
+                        <header>
+                            <Label text="자재명"/>                            
+                        </header>
+                    </Column>
+                    <Column hAlign="Center" >
+                        <header>
+                            <Label text="공급업체"/>                            
+                        </header>
+                    </Column>    
+                    <Column hAlign="Center" >
+                        <header>
+                            <Label text="공급업체명"/>                            
+                        </header>
+                    </Column>                                                                                                 
+                </columns>
+                <items>
+                    <ColumnListItem type="Active" id="materialColumnListItem" press="onMaterialTableItemPress">
+                        <cells>
+                            <Text text="{CodeDetails>_row_state_}"/>
+                            <Text text="{CodeDetails>_row_state_}"/>
+                            <Text text="{CodeDetails>_row_state_}"/>
+                            <Text text="{CodeDetails>_row_state_}"/>
+                            <Text text="{CodeDetails>_row_state_}"/>
+                            <Text text="{CodeDetails>_row_state_}"/>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+		</content>
+			<beginButton>
+				<Button text="Close" press="onMaterialDialog_close" />
+			</beginButton>
+	</Dialog>
+
+</core:FragmentDefinition>

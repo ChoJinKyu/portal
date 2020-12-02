@@ -6,7 +6,7 @@ sap.ui.define([
     "use strict";
 
     var oServiceModel = new ODataModel({
-        serviceUrl: "srv-api/odata/v2/util.CommonService/",
+        serviceUrl: "srv-api/odata/v2/cm.util.CommonService/",
         defaultBindingMode: "OneWay",
         defaultCountMode: "Inline",
         refreshAfterChange: false,

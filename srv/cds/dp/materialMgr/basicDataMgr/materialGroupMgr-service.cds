@@ -8,5 +8,4 @@ service mtlGroupMgrService {
     entity MtlGroup as projection on mtlGroup.Mm_Material_Group;
     entity MtlGroupLng as projection on mtlGroupLng.Mm_Material_Group_Lng;
 
-
 }

@@ -171,13 +171,13 @@
                                     showValueHelp="true"  
                                     valueHelpRequest=".onValueHelpRequested"
                                     suggestionItems="{
-                                        path: '/Models',
+                                        path: 'mold>/Models',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                         ],
                                         sorter: { path: 'model' }
                             }">
-                                <core:Item key="{model}" text="{model}" />
+                                <core:Item key="{mold>model}" text="{mold>model}" />
                             </Input>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
@@ -189,13 +189,13 @@
                                     showValueHelp="true"  
                                     valueHelpRequest=".onValueHelpRequested"
                                     suggestionItems="{
-                                        path: '/PartNumbers',
+                                        path: 'mold>/PartNumbers',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                         ],
                                         sorter: { path: 'part_number' }
                             }">
-                                <core:Item key="{part_number}" text="{part_number}" />
+                                <core:Item key="{mold>part_number}" text="{mold>part_number}" />
                             </Input>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
@@ -250,10 +250,10 @@
                         rowSelectionChange = ".onCheck"
                         mode="MultiSelect"
                         width="auto"
-                        items="{list>/MoldMasterSpec}">
+                        items="{list>/Approvals}">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="Approval List ({= ${list>/MoldMasterSpec}.length || 0})" level="H2"/>
+                            <Title text="Approval List ({= ${list>/Approvals}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <!-- Add the Personalization button -->
                             <Button id="mainTableCreateButton" text="Create" type="Emphasized" press=".onDialogCreate" />
@@ -300,14 +300,14 @@
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>
-                                <ObjectIdentifier text="{list>model}" />
+                                <ObjectIdentifier text="{list>approval_type_code}" />
                                 <ObjectIdentifier text="{list>company_name}" />
-                                <ObjectIdentifier text="{list>org_name}" />
-                                <ObjectIdentifier text="{list>part_number}" />
-                                <ObjectIdentifier text="{list>mold_sequence}" />
-                                <ObjectIdentifier text="{list>spec_name}" />
-                                <ObjectIdentifier text="{list>mold_item_type_name}" />
-                                <ObjectIdentifier text="{list>mold_spec_status_name}" />
+                                <ObjectIdentifier text="{list>plant_name}" />
+                                <ObjectIdentifier text="{list>approval_number}" />
+                                <ObjectIdentifier text="{list>approval_title}" />
+                                <ObjectIdentifier text="{list>requestor_empno}" />
+                                <ObjectIdentifier text="{list>request_date}" />
+                                <ObjectIdentifier text="{list>approve_status_code}" />
                             </cells>
                         </ColumnListItem>
                     </items>

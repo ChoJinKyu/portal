@@ -1,7 +1,7 @@
 namespace pg;
 
 using {pg.Md_Category_Item as items} from './PG_MD_CATEGORY_ITEM-model';
-using util from '../../util/util-model';
+using util from '../../cm/util/util-model';
 
 entity Md_Category_Id {
     key tenant_id                   : String(5) not null            @title : '테넌트ID';

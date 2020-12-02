@@ -1,6 +1,6 @@
 namespace ep;	
 
-using util from '../../util/util-model'; 
+using util from '../../cm/util/util-model'; 
 using { ep as dtl } from './EP_LOI_DTL-model';
 
 entity Loi_Mst {	

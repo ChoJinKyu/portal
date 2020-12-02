@@ -8,8 +8,196 @@
     xmlns:core="sap.ui.core"
     height="100%">
     <App>
-        <Page id="page" title="자재별 시황자재 BOM">
-            <content>
+        <Page id="page" title="자재별 시황자재 BOM 등록">
+            <content>          
+                <uxap:ObjectPageLayout                    
+                    toggleHeaderOnTitleClick="true"
+                    alwaysShowContentHeader="true"
+                    preserveHeaderStateOnScroll="false"
+                    headerContentPinnable="true"
+                    isChildPage="true"
+                    upperCaseAnchorBar="false"
+                    showTitleInHeaderContent="true"
+                    showEditHeaderButton="true"
+                    showFooter="false">
+                    <uxap:headerTitle>
+                        <uxap:ObjectPageDynamicHeaderTitle>
+                            <uxap:expandedHeading>
+                                <Title text="{i18n>appTitle}" wrapping="true"/>
+                            </uxap:expandedHeading>
+
+                            <uxap:navigationActions>
+                                <OverflowToolbarButton
+                                    id="pageEnterFullScreenButton"
+                                    type="Transparent"
+                                    icon="sap-icon://full-screen"
+                                    press="onPageEnterFullScreenButtonPress"
+                                    tooltip="Enter Full Screen Mode"
+                                    visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
+                                <OverflowToolbarButton
+                                    id="pageExitFullScreenButton"
+                                    type="Transparent"
+                                    icon="sap-icon://exit-full-screen"
+                                    press="onPageExitFullScreenButtonPress"
+                                    tooltip="Exit Full Screen Mode"
+                                    visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
+                                <OverflowToolbarButton
+                                    id="pageNavBackButton"
+                                    type="Transparent"
+                                    icon="sap-icon://decline"
+                                    text="back"
+                                    tooltip="back to the list"
+                                    press=".onPageNavBackButtonPress"
+                                    visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                            </uxap:navigationActions>
+                        </uxap:ObjectPageDynamicHeaderTitle>
+                    </uxap:headerTitle>
+                    <uxap:headerContent>
+                        <layout:VerticalLayout>
+                            <FlexBox height="30px" alignItems="Start" justifyContent="Start">
+                                    <Label text="관리조직 :" />
+                                    <Label text="{midObjectData>/tenant_name}"  class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                                    <Label text="Create :"  class="sapUiLargeMarginBegin"/>
+                                    <Label text="{midObjectData>/create}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                                    <Label text="Create Data :" class="sapUiLargeMarginBegin" />
+                                    <Label text="{midObjectData>/createdata}"  class="sapUiTinyMarginBegin"  design="Bold"/>                                                                                                        
+                            </FlexBox>          
+                        </layout:VerticalLayout>  
+                    </uxap:headerContent>
+                    <uxap:sections>
+                        <uxap:ObjectPageSection titleUppercase="false" title="General Info">
+                            <uxap:subSections>
+                                <uxap:ObjectPageSubSection>      
+                                    <layout:VerticalLayout width="100%">
+                                        <FlexBox height="28px" alignItems="Start" justifyContent="Start" class="sapUiTinyMarginTop">
+                                            <Label text="자재정보" required="true"/>
+                                        </FlexBox>
+                                        <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiTinyMarginBottom">        
+                                            <RadioButtonGroup id="radioButtonGroup" columns="3" width="100%">
+                                                <RadioButton id="radioButtonType01" text="자재명/코드" />
+                                                <RadioButton id="radioButtonType02" text="공급업체/코드" />
+                                            </RadioButtonGroup>  
+                                        </FlexBox>
+                                        <MultiInput width="100%"
+                                                    id="multiInput"
+                                                    suggestionItems=""
+                                                    valueHelpRequest="handleValueHelpMaterial">
+                                                    <core:Item key="" text="" />
+                                        </MultiInput>      
+                                        <FlexBox height="70px" alignItems="Start" justifyContent="Start" class="sapUiTinyMarginTop">
+                                            <layout:VerticalLayout class="sapUiLargeMarginEnd">
+                                                <Label text="운영방식:" required="true" />
+                                                <Input />
+                                            </layout:VerticalLayout>  
+                                            <layout:VerticalLayout class="sapUiTinyMarginEnd">
+                                                <Label text="가공비:" required="true"/>
+                                                <Input />
+                                            </layout:VerticalLayout>    
+                                            <layout:VerticalLayout>
+                                                <Label text="가공비통화:"/>
+                                                <ComboBox width="50px"/>
+                                            </layout:VerticalLayout>                                                                                        
+                                        </FlexBox>    
+                                    </layout:VerticalLayout>
+
+                                </uxap:ObjectPageSubSection>
+                            </uxap:subSections>
+                        </uxap:ObjectPageSection>
+                    </uxap:sections>
+                    <uxap:sections>
+                        <uxap:ObjectPageSection title="시황자재 List">
+                            <uxap:subSections>
+                                <uxap:ObjectPageSubSection>
+                                    <uxap:blocks>
+                                        
+                                        <!-- items="{path : '/MIMaterialCodeText',filters: [{path: 'mi_material_code', operator: 'EQ', value1: '{= ${midObjectData>/mi_material_code}'}]}"
+                                        updateFinished="onMitTableUpdateFinished"
+                                        Note : mi_material_code 전달 받은 값으로 수정 
+                                         -->  
+                                         <Table
+                                                id="midTableChange" 
+                                                items="{jCodeText>/}"
+                                                mode="MultiSelect"
+                                                width="100%">
+                                                <headerToolbar>
+                                                    <OverflowToolbar>
+                                                        <content>
+                                                            <ToolbarSpacer/>
+                                                            <Button id="buttonMidTableCreate" text="Add" type="Transparent" press=".onMidTableCreate"/>
+                                                            <Button id="buttonMidTableDelete" text="Delete" type="Transparent" press=".onMidTableDelete"/>
+                                                        </content>
+                                                    </OverflowToolbar>
+                                                </headerToolbar>
+                                                <columns>
+                                                    <Column hAlign="Center" width="50px">
+                                                        <header>
+                                                            <Label text="Code"/>
+                                                        </header>
+                                                    </Column>                                                                           
+                                                    <Column hAlign="Center">
+                                                        <header>
+                                                            <Label text="Name"/>
+                                                        </header>
+                                                    </Column>
+                                                    <Column hAlign="Center">
+                                                        <header>
+                                                            <Label text="Category"/>
+                                                        </header>
+                                                    </Column>
+                                                    <Column hAlign="Center">
+                                                        <header>
+                                                            <Label text="소요량"/>
+                                                        </header>
+                                                    </Column>
+                                                    <Column hAlign="Center">
+                                                        <header>
+                                                            <Label text="Use Flag"/>
+                                                        </header>
+                                                    </Column>
+                                                    <Column hAlign="Center">
+                                                        <header>
+                                                            <Label text="화폐단위"/>
+                                                        </header>
+                                                    </Column>
+                                                    <Column hAlign="Center">
+                                                        <header>
+                                                            <Label text="수량단위"/>
+                                                        </header>
+                                                    </Column>
+                                                    <Column hAlign="Center">
+                                                        <header>
+                                                            <Label text="거래소"/>
+                                                        </header>
+                                                    </Column>
+                                                    <Column hAlign="Center">
+                                                        <header>
+                                                            <Label text="인도조건"/>
+                                                        </header>
+                                                    </Column>
+                                                </columns>
+                                                <items>
+                                                    <ColumnListItem>
+                                                        <cells>   
+                                                            <Label text="{jCodeText>opmode}" />                                          
+                                                            <Label text="{jCodeText>opmode}" />                                          
+                                                            <Label text="{jCodeText>opmode}" />                                          
+                                                            <Label text="{jCodeText>opmode}" />                                          
+                                                            <Label text="{jCodeText>opmode}" />                                          
+                                                            <Label text="{jCodeText>opmode}" />                                          
+                                                            <Label text="{jCodeText>opmode}" />                                          
+                                                            <Label text="{jCodeText>opmode}" />                                          
+                                                            <Label text="{jCodeText>opmode}" />                                          
+                                                        </cells>
+                                                    </ColumnListItem>
+                                                </items>
+                                            </Table>  
+                                    </uxap:blocks>
+                                </uxap:ObjectPageSubSection>
+                            </uxap:subSections>
+                        </uxap:ObjectPageSection>
+                    </uxap:sections>
+                </uxap:ObjectPageLayout>
+
             </content>
             <footer>
                 <OverflowToolbar id="otbFooter">
