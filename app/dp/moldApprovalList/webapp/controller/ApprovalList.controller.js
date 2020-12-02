@@ -287,7 +287,7 @@ sap.ui.define([
         ///////////////////// Multi Combo box event End //////////////////////////
 
         ///////////////////// ValueHelpDialog section Start //////////////////////////
-        /*
+        
         
         onValueHelpRequested : function (oEvent) {
       
@@ -386,7 +386,7 @@ sap.ui.define([
             
 
         },
-        */ 
+         
         /**
          * @private 
          * @see 리스트 검색영역 팝업에서 확인버튼 클릭시
@@ -616,7 +616,7 @@ sap.ui.define([
 
 			var sModel = this.getView().byId("searchModel").getValue().trim();
             var	sPart = this.getView().byId("searchMoldPartNo").getValue().trim();
-            // var	sFamilyPart = this.getView().byId("searchFamilyPart").getValue().trim();
+            
             var	sStatus = this.getView().byId("searchStatus").getSelectedKey();
             
             var aSearchFilters = [];
@@ -652,21 +652,21 @@ sap.ui.define([
                 );
             }
 
-
+            
             if(sDateFrom || sDateFrom){
                 var _tempFilters = [];
 
                 _tempFilters.push(
                     new Filter({
-                        path: "mold_spec_register_date",
+                        path: "request_date",
                         operator: FilterOperator.BT,
                         value1: this.getFormatDate(sDateFrom),
                         value2: this.getFormatDate(sDateTo)
                     })
                 );
 
-                _tempFilters.push(new Filter("mold_spec_register_date", FilterOperator.EQ, ''));
-                _tempFilters.push(new Filter("mold_spec_register_date", FilterOperator.EQ, null));
+                _tempFilters.push(new Filter("request_date", FilterOperator.EQ, ''));
+                _tempFilters.push(new Filter("request_date", FilterOperator.EQ, null));
 
                 aSearchFilters.push(
                     new Filter({
@@ -677,16 +677,12 @@ sap.ui.define([
             }
 
 			if (sModel) {
-				aSearchFilters.push(new Filter("model", FilterOperator.StartsWith, sModel));
+                aSearchFilters.push(new Filter("tolower(model)", FilterOperator.Contains, "'"+sModel.toLowerCase().replace("'","''")+"'"));
             }
             
             if (sPart) {
-				aSearchFilters.push(new Filter("part_number", FilterOperator.StartsWith, sPart));
+				aSearchFilters.push(new Filter("tolower(mpart_number)", FilterOperator.Contains, "'"+sPart.toLowerCase()+"'"));
             }
-            
-            // if (sFamilyPart) {
-			// 	aSearchFilters.push(new Filter("family_part_numbers", FilterOperator.Contains, sFamilyPart));
-            // }
             
             if (sStatus) {
 				aSearchFilters.push(new Filter("mold_spec_status_code", FilterOperator.EQ, sStatus));
