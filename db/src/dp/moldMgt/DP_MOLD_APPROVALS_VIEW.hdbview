@@ -5,6 +5,12 @@ select distinct
     ,am.approval_title
     ,'['||mm.company_code||'] '||(select company_name from cm_org_company where company_code=mm.company_code) company_name
     ,'['||mm.org_code||'] '||(select plant_name from CM_ORG_PLANT where au_code=mm.org_code and company_code=mm.company_code) org_name
+    ,mm.company_code
+    ,mm.org_type_code
+    ,mm.org_code
+    ,mm.model
+    ,mm.mold_id
+    ,mm.part_number
     ,am.requestor_empno
     ,am.request_date
     ,am.approve_status_code
