@@ -1,6 +1,6 @@
-<mvc:View controllerName="xx.exampleControls.controller.ControlValidation" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:form="sap.ui.layout.form" xmlns:layout="sap.ui.layout" xmlns:lib-m="ext.lib.m" height="100%">
+<mvc:View controllerName="xx.exampleControls.controller.Empty" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:form="sap.ui.layout.form" xmlns:layout="sap.ui.layout" xmlns:lib-m="ext.lib.m" height="100%">
 
-    <Page id="page" title="Control Validation" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
+    <Page id="page" title="Example #2" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
         <subHeader>
             <Toolbar>
                 <ToolbarSpacer />

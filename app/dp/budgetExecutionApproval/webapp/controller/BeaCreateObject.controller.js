@@ -53,6 +53,7 @@ sap.ui.define([
             this.getView().setModel(new ManagedListModel(),"createlist"); // Participating Supplier
             this.getView().setModel(new ManagedListModel(),"appList"); // apporval list 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
+            this.getView().setModel(new ManagedListModel(),"MoldItemSelect"); // MoldItemSelect 
 		},
 
 	    onAfterRendering : function () {
@@ -174,7 +175,7 @@ sap.ui.define([
          */
         _createViewBindData : function(args){ 
            /** 초기 데이터 조회 */
-            var company_code = 'LGEKR' , plant_code = 'CCZ' ;
+            var company_code = 'LGEKR' , plant_code = 'CNZ' ;
             var appModel = this.getModel("beaCreateObjectView");
             appModel.setData({ company_code : company_code 
                                 , company_name : "" 
@@ -464,6 +465,71 @@ sap.ui.define([
         onExit: function () {
             this.byId("dialogMolItemSelection").close();
         },
+
+        /**
+         * @description Mold Item Selection Search Button 누를시 
+         * @param {*} oEvent 
+         */
+        onMoldItemSelection : function (oEvent) {
+            console.log(oEvent.getParameters());
+			if (oEvent.getParameters().refreshButtonPressed) {
+				// Search field's 'refresh' button has been pressed.
+				// This is visible if you select any master list item.
+				// In this case no new search is triggered, we only
+				// refresh the list binding.
+				this.onRefresh();
+			} else {
+				var aSearchFilters = this._getSearchMoldSelection();
+				this._applyMoldSelection(aSearchFilters);
+			}
+        },
+        _getSearchMoldSelection : function (){
+
+             var aSearchFilters = [];
+
+             this.byId('dialogMolItemSelection');
+
+            console.log("this.byId('MoldItemSearchCompany') " , this.byId('MoldItemSearchCompany').mProperties.selectedKey);
+
+             var company = this.byId('MoldItemSearchCompany').mProperties.selectedKey;
+             var plant = this.byId('MoldItemSearchPlant').mProperties.selectedKey;
+             var model = this.byId('moldItemModel').getValue().trim();
+             var partNo = this.byId('moldItemPartNo').getValue().trim();
+
+            if(company != undefined && company != "" && company != null){
+                aSearchFilters.push(new Filter("company_code", FilterOperator.EQ, company))
+            }
+            if(plant != undefined && plant != "" && plant != null){
+                aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, plant))
+            }
+            if(model != undefined && model != "" && model != null){
+                aSearchFilters.push(new Filter("model", FilterOperator.EQ, model))
+            }
+            if(partNo != undefined && partNo != "" && partNo != null){
+                aSearchFilters.push(new Filter("part_number", FilterOperator.EQ, partNo))
+            }
+
+            return aSearchFilters;
+        },
+        /**
+         * @description Mold Item Selection Search Button 누를시 
+         * @param {*} oEvent 
+         */
+        _applyMoldSelection : function(aSearchFilters){
+            console.log(" aSearchFilters " , aSearchFilters);
+            var oView = this.getView(),
+				oModel = this.getModel("MoldItemSelect");
+			oView.setBusy(true);
+			oModel.setTransactionModel(this.getModel("moldItem"));
+			oModel.read("/MoldItemSelect", {
+				filters: aSearchFilters,
+				success: function(oData){ 
+                     console.log(" oData " , oData);
+					oView.setBusy(false);
+				}
+            });
+            console.log("omdel" ,oModel);
+        }, 
          /**
          * @description  Participating Supplier Fragment Apply 버튼 클릭시 
          */
@@ -476,14 +542,7 @@ sap.ui.define([
                     model : oItem.getCells()[0].getText()
                     , moldPartNo : oItem.getCells()[1].getText()
                 });
-                // console.log(" nItem >>>>> getText 1 " ,  oItem.getCells()[0].getText());   
-                // console.log(" nItem >>>>> getText 2 " ,  oItem.getCells()[1].getText());   
-                // console.log(" nItem >>>>> getText 3 " ,  oItem.getCells()[2].getText());   
-                // console.log(" nItem >>>>> obj " ,  obj); 
-                that._addPsTable(obj);  
-                // oItem.getCells().forEach(function(nItem){ 
-                //      console.log(" nItem >>>>> getText " , nItem.getText());    
-                // });     
+                that._addPsTable(obj);     
             });
             this.onExit();
         },

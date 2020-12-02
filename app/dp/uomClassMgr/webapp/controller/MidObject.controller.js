@@ -1,7 +1,7 @@
 sap.ui.define([
     "ext/lib/controller/BaseController",
     "ext/lib/util/Multilingual",
-	"ext/lib/util/ValidatorUtil",
+	"ext/lib/util/Validator",
 	"sap/ui/model/json/JSONModel",
 	"ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedModel",
@@ -19,7 +19,7 @@ sap.ui.define([
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
     "sap/m/ObjectStatus"
-], function (BaseController, Multilingual, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
+], function (BaseController, Multilingual, Validator, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
 	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
 	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus) {
 		
@@ -29,7 +29,9 @@ sap.ui.define([
 
 	return BaseController.extend("dp.uomClassMgr.controller.MidObject", {
 
-		dateFormatter: DateFormatter,
+        dateFormatter: DateFormatter,
+        
+        validator: new Validator(),
 
 		formatter: (function(){
 			return {
@@ -197,8 +199,18 @@ sap.ui.define([
 		 * @public
 		 */
         onPageSaveButtonPress: function(){
-			var oView = this.getView(),
-				that = this;
+            var oView = this.getView(),
+                oDetailsModel = this.getModel("details"),
+                that = this;
+            // 폼의 변경은 어떻게 체크를 해야할까
+            // if(!oDetailsModel.isChanged()) {
+			// 	MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
+			// 	return;
+            // }
+                
+            if(this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
+            if(this.validator.validate(this.byId("midTable")) !== true) return;
+
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
 				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -215,7 +227,9 @@ sap.ui.define([
 						});
 					};
 				}
-			});
+            });
+            this.validator.clearValueState(this.byId("midObjectForm1Edit"));
+            this.validator.clearValueState(this.byId("midTable"));
 		},
 		
 		
@@ -251,6 +265,8 @@ sap.ui.define([
 				});
                 this._toShowMode();
             }
+            this.validator.clearValueState(this.byId("midObjectForm1Edit"));
+            this.validator.clearValueState(this.byId("midTable"));
         },
 
 		/* =========================================================== */
@@ -400,7 +416,8 @@ sap.ui.define([
 			});
 
             var oLanguageCode = new ComboBox({
-                    selectedKey: "{details>language_code}"
+                    selectedKey: "{details>language_code}",
+                    required : true
                 });
                 oLanguageCode.bindItems({
                     path: 'util>/CodeDetails',
@@ -413,7 +430,7 @@ sap.ui.define([
                         key: "{util>code}",
                         text: "{util>code_description}"
                     })
-                });
+                });                
 			this.oEditableTemplate = new ColumnListItem({
 				cells: [
 					new ObjectStatus({
@@ -422,7 +439,7 @@ sap.ui.define([
                     }),
 					oLanguageCode, 
 					new Input({
-						value: "{details>uom_class_name}"
+                        value: "{details>uom_class_name}"                        
 					}), 
 					new Input({
 						value: "{details>uom_class_desc}"
