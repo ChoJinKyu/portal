@@ -1,3 +1,102 @@
+
+        dateFormatter: DateFormatter,
+        dataPath : "resources",
+        _m : {
+            page : "page",
+            fragementPath : {
+                change : "pg.mm.view.Change",
+                display : "pg.mm.view.Display",
+                materialDetail : "pg.mm.view.MaterialDetail",
+                materialDialog : "pg.mm.view.MaterialDialog",
+                supplierDialog : "pg.mm.view.SupplierDialog"
+            },            
+            fragementId : {
+                change : "Change_ID",
+                display : "Display_ID",
+                materialDetail : "MaterialDetail_ID",
+                materialDialog : "MaterialDialog_ID",
+                supplierDialog : "SupplierDialog_ID"
+            },
+            input : {
+                inputMultiInput : "multiInput",
+            },
+            button : {
+                buttonMidTableCreate : "buttonMidTableCreate",
+                buttonMidTableDelete : "buttonMidTableDelete",
+                buttonMidDelete: "buttonMidDelete",
+                buttonMidEdit: "buttonMidEdit",
+                buttonSave: "buttonSave"
+            },
+            tableItem : {
+                items : "items" //or rows
+            },
+            filter : {
+                tenant_id : "L2100",
+                company_code : "company_code",
+                org_type_code : "org_type_code",
+                org_code : "org_code"
+            },
+            serviceName : {
+                mIMaterialPriceManagementView: "/MIMaterialPriceManagementView",
+                orgTenantView: "/OrgTenantView",
+            },
+            jsonTestData : {
+                values : [{
+                    name : "tenant",
+                    value : "/tenant.json"
+                },{
+                    name : "company",
+                    value : "/company.json"
+                }]
+            },
+            midObjectData : {
+                tenant_id: "L2100",
+                company_code: "*",
+                org_type_code: "BU",
+                org_code: "BIZ00100",
+                material_code: "ERCA00006AA", //자재코드 (시황자재코드와 다름 값이 있다면 View Mode)
+                create_user_id: "Admin",
+                system_create_dtm: "Admin"
+            },
+            processMode : {
+                create : "C",
+                view : "V",
+                edit : "E"
+            },
+            pageMode : {
+                edit : "Edit",
+                show : "Show"
+            },
+            itemMode : {
+                create : "C",
+                read : "R",
+                update : "U",
+                delete : "D"
+            },
+            odataMode : {
+                yes : "Y",
+                no : "N" 
+            },
+            midObjectView : {
+                busy: true,
+                delay: 0,
+                pageMode: "V"
+            }
+        },
+
+        _sso : {
+            user : {
+                id : "Admin",
+                name : "Hong Gil-dong"
+            },
+            dept : {
+                team_name : "구매팀",
+                team_code : "0000",
+                tenant_id : "L2100",
+                tenant_name : "LG 화확"  
+            }          
+        },
+
 /*
       //담당자 selectedItem selectedRow            
       var aTokens = this.getView().byId("multiinputUser").getTokens();
@@ -70,3 +169,22 @@
       var checkBoxOMType2 = this.byId("checkBoxOMType2").getSelected() == true ? "1" : "0";
       //알람
       var checkBoxOMType3 = this.byId("checkBoxOMType3").getSelected() == true ? "1" : "0";
+
+           //pageMode C Create, V View, E Edit
+            var midObjectView = new JSONModel({
+                busy: true,
+                delay: 0,
+                pageMode:"V"
+            });
+
+            /**
+             * Note 사용자 세션이나 정보에 다음값이 셋팅 되어 있다는 가정
+             */
+
+            var midObjectData = new JSONModel({
+                tenant_id: "L2100",
+                company_code: "*",
+                org_type_code: "BU",
+                org_code: "BIZ00100",
+                material_code: "ERCA00006AA" //자재코드 (시황자재코드와 다름 값이 있다면 View Mode)
+            });

@@ -56,11 +56,11 @@
                         <layout:VerticalLayout>
                             <FlexBox height="30px" alignItems="Start" justifyContent="Start">
                                     <Label text="관리조직 :" />
-                                    <Label text="{midObjectData>/tenant_name}"  class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                                    <Label text="{oUiData>/tenant_name}"  class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
                                     <Label text="Create :"  class="sapUiLargeMarginBegin"/>
-                                    <Label text="{midObjectData>/create}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                                    <Label text="{oUiData>/create}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
                                     <Label text="Create Data :" class="sapUiLargeMarginBegin" />
-                                    <Label text="{midObjectData>/createdata}"  class="sapUiTinyMarginBegin"  design="Bold"/>                                                                                                        
+                                    <Label text="{oUiData>/createdata}"  class="sapUiTinyMarginBegin"  design="Bold"/>                                                                                                        
                             </FlexBox>          
                         </layout:VerticalLayout>  
                     </uxap:headerContent>
@@ -79,7 +79,7 @@
                                             </RadioButtonGroup>  
                                         </FlexBox>
                                         <MultiInput width="100%"
-                                                    id="multiInput"
+                                                    id="inputMultiInput"
                                                     suggestionItems=""
                                                     valueHelpRequest="handleValueHelpMaterial">
                                                     <core:Item key="" text="" />
