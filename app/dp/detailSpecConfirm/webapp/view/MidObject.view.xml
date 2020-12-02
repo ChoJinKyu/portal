@@ -19,14 +19,14 @@
 		showFooter="false">
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
-				<!-- <uxap:expandedHeading>
+				<uxap:expandedHeading>
 					<Title text="{master>/mold_id}" wrapping="true" />
 				</uxap:expandedHeading>
 				<uxap:snappedHeading>
 					<Title text="{master>/mold_id}" wrapping="true" />
-				</uxap:snappedHeading> -->
+				</uxap:snappedHeading>
 				<uxap:actions>
-					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" />
+					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" visible="{= !(${spec>/mold_spec_status_code} === 'C') }" />
 					<!-- <Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" /> -->
 				</uxap:actions>
                 <uxap:navigationActions>
@@ -74,6 +74,13 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
+            <uxap:ObjectPageSection titleUppercase="false" title="Ship Plan(테이블 미정)">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection id="pageSubSectionSP">
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
 			<uxap:ObjectPageSection titleUppercase="false" title="Detail Spec">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection3" title="Detail Spec : Mold">
@@ -88,7 +95,7 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
-				<Button type="Emphasized" text="Save" press=".onPageSaveButtonPress" />
+				<Button type="Emphasized" text="Confirm" press=".onPageSaveButtonPress" />
 				<Button type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
 			</OverflowToolbar>
 		</uxap:footer>

@@ -331,7 +331,7 @@ sap.ui.define([
             }
             
             if (sPart) {
-				aSearchFilters.push(new Filter("tolower(mpart_number)", FilterOperator.Contains, "'"+sPart.toLowerCase()+"'"));
+				aSearchFilters.push(new Filter("tolower(part_number)", FilterOperator.Contains, "'"+sPart.toLowerCase()+"'"));
             }
             
             if (sFamilyPart) {

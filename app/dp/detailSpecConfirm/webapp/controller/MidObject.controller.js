@@ -92,7 +92,25 @@ sap.ui.define([
 		 * @public
 		 */
 		onPageEditButtonPress: function(){
-			this._toEditMode();
+
+            
+            
+            this._toEditMode();
+
+            var importCompanyCode = this.getModel('master').getProperty('/import_company_code');
+
+            console.log(importCompanyCode );
+
+            //importOrg filter
+            var filter = new Filter({
+                            filters: [
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                    new Filter("company_code", FilterOperator.EQ, importCompanyCode)
+                                ],
+                                and: true
+                        });
+
+            this.getView().byId("importOrg").getBinding("items").filter(filter, "Application");
 		},
 		
 		/**
@@ -123,13 +141,17 @@ sap.ui.define([
 		 */
         onPageSaveButtonPress: function(){
 			var oView = this.getView(),
-				me = this;
-			MessageBox.confirm("Are you sure ?", {
-				title : "Comfirmation",
-				initialFocus : sap.m.MessageBox.Action.CANCEL,
-				onClose : function(sButton) {
-					if (sButton === MessageBox.Action.OK) {
-						oView.setBusy(true);
+                me = this;
+                
+            MessageBox.confirm("Are you sure ?", {
+                title : "Comfirmation",
+                initialFocus : sap.m.MessageBox.Action.CANCEL,
+                onClose : function(sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        oView.setBusy(true);
+                        
+                        this.getModel('spec').setProperty('/mold_spec_status_code', 'C');
+
 						oTransactionManager.submit({
 						// oView.getModel("master").submitChanges({
 							success: function(ok){
@@ -244,23 +266,37 @@ sap.ui.define([
             this._loadFragment(sFragmentName, function(oFragment){
 				oPageSubSection.removeAllBlocks();
 				oPageSubSection.addBlock(oFragment);
-            })
+            });
 
             var mode = sFragmentName.split('_')[1];
 
+            //development plan
             var oPageSubSection2 = this.byId("pageSubSection2");
-            this._loadFragment("MidObjectShipPlan_"+mode, function(oFragment){
+            this._loadFragment("MidObjectDevelopmentPlan_"+mode, function(oFragment){
 				oPageSubSection2.removeAllBlocks();
 				oPageSubSection2.addBlock(oFragment);
-            })  
+            });  
+
+            var master = this.getModel("master");
+            var budgetType = master.oData.investment_ecst_type_code;
+
+            //ship plan
+            var oPageSubSectionSP = this.byId("pageSubSectionSP");
+            oPageSubSectionSP.removeAllBlocks();
+            if(budgetType == 'S'){
+                this._loadFragment("MidObjectShipPlan_"+mode, function(oFragment){
+                    oPageSubSectionSP.addBlock(oFragment);
+                });  
+            }
             
+
+            //detail spec
             var oPageSubSection3 = this.byId("pageSubSection3");
             var oPageSubSection4 = this.byId("pageSubSection4");
             oPageSubSection3.removeAllBlocks();
             oPageSubSection4.removeAllBlocks();
 
             //mold 인지 press 인지 분기
-            var master = this.getModel("master");
             var itemType = master.oData.mold_item_type_code;
 
             if(itemType == 'P' || itemType == 'E'){
@@ -281,13 +317,32 @@ sap.ui.define([
 					controller: this
 				}).then(function(oFragment){
 					this._oFragments[sFragmentName] = oFragment;
-					if(oHandler) oHandler(oFragment);
+                    if(oHandler) oHandler(oFragment);
 				}.bind(this));
 			}else{
 				if(oHandler) oHandler(this._oFragments[sFragmentName]);
 			}
-		}
+		},
+        handleChangeImpComp: function(oEvent){
 
+            console.group('===============handleChangeImpComp==================');
+
+            var params = oEvent.getParameters();
+
+            var filter = new Filter({
+                            filters: [
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                    new Filter("company_code", FilterOperator.EQ, params.selectedItem.getKey() )
+                                ],
+                                and: true
+                        });
+                        
+            console.log('handleChangeImpComp',filter);
+
+            this.getView().byId("importOrg").getBinding("items").filter(filter, "Application");
+
+            console.groupEnd();
+        },
 
 	});
 });
