@@ -24,6 +24,7 @@ sap.ui.define([
      * @author jinseon.lee
      * @date 2020.12.01
      */
+    var mainViewName = "beaCreateObjectView";
 	return BaseController.extend("dp.budgetExecutionApproval.controller.BeaCreateObject", {
 
 		dateFormatter: DateFormatter,
@@ -46,7 +47,7 @@ sap.ui.define([
 					delay : 0
                 });
                 
-            this.setModel(oViewModel, "beaCreateObjectView");
+            this.setModel(oViewModel, mainViewName);
             this.getRouter().getRoute("beaCreateObject").attachPatternMatched(this._onObjectMatched, this);
             this.getView().setModel(new ManagedListModel(),"company");
             this.getView().setModel(new ManagedListModel(),"plant");
@@ -57,7 +58,7 @@ sap.ui.define([
 		},
 
 	    onAfterRendering : function () {
-         
+          
         },
         /**
          * 폅집기 창 
@@ -176,7 +177,7 @@ sap.ui.define([
         _createViewBindData : function(args){ 
            /** 초기 데이터 조회 */
             var company_code = 'LGEKR' , plant_code = 'CNZ' ;
-            var appModel = this.getModel("beaCreateObjectView");
+            var appModel = this.getModel(mainViewName);
             appModel.setData({ company_code : company_code 
                                 , company_name : "" 
                                 , plant_code : plant_code 
@@ -217,7 +218,7 @@ sap.ui.define([
 
 		_onBindingChange : function () {
 			var oView = this.getView(),
-				oViewModel = this.getModel("beaCreateObjectView"),
+				oViewModel = this.getModel(mainViewName),
 				oElementBinding = oView.getElementBinding();
 			// No data for the binding
 			if (!oElementBinding.getBoundContext()) {
@@ -264,7 +265,7 @@ sap.ui.define([
             ;
 
             if(oSelected.length > 0){
-                    this._oSupplierDialog = sap.ui.xmlfragment("dp.bugetExecutionApproval.view.SuplierSelect", this);
+                    this._oSupplierDialog = sap.ui.xmlfragment("dp.budgetExecutionApproval.view.SuplierSelect", this);
                     
                     this.oSupplierModel = new JSONModel({
                         "cols": [  {
@@ -454,8 +455,11 @@ sap.ui.define([
 				}.bind(this));
             } 
             
+            var that = this;
             this._oDialogTableSelect.then(function(oDialog) { 
-                oDialog.open();
+                oDialog.open(); 
+                that.byId("moldItemSelectionSearch").firePress();
+
 			});
         },
         /**
@@ -480,14 +484,12 @@ sap.ui.define([
 				this.onRefresh();
 			} else {
 				var aSearchFilters = this._getSearchMoldSelection();
-				this._applyMoldSelection(aSearchFilters);
+				this._applyMoldSelection(aSearchFilters); // 로드하자마자 조회 
 			}
         },
         _getSearchMoldSelection : function (){
 
              var aSearchFilters = [];
-
-             this.byId('dialogMolItemSelection');
 
             console.log("this.byId('MoldItemSearchCompany') " , this.byId('MoldItemSearchCompany').mProperties.selectedKey);
 
@@ -503,10 +505,10 @@ sap.ui.define([
                 aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, plant))
             }
             if(model != undefined && model != "" && model != null){
-                aSearchFilters.push(new Filter("model", FilterOperator.EQ, model))
+                aSearchFilters.push(new Filter("model", FilterOperator.Contains , model))
             }
             if(partNo != undefined && partNo != "" && partNo != null){
-                aSearchFilters.push(new Filter("part_number", FilterOperator.EQ, partNo))
+                aSearchFilters.push(new Filter("part_number", FilterOperator.Contains , partNo))
             }
 
             return aSearchFilters;
@@ -524,7 +526,7 @@ sap.ui.define([
 			oModel.read("/MoldItemSelect", {
 				filters: aSearchFilters,
 				success: function(oData){ 
-                     console.log(" oData " , oData);
+                    console.log(" oData " , oData);
 					oView.setBusy(false);
 				}
             });
@@ -537,10 +539,16 @@ sap.ui.define([
             var oTable = this.byId("moldItemSelectTable");
             var aItems = oTable.getSelectedItems();
             var that = this;
-            aItems.forEach(function(oItem){   
+            aItems.forEach(function(oItem){  
+                console.log("oTem >>>" , oItem.getCells()[4]);  
                 var obj = new JSONModel({
                     model : oItem.getCells()[0].getText()
-                    , moldPartNo : oItem.getCells()[1].getText()
+                    , part_number : oItem.getCells()[1].getText()
+                    , mold_sequence : oItem.getCells()[2].getText() 
+                    , spec_name : oItem.getCells()[3].getText() 
+                    , mold_item_type_code : oItem.getCells()[4].getSelectedKey()
+                    , book_currency_code : oItem.getCells()[5].getText() 
+                    , budget_amount : oItem.getCells()[6].getText() 
                 });
                 that._addPsTable(obj);     
             });
@@ -552,7 +560,7 @@ sap.ui.define([
         selectMoldItemChange : function(oEvent){ 
             var oTable = this.byId("moldItemSelectTable");
             var aItems = oTable.getSelectedItems(); 
-            var appInfoModel = this.getModel("pssaCreateObjectView");
+            var appInfoModel = this.getModel(mainViewName);
             appInfoModel.setData({ moldItemLength : aItems == undefined ? 0 : aItems.length }); 
         },
 
@@ -565,7 +573,12 @@ sap.ui.define([
                 oModel = this.getModel("createlist");
                 oModel.addRecord({
                     "model": data.oData.model,
-                    "moldPartNo": data.oData.moldPartNo,
+                    "part_number": data.oData.part_number,
+                    "mold_sequence" : data.oData.mold_sequence,
+                    "spec_name" : data.oData.spec_name,
+                    "mold_item_type_code" : data.oData.mold_item_type_code,
+                    "book_currency_code" : data.oData.book_currency_code,
+                    "budget_amount" : data.oData.budget_amount,
                     "moldSupplier1" : "",
                     "moldSupplier2" : "",
                     "moldSupplier3" : "",
