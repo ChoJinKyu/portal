@@ -1,11 +1,17 @@
+/**
+ * Note : 데이타가 한건도 없을때 시작점 다음 값들을 셋팅해야한다.
+ * tenant_id, company_code, org_type_code, org_code 
+ * 1. 초기 신규 작성시 선택해야할 값들이 정해져 있지 않음.
+ * 
+ * 2. 수정사항 상세페이지에서의 삭제
+ * 3. 상세 페이지에서 다른테이블 batch 작없이 트랜젝션 보장확인 재확인 필요 
+ * 
+ */
 sap.ui.define([
 	"./BaseController",
 	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
-	"ext/lib/model/ManagedListModel",
 	"ext/lib/formatter/DateFormatter",
-	"sap/m/TablePersoController",
-	"./MainListPersoService",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
@@ -17,7 +23,7 @@ sap.ui.define([
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
 	"sap/base/Log"
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, Log) {
+], function (BaseController, History, JSONModel, DateFormatter,  Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, Log) {
 	"use strict";
 
 	return BaseController.extend("pg.mi.controller.MainList", {
@@ -42,40 +48,8 @@ sap.ui.define([
 				tableNoDataText : oResourceBundle.getText("tableNoDataText")
 			});
 
-			 this.setModel(oViewModel, "mainListView");
+			this.setModel(oViewModel, "mainListView");
 		
-			// var oModel = this.getOwnerComponent().getModel();
-
-			// var oModelODATA = oModel.getData();
-			// debugger;
-			//  var OdataJsonModel = new sap.ui.model.json.JSONModel();
-			//  OdataJsonModel.setData(oModelODATA);
-
-			//  var oData = this.getView().getModel().oData;
-
-
-			// console.log("====================================================");
-			// console.log("oModelODATA", oModelODATA);
-
-			
-			// this.setModel(oModelODATA, "mainListData");
-			// var testModel = this.getModel("mainListData");
-
-			// var OdataJsonModel = new sap.ui.model.json.JSONModel();
-			// OdataJsonModel.setData(oModelODATA);
-
-			// debugger;
-			// testModel.("MIMaterialCodeList(tenant_id='L2100',company_code='*',org_type_code='BU',org_code='BIZ00100',mi_material_code='LED-001-01')", {
-            //         success: function (odata, oResponse) {
-			// 			console.log("===============");
-			// 			console.log(odata);
-            //         }.bind(this),
-            //         error: function (cc, vv) {
-            //             console.log('error');
-            //         }
-			// 	});
-			// 	debugger;
-
 			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
             this._mainTable = this.getView().byId("mainTable");
@@ -104,14 +78,20 @@ sap.ui.define([
 		_onCreateModeMetadataLoaded: function() {
 			console.group("_onCreateModeMetadataLoaded");
 			this.getView().getModel().setUseBatch(true);
-			this.getView().getModel().setDeferredGroups(["updateGroup","deleteGroup","createGroup"]);
+			this.getView().getModel().setDeferredGroups(["pgmiGroup","deleteGroup"]);
             
             this.getView().getModel().setChangeGroups({
 			  "MIMaterialCodeList": {
-			    groupId: "updateGroup",
-			    changeSetId: "updateGroup"
+			    groupId: "pgmiGroup",
+			    changeSetId: "pgmiGroup"
+              },
+              "MIMaterialCodeText": {
+			    groupId: "pgmiGroup",
+			    changeSetId: "pgmiGroup"
 			  }
-			});
+            });            
+           
+
             this.getView().getModel().attachPropertyChange(this._propertyChanged.bind(this));
             
 			console.groupEnd();
@@ -156,50 +136,53 @@ sap.ui.define([
 			var bDeleteEnabled = oItemLength > 0;
             this.getView().byId("buttonMainTableDelete").setEnabled(bDeleteEnabled);
 
-            
-            // if(oItemLength > 1 ){
-            //      this.getView().byId("buttonMainTableCopy").setEnabled(false);
-            // }else{
-            //     this.getView().byId("buttonMainTableCopy").setEnabled(bDeleteEnabled);
-			// }
 			console.groupEnd();
         },
-
 		
-        // //사용하지 않음
-		// _editToggled: function() {
-		// 	var oSmartTable = this._getSmartTableById();
-		// 	var sMode = oSmartTable.getEditable() ? "MultiSelect" : "None";
-		// 	oSmartTable.getTable().setMode(sMode);
-		// },
-               
         /**
 		 * note 데이타베이스 변경으로..실행 안됨.
          * Smart Table Filter Event onBeforeRebindTable
          * @param {sap.ui.base.Event} oEvent 
          */
 		onBeforeRebindTable: function (oEvent) {
-			return;
-			console.group("onBeforeRebindTable");
-			/*
+		
+            console.group("onBeforeRebindTable");
+
+            // Object.keys(data.multi || {}).forEach(k => {
+            // var f = [];
+            // data.multi[k].forEach(v => {
+            //     if (v) f.push(new Filter(k, FilterOperator.EQ, v));
+            // });
+
+            // if (f.length > 0) {
+            //     this.aFilters.push(new Filter(f));
+            // }
+            // });
+
 			var mBindingParams = oEvent.getParameter("bindingParams");
 			var oSmtFilter = this.getView().byId("smartFilterBar");             //smart filter
 			
-			//combobox value
-			var oMi_material_code = oSmtFilter.getControlByKey("mi_material_code").getValue();     
-			var omi_material_code_name = oSmtFilter.getControlByKey("mi_mi_material_code_name").getValue();               
-			var oCategory_code = oSmtFilter.getControlByKey("category_code").getValue();   
-            var oCode = oSmtFilter.getControlByKey("code").getSelectedKey();   
-            var fOcode = oCode =="FALSE" ? false : true;
+            //combobox value
+            var oMi_tenant_id = oSmtFilter.getControlByKey("tenant_id").getSelectedKey();    
+			var oMi_material_code = oSmtFilter.getControlByKey("mi_material_code").getSelectedKey();   
+			var oMi_material_code_name = oSmtFilter.getControlByKey("mi_material_code_name").getSelectedKey();            
+			var oCategory_code = oSmtFilter.getControlByKey("category_code").getSelectedKey();    
+            var oUse_flag = oSmtFilter.getControlByKey("use_flag").getSelectedKey();   
+            var fOcode = oUse_flag =="FALSE" ? false : true;
+
+			if (oMi_tenant_id.length > 0) {
+				var oMi_tenant_idFilter = new Filter("tenant_id", FilterOperator.EQ, oMi_tenant_id);
+				mBindingParams.filters.push(oMi_tenant_idFilter);
+            }
             
 			if (oMi_material_code.length > 0) {
 				var oMi_material_codeFilter = new Filter("mi_material_code", FilterOperator.EQ, oMi_material_code);
 				mBindingParams.filters.push(oMi_material_codeFilter);
 			}
 
-			if (oMi_mi_material_code_name.length > 0) {
-				var oMi_mi_material_code_nameFilter = new Filter("mi_mi_material_code_name", FilterOperator.EQ, oMi_mi_material_code_name);
-				mBindingParams.filters.push(oMi_mi_material_code_nameFilter);
+			if (oMi_material_code_name.length > 0) {
+				var oMi_material_code_nameFilter = new Filter("mi_material_code_name", FilterOperator.EQ, oMi_material_code_name);
+				mBindingParams.filters.push(oMi_material_code_nameFilter);
 			}
 
 			if (oCategory_code.length > 0) {
@@ -207,23 +190,14 @@ sap.ui.define([
 				mBindingParams.filters.push(oCategory_codeFilter);
 			}
 			
-			if (oCode.length > 0) {
+			if (oUse_flag.length > 0) {
 				var oCodeFilter = new Filter("use_flag", FilterOperator.EQ, fOcode);
 				mBindingParams.filters.push(oCodeFilter);
 			}  
-			*/
+			
 			console.groupEnd();              
 		},
 
-
-		/**
-		 * System Event onAfterRendering
-		 * @private
-		 */
-        onAfterRendering : function () {
-			//this.byId("pageSearchButton").firePress();
-			//return;
-        },
 
         /** 
 		 * table sort dialog 
@@ -310,10 +284,10 @@ sap.ui.define([
          */
 		_deleteAction: function(oAction) {
             console.group("_deleteAction");
+            
 			if(oAction === sap.m.MessageBox.Action.DELETE) {
 				this._getSmartTableById().getTable().getSelectedItems().forEach(function(oItem){
                     var sPath = oItem.getBindingContextPath();	
-              
 					var mParameters = {"groupId":"deleteGroup"};
 					oItem.getBindingContext().getModel().remove(sPath, mParameters);
 				});
@@ -324,7 +298,7 @@ sap.ui.define([
 		        	success: this._handleDeleteSuccess.bind(this),
 		        	error: this._handleDeleteError.bind(this)
 		     	});
-            }
+            } 
             console.groupEnd();
 		},
    
@@ -357,8 +331,8 @@ sap.ui.define([
 			console.group("onMainTableCreate");
 
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-			
-			//note수정 검색한 값을 기준으로 데이타를 수정해야한다. 
+
+			//Note : 수정 검색한 값을 기준으로 데이타를 수정해야한다. 
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
 				tenant_id: "L2100",
@@ -421,24 +395,14 @@ sap.ui.define([
 					value = aParameters[i].split("=")[1];			 
 					aParameters[key] = value;
 				}
-				
-			
-/**
-oRecord: Object
-category_code: "Non-Ferrous Metal"
-mi_material_code: "LED-001-01"
-mi_material_code_name: "니켈"
-use_flag: true
 
- * / */
- //note category_name 수정해야함
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
 				tenant_id: aParameters["tenant_id"],
                 company_code: aParameters["company_code"],
 				org_type_code: aParameters["org_type_code"],
 				org_code :aParameters["org_code"],
-				category_name : "oRecord.category_code",
+				category_name : "",
 				category_code : oRecord.category_code,
 				mi_material_code: oRecord.mi_material_code,
 				mi_material_code_name: oRecord.mi_material_code_name,
@@ -488,19 +452,10 @@ use_flag: true
 		 * @private
 		 */
 		_applySearch: function(aSearchFilters) {
-			// var oView = this.getView(),
-			// 	oModel = this.getModel("list");
-			// oView.setBusy(true);
-			// oModel.setTransactionModel(this.getModel());
-			// oModel.read("/ControlOptionMasters", {
-			// 	filters: aSearchFilters,
-			// 	success: function(oData){
-			// 		oView.setBusy(false);
-			// 	}
-			// });
+			
 		},
 		
-		 _getSearchStates: function(){
+		_getSearchStates: function(){
 			var sChain = this.getView().byId("searchChain").getSelectedKey(),
 				sKeyword = this.getView().byId("searchKeyword").getValue(),
 				sUsage = this.getView().byId("searchUsageSegmentButton").getSelectedKey();
@@ -537,15 +492,7 @@ use_flag: true
 			return aSearchFilters;
 		},
 		
-		_doInitTablePerso: function(){
-			// init and activate controller
-			this._oTPC = new TablePersoController({
-				table: this.byId("mainTable"),
-				componentName: "mi",
-				persoService: MainListPersoService,
-				hasGrouping: true
-			}).activate();
-		},
+
 		_handleUpdateSuccess: function(oData) {
 			MessageToast.show(this.getResourceBundle().getText("updateSuccess"));
 		},

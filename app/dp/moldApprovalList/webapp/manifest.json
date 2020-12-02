@@ -13,7 +13,7 @@
     "resources": "resources.json",
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v2/cm.MsgMgrService/",
+        "uri": "srv-api/odata/v2/dp.OrderApprovalService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -27,7 +27,7 @@
         }
       },
       "commonUtilService": {
-        "uri": "srv-api/odata/v2/util.CommonService/",
+        "uri": "srv-api/odata/v2/cm.util.CommonService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -125,8 +125,8 @@
           "useBatch": true
         }
       },
-      "msg": {
-        "dataSource": "mainService",
+      "mold": {
+        "dataSource": "moldService",
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",
@@ -136,7 +136,7 @@
         }
       },
       "": {
-        "dataSource": "moldService",
+        "dataSource": "mainService",
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",
@@ -179,17 +179,24 @@
           ]
         },
         {
-          "pattern": "Message/{moldId}",
-          "name": "mainObject",
-          "target": [
-            "mainObject"
-          ]
-        },
-        {
           "pattern": "PssaCreateObject/{company}/{plant}",
           "name": "pssaCreateObject",
           "target": [
             "pssaCreateObject"
+          ]
+        },
+        {
+          "pattern": "BeaCreateObject/{company}/{plant}",
+          "name": "beaCreateObject",
+          "target": [
+            "beaCreateObject"
+          ]
+        },
+        {
+          "pattern": "BeaObject/{approval_number}",
+          "name": "beaObject",
+          "target": [
+            "beaObject"
           ]
         },
         {
@@ -213,11 +220,17 @@
           "viewLevel": 2,
           "title": "{i18n>mainObjectViewTitle}"
         },
-         "budgetReportObject": {
-          "viewName": "BudgetReportObject",
-          "viewId": "budgetReportObject",
+         "beaCreateObject": {
+          "viewName": "BeaCreateObject",
+          "viewId": "beaCreateObject",
           "viewLevel": 2,
-          "title": "{i18n>budgetReportObjectTitle}"
+          "title": "{i18n>beaCreateObjectTitle}"
+        },
+         "beaObject": {
+          "viewName": "BeaObject",
+          "viewId": "beaObject",
+          "viewLevel": 2,
+          "title": "{i18n>beaObjectTitle}"
         },
          "pssaCreateObject": {
           "viewName": "PssaCreateObject", 

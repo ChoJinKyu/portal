@@ -16,12 +16,25 @@
         "uri": "srv-api/odata/v2/dp.DevelopmentReceiptService/",
         "type": "OData",
         "settings": {
-          "odataVersion": "2.0",
-          "localUri": "localService/metadata.xml"
+          "odataVersion": "2.0"
         }
       },
       "commonUtilService": {
-        "uri": "srv-api/odata/v2/util.CommonService/",
+        "uri": "srv-api/odata/v2/cm.util.CommonService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
+      },
+      "orgMgrService": {
+        "uri": "srv-api/odata/v2/cm.OrgMgrService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
+      },
+      "purOrgMgrService": {
+        "uri": "srv-api/odata/v2/cm.PurOrgMgrService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -68,6 +81,7 @@
       "compact": true,
       "cozy": true
     },
+    "handleValidation": true,
     "models": {
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
@@ -75,26 +89,53 @@
           "bundleName": "dp.developmentReceipt.i18n.i18n"
         }
       },
-      "util": {
-        "dataSource": "commonUtilService",
-        "preload": true,
-        "settings": {
-          "operationMode": "Server",
-          "groupId": "$direct",
-          "synchronizationMode": "None",
-          "autoExpandSelect": true
-        }
-      },
       "": {
         "dataSource": "mainService",
         "preload": true,
         "settings": {
-          "operationMode": "Server",
-          "groupId": "$direct",
-          "synchronizationMode": "None",
-          "autoExpandSelect": true
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": true,
+          "useBatch": true
+        }
+      },
+      "util": {
+        "dataSource": "commonUtilService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "useBatch": true
+        }
+      },
+      "org": {
+        "dataSource": "orgMgrService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": true,
+          "useBatch": true
+        }
+      },
+      "purOrg": {
+        "dataSource": "purOrgMgrService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": true,
+          "useBatch": true
         }
       }
+    },
+    "resources": {
+        "css": [
+            {
+                "uri": "css/style.css"
+            }
+        ]
     },
     "resourceRoots": {
         "ext.lib": "../../../lib"
@@ -131,6 +172,7 @@
         },
         "notFound": {
           "viewName": "NotFound",
+          "viewPath": "ext.lib.view",
           "viewId": "notFound"
         }
       }

@@ -12,7 +12,7 @@
 *************************************************/
 namespace dp;
 using { User } from '@sap/cds/common';
-using util from '../../../util/util-model';
+using util from '../../../cm/util/util-model';
 using {dp.Dc_Project_Part_List_His as Project_Part_List_History} from './DP_DC_PROJECT_PART_LIST_HIS-model';
 
 entity Dc_Project_Part_List_His {

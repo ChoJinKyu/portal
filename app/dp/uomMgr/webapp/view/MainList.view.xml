@@ -22,7 +22,7 @@
                 <f:expandedContent>
                 </f:expandedContent>
                 <f:actions>
-                    <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onPageSearchButtonPress" />
+                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
                 </f:actions>
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -31,22 +31,17 @@
         </f:title>
         <!-- DynamicPage Header -->
         <f:header>
-            <!-- <f:DynamicPageHeader pinnable="true">
+            <f:DynamicPageHeader pinnable="true">
 
                 <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="Chain:" labelFor="searchChain" required="true"></Label>
-                            <ComboBox id="searchChain" width="100%" selectedKey="CM" items="{
-                                    path: 'util>/CodeDetails',
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                        {path: 'company_code', operator: 'EQ', value1: '*'},
-                                        {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
-                                    ]
+                            <Label text="UOM Class :" labelFor="searchUomClass" ></Label>
+                            <ComboBox id="searchUomClass" width="100%" selectedKey="" items="{
+                                path: 'uomClass>/UomClass'
                                 }">
                                 <items>
-                                    <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+                                    <core:Item key="{uomClass>uom_class_code}" text="{uomClass>uom_class_code}: {uomClass>uom_class_name}" />
                                 </items>
                             </ComboBox>
                             <layoutData>
@@ -54,30 +49,46 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Keyword:" labelFor="searchKeyword"></Label>
-                            <Input id="searchKeyword" placeholder="Keywords of the Code or Content"></Input>
+                            <Label text="UOM :" labelFor="searchUom" ></Label>
+                            <ComboBox id="searchUom" width="100%" selectedKey="" items="{
+                                    path: '/Uom'                                    
+                                }">
+                                <items>
+                                    <core:Item key="{uom_code}" text="{uom_code}" />
+                                </items>
+                            </ComboBox>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
-                        </VBox>
+                        </VBox>                        
                         <VBox>
-                            <Label text="Usage:" labelFor="searchUsageSegmentButton"></Label>
-                            <SegmentedButton id="searchUsageSegmentButton" selectedKey="all" class="sapUiSmallMarginBottom" width="100%" >
+                            <Label text="Base Unit :" labelFor="searchBUSegmentButton"></Label>
+                            <SegmentedButton id="searchBUSegmentButton" selectedKey="" class="sapUiSmallMarginBottom" width="100%" >
                                 <items>
                                     <SegmentedButtonItem text="All" key="all" width="4.1rem" />
-                                    <SegmentedButtonItem text="Site" key="site" width="4.1rem" />
-                                    <SegmentedButtonItem text="Company" key="company" width="5rem" />
-                                    <SegmentedButtonItem text="Org." key="org" width="4.1rem" />
-                                    <SegmentedButtonItem text="User" key="user" width="4.1rem" />
+                                    <SegmentedButtonItem text="Yes" key="true" width="4.1rem" />
+                                    <SegmentedButtonItem text="No" key="false" width="4.1rem" />                                    
                                 </items>
                             </SegmentedButton>
                             <layoutData>
                                 <layout:GridData span="XL6 L6 M12 S12" />
                             </layoutData>
                         </VBox>
+                        <!-- <VBox>
+                            <Label text="Base Unit :" labelFor="searchBUSegmentButton"></Label>
+                            <ComboBox id="searchBUSegmentButton" selectedKey=""
+                                                    width="auto">
+                                                    <core:Item key="" text="All"/>
+                                                    <core:Item key="true" text="Yes"/>                                                            
+                                                    <core:Item key="false" text="No"/>
+                            </ComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL1 L1 M3 S3" />
+                            </layoutData>
+                        </VBox> -->
                     </form:content>
                 </form:SimpleForm>
-            </f:DynamicPageHeader> -->
+            </f:DynamicPageHeader>
         </f:header>
         <f:content>
             <VBox>
@@ -88,15 +99,16 @@
                         growingThreshold="15"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
-                        items="{list>/UomClass}"
+                        items="{list>/Uom}"
                         mode="None" 
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
                             <!-- <Title text="Control Options ({= ${list>/}.length || 0})" level="H2"/> -->
-                            <Title text="UOM Class" level="H2"/>
+                            <Title text="Unit Of Measure" level="H2"/>
                             <ToolbarSpacer/>
-                            <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
+                            <SearchField id="mainTableSearchField" placeholder="Uom" width="10rem" search=".onMainTableFilterPress" />
+                            <Button id="mainTableAddButton" text="{I18N>/NEW}" type="Transparent" press=".onMainTableAddButtonPress" />
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                                 <layoutData>
@@ -106,31 +118,47 @@
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
-                        <Column id="mainColumnClass" minScreenWidth="Tablet" hAlign="Center">
+                        <Column id="mainColumnUOM" minScreenWidth="Tablet" hAlign="Center">
+                            <Text text="UOM" />
+                        </Column>
+                        <Column id="mainColumnCC" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                            <Text text="Commercial Code" />
+                        </Column>
+                        <Column id="mainColumnCN" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
+                            <Text text="Commercial Name" />
+                        </Column>
+                        <Column id="mainColumnBU" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
+                            <Text text="Base Unit" />
+                        </Column>
+                        <Column id="mainColumnClass" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
                             <Text text="Class" />
+                        </Column> 
+                        <Column id="mainColumnTC" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
+                            <Text text="Technical Code" />
                         </Column>
-                        <Column id="mainColumnText" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="Class Text" />
+                        <Column id="mainColumnTN" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
+                            <Text text="Technical Name" />
                         </Column>
-                        <Column id="mainColumnBaseUom" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
-                            <Text text="Base UOM" />
-                        </Column>
-                        <Column id="mainColumnBaseUomText" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
-                            <Text text="Base UOM Text" />
+                        <Column id="mainColumnDD" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
+                            <Text text="Disable Date" />
                         </Column>                        
                     </columns>
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>
+                                <ObjectIdentifier text="{list>uom_code}"/>
+                                <ObjectIdentifier text="{list>commercial_uom_code}"/>
+                                <ObjectIdentifier text="{list>comercial_uom_name}"/>                                
+                                <ObjectStatus 
+                                    icon="{= ${list>base_unit_flag} === true ? 'sap-icon://accept' : ''}"/>
                                 <ObjectIdentifier text="{list>uom_class_code}"/>
-                                <ObjectIdentifier text="{list>uom_class_name}"/>
-                                <ObjectIdentifier text="{list>base_uom_code}"/>
-                                <ObjectIdentifier text="{list>base_uom_name}"/>
-                                <!-- <ObjectIdentifier text="{
-                                        path: 'list>start_date',
+                                <ObjectIdentifier text="{list>technical_uom_code}"/>
+                                <ObjectIdentifier text="{list>technical_uom_name}"/>                                
+                                <ObjectIdentifier text="{
+                                        path: 'list>disable_date',
                                         formatter: '.dateFormatter.toDateString'
                                     }"/>
-                                <ObjectIdentifier text="{
+                                <!-- <ObjectIdentifier text="{
                                         path: 'list>end_date',
                                         formatter: '.dateFormatter.toDateString'
                                     }"/> -->

@@ -17,7 +17,7 @@
 
 namespace pg;
 
-using util from '../../util/util-model';
+using util from '../../cm/util/util-model';
 using {pg as MI_Mat_Cd_BOM_Mngt} from '../mi/PG_MI_MATERIAL_CODE_BOM_MNGT-model';
 
 entity MI_Material_Code_Bom_Mngt {

@@ -1,5 +1,6 @@
 sap.ui.define([
-	"ext/lib/controller/BaseController",
+    "ext/lib/controller/BaseController",
+    "ext/lib/util/Multilingual",
 	"ext/lib/util/ValidatorUtil",
 	"sap/ui/model/json/JSONModel",
 	"ext/lib/model/TransactionManager",
@@ -16,10 +17,11 @@ sap.ui.define([
 	"sap/m/Text",
 	"sap/m/Input",
 	"sap/m/ComboBox",
-	"sap/ui/core/Item",
-], function (BaseController, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
+    "sap/ui/core/Item",
+    "sap/m/ObjectStatus"
+], function (BaseController, Multilingual, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
 	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
-	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus) {
 		
 	"use strict";
 
@@ -46,6 +48,9 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {
+            var oMultilingual = new Multilingual();
+			this.setModel(oMultilingual.getModel(), "I18N");
+			this.setModel(new ManagedListModel(), "list");
 			// Model used to manipulate controlstates. The chosen values make sure,
 			// detail page shows busy indication immediately so there is no break in
 			// between the busy indication for loading the view's meta data
@@ -67,7 +72,22 @@ sap.ui.define([
 
             this._initTableTemplates();
             this.enableMessagePopover();
-		}, 
+        }, 
+
+        formattericon: function(sState){
+            switch(sState){
+                case "D":
+                    return "sap-icon://decline";
+                break;
+                case "U": 
+                    return "sap-icon://accept";
+                break;
+                case "C": 
+                    return "sap-icon://add";
+                break;
+            }
+            return "";
+        },
 
 		/* =========================================================== */
 		/* event handlers                                              */
@@ -82,7 +102,7 @@ sap.ui.define([
 			this.getRouter().navTo("midPage", {
 				layout: sNextLayout, 
 				tenantId: this._sTenantId,
-				uomClassCode: this._sUomClassCode
+				uomCode: this._sUomCode
 			});
 		},
 		/**
@@ -94,7 +114,7 @@ sap.ui.define([
 			this.getRouter().navTo("midPage", {
 				layout: sNextLayout, 
 				tenantId: this._sTenantId,
-				uomClassCode: this._sUomClassCode
+				uomCode: this._sUomCode
 			});
 		},
 		/**
@@ -147,7 +167,7 @@ sap.ui.define([
 				oDetailsModel = this.getModel("details");
 			oDetailsModel.addRecord({
 				"tenant_id": this._sTenantId,
-				"uom_class_code": this._sUomClassCode,
+				"uom_class_code": this._sUomCode,
 				"language_code": "",
 				"uom_class_name": "",
 				"uom_class_desc": "",
@@ -185,8 +205,7 @@ sap.ui.define([
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
 						oView.setBusy(true);
-						oTransactionManager.submit({
-						// oView.getModel("master").submitChanges({
+						oTransactionManager.submit({						
 							success: function(ok){
 								that._toShowMode();
                                 oView.setBusy(false);
@@ -197,7 +216,6 @@ sap.ui.define([
 					};
 				}
 			});
-
 		},
 		
 		
@@ -206,11 +224,33 @@ sap.ui.define([
 		 * @public
 		 */
         onPageCancelEditButtonPress: function(){
-			if(this.getModel("midObjectView").getProperty("/isAddedMode") == true){
-				this.onPageNavBackButtonPress.call(this);
-			}else{
-				this._toShowMode();
-			}
+			// if(this.getModel("midObjectView").getProperty("/isAddedMode") == true){
+			// 	this.onPageNavBackButtonPress.call(this);
+			// }else{
+			// 	this._toShowMode();
+            // }
+            var oView = this.getView();
+            var sTenantId = this._sTenantId;
+            if (sTenantId === "new"){
+                this.onPageNavBackButtonPress();
+            }else if (sTenantId !== "new"){
+                
+                this.getModel("midObjectView").setProperty("/isAddedMode", false);                
+                this._bindView("/UomClass(tenant_id='" + this._sTenantId + "',uom_class_code='" + this._sUomCode + "')");
+				oView.setBusy(true);
+				var oDetailsModel = this.getModel("details");
+				oDetailsModel.setTransactionModel(this.getModel());				
+                oDetailsModel.read("/UomClassLng", {
+					filters: [
+						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+						new Filter("uom_class_code", FilterOperator.EQ, this._sUomCode),
+					],
+					success: function(oData){
+						oView.setBusy(false);
+					}
+				});
+                this._toShowMode();
+            }
         },
 
 		/* =========================================================== */
@@ -222,11 +262,11 @@ sap.ui.define([
 				var oMasterModel = this.getModel("master");
 				var oDetailsModel = this.getModel("details");
 				var sTenantId = oMasterModel.getProperty("/tenant_id");
-				var sUomClassCode = oMasterModel.getProperty("/uom_class_code");
+				var sUomCode = oMasterModel.getProperty("/uom_class_code");
 				var oDetailsData = oDetailsModel.getData();
 				oDetailsData.forEach(function(oItem, nIndex){
 					oDetailsModel.setProperty("/"+nIndex+"/tenant_id", sTenantId);
-					oDetailsModel.setProperty("/"+nIndex+"/uom_class_code", sUomClassCode);
+					oDetailsModel.setProperty("/"+nIndex+"/uom_class_code", sUomCode);
 				});
 				oDetailsModel.setData(oDetailsData);
 			}
@@ -241,9 +281,9 @@ sap.ui.define([
 			var oArgs = oEvent.getParameter("arguments"),
 				oView = this.getView();
 			this._sTenantId = oArgs.tenantId;
-			this._sUomClassCode = oArgs.uomClassCode;
+			this._sUomCode = oArgs.uomCode;
 
-			if(oArgs.tenantId == "new" && oArgs.uomClassCode == "code"){
+			if(oArgs.tenantId == "new" && oArgs.uomCode == "code"){
 				//It comes Add button pressed from the before page.
 				this.getModel("midObjectView").setProperty("/isAddedMode", true);
 
@@ -259,7 +299,7 @@ sap.ui.define([
 				oDetailsModel.setData([]);
 				oDetailsModel.addRecord({
 					"tenant_id": this._sTenantId,
-					"uom_class_code": this._sUomClassCode,
+					"uom_class_code": this._sUomCode,
 					"language_code": "",
 					"uom_class_name": "",
 					"uom_class_desc": "",
@@ -270,14 +310,14 @@ sap.ui.define([
 			}else{
 				this.getModel("midObjectView").setProperty("/isAddedMode", false);
 
-				this._bindView("/UomClass(tenant_id='" + this._sTenantId + "',uom_class_code='" + this._sUomClassCode + "')");
+				this._bindView("/UomClass(tenant_id='" + this._sTenantId + "',uom_class_code='" + this._sUomCode + "')");
 				oView.setBusy(true);
 				var oDetailsModel = this.getModel("details");
 				oDetailsModel.setTransactionModel(this.getModel());
 				oDetailsModel.read("/UomClassLng", {
 					filters: [
 						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-						new Filter("uom_class_code", FilterOperator.EQ, this._sUomClassCode),
+						new Filter("uom_class_code", FilterOperator.EQ, this._sUomCode),
 					],
 					success: function(oData){
 						oView.setBusy(false);
@@ -317,7 +357,7 @@ sap.ui.define([
 
 			this.byId("midTableAddButton").setEnabled(!FALSE);
 			this.byId("midTableDeleteButton").setEnabled(!FALSE);
-			//this.byId("midTableSearchField").setEnabled(FALSE);
+			this.byId("midTableSearchField").setEnabled(FALSE);
 			//this.byId("midTableApplyFilterButton").setEnabled(FALSE);
 			this.byId("midTable").setMode(sap.m.ListMode.SingleSelectLeft);
 			this._bindMidTable(this.oEditableTemplate, "Edit");
@@ -334,7 +374,7 @@ sap.ui.define([
 
 			this.byId("midTableAddButton").setEnabled(!TRUE);
 			this.byId("midTableDeleteButton").setEnabled(!TRUE);
-			//this.byId("midTableSearchField").setEnabled(TRUE);
+			this.byId("midTableSearchField").setEnabled(TRUE);
 			//this.byId("midTableApplyFilterButton").setEnabled(TRUE);
 			this.byId("midTable").setMode(sap.m.ListMode.None);
 			this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
@@ -365,7 +405,7 @@ sap.ui.define([
                 oLanguageCode.bindItems({
                     path: 'util>/CodeDetails',
                     filters: [
-                        // new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
+                        new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
                         // new Filter("company_code", FilterOperator.EQ, 'G100'),
                         new Filter("group_code", FilterOperator.EQ, 'CM_LANG_CODE')
                     ],
@@ -376,9 +416,10 @@ sap.ui.define([
                 });
 			this.oEditableTemplate = new ColumnListItem({
 				cells: [
-					new Text({
-						text: "{details>_row_state_}"
-					}),
+					new ObjectStatus({
+                        icon:{ path:'details>_row_state_', formatter: this.formattericon
+                                }                              
+                    }),
 					oLanguageCode, 
 					new Input({
 						value: "{details>uom_class_name}"
@@ -420,8 +461,21 @@ sap.ui.define([
 			}else{
 				if(oHandler) oHandler(this._oFragments[sFragmentName]);
 			}
-		}
+        },
+        
+        onMidTableFilterPress: function() {
+            this._MidTableApplyFilter();
+        },
 
+        _MidTableApplyFilter: function() {
+
+            var oView = this.getView(),
+				sValue = oView.byId("midTableSearchField").getValue(),
+				oFilter = new Filter("uom_class_name", FilterOperator.Contains, sValue);
+
+			oView.byId("midTable").getBinding("items").filter(oFilter, sap.ui.model.FilterType.Application);
+
+        }
 
 	});
 });

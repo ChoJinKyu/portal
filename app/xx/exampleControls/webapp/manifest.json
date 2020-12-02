@@ -20,7 +20,7 @@
         }
       },
       "commonUtilService": {
-        "uri": "srv-api/odata/v2/util.CommonService/",
+        "uri": "srv-api/odata/v2/cm.util.CommonService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -156,6 +156,13 @@
           "target": [
             "example4"
           ]
+        },
+        {
+          "pattern": "example5",
+          "name": "example5",
+          "target": [
+            "example5"
+          ]
         }
       ],
       "targets": {
@@ -178,6 +185,10 @@
         "example4": {
           "viewName": "InlineEditTable",
           "viewId": "example4"
+        },
+        "example5": {
+          "viewName": "CodeCombo",
+          "viewId": "example5"
         },
         "notFound": {
           "viewName": "NotFound",

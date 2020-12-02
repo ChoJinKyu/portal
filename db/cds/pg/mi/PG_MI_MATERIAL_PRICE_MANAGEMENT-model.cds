@@ -17,7 +17,7 @@
 
 namespace pg;
 
-using util from '../../util/util-model';
+using util from '../../cm/util/util-model';
 using {pg as MI_Mat_Prc_Mngt} from '../mi/PG_MI_MATERIAL_PRICE_MANAGEMENT-model';
 
 entity MI_Material_Price_Management {
@@ -39,6 +39,7 @@ entity MI_Material_Price_Management {
         delivery_mm           : String(10)          @title : '인도월';
     key mi_date               : Date not null       @title : '시황일자';
         amount                : Decimal(17, 3)      @title : '금액';
+        status                : String(1)           @title : '구분';
 }
 
 extend MI_Material_Price_Management with util.Managed;

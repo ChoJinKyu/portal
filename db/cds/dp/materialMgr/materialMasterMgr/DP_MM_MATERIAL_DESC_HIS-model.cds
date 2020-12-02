@@ -17,7 +17,7 @@
   -. 2020.11.25 : 최미희 최초작성
 *************************************************/
 namespace dp;	
-using util from '../../../util/util-model';	
+using util from '../../../cm/util/util-model';	
 
 entity Mm_Material_Desc_His {	
   key tenant_id : String(5)  not null @title: 'Tenant ID' ;	

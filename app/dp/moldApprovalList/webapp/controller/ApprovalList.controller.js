@@ -19,8 +19,10 @@ sap.ui.define([
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
     'sap/ui/core/Element',
-	"sap/ui/core/syncStyleClass"
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item, Element, syncStyleClass) {
+    "sap/ui/core/syncStyleClass",
+    'sap/m/Label',
+    'sap/m/SearchField',
+], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item, Element, syncStyleClass, Label, SearchField) {
 	"use strict";
    /**
     * @description 품의 목록 (총 품의 공통)
@@ -60,19 +62,53 @@ sap.ui.define([
 				intent: "#Template-display"
 			}, true);
 			
-			this.setModel(new ManagedListModel(), "list");
+            this._doInitSearch();
+
+            this.setModel(new ManagedListModel(), "list");
+            this.setModel(new ManagedListModel(), "orgMap");
 			
 			this.getRouter().getRoute("approvalList").attachPatternMatched(this._onRoutedThisPage, this);
 
             this._doInitTablePerso();
-            //this._doInitSearch();
             
         },
-        
+
+        _doInitTablePerso: function(){
+			// init and activate controller
+			this._oTPC = new TablePersoController({
+				table: this.byId("mainTable"),
+				componentName: "moldApprovalList",
+				persoService: ApprovalListPersoService,
+				hasGrouping: true
+			}).activate();
+		},
+        /**
+         * @private
+         * @see init 이후 바로 실행됨
+         */       
         onAfterRendering : function () {
 			this.byId("pageSearchButton").firePress();
 			return;
         },
+
+        /**
+         * @private
+         * @see 검색을 위한 컨트롤에 대하여 필요 초기화를 진행 합니다. 
+         */
+		_doInitSearch: function(){
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S";
+
+            this.getView().setModel(this.getOwnerComponent().getModel());
+
+            /** Date */
+            var today = new Date();
+            
+            this.getView().byId("searchRequestDateS").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
+            this.getView().byId("searchRequestDateS").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+            this.getView().byId("searchRequestDateE").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
+            this.getView().byId("searchRequestDateE").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+        },
+        
 
         
 		/* =========================================================== */
@@ -102,7 +138,7 @@ sap.ui.define([
 			}
 			this.getModel("approvalListView").setProperty("/approvalListTableTitle", sTitle);
 		},
-
+        
 		/**
 		 * Event handler when a table item gets pressed
 		 * @param {sap.ui.base.Event} oEvent the table selectionChange event
@@ -153,8 +189,8 @@ sap.ui.define([
 				var aSearchFilters = this._getSearchStates();
 				this._applySearch(aSearchFilters);
 			}
-		},
-
+        },
+       
 		/**
 		 * Event handler when pressed the item of table 
          * @description 목록 클릭시 이벤트 
@@ -184,134 +220,276 @@ sap.ui.define([
             //     });
             // }
 
-		},
-        onDblClick  : function(oEvent) {
-            console.log(oEvent);
-            window.clicks = window.clicks + 1;
-                
-            if(window.clicks == 1) {
-                setTimeout(sap.ui.controller(this).clearClicks, 500);
-            } else if(window.clicks == 2) {
-                console.log("더블클릭");
-            }
         },
 
-        
-        
-        /* Affiliate Start */
-        /**
-         * @private
-         * @see 검색을 위한 컨트롤에 대하여 필요 초기화를 진행 합니다. 
-         */
-		_doInitSearch: function(){
-            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S";
 
-			this._oMultiInput = this.getView().byId("searchApprovalCategory"+sSurffix);
-            this._oMultiInput.setTokens(this._getDefaultTokens());
-
-            this.oColModel = new JSONModel(sap.ui.require.toUrl("dp/moldApprovalList/localService/mockdata") + "/columnsModel.json");
-            this.oAffiliateModel = new JSONModel(sap.ui.require.toUrl("dp/moldApprovalList/localService/mockdata") + "/affiliate.json");
-            this.setModel("affiliateModel", this.oAffiliateModel);
-
-            // /** Receipt Date */
-            // var today = new Date();
-            
-            // this.getView().byId("searchReceiptDate"+sSurffix).setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
-            // this.getView().byId("searchReceiptDate"+sSurffix).setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
-           
-        },
-        /**
+        ///////////////////// Multi Combo box event Start //////////////////////////
+         /**
          * @private 
-         * @see searchAffiliate setTokens
+         * @see (멀티박스)Company와 Plant 부분 연관성 포함함
          */
-        _getDefaultTokens: function () {
-            
-            var oToken = new Token({
-                key: "EKHQ",
-                text: "[LGEKR] LG Electronics Inc."
-            });
+        handleSelectionFinishComp: function(oEvent){
 
-            return [oToken];
-        },
+            this.copyMultiSelected(oEvent);
 
-        /**
-         * @private 
-         * @see 리스트에서 create 버튼을 제외한 각각의 팝업 오픈
-         */
-        approvalDialogOpen: function (oEvent){
-            var oView = this.getView();
-            var oButton = oEvent.getSource();
-            var id = oButton.getId();
-            var page ="";
-            if(id.indexOf("Model") != -1){
-                page = "dp.moldApprovalList.view.DialogModel";
-                dialogId = "DialogModel";
-            }else if(id.indexOf("MoldPartNo") != -1){
-                page = "dp.moldApprovalList.view.DialogMoldPartNo";
-                dialogId = "DialogMoldPartNo";
-            }else if(id.indexOf("Requester") != -1){
-                page = "dp.moldApprovalList.view.DialogRequester";
-                dialogId = "DialogRequester";
-            }
-            this._oDialog = Fragment.load({
-                id: oView.getId(),
-                name: ""+page,
-                controller: this
-            }).then(function (oDialog) {
-                // connect dialog to the root view of this component (models, lifecycle)
-                oView.addDependent(oDialog);
-                return oDialog;
-            });
-            this._oDialog.then(function(oDialog) {
-                oDialog.open();
-                
-			});
-		
-        },
+            var params = oEvent.getParameters();
+            var plantFilters = [];
 
-        /**
-         * @private 
-         * @see approvalDialogOpen 함수에서 오픈한 팝업 닫기
-         */
-        onHandleClose: function (){
-            this.byId(dialogId).close();
-            this.byId(dialogId).destroy();
-        },
+            if(params.selectedItems.length > 0){
 
-        /**
-         * @private 
-         * @see approvalDialogOpen 팝업에서 apply버튼 클릭시
-         */
-        onHandleApply : function () {
+                params.selectedItems.forEach(function(item, idx, arr){
 
-            var oTable = this.byId("modelTable");
-            var aItems = oTable.getSelectedItems();
-            var oInput = this.byId("searchModel");
-            console.log(aItems);
-            if(aItems != ""){
-                aItems.forEach(function(oItem){   
-                    console.log(" nItem >>>>> getText 1 " ,  oItem.getCells()[0].getText());  
-                    oInput.setValue(oItem.getCells()[0].getText());
+                    plantFilters.push(new Filter({
+                                filters: [
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                    new Filter("company_code", FilterOperator.EQ, item.getKey() )
+                                ],
+                                and: true
+                            }));
                 });
             }else{
-                oInput.setValue("");
+                plantFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100' ));
             }
-            this.byId(dialogId).close();
-            this.byId(dialogId).destroy();
+
+            var filter = new Filter({
+                            filters: plantFilters,
+                            and: false
+                        });
+            
+            this.getView().byId("searchPlantS").getBinding("items").filter(filter, "Application");
+            this.getView().byId("searchPlantE").getBinding("items").filter(filter, "Application");
         },
 
-         /**
-         * @public
-         * @see 사용처 DialogModel, DialogMoldPartNo, DialogRequester Search 이벤트
-         */
-        handleSearch: function (oEvent) {
-			var sValue = oEvent.getParameter("value");
-			var oFilter = new Filter("org_name", FilterOperator.Contains, sValue);
-			var oBinding = oEvent.getSource().getBinding("items");
-			oBinding.filter([oFilter]);
+
+        handleSelectionFinishDiv: function(oEvent){
+            this.copyMultiSelected(oEvent);
         },
 
+        copyMultiSelected: function(oEvent){
+            var source = oEvent.getSource();
+            var params = oEvent.getParameters();
+
+            var id = source.sId.split('--')[2];
+            var idPreFix = id.substr(0, id.length-1);
+            var selectedKeys = [];
+            console.log(idPreFix);
         
+
+            params.selectedItems.forEach(function(item, idx, arr){
+                console.log(item.getKey());
+                selectedKeys.push(item.getKey());
+            });
+
+            this.getView().byId(idPreFix+"E").setSelectedKeys(selectedKeys);
+            this.getView().byId(idPreFix+"S").setSelectedKeys(selectedKeys);
+        },
+
+        ///////////////////// Multi Combo box event End //////////////////////////
+
+        ///////////////////// ValueHelpDialog section Start //////////////////////////
+        /*
+        
+        onValueHelpRequested : function (oEvent) {
+      
+            var path = '';
+           
+            this._oBasicSearchField = new SearchField({
+				showSearchButton: false
+            });
+
+            this._oValueHelpDialog = sap.ui.xmlfragment("dp.moldApprovalList.view.ValueHelpDialog", this);
+
+            var oFilterBar = this._oValueHelpDialog.getFilterBar();
+			oFilterBar.setFilterBarExpanded(false);
+			oFilterBar.setBasicSearch(this._oBasicSearchField);
+
+            if(oEvent.getSource().sId.indexOf("searchModel") > -1){
+                //model
+                this._oInputModel = this.getView().byId("searchModel");
+
+                this.oColModel = new JSONModel({
+                    "cols": [
+                        {
+                            "label": "Model",
+                            "template": "mold>model"
+                        }
+                    ]
+                });
+
+                path = 'mold>/Models';
+                
+                this._oValueHelpDialog.setTitle('Model');
+                this._oValueHelpDialog.setKey('model');
+                this._oValueHelpDialog.setDescriptionKey('model');
+
+            }else if(oEvent.getSource().sId.indexOf("searchMoldPartNo") > -1){
+                //part
+                this._oInputModel = this.getView().byId("searchMoldPartNo");
+
+                this.oColModel = new JSONModel({
+                    "cols": [
+                        {
+                            "label": "Part No",
+                            "template": "part_number"
+                        },
+                        {
+                            "label": "Description",
+                            "template": "spec_name"
+                        }
+                    ]
+                });
+
+                path = 'mold>/PartNumbers';
+
+                this._oValueHelpDialog.setTitle('Part No');
+                this._oValueHelpDialog.setKey('part_number');
+                this._oValueHelpDialog.setDescriptionKey('spec_name');
+            }
+
+            var aCols = this.oColModel.getData().cols;
+
+            console.log('this._oValueHelpDialog.getKey()',this._oValueHelpDialog.getKey());
+            
+            this.getView().addDependent(this._oValueHelpDialog);
+
+            this._oValueHelpDialog.getTableAsync().then(function (oTable) {
+                
+                oTable.setModel(this.getOwnerComponent().getModel());
+                oTable.setModel(this.oColModel, "columns");
+                
+                if (oTable.bindRows) {
+                    oTable.bindAggregation("rows", path);
+                }
+
+                if (oTable.bindItems) {
+                    oTable.bindAggregation("items", path, function () {
+                        return new ColumnListItem({
+                            cells: aCols.map(function (column) {
+                                return new Label({ text: "{" + column.template + "}" });
+                            })
+                        });
+                    });
+                }
+                this._oValueHelpDialog.update();
+
+            }.bind(this));
+
+            
+
+            // debugger
+
+            var oToken = new Token();
+			oToken.setKey(this._oInputModel.getSelectedKey());
+			oToken.setText(this._oInputModel.getValue());
+			this._oValueHelpDialog.setTokens([oToken]);
+            this._oValueHelpDialog.open();
+            
+
+        },
+        */ 
+        /**
+         * @private 
+         * @see 리스트 검색영역 팝업에서 확인버튼 클릭시
+         */
+        onValueHelpOkPress: function (oEvent) {
+            var aTokens = oEvent.getParameter("tokens");
+            console.log(aTokens[0].getKey());
+			this._oInputModel.setSelectedKey(aTokens[0].getKey());
+			this._oValueHelpDialog.close();
+		},
+
+		onValueHelpCancelPress: function () {
+			this._oValueHelpDialog.close();
+		},
+
+		onValueHelpAfterClose: function () {
+			this._oValueHelpDialog.destroy();
+        },
+        
+        onFilterBarSearch: function (oEvent) {
+			var sSearchQuery = this._oBasicSearchField.getValue(),
+				aSelectionSet = oEvent.getParameter("selectionSet");
+			var aFilters = aSelectionSet.reduce(function (aResult, oControl) {
+				if (oControl.getValue()) {
+					aResult.push(new Filter({
+						path: oControl.getName(),
+						operator: FilterOperator.Contains,
+						value1: oControl.getValue()
+					}));
+				}
+
+				return aResult;
+			}, []);
+
+			aFilters.push(new Filter({
+				filters: [
+					new Filter({ path: "model", operator: FilterOperator.Contains, value1: sSearchQuery })
+					// new Filter({ path: "Name", operator: FilterOperator.Contains, value1: sSearchQuery }),
+					// new Filter({ path: "Category", operator: FilterOperator.Contains, value1: sSearchQuery })
+				],
+				and: false
+			}));
+
+			this._filterTable(new Filter({
+				filters: aFilters,
+				and: true
+			}));
+        },
+
+
+		_filterTable: function (oFilter) {
+			var oValueHelpDialog = this._oValueHelpDialog;
+
+			oValueHelpDialog.getTableAsync().then(function (oTable) {
+				if (oTable.bindRows) {
+					oTable.getBinding("rows").filter(oFilter);
+				}
+
+				if (oTable.bindItems) {
+					oTable.getBinding("items").filter(oFilter);
+				}
+
+				oValueHelpDialog.update();
+			});
+        },
+        
+        ///////////////////// ValueHelpDialog section Start //////////////////////////
+
+        ///////////////////// List create button pop up event Start //////////////////////////
+        
+        dialogChangeComp: function(oEvent){
+
+            this.copySelected(oEvent);
+
+            var source = oEvent.getSource();
+            var plantFilter = [];
+
+            plantFilter.push(new Filter({
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                            new Filter("company_code", FilterOperator.EQ, source.getSelectedKey() )
+                        ],
+                        and: true
+            }));
+            
+
+            var filter = new Filter({
+                        filters: plantFilter,
+                        and: false
+            });
+            
+            this.getView().byId("searchPlantF").getBinding("items").filter(filter, "Application");
+        },
+
+
+        copySelected: function(oEvent){
+            var source = oEvent.getSource();
+            var selectedKey = source.getSelectedKey();
+            console.log(source.getSelectedKey());
+            this.getView().byId("searchPlantF").setSelectedKey(selectedKey);
+        },
+
+
          /**
          * @public
          * @see 사용처 DialogCreate Fragment Open 이벤트
@@ -359,14 +537,26 @@ sap.ui.define([
          * @see 사용처 create 팝업에서 select 버튼 press시 Object로 이동
          */ 
         handleConfirm : function(targetControl){
-            console.log(toggleButtonId);
+            
+            var id = toggleButtonId.split('--')[2];
+            var page =""
+            console.log(id);
+            if(id != ""){
+                if(id == "localBudget"){
+                    page = "beaCreateObject"
+                }else if(id == "supplierSelection"){
+                    page = "pssaCreateObject"
+                }
+            }
+            console.log("page >>>", page);
+
             var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
             for(var i=0; i<groupId.length; i++){
                 if(groupId[i].getPressed() == true){
                     console.log(groupId[i].mProperties.text);
                     console.log(this.byId("searchCompanyF").getValue());
                     console.log(this.byId("searchPlantF").getValue());
-                    this.getRouter().navTo("pssaCreateObject", {
+                    this.getRouter().navTo(page, {
                         company: this.byId("searchCompanyF").getValue()
                         , plant: this.byId("searchPlantF").getValue()
                         , 
@@ -380,9 +570,9 @@ sap.ui.define([
             this.byId("dialogApprovalCategory").close();
         },
 
-       
+       ///////////////////// List create button pop up event End //////////////////////////
 
-        /* Affiliate End */
+        ///////////////////// List search section Start //////////////////////////
 
 		/* =========================================================== */
 		/* internal methods                                            */
@@ -394,7 +584,8 @@ sap.ui.define([
 		 * @private
 		 */
 		_onRoutedThisPage: function(){
-			this.getModel("approvalListView").setProperty("/headerExpanded", true);
+            this.getModel("approvalListView").setProperty("/headerExpanded", true);
+            this.setModel(new ManagedListModel(), "orgMap");
 		},
 
 		/**
@@ -407,7 +598,7 @@ sap.ui.define([
 				oModel = this.getModel("list");
 			oView.setBusy(true);
 			oModel.setTransactionModel(this.getModel());
-			oModel.read("/MoldSpec", {
+			oModel.read("/Approvals", {
 				filters: aSearchFilters,
 				success: function(oData){
 					oView.setBusy(false);
@@ -416,53 +607,88 @@ sap.ui.define([
 		},
 		
 		_getSearchStates: function(){
-			// var sChain = this.getView().byId("searchChain").getSelectedKey(),
-			// 	sKeyword = this.getView().byId("searchKeyword").getValue(),
-			// 	sUsage = this.getView().byId("searchUsageSegmentButton").getSelectedKey();
-			
-			var aSearchFilters = [];
-			// if (sChain && sChain.length > 0) {
-			// 	aSearchFilters.push(new Filter("chain_code", FilterOperator.EQ, sChain));
-			// }
-			// if (sKeyword && sKeyword.length > 0) {
-			// 	aSearchFilters.push(new Filter({
-			// 		filters: [
-			// 			new Filter("control_option_code", FilterOperator.Contains, sKeyword),
-			// 			new Filter("control_option_name", FilterOperator.Contains, sKeyword)
-			// 		],
-			// 		and: false
-			// 	}));
-			// }
-			// if(sUsage != "all"){
-			// 	switch (sUsage) {
-			// 		case "site":
-			// 		aSearchFilters.push(new Filter("site_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 		case "company":
-			// 		aSearchFilters.push(new Filter("company_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 		case "org":
-			// 		aSearchFilters.push(new Filter("organization_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 		case "user":
-			// 		aSearchFilters.push(new Filter("user_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 	}
-			// }
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S"
+            
+            var aCompany = this.getView().byId("searchCompany"+sSurffix).getSelectedItems();
+
+            var sDateFrom = this.getView().byId("searchRequestDate"+sSurffix).getDateValue();
+            var sDateTo = this.getView().byId("searchRequestDate"+sSurffix).getSecondDateValue();
+
+			var sModel = this.getView().byId("searchModel").getValue().trim();
+            var	sPart = this.getView().byId("searchMoldPartNo").getValue().trim();
+            // var	sFamilyPart = this.getView().byId("searchFamilyPart").getValue().trim();
+            var	sStatus = this.getView().byId("searchStatus").getSelectedKey();
+            
+            var aSearchFilters = [];
+            var companyFilters = [];
+            
+            if(aCompany.length > 0){
+
+                aCompany.forEach(function(item, idx, arr){
+                    companyFilters.push(new Filter("company_code", FilterOperator.EQ, item.mProperties.key ));
+                });
+
+                aSearchFilters.push(
+                    new Filter({
+                        filters: companyFilters,
+                        and: false
+                    })
+                );
+            }
+
+            // var dateFilters = [];
+
+            // dateFilters.push(
+            //     new Filter({
+            //         path: "mold_spec_register_date",
+            //         operator: FilterOperator.BT,
+            //         value1: this.getFormatDate(sDateFrom),
+            //         value2: this.getFormatDate(sDateTo)
+            //     })
+            // );
+
+            // dateFilters.push(new Filter("mold_spec_register_date", FilterOperator.EQ, ''));
+            // dateFilters.push(new Filter("mold_spec_register_date", FilterOperator.EQ, null));
+
+            // aSearchFilters.push(
+            //     new Filter({
+            //         filters: dateFilters,
+            //         and: false
+            //     })
+            // );
+
+			if (sModel) {
+				aSearchFilters.push(new Filter("model", FilterOperator.StartsWith, sModel));
+            }
+            
+            if (sPart) {
+				aSearchFilters.push(new Filter("part_number", FilterOperator.StartsWith, sPart));
+            }
+            
+            // if (sFamilyPart) {
+			// 	aSearchFilters.push(new Filter("family_part_numbers", FilterOperator.Contains, sFamilyPart));
+            // }
+            
+            if (sStatus) {
+				aSearchFilters.push(new Filter("mold_spec_status_code", FilterOperator.EQ, sStatus));
+            }
+            
+            console.log(aSearchFilters);
+
 			return aSearchFilters;
 		},
 		
-		_doInitTablePerso: function(){
-			// init and activate controller
-			this._oTPC = new TablePersoController({
-				table: this.byId("mainTable"),
-				componentName: "moldApprovalList",
-				persoService: ApprovalListPersoService,
-				hasGrouping: true
-			}).activate();
-		}
+		
+        getFormatDate: function (date){
+            console.log(date);
+            var year = date.getFullYear();              //yyyy
+            var month = (1 + date.getMonth());          //M
+            month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+            var day = date.getDate();                   //d
+            day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+            return  year + '' + month + '' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+        }
 
-        
-
-	});
+        ///////////////////// List search section End //////////////////////////
+    });
 });

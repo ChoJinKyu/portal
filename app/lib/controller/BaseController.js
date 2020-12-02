@@ -8,22 +8,24 @@ sap.ui.define([
 
 	// shortcut for sap.m.URLHelper
 	var URLHelper = mobileLibrary.URLHelper;
-	var oMessageManager;
 
 	return Controller.extend("ext.lib.controller.BaseController", {
 
 		enableMessagePopover: function(oEventName){
-			sap.ui.getCore().attachValidationError(function (oEvent) {
-				debugger;
-				oEvent.getParameter("element").setValueState(sap.ui.core.ValueState.Error);
-			});
-			sap.ui.getCore().attachValidationSuccess(function (oEvent) {
-				debugger;
-				oEvent.getParameter("element").setValueState(sap.ui.core.ValueState.None);
-			});
-			oMessageManager = sap.ui.getCore().getMessageManager();
-            this.getView().setModel(oMessageManager.getMessageModel(),  "message");
-            oMessageManager.registerObject(this.getView(), true);
+			// sap.ui.getCore().attachValidationError(function (oEvent) {
+			// 	debugger;
+			// 	oEvent.getParameter("element").setValueState(sap.ui.core.ValueState.Error);
+			// });
+			// sap.ui.getCore().attachValidationSuccess(function (oEvent) {
+			// 	debugger;
+			// 	oEvent.getParameter("element").setValueState(sap.ui.core.ValueState.None);
+            // });
+            
+            var oMessageProcessor = new sap.ui.core.message.ControlMessageProcessor();
+            
+			this.oMessageManager = sap.ui.getCore().getMessageManager();
+            this.getView().setModel(this.oMessageManager.getMessageModel(),  "message");
+            this.oMessageManager.registerObject(this.getView(), false);
 
             // oEventName = oEventName || "onMessagePopoverPress";
             // this[oEventName] = function(oEvent){

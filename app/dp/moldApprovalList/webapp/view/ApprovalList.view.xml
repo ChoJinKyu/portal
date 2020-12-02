@@ -22,7 +22,7 @@
                         <form:content>
                             <VBox>
                                 <Label text="Company" labelFor="searchCompanyS" required="true"></Label>     
-                                <MultiComboBox id="searchCompanyS" width="100%" selectedKey="L1100" items="{
+                                <MultiComboBox id="searchCompanyS" width="100%" selectedKey="" selectionFinish="handleSelectionFinishComp" items="{
                                         path: 'org>/Org_Company',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
@@ -39,7 +39,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="Plant" labelFor="searchPlantS" required="true"></Label>
-                                <MultiComboBox id="searchPlantS" width="100%" selectedKey="L1100" items="{
+                                <MultiComboBox id="searchPlantS" width="100%" selectedKey="" items="{
                                         path: 'purOrg>/Pur_Operation_Org',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
@@ -89,7 +89,7 @@
                         <form:content>
                             <VBox>
                                 <Label text="Company" labelFor="searchCompanyE" required="true"></Label>     
-                                <MultiComboBox id="searchCompanyE" width="100%" selectedKey="L1100" items="{
+                                <MultiComboBox id="searchCompanyE" width="100%" selectedKey="" selectionFinish="handleSelectionFinishComp" items="{
                                         path: 'org>/Org_Company',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
@@ -106,7 +106,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="Plant" labelFor="searchPlantE" required="true"></Label>
-                                <MultiComboBox id="searchPlantE" width="100%" selectedKey="L1100" items="{
+                                <MultiComboBox id="searchPlantE" width="100%" selectedKey="" items="{
                                         path: 'purOrg>/Pur_Operation_Org',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
@@ -153,7 +153,7 @@
                     </form:SimpleForm>
                 </f:expandedContent>
                 <f:actions>
-                    <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onSelectDialogPress" />
+                    <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onPageSearchButtonPress" />
                 </f:actions>
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -167,11 +167,17 @@
                     <form:content>
                         <VBox>
                             <Label text="Model " labelFor="searchModel"></Label>
-                            <Input id="searchModel" showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".approvalDialogOpen"  width="100%">
-                                <!-- <customData>
-                                    <core:CustomData key="multi" value="true" />
-                                    <core:CustomData key="confirmButtonText" value="Apply" />
-                                </customData> -->
+                            <Input id="searchModel" 
+                                    showValueHelp="true"  
+                                    valueHelpRequest=".onValueHelpRequested"
+                                    suggestionItems="{
+                                        path: 'mold>/Models',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                        ],
+                                        sorter: { path: 'model' }
+                            }">
+                                <core:Item key="{mold>model}" text="{mold>model}" />
                             </Input>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
@@ -179,12 +185,18 @@
                         </VBox>
                         <VBox>
                             <Label text="Mold Part No " labelFor="searchMoldPartNo"></Label>
-                            <MultiInput id="searchMoldPartNo" valueHelpOnly="true" width="100%" valueHelpRequest=".approvalDialogOpen">
-                                <customData>
-                                    <core:CustomData key="multi" value="true" />
-                                    <core:CustomData key="confirmButtonText" value="Apply" />
-                                </customData>
-                            </MultiInput>
+                            <Input id="searchMoldPartNo" 
+                                    showValueHelp="true"  
+                                    valueHelpRequest=".onValueHelpRequested"
+                                    suggestionItems="{
+                                        path: 'mold>/PartNumbers',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                        ],
+                                        sorter: { path: 'part_number' }
+                            }">
+                                <core:Item key="{mold>part_number}" text="{mold>part_number}" />
+                            </Input>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -209,19 +221,19 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                                <Label text="Status"></Label>
-                                <SegmentedButton id="searchStatusS" selectedKey="" class="sapUiSmallMarginBottom" width="100%">
-                                    <items>
-                                        <SegmentedButtonItem text="All" key="" />
-                                        <SegmentedButtonItem text="Draft" width="5em" />
-                                        <SegmentedButtonItem text="In-Appr" width="5em" />
-                                        <SegmentedButtonItem text="Apprvd" width="5em" />
-                                        <SegmentedButtonItem text="Rejected" width="5em" />
-                                    </items>
-                                </SegmentedButton>
-                                <layoutData>
-                                    <layout:GridData span="XL10 L9 M6 S12" />
-                                </layoutData>
+                            <Label text="Status" class="sapUiSmallMarginTop"></Label>
+                            <SegmentedButton id="searchStatus" selectedKey="" width="100%">
+                                <items>
+                                    <SegmentedButtonItem text="All" key="" />
+                                    <SegmentedButtonItem text="Draft" key="D" width="5em" />
+                                    <SegmentedButtonItem text="In-Appr" width="5em" />
+                                    <SegmentedButtonItem text="Apprvd" width="5em" />
+                                    <SegmentedButtonItem text="Rejected" width="5em" />
+                                </items>
+                            </SegmentedButton>
+                            <layoutData>
+                                <layout:GridData span="XL10 L9 M6 S12" />
+                            </layoutData>
                         </VBox>
                     </form:content>
                 </form:SimpleForm>
@@ -238,10 +250,10 @@
                         rowSelectionChange = ".onCheck"
                         mode="MultiSelect"
                         width="auto"
-                        items="{list>/}">
+                        items="{list>/Approvals}">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="Approval List ({= ${list>/}.length || 0})" level="H2"/>
+                            <Title text="Approval List ({= ${list>/Approvals}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <!-- Add the Personalization button -->
                             <Button id="mainTableCreateButton" text="Create" type="Emphasized" press=".onDialogCreate" />
@@ -260,10 +272,10 @@
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
-                        <Column id="mainColumnApprovalCategory" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
+                        <Column id="mainColumnApprovalCategory" minScreenWidth="Tablet" hAlign="Center"  width="12em" >
                             <Text text="Approval&#10;Category" />
                         </Column>
-                        <Column id="mainColumnCompany" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
+                        <Column id="mainColumnCompany" minScreenWidth="Tablet" hAlign="Center" width="12em" >
                             <Text text="Company" />
                         </Column>
                         <Column id="mainColumnPlant" minScreenWidth="Tablet" hAlign="Center" width="12em" >
@@ -288,14 +300,14 @@
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>
-                                <ObjectIdentifier text="{list>mold_id}"/>
-                                <ObjectIdentifier text="{list>use_material_value}"/>
-                                <ObjectIdentifier text="{list>inspection_flag}"/>
-                                <ObjectIdentifier text="{list>assembly_approval_flag}"/>
-                                <ObjectIdentifier text="{list>request_life_shot_count}"/>
-                                <ObjectIdentifier text="{list>order_qty}"/>
-                                <ObjectIdentifier text="{list>cavity_process_qty}"/>
-                                <ObjectIdentifier text="{list>mold_tonnage}"/>
+                                <ObjectIdentifier text="{list>approval_type_code}" />
+                                <ObjectIdentifier text="{list>company_name}" />
+                                <ObjectIdentifier text="{list>plant_name}" />
+                                <ObjectIdentifier text="{list>approval_number}" />
+                                <ObjectIdentifier text="{list>approval_title}" />
+                                <ObjectIdentifier text="{list>requestor_empno}" />
+                                <ObjectIdentifier text="{list>request_date}" />
+                                <ObjectIdentifier text="{list>approve_status_code}" />
                             </cells>
                         </ColumnListItem>
                     </items>

@@ -17,47 +17,23 @@
 
 namespace pg;
 
-using util from '../../util/util-model';
-using {pg as Monitoring_Full_Master} from '../monitor/PG_MONITOR_FULL_MASTER-model';
+using util from '../../cm/util/util-model';
+using {cm.Org_Tenant as OrgTenant} from '../../cm/orgMgr/CM_ORG_TENANT-model';
+using {cm.Org_Company as OrgCompany} from '../../cm/orgMgr/CM_ORG_COMPANY-model';
+using {cm.Org_Unit as OrgUnit} from '../../cm/orgMgr/CM_ORG_UNIT-model';
 
 entity Monitor_Full_Master {
-    key tenant_id                        : String(5) not null  @title : '회사코드';
-    key company_code                     : String(10) not null @title : '법인코드';
-    key bizunit_code                     : String(10) not null @title : '사업부분코드';
-    key scenario                         : Integer64 not null  @title : '시나리오';
-        language_code                    : String(10)          @title : '언어코드';
-        scenario_name                    : String(240)         @title : '시나리오명';
-        separated_code                   : String(10)          @title : '구분코드';
-        separated_name                   : String(240)         @title : '구분명';
-        type_code                        : String(10)          @title : '유형코드';
-        type_name                        : String(240)         @title : '유형명';
-        manager                          : String(30)          @title : '관리자';
-        manager_korean_name              : String(240)         @title : '관리자한국어명';
-        manager_english_name             : String(240)         @title : '관리자영문명';
-        manager_job_title                : String(100)         @title : '관리자업무제목';
-        manager_mobile_phone_number      : String(50)          @title : '관리자휴대폰번호';
-        manager_department_code          : String(16)          @title : '관리자부서코드';
-        operation_mode_display_flag      : Boolean             @title : '운영방식조회여부';
-        operation_mode_calling_flag      : Boolean             @title : '운영방식소명여부';
-        operation_mode_alram_flag        : Boolean             @title : '운영방식알람여부';
-        cycle_code                       : String(10)          @title : '주기코드';
-        cycle_name                       : String(240)         @title : '주기명';
-        indicator                        : String(10)          @title : '지표';
-        indicator_name                   : String(240)         @title : '지표명';
-        indicator_sequence               : Integer64           @title : '지표순서';
-        indicator_condition_code         : String(10)          @title : '지표조건코드';
-        indicator_start_value            : String(100)         @title : '지표시작값';
-        indicator_last_value             : String(100)         @title : '지표최종값';
-        indicator_grade                  : String(10)          @title : '지표등급';
-        indicator_comparison_base_code   : String(10)          @title : '지표비교기준코드';
-        attch                            : LargeBinary         @title : '첨부파일';
-        attch_type_code                  : String(100)         @title : '첨부파일유형코드';
-        attch_name                       : String(240)         @title : '첨부파일명';
-        attch_size                       : Integer64           @title : '첨부파일크기';
-        activate_inactivate_flag         : Boolean             @title : '활성화비활성화여부';
-        monitoring_purpose               : LargeBinary         @title : '모니터링목적';
-        scenario_desc                    : LargeBinary         @title : '시나리오설명';
-        source_system_detail_description : LargeBinary         @title : '소스시스템상세설명';
+
+    key scenario_code                    : Integer64 not null @title : '시나리오코드';
+        linkToTenantID                   : Association to OrgTenant;
+        linkToCompanyCode                : Association to OrgCompany;
+        linkToBizunitCode                : Association to OrgUnit;
+        separated_code                   : String(10)         @title : '구분코드';
+        activate_flag                    : Boolean            @title : '활성화여부';
+        monitoring_purpose               : LargeBinary        @title : '모니터링목적';
+        scenario_desc                    : LargeBinary        @title : '시나리오설명';
+        source_system_detail_description : LargeBinary        @title : '소스시스템상세설명';
 }
 
 extend Monitor_Full_Master with util.Managed;
+

@@ -11,20 +11,20 @@
   entity 위에 @cds.persistence.exists 명시  
   
   5. namespace : db
-  6. entity : Mm_Unit_Of_Measure
-  7. entity description : UOM
+  6. entity : Mm_Uom_Class
+  7. entity description : UOM 클래스
   8. history
   -. 2020.11.25 : 최미희 최초작성
 *************************************************/
 namespace dp;	
-using util from '../../../util/util-model';
-
+using util from '../../../cm/util/util-model'; 	
+	
 entity Mm_Unit_Of_Measure {	
   key tenant_id : String(5)  not null @title: 'Tenant ID' ;	
   key uom_code : String(5)  not null @title: 'UOM코드' ;	
-    comercial_uom_code : String(3)   @title: '상업UOM코드' ;	
+    commercial_uom_code : String(3)   @title: '상업UOM코드' ;	
     technical_uom_code : String(6)   @title: '기술UOM코드' ;	
-    comercial_uom_name : String(30)   @title: '상업UOM명' ;	
+    commercial_uom_name : String(30)   @title: '상업UOM명' ;	
     technical_uom_name : String(30)   @title: '기술UOM명' ;	
     base_unit_flag : Boolean  not null @title: '기본단위여부' ;	
     uom_class_code : String(10)   @title: 'UOM Class Code' ;	
@@ -40,9 +40,9 @@ entity Mm_Unit_Of_Measure {
     family_unit_flag : Boolean   @title: '가족 단위 여부' ;	
     uom_iso_code : String(3)   @title: 'UOM ISO 코드' ;	
     uom_iso_primary_code_flag : Boolean   @title: 'UOM ISO 1차코드여부' ;	
-    comercial_unit_flag : Boolean   @title: '상업단위여부' ;	
+    commercial_unit_flag : Boolean   @title: '상업단위여부' ;	
     value_base_commitment_flag : Boolean   @title: '값기준 약정 여부' ;	
-
-}
+    disable_date : Date   @title: '불가일자' ;	
+}	
 
 extend Mm_Unit_Of_Measure with util.Managed;

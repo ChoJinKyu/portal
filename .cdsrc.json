@@ -35,10 +35,13 @@
             "db/cds/cm/roleMgr",    
             "db/cds/cm/menuMgr",                    
             "db/cds/dp",
-            "db/cds/dp/standardCommon",
-            "db/cds/dp/standardCommon/categoryMgr",
+            "db/cds/dp/pd",
+            "db/cds/dp/materialMgr/basicDataMgr",
+            "db/cds/dp/materialMgr/materialMasterConv",
             "db/cds/dp/materialMgr/materialMasterMgr",
             "db/cds/dp/materialMgr/uomMgr",
+            "db/cds/dp/standardCommon",
+            "db/cds/dp/standardCommon/categoryMgr",
             "db/cds/dp/moldMgt",
             "db/cds/dp/detailSpecEntry",
             "db/cds/dp/dc/tmc",
@@ -56,6 +59,7 @@
             "db/cds/pg/spmd",
             "db/cds/pg/vp",
             "db/cds/sp",
+            "db/cds/sp/fundingMgr",
             "db/cds/mc",
             "srv"
           ]

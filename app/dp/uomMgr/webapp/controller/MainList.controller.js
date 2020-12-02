@@ -1,5 +1,6 @@
 sap.ui.define([
-	"ext/lib/controller/BaseController",
+    "ext/lib/controller/BaseController",
+    "ext/lib/util/Multilingual",
 	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
 	"ext/lib/model/ManagedListModel",
@@ -16,7 +17,7 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+], function (BaseController, Multilingual, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
 	"use strict";
 
 	return BaseController.extend("dp.uomMgr.controller.MainList", {
@@ -32,6 +33,8 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {
+            var oMultilingual = new Multilingual();
+			this.setModel(oMultilingual.getModel(), "I18N");
 			var oViewModel,
 				oResourceBundle = this.getResourceBundle();
 
@@ -118,7 +121,7 @@ sap.ui.define([
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
 				tenantId: "new",
-				uomClassCode: "code"
+				uomCode: "code"
 			});
 		},
 
@@ -153,7 +156,7 @@ sap.ui.define([
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
 				tenantId: oRecord.tenant_id,
-				uomClassCode: oRecord.uom_class_code
+				uomCode: oRecord.uom_code
 			});
 
             if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
@@ -190,7 +193,7 @@ sap.ui.define([
 				oModel = this.getModel("list");
 			oView.setBusy(true);
 			oModel.setTransactionModel(this.getModel());
-			oModel.read("/UomClass", {
+			oModel.read("/Uom", {
 				filters: aSearchFilters,
 				success: function(oData){
 					oView.setBusy(false);
@@ -199,13 +202,19 @@ sap.ui.define([
 		},
 		
 		_getSearchStates: function(){
-			// var sChain = this.getView().byId("searchChain").getSelectedKey(),
-			// 	sKeyword = this.getView().byId("searchKeyword").getValue(),
-			// 	sUsage = this.getView().byId("searchUsageSegmentButton").getSelectedKey();
+            var sUomClass = this.getView().byId("searchUomClass").getSelectedKey(),			
+                sUom = this.getView().byId("searchUom").getSelectedKey(),
+			 	sBU = this.getView().byId("searchBUSegmentButton").getSelectedKey();
 			
 			var aSearchFilters = [];
-			// if (sChain && sChain.length > 0) {
-			// 	aSearchFilters.push(new Filter("chain_code", FilterOperator.EQ, sChain));
+			if (sUomClass && sUomClass.length > 0) {
+				aSearchFilters.push(new Filter("uom_class_code", FilterOperator.EQ, sUomClass));
+            }
+            if (sUom && sUom.length > 0) {
+				aSearchFilters.push(new Filter("uom_code", FilterOperator.EQ, sUom));
+            }
+            // if (sBU && sBU.length > 0) {
+			// 	aSearchFilters.push(new Filter("base_unit_flag", FilterOperator.EQ, sBU));
 			// }
 			// if (sKeyword && sKeyword.length > 0) {
 			// 	aSearchFilters.push(new Filter({
@@ -216,22 +225,16 @@ sap.ui.define([
 			// 		and: false
 			// 	}));
 			// }
-			// if(sUsage != "all"){
-			// 	switch (sUsage) {
-			// 		case "site":
-			// 		aSearchFilters.push(new Filter("site_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 		case "company":
-			// 		aSearchFilters.push(new Filter("company_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 		case "org":
-			// 		aSearchFilters.push(new Filter("organization_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 		case "user":
-			// 		aSearchFilters.push(new Filter("user_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 	}
-            // }
+			if(sBU != "all"){
+				switch (sBU) {					
+					case "true":
+					aSearchFilters.push(new Filter("base_unit_flag", FilterOperator.EQ, sBU));
+					break;
+					case "false":
+					aSearchFilters.push(new Filter("base_unit_flag", FilterOperator.EQ, sBU));
+					break;					
+				}
+            }
             
 			return aSearchFilters;
 		},
@@ -244,7 +247,21 @@ sap.ui.define([
 				persoService: MainListPersoService,
 				hasGrouping: true
 			}).activate();
-		}
+        },
+        
+        onMainTableFilterPress: function() {
+            this._MainTableApplyFilter();
+        },
+
+        _MainTableApplyFilter: function() {
+
+            var oView = this.getView(),
+				sValue = oView.byId("mainTableSearchField").getValue(),
+				oFilter = new Filter("uom_code", FilterOperator.Contains, sValue);
+
+			oView.byId("mainTable").getBinding("items").filter(oFilter, sap.ui.model.FilterType.Application);
+
+        }
 
 
 	});

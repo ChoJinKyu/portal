@@ -57,32 +57,57 @@
                         <form:content>
                             <VBox>
                                 <Label text="Affiliate" labelFor="searchAffiliateS" required="true"></Label>
-                                <MultiInput id="searchAffiliateS" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>
+                                <!--<MultiInput id="searchAffiliateS" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>-->
+                                <MultiComboBox id="searchAffiliateS" width="100%" selectedKey=""
+                                                items="{
+                                                    path: 'org>/Org_Company',
+                                                    filters: [
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                                    ],
+                                                    sorter: { path: 'company_code'}
+                                                }"
+                                selectionFinish="handleSelectionFinishComp">
+                                    <items>
+                                        <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                                    </items>
+                                </MultiComboBox>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                             <VBox>
                                 <Label text="Division" labelFor="searchDivisionS" required="true"></Label>
-                                <MultiInput id="searchDivisionS" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>
+                                <MultiComboBox  id="searchDivisionS" width="100%" selectedKey="" 
+                                                items="{
+                                                    path: '/Divisions',
+                                                    filters: [
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                                    ],
+                                                    sorter: { path: 'org_code'}
+                                                }"
+                                selectionFinish="handleSelectionFinishDiv" >
+                                    <items>
+                                        <core:Item key="{org_code}" text="[{org_code}] {org_name}" />
+                                    </items>
+                                </MultiComboBox>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                             <VBox>
                                 <Label text="Receipt Date" labelFor="searchReceiptDateS" required="true"></Label>
-                                <DateRangeSelection id="searchReceiptDateS" width="100%" change="handleChange"/>
+                                <DateRangeSelection id="searchReceiptDateS" width="100%" change="receiptDateChange"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                             <VBox>
                                 <Label text="Status"></Label>
-                                <SegmentedButton id="searchStatusS" selectedKey="" class="sapUiSmallMarginBottom" width="100%">
+                                <SegmentedButton id="searchStatusS" selectedKey="" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
                                     <items>
-                                        <SegmentedButtonItem text="All" key="" />
-                                        <SegmentedButtonItem text="Received" width="5em" />
-                                        <SegmentedButtonItem text="Unreceived" width="7em" />
+                                        <SegmentedButtonItem text="All" key="all" />
+                                        <SegmentedButtonItem text="Received" key="received" width="5em" />
+                                        <SegmentedButtonItem text="Unreceived" key="unreceived" width="7em" />
                                     </items>
                                 </SegmentedButton>
                                 <layoutData>
@@ -129,32 +154,56 @@
                         <form:content>
                             <VBox>
                                 <Label text="Affiliate" labelFor="searchAffiliateE" required="true"></Label>
-                                <MultiInput id="searchAffiliateE" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>
+                                <MultiComboBox id="searchAffiliateE" width="100%" selectedKey=""
+                                                items="{
+                                                    path: 'org>/Org_Company',
+                                                    filters: [
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                                    ],
+                                                    sorter: { path: 'company_code'}
+                                                }"
+                                selectionFinish="handleSelectionFinishComp">
+                                    <items>
+                                        <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                                    </items>
+                                </MultiComboBox>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                             <VBox>
                                 <Label text="Division" labelFor="searchDivisionE" required="true"></Label>
-                                <MultiInput id="searchDivisionE" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>
+                                <MultiComboBox  id="searchDivisionE" width="100%" selectedKey="" 
+                                                items="{
+                                                    path: '/Divisions',
+                                                    filters: [
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                                    ],
+                                                    sorter: { path: 'org_code'}
+                                                }"
+                                selectionFinish="handleSelectionFinishDiv" >
+                                    <items>
+                                        <core:Item key="{org_code}" text="[{org_code}] {org_name}" />
+                                    </items>
+                                </MultiComboBox>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                             <VBox>
                                 <Label text="Receipt Date" labelFor="searchReceiptDateE" required="true"></Label>
-                                    <DateRangeSelection id="searchReceiptDateE" width="100%" change="handleChange"/>
+                                    <DateRangeSelection id="searchReceiptDateE" width="100%" change="receiptDateChange"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                             <VBox>
                                 <Label text="Status"></Label>
-                                <SegmentedButton id="searchStatusE" selectedKey="" class="sapUiSmallMarginBottom" width="100%">
+                                <SegmentedButton id="searchStatusE" selectedKey="" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
                                     <items>
-                                        <SegmentedButtonItem text="All" key="" />
-                                        <SegmentedButtonItem text="Received" width="5em" />
-                                        <SegmentedButtonItem text="Unreceived" width="7em" />
+                                        <SegmentedButtonItem text="All" key="all" />
+                                        <SegmentedButtonItem text="Received" key="received" width="5em" />
+                                        <SegmentedButtonItem text="Unreceived" key="unreceived" width="7em" />
                                     </items>
                                 </SegmentedButton>
                                 <layoutData>
@@ -165,7 +214,7 @@
                     </form:SimpleForm>
                 </f:expandedContent>
                 <f:actions>
-                    <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onPageSearchButtonPress" />
+                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
                 </f:actions>
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -185,7 +234,6 @@
                                                     path : 'util>/CodeDetails',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                        {path : 'company_code', operator : 'EQ', value1 : '*'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
                                                     ]
                                                 }"
@@ -204,7 +252,6 @@
                                                     path : 'util>/CodeDetails',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                        {path : 'company_code', operator : 'EQ', value1 : '*'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
                                                     ]
                                                 }"
@@ -230,7 +277,6 @@
                                                     path : 'util>/CodeDetails',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                        {path : 'company_code', operator : 'EQ', value1 : '*'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ED_TYPE'}
                                                     ]
                                                 }"
@@ -274,16 +320,20 @@
                     selectionMode="MultiToggle"
                     fixedColumnCount="7"
                     visibleRowCountMode="Auto"
-                    rows="{list>/}"
-                    ><!--updateFinished=".onMoldMstTableUpdateFinished" cellClick=".onCellClick" rowSelectionChange = ".onCheck" -->
+                    rows="{list>/MoldMasters}"
+                    cellClick=".onCellClick"
+                    rowSelectionChange=".onCheck">
                 <table:extension>
                     <OverflowToolbar>
+                        <Title text="List ({= ${list>/MoldMasters}.length || 0})" level="H2"/>
                         <ToolbarSpacer/>
+                        <Button id="moldMstTableEditButton"     type="Transparent" text="Edit"               press=".onMoldMstTableEditButtonPress"     enabled="{mode>/viewFlag}" />
+                        <ToolbarSeparator/>
                         <!-- Add the Personalization button -->
-                        <Button id="moldMstTableBindButton"     type="Transparent" text="Bind &amp; Receipt" press=".onMoldMstTableBindButtonPress" />
-                        <Button id="moldMstTableCancelButton"   type="Transparent" text="Cancel Bind"   press=".onMoldMstTableCancelButtonPress" />
-                        <Button id="moldMstTableDeleteButton"   type="Transparent" text="Delete"        press=".onMoldMstTableDeleteButtonPress" />
-                        <Button id="moldMstTableReceiptButton"  type="Emphasized"  text="Receipt"       press=".onMoldMstTableReceiptButtonPress" />
+                        <Button id="moldMstTableBindButton"     type="Transparent" text="Bind &amp; Receipt" press=".onMoldMstTableBindButtonPress"     enabled="{mode>/viewFlag}" />
+                        <Button id="moldMstTableCancelButton"   type="Transparent" text="Cancel Bind"        press=".onMoldMstTableCancelButtonPress"   enabled="{mode>/viewFlag}" />
+                        <Button id="moldMstTableDeleteButton"   type="Transparent" text="Delete"             press=".onMoldMstTableDeleteButtonPress"   enabled="{mode>/viewFlag}" />
+                        <Button id="moldMstTableReceiptButton"  type="Emphasized"  text="Receipt"            press=".onMoldMstTableReceiptButtonPress"  enabled="{mode>/viewFlag}" />
                         <ToolbarSeparator/>
                         <Button icon="sap-icon://action-settings" press=".onMoldMstTablePersoButtonPressed" >
                             <layoutData>
@@ -293,70 +343,77 @@
                     </OverflowToolbar>
                 </table:extension>                             
                 <table:columns>
-                    <table:Column id="moldMstColumnAffiliate" width="5em" hAlign="Center">
+                    <table:Column id="moldAffiliateColumn" width="5em" hAlign="Center">
                         <Label text="Affiliate"/>           
                         <table:template>
                             <Text id="company_code" text="{list>company_code}"/> 
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnDivision" width="4.5em" hAlign="Center">
+                    <table:Column id="moldDivisionColumn" width="4.5em" hAlign="Center">
                         <Label text="Division"/>
                         <table:template>
                             <Text id="org_code" text="{list>org_code}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnModel" width="15em" >
+                    <table:Column id="moldModelColumn" width="15em" >
                         <Label text="Model"/>
                         <table:template>
                             <Text id="model" text="{list>model}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnPartNo" width="8em" hAlign="Center">
+                    <table:Column id="moldPartNoColumn" width="8em" hAlign="Center">
                         <Label text="Part No"/>
                         <table:template>
                             <Text id="part_number" text="{list>part_number}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnSeq" width="3em" hAlign="Center">
+                    <table:Column id="moldSeqColumn" width="3em" hAlign="Center">
                         <Label text="Seq"/>
                         <table:template>
                             <Text id="mold_sequence" text="{list>mold_sequence}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnDescription" width="12em">
+                    <table:Column id="moldDescriptionColumn" width="12em">
                         <Label text="Description"/>
                         <table:template>
                             <Text id="spec_name" text="{list>spec_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnStatus" width="5em" hAlign="Center">
+                    <table:Column id="moldStatusColumn" width="8em" hAlign="Center">
                         <Label text="Status"/>
                         <table:template>
-                            <Text id="mold_receipt_flag" text="{list>mold_receipt_flag}"/>
+                            <!--<Text id="mold_receipt_flag" text="{list>mold_receipt_flag}"/>-->
+                            <ComboBox selectedKey="{list>mold_receipt_flag}" editable="false" class="readonlyField">
+                                <core:Item key="false" text="Unreceived"/>
+                                <core:Item key="true" text="Received"/>
+                            </ComboBox>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnFamilyFlag" width="8em" hAlign="Center">
+                    <table:Column id="moldFamilyFlagColumn" width="5.5em" hAlign="Center">
                         <Label text="Family Y/N"/>
                         <table:template>
-                            <ComboBox   id="family_flag"    
+                            <ComboBox id="family_flag" selectedKey="{= ${list>family_part_number_1} !== null ? 'Y' : 'N' }" change="familyFlagChange" editable="{mode>/editFlag}" class="readonlyField" >
+                                <core:Item key="Y" text="Yes"/>
+                                <core:Item key="N" text="No"/>
+                            </ComboBox>
+                            <!--<ComboBox   id="family_flag"    
                                         selectedKey="{= ${list>family_part_number_1}.length > 0 ? 'Y' : 'N' }"
                                         items="{
                                                     path : 'util>/CodeDetails',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
-                                                        {path : 'company_code', operator : 'EQ', value1 : '*'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'CM_YN'}
                                                     ]
                                                 }"
-                            >
+                            editable="{mode>/editFlag}" class="readonlyField">
                                 <core:Item key="{util>code}" text="{util>code_description}" />
-                            </ComboBox>
+                            </ComboBox>-->
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnProductionType" width="12em" hAlign="Center">
+                    <table:Column id="moldProductionTypeColumn" width="12em" hAlign="Center">
                         <VBox>
                         <Label text="Production"/>
-                        <Label text="Type"/>
+                        <Label text="Type" required="true"/>
                         </VBox>
                         <table:template>
                             <ComboBox   id="mold_production_type_code"
@@ -365,19 +422,18 @@
                                                     path : 'util>/CodeDetails',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                        {path : 'company_code', operator : 'EQ', value1 : '*'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
                                                     ]
                                                 }"
-                            >
+                            editable="{mode>/editFlag}" class="readonlyField" >
                                 <core:Item key="{util>code}" text="{util>code_description}" />
                             </ComboBox>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnItemType" width="10em" hAlign="Center">
+                    <table:Column id="moldItemTypeColumn" width="10em" hAlign="Center">
                         <VBox>
                         <Label text="Item"/>
-                        <Label text="Type"/>
+                        <Label text="Type" required="true"/>
                         </VBox>
                         <table:template>
                             <ComboBox   id="mold_item_type_code"
@@ -386,19 +442,18 @@
                                                     path : 'util>/CodeDetails',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                        {path : 'company_code', operator : 'EQ', value1 : '*'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
                                                     ]
                                                 }"
-                            >
+                            editable="{mode>/editFlag}" class="readonlyField" >
                                 <core:Item key="{util>code}" text="{util>code_description}" />
                             </ComboBox>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnMoldType" width="10em" hAlign="Center">
+                    <table:Column id="moldMoldTypeColumn" width="10em" hAlign="Center">
                         <VBox>
                         <Label text="Mold"/>
-                        <Label text="Type"/>
+                        <Label text="Type" required="true"/>
                         </VBox>
                         <table:template>
                             <ComboBox   id="mold_type_code"
@@ -407,19 +462,18 @@
                                                     path : 'util>/CodeDetails',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                        {path : 'company_code', operator : 'EQ', value1 : '*'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_TYPE'}
                                                     ]
                                                 }"
-                            >
+                            editable="{mode>/editFlag}" class="readonlyField" >
                                 <core:Item key="{util>code}" text="{util>code_description}" />
                             </ComboBox>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnEDType" width="10em" hAlign="Center">
+                    <table:Column id="moldEDTypeColumn" width="10em" hAlign="Center">
                         <VBox>
                         <Label text="Export/Domestic"/>
-                        <Label text="Type"/>
+                        <Label text="Type" required="true"/>
                         </VBox>
                         <table:template>
                             <ComboBox   id="export_domestic_type_code"
@@ -428,29 +482,32 @@
                                                     path : 'util>/CodeDetails',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                        {path : 'company_code', operator : 'EQ', value1 : '*'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ED_TYPE'}
                                                     ]
                                                 }"
-                            >
+                            editable="{mode>/editFlag}" class="readonlyField" >
                                 <core:Item key="{util>code}" text="{util>code_description}" />
                             </ComboBox>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnTestUseFlag" width="5em" hAlign="Center">
+                    <table:Column id="moldTestUseFlagColumn" width="5em" hAlign="Center">
                         <VBox>
                         <Label text="T-EST"/>
                         <Label text="Use Y/N"/>
                         </VBox>
                         <table:template>
-                            <CheckBox selected="{list>t_est_use_flag}" />
+                            <Switch state="{list>t_est_use_flag}" customTextOn="Yes" customTextOff="No" enabled="{mode>/editFlag}">
+                                <layoutData>
+                                    <FlexItemData growFactor="1" />
+                                </layoutData>
+                            </Switch>
+                            <!--<CheckBox selected="{list>t_est_use_flag}" editable="{mode>/editFlag}" />-->
                             <!--<ComboBox   id="t_est_use_flag"    
                                         selectedKey="{list>t_est_use_flag}"
                                         items="{
                                                     path : 'util>/CodeDetails',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
-                                                        {path : 'company_code', operator : 'EQ', value1 : '*'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'CM_TF_FLAG'}
                                                     ]
                                                 }"
@@ -459,7 +516,7 @@
                             </ComboBox>-->
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnTestAttach" width="8em" hAlign="Center">
+                    <table:Column id="moldTestAttachColumn" width="8em" hAlign="Center">
                         <VBox>
                         <Label text="T-EST"/>
                         <Label text="Attach"/>
@@ -474,19 +531,23 @@
                             </core:Icon>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnProcessType" width="8em" hAlign="Center">
+                    <table:Column id="moldProcessTypeColumn" width="8em" hAlign="Center">
                         <VBox>
                         <Label text="Process"/>
                         <Label text="Type"/>
                         </VBox>
                         <table:template>
-                            <Text id="import_mold_flag" text="{list>import_mold_flag}"/>
+                            <!--<Text id="import_mold_flag" text="{list>import_mold_flag}"/>-->
+                            <ComboBox selectedKey="{list>import_mold_flag}" editable="{mode>/editFlag}" class="readonlyField" >
+                                <core:Item key="false" text="Domestic"/>
+                                <core:Item key="true" text="Export"/>
+                            </ComboBox>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnMoldStructure" width="10em" hAlign="Center">
+                    <table:Column id="moldMoldStructureColumn" width="10em" hAlign="Center">
                         <VBox>
                         <Label text="Mold"/>
-                        <Label text="Structure"/>
+                        <Label text="Structure" required="true"/>
                         </VBox>
                         <table:template>
                             <ComboBox   id="die_form"    
@@ -495,17 +556,16 @@
                                                     path : 'util>/CodeDetails',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                        {path : 'company_code', operator : 'EQ', value1 : '*'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_STRUCTURE'}
                                                     ]
                                                 }"
-                            >
+                            editable="{mode>/editFlag}" class="readonlyField" >
                                 <core:Item key="{util>code}" text="{util>code_description}" />
                             </ComboBox>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnSize" width="10em" hAlign="Center">
-                        <Label text="Size"/>
+                    <table:Column id="moldSizeColumn" width="10em" hAlign="Center">
+                        <Label text="Size" required="true"/>
                         <table:template>
                             <ComboBox   id="mold_size"    
                                         selectedKey="{list>mold_size}"
@@ -513,16 +573,15 @@
                                                     path : 'util>/CodeDetails',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                        {path : 'company_code', operator : 'EQ', value1 : '*'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SIZE'}
                                                     ]
                                                 }"
-                            >
+                            editable="{mode>/editFlag}" class="readonlyField" >
                                 <core:Item key="{util>code}" text="{util>code_description}" />
                             </ComboBox>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnReceiptDate" width="10em" hAlign="Center">
+                    <table:Column id="moldReceiptDateColumn" width="10em" hAlign="Center">
                         <VBox>
                         <Label text="Receipt"/>
                         <Label text="Date"/>
@@ -531,86 +590,97 @@
                             <Text id="receiving_report_date" text="{list>receiving_report_date}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnRequester" width="12em" hAlign="Center">
+                    <table:Column id="moldRequesterColumn" width="12em" hAlign="Center">
                         <Label text="Requester"/>
                             <table:template>
                                 <Text id="develope_request_empno" text="{list>develope_request_empno}"/>
                             </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnMoldDeveloper" width="12em" hAlign="Center">
+                    <table:Column id="moldMoldDeveloperColumn" width="12em" hAlign="Center">
                         <VBox>
                         <Label text="Mold"/>
-                        <Label text="Developer"/>
+                        <Label text="Developer" required="true"/>
                         </VBox>
                         <table:template>
-                            <Text id="mold_developer_id" text="{list>mold_developer_id}"/>
+                            <VBox>
+                            <Text id="mold_developer_id" text="{list>mold_developer_id}" visible="{mode>/viewFlag}" />
+                            <SearchField id="searchField" value="{list>mold_developer_id}" width="100%" placeholder="Search employee" visible="{mode>/editFlag}" search=".onMoldMstTableUserSearch" />
+                            </VBox>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnRemark" width="20em" hAlign="Center">
+                    <table:Column id="moldRemarkColumn" width="20em" hAlign="Center">
                         <Label text="Remark"/>
                         <table:template>
-                            <Input id="remark" value="{list>remark}"/>
+                            <TextArea id="remark" value="{list>remark}" rows="2" width="100%" editable="{mode>/editFlag}" class="readonlyField" />
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnProjectCode" width="15em">
+                    <table:Column id="moldProjectCodeColumn" width="15em">
                         <Label text="Project Code"/>
                         <table:template>
                             <Text id="pdm_project_code" text="{list>pdm_project_code}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnProjectName" width="20em">
+                    <table:Column id="moldProjectNameColumn" width="20em">
                         <Label text="Project Name"/>
                         <table:template>
                             <Text id="pdm_project_name" text="{list>pdm_project_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnFamilyPartNo1" width="12em" hAlign="Center">
+                    <table:Column id="moldFamilyPartNo1Column" width="12em" hAlign="Center">
                         <VBox>
                         <Label text="Family"/>
                         <Label text="Part No(1)"/>
                         </VBox>
                         <table:template>
-                            <Input id="family_part_number_1" value="{list>family_part_number_1}"/>
+                            <Input id="family_part_number_1" value="{list>family_part_number_1}" maxLength="11" editable="{= ${list>family_part_number_1} !== null ? ${mode>/editFlag} : false }" class="readonlyField" />
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnFamilyPartNo2" width="12em" hAlign="Center">
+                    <table:Column id="moldFamilyPartNo2Column" width="12em" hAlign="Center">
                         <VBox>
                         <Label text="Family"/>
                         <Label text="Part No(2)"/>
                         </VBox>
                         <table:template>
-                            <Input id="family_part_number_2" value="{list>family_part_number_2}"/>
+                            <Input id="family_part_number_2" value="{list>family_part_number_2}" maxLength="11" editable="{= ${list>family_part_number_1} !== null ? ${mode>/editFlag} : false }" class="readonlyField" />
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnFamilyPartNo3" width="12em" hAlign="Center">
+                    <table:Column id="moldFamilyPartNo3Column" width="12em" hAlign="Center">
                         <VBox>
                         <Label text="Family"/>
                         <Label text="Part No(3)"/>
                         </VBox>
                         <table:template>
-                            <Input id="family_part_number_3" value="{list>family_part_number_3}"/>
+                            <Input id="family_part_number_3" value="{list>family_part_number_3}" maxLength="11" editable="{= ${list>family_part_number_1} !== null ? ${mode>/editFlag} : false }" class="readonlyField" />
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnFamilyPartNo4" width="12em" hAlign="Center">
+                    <table:Column id="moldFamilyPartNo4Column" width="12em" hAlign="Center">
                         <VBox>
                         <Label text="Family"/>
                         <Label text="Part No(4)"/>
                         </VBox>
                         <table:template>
-                            <Input id="family_part_number_4" value="{list>family_part_number_4}"/>
+                            <Input id="family_part_number_4" value="{list>family_part_number_4}" maxLength="11" editable="{= ${list>family_part_number_1} !== null ? ${mode>/editFlag} : false }" class="readonlyField" />
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMstColumnFamilyPartNo5" width="12em" hAlign="Center">
+                    <table:Column id="moldFamilyPartNo5Column" width="12em" hAlign="Center">
                         <VBox>
                         <Label text="Family"/>
                         <Label text="Part No(5)"/>
                         </VBox>
                         <table:template>
-                            <Input id="family_part_number_5" value="{list>family_part_number_5}"/>
+                            <Input id="family_part_number_5" value="{list>family_part_number_5}" maxLength="11" editable="{= ${list>family_part_number_1} !== null ? ${mode>/editFlag} : false }" class="readonlyField" />
                         </table:template>
                     </table:Column>
                 </table:columns>
             </table:Table>
         </f:content>
+        <!-- DynamicPage Footer -->
+        <f:footer>
+            <OverflowToolbar>
+                <ToolbarSpacer />
+				<Button text="{I18N>/SAVE}" type="Emphasized" press=".onPageSaveButtonPress" />
+				<Button text="{I18N>/CANCEL}" type="Transparent" press=".onPageCancelEditButtonPress"/>
+            </OverflowToolbar>
+        </f:footer>
     </f:DynamicPage>
 </mvc:View>

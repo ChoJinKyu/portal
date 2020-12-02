@@ -2,33 +2,35 @@ sap.ui.define(["jquery.sap.global"],
     function (jQuery) {
         "use strict";
 
+        var i = 0;
+
         var _columns = [
             {
-                id: "developmentReceipt-moldMstTable-moldMstColumnFamilyFlag",
+                id: "developmentReceipt-moldMstTable-moldFamilyFlagColumn",
                 order: 7,
                 text: "Family Y/N",
                 visible: true
             },
             {
-                id: "developmentReceipt-moldMstTable-moldMstColumnProductionType",
+                id: "container-developmentReceipt---developmentReceipt--moldProductionTypeColumn",
                 order: 8,
                 text: "Production Type",
                 visible: true
             },
             {
-                id: "developmentReceipt-moldMstTable-moldMstColumnItemType",
+                id: "container-developmentReceipt---developmentReceipt--moldMstTable_hdr9",
                 order: 9,
                 text: "Item Type",
                 visible: true
             },
             {
-                id: "developmentReceipt-moldMstTable-moldMstColumnMoldType",
+                id: "container-developmentReceipt---developmentReceipt--moldMoldTypeColumn",
                 order: 10,
                 text: "Mold Type",
                 visible: true
             },
             {
-                id: "developmentReceipt-moldMstTable-moldMstColumnEDType",
+                id: "developmentReceipt-moldMstTable-moldEDTypeColumn",
                 order: 11,
                 text: "Export/Domestic Type",
                 visible: true
@@ -87,19 +89,20 @@ sap.ui.define(["jquery.sap.global"],
 
             getGroup: function (oColumn) {
                 var sId = oColumn.getId();
-                if (sId.indexOf('moldMstColumnAffiliate') != -1 ||
-                    sId.indexOf('moldMstColumnDivision') != -1 ||
-                    sId.indexOf('moldMstColumnModel') != -1 ||
-                    sId.indexOf('moldMstColumnPartNo') != -1 ||
-                    sId.indexOf('moldMstColumnSeq') != -1 ||
-                    sId.indexOf('moldMstColumnDescription') != -1 ||
-                    sId.indexOf('moldMstColumnStatus') != -1) {
+                if (sId.indexOf('moldAffiliateColumn') != -1 ||
+                    sId.indexOf('moldDivisionColumn') != -1 ||
+                    sId.indexOf('moldModelColumn') != -1 ||
+                    sId.indexOf('moldPartNoColumn') != -1 ||
+                    sId.indexOf('moldSeqColumn') != -1 ||
+                    sId.indexOf('moldDescriptionColumn') != -1 ||
+                    sId.indexOf('moldStatusColumn') != -1) {
                     return "Primary Group";
                 }
                 return "Others";
             }
         };
 
+        developmentReceiptPersoService.delPersData = developmentReceiptPersoService.resetPersData;
         return developmentReceiptPersoService;
 
     });

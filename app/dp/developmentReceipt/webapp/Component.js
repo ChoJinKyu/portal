@@ -1,9 +1,10 @@
 sap.ui.define([
 	"sap/ui/core/UIComponent",
 	"sap/ui/Device",
+    'sap/ui/model/json/JSONModel',
 	"./model/models",
 	"./controller/ErrorHandler"
-], function (UIComponent, Device, models, ErrorHandler) {
+], function (UIComponent, Device, JSONModel, models, ErrorHandler) {
 	"use strict";
 
 	return UIComponent.extend("dp.developmentReceipt.Component", {
@@ -29,7 +30,17 @@ sap.ui.define([
 			this.setModel(models.createDeviceModel(), "device");
 
 			// create the views based on the url/hash
-			this.getRouter().initialize();
+            this.getRouter().initialize();
+            
+            var oMode;
+            
+            oMode = new JSONModel({
+                editFlag : false,
+                viewFlag : true,
+                class : "readonlyField"
+            });
+
+            this.setModel(oMode, "mode");
 		},
 
 		/**

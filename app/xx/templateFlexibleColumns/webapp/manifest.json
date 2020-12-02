@@ -20,7 +20,7 @@
         }
       },
       "commonUtilService": {
-        "uri": "srv-api/odata/v2/util.CommonService/",
+        "uri": "srv-api/odata/v2/cm.util.CommonService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -139,11 +139,11 @@
       ],
       "targets": {
           "mainObject": {
-              "viewName": "MainList",
+              "viewName": "TemplateMainList",
               "controlAggregation": "beginColumnPages"
           },
           "midObject": {
-              "viewName": "MidObject",
+              "viewName": "TemplateMidObject",
               "controlAggregation": "midColumnPages"
           },
           "notFound": {

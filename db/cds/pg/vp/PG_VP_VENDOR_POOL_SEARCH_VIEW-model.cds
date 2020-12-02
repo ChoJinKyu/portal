@@ -6,6 +6,7 @@ entity Vp_Vendor_Pool_Search_View {
   key company_code: String(10) @title: '회사코드';
   key org_type_code: String(2) @title: '조직유형코드';
   key org_code: String(10) @title: '조작코드';
+  language_cd: String(2) @title: '다국어적용코드';
   key operation_unit_code: String(30) @title: '평가운영단위코드';
   operation_unit_name: String @title: '평가운영단위';
   key vendor_pool_code: String(30) @title: '협력사풀코드';
@@ -16,7 +17,8 @@ entity Vp_Vendor_Pool_Search_View {
   vendor_pool_level3_name: String @title: 'V/P(Level3)';
   vendor_pool_level4_name: String @title: 'V/P(Level4)';
   vendor_pool_level5_name: String @title: 'V/P(Level5)';
-  higher_level: String @title: '상위레벨경로';
+  higher_level_path: String @title: '상위레벨경로(같은레벨)';
+  level_path: String @title: '상위레벨경로(하위레벨)';
   info_change_status: String @title: '정보변경상태';
   inp_type_code: String(30) @title: '품목속성코드';
   inp_type_name: String @title: '품목속성';
@@ -42,13 +44,5 @@ entity Vp_Vendor_Pool_Search_View {
   repr_department_code: String(50) @title: '구매부서코드';
   repr_department_name: String @title: '구매부서';
   managers_name: String @title: '담당자';
-  node_id: String @title: 'node id';
-  parent_id: String @title: 'parent node id';
   hierarchy_rank: Integer64;
-  hierarchy_tree_size: Integer64;
-  hierarchy_parent_rank: Integer64;
-  hierarchy_level: Integer;
-  hierarchy_root_rank: Integer64;
-  delete_flag: Boolean @title: '삭제가능여부';
-  drill_state: String @title: 'expand/leaf';
 }

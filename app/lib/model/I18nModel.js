@@ -26,7 +26,19 @@ sap.ui.define([
         addTransactionGroup: undefined,
 
         getText: function(sPath){
-            return this.getProperty(sPath)
+            if(arguments.length > 1){
+                var sText = this.getProperty(sPath),
+                    aParams = [], i;
+                for(i = 1; i < arguments.length; i++){
+                    aParams.push(arguments[i]);
+                }
+                aParams.forEach(function(oParam, nIndex){
+                    sText = sText.replace('{'+(nIndex)+'}', oParam);
+                });
+                sText.replace()
+                return sText;
+            }else
+                return this.getProperty(sPath)
         },
 
         load: function(){

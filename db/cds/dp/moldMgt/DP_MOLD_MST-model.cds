@@ -1,6 +1,6 @@
 namespace dp;
 
-using util from '../../util/util-model';
+using util from '../../cm/util/util-model';
 
 entity Mold_Mst {
 

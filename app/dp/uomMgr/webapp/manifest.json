@@ -13,6 +13,13 @@
     "resources": "resources.json",
     "dataSources": {
       "mainService": {
+        "uri": "srv-api/odata/v2/dp.UomMgrService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
+      },
+      "uomClassService": {
         "uri": "srv-api/odata/v2/dp.UomClassMgrService/",
         "type": "OData",
         "settings": {
@@ -20,7 +27,7 @@
         }
       },
       "commonUtilService": {
-        "uri": "srv-api/odata/v2/util.CommonService/",
+        "uri": "srv-api/odata/v2/cm.util.CommonService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -85,6 +92,16 @@
           "useBatch": true
         }
       },
+      "uomClass": {
+        "dataSource": "uomClassService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "useBatch": true
+        }
+      },
       "": {
         "dataSource": "mainService",
         "preload": true,
@@ -97,7 +114,8 @@
       }
     },
     "resourceRoots": {
-      "ext.lib": "../../../lib"
+      "ext.lib": "../../../lib",
+      "dp.util": "../../util"
     },
     "routing": {
       "config": {
@@ -122,7 +140,7 @@
               ]
           },
           {
-              "pattern": "midObject/{layout}/{tenantId}/{uomClassCode}",
+              "pattern": "midObject/{layout}/{tenantId}/{uomCode}",
               "name": "midPage",
               "target": [
                   "mainObject",

@@ -18,8 +18,9 @@ sap.ui.define([
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
     'sap/m/Label',
-    'sap/m/Token'
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, Sorter, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, Label, Token) {
+    'sap/m/Token',
+    'sap/m/SearchField'
+], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, Sorter, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, Label, Token, SearchField) {
 	"use strict";
 
 	return BaseController.extend("dp.detailSpecEntry.controller.MainList", {
@@ -257,6 +258,8 @@ sap.ui.define([
             
             var aCompany = this.getView().byId("searchCompany"+sSurffix).getSelectedItems();
 
+            var aDivision = this.getView().byId("searchDivision"+sSurffix).getSelectedItems();
+
             var sDateFrom = this.getView().byId("searchDate"+sSurffix).getDateValue();
             var sDateTo = this.getView().byId("searchDate"+sSurffix).getSecondDateValue();
 
@@ -266,84 +269,78 @@ sap.ui.define([
             var	sStatus = this.getView().byId("searchStatus").getSelectedKey();
             
             var aSearchFilters = [];
-            var companyFilters = [];
             
             if(aCompany.length > 0){
+                var _tempFilters = [];
 
                 aCompany.forEach(function(item, idx, arr){
-                    companyFilters.push(new Filter("company_code", FilterOperator.EQ, item.mProperties.key ));
+                    _tempFilters.push(new Filter("company_code", FilterOperator.EQ, item.mProperties.key ));
                 });
 
                 aSearchFilters.push(
                     new Filter({
-                        filters: companyFilters,
+                        filters: _tempFilters,
                         and: false
                     })
                 );
             }
 
-            var dateFilters = [];
+            if(aDivision.length > 0){
+                var _tempFilters = [];
 
-            if (sDateFrom) {
-				dateFilters.push(new Filter("local_update_dtm", FilterOperator.GE, sDateFrom));
-            }
+                aDivision.forEach(function(item, idx, arr){
+                    _tempFilters.push(new Filter("org_code", FilterOperator.EQ, item.mProperties.key ));
+                });
 
-            if (sDateTo) {
-				dateFilters.push(new Filter("local_update_dtm", FilterOperator.LE, sDateTo));
-            }
-
-            if(dateFilters.length > 0){
                 aSearchFilters.push(
                     new Filter({
-                        filters: dateFilters,
-                        and: true
+                        filters: _tempFilters,
+                        and: false
                     })
                 );
             }
 
+
+            if(sDateFrom || sDateFrom){
+                var _tempFilters = [];
+
+                _tempFilters.push(
+                    new Filter({
+                        path: "mold_spec_register_date",
+                        operator: FilterOperator.BT,
+                        value1: this.getFormatDate(sDateFrom),
+                        value2: this.getFormatDate(sDateTo)
+                    })
+                );
+
+                _tempFilters.push(new Filter("mold_spec_register_date", FilterOperator.EQ, ''));
+                _tempFilters.push(new Filter("mold_spec_register_date", FilterOperator.EQ, null));
+
+                aSearchFilters.push(
+                    new Filter({
+                        filters: _tempFilters,
+                        and: false
+                    })
+                );
+            }
+            
+
 			if (sModel) {
-				aSearchFilters.push(new Filter("model", FilterOperator.StartsWith, sModel));
+                aSearchFilters.push(new Filter("tolower(model)", FilterOperator.Contains, "'"+sModel.toLowerCase().replace("'","''")+"'"));
             }
             
             if (sPart) {
-				aSearchFilters.push(new Filter("part_number", FilterOperator.StartsWith, sPart));
+				aSearchFilters.push(new Filter("tolower(mpart_number)", FilterOperator.Contains, "'"+sPart.toLowerCase()+"'"));
             }
             
             if (sFamilyPart) {
-				aSearchFilters.push(new Filter("family_part_numbers", FilterOperator.Contains, sFamilyPart));
+				aSearchFilters.push(new Filter("tolower(family_part_numbers)", FilterOperator.Contains, "'"+sFamilyPart.toLowerCase()+"'"));
             }
             
             if (sStatus) {
 				aSearchFilters.push(new Filter("mold_spec_status_code", FilterOperator.EQ, sStatus));
-			}
-			// if (sKeyword && sKeyword.length > 0) {
-			// 	aSearchFilters.push(new Filter({
-			// 		filters: [
-			// 			new Filter("control_option_code", FilterOperator.Contains, sKeyword),
-			// 			new Filter("control_option_name", FilterOperator.Contains, sKeyword)
-			// 		],
-			// 		and: false
-			// 	}));
-			// }
-			// if(sUsage != "all"){
-			// 	switch (sUsage) {
-			// 		case "site":
-			// 		aSearchFilters.push(new Filter("site_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 		case "company":
-			// 		aSearchFilters.push(new Filter("company_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 		case "org":
-			// 		aSearchFilters.push(new Filter("organization_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 		case "user":
-			// 		aSearchFilters.push(new Filter("user_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 	}
-            // }
+            }
             
-            console.log('aSearchFilters',aSearchFilters);
-
 			return aSearchFilters;
 		},
 		
@@ -362,21 +359,31 @@ sap.ui.define([
             this.copyMultiSelected(oEvent);
 
             var params = oEvent.getParameters();
-            var selectedKeys = [];
             var divisionFilters = [];
 
-            params.selectedItems.forEach(function(item, idx, arr){
-                selectedKeys.push(item.getKey());
-                divisionFilters.push(new Filter("company_code", FilterOperator.EQ, item.getKey() ));
-            });
+            if(params.selectedItems.length > 0){
+
+                params.selectedItems.forEach(function(item, idx, arr){
+
+                    divisionFilters.push(new Filter({
+                                filters: [
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                    new Filter("company_code", FilterOperator.EQ, item.getKey() )
+                                ],
+                                and: true
+                            }));
+                });
+            }else{
+                divisionFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100' ));
+            }
 
             var filter = new Filter({
                             filters: divisionFilters,
                             and: false
                         });
-
-            this.getView().byId("searchDivisionE").getBinding("items").filter(filter, "Application");
+            
             this.getView().byId("searchDivisionS").getBinding("items").filter(filter, "Application");
+            this.getView().byId("searchDivisionE").getBinding("items").filter(filter, "Application");
         },
 
         handleSelectionFinishDiv: function(oEvent){
@@ -403,6 +410,14 @@ sap.ui.define([
 
             var path = '';
             this._oValueHelpDialog = sap.ui.xmlfragment("dp.detailSpecEntry.view.ValueHelpDialogModel", this);
+
+            this._oBasicSearchField = new SearchField({
+				showSearchButton: false
+            });
+            
+            var oFilterBar = this._oValueHelpDialog.getFilterBar();
+			oFilterBar.setFilterBarExpanded(false);
+			oFilterBar.setBasicSearch(this._oBasicSearchField);
 
             if(oEvent.getSource().sId.indexOf("searchModel") > -1){
                 //model
@@ -434,6 +449,10 @@ sap.ui.define([
                             "template": "part_number"
                         },
                         {
+                            "label": "Item Type",
+                            "template": "mold_item_type_name"
+                        },
+                        {
                             "label": "Description",
                             "template": "spec_name"
                         }
@@ -449,7 +468,6 @@ sap.ui.define([
 
             var aCols = this.oColModel.getData().cols;
 
-            console.log('this._oValueHelpDialog.getKey()',this._oValueHelpDialog.getKey());
             
             this.getView().addDependent(this._oValueHelpDialog);
 
@@ -500,7 +518,71 @@ sap.ui.define([
 
 		onValueHelpAfterClose: function () {
 			this._oValueHelpDialog.destroy();
-		}
+        },
+
+        onFilterBarSearch: function (oEvent) {
+			var sSearchQuery = this._oBasicSearchField.getValue(),
+				aSelectionSet = oEvent.getParameter("selectionSet");
+			var aFilters = aSelectionSet.reduce(function (aResult, oControl) {
+				if (oControl.getValue()) {
+					aResult.push(new Filter({
+						path: oControl.getName(),
+						operator: FilterOperator.Contains,
+						value1: oControl.getValue()
+					}));
+				}
+
+				return aResult;
+            }, []);
+            
+            var _tempFilters = [];
+
+            if(this._oValueHelpDialog.oRows.sPath.indexOf('/Models') > -1){
+                // /Models
+                _tempFilters.push(new Filter("tolower(model)", FilterOperator.Contains, "'"+sSearchQuery.toLowerCase().replace("'","''")+"'"));
+
+            }else if(this._oValueHelpDialog.oRows.sPath.indexOf('/PartNumbers') > -1){
+                //PartNumbers
+                _tempFilters.push(new Filter({ path: "tolower(part_number)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
+                _tempFilters.push(new Filter({ path: "tolower(mold_item_type_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
+                _tempFilters.push(new Filter({ path: "tolower(spec_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
+            }
+
+			aFilters.push(new Filter({
+				filters: _tempFilters,
+				and: false
+			}));
+
+			this._filterTable(new Filter({
+				filters: aFilters,
+				and: true
+			}));
+        },
+        
+        _filterTable: function (oFilter) {
+			var oValueHelpDialog = this._oValueHelpDialog;
+
+			oValueHelpDialog.getTableAsync().then(function (oTable) {
+				if (oTable.bindRows) {
+					oTable.getBinding("rows").filter(oFilter);
+				}
+
+				if (oTable.bindItems) {
+					oTable.getBinding("items").filter(oFilter);
+				}
+
+				oValueHelpDialog.update();
+			});
+		},
+        
+        getFormatDate: function (date){
+            var year = date.getFullYear();              //yyyy
+            var month = (1 + date.getMonth());          //M
+            month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+            var day = date.getDate();                   //d
+            day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+            return  year + '' + month + '' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+        }
 
 	});
 });

@@ -16,9 +16,9 @@ using {pg as mntrFullMaster} from '../../../../db/cds/pg/monitor/PG_MONITOR_FULL
 //View
 using {pg as mntrMasterView} from '../../../../db/cds/pg/monitor/PG_MONITOR_MASTER_VIEW';
 //CM ORG
-using {cm.Org_Tenant as OrgTenant} from '../../../../db/cds/cm/orgMgr/CM_ORG_TENANT-model';
-using {cm.Org_Company as OrgCompany} from '../../../../db/cds/cm/orgMgr/CM_ORG_COMPANY-model';
-using {cm.Org_Unit as OrgUnit} from '../../../../db/cds/cm/orgMgr/CM_ORG_UNIT-model';
+using {cm.Org_Tenant as cmOrgTenant} from '../../../../db/cds/cm/orgMgr/CM_ORG_TENANT-model';
+using {cm.Org_Company as cmOrgCompany} from '../../../../db/cds/cm/orgMgr/CM_ORG_COMPANY-model';
+using {cm.Org_Unit as cmOrgUnit} from '../../../../db/cds/cm/orgMgr/CM_ORG_UNIT-model';
 //CM Code
 using {cm.Code_Mst as codeMst} from '../../../../db/cds/cm/codeMgr/CM_CODE_MST-model';
 using {cm.Code_Dtl as codeDtl} from '../../../../db/cds/cm/codeMgr/CM_CODE_DTL-model';
@@ -49,7 +49,6 @@ service monitorService {
     entity MonitoringSeparated @(title : '모니터링 구분')                      as projection on mntrSprt.Monitor_Separated;
     entity MonitoringType @(title : '모니터링 유형')                           as projection on mntrType.Monitor_Type;
     entity MonitoringSenario @(title : '모니터링 시나리오')                      as projection on mntrSnar.Monitor_Scenario;
-    entity MonitoringFullMaster @(title : '모니터링 전체 마스터')                 as projection on mntrFullMaster.Monitor_Full_Master;
     entity MonitoringMasterHistoryManagement @(title : '모니터링 마스터 이력 관리') as projection on mntrMasterHistMngt.Monitor_Master_History_Mngt;
     // View List
     view MonitoringMasterView @(title : '모니터링 마스터 View') as select from mntrMasterView.monitor_master_view;
@@ -60,28 +59,39 @@ service monitorService {
     view DepartmentView @(title : '부서 View') as select from DepartView.Monitor_Department_View;
     view OperationModeView @(title : '운영모드 View') as select from OperatMdView.Monitor_Operation_Mode_View;
 
+    // Test List
+    entity MonitoringFullMaster @(title : '모니터링 전체 마스터')                 as projection on mntrFullMaster.Monitor_Full_Master {
+        * , linkToTenantID : redirected to OrgTenant, linkToCompanyCode : redirected to OrgCompany, linkToBizunitCode : redirected to OrgUnit
+    };
+
     // Tenant View: 회사
-    view OrgTenantView @(title : '회사 마스터 View') as
+    entity OrgTenant @(title : '회사 마스터 View') as
         select
             key tenant_id,
                 tenant_name
-        from OrgTenant;
+        from cmOrgTenant
+        where
+            use_flag = 'true';
 
     // Company View: 법인
-    view OrgCompanyView @(title : '법인 마스터 View') as
+    entity OrgCompany @(title : '법인 마스터 View') as
         select
             key tenant_id,
             key company_code,
                 company_name
-        from OrgCompany;
+        from cmOrgCompany
+        where
+            use_flag = 'true';
 
     // Unit View: 사업부분
-    view OrgUnitView @(title : '사업부분 마스터 View') as
+    entity OrgUnit @(title : '사업부분 마스터 View') as
         select
             key tenant_id,
             key bizunit_code,
                 bizunit_name
-        from OrgUnit;
+        from cmOrgUnit
+        where
+            use_flag = 'true';
 
     // Separated View: 구분
     view MonitoringSeparatedView @(title : '모니터링 구분 View') as

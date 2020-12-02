@@ -6,7 +6,8 @@
     xmlns:lib-m="ext.lib.m"
     height="100%">
 
-    <Page id="page" title="Example #2" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
+    <Page id="page" 
+        title="Inline Edit Table for ext.lib.model.v2.ODataModel" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
 
         <content>
 

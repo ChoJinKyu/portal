@@ -1,6 +1,6 @@
 namespace pg;
 
-using util from '../../util/util-model';
+using util from '../../cm/util/util-model';
 
 entity MI_Mat_Prc_Management_Ptype {
     key cud_flag              : String(1)     @title : 'Flag Field';
