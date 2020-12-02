@@ -80,8 +80,8 @@
                         <co:MicroProcessFlow>
                             <co:content>
                                 <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <co:MicroProcessFlowItem state="Error" stepWidth="3rem"  icon="sap-icon://circle-task"/>
                                 <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <co:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
                                 <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
                                 <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
                                 <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
@@ -115,7 +115,6 @@
                                 <HBox alignItems="Center">
                                     <Label
                                         text="Subject "
-                                      
                                         class="sapUiTinyMarginEnd"
                                         textAlign="Left"
                                         labelFor="input"
