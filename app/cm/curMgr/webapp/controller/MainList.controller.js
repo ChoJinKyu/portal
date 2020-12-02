@@ -214,7 +214,6 @@ sap.ui.define([
 					oView.setBusy(false);
 				}
             });
-            debugger;
             this.getView().byId("mainTable").getBinding("items").filter(aSearchFilters, "Application");
             // this.getView().byId("mainTable").getBinding("items").getModel("list");
 		},
