@@ -24,7 +24,13 @@ service ProjectMgrService{
         unit.bizunit_name,
         ep.bizdivision_code,
         div.bizdivision_name, 
-        remark
+        remark,
+        ep.local_create_dtm,
+        ep.local_update_dtm,
+        ep.create_user_id,
+        ep.update_user_id,
+        ep.system_create_dtm,
+        ep.system_update_dtm        
         from project.Project as ep
         left outer join orgUnit.Org_Unit as unit
         on ep.tenant_id = unit.tenant_id and ep.bizunit_code = unit.bizunit_code
