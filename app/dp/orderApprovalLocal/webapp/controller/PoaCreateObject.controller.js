@@ -2,7 +2,9 @@ sap.ui.define([
   "ext/lib/controller/BaseController",
     "sap/ui/model/json/JSONModel", 
     "sap/ui/core/routing/History",
+    "ext/lib/model/ManagedModel",
     "ext/lib/model/ManagedListModel",
+    "ext/lib/model/TransactionManager",
     "sap/ui/richtexteditor/RichTextEditor",
 	"ext/lib/formatter/DateFormatter",
 	"sap/ui/model/Filter",
@@ -15,9 +17,11 @@ sap.ui.define([
     ,"sap/ui/core/syncStyleClass" 
     , "sap/m/ColumnListItem" 
     , "sap/m/Label"
-], function (BaseController, JSONModel, History, ManagedListModel, RichTextEditor , DateFormatter, Filter, FilterOperator, Fragment
+], function (BaseController, JSONModel, History, ManagedModel, ManagedListModel, TransactionManager, RichTextEditor , DateFormatter, Filter, FilterOperator, Fragment
             , MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label) {
 	"use strict";
+
+    var oTransactionManager;
 
   return BaseController.extend("dp.orderApprovalLocal.controller.PoaCreateObject", {
 
@@ -42,9 +46,18 @@ sap.ui.define([
 				});
 			this.getRouter().getRoute("poaCreateObject").attachPatternMatched(this._onObjectMatched, this);
             this.setModel(oViewModel, "poaCreateObjectView");
+
+            this.getView().setModel(new ManagedListModel(),"company");
+            this.getView().setModel(new ManagedListModel(),"plant");
             this.getView().setModel(new ManagedListModel(),"createlist"); // Participating Supplier
             this.getView().setModel(new ManagedListModel(),"appList"); // apporval list 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
+            this.getView().setModel(new ManagedModel(), "appMaster");
+			this.getView().setModel(new ManagedListModel(), "appDetail");
+            
+            oTransactionManager = new TransactionManager();
+			oTransactionManager.addDataModel(this.getModel("appMaster"));
+            oTransactionManager.addDataModel(this.getModel("appDetail"));
 		},
 
 	    onAfterRendering : function () {
@@ -165,12 +178,83 @@ sap.ui.define([
          * @param {*} args : company , plant   
          */
         _createViewBindData : function(args){ 
-            var appInfoModel = this.getModel("poaCreateObjectView");
-            appInfoModel.setData({ company : ""
-                                ,  plant : "" });   
+            var company_code = 'LGEKR' , plant_code = 'CCZ' ;
+            var appModel = this.getModel("poaCreateObjectView");
+            appModel.setData({ company_code : company_code 
+                                , company_name : "" 
+                                , plant_code : plant_code 
+                                , plant_name : "" 
+                            }); 
 
-            console.log("oMasterModel >>> " , appInfoModel);
+            var oView = this.getView(),
+				oModel = this.getModel("company");
+	
+			oModel.setTransactionModel(this.getModel("org"));
+            
+            var searchFilter = [];
+            searchFilter.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100'));
+            searchFilter.push(new Filter("company_code", FilterOperator.EQ, company_code));
+
+            oModel.read("/Org_Company", {
+                filters: searchFilter ,
+				success: function(oData){ 
+                   appModel.oData.company_name = oData.results[0].company_name
+				}
+            });
+            
+            var oView = this.getView(),
+				oModel2 = this.getModel("plant");
+                oModel2.setTransactionModel(this.getModel("org"));
+            searchFilter = [];
+            searchFilter.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100'));
+            searchFilter.push(new Filter("plant_code", FilterOperator.EQ, plant_code));
+
+            oModel2.read("/Org_Plant", {
+                filters: searchFilter ,
+				success: function(oData){   
+                   appModel.oData.plant_name = oData.results[0].plant_name;
+				}
+            });
+
+            this._onRoutedThisPage(args);
         } ,
+
+        _onRoutedThisPage: function(args){
+			
+            //this._sApprovalNo = args.approvalNo;
+            this._sApprovalNo = "308889-20B-00030";
+			this._sMoldId = args.moldId;
+
+			if(args.approvalNo == "new"){
+				//It comes Create button pressed from the before page.
+				
+			}else{
+				this._bindView("/ApprovalMasters('" + this._sApprovalNo + "')", "appMaster", [], function(oData){
+                    
+                });
+
+                var schFilter = [new Filter("approval_number", FilterOperator.EQ, this._sApprovalNo)];
+                this._bindView("/ApprovalDetails", "appDetail", schFilter, function(oData){
+                    
+                });
+            }
+            
+            oTransactionManager.setServiceModel(this.getModel());
+        },
+        
+        _bindView : function (sObjectPath, sModel, aFilter, callback) {
+			var oView = this.getView(),
+				oModel = this.getModel(sModel);
+			oView.setBusy(true);
+			oModel.setTransactionModel(this.getModel());
+			oModel.read(sObjectPath, {
+                filters: aFilter,
+				success: function(oData){
+                    oView.setBusy(false);
+                    callback(oData);
+				}
+			});
+		},
 
 		_onBindingChange : function () {
 			var oView = this.getView(),
@@ -395,15 +479,15 @@ sap.ui.define([
         /**
          * @description : Popup 창 : 품의서 Participating Supplier 항목의 Add 버튼 클릭
          */
-        handleTableSelectDialogPress : function (oEvent) {
-            console.group("handleTableSelectDialogPress");   
+        onPoItemAddRow : function (oEvent) {
+            console.group("onPoItemAddRow");   
         
             var oView = this.getView();
             var oButton = oEvent.getSource();
 			if (!this._oDialogTableSelect) {
 				this._oDialogTableSelect = Fragment.load({ 
                     id: oView.getId(),
-					name: "dp.bugetExecutionApproval.view.MoldItemSelection",
+					name: "dp.orderApprovalLocal.view.MoldItemSelection",
 					controller: this
 				}).then(function (oDialog) {
 				    oView.addDependent(oDialog);
@@ -431,14 +515,19 @@ sap.ui.define([
             var that = this;
             aItems.forEach(function(oItem){   
                 var obj = new JSONModel({
-                    model : oItem.getCells()[0].getText()
-                    , moldPartNo : oItem.getCells()[1].getText()
+                    model : oItem.getCells()[0].getText(),
+                    moldPartNo : oItem.getCells()[1].getText(),
+                    moldSequence : oItem.getCells()[2].getText(),
+                    specName : oItem.getCells()[3].getText(),
+                    moldItemType : oItem.getCells()[4].getText(),
+                    bookCurrencyCode : oItem.getCells()[5].getText(),
+                    budgetAmount : oItem.getCells()[6].getText()
                 });
                 // console.log(" nItem >>>>> getText 1 " ,  oItem.getCells()[0].getText());   
                 // console.log(" nItem >>>>> getText 2 " ,  oItem.getCells()[1].getText());   
                 // console.log(" nItem >>>>> getText 3 " ,  oItem.getCells()[2].getText());   
                 // console.log(" nItem >>>>> obj " ,  obj); 
-                that._addPsTable(obj);  
+                that._addMoldItemTable(obj);  
                 // oItem.getCells().forEach(function(nItem){ 
                 //      console.log(" nItem >>>>> getText " , nItem.getText());    
                 // });     
@@ -459,22 +548,18 @@ sap.ui.define([
          * @description participating row 추가 
          * @param {*} data 
          */
-        _addPsTable : function (data){     
-            var oTable = this.byId("poItemTable"),
-                oModel = this.getModel("createlist");
+        _addMoldItemTable : function (data){     
+            var oModel = this.getModel("createlist");
                 oModel.addRecord({
                     "model": data.oData.model,
                     "moldPartNo": data.oData.moldPartNo,
-                    "moldSupplier1" : "",
-                    "moldSupplier2" : "",
-                    "moldSupplier3" : "",
-                    "moldSupplier4" : "",
-                    "moldSupplier5" : "",
-                    "moldSupplier6" : "",
-                    "moldSupplier7" : "",
-                    "moldSupplier8" : "",
-                    "moldSupplier9" : "",
-                    "moldSupplier10" : "",
+                    "moldSequence" : data.oData.moldSequence,
+                    "specName" : data.oData.specName,
+                    "moldItemType" : data.oData.moldItemType,
+                    "bookCurrencyCode" : data.oData.bookCurrencyCode,
+                    "budgetAmount" : data.oData.budgetAmount,
+                    "orderSupplier" : "",
+                    "familyPartNumber1" : "",
                 });
         },
 
@@ -539,7 +624,7 @@ sap.ui.define([
                 if (!this._oDialog) {
                     this._oDialog = Fragment.load({ 
                         id: oView.getId(),
-                        name: "dp.bugetExecutionApproval.view.Employee",
+                        name: "dp.orderApprovalLocal.view.Employee",
                         controller: this
                     }).then(function (oDialog) {
                         oView.addDependent(oDialog);

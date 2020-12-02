@@ -79,8 +79,8 @@
                     <HBox>
                         <co:MicroProcessFlow>
                             <co:content>
-                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <co:MicroProcessFlowItem state="Error" stepWidth="3rem"  icon="sap-icon://circle-task"/>
+                                <co:MicroProcessFlowItem state="None" stepWidth="3rem"  icon="sap-icon://complete" />
+                                <co:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task"/>
                                 <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
                                 <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
                                 <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
@@ -120,10 +120,10 @@
                                         labelFor="input"
                                         required="true"/>
                                     <Input
-                                        value="Input data"
+                                        value=""
                                         visible="true"
                                         width="40em" 
-                                        placeholder="필수"
+                                        placeholder="Input data"
                                         >
                                     </Input>
                                 </HBox>
@@ -137,8 +137,56 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-            <uxap:ObjectPageSection titleUppercase="false" title="Participating Supplier">
+            <uxap:ObjectPageSection titleUppercase="false" title="Item for Budget Execution">
 				<uxap:subSections>
+                    <uxap:ObjectPageSubSection>
+                       <VBox class="sapUiSmallMargin">
+                            <form:SimpleForm 
+                                editable="true"
+                                layout="ColumnLayout"
+                                columnsM="2"
+                                columnsL="2"
+                                columnsXL="2" >
+                                <form:content>
+                                    <Label text="Inspection" required="true" />
+                                    <RadioButtonGroup id="radioInspection" columns="4" width="100%" class="sapUiMediumMarginBottom">
+                                        <RadioButton id="radio_Invest" text="Invest" />
+                                        <RadioButton id="radio_Supplies" text="Supplies"  />
+                                        <RadioButton id="radio_Expense" text="Expense"  />
+                                        <RadioButton id="radio_Non-ledger_Customer" text="Non-ledger(Customer)" />
+                                    </RadioButtonGroup>
+                                    <Label text="Account Department"  required="true" />
+                                    <ComboBox width="100%"  id="acquisitionDepartment" selectedKey=""  items="{}" >
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </ComboBox>
+                                    <Label text="Project Code"  required="true" />
+                                    <ComboBox width="100%" id="projectCode" selectedKey="" items="{}" >
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </ComboBox>
+                                    <Label text="Account"  required="true" />
+                                    <ComboBox width="100%" id="account" selectedKey="" items="{}" >
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </ComboBox>
+                                    <Label text="Balanced Budget"  />
+                                    <ObjectStatus text="292,000,000" /> <ObjectStatus text="KRW" state="Error" />
+                                     <Label text="Acquisition Department"  required="true" />
+                                    <Input value="" showValueHelp="true"/> 
+                                       <Label text="Import Company"  />
+                                    <ComboBox width="100%" id="importCompany" selectedKey="" items="{}" >
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </ComboBox>                              
+                                    <Label text="Import Plant" />
+                                    <ComboBox width="100%" id="importPlant" selectedKey="" items="{}" >
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </ComboBox>
+                                        <Label text="Customer"  />
+                                    <Input value="" showValueHelp="true"/>
+                                    <Label text="Customer PO No"  />
+                                    <Input value=""  />
+                                </form:content>
+                            </form:SimpleForm>
+                        </VBox>
+                    </uxap:ObjectPageSubSection>
 					<uxap:ObjectPageSubSection>
                        <HBox>
                          <VBox class="sapUiSmallMargin">
@@ -176,17 +224,11 @@
                                     </Button>
                                     <Button id="btnPsDelete"   type="Transparent" text="Delete"  press=".onPsDelRow" />
                                     <Button id="btnPsSuplierSel"  type="Emphasized"  text="Supplier Select"   press=".onPsSupplier" />
-                                    <!-- <ToolbarSeparator/>
-                                    <Button icon="sap-icon://action-settings" press="" >
-                                        <layoutData>
-                                            <OverflowToolbarLayoutData priority="NeverOverflow" />
-                                        </layoutData>
-                                    </Button> -->
                                 </OverflowToolbar>
                             </table:extension>          
 
                                 <table:columns>
-                                    <table:Column id="c_model" width="5em" hAlign="Center">
+                                    <table:Column id="c_model" width="15em" hAlign="Center">
                                         <Label text="Model"/>           
                                         <table:template>
                                             <Text id="t_model" text="{createlist>model}"/>
@@ -195,37 +237,61 @@
                                     <table:Column id="c_moldPartNo" width="10em" hAlign="Center">
                                         <Label text="Mold&#10;Part No"/>           
                                         <table:template>
-                                            <Text id="t_mold_part_no" text="{createlist>moldPartNo}"/>
+                                            <Text id="t_mold_part_no" text="{createlist>part_number}"/>
                                         </table:template>
                                     </table:Column>
-                                    <table:Column id="c_seq" width="10em" hAlign="Center">
+                                    <table:Column id="c_seq" width="5em" hAlign="Center">
                                         <Label text="Seq"/>           
                                         <table:template>
-                                            <Text id="t_seq" text=""/>
+                                            <Text id="t_seq" text="{createlist>mold_sequence}"/>
                                         </table:template>
                                     </table:Column>
-                                    <table:Column id="c_description" width="10em" hAlign="Center">
+                                    <table:Column id="c_description" width="15em" hAlign="Center">
                                         <Label text="Description"/>           
                                         <table:template>
-                                            <Text id="description" text=""/>
+                                            <Text id="description" text="{createlist>spec_name}"/>
                                         </table:template>
                                     </table:Column>       
                                     <table:Column id="c_MoldItemType" width="10em" hAlign="Center">
                                         <Label text="Mold Item Type"/>           
                                         <table:template>
-                                            <Text id="moldItemType" text=""/>
+                                            <ComboBox selectedKey="{createlist>mold_item_type_code}"
+                                                items="{ path : 'util>/CodeDetails',
+                                                            filters : [
+                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
+                                                            ]
+                                                        }"
+                                                editable="false" >  
+                                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                            </ComboBox>
                                         </table:template>
                                     </table:Column>                                     
                                     <table:Column id="c_bookCrrency" width="10em" hAlign="Center">
                                         <Label text="Book Currency"/>           
                                         <table:template>
-                                            <Text id="bookCurrency" text=""/>
+                                            <Text id="bookCurrency" text="{createlist>book_currency_code}"/>
                                         </table:template>
                                     </table:Column>                                     
                                     <table:Column id="c_budetAmount" width="10em" hAlign="Center">
                                         <Label text="Budget Amount"/>           
                                         <table:template>
-                                            <Text id="budetAmount" text=""/>
+                                            <Text id="budetAmount" text="{createlist>budget_amount}"/>
+                                        </table:template>
+                                    </table:Column>                                     
+                                    <table:Column id="c_productionType" width="10em" hAlign="Center">
+                                        <Label text="Production Type"/>           
+                                        <table:template>
+                                            <ComboBox selectedKey="{createlist>mold_production_type_code}"
+                                                items="{ path : 'util>/CodeDetails',
+                                                            filters : [
+                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
+                                                            ]
+                                                        }"
+                                                >  
+                                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                            </ComboBox>
                                         </table:template>
                                     </table:Column>                                     
                                     <table:Column id="c_currency" width="10em" hAlign="Center">
@@ -233,16 +299,14 @@
                                         <table:template>
                                               <ComboBox   id="currency"    
                                                             selectedKey="{= ${list>family_part_number_1}.length > 0 ? 'Y' : 'N' }"
-                                                            items="{
-                                                                        path : 'util>/CodeDetails',
-                                                                        filters : [
-                                                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
-                                                                            {path : 'company_code', operator : 'EQ', value1 : '*'},
-                                                                            {path : 'group_code', operator : 'EQ', value1 : 'CM_YN'}
-                                                                        ]
-                                                                    }"
-                                                >
-                                                    <core:Item key="{util>code}" text="{util>code_description}" />
+                                                           items="{ path : 'util>/CodeDetails',
+                                                            filters : [
+                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
+                                                            ]
+                                                        }"
+                                                editable="false" >  
+                                                <core:Item key="{util>code}" text="{util>code_description}" />
                                             </ComboBox>
                                         </table:template>
                                     </table:Column>                                     

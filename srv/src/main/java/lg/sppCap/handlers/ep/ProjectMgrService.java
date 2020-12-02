@@ -29,7 +29,7 @@ public class ProjectMgrService implements EventHandler {
     @Autowired
     private JdbcTemplate jdbc;
     
-    // 카테고리 Id 저장 전
+    // Project_number 자동 채번
     @Before(event=CdsService.EVENT_CREATE, entity=Project_.CDS_NAME)
     public void createBeforeProjectNumber(Project project) {
 
@@ -43,7 +43,7 @@ public class ProjectMgrService implements EventHandler {
         log.info("### tenant_id ====" + tenant_id);
 
         String max_project_number = "";
-        String v_sql = "SELECT IFNULL(MAX(CAST(REPLACE(PROJECT_NUMBER, 'P' , '') as INTEGER)), 0) + 1 AS MAX_PROJECT_NUMBER FROM EP_PROJECT";
+        String v_sql = "SELECT IFNULL(MAX(CAST(REPLACE(EP_PROJECT_NUMBER, 'P' , '') as INTEGER)), 0) + 1 AS MAX_PROJECT_NUMBER FROM EP_PROJECT";
 
         ResultSet v_rs = null;          
 
@@ -64,7 +64,7 @@ public class ProjectMgrService implements EventHandler {
             }
             log.info("### project_number ===1111111" + project_number);
 
-            project.setProjectNumber("P"+project_number);
+            project.setEpProjectNumber("P"+project_number);
 
 		} catch (Exception e) { 
 			e.printStackTrace();

@@ -19,7 +19,7 @@
                 </f:DynamicPageTitle>
             </f:title>
             <f:header>
-                <f:DynamicPageHeader pinnable="true">
+                <!-- <f:DynamicPageHeader pinnable="true">
                     <layout:HorizontalLayout>
                         <form:Form editable="true" width="100%">
                             <form:formContainers >
@@ -58,10 +58,10 @@
                     </layout:HorizontalLayout>
                     <HBox width="100%" alignItems="Center" alignContent="End" justifyContent="End">
                         <items>
-                            <!-- <Button text="검색" press=".onCreate"  type="Transparent"/> -->
+                            <Button text="검색" press=".onCreate"  type="Transparent"/>
                         </items>
                     </HBox>
-                </f:DynamicPageHeader>
+                </f:DynamicPageHeader> -->
             </f:header>
             <f:content>
                 <IconTabBar
@@ -75,7 +75,8 @@
                     class="sapUiResponsivePadding--header sapUiResponsivePadding--content"
                     >
                     <items>
-                        <IconTabFilter id="TenantTab" text="TenantTab" key="Tenant" count="{path:'/Org_Tenant/$count',formatter: '.formatter.setCount'}"> 
+                    <!-- count="{path:'/Org_Tenant/$count',formatter: '.formatter.setCount'}" -->
+                        <IconTabFilter id="TenantTab" text="TenantTab" key="Tenant" > 
                             <mvc:XMLView viewName="cm.orgMgr.view.orgMgrTenantView"></mvc:XMLView>
                         </IconTabFilter>
                         <IconTabSeparator />

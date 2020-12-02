@@ -1,7 +1,7 @@
 sap.ui.define([
 	"sap/ui/core/UIComponent",
 	"sap/ui/Device",
-	"cm/orgMgr/model/models"
+	"ext/lib/model/models",
 ], function (UIComponent, Device, models) {
 	"use strict";
 

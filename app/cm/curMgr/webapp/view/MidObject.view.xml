@@ -112,7 +112,7 @@
 									<Title text="통화 언어 목록" level="H2"/>
 									<ToolbarSpacer/>
 									<!-- Add the Personalization button -->
-									<Button id="midTableAddButton" text="행생성" type="Transparent" press=".onMidTableAddButtonPress" />
+									<Button id="midTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onMidTableAddButtonPress" />
 									<Button id="midTableDeleteButton" text="행삭제" type="Transparent" press=".onMidTableDeleteButtonPress" />
 									<ToolbarSeparator/>
 									<SearchField id="midTableSearchField" width="10rem" search=".onMidTableFilterPress" />

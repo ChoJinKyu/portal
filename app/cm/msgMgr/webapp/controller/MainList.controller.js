@@ -3,7 +3,8 @@ sap.ui.define([
 	"ext/lib/util/Multilingual",
 	"ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedListModel",
-	"ext/lib/formatter/Formatter",
+    "ext/lib/formatter/Formatter",
+    "ext/lib/util/Validator",
 	"sap/m/TablePersoController",
 	"./MainListPersoService",
 	"sap/ui/model/Filter",
@@ -17,16 +18,17 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Formatter, TablePersoController, MainListPersoService, 
-		Filter, FilterOperator, Sorter,
-		MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Formatter, Validator, TablePersoController, MainListPersoService, 
+		Filter, FilterOperator, Sorter, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
 	"use strict";
 
 	// var oTransactionManager;
 
 	return BaseController.extend("cm.msgMgr.controller.MainList", {
 
-		formatter: Formatter,
+        formatter: Formatter,
+        
+        validator: new Validator(),
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -50,7 +52,8 @@ sap.ui.define([
 				}, true);
 			}.bind(this));
 
-			this._doInitTablePerso();
+            this._doInitTablePerso();
+            this.enableMessagePopover();
         },
         
         onRenderedFirst : function () {
@@ -137,7 +140,8 @@ sap.ui.define([
 				"message_contents": "",
 				"local_create_dtm": new Date(),
 				"local_update_dtm": new Date()
-			}, "/Message", 0);
+            }, "/Message", 0);
+            this.validator.clearValueState(this.byId("mainTable"));
 		},
 
 		onMainTableDeleteButtonPress: function(){
@@ -153,7 +157,8 @@ sap.ui.define([
 				//oModel.removeRecord(nIndex);
 				oModel.markRemoved(nIndex);
 			});
-			oTable.removeSelections(true);
+            oTable.removeSelections(true);
+            this.validator.clearValueState(this.byId("mainTable"));
 		},
        
         onMainTableSaveButtonPress: function(){
@@ -163,7 +168,10 @@ sap.ui.define([
 			if(!oModel.isChanged()) {
 				MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
 				return;
-			}
+            }
+            
+            if(this.validator.validate(this.byId("mainTable")) !== true) return;
+
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
 				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -173,8 +181,8 @@ sap.ui.define([
 						oModel.submitChanges({
 							success: function(oEvent){
 								oView.setBusy(false);
-								MessageToast.show("Success to save.");
-							}
+								MessageToast.show(this.getModel("I18N").getText("/NCM0005"));
+							}.bind(this)
 						});
 						//oTransactionManager.submit({
 						// 	success: function(oEvent){
@@ -183,7 +191,7 @@ sap.ui.define([
 						// 	}
 						// });
 					};
-				}
+				}.bind(this)
 			});
 			
         }, 
@@ -201,19 +209,25 @@ sap.ui.define([
 			var oView = this.getView(),
 				oModel = this.getModel("list");
 			oView.setBusy(true);
-			oModel.setTransactionModel(this.getModel());
+            oModel.setTransactionModel(this.getModel());
 			oModel.read("/Message", {
-				filters: aTableSearchState,
-				sorters: [
+                filters: aTableSearchState,
+                sorters: [
 					new Sorter("chain_code"),
 					new Sorter("message_code"),
 					new Sorter("language_code", true)
 				],
 				success: function(oData){
+                    this.validator.clearValueState(this.byId("mainTable"));
 					oView.setBusy(false);
-				}
+				}.bind(this)
 			});
-
+            // ,
+			// 	sorters: [
+			// 		new Sorter("chain_code"),
+			// 		new Sorter("message_code"),
+			// 		new Sorter("language_code", true)
+			// 	]
 			// oTransactionManager.setServiceModel(this.getModel());
 		},
 		
@@ -221,7 +235,7 @@ sap.ui.define([
 			var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S",
 				chain = this.getView().byId("searchChain"+sSurffix).getSelectedKey(),
 				language = this.getView().byId("searchLanguage"+sSurffix).getSelectedKey(),
-				keyword = this.getView().byId("searchKeyword"+sSurffix).getValue();
+                keyword = this.getView().byId("searchKeyword"+sSurffix).getValue();
 				
 			var aTableSearchState = [];
 			if (chain && chain.length > 0) {
