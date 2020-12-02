@@ -1,7 +1,17 @@
 sap.ui.define([
-	"sap/ui/core/mvc/Controller"
-], function (Controller) {
-	"use strict";
+    "sap/ui/core/mvc/Controller" 
+    , "sap/ui/model/odata/v2/ODataModel"
+], function (Controller,ODataModel) {
+    "use strict"; 
+ 
+    var oServiceModel = new ODataModel({
+        serviceUrl: "srv-api/odata/v2/dp.util.MoldItemSelectionService/",
+        defaultBindingMode: "OneWay",
+        defaultCountMode: "Inline",
+        refreshAfterChange: false,
+        useBatch: true
+    });
+
     /**
      * @description MoldSelection 
      * @author jinseon.lee

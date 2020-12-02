@@ -31,6 +31,7 @@ entity VI_Base_Price_Arl_Dtl {
 };
 
 extend VI_Base_Price_Arl_Dtl with util.Managed;
+
 annotate VI_Base_Price_Arl_Dtl with @title : '품의 상세'  @description : '개발단가 품의 상세';
 
 annotate VI_Base_Price_Arl_Dtl with {
