@@ -3,6 +3,7 @@ select distinct
 	am.approval_number
     ,am.approval_type_code
     ,am.approval_title
+    ,mm.tenant_id
     ,'['||mm.company_code||'] '||(select company_name from cm_org_company where company_code=mm.company_code) company_name
     ,'['||mm.org_code||'] '||(select plant_name from CM_ORG_PLANT where au_code=mm.org_code and company_code=mm.company_code) org_name
     ,mm.company_code
