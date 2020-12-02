@@ -229,13 +229,13 @@ sap.ui.define([
 				//It comes Create button pressed from the before page.
 				
 			}else{
-				this._bindView("/ApprovalMasters(" + this._sApprovalNo + ")", "appMaster", [], function(oData){
-                    console.log(oData);
+				this._bindView("/ApprovalMasters('" + this._sApprovalNo + "')", "appMaster", [], function(oData){
+                    
                 });
 
                 var schFilter = [new Filter("approval_number", FilterOperator.EQ, this._sApprovalNo)];
                 this._bindView("/ApprovalDetails", "appDetail", schFilter, function(oData){
-                    console.log(oData);
+                    
                 });
             }
             
