@@ -203,7 +203,7 @@
                         </VBox>
                         <VBox>
                             <Label text="Subject" labelFor="searchSubject"></Label>
-                            <SearchField />
+                            <Input id="searchSubject"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -226,9 +226,9 @@
                                 <items>
                                     <SegmentedButtonItem text="All" key="" />
                                     <SegmentedButtonItem text="Draft" key="D" width="5em" />
-                                    <SegmentedButtonItem text="In-Appr" width="5em" />
-                                    <SegmentedButtonItem text="Apprvd" width="5em" />
-                                    <SegmentedButtonItem text="Rejected" width="5em" />
+                                    <SegmentedButtonItem text="In-Appr" key="D" width="5em" />
+                                    <SegmentedButtonItem text="Apprvd" key="D" width="5em" />
+                                    <SegmentedButtonItem text="Rejected" key="D" width="5em" />
                                 </items>
                             </SegmentedButton>
                             <layoutData>
