@@ -306,7 +306,7 @@
                                 <ObjectIdentifier text="{list>approval_number}" />
                                 <ObjectIdentifier text="{list>approval_title}" />
                                 <ObjectIdentifier text="{list>requestor_empno}" />
-                                <ObjectIdentifier text="{list>request_date}" />
+                                <DatePicker value="{list>request_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
                                 <ObjectIdentifier text="{list>approve_status_code}" />
                             </cells>
                         </ColumnListItem>

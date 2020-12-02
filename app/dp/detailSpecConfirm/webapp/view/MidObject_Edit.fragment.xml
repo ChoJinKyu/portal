@@ -12,31 +12,108 @@
     >
         <form:content>
 		
-		<!-- <l:VerticalLayout > -->
             <Label text="Model"/>
             <Text text="{master>/model}"/>
             <Label text="Production Type"/>
             <Text text="{mstSpecView>/mold_production_type_name}"/>
             <Label text="Mold Supplier"/>
-            <!-- <Input value="{master>/mold_vendor_id}" /> -->
             <Input value="{master>/mold_vendor_id}" showValueHelp="true"/>
-        <!-- </l:VerticalLayout>            
-        <l:VerticalLayout > -->
+
+            <Label text="Account Department"/>
+            <Input value="{master>/accounting_department_code}"></Input>
+            <Label text="Acquisition Department"/>
+            <Input value="{master>/acq_department_code}"></Input>
+            <Label text="Budget Type"/>
+            <Select width="100%"
+                    editable="false"
+                    class="readonlyField"
+                    selectedKey="{master>/investment_ecst_type_code}"
+                    items="{
+                                path : 'util>/CodeDetails',
+                                filters : [
+                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                    {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_BUDGET_TYPE'}
+                                ]
+                            }"
+                >
+                <core:Item key="{util>code}" text="{util>code_description}" />
+            </Select>
+
+
             <Label text="Mold Part No"/> 
             <Text text="{master>/part_number}"/>
             <Label text="Item Type"/>
             <Text text="{mstSpecView>/mold_item_type_name}"/>
             <Label text="Order Supplier"/>
             <Text text="{master>/order_vendor_id}"></Text>
-        <!-- </l:VerticalLayout>            
-        <l:VerticalLayout > -->
+
+            <Label text="Project Code"/>
+            <Text text="{master>/project_code}"></Text>
+            <Label text="Market Type"/>
+            <Select width="100%"
+                    selectedKey="{master>/market_type_code}"
+                    items="{
+                                path : 'util>/CodeDetails',
+                                filters : [
+                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                    {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MARKET_TYPE'}
+                                ]
+                            }"
+                >
+                <core:Item key="{util>code}" text="{util>code_description}" />
+            </Select>
+            <Label text="Import Company"/>
+            <!-- <Input value="{master>/import_company_code}"></Input> -->
+
+            <Select id="importCompany" forceSelection="false" width="100%" selectedKey="{master>/import_company_code}" change="handleChangeImpComp" items="{
+                path: 'org>/Org_Company',
+                filters: [
+                    {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                ],
+                sorter: { path: 'company_code'}
+            }">
+                <items>
+                    <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                </items>
+            </Select>
+
+
             <Label text="Mold Seq"/>
             <Text text="{master>/mold_sequence}"/>
             <Label text="Description"/>
             <Text text="{master>/spec_name}"></Text>
             <Label text="Production Supplier"/>
             <Input value="{master>/production_vendor_id}" showValueHelp="true"/>
-        <!-- </l:VerticalLayout> -->
+
+            <Label text="Account"/>
+            <Select width="100%"
+                    editable="false"
+                    class="readonlyField"
+                    selectedKey="{master>/account_code}"
+                    items="{
+                                path : 'util>/CodeDetails',
+                                filters : [
+                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                    {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ACCOUNT_NEW'}
+                                ]
+                            }"
+                >
+                <core:Item key="{util>code}" text="[{util>code}] {util>code_description}" />
+            </Select>
+            <Label text="Product Group"/>
+            <Input value="{master>/product_group_code}"></Input>
+            <Label text="Import Plant"/>
+            <Select id="importOrg" forceSelection="false" width="100%" selectedKey="{master>/import_company_org_code}" selectionFinish="" items="{
+                path: '/Divisions',
+                filters: [
+                    {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                ],
+                sorter: { path: 'org_code'}
+            }">
+                <items>
+                    <core:Item key="{org_code}" text="[{org_code}] {org_name}" />
+                </items>
+            </Select>
         </form:content>
 	</form:SimpleForm>
 </core:FragmentDefinition>
