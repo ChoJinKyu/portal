@@ -84,6 +84,9 @@
         }
       }
     },
+    "resourceRoots": {
+        "ext.lib": "../../../lib"
+    },
     "resources": {
       "css": [
         {

@@ -1,13 +1,13 @@
 sap.ui.define([
-	"ext/lib/controller/BaseController",
+    "ext/lib/controller/BaseController",
 	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
 	"ext/lib/model/ManagedListModel",
 	"ext/lib/formatter/DateFormatter",
 	"sap/m/TablePersoController",
-	"./MainListPersoService",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
+    "./MainListPersoService",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
 	"sap/m/ColumnListItem",
@@ -15,8 +15,10 @@ sap.ui.define([
 	"sap/m/Text",
 	"sap/m/Input",
 	"sap/m/ComboBox",
-	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+    "sap/ui/core/Item",
+    "ext/lib/util/Multilingual",
+], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, Filter, FilterOperator, MainListPersoService,
+     MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, Multilingual) {
 	"use strict";
 
 	return BaseController.extend("cm.currencyMgr.controller.MainList", {
@@ -32,8 +34,12 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {
+            // var oMultilingual = new Multilingual();
+            // this.setModel(oMultilingual.getModel(), "I18N");
 			var oViewModel,
-				oResourceBundle = this.getResourceBundle();
+                oResourceBundle = this.getResourceBundle();
+            // var oMultilingual = new ext.lib.util.Multilingual();
+            // this.setModel(oMultilingual.getModel(), "I18N");
 
 			// Model used to manipulate control states
 			oViewModel = new JSONModel({
@@ -52,8 +58,10 @@ sap.ui.define([
 			
 			this.setModel(new ManagedListModel(), "list");
 			
-			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
+            this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
+            
+            
 			//this._doInitTablePerso();
         },
         
@@ -205,9 +213,17 @@ sap.ui.define([
 				success: function(oData){
 					oView.setBusy(false);
 				}
-			});
+            });
+            debugger;
+            this.getView().byId("mainTable").getBinding("items").filter(aSearchFilters, "Application");
+            // this.getView().byId("mainTable").getBinding("items").getModel("list");
 		},
-		
+        
+        /**
+		 * Internal helper method to apply both filter and search state together on the list binding
+		 * @param {sap.ui.model.Filter} aSearchFilters An array of filters for the search
+		 * @private
+		 */
 		_getSearchStates: function(){
 			var sChain = this.getView().byId("searchChain").getSelectedKey(),
 				sKeyword = this.getView().byId("searchKeyword").getValue();
