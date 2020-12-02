@@ -155,7 +155,8 @@ sap.ui.define([
 						oMasterModel.submitChanges({
 							success: function(ok){
 								oView.setBusy(false);
-								that.onPageNavBackButtonPress.call(that);
+                                that.onPageNavBackButtonPress.call(that);
+                                that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
 								MessageToast.show("Success to delete.");
 							}
 						});
@@ -305,7 +306,11 @@ sap.ui.define([
 
 				var oMasterModel = this.getModel("master");
 				oMasterModel.setData({
-					"tenant_id": "L2600",															
+                    "tenant_id": "L2600",
+                    "uom_class_code": "",
+                    "uom_class_name": "",
+                    "uom_class_desc": "",
+                    "disable_date": null,                    
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
 				}, "/UomClass");
@@ -369,7 +374,7 @@ sap.ui.define([
 			this.byId("page").setSelectedSection("pageSectionMain");
 			this.byId("page").setProperty("showFooter", !FALSE);
 			this.byId("pageEditButton").setEnabled(FALSE);
-			//this.byId("pageDeleteButton").setEnabled(FALSE);
+			// this.byId("pageDeleteButton").setEnabled(FALSE);
 			this.byId("pageNavBackButton").setEnabled(FALSE);
 
 			this.byId("midTableAddButton").setEnabled(!FALSE);
@@ -386,7 +391,7 @@ sap.ui.define([
 			this.byId("page").setSelectedSection("pageSectionMain");
 			this.byId("page").setProperty("showFooter", !TRUE);
 			this.byId("pageEditButton").setEnabled(TRUE);
-			//this.byId("pageDeleteButton").setEnabled(TRUE);
+			// this.byId("pageDeleteButton").setEnabled(TRUE);
 			this.byId("pageNavBackButton").setEnabled(TRUE);
 
 			this.byId("midTableAddButton").setEnabled(!TRUE);
