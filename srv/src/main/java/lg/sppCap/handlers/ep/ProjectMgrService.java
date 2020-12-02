@@ -29,7 +29,7 @@ public class ProjectMgrService implements EventHandler {
     @Autowired
     private JdbcTemplate jdbc;
     
-    // 카테고리 Id 저장 전
+    // Project_number 자동 채번
     @Before(event=CdsService.EVENT_CREATE, entity=Project_.CDS_NAME)
     public void createBeforeProjectNumber(Project project) {
 

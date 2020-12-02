@@ -10,7 +10,7 @@ service ProjectMgrService{
 
     entity Project as projection on project.Project;
 
-    // 간단한 Currency와 Currency Lang View 생성
+    // plant_name, bizunit_name, bizdivision_name 조회를 위한 View 추가
     view ProjectView as
     select 
         key ep.tenant_id,
