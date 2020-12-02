@@ -27,7 +27,7 @@
                     <form:content>
                         <VBox>
                             <Label text = "Company" required="true"/> 
-                            <ComboBox id="MoldItemSearchCompany"  width="100%" selectedKey="{beaCreateObjectView>/company_code}" enabled="false" items="{
+                            <ComboBox id="MoldItemSearchCompany"  width="100%" selectedKey="{poaCreateObjectView>/company_code}" enabled="false" items="{
                                         path: 'org>/Org_Company',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
@@ -45,7 +45,7 @@
                         
                         <VBox>
                             <Label text = "Plant" required="true"/> 
-                            <ComboBox id="MoldItemSearchPlant"  width="100%" selectedKey="{beaCreateObjectView>/plant_code}" enabled="false" items="{
+                            <ComboBox id="MoldItemSearchPlant"  width="100%" selectedKey="{poaCreateObjectView>/plant_code}" enabled="false" items="{
                                         path: 'purOrg>/Pur_Operation_Org',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
@@ -62,7 +62,7 @@
                             </layoutData> 
                         </VBox>
                         <VBox>
-                            <Button id="moldItemSelectionSearch" text="Search" class="sapUiSmallMargin" type="Emphasized" press=".onMoldItemSelection"/>
+                            <Button text="Search" class="sapUiSmallMargin" type="Emphasized" press=".onMoldItemSelection"/>
                                <layoutData>
                                 <layout:GridData span="XL2 L2 M2 S2" />
                             </layoutData> 
@@ -92,11 +92,11 @@
                             selectionChange=".selectMoldItemChange" 
                             mode="MultiSelect"
                             width="auto"
-                            items="{MoldItemSelect>/MoldItemSelect}"
+                            items="{moldMng>/MoldMasters}"
                             >
                          <headerToolbar>
                             <OverflowToolbar>
-                                <Label text="{= ${beaCreateObjectView>/moldItemLength} > 0 ? ( 'Selected : '+${beaCreateObjectView>/moldItemLength} ) : '' }"/>
+                               
                             </OverflowToolbar>
                         </headerToolbar> 
                         <columns>
@@ -112,7 +112,7 @@
                             <Column id="modelItem_description" minScreenWidth="Tablet" hAlign="Center"  >
                                 <Text text="Description" />
                             </Column> 
-                            <Column id="modelItem_moldItemType" minScreenWidth="Tablet" hAlign="Center" width="8em"  >
+                            <Column id="modelItem_moldItemType" minScreenWidth="Tablet" hAlign="Center"  >
                                 <Text text="Mold Item Type" />
                             </Column>
                             <Column id="modelItem_bookCurrency" minScreenWidth="Tablet" hAlign="Center"  >
@@ -126,23 +126,13 @@
                              <ColumnListItem>
                                 <cells>
                                     <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
-                                    <Text text="{MoldItemSelect>model}" />
-                                    <Text text="{MoldItemSelect>part_number}" />
-                                    <Text text="{MoldItemSelect>mold_sequence}" />
-                                    <Text text="{MoldItemSelect>spec_name}" />
-                                    <ComboBox selectedKey="{MoldItemSelect>mold_item_type_code}"
-                                        items="{ path : 'util>/CodeDetails',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
-                                                    ]
-                                                }"
-								        editable="false" >
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
-                                    </ComboBox>
-
-                                    <Text text="{MoldItemSelect>book_currency_code}" />
-                                    <Text text="{MoldItemSelect>budget_amount}" />
+                                    <Text text="{moldMng>model}" />
+                                    <Text text="{moldMng>part_number}" />
+                                    <Text text="{moldMng>mold_sequence}" />
+                                    <Text text="{moldMng>spec_name}" />
+                                    <Text text="{moldMng>mold_item_type_code}" />
+                                    <Text text="{moldMng>book_currency_code}" />
+                                    <Text text="{moldMng>budget_amount}" />
                                 </cells>
                             </ColumnListItem>   
                             </items>

@@ -280,11 +280,11 @@ sap.ui.define([
 				var sTenantId = oMasterModel.getProperty("/tenant_id");
 				var sUomClassCode = oMasterModel.getProperty("/uom_class_code");
 				var oDetailsData = oDetailsModel.getData();
-				oDetailsData.forEach(function(oItem, nIndex){
-					oDetailsModel.setProperty("/"+nIndex+"/tenant_id", sTenantId);
-					oDetailsModel.setProperty("/"+nIndex+"/uom_class_code", sUomClassCode);
+				oDetailsData.UomClassLng.forEach(function(oItem, nIndex){
+					oDetailsModel.setProperty("/UomClassLng/"+nIndex+"/tenant_id", sTenantId);
+					oDetailsModel.setProperty("/UomClassLng/"+nIndex+"/uom_class_code", sUomClassCode);
 				});
-				oDetailsModel.setData(oDetailsData);
+				//oDetailsModel.setData(oDetailsData);
 			}
 		},
 
@@ -305,8 +305,7 @@ sap.ui.define([
 
 				var oMasterModel = this.getModel("master");
 				oMasterModel.setData({
-					"tenant_id": "L2600",					
-					"disable_date": new Date(),					
+					"tenant_id": "L2600",															
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
 				}, "/UomClass");
@@ -340,7 +339,9 @@ sap.ui.define([
 					}
 				});
 				this._toShowMode();
-			}
+            }
+            this.validator.clearValueState(this.byId("midObjectForm1Edit"));
+            this.validator.clearValueState(this.byId("midTable"));
 			oTransactionManager.setServiceModel(this.getModel());
 		},
 

@@ -203,7 +203,7 @@
                         </VBox>
                         <VBox>
                             <Label text="Subject" labelFor="searchSubject"></Label>
-                            <SearchField />
+                            <Input id="searchSubject"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -226,9 +226,9 @@
                                 <items>
                                     <SegmentedButtonItem text="All" key="" />
                                     <SegmentedButtonItem text="Draft" key="D" width="5em" />
-                                    <SegmentedButtonItem text="In-Appr" width="5em" />
-                                    <SegmentedButtonItem text="Apprvd" width="5em" />
-                                    <SegmentedButtonItem text="Rejected" width="5em" />
+                                    <SegmentedButtonItem text="In-Appr" key="D" width="5em" />
+                                    <SegmentedButtonItem text="Apprvd" key="D" width="5em" />
+                                    <SegmentedButtonItem text="Rejected" key="D" width="5em" />
                                 </items>
                             </SegmentedButton>
                             <layoutData>
@@ -272,28 +272,28 @@
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
-                        <Column id="mainColumnApprovalCategory" minScreenWidth="Tablet" hAlign="Center"  width="12em" >
+                        <Column id="mainColumnApprovalCategory" width="4em" >
                             <Text text="Approval&#10;Category" />
                         </Column>
-                        <Column id="mainColumnCompany" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                        <Column id="mainColumnCompany" width="12em" >
                             <Text text="Company" />
                         </Column>
-                        <Column id="mainColumnPlant" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                        <Column id="mainColumnPlant" width="12em" >
                             <Text text="Plant" />
                         </Column>
-                        <Column id="mainColumnApprovalNo" minScreenWidth="Tablet" hAlign="Center" width="12em">
+                        <Column id="mainColumnApprovalNo" width="7em">
                             <Text text="Approval No" />
                         </Column>
-                        <Column id="mainColumnSubject" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                        <Column id="mainColumnSubject"  width="18em" >
                             <Text text="Subject" />
                         </Column>
-                        <Column id="mainColumnRequester" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                        <Column id="mainColumnRequester"  width="5em" >
                             <Text text="Requester" />
                         </Column>
-                        <Column id="mainColumnRequestDate" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                        <Column id="mainColumnRequestDate"  width="12em" >
                             <Text text="Request Date" />
                         </Column>
-                        <Column id="mainColumnStatus" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                        <Column id="mainColumnStatus"  width="12em" >
                             <Text text="Status" />
                         </Column>
                     </columns>
@@ -302,7 +302,7 @@
                             <cells>
                                 <ObjectIdentifier text="{list>approval_type_code}" />
                                 <ObjectIdentifier text="{list>company_name}" />
-                                <ObjectIdentifier text="{list>plant_name}" />
+                                <ObjectIdentifier text="{list>org_name}" />
                                 <ObjectIdentifier text="{list>approval_number}" />
                                 <ObjectIdentifier text="{list>approval_title}" />
                                 <ObjectIdentifier text="{list>requestor_empno}" />

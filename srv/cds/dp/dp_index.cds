@@ -11,3 +11,4 @@ using from './materialMgr/basicDataMgr/materialCommodityMgr-service';
 using from './standardCommon/categoryMgr/category-service';
 using from './dc/vi/basePriceArl-service';
 using from './util/moldItemSelection-service';
+using from './moldMgt/moldApprovalList-service';
