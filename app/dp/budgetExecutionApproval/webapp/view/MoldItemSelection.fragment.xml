@@ -92,7 +92,7 @@
                             selectionChange=".selectMoldItemChange" 
                             mode="MultiSelect"
                             width="auto"
-                            items="{moldItem>/MoldItemSelect}"
+                            items="{MoldItemSelect>/MoldItemSelect}"
                             >
                          <headerToolbar>
                             <OverflowToolbar>
@@ -126,13 +126,13 @@
                              <ColumnListItem>
                                 <cells>
                                     <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
-                                    <Text text="{moldItem>model}" />
-                                    <Text text="{moldItem>part_number}" />
-                                    <Text text="{moldItem>mold_sequence}" />
-                                    <Text text="{moldItem>spec_name}" />
-                                    <Text text="{moldItem>mold_item_type_code}" />
-                                    <Text text="{moldItem>book_currency_code}" />
-                                    <Text text="{moldItem>budget_amount}" />
+                                    <Text text="{MoldItemSelect>model}" />
+                                    <Text text="{MoldItemSelect>part_number}" />
+                                    <Text text="{MoldItemSelect>mold_sequence}" />
+                                    <Text text="{MoldItemSelect>spec_name}" />
+                                    <Text text="{MoldItemSelect>mold_item_type_code}" />
+                                    <Text text="{MoldItemSelect>book_currency_code}" />
+                                    <Text text="{MoldItemSelect>budget_amount}" />
                                 </cells>
                             </ColumnListItem>   
                             </items>
