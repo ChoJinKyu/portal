@@ -1,7 +1,5 @@
 namespace dp;
 
-using util from '../../cm/util/util-model';
-
 entity Mold_Approvals_View {
 
     key approval_number     : String(50)  not null  @title:'품의번호';
@@ -15,4 +13,3 @@ entity Mold_Approvals_View {
         approval_contents   : LargeString           @title:'품의 내용';
 }
 
-extend Mold_Approvals_View with util.Managed;
