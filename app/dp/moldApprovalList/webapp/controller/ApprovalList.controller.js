@@ -610,7 +610,7 @@ sap.ui.define([
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S"
             
             var aCompany = this.getView().byId("searchCompany"+sSurffix).getSelectedItems();
-
+            var aPlant = this.getView().byId("searchPlant"+sSurffix).getSelectedItems();
             var sDateFrom = this.getView().byId("searchRequestDate"+sSurffix).getDateValue();
             var sDateTo = this.getView().byId("searchRequestDate"+sSurffix).getSecondDateValue();
 
@@ -623,39 +623,58 @@ sap.ui.define([
             var companyFilters = [];
             
             if(aCompany.length > 0){
+                var _tempFilters = [];
 
                 aCompany.forEach(function(item, idx, arr){
-                    companyFilters.push(new Filter("company_code", FilterOperator.EQ, item.mProperties.key ));
+                    _tempFilters.push(new Filter("company_code", FilterOperator.EQ, item.mProperties.key ));
                 });
 
                 aSearchFilters.push(
                     new Filter({
-                        filters: companyFilters,
+                        filters: _tempFilters,
                         and: false
                     })
                 );
             }
 
-            // var dateFilters = [];
+            if(aPlant.length > 0){
+                var _tempFilters = [];
 
-            // dateFilters.push(
-            //     new Filter({
-            //         path: "mold_spec_register_date",
-            //         operator: FilterOperator.BT,
-            //         value1: this.getFormatDate(sDateFrom),
-            //         value2: this.getFormatDate(sDateTo)
-            //     })
-            // );
+                aPlant.forEach(function(item, idx, arr){
+                    _tempFilters.push(new Filter("org_code", FilterOperator.EQ, item.mProperties.key ));
+                });
 
-            // dateFilters.push(new Filter("mold_spec_register_date", FilterOperator.EQ, ''));
-            // dateFilters.push(new Filter("mold_spec_register_date", FilterOperator.EQ, null));
+                aSearchFilters.push(
+                    new Filter({
+                        filters: _tempFilters,
+                        and: false
+                    })
+                );
+            }
 
-            // aSearchFilters.push(
-            //     new Filter({
-            //         filters: dateFilters,
-            //         and: false
-            //     })
-            // );
+
+            if(sDateFrom || sDateFrom){
+                var _tempFilters = [];
+
+                _tempFilters.push(
+                    new Filter({
+                        path: "mold_spec_register_date",
+                        operator: FilterOperator.BT,
+                        value1: this.getFormatDate(sDateFrom),
+                        value2: this.getFormatDate(sDateTo)
+                    })
+                );
+
+                _tempFilters.push(new Filter("mold_spec_register_date", FilterOperator.EQ, ''));
+                _tempFilters.push(new Filter("mold_spec_register_date", FilterOperator.EQ, null));
+
+                aSearchFilters.push(
+                    new Filter({
+                        filters: _tempFilters,
+                        and: false
+                    })
+                );
+            }
 
 			if (sModel) {
 				aSearchFilters.push(new Filter("model", FilterOperator.StartsWith, sModel));
