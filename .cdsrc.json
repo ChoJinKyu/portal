@@ -46,6 +46,7 @@
             "db/cds/dp/detailSpecEntry",
             "db/cds/dp/dc/tmc",
             "db/cds/dp/dc/vi",
+            "db/cds/dp/util",
             "db/cds/ep",
             "db/cds/ep/loiMgr",            
             "db/cds/op",
