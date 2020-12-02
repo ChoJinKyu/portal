@@ -339,7 +339,9 @@ sap.ui.define([
 					}
 				});
 				this._toShowMode();
-			}
+            }
+            this.validator.clearValueState(this.byId("midObjectForm1Edit"));
+            this.validator.clearValueState(this.byId("midTable"));
 			oTransactionManager.setServiceModel(this.getModel());
 		},
 
