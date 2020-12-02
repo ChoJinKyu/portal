@@ -53,6 +53,7 @@ sap.ui.define([
             this.getView().setModel(new ManagedListModel(),"createlist"); // Participating Supplier
             this.getView().setModel(new ManagedListModel(),"appList"); // apporval list 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
+            this.getView().setModel(new ManagedListModel(),"MoldItemSelect"); // MoldItemSelect 
 		},
 
 	    onAfterRendering : function () {
@@ -464,6 +465,64 @@ sap.ui.define([
         onExit: function () {
             this.byId("dialogMolItemSelection").close();
         },
+
+        /**
+         * @description Mold Item Selection Search Button 누를시 
+         * @param {*} oEvent 
+         */
+        onMoldItemSelection : function (oEvent) {
+            //console.log(oEvent.getParameters());
+			if (oEvent.getParameters().refreshButtonPressed) {
+				// Search field's 'refresh' button has been pressed.
+				// This is visible if you select any master list item.
+				// In this case no new search is triggered, we only
+				// refresh the list binding.
+				this.onRefresh();
+			} else {
+				var aSearchFilters = this._getSearchMoldSelection();
+				this._applyMoldSelection(aSearchFilters);
+			}
+        },
+        _getSearchMoldSelection : function (){
+
+             var aSearchFilters = [];
+
+             this.byId('dialogMolItemSelection');
+             var company = this.byId('MoldItemSearchCompany').getSelectedItem();
+             var plant = this.byId('MoldItemSearchPlant').getSelectedItem();
+             var model = this.byId('moldItemModel').getValue().trim();
+             var partNo = this.byId('moldItemPartNo').getValue().trim();
+
+            if(company != undefined && company != "" && company != null){
+                aSearchFilters.push(new Filter("company_code", FilterOperator.EQ, company))
+            }
+
+            return aSearchFilters;
+        },
+        /**
+         * @description Mold Item Selection Search Button 누를시 
+         * @param {*} oEvent 
+         */
+        _applyMoldSelection : function(aSearchFilters){
+            // MoldItemSelect
+            /**
+             * 	oModel.setTransactionModel(this.getModel("org"));
+            
+            var searchFilter = [];
+            searchFilter.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100'));
+            searchFilter.push(new Filter("company_code", FilterOperator.EQ, company_code));
+             */
+            var oView = this.getView(),
+				oModel = this.getModel("MoldItemSelect");
+			oView.setBusy(true);
+			oModel.setTransactionModel(this.getModel("moldItem"));
+			oModel.read("/MoldItemSelect", {
+				filters: aSearchFilters,
+				success: function(oData){
+					oView.setBusy(false);
+				}
+			});
+        }, 
          /**
          * @description  Participating Supplier Fragment Apply 버튼 클릭시 
          */

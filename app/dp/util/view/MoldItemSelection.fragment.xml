@@ -1,5 +1,7 @@
 <!-- 
-   description : 품의서 Participating Supplier 항목의 Add 버튼 클릭
+   @description : 품의서 Participating Supplier 항목의 Add 버튼 클릭 공통 
+   @author : jinseon.lee
+   @date : 2020.12.02 
 -->
 <core:FragmentDefinition
     xmlns="sap.m"
@@ -92,7 +94,7 @@
                             selectionChange=".selectMoldItemChange" 
                             mode="MultiSelect"
                             width="auto"
-                            items="{moldItem>/MoldItemSelect}"
+                            items="{moldMng>/MoldMasters}"
                             >
                          <headerToolbar>
                             <OverflowToolbar>
@@ -126,13 +128,13 @@
                              <ColumnListItem>
                                 <cells>
                                     <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
-                                    <Text text="{moldItem>model}" />
-                                    <Text text="{moldItem>part_number}" />
-                                    <Text text="{moldItem>mold_sequence}" />
-                                    <Text text="{moldItem>spec_name}" />
-                                    <Text text="{moldItem>mold_item_type_code}" />
-                                    <Text text="{moldItem>book_currency_code}" />
-                                    <Text text="{moldItem>budget_amount}" />
+                                    <Text text="{moldMng>model}" />
+                                    <Text text="{moldMng>part_number}" />
+                                    <Text text="{moldMng>mold_sequence}" />
+                                    <Text text="{moldMng>spec_name}" />
+                                    <Text text="{moldMng>mold_item_type_code}" />
+                                    <Text text="{moldMng>book_currency_code}" />
+                                    <Text text="{moldMng>budget_amount}" />
                                 </cells>
                             </ColumnListItem>   
                             </items>
