@@ -50,8 +50,10 @@ sap.ui.define([
             });
 
             this.setModel(oViewModel, mainViewName);
+
             this.getRouter().getRoute("beaCreateObject").attachPatternMatched(this._onObjectMatched, this);
             this.getRouter().getRoute("beaEditObject").attachPatternMatched(this._onObjectMatched, this);
+
             this.getView().setModel(new ManagedListModel(), "company");
             this.getView().setModel(new ManagedListModel(), "plant");
             this.getView().setModel(new ManagedModel(), "appMaster");
@@ -62,7 +64,6 @@ sap.ui.define([
             oTransactionManager.addDataModel(this.getModel("appMaster"));
             oTransactionManager.addDataModel(this.getModel("appDetail"));
 
-            this.getView().setModel(new ManagedListModel(), "createlist"); // Participating Supplier
             this.getView().setModel(new ManagedListModel(), "appList"); // apporval list 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
             this.getView().setModel(new ManagedListModel(), "MoldItemSelect"); // MoldItemSelect 
@@ -177,12 +178,15 @@ sap.ui.define([
         _onObjectMatched: function (oEvent) {
             this.setRichEditor();
             var oArgs = oEvent.getParameter("arguments");
-            console.log("oArgs>>> ", oArgs);
-
-            if (oArgs.approval_number) {
+          
+            var mModel = this.getModel(mainViewName);
+ 
+            if (oArgs.approval_number) { 
+   
                 this._onRoutedThisPage(oArgs);
                 this._onLoadApprovalRow();
             } else {
+            
                 this._createViewBindData(oArgs);
                 this._onLoadApprovalRow();
             }
@@ -196,15 +200,15 @@ sap.ui.define([
         _createViewBindData: function (args) {
        
             /** 초기 데이터 조회 */
-            var company_code = args.company_code, plant_code = args.org_code;
+            var company_code = args.company_code, plant_code = (args.org_code == undefined ? args.plant_code : args.org_code);
             var appModel = this.getModel(mainViewName);
             appModel.setData({
                 company_code: company_code
                 , company_name: ""
                 , plant_code: plant_code
-                , plant_name: ""
+                , plant_name: "" 
+                , editMode : args.org_code != undefined ? true : false 
             });
-
 
             var oView = this.getView(),
                 oModel = this.getModel("company");
@@ -239,6 +243,8 @@ sap.ui.define([
         },
 
         _onRoutedThisPage: function (args) {
+            console.log("args>>>> " , args);
+
             this._bindView("/ApprovalMasters('" + args.approval_number + "')", "appMaster", [], function (oData) { });
             var schFilter = [new Filter("approval_number", FilterOperator.EQ, args.approval_number)];
 
@@ -534,7 +540,8 @@ sap.ui.define([
          */
         _addPsTable: function (data) {
             var oTable = this.byId("psTable"),
-                oModel = this.getModel("createlist");
+                oModel = this.getModel("appDetail");
+          
             oModel.addRecord({
                 "model": data.oData.model,
                 "part_number": data.oData.part_number,
@@ -552,8 +559,7 @@ sap.ui.define([
                 "moldSupplier7": "",
                 "moldSupplier8": "",
                 "moldSupplier9": "",
-                "moldSupplier10": "",
-            });
+                "moldSupplier10": "", }, "/ItemBudgetExecution");
         },
 
         /**
