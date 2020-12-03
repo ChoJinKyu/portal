@@ -316,7 +316,7 @@ sap.ui.define([
 				}, "/UomClass");
 				var oDetailsModel = this.getModel("details");
 				oDetailsModel.setTransactionModel(this.getModel());
-				oDetailsModel.setData([]);
+				oDetailsModel.setData([], "/UomLng");
 				oDetailsModel.addRecord({
 					"tenant_id": this._sTenantId,
 					"uom_class_code": this._sUomClassCode,
