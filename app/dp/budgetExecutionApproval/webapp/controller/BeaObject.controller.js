@@ -9,12 +9,14 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
 ], function (BaseController, JSONModel, History, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
-	"use strict";
+    "use strict";
+   
     /**
      * @description 예산집행품의 View 화면 
      * @author jinseon.lee
      * @date 2020.12.01
      */
+    var mainViewName = "beaObjectView";
 	return BaseController.extend("dp.budgetExecutionApproval.controller.BeaObject", {
 
 		dateFormatter: DateFormatter,
@@ -37,7 +39,7 @@ sap.ui.define([
 					delay : 0
 				});
 			this.getRouter().getRoute("beaObject").attachPatternMatched(this._onObjectMatched, this);
-			this.setModel(oViewModel, "beaObjectView");
+			this.setModel(oViewModel, mainViewName);
 		},
 
 		/* =========================================================== */
@@ -146,9 +148,9 @@ sap.ui.define([
 		 */
 		_onObjectMatched : function (oEvent) {
 			var oArgs = oEvent.getParameter("arguments"),
-                sMoldId = oArgs.moldId;
+                approval_number = oArgs.approval_number;
             console.log(oArgs);
-			this._bindView("/MoldSpec(mold_id=" + sMoldId + ")");
+			this._bindView("/MoldSpec(approval_number=" + approval_number + ")");
 			this._toShowMode();
 		},
 
