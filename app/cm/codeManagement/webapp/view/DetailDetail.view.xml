@@ -239,7 +239,7 @@
                                     class="sapFDynamicPageAlignContent"
                                     width="auto"
                                     items="{
-                                        path: 'list>/'
+                                        path: 'languages>/CodeLanguages'
                                 }">
                                 <m:headerToolbar>
                                     <m:Toolbar visible="{contModel>/detailDetail/editMode}">
@@ -270,15 +270,15 @@
                                 <m:items>
                                     <m:ColumnListItem>
                                         <m:cells>
-                                            <m:Text text="{list>_row_state_}"/>
+                                            <m:Text text="{languages>_row_state_}"/>
                                             <m:HBox>
                                                 <m:Text
                                                     visible="{contModel>/detailDetail/readMode}"
-                                                    text="{list>language_cd}" />
+                                                    text="{languages>language_cd}" />
                                                 <m:ComboBox
                                                     visible="{contModel>/detailDetail/editMode}"
                                                     width="100%" 
-                                                    selectedKey="{list>language_cd}"
+                                                    selectedKey="{languages>language_cd}"
                                                     items="{
                                                         path: 'util>/CodeDetails',
                                                         filters: [
@@ -296,10 +296,10 @@
                                                 direction="Column">
                                                 <m:Text
                                                     visible="{contModel>/detailDetail/readMode}"
-                                                    text="{list>code_name}" />
+                                                    text="{languages>code_name}" />
                                                 <m:Input
                                                     visible="{contModel>/detailDetail/editMode}"
-                                                    value="{list>code_name}" />
+                                                    value="{languages>code_name}" />
                                             </m:HBox>
                                         </m:cells>
                                     </m:ColumnListItem>
