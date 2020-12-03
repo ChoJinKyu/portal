@@ -13,8 +13,6 @@ entity Md_Category_Id {
         rgb_font_color_code         : String(7) default '#000000'   @title : 'RGB글꼴색상코드';
         rgb_cell_clolor_code        : String(7) default '#FFFFFF'   @title : 'RGB셀색상코드';
         spmd_category_sort_sequence : Integer64 not null            @title : 'SPMD범주정렬순서';
-        spmd_category_max_item_cnt  : Integer64 default 30 not null @title : 'SPMD범주최대품목개수';
-
 
         items                       : Association to many items
                                           on  items.tenant_id          = tenant_id
