@@ -22,7 +22,7 @@
             "subMenus": [
                 {
                     "name": "Vendor Pool Search",
-                    "url": "../pg/vp/vendorPoolSearch/webapp",
+                    "url": "../pg/vp/vpMgr/webapp",
                     "component": "pg.vendorPoolSearch"
                 },
                 {
