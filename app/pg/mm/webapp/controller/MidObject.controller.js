@@ -69,8 +69,11 @@ sap.ui.define([
                 mIMaterialPriceManagement: "/mIMaterialPriceManagement",  //자재리스트
                 mIMaterialCodeBOMManagement: "/MIMaterialCodeBOMManagement",  //mainList
                 orgTenantView: "/OrgTenantView", //관리조직 View
-                currencyUnitView : "/CurrencyUnitView", //통화 View
-                mIMaterialCodeList : "/MIMaterialCodeList" //자재코드 View
+                currencyUnitView : "/CurrencyUnitView", //통화단위 View
+                mIMaterialCodeList : "/MIMaterialCodeList", //자재코드 View
+                unitOfMeasureView : "/UnitOfMeasureView", //수량단위 View
+                enrollmentMaterialView : "/EnrollmentMaterialView", //자재코드  등록View
+                enrollmentSupplierView : "/EnrollmentSupplierView", //공급업체  등록View
             },
             jsonTestData : {
                 values : [{
