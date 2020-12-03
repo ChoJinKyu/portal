@@ -30,7 +30,8 @@ entity Vp_Vendor_Pool_Search_View {
   supplier_code: String(15) @title: '공급업체 코드';
   supplier_local_name: String @title: '공급업체 명'; 
   supplier_english_name: String @title: '공급업체 영문명';
-  company_name: String @title: '법인명';
+  supplier_company_code: String(30) @title: '공급업체법인코드';
+  supplier_company_name: String @title: '공급업체법인명';
   supplier_type_name: String @title: '분류';
   supplier_flag: Boolean @title: '공급유형(Supplier)';
   maker_flag: Boolean @title: '공급유형(Maker)';
