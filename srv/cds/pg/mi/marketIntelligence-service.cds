@@ -302,16 +302,16 @@ service marketIntelligenceService {
             supplier_code;
 
     // Enrollment Supplier View
-    view EnrollmentSupplierView @(title : '공급업체 등록 View') as
-        select distinct
-            key tenant_id, //회사코드
-            key supplier_code, //공급업체코드
-                supplier_local_name, //공급업체로컬명
-                supplier_engligh_name //공급업체영어명
-        from SupplierMaster
-        order by
-            tenant_id,
-            supplier_code;
+    // view EnrollmentSupplierView @(title : '공급업체 등록 View') as
+    //     select distinct
+    //         key tenant_id, //회사코드
+    //         key supplier_code, //공급업체코드
+    //             supplier_local_name, //공급업체로컬명
+    //             supplier_engligh_name //공급업체영어명
+    //     from SupplierMaster
+    //     order by
+    //         tenant_id,
+    //         supplier_code;
 
     // Category&MI Material View
     view CategoryMIMaterialView @(title : '카테고리&시황자재 View') as
