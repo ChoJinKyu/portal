@@ -23,7 +23,7 @@
                 {
                     "name": "Vendor Pool Search",
                     "url": "../pg/vp/vpMgr/webapp",
-                    "component": "pg.vendorPoolSearch"
+                    "component": "pg.vpMgr"
                 },
                 {
                     "name": "App #4",
