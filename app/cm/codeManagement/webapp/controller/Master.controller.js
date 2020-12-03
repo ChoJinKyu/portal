@@ -17,14 +17,64 @@ sap.ui.define([
 		return BaseController.extend("cm.codeManagement.controller.Master", {
 
             onInit: function () {
+                // sap.ui.getCore().attachValidationError(function (oEvent) {
+                //     // debugger;
+                //     oEvent.getParameter("element").setValueState(sap.ui.core.ValueState.Error);
+                // });
+        
+                // sap.ui.getCore().attachValidationSuccess(function (oEvent) {
+                //     // debugger;
+                //     oEvent.getParameter("element").setValueState(sap.ui.core.ValueState.None);
+                // });
 
+            // var sServiceUrl = 'srv-api/odata/v2/cm.CodeMgrService/';
+
+            //   var oModel = new sap.ui.model.odata.ODataModel(sServiceUrl, true);
+            // console.log(oModel)
+            //   this.setModel(oModel, 'oRefModel');
+
+            //   sap.ui.getCore().setModel(oModel, 'oRefModel');
+            },
+
+            isValNull: function (p_val) {
+                if(!p_val || p_val == "" || p_val == null){
+                    return true
+                }else{
+                    return false;
+                }
             },
 
             onAfterRendering: function () {
-
+                var model = this.getModel("contModel");
+                model.setProperty("/input",null);
             },
 
 			onSearch: function () {
+
+                var sSearchTenant = this.getView().byId("search_tenant").getValue();
+                var sSearchChain = this.getView().byId("search_chain").getSelectedKey();
+                var sUseFlag = this.getView().byId("search_useflag").getSelectedKey();
+                var sSearchKeyword = this.getView().byId("search_keyword").getValue();
+
+                console.log(this.getView().byId("search_keyword"))
+
+                // alert(ValidatorUtil.validate(this))
+
+                var aFilters = [];
+                if(!this.isValNull(sSearchTenant)){
+                    aFilters.push(new Filter("tenant_id", FilterOperator.EQ, sSearchTenant));
+                }
+                if(!this.isValNull(sSearchChain)){
+                    aFilters.push(new Filter("chain_code", FilterOperator.EQ, sSearchChain));
+                }
+                if(!this.isValNull(sUseFlag)){
+                    var bUseFlag = (sUseFlag === "true")?true:false;
+                    aFilters.push(new Filter("use_flag", FilterOperator.EQ, bUseFlag));
+                }
+                if(!this.isValNull(sSearchKeyword)){
+                    aFilters.push(new Filter("group_code", FilterOperator.Contains, sSearchKeyword));
+                    aFilters.push(new Filter("group_name", FilterOperator.Contains, sSearchKeyword));
+                }
 
                 var oCodeMasterTable = this.byId("codeMasterTable");
                 oCodeMasterTable.setBusy(true);
@@ -32,7 +82,7 @@ sap.ui.define([
                 var oViewModel = this.getModel('viewModel');
                 var oServiceModel = this.getModel();
                 oServiceModel.read("/CodeMasters",{
-                    filters : [],
+                    filters : aFilters,
                     success : function(data){
                         oViewModel.setProperty("/CodeMasters", data.results);
                         oCodeMasterTable.setBusy(false);
@@ -40,7 +90,6 @@ sap.ui.define([
                     error : function(data){
                         oCodeMasterTable.setBusy(false);
                     }
-                    
                 });
                 /*
                 var filters = [];
@@ -125,13 +174,13 @@ sap.ui.define([
                 var oNavParam = {
                     layout: oNextUIState.layout,
                     tenantId : oTargetData.tenant_id,
-                    companyCode : oTargetData.company_code,
                     groupCode : oTargetData.group_code
                 };
                 this.getRouter().navTo("detail", oNavParam);
             },
 
             onCreatePress : function(oEvent){
+                console.log("onCreatePress")
                 var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(0);
                 var sLayout = oNextUIState.layout;
                 // var sLayout = "MidColumnFullScreen";

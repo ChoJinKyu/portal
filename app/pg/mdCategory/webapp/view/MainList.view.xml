@@ -48,6 +48,7 @@
                 <Table id="mainTable" 
                         sticky="HeaderToolbar,ColumnHeaders" 
                         inset="false" 
+                        noDataText="{I18N>/NCM0001}"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
                         items="{list>/MdCategoryItem}"
@@ -57,8 +58,8 @@
                         <OverflowToolbar>
                             <Title text="부품 일반정보" level="H2"/>
                             <ToolbarSpacer/>
-                            <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
-                            <Button id="mainTableSaveButton" text="Save" type="Emphasized" press=".onMainTableSaveButtonPress" />
+                            <Button id="mainTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onMainTableAddButtonPress" />
+                            <Button id="mainTableSaveButton" text="{I18N>/SAVE}" type="Emphasized" press=".onMainTableSaveButtonPress" />
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                                 <layoutData>
@@ -126,11 +127,6 @@
         </f:content>
         <!-- DynamicPage Footer -->
         <f:footer>
-            <OverflowToolbar>
-                <!-- <Button icon="sap-icon://message-popup" text="123123" type="Emphasized" press=".onMessageButtonPress" /> -->
-                <ToolbarSpacer />
-				<Button text="Save" type="Emphasized" press=".onPageSaveButtonPress" />
-            </OverflowToolbar>
         </f:footer>
     </f:DynamicPage>
 </mvc:View>

@@ -54,7 +54,7 @@
 			<FlexBox wrap="Wrap" >
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <ObjectStatus
-                        title="Report No"
+                        title="Approval No"
                         text="332424-20B-00144"/>
                     <ObjectStatus
                         title="Requester"

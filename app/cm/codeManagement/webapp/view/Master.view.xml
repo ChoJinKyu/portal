@@ -20,7 +20,7 @@
         <f:header>
             <f:DynamicPageHeader pinnable="true">
                 <form:SimpleForm
-                fieldGroupIds="Required"
+                    id="form"
                     maxContainerCols="2"
                     editable="true"
                     layout="ResponsiveGridLayout"
@@ -37,15 +37,7 @@
                                 text="Tenant: "
                                 labelFor="search_tenant">
                             </Label>
-                            <ComboBox   
-                                id="search_tenant"
-                                items="{
-                                path: 'org>/Org_Tenant'
-                              }">
-                              <items>
-                                <core:Item key="{org>tenant_id}" text="{org>tenant_id} : {org>tenant_name}" />
-                              </items>
-                            </ComboBox>
+                            <Input id="search_tenant"/>
                             <layoutData>
                                 <layout:GridData
                                     span="XL2 L3 M6 S12" />
@@ -78,11 +70,14 @@
                                 text="Code Group Useflag : "
                                 labelFor="search_codeGroupUseflag">
                             </Label>
-                            <SegmentedButton selectedKey="all" width="100%">
+                            <SegmentedButton 
+                                id="search_useflag"
+                                selectedKey="" 
+                                width="100%">
                                 <items>
-                                    <SegmentedButtonItem text="All" width="3em" key="all"/>
-                                    <SegmentedButtonItem text="Yes" width="3em"/>
-                                    <SegmentedButtonItem text="No" width="3em"/>
+                                    <SegmentedButtonItem text="All" width="3em"/>
+                                    <SegmentedButtonItem text="Yes" width="3em" key="true"/>
+                                    <SegmentedButtonItem text="No" width="3em" key="false"/>
                                 </items>
                             </SegmentedButton>
                             <layoutData>
@@ -92,12 +87,11 @@
                         </VBox>
                         <VBox>
                             <Label
-                                text="Keyword : {/#CodeMasters/tenant_id/@maxLangth}"
+                                text="Keyword : "
                                 labelFor="search_Keyword">
                             </Label>
-                            <Input
-                                id="search_Keyword"
-                                value="{/#CodeMasters/tenant_id/@maxLangth}"/>
+                            <Input id="search_keyword" 
+                                placeholder="Code Group or Code Group Name"/>
                             <layoutData>
                                 <layout:GridData
                                     span="XL2 L3 M6 S12" />

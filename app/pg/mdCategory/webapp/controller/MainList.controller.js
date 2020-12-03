@@ -1,5 +1,6 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
+	"ext/lib/util/Multilingual",
 	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
 	"../model/formatter",
@@ -16,7 +17,7 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, History, JSONModel, formatter, ManagedListModel, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+], function (BaseController, Multilingual, History, JSONModel, formatter, ManagedListModel, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
     "use strict";
 
 	return BaseController.extend("pg.mdCategory.controller.MainList", {
@@ -51,6 +52,8 @@ sap.ui.define([
 				intent: "#Template-display"
 			}, true);
 			
+			var oMultilingual = new Multilingual();
+			this.setModel(oMultilingual.getModel(), "I18N");
 			this.setModel(new ManagedListModel(), "list");
 
 			this._doInitTablePerso();
@@ -61,32 +64,13 @@ sap.ui.define([
 			return;
         },
 
-		/* =========================================================== */
-		/* event handlers                                              */
-		/* =========================================================== */
 
 		/**
-		 * Triggered by the table's 'updateFinished' event: after new table
-		 * data is available, this handler method updates the table counter.
-		 * This should only happen if the update was successful, which is
-		 * why this handler is attached to 'updateFinished' and not to the
-		 * table's list binding's 'dataReceived' method.
-		 * @param {sap.ui.base.Event} oEvent the update finished event
+		 * Event handler when a table item gets pressed
+		 * @param {sap.ui.base.Event} oEvent the table updateFinished event
 		 * @public
 		 */
 		onMainTableUpdateFinished : function (oEvent) {
-			// // update the mainList's object counter after the table update
-			// var sTitle,
-			// 	oTable = oEvent.getSource(),
-			// 	iTotalItems = oEvent.getParameter("total");
-			// // only update the counter if the length is final and
-			// // the table is not empty
-			// if (iTotalItems && oTable.getBinding("items").isLengthFinal()) {
-			// 	sTitle = this.getResourceBundle().getText("mainListTableTitleCount", [iTotalItems]);
-			// } else {
-			// 	sTitle = this.getResourceBundle().getText("mainListTableTitle");
-			// }
-			// this.getModel("mainListView").setProperty("/mainListTableTitle", sTitle);
 		},
 
 		/**
@@ -114,64 +98,100 @@ sap.ui.define([
 		 * @public
 		 */
 		onPageSearchButtonPress : function (oEvent) {
-			if (oEvent.getParameters().refreshButtonPressed) {
-				// Search field's 'refresh' button has been pressed.
-				// This is visible if you select any master list item.
-				// In this case no new search is triggered, we only
-				// refresh the list binding.
-				this.onRefresh();
-			} else {
+            var forceSearch = function(){
 				var aTableSearchState = this._getSearchStates();
 				this._applySearch(aTableSearchState);
-            }
-				// var aTableSearchState = this._getSearchStates();
-				// this._applySearch(aTableSearchState);
+			}.bind(this);
+			
+			if(this.getModel("list").isChanged() === true){
+				MessageBox.confirm(this.getModel("I18N").getText("/NCM0003"), {
+					title : this.getModel("I18N").getText("/SEARCH"),
+					initialFocus : sap.m.MessageBox.Action.CANCEL,
+					onClose : function(sButton) {
+						if (sButton === MessageBox.Action.OK) {
+							forceSearch();
+						}
+					}.bind(this)
+				});
+			}else{
+				forceSearch();
+			}
+            // if (oEvent.getParameters().refreshButtonPressed) {
+			// 	// Search field's 'refresh' button has been pressed.
+			// 	// This is visible if you select any master list item.
+			// 	// In this case no new search is triggered, we only
+			// 	// refresh the list binding.
+			// 	this.onRefresh();
+			// } else {
+			// 	var aTableSearchState = this._getSearchStates();
+			// 	this._applySearch(aTableSearchState);
+            // }
 		},
 
 		onMainTableAddButtonPress: function(oEvent){
             var oTable = this.byId("mainTable"),
-				oModel = this.getModel("list");
+                oModel = this.getModel("list");
+            var oSelected = oTable.getSelectedContexts();
+            /*
+                1. 새로 추가된 row사이에 addRow시 rowIdx 밀리는 경우생김
+                2. rowIdx 억지로 뜯어내는 법 말고 함수 없나
+            */
+
+            //var idx = parseInt(oTable.getSelectedContextPaths().split("/")[2])+1;
+            var idx = 0 ;
+
+            if(oSelected.length>0){
+                idx = parseInt(oSelected[0].getPath().split("/")[2])+1;
+            }
+
 			oModel.addRecord({
 				"tenant_id": "L2100",
 				"company_code": "C100",
 				"org_type_code": "BU",
 				"org_code": "L210000000",
-				"spmd_category_code": "",
-				"spmd_character_code": "",
+				"spmd_category_code": "C101",
+				"spmd_character_code": "T999",
 				"spmd_character_code_name": "TEST",
 				"spmd_character_desc": "TEST_DESC",
 				"spmd_character_type_code": "T",
-				// "system_update_dtm": new Date(),
+				"spmd_character_value_unit": "",
+				"spmd_character_serial_no": "",
                 "system_update_dtm": new Date()
-            }, 0);
+            }, "/MdCategoryItem" , idx);     //, "/MdCategoryItem"
             
-            oTable.getAggregation('items')[0].getCells()[1].getItems()[0].setVisible(false);
-            oTable.getAggregation('items')[0].getCells()[1].getItems()[1].setVisible(true);
-            oTable.getAggregation('items')[0].getCells()[2].getItems()[0].setVisible(false);
-            oTable.getAggregation('items')[0].getCells()[2].getItems()[1].setVisible(true);
-            oTable.getAggregation('items')[0].getCells()[4].getItems()[0].setVisible(false);
-            oTable.getAggregation('items')[0].getCells()[4].getItems()[1].setVisible(true);
-            
-		},
+            oTable.getAggregation('items')[idx].getCells()[1].getItems()[0].setVisible(false);
+            oTable.getAggregation('items')[idx].getCells()[1].getItems()[1].setVisible(true);
+            oTable.getAggregation('items')[idx].getCells()[2].getItems()[0].setVisible(false);
+            oTable.getAggregation('items')[idx].getCells()[2].getItems()[1].setVisible(true);
+            oTable.getAggregation('items')[idx].getCells()[4].getItems()[0].setVisible(false);
+            oTable.getAggregation('items')[idx].getCells()[4].getItems()[1].setVisible(true);
+        },
+        
+
         onMainTableSaveButtonPress: function(){
-			// var oModel = this.getModel("list"),
-			// 	oView = this.getView();
+			var oModel = this.getModel("list"),
+                oView = this.getView();
 			
-			// MessageBox.confirm("Are you sure ?", {
-			// 	title : "Comfirmation",
-			// 	initialFocus : sap.m.MessageBox.Action.CANCEL,
-			// 	onClose : function(sButton) {
-			// 		if (sButton === MessageBox.Action.OK) {
-			// 			oView.setBusy(true);
-			// 			oModel.submitChanges({
-			// 				success: function(oEvent){
-			// 					oView.setBusy(false);
-			// 					MessageToast.show("Success to save.");
-			// 				}
-			// 			});
-			// 		};
-			// 	}
-			// });
+			if(!oModel.isChanged()) {
+				MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
+				return;
+			}
+                
+			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
+				title : this.getModel("I18N").getText("/SAVE"),
+				initialFocus : sap.m.MessageBox.Action.CANCEL,
+				onClose : (function(sButton) {
+					if (sButton === MessageBox.Action.OK) {
+						oView.setBusy(true);
+						oModel.submitChanges({
+							success: function(oEvent){
+								oView.setBusy(false);
+								MessageToast.show(this.getModel("I18N").getText("/NCM0005"));
+							}.bind(this)
+						});
+					}
+                }).bind(this)
+			})
 			
         }, 
 

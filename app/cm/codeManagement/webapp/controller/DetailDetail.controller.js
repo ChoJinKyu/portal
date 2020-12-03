@@ -20,11 +20,11 @@ sap.ui.define([
 
 			this.oRouter.getRoute("detailDetail").attachPatternMatched(this._onSupplierMatched, this);
 
-            this.setModel(new ManagedListModel(), "list");
+            this.setModel(new ManagedListModel(), "languages");
 
         //     this.getView()
         //   .setBusy(true)
-        //   .getModel("list")
+        //   .getModel("languages")
         //   .setTransactionModel(this.getView().getModel())
         //   .read("/TimeZone", {
         //     filters: predicates,
@@ -218,13 +218,13 @@ sap.ui.define([
 
             var oViewModel = this.getModel('viewModel');
             // var oServiceModel = this.getModel();
-            var oServiceModel = this.getModel("list").setTransactionModel(this.getModel());
+            var oServiceModel = this.getModel("languages").setTransactionModel(this.getModel());
             oServiceModel.read("/CodeLanguages",{
                 filters : aFilters,
                 success : function(data){
                     console.log(this)
                     console.log(oServiceModel)
-                    oViewModel.setProperty("/CodeLanguages", data.results);
+                    oViewModel.setProperty("/languages", data.results);
                     // oCodeMasterTable.setBusy(false);
                 },
                 error : function(data){
@@ -286,7 +286,7 @@ sap.ui.define([
             var bCreateFlag = oContModel.getProperty("/detailDetail/createMode");
 
             if(bCreateFlag){
-                if(ValidatorUtil.checkRequires(this,"requiredField")){
+                if(ValidatorUtil.isValid(this,"requiredField")){
                     MessageBox.confirm("추가 하시 겠습니까?", {
                         title : "Create",
                         initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -352,13 +352,13 @@ sap.ui.define([
             oModel.submitChanges({
                 groupId: "createDetail",
                 success: function(data){
-                    var oLangModel = this.getModel("list");
+                    var oLangModel = this.getModel("languages");
                     oLangModel.getData().forEach(function(item, i){
                         oLangModel.setProperty("/"+i+"/tenant_id", oParam.tenant_id);
                         oLangModel.setProperty("/"+i+"/group_code", oParam.group_code);
                         oLangModel.setProperty("/"+i+"/code", oParam.code);
                     })
-                    this.getModel('list').submitChanges({
+                    this.getModel('languages').submitChanges({
                         success: (function (oEvent) {
                             this._fnSetReadMode();
                             MessageToast.show("Success to save.");
@@ -385,7 +385,7 @@ sap.ui.define([
             var sCreatePath = oModel.createKey("/CodeDetails", oKey);
             oModel.update(sCreatePath, oParam, {
                 success: function(data){
-                    var oLangModel = this.getModel("list");
+                    var oLangModel = this.getModel("languages");
                     oLangModel.getData().forEach(function(item, i){
                         if(item["_row_state_"] === "C"){
                             oLangModel.setProperty("/"+i+"/tenant_id", oParam.tenant_id);
