@@ -247,7 +247,7 @@
         </f:header>
         <f:content>
             <VBox>
-                <Table id="mainTable"       
+                <!-- <Table id="mainTable"       
                         growing="true"
                         growingThreshold="20"
                         class="sapFDynamicPageAlignContent" 
@@ -256,7 +256,15 @@
                         rowSelectionChange = ".onCheck"
                         mode="MultiSelect"
                         width="auto"
-                        items="{list>/Approvals}">
+                        items="{list>/Approvals}"> -->
+                <Table id="mainTable"       
+                    growing="true"
+                    growingThreshold="20"
+                    class="sapFDynamicPageAlignContent" 
+                    updateFinished=".onListMainTableUpdateFinished"
+                    cellClick=".onCellClick"
+                    width="auto"
+                    items="{list>/Approvals}">
                     <headerToolbar>
                         <OverflowToolbar>
                             <Title text="Approval List ({= ${list>/Approvals}.length || 0})" level="H2"/>
@@ -278,6 +286,9 @@
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
+                        <Column width="4em" >
+                            <CheckBox selected="false" select=".onColumnChecBox"/>
+                        </Column>
                         <Column id="mainColumnApprovalCategory" width="4em" >
                             <Text text="Approval&#10;Category" />
                         </Column>
@@ -305,7 +316,8 @@
                     </columns>
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
-                            <cells>                         
+                            <cells>                  
+                                <CheckBox fieldGroupIds="checkBoxs"  visible="{= ${list>approval_type_code}==='B'? true:false }" />       
                                 <ObjectIdentifier text="{list>approval_type_code}" />
                                 <ObjectIdentifier text="{list>company_name}" />
                                 <ObjectIdentifier text="{list>org_name}" />

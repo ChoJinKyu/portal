@@ -222,6 +222,7 @@ sap.ui.define([
 
         },
 
+        
 
         ///////////////////// Multi Combo box event Start //////////////////////////
          /**
@@ -596,6 +597,24 @@ sap.ui.define([
         createPopupClose: function (oEvent){
             console.log(oEvent);
             this.byId("dialogApprovalCategory").close();
+        },
+
+        /**
+         * @public
+         * @see 리스트 체크박스 제어기능
+         */ 
+        onColumnChecBox: function(oEvent){
+            var groupId = this.getView().getControlsByFieldGroupId("checkBoxs");
+            var isChecked = oEvent.getSource().mProperties.selected;
+            if(isChecked){
+                for(var i=0; i<groupId.length; i++){
+                    groupId[i].setSelected(true);
+                }
+            }else{
+                for(var i=0; i<groupId.length; i++){
+                    groupId[i].setSelected(false);
+                }
+            }
         },
 
        ///////////////////// List create button pop up event End //////////////////////////
