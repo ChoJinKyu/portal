@@ -118,7 +118,6 @@ sap.ui.define([
 		 * Item Select Change
 		 */
         _selectionChanged: function(){
-
 			console.group("_selectionChanged");
             var oItemLength = this._getSmartTableById().getTable().getSelectedItems().length;
 			//var bDeleteEnabled = oItemLength > 0;

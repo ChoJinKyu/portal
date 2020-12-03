@@ -3,7 +3,7 @@ namespace dp;
 using {User} from '@sap/cds/common';
 
 @cds.persistence.exists
-entity Mold_Mst_Spec_View {
+entity Md_Mst_Spec_View {
 
         company_name                    : String;
         org_name                        : String;

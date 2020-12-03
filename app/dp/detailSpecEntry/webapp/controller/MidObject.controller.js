@@ -129,7 +129,10 @@ sap.ui.define([
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
-						oView.setBusy(true);
+                        oView.setBusy(true);
+                        
+                        this.getModel('spec').setProperty('/mold_spec_status_code', 'D');
+
 						oTransactionManager.submit({
 						// oView.getModel("master").submitChanges({
 							success: function(ok){
@@ -249,7 +252,7 @@ sap.ui.define([
             var mode = sFragmentName.split('_')[1];
 
             var oPageSubSection2 = this.byId("pageSubSection2");
-            this._loadFragment("MidObjectShipPlan_"+mode, function(oFragment){
+            this._loadFragment("MidObjectDevelopmentPlan_"+mode, function(oFragment){
 				oPageSubSection2.removeAllBlocks();
 				oPageSubSection2.addBlock(oFragment);
             })  

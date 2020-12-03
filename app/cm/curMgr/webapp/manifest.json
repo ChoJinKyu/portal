@@ -140,7 +140,8 @@
               "controlAggregation": "midColumnPages"
           },
           "notFound": {
-            "viewName": "MidObjectNotFound",
+            "viewName": "NotFound",
+            "viewPath": "ext.lib.view",
             "viewId": "notFound"
           }
       }

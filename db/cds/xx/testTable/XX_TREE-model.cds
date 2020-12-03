@@ -22,3 +22,20 @@ entity Categories : CodeList {
       children : Composition of many Categories
                    on children.parent = $self;
 }
+
+@cds.persistence.exists
+entity Categories_h {
+  key NODE_ID   : Integer;
+      PARENT_ID : Integer;
+      NAME      : String;
+      DESCR     : String;
+}
+
+@cds.persistence.exists
+entity Categories_haa {
+  key NODE_ID   : Integer;
+      PARENT_ID : Integer;
+      NAME      : String;
+      DESCR     : String;
+      PATH      : String;
+}

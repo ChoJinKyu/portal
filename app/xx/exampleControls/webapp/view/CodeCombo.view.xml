@@ -1,0 +1,78 @@
+<mvc:View controllerName="xx.exampleControls.controller.Empty"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:layout="sap.ui.layout"
+    xmlns:lib-m="ext.lib.control.m"
+    height="100%">
+
+    <Page id="page" title="Code Combo" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
+        <content>
+            <VBox>
+
+                <form:SimpleForm maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                    <form:content>
+                        <VBox>
+                            <Label text="Masked Number: "></Label>
+                            <lib-m:CodeComboBox id="searchChain" width="100%" 
+                                model="util" useEmpty="true" groupCode="CM_CHAIN_CD">
+                            </lib-m:CodeComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                    </form:content>
+                </form:SimpleForm>
+
+                <Table id="midTable" 
+                        sticky="HeaderToolbar,ColumnHeaders" 
+                        inset="false" 
+                        items="{form>/list}"
+                        class="sapFDynamicPageAlignContent" 
+                        updateFinished=".onMidTableUpdateFinished"
+                        mode="SingleSelectLeft" 
+                        width="auto">
+                    <columns>
+                        <Column minScreenWidth="Tablet" hAlign="Center">
+                            <Text text="Level" />
+                        </Column>
+                        <Column minScreenWidth="Tablet" hAlign="Center">
+                            <Text text="Level Value" />
+                        </Column>
+                        <Column minScreenWidth="Tablet" hAlign="Center" >
+                            <Text text="eMail" />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem type="Inactive" press=".onMidTableItemPress">
+                            <cells>
+                                <Input value="{
+                                        path: 'form>value2', 
+                                        constraints: {
+
+                                        }
+                                    }"/>
+                                <Input value="{
+                                        path: 'form>value3', 
+                                        type: 'sap.ui.model.type.String',
+                                        constraints: {
+                                            search: '\\S+@\\S+\\.\\S+'
+                                        }
+                                    }"/>
+                                <Input value="{
+                                        path: 'form>value4', 
+                                        type: 'sap.ui.model.type.String',
+                                        constraints: {
+                                            search: '\\S+@\\S+\\.\\S+'
+                                        }
+                                    }"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

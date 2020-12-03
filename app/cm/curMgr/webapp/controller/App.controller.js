@@ -1,16 +1,28 @@
 sap.ui.define([
-	"ext/lib/controller/BaseController",
-], function (BaseController) {
+    "ext/lib/controller/BaseController",
+    "ext/lib/util/Multilingual",
+], function (BaseController, Multilingual) {
 	"use strict";
 
 	return BaseController.extend("cm.currencyMgr.controller.App", {
 
 		onInit : function () {
+            var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
 			// apply content density mode to root view
 			this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
 			this.oRouter = this.getOwnerComponent().getRouter();
 			this.oRouter.attachRouteMatched(this.onRouteMatched, this);
             this.oRouter.attachBeforeRouteMatched(this.onBeforeRouteMatched, this);
+
+            oMultilingual.attachEvent("ready", function(oEvent){
+				var oi18nModel = oEvent.getParameter("model");
+				this.addHistoryEntry({
+					title: oi18nModel.getText("/MESSAGE_MANAGEMENT"),
+					icon: "sap-icon://table-view",
+					intent: "#Template-display"
+				}, true);
+			}.bind(this));
 		},
 
 		onBeforeRouteMatched: function(oEvent) {

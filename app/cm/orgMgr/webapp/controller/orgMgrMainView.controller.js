@@ -1,5 +1,9 @@
 sap.ui.define([
-        "cm/orgMgr/controller/BaseController",
+        "ext/lib/controller/BaseController",
+        "ext/lib/util/Multilingual",
+        "ext/lib/model/TransactionManager",
+        "ext/lib/model/ManagedListModel",
+        "ext/lib/formatter/Formatter",
         "sap/base/Log",
         "sap/m/MessageBox",
         "sap/m/MessageToast",
@@ -11,25 +15,39 @@ sap.ui.define([
         "sap/ui/model/json/JSONModel",
         "sap/ui/thirdparty/jquery",
         "sap/m/Token",
-        "../model/formatter"
     ],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
 
-	function (Controller, Log, MessageBox, MessageToast, DateFormat, Filter, FilterOperator, FilterType, Sorter, JSONModel, jquery, Token, formatter) {
+    function (BaseController, Multilingual, TransactionManager, ManagedListModel, formatter, Log, MessageBox, MessageToast, DateFormat, Filter, 
+        FilterOperator, FilterType, Sorter, JSONModel, jquery, Token) {
         "use strict";
         var _aValidTabKeys = ["Tenant", "Company", "Purchasing", "Plant", "Unit", "Division"];
         
 
-		return Controller.extend("cm.orgMgr.controller.orgMgrMainView", {
+		return BaseController.extend("cm.orgMgr.controller.orgMgrMainView", {
             formatter: formatter,
 			onInit: function () {
 
+                var oMultilingual = new Multilingual();
+			    this.setModel(oMultilingual.getModel(), "I18N");
                 var oRouter = this.getRouter();
                 this.getView().setModel(new JSONModel(), "view");
+                this.setModel(new ManagedListModel(), "list");
+
+                oMultilingual.attachEvent("ready", function(oEvent){
+				var oi18nModel = oEvent.getParameter("model");
+				this.addHistoryEntry({
+					title: oi18nModel.getText("/MESSAGE_MANAGEMENT"),
+					icon: "sap-icon://table-view",
+					intent: "#Template-display"
+                    }, true);
+                }.bind(this));
+
+                //this._doInitTablePerso();
                 
-                //oRouter.getRoute("TargetorgMgrMainView").attachMatched(this._onRouteMatched, this);
+                oRouter.getRoute("TargetorgMgrMainView").attachMatched(this._onRouteMatched, this);
 
                 // this.tabModel();
                 var oMessageManager = sap.ui.getCore().getMessageManager(),
@@ -61,7 +79,7 @@ sap.ui.define([
                     oView.getModel("view").setProperty("/selectedTabKey", oQuery.tab);
                 } else {
                     this.getRouter().navTo("TargetorgMgrMainView", {
-                        tabkeyId: oArgs.tabkeyId,
+                        //tabkeyId: oArgs.tabkeyId,
                         "?query": {
                             tab: _aValidTabKeys[0]
                         }
@@ -70,17 +88,17 @@ sap.ui.define([
             },
 
             
-            onTabSelect: function (oEvent){
+            onSelectedKey: function (oEvent){
                 var oCtx = this.getView().getBindingContext();
                 this.getRouter().navTo("TargetorgMgrMainView", {
-                    tabkeyId: oCtx.getProperty("tabkeyId"),
+                    //tabkeyId: oCtx.getProperty("tabkeyId"),
                     "?query": {
                         tab: oEvent.getParameter("selectedKey")
                     }
                 }, true /*without history*/);
             },
 
-            onAddRow: function (oEvent) {
+            onMainTableAddButtonPress: function (oEvent) {
                 var vSelectKey = this.getView().oParent.mProperties.key + "Table",
                     utcDate = this._getUtcSapDate();
 
@@ -204,7 +222,7 @@ sap.ui.define([
 
             },
 
-            onSelectedKey : function(oEvent) {
+            // onSelectedKey : function(oEvent) {
                 // debugger;
                 // var vGroupCheck = "Org_" + this.getView().oParent.mProperties.key + "Group";
                 // var vSelectKey = this.getView().oParent.mProperties.key + "Table";
@@ -228,7 +246,7 @@ sap.ui.define([
 
                 
                 
-            },
+            // },
 
             tabModel : function() {
                 console.group("tabModel");

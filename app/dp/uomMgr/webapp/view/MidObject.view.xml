@@ -20,19 +20,19 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="UOM Class Details" wrapping="true" />
+					<Title text="UOM Details" wrapping="true" />
 				</uxap:expandedHeading>
 				<uxap:snappedHeading>
-					<Title text="UOM Class Details" wrapping="true" />
+					<Title text="UOM Details" wrapping="true" />
 				</uxap:snappedHeading>
 				<uxap:expandedContent>
-					<Text text="Details for UOM Class : {master>/uom_class_code}" />
+					<Text text="Details for UOM : {master>/uom_code}" />
 				</uxap:expandedContent>
 				<uxap:snappedContent>
-					<Text text="Details for UOM Class : {master>/uom_class_code}" />
+					<Text text="Details for UOM : {master>/uom_code}" />
 				</uxap:snappedContent>
 				<uxap:snappedTitleOnMobile>
-					<Title text="UOM Class Details" />
+					<Title text="UOM Details" />
 				</uxap:snappedTitleOnMobile>
 				<uxap:actions>
 					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" />
@@ -105,7 +105,7 @@
 						<Table id="midTable" 
 								sticky="HeaderToolbar,ColumnHeaders" 
 								inset="false"								
-								items="{details>/UomClassLng}"
+								items="{details>/UomLng}"
 								class="sapFDynamicPageAlignContent" 
 								updateFinished=".onMidTableUpdateFinished"
                                 mode="SingleSelectLeft"
@@ -127,13 +127,22 @@
 								<Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="40px" >
 									<Text text="S" />
 								</Column>
-								<Column id="midColumnLevelCode" minScreenWidth="Tablet" hAlign="Center" importance="High">
+								<Column id="midColumnLanguage" minScreenWidth="Tablet" hAlign="Center" importance="High">
 									<Text text="Language" />
 								</Column>
-								<Column id="midColumnLevelValue" minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="Class Text" />
+								<Column id="midColumnCC" minScreenWidth="Tablet" hAlign="Center" >
+									<Text text="Commercial Code" />
 								</Column>
-								<Column id="midColumnValue" minScreenWidth="Tablet" hAlign="Center" >
+                                <Column id="midColumnCN" minScreenWidth="Tablet" hAlign="Center" >
+									<Text text="Commercial Name" />
+								</Column>
+                                <Column id="midColumnTC" minScreenWidth="Tablet" hAlign="Center" >
+									<Text text="Technical Code" />
+								</Column>
+                                <Column id="midColumnTN" minScreenWidth="Tablet" hAlign="Center" >
+									<Text text="Technical Name" />
+								</Column>                               
+								<Column id="midColumnDS" minScreenWidth="Tablet" hAlign="Center" >
 									<Text text="Description" />
 								</Column>
 							</columns>
@@ -142,8 +151,11 @@
 									<cells>
 										<Text text="{details>_row_state_}"/>
 										<Input value="{details>language_code}"/>
-										<Input value="{details>uom_class_name}"/>
-										<Input value="{details>uom_class_desc}"/>
+										<Input value="{details>commercial_uom_code}"/>
+										<Input value="{details>commercial_uom_name}"/>
+                                        <Input value="{details>technical_uom_code}"/>
+										<Input value="{details>technical_uom_name}"/>
+                                        <Input value="{details>uom_description}"/>
 									</cells>
 								</ColumnListItem>
 							</items>

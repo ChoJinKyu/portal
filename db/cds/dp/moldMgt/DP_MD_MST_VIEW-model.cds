@@ -1,7 +1,7 @@
 namespace dp;
 
 @cds.persistence.exists
-entity Mold_Mst_View {
+entity Md_Mst_View {
 
         tenant_id                       : String(5)   not null  @title:'테넌트ID';
         company_code                    : String(10)  not null  @title:'회사코드';

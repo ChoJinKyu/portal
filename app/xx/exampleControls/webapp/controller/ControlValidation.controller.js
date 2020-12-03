@@ -1,15 +1,15 @@
 sap.ui.define([
-	"ext/lib/controller/BaseController",
+	"./Empty.controller",
 	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
 	"sap/m/MessageBox",
 	"sap/m/MessageToast"
-], function (BaseController, History, JSONModel, MessageBox, MessageToast) {
+], function (Controller, History, JSONModel, MessageBox, MessageToast) {
 	"use strict";
 
 	var oMessageManager;
 
-	return BaseController.extend("xx.exampleControls.controller.Example", {
+	return Controller.extend("xx.exampleControls.controller.ControlValidation", {
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -58,16 +58,6 @@ sap.ui.define([
 		/* =========================================================== */
 		/* event handlers                                              */
 		/* =========================================================== */
-
-		onNavigationBackPress: function () {
-			var sPreviousHash = History.getInstance().getPreviousHash();
-			if (sPreviousHash !== undefined) {
-				// eslint-disable-next-line sap-no-history-manipulation
-				history.go(-1);
-			} else {
-				this.getRouter().navTo("home", {}, true);
-			}
-		},
 
         onMessagePopoverPress : function (oEvent) {
             this._getMessagePopover().openBy(oEvent.getSource());

@@ -1,0 +1,23 @@
+view DP_MOLD_APPROVALS_VIEW as
+select 
+	am.approval_number
+    ,am.approval_type_code
+    ,am.approval_title
+    ,'['||mm.company_code||'] '||(select company_name from cm_org_company where company_code=mm.company_code) as company_name
+    ,'['||mm.org_code||'] '||(select plant_name from CM_ORG_PLANT where au_code=mm.org_code and company_code=mm.company_code) as org_name
+    ,mm.tenant_id
+    ,mm.company_code
+    ,mm.org_type_code
+    ,mm.org_code
+    ,mm.model
+    ,mm.mold_id
+    ,mm.part_number
+    ,am.requestor_empno
+    ,am.request_date
+    ,am.approve_status_code
+    ,am.approval_contents
+    from dp_mold_approval_mst am
+ join  ( select approval_number, max(mold_id) as mold_id 
+   from dp_mold_approval_dtl 
+   group by approval_number ) ad on am.approval_number = ad.approval_number 
+join dp_mold_mst mm on ad.mold_id = mm.mold_id;

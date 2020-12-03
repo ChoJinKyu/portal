@@ -3,7 +3,7 @@ namespace dp;
 using util from '../../cm/util/util-model';
 using {dp as mst} from './DP_MOLD_MST-model';
 
-entity Mold_Schedule {
+entity Md_Schedule {
 
     key mold_id                       : Integer @title : '금형ID';
 
@@ -24,4 +24,4 @@ entity Mold_Schedule {
 
 }
 
-extend Mold_Schedule with util.Managed;
+extend Md_Schedule with util.Managed;

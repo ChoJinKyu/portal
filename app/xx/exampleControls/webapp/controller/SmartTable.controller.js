@@ -1,13 +1,13 @@
 sap.ui.define([
-	"ext/lib/controller/BaseController",
+	"./Empty.controller",
 	"ext/lib/model/v2/ODataDelegateModel",
 	"sap/ui/model/json/JSONModel",
 	"sap/m/MessageBox",
 	"sap/m/MessageToast"
-], function (BaseController, DelegateModel, JSONModel, MessageBox, MessageToast) {
+], function (Controller, DelegateModel, JSONModel, MessageBox, MessageToast) {
 	"use strict";
 
-	return BaseController.extend("xx.exampleControls.controller.SmartTable", {
+	return Controller.extend("xx.exampleControls.controller.SmartTable", {
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
