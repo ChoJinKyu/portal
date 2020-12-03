@@ -107,6 +107,8 @@
                 path: '/Divisions',
                 filters: [
                     {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                    
+                    
                 ],
                 sorter: { path: 'org_code'}
             }">

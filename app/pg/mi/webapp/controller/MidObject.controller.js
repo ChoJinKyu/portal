@@ -707,7 +707,7 @@ sap.ui.define([
                 var textUseflag = sap.ui.core.Fragment.byId("Display_id", "textUseflag");
 
                 textMaterialCode.setText(midObjectData.getProperty("/mi_material_code"));
-                textcategoryName.setText(midObjectData.getProperty("/category_code"));
+                //textcategoryName.setText(midObjectData.getProperty("/category_code"));
                 var useText = midObjectData.getProperty("/use_flag");
                 var vText = "미사용";
                 if (useText) {

@@ -29,7 +29,7 @@ entity Mm_Material_Desc_Lng {
         and parent.material_code = material_code;
 
   key  language_code : String(4)  not null @title: '언어코드' ;	
-    material_description : String(300) not null  @title: '자재설명' ;	
+    material_desc : String(300)  @title: '자재설명' ;	
 }
 
 extend Mm_Material_Desc_Lng with util.Managed;

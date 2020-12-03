@@ -24,6 +24,7 @@ entity Mm_Material_Commodity {
   key commodity_code : String(30)  not null @title: 'COMMODITY코드' ;	
     commodity_name : String(100)  not null @title: 'COMMODITY명' ;	
     commodity_desc : String(1000)   @title: 'COMMODITY설명' ;	
+    use_flag : Boolean default false  @title: '사용여부' ;	
 }
 
 extend Mm_Material_Commodity with util.Managed;
