@@ -279,15 +279,15 @@ service marketIntelligenceService {
             material_code;
 
     // Enrollment Material View
-    view EnrollmentMaterialView @(title : '자재코드 등록 View') as
-        select distinct
-            key tenant_id, //회사코드
-            key material_code, //자재코드
-                material_description //자재코드명
-        from MaterialDesc
-        order by
-            tenant_id,
-            material_code;
+    // view EnrollmentMaterialView @(title : '자재코드 등록 View') as
+    //     select distinct
+    //         key tenant_id, //회사코드
+    //         key material_code, //자재코드
+    //             material_description //자재코드명
+    //     from MaterialDesc
+    //     order by
+    //         tenant_id,
+    //         material_code;
 
     // // Supplier View
     view SupplierView @(title : '공급업체 조회 View') as
