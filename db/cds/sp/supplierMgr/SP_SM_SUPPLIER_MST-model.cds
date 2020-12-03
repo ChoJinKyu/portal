@@ -6,7 +6,7 @@ entity Sm_Supplier_Mst {
   key tenant_id : String(5)  not null;	
   key supplier_code : String(10)  not null;	
     supplier_local_name : String(240)  ;	
-    supplier_english_name : String(240)  ;	
+    supplier_english_name : String(240) ;	
     tax_id : String(16)  ;	
     vat_number : String(10)  ;	
     tax_id_except_flag : Boolean  ;	
