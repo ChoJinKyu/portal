@@ -255,7 +255,7 @@
                                     <table:Column id="c_MoldItemType" width="10em" hAlign="Center">
                                         <Label text="Mold Item Type"/>           
                                         <table:template>
-                                            <ComboBox selectedKey="{createlist>mold_type_code}"
+                                            <ComboBox selectedKey="{createlist>mold_item_type_code}"
                                                 items="{ path : 'util>/CodeDetails',
                                                             filters : [
                                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
@@ -286,7 +286,7 @@
                                     <table:Column id="c_itemType" width="10em" hAlign="Center">
                                         <Label text="Item Type"/>           
                                         <table:template>
-                                            <ComboBox selectedKey="{createlist>mold_item_type_code}"
+                                            <ComboBox selectedKey="{createlist>mold_type_code}"
                                                 items="{ path : 'util>/CodeDetails',
                                                             filters : [
                                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
@@ -325,19 +325,19 @@
                                         <Label text="Expected"/>           
                                         <Label text="Sales Date"/>           
                                         <table:template>
-                                             <DatePicker value="{createlist>drawing_agreement_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
+                                             <!-- 임시 컬럼명 -->
+                                             <DatePicker value="{createlist>budget_exrate_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
                                         </table:template>
                                     </table:Column>                                     
                                     <table:Column id="c_expectedDisposalDate" width="10em" hAlign="Center">
                                         <Label text="Expected"/>           
                                         <Label text="Disposal Date"/>           
                                         <table:template>
-                                             <DatePicker value="{createlist>drawing_agreement_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
+                                             <!-- 임시 컬럼명 -->
+                                             <DatePicker value="{createlist>inspection_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
                                         </table:template>
                                     </table:Column>                                     
-                                                                      
                                 </table:columns>
-
                           </table:Table>
                        
                         <!-- // -->
@@ -460,7 +460,6 @@
                                 class="size2 sapUiSmallMarginBeginEnd" 
                                 >
                             </core:Icon>
-                           
                         </HBox>
                         </Toolbar>
                             <layout:VerticalLayout class="sapUiContentPadding" width="100%">
