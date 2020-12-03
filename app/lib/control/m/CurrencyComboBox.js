@@ -6,45 +6,42 @@ sap.ui.define([
 ], function (ComboBox, Sorter, Filter, FilterOperator) {
     "use strict";
 
-    var CodeComboBox = ComboBox.extend("ext.lib.control.m.CodeComboBox", {
+    var CurrencyComboBox = ComboBox.extend("ext.lib.control.m.CurrencyComboBox", {
 
         metadata: {
             properties: {
-                groupCode: { type: "string", group: "Misc" }
             }
         },
 
         init: function () {
             ComboBox.prototype.init.call(this);
 
-            this.keyField = "code";
-            this.textField = "code_description";
+            this.keyField = "currency_code";
+            this.textField = "currency_code_name";
 
             this.attachEvent("ready", this._onReady);
         },
 
         _onReady: function(){
-            if(!this.getProperty("groupCode")){
-                return;
-            }
-
+            var sLanguageCode = this.getUserChoices().getLanguage();
             var aFilters = [
                     new Filter("tenant_id", FilterOperator.EQ, "L2100"),
-                    new Filter("group_code", FilterOperator.EQ, this.getProperty("groupCode"))
+                    new Filter("language_code", FilterOperator.EQ, sLanguageCode),
+                    new Filter("use_flag", FilterOperator.EQ, true)
                 ], aSorters = [
-                    new Sorter("sort_no", false)
+                    new Sorter("currency_code_name", false)
                 ];
-            this.read("/CodeDetails", {
+            this.read("/Currency", {
                 filters: aFilters,
                 sorters: aSorters,
                 urlParameters: {
-                    "$select": "code,code_description"
+                    "$select": "currency_code,currency_code_name"
                 }
             });
         }
         
     });
 
-    return CodeComboBox;
+    return CurrencyComboBox;
 
 });
