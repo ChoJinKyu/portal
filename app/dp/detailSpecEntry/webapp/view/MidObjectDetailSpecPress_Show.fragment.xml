@@ -14,10 +14,7 @@
         <form:content>
 
                 <Label text="Mold Test"/>
-                <RadioButtonGroup columns="2" width="100%" editable="false">
-                    <RadioButton text="Yes" selected = "{spec>/inspection_flag}"/>
-                    <RadioButton text="No" selected = "{=!${spec>/inspection_flag}}"/>
-                </RadioButtonGroup>
+                <Switch state="{spec>/inspection_flag}" customTextOn="Yes" customTextOff="No" enabled="false" />
                 <Label text="Order Qty"/>
                 <Text text="{spec>/order_qty}"/>
                 <Label text="Demand Life"/>
@@ -28,10 +25,7 @@
              <!-- </VBox>            
             <VBox > -->
                 <Label text="Assembly Approval"/> 
-                <RadioButtonGroup columns="2" width="100%" editable="false">
-                    <RadioButton text="Yes" selected = "{spec>/assembly_approval_flag}"/>
-                    <RadioButton text="No" selected = "{=!${spec>/assembly_approval_flag}}"/>
-                </RadioButtonGroup>
+                <Switch state="{spec>/assembly_approval_flag}" customTextOn="Yes" customTextOff="No" enabled="false" />
                 <Label text="Mold Structure"/>
                 <Text text="{spec>/die_form}"/>
                 <Label text="Mold Weight"/>
