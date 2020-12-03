@@ -72,8 +72,14 @@ sap.ui.define([
                     aFilters.push(new Filter("use_flag", FilterOperator.EQ, bUseFlag));
                 }
                 if(!this.isValNull(sSearchKeyword)){
-                    aFilters.push(new Filter("group_code", FilterOperator.Contains, sSearchKeyword));
-                    aFilters.push(new Filter("group_name", FilterOperator.Contains, sSearchKeyword));
+                    var aKeywordFilters = {
+                        filters: [
+                            new Filter("group_code", FilterOperator.Contains, sSearchKeyword),
+                            new Filter("group_name", FilterOperator.Contains, sSearchKeyword)
+                        ],
+                        and: false
+                    };
+                    aFilters.push(new Filter(aKeywordFilters));
                 }
 
                 var oCodeMasterTable = this.byId("codeMasterTable");
