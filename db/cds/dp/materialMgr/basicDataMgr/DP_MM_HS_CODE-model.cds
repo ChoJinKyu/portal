@@ -30,6 +30,7 @@ entity Mm_Hs_Code {
     hs_text5 : String(50)   @title: 'HS텍스트5' ;	
     hs_text6 : String(50)   @title: 'HS텍스트6' ;	
     hs_text7 : String(50)   @title: 'HS텍스트7' ;	
+    use_flag : Boolean default false  @title: '사용여부' ;	
 }
 
 extend Mm_Hs_Code with util.Managed;
