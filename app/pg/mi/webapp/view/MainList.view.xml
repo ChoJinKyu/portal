@@ -127,7 +127,7 @@
                     id="smartTable_MainTable_ResponsiveTable"
                     entitySet="MIMaterialCodeList"
                     tableBindingPath="{MIMaterialCodeList}"
-                    initiallyVisibleFields="mi_material_code,mi_material_code_name,category_code,use_flag"
+                    initiallyVisibleFields="mi_material_code,mi_material_code_name,category_name,use_flag"
                     smartFilterId="smartFilterBar"
                     ignoreFromPersonalisation="tenant_id,company_code,org_type_code"
                     tableType="ResponsiveTable"
@@ -170,6 +170,7 @@
                     </smartTable:customToolbar>
                             <Table id="mainTable" mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders">
                                  <columns>  
+                                 
                                        <Column hAlign="Center"  demandPopin="true" importance="High" popinDisplay="WithoutHeader">
                                         <customData>
                                         <core:CustomData key="p13nData"
@@ -177,6 +178,7 @@
                                         </customData>
                                             <Text text="시황자재코드"></Text>
                                         </Column>
+
                                         <Column hAlign="Center" demandPopin="true" importance="High" popinDisplay="Inline">
                                           <customData>
                                         <core:CustomData key="p13nData"
@@ -184,14 +186,16 @@
                                         </customData>
                                              <Text text="시황자재명"></Text>
                                         </Column>
-                                          <Column hAlign="Center" demandPopin="true" popinDisplay="Inline">
+
+                                        <Column hAlign="Center" demandPopin="true" popinDisplay="Inline">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "category_name", "leadingProperty": "category_name", "sortProperty": "category_name", "filterProperty": "category_name", "columnIndex": 6}'/>
                                         </customData>
                                              <Text text="Category명"></Text>
                                         </Column>
-                                           <Column hAlign="Center" demandPopin="true" popinDisplay="Inline">
+
+                                        <Column hAlign="Center" demandPopin="true" popinDisplay="Inline">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "use_flag", "leadingProperty": "use_flag", "sortProperty": "use_flag", "filterProperty": "use_flag", "columnIndex": 7}'/>
