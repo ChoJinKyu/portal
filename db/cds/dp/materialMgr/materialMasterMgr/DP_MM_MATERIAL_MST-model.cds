@@ -23,7 +23,7 @@ entity Mm_Material_Mst {
   key tenant_id : String(5)  not null @title: '테넌트ID' ;	
   key material_code : String(40)  not null @title: '자재코드' ;	
     material_type_code : String(10)   @title: '자재유형코드' ;	
-    material_description : String(300)   @title: '자재내역' ;	
+    material_desc : String(300)   @title: '자재내역' ;	
     material_spec : String(1000)   @title: '자재규격' ;	
     base_uom_code : String(3)   @title: '기준UOM코드' ;	
     material_group_code : String(10)   @title: '자재그룹코드' ;	
