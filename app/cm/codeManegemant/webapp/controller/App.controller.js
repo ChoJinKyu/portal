@@ -99,7 +99,7 @@ sap.ui.define([
         },
 
         onBeforeRouteMatched: function(oEvent) {
-
+            console.log("in onBeforeRouteMatched")
 			var oModel = this.getModel("fcl");
 
 			var sLayout = oEvent.getParameters().arguments.layout;
@@ -117,6 +117,7 @@ sap.ui.define([
 		},
 
 		onRouteMatched: function (oEvent) {
+            console.log("in onRouteMatched")
 			var sRouteName = oEvent.getParameter("name"),
 				oArguments = oEvent.getParameter("arguments");
 
@@ -129,11 +130,13 @@ sap.ui.define([
 		},
 
 		onStateChanged: function (oEvent) {
+            console.log("in onStateChanged", oEvent, this.currentRouteName)
 			var bIsNavigationArrow = oEvent.getParameter("isNavigationArrow"),
 				sLayout = oEvent.getParameter("layout");
 			this._updateUIElements();
 
-			// Replace the URL with the new layout if a navigation arrow was used
+            // Replace the URL with the new layout if a navigation arrow was used
+            console.log("bIsNavigationArrow", bIsNavigationArrow)
 			if (bIsNavigationArrow) {
 				this.oRouter.navTo(this.currentRouteName, {layout: sLayout, product: this.currentProduct, supplier: this.currentSupplier}, true);
 			}

@@ -19,8 +19,10 @@ sap.ui.define([
 			this.oRouter = this.getOwnerComponent().getRouter();
 			// this.oModel = this.getOwnerComponent().getModel();
 
+			this.oRouter.getRoute("master").attachPatternMatched(function(){console.log("master")}, this);
 			// this.oRouter.getRoute("master").attachPatternMatched(this._onProductMatched, this);
-			this.oRouter.getRoute("detail").attachPatternMatched(this._onProductMatched, this);
+			this.oRouter.getRoute("detail").attachPatternMatched(this._onDetailMatched, this);
+			this.oRouter.getRoute("detailDetail").attachPatternMatched(function(){console.log("detailDetail")}, this);
 			// this.oRouter.getRoute("detailDetail").attachPatternMatched(this._onProductMatched, this);
 
 			// [oExitButton, oEnterButton].forEach(function (oButton) {
@@ -277,7 +279,8 @@ sap.ui.define([
             });
         },
 
-		_onProductMatched: function (oEvent) {
+		_onDetailMatched: function (oEvent) {
+            console.log('_onDetailMatched', oEvent)
             this._fnInitControlModel();
 
             var sTenantId = oEvent.getParameter("arguments").tenantId;
@@ -327,7 +330,7 @@ sap.ui.define([
 
         chainFormatter : function(code){
             this._fnGetChainList();
-            console.log('chainFormatter',code)
+            // console.log('chainFormatter',code)
             var oViewModel = this.getModel("viewModel");
             // var aChain = this._fnGetChainList();
             // console.log('aChain',aChain)
@@ -358,7 +361,7 @@ sap.ui.define([
                     success : function(data){
                         oViewModel.setProperty("/chainList",data.results);
                         aChain = data.results;
-                        console.log('oUtilModel success',data.results)
+                        // console.log('oUtilModel success',data.results)
                     },
                     error : function(data){
                         // console.log('oUtilModel error',data)
