@@ -33,6 +33,7 @@
             "db/cds/cm/hrEmployeeMgr",     
             "db/cds/cm/orgCodeMgr",    
             "db/cds/cm/roleMgr",    
+            "db/cds/cm/roleGroupMgr",    
             "db/cds/cm/menuMgr",                    
             "db/cds/dp",
             "db/cds/dp/pd",
