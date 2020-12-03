@@ -188,6 +188,6 @@ SELECT '['||a.company_code||'] '||(select company_name from cm_org_company where
     , b.mold_spec_register_date
 
 from dp_mold_mst a
-left join dp_mold_spec b
+left join dp_md_spec b
 on a.mold_id=b.mold_id
 ;

@@ -14,10 +14,7 @@
         <form:content>
 
                 <Label text="Inspection"/>
-                <RadioButtonGroup columns="2" width="100%" editable="true">
-                    <RadioButton text="Yes" selected = "{spec>/inspection_flag}"/>
-                    <RadioButton text="No" selected = "{=!${spec>/inspection_flag}}"/>
-                </RadioButtonGroup>
+                <Switch state="{spec>/inspection_flag}" customTextOn="Yes" customTextOff="No"  />
                 <Label text="Cavity Qty"/>
                 <Input value="{spec>/cavity_process_qty}"/>
                 <Label text="Demand Life"/>
@@ -30,7 +27,7 @@
                 <Label text="Hot Runner Valve Qty"/>
                 <Input value="{spec>/mold_hot_runner_qty}"/>
                 <Label text="Size"/>
-                <ComboBox   width="100%"
+                <Select   width="100%"
                             selectedKey="{spec>/mold_size}"
                             items="{
                                         path : 'util>/CodeDetails',
@@ -42,9 +39,9 @@
                             editable="true"
                 >
                     <core:Item key="{util>code}" text="{util>code_description}" />
-                </ComboBox>
+                </Select>
                 <Label text="Runner"/>
-                <ComboBox   width="100%"
+                <Select   width="100%"
                             selectedKey="{spec>/mold_hot_runner_spec_name}"
                             items="{
                                         path : 'util>/CodeDetails',
@@ -56,9 +53,9 @@
                             editable="true"
                 >
                     <core:Item key="{util>code}" text="{util>code_description}" />
-                </ComboBox>
+                </Select>
                 <Label text="Return Type"/>
-                <ComboBox   width="100%"
+                <Select   width="100%"
                             selectedKey="{spec>/mold_return_type_name}"
                             items="{
                                         path : 'util>/CodeDetails',
@@ -70,9 +67,9 @@
                             editable="true"
                 >
                     <core:Item key="{util>code}" text="{util>code_description}" />
-                </ComboBox>
+                </Select>
                 <Label text="Runner Out"/>
-                <ComboBox   width="100%"
+                <Select   width="100%"
                             selectedKey="{spec>/mold_runnerout_spec_name}"
                             items="{
                                         path : 'util>/CodeDetails',
@@ -84,21 +81,18 @@
                             editable="true"
                 >
                     <core:Item key="{util>code}" text="{util>code_description}" />
-                </ComboBox>
+                </Select>
 
              <!-- </VBox>            
             <VBox > -->
                 <Label text="Assembly Approval"/> 
-                <RadioButtonGroup columns="2" width="100%" editable="true">
-                    <RadioButton text="Yes" selected = "{spec>/assembly_approval_flag}"/>
-                    <RadioButton text="No" selected = "{=!${spec>/assembly_approval_flag}}"/>
-                </RadioButtonGroup>
+                <Switch state="{spec>/assembly_approval_flag}" customTextOn="Yes" customTextOff="No"  />
                 <Label text="Order Qty"/>
                 <Input value="{spec>/order_qty}"/>
                 <Label text="Mold Weight"/>
                 <Input value="{spec>/mold_weight}"/>
                 <Label text="Hot Runner Maker"/>
-                <ComboBox   width="100%"
+                <Select   width="100%"
                             selectedKey="{spec>/hot_runner_maker_name}"
                             items="{
                                         path : 'util>/CodeDetails',
@@ -110,12 +104,12 @@
                             editable="true"
                 >
                     <core:Item key="{util>code}" text="{util>code_description}" />
-                </ComboBox>
+                </Select>
 
                 <Label text="Mold Size"/>
                 <Input value="{spec>/mold_size_2}"/>
                 <Label text="Gate"/>
-                <ComboBox   width="100%"
+                <Select   width="100%"
                             selectedKey="{spec>/mold_gate_spec_name}"
                             items="{
                                         path : 'util>/CodeDetails',
@@ -127,9 +121,9 @@
                             editable="true"
                 >
                     <core:Item key="{util>code}" text="{util>code_description}" />
-                </ComboBox>
+                </Select>
                 <Label text="Form Out"/>
-                <ComboBox   width="100%"
+                <Select   width="100%"
                             selectedKey="{spec>/mold_formout_method}"
                             items="{
                                         path : 'util>/CodeDetails',
@@ -141,7 +135,7 @@
                             editable="true"
                 >
                     <core:Item key="{util>code}" text="{util>code_description}" />
-                </ComboBox>
+                </Select>
                 <Label text="Use Machine"/>
                 <Input value="{spec>/mold_tonnage}"/>
 
@@ -152,7 +146,7 @@
                 <Label text="Sample Qty"/>
                 <Input value="{spec>/mold_sample_qty}"/>
                 <Label text="Mold Type"/>
-                <ComboBox   width="100%"
+                <Select   width="100%"
                             selectedKey="{master>/mold_type_code}"
                             items="{
                                         path : 'util>/CodeDetails',
@@ -164,9 +158,9 @@
                             editable="true"
                 >
                     <core:Item key="{util>code}" text="{util>code_description}" />
-                </ComboBox>
+                </Select>
                 <Label text="Mold Structure"/>
-                <ComboBox   width="100%"
+                <Select   width="100%"
                             selectedKey="{spec>/die_form}"
                             items="{
                                         path : 'util>/CodeDetails',
@@ -178,11 +172,11 @@
                             editable="true"
                 >
                     <core:Item key="{util>code}" text="{util>code_description}" />
-                </ComboBox>
+                </Select>
                 <Label text=""/>
                 <Text text=""/>
                 <Label text="Under Cut"/>
-                <ComboBox   width="100%"
+                <Select   width="100%"
                             selectedKey="{spec>/mold_undercut_spec_name}"
                             items="{
                                         path : 'util>/CodeDetails',
@@ -194,9 +188,9 @@
                             editable="true"
                 >
                     <core:Item key="{util>code}" text="{util>code_description}" />
-                </ComboBox>
+                </Select>
                 <Label text="Out Process"/>
-                <ComboBox   width="100%"
+                <Select   width="100%"
                             selectedKey="{spec>/mold_outform_spec_name}"
                             items="{
                                         path : 'util>/CodeDetails',
@@ -208,7 +202,7 @@
                             editable="true"
                 >
                     <core:Item key="{util>code}" text="{util>code_description}" />
-                </ComboBox>
+                </Select>
              <!-- </VBox> -->
         </form:content>
     </form:SimpleForm>
@@ -253,7 +247,7 @@
             <core:Title text="Mold Meterial" />
             <!-- <VBox> -->
                 <Label text="Cavity/Punch"/>
-                <ComboBox   width="100%"
+                <Select   width="100%"
                             selectedKey="{spec>/mold_cavity_material_name}"
                             items="{
                                         path : 'util>/CodeDetails',
@@ -265,9 +259,9 @@
                             editable="true"
                 >
                     <core:Item key="{util>code}" text="{util>code_description}" />
-                </ComboBox>
+                </Select>
                 <Label text="Taper Pin"/>
-                <ComboBox   width="100%"
+                <Select   width="100%"
                             selectedKey="{spec>/mold_slope_material_name}"
                             items="{
                                         path : 'util>/CodeDetails',
@@ -279,13 +273,13 @@
                             editable="true"
                 >
                     <core:Item key="{util>code}" text="{util>code_description}" />
-                </ComboBox>
+                </Select>
                 <Label text="Cycle Time"/>
                 <Input value="{spec>/cycle_time}"/>
             <!-- </VBox>            
             <VBox > -->
                 <Label text="Core/Die"/> 
-                <ComboBox   width="100%"
+                <Select   width="100%"
                             selectedKey="{spec>/mold_core_material_name}"
                             items="{
                                         path : 'util>/CodeDetails',
@@ -297,9 +291,9 @@
                             editable="true"
                 >
                     <core:Item key="{util>code}" text="{util>code_description}" />
-                </ComboBox>
+                </Select>
                 <Label text="Top Circle"/>
-                <ComboBox   width="100%"
+                <Select   width="100%"
                             selectedKey="{spec>/top_circle_material_name}"
                             items="{
                                         path : 'util>/CodeDetails',
@@ -311,12 +305,12 @@
                             editable="true"
                 >
                     <core:Item key="{util>code}" text="{util>code_description}" />
-                </ComboBox>
+                </Select>
 
             <!-- </VBox>            
             <VBox > -->
                 <Label text="Slide Core"/> 
-                <ComboBox   width="100%"
+                <Select   width="100%"
                             selectedKey="{spec>/slide_core_material_name}"
                             items="{
                                         path : 'util>/CodeDetails',
@@ -328,9 +322,9 @@
                             editable="true"
                 >
                     <core:Item key="{util>code}" text="{util>code_description}" />
-                </ComboBox>
+                </Select>
                 <Label text="Bottom Circle"/>
-                <ComboBox   width="100%"
+                <Select   width="100%"
                             selectedKey="{spec>/bottom_circle_material_name}"
                             items="{
                                         path : 'util>/CodeDetails',
@@ -342,7 +336,7 @@
                             editable="true"
                 >
                     <core:Item key="{util>code}" text="{util>code_description}" />
-                </ComboBox>
+                </Select>
             <!-- </VBox> -->
         </form:content>
     </form:SimpleForm>

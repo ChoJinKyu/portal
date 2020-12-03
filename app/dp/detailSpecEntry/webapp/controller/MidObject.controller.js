@@ -131,7 +131,7 @@ sap.ui.define([
 					if (sButton === MessageBox.Action.OK) {
                         oView.setBusy(true);
                         
-                        this.getModel('spec').setProperty('/mold_spec_status_code', 'D');
+                        me.getModel('spec').setProperty('/mold_spec_status_code', 'D');
 
 						oTransactionManager.submit({
 						// oView.getModel("master").submitChanges({
