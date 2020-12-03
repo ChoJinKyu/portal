@@ -175,7 +175,7 @@ sap.ui.define([
             var bCreateFlag = oContModel.getProperty("/detail/createMode");
 
             if(bCreateFlag){
-                if(ValidatorUtil.checkRequires(this.getView(),"requiredField")){
+                if(ValidatorUtil.isValid(this.getView(),"requiredField")){
                     MessageBox.confirm("추가 하시 겠습니까?", {
                         title : "Create",
                         initialFocus : sap.m.MessageBox.Action.CANCEL,
