@@ -21,9 +21,10 @@ using util from '../../../cm/util/util-model';
 
 entity Mm_Material_Class {	
   key tenant_id : String(5)  not null @title: '테넌트ID' ;	
-  key material_class_code : String(17)  not null @title: '자재클래스코드' ;	
-    material_class_name : String(150)   @title: '자재클래스명' ;	
+  key material_class_code : String(30)  not null @title: '자재클래스코드' ;	
+    material_class_name : String(100)   @title: '자재클래스명' ;	
     material_class_desc : String(1000)   @title: '자재클래스설명' ;	
+    use_flag : Boolean default false  @title: '사용여부' ;	
 }
 
 extend Mm_Material_Class with util.Managed;
