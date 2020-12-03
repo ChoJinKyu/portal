@@ -617,6 +617,50 @@ sap.ui.define([
             }
         },
 
+        onApplovalDeletePress: function(){
+
+            var oTable = this.byId("mainTable"),
+                oModel = this.getModel(),
+                lModel = this.getModel("list"),
+                oView = this.getView(),
+                groupId = this.getView().getControlsByFieldGroupId("checkBoxs");
+                console.log(groupId);
+                console.log(lModel.getData().Approvals[0].__entity);
+            // if (oSelected.length > 0) {
+            //     MessageBox.confirm(this.getModel("I18N").getText("/NCM0104", oSelected.length, "삭제"), {//this.getModel("I18N").getText("/NCM0104", oSelected.length, "${I18N>/DELETE}")
+            //         title : "Comfirmation",
+            //         initialFocus : sap.m.MessageBox.Action.CANCEL,
+            //         onClose : function(sButton) {
+            //             if (sButton === MessageBox.Action.OK) {
+            //                 oSelected.forEach(function (idx) {
+            //                     oModel.remove(lModel.getData().MoldMasters[idx].__entity, {
+            //                         groupId: "delete"
+            //                     });
+            //                 });
+                            
+            //                 oModel.submitChanges({
+            //                     groupId: "delete",
+            //                     success: function(){
+            //                         oView.setBusy(false);
+            //                         MessageToast.show("Success to Delete.");
+            //                         this.onPageSearchButtonPress();
+            //                     }.bind(this), error: function(oError){
+            //                         oView.setBusy(false);
+            //                         MessageBox.error(oError.message);
+            //                     }
+            //                 });
+            //             };
+            //         }.bind(this)
+            //     });
+
+            //     oTable.clearSelection();
+
+            // }else{
+            //     MessageBox.error("선택된 행이 없습니다.");
+            // }
+
+        },
+
        ///////////////////// List create button pop up event End //////////////////////////
 
         ///////////////////// List search section Start //////////////////////////
