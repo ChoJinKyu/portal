@@ -490,7 +490,7 @@
 				<ToolbarSpacer />
 				<Button type="Transparent" text="Draft" press=".onPageSaveButtonPress" />
 				<Button type="Transparent" text="Preview" press=".onPageSaveButtonPress" />
-				<!-- <Button type="Transparent" text="Delete" press=".onPageSaveButtonPress" /> -->
+				<Button type="Transparent" text="Cancel" press=".onPageCancelButtonPress" /> 
 				<Button type="Emphasized" text="Request" press=".onPageCancelEditButtonPress"/>
 			</OverflowToolbar>
 		</uxap:footer>

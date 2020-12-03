@@ -269,12 +269,10 @@ sap.ui.define([
 
         },
         onEditModeBea: function (oEvent) {
-            console.log("move");
-            this.getRouter().navTo("beaCreateObject", {
-                company_code: ""
-                , plant_code: ""
-                , approval_number: ""
-            });
+            this.getRouter().navTo("beaEditObject", {
+                 approval_number : '218619-20B-00005'
+            }, true);
+           
         },
         _oFragments: {},
     });

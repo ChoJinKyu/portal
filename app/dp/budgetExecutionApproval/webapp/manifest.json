@@ -189,10 +189,17 @@
             },
             "routes": [
                 {
-                    "pattern": "",
+                    "pattern": "beaCreateObject/{company_code}/{plant_code}",
                     "name": "beaCreateObject",
                     "target": [
                         "beaCreateObject"
+                    ]
+                },
+                {
+                    "pattern": "beaEditObject/{approval_number}",
+                    "name": "beaEditObject",
+                    "target": [
+                        "beaEditObject"
                     ]
                 },
                 {
@@ -205,6 +212,12 @@
             ],
             "targets": {
                 "beaCreateObject": {
+                    "viewName": "BeaCreateObject",
+                    "viewId": "beaCreateObject",
+                    "viewLevel": 1,
+                    "title": "{i18n>beaCreateObjectTitle}"
+                },
+                "beaEditObject": {
                     "viewName": "BeaCreateObject",
                     "viewId": "beaCreateObject",
                     "viewLevel": 1,
