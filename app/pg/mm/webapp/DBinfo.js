@@ -1,3 +1,15 @@
+
+
+            // var textMaterialCode = sap.ui.core.Fragment.byId("Display_id", "textMaterialCode");
+            // var textcategoryName = sap.ui.core.Fragment.byId("Display_id", "textcategoryName");
+            // var textUseflag = sap.ui.core.Fragment.byId("Display_id", "textUseflag");
+
+            comboBox.bindItems({ 
+              path: "/items", 
+              template: itemTemplate, 
+              templateShareable:true
+              }); 
+              
 MIMaterialCodeBOMManagement
 /*
 "d": {

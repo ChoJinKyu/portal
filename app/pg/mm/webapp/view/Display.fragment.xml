@@ -66,21 +66,21 @@
                                         <FlexBox height="28px" alignItems="Start" justifyContent="Start" class="sapUiTinyMarginTop">
                                             <Label text="자재정보:" required="true"/>
                                         </FlexBox>
-                                        <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiTinyMarginBottom">        
+                                        <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiSmallMarginBottom">        
                                             <Text text="[{oUiData>/material_code}] {oUiData>/material_description} / [{oUiData>/supplier_code}] {oUiData>/supplier_local_name}" design="Bold"/>
                                         </FlexBox>                                        
                                         <FlexBox height="70px" alignItems="Start" justifyContent="Start" class="sapUiTinyMarginTop">
                                             <layout:VerticalLayout class="sapUiLargeMarginEnd">
-                                                <Label text="기준수량:" required="true"/>
+                                                <Label text="기준수량:" required="true" class="sapUiTinyMarginBottom"/>
                                                 <Text text="{oUiData>/material_description}" design="Bold"/>
                                             </layout:VerticalLayout>  
                                             <layout:VerticalLayout class="sapUiLargeMarginBegin sapUiLargeMarginEnd">
-                                                <Label text="가공비:" required="true"/>
+                                                <Label text="가공비:" required="true" class="sapUiTinyMarginBottom"/>
                                                 <Text text="{oUiData>/processing_cost}" design="Bold"/>
                                             </layout:VerticalLayout>    
                                             <layout:VerticalLayout>
-                                                <Label text="가공비통화:" />
-                                                <Text text="{oUiData>/pcst_currency_unit}" design="Bold"/>
+                                                <Label text="가공비통화:" class="sapUiLargeMarginBegin sapUiTinyMarginBottom"/>
+                                                <Text text="{oUiData>/pcst_currency_unit}" design="Bold" class="sapUiLargeMarginBegin sapUiTinyMarginBottom"/>
                                             </layout:VerticalLayout>                                                                                        
                                         </FlexBox>    
                                     </layout:VerticalLayout>
@@ -100,7 +100,7 @@
                                         Note : mi_material_code 전달 받은 값으로 수정 
                                          -->  
                                          <Table
-                                            id="midTableChange" 
+                                            id="midTableShow" 
                                             items="{midList>/}"
                                             mode="None"
                                             width="100%">
@@ -158,7 +158,7 @@
                                                         <Label text="{midList>mi_material_code_name}" />                                          
                                                         <Label text="{midList>category_name}" />                                          
                                                         <Label text="{midList>reqm_quantity}" />                                          
-                                                        <Label text="{midList>use_flag}" />                                          
+                                                        <Label text="{= ${midList>use_flag}===true?'예':'아니오'}"/>                                           
                                                         <Label text="{midList>currency_unit}" />                                          
                                                         <Label text="{midList>reqm_quantity_unit}" />                                          
                                                         <Label text="{midList>exchange}" />                                          
