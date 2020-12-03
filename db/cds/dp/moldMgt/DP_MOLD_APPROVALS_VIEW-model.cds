@@ -11,6 +11,7 @@ entity Mold_Approvals_View {
         requestor_empno     : String(30)            @title:'요청자사번';
         request_date        : String(8)             @title:'요청일자';
         approve_status_code : String(30)            @title:'결재상태코드';
+        approval_contents   : LargeString           @title:'품의 내용';
         tenant_id           : String(5)             @title:'테넌트ID';
         company_code        : String(10)            @title:'회사코드';
         org_type_code       : String(10)            @title:'조직유형코드';
