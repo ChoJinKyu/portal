@@ -65,17 +65,17 @@
                              <VBox>
                                 <Label text="Approval Category" labelFor="searchApprovalCategoryS" required="true"></Label>
                                 <MultiComboBox id="searchApprovalCategoryS" width="100%">
-                                    <core:Item key="Budget" text="Budget" />
-                                    <core:Item key="Supplier Selection" text="Supplier Selection" />
-                                    <core:Item key="Order" text="Order" />
-                                    <core:Item key="Receipt" text="Receipt" />
-                                    <core:Item key="Export" text="Export" />
-                                    <core:Item key="Import Completion" text="Import Completion" />
-                                    <core:Item key="Repair/Modifi. Completion" text="Repair/Modifi. Completion" />
-                                    <core:Item key="Other In" text="Other In" />
-                                    <core:Item key="Other Out" text="Other Out" />
-                                    <core:Item key="Prod Supplier Amend" text="Prod Supplier Amend" />
-                                    <core:Item key="Prod Supplier Amend" text="Item Cancel" />
+                                    <core:Item key="B" text="Budget" />
+                                    <core:Item key="E" text="Supplier Selection" />
+                                    <core:Item key="V" text="Order" />
+                                    <core:Item key="I" text="Receipt" />
+                                    <core:Item key="X" text="Export" />
+                                    <core:Item key="B" text="Import Completion" />
+                                    <core:Item key="T" text="Repair/Modifi. Completion" />
+                                    <core:Item key="C" text="Other In" />
+                                    <core:Item key="U" text="Other Out" />
+                                    <core:Item key="S" text="Prod Supplier Amend" />
+                                    <core:Item key="W" text="Item Cancel" />
                                 </MultiComboBox>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
@@ -132,17 +132,17 @@
                              <VBox>
                                 <Label text="Approval Category" labelFor="searchApprovalCategoryE" required="true"></Label>
                                 <MultiComboBox id="searchApprovalCategoryE" width="100%">
-                                    <core:Item key="Budget" text="Budget" />
-                                    <core:Item key="Supplier Selection" text="Supplier Selection" />
-                                    <core:Item key="Order" text="Order" />
-                                    <core:Item key="Receipt" text="Receipt" />
-                                    <core:Item key="Export" text="Export" />
-                                    <core:Item key="Import Completion" text="Import Completion" />
-                                    <core:Item key="Repair/Modifi. Completion" text="Repair/Modifi. Completion" />
-                                    <core:Item key="Other In" text="Other In" />
-                                    <core:Item key="Other Out" text="Other Out" />
-                                    <core:Item key="Prod Supplier Amend" text="Prod Supplier Amend" />
-                                    <core:Item key="Prod Supplier Amend" text="Item Cancel" />
+                                    <core:Item key="B" text="Budget" />
+                                    <core:Item key="E" text="Supplier Selection" />
+                                    <core:Item key="V" text="Order" />
+                                    <core:Item key="I" text="Receipt" />
+                                    <core:Item key="X" text="Export" />
+                                    <core:Item key="B" text="Import Completion" />
+                                    <core:Item key="T" text="Repair/Modifi. Completion" />
+                                    <core:Item key="C" text="Other In" />
+                                    <core:Item key="U" text="Other Out" />
+                                    <core:Item key="S" text="Prod Supplier Amend" />
+                                    <core:Item key="W" text="Item Cancel" />
                                 </MultiComboBox>
                                 
                                 <layoutData>
@@ -184,8 +184,8 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Mold Part No " labelFor="searchMoldPartNo"></Label>
-                            <Input id="searchMoldPartNo" 
+                            <Label text="Mold Part No " labelFor="searchPart"></Label>
+                            <Input id="searchPart" 
                                     showValueHelp="true"  
                                     valueHelpRequest=".onValueHelpRequested"
                                     suggestionItems="{
@@ -203,7 +203,7 @@
                         </VBox>
                         <VBox>
                             <Label text="Subject" labelFor="searchSubject"></Label>
-                            <Input id="searchSubject"/>
+                            <Input id="searchSubject" placeholder="Input data"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -299,7 +299,7 @@
                     </columns>
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
-                            <cells>
+                            <cells>                         
                                 <ObjectIdentifier text="{list>approval_type_code}" />
                                 <ObjectIdentifier text="{list>company_name}" />
                                 <ObjectIdentifier text="{list>org_name}" />
