@@ -53,9 +53,9 @@
                                     <Label text="관리조직 :" />
                                     <Label text="{oUiData>/tenant_name}"  class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
                                     <Label text="Create :"  class="sapUiLargeMarginBegin"/>
-                                    <Label text="{oUiData>/create}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                                    <Label text="{oUiData>/create_user_id}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
                                     <Label text="Create Data :" class="sapUiLargeMarginBegin" />
-                                    <Label text="{oUiData>/createdata}"  class="sapUiTinyMarginBegin"  design="Bold"/>                                                                                                        
+                                    <Label text="{oUiData>/system_create_dtm}"  class="sapUiTinyMarginBegin"  design="Bold"/>                                                                                                        
                             </FlexBox>          
                         </layout:VerticalLayout>  
                     </uxap:headerContent>
@@ -68,26 +68,7 @@
                                             <Label text="자재정보" required="true"/>
                                         </FlexBox>
                                         <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiTinyMarginBottom">        
-                                            <RadioButtonGroup id="radioButtonGroup" columns="3" width="100%">
-                                                <RadioButton id="radioButtonType01" text="자재명/코드" />
-                                                <RadioButton id="radioButtonType02" text="공급업체/코드" />
-                                            </RadioButtonGroup>  
-                                        </FlexBox>
-                                        <MultiInput width="100%"
-                                                    id="inputMultiInput"
-                                                    suggestionItems=""
-                                                    valueHelpRequest="handleValueHelpMaterial">
-                                                    <core:Item key="" text="" />
-                                        </MultiInput>      
-                                        <FlexBox height="70px" alignItems="Start" justifyContent="Start" class="sapUiTinyMarginTop">
-                                            <layout:VerticalLayout class="sapUiLargeMarginEnd">
-                                                <Label text="기준수량:" required="true" />
-                                                <Input />
-                                            </layout:VerticalLayout>  
-                                            <layout:VerticalLayout class="sapUiTinyMarginEnd">
-                                                <Label text="가공비:" required="true"/>
-                                                <Input />
-                                            </layout:VerticalLayout>    
+                               
                                             <layout:VerticalLayout>
                                                 <Label text="가공비통화:"/>
                                                 <ComboBox width="50px"/>

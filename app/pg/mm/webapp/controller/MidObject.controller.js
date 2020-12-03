@@ -663,7 +663,7 @@ sap.ui.define([
                         midObjectData.setData(reponse.data.results[0]);
                         that.setModel(midObjectData, "midObjectData");
                     }
-                    //show
+                    //showsss
                 }
             });
 
@@ -741,10 +741,7 @@ sap.ui.define([
          * @public
          */
         onEdit: function () {
-            var midObjectView = this.getModel("midObjectView"),
-                midObjectData = this.getModel("midObjectData"),
-                pageMode = midObjectView.getProperty("/pageMode"),                
-                oView = this.getView();
+            var oView = this.getView();
 
             //false edit true show
             if (!mode) {

@@ -187,7 +187,7 @@
                                           <Column hAlign="Center" demandPopin="true" popinDisplay="Inline">
                                           <customData>
                                         <core:CustomData key="p13nData"
-                                        value='\{"columnKey": "category_code", "leadingProperty": "category_code", "sortProperty": "category_code", "filterProperty": "category_code", "columnIndex": 6}'/>
+                                        value='\{"columnKey": "category_name", "leadingProperty": "category_name", "sortProperty": "category_name", "filterProperty": "category_name", "columnIndex": 6}'/>
                                         </customData>
                                              <Text text="Category명"></Text>
                                         </Column>
@@ -204,7 +204,7 @@
                                         <ColumnListItem type="Navigation" hAlign="Middle" press=".onMainTableItemPress">
                                              <Text text="{mi_material_code}"></Text>
                                              <Text text="{mi_material_code_name}"></Text>
-                                             <Text text="{category_code}"></Text>
+                                             <Text text="{category_name}"></Text>
                                              <Text text="{= ${use_flag}===true?'예':'아니오'}"></Text>  
                                         </ColumnListItem>
                                     </items>
