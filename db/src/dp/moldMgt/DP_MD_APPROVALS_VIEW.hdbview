@@ -1,4 +1,4 @@
-view DP_MOLD_APPROVALS_VIEW as
+view DP_MD_APPROVALS_VIEW as
 select 
 	am.approval_number
     ,am.approval_type_code

@@ -288,17 +288,15 @@ sap.ui.define([
 
         ///////////////////// ValueHelpDialog section Start //////////////////////////
         
-        
         onValueHelpRequested : function (oEvent) {
-      
+
             var path = '';
-           
+            this._oValueHelpDialog = sap.ui.xmlfragment("dp.moldApprovalList.view.ValueHelpDialogApproval", this);
+
             this._oBasicSearchField = new SearchField({
 				showSearchButton: false
             });
-
-            this._oValueHelpDialog = sap.ui.xmlfragment("dp.moldApprovalList.view.ValueHelpDialog", this);
-
+            
             var oFilterBar = this._oValueHelpDialog.getFilterBar();
 			oFilterBar.setFilterBarExpanded(false);
 			oFilterBar.setBasicSearch(this._oBasicSearchField);
@@ -322,19 +320,23 @@ sap.ui.define([
                 this._oValueHelpDialog.setKey('model');
                 this._oValueHelpDialog.setDescriptionKey('model');
 
-            }else if(oEvent.getSource().sId.indexOf("searchMoldPartNo") > -1){
+            }else if(oEvent.getSource().sId.indexOf("searchPart") > -1){
                 //part
-                this._oInputModel = this.getView().byId("searchMoldPartNo");
+                this._oInputModel = this.getView().byId("searchPart");
 
                 this.oColModel = new JSONModel({
                     "cols": [
                         {
                             "label": "Part No",
-                            "template": "part_number"
+                            "template": "mold>part_number"
+                        },
+                        {
+                            "label": "Item Type",
+                            "template": "mold>mold_item_type_name"
                         },
                         {
                             "label": "Description",
-                            "template": "spec_name"
+                            "template": "mold>spec_name"
                         }
                     ]
                 });
@@ -348,7 +350,6 @@ sap.ui.define([
 
             var aCols = this.oColModel.getData().cols;
 
-            console.log('this._oValueHelpDialog.getKey()',this._oValueHelpDialog.getKey());
             
             this.getView().addDependent(this._oValueHelpDialog);
 
@@ -386,14 +387,9 @@ sap.ui.define([
             
 
         },
-         
-        /**
-         * @private 
-         * @see 리스트 검색영역 팝업에서 확인버튼 클릭시
-         */
+
         onValueHelpOkPress: function (oEvent) {
-            var aTokens = oEvent.getParameter("tokens");
-            console.log(aTokens[0].getKey());
+			var aTokens = oEvent.getParameter("tokens");
 			this._oInputModel.setSelectedKey(aTokens[0].getKey());
 			this._oValueHelpDialog.close();
 		},
@@ -405,10 +401,10 @@ sap.ui.define([
 		onValueHelpAfterClose: function () {
 			this._oValueHelpDialog.destroy();
         },
-        
+
         onFilterBarSearch: function (oEvent) {
 			var sSearchQuery = this._oBasicSearchField.getValue(),
-				aSelectionSet = oEvent.getParameter("selectionSet");
+                aSelectionSet = oEvent.getParameter("selectionSet");
 			var aFilters = aSelectionSet.reduce(function (aResult, oControl) {
 				if (oControl.getValue()) {
 					aResult.push(new Filter({
@@ -419,14 +415,24 @@ sap.ui.define([
 				}
 
 				return aResult;
-			}, []);
+            }, []);
+        
+            
+            var _tempFilters = [];
+
+            if(this._oValueHelpDialog.oRows.sPath.indexOf('/Models') > -1){
+                // /Models
+                _tempFilters.push(new Filter("tolower(model)", FilterOperator.Contains, "'"+sSearchQuery.toLowerCase().replace("'","''")+"'"));
+
+            }else if(this._oValueHelpDialog.oRows.sPath.indexOf('/PartNumbers') > -1){
+                //PartNumbers
+                _tempFilters.push(new Filter({ path: "tolower(part_number)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
+                _tempFilters.push(new Filter({ path: "tolower(mold_item_type_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
+                _tempFilters.push(new Filter({ path: "tolower(spec_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
+            }
 
 			aFilters.push(new Filter({
-				filters: [
-					new Filter({ path: "model", operator: FilterOperator.Contains, value1: sSearchQuery })
-					// new Filter({ path: "Name", operator: FilterOperator.Contains, value1: sSearchQuery }),
-					// new Filter({ path: "Category", operator: FilterOperator.Contains, value1: sSearchQuery })
-				],
+				filters: _tempFilters,
 				and: false
 			}));
 
@@ -435,9 +441,8 @@ sap.ui.define([
 				and: true
 			}));
         },
-
-
-		_filterTable: function (oFilter) {
+        
+        _filterTable: function (oFilter) {
 			var oValueHelpDialog = this._oValueHelpDialog;
 
 			oValueHelpDialog.getTableAsync().then(function (oTable) {
@@ -451,7 +456,7 @@ sap.ui.define([
 
 				oValueHelpDialog.update();
 			});
-        },
+		},
         
         ///////////////////// ValueHelpDialog section Start //////////////////////////
 
@@ -613,15 +618,32 @@ sap.ui.define([
             var aPlant = this.getView().byId("searchPlant"+sSurffix).getSelectedItems();
             var sDateFrom = this.getView().byId("searchRequestDate"+sSurffix).getDateValue();
             var sDateTo = this.getView().byId("searchRequestDate"+sSurffix).getSecondDateValue();
-            var sSubject = this.getView().byId("searchSubject").getValue();
+            var sCategory = this.getView().byId("searchApprovalCategory"+sSurffix).getSelectedItems();
+            var sSubject = this.getView().byId("searchSubject").getValue().trim();
 			var sModel = this.getView().byId("searchModel").getValue().trim();
-            var	sPart = this.getView().byId("searchMoldPartNo").getValue().trim();
+            var	sPart = this.getView().byId("searchPart").getValue().trim();
             var	sStatus = this.getView().byId("searchStatus").getSelectedKey();
 
 
             var aSearchFilters = [];
-            console.log(sStatus);
-            console.log(aCompany);
+            console.log(sSubject);
+            console.log(sCategory);
+
+            if(sCategory.length > 0){
+                var _tempFilters = [];
+
+                aCompany.forEach(function(item, idx, arr){
+                    console.log(item.mProperties.key)
+                    _tempFilters.push(new Filter("approval_type_code", FilterOperator.EQ, item.mProperties.key ));
+                });
+
+                aSearchFilters.push(
+                    new Filter({
+                        filters: _tempFilters,
+                        and: false
+                    })
+                );
+            }
             
             if(aCompany.length > 0){
                 var _tempFilters = [];
@@ -682,7 +704,11 @@ sap.ui.define([
             }
             
             if (sPart) {
-				aSearchFilters.push(new Filter("tolower(mpart_number)", FilterOperator.Contains, "'"+sPart.toLowerCase()+"'"));
+				aSearchFilters.push(new Filter("tolower(part_number)", FilterOperator.Contains, "'"+sPart.toLowerCase()+"'"));
+            }
+
+            if (sSubject) {
+				aSearchFilters.push(new Filter("tolower(approval_title)", FilterOperator.Contains, "'"+sSubject.toLowerCase()+"'"));
             }
             
             if (sStatus) {

@@ -1,10 +1,10 @@
 namespace dp.util;
 using { dp as moldMst } from '../../../../db/cds/dp/moldMgt/DP_MOLD_MST-model';
-using { dp as approvalDtl } from '../../../../db/cds/dp/moldMgt/DP_MOLD_APPROVAL_DTL-model';
+using { dp as approvalDtl } from '../../../../db/cds/dp/moldMgt/DP_MD_APPROVAL_DTL-model';
 @path: '/dp.util.MoldItemSelectionService'
 service MoldItemSelectionService {
     entity MoldMasters as projection on moldMst.Mold_Mst; 
-    entity ApprovalDetails as projection on approvalDtl.Mold_Approval_Dtl;
+    entity ApprovalDetails as projection on approvalDtl.Md_Approval_Dtl;
 
     view MoldItemSelect as 
     select 
@@ -125,7 +125,7 @@ service MoldItemSelectionService {
         m.system_update_dtm
     from moldMst.Mold_Mst m 
     where  m.mold_id not in (
-        select d.mold_id from approvalDtl.Mold_Approval_Dtl d
+        select d.mold_id from approvalDtl.Md_Approval_Dtl d
     );
 
 

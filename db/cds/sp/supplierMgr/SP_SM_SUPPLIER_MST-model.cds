@@ -2,7 +2,7 @@
 namespace sp;	
 using util from '../../cm/util/util-model';
 
-entity Sup_Supplier_Mst {	
+entity Sm_Supplier_Mst {	
   key tenant_id : String(5)  not null;	
   key supplier_code : String(10)  not null;	
     supplier_local_name : String(240)  ;	
@@ -59,4 +59,4 @@ entity Sup_Supplier_Mst {
     credit_evaluation_interface_code : String(100)  ;	
 }
 
-extend Sup_Supplier_Mst with util.Managed;
+extend Sm_Supplier_Mst with util.Managed;
