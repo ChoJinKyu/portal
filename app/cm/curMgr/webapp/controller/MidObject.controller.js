@@ -288,7 +288,7 @@ sap.ui.define([
 					oDetailsModel.setProperty("/CurrencyLng/"+nIndex+"/tenant_id", sTenantId);
 					oDetailsModel.setProperty("/CurrencyLng/"+nIndex+"/currency_code", sCurrencyCode);
 				});
-				//oDetailsModel.setData(oDetailsData);
+				oDetailsModel.setData(oDetailsData);
 			}
 		},
 
@@ -320,7 +320,7 @@ sap.ui.define([
 				},"/Currency",0);
 				var oDetailsModel = this.getModel("details");
 				oDetailsModel.setTransactionModel(this.getModel());
-				oDetailsModel.setData([]);
+                oDetailsModel.setData([], "/CurrencyLng");
 				oDetailsModel.addRecord({
                     "tenant_id": this._sTenantId,
                     "language_code" : "KO",
