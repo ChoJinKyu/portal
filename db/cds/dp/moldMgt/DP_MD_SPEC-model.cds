@@ -3,7 +3,7 @@ namespace dp;
 using util from '../../cm/util/util-model';
 using {dp as mst} from './DP_MOLD_MST-model';
 
-entity Mold_Spec {
+entity Md_Spec {
 
     key mold_id                       : Integer not null @title : '금형ID';
         use_material_value            : String(240)      @title : '사용재질값';
@@ -72,4 +72,4 @@ entity Mold_Spec {
 
 }
 
-extend Mold_Spec with util.Managed;
+extend Md_Spec with util.Managed;

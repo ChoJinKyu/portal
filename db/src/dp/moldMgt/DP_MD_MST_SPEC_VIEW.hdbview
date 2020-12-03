@@ -1,4 +1,4 @@
-view DP_MOLD_MST_SPEC_VIEW as
+view DP_MD_MST_SPEC_VIEW as
 SELECT '['||a.company_code||'] '||(select company_name from cm_org_company where company_code=a.company_code) company_name 
     , '['||a.org_code||'] '||(select plant_name from CM_ORG_PLANT where au_code=a.org_code and company_code=a.company_code) org_name 
     , ifnull((select USER_KOREAN_NAME from CM_HR_EMPLOYEE where EMPLOYEE_NUMBER=b.CREATE_USER_ID),'-') create_user_name 

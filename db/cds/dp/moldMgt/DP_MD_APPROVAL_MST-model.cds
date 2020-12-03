@@ -2,7 +2,7 @@ namespace dp;
 
 using util from '../../cm/util/util-model';
 
-entity Mold_Approval_Mst {
+entity Md_Approval_Mst {
 
     key approval_number     : String(50)  not null  @title:'품의번호';
         approval_type_code  : String(30)  not null  @title:'품의유형코드';
@@ -13,4 +13,4 @@ entity Mold_Approval_Mst {
         approval_contents   : LargeString           @title:'품의 내용';
 }
 
-extend Mold_Approval_Mst with util.Managed;
+extend Md_Approval_Mst with util.Managed;
