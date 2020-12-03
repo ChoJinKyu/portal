@@ -15,7 +15,7 @@ using {pg as MIMatCostInfoView} from '../../../../db/cds/pg/mi/PG_MI_MATERIAL_CO
 //Material
 using {dp.Mm_Material_Desc_Lng as MaterialDesc} from '../../../../db/cds/dp/materialMgr/materialMasterMgr/DP_MM_MATERIAL_DESC_LNG-model';
 //Supplier
-using {sp.Sup_Supplier_Mst as SupplierMaster} from '../../../../db/cds/sp/supplierMgr/SP_SUP_SUPPLIER_MST-model';
+using {sp.Sm_Supplier_Mst as SupplierMaster} from '../../../../db/cds/sp/supplierMgr/SP_SM_SUPPLIER_MST-model';
 //CM ORG
 using {cm.Org_Tenant as OrgTenant} from '../../../../db/cds/cm/orgMgr/CM_ORG_TENANT-model';
 using {cm.Org_Company as OrgCompany} from '../../../../db/cds/cm/orgMgr/CM_ORG_COMPANY-model';
@@ -279,15 +279,15 @@ service marketIntelligenceService {
             material_code;
 
     // Enrollment Material View
-    view EnrollmentMaterialView @(title : '자재코드 등록 View') as
-        select distinct
-            key tenant_id, //회사코드
-            key material_code, //자재코드
-                material_description //자재코드명
-        from MaterialDesc
-        order by
-            tenant_id,
-            material_code;
+    // view EnrollmentMaterialView @(title : '자재코드 등록 View') as
+    //     select distinct
+    //         key tenant_id, //회사코드
+    //         key material_code, //자재코드
+    //             material_description //자재코드명
+    //     from MaterialDesc
+    //     order by
+    //         tenant_id,
+    //         material_code;
 
     // // Supplier View
     view SupplierView @(title : '공급업체 조회 View') as
