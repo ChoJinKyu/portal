@@ -8,7 +8,11 @@ sap.ui.define([
 	"sap/ui/core/Fragment",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-], function (BaseController, JSONModel, History, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
+    "ext/lib/model/ManagedListModel",
+    "ext/lib/model/ManagedModel",
+    "ext/lib/model/TransactionManager",
+], function (BaseController, JSONModel, History, DateFormatter, Filter, FilterOperator, Fragment
+            , MessageBox, MessageToast, ManagedListModel,ManagedModel, TransactionManager) {
     "use strict";
    
     /**
@@ -17,6 +21,7 @@ sap.ui.define([
      * @date 2020.12.01
      */
     var mainViewName = "beaObjectView";
+    var oTransactionManager;
 	return BaseController.extend("dp.budgetExecutionApproval.controller.BeaObject", {
 
 		dateFormatter: DateFormatter,
@@ -38,9 +43,18 @@ sap.ui.define([
 					busy : true,
 					delay : 0
 				});
-			this.getRouter().getRoute("beaObject").attachPatternMatched(this._onObjectMatched, this);
-			this.setModel(oViewModel, mainViewName);
-		},
+            this.setModel(oViewModel, mainViewName);
+         
+            this.getView().setModel(new ManagedModel(), "appMaster");
+			this.getView().setModel(new ManagedListModel(), "appDetail");
+            
+            oTransactionManager = new TransactionManager();
+			oTransactionManager.addDataModel(this.getModel("appMaster"));
+            oTransactionManager.addDataModel(this.getModel("appDetail"));
+
+            this.getRouter().getRoute("beaObject").attachPatternMatched(this._onObjectMatched, this);
+        
+        },
 
 		/* =========================================================== */
 		/* event handlers                                              */
@@ -149,44 +163,61 @@ sap.ui.define([
 		_onObjectMatched : function (oEvent) {
 			var oArgs = oEvent.getParameter("arguments"),
                 approval_number = oArgs.approval_number;
-            console.log(oArgs);
-			this._bindView("/MoldSpec(approval_number=" + approval_number + ")");
-			this._toShowMode();
+                
+            console.log("oArgs >>>>> ",  oArgs); 
+            // ApprovalMasters(approval_number='218619-20B-00005') 
+        //	this._loadApprovalInfo();
+            this._onRoutedThisPage(oArgs);
 		},
+        _onRoutedThisPage: function(args){ 
+            this._bindView("/ApprovalMasters('" + args.approval_number + "')", "appMaster" , [], function(oData){
+                console.log("appMaster >>> " , oData);
+            });
 
+            var schFilter = [new Filter("approval_number", FilterOperator.EQ, args.approval_number)];
+            this._bindView("/ApprovalDetails", "appDetail", schFilter, function(oData){
+                   console.log("appDetail >>> " , oData);  
+            });
+
+            // mold_id 
+            
+            oTransactionManager.setServiceModel(this.getModel());
+             
+        },
 		/**
 		 * Binds the view to the object path.
 		 * @function
 		 * @param {string} sObjectPath path to the object to be bound
 		 * @private
 		 */
-		_bindView : function (sObjectPath) {
-			var oViewModel = this.getModel("budgetReportObjectView");
-
-			this.getView().bindElement({
-				path: sObjectPath,
-				events: {
-					change: this._onBindingChange.bind(this),
-					dataRequested: function () {
-						oViewModel.setProperty("/busy", true);
-					},
-					dataReceived: function () {
-						oViewModel.setProperty("/busy", false);
-					}
+		_bindView : function (sObjectPath, sModel, aFilter, callback) {
+			var oView = this.getView(),
+				oModel = this.getModel(sModel);
+			oView.setBusy(true);
+			oModel.setTransactionModel(this.getModel());
+			oModel.read(sObjectPath, {
+                filters: aFilter,
+				success: function(oData){
+                    oView.setBusy(false);
+                    callback(oData);
 				}
 			});
-		},
-
+        },
+        
 		_onBindingChange : function () {
 			var oView = this.getView(),
-				oViewModel = this.getModel("budgetReportObjectView"),
-				oElementBinding = oView.getElementBinding();
+				oViewModel = this.getModel(mainViewName),
+                oElementBinding = oView.getElementBinding(); 
+                  
 			// No data for the binding
 			if (!oElementBinding.getBoundContext()) {
 				this.getRouter().getTargets().display("mainObjectNotFound");
 				return;
 			}
-			oViewModel.setProperty("/busy", false);
+            oViewModel.setProperty("/busy", false);
+            
+console.log(" oViewModel >>> " , oViewModel);
+
 		},
 
 		_toEditMode: function(){
