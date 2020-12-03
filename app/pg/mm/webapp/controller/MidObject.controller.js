@@ -60,13 +60,13 @@ sap.ui.define([
                 items : "items" //or rows
             },
             filter : {   //마스터에서 전달 받음값
-                tenant_id : "TEST",
-                company_code : "TEST",
-                org_type_code : "TEST",
-                org_code : "TEST",
-                material_code : "TEST",
-                supplier_code : "TEST",
-                mi_material_code : "TEST"
+                tenant_id : "L2100",
+                company_code : "*",
+                org_type_code : "BU",
+                org_code : "BIZ00100",
+                material_code : "ERCA00006AA",
+                supplier_code : "KR00008",
+                mi_material_code : "COP-001-01"
             },
             serviceName : {
                 mIMaterialCodeBOMManagement: "/MIMaterialCodeBOMManagement",  //(main 동일 )자재리스트                
@@ -89,13 +89,13 @@ sap.ui.define([
                 }]
             },
             midObjectData : { //mid 페이지에서 새롭게 부여받은값
-                tenant_id: "TEST",
-                company_code: "TEST",
-                org_type_code: "TEST",
-                org_code: "TEST",
-                material_code: "TEST", //자재코드 (시황자재코드와 다름 값이 있다면 View Mode)
-                create_user_id: "TEST",
-                system_create_dtm: "TEST"
+                tenant_id: "L2100",
+                company_code: "*",
+                org_type_code: "BU",
+                org_code: "BIZ00100",
+                material_code: "ERCA00006AA", //자재코드 (시황자재코드와 다름 값이 있다면 View Mode)
+                create_user_id: "Admin",
+                system_create_dtm: "Admin"
             },
             processMode : {
                 create : "C", //신규, 
@@ -125,14 +125,14 @@ sap.ui.define([
 
         _sso : {
             user : {
-                id : "TEST",
-                name : "TEST"
+                id : "Admin",
+                name : "Hong Gil-dong"
             },
             dept : {
-                team_name : "TEST",
-                team_code : "TEST",
-                tenant_id : "TEST",
-                tenant_name : "TEST"  
+                team_name : "구매팀",
+                team_code : "0000",
+                tenant_id : "L2100",
+                tenant_name : "LG 화확"  
             }          
         },
 
