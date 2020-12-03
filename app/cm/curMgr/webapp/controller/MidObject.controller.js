@@ -188,10 +188,10 @@ sap.ui.define([
 				oDetailsModel = this.getModel("details");
 			oDetailsModel.addRecord({
                 "tenant_id": this._sTenantId,
-                "language_code" : "",
+                "language_code" : null,
 				"currency_code": this._sCurrencyCode,
-				"currency_code_name": "",
-				"currency_code_desc": "",
+				"currency_code_name": null,
+				"currency_code_desc": null,
                 "currency_prefix": null,
                 "currency_suffix" : null,
 				"local_create_dtm": new Date(),
@@ -288,7 +288,7 @@ sap.ui.define([
 					oDetailsModel.setProperty("/CurrencyLng/"+nIndex+"/tenant_id", sTenantId);
 					oDetailsModel.setProperty("/CurrencyLng/"+nIndex+"/currency_code", sCurrencyCode);
 				});
-				//oDetailsModel.setData(oDetailsData);
+				oDetailsModel.setData(oDetailsData);
 			}
 		},
 
@@ -320,13 +320,13 @@ sap.ui.define([
 				},"/Currency",0);
 				var oDetailsModel = this.getModel("details");
 				oDetailsModel.setTransactionModel(this.getModel());
-				oDetailsModel.setData([]);
+                oDetailsModel.setData([], "/CurrencyLng");
 				oDetailsModel.addRecord({
                     "tenant_id": this._sTenantId,
                     "language_code" : "KO",
 					"currency_code": this._sCurrencyCode,
-					"currency_code_name": "",
-					"currency_code_desc": "",
+					"currency_code_name": null,
+					"currency_code_desc": null,
                     "currency_prefix": null,
                     "currency_suffix" : null,
 					"local_create_dtm": new Date(),
@@ -377,16 +377,20 @@ sap.ui.define([
             var oViewModel = this.getModel("midObjectView"),
                 oEditModel = this.getModel("editMode");
             oEditModel.setProperty("/editMode", "edit");
+            this._showFormFragment('MidObject_Edit');
             this.byId("pageDeleteButton").setEnabled(!FALSE);
+            
             if(this._sTenantId === "new")
             {
+                this.byId("midObjectForm1EditCurrencyCode").setEnabled(!FALSE);
                 this.byId("pageDeleteButton").setEnabled(FALSE);
+            }else if(this._sTenantId !== "new")
+            {
+                this.byId("midObjectForm1EditCurrencyCode").setEnabled(FALSE);
             }
-            this._showFormFragment('MidObject_Edit');
 			this.byId("page").setSelectedSection("pageSectionMain");
 			//this.byId("page").setProperty("showFooter", !FALSE);
 			this.byId("pageEditButton").setEnabled(FALSE);
-			
             this.byId("pageNavBackButton").setEnabled(FALSE);
             this.byId("pageSaveButton").setEnabled(!FALSE);
             this.byId("pageCancelButton").setEnabled(!FALSE);
@@ -496,15 +500,14 @@ sap.ui.define([
                         icon:{ path:'details>_row_state_', formatter: this.formattericon
                                 }                              
                     }), 
-                   
 					new Input({
-						value: "{details>language_code}"
+						value: "{details>language_code}" , required: true
                     }),  
 					new Input({
 						value: "{details>currency_code_name}"
                     }),
                     new Input({
-						value: "{details>currency_code_desc}"
+						value: "{details>currency_code_desc}" , required: true
                     }), 
                     new Input({
 						value: "{details>currency_prefix}"

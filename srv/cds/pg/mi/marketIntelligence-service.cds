@@ -15,15 +15,18 @@ using {pg as MIMatCostInfoView} from '../../../../db/cds/pg/mi/PG_MI_MATERIAL_CO
 //Material
 using {dp.Mm_Material_Desc_Lng as MaterialDesc} from '../../../../db/cds/dp/materialMgr/materialMasterMgr/DP_MM_MATERIAL_DESC_LNG-model';
 //Supplier
-//using
+using {sp.Sm_Supplier_Mst as SupplierMaster} from '../../../../db/cds/sp/supplierMgr/SP_SM_SUPPLIER_MST-model';
 //CM ORG
 using {cm.Org_Tenant as OrgTenant} from '../../../../db/cds/cm/orgMgr/CM_ORG_TENANT-model';
 using {cm.Org_Company as OrgCompany} from '../../../../db/cds/cm/orgMgr/CM_ORG_COMPANY-model';
 using {cm.Pur_Operation_Org as OrgPurchasingOperation} from '../../../../db/cds/cm/purOrgMgr/CM_PUR_OPERATION_ORG-model';
 //CM Code
-using {cm.Code_Mst as codeMst} from '../../../../db/cds/cm/codeMgr/CM_CODE_MST-model';
-using {cm.Code_Dtl as codeDtl} from '../../../../db/cds/cm/codeMgr/CM_CODE_DTL-model';
-using {cm.Code_Lng as codeLng} from '../../../../db/cds/cm/codeMgr/CM_CODE_LNG-model';
+using {cm.Code_Mst as CodeMst} from '../../../../db/cds/cm/codeMgr/CM_CODE_MST-model';
+using {cm.Code_Dtl as CodeDtl} from '../../../../db/cds/cm/codeMgr/CM_CODE_DTL-model';
+using {cm.Code_Lng as CodeLng} from '../../../../db/cds/cm/codeMgr/CM_CODE_LNG-model';
+//Unit Code
+using {cm.Currency_Lng as CurrencyLanguage} from '../../../../db/cds/cm/currencyMgr/CM_CURRENCY_LNG-model';
+using {dp.Mm_Unit_Of_Measure_Lng as UnitOfMeasure} from '../../../../db/cds/dp/materialMgr/uomMgr/DP_MM_UNIT_OF_MEASURE_LNG-model';
 
 namespace pg;
 
@@ -45,33 +48,33 @@ service marketIntelligenceService {
     view MICategoryDetailView @(title : '카테고리 상세내용 View') as select from MICategDetlView.MI_Cateogry_Detail_View;
     view MIMaterialCostInformationView @(title : '시황자재 가격정보 View') as select from MIMatCostInfoView.MI_Material_Cost_Info_View;
 
-    // Tenant View: 회사
-    view OrgTenantView @(title : '회사 View') as
+    // Tenant View
+    view OrgTenantView @(title : '회사코드 View') as
         select
             key tenant_id, //회사코드
                 tenant_name //회사코드명
         from OrgTenant;
 
-    // Company View: 법인
-    view OrgCompanyView @(title : '법인 View') as
+    // Company View
+    view OrgCompanyView @(title : '법인코드 View') as
         select
             key tenant_id, //회사코드
             key company_code, //법인코드
                 company_name //법인코드명
         from OrgCompany;
 
-    // Organizaiton Type Code View: 조직유형코드
+    // Organizaiton Type Code View
     view OrgTypeCodeView @(title : '조직유형코드 View') as
         select
             key tenant_id, //회사코드
             key code, //조직유형코드
                 code_name //조직유형코드명
-        from codeLng
+        from CodeLng
         where
                 group_code  = 'CM_ORG_TYPE_CODE'
             and language_cd = 'KO';
 
-    // Organizaiton Code View: 조직코드
+    // Organizaiton Code View
     view OrgCodeView @(title : '조직코드 View') as
         select
             key tenant_id, //회사코드
@@ -81,7 +84,7 @@ service marketIntelligenceService {
                 org_name //조직코드명
         from OrgPurchasingOperation;
 
-    // MI Material Code View: 시황자재
+    // MI Material Code View
     view MIMatCodeView @(title : '시황자재코드 View') as
         select
             key tenant_id, //회사코드
@@ -94,15 +97,15 @@ service marketIntelligenceService {
         where
             language_code = 'KO';
 
-    // MI Parent Category View: Category
-    view MIParentCategoryView @(title : '상위 Category View') as
+    // MI Parent Category View
+    view MIParentCategoryView @(title : '상위카테고리코드 View') as
         select
             key main.tenant_id     as tenant_id, //회사코드
             key main.company_code  as company_code, //법인코드
             key main.org_type_code as org_type_code, //조직유형코드
             key main.org_code      as org_code, //조직코드
-            key main.category_code as category_code, //Category
-                main.category_name as category_name //Category명
+            key main.category_code as category_code, //카테고리코드
+                main.category_name as category_name //카테고리코드명
         from MICategoryText as main
         left join MICategory as catg
             on  main.tenant_id     = catg.tenant_id
@@ -121,15 +124,15 @@ service marketIntelligenceService {
             main.category_code,
             main.category_name;
 
-    // MI Category View: Category
+    // MI Category View
     view MICategoryView @(title : 'Category View') as
         select
             key main.tenant_id     as tenant_id, //회사코드
             key main.company_code  as company_code, //법인코드
             key main.org_type_code as org_type_code, //조직유형코드
             key main.org_code      as org_code, //조직코드
-            key main.category_code as category_code, //Category
-                main.category_name as category_text //Category명
+            key main.category_code as category_code, //카테고리코드
+                main.category_name as category_text //카테고리코드명
         from MICategoryText as main
         left join MICategory as catg
             on  main.tenant_id     = catg.tenant_id
@@ -148,39 +151,57 @@ service marketIntelligenceService {
             main.category_code,
             main.category_name;
 
-    // Use Y/N View: 사용여부
+    // Use Y/N View
     view UseYNView @(title : '사용여부 View') as
         select
             key tenant_id, //회사코드
             key code, //사용여부
                 code_name //사용여부명
-        from codeLng
+        from CodeLng
         where
                 group_code  = 'CM_USE_FLAG'
             and language_cd = 'KO';
 
-    // Language View: 언어
-    view LanguageView @(title : '사용여부 View') as
+    // Language View
+    view LanguageView @(title : '언어코드 View') as
         select
             key tenant_id, //회사코드
             key code, //언어코드
                 code_name //언어코드명
-        from codeLng
+        from CodeLng
         where
                 group_code  = 'CM_LANG_CODE'
             and language_cd = 'KO';
 
-    // MI Material Category List View: 시황자재 Category List
-    view MIMatCategListView @(title : '시황자재 Category List View') as
+    // Currency Unit View
+    view CurrencyUnitView @(title : '통화단위코드 View') as
+        select
+            key tenant_id, //회사코드
+            key currency_code, //통화단위코드
+            key language_code, //언어코드
+                currency_code_name //통화단위코드명
+        from CurrencyLanguage;
+
+    // Unit of Measure View
+    view UnitOfMeasureView @(title : '수량단위코드 View') as
+        select
+            key tenant_id, //회사코드
+            key uom_code, //수량단위코드
+            key language_code, //언어코드
+                uom_description //수량단위코드명
+        from UnitOfMeasure;
+
+    // MI Material Category List View
+    view MIMatCategListView @(title : '시황자재 카테고리 List View') as
         select
             key main.tenant_id            as tenant_id, //회사코드
             key main.company_code         as company_code, //법인코드
             key main.org_type_code        as org_type_code, //조직유형코드
             key main.org_code             as org_code, //조직코드
-            key main.parent_category_code as parent_category_code, //상위Category
-                prtCatgText.category_name as parent_category_name, //상위Category명
-            key main.category_code        as category_code, //Category
-                catgText.category_name    as category_name, //Category명
+            key main.parent_category_code as parent_category_code, //상위카테고리코드
+                prtCatgText.category_name as parent_category_name, //상위카테고리코드명
+            key main.category_code        as category_code, //카테고리코드
+                catgText.category_name    as category_name, //카테고리코드명
                 main.use_flag             as use_flag //사용여부
         from MICategory as main
         left join MICategoryText as prtCatgText
@@ -208,7 +229,7 @@ service marketIntelligenceService {
             catgText.category_name,
             main.use_flag;
 
-    // MI Material List View: 시황자재 List
+    // MI Material List View
     view MIMatListView @(title : '시황자재 List View') as
         select
             key main.tenant_id                as tenant_id, //회사코드
@@ -217,8 +238,8 @@ service marketIntelligenceService {
             key main.org_code                 as org_code, //조직코드
             key main.mi_material_code         as mi_material_code, //시황자재
                 matText.mi_material_code_name as mi_material_code_name, //시황자재명
-                main.category_code            as category_code, //Category
-                catg.category_name            as category_name, //Category명
+                main.category_code            as category_code, //카테고리코드
+                catg.category_name            as category_name, //카테고리코드명
                 main.use_flag                 as use_flag //사용여부
         from MIMaterialCode as main
         left join MIMaterialCodeText as matText
@@ -246,42 +267,65 @@ service marketIntelligenceService {
             catg.category_name,
             main.use_flag;
 
-    // Material View: 자재
-    view MaterialView @(title : '자재 View') as
+    // Material View
+    view MaterialView @(title : '자재코드 조회 View') as
         select distinct
-            key tenant_id,
-            key material_code,
-                material_description
+            key tenant_id, //회사코드
+            key material_code, //자재코드
+                material_description //자재코드명
         from MIMaterialCodeBOMManagement
         order by
             tenant_id,
             material_code;
 
-    // // Supplier View: 공급업체
-    view SupplierView @(title : '공급업체 View') as
+    // Enrollment Material View
+    // view EnrollmentMaterialView @(title : '자재코드 등록 View') as
+    //     select distinct
+    //         key tenant_id, //회사코드
+    //         key material_code, //자재코드
+    //             material_description //자재코드명
+    //     from MaterialDesc
+    //     order by
+    //         tenant_id,
+    //         material_code;
+
+    // // Supplier View
+    view SupplierView @(title : '공급업체 조회 View') as
         select distinct
-            key tenant_id,
-            key supplier_code,
-                supplier_local_name,
-                supplier_english_name
+            key tenant_id, //회사코드
+            key supplier_code, //공급업체코드
+                supplier_local_name, //공급업체로컬명
+                supplier_english_name //공급업체영어명
         from MIMaterialCodeBOMManagement
         order by
             tenant_id,
             supplier_code;
 
-    // Category&MI Material View: 카테고리&시황자재 View
+    // Enrollment Supplier View
+    // view EnrollmentSupplierView @(title : '공급업체 등록 View') as
+    //     select distinct
+    //         key tenant_id, //회사코드
+    //         key supplier_code, //공급업체코드
+    //             supplier_local_name, //공급업체로컬명
+    //             supplier_engligh_name //공급업체영어명
+    //     from SupplierMaster
+    //     order by
+    //         tenant_id,
+    //         supplier_code;
+
+    // Category&MI Material View
     view CategoryMIMaterialView @(title : '카테고리&시황자재 View') as
         select
-            key mi_mat_cd.tenant_id                  as tenant_id,
-            key mi_mat_cd.company_code               as company_code,
-            key mi_mat_cd.org_type_code              as org_type_code,
-            key mi_mat_cd.org_code                   as org_code,
-            key mi_mat_cd.mi_material_code           as mi_material_code,
-                mi_mat_cd_lang.language_code         as mi_material_language_code,
-                mi_mat_cd_lang.mi_material_code_name as mi_material_code_name,
-                mi_mat_cd.category_code              as category_code,
-                mi_cat_lang.language_code            as category_code_language_code,
-                mi_cat_lang.category_name            as category_name
+            key mi_mat_cd.tenant_id                  as tenant_id, //회사코드
+            key mi_mat_cd.company_code               as company_code, //법인코드
+            key mi_mat_cd.org_type_code              as org_type_code, //조직유형코드
+            key mi_mat_cd.org_code                   as org_code, //조직코드
+            key mi_mat_cd.mi_material_code           as mi_material_code, //시황자재코드
+                mi_mat_cd_lang.language_code         as mi_material_language_code, //시황자재 언어코드
+                mi_mat_cd_lang.mi_material_code_name as mi_material_code_name, //시황자재코드명
+                mi_mat_cd.category_code              as category_code, //카테고리코드
+                mi_cat_lang.language_code            as category_code_language_code, //카테고리 언어코드
+                mi_cat_lang.category_name            as category_name //카테고리코드명
         from MIMaterialCode as mi_mat_cd
         left join MIMaterialCodeText as mi_mat_cd_lang
             on  mi_mat_cd.tenant_id        = mi_mat_cd_lang.tenant_id

@@ -21,11 +21,12 @@
             <OverflowToolbar>
                 <content>
                     <Title text="Org_Unit" level="H2"/>
+                    <SearchField id="midTableSearchField" width="10rem" search=".onMidTableFilterPress" />
+                    <Button id="midTableApplyFilterButton" text="조회" type="Transparent" press=".onMidTableApplyFilterButton" />
                     <ToolbarSpacer/>
-                    <!-- <Button text="행추가" icon="sap-icon://add"  type="Accept" press="onAddRow" />                                            
-                    <Button text="행삭제" icon="sap-icon://delete" type="Reject" press="onDeleteRow"/>
-                    <Button text="저장"   icon="sap-icon://save" type="Attention" press="onSave"/> -->
-                    <Button icon="sap-icon://synchronize" type="Attention" press="onRefresh"/>
+                    <Button id="mainTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onMainTableAddButtonPress" />
+                    <Button id="mainTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMainTableDeleteButtonPress" />
+                    <Button id="mainTableSaveButton" text="{I18N>/SAVE}" type="Emphasized" press=".onMainTableSaveButtonPress" />
                 </content>
             </OverflowToolbar>
         </headerToolbar>
@@ -55,8 +56,11 @@
                     <Input value="{bizunit_name}"/>
                 </cells>
                 <cells>
-                    <!-- <Input value="{use_flag}"/> -->
-                    <CheckBox selected="{use_flag}" textAlign="Center"/>
+                    <Switch state="{use_flag}" customTextOn="Yes" customTextOff="No">
+                        <layoutData>
+                            <FlexItemData growFactor="1" />
+                        </layoutData>
+                    </Switch>
                 </cells>
             </ColumnListItem>
         </items>

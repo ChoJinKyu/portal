@@ -48,10 +48,11 @@ entity VI_Base_Price_Arl_Mst {
 };
 
 extend VI_Base_Price_Arl_Mst with util.Managed;
+
 annotate VI_Base_Price_Arl_Mst with @title : '품의 마스터'  @description : '개발단가 품의 마스터';
 
 annotate VI_Base_Price_Arl_Mst with {
-    tenant_id                @title : '테넌트ID'  @description    : '테넌트ID';
+    tenant_id                @title : '테넌트ID'  @description    : '테넌트ID(CM_ORG_TENANT, TENANT_ID)';
     approval_number          @title : '품의번호'  @description     : '품의번호';
     company_code             @title : '회사코드'  @description     : '회사코드';
     org_type_code            @title : '조직유형코드'  @description   : '조직유형코드';
@@ -60,7 +61,7 @@ annotate VI_Base_Price_Arl_Mst with {
     new_change_code          @title : '신규변경코드'  @description   : '공통코드(CM_CODE_DTL, DP_DC_NEW_CHANGE_CODE) : 10(신규), 20(변경)';
     approval_status_code     @title : '품의상태코드'  @description   : '공통코드(CM_CODE_DTL, DP_DC_APPROVAL_STATUS_CODE) : 10(작성중), 20(결재진행중), 30(승인), 40(반려)';
     approval_request_desc    @title : '승인요청설명'  @description   : '승인요청설명';
-    approval_requestor_empno @title : '승인요청자사번'  @description  : '승인요청자사번';
+    approval_requestor_empno @title : '승인요청자사번'  @description  : '승인요청자사번(CM_HR_EMPLOYEE, EMPLOYEE_NUMBER)';
     approval_request_date    @title : '승인요청일자'  @description   : '승인요청일자';
     attch_group_number       @title : '첨부파일그룹번호'  @description : '첨부파일그룹번호';
 };

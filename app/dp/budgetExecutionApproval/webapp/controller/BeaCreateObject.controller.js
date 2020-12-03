@@ -24,6 +24,7 @@ sap.ui.define([
      * @author jinseon.lee
      * @date 2020.12.01
      */
+    var mainViewName = "beaCreateObjectView";
 	return BaseController.extend("dp.budgetExecutionApproval.controller.BeaCreateObject", {
 
 		dateFormatter: DateFormatter,
@@ -46,17 +47,18 @@ sap.ui.define([
 					delay : 0
                 });
                 
-            this.setModel(oViewModel, "beaCreateObjectView");
+            this.setModel(oViewModel, mainViewName);
             this.getRouter().getRoute("beaCreateObject").attachPatternMatched(this._onObjectMatched, this);
             this.getView().setModel(new ManagedListModel(),"company");
             this.getView().setModel(new ManagedListModel(),"plant");
             this.getView().setModel(new ManagedListModel(),"createlist"); // Participating Supplier
             this.getView().setModel(new ManagedListModel(),"appList"); // apporval list 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
+            this.getView().setModel(new ManagedListModel(),"MoldItemSelect"); // MoldItemSelect 
 		},
 
 	    onAfterRendering : function () {
-         
+          
         },
         /**
          * 폅집기 창 
@@ -174,8 +176,8 @@ sap.ui.define([
          */
         _createViewBindData : function(args){ 
            /** 초기 데이터 조회 */
-            var company_code = 'LGEKR' , plant_code = 'CCZ' ;
-            var appModel = this.getModel("beaCreateObjectView");
+            var company_code = 'LGEKR' , plant_code = 'CNZ' ;
+            var appModel = this.getModel(mainViewName);
             appModel.setData({ company_code : company_code 
                                 , company_name : "" 
                                 , plant_code : plant_code 
@@ -216,7 +218,7 @@ sap.ui.define([
 
 		_onBindingChange : function () {
 			var oView = this.getView(),
-				oViewModel = this.getModel("beaCreateObjectView"),
+				oViewModel = this.getModel(mainViewName),
 				oElementBinding = oView.getElementBinding();
 			// No data for the binding
 			if (!oElementBinding.getBoundContext()) {
@@ -251,100 +253,8 @@ sap.ui.define([
                  MessageBox.error("삭제할 목록을 선택해주세요.");
             }
         },
-        /**
-         * @description Participating Supplier 의 Supplier Select 버튼 누를시 나오는 팝업 
-         *              , 테이블의 row 가 선택되어 있지 않으면 supplier 세팅 안됨 
-         */
-        onPsSupplier : function(){ 
-            
-            var psTable = this.byId("psTable")
-                , psModel = this.getModel("createlist") 
-                , oSelected = psTable.getSelectedIndices()
-            ;
-
-            if(oSelected.length > 0){
-                    this._oSupplierDialog = sap.ui.xmlfragment("dp.bugetExecutionApproval.view.SuplierSelect", this);
-                    
-                    this.oSupplierModel = new JSONModel({
-                        "cols": [  {
-                                "label": "Supplier Code",
-                                    "template": "org>company_code",
-                                    "width": "25rem"
-                                },
-                                {
-                                    "label": "Supplier Local Name",
-                                    "template": "org>company_name"
-                                }
-                            ]
-                    });
-                    var path = 'org>/Org_Company';
-
-                    this._oSupplierDialog.setTitle('Mold Item Selection');
-                    this._oSupplierDialog.setKey('company_code');
-                    this._oSupplierDialog.setDescriptionKey('company_name');
-                    var aCols = this.oSupplierModel.getData().cols;
-                    this.getView().addDependent(this._oSupplierDialog);
-
-                    this._oSupplierDialog.getTableAsync().then(function (oTable) {
-                        oTable.setModel(this.getOwnerComponent().getModel());
-                        oTable.setModel(this.oSupplierModel, "columns");
-                        if (oTable.bindRows) {
-                            oTable.bindAggregation("rows", path);
-                        }
-                        if (oTable.bindItems) {
-                        
-                            oTable.bindAggregation("items", path, function () { 
-                                return new ColumnListItem({
-                                    cells: aCols.map(function (column) { 
-                                        console.log(column);
-                                        return new Label({ text: "{" + column.template + "}" });
-                                    })
-                                });
-                            });
-                        }
-                        
-                        this._oSupplierDialog.update();
-                    }.bind(this));
-
-                //	this._oSupplierDialog.setTokens(this._oMultiInput.getTokens());
-                    this._oSupplierDialog.open();
-            }else{
-                MessageBox.error("Participating Supplier 목록을 선택해주세요.");
-            }
-        },
-	    onValueHelpOkPress: function (oEvent) { // row 에 데이터 세팅 
-            var aTokens = oEvent.getParameter("tokens");
-            var psTable = this.byId("psTable")
-                , psModel = this.getModel("createlist") 
-                , oSelected = psTable.getSelectedIndices()
-            ;
-            if(aTokens.length == 0){
-                MessageBox.error("Supplier를 하나이상 선택해주세요.");
-            }else{
-                oSelected.forEach(function (idx) { 
-                    psModel.getData().undefined[idx].moldSupplier1 = (aTokens[0] == undefined ?"":aTokens[0].mProperties.text);
-                    psModel.getData().undefined[idx].moldSupplier2 = (aTokens[1] == undefined ?"":aTokens[1].mProperties.text);
-                    psModel.getData().undefined[idx].moldSupplier3 = (aTokens[2] == undefined ?"":aTokens[2].mProperties.text);
-                    psModel.getData().undefined[idx].moldSupplier4 = (aTokens[3] == undefined ?"":aTokens[3].mProperties.text);
-                    psModel.getData().undefined[idx].moldSupplier5 = (aTokens[4] == undefined ?"":aTokens[4].mProperties.text);
-                    psModel.getData().undefined[idx].moldSupplier6 = (aTokens[5] == undefined ?"":aTokens[5].mProperties.text);
-                    psModel.getData().undefined[idx].moldSupplier7 = (aTokens[6] == undefined ?"":aTokens[6].mProperties.text);
-                    psModel.getData().undefined[idx].moldSupplier8 = (aTokens[7] == undefined ?"":aTokens[7].mProperties.text);
-                    psModel.getData().undefined[idx].moldSupplier9 = (aTokens[8] == undefined ?"":aTokens[8].mProperties.text);
-                    psModel.getData().undefined[idx].moldSupplier10 = (aTokens[9] == undefined ?"":aTokens[9].mProperties.text);
-                    
-                });
-
-                psTable.getModel("createlist").refresh(true); 
-                this._oSupplierDialog.close();
-            }
-         
-         console.log("psModel >>" , psModel);
-		//	this._oMultiInput.setTokens(aTokens);	
-		},
-		onValueHelpCancelPress: function () {
-			this._oSupplierDialog.close();
-		},
+      
+	 
 		_oFragments: {},
         onCheck : function(){ console.log("onCheck") },
         
@@ -453,8 +363,11 @@ sap.ui.define([
 				}.bind(this));
             } 
             
+            var that = this;
             this._oDialogTableSelect.then(function(oDialog) { 
-                oDialog.open();
+                oDialog.open(); 
+                that.byId("moldItemSelectionSearch").firePress();
+
 			});
         },
         /**
@@ -464,6 +377,69 @@ sap.ui.define([
         onExit: function () {
             this.byId("dialogMolItemSelection").close();
         },
+
+        /**
+         * @description Mold Item Selection Search Button 누를시 
+         * @param {*} oEvent 
+         */
+        onMoldItemSelection : function (oEvent) {
+            console.log(oEvent.getParameters());
+			if (oEvent.getParameters().refreshButtonPressed) {
+				// Search field's 'refresh' button has been pressed.
+				// This is visible if you select any master list item.
+				// In this case no new search is triggered, we only
+				// refresh the list binding.
+				this.onRefresh();
+			} else {
+				var aSearchFilters = this._getSearchMoldSelection();
+				this._applyMoldSelection(aSearchFilters); // 로드하자마자 조회 
+			}
+        },
+        _getSearchMoldSelection : function (){
+
+             var aSearchFilters = [];
+
+            console.log("this.byId('MoldItemSearchCompany') " , this.byId('MoldItemSearchCompany').mProperties.selectedKey);
+
+             var company = this.byId('MoldItemSearchCompany').mProperties.selectedKey;
+             var plant = this.byId('MoldItemSearchPlant').mProperties.selectedKey;
+             var model = this.byId('moldItemModel').getValue().trim();
+             var partNo = this.byId('moldItemPartNo').getValue().trim();
+
+            if(company != undefined && company != "" && company != null){
+                aSearchFilters.push(new Filter("company_code", FilterOperator.EQ, company))
+            }
+            if(plant != undefined && plant != "" && plant != null){
+                aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, plant))
+            }
+            if(model != undefined && model != "" && model != null){
+                aSearchFilters.push(new Filter("model", FilterOperator.Contains , model))
+            }
+            if(partNo != undefined && partNo != "" && partNo != null){
+                aSearchFilters.push(new Filter("part_number", FilterOperator.Contains , partNo))
+            }
+
+            return aSearchFilters;
+        },
+        /**
+         * @description Mold Item Selection Search Button 누를시 
+         * @param {*} oEvent 
+         */
+        _applyMoldSelection : function(aSearchFilters){
+            console.log(" aSearchFilters " , aSearchFilters);
+            var oView = this.getView(),
+				oModel = this.getModel("MoldItemSelect");
+			oView.setBusy(true);
+			oModel.setTransactionModel(this.getModel("moldItem"));
+			oModel.read("/MoldItemSelect", {
+				filters: aSearchFilters,
+				success: function(oData){ 
+                    console.log(" oData " , oData);
+					oView.setBusy(false);
+				}
+            });
+            console.log("omdel" ,oModel);
+        }, 
          /**
          * @description  Participating Supplier Fragment Apply 버튼 클릭시 
          */
@@ -471,19 +447,18 @@ sap.ui.define([
             var oTable = this.byId("moldItemSelectTable");
             var aItems = oTable.getSelectedItems();
             var that = this;
-            aItems.forEach(function(oItem){   
+            aItems.forEach(function(oItem){  
+                console.log("oTem >>>" , oItem.getCells()[4]);  
                 var obj = new JSONModel({
                     model : oItem.getCells()[0].getText()
-                    , moldPartNo : oItem.getCells()[1].getText()
+                    , part_number : oItem.getCells()[1].getText()
+                    , mold_sequence : oItem.getCells()[2].getText() 
+                    , spec_name : oItem.getCells()[3].getText() 
+                    , mold_item_type_code : oItem.getCells()[4].getSelectedKey()
+                    , book_currency_code : oItem.getCells()[5].getText() 
+                    , budget_amount : oItem.getCells()[6].getText() 
                 });
-                // console.log(" nItem >>>>> getText 1 " ,  oItem.getCells()[0].getText());   
-                // console.log(" nItem >>>>> getText 2 " ,  oItem.getCells()[1].getText());   
-                // console.log(" nItem >>>>> getText 3 " ,  oItem.getCells()[2].getText());   
-                // console.log(" nItem >>>>> obj " ,  obj); 
-                that._addPsTable(obj);  
-                // oItem.getCells().forEach(function(nItem){ 
-                //      console.log(" nItem >>>>> getText " , nItem.getText());    
-                // });     
+                that._addPsTable(obj);     
             });
             this.onExit();
         },
@@ -493,7 +468,7 @@ sap.ui.define([
         selectMoldItemChange : function(oEvent){ 
             var oTable = this.byId("moldItemSelectTable");
             var aItems = oTable.getSelectedItems(); 
-            var appInfoModel = this.getModel("pssaCreateObjectView");
+            var appInfoModel = this.getModel(mainViewName);
             appInfoModel.setData({ moldItemLength : aItems == undefined ? 0 : aItems.length }); 
         },
 
@@ -506,7 +481,12 @@ sap.ui.define([
                 oModel = this.getModel("createlist");
                 oModel.addRecord({
                     "model": data.oData.model,
-                    "moldPartNo": data.oData.moldPartNo,
+                    "part_number": data.oData.part_number,
+                    "mold_sequence" : data.oData.mold_sequence,
+                    "spec_name" : data.oData.spec_name,
+                    "mold_item_type_code" : data.oData.mold_item_type_code,
+                    "book_currency_code" : data.oData.book_currency_code,
+                    "budget_amount" : data.oData.budget_amount,
                     "moldSupplier1" : "",
                     "moldSupplier2" : "",
                     "moldSupplier3" : "",

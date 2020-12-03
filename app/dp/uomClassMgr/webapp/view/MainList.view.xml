@@ -93,7 +93,7 @@
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <!-- <Title text="Control Options ({= ${list>/}.length || 0})" level="H2"/> -->
+                            <!-- <Title text="UOM Class ({= ${list>/UomClass}.length || 0})" level="H2"/> -->
                             <Title text="UOM Class" level="H2"/>
                             <ToolbarSpacer/>
                             <SearchField id="mainTableSearchField" placeholder="Class" width="10rem" search=".onMainTableFilterPress" />

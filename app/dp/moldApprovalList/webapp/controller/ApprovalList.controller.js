@@ -222,6 +222,7 @@ sap.ui.define([
 
         },
 
+        
 
         ///////////////////// Multi Combo box event Start //////////////////////////
          /**
@@ -287,18 +288,16 @@ sap.ui.define([
         ///////////////////// Multi Combo box event End //////////////////////////
 
         ///////////////////// ValueHelpDialog section Start //////////////////////////
-        /*
         
         onValueHelpRequested : function (oEvent) {
-      
+
             var path = '';
-           
+            this._oValueHelpDialog = sap.ui.xmlfragment("dp.moldApprovalList.view.ValueHelpDialogApproval", this);
+
             this._oBasicSearchField = new SearchField({
 				showSearchButton: false
             });
-
-            this._oValueHelpDialog = sap.ui.xmlfragment("dp.moldApprovalList.view.ValueHelpDialog", this);
-
+            
             var oFilterBar = this._oValueHelpDialog.getFilterBar();
 			oFilterBar.setFilterBarExpanded(false);
 			oFilterBar.setBasicSearch(this._oBasicSearchField);
@@ -311,20 +310,20 @@ sap.ui.define([
                     "cols": [
                         {
                             "label": "Model",
-                            "template": "mold>model"
+                            "template": "model"
                         }
                     ]
                 });
 
-                path = 'mold>/Models';
+                path = '/Models';
                 
                 this._oValueHelpDialog.setTitle('Model');
                 this._oValueHelpDialog.setKey('model');
                 this._oValueHelpDialog.setDescriptionKey('model');
 
-            }else if(oEvent.getSource().sId.indexOf("searchMoldPartNo") > -1){
+            }else if(oEvent.getSource().sId.indexOf("searchPart") > -1){
                 //part
-                this._oInputModel = this.getView().byId("searchMoldPartNo");
+                this._oInputModel = this.getView().byId("searchPart");
 
                 this.oColModel = new JSONModel({
                     "cols": [
@@ -333,22 +332,48 @@ sap.ui.define([
                             "template": "part_number"
                         },
                         {
+                            "label": "Item Type",
+                            "template": "mold_item_type_name"
+                        },
+                        {
                             "label": "Description",
-                            "template": "spec_name"
+                            "template": "mspec_name"
                         }
                     ]
                 });
 
-                path = 'mold>/PartNumbers';
+                path = '/PartNumbers';
 
                 this._oValueHelpDialog.setTitle('Part No');
                 this._oValueHelpDialog.setKey('part_number');
                 this._oValueHelpDialog.setDescriptionKey('spec_name');
+
+            }else if(oEvent.getSource().sId.indexOf("searchRequester") > -1){
+
+                this._oInputModel = this.getView().byId("searchRequester");
+
+                this.oColModel = new JSONModel({
+                    "cols": [
+                        {
+                            "label": "Name",
+                            "template": "create_user_name"
+                        },
+                        {
+                            "label": "ID",
+                            "template": "create_user_id"
+                        }
+                    ]
+                });
+
+                path = '/CreateUsers';
+                this._oValueHelpDialog.setTitle('Requester');
+                this._oValueHelpDialog.setKey('create_user_id');
+                this._oValueHelpDialog.setDescriptionKey('create_user_id');
             }
+
 
             var aCols = this.oColModel.getData().cols;
 
-            console.log('this._oValueHelpDialog.getKey()',this._oValueHelpDialog.getKey());
             
             this.getView().addDependent(this._oValueHelpDialog);
 
@@ -386,14 +411,9 @@ sap.ui.define([
             
 
         },
-        */ 
-        /**
-         * @private 
-         * @see 리스트 검색영역 팝업에서 확인버튼 클릭시
-         */
+
         onValueHelpOkPress: function (oEvent) {
-            var aTokens = oEvent.getParameter("tokens");
-            console.log(aTokens[0].getKey());
+			var aTokens = oEvent.getParameter("tokens");
 			this._oInputModel.setSelectedKey(aTokens[0].getKey());
 			this._oValueHelpDialog.close();
 		},
@@ -405,10 +425,10 @@ sap.ui.define([
 		onValueHelpAfterClose: function () {
 			this._oValueHelpDialog.destroy();
         },
-        
+
         onFilterBarSearch: function (oEvent) {
 			var sSearchQuery = this._oBasicSearchField.getValue(),
-				aSelectionSet = oEvent.getParameter("selectionSet");
+                aSelectionSet = oEvent.getParameter("selectionSet");
 			var aFilters = aSelectionSet.reduce(function (aResult, oControl) {
 				if (oControl.getValue()) {
 					aResult.push(new Filter({
@@ -419,14 +439,24 @@ sap.ui.define([
 				}
 
 				return aResult;
-			}, []);
+            }, []);
+        
+            
+            var _tempFilters = [];
+
+            if(this._oValueHelpDialog.oRows.sPath.indexOf('/Models') > -1){
+                // /Models
+                _tempFilters.push(new Filter("tolower(model)", FilterOperator.Contains, "'"+sSearchQuery.toLowerCase().replace("'","''")+"'"));
+
+            }else if(this._oValueHelpDialog.oRows.sPath.indexOf('/PartNumbers') > -1){
+                //PartNumbers
+                _tempFilters.push(new Filter({ path: "tolower(part_number)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
+                _tempFilters.push(new Filter({ path: "tolower(mold_item_type_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
+                _tempFilters.push(new Filter({ path: "tolower(spec_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
+            }
 
 			aFilters.push(new Filter({
-				filters: [
-					new Filter({ path: "model", operator: FilterOperator.Contains, value1: sSearchQuery })
-					// new Filter({ path: "Name", operator: FilterOperator.Contains, value1: sSearchQuery }),
-					// new Filter({ path: "Category", operator: FilterOperator.Contains, value1: sSearchQuery })
-				],
+				filters: _tempFilters,
 				and: false
 			}));
 
@@ -435,9 +465,8 @@ sap.ui.define([
 				and: true
 			}));
         },
-
-
-		_filterTable: function (oFilter) {
+        
+        _filterTable: function (oFilter) {
 			var oValueHelpDialog = this._oValueHelpDialog;
 
 			oValueHelpDialog.getTableAsync().then(function (oTable) {
@@ -451,7 +480,7 @@ sap.ui.define([
 
 				oValueHelpDialog.update();
 			});
-        },
+		},
         
         ///////////////////// ValueHelpDialog section Start //////////////////////////
 
@@ -570,6 +599,24 @@ sap.ui.define([
             this.byId("dialogApprovalCategory").close();
         },
 
+        /**
+         * @public
+         * @see 리스트 체크박스 제어기능
+         */ 
+        onColumnChecBox: function(oEvent){
+            var groupId = this.getView().getControlsByFieldGroupId("checkBoxs");
+            var isChecked = oEvent.getSource().mProperties.selected;
+            if(isChecked){
+                for(var i=0; i<groupId.length; i++){
+                    groupId[i].setSelected(true);
+                }
+            }else{
+                for(var i=0; i<groupId.length; i++){
+                    groupId[i].setSelected(false);
+                }
+            }
+        },
+
        ///////////////////// List create button pop up event End //////////////////////////
 
         ///////////////////// List search section Start //////////////////////////
@@ -597,7 +644,7 @@ sap.ui.define([
 			var oView = this.getView(),
 				oModel = this.getModel("list");
 			oView.setBusy(true);
-			oModel.setTransactionModel(this.getModel());
+            oModel.setTransactionModel(this.getModel());
 			oModel.read("/Approvals", {
 				filters: aSearchFilters,
 				success: function(oData){
@@ -610,77 +657,114 @@ sap.ui.define([
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S"
             
             var aCompany = this.getView().byId("searchCompany"+sSurffix).getSelectedItems();
-
+            var aPlant = this.getView().byId("searchPlant"+sSurffix).getSelectedItems();
             var sDateFrom = this.getView().byId("searchRequestDate"+sSurffix).getDateValue();
             var sDateTo = this.getView().byId("searchRequestDate"+sSurffix).getSecondDateValue();
-
+            var sCategory = this.getView().byId("searchApprovalCategory"+sSurffix).getSelectedItems();
+            var sSubject = this.getView().byId("searchSubject").getValue().trim();
 			var sModel = this.getView().byId("searchModel").getValue().trim();
-            var	sPart = this.getView().byId("searchMoldPartNo").getValue().trim();
-            // var	sFamilyPart = this.getView().byId("searchFamilyPart").getValue().trim();
+            var	sPart = this.getView().byId("searchPart").getValue().trim();
+            var	sRequester = this.getView().byId("searchRequester").getValue().trim();
             var	sStatus = this.getView().byId("searchStatus").getSelectedKey();
-            
-            var aSearchFilters = [];
-            var companyFilters = [];
-            
-            if(aCompany.length > 0){
 
-                aCompany.forEach(function(item, idx, arr){
-                    companyFilters.push(new Filter("company_code", FilterOperator.EQ, item.mProperties.key ));
+
+            var aSearchFilters = [];
+
+            if(sCategory.length > 0){
+                var _tempFilters = [];
+
+                sCategory.forEach(function(item, idx, arr){
+                    console.log(item.mProperties.key)
+                    _tempFilters.push(new Filter("approval_type_code", FilterOperator.EQ, item.mProperties.key ));
                 });
 
                 aSearchFilters.push(
                     new Filter({
-                        filters: companyFilters,
+                        filters: _tempFilters,
+                        and: false
+                    })
+                );
+            }
+            
+            if(aCompany.length > 0){
+                var _tempFilters = [];
+
+                aCompany.forEach(function(item, idx, arr){
+                    _tempFilters.push(new Filter("company_code", FilterOperator.EQ, item.mProperties.key ));
+                });
+
+                aSearchFilters.push(
+                    new Filter({
+                        filters: _tempFilters,
                         and: false
                     })
                 );
             }
 
-            // var dateFilters = [];
+            if(aPlant.length > 0){
+                var _tempFilters = [];
 
-            // dateFilters.push(
-            //     new Filter({
-            //         path: "mold_spec_register_date",
-            //         operator: FilterOperator.BT,
-            //         value1: this.getFormatDate(sDateFrom),
-            //         value2: this.getFormatDate(sDateTo)
-            //     })
-            // );
+                aPlant.forEach(function(item, idx, arr){
+                    _tempFilters.push(new Filter("org_code", FilterOperator.EQ, item.mProperties.key ));
+                });
 
-            // dateFilters.push(new Filter("mold_spec_register_date", FilterOperator.EQ, ''));
-            // dateFilters.push(new Filter("mold_spec_register_date", FilterOperator.EQ, null));
+                aSearchFilters.push(
+                    new Filter({
+                        filters: _tempFilters,
+                        and: false
+                    })
+                );
+            }
 
-            // aSearchFilters.push(
-            //     new Filter({
-            //         filters: dateFilters,
-            //         and: false
-            //     })
-            // );
+            
+            if(sDateFrom || sDateFrom){
+                var _tempFilters = [];
+
+                _tempFilters.push(
+                    new Filter({
+                        path: "request_date",
+                        operator: FilterOperator.BT,
+                        value1: this.getFormatDate(sDateFrom),
+                        value2: this.getFormatDate(sDateTo)
+                    })
+                );
+
+                _tempFilters.push(new Filter("request_date", FilterOperator.EQ, ''));
+                _tempFilters.push(new Filter("request_date", FilterOperator.EQ, null));
+
+                aSearchFilters.push(
+                    new Filter({
+                        filters: _tempFilters,
+                        and: false
+                    })
+                );
+            }
 
 			if (sModel) {
-				aSearchFilters.push(new Filter("model", FilterOperator.StartsWith, sModel));
+                aSearchFilters.push(new Filter("tolower(model)", FilterOperator.Contains, "'"+sModel.toLowerCase().replace("'","''")+"'"));
             }
             
             if (sPart) {
-				aSearchFilters.push(new Filter("part_number", FilterOperator.StartsWith, sPart));
+				aSearchFilters.push(new Filter("tolower(part_number)", FilterOperator.Contains, "'"+sPart.toLowerCase()+"'"));
             }
-            
-            // if (sFamilyPart) {
-			// 	aSearchFilters.push(new Filter("family_part_numbers", FilterOperator.Contains, sFamilyPart));
-            // }
+
+            if (sRequester) {
+				aSearchFilters.push(new Filter("tolower(requestor_empno)", FilterOperator.Contains, "'"+sRequester.toLowerCase()+"'"));
+            }
+
+            if (sSubject) {
+				aSearchFilters.push(new Filter("tolower(approval_title)", FilterOperator.Contains, "'"+sSubject.toLowerCase()+"'"));
+            }
             
             if (sStatus) {
-				aSearchFilters.push(new Filter("mold_spec_status_code", FilterOperator.EQ, sStatus));
+				aSearchFilters.push(new Filter("approve_status_code", FilterOperator.EQ, sStatus));
             }
             
-            console.log(aSearchFilters);
-
 			return aSearchFilters;
 		},
 		
 		
         getFormatDate: function (date){
-            console.log(date);
             var year = date.getFullYear();              //yyyy
             var month = (1 + date.getMonth());          //M
             month = month >= 10 ? month : '0' + month;  //month 두자리로 저장

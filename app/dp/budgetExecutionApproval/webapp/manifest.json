@@ -13,7 +13,7 @@
         "resources": "resources.json",
         "dataSources": {
             "mainService": {
-                "uri": "srv-api/odata/v2/dp.OrderApprovalService/",
+                "uri": "srv-api/odata/v2/dp.BudgetExecutionApprovalService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
@@ -42,6 +42,13 @@
             },
             "purOrgMgrService": {
                 "uri": "srv-api/odata/v2/cm.PurOrgMgrService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            },
+            "moldItemService": {
+                "uri": "srv-api/odata/v2/dp.util.MoldItemSelectionService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
@@ -117,6 +124,16 @@
             },
             "purOrg": {
                 "dataSource": "purOrgMgrService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false,
+                    "useBatch": true
+                }
+            },
+            "moldItem": {
+                "dataSource": "moldItemService",
                 "preload": true,
                 "settings": {
                     "defaultBindingMode": "TwoWay",

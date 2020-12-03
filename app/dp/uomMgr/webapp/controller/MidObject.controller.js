@@ -1,7 +1,7 @@
 sap.ui.define([
     "ext/lib/controller/BaseController",
     "ext/lib/util/Multilingual",
-	"ext/lib/util/ValidatorUtil",
+	"ext/lib/util/Validator",
 	"sap/ui/model/json/JSONModel",
 	"ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedModel",
@@ -19,7 +19,7 @@ sap.ui.define([
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
     "sap/m/ObjectStatus"
-], function (BaseController, Multilingual, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
+], function (BaseController, Multilingual, Validator, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
 	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
 	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus) {
 		
@@ -29,7 +29,9 @@ sap.ui.define([
 
 	return BaseController.extend("dp.uomMgr.controller.MidObject", {
 
-		dateFormatter: DateFormatter,
+        dateFormatter: DateFormatter,
+        
+        validator: new Validator(),
 
 		formatter: (function(){
 			return {
@@ -167,13 +169,16 @@ sap.ui.define([
 				oDetailsModel = this.getModel("details");
 			oDetailsModel.addRecord({
 				"tenant_id": this._sTenantId,
-				"uom_class_code": this._sUomCode,
+				"uom_code": this._sUomCode,
 				"language_code": "",
-				"uom_class_name": "",
-				"uom_class_desc": "",
+				"commercial_uom_code": "",
+                "technical_uom_code": "",
+                "commercial_uom_name": "",
+                "technical_uom_name": "",
+                "uom_description": "",
 				"local_create_dtm": new Date(),
 				"local_update_dtm": new Date()
-			}, "/UomClassLng");
+			}, "/UomLng");
 		},
 
 		onMidTableDeleteButtonPress: function(){
@@ -182,7 +187,7 @@ sap.ui.define([
 				aItems = oTable.getSelectedItems(),
 				aIndices = [];
 			aItems.forEach(function(oItem){
-				aIndices.push(oModel.getProperty("/UomClassLng").indexOf(oItem.getBindingContext("details").getObject()));
+				aIndices.push(oModel.getProperty("/UomLng").indexOf(oItem.getBindingContext("details").getObject()));
 			});
 			aIndices = aIndices.sort(function(a, b){return b-a;});
 			aIndices.forEach(function(nIndex){
@@ -198,9 +203,19 @@ sap.ui.define([
 		 */
         onPageSaveButtonPress: function(){
 			var oView = this.getView(),
-				that = this;
-			MessageBox.confirm("Are you sure ?", {
-				title : "Comfirmation",
+                oDetailsModel = this.getModel("details"),
+                that = this;
+            // 폼의 변경은 어떻게 체크를 해야할까
+            // if(!oDetailsModel.isChanged()) {
+			// 	MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
+			// 	return;
+            // }
+                
+            if(this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
+            if(this.validator.validate(this.byId("midTable")) !== true) return;
+
+			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
+				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
@@ -210,12 +225,14 @@ sap.ui.define([
 								that._toShowMode();
                                 oView.setBusy(false);
                                 that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-								MessageToast.show("Success to save.");
+								MessageToast.show(that.getModel("I18N").getText("/NCM0005"));
 							}
 						});
 					};
 				}
-			});
+            });
+            this.validator.clearValueState(this.byId("midObjectForm1Edit"));
+            this.validator.clearValueState(this.byId("midTable"));
 		},
 		
 		
@@ -236,14 +253,14 @@ sap.ui.define([
             }else if (sTenantId !== "new"){
                 
                 this.getModel("midObjectView").setProperty("/isAddedMode", false);                
-                this._bindView("/UomClass(tenant_id='" + this._sTenantId + "',uom_class_code='" + this._sUomCode + "')");
+                this._bindView("/Uom(tenant_id='" + this._sTenantId + "',uom_code='" + this._sUomCode + "')");
 				oView.setBusy(true);
 				var oDetailsModel = this.getModel("details");
 				oDetailsModel.setTransactionModel(this.getModel());				
-                oDetailsModel.read("/UomClassLng", {
+                oDetailsModel.read("/UomLng", {
 					filters: [
 						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-						new Filter("uom_class_code", FilterOperator.EQ, this._sUomCode),
+						new Filter("uom_code", FilterOperator.EQ, this._sUomCode),
 					],
 					success: function(oData){
 						oView.setBusy(false);
@@ -251,6 +268,8 @@ sap.ui.define([
 				});
                 this._toShowMode();
             }
+            this.validator.clearValueState(this.byId("midObjectForm1Edit"));
+            this.validator.clearValueState(this.byId("midTable"));
         },
 
 		/* =========================================================== */
@@ -262,13 +281,13 @@ sap.ui.define([
 				var oMasterModel = this.getModel("master");
 				var oDetailsModel = this.getModel("details");
 				var sTenantId = oMasterModel.getProperty("/tenant_id");
-				var sUomCode = oMasterModel.getProperty("/uom_class_code");
+				var sUomCode = oMasterModel.getProperty("/uom_code");
 				var oDetailsData = oDetailsModel.getData();
-				oDetailsData.forEach(function(oItem, nIndex){
-					oDetailsModel.setProperty("/"+nIndex+"/tenant_id", sTenantId);
-					oDetailsModel.setProperty("/"+nIndex+"/uom_class_code", sUomCode);
+				oDetailsData.UomLng.forEach(function(oItem, nIndex){
+					oDetailsModel.setProperty("/UomLng/"+nIndex+"/tenant_id", sTenantId);
+					oDetailsModel.setProperty("/UomLng/"+nIndex+"/uom_code", sUomCode);
 				});
-				oDetailsModel.setData(oDetailsData);
+				//oDetailsModel.setData(oDetailsData);
 			}
 		},
 
@@ -289,35 +308,37 @@ sap.ui.define([
 
 				var oMasterModel = this.getModel("master");
 				oMasterModel.setData({
-					"tenant_id": "L2600",					
-					"disable_date": new Date(),					
+					"tenant_id": "L2600",										
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
-				}, "/UomClass");
+				}, "/Uom");
 				var oDetailsModel = this.getModel("details");
 				oDetailsModel.setTransactionModel(this.getModel());
 				oDetailsModel.setData([]);
 				oDetailsModel.addRecord({
 					"tenant_id": this._sTenantId,
-					"uom_class_code": this._sUomCode,
+					"uom_code": this._sUomCode,
 					"language_code": "",
-					"uom_class_name": "",
-					"uom_class_desc": "",
+					"commercial_uom_code": "",
+                    "technical_uom_code": "",
+                    "commercial_uom_name": "",
+                    "technical_uom_name": "",
+                    "uom_description": "",
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
-				}, "/UomClassLng");
+				}, "/UomLng");
 				this._toEditMode();
 			}else{
 				this.getModel("midObjectView").setProperty("/isAddedMode", false);
 
-				this._bindView("/UomClass(tenant_id='" + this._sTenantId + "',uom_class_code='" + this._sUomCode + "')");
+				this._bindView("/Uom(tenant_id='" + this._sTenantId + "',uom_code='" + this._sUomCode + "')");
 				oView.setBusy(true);
 				var oDetailsModel = this.getModel("details");
 				oDetailsModel.setTransactionModel(this.getModel());
-				oDetailsModel.read("/UomClassLng", {
+				oDetailsModel.read("/UomLng", {
 					filters: [
 						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-						new Filter("uom_class_code", FilterOperator.EQ, this._sUomCode),
+						new Filter("uom_code", FilterOperator.EQ, this._sUomCode),
 					],
 					success: function(oData){
 						oView.setBusy(false);
@@ -390,23 +411,32 @@ sap.ui.define([
 						text: "{details>language_code}"
 					}), 
 					new Text({
-						text: "{details>uom_class_name}"
+						text: "{details>commercial_uom_code}"
 					}), 
 					new Text({
-						text: "{details>uom_class_desc}"
+						text: "{details>technical_uom_code}"
+                    }),
+                    new Text({
+						text: "{details>commercial_uom_name}"
+					}), 
+					new Text({
+						text: "{details>technical_uom_name}"
+                    }),
+                    new Text({
+						text: "{details>uom_description}"
 					})
 				],
 				type: sap.m.ListType.Inactive
 			});
 
             var oLanguageCode = new ComboBox({
-                    selectedKey: "{details>language_code}"
+                    selectedKey: "{details>language_code}",
+                    required : true
                 });
                 oLanguageCode.bindItems({
                     path: 'util>/CodeDetails',
                     filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
-                        // new Filter("company_code", FilterOperator.EQ, 'G100'),
+                        new Filter("tenant_id", FilterOperator.EQ, 'L2600'),                        
                         new Filter("group_code", FilterOperator.EQ, 'CM_LANG_CODE')
                     ],
                     template: new Item({
@@ -422,10 +452,19 @@ sap.ui.define([
                     }),
 					oLanguageCode, 
 					new Input({
-						value: "{details>uom_class_name}"
+						value: "{details>commercial_uom_code}"
 					}), 
 					new Input({
-						value: "{details>uom_class_desc}"
+						value: "{details>technical_uom_code}"
+                    }),
+                    new Input({
+						value: "{details>commercial_uom_name}"
+					}), 
+					new Input({
+						value: "{details>technical_uom_name}"
+                    }),
+                    new Input({
+						value: "{details>uom_description}"
 					})
 				]
             });
@@ -433,7 +472,7 @@ sap.ui.define([
 
 		_bindMidTable: function(oTemplate, sKeyboardMode){
 			this.byId("midTable").bindItems({
-				path: "details>/UomClassLng",
+				path: "details>/UomLng",
 				template: oTemplate
 				// templateShareable: true,
 				// key: ""
@@ -471,7 +510,7 @@ sap.ui.define([
 
             var oView = this.getView(),
 				sValue = oView.byId("midTableSearchField").getValue(),
-				oFilter = new Filter("uom_class_name", FilterOperator.Contains, sValue);
+				oFilter = new Filter("commercial_uom_code", FilterOperator.Contains, sValue);
 
 			oView.byId("midTable").getBinding("items").filter(oFilter, sap.ui.model.FilterType.Application);
 
