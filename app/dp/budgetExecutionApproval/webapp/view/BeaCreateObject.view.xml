@@ -230,6 +230,12 @@
                             </table:extension>          
 
                                 <table:columns>
+                                    <table:Column id="c_mold_id"  visible="false">
+                                        <Label text="mold_id"/>           
+                                        <table:template>
+                                            <Text id="t_mold_id" text="{path: 'appDetail>mold_id', type: 'sap.ui.model.type.Integer'}"/>
+                                        </table:template>
+                                    </table:Column>
                                     <table:Column id="c_model" width="20em" hAlign="Center">
                                         <Label text="Model"/>           
                                         <table:template>

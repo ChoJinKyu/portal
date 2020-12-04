@@ -267,10 +267,10 @@ sap.ui.define([
 
                 // 1. 결과 값 
 
-                // var appDetail = that.getModel("appDetail").getProperty("/ApprovalDetails");
+                  var appDetail = that.getModel("appDetail").getProperty("/ApprovalDetails");
 
                 that._bindView("/ItemBudgetExecution", "moldList", schFilter, function (oData) {
-                    /*  console.log(" detail11 >>>> ", that.getModel("appDetail"))
+                      console.log(" detail11 >>>> ", that.getModel("appDetail"))
                       var data = that.getModel('moldList').getProperty("/ItemBudgetExecution");
                       for (var i = 0; i < appDetail.length; i++) {
                           var fList = [];
@@ -307,7 +307,7 @@ sap.ui.define([
   
                       console.log(" detail >>>> ", that.getModel("appDetail"))
                       that.getModel("appDetail").refresh();
-                      */
+                      
                     sResult = oData.results[0];
                     that._createViewBindData(sResult); // comapny , plant 조회 
                 });
@@ -585,7 +585,7 @@ sap.ui.define([
                 }
 
                 var obj = new JSONModel({
-                    mold_id: oItem.getCells()[0].getText()
+                    mold_id: Number(oItem.getCells()[0].getText())
                     , model: oItem.getCells()[1].getText()
                     , part_number: oItem.getCells()[2].getText()
                     , mold_sequence: oItem.getCells()[3].getText()
@@ -1034,8 +1034,14 @@ sap.ui.define([
          */
         onPageDraftButtonPress: function () {
             var oView = this.getView();
-
+ /**
+  *        oTransactionManager.addDataModel(this.getModel("appMaster"));
+            oTransactionManager.addDataModel(this.getModel("appDetail"));
+  */
             console.log(" oTransactionManager ", oTransactionManager);
+            console.log(" appMaster ", this.getModel("appMaster"));
+            console.log(" appDetail ", this.getModel("appDetail"));
+
 
             MessageBox.confirm("Are you sure ?", {
                 title: "Comfirmation",
