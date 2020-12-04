@@ -129,7 +129,7 @@
                                 </HBox>
                             <VBox>
                                 <Label text="Description" labelFor="input" required="true"></Label> 
-                                <layout:VerticalLayout id="idVerticalLayout" class="sapUiContentPadding" width="100%">
+                                <layout:VerticalLayout id="approvalContents" class="sapUiContentPadding" width="100%">
                                 </layout:VerticalLayout>
                             </VBox>
                         </layout:VerticalLayout> 						
@@ -163,7 +163,7 @@
                         <table:Table id="poItemTable"
                                 selectionMode="MultiToggle"
                                 visibleRowCountMode="Auto"
-                                rows="{createlist>/undefined}"
+                                rows="{appDetail>/ApprovalDetails}"
                                 cellClick=".onCellClick"
                                 rowSelectionChange=".onCheck"><!-- fixedColumnCount="7" -->
                             <table:extension>
@@ -181,7 +181,7 @@
                                 <table:Column id="moldModelColumn" width="15em" >
                                     <Label text="Model"/>
                                     <table:template>
-                                        <Text id="model" text="{createlist>model}"/>
+                                        <Text id="model" text="{appDetail>model}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="moldPartNoColumn" width="8em" hAlign="Center">
@@ -190,19 +190,19 @@
                                     <Label text="Part No"/>
                                     </VBox>
                                     <table:template>
-                                        <Text id="part_number" text="{createlist>moldPartNo}"/>
+                                        <Text id="part_number" text="{appDetail>part_number}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="moldSeqColumn" width="3em" hAlign="Center">
                                     <Label text="Seq"/>
                                     <table:template>
-                                        <Text id="mold_sequence" text="{createlist>moldSequence}"/>
+                                        <Text id="mold_sequence" text="{appDetail>mold_sequence}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="moldDescriptionColumn" width="12em">
                                     <Label text="Description"/>
                                     <table:template>
-                                        <Text id="spec_name" text="{createlist>specName}"/>
+                                        <Text id="spec_name" text="{appDetail>spec_name}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="moldItemTypeColumn" width="8em" hAlign="Center">
@@ -212,7 +212,7 @@
                                     </VBox>
                                     <table:template>
                                         <ComboBox   id="mold_item_type_code"
-                                                    selectedKey="{createlist>moldItemType}"
+                                                    selectedKey="{appDetail>mold_item_type_code}"
                                                     items="{
                                                                 path : 'util>/CodeDetails',
                                                                 filters : [
@@ -231,7 +231,7 @@
                                     <Label text="Currency"/>
                                     </VBox>
                                     <table:template>
-                                        <Text id="bookCurrency" text="{createlist>bookCurrencyCode}"/>
+                                        <Text id="bookCurrency" text="{appDetail>bookCurrencyCode}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="budetAmountColumn" width="7em" hAlign="Right">
@@ -241,7 +241,7 @@
                                     </VBox>
                                     <table:template>
                                         <ObjectNumber id="budetAmount" emphasized="false"
-                                        number="{parts:[{path:'createlist>budgetAmount'},{path:'createlist>bookCurrencyCode'}],
+                                        number="{parts:[{path:'appDetail>budgetAmount'},{path:'appDetail>bookCurrencyCode'}],
                                                 type: 'sap.ui.model.type.Currency',
                                                 formatOptions: {showMeasure: false}}" />
                                     </table:template>
@@ -249,7 +249,7 @@
                                 <table:Column id="crrencyColumn" width="6em" hAlign="Center">
                                     <Label text="Currency"/>           
                                     <table:template>
-                                        <Text id="currency" text="{createlist>bookCurrencyCode}"/>
+                                        <Text id="currency" text="{appDetail>bookCurrencyCode}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="poAmountColumn" width="7em" hAlign="End">
@@ -259,7 +259,7 @@
                                     </VBox>
                                     <table:template>
                                         <ObjectNumber id="poAmount" emphasized="false"
-                                        number="{parts:[{path:'createlist>budgetAmount'},{path:'createlist>bookCurrencyCode'}],
+                                        number="{parts:[{path:'appDetail>budgetAmount'},{path:'appDetail>bookCurrencyCode'}],
                                                 type: 'sap.ui.model.type.Currency',
                                                 formatOptions: {showMeasure: false}}" />
                                     </table:template>
@@ -270,7 +270,7 @@
                                     <Label text="Supplier"/>
                                     </VBox>
                                     <table:template>
-                                        <Text id="orderSupplier" text="{createlist>orderSupplier}"/>
+                                        <Text id="orderSupplier" text="{appDetail>orderSupplier}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="targetAmountColumn" width="7em" hAlign="Center">
@@ -280,7 +280,7 @@
                                     </VBox>
                                     <table:template>
                                         <Text id="targetAmount" emphasized="false"
-                                        number="{parts:[{path:'createlist>budgetAmount'},{path:'createlist>bookCurrencyCode'}],
+                                        number="{parts:[{path:'appDetail>budgetAmount'},{path:'appDetail>bookCurrencyCode'}],
                                                 type: 'sap.ui.model.type.Currency',
                                                 formatOptions: {showMeasure: false}}" />
                                     </table:template>
@@ -292,7 +292,7 @@
                                     </VBox>
                                     <table:template>
                                         <ComboBox   id="mold_production_type_code"
-                                                    selectedKey="{createlist>moldItemType}"
+                                                    selectedKey="{appDetail>moldItemType}"
                                                     items="{
                                                                 path : 'util>/CodeDetails',
                                                                 filters : [
@@ -311,7 +311,7 @@
                                     <Label text="Part No"/>
                                     </VBox>
                                     <table:template>
-                                        <Text id="family_part_number_1" text="{createlist>familyPartNumber1}" />
+                                        <Text id="family_part_number_1" text="{appDetail>familyPartNumber1}" />
                                     </table:template>
                                 </table:Column>
                             </table:columns>

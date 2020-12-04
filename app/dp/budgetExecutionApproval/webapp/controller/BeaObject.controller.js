@@ -79,7 +79,14 @@ sap.ui.define([
                 this.getRouter().navTo("approvalList", {}, true);
             }
         },
+        onEditModeBea: function (oEvent) {
+            var oModel = this.getModel("appMaster")
+                , oData = oModel.oData;
+            this.getRouter().navTo("beaEditObject", {
+                approval_number: oData.approval_number
+            }, true);
 
+        },
 		/**
 		 * Event handler for page edit button press
 		 * @public
@@ -164,10 +171,6 @@ sap.ui.define([
         _onObjectMatched: function (oEvent) {
             var oArgs = oEvent.getParameter("arguments"),
                 approval_number = oArgs.approval_number;
-
-            console.log("oArgs >>>>> ", oArgs);
-            // ApprovalMasters(approval_number='218619-20B-00005') 
-            //	this._loadApprovalInfo();
             this._onRoutedThisPage(oArgs);
         },
         _onRoutedThisPage: function (args) {
@@ -268,12 +271,7 @@ sap.ui.define([
             console.log(" oViewModel >>> ", oViewModel);
 
         },
-        onEditModeBea: function (oEvent) {
-            this.getRouter().navTo("beaEditObject", {
-                 approval_number : '218619-20B-00005'
-            }, true);
-           
-        },
+
         _oFragments: {},
     });
 });
