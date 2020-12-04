@@ -75,9 +75,9 @@ sap.ui.define([
         /**
          * 폅집기 창 
          */
-        setRichEditor: function () {
+        setRichEditor: function (sValue) {
             var that = this,
-                sHtmlValue = ''
+                sHtmlValue = sValue;
             sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
                 function (RTE, EditorType) {
                     var oRichTextEditor = new RTE("myRTE", {
@@ -116,6 +116,16 @@ sap.ui.define([
                     this.getRouter().navTo("approvalList", {}, true);
                 } */
         },
+
+        onPageCancelButtonPress : function(oEvent){ 
+            var oModel = this.getModel("appMaster") 
+              , oData = oModel.oData;
+
+             this.getRouter().navTo("beaObject", {
+                 approval_number : oData.approval_number
+             }, true)
+        },
+
 
 		/**
 		 * Event handler for page edit button press
@@ -176,7 +186,7 @@ sap.ui.define([
 		 * @private
 		 */
         _onObjectMatched: function (oEvent) {
-            this.setRichEditor();
+           
             var oArgs = oEvent.getParameter("arguments");
           
             var mModel = this.getModel(mainViewName);
@@ -186,7 +196,7 @@ sap.ui.define([
                 this._onRoutedThisPage(oArgs);
                 this._onLoadApprovalRow();
             } else {
-            
+                this.setRichEditor('');
                 this._createViewBindData(oArgs);
                 this._onLoadApprovalRow();
             }
@@ -244,15 +254,18 @@ sap.ui.define([
 
         _onRoutedThisPage: function (args) {
             console.log("args>>>> " , args);
-
-            this._bindView("/ApprovalMasters('" + args.approval_number + "')", "appMaster", [], function (oData) { });
+            var that = this;
+            this._bindView("/ApprovalMasters('" + args.approval_number + "')", "appMaster", [], function (oData) { 
+                that.setRichEditor(oData.approval_contents);
+             });
             var schFilter = [new Filter("approval_number", FilterOperator.EQ, args.approval_number)];
 
             var sResult = {};
-            var that = this;
+            
             this._bindView("/ItemBudgetExecution", "appDetail", schFilter, function (oData) {
                 sResult = oData.results[0];
                 that._createViewBindData(sResult);
+                
             });
             // mold_id 
             oTransactionManager.setServiceModel(this.getModel());
@@ -548,18 +561,13 @@ sap.ui.define([
                 "mold_sequence": data.oData.mold_sequence,
                 "spec_name": data.oData.spec_name,
                 "mold_item_type_code": data.oData.mold_item_type_code,
-                "book_currency_code": data.oData.book_currency_code,
-                "budget_amount": data.oData.budget_amount,
-                "moldSupplier1": "",
-                "moldSupplier2": "",
-                "moldSupplier3": "",
-                "moldSupplier4": "",
-                "moldSupplier5": "",
-                "moldSupplier6": "",
-                "moldSupplier7": "",
-                "moldSupplier8": "",
-                "moldSupplier9": "",
-                "moldSupplier10": "", }, "/ItemBudgetExecution");
+                "mold_production_type_code": data.oData.mold_production_type_code,
+                "mold_type_code": data.oData.mold_type_code,
+               
+                "family_part_number_1": data.oData.family_part_number_1,
+                "budget_exrate_date": data.oData.budget_exrate_date,
+                "inspection_date": data.oData.budget_exrate_date,
+                }, "/ItemBudgetExecution");
         },
 
         /**
