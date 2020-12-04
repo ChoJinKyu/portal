@@ -636,8 +636,9 @@ sap.ui.define([
                     onClose : function(sButton) {
                         if (sButton === MessageBox.Action.OK) {
                             oSelected.forEach(function (idx) {
-                                console.log(lModel.getData().Approvals[idx].__entity);
-                                oModel.remove(lModel.getData().Approvals[idx].__entity, {
+                                console.log(lModel.getData().ApprovalMasters[idx]);
+                                console.log(lModel.getData().ApprovalMasters[idx].__entity);
+                                oModel.remove(lModel.getData().ApprovalMasters[idx].__entity, {
                                     groupId: "delete"
                                 });
                             });
@@ -695,7 +696,7 @@ sap.ui.define([
 				oModel = this.getModel("list");
 			oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
-			oModel.read("/Approvals", {
+			oModel.read("/ApprovalMasters", {
 				filters: aSearchFilters,
 				success: function(oData){
 					oView.setBusy(false);
