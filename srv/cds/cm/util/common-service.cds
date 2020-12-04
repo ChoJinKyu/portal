@@ -10,6 +10,6 @@ service CommonService {
 
     entity CodeDetails as projection on codeDtl.Code_Dtl;
     entity Message as projection on msg.Message;
-    entity CodeView as projection on codeView.Cm_Code_View
+    entity CodeView as projection on codeView.Cm_Code_View;
 
 }
