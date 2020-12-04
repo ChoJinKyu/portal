@@ -128,6 +128,10 @@
                             <VBox>
                                 <Label text="Description" labelFor="input" required="true"></Label> 
                                 <layout:VerticalLayout id="idVerticalLayout" class="sapUiContentPadding" width="100%">
+                                    <layout:content>
+                                        <core:HTML content="{appMaster>/approval_contents}">
+                                        </core:HTML>
+                                    </layout:content>
                                 </layout:VerticalLayout>
                             </VBox>
                         </layout:VerticalLayout> 						

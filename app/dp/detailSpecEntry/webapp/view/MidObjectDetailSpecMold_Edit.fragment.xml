@@ -18,14 +18,14 @@
                 <Label text="Cavity Qty"/>
                 <Input value="{spec>/cavity_process_qty}"/>
                 <Label text="Demand Life"/>
-                <Input value="{spec>/request_life_shot_count}"/>
+                <Input type="Number" value="{path: 'spec>/request_life_shot_count', type: 'sap.ui.model.type.Integer'}"/>
                 <Text text="Shot">
                     <layoutData>
 						<form:ColumnElementData cellsSmall="2" cellsLarge="1" />
 					</layoutData>
                 </Text>
                 <Label text="Hot Runner Valve Qty"/>
-                <Input value="{spec>/mold_hot_runner_qty}"/>
+                <Input type="Number" value="{path: 'spec>/mold_hot_runner_qty', type: 'sap.ui.model.type.Integer'}"/>
                 <Label text="Size"/>
                 <Select   width="100%"
                             selectedKey="{spec>/mold_size}"
@@ -144,7 +144,7 @@
                 <Label text="Use Material"/> 
                 <Input value="{spec>/use_material_value}"/>
                 <Label text="Sample Qty"/>
-                <Input value="{spec>/mold_sample_qty}"/>
+                <Input type="Number" value="{path: 'spec>/mold_sample_qty', type: 'sap.ui.model.type.Integer'}"/>
                 <Label text="Mold Type"/>
                 <Select   width="100%"
                             selectedKey="{master>/mold_type_code}"
@@ -216,21 +216,22 @@
             <core:Title text="Spare Parts" />
             <!-- <VBox> -->
                 <Label text="Eye-Bolt"/>
-                <Input value="{spec>/spare_part_eyebolt_count}"/>
+                <Input type="Number" value="{path: 'spec>/spare_part_eyebolt_count', type: 'sap.ui.model.type.Integer'}"/>
+                
                 <Label text="Heater"/>
-                <Input value="{spec>/spare_part_heater_count}"/>
+                <Input type="Number" value="{path: 'spec>/spare_part_heater_count', type: 'sap.ui.model.type.Integer'}"/>
 
             <!-- </VBox>            
             <VBox > -->
                 <Label text="Ej-Sleeve"/> 
-                <Input value="{spec>/spare_part_ejslave_count}"/>
+                <Input type="Number" value="{path: 'spec>/spare_part_ejslave_count', type: 'sap.ui.model.type.Integer'}"/>
                 <Label text="Speaker Core"/>
-                <Input value="{spec>/spare_part_speaker_core_count}"/>
+                <Input type="Number" value="{path: 'spec>/spare_part_speaker_core_count', type: 'sap.ui.model.type.Integer'}"/>
 
             <!-- </VBox>            
             <VBox > -->
                 <Label text="Ejector-Pin"/> 
-                <Input value="{spec>/spare_part_ejector_pin_count}"/>
+                <Input type="Number" value="{path: 'spec>/spare_part_ejector_pin_count', type: 'sap.ui.model.type.Integer'}"/>
                 <Label text="Etc."/>
                 <Input value="{spec>/spare_part_etc_count}"/>
             <!-- </VBox> -->
