@@ -148,7 +148,7 @@
                             <cells>
                                 <ObjectIdentifier text="{list>uom_code}"/>
                                 <ObjectIdentifier text="{list>commercial_uom_code}"/>
-                                <ObjectIdentifier text="{list>comercial_uom_name}"/>                                
+                                <ObjectIdentifier text="{list>commercial_uom_name}"/>                                
                                 <ObjectStatus 
                                     icon="{= ${list>base_unit_flag} === true ? 'sap-icon://accept' : ''}"/>
                                 <ObjectIdentifier text="{list>uom_class_code}"/>

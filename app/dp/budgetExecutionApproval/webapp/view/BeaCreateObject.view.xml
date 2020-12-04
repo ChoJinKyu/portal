@@ -54,14 +54,15 @@
 			<FlexBox wrap="Wrap" >
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <ObjectStatus
-                        title="Report No"
-                        text="332424-20B-00144"/>
+                        title="Approval No"
+                        text="{=${beaCreateObjectView>/editMode}? ${appMaster>/approval_number}:''}"/>
+        
                     <ObjectStatus
                         title="Requester"
-                        text="김갑수[ks.kim]"/>
+                        text="{=${beaCreateObjectView>/editMode}? ${appMaster>/requestor_empno}:''}"/>
                     <ObjectStatus
                         title="Request Date"
-                        text="2020-11-20"/>
+                        text="{=${beaCreateObjectView>/editMode}? ${appMaster>/request_date}:''}"/>
 				</layout:VerticalLayout>
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
@@ -120,7 +121,7 @@
                                         labelFor="input"
                                         required="true"/>
                                     <Input
-                                        value=""
+                                        value="{=${beaCreateObjectView>/editMode}?${appMaster>/approval_title}:''}"
                                         visible="true"
                                         width="40em" 
                                         placeholder="Input data"
@@ -129,7 +130,8 @@
                                 </HBox>
                             <VBox>
                                 <Label text="Description" labelFor="input" required="true"></Label> 
-                                <layout:VerticalLayout id="idVerticalLayout" class="sapUiContentPadding" width="100%">
+                                <layout:VerticalLayout id="idVerticalLayout" class="sapUiContentPadding" width="100%" value="{=${beaCreateObjectView>/editMode}?${appMaster>/approval_contents}:''}">
+
                                 </layout:VerticalLayout>
                             </VBox>
                         </layout:VerticalLayout> 						
@@ -211,7 +213,7 @@
                                 selectionMode="MultiToggle"
                                 fixedColumnCount="4"
                                 visibleRowCountMode="Auto"
-                                rows="{createlist>/undefined}"
+                                rows="{appDetail>/ItemBudgetExecution}"
                                 >
                              <table:extension>
                                 <OverflowToolbar>
@@ -223,39 +225,39 @@
                                         </customData>
                                     </Button>
                                     <Button id="btnPsDelete"   type="Transparent" text="Delete"  press=".onPsDelRow" />
-                                    <Button id="btnPsSuplierSel"  type="Emphasized"  text="Supplier Select"   press=".onPsSupplier" />
+                                   
                                 </OverflowToolbar>
                             </table:extension>          
 
                                 <table:columns>
-                                    <table:Column id="c_model" width="15em" hAlign="Center">
+                                    <table:Column id="c_model" width="20em" hAlign="Center">
                                         <Label text="Model"/>           
                                         <table:template>
-                                            <Text id="t_model" text="{createlist>model}"/>
+                                            <Text id="t_model" text="{appDetail>model}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_moldPartNo" width="10em" hAlign="Center">
                                         <Label text="Mold&#10;Part No"/>           
                                         <table:template>
-                                            <Text id="t_mold_part_no" text="{createlist>part_number}"/>
+                                            <Text id="t_mold_part_no" text="{appDetail>part_number}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_seq" width="5em" hAlign="Center">
                                         <Label text="Seq"/>           
                                         <table:template>
-                                            <Text id="t_seq" text="{createlist>mold_sequence}"/>
+                                            <Text id="t_seq" text="{appDetail>mold_sequence}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_description" width="15em" hAlign="Center">
                                         <Label text="Description"/>           
                                         <table:template>
-                                            <Text id="description" text="{createlist>spec_name}"/>
+                                            <Text id="description" text="{appDetail>spec_name}"/>
                                         </table:template>
                                     </table:Column>       
                                     <table:Column id="c_MoldItemType" width="10em" hAlign="Center">
                                         <Label text="Mold Item Type"/>           
                                         <table:template>
-                                            <ComboBox selectedKey="{createlist>mold_item_type_code}"
+                                            <ComboBox selectedKey="{appDetail>mold_item_type_code}"
                                                 items="{ path : 'util>/CodeDetails',
                                                             filters : [
                                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
@@ -267,22 +269,11 @@
                                             </ComboBox>
                                         </table:template>
                                     </table:Column>                                     
-                                    <table:Column id="c_bookCrrency" width="10em" hAlign="Center">
-                                        <Label text="Book Currency"/>           
-                                        <table:template>
-                                            <Text id="bookCurrency" text="{createlist>book_currency_code}"/>
-                                        </table:template>
-                                    </table:Column>                                     
-                                    <table:Column id="c_budetAmount" width="10em" hAlign="Center">
-                                        <Label text="Budget Amount"/>           
-                                        <table:template>
-                                            <Text id="budetAmount" text="{createlist>budget_amount}"/>
-                                        </table:template>
-                                    </table:Column>                                     
+                                                              
                                     <table:Column id="c_productionType" width="10em" hAlign="Center">
                                         <Label text="Production Type"/>           
                                         <table:template>
-                                            <ComboBox selectedKey="{createlist>mold_production_type_code}"
+                                            <ComboBox selectedKey="{appDetail>mold_production_type_code}"
                                                 items="{ path : 'util>/CodeDetails',
                                                             filters : [
                                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
@@ -294,90 +285,61 @@
                                             </ComboBox>
                                         </table:template>
                                     </table:Column>                                     
-                                    <table:Column id="c_currency" width="10em" hAlign="Center">
-                                        <Label text="Currency"/>           
+                                    <table:Column id="c_itemType" width="10em" hAlign="Center">
+                                        <Label text="Item Type"/>           
                                         <table:template>
-                                              <ComboBox   id="currency"    
-                                                            selectedKey="{= ${list>family_part_number_1}.length > 0 ? 'Y' : 'N' }"
-                                                           items="{ path : 'util>/CodeDetails',
+                                            <ComboBox selectedKey="{appDetail>mold_type_code}"
+                                                items="{ path : 'util>/CodeDetails',
                                                             filters : [
                                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
                                                             ]
                                                         }"
-                                                editable="false" >  
+                                                >  
+                                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                            </ComboBox>
+                                        </table:template>
+                                    </table:Column>  
+
+                                    <table:Column id="c_assetType" width="10em" hAlign="Center">
+                                        <Label text="Asset Type"/>           
+                                        <table:template>
+                                            <ComboBox selectedKey="{appDetail>mold_production_type_code}"
+                                                items="{ path : 'util>/CodeDetails',
+                                                            filters : [
+                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_BUDGET_TYPE'}
+                                                            ]
+                                                        }"
+                                                >  
                                                 <core:Item key="{util>code}" text="{util>code_description}" />
                                             </ComboBox>
                                         </table:template>
                                     </table:Column>                                     
-                                    <table:Column id="c_targetAmount" width="10em" hAlign="Center">
-                                        <Label text="Target Amount"/>           
+                                    <table:Column id="c_familyPartNo" width="15em" hAlign="Center">
+                                        <Label text="Family Part No"/>           
                                         <table:template>
-                                            <Input id="targetAmount" value=""/>
+                                             <Text id="family_part_number_1" text="{appDetail>family_part_number_1}"/>
+                                        </table:template>
+                                    </table:Column>         
+                           
+                                    <table:Column id="c_expectedSalesDate" width="10em" hAlign="Center">
+                                        <Label text="Expected"/>           
+                                        <Label text="Sales Date"/>           
+                                        <table:template>
+                                             <!-- 임시 컬럼명 -->
+                                             <DatePicker value="{appDetail>budget_exrate_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
                                         </table:template>
                                     </table:Column>                                     
-                                    <table:Column id="c_moldSupplier1" width="10em" hAlign="Center">
-                                        <Label text="Mold Supplier1"/>           
+                                    <table:Column id="c_expectedDisposalDate" width="10em" hAlign="Center">
+                                        <Label text="Expected"/>           
+                                        <Label text="Disposal Date"/>           
                                         <table:template>
-                                            <Text id="moldSupplier1" text="{createlist>moldSupplier1}"/>
-                                        </table:template>
-                                    </table:Column>                                     
-                                    <table:Column id="c_moldSupplier2" width="10em" hAlign="Center">
-                                        <Label text="Mold Supplier2"/>           
-                                        <table:template>
-                                            <Text id="moldSupplier2" text="{createlist>moldSupplier2}"/>
-                                        </table:template>
-                                    </table:Column>                                     
-                                    <table:Column id="c_moldSupplier3" width="10em" hAlign="Center">
-                                        <Label text="Mold Supplier3"/>           
-                                        <table:template>
-                                            <Text id="moldSupplier3" text="{createlist>moldSupplier3}"/>
-                                        </table:template>
-                                    </table:Column>                                     
-                                    <table:Column id="c_moldSupplier4" width="10em" hAlign="Center">
-                                        <Label text="Mold Supplier4"/>           
-                                        <table:template>
-                                            <Text id="moldSupplier4" text="{createlist>moldSupplier4}"/>
-                                        </table:template>
-                                    </table:Column>                                     
-                                    <table:Column id="c_moldSupplier5" width="10em" hAlign="Center">
-                                        <Label text="Mold Supplier5"/>           
-                                        <table:template>
-                                            <Text id="moldSupplier5" text="{createlist>moldSupplier5}"/>
-                                        </table:template>
-                                    </table:Column>                                     
-                                    <table:Column id="c_moldSupplier6" width="10em" hAlign="Center">
-                                        <Label text="Mold Supplier6"/>           
-                                        <table:template>
-                                            <Text id="moldSupplier6" text="{createlist>moldSupplier6}"/>
-                                        </table:template>
-                                    </table:Column>                                     
-                                    <table:Column id="c_moldSupplier7" width="10em" hAlign="Center">
-                                        <Label text="Mold Supplier7"/>           
-                                        <table:template>
-                                            <Text id="moldSupplier7" text="{createlist>moldSupplier7}"/>
-                                        </table:template>
-                                    </table:Column>                                     
-                                    <table:Column id="c_moldSupplier8" width="10em" hAlign="Center">
-                                        <Label text="Mold Supplier8"/>           
-                                        <table:template>
-                                            <Text id="moldSupplier8" text="{createlist>moldSupplier8}"/>
-                                        </table:template>
-                                    </table:Column>                                     
-                                    <table:Column id="c_moldSupplier9" width="10em" hAlign="Center">
-                                        <Label text="Mold Supplier9"/>           
-                                        <table:template>
-                                            <Text id="moldSupplier9" text="{createlist>moldSupplier9}"/>
-                                        </table:template>
-                                    </table:Column>                                     
-                                    <table:Column id="c_moldSupplier10" width="10em" hAlign="Center">
-                                        <Label text="Mold Supplier10"/>           
-                                        <table:template>
-                                            <Text id="moldSupplier10" text="{createlist>moldSupplier10}"/>
+                                             <!-- 임시 컬럼명 -->
+                                             <DatePicker value="{appDetail>inspection_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
                                         </table:template>
                                     </table:Column>                                     
                                 </table:columns>
-
                           </table:Table>
                        
                         <!-- // -->
@@ -500,7 +462,6 @@
                                 class="size2 sapUiSmallMarginBeginEnd" 
                                 >
                             </core:Icon>
-                           
                         </HBox>
                         </Toolbar>
                             <layout:VerticalLayout class="sapUiContentPadding" width="100%">
@@ -530,8 +491,8 @@
 			<OverflowToolbar>
 				<ToolbarSpacer />
 				<Button type="Transparent" text="Draft" press=".onPageSaveButtonPress" />
-				<Button type="Transparent" text="Preview" press=".onPageSaveButtonPress" />
-				<!-- <Button type="Transparent" text="Delete" press=".onPageSaveButtonPress" /> -->
+				<!-- <Button type="Transparent" text="Preview" press=".onPageSaveButtonPress" /> -->
+				<Button type="Transparent" text="Cancel" visible="{=${beaCreateObjectView>/editMode}?true:false}" press=".onPageCancelButtonPress" /> 
 				<Button type="Emphasized" text="Request" press=".onPageCancelEditButtonPress"/>
 			</OverflowToolbar>
 		</uxap:footer>

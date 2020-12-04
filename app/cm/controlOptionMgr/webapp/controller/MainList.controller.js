@@ -16,6 +16,7 @@ sap.ui.define([
   "sap/m/Input",
   "sap/m/ComboBox",
   "sap/ui/core/Item",
+  "3rd/lib/lodash/lodash"
 ], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
   "use strict";
 
@@ -32,6 +33,7 @@ sap.ui.define([
 		 * @public
 		 */
     onInit: function () {
+      // console.log(">>>>>> lodash", _);
       var oViewModel,
         oResourceBundle = this.getResourceBundle();
 
@@ -199,16 +201,54 @@ sap.ui.define([
           oView.setBusy(false);
         }
       });
-      // (new ManagedListModel())
-      //   .setTransactionModel(this.getModel("tree"))
-      //   .read("/Categories", {
-      //     filters: [],
-      //     success: function (oData) {
-      //       console.log(">>>>>> oTree", oData);
+      /////////////////////////////////////////////////////////////////////////////////
+      // TAG : Hierachy/Tree
+      // 검색 : name like '%e%'
+      // 결과 : NODE_ID 2, 3을 제외한 결과가 Hirachecy 를 유지한 Object Array 형태로 반환
+      //        되며, 이는 sap.ui.table.TreeTable 태그의 model 에 바로 적용되는 형식
+      //
+      // * 검색버튼 클릭후 F12 를 통해 개발자도구에서 로그 확인하세요.
+      //
+      /////////////////////////////////////////////////////////////////////////////////
+      console.log(">>>>>>>>>>> Step #1 ", "name like '%e%' 를 던진다.");
+      (new ManagedListModel())
+        .setTransactionModel(this.getModel("tree"))
+        .read("/Categories_haa", {
+          filters: [
+            // 조회조건
+            new Filter("name", FilterOperator.Contains, "e")
+          ],
+          success: (function (oData) {
+            // 이 부분은 신경쓰지 마세요. 
+            // path 노드를 기준으로 필터조건들을 뽑는겁니다.
+            // 많이 사용된다면 공통화시키겠습니다.
+            var filters = oData.results
+              .reduce(function (acc, e) {
+                return [...acc, ...((e["path"]).split("/"))];
+              }, [])
+              .reduce(function (acc, e) {
+                return acc.includes(e) ? acc : [...acc, e];
+              }, [])
+              .reduce(function (acc, e) {
+                return [...acc, new Filter({
+                  path: 'node_id', operator: FilterOperator.EQ, value1: e
+                })];
+              }, []);
 
-      //       oView.setBusy(false);
-      //     }
-      //   });
+            // 검색결과가 없는 경우 종료
+            if (filters.length <= 0) return;
+
+            console.log(">>>>>>>>>>> Step #2 ", "Hirachecy 구조를 유지한 전체레코드를 조회한다.");
+            (new ManagedListModel())
+              .setTransactionModel(this.getModel("tree"))
+              .read("/Categories_h", {
+                filters: [new Filter({ filters: filters, and: false })],
+                success: function (oData) {
+                  console.log(">>>>>>>>>> 최종결과", oData);
+                }
+              });
+          }).bind(this)
+        });
     },
 
     _getSearchStates: function () {

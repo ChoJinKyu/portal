@@ -11,7 +11,9 @@ sap.ui.define([
 	"sap/ui/core/Fragment",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
+    "ext/lib/util/Multilingual",
+    "sap/ui/core/Item"
+], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, Multilingual, Item) {
     "use strict";
     
     var oTransactionManager;
@@ -31,7 +33,9 @@ sap.ui.define([
 		onInit : function () {
 			// Model used to manipulate controlstates. The chosen values make sure,
 			// detail page shows busy indication immediately so there is no break in
-			// between the busy indication for loading the view's meta data
+            // between the busy indication for loading the view's meta data
+            var oMultilingual = new Multilingual();
+			this.setModel(oMultilingual.getModel(), "I18N");
 			var oViewModel = new JSONModel({
 					busy : true,
                     delay : 0
@@ -93,14 +97,12 @@ sap.ui.define([
 		 */
 		onPageEditButtonPress: function(){
 
-            
-            
             this._toEditMode();
-
+            this.setImportOrg();
+        },
+        
+        setImportOrg: function(){
             var importCompanyCode = this.getModel('master').getProperty('/import_company_code');
-
-            console.log(importCompanyCode );
-
             //importOrg filter
             var filter = new Filter({
                             filters: [
@@ -110,8 +112,17 @@ sap.ui.define([
                                 and: true
                         });
 
-            this.getView().byId("importOrg").getBinding("items").filter(filter, "Application");
-		},
+            this.getView().byId("importOrg").bindItems(
+                {
+                    path: '/Divisions',
+                    filters: filter,
+                    template: new Item({
+                    key: "{org_code}", text: "[{org_code}] {org_name}"
+                    })
+                }
+            )
+            //this.getView().byId("importOrg").setSelectedKey("CVZ");
+        },
 		
 		/**
 		 * Event handler for delete page entity
@@ -144,13 +155,13 @@ sap.ui.define([
                 me = this;
                 
             MessageBox.confirm("Are you sure ?", {
-                title : "Comfirmation",
+                title : "Draft",
                 initialFocus : sap.m.MessageBox.Action.CANCEL,
                 onClose : function(sButton) {
                     if (sButton === MessageBox.Action.OK) {
                         oView.setBusy(true);
                         
-                        this.getModel('spec').setProperty('/mold_spec_status_code', 'C');
+                        me.getModel('spec').setProperty('/mold_spec_status_code', 'D');
 
 						oTransactionManager.submit({
 						// oView.getModel("master").submitChanges({
@@ -158,6 +169,49 @@ sap.ui.define([
 								me._toShowMode();
 								oView.setBusy(false);
 								MessageToast.show("Success to save.");
+							}
+						});
+					};
+				}
+			});
+
+        },
+        
+        onPageConfirmButtonPress: function(){
+			var oView = this.getView(),
+                me = this;
+                
+            MessageBox.confirm("Are you sure ?", {
+                title : "Comfirmation",
+                initialFocus : sap.m.MessageBox.Action.CANCEL,
+                onClose : function(sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        oView.setBusy(true);
+                        
+                        me.getModel('spec').setProperty('/mold_spec_status_code', 'C');
+                        // me.getModel('spec').setProperty('/spare_part_eyebolt_count', 3);
+
+						oTransactionManager.submit({
+						// oView.getModel("master").submitChanges({
+							success: function(ok){
+
+                                oView.setBusy(false);
+
+                                var err = ok.__batchResponses[0].__changeResponses.filter(function(item){
+                                    return item.statusCode != '204';
+                                });
+
+                                if(err.length > 0){
+                                    
+                                    var body = JSON.parse(err[0].response.body);
+
+                                    MessageToast.show(body.error.code+'\n'+body.error.message.value);
+                                    return;
+                                }
+
+                                me._toShowMode();
+                                MessageToast.show("Success to save.");
+
 							}
 						});
 					};

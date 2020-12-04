@@ -19,10 +19,11 @@
                         text="Edit" 
                         press=".onEdit"
                         />
-                    <Button
+                    <!-- <Button
                         id="buttonMidDelete" 
                         text="Delete"
-                        press=".onMidDelete"/>                                      
+                        press=".onMidDelete"/>                                       -->
+                                   
                     <Button
                         id="buttonSave"
                         text="Save"

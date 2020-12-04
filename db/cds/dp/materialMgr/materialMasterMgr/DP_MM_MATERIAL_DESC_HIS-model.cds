@@ -24,7 +24,7 @@ entity Mm_Material_Desc_His {
   key material_code : String(40)  not null @title: '자재코드' ;	
   key language_code : String(4)  not null @title: '언어코드' ;	
   key history_sequence : Integer  not null @title: '이력순번' ;	
-    material_description : String(300)   @title: '자재설명' ;	
+    material_desc : String(300)   @title: '자재설명' ;	
 }
 
 extend Mm_Material_Desc_His with util.Managed;
