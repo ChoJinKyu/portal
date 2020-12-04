@@ -1,6 +1,6 @@
 using { dp as moldSpec } from '../../../../db/cds/dp/moldMgt/DP_MD_SPEC-model';
 using { dp as moldSchedule } from '../../../../db/cds/dp/moldMgt/DP_MD_SCHEDULE-model';
-using { dp as moldMst } from '../../../../db/cds/dp/moldMgt/DP_MOLD_MST-model';
+using { dp as moldMst } from '../../../../db/cds/dp/moldMgt/DP_MD_MST-model';
 using { dp as moldMstSpecView } from '../../../../db/cds/dp/moldMgt/DP_MD_MST_SPEC_VIEW-model';
 
 using {cm as orgMapping} from '../../../../db/cds/cm/purOrgMgr/CM_PUR_ORG_TYPE_MAPPING-model';
@@ -12,7 +12,7 @@ service DetailSpecEntryService {
 
     entity MoldSpec as projection on moldSpec.Md_Spec;
     entity MoldSchedule as projection on moldSchedule.Md_Schedule;
-    entity MoldMasters as projection on moldMst.Mold_Mst;
+    entity MoldMasters as projection on moldMst.Md_Mst;
     entity MoldMasterSpec as projection on moldMstSpecView.Md_Mst_Spec_View;
 
     view Divisions as
@@ -37,7 +37,7 @@ service DetailSpecEntryService {
 
     view Models as
     select distinct key a.tenant_id, key a.model
-    from moldMst.Mold_Mst a
+    from moldMst.Md_Mst a
     where a.model is not null;
 
     view PartNumbers as
