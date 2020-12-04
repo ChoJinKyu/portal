@@ -32,33 +32,43 @@
         <!-- DynamicPage Header -->
         <f:header>
             <f:DynamicPageHeader pinnable="true">
-
                 <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="Chain:" labelFor="searchChain" required="true"></Label>
-                            <ComboBox id="searchChain" width="100%" selectedKey="CM" items="{
-                                    path: 'util>/CodeDetails',
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},                                      
-                                        {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
-                                    ]
-                                }">
-                                <items>
-                                    <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
-                                </items>
-                            </ComboBox>
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
-                            </layoutData>
+                          <Label text="테넌트" labelFor="searchTenantCombo" required="true"></Label>
+                          <ComboBox
+                            id="searchTenantCombo"
+                            width="100%"
+                            items="{
+                              path: 'org>/Org_Tenant',
+                              filters: [
+                              ]
+                            }">
+                            <items>
+                              <core:Item key="{org>tenant_id}" text="{org>tenant_id} : {org>tenant_name}" />
+                            </items>
+                          </ComboBox>
                         </VBox>
+
                         <VBox>
-                            <Label text="Keyword:" labelFor="searchKeyword"></Label>
-                            <Input id="searchKeyword" placeholder="Keywords of the Code or Content"></Input>
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
-                            </layoutData>
+                          <Label text="국가" labelFor="searchCountryCombo"></Label>
+                          <ComboBox
+                            id="searchCountryCombo"
+                            width="100%"
+                            items="{
+                              path: 'country>/Country',
+                              filters: [
+                              ]
+                            }">
+                            <items>
+                              <core:Item key="{country>country_code}" text="{country>country_code} : {country>iso_code}" value="{country>country_code}"/>
+                            </items>
+                          </ComboBox>
+                          <layoutData>
+                              <layout:GridData span="XL2 L3 M6 S12" />
+                          </layoutData>
                         </VBox>
+
                         <VBox>
                             <Label text="Usage:" labelFor="searchUsageSegmentButton"></Label>
                             <SegmentedButton id="searchUsageSegmentButton" selectedKey="all" class="sapUiSmallMarginBottom" width="100%" >
