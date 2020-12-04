@@ -55,7 +55,7 @@ entity Md_Mst_View {
         activity_code                   : String(30)            @title:'활동코드';
         accounting_department_code      : String(30)            @title:'회계부서코드';
         acq_department_code             : String(30)            @title:'취득부서코드';
-        production_vendor_id            : String(100)           @title:'제작협력사ID';
+        production_supplier_code            : String(100)           @title:'제작협력사ID';
         remark                          : String(3000)          @title:'비고';
         develope_request_code           : String(30)            @title:'개발요청코드';
         develope_request_empno          : String(50)            @title:'개발요청사번';

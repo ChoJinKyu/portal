@@ -4,8 +4,8 @@ namespace dp;
 entity Md_Approvals_View {
 
     key approval_number     : String(50)  not null  @title:'품의번호';
-        approval_type_code  : String(30)  not null  @title:'품의유형코드';
-        approval_title      : String(300) not null  @title:'품의제목';
+        approval_type_code  : String(30)            @title:'품의유형코드';
+        approval_title      : String(300)           @title:'품의제목';
         company_name        : String;                
         org_name            : String;               
         requestor_empno     : String(30)            @title:'요청자사번';

@@ -57,7 +57,7 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Date" labelFor="searchDateS" required="true"></Label>
+                                <Label text="{I18N>/DATE}" labelFor="searchDateS" required="true"></Label>
                                 <DateRangeSelection id="searchDateS" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD"/>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
@@ -105,7 +105,7 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Date" labelFor="searchDateE" required="true"></Label>
+                                <Label text="{I18N>/DATE}" labelFor="searchDateE" required="true"></Label>
                                 <DateRangeSelection id="searchDateE" valueFormat = "yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD"/>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
@@ -116,7 +116,7 @@
                     </form:SimpleForm>
                 </f:expandedContent>
                 <f:actions>
-                    <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onPageSearchButtonPress" />
+                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
                 </f:actions>
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -130,7 +130,7 @@
                 <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="Model" labelFor="searchModel"></Label>
+                            <Label text="{I18N>/MODEL}" labelFor="searchModel"></Label>
                             <Input id="searchModel" 
                                     showValueHelp="true"  
                                     valueHelpRequest=".onValueHelpRequested"
@@ -173,7 +173,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Status" labelFor="searchStatus"></Label>
+                            <Label text="{I18N>/STATUS}" labelFor="searchStatus"></Label>
                             <SegmentedButton id="searchStatus" selectedKey="" class="sapUiSmallMarginBottom" width="100%">
                                 <items>
                                     <SegmentedButtonItem text="All" key=""/>
@@ -204,7 +204,7 @@
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="List ({= ${list>/MoldMasterSpec}.length || 0})" level="H2"/>
+                            <Title text="{I18N>/LIST} ({= ${list>/MoldMasterSpec}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <!-- <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
                             <ToolbarSeparator/> -->
@@ -223,7 +223,7 @@
                             <Text text="LG Division"/>
                         </Column>
                         <Column>
-                            <Text text="Model" />
+                            <Text text="{I18N>/MODEL}" />
                         </Column>
                         <Column>
                             <Text text="Mold Part No" />
@@ -232,19 +232,19 @@
                             <Text text="Mold Seq" />
                         </Column>
                         <Column minScreenWidth="Desktop" demandPopin="false">
-                            <Text text="Description" />
+                            <Text text="{I18N>/DESCRIPTION}" />
                         </Column>
                         <Column minScreenWidth="Desktop" demandPopin="true">
-                            <Text text="Status" />
+                            <Text text="{I18N>/STATUS}" />
                         </Column>
                         <Column minScreenWidth="Desktop" demandPopin="true">
                             <Text text="Item Type" />
                         </Column>
                         <Column minScreenWidth="Desktop" demandPopin="false">
-                            <Text text="User" />
+                            <Text text="[USER]" />
                         </Column>
                         <Column minScreenWidth="Desktop" demandPopin="false">
-                            <Text text="Date" />
+                            <Text text="{I18N>/DATE}" />
                         </Column>
                         <Column minScreenWidth="Desktop" demandPopin="false">
                             <Text text="Family Part No" />

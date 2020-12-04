@@ -6,6 +6,7 @@
     xmlns:uxap="sap.uxap" >
 <VBox class="sapUiSmallMargin">
     <form:SimpleForm 
+        id="frmPress"
         editable="false"
         layout="ColumnLayout"
         columnsM="2"
@@ -13,13 +14,13 @@
         columnsXL="3" >
         <form:content>
 
-                <Label text="Mold Test"/>
+                <Label text="Mold Test" required="true"/>
                 <Switch state="{spec>/inspection_flag}" customTextOn="Yes" customTextOff="No"  />
                 <Label text="Order Qty"/>
                 <Input value="{spec>/order_qty}"/>
-                <Label text="Demand Life"/>
-                <Input type="Number" value="{path: 'spec>/request_life_shot_count', type: 'sap.ui.model.type.Integer'}"/>
-                <Label text="Size"/>
+                <Label text="Demand Life" required="true"/>
+                <Input type="Number" value="{path: 'spec>/request_life_shot_count', type: 'sap.ui.model.type.Integer'}" required="true"/>
+                <Label text="Size" required="true"/>
                 <Select   width="100%"
                             selectedKey="{spec>/mold_size}"
                             items="{
@@ -30,14 +31,15 @@
                                         ]
                                     }"
                             editable="true"
+                            required="true"
                 >
                     <core:Item key="{util>code}" text="{util>code_description}" />
                 </Select>
              <!-- </VBox>            
             <VBox > -->
-                <Label text="Assembly Approval"/> 
+                <Label text="Assembly Approval" required="true"/> 
                 <Switch state="{spec>/assembly_approval_flag}" customTextOn="Yes" customTextOff="No"  />
-                <Label text="Mold Structure"/>
+                <Label text="Mold Structure" required="true"/>
                 <Select   width="100%"
                             selectedKey="{spec>/die_form}"
                             items="{
@@ -48,6 +50,7 @@
                                         ]
                                     }"
                             editable="true"
+                            required="true"
                 >
                     <core:Item key="{util>code}" text="{util>code_description}" />
                 </Select>
@@ -59,10 +62,10 @@
 
             <!-- </VBox>            
             <VBox > -->
-                <Label text="Use Material"/> 
-                <Input value="{spec>/use_material_value}"/>
-                <Label text="Process Qty"/>
-                <Input value="{spec>/cavity_process_qty}"/>
+                <Label text="Use Material" required="true"/> 
+                <Input value="{spec>/use_material_value}" required="true"/>
+                <Label text="Process Qty" required="true"/>
+                <Input value="{spec>/cavity_process_qty}" required="true"/>
                 <Label text="Material Thickness"/>
                 <Input value="{spec>/press_material_thickness}"/>
                 <Label text="Material Size"/>
