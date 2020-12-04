@@ -82,10 +82,10 @@
         <Input value="{master>/floating_decpoint_index}"/>
 
         <core:Title text="Conversion" />
-		<Label text="Numerator"/>
-        <Input value="{master>/conversion_numerator}" editable="{midObjectView>/isAddedMode}"/>
-        <Label text="Denominator"/>
-        <Input value="{master>/conversion_denominator}" editable="{midObjectView>/isAddedMode}"/>
+		<Label text="Numerator" required="true"/>
+        <Input value="{master>/conversion_numerator}" editable="{midObjectView>/isAddedMode}" required="true"/>
+        <Label text="Denominator" required="true"/>
+        <Input value="{master>/conversion_denominator}" editable="{midObjectView>/isAddedMode}" required="true"/>
         <Label text="Index"/>
         <Input value="{master>/conversion_index}" editable="{midObjectView>/isAddedMode}"/>
         <Label text="Rate"/>
