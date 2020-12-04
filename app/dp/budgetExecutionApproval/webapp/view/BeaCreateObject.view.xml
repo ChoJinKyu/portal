@@ -108,7 +108,7 @@
 
 		<uxap:sections id="pss">
 
-			<uxap:ObjectPageSection  id="pageSectionMain" titleUppercase="true" title="General Info">
+			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="true" title="General Info">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
                         <layout:VerticalLayout class="sapUiSmallMarginBeginEnd"> 
@@ -219,7 +219,7 @@
                                 <OverflowToolbar>
                                     <ToolbarSpacer/>
                                     <!-- Add the Personalization button -->
-                                    <Button id="btnPsAdd"     type="Transparent" text="Add" press=".handleTableSelectDialogPress" >
+                                    <Button id="btnPsAdd"  type="Transparent" text="Add" press=".handleTableSelectDialogPress" >
                                     	<customData>
                                             <core:CustomData key="multi" value="true" />
                                         </customData>
@@ -301,17 +301,24 @@
                                         </table:template>
                                     </table:Column>  
                                     <table:Column id="c_bookCurrency" width="10em" hAlign="Center">
-                                        <Label text="Book"/>           
-                                        <Label text="Currency"/>           
+                                        <Label text="Book Currency"/>           
+                                           
                                         <table:template>
                                            <Text  text="{appDetail>book_currency_code}"/>
+                                        </table:template>
+                                    </table:Column>  
+                                    <table:Column id="c_budget_amount" width="10em" hAlign="Center">
+                                        <Label text="Budget Amount"/>           
+                                   
+                                        <table:template>
+                                           <Input  value="{appDetail>budget_amount}"/>
                                         </table:template>
                                     </table:Column>  
 
                                     <table:Column id="c_assetType" width="10em" hAlign="Center">
                                         <Label text="Asset Type"/>           
                                         <table:template>
-                                            <ComboBox selectedKey="{appDetail>mold_production_type_code}"
+                                            <ComboBox selectedKey="{appDetail>asset_type_code}"
                                                 items="{ path : 'util>/CodeDetails',
                                                             filters : [
                                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
@@ -331,16 +338,16 @@
                                     </table:Column>         
                            
                                     <table:Column id="c_expectedSalesDate" width="10em" hAlign="Center">
-                                        <Label text="Expected"/>           
-                                        <Label text="Sales Date"/>           
+                                        <Label text="Expected Sales Date"/>           
+                                             
                                         <table:template>
                                              <!-- 임시 컬럼명 -->
                                              <DatePicker value="{appDetail>budget_exrate_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
                                         </table:template>
                                     </table:Column>                                     
                                     <table:Column id="c_expectedDisposalDate" width="10em" hAlign="Center">
-                                        <Label text="Expected"/>           
-                                        <Label text="Disposal Date"/>           
+                                        <Label text="Expected Disposal Date"/>           
+                                      
                                         <table:template>
                                              <!-- 임시 컬럼명 -->
                                              <DatePicker value="{appDetail>inspection_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>

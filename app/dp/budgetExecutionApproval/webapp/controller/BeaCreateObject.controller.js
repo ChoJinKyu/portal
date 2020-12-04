@@ -59,10 +59,12 @@ sap.ui.define([
             this.getView().setModel(new ManagedModel(), "appMaster");
             this.getView().setModel(new ManagedListModel(), "appDetail");
             this.getView().setModel(new ManagedListModel(), "moldList");
+            this.getView().setModel(new ManagedListModel(), "MoldMasters");
 
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("appMaster"));
             oTransactionManager.addDataModel(this.getModel("appDetail"));
+            oTransactionManager.addDataModel(this.getModel("MoldMasters"));
 
             this.getView().setModel(new ManagedListModel(), "appList"); // apporval list 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
@@ -129,7 +131,6 @@ sap.ui.define([
              }, true)
         },
 
-
 		/**
 		 * Event handler for page edit button press
 		 * @public
@@ -137,7 +138,6 @@ sap.ui.define([
         onPageEditButtonPress: function () {
             this._toEditMode();
         },
-
 
 		/**
 		 * Event handler for saving page changes
@@ -264,14 +264,54 @@ sap.ui.define([
             var sResult = {};
             
             this._bindView("/ApprovalDetails", "appDetail", schFilter, function (oData) {
-  
+                
+                // 1. 결과 값 
+                 var appDetail = that.getModel("appDetail").getProperty("/ApprovalDetails");  
+
+                 that._bindView("/ItemBudgetExecution", "moldList", schFilter, function (oData) { 
+               
+                 var data = that.getModel('moldList').getProperty("/ItemBudgetExecution");
+                     for (var i = 0; i < appDetail.length; i++) {
+                         var fList = [];
+                         if (data[i].family_part_number_1) {
+                             fList.push(data[i].family_part_number_1);
+                         }
+                         if (data[i].family_part_number_2) {
+                             fList.push(data[i].family_part_number_2);
+                         }
+                         if (data[i].family_part_number_3) {
+                             fList.push(data[i].family_part_number_3);
+                         }
+                         if (data[i].family_part_number_4) {
+                             fList.push(data[i].family_part_number_4);
+                         }
+                         if (data[i].family_part_number_5) {
+                             fList.push(data[i].family_part_number_5);
+                         }
+                         data[i].family_part_number_1 = fList.join(",")
+                        
+                         appDetail[i].family_part_number_1 = data[i].family_part_number_1;
+                         appDetail[i].model = data[i].model;
+                         appDetail[i].part_number = data[i].part_number;
+                         appDetail[i].mold_sequence = data[i].mold_sequence;
+                         appDetail[i].spec_name = data[i].spec_name;
+                         appDetail[i].mold_item_type_code = data[i].mold_item_type_code;
+                         appDetail[i].mold_production_type_code = data[i].mold_production_type_code;
+                         appDetail[i].book_currency_code = data[i].book_currency_code;
+                         appDetail[i].budget_amount = data[i].budget_amount;
+                         appDetail[i].asset_type_code = data[i].asset_type_code;
+                         appDetail[i].budget_exrate_date = data[i].budget_exrate_date;
+                         appDetail[i].inspection_date = data[i].inspection_date;
+                     }
+
+                     console.log(" detail >>>> " , that.getModel("appDetail"))
+
+                     sResult = oData.results[0];
+                     that._createViewBindData(sResult); // comapny , plant 조회 
+                 });
+
             });
 
-            this._bindView("/ItemBudgetExecution", "moldList", schFilter, function (oData) {
-                sResult = oData.results[0];
-                that._createViewBindData(sResult); // comapny , plant 조회 
-            });
-            // mold_id 
             oTransactionManager.setServiceModel(this.getModel());
         },
 
@@ -311,7 +351,7 @@ sap.ui.define([
          */
         onPsDelRow: function () {
             var psTable = this.byId("psTable")
-                , psModel = this.getModel("createlist")
+                , psModel = this.getModel("appDetail")
                 , oSelected = psTable.getSelectedIndices()
                 ;
             if (oSelected.length > 0) {
@@ -585,6 +625,7 @@ sap.ui.define([
                 "book_currency_code": data.oData.book_currency_code,
                 "budget_amount": data.oData.budget_amount,
                 "mold_production_type_code": "" ,
+                "asset_type_code": "" ,
                 "family_part_number_1": "", 
                 "budget_exrate_date": "",
                 "inspection_date": "",
