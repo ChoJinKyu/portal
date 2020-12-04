@@ -40,6 +40,7 @@ service VpMappingService {
         and    map(sd.company_code, '*', sv.company_code, sd.company_code) = sv.company_code
         and    sd.org_code = sv.bizunit_code
         and    sd.supplier_code = sv.supplier_code
+        and    ifnull(sd.vendor_pool_mapping_use_flag, true) = true
         group by sv.language_cd,
                  sd.tenant_id,
                  sd.company_code,
