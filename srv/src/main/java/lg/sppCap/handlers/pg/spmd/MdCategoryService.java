@@ -117,7 +117,7 @@ public class MdCategoryService implements EventHandler {
 
             String cateCode = "";
             String charCode = "";
-            String charSerialNo = "";
+            int charSerialNo = 0;
             
             for (MdCategoryItem item : items) {
                                 
@@ -140,15 +140,24 @@ public class MdCategoryService implements EventHandler {
                         Connection conn = jdbc.getDataSource().getConnection();
 
                         // Item SPMD특성코드 생성 Function
-                        String v_sql_get_code_fun = "SELECT PG_SPMD_CHARACTER_CODE_FUNC(?) AS SPMD_CHARACTER_CODE FROM DUMMY";
+                        StringBuffer v_sql_get_code_fun = new StringBuffer();
+                        v_sql_get_code_fun.append("SELECT ")
+                            .append("   PG_SPMD_CHARACTER_CODE_FUNC(?) AS CHAR_CODE")
+                            .append("   , (SELECT IFNULL(MAX(SPMD_CHARACTER_SERIAL_NO), 0)+1 FROM PG_MD_CATEGORY_ITEM) AS CHAR_SERIAL_NO")
+                            .append(" FROM DUMMY");
                         
-                        PreparedStatement v_statement_select = conn.prepareStatement(v_sql_get_code_fun);
+                        PreparedStatement v_statement_select = conn.prepareStatement(v_sql_get_code_fun.toString());
                         v_statement_select.setObject(1, cateCode);
 
                         ResultSet rslt = v_statement_select.executeQuery();
 
-                        if(rslt.next()) charCode = rslt.getString("SPMD_CHARACTER_CODE");
+                        if(rslt.next()) {
+                            charCode = rslt.getString("CHAR_CODE");
+                            charSerialNo = rslt.getInt("CHAR_SERIAL_NO");
+                        }
                         
+                        log.info("###[LOG-10]=> ["+charCode+"] ["+charSerialNo+"] ["+new Long(charSerialNo)+"]");
+
                     } catch (SQLException sqlE) { 
                         sqlE.printStackTrace();
                         log.error("### ErrCode : "+sqlE.getErrorCode()+"###");
@@ -157,14 +166,10 @@ public class MdCategoryService implements EventHandler {
                 }
 
                 //charCode = item.getSpmdCharacterCode();
-
-                //charSerialNo = cateCode.substring(1)+""+charCode.substring(1);
-                charSerialNo = cateCode.substring(1)+""+getFillZero(String.valueOf(item.getSpmdCharacterSortSeq()), 3);
-
-                log.info("###[LOG-11]=> ["+charCode+"] ["+charSerialNo+"] ["+Long.valueOf(charSerialNo).longValue()+"]");
+                log.info("###[LOG-11]=> ["+charCode+"] ["+charSerialNo+"] ["+new Long(charSerialNo)+"]");
 
                 item.setSpmdCharacterCode(charCode);
-                item.setSpmdCharacterSerialNo(Long.valueOf(charSerialNo).longValue());
+                item.setSpmdCharacterSerialNo(new Long(charSerialNo));
 
             }
         }
