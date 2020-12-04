@@ -4,8 +4,8 @@ using { pg as partNoItemValue } from '../../../../db/cds/pg/spmd/PG_MD_PART_NO_I
 using { pg as vpItemMapping } from '../../../../db/cds/pg/spmd/PG_MD_VP_ITEM_MAPPING-model.cds';
 namespace pg;
 
-@cds.query.limit.default: 20
-@cds.query.limit.max: 100
+//@cds.query.limit.default: 20
+//@cds.query.limit.max: 100
 @path : '/pg.MdCategoryService'
 service MdCategoryService {
 
