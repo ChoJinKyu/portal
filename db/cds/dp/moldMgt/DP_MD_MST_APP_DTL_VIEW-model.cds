@@ -4,7 +4,7 @@ namespace dp;
 entity Md_Mst_App_Dtl_View {
 
     key approval_number                 : String(50)  not null  @title:'품의번호';
-    key mold_id                         : Integer     not null  @title:'금형ID';
+    key mold_id                         : String(100)  not null  @title:'금형ID';
         tenant_id                       : String(5)   not null  @title:'테넌트ID' ;	
         company_code                    : String(10)  not null  @title:'회사코드' ;	
         org_type_code                   : String(10)  not null  @title:'조직유형코드' ;	

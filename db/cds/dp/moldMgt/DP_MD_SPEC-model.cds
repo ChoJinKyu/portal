@@ -4,7 +4,7 @@ using util from '../../cm/util/util-model';
 
 entity Md_Spec {
 
-    key mold_id                       : Integer not null @title : '금형ID';
+    key mold_id                       : String(100) not null @title : '금형ID';
         use_material_value            : String(240)      @title : '사용재질값';
         inspection_flag               : Boolean          @title : '검사여부';
         assembly_approval_flag        : Boolean          @title : '조립승인여부';

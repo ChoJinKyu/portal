@@ -4,7 +4,7 @@ using util from '../../cm/util/util-model';
 
 entity Md_Schedule {
 
-    key mold_id                       : Integer @title : '금형ID';
+    key mold_id                       : String(100) @title : '금형ID';
     key mold_develope_date_type_code  : String(30)@title : '금형개발일자유형코드';
     drawing_agreement_date        : String(8) @title : '도면합의일자';
     drawing_confirmed_date        : String(8) @title : '도면확정일자';
