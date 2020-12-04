@@ -2,95 +2,93 @@
 	xmlns="sap.m"
 	xmlns:l="sap.ui.layout"
     xmlns:form="sap.ui.layout.form"
+    xmlns:richtexteditor="sap.ui.richtexteditor"
 	xmlns:core="sap.ui.core">
-	<form:SimpleForm id="midObjectForm1Show" editable="false">
-
-		<core:Title text="기본정보" />
-    <Label text="Chain" LabelFor="searchEChainCombo"/>
-		<ComboBox 
-      editable="false"
-      width="100%" 
-      selectedKey="{master>/chain_code}" 
-      required="true" 
-      items="{
-				path: 'util>/CodeDetails',
-				filters: [
-					{path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-					{path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
-				]
-			}">
-			<items>
-				<core:Item key="{util>code}" text="{util>code} : {util>code_description}" />
-			</items>
-		</ComboBox>
-    <Label text="테넌트" required="true"></Label>
-    <ComboBox
-      editable="false"
-      width="100%"
-      selectedKey="{master>/tenant_id}"
-      items="{
-        path: 'org>/Org_Tenant',
-        filters: [
-        ]
-      }">
-      <items>
-        <core:Item key="{org>tenant_id}" text="{org>tenant_id} : {org>tenant_name}" />
-      </items>
-    </ComboBox>
-		<core:Title text="" />
-		<!-- <Label text="From"/>
-		<DatePicker placeholder="Starts From" required="true" fieldGroupIds="notnull" value="{master>/start_date}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
-		<Label text="To"/>
-		<DatePicker placeholder="Ends To" required="true" fieldGroupIds="notnull" value="{master>/end_date}"  valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/> -->
-    <Label text="제어옵션코드"/>
-		<Input value="{
-			path: 'master>/control_option_code',
-			type: 'sap.ui.model.type.String',
-			constraints: {
-				maxLength: 30
-			}
-		}" required="true" editable="false"/>
-		<Label text="제어옵션명"/>
-		<Input value="{
-				path: 'master>/control_option_name',
-				type: 'sap.ui.model.type.String',
-				constraints: {
-				    maxLength: 240
-				}
-			}"
-      editable="false"
-      required="true"/>
-
-		<!-- <Label text="Code"/>
-		<Text text="{master>/control_option_code}"/>
-		<Label text="Chain"/>
-		<Text text="{master>/chain_code}"/>
-		<Label text="Name"/>
-		<Text text="{master>/control_option_name}"/>
-
-		<core:Title text="Effect" />
-		<Label text="From"/>
-		<Text text="{
-				path: 'master>/start_date',
-				formatter: '.dateFormatter.toDateTimeString'
-			}"/>
-		<Label text="To"/>
-		<Text text="{
-				path: 'master>/end_date',
-				formatter: '.dateFormatter.toDateTimeString'
-			}"/>
-
-		<core:Title text="Boundry" />
-		<Label text="Site"/>
-		<Text text="{path: 'master>/site_flag', formatter: '.formatter.toYesNo'}"></Text>
-		<Label text="Company"/>
-		<Text text="{path: 'master>/company_flag', formatter: '.formatter.toYesNo'}"></Text>
-		<Label text="Role"/>
-		<Text text="{path: 'master>/role_flag', formatter: '.formatter.toYesNo'}"></Text>
-		<Label text="Organization"/>
-		<Text text="{path: 'master>/organization_flag', formatter: '.formatter.toYesNo'}"></Text>
-		<Label text="User"/>
-		<Text text="{path: 'master>/user_flag', formatter: '.formatter.toYesNo'}"></Text> -->
-
+	<form:SimpleForm
+        maxContainerCols="2"
+        editable="true"
+        layout="ResponsiveGridLayout"
+        adjustLabelSpan="false"
+        labelSpanL="4"
+        labelSpanM="4"
+        emptySpanL="0"
+        emptySpanM="0"
+        columnsL="2"
+        columnsM="2">
+        <form:content>
+            <VBox>
+                <Label text="공고번호 :" required="true"/>
+                <Input editable="false"
+                    value="{
+                        path: 'master>/funding_notify_number',
+                        type: 'sap.ui.model.type.String'
+                    }"/>
+                <layoutData>
+                    <l:GridData span="XL4 L4 M6 S12" />
+                </layoutData>
+            </VBox>
+            <VBox>
+                <Label text="공고기간 :" required="true"/>
+                <DateRangeSelection 
+                    id="searchDate" 
+                    displayFormat="yyyy-MM-dd" 
+                    dateValue="{master>/funding_notify_start_date}"
+                    secondDateValue="{master>/funding_notify_end_date}"
+                    placeholder="YYYY-MM-DD - YYYY-MM-DD"
+                    editable="false"
+                    />
+                <layoutData>
+                    <l:GridData span="XL4 L4 M6 S12" />
+                </layoutData>
+            </VBox>
+            <VBox>
+                <Label text="신청마감일 :" required="true"/>
+                <DatePicker editable="false"
+                    value="{
+                        path:'master>/funding_appl_closing_date',
+                        type:'sap.ui.model.odata.type.DateTime',
+                        formatOptions: {
+                            pattern: 'yyyy-MM-dd'
+                        }
+                    }"/>
+                <layoutData>
+                    <l:GridData span="XL4 L4 M6 S12" />
+                </layoutData>
+            </VBox>
+            <VBox>
+                <Label text="제목 :" required="true"/>
+                <Input editable="false"
+                    value="{
+                        path: 'master>/funding_notify_title',
+                        type: 'sap.ui.model.type.String',
+                        constraints: {
+                            maxLength: 30
+                        }
+                    }"/>
+                <layoutData>
+                    <l:GridData span="XL12 L12 M12 S12" />
+                </layoutData>
+            </VBox>
+            
+            <VBox>
+                <Label text="내용 :" required="true"/>
+                <richtexteditor:RichTextEditor id="idrichtexteditorShow" editable="false"
+                    editorType="TinyMCE4"
+                    useLegacyTheme="false" 
+                    showGroupClipboard="false" 
+                    showGroupTextAlign="true" 
+                    showGroupStructure="true" 
+                    showGroupLink="true"  
+                    showGroupFont="false"
+                    value="{master>/funding_notify_contents}"
+                    width="100%"
+                    height="400px">
+                </richtexteditor:RichTextEditor>
+                <layoutData>
+                    <l:GridData span="XL12 L12 M12 S12" />
+                </layoutData>
+            </VBox>
+        </form:content>
+        
 	</form:SimpleForm>
 </core:FragmentDefinition>
