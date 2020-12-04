@@ -21,7 +21,7 @@ sap.ui.define([
     , MessageBox, MessageToast, UploadCollectionParameter, Device, syncStyleClass, ColumnListItem, Label, TransactionManager) {
     "use strict";
     /**
-     * @description 예산집행품의 Create 화면 
+     * @description 예산집행품의 Create, update 화면 
      * @author jinseon.lee
      * @date 2020.12.01
      */
@@ -58,13 +58,13 @@ sap.ui.define([
             this.getView().setModel(new ManagedListModel(), "plant");
             this.getView().setModel(new ManagedModel(), "appMaster");
             this.getView().setModel(new ManagedListModel(), "appDetail");
-            this.getView().setModel(new ManagedListModel(), "moldList");
-            this.getView().setModel(new ManagedListModel(), "MoldMasters");
+            this.setModel(new ManagedListModel(), "moldList");
+            // this.getView().setModel(new ManagedListModel(), "MoldMasters");
 
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("appMaster"));
             oTransactionManager.addDataModel(this.getModel("appDetail"));
-            oTransactionManager.addDataModel(this.getModel("MoldMasters"));
+            //  oTransactionManager.addDataModel(this.getModel("MoldMasters"));
 
             this.getView().setModel(new ManagedListModel(), "appList"); // apporval list 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
@@ -97,7 +97,7 @@ sap.ui.define([
                     });
 
                     that.getView().byId("idVerticalLayout").addContent(oRichTextEditor);
-                    oRichTextEditor.attachEvent("change", function(oEvent){
+                    oRichTextEditor.attachEvent("change", function (oEvent) {
                         that.getModel('appMaster').setProperty('/approval_contents', oEvent.getSource().getValue());
                     });
                 });
@@ -122,13 +122,13 @@ sap.ui.define([
                 } */
         },
 
-        onPageCancelButtonPress : function(oEvent){ 
-            var oModel = this.getModel("appMaster") 
-              , oData = oModel.oData;
+        onPageCancelButtonPress: function (oEvent) {
+            var oModel = this.getModel("appMaster")
+                , oData = oModel.oData;
 
-             this.getRouter().navTo("beaObject", {
-                 approval_number : oData.approval_number
-             }, true)
+            this.getRouter().navTo("beaObject", {
+                approval_number: oData.approval_number
+            }, true)
         },
 
 		/**
@@ -189,11 +189,11 @@ sap.ui.define([
 		 * @private
 		 */
         _onObjectMatched: function (oEvent) {
-           
+
             var oArgs = oEvent.getParameter("arguments");
             var mModel = this.getModel(mainViewName);
-            console.log("[ step ] _onObjectMatched args " , oArgs);
-            if (oArgs.approval_number) { 
+            console.log("[ step ] _onObjectMatched args ", oArgs);
+            if (oArgs.approval_number) {
                 this._onRoutedThisPage(oArgs);
                 this._onLoadApprovalRow();
             } else {
@@ -209,7 +209,7 @@ sap.ui.define([
          * @param {*} args : company , plant   
          */
         _createViewBindData: function (args) {
-            console.log("[ step ] _createViewBindData args " , args);
+            console.log("[ step ] _createViewBindData args ", args);
             /** 초기 데이터 조회 */
             var company_code = args.company_code, plant_code = (args.org_code == undefined ? args.plant_code : args.org_code);
             var appModel = this.getModel(mainViewName);
@@ -217,8 +217,8 @@ sap.ui.define([
                 company_code: company_code
                 , company_name: ""
                 , plant_code: plant_code
-                , plant_name: "" 
-                , editMode : args.org_code != undefined ? true : false 
+                , plant_name: ""
+                , editMode: args.org_code != undefined ? true : false
             });
 
             var oView = this.getView(),
@@ -250,65 +250,67 @@ sap.ui.define([
                     appModel.oData.plant_name = oData.results[0].plant_name;
                 }
             });
-      
+
         },
 
         _onRoutedThisPage: function (args) {
-            console.log("[step] _onRoutedThisPage args>>>> " , args);
+            console.log("[step] _onRoutedThisPage args>>>> ", args);
             var that = this;
-            this._bindView("/ApprovalMasters('" + args.approval_number + "')", "appMaster", [], function (oData) { 
+            this._bindView("/ApprovalMasters('" + args.approval_number + "')", "appMaster", [], function (oData) {
                 that.setRichEditor(oData.approval_contents);
-             });
+            });
             var schFilter = [new Filter("approval_number", FilterOperator.EQ, args.approval_number)];
 
             var sResult = {};
-            
+
             this._bindView("/ApprovalDetails", "appDetail", schFilter, function (oData) {
-                
+
                 // 1. 결과 값 
-                 var appDetail = that.getModel("appDetail").getProperty("/ApprovalDetails");  
 
-                 that._bindView("/ItemBudgetExecution", "moldList", schFilter, function (oData) { 
-               
-                 var data = that.getModel('moldList').getProperty("/ItemBudgetExecution");
-                     for (var i = 0; i < appDetail.length; i++) {
-                         var fList = [];
-                         if (data[i].family_part_number_1) {
-                             fList.push(data[i].family_part_number_1);
-                         }
-                         if (data[i].family_part_number_2) {
-                             fList.push(data[i].family_part_number_2);
-                         }
-                         if (data[i].family_part_number_3) {
-                             fList.push(data[i].family_part_number_3);
-                         }
-                         if (data[i].family_part_number_4) {
-                             fList.push(data[i].family_part_number_4);
-                         }
-                         if (data[i].family_part_number_5) {
-                             fList.push(data[i].family_part_number_5);
-                         }
-                         data[i].family_part_number_1 = fList.join(",")
-                        
-                         appDetail[i].family_part_number_1 = data[i].family_part_number_1;
-                         appDetail[i].model = data[i].model;
-                         appDetail[i].part_number = data[i].part_number;
-                         appDetail[i].mold_sequence = data[i].mold_sequence;
-                         appDetail[i].spec_name = data[i].spec_name;
-                         appDetail[i].mold_item_type_code = data[i].mold_item_type_code;
-                         appDetail[i].mold_production_type_code = data[i].mold_production_type_code;
-                         appDetail[i].book_currency_code = data[i].book_currency_code;
-                         appDetail[i].budget_amount = data[i].budget_amount;
-                         appDetail[i].asset_type_code = data[i].asset_type_code;
-                         appDetail[i].budget_exrate_date = data[i].budget_exrate_date;
-                         appDetail[i].inspection_date = data[i].inspection_date;
-                     }
+                  var appDetail = that.getModel("appDetail").getProperty("/ApprovalDetails");
 
-                     console.log(" detail >>>> " , that.getModel("appDetail"))
-
-                     sResult = oData.results[0];
-                     that._createViewBindData(sResult); // comapny , plant 조회 
-                 });
+                that._bindView("/ItemBudgetExecution", "moldList", schFilter, function (oData) {
+                      console.log(" detail11 >>>> ", that.getModel("appDetail"))
+                      var data = that.getModel('moldList').getProperty("/ItemBudgetExecution");
+                      for (var i = 0; i < appDetail.length; i++) {
+                          var fList = [];
+                          if (data[i].family_part_number_1) {
+                              fList.push(data[i].family_part_number_1);
+                          }
+                          if (data[i].family_part_number_2) {
+                              fList.push(data[i].family_part_number_2);
+                          }
+                          if (data[i].family_part_number_3) {
+                              fList.push(data[i].family_part_number_3);
+                          }
+                          if (data[i].family_part_number_4) {
+                              fList.push(data[i].family_part_number_4);
+                          }
+                          if (data[i].family_part_number_5) {
+                              fList.push(data[i].family_part_number_5);
+                          }
+                          data[i].family_part_number_1 = fList.join(",")
+                          appDetail[i].STATE_COL = 'U'
+                          appDetail[i].family_part_number_1 = data[i].family_part_number_1;
+                          appDetail[i].model = data[i].model;
+                          appDetail[i].part_number = data[i].part_number;
+                          appDetail[i].mold_sequence = data[i].mold_sequence;
+                          appDetail[i].spec_name = data[i].spec_name;
+                          appDetail[i].mold_item_type_code = data[i].mold_item_type_code;
+                          appDetail[i].mold_production_type_code = data[i].mold_production_type_code;
+                          appDetail[i].book_currency_code = data[i].book_currency_code;
+                          appDetail[i].budget_amount = data[i].budget_amount;
+                          appDetail[i].asset_type_code = data[i].asset_type_code;
+                          appDetail[i].budget_exrate_date = data[i].budget_exrate_date;
+                          appDetail[i].inspection_date = data[i].inspection_date;
+                      }
+  
+                      console.log(" detail >>>> ", that.getModel("appDetail"))
+                      that.getModel("appDetail").refresh();
+                      
+                    sResult = oData.results[0];
+                    that._createViewBindData(sResult); // comapny , plant 조회 
+                });
 
             });
 
@@ -508,11 +510,11 @@ sap.ui.define([
                 this._applyMoldSelection(aSearchFilters); // 로드하자마자 조회 
             }
         },
-         /**
-         * @description Mold Item Selection Search 조건 리턴  
-         * @param {*} oEvent 
-         */
-        _getSearchMoldSelection: function () { 
+        /**
+        * @description Mold Item Selection Search 조건 리턴  
+        * @param {*} oEvent 
+        */
+        _getSearchMoldSelection: function () {
             var aSearchFilters = [];
 
             var company = this.byId('MoldItemSearchCompany').mProperties.selectedKey;
@@ -557,7 +559,7 @@ sap.ui.define([
         /**
         * @description  Participating Supplier Fragment Apply 버튼 클릭시 
         */
-        onMoldItemSelectionApply: function (oEvent) { 
+        onMoldItemSelectionApply: function (oEvent) {
             console.log(" [step] Participating Supplier Fragment Apply 버튼 클릭시 ", oEvent);
 
             var oTable = this.byId("moldItemSelectTable");
@@ -566,32 +568,32 @@ sap.ui.define([
             aItems.forEach(function (oItem) {
                 console.log(" getSelectedItems >>>", oItem);
                 var famList = [];
-                if(oItem.getCells()[8].getText()){
+                if (oItem.getCells()[8].getText()) {
                     famList.push(oItem.getCells()[8].getText()); // family_part_number_1 
                 }
-                if(oItem.getCells()[9].getText()){
+                if (oItem.getCells()[9].getText()) {
                     famList.push(oItem.getCells()[9].getText()); // family_part_number_2 
                 }
-                if(oItem.getCells()[10].getText()){
+                if (oItem.getCells()[10].getText()) {
                     famList.push(oItem.getCells()[10].getText()); // family_part_number_3 
                 }
-                if(oItem.getCells()[11].getText()){
+                if (oItem.getCells()[11].getText()) {
                     famList.push(oItem.getCells()[11].getText()); // family_part_number_4 
                 }
-                if(oItem.getCells()[12].getText()){
+                if (oItem.getCells()[12].getText()) {
                     famList.push(oItem.getCells()[12].getText()); // family_part_number_5 
                 }
 
                 var obj = new JSONModel({
-                      mold_id: oItem.getCells()[0].getText()
+                    mold_id: Number(oItem.getCells()[0].getText())
                     , model: oItem.getCells()[1].getText()
                     , part_number: oItem.getCells()[2].getText()
                     , mold_sequence: oItem.getCells()[3].getText()
                     , spec_name: oItem.getCells()[4].getText()
                     , mold_item_type_code: oItem.getCells()[5].getSelectedKey()
                     , book_currency_code: oItem.getCells()[6].getText()
-                    , budget_amount: oItem.getCells()[7].getText() 
-                    , family_part_number_1 : famList.join(",")
+                    , budget_amount: oItem.getCells()[7].getText()
+                    , family_part_number_1: famList.join(",")
                 });
                 that._addPsTable(obj);
             });
@@ -604,7 +606,7 @@ sap.ui.define([
             var oTable = this.byId("moldItemSelectTable");
             var aItems = oTable.getSelectedItems();
             var oModel = this.getModel(mainViewName);
-            oModel.setData({ moldItemLength: aItems == undefined ? 0 : aItems.length });
+            // oModel.setData({ moldItemLength: aItems == undefined ? 0 : aItems.length });
         },
 
         /**
@@ -614,9 +616,9 @@ sap.ui.define([
         _addPsTable: function (data) {
             var oTable = this.byId("psTable"),
                 oModel = this.getModel("appDetail");
-          
-            oModel.addRecord({ 
-                "mold_id" : data.oData.mold_id,
+
+            oModel.addRecord({
+                "mold_id": data.oData.mold_id,
                 "model": data.oData.model,
                 "part_number": data.oData.part_number,
                 "mold_sequence": data.oData.mold_sequence,
@@ -624,12 +626,12 @@ sap.ui.define([
                 "mold_item_type_code": data.oData.mold_item_type_code,
                 "book_currency_code": data.oData.book_currency_code,
                 "budget_amount": data.oData.budget_amount,
-                "mold_production_type_code": "" ,
-                "asset_type_code": "" ,
-                "family_part_number_1": "", 
+                "mold_production_type_code": "",
+                "asset_type_code": "",
+                "family_part_number_1": "",
                 "budget_exrate_date": "",
                 "inspection_date": "",
-                }, "/ApprovalDetails");
+            }, "/ApprovalDetails");
         },
 
         /**
@@ -1032,6 +1034,14 @@ sap.ui.define([
          */
         onPageDraftButtonPress: function () {
             var oView = this.getView();
+ /**
+  *        oTransactionManager.addDataModel(this.getModel("appMaster"));
+            oTransactionManager.addDataModel(this.getModel("appDetail"));
+  */
+            console.log(" oTransactionManager ", oTransactionManager);
+            console.log(" appMaster ", this.getModel("appMaster"));
+            console.log(" appDetail ", this.getModel("appDetail"));
+
 
             MessageBox.confirm("Are you sure ?", {
                 title: "Comfirmation",

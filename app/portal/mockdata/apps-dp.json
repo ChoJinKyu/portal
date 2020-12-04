@@ -39,7 +39,12 @@
                     "name": "UOM Class",
                     "url": "../dp/uomClassMgr/webapp",
                     "component": "dp.uomClassMgr"
-                }               
+                },
+                {
+                    "name": "UOM Management",
+                    "url": "../dp/uomMgr/webapp",
+                    "component": "dp.uomMgr"
+                }
             ]
         },
         {

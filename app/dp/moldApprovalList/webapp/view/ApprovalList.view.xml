@@ -319,17 +319,14 @@
                             <cells>                  
                                 <CheckBox fieldGroupIds="{= ${list>approval_type_code}==='B'? 'checkBoxs':''}"  visible="{= ${list>approval_type_code}==='B'? true:false }" select=".onCheck" />       
                                 <ObjectIdentifier text="{list>approval_type_code}" />
-                                <ComboBox   id="export_domestic_type_code"
-                                            selectedKey="{list>approval_number}"
-                                            items="{
-                                                        path : 'util>/CodeDetails',
-                                                        filters : [
-                                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ED_TYPE'}
-                                                        ]
-                                                    }"
-                                            editable="{mode>/editFlag}" class="readonlyField" >
-                                    <core:Item key="{util>code}" text="{util>code_description}" />
+                                <ComboBox  
+                                        selectedKey="{list>approval_number}" 
+                                        items="{
+                                            path: '/Approvals',
+                                            sorter: { path: 'company_code'}
+                                        }"
+                                        >
+                                    <core:Item key="{list>company_code}" text="[{list>company_code}] {list>company_name}" />
                                 </ComboBox>
                                 <ObjectIdentifier text="{list>org_name}" />
                                 <ObjectIdentifier text="{list>approval_number}" />
