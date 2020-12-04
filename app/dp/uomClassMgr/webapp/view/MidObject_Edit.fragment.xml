@@ -32,8 +32,7 @@
                 type: 'sap.ui.model.type.String',
                 constraints: {
                     maxLength: 50
-                },
-                defalut
+                }                
             }" ></Input>		
         <Label text="Disable Date"/>        
         <DatePicker placeholder="Disable Date" value="{path: 'master>/disable_date',type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' }}"/>
