@@ -58,7 +58,7 @@ sap.ui.define([
             this.getView().setModel(new ManagedListModel(), "plant");
             this.getView().setModel(new ManagedModel(), "appMaster");
             this.getView().setModel(new ManagedListModel(), "appDetail");
-
+            this.getView().setModel(new ManagedListModel(), "moldList");
 
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("appMaster"));
@@ -191,11 +191,9 @@ sap.ui.define([
         _onObjectMatched: function (oEvent) {
            
             var oArgs = oEvent.getParameter("arguments");
-          
             var mModel = this.getModel(mainViewName);
- 
+            console.log("[ step ] _onObjectMatched args " , oArgs);
             if (oArgs.approval_number) { 
-   
                 this._onRoutedThisPage(oArgs);
                 this._onLoadApprovalRow();
             } else {
@@ -211,7 +209,7 @@ sap.ui.define([
          * @param {*} args : company , plant   
          */
         _createViewBindData: function (args) {
-       
+            console.log("[ step ] _createViewBindData args " , args);
             /** 초기 데이터 조회 */
             var company_code = args.company_code, plant_code = (args.org_code == undefined ? args.plant_code : args.org_code);
             var appModel = this.getModel(mainViewName);
@@ -256,7 +254,7 @@ sap.ui.define([
         },
 
         _onRoutedThisPage: function (args) {
-            console.log("args>>>> " , args);
+            console.log("[step] _onRoutedThisPage args>>>> " , args);
             var that = this;
             this._bindView("/ApprovalMasters('" + args.approval_number + "')", "appMaster", [], function (oData) { 
                 that.setRichEditor(oData.approval_contents);
@@ -266,9 +264,12 @@ sap.ui.define([
             var sResult = {};
             
             this._bindView("/ApprovalDetails", "appDetail", schFilter, function (oData) {
+  
+            });
+
+            this._bindView("/ItemBudgetExecution", "moldList", schFilter, function (oData) {
                 sResult = oData.results[0];
-                that._createViewBindData(sResult);
-                
+                that._createViewBindData(sResult); // comapny , plant 조회 
             });
             // mold_id 
             oTransactionManager.setServiceModel(this.getModel());
@@ -331,8 +332,6 @@ sap.ui.define([
                 MessageBox.error("삭제할 목록을 선택해주세요.");
             }
         },
-
-
         _oFragments: {},
         onCheck: function () { console.log("onCheck") },
 
@@ -423,10 +422,10 @@ sap.ui.define([
             oUploadCollection.setShowSeparators(oEvent.getParameters().selectedItem.getProperty("key"));
         },
         /**
-         * @description : Popup 창 : 품의서 Participating Supplier 항목의 Add 버튼 클릭
+         * @description : Popup 창 : 품의서 Item for Budget Execution 항목의 Add 버튼 클릭
          */
         handleTableSelectDialogPress: function (oEvent) {
-            console.group("handleTableSelectDialogPress");
+            console.log("[ step ] handleTableSelectDialogPress Item for Budget Execution 항목의 Add 버튼 클릭 ");
 
             var oView = this.getView();
             var oButton = oEvent.getSource();
@@ -444,7 +443,7 @@ sap.ui.define([
             var that = this;
             this._oDialogTableSelect.then(function (oDialog) {
                 oDialog.open();
-                that.byId("moldItemSelectionSearch").firePress();
+                that.byId("moldItemSelectionSearch").firePress(); // open 하자마자 조회 하여 보여줌 
 
             });
         },
@@ -463,21 +462,18 @@ sap.ui.define([
         onMoldItemSelection: function (oEvent) {
             console.log(oEvent.getParameters());
             if (oEvent.getParameters().refreshButtonPressed) {
-                // Search field's 'refresh' button has been pressed.
-                // This is visible if you select any master list item.
-                // In this case no new search is triggered, we only
-                // refresh the list binding.
                 this.onRefresh();
             } else {
                 var aSearchFilters = this._getSearchMoldSelection();
                 this._applyMoldSelection(aSearchFilters); // 로드하자마자 조회 
             }
         },
-        _getSearchMoldSelection: function () {
-
+         /**
+         * @description Mold Item Selection Search 조건 리턴  
+         * @param {*} oEvent 
+         */
+        _getSearchMoldSelection: function () { 
             var aSearchFilters = [];
-
-            console.log("this.byId('MoldItemSearchCompany') ", this.byId('MoldItemSearchCompany').mProperties.selectedKey);
 
             var company = this.byId('MoldItemSearchCompany').mProperties.selectedKey;
             var plant = this.byId('MoldItemSearchPlant').mProperties.selectedKey;
@@ -504,7 +500,7 @@ sap.ui.define([
          * @param {*} oEvent 
          */
         _applyMoldSelection: function (aSearchFilters) {
-            console.log(" aSearchFilters ", aSearchFilters);
+            console.log(" [step] Mold Item Selection Search Button Serch ", aSearchFilters);
             var oView = this.getView(),
                 oModel = this.getModel("MoldItemSelect");
             oView.setBusy(true);
@@ -521,12 +517,31 @@ sap.ui.define([
         /**
         * @description  Participating Supplier Fragment Apply 버튼 클릭시 
         */
-        onMoldItemSelectionApply: function (oEvent) {
+        onMoldItemSelectionApply: function (oEvent) { 
+            console.log(" [step] Participating Supplier Fragment Apply 버튼 클릭시 ", oEvent);
+
             var oTable = this.byId("moldItemSelectTable");
             var aItems = oTable.getSelectedItems();
             var that = this;
             aItems.forEach(function (oItem) {
-                console.log("oTem >>>", oItem);
+                console.log(" getSelectedItems >>>", oItem);
+                var famList = [];
+                if(oItem.getCells()[8].getText()){
+                    famList.push(oItem.getCells()[8].getText()); // family_part_number_1 
+                }
+                if(oItem.getCells()[9].getText()){
+                    famList.push(oItem.getCells()[9].getText()); // family_part_number_2 
+                }
+                if(oItem.getCells()[10].getText()){
+                    famList.push(oItem.getCells()[10].getText()); // family_part_number_3 
+                }
+                if(oItem.getCells()[11].getText()){
+                    famList.push(oItem.getCells()[11].getText()); // family_part_number_4 
+                }
+                if(oItem.getCells()[12].getText()){
+                    famList.push(oItem.getCells()[12].getText()); // family_part_number_5 
+                }
+
                 var obj = new JSONModel({
                       mold_id: oItem.getCells()[0].getText()
                     , model: oItem.getCells()[1].getText()
@@ -535,7 +550,8 @@ sap.ui.define([
                     , spec_name: oItem.getCells()[4].getText()
                     , mold_item_type_code: oItem.getCells()[5].getSelectedKey()
                     , book_currency_code: oItem.getCells()[6].getText()
-                    , budget_amount: oItem.getCells()[7].getText()
+                    , budget_amount: oItem.getCells()[7].getText() 
+                    , family_part_number_1 : famList.join(",")
                 });
                 that._addPsTable(obj);
             });
@@ -547,8 +563,8 @@ sap.ui.define([
         selectMoldItemChange: function (oEvent) {
             var oTable = this.byId("moldItemSelectTable");
             var aItems = oTable.getSelectedItems();
-            var appInfoModel = this.getModel(mainViewName);
-            appInfoModel.setData({ moldItemLength: aItems == undefined ? 0 : aItems.length });
+            var oModel = this.getModel(mainViewName);
+            oModel.setData({ moldItemLength: aItems == undefined ? 0 : aItems.length });
         },
 
         /**
@@ -567,7 +583,11 @@ sap.ui.define([
                 "spec_name": data.oData.spec_name,
                 "mold_item_type_code": data.oData.mold_item_type_code,
                 "book_currency_code": data.oData.book_currency_code,
-                "budget_amount": data.oData.budget_amount 
+                "budget_amount": data.oData.budget_amount,
+                "mold_production_type_code": "" ,
+                "family_part_number_1": "", 
+                "budget_exrate_date": "",
+                "inspection_date": "",
                 }, "/ApprovalDetails");
         },
 

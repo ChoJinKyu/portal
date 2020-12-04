@@ -282,7 +282,7 @@
                                     <table:Column id="c_itemType" width="10em" hAlign="Center">
                                         <Label text="Item Type"/>           
                                         <table:template>
-                                            <ComboBox selectedKey="{appDetail>mold_type_code}" 
+                                            <ComboBox selectedKey="{appDetail>mold_production_type_code}" 
                                                 editable="false"
                                                 items="{ path : 'util>/CodeDetails',
                                                             filters : [
@@ -295,7 +295,13 @@
                                             </ComboBox>
                                         </table:template>
                                     </table:Column>  
-
+                                  <table:Column id="c_bookCurrency" width="10em" hAlign="Center">
+                                        <Label text="Book"/>           
+                                        <Label text="Currency"/>           
+                                        <table:template>
+                                           <Text  text="{appDetail>book_currency_code}"/>
+                                        </table:template>
+                                    </table:Column>  
                                     <table:Column id="c_assetType" width="10em" hAlign="Center">
                                         <Label text="Asset Type"/>           
                                         <table:template>
