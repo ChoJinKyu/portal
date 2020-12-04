@@ -171,13 +171,13 @@
                                     showValueHelp="true"  
                                     valueHelpRequest=".onValueHelpRequested"
                                     suggestionItems="{
-                                        path: 'mold>/Models',
+                                        path: '/Models',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                         ],
                                         sorter: { path: 'model' }
                             }">
-                                <core:Item key="{mold>model}" text="{mold>model}" />
+                                <core:Item key="{model}" text="{model}" />
                             </Input>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
@@ -189,13 +189,13 @@
                                     showValueHelp="true"  
                                     valueHelpRequest=".onValueHelpRequested"
                                     suggestionItems="{
-                                        path: 'mold>/PartNumbers',
+                                        path: '/PartNumbers',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                         ],
                                         sorter: { path: 'part_number' }
                             }">
-                                <core:Item key="{mold>part_number}" text="{mold>part_number}" />
+                                <core:Item key="{part_number}" text="{part_number}" />
                             </Input>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
@@ -210,12 +210,18 @@
                         </VBox>
                         <VBox>
                             <Label text="Requester" labelFor="searchRequester"></Label>
-                            <MultiInput id="searchRequester" valueHelpOnly="true" width="100%" valueHelpRequest=".approvalDialogOpen">
-                                <customData>
-                                    <core:CustomData key="multi" value="true" />
-                                    <core:CustomData key="confirmButtonText" value="Apply" />
-                                </customData>
-                            </MultiInput>
+                            <Input id="searchRequester" 
+                                    showValueHelp="true"  
+                                    valueHelpRequest=".onValueHelpRequested"
+                                    suggestionItems="{
+                                        path: '/CreateUsers',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                        ],
+                                        sorter: { path: 'create_user_id' }
+                            }">
+                                <core:Item key="{create_user_id}" text="{create_user_id}" />
+                            </Input>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -226,9 +232,9 @@
                                 <items>
                                     <SegmentedButtonItem text="All" key="" />
                                     <SegmentedButtonItem text="Draft" key="D" width="5em" />
-                                    <SegmentedButtonItem text="In-Appr" key="D" width="5em" />
-                                    <SegmentedButtonItem text="Apprvd" key="D" width="5em" />
-                                    <SegmentedButtonItem text="Rejected" key="D" width="5em" />
+                                    <SegmentedButtonItem text="In-Appr" key="I" width="5em" />
+                                    <SegmentedButtonItem text="Apprvd" key="A" width="5em" />
+                                    <SegmentedButtonItem text="Rejected" key="F" width="5em" />
                                 </items>
                             </SegmentedButton>
                             <layoutData>

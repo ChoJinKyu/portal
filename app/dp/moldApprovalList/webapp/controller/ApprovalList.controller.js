@@ -309,12 +309,12 @@ sap.ui.define([
                     "cols": [
                         {
                             "label": "Model",
-                            "template": "mold>model"
+                            "template": "model"
                         }
                     ]
                 });
 
-                path = 'mold>/Models';
+                path = '/Models';
                 
                 this._oValueHelpDialog.setTitle('Model');
                 this._oValueHelpDialog.setKey('model');
@@ -328,25 +328,48 @@ sap.ui.define([
                     "cols": [
                         {
                             "label": "Part No",
-                            "template": "mold>part_number"
+                            "template": "part_number"
                         },
                         {
                             "label": "Item Type",
-                            "template": "mold>mold_item_type_name"
+                            "template": "mold_item_type_name"
                         },
                         {
                             "label": "Description",
-                            "template": "mold>spec_name"
+                            "template": "mspec_name"
                         }
                     ]
                 });
 
-                path = 'mold>/PartNumbers';
+                path = '/PartNumbers';
 
                 this._oValueHelpDialog.setTitle('Part No');
                 this._oValueHelpDialog.setKey('part_number');
                 this._oValueHelpDialog.setDescriptionKey('spec_name');
+
+            }else if(oEvent.getSource().sId.indexOf("searchRequester") > -1){
+
+                this._oInputModel = this.getView().byId("searchRequester");
+
+                this.oColModel = new JSONModel({
+                    "cols": [
+                        {
+                            "label": "Name",
+                            "template": "create_user_name"
+                        },
+                        {
+                            "label": "ID",
+                            "template": "create_user_id"
+                        }
+                    ]
+                });
+
+                path = '/CreateUsers';
+                this._oValueHelpDialog.setTitle('Requester');
+                this._oValueHelpDialog.setKey('create_user_id');
+                this._oValueHelpDialog.setDescriptionKey('create_user_id');
             }
+
 
             var aCols = this.oColModel.getData().cols;
 
@@ -622,17 +645,16 @@ sap.ui.define([
             var sSubject = this.getView().byId("searchSubject").getValue().trim();
 			var sModel = this.getView().byId("searchModel").getValue().trim();
             var	sPart = this.getView().byId("searchPart").getValue().trim();
+            var	sRequester = this.getView().byId("searchRequester").getValue().trim();
             var	sStatus = this.getView().byId("searchStatus").getSelectedKey();
 
 
             var aSearchFilters = [];
-            console.log(sSubject);
-            console.log(sCategory);
 
             if(sCategory.length > 0){
                 var _tempFilters = [];
 
-                aCompany.forEach(function(item, idx, arr){
+                sCategory.forEach(function(item, idx, arr){
                     console.log(item.mProperties.key)
                     _tempFilters.push(new Filter("approval_type_code", FilterOperator.EQ, item.mProperties.key ));
                 });
@@ -707,12 +729,16 @@ sap.ui.define([
 				aSearchFilters.push(new Filter("tolower(part_number)", FilterOperator.Contains, "'"+sPart.toLowerCase()+"'"));
             }
 
+            if (sRequester) {
+				aSearchFilters.push(new Filter("tolower(requestor_empno)", FilterOperator.Contains, "'"+sRequester.toLowerCase()+"'"));
+            }
+
             if (sSubject) {
 				aSearchFilters.push(new Filter("tolower(approval_title)", FilterOperator.Contains, "'"+sSubject.toLowerCase()+"'"));
             }
             
             if (sStatus) {
-				aSearchFilters.push(new Filter("mold_spec_status_code", FilterOperator.EQ, sStatus));
+				aSearchFilters.push(new Filter("approve_status_code", FilterOperator.EQ, sStatus));
             }
             
 			return aSearchFilters;
