@@ -76,10 +76,11 @@ sap.ui.define([
                 mIMaterialPriceManagementView: "/MIMaterialPriceManagementView",  // midList MIMaterialPriceManagementView
                 orgTenantView: "/OrgTenantView", //관리조직 View
                 currencyUnitView : "/CurrencyUnitView", //통화단위 View
-                mIMaterialCodeList : "/MIMaterialCodeList", //자재코드 View
+                mIMaterialCodeList : "/MIMaterialCodeList", //자재코드 View(검색)
                 unitOfMeasureView : "/UnitOfMeasureView", //수량단위 View
                 enrollmentMaterialView : "/EnrollmentMaterialView", //서비스 안됨 자재코드  등록View
                 enrollmentSupplierView : "/EnrollmentSupplierView", //공급업체  등록View
+                mIMaterialCostInformationView : "/MIMaterialCostInformationView" //시황자재>가격정보 검색 리스트
             },
             jsonTestData : {
                 values : [{
@@ -544,6 +545,25 @@ sap.ui.define([
                     }
                 }
             });
+
+            //시황자재 선택시 사용되는 리스트  
+            // sServiceUrl = this._m.serviceName.orgTenantView;
+            // var bFilters = [
+            //     new sap.ui.model.Filter("tenant_id", sap.ui.model.FilterOperator.EQ, this._m.filter.tenant_id)
+            // ];
+            // oModel.read(sServiceUrl, {
+            //     async: false,
+            //     filters: bFilters,
+            //     success: function (rData, reponse) {
+
+            //         console.log("json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
+            //         var oData = reponse.data.results[0];
+
+            //         if(oData.length>0){
+            //             oUiData.setProperty("/tenant_name", reponse.data.results[0].tenant_name);
+            //         }
+            //     }
+            // });
 
             this.getView().setBusy(false);
             
@@ -1432,6 +1452,134 @@ sap.ui.define([
                 actions: [MessageBox.Action.OK],
                 styleClass: "sapUiSizeCompact"
             });
+        },
+
+        _findFragmentControlId : function (fragmentID, controlID) {
+            return sap.ui.core.Fragment.byId(fragmentID, controlID);
+        },
+        /**
+         * Fragment  ============================================================ 
+         */
+
+        /**
+         * 시황자재 선택 자재 이름 및 코드 검색
+         * @param {Event} oEvent 
+         */
+        onMaterialDetailFilter : function (oEvent) {
+            console.log("onMaterialDetailFilter");
+
+            var oModel = this.getOwnerComponent().getModel(),
+                aFilter = [],
+                that = this,
+                searchField_code = this._findFragmentControlId(this._m.fragementId.materialDetail, "searchField_code").getValue(),
+                searchField_category = this._findFragmentControlId(this._m.fragementId.materialDetail, "searchField_category").getValue(),
+                oTable = this._findFragmentControlId(this._m.fragementId.materialDetail, "leftTable");
+                
+            //var sQuery = oEvent.getParameter("query");
+           
+            //하기 주석은 사용자 조직 과  자재 관리 마스터 권한에 따라 변경될수 있다. 
+            aFilter.push(new Filter("tenant_id", FilterOperator.Contains, this._m.filter.tenant_id));
+            aFilter.push(new Filter("company_code", FilterOperator.Contains, this._m.filter.company_code));
+            aFilter.push(new Filter("org_type_code", FilterOperator.Contains, this._m.filter.org_type_code));
+            aFilter.push(new Filter("org_code", FilterOperator.Contains, this._m.filter.org_code));
+
+            if(searchField_category.length>0){
+                aFilter.push(new Filter("mi_material_code", FilterOperator.Contains, searchField_code));
+            }
+            
+            if(searchField_category.length>0){
+                aFilter.push(new Filter("mi_material_code_name", FilterOperator.Contains, searchField_code));
+            }
+            
+            if(searchField_category.length>0){
+                aFilter.push(new Filter("mi_material_code", FilterOperator.Contains, searchField_category));
+            }
+
+            var sServiceUrl = this._m.serviceName.mIMaterialCodeList;
+            // var aFilters =  new Filter({                
+            //                     filters: [
+            //                         new Filter({
+            //                             path: 'mi_material_code',
+            //                             operator: FilterOperator.Contains,
+            //                             value1: searchField_code
+            //                         }),
+            //                         new Filter({
+            //                             path: 'mi_material_code_name',
+            //                             operator: FilterOperator.Contains,
+            //                             value1: searchField_code
+            //                         }),
+            //                         new Filter({
+            //                             path: 'category_name',
+            //                             operator: FilterOperator.Contains,
+            //                             value1: searchField_category
+            //                         })                                       
+            //                     ],
+            //                     and: false
+            // });
+
+            var mIMaterialCodeList = new JSONModel();
+            oModel.read(sServiceUrl, {
+                async: false,
+                filters: aFilter,
+                success: function (rData, reponse) {
+
+                    console.log( sServiceUrl + " json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
+                    mIMaterialCodeList.setData(reponse.data.results);
+                    that.getOwnerComponent().setModel(mIMaterialCodeList, "mIMaterialCodeList");
+                }
+            });
+
+        },
+
+        /**
+         * 시황자재 > 가격정보 선택
+         * @public
+         */
+        onSelectedLeftTableItem : function (oEvent) {
+            console.log("onSelectedLeftTableItem");
+
+            var oModel = this.getOwnerComponent().getModel(),
+                aFilter = [],
+                that = this,
+                oTable = this._findFragmentControlId(this._m.fragementId.materialDetail, "rightTable");
+
+                // var vEvnet = oEvent; 
+                // var oSelected = oTable.getSelectedContexts();
+                    
+                // var bSelect = false;
+                
+                // if(oSelected.length>0){
+                //     bSelect = true;
+                // }
+
+            var fCode = oEvent.oSource.getItems()[0].getCells()[0].mProperties.text;
+            var fName = oEvent.oSource.getItems()[0].getCells()[1].mProperties.text;
+            var fCategory = oEvent.oSource.getItems()[0].getCells()[2].mProperties.text;
+
+            //하기 주석은 사용자 조직 과  자재 관리 마스터 권한에 따라 변경될수 있다. 
+            aFilter.push(new Filter("tenant_id", FilterOperator.Contains, this._m.filter.tenant_id));
+            aFilter.push(new Filter("company_code", FilterOperator.Contains, this._m.filter.company_code));
+            aFilter.push(new Filter("org_type_code", FilterOperator.Contains, this._m.filter.org_type_code));
+            aFilter.push(new Filter("org_code", FilterOperator.Contains, this._m.filter.org_code));
+            
+            aFilter.push(new Filter("mi_material_code", FilterOperator.Contains, searchField_code));
+            aFilter.push(new Filter("mi_material_code_name", FilterOperator.Contains, searchField_code));
+            aFilter.push(new Filter("mi_material_code", FilterOperator.Contains, searchField_category));
+
+            var sServiceUrl = this._m.serviceName.mIMaterialCostInformationView;
+
+            var mIMaterialCodeList = new JSONModel();
+            oModel.read(sServiceUrl, {
+                async: false,
+                filters: aFilter,
+                success: function (rData, reponse) {
+
+                    console.log( sServiceUrl + " json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
+                    mIMaterialCodeList.setData(reponse.data.results);
+                    that.getOwnerComponent().setModel(mIMaterialCodeList, "mIMaterialCodeList");
+                }
+            });
         }
+
     });
 });

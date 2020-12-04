@@ -13,15 +13,16 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast", 
     "sap/m/UploadCollectionParameter",
-    "sap/ui/Device" // fileupload 
-    ,"sap/ui/core/syncStyleClass" 
-    , "sap/m/ColumnListItem" 
-    , "sap/m/Label"
+    "sap/ui/Device", // fileupload 
+    "sap/ui/core/syncStyleClass", 
+    "sap/m/ColumnListItem", 
+    "sap/m/Label"
 ], function (BaseController, JSONModel, History, ManagedModel, ManagedListModel, TransactionManager, RichTextEditor , DateFormatter, Filter, FilterOperator, Fragment
             , MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label) {
 	"use strict";
 
     var oTransactionManager;
+    var mainViewName = "poaCreateObjectView";
 
   return BaseController.extend("dp.orderApprovalLocal.controller.PoaCreateObject", {
 
@@ -43,10 +44,11 @@ sap.ui.define([
 			var oViewModel = new JSONModel({
 					busy : true,
 					delay : 0
-				});
-			this.getRouter().getRoute("poaCreateObject").attachPatternMatched(this._onObjectMatched, this);
-            this.setModel(oViewModel, "poaCreateObjectView");
+                });
 
+            this.setModel(oViewModel, mainViewName);
+			this.getRouter().getRoute("poaCreateObject").attachPatternMatched(this._onObjectMatched, this);
+            
             this.getView().setModel(new ManagedListModel(),"company");
             this.getView().setModel(new ManagedListModel(),"plant");
             this.getView().setModel(new ManagedListModel(),"createlist"); // Participating Supplier
@@ -66,9 +68,7 @@ sap.ui.define([
         /**
          * 폅집기 창 
          */
-        setRichEditor : function (){ 
-            var that = this,
-			sHtmlValue = ''
+        setRichEditor : function (sHtmlValue){ 
             sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
 				function (RTE, EditorType) {
 					var oRichTextEditor = new RTE("myRTE", {
@@ -85,8 +85,12 @@ sap.ui.define([
 						}
 					});
 
-					that.getView().byId("idVerticalLayout").addContent(oRichTextEditor);
-			});
+                    this.getView().byId("approvalContents").addContent(oRichTextEditor);
+                    
+                    oRichTextEditor.attachEvent("change", function(oEvent){
+                        this.getModel('appMaster').setProperty('/approval_contents', oEvent.getSource().getValue());
+                    });
+			}.bind(this));
         },
 
 		/* =========================================================== */
@@ -167,7 +171,7 @@ sap.ui.define([
 		 * @private
 		 */
 		_onObjectMatched : function (oEvent) { 
-            this.setRichEditor();
+            
 			var oArgs = oEvent.getParameter("arguments"); 
             this._createViewBindData(oArgs); 
             this._onLoadApprovalRow();
@@ -178,8 +182,8 @@ sap.ui.define([
          * @param {*} args : company , plant   
          */
         _createViewBindData : function(args){ 
-            var company_code = 'LGEKR' , plant_code = 'CCZ' ;
-            var appModel = this.getModel("poaCreateObjectView");
+            var company_code = 'LGEKR' , plant_code = 'CNZ' ;
+            var appModel = this.getModel(mainViewName);
             appModel.setData({ company_code : company_code 
                                 , company_name : "" 
                                 , plant_code : plant_code 
@@ -222,7 +226,7 @@ sap.ui.define([
         _onRoutedThisPage: function(args){
 			
             //this._sApprovalNo = args.approvalNo;
-            this._sApprovalNo = "308889-20B-00030";
+            this._sApprovalNo = "332424-20V-00097";
 			this._sMoldId = args.moldId;
 
 			if(args.approvalNo == "new"){
@@ -230,8 +234,8 @@ sap.ui.define([
 				
 			}else{
 				this._bindView("/ApprovalMasters('" + this._sApprovalNo + "')", "appMaster", [], function(oData){
-                    
-                });
+                    this.setRichEditor(oData.approval_contents);
+                }.bind(this));
 
                 var schFilter = [new Filter("approval_number", FilterOperator.EQ, this._sApprovalNo)];
                 this._bindView("/ApprovalDetails", "appDetail", schFilter, function(oData){
@@ -240,6 +244,7 @@ sap.ui.define([
             }
             
             oTransactionManager.setServiceModel(this.getModel());
+            
         },
         
         _bindView : function (sObjectPath, sModel, aFilter, callback) {
@@ -258,7 +263,7 @@ sap.ui.define([
 
 		_onBindingChange : function () {
 			var oView = this.getView(),
-				oViewModel = this.getModel("poaCreateObjectView"),
+				oViewModel = this.getModel(mainViewName),
 				oElementBinding = oView.getElementBinding();
 			// No data for the binding
 			if (!oElementBinding.getBoundContext()) {
@@ -270,11 +275,11 @@ sap.ui.define([
         /**
          * @description Participating Supplier 의 delete 버튼 누를시 
          */
-        onPsDelRow : function(){
-            var poItemTable = this.byId("poItemTable")
-                , psModel = this.getModel("createlist") 
-                , oSelected = poItemTable.getSelectedIndices()
-            ;
+        onPoItemDelRow : function(){
+            var oTable = this.byId("poItemTable"),
+                oModel = this.getModel("appDetail") ,
+                oSelected = oTable.getSelectedIndices().reverse();
+            
             if(oSelected.length > 0){
                 MessageBox.confirm("삭제 하시겠습니까?", {
                     title : "Comfirmation",
@@ -282,13 +287,13 @@ sap.ui.define([
                     onClose : function(sButton) {
                         if (sButton === MessageBox.Action.OK) {
                             oSelected.forEach(function (idx) {
-                                psModel.markRemoved(idx)
+                                oModel.markRemoved(idx)
                             });  
                         };
                     }.bind(this)
                 });
 
-                poItemTable.clearSelection();
+                oTable.clearSelection();
             }else{
                  MessageBox.error("삭제할 목록을 선택해주세요.");
             }
@@ -297,10 +302,10 @@ sap.ui.define([
          * @description Participating Supplier 의 Supplier Select 버튼 누를시 나오는 팝업 
          *              , 테이블의 row 가 선택되어 있지 않으면 supplier 세팅 안됨 
          */
-        onPsSupplier : function(){ 
+        /*onPsSupplier : function(){ 
             
             var poItemTable = this.byId("poItemTable")
-                , psModel = this.getModel("createlist") 
+                , psModel = this.getModel("appDetail") 
                 , oSelected = poItemTable.getSelectedIndices()
             ;
 
@@ -353,11 +358,11 @@ sap.ui.define([
             }else{
                 MessageBox.error("Participating Supplier 목록을 선택해주세요.");
             }
-        },
+        },*/
 	    onValueHelpOkPress: function (oEvent) { // row 에 데이터 세팅 
             var aTokens = oEvent.getParameter("tokens");
             var poItemTable = this.byId("poItemTable")
-                , psModel = this.getModel("createlist") 
+                , psModel = this.getModel("appDetail") 
                 , oSelected = poItemTable.getSelectedIndices()
             ;
             if(aTokens.length == 0){
@@ -377,7 +382,7 @@ sap.ui.define([
                     
                 });
 
-                poItemTable.getModel("createlist").refresh(true); 
+                poItemTable.getModel("appDetail").refresh(true); 
                 this._oSupplierDialog.close();
             }
          
@@ -480,10 +485,8 @@ sap.ui.define([
          * @description : Popup 창 : 품의서 Participating Supplier 항목의 Add 버튼 클릭
          */
         onPoItemAddRow : function (oEvent) {
-            console.group("onPoItemAddRow");   
-        
             var oView = this.getView();
-            var oButton = oEvent.getSource();
+            
 			if (!this._oDialogTableSelect) {
 				this._oDialogTableSelect = Fragment.load({ 
                     id: oView.getId(),
@@ -515,6 +518,7 @@ sap.ui.define([
             var that = this;
             aItems.forEach(function(oItem){   
                 var obj = new JSONModel({
+                    mold_id : oItem.getCells()[0].getText(),
                     model : oItem.getCells()[0].getText(),
                     moldPartNo : oItem.getCells()[1].getText(),
                     moldSequence : oItem.getCells()[2].getText(),
@@ -523,14 +527,9 @@ sap.ui.define([
                     bookCurrencyCode : oItem.getCells()[5].getText(),
                     budgetAmount : oItem.getCells()[6].getText()
                 });
-                // console.log(" nItem >>>>> getText 1 " ,  oItem.getCells()[0].getText());   
-                // console.log(" nItem >>>>> getText 2 " ,  oItem.getCells()[1].getText());   
-                // console.log(" nItem >>>>> getText 3 " ,  oItem.getCells()[2].getText());   
-                // console.log(" nItem >>>>> obj " ,  obj); 
+                
                 that._addMoldItemTable(obj);  
-                // oItem.getCells().forEach(function(nItem){ 
-                //      console.log(" nItem >>>>> getText " , nItem.getText());    
-                // });     
+                
             });
             this.onExit();
         },
@@ -540,7 +539,7 @@ sap.ui.define([
         selectMoldItemChange : function(oEvent){ 
             var oTable = this.byId("moldItemSelectTable");
             var aItems = oTable.getSelectedItems(); 
-            var appInfoModel = this.getModel("pssaCreateObjectView");
+            var appInfoModel = this.getModel(mainViewName);
             appInfoModel.setData({ moldItemLength : aItems == undefined ? 0 : aItems.length }); 
         },
 
@@ -549,18 +548,20 @@ sap.ui.define([
          * @param {*} data 
          */
         _addMoldItemTable : function (data){     
-            var oModel = this.getModel("createlist");
-                oModel.addRecord({
-                    "model": data.oData.model,
-                    "moldPartNo": data.oData.moldPartNo,
-                    "moldSequence" : data.oData.moldSequence,
-                    "specName" : data.oData.specName,
-                    "moldItemType" : data.oData.moldItemType,
-                    "bookCurrencyCode" : data.oData.bookCurrencyCode,
-                    "budgetAmount" : data.oData.budgetAmount,
-                    "orderSupplier" : "",
-                    "familyPartNumber1" : "",
-                });
+            var oModel = this.getModel("appDetail");
+
+            oModel.addRecord({
+                "mold_id" : data.oData.mold_id,
+                "model": data.oData.model,
+                "part_number": data.oData.moldPartNo,
+                "mold_sequence" : data.oData.moldSequence,
+                "spec_name" : data.oData.specName,
+                "mold_item_type_code" : data.oData.moldItemType,
+                "bookCurrencyCode" : data.oData.bookCurrencyCode,
+                "budgetAmount" : data.oData.budgetAmount,
+                "orderSupplier" : "",
+                "familyPartNumber1" : "",
+            });
         },
 
         /**
@@ -949,6 +950,28 @@ sap.ui.define([
 			MessageToast.show(messageText, {
 				width: "auto"
 			});
+        },
+        
+        onPageDraftButtonPress: function(){
+			var oView = this.getView();
+				
+			MessageBox.confirm("Are you sure ?", {
+				title : "Comfirmation",
+				initialFocus : sap.m.MessageBox.Action.CANCEL,
+				onClose : function(sButton) {
+					if (sButton === MessageBox.Action.OK) {
+                        oView.setBusy(true);
+                        
+						oTransactionManager.submit({
+							success: function(ok){
+								oView.setBusy(false);
+								MessageToast.show("Success to save.");
+							}
+						});
+					};
+				}
+			});
+
 		}
 
 	});

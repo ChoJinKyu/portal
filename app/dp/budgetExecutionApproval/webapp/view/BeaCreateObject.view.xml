@@ -56,7 +56,6 @@
                     <ObjectStatus
                         title="Approval No"
                         text="{=${beaCreateObjectView>/editMode}? ${appMaster>/approval_number}:''}"/>
-        
                     <ObjectStatus
                         title="Requester"
                         text="{=${beaCreateObjectView>/editMode}? ${appMaster>/requestor_empno}:''}"/>
@@ -69,7 +68,7 @@
 					<Label text="Status :"/>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
-                        text="New"
+                        text="{=${beaCreateObjectView>/editMode}?'Update':'New'}"
                         state="Error" />
 				</layout:VerticalLayout>
 
@@ -121,7 +120,7 @@
                                         labelFor="input"
                                         required="true"/>
                                     <Input
-                                        value=""
+                                        value="{=${beaCreateObjectView>/editMode}?${appMaster>/approval_title}:''}"
                                         visible="true"
                                         width="40em" 
                                         placeholder="Input data"
@@ -130,7 +129,9 @@
                                 </HBox>
                             <VBox>
                                 <Label text="Description" labelFor="input" required="true"></Label> 
-                                <layout:VerticalLayout id="idVerticalLayout" class="sapUiContentPadding" width="100%">
+                                <layout:VerticalLayout id="idVerticalLayout" class="sapUiContentPadding" width="100%" 
+                                    value="{=${beaCreateObjectView>/editMode}?${appMaster>/approval_contents}:''}">
+
                                 </layout:VerticalLayout>
                             </VBox>
                         </layout:VerticalLayout> 						
@@ -212,7 +213,7 @@
                                 selectionMode="MultiToggle"
                                 fixedColumnCount="4"
                                 visibleRowCountMode="Auto"
-                                rows="{appDetail>/ItemBudgetExecution}"
+                                rows="{appDetail>/ApprovalDetails}"
                                 >
                              <table:extension>
                                 <OverflowToolbar>
@@ -287,7 +288,7 @@
                                     <table:Column id="c_itemType" width="10em" hAlign="Center">
                                         <Label text="Item Type"/>           
                                         <table:template>
-                                            <ComboBox selectedKey="{appDetail>mold_type_code}"
+                                            <ComboBox selectedKey="{appDetail>mold_item_type_code}"
                                                 items="{ path : 'util>/CodeDetails',
                                                             filters : [
                                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
@@ -297,6 +298,13 @@
                                                 >  
                                                 <core:Item key="{util>code}" text="{util>code_description}" />
                                             </ComboBox>
+                                        </table:template>
+                                    </table:Column>  
+                                    <table:Column id="c_bookCurrency" width="10em" hAlign="Center">
+                                        <Label text="Book"/>           
+                                        <Label text="Currency"/>           
+                                        <table:template>
+                                           <Text  text="{appDetail>book_currency_code}"/>
                                         </table:template>
                                     </table:Column>  
 
@@ -489,9 +497,9 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
-				<Button type="Transparent" text="Draft" press=".onPageSaveButtonPress" />
-				<Button type="Transparent" text="Preview" press=".onPageSaveButtonPress" />
-				<Button type="Transparent" text="Cancel" press=".onPageCancelButtonPress" /> 
+				<Button type="Transparent" text="Draft" press=".onPageDraftButtonPress" />
+				<!-- <Button type="Transparent" text="Preview" press=".onPageSaveButtonPress" /> -->
+				<Button type="Transparent" text="Cancel" visible="{=${beaCreateObjectView>/editMode}?true:false}" press=".onPageCancelButtonPress" /> 
 				<Button type="Emphasized" text="Request" press=".onPageCancelEditButtonPress"/>
 			</OverflowToolbar>
 		</uxap:footer>

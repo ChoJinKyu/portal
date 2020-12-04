@@ -31,11 +31,11 @@ public class DevelopmentReceipt implements EventHandler {
         String         current         = sdf.format(new Date()).toString();
 
         for(MoldMasters moldMaster : moldMasters) {
-            moldMaster.setMoldReceiptFlag(true);
+            //moldMaster.setMoldReceiptFlag(true);
 
-            if(moldMaster.getReceivingReportDate() == null || "".equals(moldMaster.getReceivingReportDate())){
-                moldMaster.setReceivingReportDate(current);
-            }
+            //if(moldMaster.getReceivingReportDate() == null || "".equals(moldMaster.getReceivingReportDate())){
+            //    moldMaster.setReceivingReportDate(current);
+            //}
         }
 
     }
