@@ -26,7 +26,8 @@
                     <Button
                         id="buttonSave"
                         text="Save"
-                        press=".onMidUpdate"/>
+                        type="Emphasized"                        
+                        press=".onMidSave"/>
                 </OverflowToolbar>
             </footer>
         </Page>

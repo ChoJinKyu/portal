@@ -133,7 +133,9 @@
                
 			</beginButton>
             <endButton>
-             <Button text="Apply" press="onMaterialDetail_apply" />
+             <Button text="Apply" 
+             type="Emphasized"
+             press="onMaterialDetail_apply" />
             </endButton>
 	</Dialog>
 </core:FragmentDefinition>

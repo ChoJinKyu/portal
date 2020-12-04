@@ -158,7 +158,10 @@
                                                         <Label text="{midList>mi_material_code_name}" />                                          
                                                         <Label text="{midList>category_name}" />                                          
                                                         <Label text="{midList>reqm_quantity}" />                                          
-                                                        <Label text="{= ${midList>use_flag}===true?'예':'아니오'}"/>                                           
+                                                        <Label text="{
+                                                                path : 'midList>use_flag',
+                                                                formatter: '.formatter.toYesNo'
+                                                            }"/>                                           
                                                         <Label text="{midList>currency_unit}" />                                          
                                                         <Label text="{midList>reqm_quantity_unit}" />                                          
                                                         <Label text="{midList>exchange}" />                                          
