@@ -47,4 +47,4 @@ entity MI_Material_Code_Bom_Mngt {
         use_flag              : Boolean not null    @title : '사용여부';
 }
 
-extend MI_Material_Code_Bom_Mngt with util.Managed;	
+extend MI_Material_Code_Bom_Mngt with util.Managed;

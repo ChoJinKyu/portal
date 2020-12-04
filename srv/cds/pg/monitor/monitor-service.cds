@@ -83,8 +83,8 @@ service monitorService {
         where
             use_flag = 'true';
 
-    // Unit View: 사업부분
-    entity OrgUnit @(title : '사업부분 마스터 View') as
+    // Unit View: 사업본부
+    entity OrgUnit @(title : '사업본부 마스터 View') as
         select
             key tenant_id,
             key bizunit_code,
