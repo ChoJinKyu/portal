@@ -231,7 +231,7 @@
                 <Label text="Ejector-Pin"/> 
                 <Input type="Number" value="{path: 'spec>/spare_part_ejector_pin_count', type: 'sap.ui.model.type.Integer'}"/>
                 <Label text="Etc."/>
-                <Input value="{spec>/spare_part_etc_count}"/>
+                <Input type="Number" value="{path: 'spec>/spare_part_etc_count', type: 'sap.ui.model.type.Integer'}"/>
             <!-- </VBox> -->
         </form:content>
     </form:SimpleForm>
