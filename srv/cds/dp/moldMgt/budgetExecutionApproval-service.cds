@@ -13,7 +13,7 @@ service BudgetExecutionApprovalService {
 
     view ItemBudgetExecution as 
     select key dtl.approval_number  ,  
-            dtl.approval_type_code  ,
+            
             mst.tenant_id,
             mst.company_code,
             mst.org_type_code,
