@@ -118,6 +118,12 @@ sap.ui.define([
           error: reject
         })
       }).then(function (oData) {
+
+        // 검색조건 및 결과가 없는 경우 종료
+        if (!filters || filters.length <= 0 || !oData || !(oData.results) || oData.results.length <= 0) {
+          return oData;
+        }
+
         var predicates = oData.results
           .reduce(function (acc, e) {
             return [...acc, ...((e["path"]).split("/"))];
@@ -130,11 +136,6 @@ sap.ui.define([
               path: 'node_id', operator: FilterOperator.EQ, value1: e
             })];
           }, []);
-
-        // 검색결과가 없는 경우 종료
-        if (!filters || filters.length <= 0 || predicates.length <= 0) {
-          return oData;
-        }
 
         return new Promise(function (resolve, reject) {
           that._oTransactionModel.read(path, {
