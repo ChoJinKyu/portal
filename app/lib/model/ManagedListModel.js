@@ -143,6 +143,9 @@ sap.ui.define([
             success: resolve,
             error: reject
           })
+        }).then(function (oData) {
+          that.setData(oData, path, false);
+          return oData;
         })
       })
     },
