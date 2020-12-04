@@ -22,7 +22,8 @@ sap.ui.define([
     "sap/ui/core/syncStyleClass",
     'sap/m/Label',
     'sap/m/SearchField',
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item, Element, syncStyleClass, Label, SearchField) {
+    "ext/lib/util/Multilingual",
+], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item, Element, syncStyleClass, Label, SearchField, Multilingual) {
 	"use strict";
    /**
     * @description 품의 목록 (총 품의 공통)
@@ -63,14 +64,15 @@ sap.ui.define([
 			}, true);
 			
             this._doInitSearch();
-
+            var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedListModel(), "list");
             this.setModel(new ManagedListModel(), "orgMap");
 			
 			this.getRouter().getRoute("approvalList").attachPatternMatched(this._onRoutedThisPage, this);
 
             this._doInitTablePerso();
-            
+
         },
 
         _doInitTablePerso: function(){
@@ -87,6 +89,7 @@ sap.ui.define([
          * @see init 이후 바로 실행됨
          */       
         onAfterRendering : function () {
+            this.getModel().setDeferredGroups(["delete"]);
 			this.byId("pageSearchButton").firePress();
 			return;
         },
@@ -179,16 +182,8 @@ sap.ui.define([
 		 */
 		onPageSearchButtonPress : function (oEvent) {
             //console.log(oEvent.getParameters());
-			if (oEvent.getParameters().refreshButtonPressed) {
-				// Search field's 'refresh' button has been pressed.
-				// This is visible if you select any master list item.
-				// In this case no new search is triggered, we only
-				// refresh the list binding.
-				this.onRefresh();
-			} else {
 				var aSearchFilters = this._getSearchStates();
 				this._applySearch(aSearchFilters);
-			}
         },
        
 		/**
@@ -606,9 +601,11 @@ sap.ui.define([
         onColumnChecBox: function(oEvent){
             var groupId = this.getView().getControlsByFieldGroupId("checkBoxs");
             var isChecked = oEvent.getSource().mProperties.selected;
+
             if(isChecked){
                 for(var i=0; i<groupId.length; i++){
                     groupId[i].setSelected(true);
+                   
                 }
             }else{
                 for(var i=0; i<groupId.length; i++){
@@ -617,49 +614,58 @@ sap.ui.define([
             }
         },
 
-        onApplovalDeletePress: function(){
-
+        onApplovalDeletePress: function(){ 
             var oTable = this.byId("mainTable"),
                 oModel = this.getModel(),
                 lModel = this.getModel("list"),
                 oView = this.getView(),
-                groupId = this.getView().getControlsByFieldGroupId("checkBoxs");
-                console.log(groupId);
-                console.log(lModel.getData().Approvals[0].__entity);
-            // if (oSelected.length > 0) {
-            //     MessageBox.confirm(this.getModel("I18N").getText("/NCM0104", oSelected.length, "삭제"), {//this.getModel("I18N").getText("/NCM0104", oSelected.length, "${I18N>/DELETE}")
-            //         title : "Comfirmation",
-            //         initialFocus : sap.m.MessageBox.Action.CANCEL,
-            //         onClose : function(sButton) {
-            //             if (sButton === MessageBox.Action.OK) {
-            //                 oSelected.forEach(function (idx) {
-            //                     oModel.remove(lModel.getData().MoldMasters[idx].__entity, {
-            //                         groupId: "delete"
-            //                     });
-            //                 });
+                //oSelected  = oTable.getSelectedItems(),
+                oSelected = [],
+                checkBoxs = this.getView().getControlsByFieldGroupId("checkBoxs");
+                console.log(checkBoxs);
+            for(var i=0; i<checkBoxs.length; i++){
+                if(checkBoxs[i].mProperties.selected == true){
+                    oSelected.push(i);
+                }
+            }
+                
+            if (oSelected.length > 0) {
+                MessageBox.confirm(this.getModel("I18N").getText("/NCM0104", oSelected.length, "삭제"), {//this.getModel("I18N").getText("/NCM0104", oSelected.length, "${I18N>/DELETE}")
+                    title : "Comfirmation",
+                    initialFocus : sap.m.MessageBox.Action.CANCEL,
+                    onClose : function(sButton) {
+                        if (sButton === MessageBox.Action.OK) {
+                            oSelected.forEach(function (idx) {
+                                console.log(lModel.getData().Approvals[idx].__entity);
+                                oModel.remove(lModel.getData().Approvals[idx].__entity, {
+                                    groupId: "delete"
+                                });
+                            });
                             
-            //                 oModel.submitChanges({
-            //                     groupId: "delete",
-            //                     success: function(){
-            //                         oView.setBusy(false);
-            //                         MessageToast.show("Success to Delete.");
-            //                         this.onPageSearchButtonPress();
-            //                     }.bind(this), error: function(oError){
-            //                         oView.setBusy(false);
-            //                         MessageBox.error(oError.message);
-            //                     }
-            //                 });
-            //             };
-            //         }.bind(this)
-            //     });
+                            oModel.submitChanges({
+                                groupId: "delete",
+                                success: function(){
+                                    oView.setBusy(false);
+                                    MessageToast.show("Success to Delete.");
+                                    this.onPageSearchButtonPress();
+                                }.bind(this), error: function(oError){
+                                    oView.setBusy(false);
+                                    MessageBox.error(oError.message);
+                                }
+                            });
+                        }
+                    }.bind(this)
+                });
 
-            //     oTable.clearSelection();
+                //oTable.clearSelection();
 
-            // }else{
-            //     MessageBox.error("선택된 행이 없습니다.");
-            // }
+            }else{
+                MessageBox.error("선택된 행이 없습니다.");
+            }
 
         },
+           
+
 
        ///////////////////// List create button pop up event End //////////////////////////
 

@@ -95,6 +95,9 @@ sap.ui.define([
                     });
 
                     that.getView().byId("idVerticalLayout").addContent(oRichTextEditor);
+                    oRichTextEditor.attachEvent("change", function(oEvent){
+                        that.getModel('appMaster').setProperty('/approval_contents', oEvent.getSource().getValue());
+                    });
                 });
         },
 
@@ -262,7 +265,7 @@ sap.ui.define([
 
             var sResult = {};
             
-            this._bindView("/ItemBudgetExecution", "appDetail", schFilter, function (oData) {
+            this._bindView("/ApprovalDetails", "appDetail", schFilter, function (oData) {
                 sResult = oData.results[0];
                 that._createViewBindData(sResult);
                 
@@ -523,15 +526,16 @@ sap.ui.define([
             var aItems = oTable.getSelectedItems();
             var that = this;
             aItems.forEach(function (oItem) {
-                console.log("oTem >>>", oItem.getCells()[4]);
+                console.log("oTem >>>", oItem);
                 var obj = new JSONModel({
-                    model: oItem.getCells()[0].getText()
-                    , part_number: oItem.getCells()[1].getText()
-                    , mold_sequence: oItem.getCells()[2].getText()
-                    , spec_name: oItem.getCells()[3].getText()
-                    , mold_item_type_code: oItem.getCells()[4].getSelectedKey()
-                    , book_currency_code: oItem.getCells()[5].getText()
-                    , budget_amount: oItem.getCells()[6].getText()
+                      mold_id: oItem.getCells()[0].getText()
+                    , model: oItem.getCells()[1].getText()
+                    , part_number: oItem.getCells()[2].getText()
+                    , mold_sequence: oItem.getCells()[3].getText()
+                    , spec_name: oItem.getCells()[4].getText()
+                    , mold_item_type_code: oItem.getCells()[5].getSelectedKey()
+                    , book_currency_code: oItem.getCells()[6].getText()
+                    , budget_amount: oItem.getCells()[7].getText()
                 });
                 that._addPsTable(obj);
             });
@@ -555,19 +559,16 @@ sap.ui.define([
             var oTable = this.byId("psTable"),
                 oModel = this.getModel("appDetail");
           
-            oModel.addRecord({
+            oModel.addRecord({ 
+                "mold_id" : data.oData.mold_id,
                 "model": data.oData.model,
                 "part_number": data.oData.part_number,
                 "mold_sequence": data.oData.mold_sequence,
                 "spec_name": data.oData.spec_name,
                 "mold_item_type_code": data.oData.mold_item_type_code,
-                "mold_production_type_code": data.oData.mold_production_type_code,
-                "mold_type_code": data.oData.mold_type_code,
-               
-                "family_part_number_1": data.oData.family_part_number_1,
-                "budget_exrate_date": data.oData.budget_exrate_date,
-                "inspection_date": data.oData.budget_exrate_date,
-                }, "/ItemBudgetExecution");
+                "book_currency_code": data.oData.book_currency_code,
+                "budget_amount": data.oData.budget_amount 
+                }, "/ApprovalDetails");
         },
 
         /**
@@ -964,6 +965,30 @@ sap.ui.define([
             MessageToast.show(messageText, {
                 width: "auto"
             });
+        },
+        /**
+         * @description save
+         */
+        onPageDraftButtonPress: function () {
+            var oView = this.getView();
+
+            MessageBox.confirm("Are you sure ?", {
+                title: "Comfirmation",
+                initialFocus: sap.m.MessageBox.Action.CANCEL,
+                onClose: function (sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        oView.setBusy(true);
+
+                        oTransactionManager.submit({
+                            success: function (ok) {
+                                oView.setBusy(false);
+                                MessageToast.show("Success to save.");
+                            }
+                        });
+                    };
+                }
+            });
+
         }
 
     });

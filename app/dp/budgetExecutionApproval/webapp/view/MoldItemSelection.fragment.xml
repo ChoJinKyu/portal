@@ -100,6 +100,9 @@
                             </OverflowToolbar>
                         </headerToolbar> 
                         <columns>
+                            <Column id="modelItem_mold_id" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="0em"  >
+                                <Text text="mold_id" />
+                            </Column>
                             <Column id="modelItem_model" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true"  >
                                 <Text text="Model" />
                             </Column>
@@ -126,6 +129,7 @@
                              <ColumnListItem>
                                 <cells>
                                     <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
+                                    <Text text="{MoldItemSelect>mold_id}" />
                                     <Text text="{MoldItemSelect>model}" />
                                     <Text text="{MoldItemSelect>part_number}" />
                                     <Text text="{MoldItemSelect>mold_sequence}" />
