@@ -36,6 +36,7 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {
+
 			var oViewModel,
 				oResourceBundle = this.getResourceBundle();
 
@@ -62,7 +63,9 @@ sap.ui.define([
 
 			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
-			this._doInitTablePerso();
+            this._doInitTablePerso();
+            
+            
         },
         
         onAfterRendering : function () {

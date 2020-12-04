@@ -11,16 +11,18 @@ sap.ui.define([
 	"sap/ui/core/Fragment",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-    "ext/lib/util/Multilingual",
-    "sap/ui/core/Item"
-], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, Multilingual, Item) {
+    "sap/ui/core/Item",
+    "ext/lib/util/Validator"
+], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, Item, Validator) {
     "use strict";
     
     var oTransactionManager;
 
 	return BaseController.extend("dp.detailSpecConfirm.controller.MidObject", {
 
-		dateFormatter: DateFormatter,
+        dateFormatter: DateFormatter,
+        
+        validator: new Validator(),
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -34,8 +36,6 @@ sap.ui.define([
 			// Model used to manipulate controlstates. The chosen values make sure,
 			// detail page shows busy indication immediately so there is no break in
             // between the busy indication for loading the view's meta data
-            var oMultilingual = new Multilingual();
-			this.setModel(oMultilingual.getModel(), "I18N");
 			var oViewModel = new JSONModel({
 					busy : true,
                     delay : 0
@@ -99,6 +99,12 @@ sap.ui.define([
 
             this._toEditMode();
             this.setImportOrg();
+            this.clearValueState();
+        },
+
+        clearValueState: function(){
+            this.validator.clearValueState( this.byId('frmMold') );
+            this.validator.clearValueState( this.byId('frmPress') );
         },
         
         setImportOrg: function(){
@@ -153,8 +159,27 @@ sap.ui.define([
         onPageSaveButtonPress: function(){
 			var oView = this.getView(),
                 me = this;
-                
-            MessageBox.confirm("Are you sure ?", {
+            
+            
+            // if(!this.checkChange()){
+            //     MessageToast.show(this.getModel('I18N').getText("/NCM0002"));
+            //     return;
+            // }
+
+            //mold 인지 press 인지 구분해야한다..
+            var dtlForm = '';
+            if(this.itemType == 'P' || this.itemType == 'E'){
+                dtlForm = 'frmPress';
+            }else{
+                dtlForm = 'frmMold';
+            }
+
+            if(this.validator.validate( this.byId(dtlForm) ) !== true){
+                MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
+                return;
+            }
+
+            MessageBox.confirm( this.getModel('I18N').getText('/NCM0004'), {
                 title : "Draft",
                 initialFocus : sap.m.MessageBox.Action.CANCEL,
                 onClose : function(sButton) {
@@ -168,13 +193,26 @@ sap.ui.define([
 							success: function(ok){
 								me._toShowMode();
 								oView.setBusy(false);
-								MessageToast.show("Success to save.");
+                                MessageToast.show("Success to save.");
 							}
 						});
 					};
 				}
 			});
 
+        },
+
+        checkChange: function(){
+            // debugger
+            var omMaster = this.getModel('master');
+            var omSchedule = this.getModel('schedule');
+            var omSpec = this.getModel('spec');
+
+            if(omMaster.isChanged() || omSchedule.isChanged() || omSpec.isChanged()){
+                return true;
+            }else{
+                return false;
+            }
         },
         
         onPageConfirmButtonPress: function(){
@@ -351,9 +389,9 @@ sap.ui.define([
             oPageSubSection4.removeAllBlocks();
 
             //mold 인지 press 인지 분기
-            var itemType = master.oData.mold_item_type_code;
+            this.itemType = master.oData.mold_item_type_code;
 
-            if(itemType == 'P' || itemType == 'E'){
+            if(this.itemType == 'P' || this.itemType == 'E'){
                 this._loadFragment("MidObjectDetailSpecPress_"+mode, function(oFragment){
                     oPageSubSection4.addBlock(oFragment);
                 })  

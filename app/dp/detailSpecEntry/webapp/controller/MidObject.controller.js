@@ -123,7 +123,11 @@ sap.ui.define([
 		 */
         onPageSaveButtonPress: function(){
 			var oView = this.getView(),
-				me = this;
+                me = this;
+                
+            console.log('뭐지?');
+            console.log('oTransactionManager.isChanged()',oTransactionManager.isChanged());
+            
 			MessageBox.confirm("Are you sure ?", {
 				title : "Comfirmation",
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
