@@ -18,7 +18,7 @@
                 <Label text="Order Qty"/>
                 <Input value="{spec>/order_qty}"/>
                 <Label text="Demand Life"/>
-                <Input value="{spec>/request_life_shot_count}"/>
+                <Input type="Number" value="{path: 'spec>/request_life_shot_count', type: 'sap.ui.model.type.Integer'}"/>
                 <Label text="Size"/>
                 <Select   width="100%"
                             selectedKey="{spec>/mold_size}"
@@ -89,7 +89,7 @@
                 <Label text="B-Punch"/> 
                 <Input value="{spec>/spare_part_b_punch_count}"/>
                 <Label text="Ejector Pin"/>
-                <Input value="{spec>/spare_part_ejector_pin_count}"/>
+                <Input type="Number" value="{path: 'spec>/spare_part_ejector_pin_count', type: 'sap.ui.model.type.Integer'}"/>
 
             <!-- </VBox>            
             <VBox > -->
