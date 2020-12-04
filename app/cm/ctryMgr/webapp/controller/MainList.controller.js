@@ -201,23 +201,18 @@ sap.ui.define([
     },
 
     _getSearchStates: function () {
-      var sChain = this.getView().byId("searchChain").getSelectedKey(),
-        sKeyword = this.getView().byId("searchKeyword").getValue(),
+      var sTenant = this.getView().byId("searchTenantCombo").getSelectedKey(),
+        sCountry = this.getView().byId("searchCountryCombo").getSelectedKey(),
         sUsage = this.getView().byId("searchUsageSegmentButton").getSelectedKey();
 
       var aSearchFilters = [];
-      if (sChain && sChain.length > 0) {
-        //aSearchFilters.push(new Filter("chain_code", FilterOperator.EQ, sChain));
+      if (sTenant && sTenant.length > 0) {
+        aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenant));
       }
-      if (sKeyword && sKeyword.length > 0) {
-        aSearchFilters.push(new Filter({
-          filters: [
-            //new Filter("control_option_code", FilterOperator.Contains, sKeyword),
-            //new Filter("control_option_name", FilterOperator.Contains, sKeyword)
-          ],
-          and: false
-        }));
+      if (sCountry && sCountry.length > 0) {
+        aSearchFilters.push(new Filter("country_code", FilterOperator.EQ, sCountry));
       }
+
       if (sUsage != "all") {
         switch (sUsage) {
           case "site":
