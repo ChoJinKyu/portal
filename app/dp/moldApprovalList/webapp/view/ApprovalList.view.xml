@@ -263,8 +263,6 @@
                     class="sapFDynamicPageAlignContent" 
                     updateFinished=".onListMainTableUpdateFinished"
                     cellClick=".onCellClick"
-                    rowSelectionChange = ".onCheck"
-                    mode="MultiSelect"
                     width="auto"
                     items="{list>/Approvals}">
                     <headerToolbar>
@@ -319,7 +317,7 @@
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>                  
-                                <CheckBox fieldGroupIds="checkBoxs"  visible="{= ${list>approval_type_code}==='B'? true:false }" />       
+                                <CheckBox fieldGroupIds="{= ${list>approval_type_code}==='B'? 'checkBoxs':''}"  visible="{= ${list>approval_type_code}==='B'? true:false }" select=".onCheck" />       
                                 <ObjectIdentifier text="{list>approval_type_code}" />
                                 <ObjectIdentifier text="{list>company_name}" />
                                 <ObjectIdentifier text="{list>org_name}" />
