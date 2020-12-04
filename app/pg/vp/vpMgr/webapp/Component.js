@@ -3,7 +3,7 @@ sap.ui.define([
 ], function (UIComponent) {
 	"use strict";
 
-	return UIComponent.extend("vp.vpMgr.Component", {
+	return UIComponent.extend("pg.vp.vpMgr.Component", {
 
 		metadata : {
 			manifest: "json"

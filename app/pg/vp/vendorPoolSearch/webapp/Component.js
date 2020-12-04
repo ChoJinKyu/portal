@@ -5,7 +5,7 @@ sap.ui.define([
 ], function (UIComponent, Device, models) {
 	"use strict";
 
-	return UIComponent.extend("pg.vendorPoolSearch.Component", {
+	return UIComponent.extend("pg.vp.vendorPoolSearch.Component", {
 
 		metadata: {
 			manifest: "json"

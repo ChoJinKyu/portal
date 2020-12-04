@@ -23,12 +23,12 @@
                 {
                     "name": "Vendor Pool Search",
                     "url": "../pg/vp/vendorPoolSearch/webapp",
-                    "component": "pg.vendorPoolSearch"
+                    "component": "pg.vp.vendorPoolSearch"
                 },
                 {
                     "name": "Vendor Pool Management",
                     "url": "../pg/vp/vpMgr/webapp",
-                    "component": "pg.vpMgr"
+                    "component": "pg.vp.vpMgr"
                 },                
                 {
                     "name": "App #4",
