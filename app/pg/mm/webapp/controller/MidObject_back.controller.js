@@ -129,6 +129,13 @@ sap.ui.define([
             odataMode : {
                 yes : "Y",     //테이블 아이템 이 odata에서 load 한것
                 no : "N"       //json 에서 임으로 생성한 아이템
+            },
+            messageType : {
+                Warning : sap.ui.core.MessageType.Warning,
+                Error : sap.ui.core.MessageType.Error,
+                Information : sap.ui.core.MessageType.Information,
+                None : sap.ui.core.MessageType.None,
+                Success : sap.ui.core.MessageType.Success                
             }
         },
         _sso : {

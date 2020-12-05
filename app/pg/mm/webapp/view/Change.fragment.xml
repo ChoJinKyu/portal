@@ -120,7 +120,7 @@
                                                     <content>
                                                         <ToolbarSpacer/>
                                                         <Button id="buttonMidTableCreate" text="Add" type="Transparent" press=".onMaterialDetail"/>
-                                                        <Button id="buttonMidTableDelete" text="Delete" type="Transparent" press=".onMidTableDelete"/>
+                                                        <Button id="buttonMidTableDelete" text="Delete" type="Transparent" press=".onMidListItemDelete"/>
                                                     </content>
                                                 </OverflowToolbar>
                                             </headerToolbar>                                            
