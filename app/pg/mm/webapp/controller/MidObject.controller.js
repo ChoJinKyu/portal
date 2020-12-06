@@ -1,7 +1,7 @@
 /**
 * 
 1. 화면 레이아웃 확인
-2. 마스트 연결 진행 (Create Fragment 화면 진행) 
+2. 마스터 연결 진행 (Create Fragment 화면 진행) 
    시황자제 삭제 프로세스 진행 - 
 3. 신규진행시 테이블 확인 준비되어야 하는곳 공지 김종현 [중요]
 4. 수정 검색 확인 
@@ -54,7 +54,7 @@ sap.ui.define([
                 supplierDialog : "SupplierDialog_ID"
             },
             input : {
-                inputMultiInput : "multiInput",
+                multiInput_material_code : "multiInput",
             },
             button : {
                 buttonMidTableCreate : "buttonMidTableCreate",
@@ -152,25 +152,25 @@ sap.ui.define([
             if(sMode == this._m.controlMode.Dev){
                 console.log("=================== Dev ====================")
                 /**
-                 * Note 사용자 세션이나 정보에 다음값이 셋팅 되어 있다는 가정 Test
-                 * Data를 전달 받았을때에는 변경한다. 
+                 * 사용자 세션이나 정보에 다음값이 셋팅 되어 있다는 가정 Test
                  */
                 var oUiData = new JSONModel({
-                    tenant_name: "LG화학",
-                    create: "Admin",
-                    createdata: "2020-12-02",
+                    tenant_name: "",
+                    create: "",
+                    createdata: "",
                     material_code :"",
                     material_description :"",
                     supplier_code :"",
                     supplier_local_name :"",
                     processing_cost :"",
                     pcst_currency_unit :"",
-                    base_quantity : "1"              
+                    base_quantity : ""              
                 });
                 
                 this.setModel(oUiData, "oUiData");
 
                 this.test_onRoutedThisPage(); 
+
             }else{
                 this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
             }
@@ -217,9 +217,10 @@ sap.ui.define([
                 createMode : false
             });
 
-        
          
             this.setModel(oUi, "oUi");
+
+            this._fnControlSetting();
 
             this._fnSetReadMode();
             
@@ -232,6 +233,25 @@ sap.ui.define([
             console.groupEnd();
         },
 
+        /**
+         * control object filter 
+         * @private
+         */
+        _fnControlSetting : function() {
+            console.log("_fnControlSetting");
+            var comboBox_pcst_currency_unit = this.getView().byId("comboBox_pcst_currency_unit");            
+            var oBindingComboBox = comboBox_pcst_currency_unit.getBinding("items");
+
+            //수정대상 사용자 언어에 대한 정의가 정해지면 아래 EN부분을 수정함 
+            var aFiltersComboBox = [
+                new Filter("tenant_id", "EQ", this._m.filter.tenant_id),
+                new Filter("language_code", "EQ", "EN")
+            ];
+              
+            oBindingComboBox.filter(aFiltersComboBox);  
+        },
+
+        /** display mode setting  */
 
         _fnSetReadMode : function(){
             this._fnSetMode("read");
@@ -282,6 +302,7 @@ sap.ui.define([
             }
         },
 
+        /** Fragments control setting  */
 
         _formFragments: {},
 
@@ -368,7 +389,7 @@ sap.ui.define([
 
 		_handleValueHelpMaterialClose: function (evt) {
 			var aSelectedItems = evt.getParameter("selectedItems"),
-				oMultiInput = this.byId(this._m.input.inputMultiInput);
+				oMultiInput = this.byId(this._m.input.multiInput_material_code);
 
 			if (aSelectedItems && aSelectedItems.length > 0) {
 				aSelectedItems.forEach(function (oItem) {
@@ -465,6 +486,8 @@ sap.ui.define([
                 oModel = this.getOwnerComponent().getModel(),
                 oTenant_id;
             
+            this._m.filter.material_code = "new";
+
             if (this._m.filter.material_code == "new") {
 
                 console.log("=============== new item ===============");
@@ -475,18 +498,20 @@ sap.ui.define([
                 //oUiData.tenant_id =  oTenant_id;
                 //this._m.filter.tenant_id
 
-            } else if(this._m.filter.material_code.length>0){
+            }else{
+
+                this._onMidServiceRead();
+
+                if(this._m.filter.material_code.length>0){
                 //보기 모드(수정화면 진입전 보기화면을 반드시 거쳐야 한다.)
-                this._fnSetReadMode();
+                    this._fnSetReadMode();
+                }
+                else {
+                    this._fnSetEditMode();
+                }
             } 
-            else {
-                this._fnSetEditMode();
-            }
-
-            //this.getView().setBusy(true);
-
+            
             //자재정보 MIMaterialCodeBOMManagement Read
-            this._onMidServiceRead();
 
             //관리조직 이름 
             var bFilters = [
@@ -587,9 +612,10 @@ sap.ui.define([
          * @public
          */
         onEdit: function () {
-              this._fnSetEditMode();         
+            this._fnSetEditMode();         
         },
-  
+
+
         /**
          * 시황자제 및 가격정보 선택
          * @public
@@ -934,13 +960,13 @@ sap.ui.define([
             var bCreateFlag = oUi.getProperty("/createMode");
             var bOkActionFlag = false;
 
-            //comboBoxPcst_currency_unit=this._findFragmentControlId(this._m.fragementId.change, "comboBoxPcst_currency_unit").getSelectedKey(),
+            //comboBox_pcst_currency_unit=this._findFragmentControlId(this._m.fragementId.change, "comboBox_pcst_currency_unit").getSelectedKey(),
             //this._findFragmentControlId(this._m.fragementId.change, "midTableChange"),
             var oTable = this.getView().byId("midTableChange"),
                 oModel = this.getOwnerComponent().getModel(),
                 midList = this.getOwnerComponent().getModel("midList"),
                 oUiData = this.getModel("oUiData"),
-                comboBoxPcst_currency_unit=this.getView().byId("comboBoxPcst_currency_unit").getSelectedKey();
+                comboBox_pcst_currency_unit=this.getView().byId("comboBox_pcst_currency_unit").getSelectedKey();
 
             var updateItem = 0;
             var createItem = 0;
@@ -982,17 +1008,22 @@ sap.ui.define([
                     return;
                 }
 
+                //수정사항 신규 자재 등록일때. 자재코드 및 정보를 추가 한다. 
+                //mi_material_code 는 multiInput_material_code 값으로 대체 자재코드
+                //input_base_quantity 기준수량
                 if(!bValueCheckFlag) return;
+                
                 
                 //midList.oData 아이템 정확성, odataMode 구함
                 for(var i=0;i<midList.oData.length;i++){
                     if(midList.oData[i].mi_material_code == mi_material_code){
                         odataMode =  midList.oData[i].odataMode;
 
-                        midList.oData[i].pcst_currency_unit = comboBoxPcst_currency_unit;
+                        midList.oData[i].pcst_currency_unit = comboBox_pcst_currency_unit;
                         midList.oData[i].reqm_quantity = imputReqm_quantity;
                         midList.oData[i].use_flag = comboboxUse_flag == "true" ? true : false;
-                       
+                                               
+
                         // update 시 not null 다 넣어주어야 함.
                         // 한번에 안되면 하나씩 추가하면서 하는게 편함
                         // 값을 넣지 않고 저장하면 null 인 곳은 null이 된다.
