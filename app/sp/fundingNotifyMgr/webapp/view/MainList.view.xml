@@ -42,7 +42,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Date" labelFor="searchDateS"></Label>
+                            <Label text="공고기간" labelFor="searchDateS"></Label>
                             <DateRangeSelection id="searchDateS" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD"/>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
@@ -66,7 +66,7 @@
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="자금지원 공고 ({= ${list>/}.length || 0})" level="H2"/>
+                            <Title text="자금지원 공고 ({= ${list>/FsFundingNotify}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
                             <ToolbarSeparator/>
@@ -78,7 +78,7 @@
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
-                        <Column id="mainFundingNumberColumn" minScreenWidth="Tablet" hAlign="Center">
+                        <Column id="mainFundingNumberColumn" minScreenWidth="Tablet" width="6em" hAlign="Center">
                             <Text text="공고번호" />
                         </Column>
                         <Column id="mainFundingTitleComlumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
@@ -96,31 +96,60 @@
                         <Column id="mainFundingApplClosingDate" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
                             <Text text="신청마감일" />
                         </Column>
-                        <Column id="mainFundingApply" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                        <Column id="mainFundingApply" minScreenWidth="Tablet" width="4em" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
                             <Text text="신청" />
                         </Column>
-                        <Column id="mainFundingSelection" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                        <Column id="mainFundingSelection" minScreenWidth="Tablet" width="4em" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
                             <Text text="선정" />
                         </Column>
-                        <Column id="mainFundingContract" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                        <Column id="mainFundingContract" minScreenWidth="Tablet" width="4em" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
                             <Text text="계약" />
                         </Column>
                     </columns>
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>
-                                <ObjectIdentifier text="{list>funding_notify_number}"/>
-                                <ObjectIdentifier text="{list>funding_notify_title}"/>
-                                <ObjectIdentifier text="{list>create_user_id}"/>
-                                <ObjectIdentifier text="{list>local_create_dtm}"/>
-                                <HBox>
-                                    <ObjectIdentifier text="{list>funding_notify_start_date}"/>
-                                    <ObjectIdentifier text="{list>funding_notify_end_date}"/>
+                                <Text text="{list>funding_notify_number}"/>
+                                <Text text="{list>funding_notify_title}"/>
+                                <Text text="{list>create_user_id}"/>
+                                <Text
+                                    text="{
+                                        path: 'list>local_create_dtm',
+                                        type: 'sap.ui.model.type.Date',
+                                        formatOptions: {
+                                        pattern: 'yyyy-MM-dd'
+                                        }
+                                    }"/>
+                                <HBox justifyContent="Center">
+                                    <Text
+                                        text="{
+                                            path: 'list>funding_notify_start_date',
+                                            type: 'sap.ui.model.type.Date',
+                                            formatOptions: {
+                                                pattern: 'yyyy-MM-dd'
+                                            }
+                                        }"/>
+                                    <Text textAlign="Center" text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd"/>
+                                    <Text textAlign="Center"
+                                        text=" {
+                                            path: 'list>funding_notify_end_date',
+                                            type: 'sap.ui.model.type.Date',
+                                            formatOptions: {
+                                            pattern: 'yyyy-MM-dd'
+                                            }
+                                        }"/>
                                 </HBox>
-                                <ObjectIdentifier text="{list>funding_appl_closing_date}"/>
-                                <ObjectIdentifier text=""/>
-                                <ObjectIdentifier text=""/>
-                                <ObjectIdentifier text=""/>
+                                <Text
+                                    text="{
+                                        path: 'list>funding_appl_closing_date',
+                                        type: 'sap.ui.model.type.Date',
+                                        formatOptions: {
+                                        pattern: 'yyyy-MM-dd'
+                                        }
+                                    }"/>
+                                <Text text=""/>
+                                <Text text=""/>
+                                <Text text=""/>
                             </cells>
                         </ColumnListItem>
                     </items>

@@ -480,7 +480,7 @@ sap.ui.define([
 
 
             this.getView().byId("buttonMidEdit").setEnabled(true);
-            this.getView().byId("buttonMidDelete").setEnabled(true);
+            //this.getView().byId("buttonMidDelete").setEnabled(true);
             this.getView().byId("buttonSave").setEnabled(true);
 
             //신규 등록 
@@ -498,7 +498,7 @@ sap.ui.define([
                 //버튼 감추기 
 
                 this.getView().byId("buttonMidEdit").setEnabled(false);
-                this.getView().byId("buttonMidDelete").setEnabled(false);
+                //this.getView().byId("buttonMidDelete").setEnabled(false);
 
                 that._onPageMode(true);
 
@@ -519,7 +519,7 @@ sap.ui.define([
                 //초기 display
                 this.getView().byId("buttonMidEdit").setEnabled(true);
                 this.getView().byId("buttonMidEdit").setText("Edit");
-                this.getView().byId("buttonMidDelete").setEnabled(false);
+                //this.getView().byId("buttonMidDelete").setEnabled(false);
                 this.getView().byId("buttonSave").setEnabled(false);
 
                 that._onPageMode(false);
@@ -678,7 +678,7 @@ sap.ui.define([
                 
                 oView.byId("buttonMidEdit").setEnabled(true);
                 oView.byId("buttonMidEdit").setText("Show");
-                oView.byId("buttonMidDelete").setEnabled(true);
+                //oView.byId("buttonMidDelete").setEnabled(true);
                 oView.byId("buttonSave").setEnabled(true);
 
                 var inputMaterialCode = sap.ui.core.Fragment.byId("Change_id", "inputMaterialCode");
@@ -699,7 +699,7 @@ sap.ui.define([
                 this._onPageMode(false);
                 oView.byId("buttonMidEdit").setEnabled(true);
                 oView.byId("buttonMidEdit").setText("Edit");
-                oView.byId("buttonMidDelete").setEnabled(false);
+                //oView.byId("buttonMidDelete").setEnabled(false);
                 oView.byId("buttonSave").setEnabled(false);
 
                 var textMaterialCode = sap.ui.core.Fragment.byId("Display_id", "textMaterialCode");
@@ -707,7 +707,7 @@ sap.ui.define([
                 var textUseflag = sap.ui.core.Fragment.byId("Display_id", "textUseflag");
 
                 textMaterialCode.setText(midObjectData.getProperty("/mi_material_code"));
-                textcategoryName.setText(midObjectData.getProperty("/category_code"));
+                //textcategoryName.setText(midObjectData.getProperty("/category_code"));
                 var useText = midObjectData.getProperty("/use_flag");
                 var vText = "미사용";
                 if (useText) {

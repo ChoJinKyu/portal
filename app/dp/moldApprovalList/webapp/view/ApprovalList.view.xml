@@ -247,7 +247,7 @@
         </f:header>
         <f:content>
             <VBox>
-                <Table id="mainTable"       
+                <!-- <Table id="mainTable"       
                         growing="true"
                         growingThreshold="20"
                         class="sapFDynamicPageAlignContent" 
@@ -256,14 +256,22 @@
                         rowSelectionChange = ".onCheck"
                         mode="MultiSelect"
                         width="auto"
-                        items="{list>/Approvals}">
+                        items="{list>/Approvals}"> -->
+                <Table id="mainTable"       
+                    growing="true"
+                    growingThreshold="20"
+                    class="sapFDynamicPageAlignContent" 
+                    updateFinished=".onListMainTableUpdateFinished"
+                    cellClick=".onCellClick"
+                    width="auto"
+                    items="{list>/ApprovalMasters}">
                     <headerToolbar>
                         <OverflowToolbar>
                             <Title text="Approval List ({= ${list>/Approvals}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <!-- Add the Personalization button -->
                             <Button id="mainTableCreateButton" text="Create" type="Emphasized" press=".onDialogCreate" />
-                            <Button id="mainTableDeleteButton" text="Delete" type="Transparent" press=".onListMainTableDeleteButtonPress" />
+                            <Button id="mainTableDeleteButton" text="Delete" type="Transparent" press=".onApplovalDeletePress" />
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://excel-attachment" press=".onListMainTablePersoButtonPressed" >
                                 <layoutData>
@@ -278,6 +286,9 @@
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
+                        <Column width="4em" >
+                            <CheckBox selected="false" select=".onColumnChecBox"/>
+                        </Column>
                         <Column id="mainColumnApprovalCategory" width="4em" >
                             <Text text="Approval&#10;Category" />
                         </Column>
@@ -305,9 +316,18 @@
                     </columns>
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
-                            <cells>                         
+                            <cells>                  
+                                <CheckBox fieldGroupIds="{= ${list>approval_type_code}==='B'? 'checkBoxs':''}"  visible="{= ${list>approval_type_code}==='B'? true:false }" select=".onCheck" />       
                                 <ObjectIdentifier text="{list>approval_type_code}" />
-                                <ObjectIdentifier text="{list>company_name}" />
+                                <ComboBox  
+                                        selectedKey="{list>approval_number}" 
+                                        items="{
+                                            path: '/Approvals',
+                                            sorter: { path: 'company_code'}
+                                        }"
+                                        >
+                                    <core:Item key="{list>company_code}" text="[{list>company_code}] {list>company_name}" />
+                                </ComboBox>
                                 <ObjectIdentifier text="{list>org_name}" />
                                 <ObjectIdentifier text="{list>approval_number}" />
                                 <ObjectIdentifier text="{list>approval_title}" />

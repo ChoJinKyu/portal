@@ -80,7 +80,7 @@
                             <Label text="Category 명" design="Bold" class="sapMLabelNoText"/>
                             <Text id="textcategoryName" text="{midObjectData>/category_name}" class="sapMLabelNoText"/> 
                             <Label text="사용여부" design="Bold" class="sapMLabelNoText"/>
-                            <Text id="textUseflag" text="{= ${midObjectData>/use_flag} === true ? '사용':'미사용'}" class="sapMLabelNoText"/>
+                            <Text id="textUseflag" text="{= ${midObjectData>/use_flag} === true ? 'Yes':'No'}" class="sapMLabelNoText"/>
                             </form:SimpleForm>                                       
                     </uxap:ObjectPageSubSection>
                 </uxap:subSections>

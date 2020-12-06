@@ -22,7 +22,8 @@ sap.ui.define([
     "sap/ui/core/syncStyleClass",
     'sap/m/Label',
     'sap/m/SearchField',
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item, Element, syncStyleClass, Label, SearchField) {
+    "ext/lib/util/Multilingual",
+], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item, Element, syncStyleClass, Label, SearchField, Multilingual) {
 	"use strict";
    /**
     * @description 품의 목록 (총 품의 공통)
@@ -63,14 +64,16 @@ sap.ui.define([
 			}, true);
 			
             this._doInitSearch();
-
+            var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedListModel(), "list");
+            this.setModel(new ManagedListModel(), "appDetail");
             this.setModel(new ManagedListModel(), "orgMap");
 			
 			this.getRouter().getRoute("approvalList").attachPatternMatched(this._onRoutedThisPage, this);
 
             this._doInitTablePerso();
-            
+
         },
 
         _doInitTablePerso: function(){
@@ -87,6 +90,7 @@ sap.ui.define([
          * @see init 이후 바로 실행됨
          */       
         onAfterRendering : function () {
+            this.getModel().setDeferredGroups(["delete"]);
 			this.byId("pageSearchButton").firePress();
 			return;
         },
@@ -179,16 +183,8 @@ sap.ui.define([
 		 */
 		onPageSearchButtonPress : function (oEvent) {
             //console.log(oEvent.getParameters());
-			if (oEvent.getParameters().refreshButtonPressed) {
-				// Search field's 'refresh' button has been pressed.
-				// This is visible if you select any master list item.
-				// In this case no new search is triggered, we only
-				// refresh the list binding.
-				this.onRefresh();
-			} else {
 				var aSearchFilters = this._getSearchStates();
 				this._applySearch(aSearchFilters);
-			}
         },
        
 		/**
@@ -222,6 +218,7 @@ sap.ui.define([
 
         },
 
+        
 
         ///////////////////// Multi Combo box event Start //////////////////////////
          /**
@@ -598,6 +595,80 @@ sap.ui.define([
             this.byId("dialogApprovalCategory").close();
         },
 
+        /**
+         * @public
+         * @see 리스트 체크박스 제어기능
+         */ 
+        onColumnChecBox: function(oEvent){
+            var groupId = this.getView().getControlsByFieldGroupId("checkBoxs");
+            var isChecked = oEvent.getSource().mProperties.selected;
+
+            if(isChecked){
+                for(var i=0; i<groupId.length; i++){
+                    groupId[i].setSelected(true);
+                   
+                }
+            }else{
+                for(var i=0; i<groupId.length; i++){
+                    groupId[i].setSelected(false);
+                }
+            }
+        },
+
+        onApplovalDeletePress: function(){ 
+            var oTable = this.byId("mainTable"),
+                oModel = this.getModel(),
+                lModel = this.getModel("list"),
+                oView = this.getView(),
+                //oSelected  = oTable.getSelectedItems(),
+                oSelected = [],
+                checkBoxs = this.getView().getControlsByFieldGroupId("checkBoxs");
+                console.log(checkBoxs);
+            for(var i=0; i<checkBoxs.length; i++){
+                if(checkBoxs[i].mProperties.selected == true){
+                    oSelected.push(i);
+                }
+            }
+                
+            if (oSelected.length > 0) {
+                MessageBox.confirm(this.getModel("I18N").getText("/NCM0104", oSelected.length, "삭제"), {//this.getModel("I18N").getText("/NCM0104", oSelected.length, "${I18N>/DELETE}")
+                    title : "Comfirmation",
+                    initialFocus : sap.m.MessageBox.Action.CANCEL,
+                    onClose : function(sButton) {
+                        if (sButton === MessageBox.Action.OK) {
+                            oSelected.forEach(function (idx) {
+                                console.log(lModel.getData().ApprovalMasters[idx]);
+                                console.log(lModel.getData().ApprovalMasters[idx].__entity);
+                                oModel.remove(lModel.getData().ApprovalMasters[idx].__entity, {
+                                    groupId: "delete"
+                                });
+                            });
+                            
+                            oModel.submitChanges({
+                                groupId: "delete",
+                                success: function(){
+                                    oView.setBusy(false);
+                                    MessageToast.show("Success to Delete.");
+                                    this.onPageSearchButtonPress();
+                                }.bind(this), error: function(oError){
+                                    oView.setBusy(false);
+                                    MessageBox.error(oError.message);
+                                }
+                            });
+                        }
+                    }.bind(this)
+                });
+
+                //oTable.clearSelection();
+
+            }else{
+                MessageBox.error("선택된 행이 없습니다.");
+            }
+
+        },
+           
+
+
        ///////////////////// List create button pop up event End //////////////////////////
 
         ///////////////////// List search section Start //////////////////////////
@@ -626,7 +697,7 @@ sap.ui.define([
 				oModel = this.getModel("list");
 			oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
-			oModel.read("/Approvals", {
+			oModel.read("/ApprovalMasters", {
 				filters: aSearchFilters,
 				success: function(oData){
 					oView.setBusy(false);

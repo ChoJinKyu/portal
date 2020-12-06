@@ -128,6 +128,10 @@
                             <VBox>
                                 <Label text="Description" labelFor="input" required="true"></Label> 
                                 <layout:VerticalLayout id="idVerticalLayout" class="sapUiContentPadding" width="100%">
+                                    <layout:content>
+                                        <core:HTML content="{appMaster>/approval_contents}">
+                                        </core:HTML>
+                                    </layout:content>
                                 </layout:VerticalLayout>
                             </VBox>
                         </layout:VerticalLayout> 						
@@ -278,7 +282,7 @@
                                     <table:Column id="c_itemType" width="10em" hAlign="Center">
                                         <Label text="Item Type"/>           
                                         <table:template>
-                                            <ComboBox selectedKey="{appDetail>mold_type_code}" 
+                                            <ComboBox selectedKey="{appDetail>mold_production_type_code}" 
                                                 editable="false"
                                                 items="{ path : 'util>/CodeDetails',
                                                             filters : [
@@ -291,11 +295,24 @@
                                             </ComboBox>
                                         </table:template>
                                     </table:Column>  
-
+                                  <table:Column id="c_bookCurrency" width="10em" hAlign="Center">
+                                        <Label text="Book Currency"/>           
+                                                
+                                        <table:template>
+                                           <Text  text="{appDetail>book_currency_code}"/>
+                                        </table:template>
+                                    </table:Column>  
+                                     <table:Column id="c_budget_amount" width="10em" hAlign="Center">
+                                        <Label text="Budget Amount"/>           
+                                      
+                                        <table:template>
+                                           <Text  text="{appDetail>budget_amount}"/>
+                                        </table:template>
+                                    </table:Column>  
                                     <table:Column id="c_assetType" width="10em" hAlign="Center">
                                         <Label text="Asset Type"/>           
                                         <table:template>
-                                            <ComboBox selectedKey="{appDetail>mold_production_type_code}" 
+                                            <ComboBox selectedKey="{appDetail>asset_type_code}" 
                                                 editable="false"
                                                 items="{ path : 'util>/CodeDetails',
                                                             filters : [

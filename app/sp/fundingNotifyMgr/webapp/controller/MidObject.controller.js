@@ -22,7 +22,7 @@ sap.ui.define([
     ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
 
     "use strict";
-
+    ``
     var oTransactionManager;
 
     return BaseController.extend("sp.fundingNotifyMgr.controller.MidObject", {
@@ -66,8 +66,6 @@ sap.ui.define([
 
             this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
 
-            this._initTableTemplates();
-            this.enableMessagePopover();
         },
 
         /* =========================================================== */
@@ -82,7 +80,8 @@ sap.ui.define([
             this.getRouter().navTo("midPage", {
                 layout: sNextLayout,
                 tenantId: this._sTenantId,
-                controlOptionCode: this._sControlOptionCode
+                fundingNotifyNumber: this._sFundingNotifyNumber
+                // fundingNotifyNumber: oRecord.funding_notify_number
             });
         },
 		/**
@@ -94,7 +93,7 @@ sap.ui.define([
             this.getRouter().navTo("midPage", {
                 layout: sNextLayout,
                 tenantId: this._sTenantId,
-                controlOptionCode: this._sControlOptionCode
+                fundingNotifyNumber: this._sFundingNotifyNumber
             });
         },
 		/**
@@ -142,46 +141,11 @@ sap.ui.define([
             });
         },
 
-        onMidTableAddButtonPress: function () {
-            var oTable = this.byId("midTable"),
-                oDetailsModel = this.getModel("details");
-            oDetailsModel.addRecord({
-                "tenant_id": this._sTenantId || "",
-                "control_option_code": this._sControlOptionCode || "",
-                // "control_option_level_code": "",
-                "org_type_code": "*",
-                // "control_option_level_val": "",
-                // "control_option_val": "",
-                "start_date": new Date(), //"2021-11-20",
-                "end_date": new Date(), //"2021-11-21",
-                "local_create_dtm": new Date(),
-                "local_update_dtm": new Date()
-            }, 0);
-        },
-
         onMidTableDeleteButtonPress: function () {
-            // var oTable = this.byId("midTable"),
-            //   oModel = this.getModel("details"),
-            //   aItems = oTable.getSelectedItems(),
-            //   aIndices = [];
-            // aItems.forEach(function (oItem) {
-            //   console.log(
-            //     ">>>>> getData", oModel.getData()["ControlOptionDetails"],
-            //     ">>>>> getData - details", oItem.getBindingContext("details"),
-            //     ">>>>> getData - item", oItem.getBindingContext(),
-            //     oItem.getBindingContext("details").getObject());
-            //   aIndices.push(oModel.getData()["ControlOptionDetails"].indexOf(oItem.getBindingContext("details").getObject()));
-            // });
-            // aIndices = aIndices.sort(function (a, b) { return b - a; });
-            // aIndices.forEach(function (nIndex) {
-            //   oModel.markRemoved(nIndex);
-            // });
-            // oTable.removeSelections(true);
-
             var [tId, mName, sEntity] = arguments;
             var table = this.byId(tId);
             var model = this.getView().getModel(mName);
-            //debugger;
+            debugger;
             table
                 .getSelectedItems()
                 .map(item => model.getData()[sEntity].indexOf(item.getBindingContext("details").getObject()))
@@ -203,40 +167,26 @@ sap.ui.define([
         onPageSaveButtonPress: function () {
             var view = this.getView(),
                 master = view.getModel("master"),
-                detail = view.getModel("details"),
                 that = this;
 
-            console.log(">>> detail", detail.getData());
-
             // Validation
-            if (!master.getData()["chain_code"]) {
-                MessageBox.alert("Chain을 입력하세요");
-                return;
-            }
-            if (!master.getData()["tenant_id"]) {
-                MessageBox.alert("테넌트를 입력하세요");
-                return;
-            }
-            if (!master.getData()["control_option_code"]) {
-                MessageBox.alert("제어옵션코드를 입력하세요");
-                return;
-            }
-            if (!master.getData()["control_option_name"]) {
-                MessageBox.alert("제어옵션명을 입력하세요");
-                return;
-            }
-            if (master.getData()["_state_"] != "C" && detail.getChanges() <= 0) {
-                MessageBox.alert("변경사항이 없습니다.");
-                return;
-            }
-            // Set Details (New)
-            if (master.getData()["_state_"] == "C") {
-                detail.getData()["ControlOptionDetails"].map(r => {
-                    r["tenant_id"] = master.getData()["tenant_id"];
-                    r["control_option_code"] = master.getData()["control_option_code"];
-                    return r;
-                });
-            }
+            // if (!master.getData()["chain_code"]) {
+            //     MessageBox.alert("Chain을 입력하세요");
+            //     return;
+            // }
+            // if (!master.getData()["tenant_id"]) {
+            //     MessageBox.alert("테넌트를 입력하세요");
+            //     return;
+            // }
+            // if (!master.getData()["control_option_code"]) {
+            //     MessageBox.alert("제어옵션코드를 입력하세요");
+            //     return;
+            // }
+            // if (!master.getData()["control_option_name"]) {
+            //     MessageBox.alert("제어옵션명을 입력하세요");
+            //     return;
+            // }
+
 
             MessageBox.confirm("Are you sure ?", {
                 title: "Comfirmation",
@@ -255,7 +205,6 @@ sap.ui.define([
                     };
                 }
             });
-
         },
 
         /**
@@ -277,15 +226,8 @@ sap.ui.define([
         _onMasterDataChanged: function (oEvent) {
             if (this.getModel("midObjectView").getProperty("/isAddedMode") == true) {
                 var oMasterModel = this.getModel("master");
-                var oDetailsModel = this.getModel("details");
                 var sTenantId = oMasterModel.getProperty("/tenant_id");
-                var sControlOPtionCode = oMasterModel.getProperty("/control_option_code");
-                var oDetailsData = oDetailsModel.getData();
-                oDetailsData.forEach(function (oItem, nIndex) {
-                    oDetailsModel.setProperty("/" + nIndex + "/tenant_id", sTenantId);
-                    oDetailsModel.setProperty("/" + nIndex + "/control_option_code", sControlOPtionCode);
-                });
-                oDetailsModel.setData(oDetailsData);
+                var sFundingNotifyNumber = oMasterModel.getProperty("/funding_notify_number");
             }
         },
 
@@ -296,9 +238,12 @@ sap.ui.define([
          */
         _onRoutedThisPage: function (oEvent) {
             var oArgs = oEvent.getParameter("arguments"),
-                oView = this.getView();
+                oView = this.getView(), 
+                utcDate = this._getUtcSapDate();
+
             this._sTenantId = oArgs.tenantId;
-            this._sControlOptionCode = oArgs.controlOptionCode;
+            this._sFundingNotifyNumber = oArgs.fundingNotifyNumber;
+
             if (oArgs.tenantId == "new") {
                 //It comes Add button pressed from the before page.
                 this.getModel("midObjectView").setProperty("/isAddedMode", true);
@@ -306,12 +251,13 @@ sap.ui.define([
                 var oMasterModel = this.getModel("master");
                 oMasterModel.setData({
                     "tenant_id": "L2100",
-                    "chain_code": "",
-                    "control_option_code": "",
-                    "control_option_name": "",
-                    "group_code": "",
-                    "local_create_dtm": new Date(),
-                    "local_update_dtm": new Date()
+                    "funding_notify_number": "",
+                    "funding_notify_title": "",
+                    "local_create_dtm": utcDate,
+                    "local_update_dtm": utcDate,
+                    "create_user_id": "Admin",
+                    "update_user_id": "Admin"
+                    
                 }, "/FsFundingNotify", 0);
 
                 this._toEditMode();
@@ -319,21 +265,24 @@ sap.ui.define([
             else {
                 this.getModel("midObjectView").setProperty("/isAddedMode", false);
 
-                this._bindView("/ControlOptionMasters(tenant_id='" + this._sTenantId + "',funding_notify_number='" + this._sControlOptionCode + "')");
+                this._bindView("/FsFundingNotify(tenant_id='" + this._sTenantId + "',funding_notify_number='" + this._sFundingNotifyNumber + "')");
+
                 oView.setBusy(true);
-                var oDetailsModel = this.getModel("details");
-                oDetailsModel.setTransactionModel(this.getModel());
-                oDetailsModel.read("/ControlOptionDetails", {
+                var oMasterModel = this.getModel("master");
+                //oDetailsModel.setTransactionModel(this.getModel());
+                oMasterModel.read("/FsFundingNotify", {
                     filters: [
                         new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-                        new Filter("control_option_code", FilterOperator.EQ, this._sControlOptionCode),
+                        new Filter("funding_notify_number", FilterOperator.EQ, this._sFundingNotifyNumber),
                     ],
                     success: function (oData) {
+                        this.getModel("master").setData(oData.results[0]);
                         oView.setBusy(false);
-                    }
+                    }.bind(this)
                 });
                 this._toShowMode();
             }
+
             oTransactionManager.setServiceModel(this.getModel());
         },
 
@@ -373,123 +322,6 @@ sap.ui.define([
             this.byId("pageEditButton").setEnabled(TRUE);
             this.byId("pageDeleteButton").setEnabled(TRUE);
             this.byId("pageNavBackButton").setEnabled(TRUE);
-
-            this.byId("midTableAddButton").setEnabled(!TRUE);
-            this.byId("midTableDeleteButton").setEnabled(!TRUE);
-            //this.byId("midTable").setMode(sap.m.ListMode.None);
-            //this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
-        },
-
-        _initTableTemplates: function () {
-            this.oReadOnlyTemplate = new ColumnListItem({
-                cells: [
-                    new Text({
-                        text: "{details>_row_state_}"
-                    }),
-                    new ObjectIdentifier({
-                        text: "{details>control_option_code}"
-                    }),
-                    new ObjectIdentifier({
-                        text: "{details>control_option_level_code}"
-                    }),
-                    new Text({
-                        text: "{details>control_option_level_val}"
-                    }),
-                    new Text({
-                        text: "{details>control_option_val}"
-                    })
-                ],
-                type: sap.m.ListType.Inactive
-            });
-
-            this.oEditableTemplate = new ColumnListItem({
-                cells: [
-                    new Text({
-                        text: "{details>_row_state_}"
-                    }),
-
-                    // 제어옵션레벨코드
-                    new ComboBox({
-                        selectedKey: "{details>control_option_level_code}",
-                        items: {
-                            path: 'util>/CodeDetails',
-                            filters: [
-                                new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
-                                new Filter("group_code", FilterOperator.EQ, 'CM_CTRL_OPTION_LEVEL_CODE')
-                            ],
-                            template: new Item({
-                                key: "{util>code}",
-                                text: "{= ${util>code} + ':' + ${util>code_description}}"
-                            })
-                        },
-                        editable: "{= ${details>_row_state_} === 'C' }",
-                        required: true
-                    }),
-
-                    (function (level) {
-                        //console.log(">>>>> level", level);
-                        if (level == "T") {
-                            // 조직유형
-                            return new ComboBox({
-                                selectedKey: "{details>org_type_code}",
-                                items: {
-                                    path: 'util>/CodeDetails',
-                                    filters: [
-                                        new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
-                                        new Filter("group_code", FilterOperator.EQ, 'CM_ORG_TYPE_CODE')
-                                    ],
-                                    template: new Item({
-                                        key: "{util>code}",
-                                        text: "{= ${util>code} + ':' + ${util>code_description}}"
-                                    })
-                                },
-                                editable: "{= ${details>_row_state_} === 'C' }",
-                                display: "none",
-                                required: true
-                            })
-                        }
-                        else {
-                            new Input({
-                                value: {
-                                    path: "details>control_option_level_val",
-                                    type: new sap.ui.model.type.String(null, {
-                                        maxLength: 100
-                                    }),
-                                },
-                                editable: "{= ${details>_row_state_} === 'C' }",
-                                required: true
-                            })
-                        }
-                    })("{= ${details>control_option_level_code}}"),
-
-                    new Input({
-                        value: {
-                            path: "details>control_option_level_val",
-                            type: new sap.ui.model.type.String(null, {
-                                maxLength: 100
-                            }),
-                        },
-                        editable: "{= ${details>_row_state_} === 'C' }",
-                        required: true
-                    }),
-                    new Input({
-                        value: {
-                            path: "details>control_option_val",
-                            type: new sap.ui.model.type.String(null, {
-                                maxLength: 100
-                            })
-                        },
-                        required: true
-                    })
-                ]
-            });
-        },
-
-        _bindMidTable: function (oTemplate, sKeyboardMode) {
-            this.byId("midTable").bindItems({
-                path: "details>/ControlOptionDetails",
-                template: oTemplate
-            }).setKeyboardMode(sKeyboardMode);
         },
 
         _oFragments: {},
@@ -514,6 +346,22 @@ sap.ui.define([
             } else {
                 if (oHandler) oHandler(this._oFragments[sFragmentName]);
             }
+        },
+
+        /**
+         * UTC 기준 DATE를 반환합니다.
+         * @private
+         * @return "yyyy-MM-dd'T'HH:mm:ss"
+         */
+        _getUtcSapDate: function () {
+            var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+                pattern: "yyyy-MM-dd'T'HH:mm"
+            });
+
+            var oNow = new Date();
+            var utcDate = oDateFormat.format(oNow) + ":00Z";
+            
+            return utcDate;
         }
     });
 });

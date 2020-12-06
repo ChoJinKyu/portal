@@ -5,7 +5,7 @@ sap.ui.define([
 ], function (JSONModel, Controller, RichTextEditor) {
 	"use strict";
 
-	return Controller.extend("sp.fundingNotifyMgr.controller.Detail", {
+	return Controller.extend("cm.userMgr.controller.Detail", {
 		onInit: function () {
 			this.oRouter = this.getOwnerComponent().getRouter();
 			this.oModel = this.getOwnerComponent().getModel();

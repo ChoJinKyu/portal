@@ -327,11 +327,14 @@ sap.ui.define([
                     if (sButton === MessageBox.Action.OK) {
                         oSelected.forEach(function (idx) {//console.log(lModel.getData().MoldMasters[idx]);console.log(oModel.oData);
                             var sEntity = lModel.getData().MoldMasters[idx].__entity;
+                            lModel.getData().MoldMasters[idx].mold_receipt_flag = true;
+                            lModel.getData().MoldMasters[idx].receiving_report_date = this.getFormatDate(new Date());
+                            
                             delete lModel.getData().MoldMasters[idx].__entity;
                             oModel.update(sEntity, lModel.getData().MoldMasters[idx], {
                                 groupId: "receipt"
                             });
-                        });
+                        }.bind(this));
                         
                         oModel.submitChanges({
                             groupId: "receipt",
@@ -560,6 +563,7 @@ sap.ui.define([
 				if (status == "Received") {
 					if (receiptFromDate === null) {
                         MessageToast.show("Receipt Date를 입력해 주세요");
+                        return false;
                     } else {
                         aTableSearchState.push(new Filter("receiving_report_date", FilterOperator.BT, this.getFormatDate(receiptFromDate), this.getFormatDate(receiptToDate)));
 					}

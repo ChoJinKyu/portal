@@ -14,16 +14,13 @@
         <form:content>
 
                 <Label text="Mold Test"/>
-                <RadioButtonGroup columns="2" width="100%" editable="true">
-                    <RadioButton text="Yes" selected = "{spec>/inspection_flag}"/>
-                    <RadioButton text="No" selected = "{=!${spec>/inspection_flag}}"/>
-                </RadioButtonGroup>
+                <Switch state="{spec>/inspection_flag}" customTextOn="Yes" customTextOff="No"  />
                 <Label text="Order Qty"/>
                 <Input value="{spec>/order_qty}"/>
                 <Label text="Demand Life"/>
-                <Input value="{spec>/request_life_shot_count}"/>
+                <Input type="Number" value="{path: 'spec>/request_life_shot_count', type: 'sap.ui.model.type.Integer'}"/>
                 <Label text="Size"/>
-                <ComboBox   width="100%"
+                <Select   width="100%"
                             selectedKey="{spec>/mold_size}"
                             items="{
                                         path : 'util>/CodeDetails',
@@ -35,16 +32,13 @@
                             editable="true"
                 >
                     <core:Item key="{util>code}" text="{util>code_description}" />
-                </ComboBox>
+                </Select>
              <!-- </VBox>            
             <VBox > -->
                 <Label text="Assembly Approval"/> 
-                <RadioButtonGroup columns="2" width="100%" editable="true">
-                    <RadioButton text="Yes" selected = "{spec>/assembly_approval_flag}"/>
-                    <RadioButton text="No" selected = "{=!${spec>/assembly_approval_flag}}"/>
-                </RadioButtonGroup>
+                <Switch state="{spec>/assembly_approval_flag}" customTextOn="Yes" customTextOff="No"  />
                 <Label text="Mold Structure"/>
-                <ComboBox   width="100%"
+                <Select   width="100%"
                             selectedKey="{spec>/die_form}"
                             items="{
                                         path : 'util>/CodeDetails',
@@ -56,7 +50,7 @@
                             editable="true"
                 >
                     <core:Item key="{util>code}" text="{util>code_description}" />
-                </ComboBox>
+                </Select>
                 <Label text="Mold Weight"/>
                 <Input value="{spec>/mold_weight}"/>
                 <Label text="Open Size"/>
@@ -86,23 +80,23 @@
             <core:Title text="Spare Parts" />
             <!-- <VBox> -->
                 <Label text="P-Punch"/>
-                <Input value="{spec>/spare_part_p_punch_count}"/>
+                <Input type="Number" value="{path: 'spec>/spare_part_p_punch_count', type: 'sap.ui.model.type.Integer'}"/>
                 <Label text="Die Button"/>
-                <Input value="{spec>/spare_part_die_button_count}"/>
+                <Input type="Number" value="{path: 'spec>/spare_part_die_button_count', type: 'sap.ui.model.type.Integer'}"/>
 
             <!-- </VBox>            
             <VBox > -->
                 <Label text="B-Punch"/> 
-                <Input value="{spec>/spare_part_b_punch_count}"/>
+                <Input type="Number" value="{path: 'spec>/spare_part_b_punch_count', type: 'sap.ui.model.type.Integer'}"/>
                 <Label text="Ejector Pin"/>
-                <Input value="{spec>/spare_part_ejector_pin_count}"/>
+                <Input type="Number" value="{path: 'spec>/spare_part_ejector_pin_count', type: 'sap.ui.model.type.Integer'}"/>
 
             <!-- </VBox>            
             <VBox > -->
                 <Label text="Spring"/> 
-                <Input value="{spec>/spare_part_spring_count}"/>
+                <Input type="Number" value="{path: 'spec>/spare_part_spring_count', type: 'sap.ui.model.type.Integer'}"/>
                 <Label text="Etc. Press"/>
-                <Input value="{spec>/spare_part_etc_count}"/>
+                <Input type="Number" value="{path: 'spec>/spare_part_etc_count', type: 'sap.ui.model.type.Integer'}"/>
             <!-- </VBox> -->
         </form:content>
     </form:SimpleForm>

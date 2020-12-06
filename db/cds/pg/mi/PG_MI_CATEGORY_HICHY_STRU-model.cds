@@ -25,7 +25,7 @@ entity MI_Category_Hichy_Stru {
     key company_code         : String(10) not null @title : '법인코드';
     key org_type_code        : String(30) not null @title : '조직유형코드';
     key org_code             : String(10) not null @title : '조직코드';
-    key node_id              : Integer not null    @title : '노드ID';
+        node_id              : Integer not null    @title : '노드ID';
         hierarchy_level      : Integer             @title : '계층레벨';
     key category_code        : String(40) not null @title : '카테고리코드';
         category_name        : String(240)         @title : '카테고리명';

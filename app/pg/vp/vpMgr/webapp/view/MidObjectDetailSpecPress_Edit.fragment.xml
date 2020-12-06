@@ -1,0 +1,124 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core"
+    xmlns:uxap="sap.uxap" >
+<VBox class="sapUiSmallMargin">
+    <form:SimpleForm 
+        editable="false"
+        maxContainerCols="3"
+        layout="ResponsiveGridLayout"
+        adjustLabelSpan="false"
+        labelSpanL="3"
+        labelSpanM="3"
+        emptySpanL="0"
+        emptySpanM="0"
+        columnsL="3"
+        columnsM="3">
+            <VBox>
+
+                <Label text="Mold Test"/>
+                <Input value="{spec>/inspection_flag}"/>
+                <Label text="Order Qty"/>
+                <Input value="{spec>/order_qty}"/>
+                <Label text="Demand Life"/>
+                <Input value="{spec>/request_life_shot_count}"/>
+                <Label text="Size"/>
+                <Input value="{spec>/mold_size}"/>
+
+             </VBox>            
+            <VBox >
+                <Label text="Assembly Approval"/> 
+                <Input value="{spec>/assembly_approval_flag}"/>
+                <Label text="Mold Structure"/>
+                <Input value="{spec>/die_form}"/>
+                <Label text="Mold Weight"/>
+                <Input value="{spec>/mold_weight}"/>
+                <Label text="Open Size"/>
+                <Input value="{spec>/press_open_size}"/>
+
+
+            </VBox>            
+            <VBox >
+                <Label text="Use Material"/> 
+                <Input value="{spec>/use_material_value}"/>
+                <Label text="Process Qty"/>
+                <Input value="{spec>/cavity_process_qty}"/>
+                <Label text="Material Thickness"/>
+                <Input value="{spec>/press_material_thickness}"/>
+                <Label text="Material Size"/>
+                <Input value="{spec>/press_material_size}"/>
+             </VBox>
+    </form:SimpleForm>
+        <form:SimpleForm 
+            editable="false"
+            maxContainerCols="3"
+            layout="ResponsiveGridLayout"
+            adjustLabelSpan="false"
+            labelSpanL="3"
+            labelSpanM="3"
+            emptySpanL="0"
+            emptySpanM="0"
+            columnsL="3"
+            columnsM="3">
+            <core:Title text="Spare Parts" />
+            <VBox>
+                <Label text="P-Punch"/>
+                <Input value="{spec>/spare_part_p_punch_count}"/>
+                <Label text="Die Button"/>
+                <Input value="{spec>/spare_part_die_button_count}"/>
+
+            </VBox>            
+            <VBox >
+                <Label text="B-Punch"/> 
+                <Input value="{spec>/spare_part_b_punch_count}"/>
+                <Label text="Ejector Pin"/>
+                <Input value="{spec>/spare_part_ejector_pin_count}"/>
+
+            </VBox>            
+            <VBox >
+                <Label text="Spring"/> 
+                <Input value="{spec>/spare_part_spring_count}"/>
+                <Label text="Etc. Press"/>
+                <Input value="{spec>/spare_part_etc_count}"/>
+            </VBox>
+    </form:SimpleForm>
+
+    <form:SimpleForm 
+            editable="false"
+            maxContainerCols="3"
+            layout="ResponsiveGridLayout"
+            adjustLabelSpan="false"
+            labelSpanL="3"
+            labelSpanM="3"
+            emptySpanL="0"
+            emptySpanM="0"
+            columnsL="3"
+            columnsM="3">
+            <core:Title text="Press Meterial" />
+            <VBox>
+                <Label text="Top Holder"/>
+                <Input value="{spec>/top_holder_material_name}"/>
+                <Label text="Stripper"/>
+                <Input value="{spec>/stripper_material_name}"/>
+                <Label text="Pad Valve"/>
+                <Input value="{spec>/pad_valve_material_name}"/>
+            </VBox>            
+            <VBox >
+                <Label text="Bottom Holder"/> 
+                <Input value="{spec>/bottom_holder_material_name}"/>
+                <Label text="Punch Holder"/>
+                <Input value="{spec>/punch_holder_material_name}"/>
+                <Label text="Pad"/>
+                <Input value="{spec>/pad_material_name}"/>
+            </VBox>            
+            <VBox >
+                <Label text="Die"/> 
+                <Input value="{spec>/die_material_name}"/>
+                <Label text="Punch"/>
+                <Input value="{spec>/punch_material_name}"/>
+            </VBox>
+    </form:SimpleForm>
+	</VBox>
+</core:FragmentDefinition>

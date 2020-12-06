@@ -4,27 +4,51 @@ sap.ui.define(["jquery.sap.global"],
 
         var _columns = [
             {
-                id: "uomMgr-mainList-mainColumnClass",
+                id: "uomMgr-mainList-mainColumnUOM",
                 order: 0,
+                text: "UOM",
+                visible: true
+            },
+            {
+                id: "uomMgr-mainList-mainColumnCC",
+                order: 1,
+                text: "Commercial Code",
+                visible: false
+            },
+            {
+                id: "uomMgr-mainList-mainColumnCN",
+                order: 2,
+                text: "Commercial Name",
+                visible: false
+            },
+            {
+                id: "uomMgr-mainList-mainColumnBU",
+                order: 3,
+                text: "Base Unit",
+                visible: true
+            },
+            {
+                id: "uomMgr-mainList-mainColumnClass",
+                order: 4,
                 text: "Class",
                 visible: true
             },
             {
-                id: "uomMgr-mainList-mainColumnText",
-                order: 1,
-                text: "Class Text",
-                visible: false
+                id: "uomMgr-mainList-mainColumnTC",
+                order: 5,
+                text: "Technical Code",
+                visible: true
             },
             {
-                id: "uomMgr-mainList-mainColumnBaseUom",
-                order: 2,
-                text: "Base UOM",
-                visible: false
+                id: "uomMgr-mainList-mainColumnTN",
+                order: 6,
+                text: "Technical Name",
+                visible: true
             },
             {
-                id: "uomMgr-mainList-mainColumnBaseUomText",
-                order: 3,
-                text: "Base UOM Text",
+                id: "uomMgr-mainList-mainColumnDD",
+                order: 7,
+                text: "Disable Date",
                 visible: true
             }
         ];
@@ -72,8 +96,8 @@ sap.ui.define(["jquery.sap.global"],
             //to 'Weight (Important!)', but will leave all other column names as they are.
             getCaption: function (oColumn) {
                 if (oColumn.getHeader() && oColumn.getHeader().getText) {
-                    if (oColumn.getHeader().getText() === "Class") {
-                        return "Class (Important!)";
+                    if (oColumn.getHeader().getText() === "UOM") {
+                        return "UOM (Important!)";
                     }
                 }
                 return null;
@@ -81,7 +105,7 @@ sap.ui.define(["jquery.sap.global"],
 
             getGroup: function (oColumn) {
                 var sId = oColumn.getId();
-                if (sId.indexOf("mainColumnClass") != -1) {
+                if (sId.indexOf("mainColumnUOM") != -1) {
                     return "Columns of Key";
                 }
                 return "Others";

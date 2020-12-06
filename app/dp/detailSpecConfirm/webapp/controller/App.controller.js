@@ -1,11 +1,19 @@
 sap.ui.define([
-	"ext/lib/controller/BaseController"
-], function (BaseController) {
+    "ext/lib/controller/BaseController",
+    "ext/lib/util/Multilingual",
+    "ext/lib/util/Validator"
+], function (BaseController, Multilingual, Validator) {
 	"use strict";
 
 	return BaseController.extend("dp.detailSpecConfirm.controller.App", {
 
+        validator: new Validator(),
+
 		onInit : function () {
+
+            var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
+            
 			// apply content density mode to root view
 			this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
 			this.oRouter = this.getOwnerComponent().getRouter();
