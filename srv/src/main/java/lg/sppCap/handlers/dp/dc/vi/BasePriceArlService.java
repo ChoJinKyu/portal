@@ -26,22 +26,33 @@ public class BasePriceArlService implements EventHandler {
     @Autowired
     private JdbcTemplate jdbc;
 
-    //private Map<Object, Map<String, Object>> Base_Price_Arl_Master = new HashMap<>();
+    // private Map<Object, Map<String, Object>> Base_Price_Arl_Master = new
+    // HashMap<>();
 
-    //  @On(event = CdsService.EVENT_CREATE, entity = "AdminService.Products")
-    //  public void onCreate(CdsCreateEventContext context) {
-    //      context.getCqn().entries().forEach(e -> products.put(e.get("ID"), e));
-    //      context.setResult(context.getCqn().entries());
-    //  }
+    // @On(event = CdsService.EVENT_CREATE, entity = "AdminService.Products")
+    // public void onCreate(CdsCreateEventContext context) {
+    // context.getCqn().entries().forEach(e -> products.put(e.get("ID"), e));
+    // context.setResult(context.getCqn().entries());
+    // }
 
-    @Before(event = {CdsService.EVENT_CREATE}, entity = BasePriceArlMaster_.CDS_NAME)
+    @Before(event = { CdsService.EVENT_CREATE }, entity = BasePriceArlMaster_.CDS_NAME)
     public void beforeBasePriceArlMaster(List<BasePriceArlMaster> basePriceArlMasters) {
+        System.out.println("------------------------------------");
+        System.out.println("beforeBasePriceArlMaster Started....");
+        System.out.println("------------------------------------");
+
         for (BasePriceArlMaster basePriceArlMaster : basePriceArlMasters) {
             String tenant_id = basePriceArlMaster.getTenantId();
 
             // Init Data Setting : approval_number
-            String sql = "SELECT DP_APPROVAL_NUMBER_FUNC('" + tenant_id + "') FROM DUMMY";
-            String approval_number = jdbc.queryForObject(sql, String.class);
+            String approval_number;
+
+            if (basePriceArlMaster.getApprovalNumber() == null) {
+                String sql = "SELECT DP_APPROVAL_NUMBER_FUNC('" + tenant_id + "') FROM DUMMY";
+                approval_number = jdbc.queryForObject(sql, String.class);
+            } else {
+                approval_number = basePriceArlMaster.getApprovalNumber();
+            }
 
             System.out.println("approval_number : " + approval_number);
 
@@ -49,9 +60,10 @@ public class BasePriceArlService implements EventHandler {
         }
     }
 
-    // @On(event = CdsService.EVENT_READ, entity = "BasePriceArlService.Base_Price_Arl_Master")
+    // @On(event = CdsService.EVENT_READ, entity =
+    // "BasePriceArlService.Base_Price_Arl_Master")
     // public void onRead(CdsReadEventContext context) {
-    //     context.setResult(Base_Price_Arl_Master.values());
+    // context.setResult(Base_Price_Arl_Master.values());
     // }
 
 }
