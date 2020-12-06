@@ -14,7 +14,7 @@ sap.ui.define([
                 useEmpty: { type: "boolean", group: "Misc", defaultValue: false },
                 emptyKey: { type: "string", group: "Misc", defaultValue: "" },
                 emptyText: { type: "string", group: "Misc", defaultValue: "" },
-                textPattern: { type: "string", group: "Misc", defaultValue: "${text}" },
+                textPattern: { type: "string", defaultValue: "$text" }
             },
             events: {
                 ready: {
@@ -42,8 +42,9 @@ sap.ui.define([
         _onModelContextChange: function(){
             var sKey = "{"+this.keyField+"}";
             var sText = this.getProperty("textPattern")
-                .replace('${text}', "{"+this.textField+"}")
-                .replace('${key}', "{"+this.keyField+"}");
+                .replace(/\$text/g, "{"+this.textField+"}")
+                .replace(/\$key/g, "{"+this.keyField+"}")
+                .replace(/\[/g, "{").replace(/\]/g, "}");
 
             this.bindItems({
                 path: "/",
@@ -62,11 +63,12 @@ sap.ui.define([
                 success: function(oData){
                     var aRecords = oData.results;
                     if(this.getProperty("useEmpty") == true) {
-                        if(aRecords && aRecords.push)
-                            aRecords.splice(0, 0, {
-                                code: this.getProperty("emptyKey"), 
-                                text: this.getProperty("emptyText")
-                            });
+                        if(aRecords && aRecords.splice){
+                            var oEmpty = {};
+                            oEmpty[this.keyField] = this.getProperty("emptyKey");
+                            oEmpty[this.textField] = this.getProperty("emptyText");
+                            aRecords.splice(0, 0, oEmpty);
+                        }
                     }
                     this.getModel().setData(aRecords, false);
                     if(handleSuccess) 

@@ -18,7 +18,7 @@ sap.ui.define([
             ComboBox.prototype.init.call(this);
 
             this.keyField = "code";
-            this.textField = "code_description";
+            this.textField = "code_name";
 
             this.attachEvent("ready", this._onReady);
         },
@@ -33,12 +33,13 @@ sap.ui.define([
                     new Filter("group_code", FilterOperator.EQ, this.getProperty("groupCode"))
                 ], aSorters = [
                     new Sorter("sort_no", false)
-                ];
-            this.read("/CodeDetails", {
+                ],
+                sLanguageCode = this.getUserChoices().getLanguage();
+            this.read("/Code", {
                 filters: aFilters,
                 sorters: aSorters,
                 urlParameters: {
-                    "$select": "code,code_description"
+                    "$select": "code,code_name"
                 }
             });
         }

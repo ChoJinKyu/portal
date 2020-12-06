@@ -17,7 +17,7 @@ sap.ui.define([
 		 * @override
 		 */
 		init : function () {
-            HashChanger.getInstance().replaceHash("");
+            //HashChanger.getInstance().replaceHash("");
             
 			// call the base component's init function
 			UIComponent.prototype.init.apply(this, arguments);

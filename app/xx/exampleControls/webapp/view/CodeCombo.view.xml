@@ -18,6 +18,8 @@
                             <Label text="Code ComboBox: "></Label>
                             <lib-m:CodeComboBox id="searchCode" width="100%" 
                                 useEmpty="true" groupCode="CM_CHAIN_CD">
+                                <!-- useEmpty="true"  textPattern="$text [= $[code] === '' ? '' : '['+$[code]+']' ]" groupCode="CM_CHAIN_CD"> -->
+                                <!-- useEmpty="true"  textPattern="$text $(= $$(code)$ === '' ? '' : '('+$$(code)$+')' )$" groupCode="CM_CHAIN_CD"> -->
                             </lib-m:CodeComboBox>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M5 S10" />
@@ -25,7 +27,8 @@
                         </VBox>
                         <VBox>
                             <Label text="Currency ComboBox: "></Label>
-                            <lib-m:CurrencyComboBox id="searchCurrency" width="100%" useEmpty="true" >
+                            <lib-m:CurrencyComboBox id="searchCurrency" width="100%" 
+                                useEmpty="true" emptyKey="ALL" emptyText="ALL" >
                             </lib-m:CurrencyComboBox>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M5 S10" />

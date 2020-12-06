@@ -25,9 +25,7 @@ sap.ui.define([
         _onReady: function(){
             var sLanguageCode = this.getUserChoices().getLanguage();
             var aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2100"),
-                    new Filter("language_code", FilterOperator.EQ, sLanguageCode),
-                    new Filter("use_flag", FilterOperator.EQ, true)
+                    new Filter("tenant_id", FilterOperator.EQ, "L2100")
                 ], aSorters = [
                     new Sorter("currency_code_name", false)
                 ];
