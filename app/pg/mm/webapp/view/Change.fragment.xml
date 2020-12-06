@@ -120,11 +120,16 @@
                                                     <content>
                                                         <ToolbarSpacer/>
                                                         <Button id="buttonMidTableCreate" text="Add" type="Transparent" press=".onMaterialDetail"/>
-                                                        <Button id="buttonMidTableDelete" text="Delete" type="Transparent" press=".onMidTableDelete"/>
+                                                        <Button id="buttonMidTableDelete" text="Delete" type="Transparent" press=".onMidListItemDelete"/>
                                                     </content>
                                                 </OverflowToolbar>
                                             </headerToolbar>                                            
-                                            <columns>      
+                                            <columns>  
+                                                <Column hAlign="Center" width="50px">
+                                                    <header>
+                                                        <Label text="상태"/>
+                                                    </header>
+                                                </Column>                                                 
                                                 <Column hAlign="Center" width="150px">
                                                     <header>
                                                         <Label text="Code"/>
@@ -173,12 +178,29 @@
                                             </columns>
                                             <items>
                                                 <ColumnListItem>
-                                                    <cells>   
+                                                    <cells> 
+                                                        <Label text="{midList>itemMode}" />  
                                                         <Label text="{midList>mi_material_code}" />                                          
                                                         <Label text="{midList>mi_material_code_name}" />                                          
-                                                        <Label text="{midList>category_name}" />                                          
-                                                        <Label text="{midList>reqm_quantity}" />                                          
-                                                        <Label text="{= ${midList>use_flag}===true?'예':'아니오'}"/>                                           
+                                                        <Label text="{midList>category_name}" />  
+                                                        <Input id="imputReqm_quantity" 
+                                                               value="{ path: 'midList>reqm_quantity',
+                                                                        type: 'sap.ui.model.type.Number',
+                                                                        constraints: {minLength : 1, maxLength : 10} }"/>                                                        
+                                                                                             
+                                                        <ComboBox id="comboboxUse_flag"
+                                                            placeholder="선택"  
+                                                            items ="{
+                                                                path : '/UseYNView',
+                                                                formatter: '.formatter.toYesNo'
+                                                            }"          
+                                                            width="150px" 
+                                                            selectedKey="{midList>use_flag}"
+                                                            >  
+                                                            <items> 
+                                                                <core:ListItem key="{code}" text="{code_name}"/>
+                                                            </items>
+                                                        </ComboBox>     
                                                         <Label text="{midList>currency_unit}" />                                          
                                                         <Label text="{midList>reqm_quantity_unit}" />                                          
                                                         <Label text="{midList>exchange}" />                                          

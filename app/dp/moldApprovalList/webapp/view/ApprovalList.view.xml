@@ -264,7 +264,7 @@
                     updateFinished=".onListMainTableUpdateFinished"
                     cellClick=".onCellClick"
                     width="auto"
-                    items="{list>/Approvals}">
+                    items="{list>/ApprovalMasters}">
                     <headerToolbar>
                         <OverflowToolbar>
                             <Title text="Approval List ({= ${list>/Approvals}.length || 0})" level="H2"/>
@@ -319,7 +319,15 @@
                             <cells>                  
                                 <CheckBox fieldGroupIds="{= ${list>approval_type_code}==='B'? 'checkBoxs':''}"  visible="{= ${list>approval_type_code}==='B'? true:false }" select=".onCheck" />       
                                 <ObjectIdentifier text="{list>approval_type_code}" />
-                                <ObjectIdentifier text="{list>company_name}" />
+                                <ComboBox  
+                                        selectedKey="{list>approval_number}" 
+                                        items="{
+                                            path: '/Approvals',
+                                            sorter: { path: 'company_code'}
+                                        }"
+                                        >
+                                    <core:Item key="{list>company_code}" text="[{list>company_code}] {list>company_name}" />
+                                </ComboBox>
                                 <ObjectIdentifier text="{list>org_name}" />
                                 <ObjectIdentifier text="{list>approval_number}" />
                                 <ObjectIdentifier text="{list>approval_title}" />

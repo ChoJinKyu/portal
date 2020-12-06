@@ -166,9 +166,22 @@
                                                         <cells>   
                                                             <Label text="{mIMaterialPriceManagement>mi_material_code}" />                                          
                                                             <Label text="{mIMaterialPriceManagement>mi_material_code_name}" />                                          
-                                                            <Label text="{mIMaterialPriceManagement>category_name}" />                                          
-                                                            <Label text="{mIMaterialPriceManagement>reqm_quantity}" />                                          
-                                                            <Label text="{mIMaterialPriceManagement>use_flag}" />                                          
+                                                            <Label text="{mIMaterialPriceManagement>category_name}" />  
+                                                            <Input id="inputReqm_quantity" value="{mIMaterialPriceManagement>reqm_quantity}"/>                                        
+                                                            <Label text="{mIMaterialPriceManagement>use_flag}" />  
+                                                            <ComboBox
+                                                                id="comboBoxCategory_code"
+                                                                selectedKey="{mIMaterialPriceManagement>use_flag}"
+                                                                items="{
+                                                                    path: '/currency_code', 
+                                                                    templateShareable:false,
+                                                                    filters : [
+                                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                                    ]
+                                                                }" 
+                                                                placeholder="선택">
+                                                                <core:Item key="{jMICategoryView>category_code}" text="{jMICategoryView>category_text}" />
+                                                            </ComboBox>                                                                                                    
                                                             <Label text="{mIMaterialPriceManagement>currency_unit}" />                                          
                                                             <Label text="{mIMaterialPriceManagement>reqm_quantity_unit}" />                                          
                                                             <Label text="{mIMaterialPriceManagement>exchange}" />                                          

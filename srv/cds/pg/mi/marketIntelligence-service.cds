@@ -159,8 +159,8 @@ service marketIntelligenceService {
                 code_name //사용여부명
         from CodeLng
         where
-                group_code  = 'CM_USE_FLAG'
-            and language_cd = 'KO';
+                group_code  = 'CM_TF_FLAG'
+            and language_cd = 'EN';
 
     // Language View
     view LanguageView @(title : '언어코드 View') as

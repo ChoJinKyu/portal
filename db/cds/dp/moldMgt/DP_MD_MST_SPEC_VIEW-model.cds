@@ -20,7 +20,7 @@ entity Md_Mst_Spec_View {
         org_code                        : String(10) not null @title : '조직코드';
         part_number                     : String(40) not null @title : '부품번호';
         mold_sequence                   : Integer not null    @title : '금형순번';
-    key mold_id                         : Integer not null    @title : '금형ID';
+    key mold_id                         : String(100) not null    @title : '금형ID';
         spec_name                       : String(500)         @title : '규격명';
         model                           : String(100)         @title : '모델';
         asset_number                    : String(100)         @title : '자산번호';
@@ -65,7 +65,7 @@ entity Md_Mst_Spec_View {
         activity_code                   : String(30)          @title : '활동코드';
         accounting_department_code      : String(30)          @title : '회계부서코드';
         acq_department_code             : String(30)          @title : '취득부서코드';
-        production_vendor_id            : String(100)         @title : '제작협력사ID';
+        production_supplier_code            : String(100)         @title : '제작협력사ID';
         remark_mst                      : String(3000)        @title : '비고';
         develope_request_code           : String(30)          @title : '개발요청코드';
         develope_request_empno          : String(50)          @title : '개발요청사번';

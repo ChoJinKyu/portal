@@ -13,110 +13,123 @@
 	
 	<Dialog>
 		<content>
-	    <l:Splitter>
-		<Button width="100%" text="1. 시황자재 선택">
-			<layoutData>
-				<l:SplitterLayoutData size="300px" />
-			</layoutData>
-            <Label text="Vendor"/>
-		</Button>
-		<Button width="100%" text="Content 2">
-			<layoutData>
-				<l:SplitterLayoutData size="auto" />
-	        </l:Splitter>                
-            <FlexBox height="60px" alignItems="Start" justifyContent="End" class="sapUiSmallMarginTop">
-                <layout:VerticalLayout class="sapUiLargeMarginEnd">
-                    <Label text="Vendor"/>
-                    <ComboBox  
-                        items="{path: '/OrgTenantView', templateShareable:true}" 
-                        placeholder="선택 하세요.">
-                        <core:Item key="{tenant_id}" text="{tenant_name}"/>
-                    </ComboBox>
-                </layout:VerticalLayout>  
-                <layout:VerticalLayout class="sapUiLargeMarginEnd">
-                    <Label text="자재코드"/>
-                <ComboBox  
-                    items="{path: '/OrgTenantView', templateShareable:true}"                     
-                    placeholder="선택 하세요.">
-                    <core:Item key="{tenant_id}" text="{tenant_name}"/>
-                </ComboBox>
-                </layout:VerticalLayout> 
-                <layout:VerticalLayout class="sapUiLargeMarginEnd">
-                    <Label text="자재명"/>
-                    <Input/>
-                </layout:VerticalLayout>  
-                <layout:VerticalLayout class="sapUiTinyMarginEnd">
-                    <Label text="　"/>
-                    <Button text="Search" press=""/>
-                </layout:VerticalLayout>  
-                <layout:VerticalLayout class="sapUiTinyMarginEnd">
-                    <Label text="　"/>
-                    <Button text="Apply" press=""/>
-                </layout:VerticalLayout>  
-            </FlexBox>    
-            <Table  id="materialTable"
-                    items= "{   
-                                path : 'materialTableList>/'
-                            }"
-                    mode="SingleSelect"
-                    updateFinished="onDtlUpdateFinished" 
-                    class="sapUiSmallMarginTop"
-            >
-            <layoutData>
-            </layoutData>
-                <columns>
-                    <Column hAlign="Center" >
-                        <header>
-                            <Label text="가격정보"/>                            
-                        </header>
-                    </Column>
-                    <Column hAlign="Center" >
-                        <header>
-                            <Label text="Vendor"/>                            
-                        </header>
-                    </Column>
-                    <Column hAlign="Center" >
-                        <header>
-                            <Label text="자재코드"/>                            
-                        </header>
-                    </Column>
-                    <Column hAlign="Center" >
-                        <header>
-                            <Label text="자재명"/>                            
-                        </header>
-                    </Column>
-                    <Column hAlign="Center" >
-                        <header>
-                            <Label text="공급업체"/>                            
-                        </header>
-                    </Column>    
-                    <Column hAlign="Center" >
-                        <header>
-                            <Label text="공급업체명"/>                            
-                        </header>
-                    </Column>                                                                                                 
-                </columns>
-                <items>
-                    <ColumnListItem type="Active" id="materialColumnListItem" press="onMaterialTableItemPress">
-                        <cells>
-                            <Text text="{CodeDetails>_row_state_}"/>
-                            <Text text="{CodeDetails>_row_state_}"/>
-                            <Text text="{CodeDetails>_row_state_}"/>
-                            <Text text="{CodeDetails>_row_state_}"/>
-                            <Text text="{CodeDetails>_row_state_}"/>
-                            <Text text="{CodeDetails>_row_state_}"/>
-                        </cells>
-                    </ColumnListItem>
-                </items>
-            </Table>                
-			</layoutData>
-		</Button>
+        <HBox width="100%">
+            <VBox class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginTop" width="500px">
+                <Label text="1. 시황자재 선택"/>
+                <SearchField id="searchField_code" 
+                             width="90%" 
+                             search=".onMaterialDetailFilter" 
+                             selectOnFocus="false"
+                             placeholder="Search Name or Code"
+                             class="sapUiTinyMarginTop sapUiTinyMarginBegin" />
+                <SearchField id="searchField_category" 
+                             width="90%" 
+                             search=".onFilter_category" 
+                             selectOnFocus="false"                             
+                             placeholder="Search Category"
+                             class="sapUiTinyMarginTop sapUiTinyMarginBegin" />
+                <Table  id="leftTable"
+                        mode="SingleSelectLeft"
+                        items="{mIMaterialCodeList>/}"
+                        selectionChange=".onSelectedLeftTableItem"
+                        itemPress=".onSelectedLeftTableItem"                        
+                        noDataText="No Data"
+                        class="sapUiSmallMarginBegin sapUiSmallMarginTop"
+                >
+                        <columns>
+                        <Column hAlign="Center" >
+                            <header>
+                                <Label text="Code"/>                            
+                            </header>
+                        </Column>
+                        <Column hAlign="Center" >
+                            <header>
+                                <Label text="Name"/>                            
+                            </header>
+                        </Column>
+                        <Column hAlign="Center" >
+                            <header>
+                                <Label text="Category"/>                            
+                            </header>
+                        </Column>                                                                                                                    
+                    </columns>
+                    <items>
+                        <ColumnListItem type="Active">
+                            <cells>
+                                <Text text="{mIMaterialCodeList>mi_material_code}"/>
+                                <Text text="{mIMaterialCodeList>mi_material_code_name}"/>
+                                <Text text="{mIMaterialCodeList>category_name}"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>                      
+            </VBox>
+            <VBox class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginTop">
+                <Label text="2. 시황자재 > 가격정보 선택"/>
 
+                <Table  id="rightTable"
+                        mode="SingleSelectLeft" 
+                        items="{mIMaterialCostInformationView>/}"  
+                        noDataText="No Data"
+                        class="sapUiSmallMarginEnd" 
+                        width="700px">
+                    <columns>
+                        <Column hAlign="Center" >
+                            <header>
+                                <Label text="화폐단위"/>                            
+                            </header>
+                        </Column>
+                        <Column hAlign="Center" >
+                            <header>
+                                <Label text="수량단위"/>                            
+                            </header>
+                        </Column>
+                        <Column hAlign="Center" >
+                            <header>
+                                <Label text="거래소"/>                            
+                            </header>
+                        </Column>
+                        <Column hAlign="Center" >
+                            <header>
+                                <Label text="인도조건"/>                            
+                            </header>
+                        </Column>
+                        <Column hAlign="Center" >
+                            <header>
+                                <Label text="최근상황일지"/>                            
+                            </header>
+                        </Column>    
+                        <Column hAlign="Center" >
+                            <header>
+                                <Label text="금액"/>                            
+                            </header>
+                        </Column>                                                                                                 
+                    </columns>
+                    <items>
+                        <ColumnListItem type="Active">
+                            <cells>
+                                <Text text="{mIMaterialCostInformationView>currency_unit}"/>
+                                <Text text="{mIMaterialCostInformationView>quantity_unit}"/>
+                                <Text text="{mIMaterialCostInformationView>exchange}"/>
+                                <Text text="{mIMaterialCostInformationView>termsdelv}"/>
+                                <Text text="{mIMaterialCostInformationView>mi_date}"/>
+                                <Text text="{mIMaterialCostInformationView>amount}"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>             
+            </VBox>
 
- 
+        </HBox>
 		</content>
 			<beginButton>
-				<Button text="Close" press="onMaterialDialog_close" />
+				<Button type="Transparent"  text="Cancel" press=".onMaterialDetailClose" />
+               
 			</beginButton>
+            <endButton>
+             <Button  text="Apply" 
+             type="Emphasized"
+             press=".onMaterialDetailApply" />
+            </endButton>
 	</Dialog>
 </core:FragmentDefinition>
