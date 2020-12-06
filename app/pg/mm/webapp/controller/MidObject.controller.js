@@ -31,6 +31,8 @@ sap.ui.define([
 
         dateFormatter: DateFormatter,
 
+        validator: new Validator(),
+
 		formatter: (function(){
 			return {
 				toYesNo: function(oData){
@@ -277,7 +279,7 @@ sap.ui.define([
             }else if(mode === "create"){
                 bRead = false;
                 bCreate = true,
-                bEdit = true;
+                bEdit = false;
             }else if(mode === "edit"){
                 bRead = false;
                 bCreate = false,
@@ -485,7 +487,7 @@ sap.ui.define([
             var oUiData = this.getModel("oUiData"),
                 oModel = this.getOwnerComponent().getModel(),
                 oTenant_id;
-            
+
             this._m.filter.material_code = "new";
 
             if (this._m.filter.material_code == "new") {

@@ -123,11 +123,11 @@
         </HBox>
 		</content>
 			<beginButton>
-				<Button text="Cancel" press=".onMaterialDetailClose" />
+				<Button type="Transparent"  text="Cancel" press=".onMaterialDetailClose" />
                
 			</beginButton>
             <endButton>
-             <Button text="Apply" 
+             <Button  text="Apply" 
              type="Emphasized"
              press=".onMaterialDetailApply" />
             </endButton>
