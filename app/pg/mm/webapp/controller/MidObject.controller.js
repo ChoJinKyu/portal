@@ -1,13 +1,15 @@
 /**
-* 
-1. 화면 레이아웃 확인
-2. 마스터 연결 진행 (Create Fragment 화면 진행) 
+* 신규 등록 Fragment에서 값 던지고 받기 marteial supply Fragment 동일화면 처리 
+-스크롤 되는부분 테이블만 스크롤 되도록 수정
+-선택후 Apply 할때 테이블 등록 
+화면 레이아웃 확인
+-마스터 연결 진행 (Create Fragment 화면 진행) 
    시황자제 삭제 프로세스 진행 - 
-3. 신규진행시 테이블 확인 준비되어야 하는곳 공지 김종현 [중요]
-4. 수정 검색 확인 
-5. ValidatorUtil 내용 확인 
-6. 전체 메세지 i18n 사용 확인 (공통 메일 확인)
-7. 레이아웃 이동 확인해야함.
+-신규진행시 테이블 확인 준비되어야 하는곳 공지 김종현 [중요]
+-수정 검색 확인 
+-ValidatorUtil 내용 확인 
+-전체 메세지 i18n 사용 확인 (공통 메일 확인)
+-레이아웃 이동 확인해야함.
 */
 sap.ui.define([
     "./BaseController",
@@ -132,7 +134,7 @@ sap.ui.define([
 
             }            
         },
-        _sso : { //수정대상 공통 사용자 정보 확인될시 
+        _sso : { //수정대상 공통 사용자 정보 확인될시 //MaterialDialog
             user : {
                 id : "Admin",
                 name : "Hong Gil-dong"
@@ -166,7 +168,10 @@ sap.ui.define([
                     supplier_local_name :"",
                     processing_cost :"",
                     pcst_currency_unit :"",
-                    base_quantity : ""              
+                    base_quantity : "",
+                    radioButtonGroup : "",
+                    multiInput_material_code : ""
+
                 });
                 
                 this.setModel(oUiData, "oUiData");
@@ -293,10 +298,10 @@ sap.ui.define([
         },
 
         /**
-         * isValNull Check
+         * _isNull Check
          * @private
          */        
-        isValNull: function (p_val) {
+        _isNull: function (p_val) {
             if (!p_val || p_val == "" || p_val == null) {
                 return true
             } else {
@@ -367,26 +372,157 @@ sap.ui.define([
             console.groupEnd();
         },
        
+        /**
+         * 자재정보 검색 MaterialDialog.fragment open
+         * @public
+         */
 		handleValueHelpMaterial: function (oEvent) {
-			var sInputValue = oEvent.getSource().getValue();
+
+            //var sInputValue = oEvent.getSource().getValue();
+            
+            var oUiData = this.getModel("oUiData");
+            oUiData.setProperty("/radioButtonGroup", this.getView().byId("radioButtonGroup").getSelectedIndex());
 
 			// create value help dialog
 			if (!this._valueHelpMaterialDialog) {
 
-                this._valueHelpMaterialDialog = sap.ui.xmlfragment(this._m.fragementId.materialDialog, this._m.fragementPath.materialDialog,this);
+                this._valueHelpMaterialDialog = sap.ui.xmlfragment(
+                    this._m.fragementId.materialDialog, 
+                    this._m.fragementPath.materialDialog,this
+                );
                 this.getView().addDependent(this._valueHelpMaterialDialog);
 
 			}                
 			this._openValueHelpMaterialDialog();
 		},
 
-		_openValueHelpMaterialDialog: function () {
+		_openValueHelpMaterialDialog: function (radioButtonGroup) {
 			// open value help dialog filtered by the input value
 			this._valueHelpMaterialDialog.open();
 		},
 
-		_handleValueHelpMaterialSearch: function (evt) {
+        /**
+         * MaterialDialog Search
+         * @public 
+         * @param {*} oEvent 
+         */
+		onValueHelpMaterialDialogSearch: function (oEvent) {
 
+            console.log("_onValueHelpMaterialDialogSearch");
+
+            //수정대상 comboBox_vendorView 준비되지 않음(20201206)
+            //comboBox_vendorView=this._findFragmentControlId(this._m.materialDialog, "comboBox_vendorView").getSelectedKey(), 
+            var oModel = this.getModel(),
+                oUiData = this.getModel("oUiData"),
+                oMaterialTableList = new JSONModel(),
+                that = this,
+                comboBox_materialView=this._findFragmentControlId(this._m.fragementId.materialDialog, "comboBox_materialView").getSelectedKey(),
+                comboBox_supplierView=this._findFragmentControlId(this._m.fragementId.materialDialog, "comboBox_supplierView").getSelectedKey(),
+                input_material_description=this._findFragmentControlId(this._m.fragementId.materialDialog, "input_material_description").getValue(),
+                input_supplier_local_name=this._findFragmentControlId(this._m.fragementId.materialDialog, "input_supplier_local_name").getValue();
+           
+        
+            //수정대상 데이타가 없음 사용자 로그인 정보 필터 등록해야함
+             var sFilters = [];
+                //new Filter("tenant_id", FilterOperator.EQ, this._sso.dept.tenant_id)                                
+            //];
+
+
+            if(oUiData.getProperty("/radioButtonGroup")==0){
+
+                if(comboBox_materialView.length>0){
+                    sFilters.push(new Filter("material_code", FilterOperator.Contains, comboBox_materialView));
+                }
+                if(comboBox_materialView.length>0){
+                    sFilters.push(new Filter("material_description", FilterOperator.Contains, input_material_description));
+                }
+
+                oModel.read(this._m.serviceName.enrollmentMaterialView, {
+                    async: false,
+                    filters: sFilters,
+                    success: function (rData, reponse) {
+    
+                        console.log(that._m.serviceName.enrollmentMaterialView +"-- json oData~~~~~~~" + JSON.stringify(reponse.data.results));
+
+                        //가격정보 Vendor 자재코드 자재명 공급업체 공급업체명
+                        oMaterialTableList.setData(reponse.data.results); 
+
+                        //등록 구분
+                        for(var i=0;i<reponse.data.results.length;i++){
+                            oMaterialTableList.oData[i].itemMode = that._m.itemMode.read;
+                            oMaterialTableList.oData[i].odataMode = that._m.odataMode.yes;
+                        }
+
+                        that.getOwnerComponent().setModel(oMaterialTableList, "materialTableList");                                         
+    
+                    }
+                });
+            }else{
+
+                if(comboBox_supplierView.length>0){
+                    sFilters.push(new Filter("supplier_code", FilterOperator.Contains, comboBox_supplierView));
+                }
+                if(input_supplier_local_name.length>0){
+                    sFilters.push(new Filter("supplier_local_name", FilterOperator.Contains, input_supplier_local_name));
+                }
+
+                oModel.read(this._m.serviceName.enrollmentSupplierView, {
+                    async: false,
+                    filters: sFilters,
+                    success: function (rData, reponse) {
+    
+                        console.log(that._m.serviceName.enrollmentSupplierView + "--json oData~~~~~~~" + JSON.stringify(reponse.data));
+                        //var oData = reponse.data.results[0];
+    
+                    }
+                });
+            }
+
+
+
+            // if(oUiData.getProperty("radioButtonGroup") == 0){
+
+            // }
+            //검색후 모델이 없으면 생성후 행추가  있으면 행추가.
+
+            //자제 추가 할당시 자제가 가지고 있는 값 또는 세션 을 확인해야한다.
+            // tenant_id company_code org_type_code org_code
+            // var cParameters = {
+            //         "tenant_id": "L2100",
+            //         "company_code": "*",
+            //         "org_type_code":  "BU",
+            //         "org_code": "BIZ00100",
+            //         "material_code": "",
+            //         "material_description": oData.material_description,
+            //         "supplier_code": "",
+            //         "supplier_local_name": "",
+            //         "supplier_english_name": "",
+            //         "base_quantity": oData.base_quantity, //이 값들은?
+            //         "processing_cost": oData.processing_cost,//이 값들은?
+            //         "pcst_currency_unit": oData.pcst_currency_unit,//이 값들은?
+            //         "mi_material_code": oData.mi_material_code,
+            //         "mi_material_code_name": oData.mi_material_code_name,
+            //         "category_code": oData.category_code,//이 값들은?
+            //         "category_name": oData.category_name,//이 값들은?
+            //         "reqm_quantity_unit": oData.reqm_quantity_unit,/이 값들은?
+            //         "reqm_quantity": oData.reqm_quantity,/이 값들은?
+            //         "currency_unit": oData.currency_unit,/이 값들은?
+            //         "mi_base_reqm_quantity": "", //화폐단위
+            //         "quantity_unit": "", //수량단위
+            //         "exchange": "", //거래소
+            //         "termsdelv": "", //인도조건
+            //         "use_flag": "N",  //기본 사용안함 
+            //         "local_create_dtm": new Date(),
+            //         "local_update_dtm": new Date(),
+            //         "create_user_id": "",
+            //         "update_user_id": "",
+            //         "system_create_dtm": new Date(),
+            //         "system_update_dtm": new Date()                        
+            // };            
+            var oMaterialTableList = new JSONModel([]);
+            this.getOwnerComponent().setModel(oMaterialTableList, "materialTableList");
+
+           // 
 		},
 
 		_handleValueHelpMaterialClose: function (evt) {
@@ -814,7 +950,7 @@ sap.ui.define([
          * 시황자재 리스트 아이템 추가. 
          * @public
          */
-        onMidListItemAdd : function(){
+        onMidListItemAdd : function(odata){
             
             var oMidListModel = this.getOwnerComponent().getModel("midList"),
                 oRightTableModel = this.getOwnerComponent().getModel("mIMaterialCostInformationView");
@@ -1104,6 +1240,13 @@ sap.ui.define([
             }           
         },
 
+        /*
+        * MaterialDialog.fragment  에서 값을 받아 테이블에 등록 처리 
+         */
+        _fnMarteialCreateItem : function () {
+
+            //this.onMidListItemAdd();
+        },
         /**
          * Crate
          * @private
