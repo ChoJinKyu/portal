@@ -88,7 +88,10 @@ sap.ui.define([
             var that = this,
                 sHtmlValue = sValue;
             sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
-                function (RTE, EditorType) {
+                function (RTE, EditorType) { 
+
+                    
+
                     var oRichTextEditor = new RTE("myRTE", {
                         editorType: EditorType.TinyMCE4,
                         width: "100%",
