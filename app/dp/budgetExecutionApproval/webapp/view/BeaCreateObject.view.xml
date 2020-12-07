@@ -196,14 +196,14 @@
                          <VBox class="sapUiSmallMargin">
                             <Label text="{I18N>/AFFILIATE}" />
                             <ObjectStatus
-                                text="{company>/Org_Company/0/company_name}" 
+                                text="{company>/company_name}" 
                                 state="Error"
                                 />
                          </VBox>
                          <VBox class="sapUiSmallMargin">
                             <Label text="{I18N>/BUSINESS_DIVISION}" />
                             <ObjectStatus
-                                text="{plant>/Org_Plant/0/plant_name}" 
+                                text="{plant>/plant_name}" 
                                 state="Error"
                                 />
                          </VBox>
