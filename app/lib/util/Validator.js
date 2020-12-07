@@ -20,6 +20,8 @@ sap.ui.define([
             "_page"
         ],
         _aValidateProperties = ["value", "selectedKey", "text"], // yes, I want to validate Select and Text controls too
+        aMultiValueControls = ["sap.m.MultiComboBox"],
+        _aValidateMultiValueProperties = ["selectedKeys"],
         oMultilingual = new Multilingual();
 
     /**
@@ -120,28 +122,47 @@ sap.ui.define([
     Validator.prototype._validateRequired = function (oControl) {
         // check control for any properties worth validating
         var isValid = true;
-        for (var i = 0; i < _aValidateProperties.length; i += 1) {
-            try {
-                //oControl.getBinding(_aValidateProperties[i]);
-                var oExternalValue = oControl.getProperty(_aValidateProperties[i]);
-
-                if (!oExternalValue == undefined || oExternalValue === "" || oExternalValue === null) {
-                    this._setValueState(oControl, ValueState.Error, this._i18n.getText("/ECM0201"));
-                    isValid = false;
-                    break;
-                } else if (oControl.getAggregation("picker") && oControl.getProperty("selectedKey").length === 0) {
-                    // might be a select
-                    this._setValueState(oControl, ValueState.Error, this._i18n.getText("/ECM0202"));
-                    isValid = false;
-                    break;
-                } else {
-                    oControl.setValueState(ValueState.None);
-                    break;
+        
+        if(aMultiValueControls.indexOf(oControl.getMetadata().getElementName()) > -1){
+            for (var i = 0; i < _aValidateMultiValueProperties.length; i += 1) {
+                try {
+                    var oValue = oControl.getProperty(_aValidateMultiValueProperties[i]);
+                    if(oValue.length == 0){
+                        this._setValueState(oControl, ValueState.Error, this._i18n.getText("/ECM0202"));
+                        isValid = false;
+                        break;
+                    }else{
+                        oControl.setValueState(ValueState.None);
+                    }
+                } catch (ex) {
+                    // Validation failed
                 }
-            } catch (ex) {
-                // Validation failed
+            }
+        }else{
+            for (var i = 0; i < _aValidateProperties.length; i += 1) {
+                try {
+                    //oControl.getBinding(_aValidateProperties[i]);
+                    var oValue = oControl.getProperty(_aValidateProperties[i]);
+    
+                    if (!oValue == undefined || oValue === "" || oValue === null) {
+                        this._setValueState(oControl, ValueState.Error, this._i18n.getText("/ECM0201"));
+                        isValid = false;
+                        break;
+                    } else if (oControl.getAggregation("picker") && oControl.getProperty("selectedKey").length === 0) {
+                        // might be a select
+                        this._setValueState(oControl, ValueState.Error, this._i18n.getText("/ECM0202"));
+                        isValid = false;
+                        break;
+                    } else {
+                        oControl.setValueState(ValueState.None);
+                        break;
+                    }
+                } catch (ex) {
+                    // Validation failed
+                }
             }
         }
+
         return isValid;
     };
 
@@ -164,15 +185,9 @@ sap.ui.define([
         if (editable) {
             try {
                 // try validating the bound value
-                var oControlBinding = oControl.getBinding(
-                    _aValidateProperties[i]
-                );
-                var oExternalValue = oControl.getProperty(
-                    _aValidateProperties[i]
-                );
-                var oInternalValue = oControlBinding
-                    .getType()
-                    .parseValue(oExternalValue, oControlBinding.sInternalType);
+                var oControlBinding = oControl.getBinding(_aValidateProperties[i]);
+                var oExternalValue = oControl.getProperty(_aValidateProperties[i]);
+                var oInternalValue = oControlBinding.getType().parseValue(oExternalValue, oControlBinding.sInternalType);
                 oControlBinding.getType().validateValue(oInternalValue);
                 oControl.setValueState(ValueState.None);
             } catch (ex) {
