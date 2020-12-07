@@ -8,6 +8,7 @@ sap.ui.define([
     "ext/lib/formatter/DateFormatter",
     "ext/lib/util/ValidatorUtil",
     "ext/lib/formatter/Formatter",
+    "ext/lib/util/Validator",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
 	"sap/ui/core/Fragment",
@@ -20,7 +21,7 @@ sap.ui.define([
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
     "sap/m/ObjectStatus",
-], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Formatter, ValidatorUtil,
+], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Formatter, ValidatorUtil, Validator,
 	Filter, FilterOperator, Fragment, MessageBox, MessageToast,
 	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus) {
 		
@@ -33,6 +34,8 @@ sap.ui.define([
             // "sap/ui/model/FilterType", 사용불가??
 
         dateFormatter: DateFormatter,
+
+        validator: new Validator(),
 
 		formatter: (function(){
 			return {
@@ -196,7 +199,8 @@ sap.ui.define([
                 "currency_suffix" : null,
 				"local_create_dtm": new Date(),
 				"local_update_dtm": new Date()
-			}, 0);
+            }, 0);
+            this.validator.clearValueState(this.byId("midTable"));
         },
 
 		onMidTableDeleteButtonPress: function(){
@@ -212,33 +216,79 @@ sap.ui.define([
 				//oModel.removeRecord(nIndex);
 				oModel.markRemoved(nIndex);
 			});
-			oTable.removeSelections(true);
+            oTable.removeSelections(true);
+            this.validator.clearValueState(this.byId("midTable"));
 		},
 		
 		/**
 		 * Event handler for saving page changes
 		 * @public
 		 */
-        onPageSaveButtonPress: function(){
+        onPageSaveButtonPress: function(){  
+            // debugger;
+            // if(this.validator.validate(this.byId("midObjectForm1Edit")) !== true) 
+            // {
+            //     debugger;
+            //     return;
+            // }
+            
+            // if(this.validator.validate(this.byId("mainTable")) !== true) 
+            // {
+            //     debugger;
+            //     return;
+            // }
+
+            var oModel = this.getModel("details"),
+				oView = this.getView();
+
+            if(!oModel.isChanged()) {
+				MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
+				return;
+            }
+            
+            if(this.validator.validate(this.byId("mainTable")) !== true) 
+            {
+                debugger;
+                return;
+            }    
+
+            
 			var oView = this.getView(),
 				that = this;
-			MessageBox.confirm("Are you sure ?", {
-				title : "Comfirmation",
+			// MessageBox.confirm("Are you sure ?", {
+			// 	title : "Comfirmation",
+			// 	initialFocus : sap.m.MessageBox.Action.CANCEL,
+			// 	onClose : function(sButton) {
+			// 		if (sButton === MessageBox.Action.OK) {
+			// 			oView.setBusy(true);
+			// 			oTransactionManager.submit({
+			// 			// oView.getModel("master").submitChanges({
+			// 				success: function(ok){
+            //                     that._setModelEditCancelMode();
+            //                     that._toShowMode();
+			// 					oView.setBusy(false);
+			// 					MessageToast.show("Success to save.");
+			// 				}.bind(this)
+			// 			});
+			// 		};
+			// 	}.bind(this)
+            // });
+            MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
+				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
 						oView.setBusy(true);
-						oTransactionManager.submit({
-						// oView.getModel("master").submitChanges({
-							success: function(ok){
+						oModel.submitChanges({
+							success: function(oEvent){
                                 that._setModelEditCancelMode();
                                 that._toShowMode();
 								oView.setBusy(false);
-								MessageToast.show("Success to save.");
-							}
+								MessageToast.show(this.getModel("I18N").getText("/NCM0005"));
+							}.bind(this)
 						});
 					};
-				}
+				}.bind(this)
 			});
 
 		},
@@ -380,14 +430,7 @@ sap.ui.define([
             this._showFormFragment('MidObject_Edit');
             this.byId("pageDeleteButton").setEnabled(!FALSE);
             
-            if(this._sTenantId === "new")
-            {
-                this.byId("midObjectForm1EditCurrencyCode").setEnabled(!FALSE);
-                this.byId("pageDeleteButton").setEnabled(FALSE);
-            }else if(this._sTenantId !== "new")
-            {
-                this.byId("midObjectForm1EditCurrencyCode").setEnabled(FALSE);
-            }
+            
 			this.byId("page").setSelectedSection("pageSectionMain");
 			//this.byId("page").setProperty("showFooter", !FALSE);
 			this.byId("pageEditButton").setEnabled(FALSE);
@@ -400,7 +443,18 @@ sap.ui.define([
 			this.byId("midTableSearchField").setEnabled(FALSE);
 			this.byId("midTableApplyFilterButton").setEnabled(FALSE);
 			this.byId("midTable").setMode(sap.m.ListMode.SingleSelectLeft);
-			this._bindMidTable(this.oEditableTemplate, "Edit");
+            this._bindMidTable(this.oEditableTemplate, "Edit");
+            if(this.byId("midObjectForm1EditCurrencyCode") !== undefined){
+                if(this._sTenantId === "new")
+                {
+                    this.byId("midObjectForm1EditCurrencyCode").setEnabled(!FALSE);
+                    this.byId("pageDeleteButton").setEnabled(FALSE);
+                }
+                else if(this._sTenantId !== "new")
+                {
+                    this.byId("midObjectForm1EditCurrencyCode").setEnabled(FALSE);
+                }
+            }
 		},
 
 		_toShowMode: function(){
@@ -500,15 +554,34 @@ sap.ui.define([
                         icon:{ path:'details>_row_state_', formatter: this.formattericon
                                 }                              
                     }), 
-					new Input({
-						value: "{details>language_code}" , required: true
-                    }),  
+                    new Input({
+                        value: {
+                        path: "details>language_code",
+                        type: new sap.ui.model.type.String(null, {
+                            maxLength: 100
+                        }),
+                        },
+                        editable: "{= ${details>_row_state_} === 'C' }",
+                        required: true
+                    }),
+					// new Input({
+					// 	value: "{details>language_code}" , required: true
+                    // }),
 					new Input({
 						value: "{details>currency_code_name}"
                     }),
                     new Input({
-						value: "{details>currency_code_desc}" , required: true
-                    }), 
+                        value: {
+                        path: "details>currency_code_desc",
+                        type: new sap.ui.model.type.String(null, {
+                            maxLength: 100
+                        }),
+                        },
+                        required: true
+                    }),
+                    // new Input({
+					// 	value: "{details>currency_code_desc}" , required: true
+                    // }), 
                     new Input({
 						value: "{details>currency_prefix}"
                     }), 

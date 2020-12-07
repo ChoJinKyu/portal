@@ -270,7 +270,7 @@
                     items="{list>/ApprovalMasters}">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="Approval List ({= ${list>/Approvals}.length || 0})" level="H2"/>
+                            <Title text="Approval List ({= ${list>/ApprovalMasters}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <!-- Add the Personalization button -->
                             <Button id="mainTableCreateButton" text="Create" type="Emphasized" press=".onDialogCreate" />
@@ -323,26 +323,30 @@
                                 <CheckBox fieldGroupIds="{= ${list>approval_type_code}==='B'? 'checkBoxs':''}"  visible="{= ${list>approval_type_code}==='B'? true:false }" select=".onCheck" />       
                                 <ObjectIdentifier text="{list>approval_type_code}" />
                                 <ComboBox  
-                                        editable="false" 
-                                        class="readonlyField"
-                                        selectedKey="{list>approval_number}" 
+                                        selectedKey="{list>company_code}" 
                                         items="{
-                                            path: '/Approvals'
+                                            path: 'org>/Org_Company',
+                                            filters: [
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                            ],
+                                            sorter: { path: 'company_code'}
                                         }"
                                         width='100%'
                                         >
-                                    <core:Item key="{approval_number}" text="[{company_code}] {company_name}" />
+                                    <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                 </ComboBox>
                                 <ComboBox  
-                                        editable="false" 
-                                        class="readonlyField"
-                                        selectedKey="{list>approval_number}" 
+                                        selectedKey="{list>company_code}" 
                                         items="{
-                                            path: '/Approvals'
+                                            path: 'purOrg>/Pur_Operation_Org',
+                                            filters: [
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
+                                                {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
+                                                {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
+                                            ]
                                         }"
-                                        width='100%'
                                         >
-                                    <core:Item key="{approval_number}" text="[{org_code}] {org_name}" />
+                                    <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}] {purOrg>org_name}" />
                                 </ComboBox>
                                 <ObjectIdentifier text="{list>approval_number}" />
                                 <ObjectIdentifier text="{list>approval_title}" />

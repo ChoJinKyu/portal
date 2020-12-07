@@ -1,7 +1,7 @@
 {
   "_version": "1.12.0",
   "sap.app": {
-    "id": "cm.msgMgr",
+    "id": "dp.participatingSupplierSelectionApproval",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "title": "{{appTitle}}",
@@ -13,7 +13,14 @@
     "resources": "resources.json",
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v2/cm.MsgMgrService/",
+        "uri": "srv-api/odata/v2/dp.ParticipatingSupplierSelectionApprovalService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
+      },
+      "moldService": {
+        "uri": "srv-api/odata/v2/dp.DetailSpecEntryService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -21,6 +28,20 @@
       },
       "commonUtilService": {
         "uri": "srv-api/odata/v2/cm.util.CommonService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
+      }, 
+      "orgMgrService": {
+        "uri": "srv-api/odata/v2/cm.OrgMgrService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
+      },
+      "purOrgMgrService": {
+        "uri": "srv-api/odata/v2/cm.PurOrgMgrService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -49,9 +70,8 @@
     }
   },
   "sap.ui5": {
-    "flexEnabled": false,
     "rootView": {
-      "viewName": "cm.msgMgr.view.App",
+      "viewName": "dp.participatingSupplierSelectionApproval.view.App",
       "type": "XML",
       "async": true,
       "id": "app"
@@ -68,16 +88,45 @@
       "compact": true,
       "cozy": true
     },
-    "handleValidation": true,
     "models": {
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "cm.msgMgr.i18n.i18n"
+          "bundleName": "dp.participatingSupplierSelectionApproval.i18n.i18n"
         }
       },
       "util": {
         "dataSource": "commonUtilService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "useBatch": true
+        }
+      },
+       "org": {
+        "dataSource": "orgMgrService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": true,
+          "useBatch": true
+        }
+      },
+      "purOrg": {
+        "dataSource": "purOrgMgrService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "useBatch": true
+        }
+      },
+      "mold": {
+        "dataSource": "moldService",
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",
@@ -105,13 +154,13 @@
         ]
     },
     "resourceRoots": {
-        "ext.lib": "../../../lib"
+      "ext.lib": "../../../lib"
     },
     "routing": {
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
-        "viewPath": "cm.msgMgr.view",
+        "viewPath": "dp.participatingSupplierSelectionApproval.view",
         "controlId": "app",
         "controlAggregation": "pages",
         "bypassed": {
@@ -123,30 +172,32 @@
       },
       "routes": [
         {
-          "pattern": "",
-          "name": "mainList",
+          "pattern": "PssaObject",
+          "name": "pssaObject",
           "target": [
-            "mainList"
+            "PssaObject"
           ]
         },
         {
-          "pattern": "Message/{tenantId}/{messageCode}/{languageCode}",
-          "name": "mainObject",
+          "pattern": "PssaCreateObject/{company}/{plant}",
+          "name": "pssaCreateObject",
           "target": [
-            "mainObject"
+            "pssaCreateObject"
           ]
         }
       ],
       "targets": {
-        "mainList": {
-          "viewName": "MainList",
-          "viewId": "mainList",
-          "viewLevel": 1
+          "pssaObject": {
+          "viewName": "PssaObject",
+          "viewId": "pssaObject",
+          "viewLevel": 2,
+          "title": "{i18n>viewObjectTitle3}"
         },
-        "mainObject": {
-          "viewName": "MainObject",
-          "viewId": "mainObject",
-          "viewLevel": 2
+         "pssaCreateObject": {
+          "viewName": "PssaCreateObject", 
+          "viewId": "pssaCreateObject",
+          "viewLevel": 2,
+          "title": "{i18n>viewObjectTitle3}"
         },
         "notFound": {
           "viewName": "NotFound",
