@@ -157,9 +157,9 @@
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                         ],
-                                        sorter: { path: 'part_number' }
+                                        sorter: { path: 'mold_number' }
                             }">
-                                <core:Item key="{part_number}" text="{part_number}" />
+                                <core:Item key="{mold_number}" text="{mold_number}" />
                             </Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
@@ -256,7 +256,7 @@
                                 <ObjectIdentifier text="{list>company_name}" />
                                 <ObjectIdentifier text="{list>org_name}" />
                                 <ObjectIdentifier text="{list>model}" />
-                                <ObjectIdentifier text="{list>part_number}" />
+                                <ObjectIdentifier text="{list>mold_number}" />
                                 <ObjectIdentifier text="{list>mold_sequence}" />
                                 <ObjectIdentifier text="{list>spec_name}" />
                                 <ObjectIdentifier text="{list>mold_spec_status_name}" />
@@ -264,7 +264,7 @@
                                 <ObjectIdentifier text="{list>create_user}" />
                                 <!-- <ObjectIdentifier text="{list>mold_spec_register_date}"/> -->
                                 <DatePicker value="{list>mold_spec_register_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
-                                <ObjectIdentifier text="{list>family_part_numbers}" />
+                                <ObjectIdentifier text="{list>family_mold_numbers}" />
                             </cells>
                         </ColumnListItem>
                     </items>

@@ -13,7 +13,7 @@ SELECT
     ,a.company_code                    
     ,a.org_type_code                   
     ,a.org_code                        
-    ,a.part_number                     
+    ,a.mold_number                     
     ,a.mold_sequence                   
     ,a.mold_id                         
     ,a.mold_progress_status_code       
