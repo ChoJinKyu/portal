@@ -1,4 +1,4 @@
-using { dp as approvalMst } from '../../../../db/cds/cm/apprReq/CM_APPROVAL_MST-model';
+using { cm as approvalMst } from '../../../../db/cds/cm/apprReq/CM_APPROVAL_MST-model';
 using { dp as approvalDtl } from '../../../../db/cds/dp/moldMgt/DP_MD_APPROVAL_DTL-model';
 using { dp as approvalsView } from '../../../../db/cds/dp/moldMgt/DP_MD_APPROVALS_VIEW-model';
 
