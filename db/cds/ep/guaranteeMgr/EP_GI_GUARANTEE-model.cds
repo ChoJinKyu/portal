@@ -2,7 +2,7 @@ namespace ep;
 
 using util from '../../cm/util/util-model';
 
-entity Guarantee {
+entity Gi_Guarantee {
     key tenant_id                 : String(5) not null;
     key company_code              : String(10) not null;
     key contract_number           : String(50) not null;
@@ -25,4 +25,4 @@ entity Guarantee {
         remark                    : String(3000);
 }
 
-extend Guarantee with util.Managed;
+extend Gi_Guarantee with util.Managed;
