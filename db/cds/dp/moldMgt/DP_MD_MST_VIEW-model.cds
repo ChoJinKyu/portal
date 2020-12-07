@@ -7,7 +7,7 @@ entity Md_Mst_View {
         company_code                    : String(10)  not null  @title:'회사코드';
         org_type_code                   : String(10)  not null  @title:'조직유형코드';
         org_code                        : String(10)  not null  @title:'조직코드';
-        part_number                     : String(40)  not null  @title:'부품번호';
+        mold_number                     : String(40)  not null  @title:'부품번호';
         mold_sequence                   : Integer     not null  @title:'금형순번';
     key mold_id                         : String(100) not null  @title:'금형ID';
         spec_name                       : String(500)           @title:'규격명';
