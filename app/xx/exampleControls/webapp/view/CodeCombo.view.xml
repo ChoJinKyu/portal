@@ -15,10 +15,9 @@
                     adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="Tenant: "></Label>
-                            <lib-m:TenantComboBox id="searchTenant" width="100%" 
-                                useEmpty="true">
-                            </lib-m:TenantComboBox>
+                            <Label text="Test: "></Label>
+                            <lib-m:CodeInput id="searchTest" width="100%" groupCode="CM_CHAIN_CD">
+                            </lib-m:CodeInput>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M5 S10" />
                             </layoutData>
@@ -30,6 +29,15 @@
                                 <!-- useEmpty="true"  textPattern="$text [= $[code] === '' ? '' : '['+$[code]+']' ]" groupCode="CM_CHAIN_CD"> -->
                                 <!-- useEmpty="true"  textPattern="$text $(= $$(code)$ === '' ? '' : '('+$$(code)$+')' )$" groupCode="CM_CHAIN_CD"> -->
                             </lib-m:CodeComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M5 S10" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Tenant: "></Label>
+                            <lib-m:TenantComboBox id="searchTenant" width="100%" 
+                                useEmpty="true">
+                            </lib-m:TenantComboBox>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M5 S10" />
                             </layoutData>

@@ -21,6 +21,7 @@ sap.ui.define([
         },
 
         init: function () {
+            debugger;
             var sUrl = ServiceUrlProvider.getServiceUtils('CodeList'),
                 oQueryBuilder = new QueryBuilder(),
                 sQuery = oQueryBuilder.count()
