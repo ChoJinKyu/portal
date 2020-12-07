@@ -146,7 +146,7 @@
                                     <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
                                     <Text text="{MoldItemSelect>mold_id}" />
                                     <Text text="{MoldItemSelect>model}" />
-                                    <Text text="{MoldItemSelect>part_number}" />
+                                    <Text text="{MoldItemSelect>mold_number}" />
                                     <Text text="{MoldItemSelect>mold_sequence}" />
                                     <Text text="{MoldItemSelect>spec_name}" />
                                     <ComboBox selectedKey="{MoldItemSelect>mold_item_type_code}"

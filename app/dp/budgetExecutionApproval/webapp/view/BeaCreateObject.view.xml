@@ -55,26 +55,26 @@
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <ObjectStatus
                         title="Approval No"
-                        text="{=${beaCreateObjectView>/editMode}? ${appMaster>/approval_number}:''}"/>
+                        text="{appMaster>/approval_number}"/>
                     <ObjectStatus
                         title="Requester"
-                        text="{=${beaCreateObjectView>/editMode}? ${appMaster>/requestor_empno}:''}"/>
+                        text="{appMaster>/requestor_empno}"/>
                     <ObjectStatus
-                        title="Request Date"
-                        text="{=${beaCreateObjectView>/editMode}? ${appMaster>/request_date}:''}"/>
+                        title="{I18N>/REQUEST_DATE}"
+                        text="{appMaster>/request_date}"/>
 				</layout:VerticalLayout>
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-					<Label text="Status :"/>
+					<Label text="{I18N>/STATUS} :"/>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
-                        text="{=${beaCreateObjectView>/editMode}?'Update':'New'}"
+                        text="{=${appMaster>/approval_number}?'Update':'New'}"
                         state="Error" />
 				</layout:VerticalLayout>
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                       <HBox>
-                        <Title text="Process"/>
+                        <Title text="{I18N>/PROCESS}"/>
                     </HBox>
                     <HBox>
                         <co:MicroProcessFlow>
@@ -119,8 +119,10 @@
                                         textAlign="Left"
                                         labelFor="input"
                                         required="true"/>
-                                    <Input
-                                        value="{=${beaCreateObjectView>/editMode}?${appMaster>/approval_title}:''}"
+                                    <Input 
+                                        name="approval_title"
+                                        id="approval_title"
+                                        value="{appMaster>/approval_title}"
                                         visible="true"
                                         width="40em" 
                                         placeholder="Input data"
@@ -128,9 +130,9 @@
                                     </Input>
                                 </HBox>
                             <VBox>
-                                <Label text="Description" labelFor="input" required="true"></Label> 
-                                <layout:VerticalLayout id="idVerticalLayout" class="sapUiContentPadding" width="100%" 
-                                    value="{=${beaCreateObjectView>/editMode}?${appMaster>/approval_contents}:''}">
+                                <Label text="{I18N>/DESCRIPTION}" labelFor="input" required="true"></Label> 
+                                <layout:VerticalLayout name="approval_contents" id="idVerticalLayout" class="sapUiContentPadding" width="100%" 
+                                    value="{=${appMaster>/approval_number}?${appMaster>/approval_contents}:''}">
 
                                 </layout:VerticalLayout>
                             </VBox>
@@ -161,11 +163,11 @@
                                     <ComboBox width="100%"  id="acquisitionDepartment" selectedKey=""  items="{}" >
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>
-                                    <Label text="Project Code"  required="true" />
+                                    <Label text="{I18N>/PROJECT_CODE}"  required="true" />
                                     <ComboBox width="100%" id="projectCode" selectedKey="" items="{}" >
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>
-                                    <Label text="Account"  required="true" />
+                                    <Label text="{I18N>/ACCOUNT}"  required="true" />
                                     <ComboBox width="100%" id="account" selectedKey="" items="{}" >
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>
@@ -181,7 +183,7 @@
                                     <ComboBox width="100%" id="importPlant" selectedKey="" items="{}" >
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>
-                                        <Label text="Customer"  />
+                                        <Label text="{I18N>/CUSTOMER}"  />
                                     <Input value="" showValueHelp="true"/>
                                     <Label text="Customer PO No"  />
                                     <Input value=""  />
@@ -192,14 +194,14 @@
 					<uxap:ObjectPageSubSection>
                        <HBox>
                          <VBox class="sapUiSmallMargin">
-                            <Label text="Affiliate" />
+                            <Label text="{I18N>/AFFILIATE}" />
                             <ObjectStatus
                                 text="{company>/Org_Company/0/company_name}" 
                                 state="Error"
                                 />
                          </VBox>
                          <VBox class="sapUiSmallMargin">
-                            <Label text="Division" />
+                            <Label text="{I18N>/BUSINESS_DIVISION}" />
                             <ObjectStatus
                                 text="{plant>/Org_Plant/0/plant_name}" 
                                 state="Error"
@@ -219,12 +221,12 @@
                                 <OverflowToolbar>
                                     <ToolbarSpacer/>
                                     <!-- Add the Personalization button -->
-                                    <Button id="btnPsAdd"  type="Transparent" text="Add" press=".handleTableSelectDialogPress" >
+                                    <Button id="btnPsAdd"  type="Transparent" text="{I18N>/ROW_ADD}" press=".handleTableSelectDialogPress" > <!-- Add -->
                                     	<customData>
                                             <core:CustomData key="multi" value="true" />
                                         </customData>
                                     </Button>
-                                    <Button id="btnPsDelete"   type="Transparent" text="Delete"  press=".onPsDelRow" />
+                                    <Button id="btnPsDelete"   type="Transparent" text="{I18N>/ROW_DELETE}"  press=".onPsDelRow" />
                                    
                                 </OverflowToolbar>
                             </table:extension>          
@@ -233,11 +235,11 @@
                                     <table:Column id="c_mold_id"  visible="false">
                                         <Label text="mold_id"/>           
                                         <table:template>
-                                            <Text id="t_mold_id" text="{path: 'appDetail>mold_id', type: 'sap.ui.model.type.Integer'}"/>
+                                            <Text id="t_mold_id" text="{path:'appDetail>mold_id', type: 'sap.ui.model.type.Integer'}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_model" width="20em" hAlign="Center">
-                                        <Label text="Model"/>           
+                                        <Label text="{I18N>/MODEL}"/>           
                                         <table:template>
                                             <Text id="t_model" text="{appDetail>model}"/>
                                         </table:template>
@@ -245,13 +247,13 @@
                                     <table:Column id="c_moldPartNo" width="10em" hAlign="Center">
                                         <Label text="Mold&#10;Part No"/>           
                                         <table:template>
-                                            <Text id="t_mold_part_no" text="{appDetail>part_number}"/>
+                                            <Text id="t_mold_part_no" text="{appDetail>mold_number}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_seq" width="5em" hAlign="Center">
                                         <Label text="Seq"/>           
                                         <table:template>
-                                            <Text id="t_seq" text="{appDetail>mold_sequence}"/>
+                                            <Text id="t_seq" text="{path:'appDetail>mold_sequence', type: 'sap.ui.model.type.Integer'}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_description" width="15em" hAlign="Center">
@@ -259,23 +261,7 @@
                                         <table:template>
                                             <Text id="description" text="{appDetail>spec_name}"/>
                                         </table:template>
-                                    </table:Column>       
-                                    <table:Column id="c_MoldItemType" width="10em" hAlign="Center">
-                                        <Label text="Mold Item Type"/>           
-                                        <table:template>
-                                            <ComboBox selectedKey="{appDetail>mold_item_type_code}"
-                                                items="{ path : 'util>/CodeDetails',
-                                                            filters : [
-                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
-                                                            ]
-                                                        }"
-                                                editable="false" >  
-                                                <core:Item key="{util>code}" text="{util>code_description}" />
-                                            </ComboBox>
-                                        </table:template>
-                                    </table:Column>                                     
-                                                              
+                                    </table:Column>                               
                                     <table:Column id="c_productionType" width="10em" hAlign="Center">
                                         <Label text="Production Type"/>           
                                         <table:template>
