@@ -173,7 +173,7 @@
       "routes": [
         {
           "pattern": "PssaObject",
-          "name": "PssaObject",
+          "name": "pssaObject",
           "target": [
             "PssaObject"
           ]
@@ -187,15 +187,15 @@
         }
       ],
       "targets": {
-         "pssaCreateObject": {
-          "viewName": "PssaCreateObject", 
-          "viewId": "pssaCreateObject",
+          "pssaObject": {
+          "viewName": "PssaObject",
+          "viewId": "pssaObject",
           "viewLevel": 2,
           "title": "{i18n>viewObjectTitle3}"
         },
-         "pssaObject": {
-          "viewName": "PssaObject",
-          "viewId": "pssaObject",
+         "pssaCreateObject": {
+          "viewName": "PssaCreateObject", 
+          "viewId": "pssaCreateObject",
           "viewLevel": 2,
           "title": "{i18n>viewObjectTitle3}"
         },
