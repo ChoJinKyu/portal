@@ -121,11 +121,18 @@
                                             text="{
                                                 path:'viewModel>/detail/tenant_id'
                                             }"/>
-                                        <m:Input
+                                        <m:ComboBox   
                                             id="tenant_id"
+                                            showSecondaryValues= "true"
+                                            selectedKey="{viewModel>/detail/tenant_id}"
                                             visible="{contModel>/detail/editMode}"
-                                            value="{viewModel>/detail/tenant_id}">
-                                        </m:Input>
+                                            selectionChange=".onTenantChange"
+                                            items="{orgMgr>/Org_Tenant}">
+                                            <core:ListItem 
+                                                key="{orgMgr>tenant_id}" 
+                                                text="{orgMgr>tenant_name}"
+                                                additionalText="{orgMgr>tenant_id}"/>
+                                        </m:ComboBox>
                                         <m:layoutData>
                                             <layout:GridData
                                                 span="XL2 L3 M6 S12" />
@@ -145,21 +152,11 @@
                                             id="chain_code"
                                             visible="{contModel>/detail/editMode}"
                                             selectedKey="{viewModel>/detail/chain_code}"
-                                            showSecondaryValues="true"
-                                            items="{
-                                                path : 'util>/CodeDetails',
-                                                filters : [
-                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
-                                                    {path : 'group_code', operator : 'EQ', value1 : 'CM_CHAIN_CD'}                                                               
-                                                ]
-                                            }"
-                                        >
-                                            <core:Item key="{util>code}" text="{util>code}: {util>code_description}"/>
-                                        </m:ComboBox>
+                                            showSecondaryValues="true"/>
                                         <m:layoutData>
                                             <layout:GridData
                                                 span="XL2 L3 M6 S12" />
-                                        </m:layoutData>
+                                        </m:layoutData>   
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label

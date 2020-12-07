@@ -37,7 +37,20 @@
                                 text="Tenant: "
                                 labelFor="search_tenant">
                             </Label>
-                            <Input id="search_tenant"/>
+                            <ComboBox   
+                                id="search_tenant"
+                                showSecondaryValues= "true"
+                                selectionChange=".onTenantChange"
+                                selectedKey="{contModel>/tenant_id}"
+                                items="{
+                                    path : 'orgMgr>/Org_Tenant'
+                                }"
+                            >
+                               <core:ListItem 
+                                    key="{orgMgr>tenant_id}" 
+                                    text="{orgMgr>tenant_name}"
+                                    additionalText="{orgMgr>tenant_id}"/>
+                            </ComboBox>
                             <layoutData>
                                 <layout:GridData
                                     span="XL2 L3 M6 S12" />
@@ -48,8 +61,9 @@
                                 text="Chain : "
                                 labelFor="search_chain">
                             </Label>
-                            <ComboBox   
+                            <!-- <ComboBox   
                                 id="search_chain"
+                                showSecondaryValues= "true"
                                 items="{
                                     path : 'util>/CodeDetails',
                                     filters : [
@@ -58,12 +72,18 @@
                                     ]
                                 }"
                             >
-                                <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
-                            </ComboBox>
+                                <core:Item 
+                                    key="{util>code}" 
+                                    text="{util>code_description}"
+                                    additionalText = "{util>code}" />
+                            </ComboBox> -->
+                            <ComboBox   
+                                id="search_chain"
+                                showSecondaryValues= "true"/>
                             <layoutData>
                                 <layout:GridData
                                     span="XL2 L3 M6 S12" />
-                            </layoutData>
+                            </layoutData>   
                         </VBox>
                         <VBox>
                             <Label

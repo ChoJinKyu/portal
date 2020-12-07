@@ -98,6 +98,7 @@ sap.ui.define([
 
         onEditPress : function(){
             this._fnSetEditMode();
+            this.onTenantChange();
         },
 
         onCancelPress : function(){
@@ -114,7 +115,7 @@ sap.ui.define([
                 group_code: "",
                 group_description: "",
                 group_name: "",
-                tenant_id: "",
+                tenant_id: "L2100",
                 use_flag: true
                 // CodeDetails: []
             };
@@ -170,6 +171,7 @@ sap.ui.define([
             var oSearchBtn = oBeginColumnPage.byId('btn_search');
             oSearchBtn.firePress();
         },
+
         onSavePress : function(){
             var oContModel = this.getModel("contModel");
             var bCreateFlag = oContModel.getProperty("/detail/createMode");
@@ -233,7 +235,7 @@ sap.ui.define([
                 success: function(data){
                     this._fnMasterSearch();
                     this._fnSetReadMode();
-                },
+                }.bind(this),
                 error: function(data){
                     console.log('error',data)
                 }
@@ -280,7 +282,6 @@ sap.ui.define([
         },
 
 		_onDetailMatched: function (oEvent) {
-            console.log('_onDetailMatched', oEvent)
             this._fnInitControlModel();
 
             var sTenantId = oEvent.getParameter("arguments").tenantId;
@@ -294,6 +295,7 @@ sap.ui.define([
             if(bCreateMode){
                 this._fnSetCreateMode();
                 this._fnSetCreateData();
+                this.onTenantChange();
             }else{
                 this._fnSetReadMode();
                 this._fnReadDetails(sTenantId, sGroupCode);
@@ -370,10 +372,25 @@ sap.ui.define([
             }
 
             return aChain;
+        },
 
-            
+        onTenantChange : function(oEvent){
+            // var sTenant = oEvent.getSource().getSelectedKey();
+            var oViewModel = this.getModel("viewModel");
+            var sTenant = oViewModel.getProperty("/detail/tenant_id");
+            var aFilters = [
+                new Filter("tenant_id", FilterOperator.EQ, sTenant),
+                new Filter("group_code", FilterOperator.EQ, 'CM_CHAIN_CD')
+            ];
+            var oItemTemplate = new sap.ui.core.ListItem({
+                key : "{util>code}",
+                text : "{util>code_description}",
+                additionalText : "{util>code}"
+            });
 
-            
+            var oChain = this.byId("chain_code");
+            oChain.setSelectedKey(null);
+            oChain.bindItems("util>/CodeDetails", oItemTemplate, null, aFilters);
         }
 	});
 });

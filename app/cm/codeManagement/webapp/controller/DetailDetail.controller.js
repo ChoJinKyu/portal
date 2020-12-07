@@ -126,9 +126,9 @@ sap.ui.define([
             var oViewModel = this.getModel("viewModel");
             oViewModel.setProperty("/detailDetail", oInitDetailData);
 
-            var model = this.getModel('list');
-            model.setData([]);
-            // 레코드추가
+            var model = this.getModel('languages');
+            model.setProperty("/CodeLanguages", []);
+            // 기본 레코드
             var oData = {
                 code: "",
                 code_name: "",
@@ -138,7 +138,7 @@ sap.ui.define([
                 local_create_dtm: new Date(),
                 local_update_dtm: new Date()
             }
-            model.addRecord(oData, 0);
+            model.addRecord(oData, "/CodeLanguages", 0);
 
             /*
             var aInitLangData = [
@@ -222,9 +222,7 @@ sap.ui.define([
             oServiceModel.read("/CodeLanguages",{
                 filters : aFilters,
                 success : function(data){
-                    console.log(this)
-                    console.log(oServiceModel)
-                    oViewModel.setProperty("/languages", data.results);
+                    // oViewModel.setProperty("/languages", data.results);
                     // oCodeMasterTable.setBusy(false);
                 },
                 error : function(data){
@@ -322,12 +320,10 @@ sap.ui.define([
                 groupId: "createDetail",
                 success: function(data){
                     console.log(data)
-                    alert("Yes!!Yes!!Yes!!Yes!!")
                     // this._fnSetReadMode();
                 }.bind(this),
                 error: function(data){
                     console.log('error',data)
-                    alert("에라")
                 }
             });
 
@@ -353,16 +349,17 @@ sap.ui.define([
                 groupId: "createDetail",
                 success: function(data){
                     var oLangModel = this.getModel("languages");
-                    oLangModel.getData().forEach(function(item, i){
-                        oLangModel.setProperty("/"+i+"/tenant_id", oParam.tenant_id);
-                        oLangModel.setProperty("/"+i+"/group_code", oParam.group_code);
-                        oLangModel.setProperty("/"+i+"/code", oParam.code);
+                    oLangModel.getProperty("/CodeLanguages").forEach(function(item, i){
+                        oLangModel.setProperty("/CodeLanguages/"+i+"/tenant_id", oParam.tenant_id);
+                        oLangModel.setProperty("/CodeLanguages/"+i+"/group_code", oParam.group_code);
+                        oLangModel.setProperty("/CodeLanguages/"+i+"/code", oParam.code);
                     })
-                    this.getModel('languages').submitChanges({
+                    oLangModel.submitChanges({
+                        groupId: "CodeLanguages",
                         success: (function (oEvent) {
                             this._fnSetReadMode();
                             MessageToast.show("Success to save.");
-                        })
+                        }.bind(this))
                     });
                 }.bind(this),
                 error: function(data){
@@ -386,19 +383,22 @@ sap.ui.define([
             oModel.update(sCreatePath, oParam, {
                 success: function(data){
                     var oLangModel = this.getModel("languages");
-                    oLangModel.getData().forEach(function(item, i){
-                        if(item["_row_state_"] === "C"){
-                            oLangModel.setProperty("/"+i+"/tenant_id", oParam.tenant_id);
-                            oLangModel.setProperty("/"+i+"/group_code", oParam.group_code);
-                            oLangModel.setProperty("/"+i+"/code", oParam.code);
+                    oLangModel.getProperty("/CodeLanguages").forEach(function(item, i){
+                        if(item["tenant_id"] === ""){
+                            oLangModel.setProperty("/CodeLanguages/"+i+"/tenant_id", oParam.tenant_id);
+                            oLangModel.setProperty("/CodeLanguages/"+i+"/group_code", oParam.group_code);
+                            oLangModel.setProperty("/CodeLanguages/"+i+"/code", oParam.code);
                         }                        
                     })
-                    this.getModel('list').submitChanges({
-                        success: (function (oEvent) {
+
+                    oLangModel.submitChanges({
+                        groupId: "CodeLanguages",
+                        success: function (data) {
                             this._fnSetReadMode();
                             MessageToast.show("Success to update.");
-                        })
+                        }.bind(this)
                     });
+
                 }.bind(this),
                 error: function(data){
                     console.log('error',data)
@@ -433,13 +433,17 @@ sap.ui.define([
         onDelLangPress: function (oEvent) {
         var table = oEvent.getSource().getParent().getParent().getParent();
         var model = this.getView().getModel(table.getBindingInfo('items').model);
-        
-        table.getSelectedItems().forEach(function(item){
+        model.setProperty("/entityName", "CodeLanguages");
+
+        table.getSelectedItems().reverse().forEach(function(item){
             var iSelectIndex = table.indexOfItem(item);
             if(iSelectIndex > -1){
+                console.log('del : ',iSelectIndex)
                 model.markRemoved(iSelectIndex);
             }
-        })
+        });
+
+        table.removeSelections(true);
 
         // table
         //   .getSelectedIndices()
@@ -465,7 +469,7 @@ sap.ui.define([
                 local_create_dtm: new Date(),
                 local_update_dtm: new Date()
             }
-            model.addRecord(oData, 0);
+            model.addRecord(oData, "/CodeLanguages", 0);
         },
 
         onAddLangPressT : function(oEvent){
