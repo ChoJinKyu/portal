@@ -34,8 +34,6 @@ sap.ui.define([
             this.keyField = "code";
             this.textField = "text";
 
-            this.oServiceModel = ODataV2ServiceProvider.getCommonService();
-
             this.attachEvent("modelContextChange", this._onModelContextChange);
         },
 
@@ -59,6 +57,8 @@ sap.ui.define([
 
         read: function(sPath, oParameters){
             var handleSuccess = oParameters.success;
+            if(!this.oServiceModel)
+                this.oServiceModel = ODataV2ServiceProvider.getCommonService();
             this.oServiceModel.read(sPath, jQuery.extend(oParameters, {
                 success: function(oData){
                     var aRecords = oData.results;
