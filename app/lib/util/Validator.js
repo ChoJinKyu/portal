@@ -128,6 +128,7 @@ sap.ui.define([
                 if (!oExternalValue == undefined || oExternalValue === "" || oExternalValue === null) {
                     this._setValueState(oControl, ValueState.Error, this._i18n.getText("/ECM0201"));
                     isValid = false;
+                    debugger;
                     break;
                 } else if (oControl.getAggregation("picker") && oControl.getProperty("selectedKey").length === 0) {
                     // might be a select

@@ -1,9 +1,9 @@
 sap.ui.define([
-	"ext/lib/controller/BaseController",
+	"ext/lib/controller/BaseController"
 ], function (BaseController) {
 	"use strict";
 
-	return BaseController.extend("cm.msgMgr.controller.App", {
+	return BaseController.extend("cm.orgMgr.controller.App", {
 
 		onInit : function () {
 			// apply content density mode to root view
