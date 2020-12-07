@@ -18,7 +18,7 @@ service BudgetExecutionApprovalService {
             mst.company_code,
             mst.org_type_code,
             mst.org_code,
-            mst.part_number,
+            mst.mold_number,
             mst.mold_sequence,
             mst.mold_id,
             mst.spec_name,
