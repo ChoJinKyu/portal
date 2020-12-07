@@ -7,7 +7,7 @@ entity Md_Approvals_View {
         approval_type_code  : String(30)            @title:'품의유형코드';
         approval_title      : String(300)           @title:'품의제목';
         company_name        : String(50);                        
-        org_name            : String(50)                       
+        org_name            : String(50);                       
         company_code        : String(50);                      
         org_type_code       : String(50);                     
         org_code            : String(50);                    
