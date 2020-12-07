@@ -41,8 +41,8 @@ service DetailSpecEntryService {
     where a.model is not null;
 
     view PartNumbers as
-    select distinct key a.tenant_id, key a.part_number, a.spec_name, a.mold_item_type_name
+    select distinct key a.tenant_id, key a.mold_number, a.spec_name, a.mold_item_type_name
     from moldMstSpecView.Md_Mst_Spec_View a
-    where a.part_number is not null;
+    where a.mold_number is not null;
     
 }

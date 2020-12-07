@@ -935,6 +935,44 @@ sap.ui.define([
             this.onMaterialDetailClose();
 
         },
+
+        onValueHelpMaterialDialogApply : function () {
+            console.log("onValueHelpMaterialDialogApply");
+            var oTable = this._findFragmentControlId(this._m.fragementId.materialDialog, "materialTable"),            
+                oSelected = oTable.getSelectedContexts(),
+                oModel = this.getModel("materialTableList");
+
+            if(oSelected.length<1){
+                this._showMessageBox(
+                    "선택 확인",
+                    "항목을 선택 하여 주십시요.",
+                    this._m.messageType.Warning,
+                    function(){return;}
+                );
+                return;
+            }
+            debugger;
+
+            for(var i=0;i<oSelected.length;i++){
+
+                var idx = parseInt(oSelected[0].sPath.substring(oSelected[0].sPath.lastIndexOf('/') + 1));
+
+
+                var odata = oModel.oData[idx];
+                //oModel.oData[idx].itemMode=this._m.itemMode.delete;
+                //oModel.oData[idx].itemMode=this._m.itemMode.delete;
+
+            }
+
+            
+            oTable.removeSelections();
+
+            this.onMaterialDialog_close();
+        },
+
+        onMaterialDialog_close : function (){
+            this._valueHelpMaterialDialog.close();
+        },
         /**
          * 수정대상 : 테이블을 확인할수 없으 므로 임시 
          * 시황재재 선택 및 가격정보 선택 페이지 close

@@ -9,8 +9,8 @@
 		cancel=".onValueHelpCancelPress"
 		afterClose=".onValueHelpAfterClose"
         supportMultiselect="false"
-		key="part_number"
-		descriptionKey="part_number"
+		key="mold_number"
+		descriptionKey="mold_number"
 	>
     <filterBar>
 			<fb:FilterBar advancedMode="true" search=".onFilterBarSearch">
