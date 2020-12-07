@@ -29,7 +29,7 @@ entity MI_Material_Price_Management {
         mi_material_code_name : String(240)         @title : '시황자재코드명';
     key category_code         : String(40) not null @title : '카테고리코드';
         category_name         : String(240)         @title : '카테고리명';
-        use_flag              : Boolean             @title : '사용여부';
+        use_flag              : Boolean not null    @title : '사용여부';
     key exchange              : String(10) not null @title : '거래소';
     key currency_unit         : String(30) not null @title : '통화단위';
     key quantity_unit         : String(10) not null @title : '수량단위';

@@ -24,6 +24,7 @@ entity Mm_Material_Group {
   key material_group_code : String(30)  not null @title: '자재그룹코드' ;	
     material_group_name : String(100)  not null @title: '자재그룹명' ;	
     material_group_desc : String(1000)   @title: '자재그룹설명' ;	
+    use_flag : Boolean default false  @title: '사용여부' ;	
 }
 
 extend Mm_Material_Group with util.Managed;

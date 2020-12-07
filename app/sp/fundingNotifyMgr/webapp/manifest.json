@@ -19,14 +19,6 @@
           "odataVersion": "2.0"
         }
       },
-      "orgMgrService": {
-        "uri": "../../../cm/codeMgr/srv-api/odata/v2/cm.OrgMgrService/",
-        "type": "OData",
-        "settings": {
-          "odataVersion": "2.0",
-          "localUri": "localService/metadata.xml"
-        }
-      },
       "commonUtilService": {
         "uri": "srv-api/odata/v2/cm.util.CommonService/",
         "type": "OData",
@@ -93,16 +85,6 @@
           "useBatch": true
         }
       },
-      "org": {
-        "dataSource": "orgMgrService",
-        "preload": true,
-        "settings": {
-          "operationMode": "Server",
-          "groupId": "$direct",
-          "synchronizationMode": "None",
-          "autoExpandSelect": true
-        }
-      },
       "": {
         "dataSource": "mainService",
         "preload": true,
@@ -147,7 +129,7 @@
           ]
         },
         {
-          "pattern": "midObject/{layout}/{tenantId}",
+          "pattern": "midObject/{layout}/{tenantId}/{fundingNotifyNumber}",
           "name": "midPage",
           "target": [
             "mainObject",

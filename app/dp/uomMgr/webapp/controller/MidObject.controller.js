@@ -155,7 +155,8 @@ sap.ui.define([
 						oMasterModel.submitChanges({
 							success: function(ok){
 								oView.setBusy(false);
-								that.onPageNavBackButtonPress.call(that);
+                                that.onPageNavBackButtonPress.call(that);
+                                that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
 								MessageToast.show("Success to delete.");
 							}
 						});
@@ -308,13 +309,15 @@ sap.ui.define([
 
 				var oMasterModel = this.getModel("master");
 				oMasterModel.setData({
-					"tenant_id": "L2600",										
+                    "tenant_id": "L2600",
+                    "uom_code": "",
+                    "base_unit_flag": false,
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
 				}, "/Uom");
 				var oDetailsModel = this.getModel("details");
 				oDetailsModel.setTransactionModel(this.getModel());
-				oDetailsModel.setData([]);
+				oDetailsModel.setData([], "/UomLng");
 				oDetailsModel.addRecord({
 					"tenant_id": this._sTenantId,
 					"uom_code": this._sUomCode,
@@ -373,7 +376,7 @@ sap.ui.define([
 			this.byId("page").setSelectedSection("pageSectionMain");
 			this.byId("page").setProperty("showFooter", !FALSE);
 			this.byId("pageEditButton").setEnabled(FALSE);
-			//this.byId("pageDeleteButton").setEnabled(FALSE);
+			this.byId("pageDeleteButton").setEnabled(FALSE);
 			this.byId("pageNavBackButton").setEnabled(FALSE);
 
 			this.byId("midTableAddButton").setEnabled(!FALSE);
@@ -390,7 +393,7 @@ sap.ui.define([
 			this.byId("page").setSelectedSection("pageSectionMain");
 			this.byId("page").setProperty("showFooter", !TRUE);
 			this.byId("pageEditButton").setEnabled(TRUE);
-			//this.byId("pageDeleteButton").setEnabled(TRUE);
+			this.byId("pageDeleteButton").setEnabled(TRUE);
 			this.byId("pageNavBackButton").setEnabled(TRUE);
 
 			this.byId("midTableAddButton").setEnabled(!TRUE);
@@ -412,13 +415,13 @@ sap.ui.define([
 					}), 
 					new Text({
 						text: "{details>commercial_uom_code}"
-					}), 
-					new Text({
-						text: "{details>technical_uom_code}"
-                    }),
+					}),					
                     new Text({
 						text: "{details>commercial_uom_name}"
-					}), 
+                    }),
+                    new Text({
+						text: "{details>technical_uom_code}"
+                    }), 
 					new Text({
 						text: "{details>technical_uom_name}"
                     }),
@@ -452,19 +455,51 @@ sap.ui.define([
                     }),
 					oLanguageCode, 
 					new Input({
-						value: "{details>commercial_uom_code}"
-					}), 
-					new Input({
-						value: "{details>technical_uom_code}"
+                        value: {
+                            path: 'details>commercial_uom_code',
+                            type: 'sap.ui.model.type.String',
+                            constraints: {
+                                maxLength: 3
+                            }
+                        },
+                        required : true
                     }),
                     new Input({
-						value: "{details>commercial_uom_name}"
+                        value: {
+                            path: 'details>commercial_uom_name',
+                            type: 'sap.ui.model.type.String',
+                            constraints: {
+                                maxLength: 30
+                            }
+                        }						
 					}), 
 					new Input({
-						value: "{details>technical_uom_name}"
+                        value: {
+                            path: 'details>technical_uom_code',
+                            type: 'sap.ui.model.type.String',
+                            constraints: {
+                                maxLength: 6
+                            }
+                        },
+                        required : true                        
+                    }),                     
+					new Input({
+                        value: {
+                            path: 'details>technical_uom_name',
+                            type: 'sap.ui.model.type.String',
+                            constraints: {
+                                maxLength: 30
+                            }
+                        }						
                     }),
                     new Input({
-						value: "{details>uom_description}"
+                        value: {
+                            path: 'details>uom_description',
+                            type: 'sap.ui.model.type.String',
+                            constraints: {
+                                maxLength: 50
+                            }
+                        }						
 					})
 				]
             });

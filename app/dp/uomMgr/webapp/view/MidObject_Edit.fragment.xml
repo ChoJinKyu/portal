@@ -11,7 +11,13 @@
 		
 		<core:Title text="Normal" />
 		<Label text="UOM" required="true"/>
-		<Input value="{master>/uom_code}" editable="{midObjectView>/isAddedMode}"/>
+        <Input value="{
+                path: 'master>/uom_code',
+                type: 'sap.ui.model.type.String',
+                constraints: {
+                    maxLength: 5
+                }
+            }" editable="{midObjectView>/isAddedMode}" required="true"></Input>
         <Label text="Class" required="true"/>
         <ComboBox id="editClassCode" width="100%" selectedKey="{master>/uom_class_code}" items="{
             path: 'uomClass>/UomClass'
@@ -27,29 +33,59 @@
 			</layoutData>
 		</Switch>
         <Label text="Description" required="false"/>
-		<Input value="{master>/uom_description}"/>
-        <Label text="Disable Date" required="false"/>        
-		<DatePicker placeholder="Disable Date" dateValue="{master>/disable_date}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
+        <Input value="{
+                path: 'master>/uom_description',
+                type: 'sap.ui.model.type.String',
+                constraints: {
+                    maxLength: 50
+                }
+            }" ></Input>		
+        <Label text="Disable Date" required="false"/>
+        <DatePicker placeholder="Disable Date" value="{path: 'master>/disable_date',type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' }}"/>
 
         <core:Title text="Display" />
-        <Label text="Commercial" required="true"/>
-        <Input value="{master>/commercial_uom_code}"/>
-        <Label text="Commercial Text" required="true"/>
-        <Input value="{master>/commercial_uom_name}" editable="{midObjectView>/isAddedMode}"/>
-        <Label text="Technical" required="true"/>
-        <Input value="{master>/technical_uom_code}"/>
+        <Label text="Commercial"/>
+        <Input value="{
+                path: 'master>/commercial_uom_code',
+                type: 'sap.ui.model.type.String',
+                constraints: {
+                    maxLength: 3
+                }
+            }" required="true"></Input>        
+        <Label text="Commercial Text"/>
+        <Input value="{
+                path: 'master>/commercial_uom_name',
+                type: 'sap.ui.model.type.String',
+                constraints: {
+                    maxLength: 30
+                }
+            }" editable="{midObjectView>/isAddedMode}" required="true"></Input>        
+        <Label text="Technical"/>
+        <Input value="{
+                path: 'master>/technical_uom_code',
+                type: 'sap.ui.model.type.String',
+                constraints: {
+                    maxLength: 6
+                }
+            }" required="true"></Input>        
         <Label text="Technical Text" required="true"/>
-        <Input value="{master>/technical_uom_name}" editable="{midObjectView>/isAddedMode}"/>
+        <Input value="{
+                path: 'master>/technical_uom_name',
+                type: 'sap.ui.model.type.String',
+                constraints: {
+                    maxLength: 30
+                }
+            }" editable="{midObjectView>/isAddedMode}" required="true"></Input>  
         <Label text="Decimal Places"/>
         <Input value="{master>/decimal_places}"/>
         <Label text="Float. Point Idex"/>
         <Input value="{master>/floating_decpoint_index}"/>
 
         <core:Title text="Conversion" />
-		<Label text="Numerator"/>
-        <Input value="{master>/conversion_numerator}" editable="{midObjectView>/isAddedMode}"/>
-        <Label text="Denominator"/>
-        <Input value="{master>/conversion_denominator}" editable="{midObjectView>/isAddedMode}"/>
+		<Label text="Numerator" required="true"/>
+        <Input value="{master>/conversion_numerator}" editable="{midObjectView>/isAddedMode}" required="true"/>
+        <Label text="Denominator" required="true"/>
+        <Input value="{master>/conversion_denominator}" editable="{midObjectView>/isAddedMode}" required="true"/>
         <Label text="Index"/>
         <Input value="{master>/conversion_index}" editable="{midObjectView>/isAddedMode}"/>
         <Label text="Rate"/>

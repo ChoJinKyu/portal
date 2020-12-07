@@ -317,6 +317,17 @@ sap.ui.define([
         this.onPageNavBackButtonPress.call(this);
       } else {
         this._toShowMode();
+        // ljh - 재조회
+        this.getModel("details")
+          .setTransactionModel(this.getModel())
+          .read("/ControlOptionDetails", {
+            filters: [
+              new Filter("tenant_id", FilterOperator.EQ, this._sTenantId || "XXXXX"),
+              new Filter("control_option_code", FilterOperator.EQ, this._sControlOptionCode)
+            ],
+            success: function (oData) {
+            }
+          });
       }
     },
 

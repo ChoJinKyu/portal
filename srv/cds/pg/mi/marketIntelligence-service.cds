@@ -15,7 +15,7 @@ using {pg as MIMatCostInfoView} from '../../../../db/cds/pg/mi/PG_MI_MATERIAL_CO
 //Material
 using {dp.Mm_Material_Desc_Lng as MaterialDesc} from '../../../../db/cds/dp/materialMgr/materialMasterMgr/DP_MM_MATERIAL_DESC_LNG-model';
 //Supplier
-using {sp.Sup_Supplier_Mst as SupplierMaster} from '../../../../db/cds/sp/supplierMgr/SP_SUP_SUPPLIER_MST-model';
+using {sp.Sm_Supplier_Mst as SupplierMaster} from '../../../../db/cds/sp/supplierMgr/SP_SM_SUPPLIER_MST-model';
 //CM ORG
 using {cm.Org_Tenant as OrgTenant} from '../../../../db/cds/cm/orgMgr/CM_ORG_TENANT-model';
 using {cm.Org_Company as OrgCompany} from '../../../../db/cds/cm/orgMgr/CM_ORG_COMPANY-model';
@@ -159,8 +159,8 @@ service marketIntelligenceService {
                 code_name //사용여부명
         from CodeLng
         where
-                group_code  = 'CM_USE_FLAG'
-            and language_cd = 'KO';
+                group_code  = 'CM_TF_FLAG'
+            and language_cd = 'EN';
 
     // Language View
     view LanguageView @(title : '언어코드 View') as
@@ -283,7 +283,7 @@ service marketIntelligenceService {
         select distinct
             key tenant_id, //회사코드
             key material_code, //자재코드
-                material_description //자재코드명
+                material_desc //자재코드명
         from MaterialDesc
         order by
             tenant_id,
@@ -307,7 +307,7 @@ service marketIntelligenceService {
             key tenant_id, //회사코드
             key supplier_code, //공급업체코드
                 supplier_local_name, //공급업체로컬명
-                supplier_engligh_name //공급업체영어명
+                supplier_english_name //공급업체영어명
         from SupplierMaster
         order by
             tenant_id,

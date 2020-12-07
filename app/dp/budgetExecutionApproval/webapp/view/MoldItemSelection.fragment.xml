@@ -100,10 +100,13 @@
                             </OverflowToolbar>
                         </headerToolbar> 
                         <columns>
-                            <Column id="modelItem_model" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true"  >
+                            <Column id="modelItem_mold_id" visible="false" >
+                                <Text text="mold_id" />
+                            </Column>
+                            <Column id="modelItem_model" minScreenWidth="Tablet" hAlign="Center"   >
                                 <Text text="Model" />
                             </Column>
-                            <Column id="modelItem_modelPartNo" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" >
+                            <Column id="modelItem_modelPartNo" minScreenWidth="Tablet" hAlign="Center" >
                                 <Text text="Model Part No" />
                             </Column>
                             <Column id="modelItem_seq" minScreenWidth="Tablet" hAlign="Center"  >
@@ -121,11 +124,27 @@
                             <Column id="modelItem_budgetAmount" minScreenWidth="Tablet" hAlign="Center"  >
                                   <Text text="Budget Amount" />
                             </Column>					
+                            <Column visible="false" >
+                                  <Text text="family_part_number_1" />
+                            </Column>					
+                            <Column visible="false" >
+                                  <Text text="family_part_number_2" />
+                            </Column>					
+                            <Column  visible="false">
+                                  <Text text="family_part_number_3" />
+                            </Column>					
+                            <Column visible="false" >
+                                  <Text text="family_part_number_4" />
+                            </Column>					
+                            <Column visible="false" >
+                                  <Text text="family_part_number_5" />
+                            </Column>					
                         </columns>
                         <items>
                              <ColumnListItem>
                                 <cells>
                                     <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
+                                    <Text text="{MoldItemSelect>mold_id}" />
                                     <Text text="{MoldItemSelect>model}" />
                                     <Text text="{MoldItemSelect>part_number}" />
                                     <Text text="{MoldItemSelect>mold_sequence}" />
@@ -143,6 +162,11 @@
 
                                     <Text text="{MoldItemSelect>book_currency_code}" />
                                     <Text text="{MoldItemSelect>budget_amount}" />
+                                    <Text text="{MoldItemSelect>family_part_number_1}" />
+                                    <Text text="{MoldItemSelect>family_part_number_2}" />
+                                    <Text text="{MoldItemSelect>family_part_number_3}" />
+                                    <Text text="{MoldItemSelect>family_part_number_4}" />
+                                    <Text text="{MoldItemSelect>family_part_number_5}" />
                                 </cells>
                             </ColumnListItem>   
                             </items>

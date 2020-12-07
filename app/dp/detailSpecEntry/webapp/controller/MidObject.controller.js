@@ -123,7 +123,11 @@ sap.ui.define([
 		 */
         onPageSaveButtonPress: function(){
 			var oView = this.getView(),
-				me = this;
+                me = this;
+                
+            console.log('뭐지?');
+            console.log('oTransactionManager.isChanged()',oTransactionManager.isChanged());
+            
 			MessageBox.confirm("Are you sure ?", {
 				title : "Comfirmation",
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -131,7 +135,7 @@ sap.ui.define([
 					if (sButton === MessageBox.Action.OK) {
                         oView.setBusy(true);
                         
-                        this.getModel('spec').setProperty('/mold_spec_status_code', 'D');
+                        me.getModel('spec').setProperty('/mold_spec_status_code', 'D');
 
 						oTransactionManager.submit({
 						// oView.getModel("master").submitChanges({

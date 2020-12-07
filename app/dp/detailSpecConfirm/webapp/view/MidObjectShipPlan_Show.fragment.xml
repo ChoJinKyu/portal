@@ -37,7 +37,7 @@
                 <items>
                     <ColumnListItem>
                         <cells>
-                            <ComboBox   width="100%"
+                            <Select   width="100%"
                                         selectedKey="{schedule>mold_develope_date_type_code}"
                                         items="{
                                                     path : 'util>/CodeDetails',
@@ -50,7 +50,7 @@
                                         class="readonlyField"
                             >
                                 <core:Item key="{util>code}" text="{util>code_description}" />
-                            </ComboBox>
+                            </Select>
                             
                             <DatePicker value="{schedule>drawing_agreement_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
                             <DatePicker value="{schedule>drawing_confirmed_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
@@ -94,7 +94,7 @@
                 <items>
                     <ColumnListItem>
                         <cells>
-                            <ComboBox   width="100%"
+                            <Select   width="100%"
                                         selectedKey="{schedule>mold_develope_date_type_code}"
                                         items="{
                                                     path : 'util>/CodeDetails',
@@ -107,7 +107,7 @@
                                         class="readonlyField"
                             >
                                 <core:Item key="{util>code}" text="{util>code_description}" />
-                            </ComboBox>
+                            </Select>
                             <DatePicker value="{schedule/first_production_update_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
                             <DatePicker value="{schedule/second_production_update_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
                             <DatePicker value="{schedule/third_production_update_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
