@@ -232,7 +232,7 @@
                                     <table:Column id="c_moldPartNo" width="10em" hAlign="Center">
                                         <Label text="Mold&#10;Part No"/>           
                                         <table:template>
-                                            <Text id="t_mold_part_no" text="{appDetail>part_number}"/>
+                                            <Text id="t_mold_part_no" text="{appDetail>mold_number}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_seq" width="5em" hAlign="Center">
@@ -246,23 +246,7 @@
                                         <table:template>
                                             <Text id="description" text="{appDetail>spec_name}"/>
                                         </table:template>
-                                    </table:Column>       
-                                    <table:Column id="c_MoldItemType" width="10em" hAlign="Center">
-                                        <Label text="Mold Item Type"/>           
-                                        <table:template>
-                                            <ComboBox selectedKey="{appDetail>mold_item_type_code}"
-                                                items="{ path : 'util>/CodeDetails',
-                                                            filters : [
-                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
-                                                            ]
-                                                        }"
-                                                editable="false" >  
-                                                <core:Item key="{util>code}" text="{util>code_description}" />
-                                            </ComboBox>
-                                        </table:template>
-                                    </table:Column>                                     
-                                                              
+                                    </table:Column>                                           
                                     <table:Column id="c_productionType" width="10em" hAlign="Center">
                                         <Label text="Production Type"/>           
                                         <table:template>
