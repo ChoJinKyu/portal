@@ -12,13 +12,15 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "sap/m/UploadCollectionParameter",
-    "sap/ui/Device" // fileupload 
-    , "sap/ui/core/syncStyleClass"
-    , "sap/m/ColumnListItem"
-    , "sap/m/Label"
-    , "ext/lib/model/TransactionManager"
+    "sap/ui/Device", // fileupload 
+    "sap/ui/core/syncStyleClass",
+    "sap/m/ColumnListItem",
+    "sap/m/Label",
+    "ext/lib/model/TransactionManager",
+    "ext/lib/util/Multilingual", 
+    "ext/lib/util/Validator",
 ], function (BaseController, JSONModel, History, ManagedListModel, ManagedModel, RichTextEditor, DateFormatter, Filter, FilterOperator, Fragment
-    , MessageBox, MessageToast, UploadCollectionParameter, Device, syncStyleClass, ColumnListItem, Label, TransactionManager) {
+    , MessageBox, MessageToast, UploadCollectionParameter, Device, syncStyleClass, ColumnListItem, Label, TransactionManager, Multilingual,Validator) {
     "use strict";
     /**
      * @description 예산집행품의 Create, update 화면 
@@ -30,7 +32,7 @@ sap.ui.define([
     return BaseController.extend("dp.budgetExecutionApproval.controller.BeaCreateObject", {
 
         dateFormatter: DateFormatter,
-
+        validator: new Validator(),
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -40,6 +42,11 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
+
+            /* 다국어 처리*/
+            var oMultilingual = new Multilingual();
+			this.setModel(oMultilingual.getModel(), "I18N");
+
             console.log("BeaCreateObject Controller 호출");
             // Model used to manipulate control states. The chosen values make sure,
             // detail page shows busy indication immediately so there is no break in
@@ -59,12 +66,12 @@ sap.ui.define([
             this.getView().setModel(new ManagedModel(), "appMaster");
             this.getView().setModel(new ManagedListModel(), "appDetail");
             this.setModel(new ManagedListModel(), "moldList");
-            // this.getView().setModel(new ManagedListModel(), "MoldMasters");
+          //  this.getView().setModel(new ManagedListModel(), "MoldMasters");
 
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("appMaster"));
             oTransactionManager.addDataModel(this.getModel("appDetail"));
-            //  oTransactionManager.addDataModel(this.getModel("MoldMasters"));
+          //  oTransactionManager.addDataModel(this.getModel("MoldMasters"));
 
             this.getView().setModel(new ManagedListModel(), "appList"); // apporval list 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
@@ -81,7 +88,10 @@ sap.ui.define([
             var that = this,
                 sHtmlValue = sValue;
             sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
-                function (RTE, EditorType) {
+                function (RTE, EditorType) { 
+
+                    
+
                     var oRichTextEditor = new RTE("myRTE", {
                         editorType: EditorType.TinyMCE4,
                         width: "100%",
@@ -250,13 +260,14 @@ sap.ui.define([
                     appModel.oData.plant_name = oData.results[0].plant_name;
                 }
             });
-
         },
 
         _onRoutedThisPage: function (args) {
             console.log("[step] _onRoutedThisPage args>>>> ", args);
             var that = this;
             this._bindView("/ApprovalMasters('" + args.approval_number + "')", "appMaster", [], function (oData) {
+                console.log("oData>>>> " , oData);
+
                 that.setRichEditor(oData.approval_contents);
             });
             var schFilter = [new Filter("approval_number", FilterOperator.EQ, args.approval_number)];
@@ -264,7 +275,7 @@ sap.ui.define([
             var sResult = {};
 
             this._bindView("/ApprovalDetails", "appDetail", schFilter, function (oData) {
-
+                console.log(" detail11 >>>> ",oData)
                 // 1. 결과 값 
 
                   var appDetail = that.getModel("appDetail").getProperty("/ApprovalDetails");
@@ -289,12 +300,15 @@ sap.ui.define([
                           if (data[i].family_part_number_5) {
                               fList.push(data[i].family_part_number_5);
                           }
-                          data[i].family_part_number_1 = fList.join(",")
-                          appDetail[i].STATE_COL = 'U'
+                          data[i].family_part_number_1 = fList.join(",") 
+                        
+                          appDetail[i].STATE_COL = 'U'; 
+                          appDetail[i].apporval_type_code = 'B';
+                          appDetail[i].approval_number = args.approval_number;
                           appDetail[i].family_part_number_1 = data[i].family_part_number_1;
                           appDetail[i].model = data[i].model;
-                          appDetail[i].part_number = data[i].part_number;
-                          appDetail[i].mold_sequence = data[i].mold_sequence;
+                          appDetail[i].mold_number = data[i].mold_number;
+                          appDetail[i].mold_sequence = Number(data[i].mold_sequence);
                           appDetail[i].spec_name = data[i].spec_name;
                           appDetail[i].mold_item_type_code = data[i].mold_item_type_code;
                           appDetail[i].mold_production_type_code = data[i].mold_production_type_code;
@@ -587,7 +601,7 @@ sap.ui.define([
                 var obj = new JSONModel({
                     mold_id: Number(oItem.getCells()[0].getText())
                     , model: oItem.getCells()[1].getText()
-                    , part_number: oItem.getCells()[2].getText()
+                    , mold_number: oItem.getCells()[2].getText()
                     , mold_sequence: oItem.getCells()[3].getText()
                     , spec_name: oItem.getCells()[4].getText()
                     , mold_item_type_code: oItem.getCells()[5].getSelectedKey()
@@ -620,7 +634,7 @@ sap.ui.define([
             oModel.addRecord({
                 "mold_id": data.oData.mold_id,
                 "model": data.oData.model,
-                "part_number": data.oData.part_number,
+                "mold_number": data.oData.mold_number,
                 "mold_sequence": data.oData.mold_sequence,
                 "spec_name": data.oData.spec_name,
                 "mold_item_type_code": data.oData.mold_item_type_code,
@@ -1033,7 +1047,11 @@ sap.ui.define([
          * @description save
          */
         onPageDraftButtonPress: function () {
-            var oView = this.getView();
+            var oView = this.getView(); 
+         //   console.log("//// " , this.getView().getId('approval_title').getValue());
+
+         //   this.getModel('appMaster').setProperty('/approval_title', this.getView().getId('approval_title').value);
+
  /**
   *        oTransactionManager.addDataModel(this.getModel("appMaster"));
             oTransactionManager.addDataModel(this.getModel("appDetail"));

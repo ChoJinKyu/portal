@@ -46,8 +46,8 @@ entity Sm_Supplier_Mst {
     inactive_status_name : String(50)  ;	
     inactive_date : Date  ;	
     inactive_reason : String(1000)  ;	
-    supplier_status_code : String(30)  ;	
-    supplier_status_name : String(50)  ;	
+    bp_status_code : String(30)  ;	
+    bp_status_name : String(50)  ;	
     tel_number : String(15)  ;	
     extens_number : String(15)  ;	
     mobile_phone_number : String(15)  ;	

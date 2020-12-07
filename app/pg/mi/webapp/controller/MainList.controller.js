@@ -78,16 +78,16 @@ sap.ui.define([
 		_onCreateModeMetadataLoaded: function() {
 			console.group("_onCreateModeMetadataLoaded");
 			this.getView().getModel().setUseBatch(true);
-			this.getView().getModel().setDeferredGroups(["pgmiGroup","deleteGroup"]);
+			this.getView().getModel().setDeferredGroups(["pgGroup","deleteGroup"]);
             
             this.getView().getModel().setChangeGroups({
 			  "MIMaterialCodeList": {
-			    groupId: "pgmiGroup",
-			    changeSetId: "pgmiGroup"
+			    groupId: "pgGroup",
+			    changeSetId: "pgGroup"
               },
               "MIMaterialCodeText": {
-			    groupId: "pgmiGroup",
-			    changeSetId: "pgmiGroup"
+			    groupId: "pgGroup",
+			    changeSetId: "pgGroup"
 			  }
             });            
            

@@ -1,159 +1,90 @@
 sap.ui.define([
-	"ext/lib/controller/BaseController",
-	"sap/ui/core/UIComponent",
-    "sap/m/library",
-    "sap/ui/model/json/JSONModel"
-], function (BaseController, UIComponent, mobileLibrary, JSONModel) {
-    "use strict";
-    
-    // shortcut for sap.m.URLHelper
-	var URLHelper = mobileLibrary.URLHelper;
+  "ext/lib/controller/BaseController"
+], function (BaseController) {
+  "use strict";
 
-	return BaseController.extend("cm.userMgr.controller.App", {
+  return BaseController.extend("cm.userMgr.controller.App", {
 
-		onInit : function () {
-            this.getView().setModel(new JSONModel(), "searchModel");
-            
-			// apply content density mode to root view
-            this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
-            
-            this.oRouter = this.getOwnerComponent().getRouter();
-			this.oRouter.attachRouteMatched(this.onRouteMatched, this);
-			this.oRouter.attachBeforeRouteMatched(this.onBeforeRouteMatched, this);
-		},
-        /**
-		 * Convenience method for accessing the router.
-		 * @public
-		 * @returns {sap.ui.core.routing.Router} the router for this component
-		 */
-		getRouter : function () {
-			return UIComponent.getRouterFor(this);
-		},
+    onInit: function () {
+      // apply content density mode to root view
+      this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
+      this.oRouter = this.getOwnerComponent().getRouter();
+      this.oRouter.attachRouteMatched(this.onRouteMatched, this);
+      this.oRouter.attachBeforeRouteMatched(this.onBeforeRouteMatched, this);
+    },
 
-		/**
-		 * Convenience method for getting the view model by name.
-		 * @public
-		 * @param {string} [sName] the model name
-		 * @returns {sap.ui.model.Model} the model instance
-		 */
-		getModel : function (sName) {
-			return this.getView().getModel(sName);
-		},
+    onBeforeRouteMatched: function (oEvent) {
+      var oModel = this.getOwnerComponent().getModel("fcl");
 
-		/**
-		 * Convenience method for setting the view model.
-		 * @public
-		 * @param {sap.ui.model.Model} oModel the model instance
-		 * @param {string} sName the model name
-		 * @returns {sap.ui.mvc.View} the view instance
-		 */
-		setModel : function (oModel, sName) {
-			return this.getView().setModel(oModel, sName);
-		},
+      var sLayout = oEvent.getParameters().arguments.layout;
 
-		/**
-		 * Getter for the resource bundle.
-		 * @public
-		 * @returns {sap.ui.model.resource.ResourceModel} the resourceModel of the component
-		 */
-		getResourceBundle : function () {
-			return this.getOwnerComponent().getModel("i18n").getResourceBundle();
-		},
-		/**
-		 * Event handler when the share by E-Mail button has been clicked
-		 * @public
-		 */
-		onShareEmailPress : function () {
-			var oViewModel = (this.getModel("objectView") || this.getModel("worklistView"));
-			URLHelper.triggerEmail(
-				null,
-				oViewModel.getProperty("/shareSendEmailSubject"),
-				oViewModel.getProperty("/shareSendEmailMessage")
-			);
-		},
-		/**
-		* Adds a history entry in the FLP page history
-		* @public
-		* @param {object} oEntry An entry object to add to the hierachy array as expected from the ShellUIService.setHierarchy method
-		* @param {boolean} bReset If true resets the history before the new entry is added
-		*/
-		addHistoryEntry: function() {
-			var aHistoryEntries = [];
+      // If there is no layout parameter, query for the default level 0 layout (normally OneColumn)
+      if (!sLayout) {
+        var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(0);
+        sLayout = oNextUIState.layout;
+      }
 
-			return function(oEntry, bReset) {
-				if (bReset) {
-					aHistoryEntries = [];
-				}
+      // Update the layout of the FlexibleColumnLayout
+      if (sLayout) {
+        oModel.setProperty("/layout", sLayout);
+      }
+    },
 
-			var bInHistory = aHistoryEntries.some(function(oHistoryEntry) {
-				return oHistoryEntry.intent === oEntry.intent;
-			});
+    onColumnResize: function (oEvent) {
+      // This event is ideal to call scrollToIndex function of the Table
+      var oMasterView = oEvent.getSource().getBeginColumnPages()[0];
+      // if (oMasterView.getController().iIndex) {
+      // 	var oTable = oMasterView.byId("productsTable");
+      // 	oTable.scrollToIndex(oMasterView.getController().iIndex);
+      // }
 
-				if (!bInHistory) {
-					aHistoryEntries.push(oEntry);
-					this.getOwnerComponent().getService("ShellUIService").then(function(oService) {
-						oService.setHierarchy(aHistoryEntries);
-					});
-				}
-			};
-        },
+      var sLayout = this.getView().getModel("fcl").getProperty("/layout");
+      if (sLayout !== 'TwoColumnsMidExpanded') {
+        // var oTable = oMasterView.byId("productsTable");
+        // oTable.scrollToIndex(0);
+      }
 
-        onBeforeRouteMatched: function(oEvent) {
-            console.log("in onBeforeRouteMatched")
-			var oModel = this.getModel("fcl");
+    },
 
-			var sLayout = oEvent.getParameters().arguments.layout;
+    onRouteMatched: function (oEvent) {
+      var sRouteName = oEvent.getParameter("name"),
+        oArguments = oEvent.getParameter("arguments");
 
-			// If there is no layout parameter, query for the default level 0 layout (normally OneColumn)
-			if (!sLayout) {
-				var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(0);
-				sLayout = oNextUIState.layout;
-			}
+      this._updateUIElements();
 
-			// Update the layout of the FlexibleColumnLayout
-			if (sLayout) {
-				oModel.setProperty("/layout", sLayout);
-			}
-		},
+      // Save the current route name
+      this.sCurrentRouteName = sRouteName;
+      this.sCurrentTenantId = oArguments.tenantId;
+      this.sCurrentControlOptionCode = oArguments.supplier;
+    },
 
-		onRouteMatched: function (oEvent) {
-            console.log("in onRouteMatched")
-			var sRouteName = oEvent.getParameter("name"),
-				oArguments = oEvent.getParameter("arguments");
+    onStateChanged: function (oEvent) {
+      var bIsNavigationArrow = oEvent.getParameter("isNavigationArrow"),
+        sLayout = oEvent.getParameter("layout");
 
-			this._updateUIElements();
+      this._updateUIElements();
+      // Replace the URL with the new layout if a navigation arrow was used
+      if (bIsNavigationArrow) {
+        this.oRouter.navTo(this.sCurrentRouteName, {
+          layout: sLayout,
+          tenantId: this.sCurrentTenantId,
+          controlOptionCode: this.sCurrentControlOptionCode
+        }, true);
+      }
+    },
 
-			// Save the current route name
-			this.currentRouteName = sRouteName;
-			this.currentProduct = oArguments.product;
-            this.currentSupplier = oArguments.supplier;
-		},
+    // Update the close/fullscreen buttons visibility
+    _updateUIElements: function () {
+      var oModel = this.getOwnerComponent().getModel("fcl");
+      var oUIState = this.getOwnerComponent().getHelper().getCurrentUIState();
+      oModel.setData(oUIState);
+    },
 
-		onStateChanged: function (oEvent) {
-            console.log("in onStateChanged", oEvent, this.currentRouteName)
-			var bIsNavigationArrow = oEvent.getParameter("isNavigationArrow"),
-				sLayout = oEvent.getParameter("layout");
-			this._updateUIElements();
+    onExit: function () {
+      this.oRouter.detachRouteMatched(this.onRouteMatched, this);
+      this.oRouter.detachBeforeRouteMatched(this.onBeforeRouteMatched, this);
+    }
 
-            // Replace the URL with the new layout if a navigation arrow was used
-            console.log("bIsNavigationArrow", bIsNavigationArrow)
-			if (bIsNavigationArrow) {
-				this.oRouter.navTo(this.currentRouteName, {layout: sLayout, product: this.currentProduct, supplier: this.currentSupplier}, true);
-			}
-		},
-
-		// Update the close/fullscreen buttons visibility
-		_updateUIElements: function () {
-			var oModel = this.getModel('fcl');
-			var oUIState = this.getOwnerComponent().getHelper().getCurrentUIState();
-			oModel.setData(oUIState);
-		},
-
-		onExit: function () {
-			this.oRouter.detachRouteMatched(this.onRouteMatched, this);
-			this.oRouter.detachBeforeRouteMatched(this.onBeforeRouteMatched, this);
-		}
-        
-	});
+  });
 
 });

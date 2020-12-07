@@ -1,4 +1,4 @@
-<mvc:View controllerName="xx.exampleControls.controller.Empty"
+<mvc:View controllerName="xx.exampleControls.controller.CodeCombo"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
     xmlns:core="sap.ui.core"
@@ -11,17 +11,44 @@
         <content>
             <VBox>
 
-                <form:SimpleForm maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                <form:SimpleForm maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" class="searchBox"
+                    adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="Masked Number: "></Label>
-                            <lib-m:CodeComboBox id="searchChain" width="100%" 
-                                model="util" useEmpty="true" groupCode="CM_CHAIN_CD">
-                            </lib-m:CodeComboBox>
+                            <Label text="Tenant: "></Label>
+                            <lib-m:TenantComboBox id="searchTenant" width="100%" 
+                                useEmpty="true">
+                            </lib-m:TenantComboBox>
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL2 L3 M5 S10" />
                             </layoutData>
                         </VBox>
+                        <VBox>
+                            <Label text="Code: "></Label>
+                            <lib-m:CodeComboBox id="searchCode" width="100%" 
+                                useEmpty="true" groupCode="CM_CHAIN_CD">
+                                <!-- useEmpty="true"  textPattern="$text [= $[code] === '' ? '' : '['+$[code]+']' ]" groupCode="CM_CHAIN_CD"> -->
+                                <!-- useEmpty="true"  textPattern="$text $(= $$(code)$ === '' ? '' : '('+$$(code)$+')' )$" groupCode="CM_CHAIN_CD"> -->
+                            </lib-m:CodeComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M5 S10" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Currency: "></Label>
+                            <lib-m:CurrencyComboBox id="searchCurrency" width="100%" 
+                                useEmpty="true" emptyKey="ALL" emptyText="ALL" >
+                            </lib-m:CurrencyComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M5 S10" />
+                            </layoutData>
+                        </VBox>
+                        <FlexBox alignItems="End" justifyContent="End" class="searchBoxButtonArea">
+                            <Button text="Search" type="Emphasized" press=".onSearchButtonPress"/>
+                            <layoutData>
+                                <layout:GridData span="XL12 L12 M12 S12" />
+                            </layoutData>
+                        </FlexBox>
                     </form:content>
                 </form:SimpleForm>
 

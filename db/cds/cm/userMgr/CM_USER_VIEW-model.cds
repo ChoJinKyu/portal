@@ -1,7 +1,7 @@
 namespace cm;
 using util from '../util/util-model';
 
-@cds.persistence.exists
+// @cds.persistence.exists
 entity User_View {	
     key user_id : String(50);
     user_name : String(240);

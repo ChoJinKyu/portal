@@ -2,7 +2,7 @@
 	controllerName="cm.userMgr.controller.App"
 	displayBlock="true"
 	xmlns="sap.m"
-    xmlns:f="sap.f"
+	xmlns:f="sap.f"
 	xmlns:mvc="sap.ui.core.mvc">
 
 	<App id="app">
@@ -15,4 +15,5 @@
 			layout="{fcl>/layout}"
 			backgroundDesign="Translucent"/>
 	</App>
+
 </mvc:View>

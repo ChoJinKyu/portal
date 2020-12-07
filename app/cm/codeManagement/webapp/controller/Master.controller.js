@@ -17,23 +17,7 @@ sap.ui.define([
 		return BaseController.extend("cm.codeManagement.controller.Master", {
 
             onInit: function () {
-                // sap.ui.getCore().attachValidationError(function (oEvent) {
-                //     // debugger;
-                //     oEvent.getParameter("element").setValueState(sap.ui.core.ValueState.Error);
-                // });
-        
-                // sap.ui.getCore().attachValidationSuccess(function (oEvent) {
-                //     // debugger;
-                //     oEvent.getParameter("element").setValueState(sap.ui.core.ValueState.None);
-                // });
 
-            // var sServiceUrl = 'srv-api/odata/v2/cm.CodeMgrService/';
-
-            //   var oModel = new sap.ui.model.odata.ODataModel(sServiceUrl, true);
-            // console.log(oModel)
-            //   this.setModel(oModel, 'oRefModel');
-
-            //   sap.ui.getCore().setModel(oModel, 'oRefModel');
             },
 
             isValNull: function (p_val) {
@@ -44,14 +28,22 @@ sap.ui.define([
                 }
             },
 
+            onBeforeRendering : function(){
+                var oInitSearch = {
+                    tenant_id : "L2100"
+                }
+                var oContModel = this.getModel("contModel");
+                oContModel.setData(oInitSearch);
+
+                this.onTenantChange();
+            },
+
             onAfterRendering: function () {
-                var model = this.getModel("contModel");
-                model.setProperty("/input",null);
+                
             },
 
 			onSearch: function () {
-
-                var sSearchTenant = this.getView().byId("search_tenant").getValue();
+                var sSearchTenant = this.getView().byId("search_tenant").getSelectedKey();
                 var sSearchChain = this.getView().byId("search_chain").getSelectedKey();
                 var sUseFlag = this.getView().byId("search_useflag").getSelectedKey();
                 var sSearchKeyword = this.getView().byId("search_keyword").getValue();
@@ -72,8 +64,14 @@ sap.ui.define([
                     aFilters.push(new Filter("use_flag", FilterOperator.EQ, bUseFlag));
                 }
                 if(!this.isValNull(sSearchKeyword)){
-                    aFilters.push(new Filter("group_code", FilterOperator.Contains, sSearchKeyword));
-                    aFilters.push(new Filter("group_name", FilterOperator.Contains, sSearchKeyword));
+                    var aKeywordFilters = {
+                        filters: [
+                            new Filter("group_code", FilterOperator.Contains, sSearchKeyword),
+                            new Filter("group_name", FilterOperator.Contains, sSearchKeyword)
+                        ],
+                        and: false
+                    };
+                    aFilters.push(new Filter(aKeywordFilters));
                 }
 
                 var oCodeMasterTable = this.byId("codeMasterTable");
@@ -180,12 +178,30 @@ sap.ui.define([
             },
 
             onCreatePress : function(oEvent){
-                console.log("onCreatePress")
                 var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(0);
                 var sLayout = oNextUIState.layout;
                 // var sLayout = "MidColumnFullScreen";
                 
 			    this.getRouter().navTo("detail", {layout: sLayout});
+            },
+
+            onTenantChange : function(oEvent){
+                // var sTenant = oEvent.getSource().getSelectedKey();
+                var oContModel = this.getModel("contModel");
+                var sTenant = oContModel.getProperty("/tenant_id");
+                var aFilters = [
+                    new Filter("tenant_id", FilterOperator.EQ, sTenant),
+                    new Filter("group_code", FilterOperator.EQ, 'CM_CHAIN_CD')
+                ];
+                var oItemTemplate = new sap.ui.core.ListItem({
+                    key : "{util>code}",
+                    text : "{util>code_description}",
+                    additionalText : "{util>code}"
+                });
+
+                var oChain = this.byId("search_chain");
+                oChain.setSelectedKey(null);
+                oChain.bindItems("util>/CodeDetails", oItemTemplate, null, aFilters);
             }
 		});
 	});

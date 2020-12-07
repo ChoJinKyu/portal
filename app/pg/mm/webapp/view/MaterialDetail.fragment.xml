@@ -54,7 +54,7 @@
                         </Column>                                                                                                                    
                     </columns>
                     <items>
-                        <ColumnListItem type="Active" press="onMaterialDetailTableItemPress">
+                        <ColumnListItem type="Active">
                             <cells>
                                 <Text text="{mIMaterialCodeList>mi_material_code}"/>
                                 <Text text="{mIMaterialCodeList>mi_material_code_name}"/>
@@ -69,13 +69,7 @@
 
                 <Table  id="rightTable"
                         mode="SingleSelectLeft" 
-
-                        items="{
-                                    path : '/MIMaterialCostInformationView',
-                                    filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : '0000'}
-                                    ]
-                        }"                
+                        items="{mIMaterialCostInformationView>/}"  
                         noDataText="No Data"
                         class="sapUiSmallMarginEnd" 
                         width="700px">
@@ -112,14 +106,14 @@
                         </Column>                                                                                                 
                     </columns>
                     <items>
-                        <ColumnListItem type="Active" press="onMaterialPriceTableItemPress">
+                        <ColumnListItem type="Active">
                             <cells>
-                                <Text text="{CodeDetails>_row_state_}"/>
-                                <Text text="{CodeDetails>_row_state_}"/>
-                                <Text text="{CodeDetails>_row_state_}"/>
-                                <Text text="{CodeDetails>_row_state_}"/>
-                                <Text text="{CodeDetails>_row_state_}"/>
-                                <Text text="{CodeDetails>_row_state_}"/>
+                                <Text text="{mIMaterialCostInformationView>currency_unit}"/>
+                                <Text text="{mIMaterialCostInformationView>quantity_unit}"/>
+                                <Text text="{mIMaterialCostInformationView>exchange}"/>
+                                <Text text="{mIMaterialCostInformationView>termsdelv}"/>
+                                <Text text="{mIMaterialCostInformationView>mi_date}"/>
+                                <Text text="{mIMaterialCostInformationView>amount}"/>
                             </cells>
                         </ColumnListItem>
                     </items>
@@ -129,11 +123,13 @@
         </HBox>
 		</content>
 			<beginButton>
-				<Button text="Cancel" press="onMaterialDetail_close" />
+				<Button type="Transparent"  text="Cancel" press=".onMaterialDetailClose" />
                
 			</beginButton>
             <endButton>
-             <Button text="Apply" press="onMaterialDetail_apply" />
+             <Button  text="Apply" 
+             type="Emphasized"
+             press=".onMaterialDetailApply" />
             </endButton>
 	</Dialog>
 </core:FragmentDefinition>

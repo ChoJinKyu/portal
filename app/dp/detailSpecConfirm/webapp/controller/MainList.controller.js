@@ -36,6 +36,7 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {
+
 			var oViewModel,
 				oResourceBundle = this.getResourceBundle();
 
@@ -62,7 +63,9 @@ sap.ui.define([
 
 			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
-			this._doInitTablePerso();
+            this._doInitTablePerso();
+            
+            
         },
         
         onAfterRendering : function () {
@@ -331,11 +334,11 @@ sap.ui.define([
             }
             
             if (sPart) {
-				aSearchFilters.push(new Filter("tolower(part_number)", FilterOperator.Contains, "'"+sPart.toLowerCase()+"'"));
+				aSearchFilters.push(new Filter("tolower(mold_number)", FilterOperator.Contains, "'"+sPart.toLowerCase()+"'"));
             }
             
             if (sFamilyPart) {
-				aSearchFilters.push(new Filter("tolower(family_part_numbers)", FilterOperator.Contains, "'"+sFamilyPart.toLowerCase()+"'"));
+				aSearchFilters.push(new Filter("tolower(family_mold_numbers)", FilterOperator.Contains, "'"+sFamilyPart.toLowerCase()+"'"));
             }
 
             if(sRequester){
@@ -498,7 +501,7 @@ sap.ui.define([
                     "cols": [
                         {
                             "label": "Part No",
-                            "template": "part_number"
+                            "template": "mold_number"
                         },
                         {
                             "label": "Item Type",
@@ -514,7 +517,7 @@ sap.ui.define([
                 this.modelName = '';
                 this.vhdPath = '/PartNumbers';
                 this._oValueHelpDialog.setTitle('Part No');
-                this._oValueHelpDialog.setKey('part_number');
+                this._oValueHelpDialog.setKey('mold_number');
                 this._oValueHelpDialog.setDescriptionKey('spec_name');
 
             }else if(oEvent.getSource().sId.indexOf("searchRequester") > -1){
@@ -595,7 +598,7 @@ sap.ui.define([
 
             }else if(this._oValueHelpDialog.oRows.sPath.indexOf('/PartNumbers') > -1){
                 //PartNumbers
-                _tempFilters.push(new Filter({ path: "tolower(part_number)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
+                _tempFilters.push(new Filter({ path: "tolower(mold_number)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
                 _tempFilters.push(new Filter({ path: "tolower(mold_item_type_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
                 _tempFilters.push(new Filter({ path: "tolower(spec_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
             }else if(this._oValueHelpDialog.oRows.sPath.indexOf('/CreateUsers') > -1){

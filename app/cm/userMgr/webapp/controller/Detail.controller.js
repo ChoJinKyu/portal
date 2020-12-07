@@ -1,379 +1,77 @@
 sap.ui.define([
-    "ext/lib/controller/BaseController",
 	"sap/ui/model/json/JSONModel",
-    "sap/ui/model/Filter",
-    "sap/ui/model/Sorter",
-    "sap/ui/model/FilterOperator",
-    "sap/m/MessageBox",
-    "sap/m/MessageToast",
-    "ext/lib/util/ValidatorUtil",
-    "./Master.controller"
-], function (BaseController, JSONModel, Filter, Sorter, FilterOperator, MessageBox, MessageToast, ValidatorUtil, Master) {
+    "sap/ui/core/mvc/Controller",
+    "sap/ui/richtexteditor/RichTextEditor"
+], function (JSONModel, Controller, RichTextEditor) {
 	"use strict";
 
-	return BaseController.extend("cm.userMgr.controller.Detail", {
+	return Controller.extend("cm.userMgr.controller.Detail", {
 		onInit: function () {
-            
-			// var oExitButton = this.getView().byId("exitFullScreenBtn"),
-			// 	oEnterButton = this.getView().byId("enterFullScreenBtn");
 			this.oRouter = this.getOwnerComponent().getRouter();
-			// this.oModel = this.getOwnerComponent().getModel();
+			this.oModel = this.getOwnerComponent().getModel();
 
-			this.oRouter.getRoute("master").attachPatternMatched(function(){console.log("master")}, this);
-			// this.oRouter.getRoute("master").attachPatternMatched(this._onProductMatched, this);
-			this.oRouter.getRoute("detail").attachPatternMatched(this._onDetailMatched, this);
-			this.oRouter.getRoute("detailDetail").attachPatternMatched(function(){console.log("detailDetail")}, this);
-			// this.oRouter.getRoute("detailDetail").attachPatternMatched(this._onProductMatched, this);
-
-			// [oExitButton, oEnterButton].forEach(function (oButton) {
-			// 	oButton.addEventDelegate({
-			// 		onAfterRendering: function () {
-			// 			if (this.bFocusFullScreenButton) {
-			// 				this.bFocusFullScreenButton = false;
-			// 				oButton.focus();
-			// 			}
-			// 		}.bind(this)
-			// 	});
-			// }, this);
-        },
-
-        onAfterRendering : function(){
-            // var oData = {
-            //     readMode : true,
-            //     editMode : false
-            // }
-            // var oContModel = this.getModel("contModel");
-            // oContModel.setProperty("/detail", oData);
-            // oContModel.setProperty("/detail", {});
-        },
-
-        _fnInitControlModel : function(){
-            var oData = {
-                readMode : null,
-                createMode : null,
-                editMode : null,
-                footer : true
-            }
-
-            var oContModel = this.getModel("contModel");
-            oContModel.setProperty("/detail", oData);
-        },
-
-        _fnSetReadMode : function(){
-            this._fnSetMode("read");
-        },
-
-        _fnSetEditMode : function(){
-            this._fnSetMode("edit");
-        },
-
-        _fnSetCreateMode : function(){
-            this._fnSetMode("create");
-        },
-
-        _fnSetMode : function(mode){
-            var bRead = null,
-            bCreate = null,
-            bEdit = null;
-
-            if(mode === "read"){
-                bRead = true;
-                bCreate = false,
-                bEdit = false;
-            }else if(mode === "create"){
-                bRead = false;
-                bCreate = true,
-                bEdit = true;
-            }else if(mode === "edit"){
-                bRead = false;
-                bCreate = false,
-                bEdit = true;
-            }
-
-            var oContModel = this.getModel("contModel");
-            oContModel.setProperty("/detail/readMode", bRead);
-            oContModel.setProperty("/detail/createMode", bCreate);
-            oContModel.setProperty("/detail/editMode", bEdit);
-        },
-
-        onEditPress : function(){
-            this._fnSetEditMode();
-        },
-
-        onCancelPress : function(){
-            this._fnSetReadMode();
-
-            var oViewModel = this.getModel("viewModel");
-            var oParam = oViewModel.getProperty("/detailClone");
-            oViewModel.setProperty("/detail", oParam);
-        },
-
-        _fnSetCreateData : function(){
-            var oInitData = {
-                chain_code: "",
-                group_code: "",
-                group_description: "",
-                group_name: "",
-                tenant_id: "",
-                use_flag: true
-                // CodeDetails: []
-            };
-
-            var oViewModel = this.getModel("viewModel");
-            oViewModel.setProperty("/detail", oInitData);
-            
-            oViewModel.setProperty("/CodeDetails", []);
-        },
-
-		onHandleItemPress: function (oEvent) {
-			// var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(2),
-			// 	supplierPath = oEvent.getSource().getBindingContext("products").getPath(),
-			// 	supplier = supplierPath.split("/").slice(-1).pop();
-
-			// this.oRouter.navTo("detailDetail", {layout: oNextUIState.layout,
-            //     product: this._product, supplier: supplier});
-            this._fnShowFooter(false);
-
-            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(2);
-            
-            var oViewModel = this.getModel('viewModel');
-            var sPath = oEvent.getSource().getBindingContextPath();
-            var oTargetData = oViewModel.getProperty(sPath);
-
-            oViewModel.setProperty("/detailDetail", $.extend(true, {}, oTargetData));
-            oViewModel.setProperty("/detailDetailClone", $.extend(true, {}, oTargetData));
-
-            var oNavParam = {
-                layout: oNextUIState.layout,
-                tenantId : oTargetData.tenant_id,
-                companyCode : oTargetData.company_code,
-                groupCode : oTargetData.group_code,
-                code : oTargetData.code
-            };
-            this.getRouter().navTo("detailDetail", oNavParam);
-        },
-        
+			this.oRouter.getRoute("detail").attachPatternMatched(this._onProductMatched, this);
+		},
+		handleFullScreen: function () {
+			var sNextLayout = this.oModel.getProperty("/actionButtonsInfo/midColumn/fullScreen");
+			this.oRouter.navTo("detail", {layout: sNextLayout, product: this._product});
+		},
+		handleExitFullScreen: function () {
+			var sNextLayout = this.oModel.getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
+			this.oRouter.navTo("detail", {layout: sNextLayout, product: this._product});
+		},
 		handleClose: function () {
-			//var sNextLayout = this.oModel.getProperty("/actionButtonsInfo/midColumn/closeColumn");
-			this.oRouter.navTo("master", {layout: 'OneColumn'});
+            this.getView().getModel('contModel').setProperty("/headerExpandFlag", true);
+
+			var sNextLayout = this.oModel.getProperty("/actionButtonsInfo/midColumn/closeColumn");
+            this.oRouter.navTo("master", {layout: sNextLayout});
+		},
+		_onProductMatched: function (oEvent) {
+            this.oObjectPageLayout = this.getView().byId("ObjectPageLayout");
+            this.oTargetSection = this.getView().byId("goalsSection");
+            // this.oObjectPageLayout.setSelectedSection(this.oTargetSection)
+            this.oObjectPageLayout.scrollToSection(this.oTargetSection.getId(), 0, -500);
+
+			this._product = oEvent.getParameter("arguments").product || this._product || "0";
+			this.getView().bindElement({
+				path: "/ProductCollection/" + this._product,
+				model: "products"
+			});
         },
-        
-        onAddDetailDetailPress : function(){
-            this._fnShowFooter(false);
-            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(2);
+        doEditMode : function (oEvent){
+            var oContModel = this.getView().getModel("contModel");
+            oContModel.setProperty("/readMode", false);
+            oContModel.setProperty("/editMode", true);
+        },
+        doCancelMode : function (oEvent){
+            var oContModel = this.getView().getModel("contModel");
+            oContModel.setProperty("/readMode", true);
+            oContModel.setProperty("/editMode", false);
             
-            this.getRouter().navTo("detailDetail", {layout: oNextUIState.layout});
         },
-
-        _fnMasterSearch : function(){
-            var oBeginColumnPage = this.getView().getParent().getParent().getBeginColumnPages()[0];
-            var oSearchBtn = oBeginColumnPage.byId('btn_search');
-            oSearchBtn.firePress();
-        },
-        onSavePress : function(){
-            var oContModel = this.getModel("contModel");
-            var bCreateFlag = oContModel.getProperty("/detail/createMode");
-
-            if(bCreateFlag){
-                if(ValidatorUtil.isValid(this.getView(),"requiredField")){
-                    MessageBox.confirm("추가 하시 겠습니까?", {
-                        title : "Create",
-                        initialFocus : sap.m.MessageBox.Action.CANCEL,
-                        onClose : function(sButton) {
-                            if (sButton === MessageBox.Action.OK) {
-                                this._fnCreateCodeMaster();
-                            }
-                        }.bind(this)
-                    });
-                }else{
-                    console.log("checkRequire")
-                }
-            }else{
-                MessageBox.confirm("수정 하시 겠습니까?", {
-                    title : "Update",
-                    initialFocus : sap.m.MessageBox.Action.CANCEL,
-                    onClose : function(sButton) {
-                        if (sButton === MessageBox.Action.OK) {
-                            this._fnUpdateCodeMaster();
-                        }
-                    }.bind(this)
-                });
-            }
-        },
-
-        _fnCreateCodeMaster : function(){
-            
-            var oViewModel = this.getModel("viewModel");
-            var oParam = oViewModel.getProperty("/detail");
-
-            var oModel = this.getModel();
-            oModel.create("/CodeMasters", oParam, {
-                success: function(data){
-                    this._fnMasterSearch();
-                    this._fnSetReadMode();
-                }.bind(this),
-                error: function(data){
-                    console.log('error',data)
-                    alert("에라")
-                }
+        onAfterRendering : function () {
+            var that = this,
+				sHtmlValue = '<p style="text-align: justify; background: white; font-size: 10pt; font-family: Calibri, sans-serif;"><strong><span style="font-size: 10.5pt; font-family: sans-serif; color: black;">Lorem ipsum dolor sit amet</span></strong>' +
+				'<span style="font-size: 10.5pt; font-family: sans-serif; color: black;">, consectetur adipiscing elit. Suspendisse ornare, nibh nec gravida tincidunt, ipsum quam venenatis nisl, vitae venenatis urna sem eget ipsum. Ut cursus auctor leo et vulputate. ' +
+				'Curabitur nec pretium odio, sed auctor felis. In vehicula, eros aliquam pharetra mattis, ante mi fermentum massa, nec pharetra arcu massa finibus augue. </span></p> ';
+			sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
+				function (RTE, EditorType) {
+					var oRichTextEditor = new RTE("myRTE", {
+						editorType: EditorType.TinyMCE4,
+						width: "100%",
+                        height: "300px",
+                        editable: "{contModel>/editMode}",
+						customToolbar: true,
+						showGroupFont: true,
+						showGroupLink: true,
+						showGroupInsert: true,
+						value: sHtmlValue,
+						ready: function () {
+							this.addButtonGroup("styleselect").addButtonGroup("table");
+						}
+					});
+					that.getView().byId("idVerticalLayout").addContent(oRichTextEditor);
             });
         },
-
-        _fnUpdateCodeMaster : function(){
-            var oViewModel = this.getModel("viewModel");
-            var oParam = oViewModel.getProperty("/detail");
-            var oKey = {
-                tenant_id : oParam.tenant_id,
-                group_code : oParam.group_code
-            }
-
-            var oModel = this.getModel();
-            var sCreatePath = oModel.createKey("/CodeMasters", oKey);
-            oModel.update(sCreatePath, oParam, {
-                success: function(data){
-                    this._fnMasterSearch();
-                    this._fnSetReadMode();
-                },
-                error: function(data){
-                    console.log('error',data)
-                }
-            });
-        },
-
-        onDeletePress : function(){
-            MessageBox.confirm("삭제 하시 겠습니까?", {
-                title : "Comfirmation",
-                initialFocus : sap.m.MessageBox.Action.CANCEL,
-                onClose : function(sButton) {
-                    if (sButton === MessageBox.Action.OK) {
-                        this._fnDeleteCodeMaster();
-                    } else if (sButton === MessageBox.Action.CANCEL) {
-                        
-                    };
-                }.bind(this)
-            });
-        },
-
-        _fnDeleteCodeMaster : function(){
-            var oViewModel = this.getModel("viewModel");
-            var oParam = oViewModel.getProperty("/detail");
-            var oKey = {
-                tenant_id : oParam.tenant_id,
-                group_code : oParam.group_code
-            }
-
-            var oModel = this.getModel();
-            var sCreatePath = oModel.createKey("/CodeMasters", oKey);
-            oModel.remove(sCreatePath, {
-                success: function(){
-                    // var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(0);
-                    // var sLayout = oNextUIState.layout;
-                    this._fnMasterSearch();
-                    MessageToast.show("Success to save.");
-                    var sLayout = "OneColumn";
-                    this.getRouter().navTo("master", {layout: sLayout});
-                }.bind(this),
-                error: function(){
-                    console.log('remove error')
-                }
-            });
-        },
-
-		_onDetailMatched: function (oEvent) {
-            console.log('_onDetailMatched', oEvent)
-            this._fnInitControlModel();
-
-            var sTenantId = oEvent.getParameter("arguments").tenantId;
-            var sGroupCode = oEvent.getParameter("arguments").groupCode;
-
-            var bCreateMode = true;
-            if(sTenantId && sGroupCode){
-                bCreateMode = false;
-            }
-            
-            if(bCreateMode){
-                this._fnSetCreateMode();
-                this._fnSetCreateData();
-            }else{
-                this._fnSetReadMode();
-                this._fnReadDetails(sTenantId, sGroupCode);
-            }
-
-            //ScrollTop
-            var oObjectPageLayout = this.getView().byId("objectPageLayout");
-            var oFirstSection = oObjectPageLayout.getSections()[0];
-            oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);
-        },
-
-        _fnReadDetails : function(tenantId, groupCode){
-            var aFilters = [];
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, tenantId));
-            aFilters.push(new Filter("group_code", FilterOperator.EQ, groupCode));
-
-            var aSorter = [];
-            aSorter.push(new Sorter("sort_no", false));
-
-            var oViewModel = this.getModel('viewModel');
-            var oServiceModel = this.getModel();
-            oServiceModel.read("/CodeDetails",{
-                filters : aFilters,
-                sorters : aSorter,
-                success : function(data){
-                    oViewModel.setProperty("/CodeDetails", data.results);
-                    // oCodeMasterTable.setBusy(false);
-                },
-                error : function(data){
-                    // oCodeMasterTable.setBusy(false);
-                }
-            });
-        },
-
-        chainFormatter : function(code){
-            this._fnGetChainList();
-            // console.log('chainFormatter',code)
-            var oViewModel = this.getModel("viewModel");
-            // var aChain = this._fnGetChainList();
-            // console.log('aChain',aChain)
-            return code;
-            // aChain.forEach(function(item){
-            //     if(this.code === code){
-            //         return code + " : " + this.code_description;
-            //     }
-            // })
-        },
-
-        _fnShowFooter : function(flag){
-            var oContModel = this.getModel("contModel");
-            oContModel.setProperty("/detail/footer", flag);
-        },
-
-        _fnGetChainList : function(){
-            var oViewModel = this.getModel("viewModel");
-            var aChain = oViewModel.getProperty("/chainList");
-
-            if(!aChain){
-                var oUtilModel = this.getModel('util');
-                oUtilModel.read('/CodeDetails',{
-                    filters : [
-                        new Filter("tenant_id", FilterOperator.EQ, "L2100"),
-                        new Filter("group_code", FilterOperator.EQ, "CM_CHAIN_CD")
-                    ],
-                    success : function(data){
-                        oViewModel.setProperty("/chainList",data.results);
-                        aChain = data.results;
-                        // console.log('oUtilModel success',data.results)
-                    },
-                    error : function(data){
-                        // console.log('oUtilModel error',data)
-                    }
-                })
-            }
-
-            return aChain;
-
-            
-
-            
-        }
 	});
-});
+}, true);
