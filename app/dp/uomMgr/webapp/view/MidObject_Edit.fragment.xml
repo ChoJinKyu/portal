@@ -27,7 +27,7 @@
             </items>
         </ComboBox>
         <Label text="Base Unit"/>
-		<Switch state="{master>/base_unit_flag}" customTextOn="Yes" customTextOff="No">
+		<Switch state="{master>/base_unit_flag}" customTextOn="Yes" customTextOff="No" enabled="{midObjectView>/isAddedMode}">
 			<layoutData>
 				<FlexItemData growFactor="1" />
 			</layoutData>
