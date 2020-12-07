@@ -11,7 +11,9 @@ entity Approval_Mst {
         approval_type_code      : String(30)            @title:'품의유형코드';	
         approval_title          : String(300) not null  @title:'품의제목';	
         approval_contents       : LargeString           @title:'품의 내용';	
-        approve_status_code     : String(30)  not null  @title:'결재상태코드';	
+        approve_status_code     : String(30)  not null  @title:'결재상태코드';
+        requestor_empno         : String(30)            @title:'요청자사번';
+        request_date            : String(8)             @title:'요청일자';
         attch_group_number      : String(100)           @title:'첨부파일그룹번호';	
 }
 

@@ -67,7 +67,6 @@ sap.ui.define([
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedListModel(), "list");
-            this.setModel(new ManagedListModel(), "appDetail");
             this.setModel(new ManagedListModel(), "orgMap");
 			
 			this.getRouter().getRoute("approvalList").attachPatternMatched(this._onRoutedThisPage, this);

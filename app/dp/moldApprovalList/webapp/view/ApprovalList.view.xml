@@ -221,7 +221,9 @@
                                         sorter: { path: 'create_user_id' }
                             }">
                                 <core:Item key="{create_user_id}" text="{create_user_id}" />
+                                
                             </Input>
+                           
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -235,6 +237,7 @@
                                     <SegmentedButtonItem text="In-Appr" key="I" width="5em" />
                                     <SegmentedButtonItem text="Apprvd" key="A" width="5em" />
                                     <SegmentedButtonItem text="Rejected" key="F" width="5em" />
+                                     
                                 </items>
                             </SegmentedButton>
                             <layoutData>
@@ -322,11 +325,10 @@
                                 <ComboBox  
                                         selectedKey="{list>approval_number}" 
                                         items="{
-                                            path: '/Approvals',
-                                            sorter: { path: 'company_code'}
+                                            path: '/Approvals'
                                         }"
                                         >
-                                    <core:Item key="{list>company_code}" text="[{list>company_code}] {list>company_name}" />
+                                    <core:Item key="{approval_number}" text="[{company_code}] {company_name}" />
                                 </ComboBox>
                                 <ObjectIdentifier text="{list>org_name}" />
                                 <ObjectIdentifier text="{list>approval_number}" />
