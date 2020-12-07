@@ -7,6 +7,8 @@ entity Approval_Mst {
     key approval_number         : String(30)  not null  @title:'품의번호';	
         legacy_approval_number  : String(50)            @title:'기존시스템품의번호';	
         company_code            : String(10)            @title:'회사코드';
+        org_type_code           : String(10)            @title:'조직유형코드';
+        org_code                : String(10)            @title:'조직코드';
         chain_code              : String(30)  not null  @title:'체인코드';	
         approval_type_code      : String(30)            @title:'품의유형코드';	
         approval_title          : String(300) not null  @title:'품의제목';	
