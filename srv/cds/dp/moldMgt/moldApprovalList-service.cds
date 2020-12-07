@@ -19,9 +19,9 @@ service MoldApprovalListService {
     where a.model is not null;
 
     view PartNumbers as
-    select distinct key a.tenant_id, key a.part_number, a.spec_name
+    select distinct key a.tenant_id, key a.mold_number, a.spec_name
     from moldMst.Md_Mst a
-    where a.part_number is not null;
+    where a.mold_number is not null;
 
     view CreateUsers as
     select distinct key a.tenant_id, key a.create_user_id, a.create_user_name

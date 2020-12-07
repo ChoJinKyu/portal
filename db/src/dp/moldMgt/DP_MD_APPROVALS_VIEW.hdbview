@@ -10,7 +10,7 @@ select
     ,mm.org_code
     ,mm.model
     ,mm.mold_id
-    ,mm.part_number
+    ,mm.mold_number
     ,am.requestor_empno
     ,am.request_date
     ,am.approve_status_code

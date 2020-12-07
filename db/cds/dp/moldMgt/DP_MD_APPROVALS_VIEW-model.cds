@@ -13,7 +13,7 @@ entity Md_Approvals_View {
         org_code            : String(50);                    
         model               : String(50);                   
         mold_id             : String(50);                  
-        part_number         : String(50);                            
+        mold_number         : String(50);                            
         requestor_empno     : String(30)            @title:'요청자사번';
         request_date        : String(8)             @title:'요청일자';
         approve_status_code : String(30)            @title:'결재상태코드';
