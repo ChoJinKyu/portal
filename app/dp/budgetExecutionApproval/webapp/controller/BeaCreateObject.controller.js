@@ -66,14 +66,14 @@ sap.ui.define([
 
             this.getView().setModel(new ManagedModel(), "appMaster");
             this.getView().setModel(new ManagedListModel(), "appDetail");
-            this.getView().setModel(new ManagedListModel(), "MoldMasters");
+           // this.getView().setModel(new ManagedListModel(), "MoldMasters");
             this.getView().setModel(new ManagedListModel(), "Approvers");
             this.setModel(new ManagedListModel(), "moldList");
 
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("appMaster"));
             oTransactionManager.addDataModel(this.getModel("appDetail"));
-            oTransactionManager.addDataModel(this.getModel("MoldMasters"));
+          //  oTransactionManager.addDataModel(this.getModel("MoldMasters"));
             oTransactionManager.addDataModel(this.getModel("Approvers"));
 
             this.getView().setModel(new ManagedListModel(), "appList"); // apporval list 
@@ -270,6 +270,19 @@ sap.ui.define([
                     console.log("ApprovalMasters>>>> ", oData);
                     that.setRichEditor(oData.approval_contents);
                 });
+
+                /**
+                 *             this.getView().setModel(new ManagedListModel(), "appDetail");
+            this.getView().setModel(new ManagedListModel(), "MoldMasters");
+            this.getView().setModel(new ManagedListModel(), "Approvers");
+                 */
+
+            this._bindView( "/Approver" , "Approvers", schFilter, function (oData) {
+                console.log("Approver >>>> ", oData);
+              
+            });
+
+
 
             var sResult = {};
 
