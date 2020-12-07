@@ -13,12 +13,11 @@ service BudgetExecutionApprovalService {
 
     view ItemBudgetExecution as 
     select key dtl.approval_number  ,  
-            
             mst.tenant_id,
             mst.company_code,
             mst.org_type_code,
             mst.org_code,
-            mst.part_number,
+            mst.mold_number,
             mst.mold_sequence,
             mst.mold_id,
             mst.spec_name,
@@ -40,6 +39,7 @@ service BudgetExecutionApprovalService {
             mst.account_code,
             mst.accounting_department_code,
             mst.acq_department_code,
+            mst.production_vendor_id,
             mst.remark,
             mst.eco_number,
             mst.set_id,
