@@ -93,8 +93,6 @@ sap.ui.define([
             sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
                 function (RTE, EditorType) {
 
-
-
                     var oRichTextEditor = new RTE("myRTE", {
                         editorType: EditorType.TinyMCE4,
                         width: "100%",
@@ -265,7 +263,9 @@ sap.ui.define([
                 , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
             ];
 
-            this._bindView("/ApprovalMasters(tenant_id='L1100',approval_number='" + args.approval_number + "')"
+            var uri = "/ApprovalMasters(tenant_id='L1100',approval_number='" + args.approval_number + "')";
+            console.log("uri >>> ", uri);
+            this._bindView(uri
                 , "appMaster", [], function (oData) {
                     console.log("ApprovalMasters>>>> ", oData);
                     that.setRichEditor(oData.approval_contents);

@@ -131,8 +131,7 @@
                                 </HBox>
                             <VBox>
                                 <Label text="{I18N>/DESCRIPTION}" labelFor="input" required="true"></Label> 
-                                <layout:VerticalLayout name="approval_contents" id="idVerticalLayout" class="sapUiContentPadding" width="100%" 
-                                    value="{=${appMaster>/approval_number}?${appMaster>/approval_contents}:''}">
+                                <layout:VerticalLayout name="approval_contents" id="idVerticalLayout" class="sapUiContentPadding" width="100%" >
 
                                 </layout:VerticalLayout>
                             </VBox>
@@ -152,7 +151,7 @@
                                 columnsL="2"
                                 columnsXL="2" >
                                 <form:content>
-                                    <Label text="Inspection" required="true" />
+                                    <Label text="{I18N>/INSPECTION}" required="true" />
                                     <RadioButtonGroup id="radioInspection" columns="4" width="100%" class="sapUiMediumMarginBottom">
                                         <RadioButton id="radio_Invest" text="Invest" />
                                         <RadioButton id="radio_Supplies" text="Supplies"  />
@@ -257,7 +256,7 @@
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_description" width="15em" hAlign="Center">
-                                        <Label text="Description"/>           
+                                        <Label text="{I18N>/DESCRIPTION}"/>           
                                         <table:template>
                                             <Text id="description" text="{appDetail>spec_name}"/>
                                         </table:template>
@@ -353,7 +352,7 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			<uxap:ObjectPageSection titleUppercase="false" title="Attachments">
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>Attachments}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection >
                         <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" width="100%">
@@ -406,16 +405,16 @@
                                 <Text text="No." />
                             </Column>
                             <Column id="type" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
-                                <Text text="Type" />
+                                <Text text="{I18N>/TYPE}" />
                             </Column>
                             <Column id="nameDept" minScreenWidth="Tablet" hAlign="Center" width="12em" >
-                                <Text text="Name/Dept" />
+                                <Text text="{I18N>/NAME}/Dept" />
                             </Column>
                             <Column id="status" minScreenWidth="Tablet" hAlign="Center" width="12em" >
-                                <Text text="Status" />
+                                <Text text="{I18N>/STATUS}" />
                             </Column> 
                             <Column id="comment" minScreenWidth="Tablet" hAlign="Center" width="12em" >
-                                <Text text="Comment" />
+                                <Text text="{I18N>/COMMENT}" />
                             </Column>
                             <Column id="up" minScreenWidth="Tablet" hAlign="Center" width="1.5em" >
                                   <Text text="" />
