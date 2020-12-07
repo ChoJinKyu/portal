@@ -1,5 +1,6 @@
-using { dp as approvalMst } from '../../../../db/cds/dp/moldMgt/DP_MD_APPROVAL_MST-model';
+using { cm as approvalMst } from '../../../../db/cds/cm/apprReq/CM_APPROVAL_MST-model'; 
 using { dp as approvalDtl } from '../../../../db/cds/dp/moldMgt/DP_MD_APPROVAL_DTL-model';
+using { cm as approver } from '../../../../db/cds/cm/apprReq/CM_APPROVER-model';
 using { dp as moldMst } from '../../../../db/cds/dp/moldMgt/DP_MD_MST-model';
 
 
@@ -7,18 +8,18 @@ namespace dp;
 @path : '/dp.BudgetExecutionApprovalService'
 service BudgetExecutionApprovalService {
 
-    entity ApprovalMasters as projection on approvalMst.Md_Approval_Mst;
-    entity ApprovalDetails as projection on approvalDtl.Md_Approval_Dtl;
+    entity ApprovalMasters as projection on approvalMst.Approval_Mst;
+    entity ApprovalDetails as projection on approvalDtl.Md_Approval_Dtl; 
+    entity Approver as projection on approver.Approver;
     entity MoldMasters as projection on moldMst.Md_Mst;
 
     view ItemBudgetExecution as 
     select key dtl.approval_number  ,  
-            
             mst.tenant_id,
             mst.company_code,
             mst.org_type_code,
             mst.org_code,
-            mst.part_number,
+            mst.mold_number,
             mst.mold_sequence,
             mst.mold_id,
             mst.spec_name,

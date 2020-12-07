@@ -43,7 +43,7 @@
 
 
             <Label text="Mold Part No"/> 
-            <Text text="{master>/part_number}"/>
+            <Text text="{master>/mold_number}"/>
             <Label text="Item Type"/>
             <Text text="{mstSpecView>/mold_item_type_name}"/>
             <Label text="Order Supplier"/>

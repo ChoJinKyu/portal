@@ -28,3 +28,21 @@ entity Menu {
 }
 
 extend Menu with util.Managed;
+
+@cds.persistence.exists
+entity Menu_haa {
+  key node_id           : String;
+      parent_id         : String;
+      tenant_id         : String;
+      menu_code         : String;
+      parent_menu_code  : String;
+      chain_code        : String;
+      menu_desc         : String;
+      menu_level_number : Integer;
+      sort_number       : Integer;
+      menu_display_flag : Boolean;
+      menu_type_code    : String;
+      use_flag          : Boolean;
+}
+
+extend Menu_haa with util.Managed;

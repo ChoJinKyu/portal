@@ -170,7 +170,10 @@ sap.ui.define([
 				return;
             }
             
-            if(this.validator.validate(this.byId("mainTable")) !== true) return;
+            if(this.validator.validate(this.byId("mainTable")) !== true)
+            { 
+                debugger;
+                return;}
 
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
 				title : this.getModel("I18N").getText("/SAVE"),

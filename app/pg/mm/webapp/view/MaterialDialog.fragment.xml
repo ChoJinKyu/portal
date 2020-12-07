@@ -7,11 +7,12 @@
     xmlns:layout="sap.ui.layout"
     xmlns:table="sap.ui.table"
     xmlns:form="sap.ui.layout.form"
-	width 			= "50%"
-	height			= "50%"    
+	width 			= "500px"
+	height			= "40%"
+    showHeader="false"    
     displayBlock="true">
 	
-	<Dialog title="Part (자재코드)  -> Masterial_Code 사용">
+	<Dialog title="Part (자재코드)  -> Masterial_Code 사용" contentWidth="50%">
 		<content>
             <Panel>
             <FlexBox height="60px" alignItems="Start" justifyContent="End" class="sapUiSmallMarginTop">
@@ -79,11 +80,15 @@
                 </layout:VerticalLayout>  
                 <layout:VerticalLayout class="sapUiTinyMarginEnd">
                     <Label text="　"/>
-                    <Button type="Emphasized"  text="Apply" press=""/>
+                    <Button type="Emphasized"  text="Apply" press=".onValueHelpMaterialDialogApply"/>
                 </layout:VerticalLayout>  
             </FlexBox> 
             </Panel>  
-            <ScrollContainer> 
+            <ScrollContainer
+            width="100%"
+		    vertical="true"
+		    focusable="true"
+            > 
             <Table  id="materialTable"
                     items="{materialTableList>/}"                    
                     mode="SingleSelectLeft"

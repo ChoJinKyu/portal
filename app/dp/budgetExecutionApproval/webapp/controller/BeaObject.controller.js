@@ -223,37 +223,27 @@ sap.ui.define([
                 , plant_name: ""
             });
 
-            var oView = this.getView(),
-                oModel = this.getModel("company");
+           var oModel = this.getModel("company");
 
             oModel.setTransactionModel(this.getModel("org"));
 
-            var searchFilter = [];
-            searchFilter.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100'));
-            searchFilter.push(new Filter("company_code", FilterOperator.EQ, company_code));
-
-            oModel.read("/Org_Company", {
-                filters: searchFilter,
+            oModel.read("/Org_Company(tenant_id='L1100',company_code='" + company_code + "')", {
+                filters: [],
                 success: function (oData) {
-                    console.log(" Org_Company ", oData)
-                    appModel.oData.company_name = oData.results[0].company_name
+                    console.log("Org_Company oData>>> ", oData);
                 }
             });
 
-            var oView = this.getView(),
-                oModel2 = this.getModel("plant");
+
+            var oModel2 = this.getModel("plant");
             oModel2.setTransactionModel(this.getModel("org"));
-            searchFilter = [];
-            searchFilter.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100'));
-            searchFilter.push(new Filter("plant_code", FilterOperator.EQ, plant_code));
 
-            oModel2.read("/Org_Plant", {
-                filters: searchFilter,
+            oModel2.read("/Org_Plant(tenant_id='L1100',company_code='" + company_code + "',plant_code='" + plant_code + "')", {
+                filters: [],
                 success: function (oData) {
-                    appModel.oData.plant_name = oData.results[0].plant_name;
+                    console.log("Org_Plant oData>>> ", oData);
                 }
             });
-            console.log("oMasterModel >>> ", appModel);
         },
 
         _onBindingChange: function () {

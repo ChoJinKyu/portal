@@ -12,7 +12,7 @@ service MoldItemSelectionService {
         m.company_code,
         m.org_type_code,
         m.org_code,
-        m.part_number,
+        m.mold_number,
         m.mold_sequence,
         m.mold_id,
         m.spec_name,
