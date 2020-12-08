@@ -68,7 +68,7 @@ sap.ui.define([
             this.getView().setModel(new ManagedListModel(), "appList"); // apporval list 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
             this.setModel(new ManagedListModel(), "moldList");
-            this.setModel(new ManagedModel(), "moldItem");
+ 
 
             this.getView().setModel(new ManagedModel(), "appMaster");
             this.getView().setModel(new ManagedListModel(), "appDetail");
@@ -271,14 +271,6 @@ sap.ui.define([
                 that.setRichEditor(oData.approval_contents);
             });
 
-            /**
-             *   
-             * 
-             * this.getView().setModel(new ManagedModel(), "appMaster");
-        this.getView().setModel(new ManagedListModel(), "appDetail");
-        this.getView().setModel(new ManagedListModel(), "MoldMasterList");
-        this.getView().setModel(new ManagedListModel(), "Approvers"); 
-             */
             this._bindView("/Approver", "Approvers", schFilter, function (oData) {
                 console.log("Approver >>>> ", oData);
             });
@@ -606,7 +598,7 @@ sap.ui.define([
          */
         _addPsTable: function (data) {
             var oTable = this.byId("psTable"),
-                oModel = this.getModel("appDetail");
+                oModel = this.getModel("moldList");
 
             oModel.addRecord({
                 "mold_id": data.oData.mold_id,
@@ -622,7 +614,7 @@ sap.ui.define([
                 "family_part_number_1": "",
                 "budget_exrate_date": "",
                 "inspection_date": "",
-            }, "/ApprovalDetails");
+            }, "/ItemBudgetExecution");
         },
 
         /**
