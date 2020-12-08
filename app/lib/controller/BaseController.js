@@ -148,9 +148,16 @@ sap.ui.define([
 					// });
 				}
 			};
-		})()
+        })(),
+        
+        isValNull: function (p_val) {
+            if(!p_val || p_val == "" || p_val == null){
+                return true
+            }else{
+                return false;
+            }
+        }
 
-	
+        
 	});
-
 });
