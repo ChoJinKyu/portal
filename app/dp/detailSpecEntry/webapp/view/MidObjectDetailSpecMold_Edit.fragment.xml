@@ -1,11 +1,12 @@
 <core:FragmentDefinition
-	xmlns="sap.m"
-	xmlns:l="sap.ui.layout"
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
     xmlns:form="sap.ui.layout.form"
-	xmlns:core="sap.ui.core"
+    xmlns:core="sap.ui.core"
     xmlns:uxap="sap.uxap" >
 <VBox class="sapUiSmallMargin">
     <form:SimpleForm 
+        id="frmMold"
         editable="false"
         layout="ColumnLayout"
         columnsM="2"
@@ -13,20 +14,20 @@
         columnsXL="3" >
         <form:content>
 
-                <Label text="Inspection"/>
+                <Label text="Inspection" required="true"/>
                 <Switch state="{spec>/inspection_flag}" customTextOn="Yes" customTextOff="No"  />
-                <Label text="Cavity Qty"/>
-                <Input value="{spec>/cavity_process_qty}"/>
-                <Label text="Demand Life"/>
-                <Input type="Number" value="{path: 'spec>/request_life_shot_count', type: 'sap.ui.model.type.Integer'}"/>
+                <Label text="Cavity Qty" required="true"/>
+                <Input value="{spec>/cavity_process_qty}" required="true"/>
+                <Label text="Demand Life" required="true"/>
+                <Input type="Number" value="{path: 'spec>/request_life_shot_count', type: 'sap.ui.model.type.Integer'}" required="true"/>
                 <Text text="Shot">
                     <layoutData>
-						<form:ColumnElementData cellsSmall="2" cellsLarge="1" />
-					</layoutData>
+                        <form:ColumnElementData cellsSmall="2" cellsLarge="1" />
+                    </layoutData>
                 </Text>
-                <Label text="Hot Runner Valve Qty"/>
-                <Input type="Number" value="{path: 'spec>/mold_hot_runner_qty', type: 'sap.ui.model.type.Integer'}"/>
-                <Label text="Size"/>
+                <Label text="Hot Runner Valve Qty" required="true"/>
+                <Input type="Number" value="{path: 'spec>/mold_hot_runner_qty', type: 'sap.ui.model.type.Integer'}" required="true"/>
+                <Label text="Size" required="true"/>
                 <Select   width="100%"
                             selectedKey="{spec>/mold_size}"
                             items="{
@@ -37,6 +38,7 @@
                                         ]
                                     }"
                             editable="true"
+                            required="true"
                 >
                     <core:Item key="{util>code}" text="{util>code_description}" />
                 </Select>
@@ -85,13 +87,13 @@
 
              <!-- </VBox>            
             <VBox > -->
-                <Label text="Assembly Approval"/> 
+                <Label text="Assembly Approval" required="true"/> 
                 <Switch state="{spec>/assembly_approval_flag}" customTextOn="Yes" customTextOff="No"  />
                 <Label text="Order Qty"/>
                 <Input value="{spec>/order_qty}"/>
-                <Label text="Mold Weight"/>
-                <Input value="{spec>/mold_weight}"/>
-                <Label text="Hot Runner Maker"/>
+                <Label text="Mold Weight" required="true"/>
+                <Input value="{spec>/mold_weight}" required="true"/>
+                <Label text="Hot Runner Maker" required="true"/>
                 <Select   width="100%"
                             selectedKey="{spec>/hot_runner_maker_name}"
                             items="{
@@ -106,8 +108,8 @@
                     <core:Item key="{util>code}" text="{util>code_description}" />
                 </Select>
 
-                <Label text="Mold Size"/>
-                <Input value="{spec>/mold_size_2}"/>
+                <Label text="Mold Size" required="true"/>
+                <Input value="{spec>/mold_size_2}" required="true"/>
                 <Label text="Gate"/>
                 <Select   width="100%"
                             selectedKey="{spec>/mold_gate_spec_name}"
@@ -141,11 +143,11 @@
 
             <!-- </VBox>            
             <VBox > -->
-                <Label text="Use Material"/> 
-                <Input value="{spec>/use_material_value}"/>
+                <Label text="Use Material" required="true"/> 
+                <Input value="{spec>/use_material_value}" required="true"/>
                 <Label text="Sample Qty"/>
                 <Input type="Number" value="{path: 'spec>/mold_sample_qty', type: 'sap.ui.model.type.Integer'}"/>
-                <Label text="Mold Type"/>
+                <Label text="Mold Type" required="true"/>
                 <Select   width="100%"
                             selectedKey="{master>/mold_type_code}"
                             items="{
@@ -159,7 +161,7 @@
                 >
                     <core:Item key="{util>code}" text="{util>code_description}" />
                 </Select>
-                <Label text="Mold Structure"/>
+                <Label text="Mold Structure" required="true"/>
                 <Select   width="100%"
                             selectedKey="{spec>/die_form}"
                             items="{
@@ -170,6 +172,7 @@
                                         ]
                                     }"
                             editable="true"
+                            required="true"
                 >
                     <core:Item key="{util>code}" text="{util>code_description}" />
                 </Select>
@@ -341,5 +344,5 @@
             <!-- </VBox> -->
         </form:content>
     </form:SimpleForm>
-	</VBox>
+    </VBox>
 </core:FragmentDefinition>

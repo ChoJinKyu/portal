@@ -48,9 +48,8 @@
                             <ComboBox id="MoldItemSearchPlant"  width="100%" selectedKey="{beaCreateObjectView>/plant_code}" enabled="false" items="{
                                         path: 'purOrg>/Pur_Operation_Org',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
-                                            {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
-                                            {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                           ,{path: 'company_code', operator: 'EQ', value1: 'beaCreateObjectView>/company_code'}
                                         ]
                                     }">
                                 <items>

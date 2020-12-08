@@ -1,15 +1,17 @@
 sap.ui.define([
 	"./Empty.controller",
-	"sap/ui/core/routing/History",
+    "ext/lib/util/Validator",
 	"sap/ui/model/json/JSONModel",
 	"sap/m/MessageBox",
 	"sap/m/MessageToast"
-], function (Controller, History, JSONModel, MessageBox, MessageToast) {
+], function (Controller, Validator, JSONModel, MessageBox, MessageToast) {
 	"use strict";
 
 	var oMessageManager;
 
 	return Controller.extend("xx.exampleControls.controller.ControlValidation", {
+
+        validator: new Validator(),
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -61,7 +63,17 @@ sap.ui.define([
 
         onMessagePopoverPress : function (oEvent) {
             this._getMessagePopover().openBy(oEvent.getSource());
-		},
+        },
+        
+        onPageValidateButtonPress: function(){
+            if(this.validator.validate(this.byId("page")) !== true) {
+                return;
+            }
+        },
+        
+        onPageClearValidateButtonPress: function(){
+            this.validator.clearValueState(this.byId("page"));
+        },
 		
 		/* =========================================================== */
 		/* internal methods                                            */

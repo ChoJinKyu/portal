@@ -48,14 +48,17 @@
                                 <core:Item key="{org>tenant_id}" text="{org>tenant_id} : {org>tenant_name}" />
                               </items>
                             </ComboBox>
-                            <Label text="조직" labelFor="searchOrgCombo" required="false"></Label>
+                            <Label text="회사" labelFor="searchOrgCombo" required="false"></Label>
                             <ComboBox
                               id="searchOrgCombo"
                               width="100%"
                               items="{
+                                path: 'org>/Org_Company',
+                                filters: [
+                                ]
                               }">
                               <items>
-                                <core:Item key="{org>code}" text="{util>code}: {util>code_description}" />
+                                <core:Item key="{org>company_code}" text="{org>company_code}: {org>company_name}" />
                               </items>
                             </ComboBox>
                             <layoutData>
@@ -130,12 +133,6 @@
                             <Title text="사용자 관리 ({= ${list>/}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
-                            <ToolbarSeparator/>
-                            <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
-                                <layoutData>
-                                    <OverflowToolbarLayoutData priority="NeverOverflow" />
-                                </layoutData>
-                            </Button>
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>

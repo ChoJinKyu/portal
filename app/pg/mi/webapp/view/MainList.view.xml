@@ -209,7 +209,7 @@
                                              <Text text="{mi_material_code}"></Text>
                                              <Text text="{mi_material_code_name}"></Text>
                                              <Text text="{category_name}"></Text>
-                                             <Text text="{= ${use_flag}===true?'예':'아니오'}"></Text>  
+                                             <Text text="{= ${oUiData>/use_flag} ? 'Yes':'No'}"></Text>  
                                         </ColumnListItem>
                                     </items>
                                 </Table>

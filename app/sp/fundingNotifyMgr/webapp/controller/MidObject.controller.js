@@ -168,7 +168,7 @@ sap.ui.define([
             var view = this.getView(),
                 master = view.getModel("master"),
                 that = this;
-
+            console.log(master.getData()["funding_appl_closing_date"]);
             // Validation
             // if (!master.getData()["chain_code"]) {
             //     MessageBox.alert("Chain을 입력하세요");
@@ -305,6 +305,7 @@ sap.ui.define([
         },
 
         _toEditMode: function () {
+            debugger;
             var FALSE = false;
             this._showFormFragment('MidObject_Edit');
             this.byId("page").setSelectedSection("pageSectionMain");
@@ -315,6 +316,7 @@ sap.ui.define([
         },
 
         _toShowMode: function () {
+            debugger;
             var TRUE = true;
             this._showFormFragment('MidObject_Show');
             this.byId("page").setSelectedSection("pageSectionMain");

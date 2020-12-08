@@ -246,11 +246,9 @@ sap.ui.define([
 				return;
             }
             
-            if(this.validator.validate(this.byId("mainTable")) !== true) 
-            {
-                debugger;
+            if(this.validator.validate(this.byId("mainTable")) !== true) {
                 return;
-            }    
+            }
 
             
 			var oView = this.getView(),
