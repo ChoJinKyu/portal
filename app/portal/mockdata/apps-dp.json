@@ -54,12 +54,12 @@
                 {
                     "name": "(NPD) New Base Price",
                     "url": "../dp/basePriceArl/webapp",
-                    "component": "cm.basePriceArl"
+                    "component": "dp.basePriceArl"
                 },
                 {
                     "name": "(NPD) Base Price Change",
                     "url": "../dp/basePriceChange/webapp",
-                    "component": "cm.basePriceChange"
+                    "component": "dp.basePriceChange"
                 }
             ]
         }

@@ -1,7 +1,7 @@
 {
   "_version": "1.12.0",
   "sap.app": {
-    "id": "dp.participatingSupplierSelectionApproval",
+    "id": "dp.basePriceArl",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "title": "{{appTitle}}",
@@ -13,35 +13,14 @@
     "resources": "resources.json",
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v2/dp.ParticipatingSupplierSelectionApprovalService/",
-        "type": "OData",
-        "settings": {
-          "odataVersion": "2.0"
-        }
-      },
-      "moldService": {
-        "uri": "srv-api/odata/v2/dp.DetailSpecEntryService/",
+        "uri": "srv-api/odata/v2/dp.BasePriceArlService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
         }
       },
       "commonUtilService": {
-        "uri": "srv-api/odata/v2/cm.util.CommonService/",
-        "type": "OData",
-        "settings": {
-          "odataVersion": "2.0"
-        }
-      }, 
-      "orgMgrService": {
-        "uri": "srv-api/odata/v2/cm.OrgMgrService/",
-        "type": "OData",
-        "settings": {
-          "odataVersion": "2.0"
-        }
-      },
-      "purOrgMgrService": {
-        "uri": "srv-api/odata/v2/cm.PurOrgMgrService/",
+        "uri": "srv-api/odata/v2/xx.util.CommonService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -71,7 +50,7 @@
   },
   "sap.ui5": {
     "rootView": {
-      "viewName": "dp.participatingSupplierSelectionApproval.view.App",
+      "viewName": "dp.basePriceArl.view.App",
       "type": "XML",
       "async": true,
       "id": "app"
@@ -88,45 +67,16 @@
       "compact": true,
       "cozy": true
     },
+    "handleValidation": true,
     "models": {
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "dp.participatingSupplierSelectionApproval.i18n.i18n"
+          "bundleName": "dp.basePriceArl.i18n.i18n"
         }
       },
       "util": {
         "dataSource": "commonUtilService",
-        "preload": true,
-        "settings": {
-          "defaultBindingMode": "TwoWay",
-          "defaultCountMode": "Inline",
-          "refreshAfterChange": false,
-          "useBatch": true
-        }
-      },
-       "org": {
-        "dataSource": "orgMgrService",
-        "preload": true,
-        "settings": {
-          "defaultBindingMode": "TwoWay",
-          "defaultCountMode": "Inline",
-          "refreshAfterChange": true,
-          "useBatch": true
-        }
-      },
-      "purOrg": {
-        "dataSource": "purOrgMgrService",
-        "preload": true,
-        "settings": {
-          "defaultBindingMode": "TwoWay",
-          "defaultCountMode": "Inline",
-          "refreshAfterChange": false,
-          "useBatch": true
-        }
-      },
-      "mold": {
-        "dataSource": "moldService",
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",
@@ -154,13 +104,13 @@
         ]
     },
     "resourceRoots": {
-      "ext.lib": "../../../lib"
+        "ext.lib": "../../../lib"
     },
     "routing": {
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
-        "viewPath": "dp.participatingSupplierSelectionApproval.view",
+        "viewPath": "dp.basePriceArl.view",
         "controlId": "app",
         "controlAggregation": "pages",
         "bypassed": {
@@ -171,34 +121,19 @@
         "async": true
       },
       "routes": [
-           {
-          "pattern": "PssaCreateObject/{company}/{plant}",
-          "name": "pssaCreateObject",
-          "target": [
-            "pssaCreateObject"
-          ]
-        },
         {
-          "pattern": "PssaObject/{approval_number}",
-          "name": "pssaObject",
+          "pattern": "",
+          "name": "basePriceArl",
           "target": [
-            "pssaObject"
+            "basePriceArl"
           ]
         }
-       
       ],
       "targets": {
-          "pssaObject": {
-          "viewName": "PssaObject",
-          "viewId": "pssaObject",
-          "viewLevel": 2,
-          "title": "{i18n>viewObjectTitle3}"
-        },
-         "pssaCreateObject": {
-          "viewName": "PssaCreateObject", 
-          "viewId": "pssaCreateObject",
-          "viewLevel": 2,
-          "title": "{i18n>viewObjectTitle3}"
+        "basePriceArl": {
+          "viewName": "BasePriceArl",
+          "viewId": "basePriceArl",
+          "viewLevel": 1
         },
         "notFound": {
           "viewName": "NotFound",

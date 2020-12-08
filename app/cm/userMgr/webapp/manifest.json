@@ -20,7 +20,7 @@
         }
       },
       "orgMgrService": {
-        "uri": "../../../cm/codeMgr/srv-api/odata/v2/cm.OrgMgrService/",
+        "uri": "srv-api/odata/v2/cm.OrgMgrService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0",
@@ -35,14 +35,14 @@
         }
       },
       "currencyMgrService": {
-        "uri": "../../../cm/codeMgr/srv-api/odata/v2/cm.CurrencyMgrService/",
+        "uri": "srv-api/odata/v2/cm.CurrencyMgrService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
         }
       },
       "timeZoneMgrService": {
-        "uri": "../../../cm/codeMgr/srv-api/odata/v2/cm.TimeZoneMgrService/",
+        "uri": "srv-api/odata/v2/cm.TimeZoneMgrService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"

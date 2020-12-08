@@ -143,16 +143,16 @@
 					<uxap:ObjectPageSubSection>
                        <HBox>
                          <VBox class="sapUiSmallMargin">
-                            <Label text="Affiliate" />
+                            <Label text="{I18N>/AFFILIATE}" />
                             <ObjectStatus
-                                text="{pssaCreateObjectView>/company}" 
+                                text="{company>/company_name}" 
                                 state="Error"
                                 />
                          </VBox>
                          <VBox class="sapUiSmallMargin">
-                            <Label text="Division" />
+                            <Label text="{I18N>/BUSINESS_DIVISION}" />
                             <ObjectStatus
-                                text="{pssaCreateObjectView>/plant}" 
+                                text="{plant>/plant_name}" 
                                 state="Error"
                                 />
                          </VBox>
@@ -232,7 +232,7 @@
                                     <table:Column id="c_currency" width="10em" hAlign="Center">
                                         <Label text="Currency"/>           
                                         <table:template>
-                                              <ComboBox   id="currency"    
+                                              <!-- <ComboBox   id="currency"    
                                                             selectedKey="{= ${list>family_part_number_1}.length > 0 ? 'Y' : 'N' }"
                                                             items="{
                                                                         path : 'util>/CodeDetails',
@@ -244,7 +244,7 @@
                                                                     }"
                                                 >
                                                     <core:Item key="{util>code}" text="{util>code_description}" />
-                                            </ComboBox>
+                                            </ComboBox> -->
                                         </table:template>
                                     </table:Column>                                     
                                     <table:Column id="c_targetAmount" width="10em" hAlign="Center">
