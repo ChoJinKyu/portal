@@ -1,117 +1,88 @@
 sap.ui.define([
-    "sap/m/Dialog",
-    "sap/m/DialogRenderer",
+    "sap/m/Input",
+    'sap/m/InputRenderer',
     "ext/lib/core/service/ODataV2ServiceProvider",
-    "sap/ui/model/Sorter",
-    "sap/ui/model/Filter",
-    "sap/ui/model/FilterOperator",
-    "sap/m/Button",
-    "sap/m/Text",
-    "sap/m/Table",
-    "sap/m/Column",
-    "sap/m/ColumnListItem",
-], function (Dialog, Renderer, ODataV2ServiceProvider,
-        Sorter, Filter, FilterOperator,
-        Button, Text, Table, Column, ColumnListItem) {
+    "sap/ui/core/ListItem",
+    "sap/ui/model/json/JSONModel",
+    "./CodePickerValueHelp"
+], function (Parent, Renderer, ODataV2ServiceProvider, ListItem, JSONModel, CodePickerValueHelp) {
     "use strict";
 
-    var CodePicker = Dialog.extend("ext.lib.control.m.CodePicker", {
-
+    var CodePicker = Parent.extend("ext.lib.control.m.CodePicker", {
+        
         renderer: Renderer,
 
         metadata: {
             properties: {
-                title: { type: "string", group: "Appearance", defaultValue: "Choose a Code" },
-                contentWidth: { type: "string", group: "Appearance", defaultValue: "500px" },
-                contentHeight: { type: "string", group: "Appearance", defaultValue: "300px" },
                 keyField: { type: "string", group: "Misc", defaultValue: "code" },
-                textField: { type: "string", group: "Misc", defaultValue: "code_name" }
+                textField: { type: "string", group: "Misc", defaultValue: "code_name" },
+                additionalTextField: { type: "string", group: "Misc" },
+                showValueHelp: { type: "boolean", group: "Behavior", defaultValue: true },
+                showSuggestion: { type: "boolean", group: "Behavior", defaultValue: true },
+                textFormatMode: { type: "string", group: "Behavior", defaultValue: "KeyValue" }
             },
-            events: {
-                ok: {},
-                cancel: {}
+            defaultAggregation: "valueHelp",
+            aggregations: {
+				valueHelp: {type: "ext.lib.control.m.CodePickerValueHelp", multiple: false, bindable : "bindable"}
             }
         },
 
         init: function () {
-            Dialog.prototype.init.call(this);
-            this.addStyleClass("sapUiSizeCompact");
-            this.setBeginButton(new Button({
-                text: "Cancel",
-                press: function () {
-                    this.fireEvent("cancel");
-                    this.close();
-                }.bind(this)
-            }));
-            // this.setEndButton(new Button({
-            //     text: "Apply",
-            //     press: function () {
-            //         this.close();
-            //     }.bind(this)
-            // }));
-
-            this._firstTime = 0;
-            this.attachEvent("beforeOpen", this._onBeforeOpen);
+            Parent.prototype.init.call(this);
+            this.setModel(new JSONModel());
+            this.attachValueHelpRequest(this._onValueHelpRequest);
         },
 
-        onTablePress: function(oEvent){
-            var oData = this.getModel().getProperty(oEvent.getSource().getBindingContextPath());
-            this.fireEvent("ok", {data: oData});
-            this.close();
+        onAfterRendering: function(){
+            if(!this.oValueHelp){
+                this.oValueHelp = this.getValueHelp() || new CodePickerValueHelp();
+                this.oValueHelp.setModel(this.getModel());
+                this.oValueHelp.attachEvent("ok", this.onValueHelpOkPress.bind(this));
+            }
+        },
+        
+        extractBindingInfo(oValue, oScope){
+            var oBindingInfo = Parent.prototype.extractBindingInfo.apply(this, arguments);
+            if(oBindingInfo && (oBindingInfo.serviceName || oBindingInfo.serviceUrl) && oBindingInfo.entityName){
+                var sKey = "{"+ this.getProperty("keyField") +"}",
+                    sText = "{"+ this.getProperty("textField") +"}",
+                    sAdditionalTextField = "{"+ (this.getProperty("additionalTextField") || this.getProperty("keyField")) +"}";
+
+                this.oServiceModel = oBindingInfo.serviceName ? 
+                    ODataV2ServiceProvider.getService(oBindingInfo.serviceName) : ODataV2ServiceProvider.getServiceByUrl(oBindingInfo.serviceUrl);
+                    
+                this.oServiceModel.read("/" + oBindingInfo.entityName, jQuery.extend(oBindingInfo, {
+                    success: function(oData){
+                        var aRecords = oData.results;
+                        this.getModel().setData(aRecords, false);
+                    }.bind(this)
+                }));
+
+                delete oBindingInfo.serviceName;
+                delete oBindingInfo.entityName;
+                delete oBindingInfo.filters;
+                delete oBindingInfo.sorter;
+                oBindingInfo.path = "/";
+                oBindingInfo.template = new ListItem({
+                        key: sKey,
+                        text: sText,
+                        additionalText: sAdditionalTextField
+                    });
+                // oBindingInfo.filters = oBindingInfo.filters || [];
+            }
+            return oBindingInfo;
         },
 
-        _onBeforeOpen: function(){
-            if(this._firstTime++ != 0) return;
-            this.oTable = new Table({
-                headerToolbar: new sap.m.OverflowToolbar({
-                    content: [
-                        new sap.m.ToolbarSpacer(),
-                        new sap.m.SearchField({
-                             width: "70%",
-                             search: this._onTableFilterSearch.bind(this)
-                        })
-                    ]
-                }),
-                columns: [
-                    new Column({
-                        width: "100px",
-                        header: new Text({text: "Code"})
-                    }),
-                    new Column({
-                        width: "300px",
-                        header: new Text({text: "Name"})
-                    })
-                ],
-                items: {
-                    path: "/",
-                    template: new ColumnListItem({
-                        type: "Active",
-                        cells: [
-                            new Text({text: "{"+this.getProperty("keyField")+"}"}),
-                            new Text({text: "{"+this.getProperty("textField")+"}"})
-                        ],
-                        press: this.onTablePress.bind(this)
-                    })
-                }
-            });
-            this.addContent(this.oTable);
+        _onValueHelpRequest: function (oEvent) {
+            this.oValueHelp.open();
         },
 
-        _onTableFilterSearch: function(oEvent){
-            var aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2100"),
-                    new Filter("group_code", FilterOperator.EQ, this.getProperty("groupCode")),
-                    new Filter("code_name", FilterOperator.EQ, oEvent.getSource().getValue())
-                ], aSorters = [
-                    new Sorter("sort_no", false)
-                ]
-            this.oTable.getBinding("items").filter({
-                path: "/Code",
-                filters: aFilters
-            })
+        onValueHelpOkPress: function(oEvent){
+            var oData = oEvent.getParameter("data");
+            this.setSelectedKey(oData[this.getProperty("keyField")]);
         }
-
     });
 
     return CodePicker;
-}, /* bExport= */ true);
+
+});

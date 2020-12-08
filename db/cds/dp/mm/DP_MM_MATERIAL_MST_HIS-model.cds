@@ -24,12 +24,12 @@ entity Mm_Material_Mst_His {
   key material_code : String(40)  not null @title: '자재코드' ;	
   key history_sequence : Integer  not null @title: '이력순번' ;	
     material_type_code : String(10)   @title: '자재유형코드' ;	
-    material_description : String(300)   @title: '자재내역' ;	
+    material_desc : String(300)   @title: '자재내역' ;	
     material_spec : String(1000)   @title: '자재규격' ;	
     base_uom_code : String(3)   @title: '기준UOM코드' ;	
     material_group_code : String(10)   @title: '자재그룹코드' ;	
     purchasing_uom_code : String(3)   @title: '구매UOM코드' ;	
-    variable_order_unit_indicator : String(1)   @title: '가변오더단위지시자' ;	
+    variable_po_unit_indicator : String(1)   @title: '가변오더단위지시자' ;	
     material_class_code : String(30)   @title: '자재클래스코드' ;	
     commodity_code : String(100)   @title: '커머디티코드' ;	
     maker_part_number : String(40)   @title: '제조사 부품 번호' ;	
