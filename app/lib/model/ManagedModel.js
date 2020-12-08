@@ -28,7 +28,7 @@ sap.ui.define([
             var oData = this.getObject("/");
             if(oData[STATE_COL] != "C" && oData[STATE_COL] != "D")
                 oData[STATE_COL] = "U";
-            JSONModel.prototype.setProperty.call(this, sPath, oValue, oContext, bAsyncUpdate);
+            return JSONModel.prototype.setProperty.call(this, sPath, oValue, oContext, bAsyncUpdate);
         },
 
         removeData: function(){
