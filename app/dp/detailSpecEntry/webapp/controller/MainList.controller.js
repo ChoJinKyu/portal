@@ -366,11 +366,11 @@ sap.ui.define([
             }
             
             if (sPart) {
-				aSearchFilters.push(new Filter("tolower(mmold_number)", FilterOperator.Contains, "'"+sPart.toLowerCase()+"'"));
+				aSearchFilters.push(new Filter("tolower(mold_number)", FilterOperator.Contains, "'"+sPart.toLowerCase()+"'"));
             }
             
             if (sFamilyPart) {
-				aSearchFilters.push(new Filter("tolower(family_mold_numbers)", FilterOperator.Contains, "'"+sFamilyPart.toLowerCase()+"'"));
+				aSearchFilters.push(new Filter("tolower(family_part_numbers)", FilterOperator.Contains, "'"+sFamilyPart.toLowerCase()+"'"));
             }
             
             if (sStatus) {

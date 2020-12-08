@@ -209,10 +209,12 @@ sap.ui.define([
         },
 
         checkChange: function(){
-            // debugger
+            debugger
             var omMaster = this.getModel('master');
             var omSchedule = this.getModel('schedule');
             var omSpec = this.getModel('spec');
+
+            console.log('omSpec.isChanged()',omSpec.isChanged());
 
             if(omMaster.isChanged() || omSchedule.isChanged() || omSpec.isChanged()){
                 return true;
@@ -224,6 +226,8 @@ sap.ui.define([
         onPageConfirmButtonPress: function(){
 			var oView = this.getView(),
                 me = this;
+
+            console.log(this.byId('scheduleTable1E'));
 
             if(this.validator.validate( this.byId('scheduleTable1E') ) !== true){
                 MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
