@@ -171,20 +171,21 @@
         "async": true
       },
       "routes": [
-        {
-          "pattern": "PssaObject",
-          "name": "pssaObject",
-          "target": [
-            "pssaObject"
-          ]
-        },
-        {
+           {
           "pattern": "PssaCreateObject/{company}/{plant}",
           "name": "pssaCreateObject",
           "target": [
             "pssaCreateObject"
           ]
+        },
+        {
+          "pattern": "PssaObject/{approval_number}",
+          "name": "pssaObject",
+          "target": [
+            "pssaObject"
+          ]
         }
+       
       ],
       "targets": {
           "pssaObject": {
