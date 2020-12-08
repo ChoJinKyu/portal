@@ -124,19 +124,19 @@
 									<Text text="S" />
 								</Column>
 								<Column id="midColumnLanguageCode" minScreenWidth="Tablet" hAlign="Center">
-									<Text text="{I18N>/TYPE}" />
+									<Text text="언어" />
 								</Column>
 								<Column id="midColumnCurrencyCodeName" minScreenWidth="Tablet" hAlign="Center">
-									<Text text="{I18N>/TYPE}" />
+									<Text text="통화코드명" />
 								</Column>
 								<Column id="midColumnCurrencyCodeDesc" minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="{I18N>/TYPE}" />
+									<Text text="통화코드설명" />
 								</Column>
                                 <Column id="midColumnCurrencyPrefix" minScreenWidth="Tablet" hAlign="Center">
-									<Text text="{I18N>/TYPE}" />
+									<Text text="Prefix" />
 								</Column>
 								<Column id="midColumnCurrencySuffix" minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="{I18N>/TYPE}" />
+									<Text text="Suffix" />
 								</Column>
 							</columns>
 							<items>

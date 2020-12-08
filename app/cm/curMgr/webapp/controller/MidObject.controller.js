@@ -21,7 +21,7 @@ sap.ui.define([
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
     "sap/m/ObjectStatus",
-], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Formatter, ValidatorUtil, Validator,
+], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter,  ValidatorUtil, Formatter, Validator,
 	Filter, FilterOperator, Fragment, MessageBox, MessageToast,
 	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus) {
 		
@@ -224,19 +224,7 @@ sap.ui.define([
 		 * Event handler for saving page changes
 		 * @public
 		 */
-        onPageSaveButtonPress: function(){  
-            // debugger;
-            // if(this.validator.validate(this.byId("midObjectForm1Edit")) !== true) 
-            // {
-            //     debugger;
-            //     return;
-            // }
-            
-            // if(this.validator.validate(this.byId("mainTable")) !== true) 
-            // {
-            //     debugger;
-            //     return;
-            // }
+        onPageSaveButtonPress: function(){ 
 
             var oModel = this.getModel("details"),
 				oView = this.getView();
@@ -245,34 +233,14 @@ sap.ui.define([
 				MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
 				return;
             }
-            
-            if(this.validator.validate(this.byId("mainTable")) !== true) 
-            {
-                debugger;
-                return;
-            }    
 
-            
+            if(this.validator.validate(this.byId("page")) !== true) 
+            {
+                return;
+            }   
+
 			var oView = this.getView(),
 				that = this;
-			// MessageBox.confirm("Are you sure ?", {
-			// 	title : "Comfirmation",
-			// 	initialFocus : sap.m.MessageBox.Action.CANCEL,
-			// 	onClose : function(sButton) {
-			// 		if (sButton === MessageBox.Action.OK) {
-			// 			oView.setBusy(true);
-			// 			oTransactionManager.submit({
-			// 			// oView.getModel("master").submitChanges({
-			// 				success: function(ok){
-            //                     that._setModelEditCancelMode();
-            //                     that._toShowMode();
-			// 					oView.setBusy(false);
-			// 					MessageToast.show("Success to save.");
-			// 				}.bind(this)
-			// 			});
-			// 		};
-			// 	}.bind(this)
-            // });
             MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
 				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -289,7 +257,8 @@ sap.ui.define([
 						});
 					};
 				}.bind(this)
-			});
+            });
+            this.validator.clearValueState(this.byId("page"));
 
 		},
 		
@@ -320,6 +289,7 @@ sap.ui.define([
 					}
 				});
                 this._toShowMode();
+                this.validator.clearValueState(this.byId("page"));
             }
         },
 
@@ -338,7 +308,7 @@ sap.ui.define([
 					oDetailsModel.setProperty("/CurrencyLng/"+nIndex+"/tenant_id", sTenantId);
 					oDetailsModel.setProperty("/CurrencyLng/"+nIndex+"/currency_code", sCurrencyCode);
 				});
-				oDetailsModel.setData(oDetailsData);
+				//oDetailsModel.setData(oDetailsData);
 			}
 		},
 
@@ -367,7 +337,7 @@ sap.ui.define([
 					"use_flag": false,
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
-				},"/Currency",0);
+				},"/Currency");
 				var oDetailsModel = this.getModel("details");
 				oDetailsModel.setTransactionModel(this.getModel());
                 oDetailsModel.setData([], "/CurrencyLng");
@@ -381,7 +351,7 @@ sap.ui.define([
                     "currency_suffix" : null,
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
-                },"/CurrencyLng",0);
+                },"/CurrencyLng");
 				this._toEditMode();
 			}else{
                 
@@ -400,7 +370,8 @@ sap.ui.define([
 					}
 				});
 				this._toShowMode();
-			}
+            }
+            this.validator.clearValueState(this.byId("page"));
 			oTransactionManager.setServiceModel(this.getModel());
 		},
 
@@ -502,10 +473,7 @@ sap.ui.define([
 		},
 
 		_initTableTemplates: function(){
-            var test;
-            var label5 = new ObjectStatus().setIcon;
-
-
+            
 			this.oReadOnlyTemplate = new ColumnListItem({   
 				cells: [
                     new Text({
@@ -553,35 +521,31 @@ sap.ui.define([
 					new ObjectStatus({
                         icon:{ path:'details>_row_state_', formatter: this.formattericon
                                 }                              
-                    }), 
+                    }),
                     new Input({
                         value: {
-                        path: "details>language_code",
-                        type: new sap.ui.model.type.String(null, {
-                            maxLength: 100
-                        }),
+                            path: 'details>language_code',
+                            type: 'sap.ui.model.type.String',
+                            constraints: {
+                                maxLength: 100
+                            }
                         },
                         editable: "{= ${details>_row_state_} === 'C' }",
-                        required: true
+                        required : true
                     }),
-					// new Input({
-					// 	value: "{details>language_code}" , required: true
-                    // }),
 					new Input({
 						value: "{details>currency_code_name}"
                     }),
                     new Input({
                         value: {
-                        path: "details>currency_code_desc",
-                        type: new sap.ui.model.type.String(null, {
-                            maxLength: 100
-                        }),
+                            path: 'details>currency_code_desc',
+                            type: 'sap.ui.model.type.String',
+                            constraints: {
+                                maxLength: 100
+                            }
                         },
-                        required: true
+                        required : true
                     }),
-                    // new Input({
-					// 	value: "{details>currency_code_desc}" , required: true
-                    // }), 
                     new Input({
 						value: "{details>currency_prefix}"
                     }), 
