@@ -34,6 +34,20 @@
           "odataVersion": "2.0"
         }
       },
+      "currencyMgrService": {
+        "uri": "../../../cm/codeMgr/srv-api/odata/v2/cm.CurrencyMgrService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
+      },
+      "timeZoneMgrService": {
+        "uri": "../../../cm/codeMgr/srv-api/odata/v2/cm.TimeZoneMgrService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
+      },
       "treeService": {
         "uri": "srv-api/odata/v2/xx.TestTableService/",
         "type": "OData",
@@ -120,6 +134,26 @@
           "autoExpandSelect": true
         }
       },
+      "currency": {
+        "dataSource": "currencyMgrService",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "groupId": "$direct",
+          "synchronizationMode": "None",
+          "autoExpandSelect": true
+        }
+      },
+      "timeZoneMgr": {
+        "dataSource": "timeZoneMgrService",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "groupId": "$direct",
+          "synchronizationMode": "None",
+          "autoExpandSelect": true
+        }
+      },
       "": {
         "dataSource": "mainService",
         "preload": true,
@@ -165,7 +199,7 @@
           ]
         },
         {
-          "pattern": "midObject/{layout}/{tenantId}/{userId}/:?query:",
+          "pattern": "midObject/{layout}/{userId}/:?query:",
           "name": "midPage",
           "target": [
             "mainObject",

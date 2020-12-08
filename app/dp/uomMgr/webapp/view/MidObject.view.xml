@@ -119,7 +119,7 @@
 									<Button id="midTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMidTableDeleteButtonPress" />
 									<!-- <Button id="midTableSaveButton" text="Save" type="Emphasized" press=".onMidTableSaveButtonPress" /> -->
 									<ToolbarSeparator/>
-									<SearchField id="midTableSearchField" placeholder="Class Text" width="10rem" search=".onMidTableFilterPress" />
+									<!-- <SearchField id="midTableSearchField" placeholder="Class Text" width="10rem" search=".onMidTableFilterPress" /> -->
 									<!-- <Button id="midTableApplyFilterButton" text="Apply" type="Transparent" press=".onMidTableApplyFilterButton" /> -->
 								</OverflowToolbar>
 							</headerToolbar>
