@@ -58,8 +58,10 @@ sap.ui.define([
             this.setModel(oViewModel, mainViewName); 
             this.getRouter().getRoute("pssaCreateObject").attachPatternMatched(this._onObjectMatched, this);
 
-            this.getView().setModel(new ManagedListModel(),"company");
-            this.getView().setModel(new ManagedListModel(),"plant");
+            this.getView().setModel(new ManagedModel(),"company");
+            this.getView().setModel(new ManagedModel(),"plant");
+            // this.getView().setModel(new ManagedListModel(),"company");
+            // this.getView().setModel(new ManagedListModel(),"plant");
             this.getView().setModel(new ManagedListModel(),"createlist"); // Participating Supplier
             this.getView().setModel(new ManagedListModel(),"appList"); // apporval list 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
