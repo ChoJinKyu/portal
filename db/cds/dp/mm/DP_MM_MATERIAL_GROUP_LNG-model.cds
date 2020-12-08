@@ -18,13 +18,13 @@
 *************************************************/
 namespace dp;	
 using util from '../../cm/util/util-model';	
-using { dp as mtlGroup} from './DP_MM_MATERIAL_GROUP-model';
+using { dp as MtlGroup} from './DP_MM_MATERIAL_GROUP-model';
 
 entity Mm_Material_Group_Lng {	
   key tenant_id : String(5)  not null @title: 'Tenant ID' ;	
   key material_group_code : String(30)  not null @title: '자재그룹코드' ;	
 
-        parent: Association to mtlGroup.Mm_Material_Group
+        parent: Association to MtlGroup.Mm_Material_Group
         on parent.tenant_id = tenant_id 
         and parent.material_group_code = material_group_code;
 

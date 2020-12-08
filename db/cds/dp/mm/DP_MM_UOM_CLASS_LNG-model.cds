@@ -18,13 +18,13 @@
 *************************************************/
 namespace dp;	
 using util from '../../cm/util/util-model';  	
-using { dp as uomclass } from './DP_MM_UOM_CLASS-model';
+using { dp as UomClass } from './DP_MM_UOM_CLASS-model';
 	
 entity Mm_Uom_Class_Lng {	
   key tenant_id : String(5)  not null @title: 'Tenant ID' ;	
   key uom_class_code : String(10)  not null @title: 'UOM Class Code' ;
 
-    parent: Association to uomclass.Mm_Uom_Class
+    parent: Association to UomClass.Mm_Uom_Class
         on parent.tenant_id = tenant_id 
         and parent.uom_class_code = uom_class_code;
 

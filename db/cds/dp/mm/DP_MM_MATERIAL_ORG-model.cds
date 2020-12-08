@@ -18,13 +18,13 @@
 *************************************************/
 namespace dp;	
 using util from '../../cm/util/util-model';	
-using { dp as materialMst } from './DP_MM_MATERIAL_MST-model';
+using { dp as MtlMst } from './DP_MM_MATERIAL_MST-model';
 
 entity Mm_Material_Org {	
   key tenant_id : String(5)  not null @title: '테넌트ID' ;	
   key material_code : String(40)  not null @title: '자재코드' ;	
 
-    parent: Association to materialMst.Mm_Material_Mst
+    parent: Association to MtlMst.Mm_Material_Mst
         on parent.tenant_id = tenant_id 
         and parent.material_code = material_code;
         

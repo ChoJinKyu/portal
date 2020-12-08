@@ -18,13 +18,13 @@
 *************************************************/
 namespace dp;	
 using util from '../../cm/util/util-model';	
-using { dp as mtlCommodity} from './DP_MM_MATERIAL_COMMODITY-model';
+using { dp as Commodity} from './DP_MM_MATERIAL_COMMODITY-model';
 
 entity Mm_Material_Commodity_Lng {	
   key tenant_id : String(5)  not null @title: 'Tenant ID' ;	
   key commodity_code : String(30)  not null @title: 'COMMODITY코드' ;
 
-    parent: Association to mtlCommodity.Mm_Material_Commodity
+    parent: Association to Commodity.Mm_Material_Commodity
         on parent.tenant_id = tenant_id 
         and parent.commodity_code = commodity_code;
 

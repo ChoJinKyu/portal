@@ -18,7 +18,7 @@
 *************************************************/
 namespace dp;	
 using util from '../../cm/util/util-model';	
-using { dp as materialOrg } from './DP_MM_MATERIAL_ORG-model';
+using { dp as MtlOrg } from './DP_MM_MATERIAL_ORG-model';
 
 entity Mm_Material_Org_Attr {	
   key tenant_id : String(5)  not null @title: '테넌트ID' ;	
@@ -27,7 +27,7 @@ entity Mm_Material_Org_Attr {
   key org_type_code : String(2)  not null @title: '조직유형코드' ;	
   key org_code : String(10)  not null @title: '조직코드' ;	
  
-       parent: Association to materialOrg.Mm_Material_Org
+       parent: Association to MtlOrg.Mm_Material_Org
         on parent.tenant_id = tenant_id 
         and parent.material_code = material_code
         and parent.company_code = company_code

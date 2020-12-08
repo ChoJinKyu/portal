@@ -18,13 +18,13 @@
 *************************************************/
 namespace dp;	
 using util from '../../cm/util/util-model'; 
-using { dp as uom } from './DP_MM_UNIT_OF_MEASURE-model';	
+using { dp as Uom } from './DP_MM_UNIT_OF_MEASURE-model';	
 	
 entity Mm_Unit_Of_Measure_Lng {	
   key tenant_id : String(5)  not null @title: 'Tenant ID' ;	
   key uom_code : String(5)  not null @title: 'UOM코드' ;	
 
-      parent: Association to uom.Mm_Unit_Of_Measure
+      parent: Association to Uom.Mm_Unit_Of_Measure
         on parent.tenant_id = tenant_id 
         and parent.uom_code = uom_code;
 

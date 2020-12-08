@@ -22,7 +22,7 @@ namespace dp;
 @path : '/dp.UomClassMgrService'
 
 service UomClassMgrService {
-    view uomClassView(language_code: String) as
+    view UomClassView(language_code: String) as
     select m.tenant_id
           ,m.uom_class_code
           ,ifnull(l.uom_class_name, m.uom_class_name) as uom_class_name

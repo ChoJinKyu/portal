@@ -22,7 +22,7 @@ namespace dp;
 @path : '/dp.UomMgrService'
 
 service UomMgrService {
-    view uomView(language_code: String) as
+    view UomView(language_code: String) as
     select u.tenant_id
           ,u.uom_code
           ,ifnull(l.commercial_uom_code, u.commercial_uom_code) as commercial_uom_code

@@ -18,13 +18,13 @@
 *************************************************/
 namespace dp;	
 using util from '../../cm/util/util-model';	
-using { dp as mtlClass } from './DP_MM_MATERIAL_CLASS-model';
+using { dp as Class } from './DP_MM_MATERIAL_CLASS-model';
 
 entity Mm_Material_Class_Lng {	
   key tenant_id : String(5)  not null @title: 'Tenant ID' ;	
   key material_class_code : String(30)  not null @title: '자재클래스코드' ;	
 
-        parent: Association to mtlClass.Mm_Material_Class
+        parent: Association to Class.Mm_Material_Class
         on parent.tenant_id = tenant_id 
         and parent.material_class_code = material_class_code;
 

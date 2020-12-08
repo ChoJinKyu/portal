@@ -16,14 +16,14 @@
   8. history
   -. 2020.11.24 : 최미희 최초작성
 *************************************************/
-using { dp as uomClass } from '../../../../../db/cds/dp/mm/DP_MM_UOM_CLASS-model';
-using { dp as uomClassLng } from '../../../../../db/cds/dp/mm/DP_MM_UOM_CLASS_LNG-model';
+using { dp as Class } from '../../../../../db/cds/dp/mm/DP_MM_UOM_CLASS-model';
+using { dp as ClassLng } from '../../../../../db/cds/dp/mm/DP_MM_UOM_CLASS_LNG-model';
 namespace dp;
 @path : '/dp.UomClassMgrService'
 
 service UomClassMgrService {
 
-    entity UomClass as projection on uomClass.Mm_Uom_Class;
-    entity UomClassLng as projection on uomClassLng.Mm_Uom_Class_Lng;
+    entity UomClass as projection on Class.Mm_Uom_Class;
+    entity UomClassLng as projection on ClassLng.Mm_Uom_Class_Lng;
 
 }
