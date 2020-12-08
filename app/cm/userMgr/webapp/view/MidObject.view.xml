@@ -20,35 +20,35 @@
 			<!-- 타이틀 영역 -->
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="Control Option Details" wrapping="true" />
+					<Title text="User Details" wrapping="true" />
 				</uxap:expandedHeading>
 				<uxap:snappedHeading>
-					<Title text="Control Option Details" wrapping="true" />
+					<Title text="User Details" wrapping="true" />
 				</uxap:snappedHeading>
 				<uxap:expandedContent>
-					<Text text="Details for control option {control_option_code}" />
+					<Text text="Details for User Info {user_id}" />
 				</uxap:expandedContent>
 				<uxap:snappedContent>
-					<Text text="Details for control option {control_option_code}" />
+					<Text text="Details for User Info {user_id}" />
 				</uxap:snappedContent>
 				<uxap:snappedTitleOnMobile>
-					<Title text="Control Option Details" />
+					<Title text="User Details" />
 				</uxap:snappedTitleOnMobile>
 				<uxap:actions>
 					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" />
 					<Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" />
 				</uxap:actions>
-        <uxap:navigationActions>
+                <uxap:navigationActions>
 					<OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press="onPageEnterFullScreenButtonPress" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
 					<OverflowToolbarButton id="pageExitFullScreenButton" type="Transparent" icon="sap-icon://exit-full-screen" press="onPageExitFullScreenButtonPress" tooltip="Exit Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
 					<OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
-        </uxap:navigationActions>
+                </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
 
 		<uxap:headerContent>
 			<!-- 헤더 영역 -->
-			<FlexBox wrap="Wrap" visible="false">
+			<!-- <FlexBox wrap="Wrap" visible="false">
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
 					<layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
 						<Label text="Chain: " />
@@ -66,12 +66,12 @@
 						<Text text="{master>/update_user_id} / {master>/system_update_dtm}"/>
 					</layout:HorizontalLayout>
 				</layout:VerticalLayout>
-			</FlexBox>
-		</uxap:headerContent>
+			</FlexBox> -->
+		</uxap:headerContent> 
 
 		<uxap:sections>
 			<!-- Master 에 관한 정보 -->
-			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="Control Option Details">
+			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="User Info Details">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection1" >
 					</uxap:ObjectPageSubSection>
@@ -103,24 +103,22 @@
 			</uxap:ObjectPageSection>
 
 			<!-- Detail 에 관한 정보 -->
-			<uxap:ObjectPageSection titleUppercase="false" title="Option Values">
+			<uxap:ObjectPageSection titleUppercase="false" title="역할목록">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<Table id="midTable" 
 								sticky="HeaderToolbar,ColumnHeaders" 
 								inset="false" 
-								items="{details>/ControlOptionDetails}"
+								items="{details>/UserRoleGroupMgr}"
 								class="sapFDynamicPageAlignContent" 
 								updateFinished=".onMidTableUpdateFinished"
 								mode="MultiSelect" 
 								width="auto">
 							<headerToolbar>
 								<OverflowToolbar>
-									<Title text="Level and Values" level="H2"/>
+									<Title text="역할목록" level="H2"/>
 									<ToolbarSpacer/>
-									<!-- Add the Personalization button -->
-									<!-- <Button id="midTableAddButton" text="Add" type="Transparent" press=".onMidTableAddButtonPress('midTable', 'details', 'ControlOptionDetails', ['tenant_id'])" /> -->
-                  <Button id="midTableAddButton" text="Add" type="Transparent" press=".onMidTableAddButtonPress" />
+									<Button id="midTableAddButton" text="Add" type="Transparent" press=".onMidTableAddButtonPress" />
 									<Button id="midTableDeleteButton" text="Delete" type="Transparent" press=".onMidTableDeleteButtonPress('midTable', 'details', 'ControlOptionDetails')" />
 								</OverflowToolbar>
 							</headerToolbar>
@@ -129,91 +127,41 @@
 									<Text text="S" />
 								</Column>
 								<Column id="midLevelCodeColumn" minScreenWidth="Tablet" hAlign="Center">
-									<Text text="제어옵션레벨코드" />
+									<Text text="역할명" />
 								</Column>
-                <Column id="midOrgTypeCodeColumn" minScreenWidth="Tablet" hAlign="Center">
-									<Text text="조직유형" />
-								</Column>
-								<Column id="midLevelValueColumn" minScreenWidth="Tablet" hAlign="Center">
-									<Text text="제어옵션레벨값" required="true" />
-								</Column>
-								<Column id="midValueColumn" minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="제어옵션값" />
-								</Column>
-                <Column id="midStartDateColumn" minScreenWidth="Tablet" hAlign="Center" >
+                                <Column id="midStartDateColumn" minScreenWidth="Tablet" hAlign="Center" >
 									<Text text="시작일자" />
 								</Column>
-                <Column id="midEndDateColumn" minScreenWidth="Tablet" hAlign="Center" >
+                                <Column id="midEndDateColumn" minScreenWidth="Tablet" hAlign="Center" >
 									<Text text="종료일자" />
 								</Column>
 							</columns>
 							<items>
 								<ColumnListItem press=".onMidTableItemPress">
 									<cells>
-                    <!-- 상태 -->
+                                        <!-- 상태 -->
 										<Text text="{details>_row_state_}"/>
-                    <!-- 제어옵션레벨코드 -->
-                    <ComboBox
-                      id="midLevelCombo"
-                      selectedKey="{details>control_option_level_code}"
-                      width="100%"
-                      items="{
-                        path: 'util>/CodeDetails',
-                        filters: [
-                          {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                          {path: 'group_code', operator: 'EQ', value1: 'CM_CTRL_OPTION_LEVEL_CODE'}
-                        ]
-                      }">
-                      <items>
-                        <core:Item key="{util>code}" text="{util>code} : {util>code_description}" />
-                      </items>
-                    </ComboBox>
-                    <!-- 조직유형 -->
-										<!-- selectedKey="{details>org_type_code}" -->
-                    <ComboBox
-											enabled="{= ${details>control_option_level_code} === 'O'}"
-                      id="midOrgTypeCombo"
-                      selectedKey="{= ${details>control_option_level_code} === 'O' ? ${details>org_type_code} : ''}"
-                      width="100%"
-                      selectionChange=".selectionChange"
-                      items="{
-                        path: 'util>/CodeDetails',
-                        filters: [
-                          {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                          {path: 'group_code', operator: 'EQ', value1: 'CM_ORG_TYPE_CODE'}
-                        ]
-                      }">
-                      <items>
-                        <core:Item key="{util>code}" text="{util>code} : {util>code_description}"/>
-                      </items>
-                    </ComboBox>
-                    <!-- 제어옵션레벨값 -->
-										<HBox>
-											<ComboBox
-												width="100%"
-												selectedKey="{details>control_option_level_val}"
-												visible="{= ${details>control_option_level_code} === 'O'}"
-												items="{
-													path: 'org>/organization',
-													filters: []
-												}">
-												<items>
-													<core:Item key="{org>code}" text="{org>code}" />
-												</items>
-											</ComboBox>
-											<Input value="{details>control_option_level_val}" visible="{= ${details>control_option_level_code} !== 'O'}"/>
-										</HBox>
-                    <!-- 제어옵션값 -->
-										<Input value="{details>control_option_val}"/>
-                    <!-- 시작일자 -->
-		                <!-- <DatePicker placeholder="Starts From" required="true" fieldGroupIds="notnull" value="{details>start_date}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/> -->
-                    <DatePicker value="{ path: 'details>start_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' } }" />
-                    <!-- 종료일자 -->
-                    <!-- <DatePicker placeholder="Ends To" required="true" fieldGroupIds="notnull" value="{details>end_date}"  valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/> -->
-                    <DatePicker value="{ path: 'details>end_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' } }" />
-                    <!-- <DateTimePicker value="{ path: 'details>local_create_dtm', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true } }" />
-                    <DateTimePicker value="{ path: 'details>local_update_dtm', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: false } }" /> -->
-									</cells>
+                                        <!-- 역할그룹코드 -->
+                                        <ComboBox
+                                        id="midLevelCombo"
+                                        selectedKey="{details>control_option_level_code}"
+                                        width="100%"
+                                        items="{
+                                            path: 'util>/CodeDetails',
+                                            filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                            {path: 'group_code', operator: 'EQ', value1: 'CM_CTRL_OPTION_LEVEL_CODE'}
+                                            ]
+                                        }">
+                                        <items>
+                                            <core:Item key="{util>code}" text="{util>code} : {util>code_description}" />
+                                        </items>
+                                        </ComboBox>
+                                        <!-- 시작일자 -->
+                                        <DatePicker value="{ path: 'details>start_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' } }" />
+                                        <!-- 종료일자 -->
+                                        <DatePicker value="{ path: 'details>end_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' } }" />
+                                    </cells>
 								</ColumnListItem>
 							</items>
 						</Table>

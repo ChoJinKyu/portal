@@ -56,7 +56,6 @@ sap.ui.define([
 
       this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
-      //this._doInitTablePerso();
     },
 
     onRenderedFirst: function () {
@@ -120,7 +119,7 @@ sap.ui.define([
       this.getRouter().navTo("midPage", {
         layout: oNextUIState.layout,
         tenantId: "new",
-        userId: "userId",
+        userId: "new",
         "?query": {
           //param1: "1111111111"
         }
@@ -157,7 +156,6 @@ sap.ui.define([
 
       this.getRouter().navTo("midPage", {
         layout: oNextUIState.layout,
-        tenantId: oRecord.tenant_id,
         userId: oRecord.user_id
       });
 
@@ -196,12 +194,11 @@ sap.ui.define([
       oView.setBusy(true);
       //oModel.setTransactionModel(this.getModel());
 
-
-
         var oUserMasterTable = this.byId("mainTable");
         oUserMasterTable.setBusy(true);
 
         var oServiceModel = this.getModel();
+
         oServiceModel.read("/UserMgr",{
             filters : aSearchFilters,
             success : function(data){
@@ -265,16 +262,6 @@ sap.ui.define([
       
       return aSearchFilters;
     },
-
-    _doInitTablePerso: function () {
-      // init and activate controller
-      this._oTPC = new TablePersoController({
-        table: this.byId("mainTable"),
-        componentName: "UserMgr",
-        persoService: MainListPersoService,
-        hasGrouping: true
-      }).activate();
-    }
 
   });
 });

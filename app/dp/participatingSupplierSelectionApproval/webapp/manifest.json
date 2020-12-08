@@ -175,7 +175,7 @@
           "pattern": "PssaObject",
           "name": "pssaObject",
           "target": [
-            "PssaObject"
+            "pssaObject"
           ]
         },
         {
