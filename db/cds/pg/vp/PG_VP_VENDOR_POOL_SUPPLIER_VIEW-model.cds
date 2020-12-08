@@ -12,9 +12,9 @@ entity Vp_Vendor_Pool_Supplier_View {
     key supplier_code: String(15) @title: '공급업체코드';
     supplier_local_name: String(240) @title: '공급업체로컬명'; 
     supplier_english_name: String(240) @title: '공급업체영문명'; 
-    supplier_company_code: String(10) @title: '공급업체 회사코드'; 
+    supplier_company_code: String(10) @title: '공급업체 회사코드';
     supplier_company_name: String(240) @title: '공급업체회사명';  
-    supplier_status_code: String(30) @title: '공급업체상태코드';
+    inactive_status_code: String(30) @title: '공급업체상태코드';
     supeval_control_flag: Boolean   @title: '공급업체평가통제여부'; 
     supeval_control_start_date: String(8)   @title: '공급업체평가통제시작일자'; 
     supeval_control_end_date: String(8)   @title: '공급업체평가통제종료일자'; 
