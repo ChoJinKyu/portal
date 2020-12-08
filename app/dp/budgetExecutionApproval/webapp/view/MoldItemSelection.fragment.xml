@@ -49,7 +49,7 @@
                                         path: 'purOrg>/Pur_Operation_Org',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                           ,{path: 'company_code', operator: 'EQ', value1: 'beaCreateObjectView>/company_code'}
+                                          
                                         ]
                                     }">
                                 <items>
