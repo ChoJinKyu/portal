@@ -15,7 +15,7 @@ sap.ui.define([
         Button, Text, Table, Column, ColumnListItem) {
     "use strict";
 
-    var CodeDialog = Dialog.extend("ext.lib.control.m.CodeDialog", {
+    var CodePicker = Dialog.extend("ext.lib.control.m.CodePicker", {
 
         renderer: Renderer,
 
@@ -28,17 +28,18 @@ sap.ui.define([
                 textField: { type: "string", group: "Misc", defaultValue: "code_name" }
             },
             events: {
-                applyPress: {},
-                cancelPress: {}
+                ok: {},
+                cancel: {}
             }
         },
 
         init: function () {
             Dialog.prototype.init.call(this);
+            this.addStyleClass("sapUiSizeCompact");
             this.setBeginButton(new Button({
                 text: "Cancel",
                 press: function () {
-                    this.fireEvent("cancelPress");
+                    this.fireEvent("cancel");
                     this.close();
                 }.bind(this)
             }));
@@ -55,7 +56,7 @@ sap.ui.define([
 
         onTablePress: function(oEvent){
             var oData = this.getModel().getProperty(oEvent.getSource().getBindingContextPath());
-            this.fireEvent("applyPress", {data: oData});
+            this.fireEvent("ok", {data: oData});
             this.close();
         },
 
@@ -112,6 +113,5 @@ sap.ui.define([
 
     });
 
-
-    return CodeDialog;
+    return CodePicker;
 }, /* bExport= */ true);
