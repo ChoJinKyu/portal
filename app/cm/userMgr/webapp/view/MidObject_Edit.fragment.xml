@@ -17,7 +17,8 @@
                 editable="{midObjectView>/isAddedMode}"/>
             
             <Label text="성명"/>
-            <Input 
+            <Input
+                id="searchEUserName"
                 value="{
                     path: 'master>/employee_name',
                     type: 'sap.ui.model.type.String'
@@ -116,10 +117,10 @@
                 required="true" />
 
             <Label text="사용기간" required="true"/>
-            <HBox>
-		        <DatePicker placeholder="Starts From" required="true" fieldGroupIds="notnull" value="{master>/start_date}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd" editable="{midObjectView>/isAddedMode}"/>
-		        <DatePicker placeholder="Ends To" required="true" fieldGroupIds="notnull" value="{master>/end_date}"  valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd" editable="{midObjectView>/isAddedMode}"/>
-            </HBox>
+            <DateRangeSelection
+                dateValue="{path:'master>/start_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' } }"
+                secondDateValue="{path:'master>/end_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' }}"
+            />
 
             <Label text="회사" labelFor="searchEOrgCombo" required="true"></Label>
             <ComboBox
