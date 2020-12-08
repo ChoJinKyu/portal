@@ -64,21 +64,25 @@ sap.ui.define([
             this.getView().setModel(new ManagedModel(), "company");
             this.getView().setModel(new ManagedModel(), "plant");
 
+            this.getView().setModel(new ManagedListModel(), "MoldItemSelect"); // MoldItemSelect 
+            this.getView().setModel(new ManagedListModel(), "appList"); // apporval list 
+            this.getView().setModel(new JSONModel(Device), "device"); // file upload 
+            this.setModel(new ManagedListModel(), "moldList");
+ 
+
             this.getView().setModel(new ManagedModel(), "appMaster");
             this.getView().setModel(new ManagedListModel(), "appDetail");
-           // this.getView().setModel(new ManagedListModel(), "MoldMasters");
+            this.getView().setModel(new ManagedListModel(), "MoldMasterList");
             this.getView().setModel(new ManagedListModel(), "Approvers");
-            this.setModel(new ManagedListModel(), "moldList");
+      
 
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("appMaster"));
             oTransactionManager.addDataModel(this.getModel("appDetail"));
-          //  oTransactionManager.addDataModel(this.getModel("MoldMasters"));
+            oTransactionManager.addDataModel(this.getModel("MoldMasterList"));
             oTransactionManager.addDataModel(this.getModel("Approvers"));
 
-            this.getView().setModel(new ManagedListModel(), "appList"); // apporval list 
-            this.getView().setModel(new JSONModel(Device), "device"); // file upload 
-            this.getView().setModel(new ManagedListModel(), "MoldItemSelect"); // MoldItemSelect 
+      
         },
 
         onAfterRendering: function () {
@@ -263,79 +267,28 @@ sap.ui.define([
                 , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
             ];
 
-            var uri = "/ApprovalMasters(tenant_id='L1100',approval_number='" + args.approval_number + "')";
-            console.log("uri >>> ", uri);
-            this._bindView(uri
-                , "appMaster", [], function (oData) {
-                    console.log("ApprovalMasters>>>> ", oData);
-                    that.setRichEditor(oData.approval_contents);
-                });
-
-                /**
-                 *             this.getView().setModel(new ManagedListModel(), "appDetail");
-            this.getView().setModel(new ManagedListModel(), "MoldMasters");
-            this.getView().setModel(new ManagedListModel(), "Approvers");
-                 */
-
-            this._bindView( "/Approver" , "Approvers", schFilter, function (oData) {
-                console.log("Approver >>>> ", oData);
-              
+            this._bindView("/ApprovalMasters(tenant_id='L1100',approval_number='" + args.approval_number + "')", "appMaster", [], function (oData) {
+                that.setRichEditor(oData.approval_contents);
             });
 
-
-
+            this._bindView("/Approver", "Approvers", schFilter, function (oData) {
+                console.log("Approver >>>> ", oData);
+            });
             var sResult = {};
 
-            this._bindView("/ApprovalDetails", "appDetail", schFilter, function (oData) {
-                console.log(" detail11 >>>> ", oData)
-                // 1. 결과 값 
+            this._bindView("/ItemBudgetExecution", "moldList", schFilter, function (oData) {
+                sResult = oData.results[0];
+                that._createViewBindData(sResult); // comapny , plant 조회 
+                that._bindView("/ApprovalDetails", "appDetail", schFilter, function (oData) {
 
-                var appDetail = that.getModel("appDetail").getProperty("/ApprovalDetails");
 
-                that._bindView("/ItemBudgetExecution", "moldList", schFilter, function (oData) {
-                    console.log(" detail11 >>>> ", that.getModel("appDetail"))
-                    var data = that.getModel('moldList').getProperty("/ItemBudgetExecution");
-                    for (var i = 0; i < appDetail.length; i++) {
-                        var fList = [];
-                        if (data[i].family_part_number_1) {
-                            fList.push(data[i].family_part_number_1);
-                        }
-                        if (data[i].family_part_number_2) {
-                            fList.push(data[i].family_part_number_2);
-                        }
-                        if (data[i].family_part_number_3) {
-                            fList.push(data[i].family_part_number_3);
-                        }
-                        if (data[i].family_part_number_4) {
-                            fList.push(data[i].family_part_number_4);
-                        }
-                        if (data[i].family_part_number_5) {
-                            fList.push(data[i].family_part_number_5);
-                        }
-                        data[i].family_part_number_1 = fList.join(",")
+                    that._bindView("/MoldMasters", "MoldMasterList", [
+                        new Filter("company_code", FilterOperator.EQ, sResult.company_code)
+                        , new Filter("org_code", FilterOperator.EQ, sResult.org_code)
+                    ], function (oData) {
 
-                        appDetail[i].STATE_COL = 'U';
-                        appDetail[i].apporval_type_code = 'B';
-                        appDetail[i].approval_number = args.approval_number;
-                        appDetail[i].family_part_number_1 = data[i].family_part_number_1;
-                        appDetail[i].model = data[i].model;
-                        appDetail[i].mold_number = data[i].mold_number;
-                        appDetail[i].mold_sequence = Number(data[i].mold_sequence);
-                        appDetail[i].spec_name = data[i].spec_name;
-                        appDetail[i].mold_item_type_code = data[i].mold_item_type_code;
-                        appDetail[i].mold_production_type_code = data[i].mold_production_type_code;
-                        appDetail[i].book_currency_code = data[i].book_currency_code;
-                        appDetail[i].budget_amount = data[i].budget_amount;
-                        appDetail[i].asset_type_code = data[i].asset_type_code;
-                        appDetail[i].budget_exrate_date = data[i].budget_exrate_date;
-                        appDetail[i].inspection_date = data[i].inspection_date;
-                    }
+                    });
 
-                    console.log(" detail >>>> ", that.getModel("appDetail"))
-                    that.getModel("appDetail").refresh();
-
-                    sResult = oData.results[0];
-                    that._createViewBindData(sResult); // comapny , plant 조회 
                 });
 
             });
@@ -542,7 +495,8 @@ sap.ui.define([
         */
         _getSearchMoldSelection: function () {
             var aSearchFilters = [];
-
+                // tenant_id  
+                aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100'));
             var company = this.byId('MoldItemSearchCompany').mProperties.selectedKey;
             var plant = this.byId('MoldItemSearchPlant').mProperties.selectedKey;
             var model = this.byId('moldItemModel').getValue().trim();
@@ -570,7 +524,10 @@ sap.ui.define([
         _applyMoldSelection: function (aSearchFilters) {
             console.log(" [step] Mold Item Selection Search Button Serch ", aSearchFilters);
             var oView = this.getView(),
-                oModel = this.getModel("MoldItemSelect");
+                oModel = this.getModel("MoldItemSelect"); 
+
+            console.log(" model >>> " , this.getModel("moldItem"));
+
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel("moldItem"));
             oModel.read("/MoldItemSelect", {
@@ -641,7 +598,7 @@ sap.ui.define([
          */
         _addPsTable: function (data) {
             var oTable = this.byId("psTable"),
-                oModel = this.getModel("appDetail");
+                oModel = this.getModel("moldList");
 
             oModel.addRecord({
                 "mold_id": data.oData.mold_id,
@@ -657,7 +614,7 @@ sap.ui.define([
                 "family_part_number_1": "",
                 "budget_exrate_date": "",
                 "inspection_date": "",
-            }, "/ApprovalDetails");
+            }, "/ItemBudgetExecution");
         },
 
         /**
@@ -1059,27 +1016,42 @@ sap.ui.define([
          * @description save
          */
         onPageDraftButtonPress: function () {
-            var oView = this.getView();
-            //   console.log("//// " , this.getView().getId('approval_title').getValue());
+           console.log("this.getModel moldList >> " , this.getModel('moldList'));
 
-            //   this.getModel('appMaster').setProperty('/approval_title', this.getView().getId('approval_title').value);
+            var oData = this.getModel('moldList').getProperty("/ItemBudgetExecution");
+         
+           
+          // console.log(" appMaster ", this.getModel("appMaster"));
+           var isOk = false;
+            // for(var i = 0 ; i < oData.length ; i++){
+            //     var oDatak =  oData[i];
+            //         oDatak.STATE_COL = "U";
+            //     this.getModel("MoldMasterList").addRecord(oDatak,"/MoldMasters");
+            //     this.getModel("appDetail").addRecord(oDatak,"/ApprovalDetails");
+            //     if(i == oData.length-1){
+            //         isOk = true;
+            //     }
+            // }
 
-            /**
-             *        oTransactionManager.addDataModel(this.getModel("appMaster"));
-                       oTransactionManager.addDataModel(this.getModel("appDetail"));
-             */
             console.log(" oTransactionManager ", oTransactionManager);
-            console.log(" appMaster ", this.getModel("appMaster"));
-            console.log(" appDetail ", this.getModel("appDetail"));
 
-
+            
+            // var sEntityName = oTransactionManager.getProperty("/entityName"),
+            // aRecords = this.getProperty("/" + sEntityName);
+            // console.log(" aRecords ", aRecords);
+            
+                this.save();
+        
+    
+        },
+        save : function(){
+            var oView = this.getView();
             MessageBox.confirm("Are you sure ?", {
                 title: "Comfirmation",
                 initialFocus: sap.m.MessageBox.Action.CANCEL,
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
                         oView.setBusy(true);
-
                         oTransactionManager.submit({
                             success: function (ok) {
                                 oView.setBusy(false);

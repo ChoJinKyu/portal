@@ -38,10 +38,7 @@
             "db/cds/cm/userMgr",                   
             "db/cds/dp",
             "db/cds/dp/pd",
-            "db/cds/dp/materialMgr/basicDataMgr",
-            "db/cds/dp/materialMgr/materialMasterConv",
-            "db/cds/dp/materialMgr/materialMasterMgr",
-            "db/cds/dp/materialMgr/uomMgr",
+            "db/cds/dp/mm",
             "db/cds/dp/standardCommon",
             "db/cds/dp/standardCommon/categoryMgr",
             "db/cds/dp/moldMgt",
@@ -64,6 +61,10 @@
             "db/cds/sp",
             "db/cds/sp/fundingMgr",
             "db/cds/mc",
+            "db/cds/tmp",
+            "db/cds/tmp/tmp1Mgr",
+            "db/cds/tmp/tmp2Mgr",
+            "db/cds/tmp/tmp3Mgr",
             "srv"
           ]
         }

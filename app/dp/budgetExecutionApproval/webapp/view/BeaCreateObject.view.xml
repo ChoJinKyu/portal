@@ -131,7 +131,7 @@
                                 </HBox>
                             <VBox>
                                 <Label text="{I18N>/DESCRIPTION}" labelFor="input" required="true"></Label> 
-                                <layout:VerticalLayout name="approval_contents" id="idVerticalLayout" class="sapUiContentPadding" width="100%" >
+                                <layout:VerticalLayout name="approval_contents" id="idVerticalLayout" class="sapUiContentPadding" width="100%"  >
 
                                 </layout:VerticalLayout>
                             </VBox>
@@ -214,7 +214,7 @@
                                 selectionMode="MultiToggle"
                                 fixedColumnCount="4"
                                 visibleRowCountMode="Auto"
-                                rows="{appDetail>/ApprovalDetails}"
+                                rows="{path:'moldList>/ItemBudgetExecution'}"
                                 >
                              <table:extension>
                                 <OverflowToolbar>
@@ -234,37 +234,37 @@
                                     <table:Column id="c_mold_id"  visible="false">
                                         <Label text="mold_id"/>           
                                         <table:template>
-                                            <Text id="t_mold_id" text="{path:'appDetail>mold_id', type: 'sap.ui.model.type.Integer'}"/>
+                                            <Text id="t_mold_id" text="{path:'moldList>mold_id', type: 'sap.ui.model.type.Integer'}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_model" width="20em" hAlign="Center">
                                         <Label text="{I18N>/MODEL}"/>           
                                         <table:template>
-                                            <Text id="t_model" text="{appDetail>model}"/>
+                                            <Text id="t_model" text="{moldList>model}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_moldPartNo" width="10em" hAlign="Center">
                                         <Label text="Mold&#10;Part No"/>           
                                         <table:template>
-                                            <Text id="t_mold_part_no" text="{appDetail>mold_number}"/>
+                                            <Text id="t_mold_part_no" text="{moldList>mold_number}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_seq" width="5em" hAlign="Center">
                                         <Label text="Seq"/>           
                                         <table:template>
-                                            <Text id="t_seq" text="{path:'appDetail>mold_sequence', type: 'sap.ui.model.type.Integer'}"/>
+                                            <Text id="t_seq" text="{path:'moldList>mold_sequence', type: 'sap.ui.model.type.Integer'}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_description" width="15em" hAlign="Center">
                                         <Label text="{I18N>/DESCRIPTION}"/>           
                                         <table:template>
-                                            <Text id="description" text="{appDetail>spec_name}"/>
+                                            <Text id="description" text="{moldList>spec_name}"/>
                                         </table:template>
                                     </table:Column>                               
                                     <table:Column id="c_productionType" width="10em" hAlign="Center">
                                         <Label text="Production Type"/>           
                                         <table:template>
-                                            <ComboBox selectedKey="{appDetail>mold_production_type_code}"
+                                            <ComboBox selectedKey="{moldList>mold_production_type_code}"
                                                 items="{ path : 'util>/CodeDetails',
                                                             filters : [
                                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
@@ -279,7 +279,7 @@
                                     <table:Column id="c_itemType" width="10em" hAlign="Center">
                                         <Label text="Item Type"/>           
                                         <table:template>
-                                            <ComboBox selectedKey="{appDetail>mold_item_type_code}"
+                                            <ComboBox selectedKey="{moldList>mold_item_type_code}"
                                                 items="{ path : 'util>/CodeDetails',
                                                             filters : [
                                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
@@ -295,21 +295,21 @@
                                         <Label text="Book Currency"/>           
                                            
                                         <table:template>
-                                           <Text  text="{appDetail>book_currency_code}"/>
+                                           <Text  text="{moldList>book_currency_code}"/>
                                         </table:template>
                                     </table:Column>  
                                     <table:Column id="c_budget_amount" width="10em" hAlign="Center">
                                         <Label text="Budget Amount"/>           
                                    
                                         <table:template>
-                                           <Input  value="{appDetail>budget_amount}"/>
+                                           <Input  value="{moldList>budget_amount}"/>
                                         </table:template>
                                     </table:Column>  
 
                                     <table:Column id="c_assetType" width="10em" hAlign="Center">
                                         <Label text="Asset Type"/>           
                                         <table:template>
-                                            <ComboBox selectedKey="{appDetail>asset_type_code}"
+                                            <ComboBox selectedKey="{moldList>asset_type_code}"
                                                 items="{ path : 'util>/CodeDetails',
                                                             filters : [
                                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
@@ -324,7 +324,7 @@
                                     <table:Column id="c_familyPartNo" width="15em" hAlign="Center">
                                         <Label text="Family Part No"/>           
                                         <table:template>
-                                             <Text id="family_part_number_1" text="{appDetail>family_part_number_1}"/>
+                                             <Text id="family_part_number_1" text="{moldList>family_part_number_1}"/>
                                         </table:template>
                                     </table:Column>         
                            
@@ -333,7 +333,7 @@
                                              
                                         <table:template>
                                              <!-- 임시 컬럼명 -->
-                                             <DatePicker value="{appDetail>budget_exrate_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
+                                             <DatePicker value="{moldList>budget_exrate_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
                                         </table:template>
                                     </table:Column>                                     
                                     <table:Column id="c_expectedDisposalDate" width="10em" hAlign="Center">
@@ -341,7 +341,7 @@
                                       
                                         <table:template>
                                              <!-- 임시 컬럼명 -->
-                                             <DatePicker value="{appDetail>inspection_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
+                                             <DatePicker value="{moldList>inspection_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
                                         </table:template>
                                     </table:Column>                                     
                                 </table:columns>
