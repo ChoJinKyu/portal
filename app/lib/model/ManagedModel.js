@@ -21,13 +21,13 @@ sap.ui.define([
 
         isChanged: function () {
             var oData = this.getObject("/");
-            return oData[STATE_COL] && oData[STATE_COL] != 'C' && oData[STATE_COL] != 'D';
+            return oData[STATE_COL] && oData[STATE_COL] != "C" && oData[STATE_COL] != "D";
         },
 
         setProperty: function(sPath, oValue, oContext, bAsyncUpdate){
             var oData = this.getObject("/");
-            if(oData[STATE_COL] != 'C' && oData[STATE_COL] != 'D')
-                oData[STATE_COL] = 'U';
+            if(oData[STATE_COL] != "C" && oData[STATE_COL] != "D")
+                oData[STATE_COL] = "U";
             JSONModel.prototype.setProperty.call(this, sPath, oValue, oContext, bAsyncUpdate);
         },
 
@@ -72,14 +72,14 @@ sap.ui.define([
                             oItem.__entity = sEntity;
                         }
                     });
+                }else if(state == "U"){
+                    this._oTransactionModel.update(sEntity, oItem,{
+                        groupId: sGroupId,
+                        success: function(){
+                            oItem.__entity = sEntity;
+                        }
+                    });
                 }
-            }else{
-                this._oTransactionModel.update(sEntity, oItem,{
-                    groupId: sGroupId,
-                    success: function(){
-                        oItem.__entity = sEntity;
-                    }
-                });
             }
         }
 

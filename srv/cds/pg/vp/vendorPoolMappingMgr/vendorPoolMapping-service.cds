@@ -1,6 +1,5 @@
 using { pg as vpExportMst } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_EXPORT_MST_VIEW-model';
-using { pg as vpSupplierDtl} from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_SUPPLIER_DTL-model';
-using { pg as vpSupplierMst} from '../../../../../db/cds/pg/vp/PG_VP_SUPPLIER_MST_VIEW-model';
+using { pg as vpSupplierDtl} from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_SUPPLIER_VIEW-model';
 using { pg as vpMaterialDtl} from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_ITEM_DTL-model';
 using { pg as vpMaterialMst} from '../../../../../db/cds/pg/vp/PG_VP_MATERIAL_MST_VIEW-model';
 using { pg as vpManagerDtl } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_MANAGER_DTL-model';
@@ -28,6 +27,8 @@ service VpMappingService {
                key m.vendor_pool_code,
                m.vendor_pool_local_name,
                m.vendor_pool_english_name,
+               m.repr_department_code,
+               hd.department_korean_name,
                m.parent_vendor_pool_code,
                m.higher_level_path_name,
                m.inp_type_code,
@@ -44,61 +45,12 @@ service VpMappingService {
                m.vendor_pool_desc,
                m.vendor_pool_history_desc
         from   vpExportMst.Vp_Vendor_Pool_Export_Mst_View m
+               left outer join cmDeptMst.Hr_Department hd
+               ON   m.tenant_id = hd.tenant_id
+               AND  m.repr_department_code = hd.department_id
         where  m.vendor_pool_use_flag = true;  
 
-    view vpSupplierDtlView @(title : 'Vendor Pool Supplier Mapping View') as
-        select key sv.language_cd,
-               key sd.tenant_id,
-               key sd.company_code,
-               key sd.org_type_code,
-               key sd.org_code,
-               key sd.vendor_pool_code,
-               key sd.supplier_code,
-               sv.supplier_local_name,
-               sv.supplier_english_name,
-               sv.company_code supplier_company_code,
-               sv.company_name supplier_company_name,
-               sv.supplier_status_code,
-               sd.supeval_control_flag,
-               sd.supeval_control_start_date,
-               sd.supeval_control_end_date,
-               sd.supplier_rm_control_flag,
-               sd.supplier_base_portion_rate,
-               sd.vendor_pool_mapping_use_flag,
-               sd.register_reason,
-               sd.approval_number,
-               sd.local_update_dtm,
-               sd.update_user_id
-        from   vpSupplierDtl.Vp_Vendor_Pool_Supplier_Dtl sd,
-               vpSupplierMst.Vp_Supplier_Mst_View sv
-        where  sd.tenant_id = sv.tenant_id
-        and    map(sd.company_code, '*', sv.company_code, sd.company_code) = sv.company_code
-        and    sd.org_code = sv.bizunit_code
-        and    sd.supplier_code = sv.supplier_code
-        and    ifnull(sd.vendor_pool_mapping_use_flag, true) = true
-        group by sv.language_cd,
-                 sd.tenant_id,
-                 sd.company_code,
-                 sd.org_type_code,
-                 sd.org_code,
-                 sd.vendor_pool_code,
-                 sd.supplier_code,
-                 sv.supplier_local_name,
-                 sv.supplier_english_name,
-                 sv.company_code,
-                 sv.company_name,
-                 sv.supplier_status_code,
-                 sd.supeval_control_flag,
-                 sd.supeval_control_start_date,
-                 sd.supeval_control_end_date,
-                 sd.supplier_rm_control_flag,
-                 sd.supplier_base_portion_rate,
-                 sd.vendor_pool_mapping_use_flag,
-                 sd.register_reason,
-                 sd.approval_number,
-                 sd.local_update_dtm,
-                 sd.update_user_id
-        ;
+    entity VpSupplierView @(title : '협력사풀 공급업체 View') as projection on vpSupplierDtl.Vp_Vendor_Pool_Supplier_View;
     
     view vpMaterialDtlView @(title : 'Vendor Pool Material Mapping View') as
         select key mv.language_cd,

@@ -64,6 +64,10 @@
             "db/cds/sp",
             "db/cds/sp/fundingMgr",
             "db/cds/mc",
+            "db/cds/tmp",
+            "db/cds/tmp/tmp1Mgr",
+            "db/cds/tmp/tmp2Mgr",
+            "db/cds/tmp/tmp3Mgr",
             "srv"
           ]
         }

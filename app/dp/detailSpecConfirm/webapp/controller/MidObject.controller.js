@@ -103,6 +103,7 @@ sap.ui.define([
         },
 
         clearValueState: function(){
+            this.validator.clearValueState( this.byId('scheduleTable1E') );
             this.validator.clearValueState( this.byId('frmMold') );
             this.validator.clearValueState( this.byId('frmPress') );
         },
@@ -166,6 +167,11 @@ sap.ui.define([
             //     return;
             // }
 
+            if(this.validator.validate( this.byId('scheduleTable1E') ) !== true){
+                MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
+                return;
+            }
+
             //mold 인지 press 인지 구분해야한다..
             var dtlForm = '';
             if(this.itemType == 'P' || this.itemType == 'E'){
@@ -203,10 +209,12 @@ sap.ui.define([
         },
 
         checkChange: function(){
-            // debugger
+            debugger
             var omMaster = this.getModel('master');
             var omSchedule = this.getModel('schedule');
             var omSpec = this.getModel('spec');
+
+            console.log('omSpec.isChanged()',omSpec.isChanged());
 
             if(omMaster.isChanged() || omSchedule.isChanged() || omSpec.isChanged()){
                 return true;
@@ -218,6 +226,26 @@ sap.ui.define([
         onPageConfirmButtonPress: function(){
 			var oView = this.getView(),
                 me = this;
+
+            console.log(this.byId('scheduleTable1E'));
+
+            if(this.validator.validate( this.byId('scheduleTable1E') ) !== true){
+                MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
+                return;
+            }
+
+            //mold 인지 press 인지 구분해야한다..
+            var dtlForm = '';
+            if(this.itemType == 'P' || this.itemType == 'E'){
+                dtlForm = 'frmPress';
+            }else{
+                dtlForm = 'frmMold';
+            }
+
+            if(this.validator.validate( this.byId(dtlForm) ) !== true){
+                MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
+                return;
+            }
                 
             MessageBox.confirm("Are you sure ?", {
                 title : "Comfirmation",
@@ -292,11 +320,11 @@ sap.ui.define([
 			}else{
 
                 var self = this;
-				this._bindView("/MoldMasters(" + this._sMoldId + ")", "master", [], function(oData){
+				this._bindView("/MoldMasters('" + this._sMoldId + "')", "master", [], function(oData){
                     self._toShowMode();
                 });
 
-                this._bindView("/MoldMasterSpec(" + this._sMoldId + ")", "mstSpecView", [], function(oData){
+                this._bindView("/MoldMasterSpec('" + this._sMoldId + "')", "mstSpecView", [], function(oData){
                     
                 });
 
@@ -305,7 +333,7 @@ sap.ui.define([
                     
                 });
 
-                this._bindView("/MoldSpec("+this._sMoldId+")", "spec", [], function(oData){
+                this._bindView("/MoldSpec('"+this._sMoldId+"')", "spec", [], function(oData){
                     
                 });
             }
