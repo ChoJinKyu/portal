@@ -68,7 +68,7 @@ sap.ui.define([
 			this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
 			this.setModel(oViewModel, "midObjectView");
 			
-			this.setModel(new ManagedModel(), "master");
+			this.setModel(new ext.lib.model.ManagedModel(), "master");
 			this.setModel(new ManagedListModel(), "details");
 
 			oTransactionManager = new TransactionManager();
@@ -112,6 +112,7 @@ sap.ui.define([
                 currencyCode: this._sCurrencyCode
             });
             this._setScreen(sNextLayout);
+            this._newCheck(this._sTenantId);
             
             
 		},
@@ -127,6 +128,7 @@ sap.ui.define([
 				currencyCode: this._sCurrencyCode
             });
             this._setScreen(sNextLayout);
+            this._newCheck(this._sTenantId);
         },
         
 		/**
@@ -143,6 +145,11 @@ sap.ui.define([
         _setScreen: function (screen){
             var oViewModel = this.getModel("midObjectView");
             oViewModel.setProperty("/screen", screen);
+        },
+
+        _newCheck: function(sTenantId){
+            var oViewModel = this.getModel("editMode");
+            oViewModel.setProperty("/newcheck", sTenantId);
         },
 
 		/**
@@ -172,12 +179,13 @@ sap.ui.define([
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
 						oView.setBusy(true);
-						oMasterModel.removeData();
+                        oMasterModel.removeData();
 						oMasterModel.setTransactionModel(that.getModel());
 						oMasterModel.submitChanges({
 							success: function(ok){
                                 oView.setBusy(false);
                                 that.onPageNavBackButtonPress.call(that);
+                                that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
 								MessageToast.show("Success to delete.");
 							}
 						});
@@ -199,8 +207,8 @@ sap.ui.define([
                 "currency_suffix" : null,
 				"local_create_dtm": new Date(),
 				"local_update_dtm": new Date()
-            }, 0);
-            this.validator.clearValueState(this.byId("midTable"));
+            }, "/CurrencyLng");
+            //this.validator.clearValueState(this.byId("midTable"));
         },
 
 		onMidTableDeleteButtonPress: function(){
@@ -217,7 +225,7 @@ sap.ui.define([
 				oModel.markRemoved(nIndex);
 			});
             oTable.removeSelections(true);
-            this.validator.clearValueState(this.byId("midTable"));
+            //this.validator.clearValueState(this.byId("midTable"));
 		},
 		
 		/**
@@ -234,31 +242,36 @@ sap.ui.define([
 				return;
             }
 
-            if(this.validator.validate(this.byId("page")) !== true) 
+            if(this.validator.validate(this.byId("midTable")) !== true) 
             {
                 return;
             }   
+            
+            // this._onMasterDataChanged();
+            
 
 			var oView = this.getView(),
-				that = this;
+                that = this;
+                
             MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
 				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
 						oView.setBusy(true);
-						oModel.submitChanges({
+						oTransactionManager.submit({
 							success: function(oEvent){
                                 that._setModelEditCancelMode();
                                 that._toShowMode();
-								oView.setBusy(false);
+                                oView.setBusy(false);
+                                that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
 								MessageToast.show(this.getModel("I18N").getText("/NCM0005"));
 							}.bind(this)
 						});
 					};
 				}.bind(this)
             });
-            this.validator.clearValueState(this.byId("page"));
+            //this.validator.clearValueState(this.byId("midTable"));
 
 		},
 		
@@ -290,6 +303,7 @@ sap.ui.define([
 				});
                 this._toShowMode();
                 this.validator.clearValueState(this.byId("page"));
+                this._newCheck(this._sTenantId);
             }
         },
 
@@ -300,15 +314,16 @@ sap.ui.define([
 		_onMasterDataChanged: function(oEvent){
             if(this.getModel("midObjectView").getProperty("/isAddedMode") == true){
 				var oMasterModel = this.getModel("master");
-				var oDetailsModel = this.getModel("details");
+                var oDetailsModel = this.getModel("details");
 				var sTenantId = oMasterModel.getProperty("/tenant_id");
 				var sCurrencyCode = oMasterModel.getProperty("/currency_code");
                 var oDetailsData = oDetailsModel.getData();
 				oDetailsData.CurrencyLng.forEach(function(oItem, nIndex){
 					oDetailsModel.setProperty("/CurrencyLng/"+nIndex+"/tenant_id", sTenantId);
 					oDetailsModel.setProperty("/CurrencyLng/"+nIndex+"/currency_code", sCurrencyCode);
-				});
-				//oDetailsModel.setData(oDetailsData);
+                });
+                oDetailsModel.setTransactionModel(this.getModel());
+				oDetailsModel.setData(oDetailsData.CurrencyLng, "/CurrencyLng");
 			}
 		},
 
@@ -371,8 +386,9 @@ sap.ui.define([
 				});
 				this._toShowMode();
             }
-            this.validator.clearValueState(this.byId("page"));
-			oTransactionManager.setServiceModel(this.getModel());
+            //this.validator.clearValueState(this.byId("midTable"));
+            oTransactionManager.setServiceModel(this.getModel());
+            this._newCheck(this._sTenantId);
 		},
 
 		/**
@@ -415,17 +431,6 @@ sap.ui.define([
 			this.byId("midTableApplyFilterButton").setEnabled(FALSE);
 			this.byId("midTable").setMode(sap.m.ListMode.SingleSelectLeft);
             this._bindMidTable(this.oEditableTemplate, "Edit");
-            if(this.byId("midObjectForm1EditCurrencyCode") !== undefined){
-                if(this._sTenantId === "new")
-                {
-                    this.byId("midObjectForm1EditCurrencyCode").setEnabled(!FALSE);
-                    this.byId("pageDeleteButton").setEnabled(FALSE);
-                }
-                else if(this._sTenantId !== "new")
-                {
-                    this.byId("midObjectForm1EditCurrencyCode").setEnabled(FALSE);
-                }
-            }
 		},
 
 		_toShowMode: function(){
@@ -505,6 +510,7 @@ sap.ui.define([
                         this._CountryComboChange(oEvent);
                             }.bind(this)     
                 });
+                
                 oCountryCombo.bindItems({
                     path: 'util>/CodeDetails',
                     filters: [

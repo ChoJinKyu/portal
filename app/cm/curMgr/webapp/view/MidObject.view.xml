@@ -8,10 +8,10 @@
 	height="100%">
 
 	<uxap:ObjectPageLayout id="page"
-		toggleHeaderOnTitleClick="true"
+		toggleHeaderOnTitleClick="false"
 		alwaysShowContentHeader = "true"
 		preserveHeaderStateOnScroll="false"
-		headerContentPinnable="true"
+		headerContentPinnable="false"
 		isChildPage="true"
 		upperCaseAnchorBar="false"
 		showTitleInHeaderContent="true"
@@ -162,7 +162,7 @@
                     press=".onMessagePopoverPress" />
 				<ToolbarSpacer />
                 <Button id="pageEditButton" text="Edit" type="Transparent" press=".onPageEditButtonPress" />
-                <Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" />
+                <Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" visible="{= ${editMode>/newcheck} === 'new' ? false : true}"/>
 				<Button id="pageSaveButton" type="Emphasized" text="Save" press=".onPageSaveButtonPress" />
 				<Button id="pageCancelButton" type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
 			</OverflowToolbar>
