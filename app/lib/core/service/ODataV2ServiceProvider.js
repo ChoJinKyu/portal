@@ -11,36 +11,58 @@ sap.ui.define([
         models = {};
     
     return {
-        getCommonService: function(){
-            var sServiceName = "cm.util.CommonService",
-                oModel = models[sServiceName];
-            if(!oModel){
-                oModel = new ODataModel({
-                    serviceUrl: serviceUrls[sServiceName],
+
+        getService: function(serviceName, isNew){
+            if(!serviceUrls[serviceName])
+                throw new Exception("No service registered : " + serviceName);
+            if(isNew === true){
+                return this._createModel({
+                    serviceUrl: serviceUrls[serviceName]
+                });
+            }else{
+                var oModel = models[serviceName];
+                if(!oModel){
+                    oModel = this._createModel({
+                        serviceUrl: serviceUrls[serviceName]
+                    });
+                    models[serviceName] = oModel;
+                }
+                return oModel;
+            }
+        },
+
+        getServiceByUrl: function(serviceUrl, isNew){
+            var oUrl, sServiceName;
+            for(oUrl in serviceUrls){
+                if(serviceUrl == serviceUrls[oUrl]){
+                    sServiceName = oUrl;
+                    break;
+                }
+            }
+            if(sServiceName){
+                return this.getService(sServiceName, isNew);
+            }else{
+                return this._createModel({
+                    serviceUrl: serviceUrl
+                });
+            }
+        },
+
+        _createModel: function(sParams){
+            return new ODataModel(jQuery.extend({
                     defaultBindingMode: "OneTime",
                     defaultCountMode: "Inline",
                     refreshAfterChange: false,
                     useBatch: true
-                });
-                models[sServiceName] = oModel;
-            }
-            return oModel;
+                }, sParams || {}));
+        },
+
+        getCommonService: function(){
+            return this.getService("cm.util.CommonService");
         },
         
         getOrgService: function(){
-            var sServiceName = "cm.util.OrgService",
-                oModel = models[sServiceName];
-            if(!oModel){
-                oModel = new ODataModel({
-                    serviceUrl: serviceUrls[sServiceName],
-                    defaultBindingMode: "OneTime",
-                    defaultCountMode: "Inline",
-                    refreshAfterChange: false,
-                    useBatch: true
-                });
-                models[sServiceName] = oModel;
-            }
-            return oModel;
+            return this.getService("cm.util.OrgService");
         }
     }
 
