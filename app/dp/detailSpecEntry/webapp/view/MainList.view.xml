@@ -264,7 +264,7 @@
                                 <ObjectIdentifier text="{list>create_user}" />
                                 <!-- <ObjectIdentifier text="{list>mold_spec_register_date}"/> -->
                                 <DatePicker value="{list>mold_spec_register_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
-                                <ObjectIdentifier text="{list>family_mold_numbers}" />
+                                <ObjectIdentifier text="{list>family_part_numbers}" />
                             </cells>
                         </ColumnListItem>
                     </items>
