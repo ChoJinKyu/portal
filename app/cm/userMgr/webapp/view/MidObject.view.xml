@@ -48,11 +48,11 @@
 
 		<uxap:headerContent>
 			<!-- 헤더 영역 -->
-			<!-- <FlexBox wrap="Wrap" visible="false">
+			<FlexBox wrap="Wrap" visible="false">
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
 					<layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
-						<Label text="Chain: " />
-						<Text text="{master>/chain_code}"/>
+						<Label text="userID: " />
+						<Text text="{master>/user_id}"/>
 					</layout:HorizontalLayout>
 				</layout:VerticalLayout>
 
@@ -66,7 +66,7 @@
 						<Text text="{master>/update_user_id} / {master>/system_update_dtm}"/>
 					</layout:HorizontalLayout>
 				</layout:VerticalLayout>
-			</FlexBox> -->
+			</FlexBox>
 		</uxap:headerContent> 
 
 		<uxap:sections>
