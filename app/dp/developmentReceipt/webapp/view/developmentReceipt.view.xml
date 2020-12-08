@@ -56,9 +56,9 @@
                     <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
-                                <Label text="Affiliate" labelFor="searchAffiliateS" required="true"></Label>
-                                <!--<MultiInput id="searchAffiliateS" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>-->
-                                <MultiComboBox id="searchAffiliateS" width="100%" selectedKey=""
+                                <Label text="{I18N>/COMPANY}" labelFor="searchCompanyS" required="true"></Label>
+                                <!--<MultiInput id="searchCompanyS" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>-->
+                                <MultiComboBox id="searchCompanyS" width="100%" selectedKey=""
                                                 items="{
                                                     path: 'org>/Org_Company',
                                                     filters: [
@@ -76,7 +76,7 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Division" labelFor="searchDivisionS" required="true"></Label>
+                                <Label text="{I18N>/PLANT}" labelFor="searchDivisionS" required="true"></Label>
                                 <MultiComboBox  id="searchDivisionS" width="100%" selectedKey="" 
                                                 items="{
                                                     path: '/Divisions',
@@ -95,19 +95,19 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Receipt Date" labelFor="searchReceiptDateS" required="true"></Label>
-                                <DateRangeSelection id="searchReceiptDateS" width="100%" change="receiptDateChange"/>
+                                <Label text="Creation {I18N>/DATE}" labelFor="searchCreationDateS" required="true"></Label>
+                                <DateRangeSelection id="searchCreationDateS" width="100%" change="creationDateChange"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Status"></Label>
+                                <Label text="{I18N>/STATUS}"></Label>
                                 <SegmentedButton id="searchStatusS" selectedKey="" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
                                     <items>
                                         <SegmentedButtonItem text="All" key="all" />
-                                        <SegmentedButtonItem text="Received" key="received" width="5em" />
-                                        <SegmentedButtonItem text="Unreceived" key="unreceived" width="7em" />
+                                        <SegmentedButtonItem text="Received" key="DEV_RCV" width="5em" />
+                                        <SegmentedButtonItem text="Unreceived" key="DEV_REQ" width="7em" />
                                     </items>
                                 </SegmentedButton>
                                 <layoutData>
@@ -153,8 +153,8 @@
                     <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
-                                <Label text="Affiliate" labelFor="searchAffiliateE" required="true"></Label>
-                                <MultiComboBox id="searchAffiliateE" width="100%" selectedKey=""
+                                <Label text="{I18N>/COMPANY}" labelFor="searchCompanyE" required="true"></Label>
+                                <MultiComboBox id="searchCompanyE" width="100%" selectedKey=""
                                                 items="{
                                                     path: 'org>/Org_Company',
                                                     filters: [
@@ -172,7 +172,7 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Division" labelFor="searchDivisionE" required="true"></Label>
+                                <Label text="{I18N>/PLANT}" labelFor="searchDivisionE" required="true"></Label>
                                 <MultiComboBox  id="searchDivisionE" width="100%" selectedKey="" 
                                                 items="{
                                                     path: '/Divisions',
@@ -191,14 +191,14 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Receipt Date" labelFor="searchReceiptDateE" required="true"></Label>
-                                    <DateRangeSelection id="searchReceiptDateE" width="100%" change="receiptDateChange"/>
+                                <Label text="Creation {I18N>/DATE}" labelFor="searchCreationDateE" required="true"></Label>
+                                    <DateRangeSelection id="searchCreationDateE" width="100%" change="creationDateChange"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Status"></Label>
+                                <Label text="{I18N>/STATUS}"></Label>
                                 <SegmentedButton id="searchStatusE" selectedKey="" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
                                     <items>
                                         <SegmentedButtonItem text="All" key="all" />
@@ -263,7 +263,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Description"></Label>
+                            <Label text="{I18N>/DESCRIPTION}"></Label>
                             <Input id="searchDescription" width="100%"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
@@ -289,7 +289,7 @@
                         </VBox>
                         
                         <VBox>
-                            <Label text="Model" labelFor="searchModel"></Label>
+                            <Label text="{I18N>/MODEL}" labelFor="searchModel"></Label>
                             <!--<MultiInput id="searchModel" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>-->
                             <Input id="searchModel" width="100%"/>
                             <layoutData>
@@ -343,20 +343,20 @@
                     </OverflowToolbar>
                 </table:extension>                             
                 <table:columns>
-                    <table:Column id="moldAffiliateColumn" width="5em" hAlign="Center">
-                        <Label text="Affiliate"/>           
+                    <table:Column id="moldCompanyColumn" width="5em" hAlign="Center">
+                        <Label text="{I18N>/COMPANY}"/>           
                         <table:template>
                             <Text id="company_code" text="{list>company_code}"/> 
                         </table:template>
                     </table:Column>
                     <table:Column id="moldDivisionColumn" width="4.5em" hAlign="Center">
-                        <Label text="Division"/>
+                        <Label text="{I18N>/PLANT}"/>
                         <table:template>
                             <Text id="org_code" text="{list>org_code}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldModelColumn" width="15em" >
-                        <Label text="Model"/>
+                        <Label text="{I18N>/MODEL}"/>
                         <table:template>
                             <Text id="model" text="{list>model}"/>
                         </table:template>
@@ -364,7 +364,7 @@
                     <table:Column id="moldPartNoColumn" width="8em" hAlign="Center">
                         <Label text="Part No"/>
                         <table:template>
-                            <Text id="part_number" text="{list>part_number}"/>
+                            <Text id="mold_number" text="{list>mold_number}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldSeqColumn" width="3em" hAlign="Center">
@@ -374,18 +374,25 @@
                         </table:template>
                     </table:Column>
                     <table:Column id="moldDescriptionColumn" width="12em">
-                        <Label text="Description"/>
+                        <Label text="{I18N>/DESCRIPTION}"/>
                         <table:template>
                             <Text id="spec_name" text="{list>spec_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldStatusColumn" width="8em" hAlign="Center">
-                        <Label text="Status"/>
+                    <table:Column id="moldStatusColumn" width="13em" hAlign="Center">
+                        <Label text="{I18N>/STATUS}"/>
                         <table:template>
-                            <!--<Text id="mold_receipt_flag" text="{list>mold_receipt_flag}"/>-->
-                            <ComboBox selectedKey="{list>mold_receipt_flag}" editable="false" class="readonlyField">
-                                <core:Item key="false" text="Unreceived"/>
-                                <core:Item key="true" text="Received"/>
+                             <ComboBox   id="mold_progress_status_code"
+                                        selectedKey="{list>mold_progress_status_code}"
+                                        items="{
+                                                    path : 'util>/CodeDetails',
+                                                    filters : [
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROGRESS_STATUS_LOCAL'}
+                                                    ]
+                                                }"
+                            editable="false" class="readonlyField" >
+                                <core:Item key="{util>code}" text="{util>code_description}" />
                             </ComboBox>
                         </table:template>
                     </table:Column>
@@ -425,7 +432,7 @@
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
                                                     ]
                                                 }"
-                            editable="{mode>/editFlag}" class="readonlyField" >
+                            editable="{mode>/editFlag}" class="readonlyField" required="true" >
                                 <core:Item key="{util>code}" text="{util>code_description}" />
                             </ComboBox>
                         </table:template>
@@ -445,12 +452,12 @@
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
                                                     ]
                                                 }"
-                            editable="{mode>/editFlag}" class="readonlyField" >
+                            editable="{mode>/editFlag}" class="readonlyField" required="true" >
                                 <core:Item key="{util>code}" text="{util>code_description}" />
                             </ComboBox>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMoldTypeColumn" width="10em" hAlign="Center">
+                    <table:Column id="moldTypeColumn" width="10em" hAlign="Center">
                         <VBox>
                         <Label text="Mold"/>
                         <Label text="Type" required="true"/>
@@ -465,7 +472,7 @@
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_TYPE'}
                                                     ]
                                                 }"
-                            editable="{mode>/editFlag}" class="readonlyField" >
+                            editable="{mode>/editFlag}" class="readonlyField" required="true" >
                                 <core:Item key="{util>code}" text="{util>code_description}" />
                             </ComboBox>
                         </table:template>
@@ -476,8 +483,8 @@
                         <Label text="Type" required="true"/>
                         </VBox>
                         <table:template>
-                            <ComboBox   id="export_domestic_type_code"
-                                        selectedKey="{list>export_domestic_type_code}"
+                            <ComboBox   id="mold_location_type_code"
+                                        selectedKey="{list>mold_location_type_code}"
                                         items="{
                                                     path : 'util>/CodeDetails',
                                                     filters : [
@@ -485,35 +492,35 @@
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ED_TYPE'}
                                                     ]
                                                 }"
-                            editable="{mode>/editFlag}" class="readonlyField" >
+                            editable="{mode>/editFlag}" class="readonlyField" required="true" >
                                 <core:Item key="{util>code}" text="{util>code_description}" />
                             </ComboBox>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldTestUseFlagColumn" width="5em" hAlign="Center">
+                    <table:Column id="moldTestUseFlagColumn" width="7em" hAlign="Center">
                         <VBox>
                         <Label text="T-EST"/>
                         <Label text="Use Y/N"/>
                         </VBox>
                         <table:template>
-                            <Switch state="{list>t_est_use_flag}" customTextOn="Yes" customTextOff="No" enabled="{mode>/editFlag}">
+                            <!--<Switch state="{list>mold_cost_analysis_type_code}" customTextOn="Yes" customTextOff="No" enabled="{mode>/editFlag}">
                                 <layoutData>
                                     <FlexItemData growFactor="1" />
                                 </layoutData>
-                            </Switch>
-                            <!--<CheckBox selected="{list>t_est_use_flag}" editable="{mode>/editFlag}" />-->
-                            <!--<ComboBox   id="t_est_use_flag"    
-                                        selectedKey="{list>t_est_use_flag}"
+                            </Switch>-->
+                            <!--<CheckBox selected="{list>mold_cost_analysis_type_code}" editable="{mode>/editFlag}" />-->
+                            <ComboBox   id="mold_cost_analysis_type_code"    
+                                        selectedKey="{list>mold_cost_analysis_type_code}"
                                         items="{
                                                     path : 'util>/CodeDetails',
                                                     filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'CM_TF_FLAG'}
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_COST_ANALYSIS_TYPE'}
                                                     ]
                                                 }"
-                            >
-                                <core:Item key="{= ${util>code} === 'true' ? true : false }" text="{util>code_description}" />
-                            </ComboBox>-->
+                            editable="{mode>/editFlag}" class="readonlyField">
+                                <core:Item key="{util>code}" text="{util>code_description}" />
+                            </ComboBox>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldTestAttachColumn" width="8em" hAlign="Center">
@@ -537,10 +544,19 @@
                         <Label text="Type"/>
                         </VBox>
                         <table:template>
-                            <!--<Text id="import_mold_flag" text="{list>import_mold_flag}"/>-->
-                            <ComboBox selectedKey="{list>import_mold_flag}" editable="{mode>/editFlag}" class="readonlyField" >
-                                <core:Item key="false" text="Domestic"/>
-                                <core:Item key="true" text="Export"/>
+                            <!--<Text id="mold_purchasing_type_code" text="{list>mold_purchasing_type_code}"/>-->
+                            
+                            <ComboBox   id="mold_purchasing_type_code"    
+                                        selectedKey="{list>mold_purchasing_type_code}"
+                                        items="{
+                                                    path : 'util>/CodeDetails',
+                                                    filters : [
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PURCHASE_TYPE'}
+                                                    ]
+                                                }"
+                            editable="{mode>/editFlag}" class="readonlyField">
+                                <core:Item key="{util>code}" text="{util>code_description}" />
                             </ComboBox>
                         </table:template>
                     </table:Column>
@@ -581,19 +597,19 @@
                             </ComboBox>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldReceiptDateColumn" width="10em" hAlign="Center">
+                    <table:Column id="moldCreationDateColumn" width="10em" hAlign="Center">
                         <VBox>
-                        <Label text="Receipt"/>
-                        <Label text="Date"/>
+                        <Label text="Creation"/>
+                        <Label text="{I18N>/DATE}"/>
                         </VBox>
                         <table:template>
-                            <Text id="receiving_report_date" text="{list>receiving_report_date}"/>
+                            <Text id="local_create_dtm" text="{path: 'list>local_create_dtm', formatter: '.dateFormatter.toDateString'}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldRequesterColumn" width="12em" hAlign="Center">
                         <Label text="Requester"/>
                             <table:template>
-                                <Text id="develope_request_empno" text="{list>develope_request_empno}"/>
+                                <Text id="mold_develope_requestor_empno" text="{list>mold_develope_requestor_empno}"/>
                             </table:template>
                     </table:Column>
                     <table:Column id="moldMoldDeveloperColumn" width="12em" hAlign="Center">
@@ -603,8 +619,8 @@
                         </VBox>
                         <table:template>
                             <VBox>
-                            <Text id="mold_developer_id" text="{list>mold_developer_id}" visible="{mode>/viewFlag}" />
-                            <SearchField id="searchField" value="{list>mold_developer_id}" width="100%" placeholder="Search employee" visible="{mode>/editFlag}" search=".onMoldMstTableUserSearch" />
+                            <Text id="mold_developer_empno" text="{list>mold_developer_empno}" visible="{mode>/viewFlag}" />
+                            <SearchField id="searchField" value="{list>mold_developer_empno}" width="100%" placeholder="Search employee" visible="{mode>/editFlag}" search=".onMoldMstTableUserSearch" required="true" />
                             </VBox>
                         </table:template>
                     </table:Column>
