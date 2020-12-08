@@ -203,14 +203,17 @@ sap.ui.define([
 		 * @public
 		 */
         onPageSaveButtonPress: function(){
-			var oView = this.getView(),
+            var oView = this.getView(),
+                oMasterModel = this.getModel("master"),
                 oDetailsModel = this.getModel("details"),
                 that = this;
-            // 폼의 변경은 어떻게 체크를 해야할까
-            // if(!oDetailsModel.isChanged()) {
-			// 	MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
-			// 	return;
-            // }
+
+            if (this._sTenantId !== "new"){
+                if(!oMasterModel.isChanged() && !oDetailsModel.isChanged()) {
+                    MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
+                    return;
+                }
+            }
                 
             if(this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
             if(this.validator.validate(this.byId("midTable")) !== true) return;
@@ -381,7 +384,7 @@ sap.ui.define([
 
 			this.byId("midTableAddButton").setEnabled(!FALSE);
 			this.byId("midTableDeleteButton").setEnabled(!FALSE);
-			this.byId("midTableSearchField").setEnabled(FALSE);
+			// this.byId("midTableSearchField").setEnabled(FALSE);
 			//this.byId("midTableApplyFilterButton").setEnabled(FALSE);
 			this.byId("midTable").setMode(sap.m.ListMode.SingleSelectLeft);
 			this._bindMidTable(this.oEditableTemplate, "Edit");
@@ -398,7 +401,7 @@ sap.ui.define([
 
 			this.byId("midTableAddButton").setEnabled(!TRUE);
 			this.byId("midTableDeleteButton").setEnabled(!TRUE);
-			this.byId("midTableSearchField").setEnabled(TRUE);
+			// this.byId("midTableSearchField").setEnabled(TRUE);
 			//this.byId("midTableApplyFilterButton").setEnabled(TRUE);
 			this.byId("midTable").setMode(sap.m.ListMode.None);
 			this._bindMidTable(this.oReadOnlyTemplate, "Navigation");

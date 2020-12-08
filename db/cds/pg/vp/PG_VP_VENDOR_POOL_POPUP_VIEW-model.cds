@@ -13,6 +13,7 @@ entity Vp_Vendor_pool_Popup_View {
   parent_vendor_pool_code: String(20) @title: '상위협력사풀코드';
   higher_level_path: String @title: '상위레벨경로';
   level_path: String @title: '현재레벨경로';
+  temp_type: String(1) @title: '공급업체변경여부(Y/N)';
   node_id: String @title: 'node id';
   parent_id: String @title: 'parent node id';
   hierarchy_rank: Integer64;

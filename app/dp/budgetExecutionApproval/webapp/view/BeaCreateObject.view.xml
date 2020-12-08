@@ -131,8 +131,7 @@
                                 </HBox>
                             <VBox>
                                 <Label text="{I18N>/DESCRIPTION}" labelFor="input" required="true"></Label> 
-                                <layout:VerticalLayout name="approval_contents" id="idVerticalLayout" class="sapUiContentPadding" width="100%" 
-                                    value="{=${appMaster>/approval_number}?${appMaster>/approval_contents}:''}">
+                                <layout:VerticalLayout name="approval_contents" id="idVerticalLayout" class="sapUiContentPadding" width="100%"  >
 
                                 </layout:VerticalLayout>
                             </VBox>
@@ -152,7 +151,7 @@
                                 columnsL="2"
                                 columnsXL="2" >
                                 <form:content>
-                                    <Label text="Inspection" required="true" />
+                                    <Label text="{I18N>/INSPECTION}" required="true" />
                                     <RadioButtonGroup id="radioInspection" columns="4" width="100%" class="sapUiMediumMarginBottom">
                                         <RadioButton id="radio_Invest" text="Invest" />
                                         <RadioButton id="radio_Supplies" text="Supplies"  />
@@ -196,14 +195,14 @@
                          <VBox class="sapUiSmallMargin">
                             <Label text="{I18N>/AFFILIATE}" />
                             <ObjectStatus
-                                text="{company>/Org_Company/0/company_name}" 
+                                text="{company>/company_name}" 
                                 state="Error"
                                 />
                          </VBox>
                          <VBox class="sapUiSmallMargin">
                             <Label text="{I18N>/BUSINESS_DIVISION}" />
                             <ObjectStatus
-                                text="{plant>/Org_Plant/0/plant_name}" 
+                                text="{plant>/plant_name}" 
                                 state="Error"
                                 />
                          </VBox>
@@ -215,7 +214,7 @@
                                 selectionMode="MultiToggle"
                                 fixedColumnCount="4"
                                 visibleRowCountMode="Auto"
-                                rows="{appDetail>/ApprovalDetails}"
+                                rows="{path:'moldList>/ItemBudgetExecution'}"
                                 >
                              <table:extension>
                                 <OverflowToolbar>
@@ -235,37 +234,37 @@
                                     <table:Column id="c_mold_id"  visible="false">
                                         <Label text="mold_id"/>           
                                         <table:template>
-                                            <Text id="t_mold_id" text="{path:'appDetail>mold_id', type: 'sap.ui.model.type.Integer'}"/>
+                                            <Text id="t_mold_id" text="{path:'moldList>mold_id', type: 'sap.ui.model.type.Integer'}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_model" width="20em" hAlign="Center">
                                         <Label text="{I18N>/MODEL}"/>           
                                         <table:template>
-                                            <Text id="t_model" text="{appDetail>model}"/>
+                                            <Text id="t_model" text="{moldList>model}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_moldPartNo" width="10em" hAlign="Center">
                                         <Label text="Mold&#10;Part No"/>           
                                         <table:template>
-                                            <Text id="t_mold_part_no" text="{appDetail>mold_number}"/>
+                                            <Text id="t_mold_part_no" text="{moldList>mold_number}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_seq" width="5em" hAlign="Center">
                                         <Label text="Seq"/>           
                                         <table:template>
-                                            <Text id="t_seq" text="{path:'appDetail>mold_sequence', type: 'sap.ui.model.type.Integer'}"/>
+                                            <Text id="t_seq" text="{path:'moldList>mold_sequence', type: 'sap.ui.model.type.Integer'}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_description" width="15em" hAlign="Center">
-                                        <Label text="Description"/>           
+                                        <Label text="{I18N>/DESCRIPTION}"/>           
                                         <table:template>
-                                            <Text id="description" text="{appDetail>spec_name}"/>
+                                            <Text id="description" text="{moldList>spec_name}"/>
                                         </table:template>
                                     </table:Column>                               
                                     <table:Column id="c_productionType" width="10em" hAlign="Center">
                                         <Label text="Production Type"/>           
                                         <table:template>
-                                            <ComboBox selectedKey="{appDetail>mold_production_type_code}"
+                                            <ComboBox selectedKey="{moldList>mold_production_type_code}"
                                                 items="{ path : 'util>/CodeDetails',
                                                             filters : [
                                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
@@ -280,7 +279,7 @@
                                     <table:Column id="c_itemType" width="10em" hAlign="Center">
                                         <Label text="Item Type"/>           
                                         <table:template>
-                                            <ComboBox selectedKey="{appDetail>mold_item_type_code}"
+                                            <ComboBox selectedKey="{moldList>mold_item_type_code}"
                                                 items="{ path : 'util>/CodeDetails',
                                                             filters : [
                                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
@@ -296,21 +295,21 @@
                                         <Label text="Book Currency"/>           
                                            
                                         <table:template>
-                                           <Text  text="{appDetail>book_currency_code}"/>
+                                           <Text  text="{moldList>book_currency_code}"/>
                                         </table:template>
                                     </table:Column>  
                                     <table:Column id="c_budget_amount" width="10em" hAlign="Center">
                                         <Label text="Budget Amount"/>           
                                    
                                         <table:template>
-                                           <Input  value="{appDetail>budget_amount}"/>
+                                           <Input  value="{moldList>budget_amount}"/>
                                         </table:template>
                                     </table:Column>  
 
                                     <table:Column id="c_assetType" width="10em" hAlign="Center">
                                         <Label text="Asset Type"/>           
                                         <table:template>
-                                            <ComboBox selectedKey="{appDetail>asset_type_code}"
+                                            <ComboBox selectedKey="{moldList>asset_type_code}"
                                                 items="{ path : 'util>/CodeDetails',
                                                             filters : [
                                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
@@ -325,7 +324,7 @@
                                     <table:Column id="c_familyPartNo" width="15em" hAlign="Center">
                                         <Label text="Family Part No"/>           
                                         <table:template>
-                                             <Text id="family_part_number_1" text="{appDetail>family_part_number_1}"/>
+                                             <Text id="family_part_number_1" text="{moldList>family_part_number_1}"/>
                                         </table:template>
                                     </table:Column>         
                            
@@ -334,7 +333,7 @@
                                              
                                         <table:template>
                                              <!-- 임시 컬럼명 -->
-                                             <DatePicker value="{appDetail>budget_exrate_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
+                                             <DatePicker value="{moldList>budget_exrate_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
                                         </table:template>
                                     </table:Column>                                     
                                     <table:Column id="c_expectedDisposalDate" width="10em" hAlign="Center">
@@ -342,7 +341,7 @@
                                       
                                         <table:template>
                                              <!-- 임시 컬럼명 -->
-                                             <DatePicker value="{appDetail>inspection_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
+                                             <DatePicker value="{moldList>inspection_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
                                         </table:template>
                                     </table:Column>                                     
                                 </table:columns>
@@ -353,7 +352,7 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			<uxap:ObjectPageSection titleUppercase="false" title="Attachments">
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>Attachments}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection >
                         <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" width="100%">
@@ -406,16 +405,16 @@
                                 <Text text="No." />
                             </Column>
                             <Column id="type" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
-                                <Text text="Type" />
+                                <Text text="{I18N>/TYPE}" />
                             </Column>
                             <Column id="nameDept" minScreenWidth="Tablet" hAlign="Center" width="12em" >
-                                <Text text="Name/Dept" />
+                                <Text text="{I18N>/NAME}/Dept" />
                             </Column>
                             <Column id="status" minScreenWidth="Tablet" hAlign="Center" width="12em" >
-                                <Text text="Status" />
+                                <Text text="{I18N>/STATUS}" />
                             </Column> 
                             <Column id="comment" minScreenWidth="Tablet" hAlign="Center" width="12em" >
-                                <Text text="Comment" />
+                                <Text text="{I18N>/COMMENT}" />
                             </Column>
                             <Column id="up" minScreenWidth="Tablet" hAlign="Center" width="1.5em" >
                                   <Text text="" />

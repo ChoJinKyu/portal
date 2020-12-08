@@ -15,10 +15,9 @@
                     adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="Tenant: "></Label>
-                            <lib-m:TenantComboBox id="searchTenant" width="100%" 
-                                useEmpty="true">
-                            </lib-m:TenantComboBox>
+                            <Label text="Test: "></Label>
+                            <lib-m:CodeInput id="searchTest" width="100%" groupCode="CM_CHAIN_CD">
+                            </lib-m:CodeInput>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M5 S10" />
                             </layoutData>
@@ -35,10 +34,37 @@
                             </layoutData>
                         </VBox>
                         <VBox>
+                            <Label text="Tenant: "></Label>
+                            <lib-m:TenantComboBox id="searchTenant" width="100%" 
+                                useEmpty="true">
+                            </lib-m:TenantComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M5 S10" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
                             <Label text="Currency: "></Label>
                             <lib-m:CurrencyComboBox id="searchCurrency" width="100%" 
                                 useEmpty="true" emptyKey="ALL" emptyText="ALL" >
                             </lib-m:CurrencyComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M5 S10" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Multi: "></Label>
+                            <MultiComboBox width="350px"
+                                items="{
+                                    path: 'util>/CodeDetails',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
+                                    ]
+                                }">
+                                <items>
+                                    <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+                                </items>
+                            </MultiComboBox>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M5 S10" />
                             </layoutData>

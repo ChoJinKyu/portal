@@ -11,8 +11,7 @@ sap.ui.define([
         models = {};
     
     return {
-        getCommonService: function(sVersion){
-            sVersion = sVersion || "v2";
+        getCommonService: function(){
             var sServiceName = "cm.util.CommonService",
                 oModel = models[sServiceName];
             if(!oModel){
@@ -28,8 +27,7 @@ sap.ui.define([
             return oModel;
         },
         
-        getOrgService: function(sVersion){
-            sVersion = sVersion || "v2";
+        getOrgService: function(){
             var sServiceName = "cm.util.OrgService",
                 oModel = models[sServiceName];
             if(!oModel){

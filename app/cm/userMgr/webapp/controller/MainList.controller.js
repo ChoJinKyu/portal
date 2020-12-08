@@ -56,7 +56,6 @@ sap.ui.define([
 
       this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
-      //this._doInitTablePerso();
     },
 
     onRenderedFirst: function () {
@@ -119,8 +118,7 @@ sap.ui.define([
       var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
       this.getRouter().navTo("midPage", {
         layout: oNextUIState.layout,
-        tenantId: "new",
-        userId: "userId",
+        userId: "new",
         "?query": {
           //param1: "1111111111"
         }
@@ -157,7 +155,6 @@ sap.ui.define([
 
       this.getRouter().navTo("midPage", {
         layout: oNextUIState.layout,
-        tenantId: oRecord.tenant_id,
         userId: oRecord.user_id
       });
 
@@ -194,33 +191,14 @@ sap.ui.define([
       var oView = this.getView(),
         oModel = this.getModel("list");
       oView.setBusy(true);
-      //oModel.setTransactionModel(this.getModel());
-
-
-
-        var oUserMasterTable = this.byId("mainTable");
-        oUserMasterTable.setBusy(true);
-
-        var oServiceModel = this.getModel();
-        oServiceModel.read("/UserMgr",{
-            filters : aSearchFilters,
-            success : function(data){
-                oModel.setProperty("/UserMgr", data.results);
-                oUserMasterTable.setBusy(false);
-            },
-            error : function(data){
-                oUserMasterTable.setBusy(false);
-            }
-        });
-
-    //   oModel.read("/UserMgrMasters", {
-    //     filters: aSearchFilters,
-    //     success: function (oData) {
-    //         console.log("111111 success", oData);
-
-    //       oView.setBusy(false);
-    //     }
-    //   });
+    oModel.setTransactionModel(this.getModel());
+      oModel.read("/UserMgr", {
+        filters: aSearchFilters,
+        success: function (oData) {
+            console.log(">>>> success", oData);
+          oView.setBusy(false);
+        }
+      });
       /////////////////////////////////////////////////////////////////////////////////
       // TAG : Hierachy/Tree
       // 검색 : name like '%e%'
@@ -239,7 +217,7 @@ sap.ui.define([
         ])
         // 성공시
         .then(function (oData) {
-          console.log(">>>> success", oData);
+          
         })
         // 실패시
         .catch(function (oError) {
@@ -265,16 +243,6 @@ sap.ui.define([
       
       return aSearchFilters;
     },
-
-    _doInitTablePerso: function () {
-      // init and activate controller
-      this._oTPC = new TablePersoController({
-        table: this.byId("mainTable"),
-        componentName: "UserMgr",
-        persoService: MainListPersoService,
-        hasGrouping: true
-      }).activate();
-    }
 
   });
 });

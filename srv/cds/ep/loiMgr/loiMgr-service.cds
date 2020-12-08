@@ -15,10 +15,10 @@ service LoiMgrService {
 	
 	view LOIPublishItemView as
         select 		
-            dtl.tenant_id,	
-            dtl.company_code,	
-            dtl.loi_write_number,	
-            dtl.loi_item_number,	
+            key dtl.tenant_id,	
+            key dtl.company_code,	
+            key dtl.loi_write_number,	
+            key dtl.loi_item_number,	
             pub.buyer_empno,	
             pub.publish_date,	
             pub.supplier_code	
@@ -32,9 +32,9 @@ service LoiMgrService {
 
 	view LOIRequestView as
         select 
-            mst.tenant_id,
-            mst.company_code,
-            mst.loi_write_number,
+            key mst.tenant_id,
+            key mst.company_code,
+            key mst.loi_write_number,
             mst.loi_number,
             mst.loi_request_title,
             mst.loi_request_status_code,

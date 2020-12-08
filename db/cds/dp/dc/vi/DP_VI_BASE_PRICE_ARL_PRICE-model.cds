@@ -2,6 +2,7 @@ namespace dp;
 
 using util from '../../../cm/util/util-model';
 using {dp.VI_Base_Price_Arl_Dtl as detail} from './DP_VI_BASE_PRICE_ARL_DTL-model';
+using {cm.Code_Dtl as code} from '../../../cm/codeMgr/CM_CODE_DTL-model';
 using {cm.Org_Tenant as tenant} from '../../../cm/orgMgr/CM_ORG_TENANT-model';
 
 entity VI_Base_Price_Arl_Price {
@@ -9,11 +10,11 @@ entity VI_Base_Price_Arl_Price {
     key approval_number                  : String(50) not null;
     key item_sequence                    : Decimal not null;
     key market_code                      : String(30) not null;
-        new_base_price                   : Decimal(19,4);
+        new_base_price                   : Decimal(19, 4);
         new_base_price_currency_code     : String(3);
-        current_base_price               : Decimal(19,4);
+        current_base_price               : Decimal(19, 4);
         current_base_price_currency_code : String(3);
-        first_purchasing_net_price       : Decimal(19,4);
+        first_purchasing_net_price       : Decimal(19, 4);
         first_pur_netprice_curr_cd       : String(3);
         first_pur_netprice_str_dt        : Date;
 
@@ -21,6 +22,10 @@ entity VI_Base_Price_Arl_Price {
                                                on  item_sequence_fk.tenant_id       = tenant_id
                                                and item_sequence_fk.approval_number = approval_number
                                                and item_sequence_fk.item_sequence   = item_sequence;
+        market_code_code_fk              : Association to code
+                                               on  market_code_code_fk.tenant_id  = tenant_id
+                                               and market_code_code_fk.group_code = 'DP_VI_MARKET_CODE'
+                                               and market_code_code_fk.group_code = market_code;
         tenant_id_fk                     : Association to tenant
                                                on tenant_id_fk.tenant_id = tenant_id;
 }
