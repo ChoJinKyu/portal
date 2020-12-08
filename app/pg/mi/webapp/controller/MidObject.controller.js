@@ -70,10 +70,10 @@ sap.ui.define([
                 edit : "E"    //수정
             },
             itemMode : {
-                create : "┼",  //테이블 아이템 신규등록 ㅂ -> 한자
+                create : "C",  //테이블 아이템 신규등록 ㅂ -> 한자
                 read : "　",    //테이블 아이템 기존 존재 데이타 로드 ㄱ->한자 공백
                 update : "U",  //업데이트 상태
-                delete : "X"   //삭제 상태 
+                delete : "D"   //삭제 상태 
             },
             odataMode : {
                 yes : "Y",     //테이블 아이템 이 odata에서 load 한것
@@ -467,7 +467,7 @@ sap.ui.define([
 
             if (oArgs.mi_material_code == "new") {
                 console.log("---------- New Create item ----------");
-                this._fnSetCreateModel();
+                this._fnSetCreateMode();
 
             } else {
 
@@ -738,7 +738,7 @@ sap.ui.define([
                 "update_user_id": "Admin",
                 "system_create_dtm": new Date(),
                 "system_update_dtm": new Date(),
-                "itemMode": oUi.getProperty("createMode") == true ?  this._m.itemMode.create : this._m.itemMode.edit,
+                "itemMode": this._m.itemMode.create,
                 "odataMode": this._m.odataMode.no
             };
 
@@ -748,10 +748,51 @@ sap.ui.define([
             console.groupEnd();
         },
 
+                /**
+          * 버튼 액션 저장
+          */
+         onSaveAction : function(){
+
+            console.log("call function ==================== onMidSave ====================");
+             var oUi = this.getModel("oUi");
+             var bCreateFlag = oUi.getProperty("/createMode");
+             var bOkActionFlag = false;
+ 
+             if(bCreateFlag){
+                 if(ValidatorUtil.isValid(this.getView(),"requiredField")){
+                     MessageBox.confirm("추가 하시 겠습니까?", {
+                         title : "Create",
+                         initialFocus : sap.m.MessageBox.Action.CANCEL,
+                         onClose : function(sButton) {
+                             if (sButton === MessageBox.Action.OK) {
+                                 this._onSave();
+                             }else{
+                                 return;
+                             }
+                         }.bind(this)
+                     });
+                 }else{
+                     console.log("checkRequire")
+                 }
+             }else{
+                 MessageBox.confirm("수정 하시 겠습니까?", {
+                     title : "Update",
+                     initialFocus : sap.m.MessageBox.Action.CANCEL,
+                     onClose : function(sButton) {
+                         if (sButton === MessageBox.Action.OK) {
+                             this._onSave();
+                         }else{
+                             return;
+                         }
+                     }.bind(this)
+                 });
+             }
+        },
+
         /**
          * 저장
          */
-         onSaveAction: function () {
+         _onSave : function () {
 
             console.log("call function ==================== onSaveAction ====================");
 
@@ -763,65 +804,67 @@ sap.ui.define([
                 oUi = this.getModel("oUi"),
                 oTable = this.getView().byId(this._m.tableName),
                 oModel = this.getOwnerComponent().getModel(),
-                materialCheck = oUi.getProperty("/materialCheck"),                
-                bFlag = false;
+                materialCheck = oUi.getProperty("/materialCheck");
 
-            var SERVICENAME = "pg.marketIntelligenceService";
+            if (materialCheck==false && oUi.getProperty("/createMode") == true) {
 
-            if (materialCheck==false && oUi.getProperty("/createMode")==true) {
+                this._showMessageBox(
+                    "자재 코드 확인",
+                    "자재코드 중복을 먼저 체크 하셔야 합니다",
+                    this._m.messageType.Warning,
+                    function(){return;}
+                );
 
-                MessageBox.show("자재코드 중복을 먼저 체크 하셔야 합니다.", {
-                    icon: MessageBox.Icon.WARNING,
-                    title: "자재 코드 확인",
-                    actions: [MessageBox.Action.OK],
-                    styleClass: "sapUiSizeCompact",
-                    onClose: function (sButton) {
-
-                    },
-                });
             } else {
 
-                var input_mi_material_code = this.getView().byId("input_mi_material_code");
-                var comboBoxCategory_code = this.getView().byId("comboBoxCategory_code").getSelectedKey();
-                var switchUse_flag = this.getView().byId("switchUse_flag");
+                var input_mi_material_code,
+                    comboBoxCategory_code,
+                    comboBoxCategory_name,
+                    switchUse_flag = this.getView().byId("switchUse_flag").getState(),
+                    msg = "";
 
-                var categorySelectedKey = comboBoxCategory_code.getSelectedKey();
+                if(oUi.getProperty("/createMode")){
 
-                var msg = "";
+                    input_mi_material_code = this.getView().byId("input_mi_material_code").getValue();
+                    comboBoxCategory_code = this.getView().byId("comboBoxCategory_code").getSelectedKey();
+                    comboBoxCategory_name = this.getView().byId("comboBoxCategory_code").getSelectedText();
 
-                if (this._isValNull(input_mi_material_code.getValue())) {
+                    //form check
+                    if (this._isValNull(input_mi_material_code)) {
 
-                    input_mi_material_code.setValueState("Error");
-                    input_mi_material_code.setValueStateText("자재코드는 필수 입니다.");
-                    input_mi_material_code.openValueStateMessage();
+                        input_mi_material_code.setValueState("Error");
+                        input_mi_material_code.setValueStateText("자재코드는 필수 입니다.");
+                        input_mi_material_code.openValueStateMessage();
+    
+                    }
 
+                    if (this._isValNull(comboBoxCategory_code)) {
+
+                        comboBoxCategory_code.setValueState("Error")
+                        comboBoxCategory_code.openValueStateMessage();
+                        comboBoxCategory_code.setValueStateText("카테고리를 선택 해야 합니다..");
+
+                        msg += "카테고리를 선택 해야 합니다.\n"; 
+                    }
                 }
 
-                if (this._isValNull(categorySelectedKey)) {
-
-                    comboBoxCategory_code.setValueState("Error")
-                    comboBoxCategory_code.openValueStateMessage();
-                    comboBoxCategory_code.setValueStateText("카테고리를 선택 해야 합니다..");
-
-                    msg += "카테고리를 선택 해야 합니다.\n"; 
-                }
-
+                //language table check
                 var oTableLength = oTable.getItems().length;
                 if (oTableLength < 1) {
-                    msg += "언어정보를 한건이라도 등록 해야 합니다.";
+                    msg += "언어정보를 한건이라도 등록 해야 합니다.\n";
                 }
 
-                var bNull = true;
-                debugger;
+                var bNullCheck = true;
+    
                 for(var i=0; i<oTableLength;i++) {
-                    if(oTable.getItems()[i].getCells()[2].getValue().length<1){
+                    if(oTable.getItems()[i].getCells()[2].mAggregations.items[0].getValue().length<1){
 
-                        bNull = false;
+                        bNullCheck = false;
                         break;
                     }
                 }
 
-                if(!bNull){
+                if(!bNullCheck){
                     MessageBox.show("자재명은 빈값일수 없습니다. ", {
                         icon: MessageBox.Icon.ERROR,
                         title: "입력값 확인",
@@ -842,48 +885,31 @@ sap.ui.define([
                     return;
                 }
 
-                //언어 값을 등록하지 않을때(텍스트)
-                //note : 보류.
-
-                var groupID = "pgmiGroup";
-                //var groupMode = "create";
-                var bUpdate = oUi.getProperty("/pageMode") == false ? true : false;  //true 수정, false 신규
-
-                //MIMaterialCodeText array
-                var arrTParameters = [];
-                var carrTParameters = [];
-                
-                if (bUpdate) {
-                   // groupID = "updateGroup";
-                    //자재 신규등록 과 업데이트 구분 
-                    //groupMode = "update";
-                }
-            
                 var mi_material_code_name,
                     oldLanguage_code,
                     newLanguage_code,
                     vMi_material_code_name = "";
 
-                //자재명 선 추득을 위한 테이블 작업 우선      
+                //자재명 선 취득을 위한 테이블 작업 우선      
                 //MIMaterialCodeText create, update,  delete
-                var bFalse = false;
+                var blanguageCheck = false;
                 var mIMaterialCodeText= this._m.serviceName.mIMaterialCodeText;
 
                 for (var idx = 0; idx < oTable.getItems().length; idx++) {
-
+      
                     var items = oTable.getItems()[idx],
-                        itemsOperationMode = items.getCells()[0].mProperties.text,
-                        language_code = items.getCells()[1].mProperties.selectedKey,
-                        mi_material_code_name = items.getCells()[2].mProperties.value,
+                        itemMode = items.getCells()[0].mProperties.text,
+                        language_code = items.getCells()[1].mAggregations.items[0].getSelectedKey(),
+                        mi_material_code_name = items.getCells()[2].mAggregations.items[0].getValue(),
                         newLanguage_code = language_code;
 
                     if(newLanguage_code==oldLanguage_code){
 
-                        bFalse = true;
+                        blanguageCheck = true;
 
                         MessageBox.show("Language Code는 유일 해야합니다.", {
                             icon: MessageBox.Icon.ERROR,
-                            title: "등록에 실패 하였습니다.",
+                            title: "수정에 실패 하였습니다.",
                             actions: [MessageBox.Action.OK],
                             styleClass: "sapUiSizeCompact"
                         });    
@@ -891,67 +917,98 @@ sap.ui.define([
                         break;  
                     }
 
-                    if(bFalse) return;
-
                     oldLanguage_code = newLanguage_code;
 
-                    //자재명 등록을위한 할당
+                    if(blanguageCheck) return;
+
+                    var updateTableItem = 0;
+                    var createTableItem = 0;
+                    var deleteTableItem = 0;
+                    var updateItem = 0;
+                    var createItem = 0;
+
+        
+
+                    //자재명 등록을위한 할당 - 대표  KO
                     if (newLanguage_code == "KO") {
                         vMi_material_code_name = mi_material_code_name;
                     }
-    
-                    //MIMaterialCodeList param
-                    if(itemsOperationMode=="C"){
 
-                        var cParameters = {
-                            "groupId": groupID,
+                    //MIMaterialCodeText db key : update delete 
+                    var oMIMaterialCodeKey = {
+                        tenant_id : oUiData.getProperty("/tenant_id"),
+                        company_code : oUiData.getProperty("/company_code"),
+                        org_type_code : oUiData.getProperty("/org_type_code"),
+                        org_code: oUiData.getProperty("/org_code"),
+                        mi_material_code: oUiData.getProperty("/mi_material_code"),
+                        language_code: language_code
+                    }
+
+                    var oMIMaterialCodeTextPath = oModel.createKey(
+                            this._m.serviceName.mIMaterialCodeText,
+                            oMIMaterialCodeKey
+                        );
+                    
+                    //MIMaterialCodeText 
+                    if(itemMode==this._m.itemMode.create){
+                        var oMIMaterialCodeTextParameters = {
+                            "groupId": this._m.groupID,
                             "properties": {
                                 "tenant_id": oUiData.getProperty("/tenant_id"),
                                 "company_code": oUiData.getProperty("/company_code"),
                                 "org_type_code": oUiData.getProperty("/org_type_code"),
                                 "org_code": oUiData.getProperty("/org_code"),
-                                "mi_material_code": input_mi_material_code.getValue(),
+                                "mi_material_code": oUiData.getProperty("/mi_material_code"),
                                 "language_code": language_code,
                                 "mi_material_code_name": mi_material_code_name,
                                 "local_create_dtm": new Date(),
                                 "local_update_dtm": new Date(),
-                                "create_user_id": "Admin",
-                                "update_user_id": "Admin",
+                                "create_user_id": this._sso.user.id,
+                                "update_user_id": this._sso.user.id,
                                 "system_create_dtm": new Date(),
                                 "system_update_dtm": new Date()
                             }
                         };
-
-                        oModel.createEntry(mIMaterialCodeText, cParameters);
-
+                        console.log(oMIMaterialCodeTextPath+"--createEntry");
+                        //debugger;
+                        oModel.createEntry(mIMaterialCodeText, oMIMaterialCodeTextParameters);
+                        createTableItem++;
                     }
 
                     //기존 게시물 업데이트를 위한 param 키 값은 제외 한다.
-                    if(itemsOperationMode=="R"){
+                    if(itemMode == this._m.itemMode.read || itemMode == this._m.itemMode.update){
                         
-                        var sServicePath = mIMaterialCodeText.oData[idx].__metadata.uri,
-                            arrS = sServicePath.split(SERVICENAME),
-                            sUrl = arrS[1];
-
-                        var tParameters = {
+                        var mIMaterialCodeTextParameters = {
                             "mi_material_code_name": mi_material_code_name,
                             "local_create_dtm": new Date(),
                             "local_update_dtm": new Date(),
-                            "create_user_id": "Admin",
-                            "update_user_id": "Admin",
+                            "create_user_id": this._sso.user.id,
+                            "update_user_id": this._sso.user.id,
                             "system_create_dtm": new Date(),
                             "system_update_dtm": new Date()
                         };
 
-                        oModel.update(sUrl, tParameters, { groupId: groupID });                
+                        console.log(oMIMaterialCodeTextPath+"--update");
+                        oModel.update(
+                            oMIMaterialCodeTextPath,
+                            mIMaterialCodeTextParameters, 
+                            { 
+                                groupId: this._m.groupID 
+                            }
+                        ); 
+                        updateTableItem++;               
                     }
 
-                    if(itemsOperationMode=="D"){
-                        var sServicePath = mIMaterialCodeText.oData[idx].__metadata.uri,
-                            arrS = sServicePath.split(SERVICENAME),
-                            sUrl = arrS[1];
+                    if(itemMode==this._m.itemMode.delete){
+                        console.log(oMIMaterialCodeTextPath+"--remove");
+                        oModel.remove(
+                            oMIMaterialCodeTextPath, 
+                            { 
+                                groupId: this._m.groupID 
+                            }
+                        );
 
-                        oModel.remove(sUrl, { groupId: groupID });
+                        deleteTableItem++;    
                     }
 
                     //신규자재명 할당을 위해 KO가 없다면 한건이라도 등록한다. 
@@ -964,67 +1021,80 @@ sap.ui.define([
                 //MIMaterialCodeList create, update
                 //MIMaterialCodeList(tenant_id='L2100',company_code='%2A',org_type_code='BU',
                 //org_code='BIZ00100',mi_material_code='NIC-001-01')",
-                var mimaterialEntirySetName=this._m.serviceName.mIMaterialCodeList;
-                if (bUpdate) {
 
-                    var uParameters = {
-                            "mi_material_code_name": vMi_material_code_name,
-                            "category_code": comboBoxCategory_code.getSelectedKey(),
-                            "category_name": comboBoxCategory_code.getValue(),
-                            "use_flag": switchUse_flag.getState(),
-                            "local_create_dtm": new Date(),
-                            "local_update_dtm": new Date(),
-                            "create_user_id": "Admin",
-                            "update_user_id": "Admin",
-                            "system_create_dtm": new Date(),
-                            "system_update_dtm": new Date()
+                //대표자재가 지정 및 변경될경우 -----------------------------------------
+
+                var oMIMaterialCodeList=this._m.serviceName.mIMaterialCodeList;
+                var oMIMaterialCodeListParameters;
+                //MIMaterialCodeList db key : update delete 
+                var oMIMaterialCodeListKey = {
+                    tenant_id : oUiData.getProperty("/tenant_id"),
+                    company_code : oUiData.getProperty("/company_code"),
+                    org_type_code : oUiData.getProperty("/org_type_code"),
+                    org_code: oUiData.getProperty("/org_code"),
+                    mi_material_code: oUiData.getProperty("/mi_material_code")
+                }
+
+                var oMIMaterialCodeListPath = oModel.createKey(
+                    this._m.serviceName.mIMaterialCodeList, 
+                    oMIMaterialCodeListKey
+                );
+
+                if (oUi.getProperty("editMode")) {
+                    console.log(oMIMaterialCodeListPath+"--editMode");    
+                    //"category_code": comboBoxCategory_code.getSelectedKey(),
+                    //"category_name": comboBoxCategory_name,
+                    oMIMaterialCodeListParameters = {
+                        "mi_material_code_name": vMi_material_code_name,
+                        "use_flag": switchUse_flag.getState(),
+                        "local_create_dtm": new Date(),
+                        "local_update_dtm": new Date(),
+                        "create_user_id": "Admin",
+                        "update_user_id": "Admin",
+                        "system_create_dtm": new Date(),
+                        "system_update_dtm": new Date()
                     };
+                    console.log(oMIMaterialCodeListPath+"--update");
+                    oModel.update(oMIMaterialCodeListPath, 
+                        oMIMaterialCodeListParameters, { 
+                            groupId: this._m.groupID 
+                        }
+                    );  
 
-                    var sUrl = mimaterialEntirySetName + "(";                    
-                    sUrl = sUrl.concat("tenant_id='"+oUiData.getProperty("/tenant_id")+"'");
-                    sUrl = sUrl.concat(",company_code='"+oUiData.getProperty("/company_code")+"'");
-                    sUrl = sUrl.concat(",org_type_code='"+oUiData.getProperty("/org_type_code")+"'");
-                    sUrl = sUrl.concat(",org_code='"+oUiData.getProperty("/org_code")+"'");
-                    sUrl = sUrl.concat(",mi_material_code='"+oUiData.getProperty("/mi_material_code")+"')");
-                    //sUrl = sUrl.concat(",use_flag='"+oUiData.getProperty("/use_flag")+"')");
-
-                    console.log("sUrl : ", sUrl);
-                    oModel.update(sUrl, uParameters, { groupId: groupID });  
-///MIMaterialCodeList(tenant_id='L2100',company_code='*',org_type_code='BU',org_code='BIZ00100',mi_material_code='NIC-001-01',use_flag='true')
-                }else{
+                }else if (oUi.getProperty("createMode")){
          
                     if(vMi_material_code_name==""){
-                            vMi_material_code_name = mi_material_code_name;
+                        vMi_material_code_name = mi_material_code_name;
                     }
                     
-                    var mParameters = {
-                        "groupId": groupID,
+                    oMIMaterialCodeListParameters = {
+                        "groupId": this._m.groupID ,
                         "properties": {
                             "tenant_id": oUiData.getProperty("/tenant_id"),
                             "company_code": oUiData.getProperty("/company_code"),
                             "org_type_code": oUiData.getProperty("/org_type_code"),
                             "org_code": oUiData.getProperty("/org_code"),
-                            "mi_material_code": input_mi_material_code.getValue(),
+                            "mi_material_code": input_mi_material_code,
                             "mi_material_code_name": vMi_material_code_name,
-                            "category_code": comboBoxCategory_code.getSelectedKey(),
-                            "category_name": comboBoxCategory_code.getValue(),
-                            "use_flag": switchUse_flag.getState(),
+                            "category_code": comboBoxCategory_code,
+                            "category_name": comboBoxCategory_name,
+                            "use_flag": switchUse_flag,
                             "local_create_dtm": new Date(),
                             "local_update_dtm": new Date(),
-                            "create_user_id": "Admin",
-                            "update_user_id": "Admin",
+                            "create_user_id": this._sso.user.id,
+                            "update_user_id": this._sso.user.id,
                             "system_create_dtm": new Date(),
                             "system_update_dtm": new Date()
                         }
                     };
 
-                    oModel.createEntry(mimaterialEntirySetName, mParameters);
+                    oModel.createEntry(oMIMaterialCodeList, oMIMaterialCodeListParameters);
                 }
                 
                 //에러확인 최종에 실행
                 oModel.setUseBatch(true);
                 oModel.submitChanges({
-                    groupId: groupID,
+                    groupId: this._m.groupID,
                     success: this._handleCreateSuccess.bind(this),
                     error: this._handleCreateError.bind(this)
                 });

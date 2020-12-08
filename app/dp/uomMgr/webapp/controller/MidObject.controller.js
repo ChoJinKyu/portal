@@ -203,14 +203,17 @@ sap.ui.define([
 		 * @public
 		 */
         onPageSaveButtonPress: function(){
-			var oView = this.getView(),
+            var oView = this.getView(),
+                oMasterModel = this.getModel("master"),
                 oDetailsModel = this.getModel("details"),
                 that = this;
-            // 폼의 변경은 어떻게 체크를 해야할까
-            // if(!oDetailsModel.isChanged()) {
-			// 	MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
-			// 	return;
-            // }
+
+            if (this._sTenantId !== "new"){
+                if(!oMasterModel.isChanged() && !oDetailsModel.isChanged()) {
+                    MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
+                    return;
+                }
+            }
                 
             if(this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
             if(this.validator.validate(this.byId("midTable")) !== true) return;

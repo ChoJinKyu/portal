@@ -84,9 +84,6 @@ sap.ui.define([
 
       this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
 
-    console.log("onInit=====master" , this.getModel("master"));
-      console.log("onInit=====details", this.getModel("details"));
-
       this._initTableTemplates();
       this.enableMessagePopover();
     },
@@ -102,8 +99,7 @@ sap.ui.define([
       var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
       this.getRouter().navTo("midPage", {
         layout: sNextLayout,
-        tenantId: this._sTenantId,
-        controlOptionCode: this._sControlOptionCode
+        userId: this._sUserId
       });
     },
 		/**
@@ -114,8 +110,7 @@ sap.ui.define([
       var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
       this.getRouter().navTo("midPage", {
         layout: sNextLayout,
-        tenantId: this._sTenantId,
-        controlOptionCode: this._sControlOptionCode
+        userId: this._sUserId
       });
     },
 		/**
@@ -144,8 +139,6 @@ sap.ui.define([
         oMasterModel = this.getModel("master"),
         that = this;
         
-        console.log("onPageDeleteButtonPress=====", oMasterModel);
-
       MessageBox.confirm("Are you sure to delete this control option and details?", {
         title: "Comfirmation",
         initialFocus: sap.m.MessageBox.Action.CANCEL,
@@ -201,14 +194,14 @@ sap.ui.define([
       });
 
       oDetailsModel.addRecord({
+        "tenant_id": "L2100",
+        "user_id": this._sUserId || "",
         "role_group_code": "",
         "start_date": new Date(),
         "end_date": new Date(),
         "local_create_dtm": new Date(),
         "local_update_dtm": new Date()
       }, 0);
-
-      console.log("onMidTableAddButtonPress============" , oDetailsModel);
 
     },
 
@@ -217,9 +210,6 @@ sap.ui.define([
       var table = this.byId(tId);
       var model = this.getView().getModel(mName);
  
-      console.log("onMidTableDeleteButtonPress=============table", table);
-      console.log("onMidTableDeleteButtonPress=============model", model);
-
       table
         .getSelectedItems()
         .map(item => model.getData()[sEntity].indexOf(item.getBindingContext("details").getObject()))
@@ -245,6 +235,7 @@ sap.ui.define([
         console.log("onPageSaveButtonPress>>> master", master.getData());
         console.log("onPageSaveButtonPress>>> detail", detail.getData());
 
+        master.getData()["user_name"] = master.getData()["employee_name"];
       // Validation
       if (!master.getData()["user_id"]) {
         MessageBox.alert("사용자ID를 입력하세요.");
@@ -279,16 +270,20 @@ sap.ui.define([
         return;
       }
 
-    //   if (master.getData()["_state_"] != "C" && detail.getChanges() <= 0) {
-    //     MessageBox.alert("변경사항이 없습니다.");
-    //     return;
-    //   }
+      this._onMasterDataChanged();
 
+      if (master.getData()["_state_"] != "U") {
+        if (master.getData()["_state_"] != "C" && detail.getChanges() <= 0) {
+            MessageBox.alert("변경사항이 없습니다.");
+            return;
+        }
+      }
+      
       //Set Details (New)
       if (master.getData()["_state_"] == "C") {
         detail.getData()["UserRoleGroupMgr"].map(r => {
-          r["user_id"] = master.getData()["user_id"];
-          return r;
+            r["user_id"] = master.getData()["user_id"];
+            return r;
         });
       }
 
@@ -329,7 +324,6 @@ sap.ui.define([
               new Filter("user_id", FilterOperator.EQ, this._sUserId)
             ],
             success: function (oData) {
-                console.log("onPageCancelEditButtonPress========", oData);
             }
           });
       }
@@ -340,14 +334,14 @@ sap.ui.define([
     /* =========================================================== */
 
     _onMasterDataChanged: function (oEvent) {
-      if (this.getModel("midObjectView").getProperty("/isAddedMode") == true) {
+      if (this.getModel("midObjectView").getProperty("/isAddedMode") == false) {    // 원래true
         var oMasterModel = this.getModel("master");
         var oDetailsModel = this.getModel("details");
         var sUserId = oMasterModel.getProperty("/user_id");
-        var oDetailsData = oDetailsModel.getData();
-        debugger;
+        var oDetailsData = oDetailsModel.getData().UserRoleGroupMgr;
+ 
         oDetailsData.forEach(function (oItem, nIndex) {
-          oDetailsModel.setProperty("/" + nIndex + "/user_id", sUserId);
+            oDetailsModel.setProperty("/" + nIndex + "/user_id", sUserId);
         });
         oDetailsModel.setData(oDetailsData);
       }
@@ -362,14 +356,14 @@ sap.ui.define([
       var oArgs = oEvent.getParameter("arguments"),
         oView = this.getView();
       this._sUserId = oArgs.userId;
-      if (oArgs.userId == "new") {
+      if (oArgs.userId == "ID") {
         //It comes Add button pressed from the before page.
         this.getModel("midObjectView").setProperty("/isAddedMode", true);
 
         var oMasterModel = this.getModel("master");
         oMasterModel.setData({
             "user_id": "",
-            "user_name": "Admin2",
+            "user_name": "",
             "employee_number": "",
             "employee_name": "",
             "english_employee_name": "",
@@ -406,11 +400,11 @@ sap.ui.define([
       else {
         this.getModel("midObjectView").setProperty("/isAddedMode", false);
 
-        this._bindView("/UserMgr(user_id='" + this._sUserId + "')");
+        this._bindView("/UserMgr('" + this._sUserId + "')");
         oView.setBusy(true);
         var oDetailsModel = this.getModel("details");
         oDetailsModel.setTransactionModel(this.getModel());
-        oDetailsModel.read("/UserRoleGroupMgr", {
+        oDetailsModel.read("/UserRoleGroupMgr", {   
           filters: [
             new Filter("user_id", FilterOperator.EQ, this._sUserId)
           ],
@@ -477,12 +471,6 @@ sap.ui.define([
           }),
           new ObjectIdentifier({
             text: "{details>role_group_code}"
-          }),
-          new ObjectIdentifier({
-            text: "{details>start_date}"
-          }),
-          new Text({
-            text: "{details>end_date}"
           })
         ],
         type: sap.m.ListType.Inactive
@@ -494,7 +482,7 @@ sap.ui.define([
             text: "{details>_row_state_}"
           }),
 
-          // 제어옵션레벨코드
+          // 역할그룹코드
           new ComboBox({
             selectedKey: "{details>role_group_code}",
             items: {
@@ -509,62 +497,6 @@ sap.ui.define([
               })
             },
             editable: "{= ${details>_row_state_} === 'C' }",
-            required: true
-          }),
-
-          (function (level) {
-            //console.log(">>>>> level", level);
-            if (level == "T") {
-              // 조직유형
-              return new ComboBox({
-                selectedKey: "{details>org_type_code}",
-                items: {
-                  path: 'util>/CodeDetails',
-                  filters: [
-                    new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
-                    new Filter("group_code", FilterOperator.EQ, 'CM_ORG_TYPE_CODE')
-                  ],
-                  template: new Item({
-                    key: "{util>code}",
-                    text: "{= ${util>code} + ':' + ${util>code_description}}"
-                  })
-                },
-                editable: "{= ${details>_row_state_} === 'C' }",
-                display: "none",
-                required: true
-              })
-            }
-            else {
-              new Input({
-                value: {
-                  path: "details>control_option_level_val",
-                  type: new sap.ui.model.type.String(null, {
-                    maxLength: 100
-                  }),
-                },
-                editable: "{= ${details>_row_state_} === 'C' }",
-                required: true
-              })
-            }
-          })("{= ${details>control_option_level_code}}"),
-
-          new Input({
-            value: {
-              path: "details>control_option_level_val",
-              type: new sap.ui.model.type.String(null, {
-                maxLength: 100
-              }),
-            },
-            editable: "{= ${details>_row_state_} === 'C' }",
-            required: true
-          }),
-          new Input({
-            value: {
-              path: "details>control_option_val",
-              type: new sap.ui.model.type.String(null, {
-                maxLength: 100
-              })
-            },
             required: true
           })
         ]

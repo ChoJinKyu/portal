@@ -178,6 +178,12 @@
                                 </OverflowToolbar>
                             </table:extension>                             
                             <table:columns>
+                                <table:Column id="moldIdColumn" width="10em" >
+                                    <Label text="Mold ID"/>
+                                    <table:template>
+                                        <Text id="moldId" text="{appDetail>mold_id}"/>
+                                    </table:template>
+                                </table:Column>
                                 <table:Column id="moldModelColumn" width="15em" >
                                     <Label text="Model"/>
                                     <table:template>

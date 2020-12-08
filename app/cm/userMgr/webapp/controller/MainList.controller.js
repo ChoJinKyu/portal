@@ -118,7 +118,7 @@ sap.ui.define([
       var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
       this.getRouter().navTo("midPage", {
         layout: oNextUIState.layout,
-        userId: "new",
+        userId: "ID",
         "?query": {
           //param1: "1111111111"
         }
