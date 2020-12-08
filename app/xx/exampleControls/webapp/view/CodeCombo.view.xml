@@ -16,7 +16,7 @@
                     <form:content>
                         <VBox>
                             <Label text="Input (Code): "></Label>
-                            <lib-m:CodeInput id="searchCodeInput"
+                            <lib-m:CodePicker id="searchCodePicker"
                                 placeholder="Enter a code name"
                                 suggestionItems="{
                                     path: '/',
@@ -27,7 +27,8 @@
                                     serviceName: 'cm.util.CommonService',
                                     entityName: 'Code'
                                 }">
-                            </lib-m:CodeInput>
+                                <lib-m:CodePickerValueHelp />
+                            </lib-m:CodePicker>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M5 S10" />
                             </layoutData>
