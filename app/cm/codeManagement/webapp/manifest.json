@@ -76,6 +76,7 @@
     "sap.ui5": {
         "config" : {"fullWidth": true},
         "flexEnabled": false,
+        "handleValidation": true,
         "rootView": {
             "viewName": "cm.codeManagement.view.App",
             "type": "XML",

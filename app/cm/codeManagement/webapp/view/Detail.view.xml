@@ -68,6 +68,7 @@
                                             required="{contModel>/detail/createMode}"
                                             value="{viewModel>/detail/group_code}"
                                             visible="{contModel>/detail/createMode}"
+                                            maxLength="{= parseInt(${/#CodeMasters/group_code/@maxLength})}"
                                             fieldGroupIds="requiredField">
                                         </m:Input>
                                         <m:layoutData>
@@ -86,6 +87,7 @@
                                         <m:Input
                                             id="group_name"
                                             value="{viewModel>/detail/group_name}"
+                                            maxLength="{= parseInt(${/#CodeMasters/group_name/@maxLength})}"
                                             visible="{contModel>/detail/editMode}">
                                         </m:Input>
                                         <m:layoutData>
@@ -105,6 +107,7 @@
                                             id="group_description"
                                             visible="{contModel>/detail/editMode}"
                                             value="{viewModel>/detail/group_description}"
+                                            maxLength="{= parseInt(${/#CodeMasters/group_description/@maxLength})}"
                                             placeholder="">
                                         </m:Input>
                                         <m:layoutData>
@@ -168,7 +171,7 @@
                                             colorScheme="7" 
                                             displayOnly= "true" />
                                         <tnt:InfoLabel 
-                                            text="false" 
+                                            text="False" 
                                             visible="{= (${contModel>/detail/readMode} &amp;&amp; !${viewModel>/detail/use_flag}) ? true : false}"
                                             renderMode="Narrow" 
                                             colorScheme="5" 

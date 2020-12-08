@@ -30,11 +30,9 @@
                 </heading>
 
                 <navigationActions>
-                    <!-- 
-                    <m:OverflowToolbarButton type="Transparent" icon="sap-icon://full-screen" press="handleFullScreen" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
-                    <m:OverflowToolbarButton type="Transparent" icon="sap-icon://exit-full-screen" press="handleExitFullScreen" tooltip="Exit Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
-                     -->
-                    <m:OverflowToolbarButton type="Transparent" icon="sap-icon://decline" press="handleClose"  tooltip="Close column" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                    <m:OverflowToolbarButton type="Transparent" icon="sap-icon://full-screen" press="handleFullScreen" tooltip="Enter Full Screen Mode" visible="{contModel>/detailDetail/visibleFullScreenBtn}"/>
+                    <m:OverflowToolbarButton type="Transparent" icon="sap-icon://exit-full-screen" press="handleExitFullScreen" tooltip="Exit Full Screen Mode" visible="{= !${contModel>/detailDetail/visibleFullScreenBtn}}"/>
+                    <m:OverflowToolbarButton type="Transparent" icon="sap-icon://decline" press="handleClose"  tooltip="Close column"/>
                 </navigationActions>
 
             </ObjectPageDynamicHeaderTitle>
@@ -70,6 +68,7 @@
                                             required="{contModel>/detailDetail/createMode}"
                                             placeholder="필수"
                                             value="{viewModel>/detailDetail/code}"
+                                            maxLength="{= parseInt(${/#CodeDetails/code/@maxLength})}"
                                             visible="{contModel>/detailDetail/createMode}"
                                             fieldGroupIds="requiredField">
                                         </m:Input>
@@ -89,6 +88,7 @@
                                         <m:Input
                                             id="code_description"
                                             value="{viewModel>/detailDetail/code_description}"
+                                            maxLength="{= parseInt(${/#CodeDetails/code_description/@maxLength})}"
                                             visible="{contModel>/detailDetail/editMode}">
                                         </m:Input>
                                         <m:layoutData>
@@ -155,6 +155,7 @@
                                             text="{viewModel>/detailDetail/sort_no}">
                                         </m:Text>
                                         <m:Input
+                                            type="Number"
                                             id="sort_no"
                                             visible="{contModel>/detailDetail/editMode}"
                                             value="{viewModel>/detailDetail/sort_no}">
@@ -175,6 +176,7 @@
                                         <m:Input
                                             id="parent_group_code"
                                             value="{viewModel>/detailDetail/parent_group_code}"
+                                            maxLength="{= parseInt(${/#CodeDetails/parent_group_code/@maxLength})}"
                                             visible="{contModel>/detailDetail/editMode}">
                                         </m:Input>
                                         <m:layoutData>
@@ -193,6 +195,7 @@
                                         <m:Input
                                             id="parent_code"
                                             value="{viewModel>/detailDetail/parent_code}"
+                                            maxLength="{= parseInt(${/#CodeDetails/parent_code/@maxLength})}"
                                             visible="{contModel>/detailDetail/editMode}">
                                         </m:Input>
                                         <m:layoutData>
@@ -211,6 +214,7 @@
                                         <m:Input
                                             id="remark"
                                             value="{viewModel>/detailDetail/remark}"
+                                            maxLength="{= parseInt(${/#CodeDetails/remark/@maxLength})}"
                                             visible="{contModel>/detailDetail/editMode}">
                                         </m:Input>
                                         <m:layoutData>
@@ -228,7 +232,7 @@
 
 			<ObjectPageSection 
                 titleUppercase="false" 
-                title="다국어 ({= (${viewModel>/CodeLanguages})?${viewModel>/CodeLanguages}.length:0})">
+                title="다국어 ({= (${languages>/CodeLanguages})?${languages>/CodeLanguages}.length:0})">
 				<subSections>
 					<ObjectPageSubSection>
 						<blocks>
@@ -257,7 +261,9 @@
                                     </m:Toolbar>
                                 </m:headerToolbar>
                                 <m:columns>
-                                    <m:Column width="3em">
+                                    <m:Column 
+                                        visible="{contModel>/detailDetail/editMode}"
+                                        width="3em">
                                         <m:Text text="S"/>
                                     </m:Column>
                                     <m:Column>
@@ -299,6 +305,7 @@
                                                     text="{languages>code_name}" />
                                                 <m:Input
                                                     visible="{contModel>/detailDetail/editMode}"
+                                                    maxLength="{= parseInt(${/#CodeLanguages/code_name/@maxLength})}"
                                                     value="{languages>code_name}" />
                                             </m:HBox>
                                         </m:cells>
