@@ -272,23 +272,33 @@ sap.ui.define([
              });
 
                 /**
-                 *             this.getView().setModel(new ManagedListModel(), "appDetail");
-            this.getView().setModel(new ManagedListModel(), "MoldMasters");
-            this.getView().setModel(new ManagedListModel(), "Approvers");
+                 *   
+                 * 
+                 * this.getView().setModel(new ManagedModel(), "appMaster");
+            this.getView().setModel(new ManagedListModel(), "appDetail");
+            this.getView().setModel(new ManagedListModel(), "MoldMasterList");
+            this.getView().setModel(new ManagedListModel(), "Approvers"); 
                  */
-
-            this._bindView( "/Approver" , "Approvers", schFilter, function (oData) {
-                console.log("Approver >>>> ", oData);
-            });
-
+            this._bindView("/Approver", "Approvers", schFilter, function (oData) {
+                 console.log("Approver >>>> ", oData);
+            });    
             var sResult = {};
 
             this._bindView("/ItemBudgetExecution", "moldList", schFilter, function (oData) {
-                sResult = oData.results[0];  
+                sResult = oData.results[0];
                 that._createViewBindData(sResult); // comapny , plant 조회 
+                that._bindView("/ApprovalDetails", "appDetail", schFilter, function (oData) { 
+                    that._bindView("/MoldMasters", "MoldMasterList", [
+                        new Filter("company_code", FilterOperator.EQ, sResult.company_code)
+                        , new Filter("org_code", FilterOperator.EQ, sResult.org_code)
+                    ], function (oData) {
+                        console.log("MoldMasters >>>> ", oData);
+                    });
+                });
+
             });
 
-           
+            oTransactionManager.setServiceModel(this.getModel());
         },
 
         /**
@@ -1008,16 +1018,7 @@ sap.ui.define([
          */
         onPageDraftButtonPress: function () {
            console.log("this.getModel moldList >> " , this.getModel('moldList'));
-            //   console.log("//// " , this.getView().getId('approval_title').getValue());
 
-            //   this.getModel('appMaster').setProperty('/approval_title', this.getView().getId('approval_title').value);
-
-            /**
-            this.getView().setModel(new ManagedModel(), "appMaster");
-            this.getView().setModel(new ManagedListModel(), "appDetail");
-            this.getView().setModel(new ManagedListModel(), "MoldMasterList");
-            this.getView().setModel(new ManagedListModel(), "Approvers");
-             */
             var oData = this.getModel('moldList').getProperty("/ItemBudgetExecution");
          
            
@@ -1032,8 +1033,6 @@ sap.ui.define([
                     isOk = true;
                 }
             }
-
-             oTransactionManager.setServiceModel(this.getModel());
             console.log(" oTransactionManager ", oTransactionManager);
             
             if(isOk){
