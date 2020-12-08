@@ -10,7 +10,7 @@ service ParticipatingSupplierSelectionApprovalService {
 
     entity ApprovalMasters as projection on approvalMst.Approval_Mst;
     entity ApprovalDetails as projection on approvalDtl.Md_Approval_Dtl; 
-    entity Approver as projection on approver.Approver;   
+    entity Approver as projection on approver.Approver; 
 
 }
 
