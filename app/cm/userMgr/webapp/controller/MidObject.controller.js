@@ -84,6 +84,9 @@ sap.ui.define([
 
       this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
 
+    console.log("onInit=====master" , this.getModel("master"));
+      console.log("onInit=====details", this.getModel("details"));
+
       this._initTableTemplates();
       this.enableMessagePopover();
     },
@@ -140,6 +143,9 @@ sap.ui.define([
       var oView = this.getView(),
         oMasterModel = this.getModel("master"),
         that = this;
+        
+        console.log("onPageDeleteButtonPress=====", oMasterModel);
+
       MessageBox.confirm("Are you sure to delete this control option and details?", {
         title: "Comfirmation",
         initialFocus: sap.m.MessageBox.Action.CANCEL,
@@ -195,64 +201,34 @@ sap.ui.define([
       });
 
       oDetailsModel.addRecord({
-        "user_id": "",
-        "user_name": "",
-        "employee_number": "",
-        "employee_name": "",
-        "english_employee_name": "",
-        "email": "",
+        "role_group_code": "",
         "start_date": new Date(),
         "end_date": new Date(),
-        "tenant_id": "",
-        "company_code": "",
-        "language_code": "",
-        "timezone_code": "",
-        "date_format_type_code": "",
-        "digits_format_type_code": "",
-        "currency_code": "",
         "local_create_dtm": new Date(),
-        "local_update_dtm": new Date(),
-        "employee_status_code": "C",
-        "use_flag": "true",
-        "password": ""
+        "local_update_dtm": new Date()
       }, 0);
+
+      console.log("onMidTableAddButtonPress============" , oDetailsModel);
 
     },
 
     onMidTableDeleteButtonPress: function () {
-      // var oTable = this.byId("midTable"),
-      //   oModel = this.getModel("details"),
-      //   aItems = oTable.getSelectedItems(),
-      //   aIndices = [];
-      // aItems.forEach(function (oItem) {
-      //   console.log(
-      //     ">>>>> getData", oModel.getData()["ControlOptionDetails"],
-      //     ">>>>> getData - details", oItem.getBindingContext("details"),
-      //     ">>>>> getData - item", oItem.getBindingContext(),
-      //     oItem.getBindingContext("details").getObject());
-      //   aIndices.push(oModel.getData()["ControlOptionDetails"].indexOf(oItem.getBindingContext("details").getObject()));
-      // });
-      // aIndices = aIndices.sort(function (a, b) { return b - a; });
-      // aIndices.forEach(function (nIndex) {
-      //   oModel.markRemoved(nIndex);
-      // });
-      // oTable.removeSelections(true);
-
       var [tId, mName, sEntity] = arguments;
       var table = this.byId(tId);
       var model = this.getView().getModel(mName);
-      //debugger;
+ 
+      console.log("onMidTableDeleteButtonPress=============table", table);
+      console.log("onMidTableDeleteButtonPress=============model", model);
+
       table
         .getSelectedItems()
         .map(item => model.getData()[sEntity].indexOf(item.getBindingContext("details").getObject()))
-        //.getSelectedIndices()
         .reverse()
         // 삭제
         .forEach(function (idx) {
           model.markRemoved(idx);
         });
       table
-        //.clearSelection()
         .removeSelections(true);
     },
 
@@ -266,8 +242,8 @@ sap.ui.define([
         detail = view.getModel("details"),
         that = this;
 
-        console.log(">>> master", master.getData());
-        console.log(">>> detail", detail.getData());
+        console.log("onPageSaveButtonPress>>> master", master.getData());
+        console.log("onPageSaveButtonPress>>> detail", detail.getData());
 
       // Validation
       if (!master.getData()["user_id"]) {
@@ -303,17 +279,18 @@ sap.ui.define([
         return;
       }
 
-      if (master.getData()["_state_"] != "C" && detail.getChanges() <= 0) {
-        MessageBox.alert("변경사항이 없습니다.");
-        return;
-      }
-      // Set Details (New)
-    //   if (master.getData()["_state_"] == "C") {
-    //     detail.getData()["UserMgr"].map(r => {
-    //       r["user_id"] = master.getData()["user_id"];
-    //       return r;
-    //     });
+    //   if (master.getData()["_state_"] != "C" && detail.getChanges() <= 0) {
+    //     MessageBox.alert("변경사항이 없습니다.");
+    //     return;
     //   }
+
+      //Set Details (New)
+      if (master.getData()["_state_"] == "C") {
+        detail.getData()["UserRoleGroupMgr"].map(r => {
+          r["user_id"] = master.getData()["user_id"];
+          return r;
+        });
+      }
 
       MessageBox.confirm("Are you sure ?", {
         title: "Comfirmation",
@@ -352,6 +329,7 @@ sap.ui.define([
               new Filter("user_id", FilterOperator.EQ, this._sUserId)
             ],
             success: function (oData) {
+                console.log("onPageCancelEditButtonPress========", oData);
             }
           });
       }
@@ -367,6 +345,7 @@ sap.ui.define([
         var oDetailsModel = this.getModel("details");
         var sUserId = oMasterModel.getProperty("/user_id");
         var oDetailsData = oDetailsModel.getData();
+        debugger;
         oDetailsData.forEach(function (oItem, nIndex) {
           oDetailsModel.setProperty("/" + nIndex + "/user_id", sUserId);
         });
@@ -390,7 +369,7 @@ sap.ui.define([
         var oMasterModel = this.getModel("master");
         oMasterModel.setData({
             "user_id": "",
-            "user_name": "",
+            "user_name": "Admin2",
             "employee_number": "",
             "employee_name": "",
             "english_employee_name": "",
@@ -404,11 +383,11 @@ sap.ui.define([
             "date_format_type_code": "",
             "digits_format_type_code": "",
             "currency_code": "",
-            "local_create_dtm": new Date(),
-            "local_update_dtm": new Date(),
             "employee_status_code": "C",
-            "use_flag": "true",
-            "password": ""
+            "use_flag": true,
+            "password": "",
+            "local_create_dtm": new Date(),
+            "local_update_dtm": new Date()
         }, "/UserMgr", 0);
 
         var oDetailsModel = this.getModel("details");
@@ -418,31 +397,16 @@ sap.ui.define([
             new Filter("user_id", FilterOperator.EQ, this._sUserId)
           ],
           success: function (oData) {
-            //console.log("##### ", oData, oDetailsModel);
+            console.log("_onRoutedThisPage new ##### ", oData, oDetailsModel);
           }
         });
-
-        // var oDetailsModel = this.getModel("details");
-        // oDetailsModel.setTransactionModel(this.getModel());
-        // oDetailsModel.addRecord({
-        //   "tenant_id": "",
-        //   "control_option_code": "",
-        //   "control_option_level_code": "",
-        //   "org_type_code": "",
-        //   "control_option_level_val": "",
-        //   "control_option_val": "",
-        //   "start_date": new Date(),
-        //   "end_date": new Date(9999, 11, 31),
-        //   "local_create_dtm": new Date(),
-        //   "local_update_dtm": new Date()
-        // }, "/ControlOptionDetails", 0);
 
         this._toEditMode();
       }
       else {
         this.getModel("midObjectView").setProperty("/isAddedMode", false);
 
-        this._bindView("/UserRoleGroupMgr(user_id='" + this._sUserId + "')");
+        this._bindView("/UserMgr(user_id='" + this._sUserId + "')");
         oView.setBusy(true);
         var oDetailsModel = this.getModel("details");
         oDetailsModel.setTransactionModel(this.getModel());
@@ -451,6 +415,7 @@ sap.ui.define([
             new Filter("user_id", FilterOperator.EQ, this._sUserId)
           ],
           success: function (oData) {
+              console.log("_onRoutedThisPage newfalse ##### ", oData, oDetailsModel);
             oView.setBusy(false);
           }
         });
@@ -472,6 +437,7 @@ sap.ui.define([
       oMasterModel.setTransactionModel(this.getModel());
       oMasterModel.read(sObjectPath, {
         success: function (oData) {
+            console.log("_bindView======>" , oData);
           oView.setBusy(false);
         }
       });
@@ -488,8 +454,6 @@ sap.ui.define([
 
       this.byId("midTableAddButton").setEnabled(!FALSE);
       this.byId("midTableDeleteButton").setEnabled(!FALSE);
-      //this.byId("midTable").setMode(sap.m.ListMode.SingleSelectLeft);
-      //this._bindMidTable(this.oEditableTemplate, "Edit");
     },
 
     _toShowMode: function () {
@@ -503,8 +467,6 @@ sap.ui.define([
 
       this.byId("midTableAddButton").setEnabled(!TRUE);
       this.byId("midTableDeleteButton").setEnabled(!TRUE);
-      //this.byId("midTable").setMode(sap.m.ListMode.None);
-      //this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
     },
 
     _initTableTemplates: function () {
@@ -514,16 +476,13 @@ sap.ui.define([
             text: "{details>_row_state_}"
           }),
           new ObjectIdentifier({
-            text: "{details>control_option_code}"
+            text: "{details>role_group_code}"
           }),
           new ObjectIdentifier({
-            text: "{details>control_option_level_code}"
+            text: "{details>start_date}"
           }),
           new Text({
-            text: "{details>control_option_level_val}"
-          }),
-          new Text({
-            text: "{details>control_option_val}"
+            text: "{details>end_date}"
           })
         ],
         type: sap.m.ListType.Inactive
@@ -537,7 +496,7 @@ sap.ui.define([
 
           // 제어옵션레벨코드
           new ComboBox({
-            selectedKey: "{details>control_option_level_code}",
+            selectedKey: "{details>role_group_code}",
             items: {
               path: 'util>/CodeDetails',
               filters: [
@@ -552,25 +511,6 @@ sap.ui.define([
             editable: "{= ${details>_row_state_} === 'C' }",
             required: true
           }),
-
-          // // 조직유형
-          // new ComboBox({
-          //   selectedKey: "{details>org_type_code}",
-          //   items: {
-          //     path: 'util>/CodeDetails',
-          //     filters: [
-          //       new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
-          //       new Filter("group_code", FilterOperator.EQ, 'CM_ORG_TYPE_CODE')
-          //     ],
-          //     template: new Item({
-          //       key: "{util>code}",
-          //       text: "{= ${util>code} + ':' + ${util>code_description}}"
-          //     })
-          //   },
-          //   editable: "{= ${details>_row_state_} === 'C' }",
-          //   display: "none",
-          //   required: true
-          // }),
 
           (function (level) {
             //console.log(">>>>> level", level);
