@@ -28,7 +28,7 @@ entity Mm_Material_Desc_Con {
     source_system_code : String(30)   @title: '소스시스템코드' ;	
     material_code : String(40)   @title: '자재코드' ;	
     language_code : String(4)   @title: '언어코드' ;	
-    material_description : String(300)   @title: '자재설명' ;	
+    material_desc : String(300)   @title: '자재설명' ;	
 }
 
 extend Mm_Material_Desc_Con with util.Managed;
