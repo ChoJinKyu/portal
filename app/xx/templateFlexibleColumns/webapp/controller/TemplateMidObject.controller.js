@@ -176,9 +176,16 @@ sap.ui.define([
 		 * @public
 		 */
         onPageSaveButtonPress: function(){
-			var oView = this.getView(),
+            var oView = this.getView(),
+                oMasterModel = this.getModel("master"),
+                oDetailsModel = this.getModel("details"),
                 that = this;
                 
+			if(!oMasterModel.isChanged() && !oDetailsModel.isChanged()) {
+				MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
+				return;
+            }
+
             if(this.validator.validate(this.byId("page")) !== true) return;
 
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {

@@ -134,16 +134,23 @@ sap.ui.define([
 
             }            
         },
+        _imsiData : {
+            material_code : "ERCA00006AB",
+            material_description : "ERCA00006AB",
+            supplier_code : "KR00002600",
+            supplier_local_name : "(주)네패스",
+            supplier_english_name : "Ne"
+        },
         _sso : { //수정대상 공통 사용자 정보 확인될시 //MaterialDialog
             user : {
                 id : "Admin",
                 name : "Hong Gil-dong"
             },
             dept : {
-                team_name : "구매팀",
-                team_code : "0000",
                 tenant_id : "L2100",
-                tenant_name : "LG 화확"  
+                company_code : "*",
+                org_type_code : "BU",
+                org_code : "BIZ00100"
             }          
         },
 
@@ -442,7 +449,7 @@ sap.ui.define([
                     filters: sFilters,
                     success: function (rData, reponse) {
     
-                        console.log(that._m.serviceName.enrollmentMaterialView +"-- json oData~~~~~~~" + JSON.stringify(reponse.data.results));
+                        //console.log(that._m.serviceName.enrollmentMaterialView +"-- json oData~~~~~~~" + JSON.stringify(reponse.data.results));
 
                         //가격정보 Vendor 자재코드 자재명 공급업체 공급업체명
                         oMaterialTableList.setData(reponse.data.results); 
@@ -936,6 +943,9 @@ sap.ui.define([
 
         },
 
+        /**
+         * 자재코드 검색후 
+         */
         onValueHelpMaterialDialogApply : function () {
             console.log("onValueHelpMaterialDialogApply");
             var oTable = this._findFragmentControlId(this._m.fragementId.materialDialog, "materialTable"),            
@@ -951,21 +961,47 @@ sap.ui.define([
                 );
                 return;
             }
-            debugger;
 
+            //다수 일수 있는 경우를 대비. 현재 한건. 
             for(var i=0;i<oSelected.length;i++){
 
                 var idx = parseInt(oSelected[0].sPath.substring(oSelected[0].sPath.lastIndexOf('/') + 1));
 
 
                 var odata = oModel.oData[idx];
-                //oModel.oData[idx].itemMode=this._m.itemMode.delete;
-                //oModel.oData[idx].itemMode=this._m.itemMode.delete;
 
+                //수정대상 알수 없는 자재코드 및 서플라이로 인하여 임시로 할당 
+                if(oModel.oData[idx].material_code.length>0){
+                    odata.material_code = oModel.oData[idx].material_code;
+                    odata.material_description = oModel.oData[idx].material_description;
+                    
+                } else {
+                    odata.material_code = this._m._imsiData.material_code;
+                    odata.material_description = this._m._imsiData.material_description;
+                }
+
+                if(oModel.oData[idx].material_code.length>0){
+                    odata.supplier_code = oModel.oData[idx].supplier_code;
+                    odata.supplier_local_name = oModel.oData[idx].supplier_local_name;
+                    odata.supplier_english_name = this._m._imsiData.supplier_english_name;
+                } else {
+                    odata.supplier_code = this._m._imsiData.supplier_code;
+                    odata.supplier_local_name = this._m._imsiData.supplier_local_name;
+                    odata.supplier_english_name = this._m._imsiData.supplier_english_name;
+                } 
+                
+
+				var oMultiInput = this.byId(this._m.input.inputMultiInput);
+
+                // if (aSelectedItems && aSelectedItems.length > 0) {
+                //     aSelectedItems.forEach(function (oItem) {
+                //         oMultiInput.addToken(new Token({
+                //             text: oItem.getTitle()
+                //         }));
+                //     });
+                // }
+                            
             }
-
-            
-            oTable.removeSelections();
 
             this.onMaterialDialog_close();
         },
@@ -993,39 +1029,39 @@ sap.ui.define([
             var oMidListModel = this.getOwnerComponent().getModel("midList"),
                 oRightTableModel = this.getOwnerComponent().getModel("mIMaterialCostInformationView");
             
-            var items = {
-                "tenant_id": this._m.filter.tenant_id,
-                "company_code": this._m.filter.company_code,
-                "org_type_code": this._m.filter.org_type_code,
-                "org_code": this._m.filter.org_code,
-                "material_code": this._m.filter.material_code,
-                "material_description": "니켈2",
-                "supplier_code": "KR00008",
-                "supplier_local_name": "이지금",
-                "supplier_english_name": "IU",
-                "base_quantity": "1",
-                "processing_cost": "45000",
-                "pcst_currency_unit": "JPY",
-                "mi_material_code": "COP-001-02",
-                "mi_material_code_name": "니켈2",
-                "category_code": "Non-Ferrous Metal",
-                "category_name": "비철금속",
-                "reqm_quantity_unit": "MT",
-                "reqm_quantity": "50",
-                "currency_unit": "USD", //currency_unit
-                "mi_base_reqm_quantity": "1",
-                "quantity_unit": "MT", //quantity_unit
-                "exchange": "Platts", //exchange
-                "termsdelv": "FOB KOR", //termsdelv
-                "use_flag": true,
-                "local_create_dtm": new Date(),
-                "local_update_dtm": new Date(),
-                "create_user_id": this._sso.user.id,
-                "update_user_id": this._sso.user.id,
-                "system_create_dtm": new Date(),
-                "system_update_dtm": new Date(),
-                "itemMode" : this._m.itemMode.create,
-                "odataMode" : this._m.odataMode.no
+             var items = {
+                "tenant_id": odata.tenant_id,
+                "company_code": odata.company_code,
+                "org_type_code": odata.org_type_code,
+                "org_code": odata.org_code,
+                "material_code": odata.material_code,
+                "material_description": odata.material_description,
+                "supplier_code": odata.supplier_code,
+                "supplier_local_name": odata.supplier_local_name,
+                "supplier_english_name": odata.supplier_english_name,
+                "base_quantity": odata.base_quantity,
+                "processing_cost": odata.material_description,
+                "pcst_currency_unit": odata.material_description,
+                "mi_material_code": odata.mi_material_code,
+                "mi_material_code_name": odata.mi_material_code_name,
+                "category_code": odata.category_code,
+                "category_name": odata.category_name,
+                "reqm_quantity_unit": odata.reqm_quantity_unit,
+                "reqm_quantity": odata.reqm_quantity,
+                "currency_unit": odata.currency_unit,
+                "mi_base_reqm_quantity": odata.mi_base_reqm_quantity,
+                "quantity_unit": odata.quantity_unit,
+                "exchange": odata.exchange,
+                "termsdelv": odata.termsdelv,
+                "use_flag": odata.use_flag,
+                "local_create_dtm": odata.local_create_dtm,
+                "local_update_dtm": odata.local_update_dtm,
+                "create_user_id": odata.create_user_id,
+                "update_user_id": odata.update_user_id,
+                "system_create_dtm": odata.system_create_dtm,
+                "system_update_dtm": odata.system_update_dtm,
+                "itemMode" : odata.itemMode,
+                "odataMode" : odata.odataMode
             };
 
             oMidListModel.oData.push(items);

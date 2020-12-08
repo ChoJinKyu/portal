@@ -174,7 +174,7 @@ sap.ui.define([
             this._onRoutedThisPage(oArgs);
         },
         _onRoutedThisPage: function (args) {
-            this._bindView("/ApprovalMasters('" + args.approval_number + "')", "appMaster", [], function (oData) { });
+            this._bindView("/ApprovalMasters(tenant_id='L1100',approval_number='" + args.approval_number + "')", "appMaster", [], function (oData) { });
             var schFilter = [new Filter("approval_number", FilterOperator.EQ, args.approval_number)];
 
             var sResult = {};

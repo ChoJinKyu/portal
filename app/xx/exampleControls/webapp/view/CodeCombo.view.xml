@@ -51,6 +51,24 @@
                                 <layout:GridData span="XL2 L3 M5 S10" />
                             </layoutData>
                         </VBox>
+                        <VBox>
+                            <Label text="Multi: "></Label>
+                            <MultiComboBox width="350px"
+                                items="{
+                                    path: 'util>/CodeDetails',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
+                                    ]
+                                }">
+                                <items>
+                                    <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+                                </items>
+                            </MultiComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M5 S10" />
+                            </layoutData>
+                        </VBox>
                         <FlexBox alignItems="End" justifyContent="End" class="searchBoxButtonArea">
                             <Button text="Search" type="Emphasized" press=".onSearchButtonPress"/>
                             <layoutData>

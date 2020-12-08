@@ -19,6 +19,18 @@ sap.ui.define([
             JSONModel.prototype.setData.call(this, oData, bMerge);
         },
 
+        isChanged: function () {
+            var oData = this.getObject("/");
+            return oData[STATE_COL] && oData[STATE_COL] != 'C' && oData[STATE_COL] != 'D';
+        },
+
+        setProperty: function(sPath, oValue, oContext, bAsyncUpdate){
+            var oData = this.getObject("/");
+            if(oData[STATE_COL] != 'C' && oData[STATE_COL] != 'D')
+                oData[STATE_COL] = 'U';
+            JSONModel.prototype.setProperty.call(this, sPath, oValue, oContext, bAsyncUpdate);
+        },
+
         removeData: function(){
             var oData = this.getObject("/");
             oData[STATE_COL] = "D";
