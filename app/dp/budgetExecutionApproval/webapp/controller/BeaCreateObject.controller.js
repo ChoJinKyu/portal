@@ -67,7 +67,7 @@ sap.ui.define([
             this.getView().setModel(new ManagedListModel(), "MoldItemSelect"); // MoldItemSelect 
             this.getView().setModel(new ManagedListModel(), "appList"); // apporval list 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
-            this.setModel(new ManagedListModel(), "moldList");
+            this.setModel(new ManagedListModel(), "moldList");  // view 임 
  
 
             this.getView().setModel(new ManagedModel(), "appMaster");
@@ -290,8 +290,10 @@ sap.ui.define([
                     });
 
                 });
-
+                 console.log("moldTest>>>> " , that.getModel("moldList") );
             });
+
+           
 
             oTransactionManager.setServiceModel(this.getModel());
         },
@@ -1034,13 +1036,15 @@ sap.ui.define([
             // }
 
             console.log(" oTransactionManager ", oTransactionManager);
+            console.log(" oTransactionManager oTransactionManager ", oTransactionManager.oServiceModel.oData);
+            console.log(" oTransactionManager oTransactionManager ", oTransactionManager.oServiceModel.oData["MoldMasters('578488')"]);
 
-            
+            oTransactionManager.oServiceModel.oData["MoldMasters('578488')"].asset_type_code = "I"
             // var sEntityName = oTransactionManager.getProperty("/entityName"),
             // aRecords = this.getProperty("/" + sEntityName);
             // console.log(" aRecords ", aRecords);
             
-                this.save();
+            this.save();
         
     
         },
