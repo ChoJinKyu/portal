@@ -23,7 +23,7 @@
             path: 'uomClass>/UomClass'
             }" editable="{midObjectView>/isAddedMode}" required="true"> 
             <items>
-                <core:Item key="{uomClass>uom_class_code}" text="{uomClass>uom_class_code}: {uomClass>uom_class_name}" />
+                <core:Item key="{uomClass>uom_class_code}" text="{uomClass>uom_class_name}" />
             </items>
         </ComboBox>
         <Label text="Base Unit"/>

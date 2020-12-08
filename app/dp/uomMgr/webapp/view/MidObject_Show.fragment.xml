@@ -14,10 +14,15 @@
         <Label text="Class" required="true"/>
         <Text text="{master>/uom_class_code}"/>
         <Label text="Base Unit"/>
-		<Text text="{
+		<!-- <Text text="{
 				path: 'master>/base_unit_flag',
 				formatter: '.formatter.toYesNo'
-			}"/>
+			}"/> -->
+        <Switch state="{master>/base_unit_flag}" customTextOn="Yes" customTextOff="No" enabled="false">
+            <layoutData>
+                <FlexItemData growFactor="1" />
+            </layoutData>
+		</Switch>
         <Label text="Description"/>
         <Text text="{master>/uom_description}"/>
         <Label text="Disable Date"/>
