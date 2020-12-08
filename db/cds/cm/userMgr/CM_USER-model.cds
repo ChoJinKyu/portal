@@ -22,3 +22,5 @@ entity User {
     end_date : Date not null @title: '종료일자';
     use_flag : Boolean  not null @title: '사용여부';
 }
+
+extend User with util.Managed;

@@ -195,16 +195,26 @@ sap.ui.define([
       });
 
       oDetailsModel.addRecord({
-        "tenant_id": this._sTenantId || "",
-        "control_option_code": this._sControlOptionCode || "",
-        // "control_option_level_code": "",
-        "org_type_code": "*",
-        // "control_option_level_val": "",
-        // "control_option_val": "",
-        "start_date": utc(new Date()),
-        "end_date": utc(new Date()),
-        "local_create_dtm": utc(new Date()),
-        "local_update_dtm": utc(new Date())
+        "user_id": "",
+        "user_name": "",
+        "employee_number": "",
+        "employee_name": "",
+        "english_employee_name": "",
+        "email": "",
+        "start_date": new Date(),
+        "end_date": new Date(),
+        "tenant_id": "",
+        "company_code": "",
+        "language_code": "",
+        "timezone_code": "",
+        "date_format_type_code": "",
+        "digits_format_type_code": "",
+        "currency_code": "",
+        "local_create_dtm": new Date(),
+        "local_update_dtm": new Date(),
+        "employee_status_code": "C",
+        "use_flag": "true",
+        "password": ""
       }, 0);
 
     },
@@ -256,37 +266,54 @@ sap.ui.define([
         detail = view.getModel("details"),
         that = this;
 
-      console.log(">>> detail", detail.getData());
+        console.log(">>> master", master.getData());
+        console.log(">>> detail", detail.getData());
 
       // Validation
-      if (!master.getData()["chain_code"]) {
-        MessageBox.alert("Chain을 입력하세요");
+      if (!master.getData()["user_id"]) {
+        MessageBox.alert("사용자ID를 입력하세요.");
+        return;
+      }
+      if (!master.getData()["employee_number"]) {
+        MessageBox.alert("사번을 입력하세요.");
+        return;
+      }
+      if (!master.getData()["employee_name"]) {
+        MessageBox.alert("성명을 입력하세요.");
+        return;
+      }
+      if (!master.getData()["english_employee_name"]) {
+        MessageBox.alert("성명(영문)을 입력하세요.");
         return;
       }
       if (!master.getData()["tenant_id"]) {
-        MessageBox.alert("테넌트를 입력하세요");
+        MessageBox.alert("테넌트를 선택하세요.");
         return;
       }
-      if (!master.getData()["control_option_code"]) {
-        MessageBox.alert("제어옵션코드를 입력하세요");
+      if (!master.getData()["language_code"]) {
+        MessageBox.alert("언어를 선택하세요.");
         return;
       }
-      if (!master.getData()["control_option_name"]) {
-        MessageBox.alert("제어옵션명을 입력하세요");
+      if (!master.getData()["date_format_type_code"]) {
+        MessageBox.alert("날짜형식을 선택하세요.");
         return;
       }
+      if (!master.getData()["currency_code"]) {
+        MessageBox.alert("기본통화를 선택하세요.");
+        return;
+      }
+
       if (master.getData()["_state_"] != "C" && detail.getChanges() <= 0) {
         MessageBox.alert("변경사항이 없습니다.");
         return;
       }
       // Set Details (New)
-      if (master.getData()["_state_"] == "C") {
-        detail.getData()["ControlOptionDetails"].map(r => {
-          r["tenant_id"] = master.getData()["tenant_id"];
-          r["control_option_code"] = master.getData()["control_option_code"];
-          return r;
-        });
-      }
+    //   if (master.getData()["_state_"] == "C") {
+    //     detail.getData()["UserMgr"].map(r => {
+    //       r["user_id"] = master.getData()["user_id"];
+    //       return r;
+    //     });
+    //   }
 
       MessageBox.confirm("Are you sure ?", {
         title: "Comfirmation",
@@ -320,10 +347,9 @@ sap.ui.define([
         // ljh - 재조회
         this.getModel("details")
           .setTransactionModel(this.getModel())
-          .read("/ControlOptionDetails", {
+          .read("/UserRoleGroupMgr", {
             filters: [
-              new Filter("tenant_id", FilterOperator.EQ, this._sTenantId || "XXXXX"),
-              new Filter("control_option_code", FilterOperator.EQ, this._sControlOptionCode)
+              new Filter("user_id", FilterOperator.EQ, this._sUserId)
             ],
             success: function (oData) {
             }
@@ -339,12 +365,10 @@ sap.ui.define([
       if (this.getModel("midObjectView").getProperty("/isAddedMode") == true) {
         var oMasterModel = this.getModel("master");
         var oDetailsModel = this.getModel("details");
-        var sTenantId = oMasterModel.getProperty("/tenant_id");
-        var sControlOPtionCode = oMasterModel.getProperty("/control_option_code");
+        var sUserId = oMasterModel.getProperty("/user_id");
         var oDetailsData = oDetailsModel.getData();
         oDetailsData.forEach(function (oItem, nIndex) {
-          oDetailsModel.setProperty("/" + nIndex + "/tenant_id", sTenantId);
-          oDetailsModel.setProperty("/" + nIndex + "/control_option_code", sControlOPtionCode);
+          oDetailsModel.setProperty("/" + nIndex + "/user_id", sUserId);
         });
         oDetailsModel.setData(oDetailsData);
       }
@@ -358,28 +382,40 @@ sap.ui.define([
     _onRoutedThisPage: function (oEvent) {
       var oArgs = oEvent.getParameter("arguments"),
         oView = this.getView();
-      this._sTenantId = oArgs.tenantId;
-      this._sControlOptionCode = oArgs.controlOptionCode;
-      if (oArgs.tenantId == "new" && oArgs.controlOptionCode == "code") {
+      this._sUserId = oArgs.userId;
+      if (oArgs.userId == "new") {
         //It comes Add button pressed from the before page.
         this.getModel("midObjectView").setProperty("/isAddedMode", true);
 
         var oMasterModel = this.getModel("master");
         oMasterModel.setData({
-          "tenant_id": "L2100",
-          "chain_code": "",
-          "control_option_code": "",
-          "control_option_name": "",
-          "group_code": "",
-          "local_create_dtm": new Date(),
-          "local_update_dtm": new Date()
-        }, "/ControlOptionMasters", 0);
+            "user_id": "",
+            "user_name": "",
+            "employee_number": "",
+            "employee_name": "",
+            "english_employee_name": "",
+            "email": "",
+            "start_date": new Date(),
+            "end_date": new Date(),
+            "tenant_id": "",
+            "company_code": "",
+            "language_code": "",
+            "timezone_code": "",
+            "date_format_type_code": "",
+            "digits_format_type_code": "",
+            "currency_code": "",
+            "local_create_dtm": new Date(),
+            "local_update_dtm": new Date(),
+            "employee_status_code": "C",
+            "use_flag": "true",
+            "password": ""
+        }, "/UserMgr", 0);
 
         var oDetailsModel = this.getModel("details");
         oDetailsModel.setTransactionModel(this.getModel());
-        oDetailsModel.read("/ControlOptionDetails", {
+        oDetailsModel.read("/UserRoleGroupMgr", {
           filters: [
-            new Filter("tenant_id", FilterOperator.EQ, this._sTenantId || "XXXXX"),
+            new Filter("user_id", FilterOperator.EQ, this._sUserId)
           ],
           success: function (oData) {
             //console.log("##### ", oData, oDetailsModel);
@@ -406,14 +442,13 @@ sap.ui.define([
       else {
         this.getModel("midObjectView").setProperty("/isAddedMode", false);
 
-        this._bindView("/ControlOptionMasters(tenant_id='" + this._sTenantId + "',control_option_code='" + this._sControlOptionCode + "')");
+        this._bindView("/UserRoleGroupMgr(user_id='" + this._sUserId + "')");
         oView.setBusy(true);
         var oDetailsModel = this.getModel("details");
         oDetailsModel.setTransactionModel(this.getModel());
-        oDetailsModel.read("/ControlOptionDetails", {
+        oDetailsModel.read("/UserRoleGroupMgr", {
           filters: [
-            new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-            new Filter("control_option_code", FilterOperator.EQ, this._sControlOptionCode),
+            new Filter("user_id", FilterOperator.EQ, this._sUserId)
           ],
           success: function (oData) {
             oView.setBusy(false);
@@ -598,7 +633,7 @@ sap.ui.define([
 
     _bindMidTable: function (oTemplate, sKeyboardMode) {
       this.byId("midTable").bindItems({
-        path: "details>/ControlOptionDetails",
+        path: "details>/UserRoleGroupMgr",
         template: oTemplate
       }).setKeyboardMode(sKeyboardMode);
     },
