@@ -30,12 +30,10 @@
                 value="{
                     path: 'master>/email',
                     type: 'sap.ui.model.type.String'
-                }" 
-                editable="{midObjectView>/isAddedMode}"/>
+                }" />
 
             <Label text="테넌트" labelFor="searchETenantCombo" required="true"></Label>
             <ComboBox
-                editable="{midObjectView>/isAddedMode}"
                 id="searchETenantCombo"
                 width="100%"
                 selectedKey="{master>/tenant_id}"
@@ -51,7 +49,6 @@
 
             <Label text="언어" labelFor="searchELanguageCombo" required="true"></Label>
                 <ComboBox
-                    editable="{midObjectView>/isAddedMode}"
                     id="searchELanguageCombo"
                     width="100%"
                     selectedKey="{master>/language_code}"
@@ -69,7 +66,6 @@
 
             <Label text="날짜형식" labelFor="searchEDateFormatCombo" required="false"></Label>
                 <ComboBox
-                    editable="{midObjectView>/isAddedMode}"
                     id="searchEDateFormatCombo"
                     width="100%"
                     selectedKey="{master>/date_format_type_code}"
@@ -87,7 +83,6 @@
 
             <Label text="기본통화" labelFor="searchECurrencyCombo" required="true"></Label>
             <ComboBox
-                editable="{midObjectView>/isAddedMode}"
                 id="searchECurrencyCombo"
                 width="100%"
                 selectedKey="{master>/currency_code}"
@@ -118,8 +113,7 @@
                     path: 'master>/english_employee_name',
                     type: 'sap.ui.model.type.String'
                 }" 
-                required="true" 
-                editable="{midObjectView>/isAddedMode}"/>
+                required="true" />
 
             <Label text="사용기간" required="true"/>
             <HBox>
@@ -129,7 +123,6 @@
 
             <Label text="회사" labelFor="searchEOrgCombo" required="true"></Label>
             <ComboBox
-                editable="{midObjectView>/isAddedMode}"
                 id="searchEOrgCombo"
                 width="100%"
                 selectedKey="{master>/company_code}"
@@ -145,7 +138,6 @@
 
             <Label text="타임존" labelFor="searchETimeZoneCombo" required="true"></Label>
                 <ComboBox
-                    editable="{midObjectView>/isAddedMode}"
                     id="searchETimeZoneCombo"
                     width="100%"
                     selectedKey="{master>/timezone_code}"
@@ -161,7 +153,6 @@
        
             <Label text="숫자형식" labelFor="searchEDigitsFormatCombo" required="true"></Label>
             <ComboBox
-                    editable="{midObjectView>/isAddedMode}"
                     id="searchEDigitsFormatCombo"
                     width="100%"
                     selectedKey="{master>/digits_format_type_code}"
@@ -183,8 +174,7 @@
                     path: 'master>/password',
                     type: 'sap.ui.model.type.String'
                 }"
-                required="true"
-                editable="{midObjectView>/isAddedMode}"/>
+                required="true"/>
 		
 	</form:SimpleForm>
 </core:FragmentDefinition>

@@ -24,7 +24,7 @@
                         <form:content>
                             <VBox>
                                 <Label text="LG Company" labelFor="searchCompanyS" required="true"></Label>
-                                <MultiComboBox id="searchCompanyS" width="100%" selectedKey="" selectionFinish="handleSelectionFinishComp" items="{
+                                <MultiComboBox id="searchCompanyS" width="100%" selectedKey="" required="true" selectionFinish="handleSelectionFinishComp" items="{
                                     path: 'org>/Org_Company',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
@@ -41,7 +41,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="LG Division" labelFor="searchDivisionS" required="true"></Label>
-                                <MultiComboBox id="searchDivisionS" width="100%" selectedKey="" selectionFinish="handleSelectionFinishDiv" items="{
+                                <MultiComboBox id="searchDivisionS" width="100%" selectedKey="" required="true" selectionFinish="handleSelectionFinishDiv" items="{
                                     path: '/Divisions',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
@@ -58,7 +58,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="{I18N>/DATE}" labelFor="searchDateS" required="true"></Label>
-                                <DateRangeSelection id="searchDateS" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD"/>
+                                <DateRangeSelection id="searchDateS" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD" required="true"/>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
@@ -72,7 +72,7 @@
                         <form:content>
                             <VBox>
                                 <Label text="LG Company" labelFor="searchCompanyE"  required="true"></Label>
-                                <MultiComboBox id="searchCompanyE" width="100%" selectedKey="" selectionFinish="handleSelectionFinishComp" items="{
+                                <MultiComboBox id="searchCompanyE" width="100%" selectedKey="" required="true" selectionFinish="handleSelectionFinishComp" items="{
                                     path: 'org>/Org_Company',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
@@ -89,7 +89,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="LG Division" labelFor="searchDivisionE" required="true"></Label>
-                                <MultiComboBox id="searchDivisionE" width="100%" selectedKey="" selectionFinish="handleSelectionFinishDiv" items="{
+                                <MultiComboBox id="searchDivisionE" width="100%" selectedKey="" required="true" selectionFinish="handleSelectionFinishDiv" items="{
                                     path: '/Divisions',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
@@ -106,7 +106,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="{I18N>/DATE}" labelFor="searchDateE" required="true"></Label>
-                                <DateRangeSelection id="searchDateE" valueFormat = "yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD"/>
+                                <DateRangeSelection id="searchDateE" valueFormat = "yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD" required="true"/>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
