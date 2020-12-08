@@ -214,7 +214,7 @@
                                 selectionMode="MultiToggle"
                                 fixedColumnCount="4"
                                 visibleRowCountMode="Auto"
-                                rows="{moldList>/ItemBudgetExecution}"
+                                rows="{path:'moldList>/ItemBudgetExecution'}"
                                 >
                              <table:extension>
                                 <OverflowToolbar>
@@ -240,13 +240,13 @@
                                     <table:Column id="c_model" width="20em" hAlign="Center">
                                         <Label text="{I18N>/MODEL}"/>           
                                         <table:template>
-                                            <Text id="t_model" text="{moldList>mold_number}"/>
+                                            <Text id="t_model" text="{moldList>model}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_moldPartNo" width="10em" hAlign="Center">
                                         <Label text="Mold&#10;Part No"/>           
                                         <table:template>
-                                            <Text id="t_mold_part_no" text="{moldList>model}"/>
+                                            <Text id="t_mold_part_no" text="{moldList>mold_number}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_seq" width="5em" hAlign="Center">

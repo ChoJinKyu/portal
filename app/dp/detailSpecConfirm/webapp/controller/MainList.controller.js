@@ -351,7 +351,7 @@ sap.ui.define([
             }
             
             if (sFamilyPart) {
-				aSearchFilters.push(new Filter("tolower(family_mold_numbers)", FilterOperator.Contains, "'"+sFamilyPart.toLowerCase()+"'"));
+				aSearchFilters.push(new Filter("tolower(family_part_numbers)", FilterOperator.Contains, "'"+sFamilyPart.toLowerCase()+"'"));
             }
 
             if(sRequester){
