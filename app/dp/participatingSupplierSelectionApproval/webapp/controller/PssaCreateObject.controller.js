@@ -1,8 +1,10 @@
 sap.ui.define([
-	"ext/lib/controller/BaseController",
+  "ext/lib/controller/BaseController",
     "sap/ui/model/json/JSONModel", 
     "sap/ui/core/routing/History",
+    "ext/lib/model/ManagedModel",
     "ext/lib/model/ManagedListModel",
+    "ext/lib/model/TransactionManager",
     "sap/ui/richtexteditor/RichTextEditor",
 	"ext/lib/formatter/DateFormatter",
 	"sap/ui/model/Filter",
@@ -11,11 +13,11 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast", 
     "sap/m/UploadCollectionParameter",
-    "sap/ui/Device" // fileupload 
-    ,"sap/ui/core/syncStyleClass" 
-    , "sap/m/ColumnListItem" 
-    , "sap/m/Label"
-], function (BaseController, JSONModel, History, ManagedListModel, RichTextEditor , DateFormatter, Filter, FilterOperator, Fragment
+    "sap/ui/Device", // fileupload 
+    "sap/ui/core/syncStyleClass", 
+    "sap/m/ColumnListItem", 
+    "sap/m/Label"
+], function (BaseController, JSONModel, History, ManagedModel, ManagedListModel, TransactionManager, RichTextEditor , DateFormatter, Filter, FilterOperator, Fragment
             , MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label) {
 	"use strict";
     /**
@@ -23,7 +25,8 @@ sap.ui.define([
      * @date 2020.12.07
      * @author daun.lee 
      */
-
+    var oTransactionManager;
+    var mainViewName = "pssaCreateObjectView";
 	return BaseController.extend("dp.participatingSupplierSelectionApproval.controller.PssaCreateObject", {
         
 		dateFormatter: DateFormatter,
@@ -45,12 +48,20 @@ sap.ui.define([
 					delay : 0
                 });
            
-            this.setModel(oViewModel, "pssaCreateObjectView"); 
+            this.setModel(oViewModel, mainViewName); 
+            this.getRouter().getRoute("pssaCreateObject").attachPatternMatched(this._onObjectMatched, this);
+
+            this.getView().setModel(new ManagedListModel(),"company");
+            this.getView().setModel(new ManagedListModel(),"plant");
             this.getView().setModel(new ManagedListModel(),"createlist"); // Participating Supplier
             this.getView().setModel(new ManagedListModel(),"appList"); // apporval list 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
-            this.getRouter().getRoute("pssaCreateObject").attachPatternMatched(this._onObjectMatched, this);
-
+            this.getView().setModel(new ManagedModel(), "appMaster");
+            this.getView().setModel(new ManagedListModel(), "appDetail");
+            
+            oTransactionManager = new TransactionManager();
+			oTransactionManager.addDataModel(this.getModel("appMaster"));
+            oTransactionManager.addDataModel(this.getModel("appDetail"));
         },   
         onAfterRendering : function () {
          
@@ -170,16 +181,77 @@ sap.ui.define([
          * @param {*} args : company , plant   
          */
         _createViewBindData : function(args){ 
-            var appInfoModel = this.getModel("pssaCreateObjectView");
-            appInfoModel.setData({ company : args.company 
-                                ,  plant : args.plant });   
+            var company_code = 'LGEKR' , plant_code = 'CNZ' ;
+            var appModel = this.getModel(mainViewName);
+            appModel.setData({ company_code : company_code 
+                                , company_name : "" 
+                                , plant_code : plant_code 
+                                , plant_name : "" 
+                            }); 
 
-            console.log("oMasterModel >>> " , appInfoModel);
+            var oView = this.getView(),
+				oModel = this.getModel("company");
+	
+			oModel.setTransactionModel(this.getModel("org"));
+            
+            var searchFilter = [];
+            searchFilter.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100'));
+            searchFilter.push(new Filter("company_code", FilterOperator.EQ, company_code));
+            
+            
+            oModel.read("/Org_Company", {
+                filters: searchFilter ,
+				success: function(oData){ 
+                   appModel.oData.company_name = oData.results[0].company_name
+				}
+            });
+            
+            var oView = this.getView(),
+				oModel2 = this.getModel("plant");
+                oModel2.setTransactionModel(this.getModel("org"));
+            searchFilter = [];
+            searchFilter.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100'));
+            searchFilter.push(new Filter("plant_code", FilterOperator.EQ, plant_code));
+
+            oModel2.read("/Org_Plant", {
+                filters: searchFilter ,
+				success: function(oData){   
+                   appModel.oData.plant_name = oData.results[0].plant_name;
+				}
+            });
+            console.log(oModel);
+            console.log(oModel2);
+            console.log(args);
+            this._onRoutedThisPage(args);
         } ,
+
+        _onRoutedThisPage: function(args){
+			
+            //this._sApprovalNo = args.approvalNo;
+            this._sApprovalNo = "332424-20V-00097";
+			this._sMoldId = args.moldId;
+
+			if(args.approvalNo == "new"){
+				//It comes Create button pressed from the before page.
+				
+			}else{
+				this._bindView("/ApprovalMasters('" + this._sApprovalNo + "')", "appMaster", [], function(oData){
+                    this.setRichEditor(oData.approval_contents);
+                }.bind(this));
+
+                var schFilter = [new Filter("approval_number", FilterOperator.EQ, this._sApprovalNo)];
+                this._bindView("/ApprovalDetails", "appDetail", schFilter, function(oData){
+                    
+                });
+            }
+            
+            oTransactionManager.setServiceModel(this.getModel());
+            
+        },
 
 		_onBindingChange : function () {
 			var oView = this.getView(),
-				oViewModel = this.getModel("pssaCreateObjectView"),
+				oViewModel = this.getModel(mainViewName),
 				oElementBinding = oView.getElementBinding();
 			// No data for the binding
 			if (!oElementBinding.getBoundContext()) {
@@ -456,7 +528,7 @@ sap.ui.define([
         selectMoldItemChange : function(oEvent){ 
             var oTable = this.byId("moldItemSelectTable");
             var aItems = oTable.getSelectedItems(); 
-            var appInfoModel = this.getModel("pssaCreateObjectView");
+            var appInfoModel = this.getModel(mainViewName);
             appInfoModel.setData({ moldItemLength : aItems == undefined ? 0 : aItems.length }); 
         },
 
