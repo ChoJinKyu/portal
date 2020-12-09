@@ -18,9 +18,10 @@ sap.ui.define([
     "sap/m/Label",
     "ext/lib/model/TransactionManager",
     "ext/lib/util/Multilingual",
-    "ext/lib/util/Validator",
+    "ext/lib/util/Validator", 
+     "ext/lib/formatter/Formatter",
 ], function (BaseController, JSONModel, History, ManagedListModel, ManagedModel, RichTextEditor, DateFormatter, Filter, FilterOperator, Fragment
-    , MessageBox, MessageToast, UploadCollectionParameter, Device, syncStyleClass, ColumnListItem, Label, TransactionManager, Multilingual, Validator) {
+    , MessageBox, MessageToast, UploadCollectionParameter, Device, syncStyleClass, ColumnListItem, Label, TransactionManager, Multilingual, Validator, Formatter) {
     "use strict";
     /**
      * @description 예산집행품의 Create, update 화면 
@@ -30,7 +31,7 @@ sap.ui.define([
     var mainViewName = "beaCreateObjectView";
     var oTransactionManager;
     return BaseController.extend("dp.budgetExecutionApproval.controller.BeaCreateObject", {
-
+         formatter: Formatter,
         dateFormatter: DateFormatter,
         validator: new Validator(),
         /* =========================================================== */
@@ -328,21 +329,15 @@ sap.ui.define([
             var psTable = this.byId("psTable")
                 , psModel = this.getModel("appDetail")
                 , oSelected = psTable.getSelectedIndices()
+               
                 ;
             if (oSelected.length > 0) {
-                MessageBox.confirm("삭제 하시겠습니까?", {
-                    title: "Comfirmation",
-                    initialFocus: sap.m.MessageBox.Action.CANCEL,
-                    onClose: function (sButton) {
-                        if (sButton === MessageBox.Action.OK) {
-                            oSelected.forEach(function (idx) {
-                                psModel.markRemoved(idx)
-                            });
-                        };
-                    }.bind(this)
+                oSelected.forEach(function (idx) {
+                    psModel.markRemoved(idx)
                 });
-
                 psTable.clearSelection();
+
+                 console.log("psModel" ,  psModel);
             } else {
                 MessageBox.error("삭제할 목록을 선택해주세요.");
             }
