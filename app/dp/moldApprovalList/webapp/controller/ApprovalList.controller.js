@@ -376,8 +376,6 @@ sap.ui.define([
 
             this._oValueHelpDialog.getTableAsync().then(function (oTable) {
 
-                debugger
-
                 oTable.setModel(this.getOwnerComponent().getModel());
                 oTable.setModel(this.oColModel, "columns");
 
