@@ -181,6 +181,13 @@
           "target": [
             "example5"
           ]
+        },
+        {
+          "pattern": "example7",
+          "name": "example7",
+          "target": [
+            "example7"
+          ]
         }
       ],
       "targets": {
@@ -207,6 +214,10 @@
         "example5": {
           "viewName": "CodeCombo",
           "viewId": "example5"
+        },
+        "example7": {
+          "viewName": "PivotTable",
+          "viewId": "example7"
         },
         "notFound": {
           "viewName": "NotFound",
