@@ -172,7 +172,7 @@
       },
       "routes": [
            {
-          "pattern": "PssaCreateObject/{company}/{plant}",
+          "pattern": "PssaCreateObject/{company_code}/{plant_code}",
           "name": "pssaCreateObject",
           "target": [
             "pssaCreateObject"

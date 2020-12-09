@@ -89,41 +89,36 @@
                                                 class="sapMLabelNoText"/>                                     
                                         <Input  id="input_mi_material_code"
                                                 placeholder="자재코드 입력"
-                                                value="{ 
-                                                    path : 'oUiData>/mi_material_code', 
-                                                    type : 'sap.ui.model.type.String', 
-                                                    constraints : { 
-                                                        minLength : 1, 
-                                                        maxLength : 40 
-                                                }}"
                                                 class="sapUiSmallMarginEnd"
                                                 visible="{oUi>/createMode}"
+                                                required="{oUi>/createMode}"
                                         />
                                         <Button
                                             id="buttonMaterialCheck"
-                                            width="9em"
+                                            width="8em"
                                             text="중복Check"
                                             visible="{oUi>/createMode}"
                                             press=".onMaterialCodeCheck"/> 
+
                                         <Label  text="Category 명" 
                                                 design="Bold" 
                                                 class="sapMLabelNoText"/>
+
                                         <Text   id="textcategoryName" 
                                                 text="{oUiData>/category_name}" 
                                                 class="sapMLabelNoText"
-                                                required="{oUi>/readMode}"
-                                                /> 
+                                                visible="{=!${oUi>/createMode}}"
+                                        /> 
                                         <ComboBox
                                             id="comboBoxCategory_code"
-                                            selectedKey="{oUiData>/category_code}"
-                                            visible="{oUi>/createMode}"
                                             items="{
                                                 path: '/MICategoryHierarchyStructure', 
                                                 templateShareable:false
                                             }" 
-                                            required="{=!${oUi>/readMode}}"
+                                            visible="{oUi>/createMode}"
+                                            required="{oUi>/createMode}"
                                             placeholder="선택하세요">
-                                            <core:Item key="{mICategoryView>category_code}" text="{mICategoryView>category_text}" />
+                                            <core:Item key="{category_code}" text="{category_name}" />
                                         </ComboBox>
                                         <Label  text="사용여부" 
                                                 design="Bold" 
@@ -134,7 +129,7 @@
                                                 class="sapMLabelNoText"/>
                                         <Switch id="switchUse_flag" 
                                                 visible="{=!${oUi>/readMode}}"
-                                                state="{oUiData>/use_flag}"
+                                                state="{= ${oUiData>/use_flag}!=='' ? true:${oUiData>/use_flag}}"
                                         >
                                             <layoutData>
                                                 <FlexItemData growFactor="1"/>

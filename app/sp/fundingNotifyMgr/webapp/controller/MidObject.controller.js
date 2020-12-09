@@ -17,9 +17,10 @@ sap.ui.define([
     "sap/m/Input",
     "sap/m/ComboBox",
     "sap/ui/core/Item",
+    "sap/ui/richtexteditor/RichTextEditor"
 ], function (BaseController, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter,
     Filter, FilterOperator, Fragment, MessageBox, MessageToast,
-    ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+    ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, RichTextEditor) {
 
     "use strict";
     ``
@@ -53,7 +54,7 @@ sap.ui.define([
                 busy: true,
                 delay: 0,
                 screen: "",
-                editMode: ""
+                editMode: true
             });
 
             this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
@@ -63,9 +64,36 @@ sap.ui.define([
 
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("master"));
-
+            
             this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
+            
+        },
 
+        onRichTextEditorRendering : function () {
+            var view = this.getView(),
+                master = view.getModel("master"),
+                that = this;
+                // sHtmlValue = master.getData()["funding_notify_contents"];
+                
+			sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
+				function (RTE, EditorType) {
+					var oRichTextEditor = new RTE("myRTE", {
+						editorType: EditorType.TinyMCE4,
+						width: "100%",
+                        height: "400px",
+                        editable: "{midObjectView>/editMode}",
+						customToolbar: true,
+						showGroupFont: true,
+						showGroupLink: true,
+						showGroupInsert: true,
+						value: "{master>/funding_notify_contents}",
+						ready: function () {
+							this.addButtonGroup("styleselect").addButtonGroup("table");
+						}
+                });
+
+                that.getView().byId("idEditLayout").addItem(oRichTextEditor);
+            });
         },
 
         /* =========================================================== */
@@ -111,6 +139,7 @@ sap.ui.define([
 		 */
         onPageEditButtonPress: function () {
             this._toEditMode();
+            
         },
 
 		/**
@@ -145,7 +174,7 @@ sap.ui.define([
             var [tId, mName, sEntity] = arguments;
             var table = this.byId(tId);
             var model = this.getView().getModel(mName);
-            debugger;
+            
             table
                 .getSelectedItems()
                 .map(item => model.getData()[sEntity].indexOf(item.getBindingContext("details").getObject()))
@@ -168,7 +197,8 @@ sap.ui.define([
             var view = this.getView(),
                 master = view.getModel("master"),
                 that = this;
-            console.log(master.getData()["funding_appl_closing_date"]);
+            console.log(master.getData()["funding_notify_contents"]);
+            
             // Validation
             // if (!master.getData()["chain_code"]) {
             //     MessageBox.alert("Chain을 입력하세요");
@@ -186,7 +216,6 @@ sap.ui.define([
             //     MessageBox.alert("제어옵션명을 입력하세요");
             //     return;
             // }
-
 
             MessageBox.confirm("Are you sure ?", {
                 title: "Comfirmation",
@@ -224,6 +253,7 @@ sap.ui.define([
         /* =========================================================== */
 
         _onMasterDataChanged: function (oEvent) {
+            
             if (this.getModel("midObjectView").getProperty("/isAddedMode") == true) {
                 var oMasterModel = this.getModel("master");
                 var sTenantId = oMasterModel.getProperty("/tenant_id");
@@ -259,7 +289,7 @@ sap.ui.define([
                     "update_user_id": "Admin"
                     
                 }, "/FsFundingNotify", 0);
-
+                this.onRichTextEditorRendering()
                 this._toEditMode();
             }
             else {
@@ -278,6 +308,7 @@ sap.ui.define([
                     success: function (oData) {
                         this.getModel("master").setData(oData.results[0]);
                         oView.setBusy(false);
+                        this.onRichTextEditorRendering();
                     }.bind(this)
                 });
                 this._toShowMode();
@@ -305,52 +336,56 @@ sap.ui.define([
         },
 
         _toEditMode: function () {
-            debugger;
+            var oMidObjectView = this.getView().getModel("midObjectView");
             var FALSE = false;
-            this._showFormFragment('MidObject_Edit');
+            //this._showFormFragment('MidObject_Edit');
             this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("page").setProperty("showFooter", !FALSE);
             this.byId("pageEditButton").setEnabled(FALSE);
             this.byId("pageDeleteButton").setEnabled(FALSE);
             this.byId("pageNavBackButton").setEnabled(FALSE);
+            oMidObjectView.setProperty("/editMode", true);
+            
         },
 
         _toShowMode: function () {
-            debugger;
+            var oMidObjectView = this.getView().getModel("midObjectView");
             var TRUE = true;
-            this._showFormFragment('MidObject_Show');
+            //this._showFormFragment('MidObject_Show');
             this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("page").setProperty("showFooter", !TRUE);
             this.byId("pageEditButton").setEnabled(TRUE);
             this.byId("pageDeleteButton").setEnabled(TRUE);
             this.byId("pageNavBackButton").setEnabled(TRUE);
+            oMidObjectView.setProperty("/editMode", false);
+            
         },
 
-        _oFragments: {},
-        _showFormFragment: function (sFragmentName) {
-            var oPageSubSection = this.byId("pageSubSection1");
-            this._loadFragment(sFragmentName, function (oFragment) {
-                oPageSubSection.removeAllBlocks();
-                oPageSubSection.addBlock(oFragment);
-            })
-        },
+        // _oFragments: {},
+        // _oFragments: {},
+        // _showFormFragment: function (sFragmentName) {
+        //     var oPageSubSection = this.byId("pageSubSection1");
+        //     this._loadFragment(sFragmentName, function (oFragment) {
+        //         oPageSubSection.removeAllBlocks();
+        //         oPageSubSection.addBlock(oFragment);
+        //     })
+        // },        _loadFragment: function (sFragmentName, oHandler) {
+        //     if (!this._oFragments[sFragmentName]) {
+        //         Fragment.load({
+        //             id: this.getView().getId(),
+        //             name: "sp.fundingNotifyMgr.view." + sFragmentName,
+        //             controller: this
+        //         }).then(function (oFragment) {
+        //             this._oFragments[sFragmentName] = oFragment;
+        //             if (oHandler) oHandler(oFragment);
+        //             this.onRichTextEditorRendering(sFragmentName);
+        //         }.bind(this));
+        //     } else {
+        //         if (oHandler) oHandler(this._oFragments[sFragmentName]);
+        //     }
+        //     
 
-        _loadFragment: function (sFragmentName, oHandler) {
-            if (!this._oFragments[sFragmentName]) {
-                Fragment.load({
-                    id: this.getView().getId(),
-                    name: "sp.fundingNotifyMgr.view." + sFragmentName,
-                    controller: this
-                }).then(function (oFragment) {
-                    this._oFragments[sFragmentName] = oFragment;
-                    if (oHandler) oHandler(oFragment);
-                }.bind(this));
-            } else {
-                if (oHandler) oHandler(this._oFragments[sFragmentName]);
-            }
-        },
-
-        /**
+         /**
          * UTC 기준 DATE를 반환합니다.
          * @private
          * @return "yyyy-MM-dd'T'HH:mm:ss"

@@ -58,8 +58,10 @@ sap.ui.define([
             this.setModel(oViewModel, mainViewName); 
             this.getRouter().getRoute("pssaCreateObject").attachPatternMatched(this._onObjectMatched, this);
 
-            this.getView().setModel(new ManagedListModel(),"company");
-            this.getView().setModel(new ManagedListModel(),"plant");
+            this.getView().setModel(new ManagedModel(),"company");
+            this.getView().setModel(new ManagedModel(),"plant");
+            // this.getView().setModel(new ManagedListModel(),"company");
+            // this.getView().setModel(new ManagedListModel(),"plant");
             this.getView().setModel(new ManagedListModel(),"createlist"); // Participating Supplier
             this.getView().setModel(new ManagedListModel(),"appList"); // apporval list 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
@@ -258,21 +260,21 @@ sap.ui.define([
             this._bindView("/Approver", "Approvers", schFilter, function (oData) {
                  console.log("Approver >>>> ", oData);
             });    
-            var sResult = {};
+            // var sResult = {};
 
-            this._bindView("/ItemBudgetExecution", "moldList", schFilter, function (oData) {
-                sResult = oData.results[0];
-                that._createViewBindData(sResult); // comapny , plant 조회 
-                that._bindView("/ApprovalDetails", "appDetail", schFilter, function (oData) { 
-                    that._bindView("/MoldMasters", "MoldMasterList", [
-                        new Filter("company_code", FilterOperator.EQ, sResult.company_code)
-                        , new Filter("org_code", FilterOperator.EQ, sResult.org_code)
-                    ], function (oData) {
-                        console.log("MoldMasters >>>> ", oData);
-                    });
-                });
+            // this._bindView("/ItemBudgetExecution", "moldList", schFilter, function (oData) {
+            //     sResult = oData.results[0];
+            //     that._createViewBindData(sResult); // comapny , plant 조회 
+            //     that._bindView("/ApprovalDetails", "appDetail", schFilter, function (oData) { 
+            //         that._bindView("/MoldMasters", "MoldMasterList", [
+            //             new Filter("company_code", FilterOperator.EQ, sResult.company_code)
+            //             , new Filter("org_code", FilterOperator.EQ, sResult.org_code)
+            //         ], function (oData) {
+            //             console.log("MoldMasters >>>> ", oData);
+            //         });
+            //     });
 
-            });
+            // });
 
             oTransactionManager.setServiceModel(this.getModel());
         },
@@ -984,7 +986,7 @@ sap.ui.define([
 			MessageToast.show(messageText, {
 				width: "auto"
 			});
-		}
+        }
 
 	});
 });

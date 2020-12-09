@@ -31,7 +31,7 @@
                     </ComboBox>
                 </layout:VerticalLayout>  
                 <layout:VerticalLayout class="sapUiLargeMarginEnd">
-                    <VBox visible="{= ${oUiData>/radioButtonGroup} === 0 }">
+                    <VBox visible="{= ${_oUiData>/radioButtonGroup} === 0 }">
                         <Label text="자재코드"/>
                         <!--수정사항 자재명 확인 -->
                         <ComboBox  
@@ -45,7 +45,7 @@
                             <core:Item key="{material_code}" text="{material_description}"/>
                         </ComboBox>
                     </VBox>
-                    <VBox visible="{= ${oUiData>/radioButtonGroup} === 1 }">
+                    <VBox visible="{= ${_oUiData>/radioButtonGroup} === 1 }">
                         <Label text="공급업체코드"/>
                         <!--수정사항 tenant_id 정해지면 사용자 세션으로 바인딩 -->
                         <ComboBox  
@@ -61,13 +61,13 @@
                     </VBox>
                 </layout:VerticalLayout> 
                 <layout:VerticalLayout class="sapUiLargeMarginEnd">
-                    <VBox visible="{= ${oUiData>/radioButtonGroup} === 0}">
+                    <VBox visible="{= ${_oUiData>/radioButtonGroup} === 0}">
                         <Label  text="자재명"/>
                         <Input  id="input_material_description"
                                 class="sapUiSmallMarginBottom" 
                         />   
                     </VBox>
-                    <VBox visible="{= ${oUiData>/radioButtonGroup} === 1}">
+                    <VBox visible="{= ${_oUiData>/radioButtonGroup} === 1}">
                         <Label text="공급업체명"/>
                         <Input  id="input_supplier_local_name"
                                 class="sapUiSmallMarginBottom" 

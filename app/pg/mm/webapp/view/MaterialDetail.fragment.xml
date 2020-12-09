@@ -31,8 +31,8 @@
                 <Table  id="leftTable"
                         mode="SingleSelectLeft"
                         items="{mIMaterialCodeList>/}"
-                        selectionChange=".onSelectedLeftTableItem"
-                        itemPress=".onSelectedLeftTableItem"                        
+                        selectionChange="._BonSelectedLeftTableItem"
+                        itemPress="._BonSelectedLeftTableItem"                        
                         noDataText="No Data"
                         class="sapUiSmallMarginBegin sapUiSmallMarginTop"
                 >

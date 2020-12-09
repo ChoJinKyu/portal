@@ -13,7 +13,7 @@ using {pg as MIMatPrcMngtView} from '../../../../db/cds/pg/mi/PG_MI_MAT_PRC_MANA
 using {pg as MICategDetlView} from '../../../../db/cds/pg/mi/PG_MI_CATEGORY_DETAIL_VIEW';
 using {pg as MIMatCostInfoView} from '../../../../db/cds/pg/mi/PG_MI_MATERIAL_COST_INFO_VIEW';
 //Material
-using {dp.Mm_Material_Desc_Lng as MaterialDesc} from '../../../../db/cds/dp/materialMgr/materialMasterMgr/DP_MM_MATERIAL_DESC_LNG-model';
+using {dp.Mm_Material_Desc_Lng as MaterialDesc} from '../../../../db/cds/dp/mm/DP_MM_MATERIAL_DESC_LNG-model';
 //Supplier
 using {sp.Sm_Supplier_Mst as SupplierMaster} from '../../../../db/cds/sp/supplierMgr/SP_SM_SUPPLIER_MST-model';
 //CM ORG
@@ -26,7 +26,7 @@ using {cm.Code_Dtl as CodeDtl} from '../../../../db/cds/cm/codeMgr/CM_CODE_DTL-m
 using {cm.Code_Lng as CodeLng} from '../../../../db/cds/cm/codeMgr/CM_CODE_LNG-model';
 //Unit Code
 using {cm.Currency_Lng as CurrencyLanguage} from '../../../../db/cds/cm/currencyMgr/CM_CURRENCY_LNG-model';
-using {dp.Mm_Unit_Of_Measure_Lng as UnitOfMeasure} from '../../../../db/cds/dp/materialMgr/uomMgr/DP_MM_UNIT_OF_MEASURE_LNG-model';
+using {dp.Mm_Unit_Of_Measure_Lng as UnitOfMeasure} from '../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE_LNG-model';
 
 namespace pg;
 
@@ -107,7 +107,7 @@ service marketIntelligenceService {
             key main.category_code as category_code, //카테고리코드
                 main.category_name as category_name //카테고리코드명
         from MICategoryText as main
-        left join MICategory as catg
+        left join MICategoryHierarchyStructure as catg
             on  main.tenant_id     = catg.tenant_id
             and main.company_code  = catg.company_code
             and main.org_type_code = catg.org_type_code
@@ -134,7 +134,7 @@ service marketIntelligenceService {
             key main.category_code as category_code, //카테고리코드
                 main.category_name as category_text //카테고리코드명
         from MICategoryText as main
-        left join MICategory as catg
+        left join MICategoryHierarchyStructure as catg
             on  main.tenant_id     = catg.tenant_id
             and main.company_code  = catg.company_code
             and main.org_type_code = catg.org_type_code
@@ -203,7 +203,7 @@ service marketIntelligenceService {
             key main.category_code        as category_code, //카테고리코드
                 catgText.category_name    as category_name, //카테고리코드명
                 main.use_flag             as use_flag //사용여부
-        from MICategory as main
+        from MICategoryHierarchyStructure as main
         left join MICategoryText as prtCatgText
             on  main.tenant_id            = prtCatgText.tenant_id
             and main.company_code         = prtCatgText.company_code

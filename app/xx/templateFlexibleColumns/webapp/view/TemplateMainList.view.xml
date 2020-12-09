@@ -37,14 +37,14 @@
                         <VBox>
                             <Label text="{I18N>/CHAIN}:" labelFor="searchChain" required="true"></Label>
                             <ComboBox id="searchChain" width="100%" selectedKey="CM" items="{
-                                    path: 'util>/CodeDetails',
+                                    path: 'common>/CodeDetails',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                         {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                                     ]
                                 }">
                                 <items>
-                                    <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+                                    <core:Item key="{common>code}" text="{common>code}: {common>code_description}" />
                                 </items>
                             </ComboBox>
                             <layoutData>
