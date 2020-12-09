@@ -18,7 +18,7 @@ sap.ui.define([
             this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
             
             this.oRouter = this.getOwnerComponent().getRouter();
-			this.oRouter.attachRouteMatched(this.onRouteMatched, this);
+			// this.oRouter.attachRouteMatched(this.onRouteMatched, this);
 			this.oRouter.attachBeforeRouteMatched(this.onBeforeRouteMatched, this);
 		},
         /**
@@ -99,6 +99,7 @@ sap.ui.define([
         },
 
         onBeforeRouteMatched: function(oEvent) {
+            console.log('onBeforeRouteMatched')
 			var oModel = this.getModel("fcl");
 
 			var sLayout = oEvent.getParameters().arguments.layout;
@@ -112,29 +113,6 @@ sap.ui.define([
 			// Update the layout of the FlexibleColumnLayout
 			if (sLayout) {
 				oModel.setProperty("/layout", sLayout);
-			}
-		},
-
-		onRouteMatched: function (oEvent) {
-			var sRouteName = oEvent.getParameter("name"),
-				oArguments = oEvent.getParameter("arguments");
-
-			this._updateUIElements();
-
-			// Save the current route name
-			this.currentRouteName = sRouteName;
-			this.currentProduct = oArguments.product;
-            this.currentSupplier = oArguments.supplier;
-		},
-
-		onStateChanged: function (oEvent) {
-			var bIsNavigationArrow = oEvent.getParameter("isNavigationArrow"),
-				sLayout = oEvent.getParameter("layout");
-			this._updateUIElements();
-
-            // Replace the URL with the new layout if a navigation arrow was used
-			if (bIsNavigationArrow) {
-				this.oRouter.navTo(this.currentRouteName, {layout: sLayout, product: this.currentProduct, supplier: this.currentSupplier}, true);
 			}
 		},
 
