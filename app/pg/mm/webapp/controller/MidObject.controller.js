@@ -63,7 +63,7 @@ sap.ui.define([
                 supplierDialog : "SupplierDialog_ID"
             },
             input : {
-                multiInput_material_code : "multiInput",
+                input_material_code : "input_material_code",
             },
             button : {
                 buttonMidTableCreate : "buttonMidTableCreate",
@@ -185,7 +185,7 @@ sap.ui.define([
                     pcst_currency_unit :"",
                     base_quantity : "",
                     radioButtonGroup : "",
-                    multiInput_material_code : ""
+                    input_material_code : ""
                 });
 
                 
@@ -196,7 +196,7 @@ sap.ui.define([
             }else{
                 var _oUiData = new JSONModel({
                     tenant_name: "",
-                    multiInput_material_code : ""
+                    input_material_code : ""
                 });
 
                 
@@ -550,15 +550,17 @@ sap.ui.define([
 
 		_handleValueHelpMaterialClose: function (evt) {
 			var aSelectedItems = evt.getParameter("selectedItems"),
-				oMultiInput = this.byId(this._m.input.multiInput_material_code);
+				oInput_material_code = this.byId(this._m.input.input_material_code);
 
-			if (aSelectedItems && aSelectedItems.length > 0) {
-				aSelectedItems.forEach(function (oItem) {
-					oMultiInput.addToken(new Token({
-						text: oItem.getTitle()
-					}));
-				});
-			}
+                oInput_material_code.setValue = oInput_material_code;
+
+			// if (aSelectedItems && aSelectedItems.length > 0) {
+			// 	aSelectedItems.forEach(function (oItem) {
+			// 		oMultiInput.addToken(new Token({
+			// 			text: oItem.getTitle()
+			// 		}));
+			// 	});
+			// }
 		},
 		/**
 		 * Event handler for Enter Full Screen Button pressed
@@ -1089,7 +1091,7 @@ sap.ui.define([
                 return;
             }
 
-            var multiInput_material_code = this.byId("multiInput_material_code");
+            var input_material_code = this.byId("input_material_code");
             //다수 일수 있는 경우를 대비. 현재 한건. 
             
             for(var i=0;i<oSelected.length;i++){
@@ -1126,15 +1128,15 @@ sap.ui.define([
                 } 
                 
   
-                // multiInput_material_code.addToken([
+                // input_material_code.addToken([
                 //     new Token({text: odata.material_description, key: odata.material_code})                   
                 // ]);
                     //             text: oItem.getTitle()
                     //         }));                
                 // if (aSelectedItems && aSelectedItems.length > 0) {
                    
-                    multiInput_material_code.removeAllTokens();
-                    multiInput_material_code.addToken(new Token({
+                    input_material_code.removeAllTokens();
+                    input_material_code.addToken(new Token({
                         text: odata.material_code,
                         key: odata.material_description
                     }));
@@ -1365,7 +1367,7 @@ sap.ui.define([
                 }
 
                 //수정사항 신규 자재 등록일때. 자재코드 및 정보를 추가 한다. 
-                //mi_material_code 는 multiInput_material_code 값으로 대체 자재코드
+                //mi_material_code 는 input_material_code 값으로 대체 자재코드
                 //input_base_quantity 기준수량
                 if(!bValueCheckFlag) return;
                 

@@ -72,14 +72,14 @@ sap.ui.define([
 
             this.getView().setModel(new ManagedModel(), "appMaster");
             this.getView().setModel(new ManagedListModel(), "appDetail");
-            this.getView().setModel(new ManagedListModel(), "MoldMasterList");
+           // this.getView().setModel(new ManagedListModel(), "MoldMasterList");
             this.getView().setModel(new ManagedListModel(), "Approvers");
       
 
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("appMaster"));
             oTransactionManager.addDataModel(this.getModel("appDetail"));
-            oTransactionManager.addDataModel(this.getModel("MoldMasterList"));
+           // oTransactionManager.addDataModel(this.getModel("MoldMasterList"));
             oTransactionManager.addDataModel(this.getModel("Approvers"));
 
       
@@ -271,29 +271,26 @@ sap.ui.define([
                 that.setRichEditor(oData.approval_contents);
             });
 
+            this._bindView("/ApprovalDetails", "appDetail", schFilter, function (oData) { 
+                console.log("approvalDetails >>>> " , oData);
+                    // that._bindView("/MoldMasters", "MoldMasterList", [
+                    //     new Filter("company_code", FilterOperator.EQ, sResult.company_code)
+                    //     , new Filter("org_code", FilterOperator.EQ, sResult.org_code)
+                    // ], function (oData) {
+                    // });
+             });
+            
             this._bindView("/Approver", "Approvers", schFilter, function (oData) {
                 console.log("Approver >>>> ", oData);
             });
+
             var sResult = {};
 
-            this._bindView("/ItemBudgetExecution", "moldList", schFilter, function (oData) {
-                sResult = oData.results[0];
+            this._bindView("/ItemBudgetExecution", "moldList", [new Filter("approval_number", FilterOperator.EQ, args.approval_number)], function (oData) { 
+                sResult = oData.results[0]; 
                 that._createViewBindData(sResult); // comapny , plant 조회 
-                that._bindView("/ApprovalDetails", "appDetail", schFilter, function (oData) {
-
-
-                    that._bindView("/MoldMasters", "MoldMasterList", [
-                        new Filter("company_code", FilterOperator.EQ, sResult.company_code)
-                        , new Filter("org_code", FilterOperator.EQ, sResult.org_code)
-                    ], function (oData) {
-
-                    });
-
-                });
                  console.log("moldTest>>>> " , that.getModel("moldList") );
             });
-
-           
 
             oTransactionManager.setServiceModel(this.getModel());
         },
@@ -600,10 +597,19 @@ sap.ui.define([
          */
         _addPsTable: function (data) {
             var oTable = this.byId("psTable"),
-                oModel = this.getModel("moldList");
+                oModel = this.getModel("appDetail"),
+                mstModel = this.getModel("appMaster");
+                ;
 
-            oModel.addRecord({
-                "mold_id": data.oData.mold_id,
+            var approval_number = mstModel.oData.approval_number;
+/**
+ * system_create_dtm: Wed Nov 04 2020 08:47:00 GMT+0900 (대한민국 표준시) {}
+system_update_dtm: Wed Dec 09 2020 11:13:43 GMT+0900 (대한민국 표준시) {}
+ */
+            oModel.addRecord({ 
+                "tenant_id": "L1100",
+                "mold_id": String(data.oData.mold_id),
+                "approval_number": approval_number,
                 "model": data.oData.model,
                 "mold_number": data.oData.mold_number,
                 "mold_sequence": data.oData.mold_sequence,
@@ -615,8 +621,17 @@ sap.ui.define([
                 "asset_type_code": "",
                 "family_part_number_1": "",
                 "budget_exrate_date": "",
-                "inspection_date": "",
-            }, "/ItemBudgetExecution");
+                "inspection_date": "", 
+                "local_create_dtm" :  new Date() ,
+                "local_update_dtm" : new Date(),
+                "create_user_id" : "777777" ,
+                "update_user_id" : "777777",
+                "system_create_dtm" : new Date(),
+                "system_update_dtm" : new Date()
+            }, "/ApprovalDetails");
+
+            console.log("oModel.addRecord " , this.getModel("appDetail"));
+            console.log("oModel.addRecord oTransactionManager oTransactionManager ", oTransactionManager.oServiceModel.oData);
         },
 
         /**
@@ -1037,9 +1052,9 @@ sap.ui.define([
 
             console.log(" oTransactionManager ", oTransactionManager);
             console.log(" oTransactionManager oTransactionManager ", oTransactionManager.oServiceModel.oData);
-            console.log(" oTransactionManager oTransactionManager ", oTransactionManager.oServiceModel.oData["MoldMasters('578488')"]);
+          //  console.log(" oTransactionManager oTransactionManager ", oTransactionManager.oServiceModel.oData["MoldMasters('578488')"]);
 
-            oTransactionManager.oServiceModel.oData["MoldMasters('578488')"].asset_type_code = "I"
+  
             // var sEntityName = oTransactionManager.getProperty("/entityName"),
             // aRecords = this.getProperty("/" + sEntityName);
             // console.log(" aRecords ", aRecords);

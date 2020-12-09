@@ -19,8 +19,15 @@
           "odataVersion": "2.0"
         }
       },
-      "commonUtilService": {
+      "commonService": {
         "uri": "srv-api/odata/v2/cm.util.CommonService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
+      },
+      "orgService": {
+        "uri": "srv-api/odata/v2/cm.util.OrgService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -75,8 +82,19 @@
           "bundleName": "xx.exampleControls.i18n.i18n"
         }
       },
-      "util": {
-        "dataSource": "commonUtilService",
+      "common": {
+        "dataSource": "commonService",
+        "type": "ext.lib.model.v2.ODataModel",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "useBatch": true
+        }
+      },
+      "org": {
+        "dataSource": "orgService",
         "type": "ext.lib.model.v2.ODataModel",
         "preload": true,
         "settings": {
