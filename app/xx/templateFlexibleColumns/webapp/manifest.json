@@ -19,7 +19,7 @@
           "odataVersion": "2.0"
         }
       },
-      "commonUtilService": {
+      "commonService": {
         "uri": "srv-api/odata/v2/cm.util.CommonService/",
         "type": "OData",
         "settings": {
@@ -75,8 +75,8 @@
           "bundleName": "xx.templateFlexibleColumns.i18n.i18n"
         }
       },
-      "util": {
-        "dataSource": "commonUtilService",
+      "common": {
+        "dataSource": "commonService",
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",

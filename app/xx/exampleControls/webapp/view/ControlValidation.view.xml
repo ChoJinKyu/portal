@@ -18,14 +18,14 @@
                             <Label text="Multi Combo: " required="true"></Label>
                             <MultiComboBox width="350px"
                                 items="{
-                                    path: 'util>/CodeDetails',
+                                    path: 'common>/CodeDetails',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                         {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                                     ]
                                 }" required="true">
                                 <items>
-                                    <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+                                    <core:Item key="{common>code}" text="{common>code}: {common>code_description}" />
                                 </items>
                             </MultiComboBox>
                             <layoutData>

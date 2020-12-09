@@ -16,14 +16,14 @@
 		}" required="true" editable="{midObjectView>/isAddedMode}"/>
 		<Label text="Chain"/>
 		<ComboBox id="searchChain" width="100%" selectedKey="{master>/chain_code}" required="true" items="{
-				path: 'util>/CodeDetails',
+				path: 'common>/Code',
 				filters: [
 					{path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
 					{path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
 				]
 			}">
 			<items>
-				<core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+				<core:Item key="{common>code}" text="{common>code}: {common>code_name}" />
 			</items>
 		</ComboBox>
 		<Label text="Name"/>
