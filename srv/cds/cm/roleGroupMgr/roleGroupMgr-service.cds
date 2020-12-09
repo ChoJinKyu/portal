@@ -5,6 +5,6 @@ namespace cm;
 @path : '/cm.RoleGroupMgrService'
 service RoleGroupMgrService {
 
-    entity RoleGroupMgr as projection on cm.Role_Group;
+    entity RoleGroupMgr as projection on roleGroupMgr.Role_Group;
 
 }

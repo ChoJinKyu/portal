@@ -79,7 +79,7 @@ sap.ui.define([
 
       this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
 
-      //this._initTableTemplates();
+      this._initTableTemplates();
       this.enableMessagePopover();
     },
 
@@ -155,10 +155,8 @@ sap.ui.define([
     },
 
     onMidTableAddButtonPress: function () {
-
-      var oTable = this.byId("midTable"),
-        oDetailsModel = this.getModel("details");
-
+        var oTable = this.byId("midTable"),
+            oDetailsModel = this.getModel("details");
         oDetailsModel.addRecord({
             "tenant_id": "L2100",
             "user_id": this._sUserId,
@@ -167,25 +165,24 @@ sap.ui.define([
             "end_date": new Date(),
             "local_create_dtm": new Date(),
             "local_update_dtm": new Date()
-        }, 0);
-
+        }, "/UserRoleGroupMgr", 0);
     },
 
     onMidTableDeleteButtonPress: function () {
-      var [tId, mName, sEntity] = arguments;
-      var table = this.byId(tId);
-      var model = this.getView().getModel(mName);
- 
-      table
-        .getSelectedItems()
-        .map(item => model.getData()[sEntity].indexOf(item.getBindingContext("details").getObject()))
-        .reverse()
-        // 삭제
-        .forEach(function (idx) {
-          model.markRemoved(idx);
+        var oTable = this.byId("midTable"),
+            oModel = this.getModel("details"),
+            aItems = oTable.getSelectedItems(),
+            aIndices = [];
+        aItems.forEach(function(oItem){
+            aIndices.push(oModel.getProperty("/UserRoleGroupMgr").indexOf(oItem.getBindingContext("details").getObject()));
         });
-      table
-        .removeSelections(true);
+        aIndices = aIndices.sort(function(a, b){return b-a;});
+        aIndices.forEach(function(nIndex){
+            //oModel.removeRecord(nIndex);
+            oModel.markRemoved(nIndex);
+        });
+        oTable.removeSelections(true);
+        this.validator.clearValueState(this.byId("midTable"));      
     },
 
     /**
@@ -235,8 +232,7 @@ sap.ui.define([
         return;
       }
 
-      this._onMasterDataChanged();
-
+      
       if (master.getData()["_state_"] != "U") {
         if (master.getData()["_state_"] != "C" && detail.getChanges() <= 0) {
             MessageBox.alert("변경사항이 없습니다.");
@@ -251,6 +247,8 @@ sap.ui.define([
             return r;
         });
       }
+
+      this._onMasterDataChanged();
 
       MessageBox.confirm("Are you sure ?", {
         title: "Comfirmation",
@@ -432,50 +430,50 @@ sap.ui.define([
       this.byId("midTableDeleteButton").setEnabled(!TRUE);
     },
 
-    // _initTableTemplates: function () {
-    //   this.oReadOnlyTemplate = new ColumnListItem({
-    //     cells: [
-    //       new Text({
-    //         text: "{details>_row_state_}"
-    //       }),
-    //       new ObjectIdentifier({
-    //         text: "{details>role_group_code}"
-    //       })
-    //     ],
-    //     type: sap.m.ListType.Inactive
-    //   });
+    _initTableTemplates: function () {
+      this.oReadOnlyTemplate = new ColumnListItem({
+        cells: [
+          new Text({
+            text: "{details>_row_state_}"
+          }),
+          new ObjectIdentifier({
+            text: "{details>role_group_code}"
+          })
+        ],
+        type: sap.m.ListType.Inactive
+      });
 
-    //   this.oEditableTemplate = new ColumnListItem({
-    //     cells: [
-    //       new Text({
-    //         text: "{details>_row_state_}"
-    //       }),
+      this.oEditableTemplate = new ColumnListItem({
+        cells: [
+          new Text({
+            text: "{details>_row_state_}"
+          }),
 
-    //       // 역할그룹코드
-    //       new ComboBox({
-    //         selectedKey: "{details>role_group_code}",
-    //         items: {
-    //           path: 'roleGroup>/RoleGroupMgr',
-    //           filters: [
-    //           ],
-    //           template: new Item({
-    //             key: "{roleGroup>role_group_code}",
-    //             text: "{= ${roleGroup>role_group_code} + ':' + ${roleGroup>role_group_name}}"
-    //           })
-    //         },
-    //         editable: "{= ${details>_row_state_} === 'C' }",
-    //         required: true
-    //       })
-    //     ]
-    //   });
-    // },
+          // 역할그룹코드
+          new ComboBox({
+            selectedKey: "{details>role_group_code}",
+            items: {
+              path: 'roleGroup>/RoleGroupMgr',
+              filters: [
+              ],
+              template: new Item({
+                key: "{roleGroup>role_group_code}",
+                text: "{= ${roleGroup>role_group_code} + ':' + ${roleGroup>role_group_name}}"
+              })
+            },
+            editable: "{= ${details>_row_state_} === 'C' }",
+            required: true
+          })
+        ]
+      });
+    },
 
-        // _bindMidTable: function (oTemplate, sKeyboardMode) {
-        //     this.byId("midTable").bindItems({
-        //         path: "details>/UserRoleGroupMgr",
-        //         template: oTemplate
-        //     }).setKeyboardMode(sKeyboardMode);
-        // },
+        _bindMidTable: function (oTemplate, sKeyboardMode) {
+            this.byId("midTable").bindItems({
+                path: "details>/UserRoleGroupMgr",
+                template: oTemplate
+            }).setKeyboardMode(sKeyboardMode);
+        },
 
         _oFragments: {},
         _showFormFragment: function (sFragmentName) {
@@ -500,6 +498,7 @@ sap.ui.define([
                 if (oHandler) oHandler(this._oFragments[sFragmentName]);
             }
         }
+
 
 
     });

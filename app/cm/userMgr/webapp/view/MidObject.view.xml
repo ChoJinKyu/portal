@@ -143,16 +143,17 @@
 										<Text text="{details>_row_state_}"/>
                                         <!-- 역할그룹코드 -->
                                         <ComboBox
-                                        selectedKey="{details>role_group_code}"
-                                        width="100%"
-                                        items="{
-                                            path: 'roleGroup>/RoleGroupMgr',
-                                            filters: [
-                                            ]
-                                        }">
-                                        <items>
-                                            <core:Item key="{roleGroup>role_group_code}" text="{roleGroup>role_group_code} : {roleGroup>role_group_name}" />
-                                        </items>
+                                            id="searchRoleGroupCode"
+                                            selectedKey="{details>role_group_code}"
+                                            width="100%"
+                                            items="{
+                                                path: 'roleGroup>/RoleGroupMgr',
+                                                filters: [
+                                                ]
+                                            }">
+                                            <items>
+                                                <core:Item key="{roleGroup>role_group_code}" text="{roleGroup>role_group_code} : {roleGroup>role_group_name}" />
+                                            </items>
                                         </ComboBox>
                                         <!-- 시작일자 -->
                                         <DatePicker value="{ path: 'details>start_date', type: 'sap.ui.model.odata.type.Date', formatOptions: { UTC: true, format: 'yMd' } }" />
