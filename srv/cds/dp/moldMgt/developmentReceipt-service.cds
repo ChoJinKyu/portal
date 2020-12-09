@@ -35,7 +35,7 @@ service DevelopmentReceiptService {
     from moldMst.Md_Mst a
     where a.model is not null;
 
-    view PartNumbers as
+    view MoldNumbers as
     select distinct key a.tenant_id, key a.mold_number, a.spec_name
     from moldMst.Md_Mst a
     where a.mold_number is not null;
