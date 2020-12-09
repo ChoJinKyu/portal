@@ -3,7 +3,7 @@ namespace cm;
 using util from '../util/util-model';
 
 entity Role_Menu {	
-  key tenent_id : String(5)  not null;	
+  key tenant_id : String(5)  not null;	
   key role_code : String(30)  not null;	
   key menu_code : String(30)  not null;	
 }	
