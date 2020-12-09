@@ -1,8 +1,11 @@
 
 using { cm.Code_Dtl as codeDetail, cm.Code_Lng as codeLanguage } from '../../../../db/cds/cm/codeMgr/CM_CODE_LNG-model';
+
 using { cm.Message as message } from '../../../../db/cds/cm/msgMgr/CM_MESSAGE-model';
 using { cm as codeView } from '../../../../db/cds/cm/util/CM_CODE_VIEW-model';
 using { cm.Currency as currency, cm.Currency_Lng as currencyLanguage } from '../../../../db/cds/cm/currencyMgr/CM_CURRENCY_LNG-model';
+using { cm.Country as country, cm.Country_Lng as countryLanguage } from '../../../../db/cds/cm/countryMgr/CM_COUNTRY_LNG-model';
+using { cm.Time_Zone as timezone } from '../../../../db/cds/cm/timeZoneMgr/CM_TIME_ZONE-model';
 
 namespace cm.util;
 
@@ -49,6 +52,36 @@ service CommonService {
         where
             $now between c.effective_start_date and c.effective_end_date
             and c.use_flag = true
+    ;
+    
+    @readonly
+    view Country as
+        select 
+            key c.tenant_id,
+            key c.country_code,
+            l.country_name as country_code_name: String(30),
+            c.language_code,
+            c.iso_code,
+            c.eu_code,
+            c.currency_code,
+            c.date_format_code,
+            c.number_format_code
+        from country as c 
+            left join countryLanguage as l 
+                on c.tenant_id = l.tenant_id 
+                and c.country_code = l.country_code
+                and l.language_code = 'KO'
+    ;
+    
+    @readonly
+    view Timezone as
+        select 
+            key a.tenant_id,
+            key a.timezone_code,
+            a.timezone_name,
+            a.country_code,
+            gmt_offset
+        from timezone as a
     ;
 
 }

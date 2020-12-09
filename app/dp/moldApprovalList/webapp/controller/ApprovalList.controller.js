@@ -324,7 +324,7 @@ sap.ui.define([
                     "cols": [
                         {
                             "label": "Part No",
-                            "template": "part_number"
+                            "template": "mold_number"
                         },
                         {
                             "label": "Item Type",
@@ -332,7 +332,7 @@ sap.ui.define([
                         },
                         {
                             "label": "Description",
-                            "template": "mspec_name"
+                            "template": "spec_name"
                         }
                     ]
                 });
@@ -340,7 +340,7 @@ sap.ui.define([
                 path = '/PartNumbers';
 
                 this._oValueHelpDialog.setTitle('Part No');
-                this._oValueHelpDialog.setKey('part_number');
+                this._oValueHelpDialog.setKey('mold_number');
                 this._oValueHelpDialog.setDescriptionKey('spec_name');
 
             }else if(oEvent.getSource().sId.indexOf("searchRequester") > -1){

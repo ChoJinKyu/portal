@@ -62,7 +62,7 @@ sap.ui.define([
                 text: "Cancel",
                 press: function () {
                     this.fireEvent("cancel");
-                    this.close();
+                    this.oDialog.close();
                 }.bind(this)
             }));
 
@@ -78,12 +78,13 @@ sap.ui.define([
                 }),
                 columns: [
                     new Column({
-                        width: "100px",
-                        header: new Text({text: this.getProperty("keyFieldHeaderText")})
+                        width: "75%",
+                        header: new Text({text: this.getProperty("textFieldHeaderText")})
                     }),
                     new Column({
-                        width: "300px",
-                        header: new Text({text: this.getProperty("textFieldHeaderText")})
+                        width: "25%",
+                        hAlign: "Center",
+                        header: new Text({text: this.getProperty("keyFieldHeaderText")})
                     })
                 ],
                 items: {
@@ -91,8 +92,8 @@ sap.ui.define([
                     template: new ColumnListItem({
                         type: "Active",
                         cells: [
-                            new Text({text: "{"+this.getProperty("keyField")+"}"}),
-                            new Text({text: "{"+this.getProperty("textField")+"}"})
+                            new Text({text: "{"+this.getProperty("textField")+"}"}),
+                            new Text({text: "{"+this.getProperty("keyField")+"}"})
                         ],
                         press: this.onItemPress.bind(this)
                     })

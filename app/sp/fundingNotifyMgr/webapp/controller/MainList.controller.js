@@ -203,9 +203,7 @@ sap.ui.define([
         },
 
         _getSearchStates: function () {
-            var sTitle, sUsage, aSearchFilters = [];
-            //if (!!this.byId("searchTitle").getSelectedKey()) aSearchFilters.push(new Filter("chain_code", FilterOperator.EQ, this.byId("searchChainCombo").getSelectedKey()));
-            if (!!this.byId("searchDateS").getValue()) aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.byId("searchDateS").getValue()));
+            var sTitle, searchDateS, aSearchFilters = [];
             if (!!(sTitle = this.byId("searchTitle").getValue())) {
                 aSearchFilters.push(new Filter({
                     filters: [
@@ -214,6 +212,8 @@ sap.ui.define([
                 }));
             }
 
+            
+            
             return aSearchFilters;
         },
 

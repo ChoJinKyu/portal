@@ -17,7 +17,7 @@
         columnsM="2">
         <form:content>
             <VBox>
-                <Label text="공고번호 :" required="true"/>
+                <Label text="공고번호 :" />
                 <Input editable="false"
                     value="{
                         path: 'master>/funding_notify_number',
@@ -28,7 +28,7 @@
                 </layoutData>
             </VBox>
             <VBox>
-                <Label text="공고기간 :" required="true"/>
+                <Label text="공고기간 :" />
                 <DateRangeSelection 
                     id="searchDate" 
                     displayFormat="yyyy-MM-dd" 
@@ -42,7 +42,7 @@
                 </layoutData>
             </VBox>
             <VBox>
-                <Label text="신청마감일 :" required="true"/>
+                <Label text="신청마감일 :" />
                 <DatePicker editable="false"
                     value="{
                         path:'master>/funding_appl_closing_date',
@@ -56,7 +56,7 @@
                 </layoutData>
             </VBox>
             <VBox>
-                <Label text="제목 :" required="true"/>
+                <Label text="제목 :" />
                 <Input editable="false"
                     value="{
                         path: 'master>/funding_notify_title',
@@ -70,20 +70,8 @@
                 </layoutData>
             </VBox>
             
-            <VBox>
-                <Label text="내용 :" required="true"/>
-                <richtexteditor:RichTextEditor id="idrichtexteditorShow" editable="false"
-                    editorType="TinyMCE4"
-                    useLegacyTheme="false" 
-                    showGroupClipboard="false" 
-                    showGroupTextAlign="true" 
-                    showGroupStructure="true" 
-                    showGroupLink="true"  
-                    showGroupFont="false"
-                    value="{master>/funding_notify_contents}"
-                    width="100%"
-                    height="400px">
-                </richtexteditor:RichTextEditor>
+            <VBox id="idShowLayout">
+                <Label text="내용 :" />
                 <layoutData>
                     <l:GridData span="XL12 L12 M12 S12" />
                 </layoutData>
