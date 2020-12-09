@@ -129,7 +129,7 @@
                                                 class="sapMLabelNoText"/>
                                         <Switch id="switchUse_flag" 
                                                 visible="{=!${oUi>/readMode}}"
-                                                state="{= ${oUiData>/use_flag}!=='' ? false:${oUiData>/use_flag}}"
+                                                state="{= ${oUiData>/use_flag}!=='' ? true:${oUiData>/use_flag}}"
                                         >
                                             <layoutData>
                                                 <FlexItemData growFactor="1"/>
