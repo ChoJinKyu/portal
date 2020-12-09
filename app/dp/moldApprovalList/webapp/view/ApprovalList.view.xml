@@ -208,13 +208,13 @@
                                     showValueHelp="true"  
                                     valueHelpRequest=".onValueHelpRequested"
                                     suggestionItems="{
-                                        path: '/CreateUsers',
+                                        path: '/Requestors',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                         ],
-                                        sorter: { path: 'create_user_id' }
+                                        sorter: { path: 'user_id' }
                             }">
-                                <core:Item key="{create_user_id}" text="{create_user_id}" />
+                            <core:Item key="{user_id}" text="{user_id}" />
                                 
                             </Input>
                            
@@ -362,7 +362,7 @@
                                 </ComboBox>
                                 <ObjectIdentifier text="{list>approval_number}" />
                                 <ObjectIdentifier text="{list>approval_title}" />
-                                <ObjectIdentifier text="{list>requestor_empno}" />
+                                <!-- <ObjectIdentifier text="{list>requestor_empno}" /> -->
                                 <ComboBox
                                         editable="false"   
                                         class="readonlyField"
