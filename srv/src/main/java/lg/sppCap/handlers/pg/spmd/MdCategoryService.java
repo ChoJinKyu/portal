@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.time.Instant;
 
-//import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,16 +41,46 @@ public class MdCategoryService implements EventHandler {
     
     // 카테고리 Id 저장 전
     @Before(event=CdsService.EVENT_CREATE, entity=MdCategory_.CDS_NAME)
-    public void createBeforeMdCategoryIdProc(List<MdCategory> cateIds) {
+    public void createBeforeMdCategoryIdProc(List< MdCategory> cateIds) {
 
         Instant current = Instant.now();
 
         log.info("### ID Insert... [Before] ###");
 
-        for(MdCategory cateId : cateIds) {
-            cateId.setLocalCreateDtm(current);
-            cateId.setLocalUpdateDtm(current);
+        if(!cateIds.isEmpty() && cateIds.size() > 0){
+
+            String cateCode = "";
+            
+            for(MdCategory cateId : cateIds) {
+                                    
+                cateId.setLocalCreateDtm(current);
+                cateId.setLocalUpdateDtm(current);
+
+                //log.info("###"+cateId.toString()+"###");
+
+                // DB처리
+                try {
+                    Connection conn = jdbc.getDataSource().getConnection();
+                    // Item SPMD범주코드 생성 Function
+                    PreparedStatement v_statement_select = conn.prepareStatement("SELECT PG_SPMD_CATEGORY_CODE_FUNC(?) AS CATE_CODE FROM DUMMY");
+                    v_statement_select.setObject(1, "");    // Category 채번 구분값 없음.
+                    ResultSet rslt = v_statement_select.executeQuery();
+                    if(rslt.next()) cateCode = rslt.getString("CATE_CODE");
+                    
+                    //log.info("###[LOG-10]=> ["+cateCode+"]");
+
+                } catch (SQLException sqlE) { 
+                    sqlE.printStackTrace();
+                    log.error("### ErrCode : "+sqlE.getErrorCode()+"###");
+                    log.error("### ErrMesg : "+sqlE.getMessage()+"###");
+                }
+
+                log.info("###[LOG-11]=> ["+cateCode+"]");
+
+                cateId.setSpmdCategoryCode(cateCode);
+            }
         }
+
     }
 
     // 카테고리 Id 저장
@@ -131,8 +161,8 @@ public class MdCategoryService implements EventHandler {
                 cateCode = item.getSpmdCategoryCode();
                 charCode = item.getSpmdCharacterCode();
 
-                if ("".equals(charCode) || charCode == null) {
-                //if (StringUtils.isEmpty(charCode)) {
+                //if ("".equals(charCode) || charCode == null) {
+                if (StringUtils.isEmpty(charCode)) {
 
                     // DB처리
                     try {

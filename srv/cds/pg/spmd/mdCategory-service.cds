@@ -25,36 +25,34 @@ service MdCategoryService {
 
     // Category별 Item View
     view MdCategoryCodeItemView @(title : 'Category Item Mapping View') as
-		select 
+    	select 
 			key cid.tenant_id
 			, key cid.company_code
 			, key cid.org_type_code
 			, key cid.org_code
 			, key cid.spmd_category_code
-			, key citm.spmd_character_code
 
 			, cid.spmd_category_code_name
 			, cid.rgb_font_color_code
 			, cid.rgb_cell_clolor_code
 			, cid.spmd_category_sort_sequence
-		
+
 			, citm.spmd_character_code_name
 			, citm.spmd_character_desc
 			, citm.spmd_character_sort_seq
 			, citm.spmd_character_serial_no
-		 
-		from cateId.Md_Category_Id as cid
-			left outer join cateItem.Md_Category_Item as citm on cid.tenant_id = citm.tenant_id
+            
+        from cateId.Md_Category_Id as cid
+			join cateItem.Md_Category_Item as citm on cid.tenant_id = citm.tenant_id
 									  and cid.company_code = citm.company_code
 									  and cid.org_type_code = citm.org_type_code
 									  and cid.org_code = citm.org_code
 									  and cid.spmd_category_code = citm.spmd_category_code
-		order by cid.spmd_category_sort_sequence
-                , citm.spmd_character_sort_seq
 		;
 
 
     // Category별 Item Condition View
+    // 참고사항) oData v2에서 parameter있는 View가 호출이 안됨.
     view MdCategoryCodeItemConditionView (
                         tenant_id: String(5), 
                         company_code: String(10), 
@@ -81,7 +79,7 @@ service MdCategoryService {
 			, citm.spmd_character_serial_no
 		 
 		from cateId.Md_Category_Id as cid
-			left outer join cateItem.Md_Category_Item as citm on cid.tenant_id = citm.tenant_id
+			join cateItem.Md_Category_Item as citm on cid.tenant_id = citm.tenant_id
 									  and cid.company_code = citm.company_code
 									  and cid.org_type_code = citm.org_type_code
 									  and cid.org_code = citm.org_code
@@ -91,9 +89,6 @@ service MdCategoryService {
 		and cid.org_type_code = :org_type_code
 		and cid.org_code = :org_code
 		and cid.spmd_category_code = :spmd_category_code
-		order by cid.spmd_category_sort_sequence
-                , citm.spmd_character_sort_seq
 		;
-
 
 }
