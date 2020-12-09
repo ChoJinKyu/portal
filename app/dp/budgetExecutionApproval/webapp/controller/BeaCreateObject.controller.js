@@ -18,9 +18,10 @@ sap.ui.define([
     "sap/m/Label",
     "ext/lib/model/TransactionManager",
     "ext/lib/util/Multilingual",
-    "ext/lib/util/Validator",
+    "ext/lib/util/Validator", 
+     "ext/lib/formatter/Formatter",
 ], function (BaseController, JSONModel, History, ManagedListModel, ManagedModel, RichTextEditor, DateFormatter, Filter, FilterOperator, Fragment
-    , MessageBox, MessageToast, UploadCollectionParameter, Device, syncStyleClass, ColumnListItem, Label, TransactionManager, Multilingual, Validator) {
+    , MessageBox, MessageToast, UploadCollectionParameter, Device, syncStyleClass, ColumnListItem, Label, TransactionManager, Multilingual, Validator, Formatter) {
     "use strict";
     /**
      * @description 예산집행품의 Create, update 화면 
@@ -30,7 +31,7 @@ sap.ui.define([
     var mainViewName = "beaCreateObjectView";
     var oTransactionManager;
     return BaseController.extend("dp.budgetExecutionApproval.controller.BeaCreateObject", {
-
+         formatter: Formatter,
         dateFormatter: DateFormatter,
         validator: new Validator(),
         /* =========================================================== */
@@ -68,21 +69,21 @@ sap.ui.define([
             this.getView().setModel(new ManagedListModel(), "appList"); // apporval list 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
             this.setModel(new ManagedListModel(), "moldList");  // view 임 
- 
+
 
             this.getView().setModel(new ManagedModel(), "appMaster");
             this.getView().setModel(new ManagedListModel(), "appDetail");
-            this.getView().setModel(new ManagedListModel(), "MoldMasterList");
+            // this.getView().setModel(new ManagedListModel(), "MoldMasterList");
             this.getView().setModel(new ManagedListModel(), "Approvers");
-      
+
 
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("appMaster"));
             oTransactionManager.addDataModel(this.getModel("appDetail"));
-            oTransactionManager.addDataModel(this.getModel("MoldMasterList"));
+            // oTransactionManager.addDataModel(this.getModel("MoldMasterList"));
             oTransactionManager.addDataModel(this.getModel("Approvers"));
 
-      
+
         },
 
         onAfterRendering: function () {
@@ -267,34 +268,26 @@ sap.ui.define([
                 , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
             ];
 
-            this._bindView("/ApprovalMasters(tenant_id='L1100',approval_number='" + args.approval_number + "')", "appMaster", [], function (oData) {
+            this._bindView("/ApprovalMasters(tenant_id='L1100',approval_number='" + args.approval_number + "')"
+                , "appMaster", [], function (oData) { 
+                    console.log(" ApprovalMasters oData " , oData); 
+                that._createViewBindData(oData); // comapny , plant 조회 
                 that.setRichEditor(oData.approval_contents);
+            });
+
+            this._bindView("/ApprovalDetails", "appDetail", schFilter, function (oData) {
+                console.log("approvalDetails >>>> ", oData);
+                // that._bindView("/MoldMasters", "MoldMasterList", [
+                //     new Filter("company_code", FilterOperator.EQ, sResult.company_code)
+                //     , new Filter("org_code", FilterOperator.EQ, sResult.org_code)
+                // ], function (oData) {
+                // });
             });
 
             this._bindView("/Approver", "Approvers", schFilter, function (oData) {
                 console.log("Approver >>>> ", oData);
             });
-            var sResult = {};
-
-            this._bindView("/ItemBudgetExecution", "moldList", schFilter, function (oData) {
-                sResult = oData.results[0];
-                that._createViewBindData(sResult); // comapny , plant 조회 
-                that._bindView("/ApprovalDetails", "appDetail", schFilter, function (oData) {
-
-
-                    that._bindView("/MoldMasters", "MoldMasterList", [
-                        new Filter("company_code", FilterOperator.EQ, sResult.company_code)
-                        , new Filter("org_code", FilterOperator.EQ, sResult.org_code)
-                    ], function (oData) {
-
-                    });
-
-                });
-                 console.log("moldTest>>>> " , that.getModel("moldList") );
-            });
-
-           
-
+   
             oTransactionManager.setServiceModel(this.getModel());
         },
 
@@ -336,21 +329,15 @@ sap.ui.define([
             var psTable = this.byId("psTable")
                 , psModel = this.getModel("appDetail")
                 , oSelected = psTable.getSelectedIndices()
+               
                 ;
             if (oSelected.length > 0) {
-                MessageBox.confirm("삭제 하시겠습니까?", {
-                    title: "Comfirmation",
-                    initialFocus: sap.m.MessageBox.Action.CANCEL,
-                    onClose: function (sButton) {
-                        if (sButton === MessageBox.Action.OK) {
-                            oSelected.forEach(function (idx) {
-                                psModel.markRemoved(idx)
-                            });
-                        };
-                    }.bind(this)
+                oSelected.forEach(function (idx) {
+                    psModel.markRemoved(idx)
                 });
-
                 psTable.clearSelection();
+
+                 console.log("psModel" ,  psModel);
             } else {
                 MessageBox.error("삭제할 목록을 선택해주세요.");
             }
@@ -497,8 +484,8 @@ sap.ui.define([
         */
         _getSearchMoldSelection: function () {
             var aSearchFilters = [];
-                // tenant_id  
-                aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100'));
+            // tenant_id  
+            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100'));
             var company = this.byId('MoldItemSearchCompany').mProperties.selectedKey;
             var plant = this.byId('MoldItemSearchPlant').mProperties.selectedKey;
             var model = this.byId('moldItemModel').getValue().trim();
@@ -526,9 +513,9 @@ sap.ui.define([
         _applyMoldSelection: function (aSearchFilters) {
             console.log(" [step] Mold Item Selection Search Button Serch ", aSearchFilters);
             var oView = this.getView(),
-                oModel = this.getModel("MoldItemSelect"); 
+                oModel = this.getModel("MoldItemSelect");
 
-            console.log(" model >>> " , this.getModel("moldItem"));
+            console.log(" model >>> ", this.getModel("moldItem"));
 
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel("moldItem"));
@@ -600,23 +587,30 @@ sap.ui.define([
          */
         _addPsTable: function (data) {
             var oTable = this.byId("psTable"),
-                oModel = this.getModel("moldList");
-
+                oModel = this.getModel("appDetail"),
+                mstModel = this.getModel("appMaster");
+            ;
+            /** add record 시 저장할 model 과 다른 컬럼이 있을 경우 submit 안됨 */
+            var approval_number = mstModel.oData.approval_number;
             oModel.addRecord({
-                "mold_id": data.oData.mold_id,
-                "model": data.oData.model,
-                "mold_number": data.oData.mold_number,
-                "mold_sequence": data.oData.mold_sequence,
-                "spec_name": data.oData.spec_name,
-                "mold_item_type_code": data.oData.mold_item_type_code,
-                "book_currency_code": data.oData.book_currency_code,
-                "budget_amount": data.oData.budget_amount,
-                "mold_production_type_code": "",
-                "asset_type_code": "",
-                "family_part_number_1": "",
-                "budget_exrate_date": "",
-                "inspection_date": "",
-            }, "/ItemBudgetExecution");
+                "tenant_id": "L1100",
+                "mold_id": String(data.oData.mold_id),
+                "approval_number": approval_number,
+                /*  "model": data.oData.model,
+                  "mold_number": data.oData.mold_number,
+                  "mold_sequence": data.oData.mold_sequence,
+                  "spec_name": data.oData.spec_name,
+                  "mold_item_type_code": data.oData.mold_item_type_code,
+                  "book_currency_code": data.oData.book_currency_code,
+                  "budget_amount": data.oData.budget_amount,
+                  "mold_production_type_code": "",
+                  "asset_type_code": "",
+                  "family_part_number_1": "",
+                  "budget_exrate_date": "",
+                  "inspection_date": "",  */
+                "local_create_dtm": new Date(),
+                "local_update_dtm": new Date()
+            }, "/ApprovalDetails", 0);
         },
 
         /**
@@ -627,16 +621,16 @@ sap.ui.define([
                 oModel = this.getModel("appList");
             if (oModel.oData.undefined == undefined || oModel.oData.undefined == null) {
                 oModel.addRecord({
-                    "no": "1",
+                    "approve_sequence": "1",
                     "type": "",
                     "nameDept": "",
                     "status": "",
-                    "comment": "",
+                    "approve_comment": "",
                     "arrowUp": "",
                     "arrowDown": "",
                     "editMode": true,
                     "trashShow": false
-                });
+                },"/Approver");
             }
         },
         /**
@@ -740,57 +734,57 @@ sap.ui.define([
             for (var i = 0; i < oldItems.length - 1; i++) {
                 if (oldItems.length > 1 && i == 0) { // 첫줄은 bottom 으로 가는 화살표만 , 생성되는 1줄만일 경우는 화살표 없기 때문에 1 보다 큰지 비교 
                     oModel.addRecord({
-                        "no": noCnt,
+                        "approve_sequence": noCnt,
                         "type": oldItems[i].type,
                         "nameDept": oldItems[i].nameDept,
                         "status": "",
-                        "comment": "",
+                        "approve_comment": "",
                         "arrowUp": "",
                         "arrowDown": "sap-icon://arrow-bottom",
                         "editMode": false,
                         "trashShow": true
-                    });
+                    }, "/Approver");
                 } else {
                     oModel.addRecord({ // 중간 꺼는 위아래 화살표 모두 
-                        "no": noCnt,
+                        "approve_sequence": noCnt,
                         "type": oldItems[i].type,
                         "nameDept": oldItems[i].nameDept,
                         "status": "",
-                        "comment": "",
+                        "approve_comment": "",
                         "arrowUp": "sap-icon://arrow-top",
                         "arrowDown": "sap-icon://arrow-bottom",
                         "editMode": false,
                         "trashShow": true
-                    });
+                    },"/Approver");
                 }
                 noCnt++;
             }
 
             /** 신규 데이터를 담는 작업 */
             oModel.addRecord({
-                "no": noCnt,
+                "approve_sequence": noCnt,
                 "type": oldItems[oldItems.length - 1].type, // 마지막에 select 한 내용으로 담음 
                 "nameDept": obj.oData.moldPartNo,
                 "status": "",
-                "comment": "",
+                "approve_comment": "",
                 "arrowUp": noCnt == 1 ? "" : "sap-icon://arrow-top", // 생성되는 1줄만일 경우는 화살표 없기 때문에 1 보다 큰지 비교
                 "arrowDown": "",
                 "editMode": false,
                 "trashShow": true
-            });
+            },"/Approver");
             /** 마지막 Search 하는 Row 담는 작업 */
             noCnt++;
             oModel.addRecord({
-                "no": noCnt,
+                "approve_sequence": noCnt,
                 "type": "",
                 "nameDept": "",
                 "status": "",
-                "comment": "",
+                "approve_comment": "",
                 "arrowUp": "",
                 "arrowDown": "",
                 "editMode": true,
                 "trashShow": false
-            });
+            },"/Approver");
 
         },
         onSortUp: function (oParam) {
@@ -930,57 +924,57 @@ sap.ui.define([
             for (var i = 0; i < dataList.length; i++) {
                 if (dataList.length > 0 && i == 0) { // 첫줄은 bottom 으로 가는 화살표만 , 생성되는 1줄만일 경우는 화살표 없기 때문에 1 보다 큰지 비교 
                     oModel.addRecord({
-                        "no": noCnt,
+                        "approve_sequence": noCnt,
                         "type": dataList[i].type,
                         "nameDept": dataList[i].nameDept,
                         "status": "",
-                        "comment": "",
+                        "approve_comment": "",
                         "arrowUp": "",
                         "arrowDown": "sap-icon://arrow-bottom",
                         "editMode": false,
                         "trashShow": true
-                    });
+                    },"/Approver");
                 } else if (i == dataList.length - 1) {
                     oModel.addRecord({ // 마지막 꺼는 밑으로 가는거 없음  
-                        "no": noCnt,
+                        "approve_sequence": noCnt,
                         "type": dataList[i].type,
                         "nameDept": dataList[i].nameDept,
                         "status": "",
-                        "comment": "",
+                        "approve_comment": "",
                         "arrowUp": "sap-icon://arrow-top",
                         "arrowDown": "",
                         "editMode": false,
                         "trashShow": true
-                    });
+                    },"/Approver");
 
                 } else {
                     oModel.addRecord({ // 중간 꺼는 위아래 화살표 모두 
-                        "no": noCnt,
+                        "approve_sequence": noCnt,
                         "type": dataList[i].type,
                         "nameDept": dataList[i].nameDept,
                         "status": "",
-                        "comment": "",
+                        "approve_comment": "",
                         "arrowUp": "sap-icon://arrow-top",
                         "arrowDown": "sap-icon://arrow-bottom",
                         "editMode": false,
                         "trashShow": true
-                    });
+                    },"/Approver");
                 }
                 noCnt++;
             }
 
             /** 마지막 Search 하는 Row 담는 작업 */
             oModel.addRecord({
-                "no": noCnt,
+                "approve_sequence": noCnt,
                 "type": "",
                 "nameDept": "",
                 "status": "",
-                "comment": "",
+                "approve_comment": "",
                 "arrowUp": "",
                 "arrowDown": "",
                 "editMode": true,
                 "trashShow": false
-            });
+            },"/Approver");
         },
 
         handleSelectionChangeReferrer: function (oEvent) { // Referrer 
@@ -1018,37 +1012,7 @@ sap.ui.define([
          * @description save
          */
         onPageDraftButtonPress: function () {
-           console.log("this.getModel moldList >> " , this.getModel('moldList'));
 
-            var oData = this.getModel('moldList').getProperty("/ItemBudgetExecution");
-         
-           
-          // console.log(" appMaster ", this.getModel("appMaster"));
-           var isOk = false;
-            // for(var i = 0 ; i < oData.length ; i++){
-            //     var oDatak =  oData[i];
-            //         oDatak.STATE_COL = "U";
-            //     this.getModel("MoldMasterList").addRecord(oDatak,"/MoldMasters");
-            //     this.getModel("appDetail").addRecord(oDatak,"/ApprovalDetails");
-            //     if(i == oData.length-1){
-            //         isOk = true;
-            //     }
-            // }
-
-            console.log(" oTransactionManager ", oTransactionManager);
-            console.log(" oTransactionManager oTransactionManager ", oTransactionManager.oServiceModel.oData);
-            console.log(" oTransactionManager oTransactionManager ", oTransactionManager.oServiceModel.oData["MoldMasters('578488')"]);
-
-            oTransactionManager.oServiceModel.oData["MoldMasters('578488')"].asset_type_code = "I"
-            // var sEntityName = oTransactionManager.getProperty("/entityName"),
-            // aRecords = this.getProperty("/" + sEntityName);
-            // console.log(" aRecords ", aRecords);
-            
-            this.save();
-        
-    
-        },
-        save : function(){
             var oView = this.getView();
             MessageBox.confirm("Are you sure ?", {
                 title: "Comfirmation",
@@ -1065,8 +1029,8 @@ sap.ui.define([
                     };
                 }
             });
+        },
 
-        }
 
     });
 });

@@ -92,6 +92,7 @@ sap.ui.define([
                             aRecords.splice(0, 0, oEmpty);
                         }
                     }
+                    this.getModel().setSizeLimit(aRecords.length || 100);
                     this.getModel().setData(aRecords, false);
                     if(handleSuccess) 
                         handleSuccess.apply(this, arguments);

@@ -187,9 +187,9 @@
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                         ],
-                                        sorter: { path: 'part_number' }
+                                        sorter: { path: 'mold_number' }
                             }">
-                                <core:Item key="{part_number}" text="{part_number}" />
+                                <core:Item key="{mold_number}" text="{mold_number}" />
                             </Input>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
@@ -227,7 +227,7 @@
                             <SegmentedButton id="searchStatus" selectedKey="" width="100%">
                                 <items>
                                     <SegmentedButtonItem text="All" key="" />
-                                    <!-- <SegmentedButtonItem text="Apprv-Req" key="AR" width="5em"/> -->
+                                    <SegmentedButtonItem text="Appr-Req" key="AR" width="5em"/>
                                     <SegmentedButtonItem text="Draft" key="DR" width="5em" />
                                     <SegmentedButtonItem text="In-Appr" key="IA" width="5em" />
                                     <SegmentedButtonItem text="Apprvd" key="AP" width="5em" />
@@ -315,7 +315,7 @@
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>                  
-                                <CheckBox fieldGroupIds="{= ${list>approval_type_code}==='B'? 'checkBoxs':''}"  visible="{= ${list>approval_type_code}==='B'? true:false }" select=".onCheck" />       
+                                <CheckBox fieldGroupIds="{= ${list>approve_status_code}==='DR'? 'checkBoxs':''}"  visible="{= ${list>approve_status_code}==='DR'? true:false }" select=".onCheck" />       
                                 <ComboBox 
                                         editable="false"   
                                         class="readonlyField"

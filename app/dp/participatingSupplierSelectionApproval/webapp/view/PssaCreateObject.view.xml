@@ -79,8 +79,8 @@
                     <HBox>
                         <co:MicroProcessFlow>
                             <co:content>
-                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
+                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
                                 <co:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
                                 <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
                                 <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
@@ -188,7 +188,7 @@
 
                                 <table:columns>
                                     <table:Column id="c_model" width="5em" hAlign="Center">
-                                        <Label text="Model"/>           
+                                        <Label text="{I18N>/MODEL}"/>         
                                         <table:template>
                                             <Text id="t_model" text="{createlist>model}"/>
                                         </table:template>
@@ -206,7 +206,7 @@
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_description" width="10em" hAlign="Center">
-                                        <Label text="Description"/>           
+                                        <Label text="{I18N>/DESCRIPTION}"/>           
                                         <table:template>
                                             <Text id="description" text=""/>
                                         </table:template>

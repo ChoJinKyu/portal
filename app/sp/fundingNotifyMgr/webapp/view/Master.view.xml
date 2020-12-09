@@ -136,20 +136,6 @@
                             <ObjectStatus
                                 text="{products>7}"
                                 state="{= (${products>7} === 'Saved') ? 'Error' : 'Success' }" />
-
-<!-- 
-							<ObjectIdentifier title="{products>Name}" text="{products>ProductId}" />
-							<ObjectIdentifier text="{products>Quantity}" />
-							<ObjectIdentifier text="{products>Description}" />
-							<ObjectNumber
-									number="{
-										parts:[{path:'products>Price'},{path:'products>CurrencyCode'}],
-										type: 'sap.ui.model.type.Currency',
-										formatOptions: {showMeasure: false}
-									}"
-									unit="{products>CurrencyCode}" /> -->
-
-                                    
 						</cells>
 					</ColumnListItem>
 				</items>

@@ -986,7 +986,7 @@ sap.ui.define([
 			MessageToast.show(messageText, {
 				width: "auto"
 			});
-		}
+        }
 
 	});
 });
