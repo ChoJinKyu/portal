@@ -29,7 +29,7 @@ service MoldApprovalListService {
     from moldMstSpecView.Md_Mst_Spec_View a
     where a.create_user_id is not null;
 
-    view Requesters as
+    view Requestors as
     select distinct key a.tenant_id, a.english_employee_name, a.user_id 
     from req.User a
     where a.user_id is not null;
