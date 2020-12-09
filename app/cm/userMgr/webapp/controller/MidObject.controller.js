@@ -17,29 +17,24 @@ sap.ui.define([
   "sap/m/Input",
   "sap/m/ComboBox",
   "sap/ui/core/Item",
-], function (BaseController, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter,
-  Filter, FilterOperator, Fragment, MessageBox, MessageToast,
-  ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+], function (BaseController, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+    
+    "use strict";
 
-  "use strict";
+    var oTransactionManager;
 
-  var oTransactionManager;
+    return BaseController.extend("cm.userMgr.controller.MidObject", {
 
-  return BaseController.extend("cm.userMgr.controller.MidObject", {
+        dateFormatter: DateFormatter,
 
-    dateFormatter: DateFormatter,
+        formatter: (function () {
+            return {
+                toYesNo: function (oData) {
+                return oData === true ? "YES" : "NO"
+                },
+            }
+        })(),
 
-    formatter: (function () {
-      return {
-        toYesNo: function (oData) {
-          return oData === true ? "YES" : "NO"
-        },
-      }
-    })(),
-
-    // getFilter: function () {
-    //   console.log(">>>>>>>>>>> arguments", arguments);
-    // },
     /* =========================================================== */
     /* lifecycle methods                                           */
     /* =========================================================== */
@@ -503,36 +498,37 @@ sap.ui.define([
       });
     },
 
-    _bindMidTable: function (oTemplate, sKeyboardMode) {
-      this.byId("midTable").bindItems({
-        path: "details>/UserRoleGroupMgr",
-        template: oTemplate
-      }).setKeyboardMode(sKeyboardMode);
-    },
+        _bindMidTable: function (oTemplate, sKeyboardMode) {
+            this.byId("midTable").bindItems({
+                path: "details>/UserRoleGroupMgr",
+                template: oTemplate
+            }).setKeyboardMode(sKeyboardMode);
+        },
 
-    _oFragments: {},
-    _showFormFragment: function (sFragmentName) {
-      var oPageSubSection = this.byId("pageSubSection1");
-      this._loadFragment(sFragmentName, function (oFragment) {
-        oPageSubSection.removeAllBlocks();
-        oPageSubSection.addBlock(oFragment);
-      })
-    },
-    _loadFragment: function (sFragmentName, oHandler) {
-      if (!this._oFragments[sFragmentName]) {
-        Fragment.load({
-          id: this.getView().getId(),
-          name: "cm.userMgr.view." + sFragmentName,
-          controller: this
-        }).then(function (oFragment) {
-          this._oFragments[sFragmentName] = oFragment;
-          if (oHandler) oHandler(oFragment);
-        }.bind(this));
-      } else {
-        if (oHandler) oHandler(this._oFragments[sFragmentName]);
-      }
-    }
+        _oFragments: {},
+        _showFormFragment: function (sFragmentName) {
+            var oPageSubSection = this.byId("pageSubSection1");
+            this._loadFragment(sFragmentName, function (oFragment) {
+                oPageSubSection.removeAllBlocks();
+                oPageSubSection.addBlock(oFragment);
+            })
+        },
+
+        _loadFragment: function (sFragmentName, oHandler) {
+            if (!this._oFragments[sFragmentName]) {
+                Fragment.load({
+                    id: this.getView().getId(),
+                    name: "cm.userMgr.view." + sFragmentName,
+                    controller: this
+                }).then(function (oFragment) {
+                    this._oFragments[sFragmentName] = oFragment;
+                    if (oHandler) oHandler(oFragment);
+                }.bind(this));
+            } else {
+                if (oHandler) oHandler(this._oFragments[sFragmentName]);
+            }
+        }
 
 
-  });
+    });
 });
