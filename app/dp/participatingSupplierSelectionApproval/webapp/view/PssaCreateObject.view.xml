@@ -79,8 +79,8 @@
                     <HBox>
                         <co:MicroProcessFlow>
                             <co:content>
-                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
+                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
                                 <co:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
                                 <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
                                 <co:MicroProcessFlowItem state="None" stepWidth="3rem" />

@@ -315,7 +315,7 @@
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>                  
-                                <CheckBox fieldGroupIds="{= ${list>approval_type_code}==='B'? 'checkBoxs':''}"  visible="{= ${list>approval_type_code}==='B'? true:false }" select=".onCheck" />       
+                                <CheckBox fieldGroupIds="{= ${list>approve_status_code}==='DR'? 'checkBoxs':''}"  visible="{= ${list>approve_status_code}==='DR'? true:false }" select=".onCheck" />       
                                 <ComboBox 
                                         editable="false"   
                                         class="readonlyField"
