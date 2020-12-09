@@ -1,7 +1,7 @@
-863/**
- * 전체적인 CRUD
- * 수정부터
- * 삭제는 상세페이지에서 
+/**
+ * 자재 체크 변경  onMiMaterialCodeCheck 현재 다섯자 이상부터 검사 
+ * 메인페이지 Delete 추가. 
+ * 
  * 신규등록시 빈값을 전달
  * _sso로 등록페이지 사용
  * mm 참고 action 수정
@@ -67,7 +67,7 @@ sap.ui.define([
             },
             processMode : {
                 create : "C", //신규, 
-                read : "R",   //보기
+                read : "　",   //보기
                 edit : "E"    //수정
             },
             itemMode : {
@@ -112,7 +112,7 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
-            console.group("[mid] onInit");
+            console.group("[midObjectPage] onInit");
 
             // Attaches validation handlers
             sap.ui.getCore().attachValidationError(function (oEvent) {
@@ -132,12 +132,7 @@ sap.ui.define([
                 createMode : false
             });
 
-            var midTaleData = new JSONModel({
-                items: []
-            });
-
             this.setModel(oUi, "oUi");
-
 
             this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
 
@@ -196,32 +191,6 @@ sap.ui.define([
             }
         },
 
-        /**
-         * midTable filter
-         */
-        _setTableFilters: function (midTale) {
-            console.group("_setTableFilters");
-            Log.info("_setTableFilters >  midTale : " + midTale);
-            /**
-             * 모든 작업은 공통 모듈을 사용하지 않아도 된다. 
-             * 모든 테이블을 스마트 테이블로 가야 가야하는가? 리포트 뷰형은 스마트 테이블을 사용한다. 
-             * 
-             */
-            var oUiData = this.getModel("oUiData");
-
-            //sample 'LED-001-01'
-            var oModel = this.getOwnerComponent().getModel(),
-                oBinding = midTale.getBinding("items"),
-                aFilters = [];
-            midTale.setModel(oModel);
-
-            var oFilter = new Filter("mi_material_code", FilterOperator.EQ, oUiData.getProperty("/mi_material_code"));
-            aFilters.push(oFilter);
-            oBinding.filter(aFilters);
-
-            console.groupEnd();
-        },
-
         _formFragments: {},
 
         /**
@@ -245,7 +214,6 @@ sap.ui.define([
             return this._formFragments[sFragmentName];
 
             console.groupEnd();
-
         },
 
         _showFormFragment: function (sFragmentName) {
@@ -266,15 +234,6 @@ sap.ui.define([
             console.groupEnd();
         },
 
-        /**null check */
-        _isValNull: function (p_val) {
-            if (!p_val || p_val == "" || p_val == null) {
-                return true
-            } else {
-                return false;
-            }
-        },
-
         /**
          * 자재코드 확인
          * @public
@@ -290,14 +249,16 @@ sap.ui.define([
 
             var bMaterialCode = false;
 
-            if (this._isValNull(input_mi_material_code)) {
+            if (this._isNull(input_mi_material_code)) {
 
-                this._showMessageBox(
-                    "자재코드 확인",
-                    "자재코드를 먼저 입력 하셔야 합니다.",
-                    this._m.messageType.Warning,
-                    function(){return;}
-                );
+                this._showMessageToast("자재코드를 먼저 입력 하셔야 합니다.");
+
+                // this._showMessageBox(
+                //     "자재코드 확인",
+                //     "자재코드를 먼저 입력 하셔야 합니다.",
+                //     this._m.messageType.Warning,
+                //     function(){return;}
+                // );
 
                 return;
             }
@@ -367,7 +328,11 @@ sap.ui.define([
                 onClose: closeEvent,
             });
         },
+        
 
+        _showMessageToast : function(content){
+            MessageToast.show(content);
+        },
 
         /* =========================================================== */
         /* event handlers                                              */
@@ -613,13 +578,7 @@ sap.ui.define([
 
             } else {
 
-                this._showMessageBox(
-                    "확인",
-                    "삭세할 항목을 선택 하셔야 합니다.",
-                    this._m.messageType.Warning,
-                    function(){return;}
-                );
-
+                this._showMessageToast("삭제할 항목을 선택 하셔야 합니다.");
                 return;
             }
         },
@@ -746,12 +705,7 @@ sap.ui.define([
                 
                 if(nCound>1)
                 {
-                    this._showMessageBox(
-                        "중복 확인",
-                        "고유한 언어를 선택하여 주십시요.",
-                        this._m.messageType.Warning,
-                        function(){return;}
-                    );
+                    this._showMessageToast("고유한 언어를 선택하여 주십시요.");
 
                     items.getCells()[1].mAggregations.items[0].setSelectedKey("");
 
@@ -782,13 +736,7 @@ sap.ui.define([
             }
 
             if(!bFlag){
-                MessageBox.show("더이상 추가 할수 없습니다.", {
-                    icon: MessageBox.Icon.WARNING,
-                    title: "언어 확인",
-                    actions: [MessageBox.Action.OK],
-                    styleClass: "sapUiSizeCompact"
-                });  
-
+                this._showMessageToast("더이상 추가 할수 없습니다.");
                 return;
             }
 
@@ -820,7 +768,7 @@ sap.ui.define([
             console.groupEnd();
         },
 
-                /**
+         /**
           * 버튼 액션 저장
           */
          onSaveAction : function(){
@@ -830,6 +778,10 @@ sap.ui.define([
              var bCreateFlag = oUi.getProperty("/createMode");
              var bOkActionFlag = false;
  
+             if(!this._onPageValidate()){
+                return;
+             }
+
              if(!this._checkData()){
                  return;
              }
@@ -866,6 +818,20 @@ sap.ui.define([
         },
 
         /**
+         * 대문자 및 중복 체크 
+         * @param {*} e 
+         */
+        onMiMaterialCodeCheck : function(e) {
+            var oView = this.getView();
+            var input_mi_material_code = this.getView().byId("input_mi_material_code");
+            // 소문자 -> 대문자 변환
+            input_mi_material_code.setValue(input_mi_material_code.getValue().toUpperCase());
+
+            if(input_mi_material_code.getValue().length > 5 ){
+                this._inputMartetial(input_mi_material_code);
+            }
+        },
+        /**
          * 업데이트
          */
         _onTableItemUpdate : function () {
@@ -875,9 +841,11 @@ sap.ui.define([
         _checkData : function(){
 
             console.log("call function ==================== onSaveAction ====================");
-
-            var validator = new Validator();
-            validator.validate(this.byId("page"));
+            // if(!ValidatorUtil.isValid(this.getView(),"requiredField")){
+            //     return;
+            // }
+            // var validator = new Validator();
+            // validator.validate(this.byId("page"));
 
             var omIMaterialCodeText = this.getOwnerComponent().getModel("mIMaterialCodeText"),
                 oUiData = this.getModel("oUiData"),
@@ -900,10 +868,9 @@ sap.ui.define([
             }
 
             if (materialCheck==false && oUi.getProperty("/createMode") == true) {
-
                 this._setValueState( 
                     this.getView().byId("input_mi_material_code"), 
-                    "자재코드 중복을 먼저 체크 하셔야 합니다."
+                    "자재코드를 확인 해야 합니다.."
                 );
                 return false;
                
@@ -926,15 +893,8 @@ sap.ui.define([
                     }
                     
 
-                    if (this._isValNull(comboBoxCategory_code)) {
-
-                        this._showMessageBox(
-                            "카테고리 확인",
-                            "카테고리를 선택 해야 합니다.",
-                            this._m.messageType.Warning,
-                            function(){return;}
-                        );
-
+                    if (this._isNull(comboBoxCategory_code)) {
+                        this._showMessageToast("카테고리를 선택 해야 합니다.");
                         return false;
                     }
                   
@@ -944,13 +904,8 @@ sap.ui.define([
             //language table check
             var oTableLength = oTable.getItems().length;
             if (oTableLength < 1) {
-                this._showMessageBox(
-                    "언어정보 확인",
-                    "언어정보를 등록 해야 합니다.",
-                    this._m.messageType.Warning,
-                    function(){return;}
-                );
-                
+
+                this._showMessageToast("언어정보를 등록 해야 합니다.");
                 return false;
             }
 
@@ -974,6 +929,7 @@ sap.ui.define([
                     break;
                 }                        
             }
+            
             var bNullCheck = true;
             for(var i=0; i<oTableLength;i++) {
                 if(oTable.getItems()[i].getCells()[2].mAggregations.items[0].getValue().length<1){
@@ -986,13 +942,7 @@ sap.ui.define([
 
             if(!bNullCheck && odataMode==this._m.odataMode.yes){
 
-                this._showMessageBox(
-                    "자재명 확인",
-                    "자재명은 빈값일수 없습니다.",
-                    this._m.messageType.Warning,
-                    function(){return;}
-                );
-                
+                this._showMessageToast("자재명은 빈값일수 없습니다.");
                 return false;
             }
 
@@ -1008,24 +958,74 @@ sap.ui.define([
                 if(newLanguage_code==oldLanguage_code){
 
                     bValidator = false; 
-
-                    this._showMessageBox(
-                        "Language 확인",
-                        "Language Code는 유일 해야합니다.",
-                        this._m.messageType.Warning,
-                        function(){return;}
-                    );
-
-                    
+                    this._showMessageToast("Language Code는 유일 해야합니다.");                    
                     return false;
                     break;  
                 }
             }
-         
-
             return bValidator;
         },
 
+        /**
+         * 자재 중복 체크 
+         * @param {*} input_mi_material_code 
+         */
+        _inputMartetial : function(input_mi_material_code){
+            var oUi = this.getModel("oUi");
+            var oModel = this.getModel();
+            var oMIMaterialCodeListFilters = [
+                new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id),
+                new Filter("company_code", FilterOperator.EQ, this._m.filter.company_code),
+                new Filter("org_type_code", FilterOperator.EQ, this._m.filter.org_type_code),
+                new Filter("org_code", FilterOperator.EQ, this._m.filter.org_code),
+                new Filter("mi_material_code", FilterOperator.EQ, input_mi_material_code.getValue())
+            ];
+
+            
+
+
+            var sServiceUrl = this._m.serviceName.mIMaterialCodeList;
+            var itemLength = 0;
+            oModel.read(sServiceUrl, {
+                async: false,
+                filters: oMIMaterialCodeListFilters,
+                success: function (rData, reponse) {
+
+                    console.log(sServiceUrl + " - 자재건수 :" + reponse.data.results.length);
+
+                    itemLength = reponse.data.results.length;
+
+                    if (itemLength < 1) {
+                        oUi.setProperty("/materialCheck", true);
+                        input_mi_material_code.setValueState("Success");
+                        input_mi_material_code.setValueStateText("사용할수 있는 자재 코드 입니다.");
+                        MessageToast.show("사용할수 있는 자재 코드 입니다.");
+                        input_mi_material_code.openValueStateMessage();
+                    } else {
+                        oUi.setProperty("/materialCheck", false);
+                        input_mi_material_code.setValueState("Error");
+                        input_mi_material_code.setValueStateText("중복된 자재코드 입니다.");
+                        input_mi_material_code.openValueStateMessage();
+                    }
+                }
+            });
+        },
+        _onPageValidate: function(){
+
+            if(this.validator.validate(this.byId("mid_simpleForm")) !== true) {
+                return false;
+            }else{
+                this.validator.clearValueState(this.byId("mid_simpleForm"));
+                return true;
+            }
+            
+    
+        },
+        
+
+        /**
+         * new Save
+         */
         _onSave : function () {
 
             console.log("call function ==================== onSaveAction ====================");
@@ -1306,13 +1306,8 @@ sap.ui.define([
 
             if (materialCheck==false && oUi.getProperty("/createMode") == true) {
 
-                this._showMessageBox(
-                    "자재 코드 확인",
-                    "자재코드 중복을 먼저 체크 하셔야 합니다",
-                    this._m.messageType.Warning,
-                    function(){return;}
-                );
-
+                this._showMessageToast("자재코드 중복을 먼저 체크 하셔야 합니다.");                    
+                
             } else {
 
                 var input_mi_material_code,
@@ -1330,14 +1325,14 @@ sap.ui.define([
                     }       
 
                     //form check
-                    if (this._isValNull(input_mi_material_code)) {
+                    if (this._isNull(input_mi_material_code)) {
 
                         input_mi_material_code.setValueState("Error");
                         input_mi_material_code.setValueStateText("자재코드는 필수 입니다.");
                         input_mi_material_code.openValueStateMessage();
                     }
 
-                    if (this._isValNull(comboBoxCategory_code)) {
+                    if (this._isNull(comboBoxCategory_code)) {
 
                         comboBoxCategory_code.setValueState("Error")
                         comboBoxCategory_code.openValueStateMessage();
@@ -1383,13 +1378,7 @@ sap.ui.define([
                 }
 
                 if(!bNullCheck && odataMode==this._m.odataMode.yes){
-                    MessageBox.show("자재명은 빈값일수 없습니다. ", {
-                        icon: MessageBox.Icon.WARNING, 
-                        title: "입력값 확인",
-                        actions: [MessageBox.Action.OK],
-                        styleClass: "sapUiSizeCompact"
-                    }); 
-                    
+                    this._showMessageToast("자재코드 중복을 먼저 체크 하셔야 합니다.");                    
                     return;
                 }
 
@@ -1424,14 +1413,7 @@ sap.ui.define([
                     if(newLanguage_code==oldLanguage_code){
 
                         blanguageCheck = true;
-
-                        MessageBox.show("Language Code는 유일 해야합니다.", {
-                            icon: MessageBox.Icon.WARNING, 
-                            title: "Language Code 확인.",
-                            actions: [MessageBox.Action.OK],
-                            styleClass: "sapUiSizeCompact"
-                        });    
-                       
+                        this._showMessageToast("자재코드 중복을 먼저 체크 하셔야 합니다."); 
                         break;  
                     }
 
@@ -1753,18 +1735,24 @@ sap.ui.define([
 
         _handleCreateSuccess: function (oData) {
             var that = this;
-            MessageBox.show("저장에 성공 하였습니다.", {
-                icon: MessageBox.Icon.SUCCESS,
-                title: "저장 성공",
-                actions: [MessageBox.Action.OK],
-                onClose: function (sButton) {
-                    if (sButton === MessageBox.Action.OK) {
-                        var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
-                        that._onExit();
-                        that.getRouter().navTo("mainPage", { layout: sNextLayout });
-                    }
-                }
-            });
+            this._showMessageToast("저장에 성공 하였습니다."); 
+            
+            var sNextLayout = this.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+            this._onExit();
+            this.getRouter().navTo("mainPage", { layout: sNextLayout });
+
+            // MessageBox.show("저장에 성공 하였습니다.", {
+            //     icon: MessageBox.Icon.SUCCESS,
+            //     title: "저장 성공",
+            //     actions: [MessageBox.Action.OK],
+            //     onClose: function (sButton) {
+            //         if (sButton === MessageBox.Action.OK) {
+            //             var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+            //             that._onExit();
+            //             that.getRouter().navTo("mainPage", { layout: sNextLayout });
+            //         }
+            //     }
+            // });
             //MessageToast.show("저장에 성공 하였습니다.");
         },
         _handleCreateError: function (oError) {
@@ -1772,27 +1760,35 @@ sap.ui.define([
         },
         _handleUpdateSuccess: function (oData) {
             var that = this;
-            MessageBox.show("수정에 성공 하였습니다.", {
-                icon: MessageBox.Icon.SUCCESS,
-                title: "수정 성공",
-                actions: [MessageBox.Action.OK],
-                onClose: function (sButton) {
-                    if (sButton === MessageBox.Action.OK) {
-                        var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
-                        that._onExit();
-                        that.getRouter().navTo("mainPage", { layout: sNextLayout });
-                    }
-                }
-            });
+            this._showMessageToast("수정에 성공 하였습니다."); 
+
+            var sNextLayout = this.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+            this._onExit();
+            this.getRouter().navTo("mainPage", { layout: sNextLayout });
+
+            // MessageBox.show("수정에 성공 하였습니다.", {
+            //     icon: MessageBox.Icon.SUCCESS,
+            //     title: "수정 성공",
+            //     actions: [MessageBox.Action.OK],
+            //     onClose: function (sButton) {
+            //         if (sButton === MessageBox.Action.OK) {
+            //             var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+            //             that._onExit();
+            //             that.getRouter().navTo("mainPage", { layout: sNextLayout });
+            //         }
+            //     }
+            // });
 
         },
+
         _handleUpdateError: function (oError) {
-            MessageBox.show("수정에 실패 하였습니다.", {
-                icon: MessageBox.Icon.ERROR,
-                title: "수정 실패",
-                actions: [MessageBox.Action.OK],
-                styleClass: "sapUiSizeCompact"
-            });
+            MessageBox.error("수정에 실패 하였습니다.");
+            // MessageBox.show("수정에 실패 하였습니다.", {
+            //     icon: MessageBox.Icon.ERROR,
+            //     title: "수정 실패",
+            //     actions: [MessageBox.Action.OK],
+            //     styleClass: "sapUiSizeCompact"
+            // });
         },
         /**
          * 삭제 성공
@@ -1800,20 +1796,25 @@ sap.ui.define([
          * @private
          */
         _handleDeleteSuccess: function (oData) {
+            MessageBox.error("삭제가 성공 하였습니다.");
 
-            var that = this;
-            MessageBox.show("삭제가 성공 하였습니다.", {
-                icon: MessageBox.Icon.SUCCESS,
-                title: "삭제 성공.",
-                actions: [MessageBox.Action.OK],
-                onClose: function (sButton) {
-                    if (sButton === MessageBox.Action.OK) {
-                        var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
-                        that._onExit();
-                        that.getRouter().navTo("mainPage", { layout: sNextLayout });
-                    }
-                }
-            });
+            var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+            this._onExit();
+            this.getRouter().navTo("mainPage", { layout: sNextLayout });
+
+            // var that = this;
+            // MessageBox.show("삭제가 성공 하였습니다.", {
+            //     icon: MessageBox.Icon.SUCCESS,
+            //     title: "삭제 성공.",
+            //     actions: [MessageBox.Action.OK],
+            //     onClose: function (sButton) {
+            //         if (sButton === MessageBox.Action.OK) {
+            //             var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+            //             that._onExit();
+            //             that.getRouter().navTo("mainPage", { layout: sNextLayout });
+            //         }
+            //     }
+            // });
 
         },
 
