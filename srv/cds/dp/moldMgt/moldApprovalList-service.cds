@@ -30,7 +30,7 @@ service MoldApprovalListService {
     where a.create_user_id is not null;
 
     view Requestors as
-    select distinct key a.tenant_id, a.english_employee_name, a.user_id 
+    select key a.tenant_id, a.english_employee_name, a.user_id 
     from req.User a
-    where a.user_id is not null;
+    where  a.use_flag = true and  a.tenant_id = 'L1100' ;
 }
