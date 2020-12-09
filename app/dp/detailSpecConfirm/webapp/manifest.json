@@ -155,7 +155,8 @@
         ]
     },
     "resourceRoots": {
-      "ext.lib": "../../../lib"
+      "ext.lib": "../../../lib",
+      "dp.util": "../../util"
     },
     "routing": {
       "config": {
@@ -163,7 +164,7 @@
         "viewType": "XML",
         "viewPath": "dp.detailSpecConfirm.view",
         "controlId": "fcl",
-				"transition": "slide",
+                "transition": "slide",
         "bypassed": {
           "target": [
             "notFound"
