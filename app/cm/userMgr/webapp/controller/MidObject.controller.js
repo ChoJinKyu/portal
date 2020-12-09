@@ -79,7 +79,7 @@ sap.ui.define([
 
       this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
 
-      this._initTableTemplates();
+      //this._initTableTemplates();
       this.enableMessagePopover();
     },
 
@@ -155,48 +155,19 @@ sap.ui.define([
     },
 
     onMidTableAddButtonPress: function () {
+
       var oTable = this.byId("midTable"),
         oDetailsModel = this.getModel("details");
 
-      var transition = function (f) {
-        return function (v) {
-          return f(v);
-        };
-      };
-
-      var utc = transition(function (lDate) {
-        var yyyy = lDate.getFullYear() + "";
-        var mm = lDate.getMonth() + 1 + "";
-        var dd = lDate.getDate() + "";
-        var hh = lDate.getHours() + "";
-        var mi = lDate.getHours() + "";
-        var ss = lDate.getSeconds() + "";
-        // YYYY-MM-DDTHH:mm:ss.sssZ
-        return new Date([
-          yyyy,
-          mm.length == 1 ? "0" + mm : mm,
-          dd.length == 1 ? "0" + dd : dd
-        ].join("-") + (function () {
-          if (!hh && !mi && !ss) {
-            return "";
-          }
-          return "T" + [
-            hh.length == 1 ? "0" + hh : hh,
-            mi.length == 1 ? "0" + mi : mi,
-            ss.length == 1 ? "0" + ss : ss,
-          ].join(":");
-        })());
-      });
-
-      oDetailsModel.addRecord({
-        "tenant_id": "L2100",
-        "user_id": this._sUserId || "",
-        "role_group_code": "",
-        "start_date": new Date(),
-        "end_date": new Date(),
-        "local_create_dtm": new Date(),
-        "local_update_dtm": new Date()
-      }, 0);
+        oDetailsModel.addRecord({
+            "tenant_id": "L2100",
+            "user_id": this._sUserId,
+            "role_group_code": "",
+            "start_date": new Date(),
+            "end_date": new Date(),
+            "local_create_dtm": new Date(),
+            "local_update_dtm": new Date()
+        }, 0);
 
     },
 
@@ -227,7 +198,6 @@ sap.ui.define([
         detail = view.getModel("details"),
         that = this;
 
-        console.log("onPageSaveButtonPress>>> master", master.getData());
         console.log("onPageSaveButtonPress>>> detail", detail.getData());
 
         master.getData()["user_name"] = master.getData()["employee_name"];
@@ -379,8 +349,10 @@ sap.ui.define([
             "local_update_dtm": new Date()
         }, "/UserMgr", 0);
 
+
         var oDetailsModel = this.getModel("details");
         oDetailsModel.setTransactionModel(this.getModel());
+
         oDetailsModel.read("/UserRoleGroupMgr", {
           filters: [
             new Filter("user_id", FilterOperator.EQ, this._sUserId)
@@ -391,12 +363,14 @@ sap.ui.define([
         });
 
         this._toEditMode();
-      }
-      else {
+
+      } else {
+  
         this.getModel("midObjectView").setProperty("/isAddedMode", false);
 
         this._bindView("/UserMgr('" + this._sUserId + "')");
         oView.setBusy(true);
+
         var oDetailsModel = this.getModel("details");
         oDetailsModel.setTransactionModel(this.getModel());
         oDetailsModel.read("/UserRoleGroupMgr", {   
@@ -458,52 +432,50 @@ sap.ui.define([
       this.byId("midTableDeleteButton").setEnabled(!TRUE);
     },
 
-    _initTableTemplates: function () {
-      this.oReadOnlyTemplate = new ColumnListItem({
-        cells: [
-          new Text({
-            text: "{details>_row_state_}"
-          }),
-          new ObjectIdentifier({
-            text: "{details>role_group_code}"
-          })
-        ],
-        type: sap.m.ListType.Inactive
-      });
+    // _initTableTemplates: function () {
+    //   this.oReadOnlyTemplate = new ColumnListItem({
+    //     cells: [
+    //       new Text({
+    //         text: "{details>_row_state_}"
+    //       }),
+    //       new ObjectIdentifier({
+    //         text: "{details>role_group_code}"
+    //       })
+    //     ],
+    //     type: sap.m.ListType.Inactive
+    //   });
 
-      this.oEditableTemplate = new ColumnListItem({
-        cells: [
-          new Text({
-            text: "{details>_row_state_}"
-          }),
+    //   this.oEditableTemplate = new ColumnListItem({
+    //     cells: [
+    //       new Text({
+    //         text: "{details>_row_state_}"
+    //       }),
 
-          // 역할그룹코드
-          new ComboBox({
-            selectedKey: "{details>role_group_code}",
-            items: {
-              path: 'util>/CodeDetails',
-              filters: [
-                new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
-                new Filter("group_code", FilterOperator.EQ, 'CM_CTRL_OPTION_LEVEL_CODE')
-              ],
-              template: new Item({
-                key: "{util>code}",
-                text: "{= ${util>code} + ':' + ${util>code_description}}"
-              })
-            },
-            editable: "{= ${details>_row_state_} === 'C' }",
-            required: true
-          })
-        ]
-      });
-    },
+    //       // 역할그룹코드
+    //       new ComboBox({
+    //         selectedKey: "{details>role_group_code}",
+    //         items: {
+    //           path: 'roleGroup>/RoleGroupMgr',
+    //           filters: [
+    //           ],
+    //           template: new Item({
+    //             key: "{roleGroup>role_group_code}",
+    //             text: "{= ${roleGroup>role_group_code} + ':' + ${roleGroup>role_group_name}}"
+    //           })
+    //         },
+    //         editable: "{= ${details>_row_state_} === 'C' }",
+    //         required: true
+    //       })
+    //     ]
+    //   });
+    // },
 
-        _bindMidTable: function (oTemplate, sKeyboardMode) {
-            this.byId("midTable").bindItems({
-                path: "details>/UserRoleGroupMgr",
-                template: oTemplate
-            }).setKeyboardMode(sKeyboardMode);
-        },
+        // _bindMidTable: function (oTemplate, sKeyboardMode) {
+        //     this.byId("midTable").bindItems({
+        //         path: "details>/UserRoleGroupMgr",
+        //         template: oTemplate
+        //     }).setKeyboardMode(sKeyboardMode);
+        // },
 
         _oFragments: {},
         _showFormFragment: function (sFragmentName) {
