@@ -11,12 +11,11 @@ namespace cm.util;
 @path : '/cm.util.OrgService'
 service OrgService {
 
+    @readonly
     entity Tenant        as projection on Org_Tenant;
+    @readonly
     entity Company       as projection on Org_Company;
+    @readonly
     entity Plant         as projection on Org_Plant;
-    
-    entity Purchasing    as projection on Org_Purchasing;
-    entity Division      as projection on Org_Division;
-    entity Unit          as projection on Org_Unit;
 
 }

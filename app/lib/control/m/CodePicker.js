@@ -35,7 +35,11 @@ sap.ui.define([
 
         onAfterRendering: function(){
             if(!this.oValueHelp){
-                this.oValueHelp = this.getValueHelp() || new CodePickerValueHelp();
+                this.oValueHelp = this.getValueHelp() || new CodePickerValueHelp({
+                    contentWidth: "500px",
+                });
+                this.oValueHelp.setProperty("keyField", this.getProperty("keyField"));
+                this.oValueHelp.setProperty("textField", this.getProperty("textField"));
                 this.oValueHelp.setModel(this.getModel());
                 this.oValueHelp.attachEvent("ok", this.onValueHelpOkPress.bind(this));
             }
@@ -54,6 +58,7 @@ sap.ui.define([
                 this.oServiceModel.read("/" + oBindingInfo.entityName, jQuery.extend(oBindingInfo, {
                     success: function(oData){
                         var aRecords = oData.results;
+                        this.getModel().setSizeLimit(aRecords.length || 100);
                         this.getModel().setData(aRecords, false);
                     }.bind(this)
                 }));
