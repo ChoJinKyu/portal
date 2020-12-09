@@ -1,4 +1,3 @@
-namespace dp;	
 using util from '../../cm/util/util-model'; 	
 // using {dp as productActivityTemplate} from '../pd/DP_PD_PRODUCT_ACTIVITY_TEMPLATE-model';	
 	
@@ -11,7 +10,8 @@ entity Pd_Product_Activity_Template {
     event : String(30)   @title: '이벤트' ;	
     seq : Decimal default 1  @title: '순번' ;	
     product_activity_name : String(2000)   @title: '제품활동명' ;	
+    product_activity__eng_name : String(2000)   @title: '제품활동영문명' ;	
     milestone_flag : Boolean   @title: '마일스톤여부' ;	
     status_code : String(10)   @title: '상태코드' ;	
 }	
-extend Pd_Product_Activity_Template with util.Managed;
+extend Pd_Product_Activity_Template with util.Managed;	

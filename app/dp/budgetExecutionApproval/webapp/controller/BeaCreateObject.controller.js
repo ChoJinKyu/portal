@@ -214,11 +214,27 @@ sap.ui.define([
                 this._onLoadApprovalRow();
             } else {
                 this.setRichEditor('');
-                this._createViewBindData(oArgs);
+                this._onCreatePagetData(oArgs);
                 this._onLoadApprovalRow();
             }
             this.oSF = this.getView().byId("searchField");
         },
+		/**
+		 * Binds the view to the data path.
+		 * @function
+		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
+		 * @private
+		 */
+        _onCreatePagetData : function (args) {  
+            this.getModel('appMaster').setProperty('/company_code', args.company_code);
+            this.getModel('appMaster').setProperty('/org_code', args.plant_code); 
+            this.getModel('appMaster').setProperty('/tenant_id', 'L1100' ); 
+            this.getModel('appMaster').setProperty('/chain_code', 'DP' ); 
+            this.getModel('appMaster').setProperty('/approval_type_code', 'B' ); 
+
+
+            this._createViewBindData(args);
+        } ,
 
         /**
          * @description 초기 생성시 파라미터를 받고 들어옴 
@@ -619,7 +635,7 @@ sap.ui.define([
         _onLoadApprovalRow: function () {
             var oTable = this.byId("ApprovalTable"),
                 oModel = this.getModel("appList");
-            if (oModel.oData.undefined == undefined || oModel.oData.undefined == null) {
+            if (oModel.oData.Approver == undefined || oModel.oData.Approver == null) {
                 oModel.addRecord({
                     "approve_sequence": "1",
                     "type": "",

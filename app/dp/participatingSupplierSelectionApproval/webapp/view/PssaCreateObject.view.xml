@@ -196,19 +196,19 @@
                                     <table:Column id="c_moldPartNo" width="10em" hAlign="Center">
                                         <Label text="Mold&#10;Part No"/>           
                                         <table:template>
-                                            <Text id="t_mold_part_no" text="{createlist>moldPartNo}"/>
+                                            <Text id="t_mold_part_no" text="{createlist>mold_number}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_seq" width="10em" hAlign="Center">
                                         <Label text="Seq"/>           
                                         <table:template>
-                                            <Text id="t_seq" text=""/>
+                                            <Text id="t_seq" text="{createlist>seq}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_description" width="10em" hAlign="Center">
                                         <Label text="{I18N>/DESCRIPTION}"/>           
                                         <table:template>
-                                            <Text id="description" text=""/>
+                                            <Text id="description" text="{createlist>description}"/>
                                         </table:template>
                                     </table:Column>       
                                     <table:Column id="c_MoldItemType" width="10em" hAlign="Center">
@@ -466,7 +466,7 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
-				<Button type="Transparent" text="Draft" press=".onPageSaveButtonPress" />
+				<Button type="Transparent" text="Draft" press=".onPageDraftButtonPress" />
 				<Button type="Transparent" text="Preview" press=".onPageSaveButtonPress" />
 				<!-- <Button type="Transparent" text="Delete" press=".onPageSaveButtonPress" /> -->
 				<Button type="Emphasized" text="Request" press=".onPageCancelEditButtonPress"/>
