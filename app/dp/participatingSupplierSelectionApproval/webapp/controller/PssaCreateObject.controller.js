@@ -132,38 +132,6 @@ sap.ui.define([
 		onPageEditButtonPress: function(){
 			this._toEditMode();
 		},
-
-
-		/**
-		 * Event handler for saving page changes
-		 * @public
-		 */
-        onPageSaveButtonPress: function(){
-			var oView = this.getView(),
-				me = this,
-				oMessageContents = this.byId("inputMessageContents");
-
-			if(!oMessageContents.getValue()) {
-				oMessageContents.setValueState(sap.ui.core.ValueState.Error);
-				return;
-			}
-			MessageBox.confirm("Are you sure ?", {
-				title : "Comfirmation",
-				initialFocus : sap.m.MessageBox.Action.CANCEL,
-				onClose : function(sButton) {
-					if (sButton === MessageBox.Action.OK) {
-						oView.setBusy(true);
-						oView.getModel().submitBatch("odataGroupIdForUpdate").then(function(ok){
-							me._toShowMode();
-							oView.setBusy(false);
-                            MessageToast.show("Success to save.");
-						}).catch(function(err){
-                            MessageBox.error("Error while saving.");
-						});
-					};
-				}
-			});
-		},
 		
 		/**
 		 * Event handler for cancel page editing
@@ -555,10 +523,14 @@ sap.ui.define([
                 var obj = new JSONModel({
                     model : oItem.getCells()[0].getText()
                     , moldPartNo : oItem.getCells()[1].getText()
+                    , seq : oItem.getCells()[2].getText()
+                    , description : oItem.getCells()[3].getText()
                 });
+
+                //console.log(oItem);
                 // console.log(" nItem >>>>> getText 1 " ,  oItem.getCells()[0].getText());   
                 // console.log(" nItem >>>>> getText 2 " ,  oItem.getCells()[1].getText());   
-                // console.log(" nItem >>>>> getText 3 " ,  oItem.getCells()[2].getText());   
+                //console.log(" nItem >>>>> getText 3 " ,  oItem.getCells()[2].getText());   
                 // console.log(" nItem >>>>> obj " ,  obj); 
                 that._addPsTable(obj);  
                 // oItem.getCells().forEach(function(nItem){ 
@@ -584,9 +556,12 @@ sap.ui.define([
         _addPsTable : function (data){     
             var oTable = this.byId("psTable"),
                 oModel = this.getModel("createlist");
+                console.log(data.oData);
                 oModel.addRecord({
                     "model": data.oData.model,
-                    "moldPartNo": data.oData.moldPartNo,
+                    "mold_number": data.oData.moldPartNo,
+                    "seq" : data.oData.seq,
+                    "description" : data.oData.description,
                     "moldSupplier1" : "",
                     "moldSupplier2" : "",
                     "moldSupplier3" : "",
@@ -986,7 +961,32 @@ sap.ui.define([
 			MessageToast.show(messageText, {
 				width: "auto"
 			});
-        }
+        },
+
+        onPageDraftButtonPress: function(){
+            var oView = this.getView(),
+                mstModel = this.getModel("appMaster"),
+                dtlModel = this.getModel("appDetail");
+				
+			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
+				title : "Comfirmation",
+				initialFocus : sap.m.MessageBox.Action.CANCEL,
+				onClose : function(sButton) {
+					if (sButton === MessageBox.Action.OK) {
+                        oView.setBusy(true);
+                        console.log(mstModel.oData);
+                        console.log(dtlModel.getData().ApprovalDetails);
+						oTransactionManager.submit({
+							success: function(ok){
+								oView.setBusy(false);
+								MessageToast.show("Success to save.");
+							}
+						});
+					}
+				}
+			});
+
+		}
 
 	});
 });

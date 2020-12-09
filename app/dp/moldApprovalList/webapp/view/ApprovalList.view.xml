@@ -363,6 +363,20 @@
                                 <ObjectIdentifier text="{list>approval_number}" />
                                 <ObjectIdentifier text="{list>approval_title}" />
                                 <ObjectIdentifier text="{list>requestor_empno}" />
+                                <ComboBox
+                                        editable="false"   
+                                        class="readonlyField"
+                                        selectedKey="{list>requestor_empno}"
+                                        items="{
+                                                    path : 'user>/UserMgr',
+                                                    filters : [
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'}
+                                                    ]
+                                                }"
+                                        width='100%'
+                                        >
+                                    <core:Item key="{user>employee_number}" text="[{user>english_employee_name}]{user>user_name}" />
+                                </ComboBox>
                                 <DatePicker value="{list>request_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
                                 <ComboBox
                                         editable="false"   

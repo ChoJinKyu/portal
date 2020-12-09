@@ -212,7 +212,7 @@
                         <!-- Participating Supplier Table -->
                         <table:Table id="psTable"
                                 selectionMode="MultiToggle"
-                                fixedColumnCount="4"
+                                fixedColumnCount="7"
                                 visibleRowCountMode="Auto"
                                 rows="{path:'appDetail>/ApprovalDetails'}"
                                 >
@@ -393,8 +393,6 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			
-
 			<uxap:ObjectPageSection titleUppercase="false" title="Approval Line">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
@@ -446,16 +444,16 @@
                                     <Text text="{appList>approve_sequence}" />
                                     <ComboBox  id="searchItemType" width="100%"
                                         selectedKey="{appList>type}" 
-                                        enabled="{appList>editMode}"
-                                        items="{
-                                            path: 'org>/Org_Company',
-                                            filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                            ],
-                                            sorter: { path: 'company_code'}
-                                        }"
-                                        >
-                                    <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                                        enabled="{appList>editMode}" 
+                                        items="{ path : 'util>/CodeDetails',
+                                                    filters : [
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                        {path : 'group_code', operator : 'EQ', value1 : 'CM_APPROVE_STATUS'}
+                                                    ]
+                                                }"
+                                        >  
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+
                                     </ComboBox>
                                     <SearchField id="searchField" enabled="{appList>editMode}" search=".onSearch" width="100%" placeholder="Search employee" value="{appList>nameDept}"/>
                                     <Text text="{appList>status}" />
