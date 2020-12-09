@@ -454,6 +454,12 @@ sap.ui.define([
                 _tempFilters.push(new Filter({ path: "tolower(spec_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
             }
 
+            else if (this._oValueHelpDialog.oRows.sPath.indexOf('/Requestors') > -1) {
+                //PartNumbers
+                _tempFilters.push(new Filter({ path: "tolower(user_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+                _tempFilters.push(new Filter({ path: "tolower(english_employee_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+            }
+
             aFilters.push(new Filter({
                 filters: _tempFilters,
                 and: false
