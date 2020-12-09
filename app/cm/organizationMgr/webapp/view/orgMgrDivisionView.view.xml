@@ -80,7 +80,7 @@
                     <Input value="{list>bizunit_code}"/>
                 </cells>
                 <cells>
-                    <Switch state="{list>use_flag}" customTextOn="Yes" customTextOff="No" required="true">
+                    <Switch state="{list>use_flag}" customTextOn="Yes" customTextOff="No">
                         <layoutData>
                             <FlexItemData growFactor="1" />
                         </layoutData>

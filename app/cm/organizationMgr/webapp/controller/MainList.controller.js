@@ -395,10 +395,10 @@ sap.ui.define([
                 nameFilter;
             // tenant_id : "",
             // company_code : "",
-            if (!oModel.isChanged()) {
-                MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
-                return;
-            }
+            // if (!oModel.isChanged()) {
+            //     MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
+            //     return;
+            // }
 
 
             if (this.getView().byId("search_tenant")) {

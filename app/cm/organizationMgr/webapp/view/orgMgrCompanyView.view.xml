@@ -90,7 +90,7 @@
                 </cells>
                 <cells>
                     <!-- <Input value="{use_flag}"/> -->
-                    <Switch state="{list>use_flag}" customTextOn="Yes" customTextOff="No" required="true">
+                    <Switch state="{list>use_flag}" customTextOn="Yes" customTextOff="No">
                         <layoutData>
                             <FlexItemData growFactor="1" />
                         </layoutData>
@@ -103,6 +103,18 @@
                     <Input value="{list>currency_code}"/>
                 </cells>
                 <cells>
+                    <!-- <ComboBox
+                    width="100%"
+                    items="{
+                        path: 'country>/Country',
+                        filters: [
+                        ]
+                    }"
+                    selectedKey="{list>country_code}">
+                    <items>
+                        <core:Item key="{country>country_code}" text="{country>country_code} : {country>iso_code}" value="{country>country_code}" valueLiveUpdate="true" />
+                    </items>
+                    </ComboBox> -->
                     <Input value="{list>country_code}"/>
                 </cells>
                 <cells>

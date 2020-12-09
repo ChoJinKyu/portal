@@ -74,7 +74,7 @@
                     <Input value="{list>purchase_org_name}" required="true"/>
                 </cells>
                 <cells>
-                    <Switch state="{list>use_flag}" customTextOn="Yes" customTextOff="No" required="true">
+                    <Switch state="{list>use_flag}" customTextOn="Yes" customTextOff="No">
                         <layoutData>
                             <FlexItemData growFactor="1" />
                         </layoutData>

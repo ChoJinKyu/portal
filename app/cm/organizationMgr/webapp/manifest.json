@@ -25,6 +25,14 @@
         "settings": {
           "odataVersion": "2.0"
         }
+      },
+      "countryMgrService": {
+        "uri": "srv-api/odata/v2/cm.CountryMgrService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0",
+          "localUri": "localService/metadata.xml"
+        }
       }
     }
   },
@@ -94,6 +102,16 @@
           "defaultCountMode": "Inline",
           "refreshAfterChange": true,
           "useBatch": true
+        }
+      },
+      "country": {
+        "dataSource": "countryMgrService",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "groupId": "$direct",
+          "synchronizationMode": "None",
+          "autoExpandSelect": true
         }
       }
     },
