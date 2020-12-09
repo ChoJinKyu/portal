@@ -28,13 +28,7 @@ SELECT M.TENANT_ID,
                               2, M.VENDOR_POOL_LEVEL1_NAME || ' > ' || M.VENDOR_POOL_LEVEL2_NAME, 
        	                      3, M.VENDOR_POOL_LEVEL1_NAME || ' > ' || M.VENDOR_POOL_LEVEL2_NAME || ' > ' || M.VENDOR_POOL_LEVEL3_NAME,
        	                      M.VENDOR_POOL_LEVEL1_NAME || ' > ' || M.VENDOR_POOL_LEVEL2_NAME || ' > ' || M.VENDOR_POOL_LEVEL3_NAME || ' > ' || M.VENDOR_POOL_LEVEL4_NAME) LEVEL_PATH,
-       (SELECT MAP(COUNT(1),0, NULL, MAP(MAX(APPROVAL_NUMBER), NULL, 'In Work', 'In Approve', NULL), NULL)
-        FROM   PG_VP_VENDOR_POOL_SUPPLIER_TMP
-        WHERE  TENANT_ID = M.TENANT_ID
-       	AND    COMPANY_CODE = M.COMPANY_CODE
-       	AND    ORG_TYPE_CODE = M.ORG_TYPE_CODE
-       	AND    ORG_CODE = M.ORG_CODE
-       	AND    VENDOR_POOL_CODE = M.VENDOR_POOL_CODE) INFO_CHANGE_STATUS,
+       M.INFO_CHANGE_STATUS,
        M.INP_TYPE_CODE, 
        (SELECT CODE_NAME
        	FROM   CM_CODE_LNG CD
@@ -76,7 +70,7 @@ SELECT M.TENANT_ID,
        CASE WHEN SM.MAKER_FLAG = 'Y' THEN TRUE
             ELSE FALSE
        END MAKER_FLAG,
-       SM.SUPPLIER_STATUS_NAME SUPPLIER_STATUS_NAME,
+       SM.INACTIVE_STATUS_NAME SUPPLIER_STATUS_NAME,
        /*-------------------
        Supplier Master 정보
        -------------------*/
@@ -142,6 +136,7 @@ GROUP BY M.TENANT_ID,
        M.VENDOR_POOL_LEVEL3_NAME,
        M.VENDOR_POOL_LEVEL4_NAME,
        M.VENDOR_POOL_LEVEL5_NAME,
+       M.INFO_CHANGE_STATUS,
        M.INP_TYPE_CODE,
        M.EQUIPMENT_GRADE_CODE,
        M.EQUIPMENT_TYPE_CODE,
@@ -153,7 +148,7 @@ GROUP BY M.TENANT_ID,
        SM.SUPPLIER_REGISTER_STATUS_CODE,
        SM.SUPPLIER_FLAG, 
        SM.MAKER_FLAG,
-       SM.SUPPLIER_STATUS_NAME,
+       SM.INACTIVE_STATUS_NAME,
        /*-------------------
        Supplier Master 정보
        -------------------*/

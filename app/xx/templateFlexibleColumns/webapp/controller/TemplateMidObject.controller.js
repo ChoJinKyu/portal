@@ -380,14 +380,14 @@ sap.ui.define([
                         selectedKey: "{details>control_option_level_code}",
                         items: {
                             id: "testCombo1",
-                            path: 'util>/CodeDetails',
+                            path: 'common>/CodeDetails',
                             filters: [
                                 new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
                                 new Filter("group_code", FilterOperator.EQ, 'TEST')
                             ],
                             template: new Item({
-                                key: "{util>code}",
-                                text: "{util>code_description}"
+                                key: "{common>code}",
+                                text: "{common>code_description}"
                             })
                         },
                         required: true

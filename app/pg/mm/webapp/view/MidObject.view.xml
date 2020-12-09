@@ -55,8 +55,8 @@
                     <uxap:headerContent>
                         <layout:VerticalLayout>
                             <FlexBox height="30px" alignItems="Start" justifyContent="Start" visible="{=!${oUi>/createMode}}">
-                                    <Label text="관리조직 :" required="true" />
-                                    <Label text="{oUiData>/tenant_name}"  class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                                    <Label text="관리조직 :" />
+                                    <Label text="화확" id="label_tenant_name"  class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
                                     <Label text="Create :"  class="sapUiLargeMarginBegin" />
                                     <Label text="{oUiData>/create_user_id}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
                                     <Label text="Create Data :" class="sapUiLargeMarginBegin" />
@@ -87,16 +87,16 @@
                                                 <RadioButton id="radioButtonType01" text="자재명/코드" />
                                                 <RadioButton id="radioButtonType02" text="공급업체/코드" />
                                             </RadioButtonGroup>  
-                                        </FlexBox>        
-                                        <MultiInput id="multiInput_material_code" 
+                                        </FlexBox>       
+                                        <input id="input_material_code" 
                                                     required="{oUi>/createMode}"
                                                     fieldGroupIds="requiredField"
                                                     width="100%"
                                                     visible="{oUi>/createMode}"
-                                                    class="sapUiSmallMarginBottom" 
-                                                    valueHelpRequest="handleValueHelpMaterial">
-                                                    <core:Item key="" text="" />
-                                        </MultiInput>                                                                            
+                                                    class="sapUiSmallMarginBottom"                                                    
+                                                    showValueHelp="true" 
+                                                    valueHelpRequest=".handleValueHelpMaterial"/>
+                                                                                
                                         <FlexBox    height="40px" 
                                                     alignItems="Start" 
                                                     justifyContent="Start" 
@@ -187,8 +187,8 @@
                                                 <OverflowToolbar>
                                                     <content>
                                                         <ToolbarSpacer />
-                                                            <Button id="buttonMidTableCreate" text="Add" type="Transparent" visible="{oUi>/editMode}" press=".onMaterialDetail"/>
-                                                            <Button id="buttonMidTableDelete" text="Delete" type="Transparent" visible="{oUi>/editMode}" press=".onMidListItemDelete"/>
+                                                            <Button id="buttonMidTableCreate" text="Add" type="Transparent" visible="{=!${oUi>/readMode}}" press=".onMaterialDetail"/>
+                                                            <Button id="buttonMidTableDelete" text="Delete" type="Transparent" visible="{=!${oUi>/readMode}}" press=".onMidListItemDelete"/>
                                                     </content>
                                                 </OverflowToolbar>
                                             </headerToolbar>                                            
@@ -269,8 +269,7 @@
                                                                         formatter: '.formatter.toYesNo'
                                                                         }"
                                                                     visible="{oUi>/readMode}"/>                                                          
-                                                            <ComboBox   id="comboboxUse_flag"
-                                                                        placeholder="선택"
+                                                            <ComboBox   placeholder="선택"
                                                                         visible="{oUi>/editMode}"  
                                                                         items ="{
                                                                             path : '/UseYNView',

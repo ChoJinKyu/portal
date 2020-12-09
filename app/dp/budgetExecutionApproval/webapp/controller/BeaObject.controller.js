@@ -47,8 +47,8 @@ sap.ui.define([
 
             this.getView().setModel(new ManagedModel(), "appMaster");
             this.getView().setModel(new ManagedListModel(), "appDetail");
-            this.getView().setModel(new ManagedListModel(), "company");
-            this.getView().setModel(new ManagedListModel(), "plant");
+            this.getView().setModel(new ManagedModel(), "company");
+            this.getView().setModel(new ManagedModel(), "plant");
 
 
             oTransactionManager = new TransactionManager();
@@ -173,15 +173,13 @@ sap.ui.define([
                 approval_number = oArgs.approval_number;
             this._onRoutedThisPage(oArgs);
         },
-        _onRoutedThisPage: function (args) {
-            this._bindView("/ApprovalMasters(tenant_id='L1100',approval_number='" + args.approval_number + "')", "appMaster", [], function (oData) { });
-            var schFilter = [new Filter("approval_number", FilterOperator.EQ, args.approval_number)];
-
-            var sResult = {};
+        _onRoutedThisPage: function (args) { 
             var that = this;
-            this._bindView("/ItemBudgetExecution", "appDetail", schFilter, function (oData) {
-                sResult = oData.results[0];
-                that._createViewBindData(sResult);
+            this._bindView("/ApprovalMasters(tenant_id='L1100',approval_number='" + args.approval_number + "')", "appMaster", [], function (oData) {
+                that._createViewBindData(oData);
+            });
+            var schFilter = [new Filter("approval_number", FilterOperator.EQ, args.approval_number)];
+            this._bindView("/ItemBudgetExecution", "appDetail", schFilter, function (oData) {  
             });
             // mold_id 
             oTransactionManager.setServiceModel(this.getModel());

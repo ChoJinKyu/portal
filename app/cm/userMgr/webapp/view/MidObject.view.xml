@@ -119,14 +119,14 @@
 									<Title text="역할목록" level="H2"/>
 									<ToolbarSpacer/>
 									<Button id="midTableAddButton" text="Add" type="Transparent" press=".onMidTableAddButtonPress" />
-									<Button id="midTableDeleteButton" text="Delete" type="Transparent" press=".onMidTableDeleteButtonPress('midTable', 'details', 'ControlOptionDetails')" />
+									<Button id="midTableDeleteButton" text="Delete" type="Transparent" press=".onMidTableDeleteButtonPress('midTable', 'details', 'UserRoleGroupMgr')" />
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
 								<Column id="midStateColumn" minScreenWidth="Tablet" hAlign="Center" width="40px" >
 									<Text text="S" />
 								</Column>
-								<Column id="midLevelCodeColumn" minScreenWidth="Tablet" hAlign="Center">
+								<Column id="midRoleGroupCodeColumn" minScreenWidth="Tablet" hAlign="Center">
 									<Text text="역할명" />
 								</Column>
                                 <Column id="midStartDateColumn" minScreenWidth="Tablet" hAlign="Center" >
@@ -143,24 +143,23 @@
 										<Text text="{details>_row_state_}"/>
                                         <!-- 역할그룹코드 -->
                                         <ComboBox
-                                        id="midLevelCombo"
-                                        selectedKey="{details>control_option_level_code}"
+                                        selectedKey="{details>role_group_code}"
                                         width="100%"
                                         items="{
                                             path: 'util>/CodeDetails',
                                             filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                            {path: 'group_code', operator: 'EQ', value1: 'CM_CTRL_OPTION_LEVEL_CODE'}
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
                                             ]
                                         }">
                                         <items>
-                                            <core:Item key="{util>code}" text="{util>code} : {util>code_description}" />
+                                            <core:Item key="{util>role_group_code}" text="{util>role_group_code} : {util>code_description}" />
                                         </items>
                                         </ComboBox>
                                         <!-- 시작일자 -->
-                                        <DatePicker value="{ path: 'details>start_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' } }" />
+                                        <DatePicker value="{ path: 'details>start_date', type: 'sap.ui.model.odata.type.Date', formatOptions: { UTC: true, format: 'yMd' } }" />
                                         <!-- 종료일자 -->
-                                        <DatePicker value="{ path: 'details>end_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' } }" />
+                                        <DatePicker value="{ path: 'details>end_date', type: 'sap.ui.model.odata.type.Date', formatOptions: { UTC: true, format: 'yMd' } }" />
                                     </cells>
 								</ColumnListItem>
 							</items>

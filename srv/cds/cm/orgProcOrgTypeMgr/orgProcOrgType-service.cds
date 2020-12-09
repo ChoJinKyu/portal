@@ -15,7 +15,16 @@ service orgProcOrgTypeMgrService {
     view PurOrgTypeMapView as
     select key p.tenant_id,
            key p.company_code,
-           key p.process_type_code
+           key p.process_type_code,
+           ( select l.code_name
+             from   codeLng.Code_Lng l
+             where  l.group_code = 'CM_PROCESS_TYPE_CODE'
+             and    l.code = p.process_type_code
+             and    l.language_cd = 'KO'
+             and    l.tenant_id = p.tenant_id
+            )  as process_type_name: String(240),
+           p.org_type_code,
+           p.use_flag
     from   purOrgTypeMap.Pur_Org_Type_Mapping p
     ;
 

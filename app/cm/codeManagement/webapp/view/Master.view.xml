@@ -4,6 +4,7 @@
     xmlns:core="sap.ui.core"
     xmlns="sap.m"
     xmlns:f="sap.f"
+    xmlns:tnt="sap.tnt"
     xmlns:form="sap.ui.layout.form"
     xmlns:layout="sap.ui.layout"
     height="100%">
@@ -20,7 +21,6 @@
         <f:header>
             <f:DynamicPageHeader pinnable="true">
                 <form:SimpleForm
-                    id="form"
                     maxContainerCols="2"
                     editable="true"
                     layout="ResponsiveGridLayout"
@@ -58,7 +58,7 @@
                         </VBox>
                         <VBox>
                             <Label
-                                text="Chain : "
+                                text="Chain: "
                                 labelFor="search_chain">
                             </Label>
                             <!-- <ComboBox   
@@ -87,7 +87,7 @@
                         </VBox>
                         <VBox>
                             <Label
-                                text="Code Group Useflag : "
+                                text="Code Group Useflag: "
                                 labelFor="search_codeGroupUseflag">
                             </Label>
                             <SegmentedButton 
@@ -107,7 +107,7 @@
                         </VBox>
                         <VBox>
                             <Label
-                                text="Keyword : "
+                                text="Keyword: "
                                 labelFor="search_Keyword">
                             </Label>
                             <Input id="search_keyword" 
@@ -153,7 +153,7 @@
                 </headerToolbar>
                 <columns>
                     <Column
-                        width="7em"
+                        width="6em"
                         minScreenWidth="Tablet"
                         demandPopin="true">
                         <Text text="Tenant ID" />
@@ -165,16 +165,15 @@
                         <Text text="Chain Code" />
                     </Column>
                     <Column
-                            width="20em">
+                        width="18em">
                         <Text text="Code Group" />
                     </Column>
                     <Column
-                            minScreenWidth="Tablet"
-                            demandPopin="true">
+                        minScreenWidth="Tablet"
+                        demandPopin="true">
                         <Text text="Code Group Name" />
                     </Column>
                     <Column
-                        width="20em"
                         minScreenWidth="Tablet"
                         demandPopin="true">
                         <Text text="Description" />
@@ -194,7 +193,20 @@
                             <Text text="{viewModel>group_code}" />
                             <Text text="{viewModel>group_name}" />
                             <Text text="{viewModel>group_description}" />
-                            <Text text="{viewModel>use_flag}" />
+                            <HBox>
+                                <tnt:InfoLabel 
+                                    text="True" 
+                                    visible="{viewModel>use_flag}"
+                                    renderMode="Narrow" 
+                                    colorScheme="7" 
+                                    displayOnly= "true" />
+                                <tnt:InfoLabel 
+                                    text="False" 
+                                    visible="{= !${viewModel>use_flag}}"
+                                    renderMode="Narrow" 
+                                    colorScheme="5" 
+                                    displayOnly= "true" />
+                            </HBox>
                         </cells>
                     </ColumnListItem>
                 </items>
