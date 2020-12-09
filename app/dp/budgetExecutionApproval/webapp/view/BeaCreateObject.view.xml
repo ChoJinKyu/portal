@@ -195,14 +195,14 @@
                          <VBox class="sapUiSmallMargin">
                             <Label text="{I18N>/AFFILIATE}" />
                             <ObjectStatus
-                                text="{company>/company_name}" 
+                                text="[{appMaster>/company_code}] {company>/company_name}" 
                                 state="Error"
                                 />
                          </VBox>
                          <VBox class="sapUiSmallMargin">
                             <Label text="{I18N>/BUSINESS_DIVISION}" />
                             <ObjectStatus
-                                text="{plant>/plant_name}" 
+                                text="[{appMaster>/org_code}] {plant>/plant_name}" 
                                 state="Error"
                                 />
                          </VBox>
@@ -226,12 +226,10 @@
                                         </customData>
                                     </Button>
                                     <Button id="btnPsDelete"   type="Transparent" text="{I18N>/ROW_DELETE}"  press=".onPsDelRow" />
-                                   
                                 </OverflowToolbar>
                             </table:extension>          
-
                                 <table:columns>
-                                    <table:Column id="c_mold_id"  visible="false">
+                                    <table:Column id="c_mold_id"  visible="true">
                                         <Label text="mold_id"/>           
                                         <table:template>
                                             <Text id="t_mold_id" text="{path:'appDetail>mold_id', type: 'sap.ui.model.type.Integer'}"/>
@@ -399,7 +397,7 @@
                             rowSelectionChange=".onCheck"
                             mode="None"
                             width="auto"
-                            items="{appList>/undefined}"
+                            items="{appList>/Approver}"
                             >
                         <headerToolbar>
                             <OverflowToolbar>
@@ -436,7 +434,7 @@
                              <ColumnListItem>
                                 <cells>
                                     <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
-                                    <Text text="{appList>no}" />
+                                    <Text text="{appList>approve_sequence}" />
                                     <ComboBox  id="searchItemType" width="100%"
                                         selectedKey="{appList>type}" 
                                         enabled="{appList>editMode}"
