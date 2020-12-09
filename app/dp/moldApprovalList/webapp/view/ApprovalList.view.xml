@@ -187,9 +187,9 @@
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                         ],
-                                        sorter: { path: 'part_number' }
+                                        sorter: { path: 'mold_number' }
                             }">
-                                <core:Item key="{part_number}" text="{part_number}" />
+                                <core:Item key="{mold_number}" text="{mold_number}" />
                             </Input>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />

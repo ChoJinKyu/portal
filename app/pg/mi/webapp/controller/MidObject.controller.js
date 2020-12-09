@@ -1039,10 +1039,6 @@ sap.ui.define([
                 oModel = this.getOwnerComponent().getModel(),
                 materialCheck = oUi.getProperty("/materialCheck");
 
-
-
-
-
             if (materialCheck==false && oUi.getProperty("/createMode") == true) {
             } else {
 
@@ -1064,13 +1060,14 @@ sap.ui.define([
                     comboBoxCategory_code = oUiData.getProperty("/category_code");
                     comboBoxCategory_name = oUiData.getProperty("/category_name");                    
                 }
-
                 if(oUi.getProperty("/createMode")){
                     o_mi_material_code =   input_mi_material_code; 
                 }else{
                     o_mi_material_code =   oUiData.getProperty("/mi_material_code");
                 }
 
+
+                                
                 var mi_material_code_name,
                     oldLanguage_code,
                     newLanguage_code,
@@ -1145,6 +1142,7 @@ sap.ui.define([
                         createTableItem++;
                     }
 
+                    console.log("itemMode == this._m.itemMode.read");
                     //기존 게시물 업데이트를 위한 param 키 값은 제외 한다.
                     if(itemMode == this._m.itemMode.read || itemMode == this._m.itemMode.update){
                         
@@ -1169,7 +1167,14 @@ sap.ui.define([
                         updateTableItem++;               
                     }
 
-                    
+                    console.log("itemMode==this._m.itemMode.delete");
+                    for(var i=0;i<omIMaterialCodeText.oData.length;i++){
+
+                        if(omIMaterialCodeText.oData[i].mi_material_code == o_mi_material_code){
+                            odataMode =  omIMaterialCodeText.oData[i].odataMode;
+                            break;
+                        }                        
+                    }
                     if(itemMode==this._m.itemMode.delete && odataMode == this._m.odataMode.yes){
                         console.log(oMIMaterialCodeTextPath+"--remove");
                         oModel.remove(
@@ -1514,7 +1519,8 @@ sap.ui.define([
                         updateTableItem++;               
                     }
 
-                    
+                    console.log("oMIMaterialCodeTextPath remove-----");
+                    debugger;
                     if(itemMode==this._m.itemMode.delete && odataMode == this._m.odataMode.yes){
                         console.log(oMIMaterialCodeTextPath+"--remove");
                         oModel.remove(

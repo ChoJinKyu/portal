@@ -194,14 +194,14 @@
                          <VBox class="sapUiSmallMargin">
                             <Label text="Affiliate" />
                             <ObjectStatus
-                                text="{company>/company_name}" 
+                                text="[{appMaster>/company_code}] {company>/company_name}" 
                                 state="Error"
                                 />
                          </VBox>
                          <VBox class="sapUiSmallMargin">
                             <Label text="Division" />
                             <ObjectStatus
-                                text="{plant>/plant_name}" 
+                                text="[{appMaster>/org_code}] {plant>/plant_name}" 
                                 state="Error"
                                 />
                          </VBox>
