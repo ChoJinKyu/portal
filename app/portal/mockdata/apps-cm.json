@@ -42,8 +42,8 @@
         },
         {
           "name": "조직 관리",
-          "url": "../cm/orgMgr/webapp",
-          "component": "cm.orgMgr"
+          "url": "../cm/organizationMgr/webapp",
+          "component": "cm.organizationMgr"
         },
         {
           "name": "구매 관리 (TBD)",
