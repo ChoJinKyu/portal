@@ -260,21 +260,21 @@ sap.ui.define([
             this._bindView("/Approver", "Approvers", schFilter, function (oData) {
                  console.log("Approver >>>> ", oData);
             });    
-            var sResult = {};
+            // var sResult = {};
 
-            this._bindView("/ItemBudgetExecution", "moldList", schFilter, function (oData) {
-                sResult = oData.results[0];
-                that._createViewBindData(sResult); // comapny , plant 조회 
-                that._bindView("/ApprovalDetails", "appDetail", schFilter, function (oData) { 
-                    that._bindView("/MoldMasters", "MoldMasterList", [
-                        new Filter("company_code", FilterOperator.EQ, sResult.company_code)
-                        , new Filter("org_code", FilterOperator.EQ, sResult.org_code)
-                    ], function (oData) {
-                        console.log("MoldMasters >>>> ", oData);
-                    });
-                });
+            // this._bindView("/ItemBudgetExecution", "moldList", schFilter, function (oData) {
+            //     sResult = oData.results[0];
+            //     that._createViewBindData(sResult); // comapny , plant 조회 
+            //     that._bindView("/ApprovalDetails", "appDetail", schFilter, function (oData) { 
+            //         that._bindView("/MoldMasters", "MoldMasterList", [
+            //             new Filter("company_code", FilterOperator.EQ, sResult.company_code)
+            //             , new Filter("org_code", FilterOperator.EQ, sResult.org_code)
+            //         ], function (oData) {
+            //             console.log("MoldMasters >>>> ", oData);
+            //         });
+            //     });
 
-            });
+            // });
 
             oTransactionManager.setServiceModel(this.getModel());
         },
