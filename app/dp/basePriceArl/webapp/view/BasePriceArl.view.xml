@@ -33,13 +33,14 @@
                 <!--Part No List 시작-->
                 <t:Table id="mainTable"
                     selectionMode="MultiToggle"
-                    rows="{list>/details}"
+                    rows="{listModel>/details}"
+                    rowSelectionChange=".onRowSelectionChange"
                     visibleRowCountMode="Auto">
                     <t:extension>
                         <OverflowToolbar class="sapFDynamicPageAlignContent">
                             <!-- <Title text="{I18N>/PART_NO_LIST}" level="H2"/> -->
                             <Title text="Part-No List" level="H2"/>
-                            <SearchField width="12rem" />
+                            <SearchField width="12rem" search="onOpenParNtoList" />
                             <ToolbarSpacer/>
                             <!-- <Button text="{I18N>/CHANGE_DEVELOPER}" type="Transparent"/>
                             <Button text="{I18N>/DOWNLOAD}" type="Transparent"/>
@@ -57,176 +58,186 @@
                     <t:columns>
                         <t:Column hAlign="Center" width="4rem">
                             <!-- <Label text="{I18N>/DIV}" textAlign="Center" /> -->
-                            <Label text="Div" textAlign="Center" />
+                            <Label text="Div" />
                             <t:template>
-                                <Text text="{list>_row_state_}" />
+                                <Text text="{listModel>/org_code}" />
                             </t:template>
                         </t:Column>
-                        <t:Column hAlign="Center"  width="8rem">
+                        <t:Column hAlign="Center" width="8rem">
                             <!-- <Label text="{I18N>/PART_NO}" /> -->
-                            <Label text="Part_No" />
+                            <Label text="Material Code" />
                             <t:template>
-                                <Text text="{list>tenant_id}" />
+                                <Text text="{listModel>material_code}" visible="{= ${listModel>basis} !== '3' ? true : false }" />
                             </t:template>
                         </t:Column>
-                        <t:Column hAlign="Center"  width="16rem">
+                        <t:Column hAlign="Center" width="16rem">
                             <!-- <Label text="{I18N>/DESCRIPTION}" textAlign="Center" /> -->
-                            <Label text="Description" textAlign="Center" />
+                            <Label text="Description" />
                             <t:template>
-                                <Input value="{list>timezone_code}" visible="{= ${list>basis} !== '3' ? true : false }" />
+                                <Text text="{listModel>timezone_code}" visible="{= ${listModel>basis} !== '3' ? true : false }" />
                             </t:template>
                         </t:Column>
-                        <t:Column hAlign="Center"  width="12rem">
+                        <t:Column hAlign="Center" width="12rem">
                             <!-- <Label text="{I18N>/SPECIFICATION}" /> -->
                             <Label text="Spec" />
                             <t:template>
-                                <Input value="{list>timezone_name}" visible="{= ${list>basis} !== '3' ? true : false }" />
+                                <Text text="{listModel>timezone_name}" visible="{= ${listModel>basis} !== '3' ? true : false }" />
                             </t:template>
                         </t:Column>
-                        <t:Column id="mainCountryCodeColumn">
+                        <t:Column hAlign="Center" width="8rem">
                             <!-- <Label text="{I18N>/BASIS}" textAlign="Center" width="100%"/> -->
-                            <Label text="Basis" textAlign="Center" width="100%"/>
+                            <Label text="Basis" />
                             <t:template>
                                 <ComboBox
                                     items="{codeModel>/basis}"
-                                    selectedKey="{list>basis}">
+                                    selectedKey="{listModel>basis}">
                                     <items>
                                         <core:Item key="{codeModel>code}" text="{codeModel>text}" />
                                     </items>
                                 </ComboBox>
                             </t:template>
                         </t:Column>
-                        <t:Column headerSpan="3">
+                        <t:Column headerSpan="3" hAlign="Center" width="10rem">
                             <t:multiLabels>
                                 <!-- <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%"/>
                                 <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%"/> -->
-                                <Label text="Domestic" textAlign="Center" width="100%"/>
-                                <Label text="Base Date" textAlign="Center" width="100%"/>
+                                <Label text="Domestic" />
+                                <Label text="Base Date" />
                             </t:multiLabels>
                             <t:template>
-                                <Text text="{list>domestic_base_date}" />
+                                <Text text="{listModel>domestic_base_date}" />
                             </t:template>
                             </t:Column>
-                        <t:Column>
+                        <t:Column width="12rem" hAlign="Center">
                             <t:multiLabels>
                                 <!-- <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%"/>
                                 <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%"/> -->
                                 <Label text="Domestic"/>
-                                <Label text="New Base Price" textAlign="Center" width="100%"/>
+                                <Label text="New Base Price" />
                             </t:multiLabels>
                             <t:template>
-                                <Input value="{list>prices/0/new_base_price}" type="Number" />
+                                <Input value="{listModel>prices/0/new_base_price}" type="Number" />
                             </t:template>
                             </t:Column>
-                        <t:Column>
+                        <t:Column width="6rem" hAlign="Center">
                             <t:multiLabels>
                                 <!-- <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%"/>
                                 <Label text="{I18N>/CURRENCY}" textAlign="Center" width="100%"/> -->
                                 <Label text="Domestic"/>
-                                <Label text="Curr." textAlign="Center" width="100%"/>
+                                <Label text="Curr." />
                             </t:multiLabels>
                             <t:template>
                                 <ComboBox
                                     items="{codeModel>/currency}"
-                                    selectedKey="{list>prices/0/new_base_price_currency_code}">
+                                    selectedKey="{listModel>prices/0/new_base_price_currency_code}">
                                     <items>
                                         <core:Item key="{codeModel>code}" text="{codeModel>text}" />
                                     </items>
                                 </ComboBox>
                             </t:template>
                         </t:Column>
-                        <t:Column headerSpan="3">
+                        <t:Column headerSpan="3" hAlign="Center" width="10rem">
                             <t:multiLabels>
                                 <!-- <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%"/>
                                 <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%"/> -->
-                                <Label text="Export" textAlign="Center" width="100%"/>
-                                <Label text="Base Date" textAlign="Center" width="100%"/>
+                                <Label text="Export" />
+                                <Label text="Base Date" />
                             </t:multiLabels>
                             <t:template>
-                                <Text text="{list>export_base_date}" />
+                                <Text text="{listModel>export_base_date}" />
                             </t:template>
                             </t:Column>
-                        <t:Column>
+                        <t:Column width="12rem" hAlign="Center">
                             <t:multiLabels>
-                                 <!-- <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%"/>
+                                    <!-- <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%"/>
                                 <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%"/> -->
                                 <Label text="Export"/>
-                                <Label text="New Base Price" textAlign="Center" width="100%"/>
+                                <Label text="New Base Price" />
                             </t:multiLabels>
                             <t:template>
-                                <Input value="{list>prices/1/new_base_price}" type="Number" />
+                                <Input value="{listModel>prices/1/new_base_price}" type="Number" />
                             </t:template>
                             </t:Column>
-                        <t:Column>
+                        <t:Column width="6rem" hAlign="Center">
                             <t:multiLabels>
                                 <!-- <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%"/>
                                 <Label text="{I18N>/CURRENCY}" textAlign="Center" width="100%"/> -->
                                 <Label text="Export"/>
-                                <Label text="Curr." textAlign="Center" width="100%"/>
+                                <Label text="Curr." />
                             </t:multiLabels>
                             <t:template>
                                 <ComboBox
                                     items="{codeModel>/currency}"
-                                    selectedKey="{list>prices/1/new_base_price_currency_code}">
+                                    selectedKey="{listModel>prices/1/new_base_price_currency_code}">
                                     <items>
                                         <core:Item key="{codeModel>code}" text="{codeModel>text}" />
                                     </items>
                                 </ComboBox>
                             </t:template>
                         </t:Column>
-                        <t:Column headerSpan="4">
+                        <t:Column hAlign="Center" width="12rem">
+                            <t:multiLabels>
+                                <!-- <Label text="{I18N>/FAMILY_PART_NO}"/>
+                                <Label text="{I18N>/SUPPLIER_NAME}" textAlign="Center" width="100%"/> -->
+                                <Label text="Base Price Type" />
+                            </t:multiLabels>
+                            <t:template>
+                                <Text text="{listModel>supplier_name}" />
+                            </t:template>
+                        </t:Column>
+                        <t:Column headerSpan="4" hAlign="Center" width="6rem">
                             <t:multiLabels>
                                 <!-- <Label text="{I18N>/FAMILY_PART_NO}" textAlign="Center" width="100%"/>
                                 <Label text="{I18N>/DIV}" textAlign="Center" width="100%"/> -->
-                                <Label text="Family Part-No" textAlign="Center" width="100%"/>
-                                <Label text="Div" textAlign="Center" width="100%"/>
+                                <Label text="Family Part-No" />
+                                <Label text="Div" />
                             </t:multiLabels>
                             <t:template>
-                                <Text text="{list>div}" />
+                                <Text text="{listModel>div}" />
                             </t:template>
                             </t:Column>
-                        <t:Column>
+                        <t:Column hAlign="Center" width="12rem">
                             <t:multiLabels>
                                 <!-- <Label text="{I18N>/FAMILY_PART_NO}"/>
                                 <Label text="{I18N>/PART_NO}" textAlign="Center" width="100%"/> -->
                                 <Label text="Family Part-No"/>
-                                <Label text="Part-No" textAlign="Center" width="100%"/>
+                                <Label text="Part-No" />
                             </t:multiLabels>
                             <t:template>
                                 <Input 
-                                    value="{list>PART_NO}" 
-                                    visible="{= ${list>basis} === '3' ? true : false }"
+                                    value="{listModel>PART_NO}" 
+                                    visible="{= ${listModel>basis} === '3' ? true : false }"
                                     showValueHelp="true"
-			                        valueHelpRequest=".onValueHelpRequest" />
+			                        valueHelpRequest=".onOpenFamilyPartNo" />
                             </t:template>
                             </t:Column>
-                        <t:Column>
+                        <t:Column hAlign="Center" width="12rem">
                             <t:multiLabels>
                                 <!-- <Label text="{I18N>/FAMILY_PART_NO}"/>
                                 <Label text="{I18N>/SUPPLIER_CODE}" textAlign="Center" width="100%"/> -->
                                 <Label text="Family Part-No"/>
-                                <Label text="Supplier Code" textAlign="Center" width="100%"/>
+                                <Label text="Supplier Code" />
                             </t:multiLabels>
                             <t:template>
-                                <Text text="{list>supplier_code}" />
+                                <Text text="{listModel>supplier_code}" />
                             </t:template>
                         </t:Column>
-                        <t:Column>
+                        <t:Column hAlign="Center" width="12rem">
                             <t:multiLabels>
                                 <!-- <Label text="{I18N>/FAMILY_PART_NO}"/>
                                 <Label text="{I18N>/SUPPLIER_NAME}" textAlign="Center" width="100%"/> -->
                                 <Label text="Family Part-No"/>
-                                <Label text="Supplier Name" textAlign="Center" width="100%"/>
+                                <Label text="Supplier Name" />
                             </t:multiLabels>
                             <t:template>
-                                <Text text="{list>supplier_name}" />
+                                <Text text="{listModel>supplier_name}" />
                             </t:template>
                         </t:Column>
                         <t:Column hAlign="Center"  width="12rem">
                             <!-- <Label text="{I18N>/HQ_NPD_BASE_PRICE}" /> -->
                             <Label text="(HQ) NPD  Base Price" />
                             <t:template>
-                                <Text text="{list>hq_npd_base_price}" />
+                                <Text text="{listModel>hq_npd_base_price}" />
                             </t:template>
                         </t:Column>
                     </t:columns>
@@ -259,7 +270,7 @@
                             class="sapFDynamicPageAlignContent sapUiSmallMargin" 
                             mode="None"
                             width="auto"
-                            items="{appList>/undefined}"
+                            items="{applistModel>/undefined}"
                             >
                         <headerToolbar>
                             <OverflowToolbar>
@@ -290,10 +301,10 @@
                              <ColumnListItem>
                                 <cells>
                                     <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
-                                    <Text text="{appList>no}" />
+                                    <Text text="{applistModel>no}" />
                                     <ComboBox  width="100%"
-                                        selectedKey="{appList>type}" 
-                                        enabled="{appList>editMode}"
+                                        selectedKey="{applistModel>type}" 
+                                        enabled="{applistModel>editMode}"
                                         items="{
                                             path: 'org>/Org_Company',
                                             filters: [
@@ -304,12 +315,12 @@
                                         >
                                     <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                     </ComboBox>
-                                    <SearchField enabled="{appList>editMode}" search=".onSearch" width="100%" placeholder="Search employee" value="{appList>nameDept}"/>
-                                    <Text text="{appList>status}" />
-                                    <Text text="{appList>comment}" />
-                                    <Button icon="{appList>arrowUp}" press=".onSortUp(${appList>no})" tooltip="sort" visible="{= ${appList>arrowUp}===''?false:true }"></Button>
-                                    <Button icon="{appList>arrowDown}" press=".onSortDown(${appList>no})"  visible="{= ${appList>arrowDown}===''?false:true }" tooltip="sort"></Button>
-                                    <Button icon="sap-icon://delete" press=".setApprovalRemoveRow(${appList>no})" tooltip="삭제" visible="{appList>trashShow}"></Button>
+                                    <SearchField enabled="{applistModel>editMode}" search=".onSearch" width="100%" placeholder="Search employee" value="{applistModel>nameDept}"/>
+                                    <Text text="{applistModel>status}" />
+                                    <Text text="{applistModel>comment}" />
+                                    <Button icon="{applistModel>arrowUp}" press=".onSortUp(${applistModel>no})" tooltip="sort" visible="{= ${applistModel>arrowUp}===''?false:true }"></Button>
+                                    <Button icon="{applistModel>arrowDown}" press=".onSortDown(${applistModel>no})"  visible="{= ${applistModel>arrowDown}===''?false:true }" tooltip="sort"></Button>
+                                    <Button icon="sap-icon://delete" press=".setApprovalRemoveRow(${applistModel>no})" tooltip="삭제" visible="{applistModel>trashShow}"></Button>
                                 </cells>
                             </ColumnListItem>   
                         </items>
@@ -321,7 +332,7 @@
                             class="sapFDynamicPageAlignContent sapUiSmallMargin" 
                             mode="None"
                             width="auto"
-                            items="{appList>/undefined}"
+                            items="{applistModel>/undefined}"
                             >
                         <headerToolbar>
                             <OverflowToolbar>
@@ -352,10 +363,10 @@
                              <ColumnListItem>
                                 <cells>
                                     <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
-                                    <Text text="{appList>no}" />
+                                    <Text text="{applistModel>no}" />
                                     <ComboBox  width="100%"
-                                        selectedKey="{appList>type}" 
-                                        enabled="{appList>editMode}"
+                                        selectedKey="{applistModel>type}" 
+                                        enabled="{applistModel>editMode}"
                                         items="{
                                             path: 'org>/Org_Company',
                                             filters: [
@@ -366,12 +377,12 @@
                                         >
                                     <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                     </ComboBox>
-                                    <SearchField enabled="{appList>editMode}" search=".onSearch" width="100%" placeholder="Search employee" value="{appList>nameDept}"/>
-                                    <Text text="{appList>status}" />
-                                    <Text text="{appList>comment}" />
-                                    <Button icon="{appList>arrowUp}" press=".onSortUp(${appList>no})" tooltip="sort" visible="{= ${appList>arrowUp}===''?false:true }"></Button>
-                                    <Button icon="{appList>arrowDown}" press=".onSortDown(${appList>no})"  visible="{= ${appList>arrowDown}===''?false:true }" tooltip="sort"></Button>
-                                    <Button icon="sap-icon://delete" press=".setApprovalRemoveRow(${appList>no})" tooltip="삭제" visible="{appList>trashShow}"></Button>
+                                    <SearchField enabled="{applistModel>editMode}" search=".onSearch" width="100%" placeholder="Search employee" value="{applistModel>nameDept}"/>
+                                    <Text text="{applistModel>status}" />
+                                    <Text text="{applistModel>comment}" />
+                                    <Button icon="{applistModel>arrowUp}" press=".onSortUp(${applistModel>no})" tooltip="sort" visible="{= ${applistModel>arrowUp}===''?false:true }"></Button>
+                                    <Button icon="{applistModel>arrowDown}" press=".onSortDown(${applistModel>no})"  visible="{= ${applistModel>arrowDown}===''?false:true }" tooltip="sort"></Button>
+                                    <Button icon="sap-icon://delete" press=".setApprovalRemoveRow(${applistModel>no})" tooltip="삭제" visible="{applistModel>trashShow}"></Button>
                                 </cells>
                             </ColumnListItem>   
                         </items>
