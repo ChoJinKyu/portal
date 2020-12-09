@@ -351,19 +351,19 @@ sap.ui.define([
                     "cols": [
                         {
                             "label": "Name",
-                            "template": "create_user_name"
+                            "template": "english_employee_name"
                         },
                         {
                             "label": "ID",
-                            "template": "create_user_id"
+                            "template": "user_id"
                         }
                     ]
                 });
 
-                path = '/CreateUsers';
+                path = '/Requestors';
                 this._oValueHelpDialog.setTitle('Requester');
-                this._oValueHelpDialog.setKey('create_user_id');
-                this._oValueHelpDialog.setDescriptionKey('create_user_id');
+                this._oValueHelpDialog.setKey('user_id');
+                this._oValueHelpDialog.setDescriptionKey('user_id');
             }
 
 
