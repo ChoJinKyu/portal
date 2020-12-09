@@ -214,7 +214,7 @@
                                 selectionMode="MultiToggle"
                                 fixedColumnCount="4"
                                 visibleRowCountMode="Auto"
-                                rows="{path:'moldList>/ItemBudgetExecution'}"
+                                rows="{path:'appDetail>/ApprovalDetails'}"
                                 >
                              <table:extension>
                                 <OverflowToolbar>
@@ -234,37 +234,43 @@
                                     <table:Column id="c_mold_id"  visible="false">
                                         <Label text="mold_id"/>           
                                         <table:template>
-                                            <Text id="t_mold_id" text="{path:'moldList>mold_id', type: 'sap.ui.model.type.Integer'}"/>
+                                            <Text id="t_mold_id" text="{path:'appDetail>mold_id', type: 'sap.ui.model.type.Integer'}"/>
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column id="c_approval_number"  visible="true">
+                                        <Label text="approval_number"/>           
+                                        <table:template>
+                                            <Text id="t_approval_number" text="{path:'appDetail>approval_number'}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_model" width="20em" hAlign="Center">
                                         <Label text="{I18N>/MODEL}"/>           
                                         <table:template>
-                                            <Text id="t_model" text="{moldList>model}"/>
+                                            <Text id="t_model" text="{appDetail>model}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_moldPartNo" width="10em" hAlign="Center">
                                         <Label text="Mold&#10;Part No"/>           
                                         <table:template>
-                                            <Text id="t_mold_part_no" text="{moldList>mold_number}"/>
+                                            <Text id="t_mold_part_no" text="{appDetail>mold_number}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_seq" width="5em" hAlign="Center">
                                         <Label text="Seq"/>           
                                         <table:template>
-                                            <Text id="t_seq" text="{path:'moldList>mold_sequence', type: 'sap.ui.model.type.Integer'}"/>
+                                            <Text id="t_seq" text="{path:'appDetail>mold_sequence', type: 'sap.ui.model.type.Integer'}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_description" width="15em" hAlign="Center">
                                         <Label text="{I18N>/DESCRIPTION}"/>           
                                         <table:template>
-                                            <Text id="description" text="{moldList>spec_name}"/>
+                                            <Text id="description" text="{appDetail>spec_name}"/>
                                         </table:template>
                                     </table:Column>                               
                                     <table:Column id="c_productionType" width="10em" hAlign="Center">
                                         <Label text="Production Type"/>           
                                         <table:template>
-                                            <ComboBox selectedKey="{moldList>mold_production_type_code}"
+                                            <ComboBox selectedKey="{appDetail>mold_production_type_code}"
                                                 items="{ path : 'util>/CodeDetails',
                                                             filters : [
                                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
@@ -279,7 +285,7 @@
                                     <table:Column id="c_itemType" width="10em" hAlign="Center">
                                         <Label text="Item Type"/>           
                                         <table:template>
-                                            <ComboBox selectedKey="{moldList>mold_item_type_code}"
+                                            <ComboBox selectedKey="{appDetail>mold_item_type_code}"
                                                 items="{ path : 'util>/CodeDetails',
                                                             filters : [
                                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
@@ -295,14 +301,14 @@
                                         <Label text="Book Currency"/>           
                                            
                                         <table:template>
-                                           <Text  text="{moldList>book_currency_code}"/>
+                                           <Text  text="{appDetail>book_currency_code}"/>
                                         </table:template>
                                     </table:Column>  
                                     <table:Column id="c_budget_amount" width="10em" hAlign="Center">
                                         <Label text="Budget Amount"/>           
                                    
                                         <table:template>
-                                           <Input  value="{moldList>budget_amount}"/>
+                                           <Input  value="{appDetail>budget_amount}"/>
                                         </table:template>
                                     </table:Column>  
 
