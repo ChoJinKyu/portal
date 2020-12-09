@@ -15,7 +15,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{i18n>appTitle}" />
+                    <Title text="사용자 관리" />
                 </f:heading>
                 <f:snappedContent>
                 </f:snappedContent>
@@ -35,10 +35,12 @@
                 <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
+                            <!-- 테넌트 -->
                             <Label text="테넌트" labelFor="searchTenantCombo" required="true"></Label>
                             <ComboBox
                               id="searchTenantCombo"
                               width="100%"
+                              selectedKey="L2100"
                               items="{
                                 path: 'org>/Org_Tenant',
                                 filters: [
@@ -48,6 +50,7 @@
                                 <core:Item key="{org>tenant_id}" text="{org>tenant_id} : {org>tenant_name}" />
                               </items>
                             </ComboBox>
+                            <!-- 회사 -->
                             <Label text="회사" labelFor="searchOrgCombo" required="false"></Label>
                             <ComboBox
                               id="searchOrgCombo"
@@ -57,6 +60,7 @@
                                 filters: [
                                 ]
                               }">
+                              <!-- {path: 'tenant_id', operator: 'EQ', value1: 'L2100'} -->
                               <items>
                                 <core:Item key="{org>company_code}" text="{org>company_code}: {org>company_name}" />
                               </items>
@@ -67,12 +71,14 @@
                         </VBox>
                         
                         <VBox>
-                            <Label text="사용자ID:" labelFor="searchUserId"></Label>
+                            <!-- 사용자 ID -->
+                            <Label text="사용자 ID:" labelFor="searchUserId"></Label>
                             <Input id="searchUserId" placeholder="User ID"></Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
 
+                            <!-- 사용자 Name -->
                             <Label text="성명:" labelFor="searchUserName"></Label>
                             <Input id="searchUserName" placeholder="User Name"></Input>
                             <layoutData>
@@ -81,12 +87,14 @@
                         </VBox>
 
                         <VBox>
+                            <!-- 성명(영문) -->
                             <Label text="성명(영문):" labelFor="searchEngName"></Label>
                             <Input id="searchEngName" placeholder="User Eng Name"></Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
 
+                            <!-- 이메일 -->
                             <Label text="이메일:" labelFor="searchEmail"></Label>
                             <Input id="searchEmail" placeholder="Email Address"></Input>
                             <layoutData>
@@ -95,6 +103,7 @@
                         </VBox>
 
                         <VBox>
+                            <!-- 유효여부 -->
                             <Label text="유효여부: " labelFor="searchUseflag">
                             </Label>
                             <SegmentedButton 
