@@ -15,54 +15,90 @@
                     adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="Test: "></Label>
-                            <lib-m:CodeInput id="searchTest" width="100%" groupCode="CM_CHAIN_CD">
-                            </lib-m:CodeInput>
+                            <Label text="Input (Code): "></Label>
+                            <lib-m:CodePicker id="searchCodePicker"
+                                placeholder="Enter a code name"
+                                suggestionItems="{
+                                    path: '/',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
+                                    ],
+                                    serviceName: 'cm.util.CommonService',
+                                    entityName: 'Code'
+                                }">
+                                <lib-m:CodePickerValueHelp />
+                            </lib-m:CodePicker>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M5 S10" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Code: "></Label>
-                            <lib-m:CodeComboBox id="searchCode" width="100%" 
-                                useEmpty="true" groupCode="CM_CHAIN_CD">
-                                <!-- useEmpty="true"  textPattern="$text [= $[code] === '' ? '' : '['+$[code]+']' ]" groupCode="CM_CHAIN_CD"> -->
-                                <!-- useEmpty="true"  textPattern="$text $(= $$(code)$ === '' ? '' : '('+$$(code)$+')' )$" groupCode="CM_CHAIN_CD"> -->
+                            <Label text="CoboBox (Code): "></Label>
+                            <lib-m:CodeComboBox id="searchCode1" width="100%" showSecondaryValues="true" 
+                                useEmpty="true" 
+                                items="{
+                                    path: '/',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
+                                    ],
+                                    serviceName: 'cm.util.CommonService',
+                                    entityName: 'Code'
+                                }">
                             </lib-m:CodeComboBox>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M5 S10" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Tenant: "></Label>
-                            <lib-m:TenantComboBox id="searchTenant" width="100%" 
-                                useEmpty="true">
-                            </lib-m:TenantComboBox>
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M5 S10" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Currency: "></Label>
-                            <lib-m:CurrencyComboBox id="searchCurrency" width="100%" 
-                                useEmpty="true" emptyKey="ALL" emptyText="ALL" >
-                            </lib-m:CurrencyComboBox>
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M5 S10" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Multi: "></Label>
-                            <MultiComboBox width="350px"
+                            <Label text="CoboBox (Tenant): "></Label>
+                            <lib-m:CodeComboBox id="searchCode2" width="100%" showSecondaryValues="true" 
+                                keyField="tenant_id" textField="tenant_name" useEmpty="true"
                                 items="{
-                                    path: 'util>/CodeDetails',
+                                    path: '/',
+                                    serviceUrl: 'srv-api/odata/v2/cm.util.OrgService/',
+                                    entityName: 'Tenant'
+                                }">
+                            </lib-m:CodeComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M5 S10" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="CoboBox (Currency): "></Label>
+                            <lib-m:CodeComboBox id="searchCurrencyCombo" width="100%" showSecondaryValues="true" 
+                                keyField="currency_code" textField="currency_code_name" 
+                                useEmpty="true" emptyText="전체"
+                                items="{
+                                    path: '/',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                    ],
+                                    sorter: {
+                                        path: 'currency_code',
+                                        descending: true
+                                    },
+                                    serviceName: 'cm.util.CommonService',
+                                    entityName: 'Currency'
+                                }">
+                            </lib-m:CodeComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M5 S10" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="MultiCoboBox (Code): "></Label>
+                            <MultiComboBox id="searchMultiComboCode" width="100%" showSecondaryValues="true" 
+                                items="{
+                                    path: 'util>/Code',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                         {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                                     ]
                                 }">
                                 <items>
-                                    <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+                                    <core:ListItem key="{util>code}" text="{util>code_name}" additionalText="{util>code}"/>
                                 </items>
                             </MultiComboBox>
                             <layoutData>

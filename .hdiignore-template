@@ -1,4 +1,4 @@
-
+# Move this file under "/db" and rename it to ".hdiignore".
 src/gen/cm*
 src/cm/**
 src/gen/dp*

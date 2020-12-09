@@ -150,7 +150,7 @@
                             <ToolbarSpacer/>
                             <Button text="Create" id="buttonMainTableCreate" type="Transparent" press=".onMainTableCreate"/>                            
                             <!-- <Button text="Copy" id="buttonMainTableCopy"  type="Transparent" enabled="false" press=".onMainTableCopy"/> -->
-                            <Button text="Delete" id="buttonMainTableDelete" type="Transparent" enabled="false" press=".onMainTableDelete"/>
+                            <!-- <Button text="Delete" id="buttonMainTableDelete" type="Transparent" enabled="false" press=".onMainTableDelete"/> -->
                             <OverflowToolbarButton
                                 icon="sap-icon://sort"
                                 tooltip="Sort"
@@ -168,7 +168,7 @@
                                 press=".onMainTableColumns"/>
                         </OverflowToolbar>
                     </smartTable:customToolbar>
-                            <Table id="mainTable" mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders">
+                            <Table id="mainTable" mode="None" sticky="HeaderToolbar,ColumnHeaders">
                                  <columns>  
                                  
                                        <Column hAlign="Center"  demandPopin="true" importance="High" popinDisplay="WithoutHeader">

@@ -39,6 +39,7 @@ sap.ui.define([
             var oModel;
             oModel = new JSONModel({
                             editMode : "",
+                            newcheck : "",
                         });
             this.setModel(oModel, "editMode");
             
