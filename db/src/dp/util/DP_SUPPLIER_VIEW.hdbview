@@ -1,4 +1,5 @@
 view DP_SUPPLIER_VIEW as
+/*
 SELECT y.company_code, y.org_type_code, y.org_code, y.supplier_type_code, x.*
 FROM 
 	(
@@ -23,4 +24,12 @@ FROM
 		WHERE a.PROCESS_TYPE_CODE = 'DP05'
 	) AS y
 	ON x.tenant_id = y.tenant_id
-		AND x.supplier_code = y.supplier_code;
+		AND x.supplier_code = y.supplier_code
+*/
+
+/* 임시 */
+select b.company_code, b.org_type_code, b.org_code, b.supplier_type_code, a.* 
+from SP_SM_SUPPLIER_MST a
+left join SP_SM_SUPPLIER_ORG b
+on a.tenant_id = b.tenant_id
+and a.supplier_code = b.supplier_code
