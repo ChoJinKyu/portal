@@ -1,8 +1,7 @@
 {
     "columns": [
-        {"label": "Seq.", "columnId": "seq"},
-        {"label": "Mame", "columnId": "name"},
-        {"label": "Dynamic C1", "columnId": "C001"},
+        {"label": "Seq.", "columnId": "seq", "type": "number"},
+        {"label": "Name", "columnId": "name"},
         {"label": "Dynamic C1", "columnId": "C001"},
         {"label": "Dynamic C2", "columnId": "C002"},
         {"label": "Dynamic C3", "columnId": "C003", "type": "boolean"},
@@ -34,7 +33,7 @@
             "name": "Eden Hunt",
             "C001": "Value 1",
             "C002": "Value 2",
-            "C003": false,
+            "C003": true,
             "C004": "Value 4",
             "C005": true,
             "C006": "Value 6",
@@ -44,13 +43,13 @@
             "C010": "2020-12-09 01-19-22"
         },
         {
-            "seq": 1,
+            "seq": 2,
             "name": "James Bond",
             "C001": "Value 1",
             "C002": "Value 2",
-            "C003": false,
+            "C003": true,
             "C004": "Value 4",
-            "C005": true,
+            "C005": false,
             "C006": "Value 6",
             "C007": 125.91,
             "C008": "PND",

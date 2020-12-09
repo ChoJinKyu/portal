@@ -12,11 +12,12 @@
                 <table:Table id="table"
                     selectionMode="MultiToggle"
                     visibleRowCount="7"
-                    paste="onPaste"
                     ariaLabelledBy="title">
                     <table:extension>
                         <OverflowToolbar>
                             <Title id="title" text="Products"/>
+                            <ToolbarSpacer />
+                            <Button text="Apply Style" type="Transparent" press=".applyStyle"/>
                         </OverflowToolbar>
                     </table:extension>
                 </table:Table>
