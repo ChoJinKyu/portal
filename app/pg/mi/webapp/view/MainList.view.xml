@@ -166,7 +166,7 @@
                                 press=".onMainTableColumns"/>
                         </OverflowToolbar>
                     </smartTable:customToolbar>
-                            <Table id="mainTable" mode="None" sticky="HeaderToolbar,ColumnHeaders">
+                            <Table id="mainTable" mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders">
                                  <columns>  
                                  
                                        <Column hAlign="Center"  demandPopin="true" importance="High" popinDisplay="WithoutHeader">
