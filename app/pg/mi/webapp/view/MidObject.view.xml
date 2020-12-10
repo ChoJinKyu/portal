@@ -107,8 +107,18 @@
                                                 text="{oUiData>/mi_material_code}" 
                                                 class="sapMLabelNoText"/>                                     
                                         <Input  id="input_mi_material_code"
+                                                valueStateText="필수"
                                                 placeholder="자재코드 입력"
+                                                liveChange=".onMiMaterialCodeCheck"
                                                 class="sapUiSmallMarginEnd"
+                                                value="{
+                                                            path : '{_oUiData>/mi_material_code}',
+                                                            type : 'sap.ui.model.type.String',
+                                                            constraints : {
+                                                                minLength: 1,
+                                                                maxLength: 3
+                                                            }
+                                                }"                                                
                                                 visible="{oUi>/createMode}"
                                                 required="{oUi>/createMode}"
                                         />
@@ -116,7 +126,7 @@
                                             id="buttonMaterialCheck"
                                             width="8em"
                                             text="중복Check"
-                                            visible="{oUi>/createMode}"
+                                            visible="false"
                                             press=".onMaterialCodeCheck"/> 
 
                                         <Label  text="Category 명" 
@@ -188,7 +198,10 @@
                                                     </OverflowToolbar>
                                                 </headerToolbar>                                                
                                                 <columns>
-                                                    <Column hAlign="Center" width="50px">
+                                                    <Column hAlign="Center" 
+                                                     width="50px"
+                                                     visible="{= ${oUi>/readMode}?'None':'MultiSelect'}" 
+                                                    >
                                                         <header>
                                                             <Label text="상태"/>
                                                         </header>

@@ -1,20 +1,3 @@
-/**
- * 
- * _BonSelectedLeftTableItem 임시 제거 
-* 신규 등록 Fragment에서 값 던지고 받기 marteial supply Fragment 동일화면 처리 
--스크롤 되는부분 테이블만 스크롤 되도록 수정
--선택후 Apply 할때 테이블 등록 
-화면 레이아웃 확인
--마스터 연결 진행 (Create Fragment 화면 진행) 
-   시황자제 삭제 프로세스 진행 - 
--신규진행시 테이블 확인 준비되어야 하는곳 공지 김종현 [중요]
--수정 검색 확인 
--ValidatorUtil 내용 확인 
--전체 메세지 i18n 사용 확인 (공통 메일 확인)
--레이아웃 이동 확인해야함.
--{_oUiData>/tenant_name}
--mi 에서 bom에서 사용중인 항목은 삭제 할수 없다. 
-*/
 sap.ui.define([
     "./BaseController",
     "sap/ui/core/routing/History",
@@ -63,7 +46,7 @@ sap.ui.define([
                 supplierDialog : "SupplierDialog_ID"
             },
             input : {
-                multiInput_material_code : "multiInput",
+                input_material_code : "input_material_code",
             },
             button : {
                 buttonMidTableCreate : "buttonMidTableCreate",
@@ -90,7 +73,7 @@ sap.ui.define([
                 mIMaterialPriceManagement: "/MIMaterialPriceManagement",  //시황자재리스트
                 mIMaterialPriceManagementView: "/MIMaterialPriceManagementView",  //X MIMaterialPriceManagementView
                 orgTenantView: "/OrgTenantView", //관리조직 View
-                currencyUnitView : "/CurrencyUnitView", //통화단위 View
+                currencyUnitView : "/CurrencyUnitView아 ㄴ", //통화단위 View
                 mIMaterialCodeList : "/MIMaterialCodeList", //자재코드 View(검색)
                 unitOfMeasureView : "/UnitOfMeasureView", //수량단위 View
                 enrollmentMaterialView : "/EnrollmentMaterialView", //서비스 안됨 자재코드  등록View
@@ -171,8 +154,6 @@ sap.ui.define([
                  * 사용자 세션이나 정보에 다음값이 셋팅 되어 있다는 가정 Test
                  */
 
-                
-
                 var _oUiData = new JSONModel({
                     tenant_name: "",
                     create: "",
@@ -185,7 +166,7 @@ sap.ui.define([
                     pcst_currency_unit :"",
                     base_quantity : "",
                     radioButtonGroup : "",
-                    multiInput_material_code : ""
+                    input_material_code : ""
                 });
 
                 
@@ -196,7 +177,7 @@ sap.ui.define([
             }else{
                 var _oUiData = new JSONModel({
                     tenant_name: "",
-                    multiInput_material_code : ""
+                    input_material_code : ""
                 });
 
                 
@@ -222,21 +203,6 @@ sap.ui.define([
             sap.ui.getCore().attachValidationSuccess(function (oEvent) {
                 oEvent.getParameter("element").setValueState(ValueState.None);
             });
-
-            // var validator = new Validator();
-            // validator.validate(this.byId("page"));
-            //this.getView().getModel().setUseBatch(true);
-            //수정대상 mainList 연동시 제거 
-			// this.getView().getModel().setDeferredGroups(["pgGroup","deleteGroup"]);
-            
-            // this.getView().getModel().setChangeGroups({
-			//   "MIMaterialCodeBOMManagement": {
-			//     groupId: "pgGroup",
-			//     changeSetId: "pgGroup"
-            //   }
-            // });            
-
-            //xml 과의 bindingpath를 사용하는 모델 생성 
 
             //pageMode C Create, V View, E Edit
             var oUi = new JSONModel({
@@ -430,9 +396,7 @@ sap.ui.define([
          * @param {*} oEvent 
          */
 		onValueHelpMaterialDialogSearch: function (oEvent) {
-
             console.log("_onValueHelpMaterialDialogSearch");
-
             //수정대상 comboBox_vendorView 준비되지 않음(20201206)
             //comboBox_vendorView=this._findFragmentControlId(this._m.materialDialog, "comboBox_vendorView").getSelectedKey(), 
             var oModel = this.getModel(),
@@ -550,15 +514,10 @@ sap.ui.define([
 
 		_handleValueHelpMaterialClose: function (evt) {
 			var aSelectedItems = evt.getParameter("selectedItems"),
-				oMultiInput = this.byId(this._m.input.multiInput_material_code);
+				oInput_material_code = this.byId(this._m.input.input_material_code);
 
-			if (aSelectedItems && aSelectedItems.length > 0) {
-				aSelectedItems.forEach(function (oItem) {
-					oMultiInput.addToken(new Token({
-						text: oItem.getTitle()
-					}));
-				});
-			}
+                oInput_material_code.setValue = oInput_material_code;
+
 		},
 		/**
 		 * Event handler for Enter Full Screen Button pressed
@@ -683,13 +642,8 @@ sap.ui.define([
                 async: false,
                 filters: bFilters,
                 success: function (rData, reponse) {
-
-                    //console.log("json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
-                    var oData = reponse.data.results[0];
-
-                    debugger;
+                   // console.log("json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
                     if(reponse.data.results.length>0){
-                        this.getView().byId("label_tenant_name").setValue(reponse.data.results[0].tenant_name);
                         _oUiData.setProperty("/tenant_name", reponse.data.results[0].tenant_name );
                     }
                 }
@@ -816,9 +770,7 @@ sap.ui.define([
                 filters: bFilters,
                 success: function (rData, reponse) {
 
-                    //console.log("json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
-                    //var oData = reponse.data.results[0];
-                    debugger;
+                    console.log("json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
 
                     if(reponse.data.results.length>0){
                         _oUiData.setProperty("/tenant_name", reponse.data.results[0].tenant_name);
@@ -829,13 +781,21 @@ sap.ui.define([
        //this.getView().setBusy(false);            
         },
 
+       /**
+         * Read, Edit 버튼 토글 
+         * @public
+         */
+        onRead : function () {
+            this._fnSetReadMode(); 
+        },
+
         /**
          * 작업 취소? 리스트 이동..
          */
         onCancel : function () {
             var that = this;
 
-            //that._onExit();
+            that._onExit();
             // MessageBox.show("리스트로 이동합니다.", {
             //     icon: MessageBox.Icon.SUCCESS,
             //     title: "저장 확인",
@@ -848,27 +808,17 @@ sap.ui.define([
             //         }
             //     }
             // });
-            MessageBox.confirm("작업내용을 취소 하게 됩니다. 취소 하시 겠습니까?", {
-                title : "Cancel",
-                initialFocus : sap.m.MessageBox.Action.CANCEL,
-                onClose : function(sButton) {
-                    if (sButton === MessageBox.Action.OK) {
-                        var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
-                        that._onExit();
-                        that.getRouter().navTo("mainPage", { layout: sNextLayout });
-                    }else{
-                        return;
-                    }
-                }.bind(this)
-            });            
-        },
-
-       /**
-         * Read, Edit 버튼 토글 
-         * @public
-         */
-        onRead : function () {
-            this._fnSetReadMode(); 
+            // MessageBox.confirm("작업내용을 취소 하게 됩니다. 취소 하시 겠습니까?", {
+            //     title : "Create",
+            //     initialFocus : sap.m.MessageBox.Action.CANCEL,
+            //     onClose : function(sButton) {
+            //         if (sButton === MessageBox.Action.OK) {
+            //             this._onExit();
+            //         }else{
+            //             return;
+            //         }
+            //     }.bind(this)
+            // });            
         },
 
         /**
@@ -935,7 +885,7 @@ sap.ui.define([
                     }
                 }
             });
-            //MessageToast.show("저장 성공 하였습니다.");
+            //MessageToast.show("저장에 성공 하였습니다.");
         },
 
         _findFragmentControlId : function (fragmentID, controlID) {
@@ -952,6 +902,12 @@ sap.ui.define([
          */
         onMaterialDetailFilter : function (oEvent) {
             console.log("onMaterialDetailFilter");
+
+            if(ValidatorUtil.isValid(this.getView(),"requiredField")){
+                console.log("ValidatorUtil true");
+            } else {
+                console.log("ValidatorUtil false");
+            }
 
             var oModel = this.getOwnerComponent().getModel(),
                 aFilter = [],
@@ -1052,10 +1008,10 @@ sap.ui.define([
            
             //수정대상 확인 통화 단위 이상함             
             //하기 주석은 사용자 조직 과  자재 관리 마스터 권한에 따라 변경될수 있다. 
-            aFilter.push(new Filter("tenant_id", FilterOperator.Contains, this._m.filter.tenant_id));
-            aFilter.push(new Filter("company_code", FilterOperator.Contains, this._m.filter.company_code));
-            aFilter.push(new Filter("org_type_code", FilterOperator.Contains, this._m.filter.org_type_code));
-            aFilter.push(new Filter("org_code", FilterOperator.Contains, this._m.filter.org_code));
+            aFilter.push(new Filter("tenant_id", FilterOperator.Contains, this._sso.dept.tenant_id));
+            aFilter.push(new Filter("company_code", FilterOperator.Contains, this._sso.dept.company_code));
+            aFilter.push(new Filter("org_type_code", FilterOperator.Contains, this._sso.dept.org_type_code));
+            aFilter.push(new Filter("org_code", FilterOperator.Contains, this._sso.dept.org_code));
             
             //aFilter.push(new Filter("mi_material_code", FilterOperator.Contains, fCode));
             //aFilter.push(new Filter("mi_material_name", FilterOperator.Contains, fName));
@@ -1124,7 +1080,7 @@ sap.ui.define([
                 return;
             }
 
-            var multiInput_material_code = this.byId("multiInput_material_code");
+            var input_material_code = this.byId("input_material_code");
             //다수 일수 있는 경우를 대비. 현재 한건. 
             
             for(var i=0;i<oSelected.length;i++){
@@ -1161,29 +1117,8 @@ sap.ui.define([
                 } 
                 
   
-                 var input_material_code = this.getView().byId("input_material_code");
-
-                 input_material_code.setValue(odata.material_code);
-
-                // // multiInput_material_code.addToken([
-                // //     new Token({text: odata.material_desc, key: odata.material_code})                   
-                // // ]);
-                //     //             text: oItem.getTitle()
-                //     //         }));                
-                // // if (aSelectedItems && aSelectedItems.length > 0) {
-                   
-                //     multiInput_material_code.removeAllTokens();
-                //     multiInput_material_code.addToken(new Token({
-                //         text: odata.material_code,
-                //         key: odata.material_desc
-                //     }));
-                   
-                    // var sData = aTokens.map(function(oToken) {
-                    //     return oToken.getKey();
-                    //   }).join(",");
-
-                // }
-                            
+                input_material_code.setValue(odata.material_code);
+                                          
             }
 
             this.onMaterialDialog_close();
@@ -1310,7 +1245,7 @@ sap.ui.define([
          */
         _showMessageToast : function(content){
             MessageToast.show(content);
-        }, 
+        },        
 
         /**
           * 버튼 액션 저장
@@ -1390,7 +1325,7 @@ sap.ui.define([
                 if(imputReqm_quantity.length<1){
                     this._showMessageBox(
                         "소요량 확인",
-                        "소요량 을 입력 하여 주십시요.",
+                        "소요량을 입력 하여 주십시요.",
                         this._m.messageType.Warning,
                         function(){return;}
                     );
@@ -1412,7 +1347,7 @@ sap.ui.define([
                 }
 
                 //수정사항 신규 자재 등록일때. 자재코드 및 정보를 추가 한다. 
-                //mi_material_code 는 multiInput_material_code 값으로 대체 자재코드
+                //mi_material_code 는 input_material_code 값으로 대체 자재코드
                 //input_base_quantity 기준수량
                 if(!bValueCheckFlag) return;
                 
@@ -1757,4 +1692,3 @@ sap.ui.define([
            
     });
 });
-
