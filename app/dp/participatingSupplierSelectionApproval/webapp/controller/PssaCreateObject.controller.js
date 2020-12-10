@@ -56,8 +56,10 @@ sap.ui.define([
                 });
            
             this.setModel(oViewModel, mainViewName); 
+            
             this.getRouter().getRoute("pssaCreateObject").attachPatternMatched(this._onObjectMatched, this);
-
+            this.getRouter().getRoute("pssaEditObject").attachPatternMatched(this._onObjectMatched, this);
+            
             this.getView().setModel(new ManagedModel(),"company");
             this.getView().setModel(new ManagedModel(),"plant");
             // this.getView().setModel(new ManagedListModel(),"company");
@@ -65,12 +67,15 @@ sap.ui.define([
             this.getView().setModel(new ManagedListModel(),"createlist"); // Participating Supplier
             this.getView().setModel(new ManagedListModel(),"appList"); // apporval list 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
+
             this.getView().setModel(new ManagedModel(), "appMaster");
             this.getView().setModel(new ManagedListModel(), "appDetail");
+            this.getView().setModel(new ManagedListModel(), "Approvers");
             
             oTransactionManager = new TransactionManager();
 			oTransactionManager.addDataModel(this.getModel("appMaster"));
             oTransactionManager.addDataModel(this.getModel("appDetail"));
+            oTransactionManager.addDataModel(this.getModel("Approvers"));
 
               
         },   
@@ -116,13 +121,13 @@ sap.ui.define([
 		 * @public
 		 */
 		onPageNavBackButtonPress : function() {
-			var sPreviousHash = History.getInstance().getPreviousHash();
-			if (sPreviousHash !== undefined) {
-				// eslint-disable-next-line sap-no-history-manipulation
-				history.go(-1);
-			} else {
-				this.getRouter().navTo("approvalList", {}, true);
-			}
+			// var sPreviousHash = History.getInstance().getPreviousHash();
+			// if (sPreviousHash !== undefined) {
+			// 	// eslint-disable-next-line sap-no-history-manipulation
+			// 	history.go(-1);
+			// } else {
+			// 	this.getRouter().navTo("approvalList", {}, true);
+			// }
 		},
 
 		/**
@@ -132,13 +137,49 @@ sap.ui.define([
 		onPageEditButtonPress: function(){
 			this._toEditMode();
 		},
-		
+        
+        /**
+		 * Event handler for saving page changes
+		 * @public
+		 */
+        onPageSaveButtonPress: function () {
+            var oView = this.getView(),
+                me = this,
+                oMessageContents = this.byId("inputMessageContents");
+
+            if (!oMessageContents.getValue()) {
+                oMessageContents.setValueState(sap.ui.core.ValueState.Error);
+                return;
+            }
+            MessageBox.confirm("Are you sure ?", {
+                title: "Comfirmation",
+                initialFocus: sap.m.MessageBox.Action.CANCEL,
+                onClose: function (sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        oView.setBusy(true);
+                        oView.getModel().submitBatch("odataGroupIdForUpdate").then(function (ok) {
+                            me._toShowMode();
+                            oView.setBusy(false);
+                            MessageToast.show("Success to save.");
+                        }).catch(function (err) {
+                            MessageBox.error("Error while saving.");
+                        });
+                    };
+                }
+            });
+        },
+
 		/**
 		 * Event handler for cancel page editing
 		 * @public
 		 */
-        onPageCancelEditButtonPress: function(){
-			
+        onPageCancelButtonPress: function (oEvent) {
+            // var oModel = this.getModel("appMaster")
+            //     , oData = oModel.oData;
+
+            // this.getRouter().navTo("pssaObject", {
+            //     approval_number: oData.approval_number
+            // }, true)
         },
 
 		/* =========================================================== */
@@ -166,6 +207,24 @@ sap.ui.define([
             }
             this.oSF = this.getView().byId("searchField");
         },
+
+        /**
+		 * Binds the view to the data path.
+		 * @function
+		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
+		 * @private
+		 */
+        _onCreatePagetData : function (args) {  
+            this.getModel('appMaster').setProperty('/company_code', args.company_code);
+            this.getModel('appMaster').setProperty('/org_code', args.plant_code); 
+            this.getModel('appMaster').setProperty('/tenant_id', 'L1100' ); 
+            this.getModel('appMaster').setProperty('/chain_code', 'DP' ); 
+            this.getModel('appMaster').setProperty('/approval_type_code', 'B' ); 
+
+
+            this._createViewBindData(args);
+        } ,
+
         /**
          * @description 초기 생성시 파라미터를 받고 들어옴 
          * @param {*} args : company , plant   
@@ -208,46 +267,41 @@ sap.ui.define([
         },
 
         _onRoutedThisPage: function(args){
+            console.log("[step] _onRoutedThisPage args>>>> ", args);
             var that = this;
             var schFilter = [new Filter("approval_number", FilterOperator.EQ, args.approval_number)
                 , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
             ];
 
-            this._bindView("/ApprovalMasters(tenant_id='L1100',approval_number='" + args.approval_number + "')" , "appMaster", [], function (oData) {
-                     that.setRichEditor(oData.approval_contents);
-             });
+            this._bindView("/ApprovalMasters(tenant_id='L1100',approval_number='" + args.approval_number + "')"
+                , "appMaster", [], function (oData) { 
+                    console.log(" ApprovalMasters oData " , oData); 
+                that._createViewBindData(oData); // comapny , plant 조회 
+                that.setRichEditor(oData.approval_contents);
+            });
 
-                /**
-                 *   
-                 * 
-                 * this.getView().setModel(new ManagedModel(), "appMaster");
-            this.getView().setModel(new ManagedListModel(), "appDetail");
-            this.getView().setModel(new ManagedListModel(), "MoldMasterList");
-            this.getView().setModel(new ManagedListModel(), "Approvers"); 
-                 */
+            this._bindView("/ApprovalDetails", "appDetail", schFilter, function (oData) {
+                console.log("approvalDetails >>>> ", oData);
+                // that._bindView("/MoldMasters", "MoldMasterList", [
+                //     new Filter("company_code", FilterOperator.EQ, sResult.company_code)
+                //     , new Filter("org_code", FilterOperator.EQ, sResult.org_code)
+                // ], function (oData) {
+                // });
+            });
+
             this._bindView("/Approver", "Approvers", schFilter, function (oData) {
-                 console.log("Approver >>>> ", oData);
-            });    
-            // var sResult = {};
-
-            // this._bindView("/ItemBudgetExecution", "moldList", schFilter, function (oData) {
-            //     sResult = oData.results[0];
-            //     that._createViewBindData(sResult); // comapny , plant 조회 
-            //     that._bindView("/ApprovalDetails", "appDetail", schFilter, function (oData) { 
-            //         that._bindView("/MoldMasters", "MoldMasterList", [
-            //             new Filter("company_code", FilterOperator.EQ, sResult.company_code)
-            //             , new Filter("org_code", FilterOperator.EQ, sResult.org_code)
-            //         ], function (oData) {
-            //             console.log("MoldMasters >>>> ", oData);
-            //         });
-            //     });
-
-            // });
-
+                console.log("Approver >>>> ", oData);
+            });
+   
             oTransactionManager.setServiceModel(this.getModel());
         },
 
-
+        /**
+         * Binds the view to the object path.
+         * @function
+         * @param {string} sObjectPath path to the object to be bound
+         * @private
+         */
         _bindView : function (sObjectPath, sModel, aFilter, callback) {
 			var oView = this.getView(),
 				oModel = this.getModel(sModel);
@@ -273,6 +327,7 @@ sap.ui.define([
 			}
 			oViewModel.setProperty("/busy", false);
         },
+        
         /**
          * @description Participating Supplier 의 delete 버튼 누를시 
          */

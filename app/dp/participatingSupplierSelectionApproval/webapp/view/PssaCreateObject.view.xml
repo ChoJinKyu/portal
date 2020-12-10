@@ -54,27 +54,27 @@
 			<FlexBox wrap="Wrap" >
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <ObjectStatus
-                        title="Report No"
-                        text="332424-20B-00144"/>
+                        title="Approval No"
+                        text="{appMaster>/approval_number}"/>
                     <ObjectStatus
                         title="Requester"
-                        text="김갑수[ks.kim]"/>
+                        text="{appMaster>/requestor_empno}"/>
                     <ObjectStatus
-                        title="Request Date"
-                        text="2020-11-20"/>
+                        title="{I18N>/REQUEST_DATE}"
+                        text="{appMaster>/request_date}"/>
 				</layout:VerticalLayout>
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-					<Label text="Status :"/>
+					<Label text="{I18N>/STATUS} :"/>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
-                        text="New"
+                        text="{=${appMaster>/approval_number}?'Update':'New'}"
                         state="Error" />
 				</layout:VerticalLayout>
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                       <HBox>
-                        <Title text="Process"/>
+                        <Title text="{I18N>/PROCESS}"/>
                     </HBox>
                     <HBox>
                         <co:MicroProcessFlow>
@@ -114,23 +114,25 @@
                         <layout:VerticalLayout class="sapUiSmallMarginBeginEnd"> 
                                 <HBox alignItems="Center">
                                     <Label
-                                        text="Subject "
-                                      
+                                        text="Subject "     
                                         class="sapUiTinyMarginEnd"
                                         textAlign="Left"
                                         labelFor="input"
                                         required="true"/>
                                     <Input
-                                        value="Input data"
+                                        name="approval_title"
+                                        id="approval_title"
+                                        value="{appMaster>/approval_title}"
                                         visible="true"
                                         width="40em" 
-                                        placeholder="필수"
+                                        placeholder="Input data"
                                         >
                                     </Input>
                                 </HBox>
                             <VBox>
-                                <Label text="Description" labelFor="input" required="true"></Label> 
-                                <layout:VerticalLayout id="idVerticalLayout" class="sapUiContentPadding" width="100%">
+                                <Label text="{I18N>/DESCRIPTION}" labelFor="input" required="true"></Label> 
+                                <layout:VerticalLayout name="approval_contents" id="idVerticalLayout" class="sapUiContentPadding" width="100%"  >
+
                                 </layout:VerticalLayout>
                             </VBox>
                         </layout:VerticalLayout> 						
