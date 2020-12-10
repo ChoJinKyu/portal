@@ -27,7 +27,7 @@ service orgProcOrgTypeMgrService {
            ( select l.code_name
              from   codeLng.Code_Lng l
              where  l.group_code = 'CM_ORG_TYPE_CODE'
-             and    l.code = p.process_type_code
+             and    l.code = p.org_type_code
              and    l.language_cd = 'KO'
              and    l.tenant_id = p.tenant_id
             )  as org_type_name: String(240),
