@@ -13,7 +13,7 @@
         "resources": "resources.json",
         "dataSources": {
             "mainService": {
-                "uri": "srv-api/odata/v2/dp.OrderApprovalService/",
+                "uri": "srv-api/odata/v2/dp.BudgetExecutionApprovalService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
@@ -42,6 +42,13 @@
             },
             "purOrgMgrService": {
                 "uri": "srv-api/odata/v2/cm.PurOrgMgrService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            },
+            "moldItemService": {
+                "uri": "srv-api/odata/v2/dp.util.MoldItemSelectionService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
@@ -125,6 +132,16 @@
                     "useBatch": true
                 }
             },
+            "moldItem": {
+                "dataSource": "moldItemService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false,
+                    "useBatch": true
+                }
+            },
             "": {
                 "dataSource": "mainService",
                 "preload": true,
@@ -172,10 +189,17 @@
             },
             "routes": [
                 {
-                    "pattern": "",
+                    "pattern": "beaCreateObject/{company_code}/{plant_code}",
                     "name": "beaCreateObject",
                     "target": [
                         "beaCreateObject"
+                    ]
+                },
+                {
+                    "pattern": "beaEditObject/{approval_number}",
+                    "name": "beaEditObject",
+                    "target": [
+                        "beaEditObject"
                     ]
                 },
                 {
@@ -188,6 +212,12 @@
             ],
             "targets": {
                 "beaCreateObject": {
+                    "viewName": "BeaCreateObject",
+                    "viewId": "beaCreateObject",
+                    "viewLevel": 1,
+                    "title": "{i18n>beaCreateObjectTitle}"
+                },
+                "beaEditObject": {
                     "viewName": "BeaCreateObject",
                     "viewId": "beaCreateObject",
                     "viewLevel": 1,

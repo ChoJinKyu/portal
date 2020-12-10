@@ -10,7 +10,7 @@
 	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
     height="100%">
 
-    <Page id="page" title="Example #3" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
+    <Page id="page" title="Smart Table" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
         <content>
 
 			<smartFilterBar:SmartFilterBar id="smartFilterBar"

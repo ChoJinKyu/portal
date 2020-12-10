@@ -117,7 +117,11 @@ sap.ui.define([
             var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
             this.getRouter().navTo("midPage", {
                 layout: oNextUIState.layout,
-                tenantId: "new"
+                tenantId: "new",
+                fundingNotifyNumber: "number",
+                "?query": {
+                //param1: "1111111111"
+                }
             });
         },
 
@@ -127,6 +131,7 @@ sap.ui.define([
 		 * @public
 		 */
         onPageSearchButtonPress: function (oEvent) {
+            
             if (oEvent.getParameters().refreshButtonPressed) {
                 // Search field's 'refresh' button has been pressed.
                 // This is visible if you select any master list item.
@@ -145,15 +150,14 @@ sap.ui.define([
 		 * @public
 		 */
         onMainTableItemPress: function (oEvent) {
-            debugger;
             var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
                 sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
-
+            
             this.getRouter().navTo("midPage", {
                 layout: oNextUIState.layout,
                 tenantId: oRecord.tenant_id,
-                controlOptionCode: oRecord.control_option_code
+                fundingNotifyNumber: oRecord.funding_notify_number
             });
 
             if (oNextUIState.layout === 'TwoColumnsMidExpanded') {
@@ -199,19 +203,15 @@ sap.ui.define([
         },
 
         _getSearchStates: function () {
-            //   var sKeyword, sUsage, aSearchFilters = [];
-            //   if (!!this.byId("searchChainCombo").getSelectedKey()) aSearchFilters.push(new Filter("chain_code", FilterOperator.EQ, this.byId("searchChainCombo").getSelectedKey()));
-            //   if (!!this.byId("searchTenantCombo").getSelectedKey()) aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.byId("searchTenantCombo").getSelectedKey()));
-            //   if (!!(sKeyword = this.byId("searchKeyword").getValue())) {
-            //     aSearchFilters.push(new Filter({
-            //       filters: [
-            //         new Filter("control_option_code", FilterOperator.Contains, sKeyword),
-            //         new Filter("control_option_name", FilterOperator.Contains, sKeyword)
-            //       ],
-            //       and: false
-            //     }));
-            //   }
-            //   return aSearchFilters;
+            var sTitle, searchDateS, aSearchFilters = [];
+            if (!!(sTitle = this.byId("searchTitle").getValue())) {
+                aSearchFilters.push(new Filter({
+                    filters: [
+                        new Filter("funding_notify_title", FilterOperator.Contains, sTitle)
+                    ]
+                }));
+            }
+            return aSearchFilters;
         },
 
         _doInitTablePerso: function () {
@@ -223,7 +223,6 @@ sap.ui.define([
                 hasGrouping: true
             }).activate();
         }
-
 
     });
 });

@@ -78,16 +78,16 @@ sap.ui.define([
 		_onCreateModeMetadataLoaded: function() {
 			console.group("_onCreateModeMetadataLoaded");
 			this.getView().getModel().setUseBatch(true);
-			this.getView().getModel().setDeferredGroups(["pgmiGroup","deleteGroup"]);
+			this.getView().getModel().setDeferredGroups(["pgGroup","deleteGroup"]);
             
             this.getView().getModel().setChangeGroups({
 			  "MIMaterialCodeList": {
-			    groupId: "pgmiGroup",
-			    changeSetId: "pgmiGroup"
+			    groupId: "pgGroup",
+			    changeSetId: "pgGroup"
               },
               "MIMaterialCodeText": {
-			    groupId: "pgmiGroup",
-			    changeSetId: "pgmiGroup"
+			    groupId: "pgGroup",
+			    changeSetId: "pgGroup"
 			  }
             });            
            
@@ -302,26 +302,6 @@ sap.ui.define([
             console.groupEnd();
 		},
    
-
-		/**
-		 * Event handler when a table item gets pressed
-		 * @param {sap.ui.base.Event} oEvent the table selectionChange event
-		 * @public
-		 */
-		onMainTablePersoButtonPressed: function(oEvent){
-			this._oTPC.openDialog();
-		},
-
-		/**
-		 * Event handler when a table personalization refresh
-		 * @param {sap.ui.base.Event} oEvent the table selectionChange event
-		 * @public
-		 */
-		onMainTablePersoRefresh : function() {
-			MainListPersoService.resetPersData();
-			this._oTPC.refresh();
-		},
-
 		/**
 		 * Event handler when a table add button pressed
 		 * @param {sap.ui.base.Event} oEvent
@@ -332,7 +312,7 @@ sap.ui.define([
 
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
 
-			//Note : 수정 검색한 값을 기준으로 데이타를 수정해야한다. 
+			//수정대상 : 수정 검색한 값을 기준으로 데이타를 수정해야한다. 
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
 				tenant_id: "L2100",
@@ -383,8 +363,16 @@ sap.ui.define([
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
 				sPath = oEvent.getSource().getBindingContext().getPath(),
 				oRecord = this.getModel().getProperty(sPath);
-				
+				// ,
+				// oTable = this.get
+				// oSelected = oTable.getSelectedContexts();
 
+				// for (var i = 0; i < oSelected.length; i++) {
+                //     var idx = parseInt(oSelected[0].sPath.substring(oSelected[0].sPath.lastIndexOf('/') + 1));
+				// 		var itemData = oModel.oData[idx];
+				// 		debugger;
+				// }
+				
 				var aParameters = sPath.substring( sPath.indexOf('(')+1, sPath.length );		
 				aParameters = aParameters.split(",");
 		
@@ -402,26 +390,9 @@ sap.ui.define([
                 company_code: aParameters["company_code"],
 				org_type_code: aParameters["org_type_code"],
 				org_code :aParameters["org_code"],
-				category_name : "",
-				category_code : oRecord.category_code,
-				mi_material_code: oRecord.mi_material_code,
-				mi_material_code_name: oRecord.mi_material_code_name,
-				use_flag: oRecord.use_flag
+				mi_material_code: oRecord.mi_material_code
 				
             });
-/*
-				"pattern": "midObject/
-				{layout}/
-				{tenant_id}/
-				{company_code}/
-				{org_type_code}/
-				{org_code}/
-				{category_name}/
-				{category_code}/
-				{mi_material_code}/
-				{use_flag}",
-
-				*/
 
             if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
                 this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);

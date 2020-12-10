@@ -11,14 +11,21 @@ sap.ui.define([
 	"sap/ui/core/Fragment",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
+    "sap/ui/core/Item",
+    "ext/lib/util/Validator",
+    "dp/util/controller/SupplierSelection"
+], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, Item, Validator, SupplierSelection) {
     "use strict";
     
     var oTransactionManager;
 
 	return BaseController.extend("dp.detailSpecConfirm.controller.MidObject", {
 
-		dateFormatter: DateFormatter,
+        dateFormatter: DateFormatter,
+        
+        validator: new Validator(),
+
+        supplierSelection: new SupplierSelection(),
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -31,7 +38,7 @@ sap.ui.define([
 		onInit : function () {
 			// Model used to manipulate controlstates. The chosen values make sure,
 			// detail page shows busy indication immediately so there is no break in
-			// between the busy indication for loading the view's meta data
+            // between the busy indication for loading the view's meta data
 			var oViewModel = new JSONModel({
 					busy : true,
                     delay : 0
@@ -92,8 +99,40 @@ sap.ui.define([
 		 * @public
 		 */
 		onPageEditButtonPress: function(){
-			this._toEditMode();
-		},
+
+            this._toEditMode();
+            this.setImportOrg();
+            this.clearValueState();
+        },
+
+        clearValueState: function(){
+            this.validator.clearValueState( this.byId('scheduleTable1E') );
+            this.validator.clearValueState( this.byId('frmMold') );
+            this.validator.clearValueState( this.byId('frmPress') );
+        },
+        
+        setImportOrg: function(){
+            var importCompanyCode = this.getModel('master').getProperty('/import_company_code');
+            //importOrg filter
+            var filter = new Filter({
+                            filters: [
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                    new Filter("company_code", FilterOperator.EQ, importCompanyCode)
+                                ],
+                                and: true
+                        });
+
+            this.getView().byId("importOrg").bindItems(
+                {
+                    path: '/Divisions',
+                    filters: filter,
+                    template: new Item({
+                    key: "{org_code}", text: "[{org_code}] {org_name}"
+                    })
+                }
+            )
+            //this.getView().byId("importOrg").setSelectedKey("CVZ");
+        },
 		
 		/**
 		 * Event handler for delete page entity
@@ -123,19 +162,125 @@ sap.ui.define([
 		 */
         onPageSaveButtonPress: function(){
 			var oView = this.getView(),
-				me = this;
-			MessageBox.confirm("Are you sure ?", {
-				title : "Comfirmation",
-				initialFocus : sap.m.MessageBox.Action.CANCEL,
-				onClose : function(sButton) {
-					if (sButton === MessageBox.Action.OK) {
-						oView.setBusy(true);
+                me = this;
+            
+            
+            // if(!this.checkChange()){
+            //     MessageToast.show(this.getModel('I18N').getText("/NCM0002"));
+            //     return;
+            // }
+
+            if(this.validator.validate( this.byId('scheduleTable1E') ) !== true){
+                MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
+                return;
+            }
+
+            //mold 인지 press 인지 구분해야한다..
+            var dtlForm = '';
+            if(this.itemType == 'P' || this.itemType == 'E'){
+                dtlForm = 'frmPress';
+            }else{
+                dtlForm = 'frmMold';
+            }
+
+            if(this.validator.validate( this.byId(dtlForm) ) !== true){
+                MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
+                return;
+            }
+
+            MessageBox.confirm( this.getModel('I18N').getText('/NCM0004'), {
+                title : "Draft",
+                initialFocus : sap.m.MessageBox.Action.CANCEL,
+                onClose : function(sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        oView.setBusy(true);
+                        
+                        me.getModel('spec').setProperty('/mold_spec_status_code', 'D');
+
 						oTransactionManager.submit({
 						// oView.getModel("master").submitChanges({
 							success: function(ok){
 								me._toShowMode();
 								oView.setBusy(false);
-								MessageToast.show("Success to save.");
+                                MessageToast.show("Success to save.");
+							}
+						});
+					};
+				}
+			});
+
+        },
+
+        checkChange: function(){
+            debugger
+            var omMaster = this.getModel('master');
+            var omSchedule = this.getModel('schedule');
+            var omSpec = this.getModel('spec');
+
+            console.log('omSpec.isChanged()',omSpec.isChanged());
+
+            if(omMaster.isChanged() || omSchedule.isChanged() || omSpec.isChanged()){
+                return true;
+            }else{
+                return false;
+            }
+        },
+        
+        onPageConfirmButtonPress: function(){
+			var oView = this.getView(),
+                me = this;
+
+            console.log(this.byId('scheduleTable1E'));
+
+            if(this.validator.validate( this.byId('scheduleTable1E') ) !== true){
+                MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
+                return;
+            }
+
+            //mold 인지 press 인지 구분해야한다..
+            var dtlForm = '';
+            if(this.itemType == 'P' || this.itemType == 'E'){
+                dtlForm = 'frmPress';
+            }else{
+                dtlForm = 'frmMold';
+            }
+
+            if(this.validator.validate( this.byId(dtlForm) ) !== true){
+                MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
+                return;
+            }
+                
+            MessageBox.confirm("Are you sure ?", {
+                title : "Comfirmation",
+                initialFocus : sap.m.MessageBox.Action.CANCEL,
+                onClose : function(sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        oView.setBusy(true);
+                        
+                        me.getModel('spec').setProperty('/mold_spec_status_code', 'C');
+                        // me.getModel('spec').setProperty('/spare_part_eyebolt_count', 3);
+
+						oTransactionManager.submit({
+						// oView.getModel("master").submitChanges({
+							success: function(ok){
+
+                                oView.setBusy(false);
+
+                                var err = ok.__batchResponses[0].__changeResponses.filter(function(item){
+                                    return item.statusCode != '204';
+                                });
+
+                                if(err.length > 0){
+                                    
+                                    var body = JSON.parse(err[0].response.body);
+
+                                    MessageToast.show(body.error.code+'\n'+body.error.message.value);
+                                    return;
+                                }
+
+                                me._toShowMode();
+                                MessageToast.show("Success to save.");
+
 							}
 						});
 					};
@@ -151,6 +296,11 @@ sap.ui.define([
 		 */
         onPageCancelEditButtonPress: function(){
 			this._toShowMode();
+        },
+
+        onSuppValueHelpRequested: function(oEvent){
+
+            this.supplierSelection.showSupplierSelection(this, oEvent);
         },
 
 		/* =========================================================== */
@@ -178,11 +328,11 @@ sap.ui.define([
 			}else{
 
                 var self = this;
-				this._bindView("/MoldMasters(" + this._sMoldId + ")", "master", [], function(oData){
+				this._bindView("/MoldMasters('" + this._sMoldId + "')", "master", [], function(oData){
                     self._toShowMode();
                 });
 
-                this._bindView("/MoldMasterSpec(" + this._sMoldId + ")", "mstSpecView", [], function(oData){
+                this._bindView("/MoldMasterSpec('" + this._sMoldId + "')", "mstSpecView", [], function(oData){
                     
                 });
 
@@ -191,7 +341,7 @@ sap.ui.define([
                     
                 });
 
-                this._bindView("/MoldSpec("+this._sMoldId+")", "spec", [], function(oData){
+                this._bindView("/MoldSpec('"+this._sMoldId+"')", "spec", [], function(oData){
                     
                 });
             }
@@ -244,26 +394,40 @@ sap.ui.define([
             this._loadFragment(sFragmentName, function(oFragment){
 				oPageSubSection.removeAllBlocks();
 				oPageSubSection.addBlock(oFragment);
-            })
+            });
 
             var mode = sFragmentName.split('_')[1];
 
+            //development plan
             var oPageSubSection2 = this.byId("pageSubSection2");
-            this._loadFragment("MidObjectShipPlan_"+mode, function(oFragment){
+            this._loadFragment("MidObjectDevelopmentPlan_"+mode, function(oFragment){
 				oPageSubSection2.removeAllBlocks();
 				oPageSubSection2.addBlock(oFragment);
-            })  
+            });  
+
+            var master = this.getModel("master");
+            var budgetType = master.oData.investment_ecst_type_code;
+
+            //ship plan
+            var oPageSubSectionSP = this.byId("pageSubSectionSP");
+            oPageSubSectionSP.removeAllBlocks();
+            if(budgetType == 'S'){
+                this._loadFragment("MidObjectShipPlan_"+mode, function(oFragment){
+                    oPageSubSectionSP.addBlock(oFragment);
+                });  
+            }
             
+
+            //detail spec
             var oPageSubSection3 = this.byId("pageSubSection3");
             var oPageSubSection4 = this.byId("pageSubSection4");
             oPageSubSection3.removeAllBlocks();
             oPageSubSection4.removeAllBlocks();
 
             //mold 인지 press 인지 분기
-            var master = this.getModel("master");
-            var itemType = master.oData.mold_item_type_code;
+            this.itemType = master.oData.mold_item_type_code;
 
-            if(itemType == 'P' || itemType == 'E'){
+            if(this.itemType == 'P' || this.itemType == 'E'){
                 this._loadFragment("MidObjectDetailSpecPress_"+mode, function(oFragment){
                     oPageSubSection4.addBlock(oFragment);
                 })  
@@ -281,13 +445,32 @@ sap.ui.define([
 					controller: this
 				}).then(function(oFragment){
 					this._oFragments[sFragmentName] = oFragment;
-					if(oHandler) oHandler(oFragment);
+                    if(oHandler) oHandler(oFragment);
 				}.bind(this));
 			}else{
 				if(oHandler) oHandler(this._oFragments[sFragmentName]);
 			}
-		}
+		},
+        handleChangeImpComp: function(oEvent){
 
+            console.group('===============handleChangeImpComp==================');
+
+            var params = oEvent.getParameters();
+
+            var filter = new Filter({
+                            filters: [
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                    new Filter("company_code", FilterOperator.EQ, params.selectedItem.getKey() )
+                                ],
+                                and: true
+                        });
+                        
+            console.log('handleChangeImpComp',filter);
+
+            this.getView().byId("importOrg").getBinding("items").filter(filter, "Application");
+
+            console.groupEnd();
+        },
 
 	});
 });

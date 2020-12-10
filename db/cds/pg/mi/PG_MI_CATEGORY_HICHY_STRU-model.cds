@@ -21,17 +21,19 @@ using util from '../../cm/util/util-model';
 using {pg as Categ_Hier_Str} from '../mi/PG_MI_CATEGORY_HICHY_STRU-model';
 
 entity MI_Category_Hichy_Stru {
-    key tenant_id       : String(5) not null  @title : '회사코드';
-    key company_code    : String(10) not null @title : '법인코드';
-    key org_type_code   : String(30) not null @title : '조직유형코드';
-    key org_code        : String(10) not null @title : '조직코드';
-    key node_id         : Integer not null    @title : '노드ID';
-        hierarchy_level : Integer             @title : '계층레벨';
-    key category_code   : String(40) not null @title : '카테고리코드';
-        category_name   : String(240)         @title : '카테고리명';
-        parent_node_id  : Integer             @title : '상위노드ID';
-        drillstate      : String(10)          @title : '노드상태';
-        use_flag        : Boolean not null    @title : '사용여부';
+    key tenant_id            : String(5) not null  @title : '회사코드';
+    key company_code         : String(10) not null @title : '법인코드';
+    key org_type_code        : String(30) not null @title : '조직유형코드';
+    key org_code             : String(10) not null @title : '조직코드';
+        node_id              : Integer not null    @title : '노드ID';
+        hierarchy_level      : Integer             @title : '계층레벨';
+    key category_code        : String(40) not null @title : '카테고리코드';
+        category_name        : String(240)         @title : '카테고리명';
+        parent_node_id       : Integer             @title : '상위노드ID';
+        parent_category_code : String(40)          @title : '상위카테고리코드';
+        filter_category_code : String(500)         @title : '필터카테고리코드';
+        drillstate           : String(10)          @title : '노드상태';
+        use_flag             : Boolean not null    @title : '사용여부';
 }
 
 extend MI_Category_Hichy_Stru with util.Managed;

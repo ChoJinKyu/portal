@@ -10,6 +10,7 @@
 
     <f:DynamicPage id="page"
         headerExpanded="false" 
+        showFooter="{= ${message>/}.length > 0 }"
         toggleHeaderOnTitleClick="true">
         <!-- DynamicPage Title -->
         <f:title>
@@ -22,7 +23,7 @@
                         <form:content>
                             <VBox>
                                 <Label text="{I18N>/CHAIN}: " labelFor="searchChainS" ></Label>
-                                <ComboBox id="searchChainS" width="100%" items="{
+                                <ComboBox id="searchChainS" width="100%" selectedKey="" items="{
                                         path: 'util>/CodeDetails',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
@@ -39,7 +40,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="{I18N>/LANGUAGE}: " labelFor="searchLanguageS"></Label>
-                                <ComboBox id="searchLanguageS" width="100%" items="{
+                                <ComboBox id="searchLanguageS" selectedKey="" width="100%" items="{
                                         path: 'util>/CodeDetails',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
@@ -70,7 +71,7 @@
                         <form:content>
                             <VBox>
                                 <Label text="{I18N>/CHAIN}: " labelFor="searchChainE"></Label>
-                                <ComboBox id="searchChainE" width="100%" items="{
+                                <ComboBox id="searchChainE" selectedKey="" width="100%" items="{
                                         path: 'util>/CodeDetails',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
@@ -87,7 +88,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="{I18N>/LANGUAGE}: " labelFor="searchLanguageE"></Label>
-                                <ComboBox id="searchLanguageE" width="100%" items="{
+                                <ComboBox id="searchLanguageE" selectedKey="" width="100%" items="{
                                         path: 'util>/CodeDetails',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
@@ -135,6 +136,8 @@
                     updateFinished=".onMainTableUpdateFinished"
                     items="{list>/Message}"
                     mode="MultiSelect" 
+                    growing="true"
+                    growingThreshold="50"
                     width="auto">
                 <headerToolbar>
                     <OverflowToolbar>
@@ -184,7 +187,7 @@
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                         {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                                     ]
-                                }" editable="{= ${list>_row_state_} === 'C' }">
+                                }" editable="{= ${list>_row_state_} === 'C' }" required="true">
                                 <items>
                                     <core:Item key="{util>code}" text="{util>code_description}" />
                                 </items>
@@ -195,13 +198,13 @@
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                         {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
                                     ]
-                                }" editable="{= ${list>_row_state_} === 'C' }">
+                                }" editable="{= ${list>_row_state_} === 'C' }" required="true">
                                 <items>
                                     <core:Item key="{util>code}" text="{util>code_description}" />
                                 </items>
                             </ComboBox>
-                            <Input value="{list>message_code}" editable="{= ${list>_row_state_} === 'C' }"></Input>
-                            <Input value="{list>message_contents}"></Input>
+                            <Input value="{list>message_code}" editable="{= ${list>_row_state_} === 'C' }"  required="true"></Input>
+                            <Input value="{list>message_contents}" required="true"></Input>
                             <ComboBox selectedKey="{list>message_type_code}" width="100%" items="{
                                     path: 'util>/CodeDetails',
                                     filters: [
@@ -219,5 +222,17 @@
             </Table>
         </f:content>
         <!-- DynamicPage Footer -->
+        <f:footer>
+			<OverflowToolbar>
+                <Button
+                    icon="sap-icon://alert"
+                    type="Reject"
+                    text="{= ${message>/}.length }"
+                    visible="{= ${message>/}.length > 0 }"
+                    ariaHasPopup="Dialog"
+                    press=".onMessagePopoverPress" />
+				<ToolbarSpacer />
+			</OverflowToolbar>
+		</f:footer>
     </f:DynamicPage>
 </mvc:View>

@@ -48,9 +48,8 @@
                             <ComboBox id="MoldItemSearchPlant"  width="100%" selectedKey="{beaCreateObjectView>/plant_code}" enabled="false" items="{
                                         path: 'purOrg>/Pur_Operation_Org',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
-                                            {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
-                                            {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                          
                                         ]
                                     }">
                                 <items>
@@ -62,7 +61,7 @@
                             </layoutData> 
                         </VBox>
                         <VBox>
-                            <Button text="Search" class="sapUiSmallMargin" type="Emphasized" press=".onMoldItemSelection"/>
+                            <Button id="moldItemSelectionSearch" text="Search" class="sapUiSmallMargin" type="Emphasized" press=".onMoldItemSelection"/>
                                <layoutData>
                                 <layout:GridData span="XL2 L2 M2 S2" />
                             </layoutData> 
@@ -92,18 +91,21 @@
                             selectionChange=".selectMoldItemChange" 
                             mode="MultiSelect"
                             width="auto"
-                            items="{moldMng>/MoldMasters}"
+                            items="{MoldItemSelect>/MoldItemSelect}"
                             >
                          <headerToolbar>
                             <OverflowToolbar>
-                               
+                                <Label text="{= ${beaCreateObjectView>/moldItemLength} > 0 ? ( 'Selected : '+${beaCreateObjectView>/moldItemLength} ) : '' }"/>
                             </OverflowToolbar>
                         </headerToolbar> 
                         <columns>
-                            <Column id="modelItem_model" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true"  >
+                            <Column id="modelItem_mold_id" visible="false" >
+                                <Text text="mold_id" />
+                            </Column>
+                            <Column id="modelItem_model" minScreenWidth="Tablet" hAlign="Center"   >
                                 <Text text="Model" />
                             </Column>
-                            <Column id="modelItem_modelPartNo" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" >
+                            <Column id="modelItem_modelPartNo" minScreenWidth="Tablet" hAlign="Center" >
                                 <Text text="Model Part No" />
                             </Column>
                             <Column id="modelItem_seq" minScreenWidth="Tablet" hAlign="Center"  >
@@ -112,7 +114,7 @@
                             <Column id="modelItem_description" minScreenWidth="Tablet" hAlign="Center"  >
                                 <Text text="Description" />
                             </Column> 
-                            <Column id="modelItem_moldItemType" minScreenWidth="Tablet" hAlign="Center"  >
+                            <Column id="modelItem_moldItemType" minScreenWidth="Tablet" hAlign="Center" width="8em"  >
                                 <Text text="Mold Item Type" />
                             </Column>
                             <Column id="modelItem_bookCurrency" minScreenWidth="Tablet" hAlign="Center"  >
@@ -121,18 +123,49 @@
                             <Column id="modelItem_budgetAmount" minScreenWidth="Tablet" hAlign="Center"  >
                                   <Text text="Budget Amount" />
                             </Column>					
+                            <Column visible="false" >
+                                  <Text text="family_part_number_1" />
+                            </Column>					
+                            <Column visible="false" >
+                                  <Text text="family_part_number_2" />
+                            </Column>					
+                            <Column  visible="false">
+                                  <Text text="family_part_number_3" />
+                            </Column>					
+                            <Column visible="false" >
+                                  <Text text="family_part_number_4" />
+                            </Column>					
+                            <Column visible="false" >
+                                  <Text text="family_part_number_5" />
+                            </Column>					
                         </columns>
                         <items>
                              <ColumnListItem>
                                 <cells>
                                     <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
-                                    <Text text="{moldMng>model}" />
-                                    <Text text="{moldMng>part_number}" />
-                                    <Text text="{moldMng>mold_sequence}" />
-                                    <Text text="{moldMng>spec_name}" />
-                                    <Text text="{moldMng>mold_item_type_code}" />
-                                    <Text text="{moldMng>book_currency_code}" />
-                                    <Text text="{moldMng>budget_amount}" />
+                                    <Text text="{MoldItemSelect>mold_id}" />
+                                    <Text text="{MoldItemSelect>model}" />
+                                    <Text text="{MoldItemSelect>mold_number}" />
+                                    <Text text="{MoldItemSelect>mold_sequence}" />
+                                    <Text text="{MoldItemSelect>spec_name}" />
+                                    <ComboBox selectedKey="{MoldItemSelect>mold_item_type_code}"
+                                        items="{ path : 'util>/CodeDetails',
+                                                    filters : [
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
+                                                    ]
+                                                }"
+								        editable="false" >
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </ComboBox>
+
+                                    <Text text="{MoldItemSelect>book_currency_code}" />
+                                    <Text text="{MoldItemSelect>budget_amount}" />
+                                    <Text text="{MoldItemSelect>family_part_number_1}" />
+                                    <Text text="{MoldItemSelect>family_part_number_2}" />
+                                    <Text text="{MoldItemSelect>family_part_number_3}" />
+                                    <Text text="{MoldItemSelect>family_part_number_4}" />
+                                    <Text text="{MoldItemSelect>family_part_number_5}" />
                                 </cells>
                             </ColumnListItem>   
                             </items>

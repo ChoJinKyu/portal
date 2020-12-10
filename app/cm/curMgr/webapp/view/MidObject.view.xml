@@ -8,10 +8,10 @@
 	height="100%">
 
 	<uxap:ObjectPageLayout id="page"
-		toggleHeaderOnTitleClick="true"
+		toggleHeaderOnTitleClick="false"
 		alwaysShowContentHeader = "true"
 		preserveHeaderStateOnScroll="false"
-		headerContentPinnable="true"
+		headerContentPinnable="false"
 		isChildPage="true"
 		upperCaseAnchorBar="false"
 		showTitleInHeaderContent="true"
@@ -112,7 +112,7 @@
 									<Title text="통화 언어 목록" level="H2"/>
 									<ToolbarSpacer/>
 									<!-- Add the Personalization button -->
-									<Button id="midTableAddButton" text="행생성" type="Transparent" press=".onMidTableAddButtonPress" />
+									<Button id="midTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onMidTableAddButtonPress" />
 									<Button id="midTableDeleteButton" text="행삭제" type="Transparent" press=".onMidTableDeleteButtonPress" />
 									<ToolbarSeparator/>
 									<SearchField id="midTableSearchField" width="10rem" search=".onMidTableFilterPress" />
@@ -141,54 +141,7 @@
 							</columns>
 							<items>
 								<ColumnListItem type="Inactive" press=".onMidTableItemPress">
-                                <!-- <cells>
-                                    <ObjectStatus icon="{
-                                    path: 'details>_row_state_',
-                                    formatter: '.formatter.toModelStateColumnIcon'
-                                    }" />
-                                    </cells> -->
-
-                                                    <!-- <cells>
-                                                <ObjectStatus icon="{
-                                                    path: 'list>_row_state_',
-                                                    formatter: '.formatter.toModelStateColumnIcon'
-                                                }" />
-                                                <ComboBox selectedKey="{list>chain_code}" width="100%" items="{
-                                                        path: 'util>/CodeDetails',
-                                                        filters: [
-                                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                                            {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
-                                                        ]
-                                                    }" editable="{= ${list>_row_state_} === 'C' }">
-                                                    <items>
-                                                        <core:Item key="{util>code}" text="{util>code_description}" />
-                                                    </items>
-                                                </ComboBox>
-                                                <ComboBox selectedKey="{list>language_code}" width="100%" items="{
-                                                        path: 'util>/CodeDetails',
-                                                        filters: [
-                                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                                            {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
-                                                        ]
-                                                    }" editable="{= ${list>_row_state_} === 'C' }">
-                                                    <items>
-                                                        <core:Item key="{util>code}" text="{util>code_description}" />
-                                                    </items>
-                                                </ComboBox>
-                                                <Input value="{list>message_code}" editable="{= ${list>_row_state_} === 'C' }" />
-                                                <Input value="{list>message_contents}"></Input>
-                                                <ComboBox selectedKey="{list>message_type_code}" width="100%" items="{
-                                                        path: 'util>/CodeDetails',
-                                                        filters: [
-                                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                                            {path: 'group_code', operator: 'EQ', value1: 'CM_MESSAGE_TYPE_CODE'}
-                                                        ]
-                                                    }">
-                                                    <items>
-                                                        <core:Item key="{util>code}" text="{util>code_description}" />
-                                                    </items>
-                                                </ComboBox> -->
-                                            <!-- </cells> -->
+                              
 								</ColumnListItem>
 							</items>
 						</Table>
@@ -198,11 +151,18 @@
 
 		</uxap:sections>
 		
-		<uxap:footer visible="true">
-			<OverflowToolbar visible="true">
+		<uxap:footer>
+			<OverflowToolbar>
+                <Button
+                    icon="sap-icon://alert"
+                    type="Emphasized"
+                    text="{= ${message>/}.length }"
+                    visible="{= ${message>/}.length > 0 }"
+                    ariaHasPopup="Dialog"
+                    press=".onMessagePopoverPress" />
 				<ToolbarSpacer />
                 <Button id="pageEditButton" text="Edit" type="Transparent" press=".onPageEditButtonPress" />
-                <Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" />
+                <Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" visible="{= ${editMode>/newcheck} === 'new' ? false : true}"/>
 				<Button id="pageSaveButton" type="Emphasized" text="Save" press=".onPageSaveButtonPress" />
 				<Button id="pageCancelButton" type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
 			</OverflowToolbar>

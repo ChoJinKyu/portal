@@ -1,0 +1,7 @@
+view DP_SUPPLIER_VIEW as
+
+select b.company_code, b.org_type_code, b.org_code, b.supplier_type_code, a.* 
+from SP_SM_SUPPLIER_MST a
+left join SP_SM_SUPPLIER_ORG b
+on a.tenant_id = b.tenant_id
+and a.supplier_code = b.supplier_code

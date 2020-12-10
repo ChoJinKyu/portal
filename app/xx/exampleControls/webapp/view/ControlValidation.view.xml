@@ -1,6 +1,6 @@
-<mvc:View controllerName="xx.exampleControls.controller.Example" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:form="sap.ui.layout.form" xmlns:layout="sap.ui.layout" xmlns:lib-m="ext.lib.m" height="100%">
+<mvc:View controllerName="xx.exampleControls.controller.ControlValidation" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:form="sap.ui.layout.form" xmlns:layout="sap.ui.layout" xmlns:lib-m="ext.lib.m" height="100%">
 
-    <Page id="page" title="Example #2" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
+    <Page id="page" title="Control Validation" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
         <subHeader>
             <Toolbar>
                 <ToolbarSpacer />
@@ -15,14 +15,33 @@
                 <form:SimpleForm maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="Masked Number: "></Label>
-                            <MaskInput mask="999999" placeholderSymbol="_" placeholder="Enter a six digit number"/>
+                            <Label text="Multi Combo: " required="true"></Label>
+                            <MultiComboBox width="350px"
+                                items="{
+                                    path: 'common>/CodeDetails',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
+                                    ]
+                                }" required="true">
+                                <items>
+                                    <core:Item key="{common>code}" text="{common>code}: {common>code_description}" />
+                                </items>
+                            </MultiComboBox>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Required: "></Label>
+                            <Label text="Masked Number: "></Label>
+                            <MaskInput mask="999999" placeholderSymbol="_" width="100%"
+                                placeholder="Enter a six digit number"/>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Required: " required="true"></Label>
                             <Input required="true" placeholder="Required"></Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
@@ -130,7 +149,8 @@
                     type="Emphasized"
                     press="onMessagePopoverPress" />
 				<ToolbarSpacer />
-				<Button type="Transparent" text="Done" press=".onPageCancelEditButtonPress"/>
+				<Button type="Transparent" text="Clear Validate" press=".onPageClearValidateButtonPress"/>
+				<Button type="Emphasized" text="Validate" press=".onPageValidateButtonPress"/>
 			</OverflowToolbar>
 		</footer>
     </Page>

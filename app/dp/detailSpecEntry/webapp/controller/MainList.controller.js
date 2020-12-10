@@ -19,13 +19,16 @@ sap.ui.define([
     "sap/ui/core/Item",
     'sap/m/Label',
     'sap/m/Token',
-    'sap/m/SearchField'
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, Sorter, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, Label, Token, SearchField) {
+    'sap/m/SearchField',
+    "ext/lib/util/Validator"
+], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, Sorter, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, Label, Token, SearchField, Validator) {
 	"use strict";
 
 	return BaseController.extend("dp.detailSpecEntry.controller.MainList", {
 
-		dateFormatter: DateFormatter,
+        dateFormatter: DateFormatter,
+        
+        validator: new Validator(),
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -79,6 +82,14 @@ sap.ui.define([
 
             this.getView().setModel(this.getOwnerComponent().getModel());
 
+            this.setDivision('LGEKR');
+
+            //접속자 법인 사업부로 바꿔줘야함
+            this.getView().byId("searchCompanyS").setSelectedKeys(['LGEKR']);
+            this.getView().byId("searchCompanyE").setSelectedKeys(['LGEKR']);
+            this.getView().byId("searchDivisionS").setSelectedKeys(['DFZ']);
+            this.getView().byId("searchDivisionE").setSelectedKeys(['DFZ']);
+
             /** Date */
             var today = new Date();
             
@@ -86,6 +97,28 @@ sap.ui.define([
             this.getView().byId("searchDateS").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
             this.getView().byId("searchDateE").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
             this.getView().byId("searchDateE").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+        },
+
+        setDivision: function(companyCode){
+            
+            var filter = new Filter({
+                            filters: [
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                    new Filter("company_code", FilterOperator.EQ, companyCode)
+                                ],
+                                and: true
+                        });
+
+            var bindItemInfo = {
+                    path: '/Divisions',
+                    filters: filter,
+                    template: new Item({
+                        key: "{org_code}", text: "[{org_code}] {org_name}"
+                    })
+                };
+
+            this.getView().byId("searchDivisionS").bindItems(bindItemInfo);
+            this.getView().byId("searchDivisionE").bindItems(bindItemInfo);
         },
 
 		/* =========================================================== */
@@ -162,6 +195,10 @@ sap.ui.define([
 				// refresh the list binding.
 				this.onRefresh();
 			} else {
+
+                this.validator.validate( this.byId('pageSearchFormE'));
+                if(this.validator.validate( this.byId('pageSearchFormS') ) !== true) return;
+
                 var aSearchFilters = this._getSearchStates();
 				this._applySearch(aSearchFilters);
 			}
@@ -256,9 +293,8 @@ sap.ui.define([
 
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S"
             
-            var aCompany = this.getView().byId("searchCompany"+sSurffix).getSelectedItems();
-
-            var aDivision = this.getView().byId("searchDivision"+sSurffix).getSelectedItems();
+            var aCompany = this.getView().byId("searchCompany"+sSurffix).getSelectedKeys();
+            var aDivision = this.getView().byId("searchDivision"+sSurffix).getSelectedKeys();
 
             var sDateFrom = this.getView().byId("searchDate"+sSurffix).getDateValue();
             var sDateTo = this.getView().byId("searchDate"+sSurffix).getSecondDateValue();
@@ -274,7 +310,7 @@ sap.ui.define([
                 var _tempFilters = [];
 
                 aCompany.forEach(function(item, idx, arr){
-                    _tempFilters.push(new Filter("company_code", FilterOperator.EQ, item.mProperties.key ));
+                    _tempFilters.push(new Filter("company_code", FilterOperator.EQ, item ));
                 });
 
                 aSearchFilters.push(
@@ -289,7 +325,7 @@ sap.ui.define([
                 var _tempFilters = [];
 
                 aDivision.forEach(function(item, idx, arr){
-                    _tempFilters.push(new Filter("org_code", FilterOperator.EQ, item.mProperties.key ));
+                    _tempFilters.push(new Filter("org_code", FilterOperator.EQ, item ));
                 });
 
                 aSearchFilters.push(
@@ -330,7 +366,7 @@ sap.ui.define([
             }
             
             if (sPart) {
-				aSearchFilters.push(new Filter("tolower(mpart_number)", FilterOperator.Contains, "'"+sPart.toLowerCase()+"'"));
+				aSearchFilters.push(new Filter("tolower(mold_number)", FilterOperator.Contains, "'"+sPart.toLowerCase()+"'"));
             }
             
             if (sFamilyPart) {
@@ -446,7 +482,7 @@ sap.ui.define([
                     "cols": [
                         {
                             "label": "Part No",
-                            "template": "part_number"
+                            "template": "mold_number"
                         },
                         {
                             "label": "Item Type",
@@ -462,7 +498,7 @@ sap.ui.define([
                 path = '/PartNumbers';
 
                 this._oValueHelpDialog.setTitle('Part No');
-                this._oValueHelpDialog.setKey('part_number');
+                this._oValueHelpDialog.setKey('mold_number');
                 this._oValueHelpDialog.setDescriptionKey('spec_name');
             }
 
@@ -543,7 +579,7 @@ sap.ui.define([
 
             }else if(this._oValueHelpDialog.oRows.sPath.indexOf('/PartNumbers') > -1){
                 //PartNumbers
-                _tempFilters.push(new Filter({ path: "tolower(part_number)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
+                _tempFilters.push(new Filter({ path: "tolower(mold_number)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
                 _tempFilters.push(new Filter({ path: "tolower(mold_item_type_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
                 _tempFilters.push(new Filter({ path: "tolower(spec_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
             }

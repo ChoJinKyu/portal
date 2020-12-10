@@ -66,17 +66,13 @@ sap.ui.define([
 		_onCreateModeMetadataLoaded: function() {
 			console.group("_onCreateModeMetadataLoaded");
 			this.getView().getModel().setUseBatch(true);
-			this.getView().getModel().setDeferredGroups(["updateGroup","deleteGroup","createGroup"]);
+			this.getView().getModel().setDeferredGroups(["pgGroup","deleteGroup"]);
             
             this.getView().getModel().setChangeGroups({
-			  "MIMaterialCodeList": {
+			  "mIMaterialCodeBOMManagement": {
 			    groupId: "pgGroup",
 			    changeSetId: "pgGroup"
-              },
-              "MIMaterialCodeText": {
-			    groupId: "pgGroup",
-			    changeSetId: "pgGroup"
-			  }
+              }
             });            
            
 
@@ -118,7 +114,6 @@ sap.ui.define([
 		 * Item Select Change
 		 */
         _selectionChanged: function(){
-
 			console.group("_selectionChanged");
             var oItemLength = this._getSmartTableById().getTable().getSelectedItems().length;
 			//var bDeleteEnabled = oItemLength > 0;
@@ -250,14 +245,27 @@ sap.ui.define([
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
 			
 			//note수정 검색한 값을 기준으로 데이타를 수정해야한다. 
+	//midObject/{layout}/{tenant_id}/{company_code}/{org_type_code}/{org_code}/{material_code}/{supplier_code}/{mi_material_code}
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
 				tenant_id: "L2100",
 				company_code: "*",
 				org_type_code: "BU",
-				org_code: "BIZ00100",
-				mi_material_code: "new"				
-            });
+				org_code :"BIZ00100",
+				material_code:"new",	
+				supplier_code: "KR00008",	
+				mi_material_code: "TIN-001-41"
+			});
+
+			// layout: oNextUIState.layout, 
+			// tenant_id: aParameters["tenant_id"],
+			// company_code: aParameters["company_code"],
+			// org_type_code: aParameters["org_type_code"],
+			// org_code :aParameters["org_code"],
+			// material_code: oRecord.material_code,
+			// supplier_code: aParameters["supplier_code"],
+			// mi_material_code: aParameters["mi_material_code"]
+
 			
             if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
                 this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
@@ -312,43 +320,19 @@ sap.ui.define([
 					value = aParameters[i].split("=")[1];			 
 					aParameters[key] = value;
 				}
-				
 			
-/**
-oRecord: Object
-category_code: "Non-Ferrous Metal"
-mi_material_code: "LED-001-01"
-mi_material_code_name: "니켈"
-use_flag: true
+				this.getRouter().navTo("midPage", {
+					layout: oNextUIState.layout, 
+					tenant_id: aParameters["tenant_id"],
+					company_code: aParameters["company_code"],
+					org_type_code: aParameters["org_type_code"],
+					org_code :aParameters["org_code"],
+					material_code: oRecord.material_code,
+					supplier_code: aParameters["supplier_code"],
+					mi_material_code: aParameters["mi_material_code"]
+					
+				});
 
- * / */
- //note category_name 수정해야함
-			this.getRouter().navTo("midPage", {
-				layout: oNextUIState.layout, 
-				tenant_id: aParameters["tenant_id"],
-                company_code: aParameters["company_code"],
-				org_type_code: aParameters["org_type_code"],
-				org_code :aParameters["org_code"],
-				category_name : "oRecord.category_code",
-				category_code : oRecord.category_code,
-				mi_material_code: oRecord.mi_material_code,
-				mi_material_code_name: oRecord.mi_material_code_name,
-				use_flag: oRecord.use_flag
-				
-            });
-/*
-				"pattern": "midObject/
-				{layout}/
-				{tenant_id}/
-				{company_code}/
-				{org_type_code}/
-				{org_code}/
-				{category_name}/
-				{category_code}/
-				{mi_material_code}/
-				{use_flag}",
-
-				*/
 
             if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
                 this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);

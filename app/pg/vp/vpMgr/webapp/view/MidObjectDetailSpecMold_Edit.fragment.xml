@@ -1,0 +1,146 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core"
+    xmlns:uxap="sap.uxap" >
+<VBox class="sapUiSmallMargin">
+    <form:SimpleForm 
+        editable="false"
+        maxContainerCols="3"
+        layout="ResponsiveGridLayout"
+        adjustLabelSpan="false"
+        labelSpanL="3"
+        labelSpanM="3"
+        emptySpanL="0"
+        emptySpanM="0"
+        columnsL="3"
+        columnsM="3">
+            <VBox> 
+
+                <Label text="Inspection"/>
+                <Input value="{spec>/inspection_flag}"/>
+                <Label text="Cavity Qty"/>
+                <Input value="{spec>/cavity_process_qty}"/>
+                <Label text="Demand Life"/>
+                <Input value="{spec>/request_life_shot_count}"/>
+                <Label text="Hot Runner Valve Qty"/>
+                <Input value="{spec>/mold_hot_runner_qty}"/>
+                <Label text="Size"/>
+                <Input value="{spec>/mold_size}"/>
+                <Label text="Runner"/>
+                <Input value="{spec>/mold_hot_runner_spec_name}"/>
+                <Label text="Return Type"/>
+                <Input value="{spec>/mold_return_type_name}"/>
+                <Label text="Runner Out"/>
+                <Input value="{spec>/mold_runnerout_spec_name}"/>
+
+             </VBox>            
+            <VBox >
+                <Label text="Assembly Approval"/> 
+                <Input value="{spec>/assembly_approval_flag}"/>
+                <Label text="Order Qty"/>
+                <Input value="{spec>/order_qty}"/>
+                <Label text="Mold Weight"/>
+                <Input value="{spec>/mold_weight}"/>
+                <Label text="Hot Runner Maker"/>
+                <Input value="{spec>/hot_runner_maker_name}"/>
+                <Label text="Mold Size"/>
+                <Input value="{spec>/mold_size_2}"/>
+                <Label text="Gate"/>
+                <Input value="{spec>/mold_gate_spec_name}"/>
+
+                <Label text="Form Out"/>
+                <Input value="{spec>/mold_formout_method}"/>
+                <Label text="Use Machine"/>
+                <Input value="{spec>/mold_tonnage}"/>
+
+            </VBox>            
+            <VBox >
+                <Label text="Use Material"/> 
+                <Input value="{spec>/use_material_value}"/>
+                <Label text="Sample Qty"/>
+                <Input value="{spec>/mold_sample_qty}"/>
+                <Label text="Mold Type"/>
+                <Input value="{master>/mold_type_code}"/>
+                <Label text="Mold Structure"/>
+                <Input value="{spec>/die_form}"/>
+                <Label text=""/>
+                <Input value=""/>
+                <Label text="Under Cut"/>
+                <Input value="{spec>/mold_undercut_spec_name}"/>
+
+                <Label text="Out Process"/>
+                <Input value="{spec>/mold_outform_spec_name}"/>
+             </VBox>
+    </form:SimpleForm>
+        <form:SimpleForm 
+            editable="false"
+            maxContainerCols="3"
+            layout="ResponsiveGridLayout"
+            adjustLabelSpan="false"
+            labelSpanL="3"
+            labelSpanM="3"
+            emptySpanL="0"
+            emptySpanM="0"
+            columnsL="3"
+            columnsM="3">
+            <core:Title text="Spare Parts" />
+            <VBox>
+                <Label text="Eye-Bolt"/>
+                <Input value="{spec>/spare_part_eyebolt_count}"/>
+                <Label text="Heater"/>
+                <Input value="{spec>/spare_part_heater_count}"/>
+
+            </VBox>            
+            <VBox >
+                <Label text="Ej-Sleeve"/> 
+                <Input value="{spec>/spare_part_ejslave_count}"/>
+                <Label text="Speaker Core"/>
+                <Input value="{spec>/spare_part_speaker_core_count}"/>
+
+            </VBox>            
+            <VBox >
+                <Label text="Ejector-Pin"/> 
+                <Input value="{spec>/spare_part_ejector_pin_count}"/>
+                <Label text="Etc."/>
+                <Input value="{spec>/spare_part_etc_count}"/>
+            </VBox>
+    </form:SimpleForm>
+
+    <form:SimpleForm 
+            editable="false"
+            maxContainerCols="3"
+            layout="ResponsiveGridLayout"
+            adjustLabelSpan="false"
+            labelSpanL="3"
+            labelSpanM="3"
+            emptySpanL="0"
+            emptySpanM="0"
+            columnsL="3"
+            columnsM="3">
+            <core:Title text="Mold Meterial" />
+            <VBox>
+                <Label text="Cavity/Punch"/>
+                <Input value="{spec>/mold_cavity_material_name}"/>
+                <Label text="Taper Pin"/>
+                <Input value="{spec>/mold_slope_material_name}"/>
+                <Label text="Cycle Time"/>
+                <Input value="{spec>/cycle_time}"/>
+            </VBox>            
+            <VBox >
+                <Label text="Core/Die"/> 
+                <Input value="{spec>/mold_core_material_name}"/>
+                <Label text="Top Circle"/>
+                <Input value="{spec>/top_circle_material_name}"/>
+
+            </VBox>            
+            <VBox >
+                <Label text="Slide Core"/> 
+                <Input value="{spec>/slide_core_material_name}"/>
+                <Label text="Bottom Circle"/>
+                <Input value="{spec>/bottom_circle_material_name}"/>
+            </VBox>
+    </form:SimpleForm>
+	</VBox>
+</core:FragmentDefinition>

@@ -1,13 +1,13 @@
 sap.ui.define([
-	"ext/lib/controller/BaseController",
+	"./Empty.controller",
 	"ext/lib/formatter/Formatter",
 	"sap/ui/model/json/JSONModel",
 	"sap/m/MessageBox",
 	"sap/m/MessageToast"
-], function (BaseController, Formatter, JSONModel, MessageBox, MessageToast) {
+], function (Controller, Formatter, JSONModel, MessageBox, MessageToast) {
 	"use strict";
 
-	return BaseController.extend("xx.exampleControls.controller.SmartTable", {
+	return Controller.extend("xx.exampleControls.controller.InlineEditTable", {
 
         formatter: Formatter,
 
@@ -34,7 +34,7 @@ sap.ui.define([
         onAfterRendering: function(){
             var oView = this.getView();
             oView.setBusy(true);
-            this.getModel().read("/Message", {
+            this.getModel("odata").read("/Message", {
 				success: function(oData){
 					oView.setBusy(false);
 				}
@@ -42,7 +42,7 @@ sap.ui.define([
         },
 
         onMainTableAddButtonPress: function(){
-            var oContext = this.getModel().createEntry("/Message", {
+            var oContext = this.getModel("odata").createEntry("/Message", {
                 groupId: "changes",
                 properties: {
                     "tenant_id": "L2100",
@@ -55,25 +55,25 @@ sap.ui.define([
                     "local_update_dtm": new Date()
                 }
             });
-            this.getModel().submitChanges({
+            this.getModel("odata").submitChanges({
                 groupId: "changes",
                 success: function(){
                     debugger;
                 }, error: function(){
                     debugger;
                 }});
-            // this.getModel().deleteCreatedEntry(oContext);
+            // this.getModel("odata").deleteCreatedEntry(oContext);
         },
 
         onMainTableDeleteButtonPress: function(){
 			var oTable = this.byId("mainTable"),
-				oModel = this.getModel(),
+				oModel = this.getModel("odata"),
                 aItems = oTable.getSelectedItems();
                 debugger;
-            this.getModel().remove(aItems[0].getBindingContextPath(), {
+            this.getModel("odata").remove(aItems[0].getBindingContextPath(), {
                 groupId: "changes"
             });
-            this.getModel().submitChanges({
+            this.getModel("odata").submitChanges({
                 groupId: "changes",
                 success: function(){
                     debugger;
@@ -84,7 +84,7 @@ sap.ui.define([
 
         onMainTableTestButtonPress: function(){
             var oView = this.getView(),
-                oModel = this.getModel();
+                oModel = this.getModel("odata");
                 
             debugger;
         }

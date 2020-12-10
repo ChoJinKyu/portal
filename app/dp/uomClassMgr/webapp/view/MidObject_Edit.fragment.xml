@@ -7,18 +7,37 @@
 		
 		<!-- <core:Title text="Normal" /> -->
 		<Label text="Class" required="true"/>
-		<Input value="{master>/uom_class_code}" editable="{midObjectView>/isAddedMode}"/>
-        <Label text="Class Text" required="true"/>
-		<Input value="{master>/uom_class_name}"/>
-        <Label text="Base UOM" required="false"/>
+        <Input value="{
+                path: 'master>/uom_class_code',
+                type: 'sap.ui.model.type.String',
+                constraints: {
+                    maxLength: 10
+                }
+            }" editable="{midObjectView>/isAddedMode}" required="true"></Input>		
+        <Label text="Class Text"/>
+        <Input value="{
+                path: 'master>/uom_class_name',
+                type: 'sap.ui.model.type.String',
+                constraints: {
+                    maxLength: 20
+                }
+            }" required="true"></Input>			
+        <Label text="Base UOM"/>
 		<Text text="{master>/base_uom_code}"/>
-        <Label text="Base UOM Text" required="false"/>
+        <Label text="Base UOM Text"/>
 		<Text text="{master>/base_uom_name}"/>
-        <Label text="Description" required="false"/>
-		<Input value="{master>/uom_class_desc}"/>
-        <Label text="Disable Date" required="false"/>
-        <!-- <DatePicker placeholder="Date" value="{path: 'master>/disable_date',type: 'sap.ui.model.odata.type.Date'}" displayFormat="Date"/> -->
-		<DatePicker placeholder="Disable Date" dateValue="{master>/disable_date}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
+        <Label text="Description"/>
+        <Input value="{
+                path: 'master>/uom_class_desc',
+                type: 'sap.ui.model.type.String',
+                constraints: {
+                    maxLength: 50
+                }                
+            }" ></Input>		
+        <Label text="Disable Date"/>        
+        <DatePicker placeholder="Disable Date" value="{path: 'master>/disable_date',type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' }}"/>
+        <!-- <DatePicker value="{ path: 'master>disable_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' } }" />         -->
+		<!-- <DatePicker placeholder="Disable Date" dateValue="{master>/disable_date}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/> -->
 		<!-- <Label text="Chain" required="true"/>
 		<ComboBox id="searchChain" width="100%" selectedKey="{master>/chain_code}" items="{
 				path: 'util>/CodeDetails',

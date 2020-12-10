@@ -1,23 +1,32 @@
 sap.ui.define([
-  "ext/lib/controller/BaseController",
-    "sap/ui/model/json/JSONModel", 
-    "sap/ui/core/routing/History",
-    "ext/lib/model/ManagedListModel",
-    "sap/ui/richtexteditor/RichTextEditor",
+    "ext/lib/controller/BaseController",
 	"ext/lib/formatter/DateFormatter",
-	"sap/ui/model/Filter",
-	"sap/ui/model/FilterOperator",
-	"sap/ui/core/Fragment",
+    "ext/lib/model/ManagedModel",
+    "ext/lib/model/ManagedListModel",
+    "ext/lib/model/TransactionManager",
+    "ext/lib/util/Multilingual",
+    "ext/lib/util/Validator",
+    "sap/m/ColumnListItem", 
+    "sap/m/Label",
     "sap/m/MessageBox",
     "sap/m/MessageToast", 
     "sap/m/UploadCollectionParameter",
-    "sap/ui/Device" // fileupload 
-    ,"sap/ui/core/syncStyleClass" 
-    , "sap/m/ColumnListItem" 
-    , "sap/m/Label"
-], function (BaseController, JSONModel, History, ManagedListModel, RichTextEditor , DateFormatter, Filter, FilterOperator, Fragment
-            , MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label) {
+	"sap/ui/core/Fragment",
+    "sap/ui/core/syncStyleClass", 
+    "sap/ui/core/routing/History",
+    "sap/ui/Device", // fileupload 
+    "sap/ui/model/json/JSONModel", 
+	"sap/ui/model/Filter",
+	"sap/ui/model/FilterOperator",
+    "sap/ui/richtexteditor/RichTextEditor"
+], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator, 
+             ColumnListItem, Label, MessageBox , MessageToast, UploadCollectionParameter, 
+             Fragment, syncStyleClass, History,  Device, JSONModel ,Filter, FilterOperator, RichTextEditor) {
 	"use strict";
+
+    var oTransactionManager;
+    var oRichTextEditor;
+    var approvalNumber;
 
   return BaseController.extend("dp.orderApprovalLocal.controller.PoaCreateObject", {
 
@@ -32,19 +41,30 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () { 
-              console.log("PoaCreateObject Controller 호출");
 			// Model used to manipulate control states. The chosen values make sure,
 			// detail page shows busy indication immediately so there is no break in
 			// between the busy indication for loading the view's meta data
 			var oViewModel = new JSONModel({
 					busy : true,
 					delay : 0
-				});
-			this.getRouter().getRoute("poaCreateObject").attachPatternMatched(this._onObjectMatched, this);
+                });
+
+            var oMultilingual = new Multilingual();
+			this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(oViewModel, "poaCreateObjectView");
+			this.getRouter().getRoute("poaCreateObject").attachPatternMatched(this._onObjectMatched, this);
+            
+            this.getView().setModel(new ManagedListModel(),"company");
+            this.getView().setModel(new ManagedListModel(),"plant");
             this.getView().setModel(new ManagedListModel(),"createlist"); // Participating Supplier
             this.getView().setModel(new ManagedListModel(),"appList"); // apporval list 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
+            this.getView().setModel(new ManagedModel(), "appMaster");
+			this.getView().setModel(new ManagedListModel(), "appDetail");
+            
+            oTransactionManager = new TransactionManager();
+			oTransactionManager.addDataModel(this.getModel("appMaster"));
+            oTransactionManager.addDataModel(this.getModel("appDetail"));
 		},
 
 	    onAfterRendering : function () {
@@ -54,11 +74,9 @@ sap.ui.define([
          * 폅집기 창 
          */
         setRichEditor : function (){ 
-            var that = this,
-			sHtmlValue = ''
             sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
 				function (RTE, EditorType) {
-					var oRichTextEditor = new RTE("myRTE", {
+					this.oRichTextEditor = new RTE("myRTE", {
 						editorType: EditorType.TinyMCE4,
 						width: "100%",
 						height: "600px",
@@ -66,14 +84,18 @@ sap.ui.define([
 						showGroupFont: true,
 						showGroupLink: true,
 						showGroupInsert: true,
-						value: sHtmlValue,
+						value: "",
 						ready: function () {
 							this.addButtonGroup("styleselect").addButtonGroup("table");
 						}
 					});
 
-					that.getView().byId("idVerticalLayout").addContent(oRichTextEditor);
-			});
+                    this.getView().byId("approvalContents").addContent(this.oRichTextEditor);
+                    
+                    this.oRichTextEditor.attachEvent("change", function(oEvent){
+                        this.getModel('appMaster').setProperty('/approval_contents', oEvent.getSource().getValue());
+                    });
+			}.bind(this));
         },
 
 		/* =========================================================== */
@@ -153,10 +175,10 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
 		 * @private
 		 */
-		_onObjectMatched : function (oEvent) { 
-            this.setRichEditor();
+		_onObjectMatched : function (oEvent) {
 			var oArgs = oEvent.getParameter("arguments"); 
-            this._createViewBindData(oArgs); 
+            this._createViewBindData(oArgs);
+            this.setRichEditor();
             this._onLoadApprovalRow();
             this.oSF = this.getView().byId("searchField");
         },
@@ -165,12 +187,81 @@ sap.ui.define([
          * @param {*} args : company , plant   
          */
         _createViewBindData : function(args){ 
-            var appInfoModel = this.getModel("poaCreateObjectView");
-            appInfoModel.setData({ company : ""
-                                ,  plant : "" });   
+            //var company_code = args.company_code, plant_code = (args.org_code == undefined ? args.plant_code : args.org_code);
+            var company_code = 'LGEKR' , plant_code = 'CNZ' ;
+            
+            var appModel = this.getModel("poaCreateObjectView");
+            appModel.setData({ company_code : company_code 
+                                , company_name : "" 
+                                , plant_code : plant_code 
+                                , plant_name : "" 
+                            }); 
 
-            console.log("oMasterModel >>> " , appInfoModel);
+            var oModel = this.getModel("company");
+	
+			oModel.setTransactionModel(this.getModel("org"));
+            
+            var searchFilter = [];
+            searchFilter.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100'));
+            searchFilter.push(new Filter("company_code", FilterOperator.EQ, company_code));
+
+            oModel.read("/Org_Company", {
+                filters: searchFilter ,
+				success: function(oData){ 
+                   appModel.oData.company_name = oData.results[0].company_name
+				}
+            });
+            
+            var oModel2 = this.getModel("plant");
+                oModel2.setTransactionModel(this.getModel("org"));
+            searchFilter = [];
+            searchFilter.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100'));
+            searchFilter.push(new Filter("plant_code", FilterOperator.EQ, plant_code));
+
+            oModel2.read("/Org_Plant", {
+                filters: searchFilter ,
+				success: function(oData){   
+                   appModel.oData.plant_name = oData.results[0].plant_name;
+				}
+            });
+
+            //approvalNumber = args.approvalNo;
+            approvalNumber = "274479-20V-00008";
+            if (approvalNumber) {//args.approval_number
+                this._onRoutedThisPage(approvalNumber);
+            }
         } ,
+
+        _onRoutedThisPage: function(approvalNumber){
+			
+			//this._sMoldId = args.moldId;
+
+            this._bindView("/ApprovalMasters(tenant_id='L1100',approval_number='" + approvalNumber + "')", "appMaster", [], function(oData){
+                this.oRichTextEditor.setValue(oData.approval_contents);
+            }.bind(this));
+
+            var schFilter = [new Filter("approval_number", FilterOperator.EQ, approvalNumber)];
+            this._bindView("/ApprovalDetails", "appDetail", schFilter, function(oData){
+                
+            });
+            
+            oTransactionManager.setServiceModel(this.getModel());
+            
+        },
+        
+        _bindView : function (sObjectPath, sModel, aFilter, callback) {
+			var oView = this.getView(),
+				oModel = this.getModel(sModel);
+			oView.setBusy(true);
+			oModel.setTransactionModel(this.getModel());
+			oModel.read(sObjectPath, {
+                filters: aFilter,
+				success: function(oData){
+                    oView.setBusy(false);
+                    callback(oData);
+				}
+			});
+		},
 
 		_onBindingChange : function () {
 			var oView = this.getView(),
@@ -186,25 +277,17 @@ sap.ui.define([
         /**
          * @description Participating Supplier 의 delete 버튼 누를시 
          */
-        onPsDelRow : function(){
-            var poItemTable = this.byId("poItemTable")
-                , psModel = this.getModel("createlist") 
-                , oSelected = poItemTable.getSelectedIndices()
-            ;
+        onPoItemDelRow : function(){
+            var oTable = this.byId("poItemTable"),
+                oModel = this.getModel("appDetail") ,
+                oSelected = oTable.getSelectedIndices().reverse();
+            
             if(oSelected.length > 0){
-                MessageBox.confirm("삭제 하시겠습니까?", {
-                    title : "Comfirmation",
-                    initialFocus : sap.m.MessageBox.Action.CANCEL,
-                    onClose : function(sButton) {
-                        if (sButton === MessageBox.Action.OK) {
-                            oSelected.forEach(function (idx) {
-                                psModel.markRemoved(idx)
-                            });  
-                        };
-                    }.bind(this)
+                oSelected.forEach(function (idx) {
+                    oModel.removeRecord(idx)
                 });
-
-                poItemTable.clearSelection();
+                
+                oTable.clearSelection();
             }else{
                  MessageBox.error("삭제할 목록을 선택해주세요.");
             }
@@ -213,10 +296,10 @@ sap.ui.define([
          * @description Participating Supplier 의 Supplier Select 버튼 누를시 나오는 팝업 
          *              , 테이블의 row 가 선택되어 있지 않으면 supplier 세팅 안됨 
          */
-        onPsSupplier : function(){ 
+        /*onPsSupplier : function(){ 
             
             var poItemTable = this.byId("poItemTable")
-                , psModel = this.getModel("createlist") 
+                , psModel = this.getModel("appDetail") 
                 , oSelected = poItemTable.getSelectedIndices()
             ;
 
@@ -269,11 +352,11 @@ sap.ui.define([
             }else{
                 MessageBox.error("Participating Supplier 목록을 선택해주세요.");
             }
-        },
+        },*/
 	    onValueHelpOkPress: function (oEvent) { // row 에 데이터 세팅 
             var aTokens = oEvent.getParameter("tokens");
             var poItemTable = this.byId("poItemTable")
-                , psModel = this.getModel("createlist") 
+                , psModel = this.getModel("appDetail") 
                 , oSelected = poItemTable.getSelectedIndices()
             ;
             if(aTokens.length == 0){
@@ -293,7 +376,7 @@ sap.ui.define([
                     
                 });
 
-                poItemTable.getModel("createlist").refresh(true); 
+                poItemTable.getModel("appDetail").refresh(true); 
                 this._oSupplierDialog.close();
             }
          
@@ -395,15 +478,13 @@ sap.ui.define([
         /**
          * @description : Popup 창 : 품의서 Participating Supplier 항목의 Add 버튼 클릭
          */
-        handleTableSelectDialogPress : function (oEvent) {
-            console.group("handleTableSelectDialogPress");   
-        
+        onPoItemAddRow : function (oEvent) {
             var oView = this.getView();
-            var oButton = oEvent.getSource();
+            
 			if (!this._oDialogTableSelect) {
 				this._oDialogTableSelect = Fragment.load({ 
                     id: oView.getId(),
-					name: "dp.bugetExecutionApproval.view.MoldItemSelection",
+					name: "dp.orderApprovalLocal.view.MoldItemSelection",
 					controller: this
 				}).then(function (oDialog) {
 				    oView.addDependent(oDialog);
@@ -431,17 +512,18 @@ sap.ui.define([
             var that = this;
             aItems.forEach(function(oItem){   
                 var obj = new JSONModel({
-                    model : oItem.getCells()[0].getText()
-                    , moldPartNo : oItem.getCells()[1].getText()
+                    mold_id : oItem.getCells()[0].getText(),
+                    model : oItem.getCells()[1].getText(),
+                    moldPartNo : oItem.getCells()[2].getText(),
+                    moldSequence : oItem.getCells()[3].getText(),
+                    specName : oItem.getCells()[4].getText(),
+                    moldItemType : oItem.getCells()[5].getText(),
+                    bookCurrencyCode : oItem.getCells()[6].getText(),
+                    budgetAmount : oItem.getCells()[7].getText()
                 });
-                // console.log(" nItem >>>>> getText 1 " ,  oItem.getCells()[0].getText());   
-                // console.log(" nItem >>>>> getText 2 " ,  oItem.getCells()[1].getText());   
-                // console.log(" nItem >>>>> getText 3 " ,  oItem.getCells()[2].getText());   
-                // console.log(" nItem >>>>> obj " ,  obj); 
-                that._addPsTable(obj);  
-                // oItem.getCells().forEach(function(nItem){ 
-                //      console.log(" nItem >>>>> getText " , nItem.getText());    
-                // });     
+                
+                that._addMoldItemTable(obj);  
+                
             });
             this.onExit();
         },
@@ -451,7 +533,7 @@ sap.ui.define([
         selectMoldItemChange : function(oEvent){ 
             var oTable = this.byId("moldItemSelectTable");
             var aItems = oTable.getSelectedItems(); 
-            var appInfoModel = this.getModel("pssaCreateObjectView");
+            var appInfoModel = this.getModel("poaCreateObjectView");
             appInfoModel.setData({ moldItemLength : aItems == undefined ? 0 : aItems.length }); 
         },
 
@@ -459,23 +541,24 @@ sap.ui.define([
          * @description participating row 추가 
          * @param {*} data 
          */
-        _addPsTable : function (data){     
-            var oTable = this.byId("poItemTable"),
-                oModel = this.getModel("createlist");
-                oModel.addRecord({
-                    "model": data.oData.model,
-                    "moldPartNo": data.oData.moldPartNo,
-                    "moldSupplier1" : "",
-                    "moldSupplier2" : "",
-                    "moldSupplier3" : "",
-                    "moldSupplier4" : "",
-                    "moldSupplier5" : "",
-                    "moldSupplier6" : "",
-                    "moldSupplier7" : "",
-                    "moldSupplier8" : "",
-                    "moldSupplier9" : "",
-                    "moldSupplier10" : "",
-                });
+        _addMoldItemTable : function (data){     
+            var oModel = this.getModel("appDetail");
+
+            oModel.addRecord({
+                "approval_number" : approvalNumber,
+                "mold_id" : data.oData.mold_id,
+                "approval_type_code" : "V",
+                "model": data.oData.model,
+                "part_number": data.oData.moldPartNo,
+                "mold_sequence" : data.oData.moldSequence,
+                "spec_name" : data.oData.specName,
+                "mold_item_type_code" : data.oData.moldItemType,
+                "bookCurrencyCode" : data.oData.bookCurrencyCode,
+                "budgetAmount" : data.oData.budgetAmount,
+                "orderSupplier" : "",
+                "familyPartNumber1" : ""
+            }, "/Message", 0);
+            this.validator.clearValueState(this.byId("mainTable"));
         },
 
         /**
@@ -539,7 +622,7 @@ sap.ui.define([
                 if (!this._oDialog) {
                     this._oDialog = Fragment.load({ 
                         id: oView.getId(),
-                        name: "dp.bugetExecutionApproval.view.Employee",
+                        name: "dp.orderApprovalLocal.view.Employee",
                         controller: this
                     }).then(function (oDialog) {
                         oView.addDependent(oDialog);
@@ -864,6 +947,31 @@ sap.ui.define([
 			MessageToast.show(messageText, {
 				width: "auto"
 			});
+        },
+        
+        onPageDraftButtonPress: function(){
+            var oView = this.getView(),
+                mstModel = this.getModel("appMaster"),
+                dtlModel = this.getModel("appDetail");
+				
+			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
+				title : "Comfirmation",
+				initialFocus : sap.m.MessageBox.Action.CANCEL,
+				onClose : function(sButton) {
+					if (sButton === MessageBox.Action.OK) {
+                        oView.setBusy(true);
+                        console.log(mstModel.oData);
+                        console.log(dtlModel.getData().ApprovalDetails);
+						oTransactionManager.submit({
+							success: function(ok){
+								oView.setBusy(false);
+								MessageToast.show("Success to save.");
+							}
+						});
+					};
+				}
+			});
+
 		}
 
 	});

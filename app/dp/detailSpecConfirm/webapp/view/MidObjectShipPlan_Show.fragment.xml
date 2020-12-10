@@ -6,7 +6,7 @@
     xmlns:uxap="sap.uxap" >
 
     <l:VerticalLayout class="sapUiContentPadding">
-            <Table id="scheduleTable1S"
+            <Table id="tbShipPlanS1"
                     mode="None"
                     sticky="HeaderToolbar,ColumnHeaders"
                     inset="false"
@@ -19,25 +19,25 @@
                         <Text text="Type" />
                     </Column>
                     <Column>
-                        <Text text="Drawing Consent" />
+                        <Text text="PV (1st Mold)" />
                     </Column>
                     <Column>
-                        <Text text="Settled Drawing" />
+                        <Text text="MP (1st Mold)" />
                     </Column>
                     <Column>
-                        <Text text="1st Prod Date" />
+                        <Text text="PV" />
                     </Column>
                     <Column>
-                        <Text text="Complete Date" />
+                        <Text text="Tool Off" />
                     </Column>
                     <Column>
-                        <Text text="Inspection Date" />
+                        <Text text="Packing-In (Export)" />
                     </Column>
                 </columns>
                 <items>
                     <ColumnListItem>
                         <cells>
-                            <ComboBox   width="100%"
+                            <Select   width="100%"
                                         selectedKey="{schedule>mold_develope_date_type_code}"
                                         items="{
                                                     path : 'util>/CodeDetails',
@@ -50,7 +50,7 @@
                                         class="readonlyField"
                             >
                                 <core:Item key="{util>code}" text="{util>code_description}" />
-                            </ComboBox>
+                            </Select>
                             
                             <DatePicker value="{schedule>drawing_agreement_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
                             <DatePicker value="{schedule>drawing_confirmed_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
@@ -63,7 +63,7 @@
                 
             </Table>
             
-            <Table id="scheduleTable2S"
+            <Table id="tbShipPlanS2"
                     mode="None"
                     sticky="HeaderToolbar,ColumnHeaders"
                     inset="false"
@@ -76,25 +76,25 @@
                         <Text text="Type" />
                     </Column>
                     <Column>
-                        <Text text="1st Production Changed Date" />
+                        <Text text="Packing-Out (Export)" />
                     </Column>
                     <Column>
-                        <Text text="2nd Production Changed Date" />
+                        <Text text="ETD (Port)" />
                     </Column>
                     <Column>
-                        <Text text="3rd Production Changed Date" />
+                        <Text text="ETA (Port)" />
                     </Column>
                     <Column>
-                        <Text text="4th Production Changed Date" />
+                        <Text text="Receiving" />
                     </Column>
                     <Column>
-                        <Text text="5th Production Changed Date" />
+                        <Text text="Complete (Set Up)" />
                     </Column>
                 </columns>
                 <items>
                     <ColumnListItem>
                         <cells>
-                            <ComboBox   width="100%"
+                            <Select   width="100%"
                                         selectedKey="{schedule>mold_develope_date_type_code}"
                                         items="{
                                                     path : 'util>/CodeDetails',
@@ -107,7 +107,7 @@
                                         class="readonlyField"
                             >
                                 <core:Item key="{util>code}" text="{util>code_description}" />
-                            </ComboBox>
+                            </Select>
                             <DatePicker value="{schedule/first_production_update_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
                             <DatePicker value="{schedule/second_production_update_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
                             <DatePicker value="{schedule/third_production_update_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>

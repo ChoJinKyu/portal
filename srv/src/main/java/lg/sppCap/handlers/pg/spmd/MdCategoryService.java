@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.time.Instant;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,16 +41,46 @@ public class MdCategoryService implements EventHandler {
     
     // 카테고리 Id 저장 전
     @Before(event=CdsService.EVENT_CREATE, entity=MdCategory_.CDS_NAME)
-    public void createBeforeMdCategoryIdProc(List<MdCategory> cateIds) {
+    public void createBeforeMdCategoryIdProc(List< MdCategory> cateIds) {
 
         Instant current = Instant.now();
 
         log.info("### ID Insert... [Before] ###");
 
-        for(MdCategory cateId : cateIds) {
-            cateId.setLocalCreateDtm(current);
-            cateId.setLocalUpdateDtm(current);
+        if(!cateIds.isEmpty() && cateIds.size() > 0){
+
+            String cateCode = "";
+            
+            for(MdCategory cateId : cateIds) {
+                                    
+                cateId.setLocalCreateDtm(current);
+                cateId.setLocalUpdateDtm(current);
+
+                //log.info("###"+cateId.toString()+"###");
+
+                // DB처리
+                try {
+                    Connection conn = jdbc.getDataSource().getConnection();
+                    // Item SPMD범주코드 생성 Function
+                    PreparedStatement v_statement_select = conn.prepareStatement("SELECT PG_SPMD_CATEGORY_CODE_FUNC(?) AS CATE_CODE FROM DUMMY");
+                    v_statement_select.setObject(1, "");    // Category 채번 구분값 없음.
+                    ResultSet rslt = v_statement_select.executeQuery();
+                    if(rslt.next()) cateCode = rslt.getString("CATE_CODE");
+                    
+                    //log.info("###[LOG-10]=> ["+cateCode+"]");
+
+                } catch (SQLException sqlE) { 
+                    sqlE.printStackTrace();
+                    log.error("### ErrCode : "+sqlE.getErrorCode()+"###");
+                    log.error("### ErrMesg : "+sqlE.getMessage()+"###");
+                }
+
+                log.info("###[LOG-11]=> ["+cateCode+"]");
+
+                cateId.setSpmdCategoryCode(cateCode);
+            }
         }
+
     }
 
     // 카테고리 Id 저장
@@ -116,7 +147,7 @@ public class MdCategoryService implements EventHandler {
 
             String cateCode = "";
             String charCode = "";
-            String charSerialNo = "";
+            int charSerialNo = 0;
             
             for (MdCategoryItem item : items) {
                                 
@@ -130,7 +161,8 @@ public class MdCategoryService implements EventHandler {
                 cateCode = item.getSpmdCategoryCode();
                 charCode = item.getSpmdCharacterCode();
 
-                if ("".equals(charCode) || charCode == null) {
+                //if ("".equals(charCode) || charCode == null) {
+                if (StringUtils.isEmpty(charCode)) {
 
                     // DB처리
                     try {
@@ -138,15 +170,24 @@ public class MdCategoryService implements EventHandler {
                         Connection conn = jdbc.getDataSource().getConnection();
 
                         // Item SPMD특성코드 생성 Function
-                        String v_sql_get_code_fun = "SELECT PG_SPMD_CHARACTER_CODE_FUNC(?) AS SPMD_CHARACTER_CODE FROM DUMMY";
+                        StringBuffer v_sql_get_code_fun = new StringBuffer();
+                        v_sql_get_code_fun.append("SELECT ")
+                            .append("   PG_SPMD_CHARACTER_CODE_FUNC(?) AS CHAR_CODE")
+                            .append("   , (SELECT IFNULL(MAX(SPMD_CHARACTER_SERIAL_NO), 0)+1 FROM PG_MD_CATEGORY_ITEM) AS CHAR_SERIAL_NO")
+                            .append(" FROM DUMMY");
                         
-                        PreparedStatement v_statement_select = conn.prepareStatement(v_sql_get_code_fun);
+                        PreparedStatement v_statement_select = conn.prepareStatement(v_sql_get_code_fun.toString());
                         v_statement_select.setObject(1, cateCode);
 
                         ResultSet rslt = v_statement_select.executeQuery();
 
-                        if(rslt.next()) charCode = rslt.getString("SPMD_CHARACTER_CODE");
+                        if(rslt.next()) {
+                            charCode = rslt.getString("CHAR_CODE");
+                            charSerialNo = rslt.getInt("CHAR_SERIAL_NO");
+                        }
                         
+                        log.info("###[LOG-10]=> ["+charCode+"] ["+charSerialNo+"] ["+new Long(charSerialNo)+"]");
+
                     } catch (SQLException sqlE) { 
                         sqlE.printStackTrace();
                         log.error("### ErrCode : "+sqlE.getErrorCode()+"###");
@@ -155,13 +196,10 @@ public class MdCategoryService implements EventHandler {
                 }
 
                 //charCode = item.getSpmdCharacterCode();
-
-                charSerialNo = cateCode.substring(1)+""+charCode.substring(1);
-
-                log.info("###[LOG-11]=> ["+charCode+"] ["+charSerialNo+"] ["+Long.valueOf(charSerialNo).longValue()+"]");
+                log.info("###[LOG-11]=> ["+charCode+"] ["+charSerialNo+"] ["+new Long(charSerialNo)+"]");
 
                 item.setSpmdCharacterCode(charCode);
-                item.setSpmdCharacterSerialNo(Long.valueOf(charSerialNo).longValue());
+                item.setSpmdCharacterSerialNo(new Long(charSerialNo));
 
             }
         }
@@ -231,5 +269,38 @@ public class MdCategoryService implements EventHandler {
         log.info("### Item Delete [After] ###");
     }
 
+
+	/**
+	 *
+	 * 전달받은 문자열에 지정된 길이에 맞게 0을 채운다
+	 *
+	 * @param des
+	 * @param size
+	 * @return
+	 */
+	public String getFillZero(String des, int size) {
+		StringBuffer str = new StringBuffer();
+
+		if (des == null) {
+			for (int i = 0; i < size; i++)
+				str.append("0");
+			return str.toString();
+		}
+
+		if (des.trim().length() > size)
+			return des.substring(0, size);
+		else
+			des = des.trim();
+
+		int diffsize = size - des.length();
+
+		for (int i = 0; i < diffsize; i++) {
+			str = str.append("0");
+		}
+
+		str.append(des);
+
+		return str.toString();
+	}
 
 }

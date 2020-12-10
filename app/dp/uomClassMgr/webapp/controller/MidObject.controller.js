@@ -1,7 +1,7 @@
 sap.ui.define([
     "ext/lib/controller/BaseController",
     "ext/lib/util/Multilingual",
-	"ext/lib/util/ValidatorUtil",
+	"ext/lib/util/Validator",
 	"sap/ui/model/json/JSONModel",
 	"ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedModel",
@@ -19,7 +19,7 @@ sap.ui.define([
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
     "sap/m/ObjectStatus"
-], function (BaseController, Multilingual, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
+], function (BaseController, Multilingual, Validator, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
 	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
 	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus) {
 		
@@ -29,7 +29,9 @@ sap.ui.define([
 
 	return BaseController.extend("dp.uomClassMgr.controller.MidObject", {
 
-		dateFormatter: DateFormatter,
+        dateFormatter: DateFormatter,
+        
+        validator: new Validator(),
 
 		formatter: (function(){
 			return {
@@ -153,7 +155,8 @@ sap.ui.define([
 						oMasterModel.submitChanges({
 							success: function(ok){
 								oView.setBusy(false);
-								that.onPageNavBackButtonPress.call(that);
+                                that.onPageNavBackButtonPress.call(that);
+                                that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
 								MessageToast.show("Success to delete.");
 							}
 						});
@@ -197,8 +200,21 @@ sap.ui.define([
 		 * @public
 		 */
         onPageSaveButtonPress: function(){
-			var oView = this.getView(),
-				that = this;
+            var oView = this.getView(),
+                oMasterModel = this.getModel("master"),
+                oDetailsModel = this.getModel("details"),
+                that = this;
+
+            if (this._sTenantId !== "new"){
+                if(!oMasterModel.isChanged() && !oDetailsModel.isChanged()) {
+                    MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
+                    return;
+                }
+            }
+                
+            if(this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
+            if(this.validator.validate(this.byId("midTable")) !== true) return;
+
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
 				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -215,7 +231,9 @@ sap.ui.define([
 						});
 					};
 				}
-			});
+            });
+            this.validator.clearValueState(this.byId("midObjectForm1Edit"));
+            this.validator.clearValueState(this.byId("midTable"));
 		},
 		
 		
@@ -251,6 +269,8 @@ sap.ui.define([
 				});
                 this._toShowMode();
             }
+            this.validator.clearValueState(this.byId("midObjectForm1Edit"));
+            this.validator.clearValueState(this.byId("midTable"));
         },
 
 		/* =========================================================== */
@@ -264,11 +284,11 @@ sap.ui.define([
 				var sTenantId = oMasterModel.getProperty("/tenant_id");
 				var sUomClassCode = oMasterModel.getProperty("/uom_class_code");
 				var oDetailsData = oDetailsModel.getData();
-				oDetailsData.forEach(function(oItem, nIndex){
-					oDetailsModel.setProperty("/"+nIndex+"/tenant_id", sTenantId);
-					oDetailsModel.setProperty("/"+nIndex+"/uom_class_code", sUomClassCode);
+				oDetailsData.UomClassLng.forEach(function(oItem, nIndex){
+					oDetailsModel.setProperty("/UomClassLng/"+nIndex+"/tenant_id", sTenantId);
+					oDetailsModel.setProperty("/UomClassLng/"+nIndex+"/uom_class_code", sUomClassCode);
 				});
-				oDetailsModel.setData(oDetailsData);
+				//oDetailsModel.setData(oDetailsData);
 			}
 		},
 
@@ -289,14 +309,17 @@ sap.ui.define([
 
 				var oMasterModel = this.getModel("master");
 				oMasterModel.setData({
-					"tenant_id": "L2600",					
-					"disable_date": new Date(),					
+                    "tenant_id": "L2600",
+                    "uom_class_code": "",
+                    "uom_class_name": "",
+                    "uom_class_desc": "",
+                    "disable_date": null,                    
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
 				}, "/UomClass");
 				var oDetailsModel = this.getModel("details");
 				oDetailsModel.setTransactionModel(this.getModel());
-				oDetailsModel.setData([]);
+				oDetailsModel.setData([], "/UomClassLng");
 				oDetailsModel.addRecord({
 					"tenant_id": this._sTenantId,
 					"uom_class_code": this._sUomClassCode,
@@ -324,7 +347,9 @@ sap.ui.define([
 					}
 				});
 				this._toShowMode();
-			}
+            }
+            this.validator.clearValueState(this.byId("midObjectForm1Edit"));
+            this.validator.clearValueState(this.byId("midTable"));
 			oTransactionManager.setServiceModel(this.getModel());
 		},
 
@@ -352,7 +377,7 @@ sap.ui.define([
 			this.byId("page").setSelectedSection("pageSectionMain");
 			this.byId("page").setProperty("showFooter", !FALSE);
 			this.byId("pageEditButton").setEnabled(FALSE);
-			//this.byId("pageDeleteButton").setEnabled(FALSE);
+			// this.byId("pageDeleteButton").setEnabled(FALSE);
 			this.byId("pageNavBackButton").setEnabled(FALSE);
 
 			this.byId("midTableAddButton").setEnabled(!FALSE);
@@ -369,7 +394,7 @@ sap.ui.define([
 			this.byId("page").setSelectedSection("pageSectionMain");
 			this.byId("page").setProperty("showFooter", !TRUE);
 			this.byId("pageEditButton").setEnabled(TRUE);
-			//this.byId("pageDeleteButton").setEnabled(TRUE);
+			// this.byId("pageDeleteButton").setEnabled(TRUE);
 			this.byId("pageNavBackButton").setEnabled(TRUE);
 
 			this.byId("midTableAddButton").setEnabled(!TRUE);
@@ -400,7 +425,8 @@ sap.ui.define([
 			});
 
             var oLanguageCode = new ComboBox({
-                    selectedKey: "{details>language_code}"
+                    selectedKey: "{details>language_code}",
+                    required : true
                 });
                 oLanguageCode.bindItems({
                     path: 'util>/CodeDetails',
@@ -413,7 +439,7 @@ sap.ui.define([
                         key: "{util>code}",
                         text: "{util>code_description}"
                     })
-                });
+                });                
 			this.oEditableTemplate = new ColumnListItem({
 				cells: [
 					new ObjectStatus({
@@ -422,10 +448,23 @@ sap.ui.define([
                     }),
 					oLanguageCode, 
 					new Input({
-						value: "{details>uom_class_name}"
+                        value: {
+                            path: 'details>uom_class_name',
+                            type: 'sap.ui.model.type.String',
+                            constraints: {
+                                maxLength: 20
+                            }
+                        },
+                        required : true                        
 					}), 
 					new Input({
-						value: "{details>uom_class_desc}"
+						value: {
+                            path: 'details>uom_class_desc',
+                            type: 'sap.ui.model.type.String',
+                            constraints: {
+                                maxLength: 50
+                            }
+                        }
 					})
 				]
             });

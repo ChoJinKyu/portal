@@ -1,4 +1,5 @@
 
+
 MidObject.controller.js:159 _showFormFragment
 남은작업  11월 23일에 진행해야할 작업 ===============================
 -main page
@@ -807,7 +808,7 @@ UseYNView(tenant_id='L2100',code='TRUE'): {__metadata: {…}, tenant_id: "L2100"
                     this._showFormFragment("Display");
                     this.byId("textMaterialCode").setText(midObjectData.getProperty("/mi_material_code"));
                     this.byId("textCategoryName").setText(midObjectData.getProperty("/category"));
-                    this.byId("textUse_flag").setText(midObjectData.getProperty("/use_flag") == "true" ? "사용" : "미사용" );
+                    this.byId("textUse_flag").setText(midObjectData.getProperty("/use_flag") == "true" ? "Yes" : "No" );
         
                     //this.byId("page").setSelectedSection("pageSectionMain");
                     //this.byId("page").setProperty("showFooter", false);

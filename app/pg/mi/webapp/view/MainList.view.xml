@@ -127,7 +127,7 @@
                     id="smartTable_MainTable_ResponsiveTable"
                     entitySet="MIMaterialCodeList"
                     tableBindingPath="{MIMaterialCodeList}"
-                    initiallyVisibleFields="mi_material_code,mi_material_code_name,category_code,use_flag"
+                    initiallyVisibleFields="mi_material_code,mi_material_code_name,category_name,use_flag"
                     smartFilterId="smartFilterBar"
                     ignoreFromPersonalisation="tenant_id,company_code,org_type_code"
                     tableType="ResponsiveTable"
@@ -150,7 +150,7 @@
                             <ToolbarSpacer/>
                             <Button text="Create" id="buttonMainTableCreate" type="Transparent" press=".onMainTableCreate"/>                            
                             <!-- <Button text="Copy" id="buttonMainTableCopy"  type="Transparent" enabled="false" press=".onMainTableCopy"/> -->
-                            <Button text="Delete" id="buttonMainTableDelete" type="Transparent" enabled="false" press=".onMainTableDelete"/>
+                            <!-- <Button text="Delete" id="buttonMainTableDelete" type="Transparent" enabled="false" press=".onMainTableDelete"/> -->
                             <OverflowToolbarButton
                                 icon="sap-icon://sort"
                                 tooltip="Sort"
@@ -168,8 +168,9 @@
                                 press=".onMainTableColumns"/>
                         </OverflowToolbar>
                     </smartTable:customToolbar>
-                            <Table id="mainTable" mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders">
+                            <Table id="mainTable" mode="None" sticky="HeaderToolbar,ColumnHeaders">
                                  <columns>  
+                                 
                                        <Column hAlign="Center"  demandPopin="true" importance="High" popinDisplay="WithoutHeader">
                                         <customData>
                                         <core:CustomData key="p13nData"
@@ -177,6 +178,7 @@
                                         </customData>
                                             <Text text="시황자재코드"></Text>
                                         </Column>
+
                                         <Column hAlign="Center" demandPopin="true" importance="High" popinDisplay="Inline">
                                           <customData>
                                         <core:CustomData key="p13nData"
@@ -184,14 +186,16 @@
                                         </customData>
                                              <Text text="시황자재명"></Text>
                                         </Column>
-                                          <Column hAlign="Center" demandPopin="true" popinDisplay="Inline">
+
+                                        <Column hAlign="Center" demandPopin="true" popinDisplay="Inline">
                                           <customData>
                                         <core:CustomData key="p13nData"
-                                        value='\{"columnKey": "category_code", "leadingProperty": "category_code", "sortProperty": "category_code", "filterProperty": "category_code", "columnIndex": 6}'/>
+                                        value='\{"columnKey": "category_name", "leadingProperty": "category_name", "sortProperty": "category_name", "filterProperty": "category_name", "columnIndex": 6}'/>
                                         </customData>
                                              <Text text="Category명"></Text>
                                         </Column>
-                                           <Column hAlign="Center" demandPopin="true" popinDisplay="Inline">
+
+                                        <Column hAlign="Center" demandPopin="true" popinDisplay="Inline">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "use_flag", "leadingProperty": "use_flag", "sortProperty": "use_flag", "filterProperty": "use_flag", "columnIndex": 7}'/>
@@ -204,8 +208,8 @@
                                         <ColumnListItem type="Navigation" hAlign="Middle" press=".onMainTableItemPress">
                                              <Text text="{mi_material_code}"></Text>
                                              <Text text="{mi_material_code_name}"></Text>
-                                             <Text text="{category_code}"></Text>
-                                             <Text text="{= ${use_flag}===true?'예':'아니오'}"></Text>  
+                                             <Text text="{category_name}"></Text>
+                                             <Text text="{= ${oUiData>/use_flag} ? 'Yes':'No'}"></Text>  
                                         </ColumnListItem>
                                     </items>
                                 </Table>

@@ -1,5 +1,5 @@
 sap.ui.define([
-    "../SuperModel"
+    "../AbstractModel"
 ], function (SuperModel) {
     "use strict";
 

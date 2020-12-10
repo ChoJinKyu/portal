@@ -1,5 +1,5 @@
-using { dp as moldMst } from '../../../../db/cds/dp/moldMgt/DP_MOLD_MST-model';
-using { dp as moldMstView } from '../../../../db/cds/dp/moldMgt/DP_MOLD_MST_VIEW-model';
+using { dp as moldMst } from '../../../../db/cds/dp/moldMgt/DP_MD_MST-model';
+using { dp as moldMstView } from '../../../../db/cds/dp/moldMgt/DP_MD_MST_VIEW-model';
 
 using {cm as orgMapping} from '../../../../db/cds/cm/purOrgMgr/CM_PUR_ORG_TYPE_MAPPING-model';
 using {cm as Org} from '../../../../db/cds/cm/purOrgMgr/CM_PUR_OPERATION_ORG-model';
@@ -8,7 +8,7 @@ namespace dp;
 @path : '/dp.DevelopmentReceiptService'
 service DevelopmentReceiptService {
 
-    entity MoldMasters as projection on moldMst.Mold_Mst;
+    entity MoldMasters as projection on moldMst.Md_Mst;
     
     view Divisions as
     select key a.tenant_id       
@@ -32,11 +32,11 @@ service DevelopmentReceiptService {
 
     view Models as
     select distinct key a.tenant_id, key a.model
-    from moldMst.Mold_Mst a
+    from moldMst.Md_Mst a
     where a.model is not null;
 
-    view PartNumbers as
-    select distinct key a.tenant_id, key a.part_number, a.spec_name
-    from moldMst.Mold_Mst a
-    where a.part_number is not null;
+    view MoldNumbers as
+    select distinct key a.tenant_id, key a.mold_number, a.mold_item_type_code, a.spec_name
+    from moldMst.Md_Mst a
+    where a.mold_number is not null;
 }

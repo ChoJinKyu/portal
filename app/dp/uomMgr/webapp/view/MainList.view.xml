@@ -41,14 +41,14 @@
                                 path: 'uomClass>/UomClass'
                                 }">
                                 <items>
-                                    <core:Item key="{uomClass>uom_class_code}" text="{uomClass>uom_class_code}: {uomClass>uom_class_name}" />
+                                    <core:Item key="{uomClass>uom_class_code}" text="{uomClass>uom_class_name}" />
                                 </items>
                             </ComboBox>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
-                        <VBox>
+                        <!-- <VBox>
                             <Label text="UOM :" labelFor="searchUom" ></Label>
                             <ComboBox id="searchUom" width="100%" selectedKey="" items="{
                                     path: '/Uom'                                    
@@ -60,7 +60,7 @@
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
-                        </VBox>                        
+                        </VBox> -->
                         <VBox>
                             <Label text="Base Unit :" labelFor="searchBUSegmentButton"></Label>
                             <SegmentedButton id="searchBUSegmentButton" selectedKey="" class="sapUiSmallMarginBottom" width="100%" >
@@ -104,7 +104,7 @@
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <!-- <Title text="Control Options ({= ${list>/}.length || 0})" level="H2"/> -->
+                            <!-- <Title text="Unit Of Measure ({= ${list>/Uom}.length || 0})" level="H2"/> -->
                             <Title text="Unit Of Measure" level="H2"/>
                             <ToolbarSpacer/>
                             <SearchField id="mainTableSearchField" placeholder="Uom" width="10rem" search=".onMainTableFilterPress" />
@@ -148,7 +148,7 @@
                             <cells>
                                 <ObjectIdentifier text="{list>uom_code}"/>
                                 <ObjectIdentifier text="{list>commercial_uom_code}"/>
-                                <ObjectIdentifier text="{list>comercial_uom_name}"/>                                
+                                <ObjectIdentifier text="{list>commercial_uom_name}"/>                                
                                 <ObjectStatus 
                                     icon="{= ${list>base_unit_flag} === true ? 'sap-icon://accept' : ''}"/>
                                 <ObjectIdentifier text="{list>uom_class_code}"/>

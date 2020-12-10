@@ -64,18 +64,15 @@
                             </VBox>
                              <VBox>
                                 <Label text="Approval Category" labelFor="searchApprovalCategoryS" required="true"></Label>
-                                <MultiComboBox id="searchApprovalCategoryS" width="100%">
-                                    <core:Item key="Budget" text="Budget" />
-                                    <core:Item key="Supplier Selection" text="Supplier Selection" />
-                                    <core:Item key="Order" text="Order" />
-                                    <core:Item key="Receipt" text="Receipt" />
-                                    <core:Item key="Export" text="Export" />
-                                    <core:Item key="Import Completion" text="Import Completion" />
-                                    <core:Item key="Repair/Modifi. Completion" text="Repair/Modifi. Completion" />
-                                    <core:Item key="Other In" text="Other In" />
-                                    <core:Item key="Other Out" text="Other Out" />
-                                    <core:Item key="Prod Supplier Amend" text="Prod Supplier Amend" />
-                                    <core:Item key="Prod Supplier Amend" text="Item Cancel" />
+                                <MultiComboBox id="searchApprovalCategoryS" width="100%" selectedKey="" items="{
+                                            path : 'util>/CodeDetails',
+                                            filters : [
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_APPROVAL_TYPE'}
+                                            ],
+                                            sorter: { path: 'code'}
+                                        }">
+                                <core:Item key="{util>code}" text="{util>code_description}" />
                                 </MultiComboBox>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
@@ -131,18 +128,15 @@
                             </VBox>
                              <VBox>
                                 <Label text="Approval Category" labelFor="searchApprovalCategoryE" required="true"></Label>
-                                <MultiComboBox id="searchApprovalCategoryE" width="100%">
-                                    <core:Item key="Budget" text="Budget" />
-                                    <core:Item key="Supplier Selection" text="Supplier Selection" />
-                                    <core:Item key="Order" text="Order" />
-                                    <core:Item key="Receipt" text="Receipt" />
-                                    <core:Item key="Export" text="Export" />
-                                    <core:Item key="Import Completion" text="Import Completion" />
-                                    <core:Item key="Repair/Modifi. Completion" text="Repair/Modifi. Completion" />
-                                    <core:Item key="Other In" text="Other In" />
-                                    <core:Item key="Other Out" text="Other Out" />
-                                    <core:Item key="Prod Supplier Amend" text="Prod Supplier Amend" />
-                                    <core:Item key="Prod Supplier Amend" text="Item Cancel" />
+                                <MultiComboBox id="searchApprovalCategoryE" width="100%" selectedKey="" items="{
+                                            path : 'util>/CodeDetails',
+                                            filters : [
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_APPROVAL_TYPE'}
+                                            ],
+                                            sorter: { path: 'code'}
+                                        }">
+                                <core:Item key="{util>code}" text="{util>code_description}" />
                                 </MultiComboBox>
                                 
                                 <layoutData>
@@ -171,31 +165,31 @@
                                     showValueHelp="true"  
                                     valueHelpRequest=".onValueHelpRequested"
                                     suggestionItems="{
-                                        path: 'mold>/Models',
+                                        path: '/Models',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                         ],
                                         sorter: { path: 'model' }
                             }">
-                                <core:Item key="{mold>model}" text="{mold>model}" />
+                                <core:Item key="{model}" text="{model}" />
                             </Input>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Mold Part No " labelFor="searchMoldPartNo"></Label>
-                            <Input id="searchMoldPartNo" 
+                            <Label text="Mold Part No " labelFor="searchPart"></Label>
+                            <Input id="searchPart" 
                                     showValueHelp="true"  
                                     valueHelpRequest=".onValueHelpRequested"
                                     suggestionItems="{
-                                        path: 'mold>/PartNumbers',
+                                        path: '/PartNumbers',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                         ],
-                                        sorter: { path: 'part_number' }
+                                        sorter: { path: 'mold_number' }
                             }">
-                                <core:Item key="{mold>part_number}" text="{mold>part_number}" />
+                                <core:Item key="{mold_number}" text="{mold_number}" />
                             </Input>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
@@ -203,19 +197,27 @@
                         </VBox>
                         <VBox>
                             <Label text="Subject" labelFor="searchSubject"></Label>
-                            <SearchField />
+                            <Input id="searchSubject" placeholder="Input data"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="Requester" labelFor="searchRequester"></Label>
-                            <MultiInput id="searchRequester" valueHelpOnly="true" width="100%" valueHelpRequest=".approvalDialogOpen">
-                                <customData>
-                                    <core:CustomData key="multi" value="true" />
-                                    <core:CustomData key="confirmButtonText" value="Apply" />
-                                </customData>
-                            </MultiInput>
+                            <Input id="searchRequester" 
+                                    showValueHelp="true"  
+                                    valueHelpRequest=".onValueHelpRequested"
+                                    suggestionItems="{
+                                        path: '/Requestors',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                        ],
+                                        sorter: { path: 'user_id' }
+                            }">
+                            <core:Item key="{user_id}" text="{user_id}" />
+                                
+                            </Input>
+                           
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -225,10 +227,12 @@
                             <SegmentedButton id="searchStatus" selectedKey="" width="100%">
                                 <items>
                                     <SegmentedButtonItem text="All" key="" />
-                                    <SegmentedButtonItem text="Draft" key="D" width="5em" />
-                                    <SegmentedButtonItem text="In-Appr" width="5em" />
-                                    <SegmentedButtonItem text="Apprvd" width="5em" />
-                                    <SegmentedButtonItem text="Rejected" width="5em" />
+                                    <SegmentedButtonItem text="Appr-Req" key="AR" width="5em"/>
+                                    <SegmentedButtonItem text="Draft" key="DR" width="5em" />
+                                    <SegmentedButtonItem text="In-Appr" key="IA" width="5em" />
+                                    <SegmentedButtonItem text="Apprvd" key="AP" width="5em" />
+                                    <SegmentedButtonItem text="Rejected" key="RJ" width="5em" />
+                                     
                                 </items>
                             </SegmentedButton>
                             <layoutData>
@@ -241,7 +245,7 @@
         </f:header>
         <f:content>
             <VBox>
-                <Table id="mainTable"       
+                <!-- <Table id="mainTable"       
                         growing="true"
                         growingThreshold="20"
                         class="sapFDynamicPageAlignContent" 
@@ -250,14 +254,22 @@
                         rowSelectionChange = ".onCheck"
                         mode="MultiSelect"
                         width="auto"
-                        items="{list>/Approvals}">
+                        items="{list>/Approvals}"> -->
+                <Table id="mainTable"       
+                    growing="true"
+                    growingThreshold="20"
+                    class="sapFDynamicPageAlignContent" 
+                    updateFinished=".onListMainTableUpdateFinished"
+                    cellClick=".onCellClick"
+                    width="auto"
+                    items="{list>/ApprovalMasters}">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="Approval List ({= ${list>/Approvals}.length || 0})" level="H2"/>
+                            <Title text="Approval List ({= ${list>/ApprovalMasters}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <!-- Add the Personalization button -->
                             <Button id="mainTableCreateButton" text="Create" type="Emphasized" press=".onDialogCreate" />
-                            <Button id="mainTableDeleteButton" text="Delete" type="Transparent" press=".onListMainTableDeleteButtonPress" />
+                            <Button id="mainTableDeleteButton" text="Delete" type="Transparent" press=".onApplovalDeletePress" />
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://excel-attachment" press=".onListMainTablePersoButtonPressed" >
                                 <layoutData>
@@ -272,42 +284,116 @@
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
-                        <Column id="mainColumnApprovalCategory" minScreenWidth="Tablet" hAlign="Center"  width="12em" >
+                        <Column width="4em" >
+                            <CheckBox selected="false" select=".onColumnChecBox"/>
+                        </Column>
+                        <Column id="mainColumnApprovalCategory" >
                             <Text text="Approval&#10;Category" />
                         </Column>
-                        <Column id="mainColumnCompany" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                        <Column id="mainColumnCompany" >
                             <Text text="Company" />
                         </Column>
-                        <Column id="mainColumnPlant" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                        <Column id="mainColumnPlant" >
                             <Text text="Plant" />
                         </Column>
-                        <Column id="mainColumnApprovalNo" minScreenWidth="Tablet" hAlign="Center" width="12em">
+                        <Column id="mainColumnApprovalNo">
                             <Text text="Approval No" />
                         </Column>
-                        <Column id="mainColumnSubject" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                        <Column id="mainColumnSubject"  >
                             <Text text="Subject" />
                         </Column>
-                        <Column id="mainColumnRequester" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                        <Column id="mainColumnRequester"  >
                             <Text text="Requester" />
                         </Column>
-                        <Column id="mainColumnRequestDate" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                        <Column id="mainColumnRequestDate"  >
                             <Text text="Request Date" />
                         </Column>
-                        <Column id="mainColumnStatus" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                        <Column id="mainColumnStatus"  >
                             <Text text="Status" />
                         </Column>
                     </columns>
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
-                            <cells>
-                                <ObjectIdentifier text="{list>approval_type_code}" />
-                                <ObjectIdentifier text="{list>company_name}" />
-                                <ObjectIdentifier text="{list>plant_name}" />
+                            <cells>                  
+                                <CheckBox fieldGroupIds="{= ${list>approve_status_code}==='DR'? 'checkBoxs':''}"  visible="{= ${list>approve_status_code}==='DR'? true:false }" select=".onCheck" />       
+                                <ComboBox 
+                                        editable="false"   
+                                        class="readonlyField"
+                                        selectedKey="{list>approval_type_code}"
+                                        items="{
+                                                    path : 'util>/CodeDetails',
+                                                    filters : [
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_APPROVAL_TYPE'}
+                                                    ]
+                                                }"
+                                        width='100%'
+                                        >
+                                    <core:Item key="{util>code}" text="{util>code_description}" />
+                                </ComboBox>
+                                <ComboBox  
+                                        editable="false" 
+                                        class="readonlyField"
+                                        selectedKey="{list>company_code}" 
+                                        items="{
+                                                    path: 'org>/Org_Company',
+                                                    filters: [
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                                    ],
+                                                    sorter: { path: 'company_code'}
+                                                }"
+                                        width='100%'
+                                        >
+                                    <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                                </ComboBox>
+                                <ComboBox
+                                        editable="false" 
+                                        class="readonlyField"  
+                                        selectedKey="{list>org_code}" 
+                                        items="{
+                                                    path: 'purOrg>/Pur_Operation_Org',
+                                                    filters: [
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                                    ]
+                                                }"
+                                        width='100%'
+                                        >
+                                    <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}] {purOrg>org_name}" />
+                                </ComboBox>
                                 <ObjectIdentifier text="{list>approval_number}" />
                                 <ObjectIdentifier text="{list>approval_title}" />
-                                <ObjectIdentifier text="{list>requestor_empno}" />
-                                <ObjectIdentifier text="{list>request_date}" />
-                                <ObjectIdentifier text="{list>approve_status_code}" />
+                                <!-- <ObjectIdentifier text="{list>requestor_empno}" /> -->
+                                <ComboBox
+                                        editable="false"   
+                                        class="readonlyField"
+                                        selectedKey="{list>requestor_empno}"
+                                        items="{
+                                                    path : 'user>/UserMgr',
+                                                    filters : [
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'}
+                                                    ]
+                                                }"
+                                        width='100%'
+                                        >
+                                    <core:Item key="{user>employee_number}" text="[{user>english_employee_name}]{user>user_name}" />
+                                </ComboBox>
+                                <DatePicker value="{list>request_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
+                                <ComboBox
+                                        editable="false"   
+                                        class="readonlyField"
+                                        selectedKey="{list>approve_status_code}"
+                                        items="{
+                                                    path : 'util>/CodeDetails',
+                                                    filters : [
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                        {path : 'group_code', operator : 'EQ', value1 : 'CM_APPROVE_STATUS'}
+                                                    ]
+                                                }"
+                                        width='100%'
+                                        >
+                                    <core:Item key="{util>code}" text="{util>code_description}" />
+                                </ComboBox>
+
                             </cells>
                         </ColumnListItem>
                     </items>
