@@ -1,7 +1,7 @@
 sap.ui.define([
-    "sap/ui/core/mvc/Controller" 
-    , "sap/ui/model/odata/v2/ODataModel" 
-    , "sap/m/Dialog",
+    "sap/ui/core/mvc/Controller",
+    "sap/ui/model/odata/v2/ODataModel",
+    "sap/m/Dialog",
     "sap/m/DialogRenderer",
     "ext/lib/core/service/ODataV2ServiceProvider",
     "sap/ui/model/Sorter",
@@ -12,11 +12,13 @@ sap.ui.define([
     "sap/m/Table",
     "sap/m/Column",
     "sap/m/ColumnListItem",
-], function (Controller,ODataModel,Dialog, Renderer, ODataV2ServiceProvider,
-        Sorter, Filter, FilterOperator,
-        Button, Text, Table, Column, ColumnListItem) {
-    "use strict"; 
- 
+    "sap/ui/core/Fragment",
+    "ext/lib/util/Multilingual",
+], function (Controller, ODataModel, Dialog, Renderer, ODataV2ServiceProvider,
+    Sorter, Filter, FilterOperator,
+    Button, Text, Table, Column, ColumnListItem, Fragment) {
+    "use strict";
+
     var oServiceModel = new ODataModel({
         serviceUrl: "srv-api/odata/v2/dp.util.MoldItemSelectionService/",
         defaultBindingMode: "OneWay",
@@ -30,24 +32,34 @@ sap.ui.define([
      * @author jinseon.lee
      * @date   2020.12.02 
      */
-	return Controller.extend("dp.util.controller.MoldItemSelection", {
-    
-        
+    return Controller.extend("dp.util.controller.MoldItemSelection", {
+
+        onInit: function () {
+
+            /* 다국어 처리*/
+            var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
+
+            console.log("MoldItemSelection Controller 호출");
+
+            var oViewModel = new JSONModel({
+                busy: true,
+                delay: 0
+            });
+
+            this.setModel(oViewModel, "moldItemPop");
+        },
         /**
+         * @param vThis : view page의 this 
+         *       , oEvent : 이벤트 
+         * ,     , oArges : company_code , org_code 
 		 * Called when the mainObject controller is instantiated.
 		 * @public
 		 */
-		init : function () { 
-            console.log("init >>> ");
-            Parent.prototype.init.call(this);
-            this.setModel(new JSONModel());
-                
-            this.handleTableSelectDialogPress();
-        },
-           handleTableSelectDialogPress: function (oEvent) {
+        handleTableSelectDialogPress: function (oThis, oEvent, oArges) {
             console.log("[ step ] handleTableSelectDialogPress Item for Budget Execution 항목의 Add 버튼 클릭 ");
 
-            var oView = this.getView();
+            var oView = oThis.getView();
             var oButton = oEvent.getSource();
             if (!this._oDialogTableSelect) {
                 this._oDialogTableSelect = Fragment.load({
@@ -69,6 +81,6 @@ sap.ui.define([
         },
 
 
-	});
+    });
 
 });

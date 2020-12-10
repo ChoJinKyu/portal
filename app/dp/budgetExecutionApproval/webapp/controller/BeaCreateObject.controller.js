@@ -19,9 +19,11 @@ sap.ui.define([
     "ext/lib/model/TransactionManager",
     "ext/lib/util/Multilingual",
     "ext/lib/util/Validator", 
-     "ext/lib/formatter/Formatter",
+    "ext/lib/formatter/Formatter", 
+    "dp/util/controller/MoldItemSelection"
 ], function (BaseController, JSONModel, History, ManagedListModel, ManagedModel, RichTextEditor, DateFormatter, Filter, FilterOperator, Fragment
-    , MessageBox, MessageToast, UploadCollectionParameter, Device, syncStyleClass, ColumnListItem, Label, TransactionManager, Multilingual, Validator, Formatter) {
+    , MessageBox, MessageToast, UploadCollectionParameter, Device, syncStyleClass, ColumnListItem, Label, TransactionManager, Multilingual
+    , Validator, Formatter, MoldItemSelection) {
     "use strict";
     /**
      * @description 예산집행품의 Create, update 화면 
@@ -33,7 +35,8 @@ sap.ui.define([
     return BaseController.extend("dp.budgetExecutionApproval.controller.BeaCreateObject", {
          formatter: Formatter,
         dateFormatter: DateFormatter,
-        validator: new Validator(),
+        validator: new Validator(), 
+        moldItemPop: new MoldItemSelection(),
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -470,6 +473,9 @@ sap.ui.define([
          * @description : Popup 창 : 품의서 Item for Budget Execution 항목의 Add 버튼 클릭
          */
         handleTableSelectDialogPress: function (oEvent) {
+ 
+            this.moldItemPop.handleTableSelectDialogPress(this, oEvent);
+  /*
             console.log("[ step ] handleTableSelectDialogPress Item for Budget Execution 항목의 Add 버튼 클릭 ");
 
             var oView = this.getView();
@@ -490,7 +496,7 @@ sap.ui.define([
                 oDialog.open();
                 that.byId("moldItemSelectionSearch").firePress(); // open 하자마자 조회 하여 보여줌 
 
-            });
+            }); */ 
         },
         /**
          * @public 
