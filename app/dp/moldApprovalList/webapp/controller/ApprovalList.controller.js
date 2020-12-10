@@ -288,6 +288,7 @@ sap.ui.define([
 
 
             var path = '';
+            
             this._oValueHelpDialog = sap.ui.xmlfragment("dp.moldApprovalList.view.ValueHelpDialogApproval", this);
 
             this._oBasicSearchField = new SearchField({
@@ -344,9 +345,9 @@ sap.ui.define([
                 this._oValueHelpDialog.setKey('mold_number');
                 this._oValueHelpDialog.setDescriptionKey('spec_name');
 
-            } else if (oEvent.getSource().sId.indexOf("searchRequester") > -1) {
+            } else if (oEvent.getSource().sId.indexOf("searchRequestor") > -1) {
 
-                this._oInputModel = this.getView().byId("searchRequester");
+                this._oInputModel = this.getView().byId("searchRequestor");
 
                 this.oColModel = new JSONModel({
                     "cols": [
@@ -362,7 +363,8 @@ sap.ui.define([
                 });
 
                 path = '/Requestors';
-                this._oValueHelpDialog.setTitle('Requester');
+                //filters = new Filter("tenant_id", FilterOperator.EQ, 'L1100')
+                this._oValueHelpDialog.setTitle('Requestor');
                 this._oValueHelpDialog.setKey('user_id');
                 // this._oValueHelpDialog.setDescriptionKey('english_employee_name');
             }
@@ -726,7 +728,7 @@ sap.ui.define([
             var sSubject = this.getView().byId("searchSubject").getValue().trim();
             var sModel = this.getView().byId("searchModel").getValue().trim();
             var sPart = this.getView().byId("searchPart").getValue().trim();
-            var sRequester = this.getView().byId("searchRequester").getValue().trim();
+            var sRequestor = this.getView().byId("searchRequestor").getValue().trim();
             var sStatus = this.getView().byId("searchStatus").getSelectedKey();
 
 
@@ -811,8 +813,8 @@ sap.ui.define([
                 aSearchFilters.push(new Filter("tolower(part_number)", FilterOperator.Contains, "'" + sPart.toLowerCase() + "'"));
             }
 
-            if (sRequester) {
-                aSearchFilters.push(new Filter("tolower(user_id)", FilterOperator.Contains, "'" + sRequester.toLowerCase() + "'"));
+            if (sRequestor) {
+                aSearchFilters.push(new Filter("tolower(user_id)", FilterOperator.Contains, "'" + sRequestor.toLowerCase() + "'"));
             }
 
             if (sSubject) {
