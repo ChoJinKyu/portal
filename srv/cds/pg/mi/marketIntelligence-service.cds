@@ -1,14 +1,11 @@
 //Table
-using {pg as MICateg} from '../../../../db/cds/pg/mi/PG_MI_CATEGORY-model';
+using {pg as MICategHierStru} from '../../../../db/cds/pg/mi/PG_MI_CATEGORY_HICHY_STRU-model';
 using {pg as MICategText} from '../../../../db/cds/pg/mi/PG_MI_CATEGORY_LNG-model';
-using {pg as MICategList} from '../../../../db/cds/pg/mi/PG_MI_CATEGORY_LIST-model';
 using {pg as MIMatCode} from '../../../../db/cds/pg/mi/PG_MI_MATERIAL_CODE-model';
 using {pg as MIMatCodetext} from '../../../../db/cds/pg/mi/PG_MI_MATERIAL_CODE_LNG-model';
-using {pg as MIMatCodeList} from '../../../../db/cds/pg/mi/PG_MI_MATERIAL_CODE_LIST-model';
 using {pg as MIExchange} from '../../../../db/cds/pg/mi/PG_MI_EXCHANGE_LNG-model';
 using {pg as MITermsdelv} from '../../../../db/cds/pg/mi/PG_MI_TERMSDELV_LNG-model';
 using {pg as MIMatPrcMngt} from '../../../../db/cds/pg/mi/PG_MI_MATERIAL_PRICE_MANAGEMENT-model';
-using {pg as MICategHierStru} from '../../../../db/cds/pg/mi/PG_MI_CATEGORY_HICHY_STRU-model';
 using {pg as MIMatCdBOMMngt} from '../../../../db/cds/pg/mi/PG_MI_MATERIAL_CODE_BOM_MNGT-model';
 //View
 using {pg as MIMatPrcMngtView} from '../../../../db/cds/pg/mi/PG_MI_MAT_PRC_MANAGEMENT_VIEW';
@@ -28,7 +25,7 @@ using {cm.Code_Dtl as CodeDtl} from '../../../../db/cds/cm/codeMgr/CM_CODE_DTL-m
 using {cm.Code_Lng as CodeLng} from '../../../../db/cds/cm/codeMgr/CM_CODE_LNG-model';
 //Unit Code
 using {cm.Currency_Lng as CurrencyLanguage} from '../../../../db/cds/cm/currencyMgr/CM_CURRENCY_LNG-model';
-// using {dp.Mm_Unit_Of_Measure_Lng as UnitOfMeasure} from '../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE_LNG-model';
+using {dp.Mm_Unit_Of_Measure_Lng as UnitOfMeasure} from '../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE_LNG-model';
 
 namespace pg;
 
@@ -36,16 +33,13 @@ namespace pg;
 service marketIntelligenceService {
 
     // Entity List
-    entity MICategory @(title : '카테고리속성') as projection on MICateg.MI_Category;
+    entity MICategoryHierarchyStructure @(title : 'Category 계층구조')  as projection on MICategHierStru.MI_Category_Hichy_Stru;
     entity MICategoryText @(title : '카테고리명') as projection on MICategText.MI_Category_Lng;
-    entity MICategoryList @(title : '카테고리 List') as projection on MICategList.MI_Category_List;
     entity MIMaterialCode @(title : '시황자재 속성') as projection on MIMatCode.MI_Material_Code;
     entity MIMaterialCodeText @(title : '시황자재명') as projection on MIMatCodetext.MI_Material_Code_Lng;
-    entity MIMaterialCodeList @(title : '시황자재 List') as projection on MIMatCodeList.MI_Material_Code_List;
     entity Exchange @(title : '거래소명') as projection on MIExchange.MI_Exchange_Lng;
     entity TermsOfDelivery @(title : '인도조건명') as projection on MITermsdelv.MI_Termsdelv_Lng;
-    entity MIMaterialPriceManagement @(title : '시황자재 가격관리') as projection on MIMatPrcMngt.MI_Material_Price_Management;
-    entity MICategoryHierarchyStructure @(title : 'Category 계층구조')  as projection on MICategHierStru.MI_Category_Hichy_Stru;
+    entity MIMaterialPriceManagement @(title : '시황자재 가격관리') as projection on MIMatPrcMngt.MI_Material_Price_Management;    
     entity MIMaterialCodeBOMManagement @(title : '자제별 시황자재 BOM 관리') as projection on MIMatCdBOMMngt.MI_Material_Code_Bom_Mngt;
     // View List
     view MIMaterialPriceManagementView @(title : '시황자재 가격관리 View') as select from MIMatPrcMngtView.MI_Mat_Prc_Management_View;
@@ -187,13 +181,13 @@ service marketIntelligenceService {
         from CurrencyLanguage;
 
     // Unit of Measure View
-    // view UnitOfMeasureView @(title : '수량단위코드 View') as
-    //     select
-    //         key tenant_id, //회사코드
-    //         key uom_code, //수량단위코드
-    //         key language_code, //언어코드
-    //             uom_name //수량단위코드명
-    //     from UnitOfMeasure;
+    view UnitOfMeasureView @(title : '수량단위코드 View') as
+        select
+            key tenant_id, //회사코드
+            key uom_code, //수량단위코드
+            key language_code, //언어코드
+                uom_name //수량단위코드명
+        from UnitOfMeasure;
 
     // MI Material Category List View
     view MIMatCategListView @(title : '시황자재 카테고리 List View') as
