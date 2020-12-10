@@ -9,7 +9,8 @@
     xmlns:si="sap.suite.ui.commons.statusindicator"
     xmlns:u="sap.ui.unified" 
     xmlns:table="sap.ui.table" 
-    xmlns="sap.m"
+    xmlns="sap.m" 
+    xmlns:moditemPop="dp.util.view"
 	height="100%">
 
 	<uxap:ObjectPageLayout 
@@ -68,7 +69,7 @@
 					<Label text="{I18N>/STATUS} :"/>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
-                        text="{=${appMaster>/approval_number}?'Update':'New'}"
+                        text="{=${beaCreateObjectView>/editMode}?'Update':'New'}"
                         state="Error" />
 				</layout:VerticalLayout>
 
@@ -220,6 +221,7 @@
                                 <OverflowToolbar>
                                     <ToolbarSpacer/>
                                     <!-- Add the Personalization button -->
+                                    <moditemPop:MoldItemSelection />
                                     <Button id="btnPsAdd"  type="Transparent" text="{I18N>/ROW_ADD}" press=".handleTableSelectDialogPress" > <!-- Add -->
                                     	<customData>
                                             <core:CustomData key="multi" value="true" />
@@ -448,16 +450,16 @@
                                         items="{ path : 'util>/CodeDetails',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'CM_APPROVE_STATUS'}
+                                                        {path : 'group_code', operator : 'EQ', value1 : 'CM_APPROVER_TYPE'}
                                                     ]
                                                 }"
                                         >  
                                         <core:Item key="{util>code}" text="{util>code_description}" />
 
                                     </ComboBox>
-                                    <SearchField id="searchField" enabled="{appList>editMode}" search=".onSearch" width="100%" placeholder="Search employee" value="{appList>nameDept}"/>
-                                    <Text text="{appList>status}" />
-                                    <Text text="{appList>comment}" />
+                                    <SearchField id="searchField" enabled="{appList>editMode}" search=".onSearch" width="100%" placeholder="Search employee" value="{appList>approver_empno}"/>
+                                    <Text text="{appList>approve_status_code}" />
+                                    <Text text="{appList>approve_comment}" />
                                     <Button id="btnSortUp" icon="{appList>arrowUp}" press=".onSortUp(${appList>no})" tooltip="sort" visible="{= ${appList>arrowUp}===''?false:true }"></Button>
                                     <Button id="btnSortDown" icon="{appList>arrowDown}" press=".onSortDown(${appList>no})"  visible="{= ${appList>arrowDown}===''?false:true }" tooltip="sort"></Button>
                                     <Button id="btnDelete" icon="sap-icon://delete" press=".setApprovalRemoveRow(${appList>no})" tooltip="삭제" visible="{appList>trashShow}"></Button>

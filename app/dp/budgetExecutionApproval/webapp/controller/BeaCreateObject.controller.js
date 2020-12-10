@@ -79,9 +79,9 @@ sap.ui.define([
 
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("appMaster"));
-            oTransactionManager.addDataModel(this.getModel("appDetail"));
+           // oTransactionManager.addDataModel(this.getModel("appDetail"));
             // oTransactionManager.addDataModel(this.getModel("MoldMasterList"));
-            oTransactionManager.addDataModel(this.getModel("Approvers"));
+          //  oTransactionManager.addDataModel(this.getModel("Approvers"));
 
 
         },
@@ -226,16 +226,43 @@ sap.ui.define([
 		 * @private
 		 */
         _onCreatePagetData : function (args) {  
+            var d = new Date();
             this.getModel('appMaster').setProperty('/company_code', args.company_code);
             this.getModel('appMaster').setProperty('/org_code', args.plant_code); 
+            this.getModel('appMaster').setProperty('/org_type_code', 'AU'); 
             this.getModel('appMaster').setProperty('/tenant_id', 'L1100' ); 
             this.getModel('appMaster').setProperty('/chain_code', 'DP' ); 
             this.getModel('appMaster').setProperty('/approval_type_code', 'B' ); 
+            this.getModel('appMaster').setProperty('/requestor_empno', '888888' ); 
+            this.getModel('appMaster').setProperty('/approval_number', '326857-20E-88847' ); 
+            this.getModel('appMaster').setProperty('/request_date', this._getToday() ); 
+            this.getModel('appMaster').setProperty('/local_create_dtm', new Date() ); 
+            this.getModel('appMaster').setProperty('/local_update_dtm', new Date() ); 
+            this.getModel('appMaster').setProperty('/_state_', "C"); 
+            this.getModel('appMaster').setProperty('/__entity', "/ApprovalMasters(tenant_id='L1100',approval_number='326857-20E-88847')");
+           //  "/ApprovalMasters(tenant_id='L1100',approval_number='" + args.approval_number + "')"
 
+            console.log("appMaster>>>> " , this.getModel("appMaster"));
+
+            oTransactionManager.setServiceModel(this.getModel());
 
             this._createViewBindData(args);
-        } ,
+        },
 
+        /**
+         * today
+         * @private
+         * @return yyyy-mm-dd
+         */
+        _getToday: function () {
+            var date_ob = new Date();
+            var date = ("0" + date_ob.getDate()).slice(-2);
+            var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+            var year = date_ob.getFullYear();
+
+            console.log(year + "-" + month + "-" + date);
+            return year + "" + month + "" + date;
+        },
         /**
          * @description 초기 생성시 파라미터를 받고 들어옴 
          * @param {*} args : company , plant   
@@ -244,16 +271,9 @@ sap.ui.define([
             console.log("[ step ] _createViewBindData args ", args);
             /** 초기 데이터 조회 */
             var company_code = args.company_code, plant_code = (args.org_code == undefined ? args.plant_code : args.org_code);
-            var appModel = this.getModel(mainViewName);
-            appModel.setData({
-                company_code: company_code
-                , company_name: ""
-                , plant_code: plant_code
-                , plant_name: ""
-                , editMode: args.org_code != undefined ? true : false
-            });
-
-
+         
+            this.getModel(mainViewName).setProperty('/editMode', args.org_code != undefined ? true : false ); 
+            
             var oModel = this.getModel("company");
 
             oModel.setTransactionModel(this.getModel("org"));
@@ -264,7 +284,6 @@ sap.ui.define([
                     console.log("Org_Company oData>>> ", oData);
                 }
             });
-
 
             var oModel2 = this.getModel("plant");
             oModel2.setTransactionModel(this.getModel("org"));
@@ -286,7 +305,7 @@ sap.ui.define([
 
             this._bindView("/ApprovalMasters(tenant_id='L1100',approval_number='" + args.approval_number + "')"
                 , "appMaster", [], function (oData) { 
-                    console.log(" ApprovalMasters oData " , oData); 
+                    console.log(" appMaster " , that.getModel("appMaster")); 
                 that._createViewBindData(oData); // comapny , plant 조회 
                 that.setRichEditor(oData.approval_contents);
             });
