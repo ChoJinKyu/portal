@@ -58,7 +58,26 @@
                             </uxap:navigationActions>
                         </uxap:ObjectPageDynamicHeaderTitle>
                     </uxap:headerTitle>
-                    <uxap:headerContent></uxap:headerContent>
+                    <uxap:headerContent>
+                        <layout:VerticalLayout>
+                            <FlexBox height="30px" alignItems="Start" justifyContent="Start" visible="{=!${oUi>/createMode}}">
+                                    <Label text="관리조직 :" />
+                                    <Label text="{_oUiData>/tenant_name}" id="label_tenant_name"  class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                                    <Label text="Create :"  class="sapUiLargeMarginBegin" />
+                                    <Label text="{oUiData>/create_user_id}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                                    <Label text="Create Data :" class="sapUiLargeMarginBegin" />
+                                    <Label text="{
+                                        path: 'oUiData>/system_create_dtm',
+                                        type: 'sap.ui.model.type.Date',
+                                        formatOptions: {
+                                            pattern: 'yyyy/MM/dd'
+                                        }                                        
+                                    }"  
+                                    class="sapUiTinyMarginBegin"  
+                                    design="Bold"/>  
+                            </FlexBox>          
+                        </layout:VerticalLayout>  
+                    </uxap:headerContent>
                     <uxap:sections>
                         <uxap:ObjectPageSection
                             id="pageSectionMain"
@@ -205,9 +224,9 @@
                                                                         visible="{oUi>/readMode}"/>
                                                             </VBox>
                                                             <VBox>
-                                                                <Input  value="{mIMaterialCodeText>mi_material_code_name}" 
+                                                                <Input  value="{mIMaterialCodeText>mi_material_name}" 
                                                                         visible="{=!${oUi>/readMode}}"/>
-                                                                <Text   text="{mIMaterialCodeText>mi_material_code_name}"
+                                                                <Text   text="{mIMaterialCodeText>mi_material_name}"
                                                                         visible="{oUi>/readMode}"/>
                                                             </VBox>
                                                         </cells>
@@ -225,16 +244,20 @@
                 <OverflowToolbar id="overflowToolbar">
                     <ToolbarSpacer/>
                         <HBox visible="{oUi>/readMode}">
+                            <Button type="Transparent" text="Cancel" enabled="false"/>                                                
                             <Button type="Transparent" text="Edit" enabled="true" press=".onEdit"/>
                             <Button type="Transparent" text="Delete" enabled="false" />
                             <Button type="Emphasized" text="Save"  enabled="false"  />
                         </HBox>
                         <HBox visible="{oUi>/editMode}">
-                            <Button type="Transparent" text="Show" enabled="true" press=".onRead"/>
+                            <Button type="Transparent" text="Cancel" enabled="true" press=".onCancel"/>                                                
+                            <!-- <Button type="Transparent" text="Show" enabled="true" press=".onRead"/> -->
+                            <Button type="Transparent" text="Edit" enabled="false"/>
                             <Button type="Transparent" text="Delete" enabled="true" press=".onDeleteAction"/>                    
                             <Button type="Emphasized" text="Save"  enabled="true" press=".onSaveAction"/>
                         </HBox>
                         <HBox visible="{oUi>/createMode}">
+                            <Button type="Transparent" text="Cancel" enabled="true" press=".onCancel"/>                                                                        
                             <Button type="Transparent" text="Edit" enabled="false"/>
                             <Button type="Transparent" text="Delete" enabled="false"/>
                             <Button type="Emphasized" text="Save" press=".onSaveAction"/>
