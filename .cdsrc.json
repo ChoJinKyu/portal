@@ -43,7 +43,7 @@
             "db/cds/dp/standardCommon/categoryMgr",
             "db/cds/dp/moldMgt",
             "db/cds/dp/detailSpecEntry",
-            "db/cds/dp/dc/tmc",
+            "db/cds/dp/dc/tc",
             "db/cds/dp/dc/vi",
             "db/cds/dp/util",
             "db/cds/ep",
