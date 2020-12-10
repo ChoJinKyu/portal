@@ -23,7 +23,7 @@ sap.ui.define([
 
     var oTransactionManager;
 
-    return BaseController.extend("cm.userMgr.controller.MidObject", {
+    return BaseController.extend("cm.roleMgr.controller.MidObject", {
 
         dateFormatter: DateFormatter,
 
@@ -38,6 +38,20 @@ sap.ui.define([
     /* =========================================================== */
     /* lifecycle methods                                           */
     /* =========================================================== */
+
+    selectionChange: function (event) {
+      var combo = event.getSource().getParent().getCells()[3].getItems()[0];
+      combo.clearSelection();
+      combo.bindItems({
+        path: 'org>/organization',
+        filters: [
+          new Filter('type', FilterOperator.EQ, event.getSource().getSelectedKey())
+        ],
+        template: new Item({
+          key: "{org>code}", text: "{org>code}"
+        })
+      });
+    },
 
 		/**
 		 * Called when the midObject controller is instantiated.
@@ -143,7 +157,6 @@ sap.ui.define([
     onMidTableAddButtonPress: function () {
         var oTable = this.byId("midTable"),
             oDetailsModel = this.getModel("details");
-
         oDetailsModel.addRecord({
             "tenant_id": "L2100",
             "user_id": this._sUserId,
@@ -302,7 +315,7 @@ sap.ui.define([
      * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
      * @private
      */
-    _onRoutedThisPage: function (oEvent) {  
+    _onRoutedThisPage: function (oEvent) {
       var oArgs = oEvent.getParameter("arguments"),
         oView = this.getView();
       this._sUserId = oArgs.userId;
@@ -332,7 +345,7 @@ sap.ui.define([
             "password": "",
             "local_create_dtm": new Date(),
             "local_update_dtm": new Date()
-        }, "/UserMgr", 0);
+        }, "/roleMgr", 0);
 
 
         var oDetailsModel = this.getModel("details");
@@ -353,7 +366,7 @@ sap.ui.define([
   
         this.getModel("midObjectView").setProperty("/isAddedMode", false);
 
-        this._bindView("/UserMgr('" + this._sUserId + "')");
+        this._bindView("/roleMgr('" + this._sUserId + "')");
         oView.setBusy(true);
 
         var oDetailsModel = this.getModel("details");
@@ -370,7 +383,6 @@ sap.ui.define([
         this._toShowMode();
       }
       oTransactionManager.setServiceModel(this.getModel());
-      
     },
 
     /**
@@ -403,8 +415,6 @@ sap.ui.define([
 
       this.byId("midTableAddButton").setEnabled(!FALSE);
       this.byId("midTableDeleteButton").setEnabled(!FALSE);
-
-      //this._bindMidTable(this.oEditableTemplate, "Edit");
     },
 
     _toShowMode: function () {
@@ -421,9 +431,18 @@ sap.ui.define([
     },
 
     _initTableTemplates: function () {
-        this.getModel("details");
-        this.getModel("roleGroup");
-      
+      this.oReadOnlyTemplate = new ColumnListItem({
+        cells: [
+          new Text({
+            text: "{details>_row_state_}"
+          }),
+          new ObjectIdentifier({
+            text: "{details>role_group_code}"
+          })
+        ],
+        type: sap.m.ListType.Inactive
+      });
+
       this.oEditableTemplate = new ColumnListItem({
         cells: [
           new Text({
@@ -469,7 +488,7 @@ sap.ui.define([
             if (!this._oFragments[sFragmentName]) {
                 Fragment.load({
                     id: this.getView().getId(),
-                    name: "cm.userMgr.view." + sFragmentName,
+                    name: "cm.roleMgr.view." + sFragmentName,
                     controller: this
                 }).then(function (oFragment) {
                     this._oFragments[sFragmentName] = oFragment;
@@ -478,35 +497,9 @@ sap.ui.define([
             } else {
                 if (oHandler) oHandler(this._oFragments[sFragmentName]);
             }
-        },
-
-        searchETenantComboChange: function(oEvent) {
-            this.getModel("org");
-            var combo = this.byId("searchEOrgCombo");
-            combo.bindItems({
-                path: 'org>/Org_Company',
-                filters: [
-                    new Filter('tenant_id', FilterOperator.EQ, oEvent.getSource().getSelectedKey())
-                ],
-                template: new Item({
-                    key: "{org>company_code}", text:"{org>company_code}: {org>company_name}"
-                })
-            });
-        },
-
-        searchTenantComboChange: function(oEvent) {
-            this.getModel("org");
-            var combo = this.byId("searchOrgCombo");
-            combo.bindItems({
-                path: 'org>/Org_Company',
-                filters: [
-                    new Filter('tenant_id', FilterOperator.EQ, oEvent.getSource().getSelectedKey())
-                ],
-                template: new Item({
-                    key: "{org>company_code}", text:"{org>company_code}: {org>company_name}"
-                })
-            });
         }
+
+
 
     });
 });
