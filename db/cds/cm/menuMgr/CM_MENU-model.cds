@@ -6,7 +6,7 @@ using {cm as lng} from './CM_MENU_LNG-model';
 entity Menu {
   key tenant_id         : String(5) not null;
   key menu_code         : String(30) not null;
-  key parent_menu_code  : String(30) not null;
+      parent_menu_code  : String(30);
       chain_code        : String(30) not null;
       menu_desc         : String(300) not null;
       menu_level_number : Decimal not null;
