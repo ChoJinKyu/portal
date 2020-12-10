@@ -174,12 +174,12 @@ sap.ui.define([
 		 * @public
 		 */
         onPageCancelButtonPress: function (oEvent) {
-            // var oModel = this.getModel("appMaster")
-            //     , oData = oModel.oData;
+            var oModel = this.getModel("appMaster")
+                , oData = oModel.oData;
 
-            // this.getRouter().navTo("pssaObject", {
-            //     approval_number: oData.approval_number
-            // }, true)
+            this.getRouter().navTo("pssaObject", {
+                approval_number: oData.approval_number
+            }, true)
         },
 
 		/* =========================================================== */
@@ -635,34 +635,34 @@ sap.ui.define([
             var aItems = oTable.getSelectedItems();
             var that = this;
             aItems.forEach(function (oItem) {
-                console.log(" getSelectedItems >>>", oItem);
-                var famList = [];
-                if (oItem.getCells()[8].getText()) {
-                    famList.push(oItem.getCells()[8].getText()); // family_part_number_1 
-                }
-                if (oItem.getCells()[9].getText()) {
-                    famList.push(oItem.getCells()[9].getText()); // family_part_number_2 
-                }
-                if (oItem.getCells()[10].getText()) {
-                    famList.push(oItem.getCells()[10].getText()); // family_part_number_3 
-                }
-                if (oItem.getCells()[11].getText()) {
-                    famList.push(oItem.getCells()[11].getText()); // family_part_number_4 
-                }
-                if (oItem.getCells()[12].getText()) {
-                    famList.push(oItem.getCells()[12].getText()); // family_part_number_5 
-                }
+                console.log(" getSelectedItems >>>", oItem.getCells()[0].getText());
+                // var famList = [];
+                // if (oItem.getCells()[8].getText()) {
+                //     famList.push(oItem.getCells()[8].getText()); // family_part_number_1 
+                // }
+                // if (oItem.getCells()[9].getText()) {
+                //     famList.push(oItem.getCells()[9].getText()); // family_part_number_2 
+                // }
+                // if (oItem.getCells()[10].getText()) {
+                //     famList.push(oItem.getCells()[10].getText()); // family_part_number_3 
+                // }
+                // if (oItem.getCells()[11].getText()) {
+                //     famList.push(oItem.getCells()[11].getText()); // family_part_number_4 
+                // }
+                // if (oItem.getCells()[12].getText()) {
+                //     famList.push(oItem.getCells()[12].getText()); // family_part_number_5 
+                // }
 
                 var obj = new JSONModel({
-                    mold_id: Number(oItem.getCells()[0].getText())
-                    , model: oItem.getCells()[1].getText()
-                    , mold_number: oItem.getCells()[2].getText()
-                    , mold_sequence: oItem.getCells()[3].getText()
-                    , spec_name: oItem.getCells()[4].getText()
-                    , mold_item_type_code: oItem.getCells()[5].getSelectedKey()
-                    , book_currency_code: oItem.getCells()[6].getText()
-                    , budget_amount: oItem.getCells()[7].getText()
-                    , family_part_number_1: famList.join(",")
+                    // mold_id: Number(oItem.getCells()[0].getText())
+                    // , model: oItem.getCells()[1].getText()
+                    // , mold_number: oItem.getCells()[2].getText()
+                    // , mold_sequence: oItem.getCells()[3].getText()
+                    // , spec_name: oItem.getCells()[4].getText()
+                    // , mold_item_type_code: oItem.getCells()[5].getSelectedKey()
+                    // , book_currency_code: oItem.getCells()[6].getText()
+                    // , budget_amount: oItem.getCells()[7].getText()
+                    // , family_part_number_1: famList.join(",")
                 });
                 that._addPsTable(obj);
             });
@@ -1103,9 +1103,9 @@ sap.ui.define([
         },
 
         onPageDraftButtonPress: function () {
-
             var oView = this.getView();
             MessageBox.confirm("Are you sure ?", {
+                
                 title: "Comfirmation",
                 initialFocus: sap.m.MessageBox.Action.CANCEL,
                 onClose: function (sButton) {
