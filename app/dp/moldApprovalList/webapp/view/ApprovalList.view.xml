@@ -348,7 +348,7 @@
                                 </ComboBox>
                                 <ComboBox
                                         editable="false" 
-                                        class="sapMInputBaseReadonlyWrapper"  
+                                        class="readonlyField"  
                                         selectedKey="{list>org_code}" 
                                         items="{
                                                     path: 'purOrg>/Pur_Operation_Org',

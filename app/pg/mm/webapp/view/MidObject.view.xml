@@ -88,13 +88,14 @@
                                                 <RadioButton id="radioButtonType02" text="공급업체/코드" />
                                             </RadioButtonGroup>  
                                         </FlexBox>       
-                                        <input id="input_material_code" 
+                                        <Input id="input_material_code" 
                                                     required="{oUi>/createMode}"
                                                     fieldGroupIds="requiredField"
                                                     width="100%"
                                                     visible="{oUi>/createMode}"
                                                     class="sapUiSmallMarginBottom"                                                    
                                                     showValueHelp="true" 
+                                                    enabled = "true"
                                                     valueHelpRequest=".handleValueHelpMaterial"/>
                                                                                 
                                         <FlexBox    height="40px" 
@@ -113,7 +114,8 @@
                                                 <Input  id="input_base_quantity"
                                                         required="{oUi>/createMode}"
                                                         fieldGroupIds="requiredField"
-                                                        class="sapUiSmallMarginBottom" 
+                                                        class="sapUiSmallMarginBottom"
+                                                        type = "Number"
                                                         value="{ 
                                                             path : 'oUiData>/base_quantity', 
                                                             type : 'sap.ui.model.type.Number', 
@@ -132,6 +134,7 @@
                                                         required="{oUi>/createMode}"
                                                         fieldGroupIds="requiredField"
                                                         visible="{oUi>/createMode}"
+                                                        type = "Number"
                                                         value="{ 
                                                             path : 'oUiData>/processing_cost', 
                                                             type : 'sap.ui.model.type.Number', 
@@ -149,10 +152,11 @@
                                                         design="Bold"                                                         
                                                         visible="{oUi>/readMode}"
                                                         />
-                                                <!-- 수정대상 보기와 수정이 다르다. 테스트 데이타 확인 필요   -->                                                        
+                                                                                                      
                                                 <ComboBox
                                                     id="comboBox_pcst_currency_unit"                                                     
                                                     items="{/CurrencyUnitView}"
+                                                    required="{= !${oUi>/readMode}}"
                                                     width="100px"
                                                     selectedKey="{oUiData>/pcst_currency_unit}"                                       
                                                     placeholder="선택"
@@ -258,7 +262,8 @@
                                                             <Input  id="imputReqm_quantity" 
                                                                     visible="{oUi>/editMode}"
                                                                     required="true"
-                                                                    fieldGroupIds="requiredField"  
+                                                                    fieldGroupIds="requiredField"
+                                                                    type = "Number"  
                                                                     value="{ path: 'midList>reqm_quantity',
                                                                             type: 'sap.ui.model.type.Number',
                                                                             constraints: {minLength : 1, maxLength : 10} }"/>                                                        

@@ -33,7 +33,7 @@ entity Mm_Unit_Of_Measure_Lng {
     technical_uom_code : String(6)  not null @title: '기술UOM코드' ;	
     commercial_uom_name : String(30)   @title: '상업UOM명' ;	
     technical_uom_name : String(30)   @title: '기술UOM명' ;	
-    uom_description : String(50)   @title: 'UOM설명' ;	
+    uom_desc : String(50)   @title: 'UOM설명' ;	
 }	
 
 extend Mm_Unit_Of_Measure_Lng with util.Managed;

@@ -454,6 +454,12 @@ sap.ui.define([
                 _tempFilters.push(new Filter({ path: "tolower(spec_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
             }
 
+            else if (this._oValueHelpDialog.oRows.sPath.indexOf('/Requestors') > -1) {
+                //PartNumbers
+                _tempFilters.push(new Filter({ path: "tolower(user_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+                _tempFilters.push(new Filter({ path: "tolower(english_employee_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+            }
+
             aFilters.push(new Filter({
                 filters: _tempFilters,
                 and: false
@@ -742,6 +748,7 @@ sap.ui.define([
                 );
             }
 
+
             if (aCompany.length > 0) {
                 var _tempFilters = [];
 
@@ -805,7 +812,7 @@ sap.ui.define([
             }
 
             if (sRequester) {
-                aSearchFilters.push(new Filter("tolower(requestor_empno)", FilterOperator.Contains, "'" + sRequester.toLowerCase() + "'"));
+                aSearchFilters.push(new Filter("tolower(user_id)", FilterOperator.Contains, "'" + sRequester.toLowerCase() + "'"));
             }
 
             if (sSubject) {
