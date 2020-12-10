@@ -31,25 +31,36 @@ sap.ui.define([
 		dateFormatter: DateFormatter,
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< Updated upstream
 =======
 >>>>>>> 4cf5f4b3... db 필드 매핑 수정 pg
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> ca36fa1e9d0ae7f95aada19172b7849dd1a460bd
 		_m : {  //수정대상 등록된 필터값들은 삭제한다. 
             page : "page",
             groupID : "pgGroup",
             tableItem : {
                 items : "items" //or rows
 <<<<<<< HEAD
+<<<<<<< HEAD
             },
 =======
+=======
+>>>>>>> ca36fa1e9d0ae7f95aada19172b7849dd1a460bd
 			},
             serviceName : {
                 marketIntelligenceService : "pg.marketIntelligenceService", //main Service
                 orgTenantView : "/OrgTenantView", //관리조직 View
                 mIMaterialCodeBOMManagement : ",MIMaterialCodeBOMManagement"
             },			
+<<<<<<< HEAD
 >>>>>>> 4cf5f4b3... db 필드 매핑 수정 pg
+=======
+>>>>>>> ca36fa1e9d0ae7f95aada19172b7849dd1a460bd
             tableName : "maindTable",
             filter : {  
                 tenant_id : "",
@@ -73,36 +84,48 @@ sap.ui.define([
 		},
 		
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> Stashed changes
 >>>>>>> 4cf5f4b3... db 필드 매핑 수정 pg
+=======
+>>>>>>> Stashed changes
+>>>>>>> ca36fa1e9d0ae7f95aada19172b7849dd1a460bd
 		/**
 		 * Called when the mainList controller is instantiated.
 		 * @public
 		 */
 		onInit : function () {
-			console.group("onInit");
 			
-			var oUi, oUiData,
+			console.group("onInit");
+
+			var oViewModel,
 				oResourceBundle = this.getResourceBundle();
 
-			//상태 및 모드 설정 oUI
-			//데이타 oUiData
-			oUi = new JSONModel({
+			// Model used to manipulate control states
+			oViewModel = new JSONModel({
 				headerExpanded: true,
-				mainListTableTitle : oResourceBundle.getText("mainListTableTitle")
+				mainListTableTitle : oResourceBundle.getText("mainListTableTitle"),
+				tableNoDataText : oResourceBundle.getText("tableNoDataText")
 			});
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 <<<<<<< Updated upstream
 			this.setModel(oViewModel, "mainListView");
 =======
 >>>>>>> 4cf5f4b3... db 필드 매핑 수정 pg
+=======
+<<<<<<< Updated upstream
+			this.setModel(oViewModel, "mainListView");
+=======
+>>>>>>> ca36fa1e9d0ae7f95aada19172b7849dd1a460bd
 			oUiData = new JSONModel({
 				tenant_id : this._sso.dept.tenant_id
 			});
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 			
 			this.setModel(oUi, "oUi");
@@ -112,6 +135,11 @@ sap.ui.define([
 			this.setModel(oUiData, "oUiData");
 >>>>>>> Stashed changes
 >>>>>>> 4cf5f4b3... db 필드 매핑 수정 pg
+=======
+			this.setModel(oUi, "oUi");
+			this.setModel(oUiData, "oUiData");
+>>>>>>> Stashed changes
+>>>>>>> ca36fa1e9d0ae7f95aada19172b7849dd1a460bd
 		
 			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
@@ -175,22 +203,6 @@ sap.ui.define([
 			console.groupEnd();
 		},
 				
-
-        /**
-         * control object filter 
-         * @private
-         */
-        _fnControlSetting : function() {
-			console.log("_fnControlSetting");
-			// var oUi = this.getModel("oUi");
-			// oUi.setProperty("tenant_id", this._sso.dept.tenant_id);
-            //var select_tenant_id = this.getView().byId("select_tenant_id");            
-			//select_tenant_id.setSelectedKey(this._sso.dept.tenant_id);
-            // var aFiltersComboBox = [
-            //     new Filter("tenant_id", "EQ", this._sso.user.dept.tenant_id)
-            // ];
-            //oBindingComboBox.filter(aFiltersComboBox);  
-        },
 		
 		/**
 		 * SmartTableById
@@ -241,7 +253,6 @@ sap.ui.define([
 			var mBindingParams = oEvent.getParameter("bindingParams");
 			var oSmtFilter = this.getView().byId("smartFilterBar");             //smart filter
 			
-			debugger;
             //combobox value
             var oMi_tenant_id = oSmtFilter.getControlByKey("tenant_id").getSelectedKey();    
 			var oMi_material_code = oSmtFilter.getControlByKey("mi_material_code").getSelectedKey();   
@@ -328,7 +339,7 @@ sap.ui.define([
 			} else {
 				sTitle = this.getResourceBundle().getText("mainListTableTitle");
 			}
-			this.getModel("oUi").setProperty("/mainListTableTitle", sTitle);
+			this.getModel("mainListView").setProperty("/mainListTableTitle", sTitle);
 		},
 
 
@@ -474,7 +485,7 @@ sap.ui.define([
             });
 			
             if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
-                this.getView().getModel('oUi').setProperty("/headerExpandFlag", false);
+                this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
             }
 
 			//var oItem = oEvent.getSource();
@@ -546,7 +557,7 @@ sap.ui.define([
             });
 
             if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
-                this.getView().getModel('oUi').setProperty("/headerExpandFlag", false);
+                this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
             }
 
 			var oItem = oEvent.getSource();
@@ -564,7 +575,7 @@ sap.ui.define([
 		 */
 		_onRoutedThisPage: function(){
 			console.group("_onRoutedThisPage");
-			this.getModel("oUi").setProperty("/headerExpanded", true);
+			this.getModel("mainListView").setProperty("/headerExpanded", true);
 			console.groupEnd();
 		},
 

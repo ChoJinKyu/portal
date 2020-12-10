@@ -1,12 +1,18 @@
 /**
 <<<<<<< HEAD
+<<<<<<< HEAD
  * message box 변경 mi 참고 
 =======
+=======
+>>>>>>> ca36fa1e9d0ae7f95aada19172b7849dd1a460bd
 <<<<<<< Updated upstream
  * 
 =======
 >>>>>>> Stashed changes
+<<<<<<< HEAD
 >>>>>>> 4cf5f4b3... db 필드 매핑 수정 pg
+=======
+>>>>>>> ca36fa1e9d0ae7f95aada19172b7849dd1a460bd
  * _BonSelectedLeftTableItem 임시 제거 
 * 신규 등록 Fragment에서 값 던지고 받기 marteial supply Fragment 동일화면 처리 
 -스크롤 되는부분 테이블만 스크롤 되도록 수정
@@ -437,7 +443,9 @@ sap.ui.define([
          * @param {*} oEvent 
          */
 		onValueHelpMaterialDialogSearch: function (oEvent) {
+
             console.log("_onValueHelpMaterialDialogSearch");
+
             //수정대상 comboBox_vendorView 준비되지 않음(20201206)
             //comboBox_vendorView=this._findFragmentControlId(this._m.materialDialog, "comboBox_vendorView").getSelectedKey(), 
             var oModel = this.getModel(),
@@ -951,12 +959,6 @@ sap.ui.define([
         onMaterialDetailFilter : function (oEvent) {
             console.log("onMaterialDetailFilter");
 
-            if(ValidatorUtil.isValid(this.getView(),"requiredField")){
-                console.log("ValidatorUtil true");
-            } else {
-                console.log("ValidatorUtil false");
-            }
-
             var oModel = this.getOwnerComponent().getModel(),
                 aFilter = [],
                 that = this,
@@ -1056,10 +1058,10 @@ sap.ui.define([
            
             //수정대상 확인 통화 단위 이상함             
             //하기 주석은 사용자 조직 과  자재 관리 마스터 권한에 따라 변경될수 있다. 
-            aFilter.push(new Filter("tenant_id", FilterOperator.Contains, this._sso.dept.tenant_id));
-            aFilter.push(new Filter("company_code", FilterOperator.Contains, this._sso.dept.company_code));
-            aFilter.push(new Filter("org_type_code", FilterOperator.Contains, this._sso.dept.org_type_code));
-            aFilter.push(new Filter("org_code", FilterOperator.Contains, this._sso.dept.org_code));
+            aFilter.push(new Filter("tenant_id", FilterOperator.Contains, this._m.filter.tenant_id));
+            aFilter.push(new Filter("company_code", FilterOperator.Contains, this._m.filter.company_code));
+            aFilter.push(new Filter("org_type_code", FilterOperator.Contains, this._m.filter.org_type_code));
+            aFilter.push(new Filter("org_code", FilterOperator.Contains, this._m.filter.org_code));
             
             //aFilter.push(new Filter("mi_material_code", FilterOperator.Contains, fCode));
             //aFilter.push(new Filter("mi_material_name", FilterOperator.Contains, fName));
@@ -1165,7 +1167,6 @@ sap.ui.define([
                 } 
                 
   
-                input_material_code.setValue(odata.material_code);
                 // input_material_code.addToken([
                 //     new Token({text: odata.material_desc, key: odata.material_code})                   
                 // ]);
@@ -1174,11 +1175,22 @@ sap.ui.define([
                 // if (aSelectedItems && aSelectedItems.length > 0) {
                    
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< Updated upstream
+                    input_material_code.removeAllTokens();
+                    input_material_code.addToken(new Token({
+                        text: odata.material_code,
+                        key: odata.material_description
+                    }));
+=======
+>>>>>>> ca36fa1e9d0ae7f95aada19172b7849dd1a460bd
                     // input_material_code.removeAllTokens();
                     // input_material_code.addToken(new Token({
                     //     text: odata.material_code,
-                    //     key: odata.material_description
+                    //     key: odata.material_desc
                     // }));
+<<<<<<< HEAD
 =======
 <<<<<<< Updated upstream
                     input_material_code.removeAllTokens();
@@ -1194,6 +1206,9 @@ sap.ui.define([
                     // }));
 >>>>>>> Stashed changes
 >>>>>>> 4cf5f4b3... db 필드 매핑 수정 pg
+=======
+>>>>>>> Stashed changes
+>>>>>>> ca36fa1e9d0ae7f95aada19172b7849dd1a460bd
                    
                     // var sData = aTokens.map(function(oToken) {
                     //     return oToken.getKey();
