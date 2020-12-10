@@ -18,12 +18,9 @@ sap.ui.define([
     "sap/m/Label",
     "ext/lib/model/TransactionManager",
     "ext/lib/util/Multilingual",
-    "ext/lib/util/Validator", 
-    "ext/lib/formatter/Formatter", 
-    "dp/util/controller/MoldItemSelection"
+    "ext/lib/util/Validator",
 ], function (BaseController, JSONModel, History, ManagedListModel, ManagedModel, RichTextEditor, DateFormatter, Filter, FilterOperator, Fragment
-    , MessageBox, MessageToast, UploadCollectionParameter, Device, syncStyleClass, ColumnListItem, Label, TransactionManager, Multilingual
-    , Validator, Formatter, MoldItemSelection) {
+    , MessageBox, MessageToast, UploadCollectionParameter, Device, syncStyleClass, ColumnListItem, Label, TransactionManager, Multilingual, Validator) {
     "use strict";
     /**
      * @description 예산집행품의 Create, update 화면 
@@ -33,10 +30,9 @@ sap.ui.define([
     var mainViewName = "beaCreateObjectView";
     var oTransactionManager;
     return BaseController.extend("dp.budgetExecutionApproval.controller.BeaCreateObject", {
-         formatter: Formatter,
+
         dateFormatter: DateFormatter,
-        validator: new Validator(), 
-        moldItemPop: new MoldItemSelection(),
+        validator: new Validator(),
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -217,55 +213,12 @@ sap.ui.define([
                 this._onLoadApprovalRow();
             } else {
                 this.setRichEditor('');
-                this._onCreatePagetData(oArgs);
+                this._createViewBindData(oArgs);
                 this._onLoadApprovalRow();
             }
             this.oSF = this.getView().byId("searchField");
         },
-		/**
-		 * Binds the view to the data path.
-		 * @function
-		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
-		 * @private
-		 */
-        _onCreatePagetData : function (args) {  
-            var d = new Date();
-            this.getModel('appMaster').setProperty('/company_code', args.company_code);
-            this.getModel('appMaster').setProperty('/org_code', args.plant_code); 
-            this.getModel('appMaster').setProperty('/org_type_code', 'AU'); 
-            this.getModel('appMaster').setProperty('/tenant_id', 'L1100' ); 
-            this.getModel('appMaster').setProperty('/chain_code', 'DP' ); 
-            this.getModel('appMaster').setProperty('/approval_type_code', 'B' ); 
-            this.getModel('appMaster').setProperty('/requestor_empno', '888888' ); 
-            this.getModel('appMaster').setProperty('/approval_number', '326857-20E-88847' ); 
-            this.getModel('appMaster').setProperty('/request_date', this._getToday() ); 
-            this.getModel('appMaster').setProperty('/local_create_dtm', new Date() ); 
-            this.getModel('appMaster').setProperty('/local_update_dtm', new Date() ); 
-            this.getModel('appMaster').setProperty('/_state_', "C"); 
-            this.getModel('appMaster').setProperty('/__entity', "/ApprovalMasters(tenant_id='L1100',approval_number='326857-20E-88847')");
-           //  "/ApprovalMasters(tenant_id='L1100',approval_number='" + args.approval_number + "')"
 
-            console.log("appMaster>>>> " , this.getModel("appMaster"));
-
-            oTransactionManager.setServiceModel(this.getModel());
-
-            this._createViewBindData(args);
-        },
-
-        /**
-         * today
-         * @private
-         * @return yyyy-mm-dd
-         */
-        _getToday: function () {
-            var date_ob = new Date();
-            var date = ("0" + date_ob.getDate()).slice(-2);
-            var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
-            var year = date_ob.getFullYear();
-
-            console.log(year + "-" + month + "-" + date);
-            return year + "" + month + "" + date;
-        },
         /**
          * @description 초기 생성시 파라미터를 받고 들어옴 
          * @param {*} args : company , plant   
@@ -274,9 +227,16 @@ sap.ui.define([
             console.log("[ step ] _createViewBindData args ", args);
             /** 초기 데이터 조회 */
             var company_code = args.company_code, plant_code = (args.org_code == undefined ? args.plant_code : args.org_code);
-         
-            this.getModel(mainViewName).setProperty('/editMode', args.org_code != undefined ? true : false ); 
-            
+            var appModel = this.getModel(mainViewName);
+            appModel.setData({
+                company_code: company_code
+                , company_name: ""
+                , plant_code: plant_code
+                , plant_name: ""
+                , editMode: args.org_code != undefined ? true : false
+            });
+
+
             var oModel = this.getModel("company");
 
             oModel.setTransactionModel(this.getModel("org"));
@@ -287,6 +247,7 @@ sap.ui.define([
                     console.log("Org_Company oData>>> ", oData);
                 }
             });
+
 
             var oModel2 = this.getModel("plant");
             oModel2.setTransactionModel(this.getModel("org"));
@@ -308,7 +269,7 @@ sap.ui.define([
 
             this._bindView("/ApprovalMasters(tenant_id='L1100',approval_number='" + args.approval_number + "')"
                 , "appMaster", [], function (oData) { 
-                    console.log(" appMaster " , that.getModel("appMaster")); 
+                    console.log(" ApprovalMasters oData " , oData); 
                 that._createViewBindData(oData); // comapny , plant 조회 
                 that.setRichEditor(oData.approval_contents);
             });
@@ -367,15 +328,21 @@ sap.ui.define([
             var psTable = this.byId("psTable")
                 , psModel = this.getModel("appDetail")
                 , oSelected = psTable.getSelectedIndices()
-               
                 ;
             if (oSelected.length > 0) {
-                oSelected.forEach(function (idx) {
-                    psModel.markRemoved(idx)
+                MessageBox.confirm("삭제 하시겠습니까?", {
+                    title: "Comfirmation",
+                    initialFocus: sap.m.MessageBox.Action.CANCEL,
+                    onClose: function (sButton) {
+                        if (sButton === MessageBox.Action.OK) {
+                            oSelected.forEach(function (idx) {
+                                psModel.markRemoved(idx)
+                            });
+                        };
+                    }.bind(this)
                 });
-                psTable.clearSelection();
 
-                 console.log("psModel" ,  psModel);
+                psTable.clearSelection();
             } else {
                 MessageBox.error("삭제할 목록을 선택해주세요.");
             }
@@ -473,19 +440,6 @@ sap.ui.define([
          * @description : Popup 창 : 품의서 Item for Budget Execution 항목의 Add 버튼 클릭
          */
         handleTableSelectDialogPress: function (oEvent) {
- /**
-  * this.getModel('appMaster').setProperty('/company_code', args.company_code);
-            this.getModel('appMaster').setProperty('/org_code', args.plant_code); 
-  */
-            var oArgs = {
-                company_code : this.getModel('appMaster').oData.company_code , 
-                org_code : this.getModel('appMaster').oData.org_code
-            }
-
-            this.moldItemPop.openMoldItemSelectionPop(this, oEvent, oArgs , function (rData) {
-                console.log("rData >>>> ", rData);
-            });
-  /*
             console.log("[ step ] handleTableSelectDialogPress Item for Budget Execution 항목의 Add 버튼 클릭 ");
 
             var oView = this.getView();
@@ -506,7 +460,7 @@ sap.ui.define([
                 oDialog.open();
                 that.byId("moldItemSelectionSearch").firePress(); // open 하자마자 조회 하여 보여줌 
 
-            }); */ 
+            });
         },
         /**
          * @public 
@@ -670,7 +624,7 @@ sap.ui.define([
         _onLoadApprovalRow: function () {
             var oTable = this.byId("ApprovalTable"),
                 oModel = this.getModel("appList");
-            if (oModel.oData.Approver == undefined || oModel.oData.Approver == null) {
+            if (oModel.oData.undefined == undefined || oModel.oData.undefined == null) {
                 oModel.addRecord({
                     "approve_sequence": "1",
                     "type": "",

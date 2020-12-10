@@ -188,6 +188,13 @@
           "target": [
             "example7"
           ]
+        },        
+        {
+          "pattern": "example8",
+          "name": "example8",
+          "target": [
+            "example8"
+          ]
         }
       ],
       "targets": {
@@ -218,6 +225,10 @@
         "example7": {
           "viewName": "PivotTable",
           "viewId": "example7"
+        },
+        "example8": {
+          "viewName": "NumberFormat",
+          "viewId": "example8"
         },
         "notFound": {
           "viewName": "NotFound",

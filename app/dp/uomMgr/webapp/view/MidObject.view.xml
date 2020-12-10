@@ -155,7 +155,7 @@
 										<Input value="{details>commercial_uom_name}"/>
                                         <Input value="{details>technical_uom_code}"/>
 										<Input value="{details>technical_uom_name}"/>
-                                        <Input value="{details>uom_desc}"/>
+                                        <Input value="{details>uom_description}"/>
 									</cells>
 								</ColumnListItem>
 							</items>

@@ -46,13 +46,6 @@
                 "settings": {
                     "odataVersion": "2.0"
                 }
-            },
-            "roleGroupMgrService": {
-                "uri": "srv-api/odata/v2/cm.RoleGroupMgrService/",
-                "type": "OData",
-                "settings": {
-                    "odataVersion": "2.0"
-                }
             }
         }
     },
@@ -135,16 +128,6 @@
             },
             "timeZoneMgr": {
                 "dataSource": "timeZoneMgrService",
-                "preload": true,
-                "settings": {
-                    "operationMode": "Server",
-                    "groupId": "$direct",
-                    "synchronizationMode": "None",
-                    "autoExpandSelect": true
-                }
-            },
-            "roleGroup": {
-                "dataSource": "roleGroupMgrService",
                 "preload": true,
                 "settings": {
                     "operationMode": "Server",

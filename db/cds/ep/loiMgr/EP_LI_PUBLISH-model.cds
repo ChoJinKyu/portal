@@ -20,11 +20,10 @@ entity Li_Publish {
         offline_flag               : Boolean;
         contract_date              : String(8);
         additional_condition_desc  : String(1000);
-        special_note               : LargeString;	        
         attch_group_number         : String(100);
         approval_number            : String(50);
         buyer_empno                : String(30);
-        purchasing_department_code : String(50);
+        purchasing_department_code : String(30);
         publish_date               : Date;
         remark                     : String(3000);
         org_type_code              : String(2);

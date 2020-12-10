@@ -211,6 +211,9 @@ sap.ui.define([
                     ]
                 }));
             }
+
+            
+            
             return aSearchFilters;
         },
 
@@ -223,6 +226,7 @@ sap.ui.define([
                 hasGrouping: true
             }).activate();
         }
+
 
     });
 });

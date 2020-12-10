@@ -7,7 +7,6 @@ using from './spmd/mdCategory-service.cds';
 // Vendor Pool
 using from './vp/vendorPoolSearchMgr/vendorPoolSearch-service';
 using from './vp/vendorPoolMappingMgr/vendorPoolMapping-service';
-using from './vp/vendorPoolChangeMgr/vendorPoolChange-service';
 
 //Monitor
 using from './monitor/monitor-service';
@@ -16,7 +15,7 @@ using from './monitor/monitor-service';
 using from './mi/marketIntelligence-service';
 
 //Market Intelligence Proceduer
-// using from './mi/miProcedure-service';
+using from './mi/miProcedure-service';
 
 //SAC용 Monitor
 using from './monitor/monitorSac-service';

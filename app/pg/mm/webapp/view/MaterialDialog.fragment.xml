@@ -43,7 +43,7 @@
                                     templateShareable:true}"                     
                             placeholder="선택 하세요.">
                             <core:Item key="{material_code}" text="{material_description}"/>
-                        </ComboBox> 
+                        </ComboBox>
                     </VBox>
                     <VBox visible="{= ${_oUiData>/radioButtonGroup} === 1 }">
                         <Label text="공급업체코드"/>

@@ -31,8 +31,7 @@ entity MI_Category_Hichy_Stru {
         category_name        : String(240)         @title : '카테고리명';
         parent_node_id       : Integer             @title : '상위노드ID';
         parent_category_code : String(40)          @title : '상위카테고리코드';
-        sort_sequence        : String              @title : '정렬순서';
-        find_condition       : String              @title : '검색조건';
+        filter_category_code : String(500)         @title : '필터카테고리코드';
         drillstate           : String(10)          @title : '노드상태';
         use_flag             : Boolean not null    @title : '사용여부';
 }

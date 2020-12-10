@@ -27,7 +27,7 @@ entity Li_Dtl {
         plant_code                      : String(10);
         delivery_request_date           : String(8);
         buyer_empno                     : String(30);
-        purchasing_department_code      : String(50);
+        purchasing_department_code      : String(30);
         loi_selection_number            : String(50);
         loi_publish_number              : String(50);
 

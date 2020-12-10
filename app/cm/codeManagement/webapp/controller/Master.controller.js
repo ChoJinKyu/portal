@@ -7,13 +7,12 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "ext/lib/model/ManagedListModel",
-    "ext/lib/util/ValidatorUtil",
-    "ext/lib/util/ControlUtil"
+    "ext/lib/util/ValidatorUtil"
 ],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (BaseController, JSONModel, MessageToast, MessageBox, LayoutType, Filter, FilterOperator, ManagedListModel, ValidatorUtil, ControlUtil) {
+	function (BaseController, JSONModel, MessageToast, MessageBox, LayoutType, Filter, FilterOperator, ManagedListModel, ValidatorUtil) {
 		"use strict";
 
 		return BaseController.extend("cm.codeManagement.controller.Master", {
@@ -90,8 +89,6 @@ sap.ui.define([
 
                 oViewModel.setProperty("/detail", $.extend(true, {}, oTargetData));
                 oViewModel.setProperty("/detailClone", $.extend(true, {}, oTargetData));
-
-                ControlUtil.scrollToIndexOneColumnMTable(oEvent.getSource());
 
                 var oNavParam = {
                     layout: oNextUIState.layout,

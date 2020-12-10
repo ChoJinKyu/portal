@@ -17,8 +17,7 @@
             <VBox class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginTop" width="500px">
                 <Label text="1. 시황자재 선택"/>
                 <SearchField id="searchField_code" 
-                             width="90%"
-                             required="true" 
+                             width="90%" 
                              search=".onMaterialDetailFilter" 
                              selectOnFocus="false"
                              placeholder="Search Name or Code"

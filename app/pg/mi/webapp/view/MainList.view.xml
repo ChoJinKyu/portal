@@ -17,7 +17,7 @@
 
     <f:DynamicPage
         id="page"
-        headerExpanded="{oUi>/headerExpanded}"
+        headerExpanded="{mainListView>/headerExpanded}"
         toggleHeaderOnTitleClick="true">
         <!-- DynamicPage Title -->
         <f:title>
@@ -52,15 +52,15 @@
                             <smartFilterBar:ControlConfiguration  
                             key="tenant_id" 
                             groupId="_BASIC" 
-                            index="1"                             
+                            index="1" 
                             label="관리조직"
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
-                                    <Select id="select_tenant_id" 
-                                            selectedKey = "{oUiData>/tenant_id}"
-                                            items="{path: '/OrgTenantView', templateShareable:true}">
+                                        <ComboBox id="sf_tenant_id" 
+                                        items="{path: '/OrgTenantView', templateShareable:true}" 
+                                        placeholder="선택하세요.">
                                         <core:Item key="{tenant_id}" text="{tenant_name}"/>
-                                    </Select>
+                                    </ComboBox>
                                 </smartFilterBar:customControl>
                                 
                             </smartFilterBar:ControlConfiguration>
@@ -69,7 +69,7 @@
                             <smartFilterBar:ControlConfiguration  key="mi_material_code" groupId="_BASIC" index="1" label="시황자재코드"
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
-                                        <ComboBox id="combobox_mi_material_code" items="{path: '/MIMatListView', templateShareable:true}" placeholder="선택하세요.">
+                                        <ComboBox id="sf_mi_material_code" items="{path: '/MIMatListView', templateShareable:true}" placeholder="선택하세요.">
                                         <core:Item key="{mi_material_code}" text="{mi_material_code}"/>
                                     </ComboBox>
                                 </smartFilterBar:customControl>
@@ -80,8 +80,9 @@
                             <smartFilterBar:ControlConfiguration key="mi_material_code_name" groupId="_BASIC" index="2" label="시황자재명"  
                             visibleInAdvancedArea="true" >
                                 <smartFilterBar:customControl>
-                                        <Input id="input_mi_material_code_name" placeholder="입력 해주세요."/>
-                                        
+                                        <ComboBox id="sf_mi_material_code_name" items="{path: '/MIMatListView', templateShareable:true}" placeholder="선택하세요.">
+                                        <core:Item key="{mi_material_code_name}" text="{mi_material_code_name}"/>
+                                    </ComboBox>
                                 </smartFilterBar:customControl>
                             </smartFilterBar:ControlConfiguration>
 
@@ -89,7 +90,7 @@
                             <smartFilterBar:ControlConfiguration key="category_code" groupId="_BASIC" index="3" label="Category명" 
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
-                                        <ComboBox id="combobox_category_code" items="{path: '/MICategoryView', templateShareable:true}" placeholder="선택하세요.">
+                                        <ComboBox id="sf_category_code" items="{path: '/MICategoryView', templateShareable:true}" placeholder="선택하세요.">
                                         <core:Item key="{category_code}" text="{category_text}"/>
                                     </ComboBox>
                                 </smartFilterBar:customControl>
@@ -99,7 +100,7 @@
                           <smartFilterBar:ControlConfiguration key="use_flag" groupId="_BASIC" index="4" label="사용여부" 
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
-                                        <ComboBox id="combobox_use_flag" items="{path: '/UseYNView', templateShareable:true}" placeholder="선택하세요.">
+                                        <ComboBox id="sf_use_flag" items="{path: '/UseYNView', templateShareable:true}" placeholder="선택하세요.">
                                         <core:Item key="{code}" text="{code_name}"/>
                                     </ComboBox>
                                 </smartFilterBar:customControl>

@@ -1,27 +1,21 @@
 sap.ui.define([
-    "ext/lib/controller/BaseController",
-    "sap/ui/model/json/JSONModel",
-    "sap/ui/core/routing/History",
-    "ext/lib/formatter/DateFormatter",
-    "sap/ui/model/Filter",
-    "sap/ui/model/FilterOperator",
-    "sap/ui/core/Fragment",
+	"ext/lib/controller/BaseController",
+	"sap/ui/model/json/JSONModel",
+	"sap/ui/core/routing/History",
+	"ext/lib/formatter/DateFormatter",
+	"sap/ui/model/Filter",
+	"sap/ui/model/FilterOperator",
+	"sap/ui/core/Fragment",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-    "ext/lib/model/ManagedListModel",
-    "ext/lib/model/ManagedModel",
-    "ext/lib/model/TransactionManager",
-], function (BaseController, JSONModel, History, DateFormatter, Filter, FilterOperator, Fragment
-    , MessageBox, MessageToast, ManagedListModel, ManagedModel, TransactionManager) {
-    "use strict";
-
+], function (BaseController, JSONModel, History, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
+	"use strict";
     /**
      * @description 입찰대상 협력사 선정 품의화면
      * @date 2020.12.07
      * @author daun.lee 
      */
-    var mainViewName = "pssaObjectView";
-    var oTransactionManager;
+
 	return BaseController.extend("dp.participatingSupplierSelectionApproval.controller.PssaObject", {
 
 		dateFormatter: DateFormatter,
@@ -34,30 +28,18 @@ sap.ui.define([
 		 * Called when the mainObject controller is instantiated.
 		 * @public
 		 */
-		onInit: function () {
-            console.log("BeaObject Controller 호출");
-            // Model used to manipulate control states. The chosen values make sure,
-            // detail page shows busy indication immediately so there is no break in
-            // between the busy indication for loading the view's meta data
-            var oViewModel = new JSONModel({
-                busy: true,
-                delay: 0
-            });
-            this.setModel(oViewModel, mainViewName);
-
-            this.getView().setModel(new ManagedModel(), "appMaster");
-            this.getView().setModel(new ManagedListModel(), "appDetail");
-            this.getView().setModel(new ManagedModel(), "company");
-            this.getView().setModel(new ManagedModel(), "plant");
-
-
-            oTransactionManager = new TransactionManager();
-            oTransactionManager.addDataModel(this.getModel("appMaster"));
-            oTransactionManager.addDataModel(this.getModel("appDetail"));
-
-            this.getRouter().getRoute("pssaObject").attachPatternMatched(this._onObjectMatched, this);
-
-        },
+		onInit : function () { 
+              console.log("PssaObject Controller 호출");
+			// Model used to manipulate control states. The chosen values make sure,
+			// detail page shows busy indication immediately so there is no break in
+			// between the busy indication for loading the view's meta data
+			var oViewModel = new JSONModel({
+					busy : true,
+					delay : 0
+				});
+			this.getRouter().getRoute("pssaObject").attachPatternMatched(this._onObjectMatched, this);
+			this.setModel(oViewModel, "pssaObjectView");
+		},
 
 		/* =========================================================== */
 		/* event handlers                                              */

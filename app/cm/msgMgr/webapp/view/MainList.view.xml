@@ -137,7 +137,7 @@
                     items="{list>/Message}"
                     mode="MultiSelect" 
                     growing="true"
-                    growingThreshold="50"
+                    growingThreshold="100"
                     width="auto">
                 <headerToolbar>
                     <OverflowToolbar>

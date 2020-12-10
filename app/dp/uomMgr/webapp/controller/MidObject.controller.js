@@ -176,7 +176,7 @@ sap.ui.define([
                 "technical_uom_code": "",
                 "commercial_uom_name": "",
                 "technical_uom_name": "",
-                "uom_desc": "",
+                "uom_description": "",
 				"local_create_dtm": new Date(),
 				"local_update_dtm": new Date()
 			}, "/UomLng");
@@ -329,7 +329,7 @@ sap.ui.define([
                     "technical_uom_code": "",
                     "commercial_uom_name": "",
                     "technical_uom_name": "",
-                    "uom_desc": "",
+                    "uom_description": "",
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
 				}, "/UomLng");
@@ -429,7 +429,7 @@ sap.ui.define([
 						text: "{details>technical_uom_name}"
                     }),
                     new Text({
-						text: "{details>uom_desc}"
+						text: "{details>uom_description}"
 					})
 				],
 				type: sap.m.ListType.Inactive
@@ -497,7 +497,7 @@ sap.ui.define([
                     }),
                     new Input({
                         value: {
-                            path: 'details>uom_desc',
+                            path: 'details>uom_description',
                             type: 'sap.ui.model.type.String',
                             constraints: {
                                 maxLength: 50

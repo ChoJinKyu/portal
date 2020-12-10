@@ -89,7 +89,7 @@ sap.ui.define([
 
             var oViewModel = this.getModel("viewModel");
             var oParam = oViewModel.getProperty("/detailClone");
-            oViewModel.setProperty("/detail", $.extend(true, {}, oParam));
+            oViewModel.setProperty("/detail", oParam);
         },
 
         _fnSetCreateData : function(){
@@ -256,7 +256,7 @@ sap.ui.define([
                     // var sLayout = oNextUIState.layout;
                     this._fnMasterSearch();
                     MessageToast.show("Success to save.");
-                    var sLayout = LayoutType.OneColumn;
+                    var sLayout = "OneColumn";
                     this.getRouter().navTo("master", {layout: sLayout});
                 }.bind(this),
                 error: function(){

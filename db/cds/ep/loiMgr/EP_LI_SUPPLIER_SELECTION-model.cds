@@ -15,11 +15,10 @@ entity Li_Supplier_Selection {
 
         loi_selection_title        : String(100);
         loi_selection_status_code  : String(30);
-        special_note               : LargeString;	
         attch_group_number         : String(100);
         approval_number            : String(50);
         buyer_empno                : String(30);
-        purchasing_department_code : String(50);
+        purchasing_department_code : String(30);
         supplier_selection_date    : Date;
         remark                     : String(3000);
         org_type_code              : String(2);

@@ -40,7 +40,7 @@ entity Mm_Material_Org {
     user_item_type_code : String(30)   @title: '사용자품목유형코드' ;	
     purchasing_item_flag : Boolean  default false @title: '구매품목여부' ;	
     purchasing_enable_flag : Boolean default false  @title: '구매가능여부' ;	
-    osp_item_flag : Boolean default false  @title: '외주가공품여부' ;	
+    outside_processing_item_flag : Boolean default false  @title: '외주가공품여부' ;	
     buyer_empno : String(30)   @title: '구매담당자사번' ;	
     eng_item_flag : Boolean default false  @title: '설계품목여부' ;	
 }

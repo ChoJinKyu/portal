@@ -18,11 +18,10 @@ entity Li_Mst {
         loi_request_status_code  : String(30);
         loi_publish_purpose_desc : String(1000);
         investment_review_flag   : Boolean;
-        special_note             : LargeString;	
         attch_group_number       : String(100);
         approval_number          : String(50);
         requestor_empno          : String(30);
-        request_department_code  : String(50);
+        request_department_code  : String(30);
         request_date             : Date;
         org_type_code            : String(2);
         org_code                 : String(10);

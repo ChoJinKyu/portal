@@ -134,29 +134,8 @@
 			<uxap:ObjectPageSection id="pageAttachmentMain" titleUppercase="true" title="Attachment">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
-						<form:SimpleForm>
-                            <VBox>
-                                <!-- File Upload 시작-->
-                                <UploadCollection
-                                    id="UploadCollection"
-                                    maximumFilenameLength="55"
-                                    maximumFileSize="10"
-                                    multiple="true"
-                                    sameFilenameAllowed="true"
-                                    instantUpload="false"
-                                    noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
-                                    change="onChange"
-                                    fileDeleted="onFileDeleted"
-                                    filenameLengthExceed="onFilenameLengthExceed"
-                                    fileSizeExceed="onFileSizeExceed"
-                                    typeMissmatch="onTypeMissmatch"
-                                    uploadComplete="onUploadComplete"
-                                    beforeUploadStarts="onBeforeUploadStarts" />
-                                <layoutData>
-                                    <layout:GridData span="XL12 L12 M12 S12" />
-                                </layoutData>
-                                <!-- File Upload 끝-->
-                            </VBox>
+						<form:SimpleForm editable="false">
+							<Label text="Created by"/>
 						</form:SimpleForm>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>

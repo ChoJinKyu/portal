@@ -17,18 +17,11 @@
     },
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v2/cm.menuMgrService/",
+        "uri": "srv-api/odata/v4/cm.menuMgrService/",
         "type": "OData",
         "settings": {
-          "odataVersion": "2.0",
+          "odataVersion": "4.0",
           "localUri": "localService/metadata.xml"
-        }
-      },
-      "commonUtilService": {
-        "uri": "srv-api/odata/v2/cm.util.CommonService/",
-        "type": "OData",
-        "settings": {
-          "odataVersion": "2.0"
         }
       }
     }
@@ -56,10 +49,10 @@
   "sap.ui5": {
     "flexEnabled": false,
     "rootView": {
-      "viewName": "cm.menuMgr.view.App",
+      "viewName": "cm.menuMgr.view.menuMgr",
       "type": "XML",
       "async": true,
-      "id": "app"
+      "id": "menuMgr"
     },
     "dependencies": {
       "minUI5Version": "1.60.1",
@@ -89,16 +82,6 @@
           "synchronizationMode": "None",
           "autoExpandSelect": true
         }
-      },
-      "util": {
-        "dataSource": "commonUtilService",
-        "preload": true,
-        "settings": {
-          "defaultBindingMode": "TwoWay",
-          "defaultCountMode": "Inline",
-          "refreshAfterChange": false,
-          "useBatch": true
-        }
       }
     },
     "resources": {
@@ -108,54 +91,32 @@
         }
       ]
     },
-    "resourceRoots": {
-      "ext.lib": "../../../lib",
-      "3rd.lib": "../../../node_modules"
-    },
     "routing": {
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
         "async": true,
         "viewPath": "cm.menuMgr.view",
-        "controlId": "fcl",
-        "transition": "slide",
-        "bypassed": {
-          "target": [
-            "notFound"
-          ]
-        }
+        "controlAggregation": "pages",
+        "controlId": "app",
+        "clearControlAggregation": false
       },
       "routes": [
         {
-          "name": "menuMgr",
-          "pattern": ":layout:",
+          "name": "RoutemenuMgr",
+          "pattern": "RoutemenuMgr",
           "target": [
-            "menuMgr"
-          ]
-        },
-        {
-          "name": "midPage",
-          "pattern": "midObject/{layout}/{?query}",
-          "target": [
-            "menuMgr",
-            "midObject"
+            "TargetmenuMgr"
           ]
         }
       ],
       "targets": {
-        "menuMgr": {
-          "viewName": "menuMgr",
-          "controlAggregation": "beginColumnPages"
-        },
-        "midObject": {
-          "viewName": "MidObject",
-          "controlAggregation": "midColumnPages"
-        },
-        "notFound": {
-          "viewName": "NotFound",
-          "viewPath": "ext.lib.view",
-          "viewId": "notFound"
+        "TargetmenuMgr": {
+          "viewType": "XML",
+          "transition": "slide",
+          "clearControlAggregation": false,
+          "viewId": "menuMgr",
+          "viewName": "menuMgr"
         }
       }
     }

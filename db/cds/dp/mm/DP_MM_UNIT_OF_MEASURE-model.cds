@@ -28,7 +28,7 @@ entity Mm_Unit_Of_Measure {
     technical_uom_name : String(30)   @title: '기술UOM명' ;	
     base_unit_flag : Boolean  not null @title: '기본단위여부' ;	
     uom_class_code : String(10)   @title: 'UOM Class Code' ;	
-    uom_desc : String(50)   @title: 'UOM설명' ;	
+    uom_description : String(50)   @title: 'UOM설명' ;	
     decimal_places : Decimal(10,0)   @title: '소수자리수' ;	
     floating_decpoint_index : Decimal(10,0)   @title: '부동소수점지수' ;	
     conversion_numerator : Decimal(10,0)   @title: '환산 분자' ;	

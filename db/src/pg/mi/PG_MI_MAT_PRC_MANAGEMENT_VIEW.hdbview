@@ -1,7 +1,7 @@
 view pg_MI_Mat_Prc_Management_View as
 select
 		main.mi_material_code		as mi_material_code,
-		mat.mi_material_name	    as mi_material_name,
+		mat.mi_material_code_name	as mi_material_code_name,
         main.category_code			as category_code,
         catg.category_name			as category_name,
 		main.currency_unit			as currency_unit,

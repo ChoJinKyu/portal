@@ -1,13 +1,13 @@
 {
     "menus": [
         {
-            "name": "조달 구매",
+            "name": "Exam1",
             "icon": "sap-icon://source-code",
             "subMenus": [
                 {
-                    "name": "PR",
-                    "url": "../op/prMgr/webapp",
-                    "component": "op.prMgr"
+                    "name": "App #1",
+                    "url": "../cm/codeMgr/webapp",
+                    "component": "cm.codeMgr"
                 },
                 {
                     "name": "App #2",
@@ -15,7 +15,7 @@
                     "component": "cm.controlOptionMgr"
                 }
             ]
-        }, 
+        },
         {
             "name": "Exam2",
             "icon": "sap-icon://locate-me",

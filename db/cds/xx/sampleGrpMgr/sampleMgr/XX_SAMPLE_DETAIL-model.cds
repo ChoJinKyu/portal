@@ -1,3 +1,4 @@
+using {xx.Sample_Header as Header} from './XX_SAMPLE_HEADER-model';
 namespace xx;
 
 entity Sample_Detail {

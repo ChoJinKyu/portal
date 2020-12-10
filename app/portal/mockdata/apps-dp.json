@@ -57,9 +57,9 @@
                     "component": "dp.basePriceArl"
                 },
                 {
-                    "name": "Base Price Progress Status",
-                    "url": "../dp/basePriceList/webapp",
-                    "component": "dp.basePriceList"
+                    "name": "(NPD) Base Price Change",
+                    "url": "../dp/basePriceChange/webapp",
+                    "component": "dp.basePriceChange"
                 }
             ]
         }
