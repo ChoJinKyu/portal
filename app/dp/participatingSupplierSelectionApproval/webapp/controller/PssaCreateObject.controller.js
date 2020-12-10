@@ -443,7 +443,7 @@ sap.ui.define([
         onPsSupplier : function(){ 
             
             var psTable = this.byId("psTable")
-                , psModel = this.getModel("createlist") 
+                , psModel = this.getModel("appDetail") 
                 , oSelected = psTable.getSelectedIndices()
             ;
 
@@ -603,31 +603,68 @@ sap.ui.define([
 
             return aSearchFilters;
         },
-
-         /**
-         * @description  Participating Supplier Fragment Apply 버튼 클릭시 
+        /**
+         * @description Mold Item Selection Search Button 누를시 
+         * @param {*} oEvent 
          */
-        onMoldItemSelectionApply : function(oEvent){
+        _applyMoldSelection: function (aSearchFilters) {
+            console.log(" [step] Mold Item Selection Search Button Serch ", aSearchFilters);
+            var oView = this.getView(),
+                oModel = this.getModel("MoldItemSelect");
+
+            console.log(" model >>> ", this.getModel("moldItem"));
+
+            oView.setBusy(true);
+            oModel.setTransactionModel(this.getModel("moldItem"));
+            oModel.read("/MoldItemSelect", {
+                filters: aSearchFilters,
+                success: function (oData) {
+                    console.log(" oData ", oData);
+                    oView.setBusy(false);
+                }
+            });
+            console.log("omdel", oModel);
+        },
+        /**
+        * @description  Participating Supplier Fragment Apply 버튼 클릭시 
+        */
+        onMoldItemSelectionApply: function (oEvent) {
+            console.log(" [step] Participating Supplier Fragment Apply 버튼 클릭시 ", oEvent);
+
             var oTable = this.byId("moldItemSelectTable");
             var aItems = oTable.getSelectedItems();
             var that = this;
-            aItems.forEach(function(oItem){   
-                var obj = new JSONModel({
-                    model : oItem.getCells()[0].getText()
-                    , moldPartNo : oItem.getCells()[1].getText()
-                    , seq : oItem.getCells()[2].getText()
-                    , description : oItem.getCells()[3].getText()
-                });
+            aItems.forEach(function (oItem) {
+                console.log(" getSelectedItems >>>", oItem);
+                var famList = [];
+                if (oItem.getCells()[8].getText()) {
+                    famList.push(oItem.getCells()[8].getText()); // family_part_number_1 
+                }
+                if (oItem.getCells()[9].getText()) {
+                    famList.push(oItem.getCells()[9].getText()); // family_part_number_2 
+                }
+                if (oItem.getCells()[10].getText()) {
+                    famList.push(oItem.getCells()[10].getText()); // family_part_number_3 
+                }
+                if (oItem.getCells()[11].getText()) {
+                    famList.push(oItem.getCells()[11].getText()); // family_part_number_4 
+                }
+                if (oItem.getCells()[12].getText()) {
+                    famList.push(oItem.getCells()[12].getText()); // family_part_number_5 
+                }
 
-                //console.log(oItem);
-                // console.log(" nItem >>>>> getText 1 " ,  oItem.getCells()[0].getText());   
-                // console.log(" nItem >>>>> getText 2 " ,  oItem.getCells()[1].getText());   
-                //console.log(" nItem >>>>> getText 3 " ,  oItem.getCells()[2].getText());   
-                // console.log(" nItem >>>>> obj " ,  obj); 
-                that._addPsTable(obj);  
-                // oItem.getCells().forEach(function(nItem){ 
-                //      console.log(" nItem >>>>> getText " , nItem.getText());    
-                // });     
+                var obj = new JSONModel({
+                    mold_id: Number(oItem.getCells()[0].getText())
+                    , model: oItem.getCells()[1].getText()
+                    , mold_number: oItem.getCells()[2].getText()
+                    , mold_sequence: oItem.getCells()[3].getText()
+                    , spec_name: oItem.getCells()[4].getText()
+                    , mold_item_type_code: oItem.getCells()[5].getSelectedKey()
+                    , book_currency_code: oItem.getCells()[6].getText()
+                    , budget_amount: oItem.getCells()[7].getText()
+                    , family_part_number_1: famList.join(",")
+                });
+                that._addPsTable(obj);
             });
             this.onExit();
         },
@@ -647,24 +684,26 @@ sap.ui.define([
          */
         _addPsTable : function (data){     
             var oTable = this.byId("psTable"),
-                oModel = this.getModel("createlist");
+                oModel = this.getModel("appDetail");
                 console.log(data.oData);
                 oModel.addRecord({
                     "model": data.oData.model,
                     "mold_number": data.oData.moldPartNo,
                     "seq" : data.oData.seq,
                     "description" : data.oData.description,
-                    "moldSupplier1" : "",
-                    "moldSupplier2" : "",
-                    "moldSupplier3" : "",
-                    "moldSupplier4" : "",
-                    "moldSupplier5" : "",
-                    "moldSupplier6" : "",
-                    "moldSupplier7" : "",
-                    "moldSupplier8" : "",
-                    "moldSupplier9" : "",
-                    "moldSupplier10" : "",
-                });
+                    // "moldSupplier1" : "",
+                    // "moldSupplier2" : "",
+                    // "moldSupplier3" : "",
+                    // "moldSupplier4" : "",
+                    // "moldSupplier5" : "",
+                    // "moldSupplier6" : "",
+                    // "moldSupplier7" : "",
+                    // "moldSupplier8" : "",
+                    // "moldSupplier9" : "",
+                    // "moldSupplier10" : "",
+                    "local_create_dtm": new Date(),
+                    "local_update_dtm": new Date()
+                }, "/ApprovalDetails", 0);
         },
 
         /**
@@ -771,9 +810,11 @@ sap.ui.define([
                //  console.log("oItem >>> " , oItem.mAggregations.cells[0].mProperties.text);
                //  console.log("oItem >>> " , oItem.mAggregations.cells[1].mProperties.selectedKey);
                //  console.log("oItem >>> " , oItem.mAggregations.cells[2].mProperties.value);
-               var item = { "no" : oItem.mAggregations.cells[0].mProperties.text ,
-                            "type": oItem.mAggregations.cells[1].mProperties.selectedKey,
-                            "nameDept": oItem.mAggregations.cells[2].mProperties.value, } 
+               var item = {
+                    "no": oItem.mAggregations.cells[0].mProperties.text,
+                    "type": oItem.mAggregations.cells[1].mProperties.selectedKey,
+                    "nameDept": oItem.mAggregations.cells[2].mProperties.value,
+                }
                 oldItems.push(item);
             });
 
@@ -786,57 +827,57 @@ sap.ui.define([
             for(var i = 0 ; i < oldItems.length-1 ; i++){ 
                 if(oldItems.length > 1 && i == 0){ // 첫줄은 bottom 으로 가는 화살표만 , 생성되는 1줄만일 경우는 화살표 없기 때문에 1 보다 큰지 비교 
                     oModel.addRecord({
-                        "no": noCnt,
+                        "approve_sequence": noCnt,
                         "type": oldItems[i].type,
                         "nameDept": oldItems[i].nameDept,
                         "status": "",
-                        "comment": "" ,
-                        "arrowUp": "" ,
-                        "arrowDown": "sap-icon://arrow-bottom" ,
-                        "editMode": false ,
-                        "trashShow" : true
-                    });
-                }else{
-                    oModel.addRecord({ // 중간 꺼는 위아래 화살표 모두 
-                        "no": noCnt,
-                        "type": oldItems[i].type,
-                        "nameDept": oldItems[i].nameDept,
-                        "status": "",
-                        "comment": "" ,
-                        "arrowUp": "sap-icon://arrow-top" ,
-                        "arrowDown": "sap-icon://arrow-bottom" ,
+                        "approve_comment": "",
+                        "arrowUp": "",
+                        "arrowDown": "sap-icon://arrow-bottom",
                         "editMode": false,
-                        "trashShow" : true  
-                    });
+                        "trashShow": true
+                    }, "/Approver");
+                }else{
+                     oModel.addRecord({ // 중간 꺼는 위아래 화살표 모두 
+                        "approve_sequence": noCnt,
+                        "type": oldItems[i].type,
+                        "nameDept": oldItems[i].nameDept,
+                        "status": "",
+                        "approve_comment": "",
+                        "arrowUp": "sap-icon://arrow-top",
+                        "arrowDown": "sap-icon://arrow-bottom",
+                        "editMode": false,
+                        "trashShow": true
+                    },"/Approver");
                 }
                 noCnt++;
             }
 
             /** 신규 데이터를 담는 작업 */
             oModel.addRecord({
-                        "no": noCnt,
-                        "type": oldItems[oldItems.length-1].type, // 마지막에 select 한 내용으로 담음 
-                        "nameDept": obj.oData.moldPartNo,
-                        "status": "",
-                        "comment": "" ,
-                        "arrowUp": noCnt == 1? "":"sap-icon://arrow-top" , // 생성되는 1줄만일 경우는 화살표 없기 때문에 1 보다 큰지 비교
-                        "arrowDown": "" ,
-                        "editMode": false ,
-                        "trashShow" : true 
-                    });
+                "approve_sequence": noCnt,
+                "type": oldItems[oldItems.length - 1].type, // 마지막에 select 한 내용으로 담음 
+                "nameDept": obj.oData.moldPartNo,
+                "status": "",
+                "approve_comment": "",
+                "arrowUp": noCnt == 1 ? "" : "sap-icon://arrow-top", // 생성되는 1줄만일 경우는 화살표 없기 때문에 1 보다 큰지 비교
+                "arrowDown": "",
+                "editMode": false,
+                "trashShow": true
+            },"/Approver");
             /** 마지막 Search 하는 Row 담는 작업 */        
             noCnt++;       
             oModel.addRecord({
-                        "no": noCnt,
-                        "type": "",
-                        "nameDept": "",
-                        "status": "",
-                        "comment": "" ,
-                        "arrowUp": "" ,
-                        "arrowDown": "" ,
-                        "editMode": true ,
-                        "trashShow" : false 
-                    });
+                "approve_sequence": noCnt,
+                "type": "",
+                "nameDept": "",
+                "status": "",
+                "approve_comment": "",
+                "arrowUp": "",
+                "arrowDown": "",
+                "editMode": true,
+                "trashShow": false
+            },"/Approver");
             
         } ,
         onSortUp : function(oParam){
@@ -847,9 +888,11 @@ sap.ui.define([
             var oldItems = [];
             var that = this;
             aItems.forEach(function(oItem){ 
-               var item = { "no" : oItem.mAggregations.cells[0].mProperties.text ,
-                            "type": oItem.mAggregations.cells[1].mProperties.selectedKey,
-                            "nameDept": oItem.mAggregations.cells[2].mProperties.value, } 
+              var item = {
+                    "no": oItem.mAggregations.cells[0].mProperties.text,
+                    "type": oItem.mAggregations.cells[1].mProperties.selectedKey,
+                    "nameDept": oItem.mAggregations.cells[2].mProperties.value,
+                }
                 oldItems.push(item);
             });
             console.log(" btn onSortUp >>> ", oldItems);
@@ -883,7 +926,7 @@ sap.ui.define([
             }  
             
             this.setApprovalData(nArray);
-        } ,
+        },
         onSortDown : function(oParam){
             console.log(" btn onSortDown >>> ", oParam);
        
@@ -892,9 +935,11 @@ sap.ui.define([
             var oldItems = [];
             var that = this;
             aItems.forEach(function(oItem){ 
-               var item = { "no" : oItem.mAggregations.cells[0].mProperties.text ,
-                            "type": oItem.mAggregations.cells[1].mProperties.selectedKey,
-                            "nameDept": oItem.mAggregations.cells[2].mProperties.value, } 
+               var item = {
+                    "no": oItem.mAggregations.cells[0].mProperties.text,
+                    "type": oItem.mAggregations.cells[1].mProperties.selectedKey,
+                    "nameDept": oItem.mAggregations.cells[2].mProperties.value,
+                }
                 oldItems.push(item);
             });
             console.log(" btn onSortUp >>> ", oldItems);
@@ -909,7 +954,7 @@ sap.ui.define([
                         "nameDept": oldItems[i].nameDept,   
                     };
                     reciveData = {
-                        "no": (Number(oldItems[i+1].no)-1)+"" ,
+                        "no": (Number(oldItems[i+1].no)-1) + "" ,
                         "type": oldItems[i+1].type,
                         "nameDept": oldItems[i+1].nameDept,   
                     } 
@@ -929,99 +974,101 @@ sap.ui.define([
             
             this.setApprovalData(nArray);
         },
-        setApprovalRemoveRow : function(oParam){ 
+        setApprovalRemoveRow: function (oParam) {
             var that = this;
             var oView = this.getView();
             MessageBox.confirm("Are you sure ?", { // 삭제라서 컨펌창 띄움 
-				title : "Comfirmation",
-				initialFocus : sap.m.MessageBox.Action.CANCEL,
-				onClose : function(sButton) {
-					if (sButton === MessageBox.Action.OK) {
-						oView.setBusy(true);
-						console.log(" btn remove >>> ", oldItems);
+                title: "Comfirmation",
+                initialFocus: sap.m.MessageBox.Action.CANCEL,
+                onClose: function (sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        oView.setBusy(true);
+                        console.log(" btn remove >>> ", oldItems);
                         var oTable = that.byId("ApprovalTable");
                         var aItems = oTable.getItems();
                         var oldItems = [];
-                       
-                        aItems.forEach(function(oItem){ 
-                        var item = { "no" : oItem.mAggregations.cells[0].mProperties.text ,
-                                        "type": oItem.mAggregations.cells[1].mProperties.selectedKey,
-                                        "nameDept": oItem.mAggregations.cells[2].mProperties.value, } 
+
+                        aItems.forEach(function (oItem) {
+                            var item = {
+                                "no": oItem.mAggregations.cells[0].mProperties.text,
+                                "type": oItem.mAggregations.cells[1].mProperties.selectedKey,
+                                "nameDept": oItem.mAggregations.cells[2].mProperties.value,
+                            }
                             oldItems.push(item);
                         });
                         var nArray = [];
-                        for(var i = 0 ; i < oldItems.length -1 ; i++){
-                            if(oParam != oldItems[i].no){
-                            nArray.push(oldItems[i]);
+                        for (var i = 0; i < oldItems.length - 1; i++) {
+                            if (oParam != oldItems[i].no) {
+                                nArray.push(oldItems[i]);
                             }
                         }
                         that.setApprovalData(nArray);
                         oView.setBusy(false);
-                         MessageToast.show("Success to delete.");
-					};
-				}
-			});
-        }, 
-        setApprovalData : function(dataList){ 
-            console.log("dataList " , dataList);
-            this.getView().setModel(new ManagedListModel(),"appList"); // oldItems 에 기존 데이터를 담아 놓고 나서 다시 모델을 리셋해서 다시 담는 작업을 함 
+                        MessageToast.show("Success to delete.");
+                    };
+                }
+            });
+        },
+        setApprovalData: function (dataList) {
+            console.log("dataList ", dataList);
+            this.getView().setModel(new ManagedListModel(), "appList"); // oldItems 에 기존 데이터를 담아 놓고 나서 다시 모델을 리셋해서 다시 담는 작업을 함 
             var oModel = this.getModel("appList");
             var noCnt = 1;
-            for(var i = 0 ; i < dataList.length ; i++){ 
-                if(dataList.length > 0 && i == 0){ // 첫줄은 bottom 으로 가는 화살표만 , 생성되는 1줄만일 경우는 화살표 없기 때문에 1 보다 큰지 비교 
+            for (var i = 0; i < dataList.length; i++) {
+                if (dataList.length > 0 && i == 0) { // 첫줄은 bottom 으로 가는 화살표만 , 생성되는 1줄만일 경우는 화살표 없기 때문에 1 보다 큰지 비교 
                     oModel.addRecord({
-                        "no": noCnt,
+                        "approve_sequence": noCnt,
                         "type": dataList[i].type,
                         "nameDept": dataList[i].nameDept,
                         "status": "",
-                        "comment": "" ,
-                        "arrowUp": "" ,
-                        "arrowDown": "sap-icon://arrow-bottom" ,
-                        "editMode": false ,
-                        "trashShow" : true
-                    });
-                }else if(i == dataList.length-1){
+                        "approve_comment": "",
+                        "arrowUp": "",
+                        "arrowDown": "sap-icon://arrow-bottom",
+                        "editMode": false,
+                        "trashShow": true
+                    },"/Approver");
+                } else if (i == dataList.length - 1) {
                     oModel.addRecord({ // 마지막 꺼는 밑으로 가는거 없음  
-                        "no": noCnt,
+                        "approve_sequence": noCnt,
                         "type": dataList[i].type,
                         "nameDept": dataList[i].nameDept,
                         "status": "",
-                        "comment": "" ,
-                        "arrowUp": "sap-icon://arrow-top" ,
-                        "arrowDown": "" ,
+                        "approve_comment": "",
+                        "arrowUp": "sap-icon://arrow-top",
+                        "arrowDown": "",
                         "editMode": false,
-                        "trashShow" : true  
-                    });
-                
-                }else{
+                        "trashShow": true
+                    },"/Approver");
+
+                } else {
                     oModel.addRecord({ // 중간 꺼는 위아래 화살표 모두 
-                        "no": noCnt,
+                        "approve_sequence": noCnt,
                         "type": dataList[i].type,
                         "nameDept": dataList[i].nameDept,
                         "status": "",
-                        "comment": "" ,
-                        "arrowUp": "sap-icon://arrow-top" ,
-                        "arrowDown": "sap-icon://arrow-bottom" ,
+                        "approve_comment": "",
+                        "arrowUp": "sap-icon://arrow-top",
+                        "arrowDown": "sap-icon://arrow-bottom",
                         "editMode": false,
-                        "trashShow" : true  
-                    });
+                        "trashShow": true
+                    },"/Approver");
                 }
                 noCnt++;
             }
 
-             /** 마지막 Search 하는 Row 담는 작업 */            
+              /** 마지막 Search 하는 Row 담는 작업 */
             oModel.addRecord({
-                        "no": noCnt,
-                        "type": "",
-                        "nameDept": "",
-                        "status": "",
-                        "comment": "" ,
-                        "arrowUp": "" ,
-                        "arrowDown": "" ,
-                        "editMode": true ,
-                        "trashShow" : false 
-                    });
-        } , 
+                "approve_sequence": noCnt,
+                "type": "",
+                "nameDept": "",
+                "status": "",
+                "approve_comment": "",
+                "arrowUp": "",
+                "arrowDown": "",
+                "editMode": true,
+                "trashShow": false
+            },"/Approver");
+        },
 
 	    handleSelectionChangeReferrer: function(oEvent) { // Referrer 
 			var changedItem = oEvent.getParameter("changedItem");
@@ -1055,30 +1102,25 @@ sap.ui.define([
 			});
         },
 
-        onPageDraftButtonPress: function(){
-            var oView = this.getView(),
-                mstModel = this.getModel("appMaster"),
-                dtlModel = this.getModel("appDetail");
-				
-			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
-				title : "Comfirmation",
-				initialFocus : sap.m.MessageBox.Action.CANCEL,
-				onClose : function(sButton) {
-					if (sButton === MessageBox.Action.OK) {
-                        oView.setBusy(true);
-                        console.log(mstModel.oData);
-                        console.log(dtlModel.getData().ApprovalDetails);
-						oTransactionManager.submit({
-							success: function(ok){
-								oView.setBusy(false);
-								MessageToast.show("Success to save.");
-							}
-						});
-					}
-				}
-			});
+        onPageDraftButtonPress: function () {
 
-		}
+            var oView = this.getView();
+            MessageBox.confirm("Are you sure ?", {
+                title: "Comfirmation",
+                initialFocus: sap.m.MessageBox.Action.CANCEL,
+                onClose: function (sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        oView.setBusy(true);
+                        oTransactionManager.submit({
+                            success: function (ok) {
+                                oView.setBusy(false);
+                                MessageToast.show("Success to save.");
+                            }
+                        });
+                    };
+                }
+            });
+        },
 
 	});
 });
