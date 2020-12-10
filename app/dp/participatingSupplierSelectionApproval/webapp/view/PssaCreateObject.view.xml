@@ -461,8 +461,9 @@
 			<OverflowToolbar>
 				<ToolbarSpacer />
 				<Button type="Transparent" text="Draft" press=".onPageDraftButtonPress" />
-				<Button type="Transparent" text="Preview" press=".onPageSaveButtonPress" />
+				<!-- <Button type="Transparent" text="Preview" press=".onPageSaveButtonPress" /> -->
 				<!-- <Button type="Transparent" text="Delete" press=".onPageSaveButtonPress" /> -->
+                <Button type="Transparent" text="Cancel" visible="{=${beaCreateObjectView>/editMode}?true:false}" press=".onPageCancelButtonPress" /> 
 				<Button type="Emphasized" text="Request" press=".onPageCancelEditButtonPress"/>
 			</OverflowToolbar>
 		</uxap:footer>
