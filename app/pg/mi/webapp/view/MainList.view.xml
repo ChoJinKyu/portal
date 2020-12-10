@@ -148,7 +148,7 @@
                             <ToolbarSpacer/>
                             <Button text="Create" id="buttonMainTableCreate" type="Transparent" press=".onMainTableCreate"/>                            
                             <!-- <Button text="Copy" id="buttonMainTableCopy"  type="Transparent" enabled="false" press=".onMainTableCopy"/> -->
-                            <!-- <Button text="Delete" id="buttonMainTableDelete" type="Transparent" enabled="false" press=".onMainTableDelete"/> -->
+                            <Button text="Delete" id="buttonMainTableDelete" type="Transparent" enabled="false" press=".onMainTableDelete"/>
                             <OverflowToolbarButton
                                 icon="sap-icon://sort"
                                 tooltip="Sort"
