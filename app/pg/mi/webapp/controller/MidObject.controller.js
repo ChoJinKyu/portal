@@ -397,6 +397,29 @@ sap.ui.define([
             oBindingComboBox.filter(aFiltersComboBox);  
         },
 
+
+        
+        /**
+         * jsoon model data null initial
+         * @private
+         */
+        _initialModel : function() {
+            var mIMaterialCodeText = this.getOwnerComponent().getModel("mIMaterialCodeText"),
+                oUiData =  this.getOwnerComponent().getModel("oUiData"),
+                _oUiData =  this.getOwnerComponent().getModel("_oUiData"),
+                languageView =  this.getOwnerComponent().getModel("languageView"),
+                mICategoryHierarchyStructure =  this.getOwnerComponent().getModel("mICategoryHierarchyStructure"),
+                oUi =  this.getOwnerComponent().getModel("oUi");
+                  
+            if(mIMaterialCodeText){midmIMaterialCodeTextList.setData(null);mIMaterialCodeText.updateBindings(true);}
+            if(oUiData){oUiData.setData(null);oUiData.updateBindings(true);}
+            if(_oUiData){_oUiData.setData(null);_oUiData.updateBindings(true);}        
+            if(languageView){languageView.setData(null);languageView.updateBindings(true);}  
+            if(mICategoryHierarchyStructure){lanmICategoryHierarchyStructureguageView.setData(null);mICategoryHierarchyStructure.updateBindings(true);}          
+            if(oUi){oUi.setData(null);oUi.updateBindings(true);}
+        },
+
+
 		/**
 		 * When it routed to this page from the other page.
 		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'

@@ -37,13 +37,11 @@ sap.ui.define([
             groupID : "pgGroup",
             fragementPath : {
                 materialDetail : "pg.mm.view.MaterialDetail",
-                materialDialog : "pg.mm.view.MaterialDialog",
-                supplierDialog : "pg.mm.view.SupplierDialog"
+                materialDialog : "pg.mm.view.MaterialDialog"
             },            
             fragementId : {
                 materialDetail : "MaterialDetail_ID",
-                materialDialog : "MaterialDialog_ID",
-                supplierDialog : "SupplierDialog_ID"
+                materialDialog : "MaterialDialog_ID"
             },
             input : {
                 input_material_code : "input_material_code",
@@ -76,8 +74,8 @@ sap.ui.define([
                 currencyUnitView : "/CurrencyUnitView아 ㄴ", //통화단위 View
                 mIMaterialCodeList : "/MIMaterialCodeList", //자재코드 View(검색)
                 unitOfMeasureView : "/UnitOfMeasureView", //수량단위 View
-                enrollmentMaterialView : "/EnrollmentMaterialView", //서비스 안됨 자재코드  등록View
-                enrollmentSupplierView : "/EnrollmentSupplierView", //공급업체  등록View
+                materialView : "/MaterialView", //서비스 안됨 자재코드  등록View
+                supplierView : "/SupplierView", //공급업체  등록View
                 mIMaterialCostInformationView : "/MIMaterialCostInformationView" //시황자재>가격정보 검색 리스트
             },
             jsonTestData : {
@@ -147,7 +145,9 @@ sap.ui.define([
          * @private
          */
         _controlMode : function (sMode) {
-            
+            console.log(" --------------- _controlMode");
+
+
             if(sMode == this._m.controlMode.Dev){
                 console.log("=================== Dev ====================")
                 /**
@@ -172,14 +172,9 @@ sap.ui.define([
                 
                 this.setModel(_oUiData, "_oUiData");
 
-                this.test_onRoutedThisPage(); 
 
             }else{
-                var _oUiData = new JSONModel({
-                    tenant_name: "",
-                    input_material_code : ""
-                });
-
+                var _oUiData = new JSONModel({tenant_name: "",radioButtonGroup:0});
                 
                 this.setModel(_oUiData, "_oUiData");
                                 
@@ -424,12 +419,12 @@ sap.ui.define([
                     sFilters.push(new Filter("material_desc", FilterOperator.Contains, input_material_desc));
                 }
 
-                oModel.read(this._m.serviceName.enrollmentMaterialView, {
+                oModel.read(this._m.serviceName.materialView, {
                     async: false,
                     filters: sFilters,
                     success: function (rData, reponse) {
     
-                        //console.log(that._m.serviceName.enrollmentMaterialView +"-- json oData~~~~~~~" + JSON.stringify(reponse.data.results));
+                        //console.log(that._m.serviceName.materialView +"-- json oData~~~~~~~" + JSON.stringify(reponse.data.results));
 
                         //가격정보 Vendor 자재코드 자재명 공급업체 공급업체명
                         oMaterialTableList.setData(reponse.data.results); 
@@ -453,12 +448,12 @@ sap.ui.define([
                     sFilters.push(new Filter("supplier_local_name", FilterOperator.Contains, input_supplier_local_name));
                 }
 
-                oModel.read(this._m.serviceName.enrollmentSupplierView, {
+                oModel.read(this._m.serviceName.supplierView, {
                     async: false,
                     filters: sFilters,
                     success: function (rData, reponse) {
     
-                        console.log(that._m.serviceName.enrollmentSupplierView + "--json oData~~~~~~~" + JSON.stringify(reponse.data));
+                        console.log(that._m.serviceName.supplierView + "--json oData~~~~~~~" + JSON.stringify(reponse.data));
                         //var oData = reponse.data.results[0];
     
                     }
@@ -593,67 +588,6 @@ sap.ui.define([
         /* internal methods                                            */
         /* =========================================================== */
 
-        test_onRoutedThisPage : function() {
-            console.group("TEST[test_onRoutedThisPage]  _onRoutedThisPage");
-            /*
-            tenant_name 이름을 가져오기위한 필터 master 페이지에서 전달 받은 파라메터를 할당한다. 
-            수정대상 : 파라메터 전달 전 개별 페이지로 테스트
-            oArgs = oEvent.getParameter("arguments")
-            수정모드와 신규 모드 모두  
-            선택할수 있는 콤보박스 노출과 저장시
-            */
-            var _oUiData = this.getModel("_oUiData"),
-                oModel = this.getOwnerComponent().getModel(),
-                oTenant_id;
-
-            this._m.filter.material_code = "new";
-
-            if (this._m.filter.material_code == "new") {
-
-                console.log("=============== new item ===============");
-                //신규라면 
-                this._fnSetCreateMode();
-
-                //수정사항 파라메터로 전달받은 값을 할당한다.        
-                //oUiData.tenant_id =  oTenant_id;
-                //this._m.filter.tenant_id
-
-            }else{
-
-                this._onMidServiceRead();
-
-                if(this._m.filter.material_code.length>0){
-                //보기 모드(수정화면 진입전 보기화면을 반드시 거쳐야 한다.)
-                    this._fnSetReadMode();
-                }
-                else {
-                    this._fnSetEditMode();
-                }
-            } 
-            
-            //자재정보 MIMaterialCodeBOMManagement Read
-
-            //관리조직 이름 
-            var bFilters = [
-                new Filter("tenant_id", FilterOperator.EQ, this._sso.dept.tenant_id)
-            ];
-
-            oModel.read(this._m.serviceName.orgTenantView, {
-                async: false,
-                filters: bFilters,
-                success: function (rData, reponse) {
-                   // console.log("json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
-                    if(reponse.data.results.length>0){
-                        _oUiData.setProperty("/tenant_name", reponse.data.results[0].tenant_name );
-                    }
-                }
-            });
-
-            //this.getView().setBusy(false);
-            
-            console.groupEnd();            
-        },
-
         /**
          * 자재정보 MIMaterialCodeBOMManagement Read
          * @private
@@ -715,6 +649,36 @@ sap.ui.define([
 
         },     
 
+        /**
+         * jsoon model data null initial
+         * @private
+         */
+        _initialModel : function() {
+            var midList = this.getOwnerComponent().getModel("midList"),
+                oUiData =  this.getOwnerComponent().getModel("oUiData"),
+                _oUi =  this.getOwnerComponent().getModel("_oUi"),
+                oUi =  this.getOwnerComponent().getModel("oUi");
+    
+            if(midList){
+                midList.setData(null);
+                midList.updateBindings(true);
+            }
+
+            if(oUiData){
+                oUiData.setData(null);
+                oUiData.updateBindings(true);
+            }
+            
+            if(_oUi){
+                _oUi.setData(null);
+                _oUi.updateBindings(true);
+            }           
+
+            if(oUi){
+                oUi.setData(null);
+                oUi.updateBindings(true);
+            }
+        },
 		/**
 		 * When it routed to this page from the other page.
 		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
@@ -722,7 +686,11 @@ sap.ui.define([
 		 */
         _onRoutedThisPage: function (oEvent) {
             console.log("_onRoutedThisPage");
-            var _oUiData = this.getModel("oUiData"),
+
+
+            this._initialModel();
+
+            var _oUiData = this.getModel("_oUiData"),
                 oArgs = oEvent.getParameter("arguments"),
                 oModel = this.getOwnerComponent().getModel(),
                 oTenant_id;
@@ -747,10 +715,11 @@ sap.ui.define([
 
             }else{
 
-                this._onMidServiceRead();
+                
 
                 if(this._m.filter.material_code.length>0){
                 //보기 모드(수정화면 진입전 보기화면을 반드시 거쳐야 한다.)
+                    this._onMidServiceRead();
                     this._fnSetReadMode();
                 }
                 else {
@@ -865,6 +834,14 @@ sap.ui.define([
                     return;
                 }
                
+
+
+                var midList = this.getOwnerComponent().getModel("midList"); 
+    
+                if(midList){
+                    midList.setData(null);
+                    midList.updateBindings(true);
+                }
 
                 this._formFragments[sPropertyName].destroy();
                 this._formFragments[sPropertyName] = null;

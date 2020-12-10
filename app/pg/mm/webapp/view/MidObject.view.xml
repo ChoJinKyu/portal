@@ -96,6 +96,7 @@
                                                     class="sapUiSmallMarginBottom"                                                    
                                                     showValueHelp="true" 
                                                     enabled = "true"
+                                                    placeholder="선택해주세요"
                                                     valueHelpRequest=".handleValueHelpMaterial"/>
                                                                                 
                                         <FlexBox    height="40px" 
@@ -110,23 +111,20 @@
                                                 <Label  text="기준수량:" required="{oUi>/createMode}" class="sapUiTinyMarginBottom"/>                                               
                                                 <Label  text="{oUiData>/base_quantity}" textAlign="Center"
                                                         visible="{=!${oUi>/createMode}}"
+                                                        type="Number"
                                                         design="Bold"/>
                                                 <Input  id="input_base_quantity"
                                                         required="{oUi>/createMode}"
                                                         fieldGroupIds="requiredField"
                                                         class="sapUiSmallMarginBottom"
                                                         type = "Number"
-                                                        value="{ 
-                                                            path : 'oUiData>/base_quantity', 
-                                                            type : 'sap.ui.model.type.Number', 
-                                                            constraints : { 
-                                                                minLength : 1, 
-                                                                maxLength : 15 
-                                                        }}"                                                        
+                                                        placeholder="Number"                                                                                                
                                                         visible="{oUi>/createMode}"/>       
                                             </layout:VerticalLayout>  
                                             <layout:VerticalLayout class="sapUiTinyMarginBottom sapUiLargeMarginBegin sapUiLargeMarginEnd">
-                                                <Label  text="가공비:" required="{oUi>/createMode}" class="sapUiTinyMarginBottom"/>
+                                                <Label  text="가공비:" 
+                                                required="{oUi>/createMode}" 
+                                                class="sapUiTinyMarginBottom"/>
                                                 <Label  text="{oUiData>/processing_cost}" design="Bold"
                                                         visible="{=!${oUi>/createMode}}" 
                                                         class="sapUiLargeMarginEnd"/>
@@ -135,13 +133,7 @@
                                                         fieldGroupIds="requiredField"
                                                         visible="{oUi>/createMode}"
                                                         type = "Number"
-                                                        value="{ 
-                                                            path : 'oUiData>/processing_cost', 
-                                                            type : 'sap.ui.model.type.Number', 
-                                                            constraints : { 
-                                                                minLength : 1, 
-                                                                maxLength : 15 
-                                                        }}"                                                           
+                                                        placeholder="Number"                                                                                                               
                                                 />
                                             </layout:VerticalLayout>                                          
                                             <layout:VerticalLayout class="sapUiLargeMarginBegin sapUiLargeMarginBottom" >

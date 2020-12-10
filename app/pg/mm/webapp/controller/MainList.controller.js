@@ -286,7 +286,7 @@ sap.ui.define([
 
 			
             if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
-                this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
+                this.getView().getModel('oUi').setProperty("/headerExpandFlag", false);
             }
 
 			//var oItem = oEvent.getSource();
@@ -354,7 +354,7 @@ sap.ui.define([
 
 
             if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
-                this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
+                this.getView().getModel('oUi').setProperty("/headerExpandFlag", false);
             }
 
 			var oItem = oEvent.getSource();
@@ -372,7 +372,7 @@ sap.ui.define([
 		 */
 		_onRoutedThisPage: function(){
 			console.group("_onRoutedThisPage");
-			this.getModel("mainListView").setProperty("/headerExpanded", true);
+			this.getModel("oUi").setProperty("/headerExpanded", true);
 			console.groupEnd();
 		},
 
