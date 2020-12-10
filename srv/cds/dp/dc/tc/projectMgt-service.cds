@@ -5,7 +5,7 @@ using {dp as pjtSimilarModel} from '../../../../../db/cds/dp/dc/tc/DP_TC_PROJECT
 
 namespace dp;
 
-@path : '/dp.ProjectMgrService'
+@path : '/dp.ProjectMgtService'
 service ProjectMgrService {
     entity Project as projection on dp.Tc_Project;
     entity ProjectEvent as projection on dp.Tc_Project_Event;
