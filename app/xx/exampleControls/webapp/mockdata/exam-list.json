@@ -25,6 +25,11 @@
         "viewName": "example5"
     },
     {
+        "name": "Excel Utils",
+        "icon": "sap-icon://source-code",
+        "viewName": "example6"
+    },
+    {
         "name": "Dynamic Column Table likes Pivot",
         "icon": "sap-icon://source-code",
         "viewName": "example7"
