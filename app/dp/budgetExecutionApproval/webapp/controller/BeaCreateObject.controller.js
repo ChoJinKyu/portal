@@ -469,15 +469,13 @@ sap.ui.define([
             var oUploadCollection = this.byId("UploadCollection");
             oUploadCollection.setShowSeparators(oEvent.getParameters().selectedItem.getProperty("key"));
         },
+
         /**
-         * @description : Popup 창 : 품의서 Item for Budget Execution 항목의 Add 버튼 클릭
+         * 
+         * @description moldItemSelect 공통팝업  
          */
-        handleTableSelectDialogPress: function (oEvent) {
- /**
-  * this.getModel('appMaster').setProperty('/company_code', args.company_code);
-            this.getModel('appMaster').setProperty('/org_code', args.plant_code); 
-  */
-            var oArgs = {
+        onMoldItemPopPress : function (oEvent){
+             var oArgs = {
                 company_code : this.getModel('appMaster').oData.company_code , 
                 org_code : this.getModel('appMaster').oData.org_code
             }
@@ -485,7 +483,12 @@ sap.ui.define([
             this.moldItemPop.openMoldItemSelectionPop(this, oEvent, oArgs , function (rData) {
                 console.log("rData >>>> ", rData);
             });
-  /*
+        },
+        /**
+         * @description : Popup 창 : 품의서 Item for Budget Execution 항목의 Add 버튼 클릭
+         */
+        handleTableSelectDialogPress: function (oEvent) {
+  
             console.log("[ step ] handleTableSelectDialogPress Item for Budget Execution 항목의 Add 버튼 클릭 ");
 
             var oView = this.getView();
@@ -506,7 +509,7 @@ sap.ui.define([
                 oDialog.open();
                 that.byId("moldItemSelectionSearch").firePress(); // open 하자마자 조회 하여 보여줌 
 
-            }); */ 
+            }); 
         },
         /**
          * @public 
