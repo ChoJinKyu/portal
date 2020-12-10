@@ -30,7 +30,7 @@ sap.ui.define([
 						currency: "USD"
 					},
 					exchangeRate: 0.85654,
-					amount: 1234154.72
+					amount: 12345154.72
 				},
 				{
 					expense: "Hotel",
