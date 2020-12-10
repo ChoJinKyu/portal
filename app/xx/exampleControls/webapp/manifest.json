@@ -188,7 +188,6 @@
           "target": [
             "example7"
           ]
-<<<<<<< HEAD
         },        
         {
           "pattern": "example8",
@@ -196,8 +195,6 @@
           "target": [
             "example8"
           ]
-=======
->>>>>>> 470c7fcd4c2a1506a7872ba50ce4a246613ea89a
         }
       ],
       "targets": {
