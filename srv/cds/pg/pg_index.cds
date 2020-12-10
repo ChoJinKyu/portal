@@ -7,6 +7,7 @@ using from './spmd/mdCategory-service.cds';
 // Vendor Pool
 using from './vp/vendorPoolSearchMgr/vendorPoolSearch-service';
 using from './vp/vendorPoolMappingMgr/vendorPoolMapping-service';
+using from './vp/vendorPoolChangeMgr/vendorPoolChange-service';
 
 //Monitor
 using from './monitor/monitor-service';
