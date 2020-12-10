@@ -103,11 +103,12 @@
                                                 visible="{oUi>/createMode}"
                                                 required="{oUi>/createMode}"
                                         />
+                                        <!--사용하지 않음-->
                                         <Button
                                             id="buttonMaterialCheck"
                                             width="8em"
                                             text="중복Check"
-                                            visible="{oUi>/createMode}"
+                                            visible="false"
                                             press=".onMaterialCodeCheck"/> 
 
                                         <Label  text="Category 명" 

@@ -1796,8 +1796,9 @@ sap.ui.define([
          * @private
          */
         _handleDeleteSuccess: function (oData) {
-            MessageBox.error("삭제가 성공 하였습니다.");
-
+            
+            this._showMessageToast("삭제가 성공 하였습니다.");
+            
             var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
             this._onExit();
             this.getRouter().navTo("mainPage", { layout: sNextLayout });
