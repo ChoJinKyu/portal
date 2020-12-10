@@ -19,9 +19,9 @@
 using { dp as uomClass } from '../../../../../db/cds/dp/mm/DP_MM_UOM_CLASS-model';
 using { dp as uomClassLng } from '../../../../../db/cds/dp/mm/DP_MM_UOM_CLASS_LNG-model';
 namespace dp;
-@path : '/dp.UomClassMgtService'
+@path : '/dp.UomClassMgrService'
 
-service UomClassMgtService {
+service UomClassMgrService {
     view UomClassView(language_code: String) as
     select m.tenant_id
           ,m.uom_class_code

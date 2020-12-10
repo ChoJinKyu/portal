@@ -12,19 +12,18 @@
   
   5. namespace : db
   6. service : uomClass
-  7. service description : UOM 서비스
+  7. service description : UOM 클래스 서비스
   8. history
   -. 2020.11.24 : 최미희 최초작성
 *************************************************/
-
-using { dp as uom } from '../../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE-model';
-using { dp as uomLng } from '../../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE_LNG-model';
+using { dp as Class } from '../../../../../db/cds/dp/mm/DP_MM_UOM_CLASS-model';
+using { dp as ClassLng } from '../../../../../db/cds/dp/mm/DP_MM_UOM_CLASS_LNG-model';
 namespace dp;
-@path : '/dp.UomMgtService'
+@path : '/dp.UomClassMgrService'
 
-service UomMgtService {
+service UomClassMgrService {
 
-    entity Uom as projection on uom.Mm_Unit_Of_Measure;
-    entity UomLng as projection on uomLng.Mm_Unit_Of_Measure_Lng;
+    entity UomClass as projection on Class.Mm_Uom_Class;
+    entity UomClassLng as projection on ClassLng.Mm_Uom_Class_Lng;
 
 }

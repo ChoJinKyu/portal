@@ -1,7 +1,7 @@
-/**
- * 자재 체크 변경  onMiMaterialCodeCheck 현재 다섯자 이상부터 검사 
- * 메인페이지 Delete 추가. 
- * 
+863/**
+ * 전체적인 CRUD
+ * 수정부터
+ * 삭제는 상세페이지에서 
  * 신규등록시 빈값을 전달
  * _sso로 등록페이지 사용
  * mm 참고 action 수정
@@ -59,6 +59,7 @@ sap.ui.define([
             },
             serviceName : {
                 marketIntelligenceService : "pg.marketIntelligenceService", //main Service
+                orgTenantView : "/OrgTenantView", //관리조직 View
                 mIMaterialCodeList : "/MIMaterialCodeList",
                 mIMaterialCodeText : "/MIMaterialCodeText", 
                 languageView : "/LanguageView",
@@ -67,7 +68,7 @@ sap.ui.define([
             },
             processMode : {
                 create : "C", //신규, 
-                read : "　",   //보기
+                read : "R",   //보기
                 edit : "E"    //수정
             },
             itemMode : {
@@ -112,7 +113,7 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
-            console.group("[midObjectPage] onInit");
+            console.group("[mid] onInit");
 
             // Attaches validation handlers
             sap.ui.getCore().attachValidationError(function (oEvent) {
@@ -132,7 +133,26 @@ sap.ui.define([
                 createMode : false
             });
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ca36fa1e9d0ae7f95aada19172b7849dd1a460bd
+<<<<<<< Updated upstream
+            var midTaleData = new JSONModel({
+                items: []
+            });
+=======
+            var _oUiData = new JSONModel({tenant_name:""});
+            this.setModel(_oUiData, "_oUiData");
+>>>>>>> Stashed changes
+
+<<<<<<< HEAD
+>>>>>>> 4cf5f4b3... db 필드 매핑 수정 pg
+=======
+>>>>>>> ca36fa1e9d0ae7f95aada19172b7849dd1a460bd
             this.setModel(oUi, "oUi");
+
 
             this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
 
@@ -191,6 +211,32 @@ sap.ui.define([
             }
         },
 
+        /**
+         * midTable filter
+         */
+        _setTableFilters: function (midTale) {
+            console.group("_setTableFilters");
+            Log.info("_setTableFilters >  midTale : " + midTale);
+            /**
+             * 모든 작업은 공통 모듈을 사용하지 않아도 된다. 
+             * 모든 테이블을 스마트 테이블로 가야 가야하는가? 리포트 뷰형은 스마트 테이블을 사용한다. 
+             * 
+             */
+            var oUiData = this.getModel("oUiData");
+
+            //sample 'LED-001-01'
+            var oModel = this.getOwnerComponent().getModel(),
+                oBinding = midTale.getBinding("items"),
+                aFilters = [];
+            midTale.setModel(oModel);
+
+            var oFilter = new Filter("mi_material_code", FilterOperator.EQ, oUiData.getProperty("/mi_material_code"));
+            aFilters.push(oFilter);
+            oBinding.filter(aFilters);
+
+            console.groupEnd();
+        },
+
         _formFragments: {},
 
         /**
@@ -214,6 +260,7 @@ sap.ui.define([
             return this._formFragments[sFragmentName];
 
             console.groupEnd();
+
         },
 
         _showFormFragment: function (sFragmentName) {
@@ -234,6 +281,15 @@ sap.ui.define([
             console.groupEnd();
         },
 
+        /**null check */
+        _isValNull: function (p_val) {
+            if (!p_val || p_val == "" || p_val == null) {
+                return true
+            } else {
+                return false;
+            }
+        },
+
         /**
          * 자재코드 확인
          * @public
@@ -249,16 +305,14 @@ sap.ui.define([
 
             var bMaterialCode = false;
 
-            if (this._isNull(input_mi_material_code)) {
+            if (this._isValNull(input_mi_material_code)) {
 
-                this._showMessageToast("자재코드를 먼저 입력 하셔야 합니다.");
-
-                // this._showMessageBox(
-                //     "자재코드 확인",
-                //     "자재코드를 먼저 입력 하셔야 합니다.",
-                //     this._m.messageType.Warning,
-                //     function(){return;}
-                // );
+                this._showMessageBox(
+                    "자재코드 확인",
+                    "자재코드를 먼저 입력 하셔야 합니다.",
+                    this._m.messageType.Warning,
+                    function(){return;}
+                );
 
                 return;
             }
@@ -328,11 +382,36 @@ sap.ui.define([
                 onClose: closeEvent,
             });
         },
-        
 
+<<<<<<< HEAD
+<<<<<<< HEAD
         _showMessageToast : function(content){
             MessageToast.show(content);
         },
+=======
+<<<<<<< Updated upstream
+=======
+        /**
+         * MessageToast
+         * @param {*} content 
+         */
+        _showMessageToast : function(content){
+            MessageToast.show(content);
+        },
+>>>>>>> Stashed changes
+>>>>>>> 4cf5f4b3... db 필드 매핑 수정 pg
+=======
+<<<<<<< Updated upstream
+=======
+        /**
+         * MessageToast
+         * @param {*} content 
+         */
+        _showMessageToast : function(content){
+            MessageToast.show(content);
+        },
+>>>>>>> Stashed changes
+>>>>>>> ca36fa1e9d0ae7f95aada19172b7849dd1a460bd
 
         /* =========================================================== */
         /* event handlers                                              */
@@ -405,13 +484,14 @@ sap.ui.define([
 		 * @private
 		 */
         _onRoutedThisPage: function (oEvent) {
-            console.group("[mid] _onRoutedThisPage");
-
+            console.log("[mid] _onRoutedThisPage");
+        
             this.getView().byId("input_mi_material_code").setValue("");
             this.getView().byId("comboBoxCategory_code").setSelectedKey("");
 
             var oArgs = oEvent.getParameter("arguments"),
                 oUiData = this.getModel("oUiData"),
+                _oUiData = this.getModel("_oUiData"),
                 oUi = this.getModel("oUi"),
                 oView = this.getView(),
                 that = this,
@@ -435,6 +515,24 @@ sap.ui.define([
             this._m.filter.org_type_code = oArgs.org_type_code;
             this._m.filter.org_code = oArgs.org_code;
             this._m.filter.mi_material_code = oArgs.mi_material_code;
+            
+            //관리조직 명 확인
+            //관리조직 이름 
+            var orgTenantViewFilters = [
+                new Filter("tenant_id", FilterOperator.EQ, oArgs.tenant_id)
+            ];
+
+            oModel.read(this._m.serviceName.orgTenantView, {
+                async: false,
+                filters: orgTenantViewFilters,
+                success: function (rData, reponse) {
+
+                    //console.log("json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
+                    if(reponse.data.results.length>0){
+                        _oUiData.setProperty("/tenant_name", reponse.data.results[0].tenant_name);
+                    }
+                }
+            });
 
             if (oArgs.mi_material_code == "new") {
                 console.log("---------- New Create item ----------");
@@ -476,7 +574,7 @@ sap.ui.define([
                 async: false,
                 filters: aFilters,
                 success: function (rData, reponse) {
-                    console.log(sServiceUrl + "-- to json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
+                    //console.log(sServiceUrl + "-- to json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
                     mIMaterialCodeText.setData(reponse.data.results);
 
                     for(var i=0;i<reponse.data.results.length;i++){
@@ -538,6 +636,42 @@ sap.ui.define([
                 mBindingParams.filters.push(new Filter("tenant_id", FilterOperator.EQ, oUiData.getProperty("/tenant_id")));
         },
 
+/**
+         * 작업 취소? 리스트 이동..
+         */
+        onCancel : function () {
+            console.log("onCancel");
+            var that = this;
+            var sNextLayout = this.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+            
+            
+           
+            // MessageBox.show("리스트로 이동합니다.", {
+            //     icon: MessageBox.Icon.SUCCESS,
+            //     title: "저장 확인",
+            //     actions: [MessageBox.Action.OK],
+            //     onClose: function (sButton) {
+            //         if (sButton === MessageBox.Action.OK) {
+            //             var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+            //             that._onExit();
+            //             that.getRouter().navTo("mainPage", { layout: sNextLayout });
+            //         }
+            //     }
+            // });
+            MessageBox.confirm("작업내용을 취소 하게 됩니다. 취소 하시 겠습니까?", {
+                title : "Cancel",
+                initialFocus : sap.m.MessageBox.Action.CANCEL,
+                onClose : function(sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        that._onExit();
+                        that.getRouter().navTo("mainPage", { layout: sNextLayout });
+                    }else{
+                        return;
+                    }
+                }.bind(this)
+            });            
+        },
+                
         /**
          * 화면에서 Edit 버튼 이벤트 수정모드 전환
          * @public
@@ -559,18 +693,22 @@ sap.ui.define([
 
             
             var oSelected = oTable.getSelectedContexts();
-
+            var items = oTable.getSelectedItems();
+            
             if (oSelected.length > 0) {
-
+                
                 for (var i = 0; i < oSelected.length; i++) {
                     var idx = parseInt(oSelected[0].sPath.substring(oSelected[0].sPath.lastIndexOf('/') + 1));
                         oModel.oData[idx].itemMode =  this._m.itemMode.delete;
-
-                        //bom 에서 사용하는 아이템은 삭제 할수 없습니다.
-
-
+                        //oTable.removeItem(item);
                 }
 
+               
+                // for(var x=0; x < items.length; x++){
+                //     var item=items[x];
+                //     oTable.removeItem(item);
+                // }
+                
                 oModel.refresh();
                 that.getView().setBusy(false);
                 oTable.removeSelections();
@@ -578,7 +716,13 @@ sap.ui.define([
 
             } else {
 
-                this._showMessageToast("삭제할 항목을 선택 하셔야 합니다.");
+                this._showMessageBox(
+                    "확인",
+                    "삭세할 항목을 선택 하셔야 합니다.",
+                    this._m.messageType.Warning,
+                    function(){return;}
+                );
+
                 return;
             }
         },
@@ -705,7 +849,12 @@ sap.ui.define([
                 
                 if(nCound>1)
                 {
-                    this._showMessageToast("고유한 언어를 선택하여 주십시요.");
+                    this._showMessageBox(
+                        "중복 확인",
+                        "고유한 언어를 선택하여 주십시요.",
+                        this._m.messageType.Warning,
+                        function(){return;}
+                    );
 
                     items.getCells()[1].mAggregations.items[0].setSelectedKey("");
 
@@ -736,7 +885,13 @@ sap.ui.define([
             }
 
             if(!bFlag){
-                this._showMessageToast("더이상 추가 할수 없습니다.");
+                MessageBox.show("더이상 추가 할수 없습니다.", {
+                    icon: MessageBox.Icon.WARNING,
+                    title: "언어 확인",
+                    actions: [MessageBox.Action.OK],
+                    styleClass: "sapUiSizeCompact"
+                });  
+
                 return;
             }
 
@@ -751,7 +906,7 @@ sap.ui.define([
                 "org_code": oUiData.getProperty("/org_code"),
                 "mi_material_code": input_mi_material_code,
                 "language_code": "",
-                "mi_material_code_name": "",
+                "mi_material_name": "",
                 "local_create_dtm": new Date(),
                 "local_update_dtm": new Date(),
                 "create_user_id": "Admin",
@@ -768,7 +923,7 @@ sap.ui.define([
             console.groupEnd();
         },
 
-         /**
+                /**
           * 버튼 액션 저장
           */
          onSaveAction : function(){
@@ -778,10 +933,6 @@ sap.ui.define([
              var bCreateFlag = oUi.getProperty("/createMode");
              var bOkActionFlag = false;
  
-             if(!this._onPageValidate()){
-                return;
-             }
-
              if(!this._checkData()){
                  return;
              }
@@ -818,20 +969,6 @@ sap.ui.define([
         },
 
         /**
-         * 대문자 및 중복 체크 
-         * @param {*} e 
-         */
-        onMiMaterialCodeCheck : function(e) {
-            var oView = this.getView();
-            var input_mi_material_code = this.getView().byId("input_mi_material_code");
-            // 소문자 -> 대문자 변환
-            input_mi_material_code.setValue(input_mi_material_code.getValue().toUpperCase());
-
-            if(input_mi_material_code.getValue().length > 5 ){
-                this._inputMartetial(input_mi_material_code);
-            }
-        },
-        /**
          * 업데이트
          */
         _onTableItemUpdate : function () {
@@ -841,11 +978,9 @@ sap.ui.define([
         _checkData : function(){
 
             console.log("call function ==================== onSaveAction ====================");
-            // if(!ValidatorUtil.isValid(this.getView(),"requiredField")){
-            //     return;
-            // }
-            // var validator = new Validator();
-            // validator.validate(this.byId("page"));
+
+            var validator = new Validator();
+            validator.validate(this.byId("page"));
 
             var omIMaterialCodeText = this.getOwnerComponent().getModel("mIMaterialCodeText"),
                 oUiData = this.getModel("oUiData"),
@@ -868,9 +1003,10 @@ sap.ui.define([
             }
 
             if (materialCheck==false && oUi.getProperty("/createMode") == true) {
+
                 this._setValueState( 
                     this.getView().byId("input_mi_material_code"), 
-                    "자재코드를 확인 해야 합니다.."
+                    "자재코드 중복을 먼저 체크 하셔야 합니다."
                 );
                 return false;
                
@@ -893,8 +1029,15 @@ sap.ui.define([
                     }
                     
 
-                    if (this._isNull(comboBoxCategory_code)) {
-                        this._showMessageToast("카테고리를 선택 해야 합니다.");
+                    if (this._isValNull(comboBoxCategory_code)) {
+
+                        this._showMessageBox(
+                            "카테고리 확인",
+                            "카테고리를 선택 해야 합니다.",
+                            this._m.messageType.Warning,
+                            function(){return;}
+                        );
+
                         return false;
                     }
                   
@@ -904,8 +1047,13 @@ sap.ui.define([
             //language table check
             var oTableLength = oTable.getItems().length;
             if (oTableLength < 1) {
-
-                this._showMessageToast("언어정보를 등록 해야 합니다.");
+                this._showMessageBox(
+                    "언어정보 확인",
+                    "언어정보를 등록 해야 합니다.",
+                    this._m.messageType.Warning,
+                    function(){return;}
+                );
+                
                 return false;
             }
 
@@ -929,7 +1077,6 @@ sap.ui.define([
                     break;
                 }                        
             }
-            
             var bNullCheck = true;
             for(var i=0; i<oTableLength;i++) {
                 if(oTable.getItems()[i].getCells()[2].mAggregations.items[0].getValue().length<1){
@@ -942,7 +1089,13 @@ sap.ui.define([
 
             if(!bNullCheck && odataMode==this._m.odataMode.yes){
 
-                this._showMessageToast("자재명은 빈값일수 없습니다.");
+                this._showMessageBox(
+                    "자재명 확인",
+                    "자재명은 빈값일수 없습니다.",
+                    this._m.messageType.Warning,
+                    function(){return;}
+                );
+                
                 return false;
             }
 
@@ -958,74 +1111,24 @@ sap.ui.define([
                 if(newLanguage_code==oldLanguage_code){
 
                     bValidator = false; 
-                    this._showMessageToast("Language Code는 유일 해야합니다.");                    
+
+                    this._showMessageBox(
+                        "Language 확인",
+                        "Language Code는 유일 해야합니다.",
+                        this._m.messageType.Warning,
+                        function(){return;}
+                    );
+
+                    
                     return false;
                     break;  
                 }
             }
+         
+
             return bValidator;
         },
 
-        /**
-         * 자재 중복 체크 
-         * @param {*} input_mi_material_code 
-         */
-        _inputMartetial : function(input_mi_material_code){
-            var oUi = this.getModel("oUi");
-            var oModel = this.getModel();
-            var oMIMaterialCodeListFilters = [
-                new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id),
-                new Filter("company_code", FilterOperator.EQ, this._m.filter.company_code),
-                new Filter("org_type_code", FilterOperator.EQ, this._m.filter.org_type_code),
-                new Filter("org_code", FilterOperator.EQ, this._m.filter.org_code),
-                new Filter("mi_material_code", FilterOperator.EQ, input_mi_material_code.getValue())
-            ];
-
-            
-
-
-            var sServiceUrl = this._m.serviceName.mIMaterialCodeList;
-            var itemLength = 0;
-            oModel.read(sServiceUrl, {
-                async: false,
-                filters: oMIMaterialCodeListFilters,
-                success: function (rData, reponse) {
-
-                    console.log(sServiceUrl + " - 자재건수 :" + reponse.data.results.length);
-
-                    itemLength = reponse.data.results.length;
-
-                    if (itemLength < 1) {
-                        oUi.setProperty("/materialCheck", true);
-                        input_mi_material_code.setValueState("Success");
-                        input_mi_material_code.setValueStateText("사용할수 있는 자재 코드 입니다.");
-                        MessageToast.show("사용할수 있는 자재 코드 입니다.");
-                        input_mi_material_code.openValueStateMessage();
-                    } else {
-                        oUi.setProperty("/materialCheck", false);
-                        input_mi_material_code.setValueState("Error");
-                        input_mi_material_code.setValueStateText("중복된 자재코드 입니다.");
-                        input_mi_material_code.openValueStateMessage();
-                    }
-                }
-            });
-        },
-        _onPageValidate: function(){
-
-            if(this.validator.validate(this.byId("mid_simpleForm")) !== true) {
-                return false;
-            }else{
-                this.validator.clearValueState(this.byId("mid_simpleForm"));
-                return true;
-            }
-            
-    
-        },
-        
-
-        /**
-         * new Save
-         */
         _onSave : function () {
 
             console.log("call function ==================== onSaveAction ====================");
@@ -1068,10 +1171,10 @@ sap.ui.define([
 
 
                                 
-                var mi_material_code_name,
+                var mi_material_name,
                     oldLanguage_code,
                     newLanguage_code,
-                    vMi_material_code_name = "";
+                    vMi_material_name = "";
 
                 //자재명 선 취득을 위한 테이블 작업 우선      
                 //MIMaterialCodeText create, update,  delete
@@ -1083,7 +1186,7 @@ sap.ui.define([
                     var items = oTable.getItems()[idx],
                         itemMode = items.getCells()[0].mProperties.text,
                         language_code = items.getCells()[1].mAggregations.items[0].getSelectedKey(),
-                        mi_material_code_name = items.getCells()[2].mAggregations.items[0].getValue(),
+                        mi_material_name = items.getCells()[2].mAggregations.items[0].getValue(),
                         newLanguage_code = language_code;
 
                     var updateTableItem = 0;
@@ -1094,7 +1197,7 @@ sap.ui.define([
 
                     //자재명 등록을위한 할당 - 대표  KO
                     if (newLanguage_code == "KO") {
-                        vMi_material_code_name = mi_material_code_name;
+                        vMi_material_name = mi_material_name;
                     }
 
                     var o_mi_material_code;
@@ -1126,7 +1229,7 @@ sap.ui.define([
                                 "org_code": this._sso.dept.org_code,
                                 "mi_material_code": o_mi_material_code,
                                 "language_code": language_code,
-                                "mi_material_code_name": mi_material_code_name,
+                                "mi_material_name": mi_material_name,
                                 "local_create_dtm": new Date(),
                                 "local_update_dtm": new Date(),
                                 "create_user_id": this._sso.user.id,
@@ -1147,7 +1250,7 @@ sap.ui.define([
                     if(itemMode == this._m.itemMode.read || itemMode == this._m.itemMode.update){
                         
                         var mIMaterialCodeTextParameters = {
-                            "mi_material_code_name": mi_material_code_name,
+                            "mi_material_name": mi_material_name,
                             "local_create_dtm": new Date(),
                             "local_update_dtm": new Date(),
                             "create_user_id": this._sso.user.id,
@@ -1190,7 +1293,7 @@ sap.ui.define([
                     //신규자재명 할당을 위해 KO가 없다면 한건이라도 등록한다. 
                     //초기 KO는 필수로 정해야한다...
                     if (newLanguage_code == "") {
-                        vMi_material_code_name = mi_material_code_name;
+                        vMi_material_name = mi_material_name;
                     }
                 } //end for
 
@@ -1222,7 +1325,7 @@ sap.ui.define([
                     oMIMaterialCodeListParameters = {
                         "category_code": oUiData.getProperty("/category_code"),
                         "category_name": oUiData.getProperty("/category_name"),           
-                        "mi_material_code_name": vMi_material_code_name,
+                        "mi_material_name": vMi_material_name,
                         "use_flag": switchUse_flag,
                         "local_create_dtm": new Date(),
                         "local_update_dtm": new Date(),
@@ -1241,8 +1344,8 @@ sap.ui.define([
 
                 } else if (oUi.getProperty("/createMode")){
          
-                    if(vMi_material_code_name==""){
-                        vMi_material_code_name = mi_material_code_name;
+                    if(vMi_material_name==""){
+                        vMi_material_name = mi_material_name;
                     }
                     
                     oMIMaterialCodeListParameters = {
@@ -1253,7 +1356,7 @@ sap.ui.define([
                             "org_type_code": this._sso.dept.org_type_code,
                             "org_code": this._sso.dept.org_code,
                             "mi_material_code": input_mi_material_code,
-                            "mi_material_code_name": vMi_material_code_name,
+                            "mi_material_name": vMi_material_name,
                             "category_code": comboBoxCategory_code,
                             "category_name": comboBoxCategory_name,
                             "use_flag": switchUse_flag,
@@ -1306,8 +1409,13 @@ sap.ui.define([
 
             if (materialCheck==false && oUi.getProperty("/createMode") == true) {
 
-                this._showMessageToast("자재코드 중복을 먼저 체크 하셔야 합니다.");                    
-                
+                this._showMessageBox(
+                    "자재 코드 확인",
+                    "자재코드 중복을 먼저 체크 하셔야 합니다",
+                    this._m.messageType.Warning,
+                    function(){return;}
+                );
+
             } else {
 
                 var input_mi_material_code,
@@ -1325,14 +1433,14 @@ sap.ui.define([
                     }       
 
                     //form check
-                    if (this._isNull(input_mi_material_code)) {
+                    if (this._isValNull(input_mi_material_code)) {
 
                         input_mi_material_code.setValueState("Error");
                         input_mi_material_code.setValueStateText("자재코드는 필수 입니다.");
                         input_mi_material_code.openValueStateMessage();
                     }
 
-                    if (this._isNull(comboBoxCategory_code)) {
+                    if (this._isValNull(comboBoxCategory_code)) {
 
                         comboBoxCategory_code.setValueState("Error")
                         comboBoxCategory_code.openValueStateMessage();
@@ -1351,7 +1459,7 @@ sap.ui.define([
                 //language table check
                 var oTableLength = oTable.getItems().length;
                 if (oTableLength < 1) {
-                    msg += "언어정보를 한 건 이라도 등록 해야 합니다.\n";
+                    msg += "언어정보를 등록 해야 합니다.\n";
                 }
 
                 if(oUi.getProperty("/createMode")){
@@ -1378,7 +1486,13 @@ sap.ui.define([
                 }
 
                 if(!bNullCheck && odataMode==this._m.odataMode.yes){
-                    this._showMessageToast("자재코드 중복을 먼저 체크 하셔야 합니다.");                    
+                    MessageBox.show("자재명은 빈값일수 없습니다. ", {
+                        icon: MessageBox.Icon.WARNING, 
+                        title: "입력값 확인",
+                        actions: [MessageBox.Action.OK],
+                        styleClass: "sapUiSizeCompact"
+                    }); 
+                    
                     return;
                 }
 
@@ -1392,10 +1506,10 @@ sap.ui.define([
                     return;
                 }
 
-                var mi_material_code_name,
+                var mi_material_name,
                     oldLanguage_code,
                     newLanguage_code,
-                    vMi_material_code_name = "";
+                    vMi_material_name = "";
 
                 //자재명 선 취득을 위한 테이블 작업 우선      
                 //MIMaterialCodeText create, update,  delete
@@ -1407,13 +1521,20 @@ sap.ui.define([
                     var items = oTable.getItems()[idx],
                         itemMode = items.getCells()[0].mProperties.text,
                         language_code = items.getCells()[1].mAggregations.items[0].getSelectedKey(),
-                        mi_material_code_name = items.getCells()[2].mAggregations.items[0].getValue(),
+                        mi_material_name = items.getCells()[2].mAggregations.items[0].getValue(),
                         newLanguage_code = language_code;
 
                     if(newLanguage_code==oldLanguage_code){
 
                         blanguageCheck = true;
-                        this._showMessageToast("자재코드 중복을 먼저 체크 하셔야 합니다."); 
+
+                        MessageBox.show("Language Code는 유일 해야합니다.", {
+                            icon: MessageBox.Icon.WARNING, 
+                            title: "Language Code 확인.",
+                            actions: [MessageBox.Action.OK],
+                            styleClass: "sapUiSizeCompact"
+                        });    
+                       
                         break;  
                     }
 
@@ -1429,7 +1550,7 @@ sap.ui.define([
 
                     //자재명 등록을위한 할당 - 대표  KO
                     if (newLanguage_code == "KO") {
-                        vMi_material_code_name = mi_material_code_name;
+                        vMi_material_name = mi_material_name;
                     }
 
                     var o_mi_material_code;
@@ -1461,7 +1582,7 @@ sap.ui.define([
                                 "org_code": this._sso.dept.org_code,
                                 "mi_material_code": o_mi_material_code,
                                 "language_code": language_code,
-                                "mi_material_code_name": mi_material_code_name,
+                                "mi_material_name": mi_material_name,
                                 "local_create_dtm": new Date(),
                                 "local_update_dtm": new Date(),
                                 "create_user_id": this._sso.user.id,
@@ -1481,7 +1602,7 @@ sap.ui.define([
                     if(itemMode == this._m.itemMode.read || itemMode == this._m.itemMode.update){
                         
                         var mIMaterialCodeTextParameters = {
-                            "mi_material_code_name": mi_material_code_name,
+                            "mi_material_name": mi_material_name,
                             "local_create_dtm": new Date(),
                             "local_update_dtm": new Date(),
                             "create_user_id": this._sso.user.id,
@@ -1518,7 +1639,7 @@ sap.ui.define([
                     //신규자재명 할당을 위해 KO가 없다면 한건이라도 등록한다. 
                     //초기 KO는 필수로 정해야한다...
                     if (newLanguage_code == "") {
-                        vMi_material_code_name = mi_material_code_name;
+                        vMi_material_name = mi_material_name;
                     }
                 } //end for
 
@@ -1557,7 +1678,7 @@ sap.ui.define([
                     oMIMaterialCodeListParameters = {
                         "category_code": oUiData.getProperty("/category_code"),
                         "category_name": oUiData.getProperty("/category_name"),           
-                        "mi_material_code_name": vMi_material_code_name,
+                        "mi_material_name": vMi_material_name,
                         "use_flag": switchUse_flag,
                         "local_create_dtm": new Date(),
                         "local_update_dtm": new Date(),
@@ -1576,8 +1697,8 @@ sap.ui.define([
 
                 } else if (oUi.getProperty("/createMode")){
          
-                    if(vMi_material_code_name==""){
-                        vMi_material_code_name = mi_material_code_name;
+                    if(vMi_material_name==""){
+                        vMi_material_name = mi_material_name;
                     }
                     
                     oMIMaterialCodeListParameters = {
@@ -1588,7 +1709,7 @@ sap.ui.define([
                             "org_type_code": this._sso.dept.org_type_code,
                             "org_code": this._sso.dept.org_code,
                             "mi_material_code": input_mi_material_code,
-                            "mi_material_code_name": vMi_material_code_name,
+                            "mi_material_name": vMi_material_name,
                             "category_code": comboBoxCategory_code,
                             "category_name": comboBoxCategory_name,
                             "use_flag": switchUse_flag,
@@ -1735,7 +1856,31 @@ sap.ui.define([
 
         _handleCreateSuccess: function (oData) {
             var that = this;
+<<<<<<< HEAD
+<<<<<<< HEAD
             this._showMessageToast("저장에 성공 하였습니다."); 
+=======
+=======
+>>>>>>> ca36fa1e9d0ae7f95aada19172b7849dd1a460bd
+<<<<<<< Updated upstream
+            MessageBox.show("저장에 성공 하였습니다.", {
+                icon: MessageBox.Icon.SUCCESS,
+                title: "저장 성공",
+                actions: [MessageBox.Action.OK],
+                onClose: function (sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+                        that._onExit();
+                        that.getRouter().navTo("mainPage", { layout: sNextLayout });
+                    }
+                }
+            });
+=======
+            this._showMessageToast("저장 성공 하였습니다."); 
+<<<<<<< HEAD
+>>>>>>> 4cf5f4b3... db 필드 매핑 수정 pg
+=======
+>>>>>>> ca36fa1e9d0ae7f95aada19172b7849dd1a460bd
             
             var sNextLayout = this.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
             this._onExit();
@@ -1753,14 +1898,51 @@ sap.ui.define([
             //         }
             //     }
             // });
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+>>>>>>> 4cf5f4b3... db 필드 매핑 수정 pg
+=======
+>>>>>>> Stashed changes
+>>>>>>> ca36fa1e9d0ae7f95aada19172b7849dd1a460bd
             //MessageToast.show("저장에 성공 하였습니다.");
         },
         _handleCreateError: function (oError) {
-            MessageBox.error("저장에 실패 하였습니다.");
+            this._showMessageBox(
+                "저장 실패",
+                "저장 실패 하였습니다.",
+                this._m.messageType.Error,
+                function(){return;}
+            );
         },
         _handleUpdateSuccess: function (oData) {
             var that = this;
+<<<<<<< HEAD
+<<<<<<< HEAD
             this._showMessageToast("수정에 성공 하였습니다."); 
+=======
+=======
+>>>>>>> ca36fa1e9d0ae7f95aada19172b7849dd1a460bd
+<<<<<<< Updated upstream
+            MessageBox.show("수정에 성공 하였습니다.", {
+                icon: MessageBox.Icon.SUCCESS,
+                title: "수정 성공",
+                actions: [MessageBox.Action.OK],
+                onClose: function (sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+                        that._onExit();
+                        that.getRouter().navTo("mainPage", { layout: sNextLayout });
+                    }
+                }
+            });
+=======
+            this._showMessageToast("수정 성공 하였습니다."); 
+<<<<<<< HEAD
+>>>>>>> 4cf5f4b3... db 필드 매핑 수정 pg
+=======
+>>>>>>> ca36fa1e9d0ae7f95aada19172b7849dd1a460bd
 
             var sNextLayout = this.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
             this._onExit();
@@ -1778,10 +1960,19 @@ sap.ui.define([
             //         }
             //     }
             // });
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+>>>>>>> 4cf5f4b3... db 필드 매핑 수정 pg
+=======
+>>>>>>> Stashed changes
+>>>>>>> ca36fa1e9d0ae7f95aada19172b7849dd1a460bd
 
         },
-
         _handleUpdateError: function (oError) {
+<<<<<<< HEAD
+<<<<<<< HEAD
             MessageBox.error("수정에 실패 하였습니다.");
             // MessageBox.show("수정에 실패 하였습니다.", {
             //     icon: MessageBox.Icon.ERROR,
@@ -1789,6 +1980,28 @@ sap.ui.define([
             //     actions: [MessageBox.Action.OK],
             //     styleClass: "sapUiSizeCompact"
             // });
+=======
+=======
+>>>>>>> ca36fa1e9d0ae7f95aada19172b7849dd1a460bd
+<<<<<<< Updated upstream
+            MessageBox.show("수정에 실패 하였습니다.", {
+                icon: MessageBox.Icon.ERROR,
+                title: "수정 실패",
+                actions: [MessageBox.Action.OK],
+                styleClass: "sapUiSizeCompact"
+            });
+=======
+            this._showMessageBox(
+                "수정 실패",
+                "수정 실패 하였습니다.",
+                this._m.messageType.Error,
+                function(){return;}
+            );
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+>>>>>>> 4cf5f4b3... db 필드 매핑 수정 pg
+=======
+>>>>>>> ca36fa1e9d0ae7f95aada19172b7849dd1a460bd
         },
         /**
          * 삭제 성공
@@ -1796,26 +2009,48 @@ sap.ui.define([
          * @private
          */
         _handleDeleteSuccess: function (oData) {
+<<<<<<< HEAD
+<<<<<<< HEAD
             
             this._showMessageToast("삭제가 성공 하였습니다.");
+=======
+<<<<<<< Updated upstream
+=======
+            
+            this._showMessageToast("삭제 성공 하였습니다.");
+>>>>>>> 4cf5f4b3... db 필드 매핑 수정 pg
+=======
+<<<<<<< Updated upstream
+=======
+            
+            this._showMessageToast("삭제 성공 하였습니다.");
+>>>>>>> ca36fa1e9d0ae7f95aada19172b7849dd1a460bd
             
             var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
             this._onExit();
             this.getRouter().navTo("mainPage", { layout: sNextLayout });
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+>>>>>>> 4cf5f4b3... db 필드 매핑 수정 pg
+=======
+>>>>>>> Stashed changes
+>>>>>>> ca36fa1e9d0ae7f95aada19172b7849dd1a460bd
 
-            // var that = this;
-            // MessageBox.show("삭제가 성공 하였습니다.", {
-            //     icon: MessageBox.Icon.SUCCESS,
-            //     title: "삭제 성공.",
-            //     actions: [MessageBox.Action.OK],
-            //     onClose: function (sButton) {
-            //         if (sButton === MessageBox.Action.OK) {
-            //             var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
-            //             that._onExit();
-            //             that.getRouter().navTo("mainPage", { layout: sNextLayout });
-            //         }
-            //     }
-            // });
+            var that = this;
+            MessageBox.show("삭제가 성공 하였습니다.", {
+                icon: MessageBox.Icon.SUCCESS,
+                title: "삭제 성공.",
+                actions: [MessageBox.Action.OK],
+                onClose: function (sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+                        that._onExit();
+                        that.getRouter().navTo("mainPage", { layout: sNextLayout });
+                    }
+                }
+            });
 
         },
 
@@ -1825,12 +2060,12 @@ sap.ui.define([
          * @private
          */
         _handleDeleteError: function (oError) {
-            MessageBox.show("삭제가 실패 하였습니다.", {
-                icon: MessageBox.Icon.ERROR,
-                title: "삭제 실패",
-                actions: [MessageBox.Action.OK],
-                styleClass: "sapUiSizeCompact"
-            });
+            this._showMessageBox(
+                "삭제 실패",
+                "삭제 실패 하였습니다.",
+                this._m.messageType.Error,
+                function(){return;}
+            );
         }
     });
 });

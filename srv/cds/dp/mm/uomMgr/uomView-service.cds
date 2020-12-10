@@ -19,13 +19,12 @@
 using { dp as uom }    from '../../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE-model';
 using { dp as uomLng } from '../../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE_LNG-model';
 namespace dp;
-@path : '/dp.UomMgtService'
+@path : '/dp.UomMgrService'
 
-service UomMgtService {
+service UomMgrService {
     view UomView(language_code: String) as
     select u.tenant_id
           ,u.uom_code
-          ,ifnull(l.uom_name, u.uom_name)  as uom_name
           ,ifnull(l.commercial_uom_code, u.commercial_uom_code) as commercial_uom_code
           ,ifnull(l.commercial_uom_name, u.commercial_uom_name) as commercial_uom_name
           ,ifnull(l.technical_uom_code, u.technical_uom_code) as technical_uom_code
