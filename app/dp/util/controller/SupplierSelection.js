@@ -1,10 +1,11 @@
 sap.ui.define([
     "sap/ui/base/EventProvider",
-	"ext/lib/model/I18nModel",
+    "ext/lib/model/I18nModel",
     "sap/ui/model/odata/v2/ODataModel",
     'sap/m/SearchField',
-    "sap/ui/model/json/JSONModel"
-], function (EventProvider, I18nModel, ODataModel, SearchField, JSONModel) {
+    "sap/ui/model/json/JSONModel",
+    'sap/m/Token'
+], function (EventProvider, I18nModel, ODataModel, SearchField, JSONModel, Token) {
     "use strict";
 
     // var oServiceModel = new ODataModel({
@@ -25,17 +26,17 @@ sap.ui.define([
             useBatch: true
         }),
 
-		showSupplierSelection: function(oThis, oEvent, sInputId){
+        showSupplierSelection: function(oThis, oEvent, sInputId){
 
             var path = '';
             this._oValueHelpDialog = sap.ui.xmlfragment("dp.util.view.SupplierSelection", oThis);
 
             this._oBasicSearchField = new SearchField({
-				showSearchButton: false
+                showSearchButton: false
             });
             
             var oFilterBar = this._oValueHelpDialog.getFilterBar();
-			oFilterBar.setFilterBarExpanded(false);
+            oFilterBar.setFilterBarExpanded(false);
             oFilterBar.setBasicSearch(this._oBasicSearchField);
             
             this._oInputModel = oEvent.getSource();
@@ -86,9 +87,9 @@ sap.ui.define([
             // debugger
 
             var oToken = new Token();
-			oToken.setKey(this._oInputModel.getSelectedKey());
-			oToken.setText(this._oInputModel.getValue());
-			this._oValueHelpDialog.setTokens([oToken]);
+            oToken.setKey(this._oInputModel.getSelectedKey());
+            oToken.setText(this._oInputModel.getValue());
+            this._oValueHelpDialog.setTokens([oToken]);
             this._oValueHelpDialog.open();
         }
     });
