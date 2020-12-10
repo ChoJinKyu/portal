@@ -50,61 +50,45 @@
                                 <core:Item key="{org>tenant_id}" text="{org>tenant_id} : {org>tenant_name}" />
                               </items>
                             </ComboBox>
-                            <!-- 회사 -->
-                            <Label text="회사" labelFor="searchOrgCombo" required="false"></Label>
-                            <ComboBox
-                              id="searchOrgCombo"
-                              width="100%"
-                              items="{
-                                path: 'org>/Org_Company',
-                                filters: [
-                                ]
-                              }">
-                              <!-- {path: 'tenant_id', operator: 'EQ', value1: 'L2100'} -->
-                              <items>
-                                <core:Item key="{org>company_code}" text="{org>company_code}: {org>company_name}" />
-                              </items>
+                        </VBox>
+                        <!-- Chain -->
+                        <VBox>
+                            <Label text="Chain:" labelFor="searchChainCombo" required="true"></Label>
+                            <ComboBox id="searchChainCombo" width="100%" 
+                                selectedKey="CM" 
+                                items="{
+                                    path: 'util>/CodeDetails',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
+                                    ]
+                                }">
+                                <items>
+                                    <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+                                </items>
                             </ComboBox>
+                        </VBox>
+
+                        <VBox>
+                            <!-- 역할코드 -->
+                            <Label text="역할코드:" labelFor="searchRoleCode"></Label>
+                            <Input id="searchRoleCode" placeholder="Role Code"></Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
-                        
                         <VBox>
-                            <!-- 사용자 ID -->
-                            <Label text="사용자 ID:" labelFor="searchUserId"></Label>
-                            <Input id="searchUserId" placeholder="User ID"></Input>
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
-                            </layoutData>
-
-                            <!-- 사용자 Name -->
-                            <Label text="성명:" labelFor="searchUserName"></Label>
-                            <Input id="searchUserName" placeholder="User Name"></Input>
+                            <!-- 역할명 -->
+                            <Label text="역할명:" labelFor="searchRoleName"></Label>
+                            <Input id="searchRoleName" placeholder="Role Name"></Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
 
                         <VBox>
-                            <!-- 성명(영문) -->
-                            <Label text="성명(영문):" labelFor="searchEngName"></Label>
-                            <Input id="searchEngName" placeholder="User Eng Name"></Input>
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
-                            </layoutData>
-
-                            <!-- 이메일 -->
-                            <Label text="이메일:" labelFor="searchEmail"></Label>
-                            <Input id="searchEmail" placeholder="Email Address"></Input>
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-
-                        <VBox>
-                            <!-- 유효여부 -->
-                            <Label text="유효여부: " labelFor="searchUseflag">
+                            <!-- 사용여부 -->
+                            <Label text="사용여부: " labelFor="searchUseflag">
                             </Label>
                             <SegmentedButton 
                                 id="searchUseflag"
@@ -134,79 +118,63 @@
                         growingThreshold="10"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
-                        items="{list>/roleMgr}"
+                        items="{list>/Role}"
                         mode="None" 
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="사용자 관리 ({= ${list>/}.length || 0})" level="H2"/>
+                            <Title text="역할 목록 ({= ${list>/Role}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
-                        <Column id="mainUserIdColumn" minScreenWidth="Tablet" hAlign="Center">
-                            <Text text="사용자ID" />
+                        <Column id="mainRoleCodeColumn" minScreenWidth="Tablet" hAlign="Center">
+                            <Text text="역할코드" />
                         </Column>
-                        <Column id="mainEmpNoColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="사번" />
+                        <Column id="mainRoleNameColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                            <Text text="역할명" />
                         </Column>
-                        <Column id="mainNameColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="성명" />
+                        <Column id="mainChainColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                            <Text text="체인" />
                         </Column>
-                        <Column id="mainEngNameColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="성명(영문)" />
+                        <Column id="mainRoleDescColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                            <Text text="설명" />
                         </Column>
-                        <Column id="mainEmailColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="이메일" />
+                        <Column id="mainUseFlagColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                            <Text text="사용여부" />
                         </Column>
-                        <Column id="mainSystemStartDtmColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="시작일" />
+                        <Column id="mainCreateUserIdColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                            <Text text="생성자" />
                         </Column>
-                        <Column id="mainSystemEndDtmColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="종료일" />
+                        <Column id="mainSystemCreateDtmColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                            <Text text="시스템생성일시" />
                         </Column>
-                        <Column id="mainOrgColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="회사" />
+                        <Column id="mainUpdateUserIdColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                            <Text text="변경자" />
                         </Column>
-                        <Column id="mainLanguageColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="언어" />
-                        </Column>
-                        <Column id="mainTimeZoneColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="타임존" />
-                        </Column>
-                        <Column id="mainDateFormatColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="날짜형식" />
-                        </Column>
-                        <Column id="mainNumberFormatColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="숫자형식" />
-                        </Column>
-                        <Column id="mainCurrencyColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="기본통화" />
+                        <Column id="mainSystemUpdateDtmColumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                            <Text text="시스템변경일시" />
                         </Column>
                     </columns>
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>
-                                <ObjectIdentifier text="{list>user_id}"/>
-                                <ObjectIdentifier text="{list>employee_number}"/>
-                                <ObjectIdentifier text="{list>employee_name}"/>
-                                <ObjectIdentifier text="{list>english_employee_name}"/>
-                                <ObjectIdentifier text="{list>email}"/>
+                                <ObjectIdentifier text="{list>role_code}"/>
+                                <ObjectIdentifier text="{list>role_name}"/>
+                                <ObjectIdentifier text="{list>chain_code}"/>
+                                <ObjectIdentifier text="{list>role_desc}"/>
+                                <ObjectIdentifier text="{list>use_flag}"/>
+                                <ObjectIdentifier text="{list>create_user_id}"/>
                                 <ObjectIdentifier text="{
-                                  path: 'list>start_date',
+                                  path: 'list>system_create_dtm',
                                   formatter: '.dateFormatter.toDateTimeString'
                                 }"/>
+                                <ObjectIdentifier text="{list>update_user_id}"/>
                                 <ObjectIdentifier text="{
-                                  path: 'list>end_date',
+                                  path: 'list>system_update_dtm',
                                   formatter: '.dateFormatter.toDateTimeString'
                                 }"/>
-                                <ObjectIdentifier text="{list>company_code}"/>
-                                <ObjectIdentifier text="{list>language_code}"/>
-                                <ObjectIdentifier text="{list>timezone_code}"/>
-                                <ObjectIdentifier text="{list>date_format_type_code}"/>
-                                <ObjectIdentifier text="{list>digits_format_type_code}"/>
-                                <ObjectIdentifier text="{list>currency_code}"/>
                             </cells>
                         </ColumnListItem>
                     </items>
