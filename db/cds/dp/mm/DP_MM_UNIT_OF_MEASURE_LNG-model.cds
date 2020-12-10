@@ -29,11 +29,12 @@ entity Mm_Unit_Of_Measure_Lng {
         and parent.uom_code = uom_code;
 
   key language_code : String(4)  not null @title: 'Language' ;	
-    commercial_uom_code : String(3)  not null @title: '상업UOM코드' ;	
-    technical_uom_code : String(6)  not null @title: '기술UOM코드' ;	
+    uom_name : String(30)   @title: 'UOM명' ;
+    uom_desc : String(50)   @title: 'UOM설명' ;	    	
+    commercial_uom_code : String(3)  @title: '상업UOM코드' ;	
+    technical_uom_code : String(6)   @title: '기술UOM코드' ;	
     commercial_uom_name : String(30)   @title: '상업UOM명' ;	
     technical_uom_name : String(30)   @title: '기술UOM명' ;	
-    uom_desc : String(50)   @title: 'UOM설명' ;	
 }	
 
 extend Mm_Unit_Of_Measure_Lng with util.Managed;
