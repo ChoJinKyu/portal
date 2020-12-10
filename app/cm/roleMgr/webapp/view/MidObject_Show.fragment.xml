@@ -43,8 +43,7 @@
                 path: 'org>/Org_Tenant',
                 filters: [
                 ]
-            }"
-            change="searchTenantComboChange">
+            }">
         <items>
             <core:Item key="{org>tenant_id}" text="{org>tenant_id} : {org>tenant_name}" />
         </items>
@@ -130,12 +129,16 @@
         />
 
         <Label text="회사" labelFor="searchOrgCombo" required="true"></Label>
-        <ComboBox editable="false" id="searchOrgCombo" width="100%" selectedKey="{master>/company_code}" 
-        items="{
-            path: 'org>/Org_Company',
-            filters: [
-            ]
-        }">
+        <ComboBox
+            editable="false"
+            id="searchOrgCombo"
+            width="100%"
+            selectedKey="{master>/company_code}"
+            items="{
+                path: 'org>/Org_Company',
+                filters: [
+                ]
+            }">
         <items>
             <core:Item key="{org>company_code}" text="{org>company_code}: {org>company_name}" />
         </items>

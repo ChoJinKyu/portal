@@ -1,4 +1,4 @@
-<mvc:View controllerName="cm.userMgr.controller.MainList"
+<mvc:View controllerName="cm.roleMgr.controller.MainList"
     xmlns:mvc="sap.ui.core.mvc" 
     xmlns="sap.m" 
     xmlns:f="sap.f" 
@@ -15,7 +15,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="사용자 관리" />
+                    <Title text="역할 관리" />
                 </f:heading>
                 <f:snappedContent>
                 </f:snappedContent>
@@ -45,19 +45,25 @@
                                 path: 'org>/Org_Tenant',
                                 filters: [
                                 ]
-                              }"
-                              change="handleChange">
+                              }">
                               <items>
                                 <core:Item key="{org>tenant_id}" text="{org>tenant_id} : {org>tenant_name}" />
                               </items>
                             </ComboBox>
                             <!-- 회사 -->
                             <Label text="회사" labelFor="searchOrgCombo" required="false"></Label>
-                            <ComboBox id="searchOrgCombo" width="100%" >
+                            <ComboBox
+                              id="searchOrgCombo"
+                              width="100%"
+                              items="{
+                                path: 'org>/Org_Company',
+                                filters: [
+                                ]
+                              }">
                               <!-- {path: 'tenant_id', operator: 'EQ', value1: 'L2100'} -->
                               <items>
-                              <!--   <core:Item key="{org>company_code}" text="{org>company_code}: {org>company_name}" />-->
-                              </items> 
+                                <core:Item key="{org>company_code}" text="{org>company_code}: {org>company_name}" />
+                              </items>
                             </ComboBox>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
@@ -128,7 +134,7 @@
                         growingThreshold="10"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
-                        items="{list>/UserMgr}"
+                        items="{list>/roleMgr}"
                         mode="None" 
                         width="auto">
                     <headerToolbar>

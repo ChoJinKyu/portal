@@ -20,7 +20,7 @@ sap.ui.define([
 ], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
   "use strict";
 
-    return BaseController.extend("cm.userMgr.controller.MainList", {
+    return BaseController.extend("cm.roleMgr.controller.MainList", {
 
         dateFormatter: DateFormatter,
 
@@ -53,13 +53,10 @@ sap.ui.define([
             }, true);
         
             this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
-
-
         },
 
         onRenderedFirst: function () {
-            //this.byId("pageSearchButton").firePress();
-            this.byId("searchTenantCombo").fireChange();
+        //this.byId("pageSearchButton").firePress();
         },
 
         /* =========================================================== */
@@ -194,7 +191,7 @@ sap.ui.define([
             oModel = this.getModel("list");
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
-            oModel.read("/UserMgr", {
+            oModel.read("/roleMgr", {
                 filters: aSearchFilters,
                 success: function (oData) {
                     console.log(">>>> success", oData);
@@ -215,24 +212,7 @@ sap.ui.define([
             if (!!this.byId("searchUseflag").getSelectedKey()) aSearchFilters.push(new Filter("use_flag", FilterOperator.EQ, this.byId("searchUseflag").getSelectedKey()));
 
             return aSearchFilters;
-        },
-
-        handleChange: function (oEvent) {
-
-            this.getModel("org");
-            var combo = this.byId("searchOrgCombo");
-            combo.bindItems({
-                path: 'org>/Org_Company',
-                filters: [
-                    new Filter('tenant_id', FilterOperator.EQ, oEvent.getSource().getSelectedKey())
-                ],
-                template: new Item({
-                    key: "{org>company_code}", text:"{org>company_code}: {org>company_name}"
-                })
-            });
-
-
-		}
+        }
 
     });
 });
