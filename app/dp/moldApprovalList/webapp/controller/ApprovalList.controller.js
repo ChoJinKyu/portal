@@ -748,6 +748,7 @@ sap.ui.define([
                 );
             }
 
+
             if (aCompany.length > 0) {
                 var _tempFilters = [];
 
@@ -811,7 +812,7 @@ sap.ui.define([
             }
 
             if (sRequester) {
-                aSearchFilters.push(new Filter("tolower(requestor_empno)", FilterOperator.Contains, "'" + sRequester.toLowerCase() + "'"));
+                aSearchFilters.push(new Filter("tolower(user_id)", FilterOperator.Contains, "'" + sRequester.toLowerCase() + "'"));
             }
 
             if (sSubject) {
