@@ -625,7 +625,7 @@ sap.ui.define([
                 }
             }
         },
-
+        //
         onApplovalDeletePress: function () {
             var oTable = this.byId("mainTable"),
                 oModel = this.getModel(),
