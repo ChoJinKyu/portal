@@ -6,45 +6,28 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
+    "sap/f/LayoutType",
     "ext/lib/util/ValidatorUtil",
     "./Master.controller"
-], function (BaseController, JSONModel, Filter, Sorter, FilterOperator, MessageBox, MessageToast, ValidatorUtil, Master) {
+], function (BaseController, JSONModel, Filter, Sorter, FilterOperator, MessageBox, MessageToast, LayoutType, ValidatorUtil, Master) {
 	"use strict";
 
 	return BaseController.extend("cm.codeManagement.controller.Detail", {
 		onInit: function () {
-            
-			// var oExitButton = this.getView().byId("exitFullScreenBtn"),
-			// 	oEnterButton = this.getView().byId("enterFullScreenBtn");
 			this.oRouter = this.getOwnerComponent().getRouter();
-			// this.oModel = this.getOwnerComponent().getModel();
+			this.oRouter.getRoute("detail").attachPatternMatched(this._onCodeGroupDetailMatched, this);
+        },
 
-			this.oRouter.getRoute("master").attachPatternMatched(function(){console.log("master")}, this);
-			// this.oRouter.getRoute("master").attachPatternMatched(this._onProductMatched, this);
-			this.oRouter.getRoute("detail").attachPatternMatched(this._onDetailMatched, this);
-			this.oRouter.getRoute("detailDetail").attachPatternMatched(function(){console.log("detailDetail")}, this);
-			// this.oRouter.getRoute("detailDetail").attachPatternMatched(this._onProductMatched, this);
+        onBeforeRendering : function(){
 
-			// [oExitButton, oEnterButton].forEach(function (oButton) {
-			// 	oButton.addEventDelegate({
-			// 		onAfterRendering: function () {
-			// 			if (this.bFocusFullScreenButton) {
-			// 				this.bFocusFullScreenButton = false;
-			// 				oButton.focus();
-			// 			}
-			// 		}.bind(this)
-			// 	});
-			// }, this);
         },
 
         onAfterRendering : function(){
-            // var oData = {
-            //     readMode : true,
-            //     editMode : false
-            // }
-            // var oContModel = this.getModel("contModel");
-            // oContModel.setProperty("/detail", oData);
-            // oContModel.setProperty("/detail", {});
+           
+        },
+
+        onExit : function(){
+            
         },
 
         _fnInitControlModel : function(){
@@ -98,6 +81,7 @@ sap.ui.define([
 
         onEditPress : function(){
             this._fnSetEditMode();
+            this.onTenantChange();
         },
 
         onCancelPress : function(){
@@ -105,7 +89,7 @@ sap.ui.define([
 
             var oViewModel = this.getModel("viewModel");
             var oParam = oViewModel.getProperty("/detailClone");
-            oViewModel.setProperty("/detail", oParam);
+            oViewModel.setProperty("/detail", $.extend(true, {}, oParam));
         },
 
         _fnSetCreateData : function(){
@@ -114,7 +98,7 @@ sap.ui.define([
                 group_code: "",
                 group_description: "",
                 group_name: "",
-                tenant_id: "",
+                tenant_id: "L2100",
                 use_flag: true
                 // CodeDetails: []
             };
@@ -154,8 +138,9 @@ sap.ui.define([
         },
         
 		handleClose: function () {
-			//var sNextLayout = this.oModel.getProperty("/actionButtonsInfo/midColumn/closeColumn");
-			this.oRouter.navTo("master", {layout: 'OneColumn'});
+            var sLayout = LayoutType.OneColumn;
+            var oFclModel = this.getModel("fcl");
+            oFclModel.setProperty("/layout", sLayout);
         },
         
         onAddDetailDetailPress : function(){
@@ -170,6 +155,7 @@ sap.ui.define([
             var oSearchBtn = oBeginColumnPage.byId('btn_search');
             oSearchBtn.firePress();
         },
+
         onSavePress : function(){
             var oContModel = this.getModel("contModel");
             var bCreateFlag = oContModel.getProperty("/detail/createMode");
@@ -233,7 +219,7 @@ sap.ui.define([
                 success: function(data){
                     this._fnMasterSearch();
                     this._fnSetReadMode();
-                },
+                }.bind(this),
                 error: function(data){
                     console.log('error',data)
                 }
@@ -270,7 +256,7 @@ sap.ui.define([
                     // var sLayout = oNextUIState.layout;
                     this._fnMasterSearch();
                     MessageToast.show("Success to save.");
-                    var sLayout = "OneColumn";
+                    var sLayout = LayoutType.OneColumn;
                     this.getRouter().navTo("master", {layout: sLayout});
                 }.bind(this),
                 error: function(){
@@ -279,8 +265,7 @@ sap.ui.define([
             });
         },
 
-		_onDetailMatched: function (oEvent) {
-            console.log('_onDetailMatched', oEvent)
+		_onCodeGroupDetailMatched: function (oEvent) {
             this._fnInitControlModel();
 
             var sTenantId = oEvent.getParameter("arguments").tenantId;
@@ -294,6 +279,7 @@ sap.ui.define([
             if(bCreateMode){
                 this._fnSetCreateMode();
                 this._fnSetCreateData();
+                this.onTenantChange();
             }else{
                 this._fnSetReadMode();
                 this._fnReadDetails(sTenantId, sGroupCode);
@@ -370,10 +356,25 @@ sap.ui.define([
             }
 
             return aChain;
+        },
 
-            
+        onTenantChange : function(oEvent){
+            // var sTenant = oEvent.getSource().getSelectedKey();
+            var oViewModel = this.getModel("viewModel");
+            var sTenant = oViewModel.getProperty("/detail/tenant_id");
+            var aFilters = [
+                new Filter("tenant_id", FilterOperator.EQ, sTenant),
+                new Filter("group_code", FilterOperator.EQ, 'CM_CHAIN_CD')
+            ];
+            var oItemTemplate = new sap.ui.core.ListItem({
+                key : "{util>code}",
+                text : "{util>code_description}",
+                additionalText : "{util>code}"
+            });
 
-            
+            var oChain = this.byId("chain_code");
+            oChain.setSelectedKey(null);
+            oChain.bindItems("util>/CodeDetails", oItemTemplate, null, aFilters);
         }
 	});
 });

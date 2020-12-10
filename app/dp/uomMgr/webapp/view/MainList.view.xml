@@ -38,10 +38,13 @@
                         <VBox>
                             <Label text="UOM Class :" labelFor="searchUomClass" ></Label>
                             <ComboBox id="searchUomClass" width="100%" selectedKey="" items="{
-                                path: 'uomClass>/UomClass'
+                                path: 'uomClass>/UomClass',
+                                filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}                                        
+                                    ]
                                 }">
                                 <items>
-                                    <core:Item key="{uomClass>uom_class_code}" text="{uomClass>uom_class_code}: {uomClass>uom_class_name}" />
+                                    <core:Item key="{uomClass>uom_class_code}" text="{uomClass>uom_class_name}" />
                                 </items>
                             </ComboBox>
                             <layoutData>
@@ -148,7 +151,7 @@
                             <cells>
                                 <ObjectIdentifier text="{list>uom_code}"/>
                                 <ObjectIdentifier text="{list>commercial_uom_code}"/>
-                                <ObjectIdentifier text="{list>comercial_uom_name}"/>                                
+                                <ObjectIdentifier text="{list>commercial_uom_name}"/>                                
                                 <ObjectStatus 
                                     icon="{= ${list>base_unit_flag} === true ? 'sap-icon://accept' : ''}"/>
                                 <ObjectIdentifier text="{list>uom_class_code}"/>

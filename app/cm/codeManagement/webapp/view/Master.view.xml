@@ -4,6 +4,7 @@
     xmlns:core="sap.ui.core"
     xmlns="sap.m"
     xmlns:f="sap.f"
+    xmlns:tnt="sap.tnt"
     xmlns:form="sap.ui.layout.form"
     xmlns:layout="sap.ui.layout"
     height="100%">
@@ -20,7 +21,6 @@
         <f:header>
             <f:DynamicPageHeader pinnable="true">
                 <form:SimpleForm
-                    id="form"
                     maxContainerCols="2"
                     editable="true"
                     layout="ResponsiveGridLayout"
@@ -37,28 +37,19 @@
                                 text="Tenant: "
                                 labelFor="search_tenant">
                             </Label>
-                            <Input id="search_tenant"/>
-                            <layoutData>
-                                <layout:GridData
-                                    span="XL2 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label
-                                text="Chain : "
-                                labelFor="search_chain">
-                            </Label>
                             <ComboBox   
-                                id="search_chain"
+                                id="search_tenant"
+                                showSecondaryValues= "true"
+                                selectionChange=".onTenantChange"
+                                selectedKey="{contModel>/tenant_id}"
                                 items="{
-                                    path : 'util>/CodeDetails',
-                                    filters : [
-                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
-                                        {path : 'group_code', operator : 'EQ', value1 : 'CM_CHAIN_CD'}                                                               
-                                    ]
+                                    path : 'orgMgr>/Org_Tenant'
                                 }"
                             >
-                                <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+                               <core:ListItem 
+                                    key="{orgMgr>tenant_id}" 
+                                    text="{orgMgr>tenant_name}"
+                                    additionalText="{orgMgr>tenant_id}"/>
                             </ComboBox>
                             <layoutData>
                                 <layout:GridData
@@ -67,7 +58,36 @@
                         </VBox>
                         <VBox>
                             <Label
-                                text="Code Group Useflag : "
+                                text="Chain: "
+                                labelFor="search_chain">
+                            </Label>
+                            <!-- <ComboBox   
+                                id="search_chain"
+                                showSecondaryValues= "true"
+                                items="{
+                                    path : 'util>/CodeDetails',
+                                    filters : [
+                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                        {path : 'group_code', operator : 'EQ', value1 : 'CM_CHAIN_CD'}                                                               
+                                    ]
+                                }"
+                            >
+                                <core:Item 
+                                    key="{util>code}" 
+                                    text="{util>code_description}"
+                                    additionalText = "{util>code}" />
+                            </ComboBox> -->
+                            <ComboBox   
+                                id="search_chain"
+                                showSecondaryValues= "true"/>
+                            <layoutData>
+                                <layout:GridData
+                                    span="XL2 L3 M6 S12" />
+                            </layoutData>   
+                        </VBox>
+                        <VBox>
+                            <Label
+                                text="Code Group Useflag: "
                                 labelFor="search_codeGroupUseflag">
                             </Label>
                             <SegmentedButton 
@@ -87,7 +107,7 @@
                         </VBox>
                         <VBox>
                             <Label
-                                text="Keyword : "
+                                text="Keyword: "
                                 labelFor="search_Keyword">
                             </Label>
                             <Input id="search_keyword" 
@@ -133,7 +153,7 @@
                 </headerToolbar>
                 <columns>
                     <Column
-                        width="7em"
+                        width="6em"
                         minScreenWidth="Tablet"
                         demandPopin="true">
                         <Text text="Tenant ID" />
@@ -145,16 +165,15 @@
                         <Text text="Chain Code" />
                     </Column>
                     <Column
-                            width="20em">
+                        width="18em">
                         <Text text="Code Group" />
                     </Column>
                     <Column
-                            minScreenWidth="Tablet"
-                            demandPopin="true">
+                        minScreenWidth="Tablet"
+                        demandPopin="true">
                         <Text text="Code Group Name" />
                     </Column>
                     <Column
-                        width="20em"
                         minScreenWidth="Tablet"
                         demandPopin="true">
                         <Text text="Description" />
@@ -174,7 +193,20 @@
                             <Text text="{viewModel>group_code}" />
                             <Text text="{viewModel>group_name}" />
                             <Text text="{viewModel>group_description}" />
-                            <Text text="{viewModel>use_flag}" />
+                            <HBox>
+                                <tnt:InfoLabel 
+                                    text="True" 
+                                    visible="{viewModel>use_flag}"
+                                    renderMode="Narrow" 
+                                    colorScheme="7" 
+                                    displayOnly= "true" />
+                                <tnt:InfoLabel 
+                                    text="False" 
+                                    visible="{= !${viewModel>use_flag}}"
+                                    renderMode="Narrow" 
+                                    colorScheme="5" 
+                                    displayOnly= "true" />
+                            </HBox>
                         </cells>
                     </ColumnListItem>
                 </items>

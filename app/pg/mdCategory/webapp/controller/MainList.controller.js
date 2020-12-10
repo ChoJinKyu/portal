@@ -100,7 +100,7 @@ sap.ui.define([
 		onPageSearchButtonPress : function (oEvent) {
             var forceSearch = function(){
 				var aTableSearchState = this._getSearchStates();
-				this._applySearch(aTableSearchState);
+                this._applySearch(aTableSearchState);
 			}.bind(this);
 			
 			if(this.getModel("list").isChanged() === true){
@@ -150,13 +150,15 @@ sap.ui.define([
 				"org_type_code": "BU",
 				"org_code": "L210000000",
 				"spmd_category_code": "C101",
-				"spmd_character_code": "T999",
+				// "spmd_character_code": "T999",
 				"spmd_character_code_name": "TEST",
 				"spmd_character_desc": "TEST_DESC",
-				"spmd_character_type_code": "T",
-				"spmd_character_value_unit": "",
-				"spmd_character_serial_no": "",
-                "system_update_dtm": new Date()
+				// "spmd_character_type_code": "T",
+				// "spmd_character_value_unit": "",
+                "spmd_character_sort_seq": "10",
+                "system_update_dtm": new Date(),
+                // "local_create_dtm": new Date(),
+                // "local_update_dtm": new Date()
             }, "/MdCategoryItem" , idx);     //, "/MdCategoryItem"
             
             oTable.getAggregation('items')[idx].getCells()[1].getItems()[0].setVisible(false);
@@ -186,7 +188,8 @@ sap.ui.define([
 						oModel.submitChanges({
 							success: function(oEvent){
 								oView.setBusy(false);
-								MessageToast.show(this.getModel("I18N").getText("/NCM0005"));
+                                MessageToast.show(this.getModel("I18N").getText("/NCM0005"));
+                                this._refreshSearch();
 							}.bind(this)
 						});
 					}
@@ -217,7 +220,34 @@ sap.ui.define([
 				}
 			});
 		},
-		
+        
+        
+		/**
+		 * Internal helper method to apply both filter and search state together on the list binding
+		 * @param {sap.ui.model.Filter[]} aTableSearchState An array of filters for the search
+		 * @private
+		 */
+		_refreshSearch: function() {
+			var oView = this.getView(),
+                oTable = this.byId("mainTable"),
+                oModel = this.getModel("list");
+            oView.setBusy(true);
+            
+			oModel.setTransactionModel(this.getModel());
+			oModel.read("/MdCategoryItem", {
+				success: function(oData){
+					oView.setBusy(false);
+				}
+            });
+            var idx = 0 ;
+            oTable.getAggregation('items')[idx].getCells()[1].getItems()[0].setVisible(true);
+            oTable.getAggregation('items')[idx].getCells()[1].getItems()[1].setVisible(false);
+            oTable.getAggregation('items')[idx].getCells()[2].getItems()[0].setVisible(true);
+            oTable.getAggregation('items')[idx].getCells()[2].getItems()[1].setVisible(false);
+            oTable.getAggregation('items')[idx].getCells()[4].getItems()[0].setVisible(true);
+            oTable.getAggregation('items')[idx].getCells()[4].getItems()[1].setVisible(false);
+        },
+        
 		_getSearchStates: function(){
 			var keyword = this.getView().byId("searchKeyword").getValue();
                 

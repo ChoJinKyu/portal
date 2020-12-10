@@ -1,8 +1,9 @@
 sap.ui.define([
     "ext/lib/controller/BaseController",
+	"ext/lib/formatter/DateFormatter",
     "ext/lib/model/ManagedListModel",
     "ext/lib/util/Multilingual",
-	"../model/formatter",
+    "ext/lib/util/Validator",
 	"./developmentReceiptPersoService",
     "sap/ui/base/ManagedObject",
 	"sap/ui/core/routing/History",
@@ -24,14 +25,16 @@ sap.ui.define([
 	"sap/m/ObjectIdentifier",
 	"sap/m/Text",
     "sap/m/Token"
-], function (BaseController, ManagedListModel, Multilingual, formatter, developmentReceiptPersoService, 
+], function (BaseController, DateFormatter, ManagedListModel, Multilingual, Validator, developmentReceiptPersoService, 
     ManagedObject, History, Element, Fragment, JSONModel, Filter, FilterOperator, Sorter, Column, Row, TablePersoController, Item, 
     ComboBox, ColumnListItem, Input, MessageBox, MessageToast, ObjectIdentifier, Text, Token) {
 	"use strict";
 
 	return BaseController.extend("dp.developmentReceipt.controller.developmentReceipt", {
 
-		formatter: formatter,
+        dateFormatter: DateFormatter,
+        
+        validator: new Validator(),
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -59,6 +62,15 @@ sap.ui.define([
 				intent: "#Template-display"
             }, true);
 
+            
+            /** Receipt Date */
+            var today = new Date();
+            
+            this.getView().byId("searchCreationDateE").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
+            this.getView().byId("searchCreationDateE").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+            this.getView().byId("searchCreationDateS").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
+            this.getView().byId("searchCreationDateS").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+            
             //this._doInitSearch();
             //this._doInitTablePerso();
             
@@ -237,15 +249,14 @@ sap.ui.define([
 			this._toEditMode();
         },
         
-		onMoldMstTableCancelButtonPress: function(){
-			
-		},
-
-       
         onMoldMstTableBindButtonPress: function(){
 			
         },
 		
+		onMoldMstTableCancelButtonPress: function(){
+			
+		},
+       
 		/**
 		 * Event handler for cancel page editing
 		 * @public
@@ -327,11 +338,14 @@ sap.ui.define([
                     if (sButton === MessageBox.Action.OK) {
                         oSelected.forEach(function (idx) {//console.log(lModel.getData().MoldMasters[idx]);console.log(oModel.oData);
                             var sEntity = lModel.getData().MoldMasters[idx].__entity;
+                            lModel.getData().MoldMasters[idx].mold_progress_status_code = "DEV_RCV";
+                            //lModel.getData().MoldMasters[idx].receiving_report_date = this.getFormatDate(new Date());
+                            
                             delete lModel.getData().MoldMasters[idx].__entity;
                             oModel.update(sEntity, lModel.getData().MoldMasters[idx], {
                                 groupId: "receipt"
                             });
-                        });
+                        }.bind(this));
                         
                         oModel.submitChanges({
                             groupId: "receipt",
@@ -386,7 +400,34 @@ sap.ui.define([
 		 * @public
 		 */
         onPageSaveButtonPress: function(){
-            this.onMoldMstTableReceiptButtonPress.apply(this, arguments);
+            var oModel = this.getModel("list"),
+				oView = this.getView();
+			
+			if(!oModel.isChanged()) {
+				MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
+				return;
+            }
+
+            if(this.validator.validate(this.byId("moldMstTable")) !== true){
+                MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
+                return;
+            }
+            
+			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
+				title : this.getModel("I18N").getText("/SAVE"),
+				initialFocus : sap.m.MessageBox.Action.CANCEL,
+				onClose : function(sButton) {
+					if (sButton === MessageBox.Action.OK) {
+						oView.setBusy(true);
+						oModel.submitChanges({
+							success: function(oEvent){
+								oView.setBusy(false);
+								MessageToast.show(this.getModel("I18N").getText("/NCM0005"));
+							}.bind(this)
+						});
+					};
+				}.bind(this)
+			});
         },
         
 		/**
@@ -408,14 +449,14 @@ sap.ui.define([
             
         },
 
-        receiptDateChange : function (oEvent) {
+        creationDateChange : function (oEvent) {
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S",
                 seSurffix = sSurffix === "E" ? "S" : "E",
                 sFrom = oEvent.getParameter("from"),
 				sTo = oEvent.getParameter("to");
 
-			this.getView().byId("searchReceiptDate"+seSurffix).setDateValue(new Date(sFrom.getFullYear(), sFrom.getMonth(), sFrom.getDate()));
-            this.getView().byId("searchReceiptDate"+seSurffix).setSecondDateValue(new Date(sTo.getFullYear(), sTo.getMonth(), sTo.getDate()));
+			this.getView().byId("searchCreationDate"+seSurffix).setDateValue(sFrom);
+            this.getView().byId("searchCreationDate"+seSurffix).setSecondDateValue(sTo);
 		},
         
         onStatusSelectionChange : function (oEvent) {
@@ -424,20 +465,6 @@ sap.ui.define([
                 oSearchStatus = this.getView().byId("searchStatus"+seSurffix);
 
             oSearchStatus.setSelectedKey(oEvent.getParameter("item").getKey());
-            
-            /** Receipt Date */
-            var today = new Date();
-            if(oEvent.getParameter("item").getKey() === 'received'){
-                this.getView().byId("searchReceiptDate"+sSurffix).setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
-                this.getView().byId("searchReceiptDate"+sSurffix).setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
-                this.getView().byId("searchReceiptDate"+seSurffix).setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
-                this.getView().byId("searchReceiptDate"+seSurffix).setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
-            }else{
-                this.getView().byId("searchReceiptDate"+sSurffix).setDateValue(null);
-                this.getView().byId("searchReceiptDate"+sSurffix).setSecondDateValue(null);
-                this.getView().byId("searchReceiptDate"+seSurffix).setDateValue(null);
-                this.getView().byId("searchReceiptDate"+seSurffix).setSecondDateValue(null);
-            }
 		},
 
         familyFlagChange : function (oEvent) {
@@ -501,19 +528,20 @@ sap.ui.define([
 			oModel.read("/MoldMasters", {
 				filters: aTableSearchState,
 				success: function(oData){
+                    this.validator.clearValueState(this.byId("moldMstTable"));
                     oView.setBusy(false);
-				}
+				}.bind(this)
 			});
         },
         
 		_getSearchStates: function(){
 			var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S",
-				affiliate = this.getView().byId("searchAffiliate"+sSurffix).getSelectedItems(),
+				company = this.getView().byId("searchCompany"+sSurffix).getSelectedItems(),
                 division = this.getView().byId("searchDivision"+sSurffix).getSelectedItems(),
                 statusSelectedItemId = this.getView().byId("searchStatus"+sSurffix).getSelectedItem(),
                 status = Element.registry.get(statusSelectedItemId).getText(),
-                receiptFromDate = this.getView().byId("searchReceiptDate"+sSurffix).getDateValue(),
-                receiptToDate = this.getView().byId("searchReceiptDate"+sSurffix).getSecondDateValue(),
+                receiptFromDate = this.getView().byId("searchCreationDate"+sSurffix).getDateValue(),
+                receiptToDate = this.getView().byId("searchCreationDate"+sSurffix).getSecondDateValue(),
                 itemType = this.getView().byId("searchItemType").getSelectedKey(),
                 productionType = this.getView().byId("searchProductionType").getSelectedKey(),
                 eDType = this.getView().byId("searchEDType").getSelectedKey(),
@@ -523,18 +551,18 @@ sap.ui.define([
                 familyPartNo = this.getView().byId("searchFamilyPartNo").getValue();
 				
             var aTableSearchState = [];
-            var affiliateFilters = [];
+            var companyFilters = [];
             var divisionFilters = [];
 
-            if(affiliate.length > 0){
+            if(company.length > 0){
 
-                affiliate.forEach(function(item){
-                    affiliateFilters.push(new Filter("company_code", FilterOperator.EQ, item.mProperties.key ));
+                company.forEach(function(item){
+                    companyFilters.push(new Filter("company_code", FilterOperator.EQ, item.mProperties.key ));
                 });
 
                 aTableSearchState.push(
                     new Filter({
-                        filters: affiliateFilters,
+                        filters: companyFilters,
                         and: false
                     })
                 );
@@ -553,17 +581,15 @@ sap.ui.define([
                     })
                 );
             }
-            
-			if (status !== "All") {
-				aTableSearchState.push(new Filter("mold_receipt_flag", FilterOperator.EQ, (status == "Received" ? true : false)));
 
-				if (status == "Received") {
-					if (receiptFromDate === null) {
-                        MessageToast.show("Receipt Date를 입력해 주세요");
-                    } else {
-                        aTableSearchState.push(new Filter("receiving_report_date", FilterOperator.BT, this.getFormatDate(receiptFromDate), this.getFormatDate(receiptToDate)));
-					}
-				}
+            if (receiptFromDate === null) {
+                MessageToast.show("Receipt Date를 입력해 주세요");
+                return false;
+            } else {
+                aTableSearchState.push(new Filter("local_create_dtm", FilterOperator.BT, receiptFromDate, receiptToDate));
+            }
+			if (status !== "All") {
+				aTableSearchState.push(new Filter("mold_progress_status_code", FilterOperator.EQ, (status == "Received" ? "DEV_RCV" : "DEV_REQ")));
 			}
 			if (itemType && itemType.length > 0) {
 				aTableSearchState.push(new Filter("mold_item_type_code", FilterOperator.EQ, itemType));
@@ -572,13 +598,13 @@ sap.ui.define([
 				aTableSearchState.push(new Filter("mold_production_type_code", FilterOperator.EQ, productionType));
 			}
 			if (eDType && eDType.length > 0) {
-				aTableSearchState.push(new Filter("export_domestic_type_code", FilterOperator.EQ, eDType));
+				aTableSearchState.push(new Filter("mold_location_type_code", FilterOperator.EQ, eDType));
 			}
 			if (model && model.length > 0) {
                 aTableSearchState.push(new Filter("tolower(model)", FilterOperator.Contains, "'" + model.toLowerCase() + "'"));
 			}
 			if (partNo && partNo.length > 0) {
-                aTableSearchState.push(new Filter("part_number", FilterOperator.Contains, partNo.toUpperCase()));
+                aTableSearchState.push(new Filter("mold_number", FilterOperator.Contains, partNo.toUpperCase()));
 			}
 			if (description && description.length > 0) {
                 aTableSearchState.push(new Filter("tolower(spec_name)", FilterOperator.Contains, "'" + description.toLowerCase() + "'"));

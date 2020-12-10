@@ -49,6 +49,7 @@
     }
   },
   "sap.ui5": {
+    "flexEnabled": false,
     "rootView": {
       "viewName": "cm.msgMgr.view.App",
       "type": "XML",

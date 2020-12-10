@@ -1,81 +1,104 @@
 sap.ui.define([
     "sap/m/ComboBox",
-    "sap/ui/core/Item",
-    "sap/ui/model/json/JSONModel",
-	"sap/ui/model/odata/v2/ODataModel",
-    "sap/ui/model/Sorter",
-    "sap/ui/model/Filter",
-    "sap/ui/model/FilterOperator",
-], function (ComboBox, Item, JSONModel, ODataModel, Sorter, Filter, FilterOperator) {
+    'sap/m/ComboBoxRenderer',
+    "ext/lib/core/service/ODataV2ServiceProvider",
+    "sap/ui/core/ListItem",
+    "sap/ui/model/json/JSONModel"
+], function (Parent, Renderer, ODataV2ServiceProvider, ListItem, JSONModel) {
     "use strict";
-
-    var oServiceModel = new ODataModel({
-        serviceUrl: "srv-api/odata/v2/cm.util.CommonService/",
-        defaultBindingMode: "OneWay",
-        defaultCountMode: "Inline",
-        refreshAfterChange: false,
-        useBatch: true
-    });
     
-    var CodeComboBox = ComboBox.extend("ext.lib.control.m.CodeComboBox", {
+    var CodeComboBox = Parent.extend("ext.lib.control.m.CodeComboBox", {
+
+        renderer: Renderer,
 
         metadata: {
             properties: {
-                groupCode: { type: "string", group: "Misc" },
+                keyField: { type: "string", group: "Misc", defaultValue: "code" },
+                textField: { type: "string", group: "Misc", defaultValue: "code_name" },
+                additionalTextField: { type: "string", group: "Misc" },
                 useEmpty: { type: "boolean", group: "Misc", defaultValue: false },
                 emptyKey: { type: "string", group: "Misc", defaultValue: "" },
-                emptyText: { type: "string", group: "Misc", defaultValue: "" },
-                showTextWithCode: { type: "boolean", group: "Misc", defaultValue: false },
+                emptyText: { type: "string", group: "Misc", defaultValue: "" }
+            },
+            events: {
+                ready: {
+                    parameters: {
+						serviceModel: {type: "object"}
+					}
+                },
+                complete: {
+                }
             }
         },
 
         init: function () {
-            ComboBox.prototype.init.call(this);
-            
+            Parent.prototype.init.call(this);
             this.setModel(new JSONModel());
-
-            this.attachEvent("modelContextChange", this._onModelContextChange);
-            // this.attachValueHelpRequest(this.handleValueHelpRequest);
         },
 
-        _onModelContextChange: function(oEvent){
-            this.bindItems({
-                path: "/",
-                template: new Item({
-                    key: "{code}",
-                    text: this.getProperty("showTextWithCode") ? "[{code}] {code_description}" : "{code_description}"
-                })
-            });
+        extractBindingInfo(oValue, oScope){
+            var oBindingInfo = Parent.prototype.extractBindingInfo.apply(this, arguments);
+            if(oBindingInfo && (oBindingInfo.serviceName || oBindingInfo.serviceUrl) && oBindingInfo.entityName){
+                var sKey = "{"+ this.getProperty("keyField") +"}",
+                    sText = "{"+ this.getProperty("textField") +"}",
+                    sAdditionalTextField = "{"+ (this.getProperty("additionalTextField") || this.getProperty("keyField")) +"}";
 
-            if(!this.getProperty("groupCode")){
-                return;
+                this.oServiceModel = oBindingInfo.serviceName ? 
+                    ODataV2ServiceProvider.getService(oBindingInfo.serviceName) : ODataV2ServiceProvider.getServiceByUrl(oBindingInfo.serviceUrl);
+                    
+                this.oServiceModel.read("/" + oBindingInfo.entityName, jQuery.extend(oBindingInfo, {
+                    success: function(oData){
+                        var aRecords = oData.results;
+                        if(this.getProperty("useEmpty") == true) {
+                            if(aRecords && aRecords.splice){
+                                var oEmpty = {};
+                                oEmpty[this.getProperty("keyField")] = this.getProperty("emptyKey");
+                                oEmpty[this.getProperty("textField")] = this.getProperty("emptyText");
+                                aRecords.splice(0, 0, oEmpty);
+                            }
+                        }
+                        this.getModel().setData(aRecords, false);
+                        this.fireEvent("complete");
+                    }.bind(this)
+                }));
+
+                delete oBindingInfo.serviceName;
+                delete oBindingInfo.entityName;
+                delete oBindingInfo.filters;
+                delete oBindingInfo.sorter;
+                oBindingInfo.path = "/";
+                oBindingInfo.template = new ListItem({
+                        key: sKey,
+                        text: sText,
+                        additionalText: sAdditionalTextField
+                    });
+                // oBindingInfo.filters = oBindingInfo.filters || [];
             }
-
-            var aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2100"),
-                    new Filter("group_code", FilterOperator.EQ, this.getProperty("groupCode"))
-                ], aSorters = [
-                    new Sorter("sort_no", false)
-                ];
-            oServiceModel.read("/CodeDetails", {
-                filters: aFilters,
-                sorters: aSorters,
-                urlParameters: {
-                    "$select": "code,code_description"
-                },
-                success: this._onRead.bind(this)
-            });
+            return oBindingInfo;
         },
 
-        _onRead: function(oData){
-            var aResults = oData.results;
-            if(this.getProperty("useEmpty") == true) {
-                aResults.splice(0, 0, {
-                    code: this.getProperty("emptyKey"), 
-                    code_description: this.getProperty("emptyText")
-                });
-            }
-            this.getModel().setData(aResults, false);
+        read: function(sPath, oParameters){
+            var handleSuccess = oParameters.success;
+            if(!this.oServiceModel)
+                this.oServiceModel = ODataV2ServiceProvider.getCommonService();
+            this.oServiceModel.read(sPath, jQuery.extend(oParameters, {
+                success: function(oData){
+                    var aRecords = oData.results;
+                    if(this.getProperty("useEmpty") == true) {
+                        if(aRecords && aRecords.splice){
+                            var oEmpty = {};
+                            oEmpty[this.keyField] = this.getProperty("emptyKey");
+                            oEmpty[this.textField] = this.getProperty("emptyText");
+                            aRecords.splice(0, 0, oEmpty);
+                        }
+                    }
+                    this.getModel().setSizeLimit(aRecords.length || 100);
+                    this.getModel().setData(aRecords, false);
+                    if(handleSuccess) 
+                        handleSuccess.apply(this, arguments);
+                    this.fireEvent("complete");
+                }.bind(this)
+            }));
         }
         
     });

@@ -1,24 +1,25 @@
-using { dp as approvalMst } from '../../../../db/cds/dp/moldMgt/DP_MD_APPROVAL_MST-model';
+using { cm as approvalMst } from '../../../../db/cds/cm/apprReq/CM_APPROVAL_MST-model'; 
 using { dp as approvalDtl } from '../../../../db/cds/dp/moldMgt/DP_MD_APPROVAL_DTL-model';
-using { dp as moldMst } from '../../../../db/cds/dp/moldMgt/DP_MOLD_MST-model';
+using { cm as approver } from '../../../../db/cds/cm/apprReq/CM_APPROVER-model';
+using { dp as moldMst } from '../../../../db/cds/dp/moldMgt/DP_MD_MST-model';
 
 
 namespace dp;
 @path : '/dp.BudgetExecutionApprovalService'
 service BudgetExecutionApprovalService {
 
-    entity ApprovalMasters as projection on approvalMst.Md_Approval_Mst;
-    entity ApprovalDetails as projection on approvalDtl.Md_Approval_Dtl;
-    entity MoldMasters as projection on moldMst.Mold_Mst;
+    entity ApprovalMasters as projection on approvalMst.Approval_Mst;
+    entity ApprovalDetails as projection on approvalDtl.Md_Approval_Dtl; 
+    entity Approver as projection on approver.Approver;
+    entity MoldMasters as projection on moldMst.Md_Mst;
 
     view ItemBudgetExecution as 
     select key dtl.approval_number  ,  
-            dtl.approval_type_code  ,
             mst.tenant_id,
             mst.company_code,
             mst.org_type_code,
             mst.org_code,
-            mst.part_number,
+            mst.mold_number,
             mst.mold_sequence,
             mst.mold_id,
             mst.spec_name,
@@ -26,65 +27,26 @@ service BudgetExecutionApprovalService {
             mst.asset_number,
             mst.mold_item_type_code,
             mst.mold_production_type_code,
-            mst.export_domestic_type_code,
             mst.first_production_date,
             mst.production_complete_date,
-            mst.budget_report_number,
-            mst.budget_report_date,
             mst.budget_amount,
             mst.currency_code,
             mst.target_amount,
-            mst.quotation_end_date,
-            mst.mold_receipt_flag,
-            mst.import_mold_flag,
-            mst.costtable_use_flag,
-            mst.quotation_report_number,
-            mst.quotation_report_date,
-            mst.quotation_cancel_report_number,
-            mst.quotation_cancel_report_date,
-            mst.quotation_cancel_reason,
-            mst.vendor_selection_remark,
-            mst.order_report_number,
-            mst.order_report_date,
             mst.order_confirmed_amount,
-            mst.order_vendor_id,
-            mst.order_amount,
-            mst.revised_status_code,
-            mst.revised_report_number,
-            mst.revised_report_date,
             mst.order_number,
             mst.investment_ecst_type_code,
             mst.project_code,
-            mst.develope_cancel_report_number,
-            mst.develope_cancel_report_date,
-            mst.receiving_report_number,
-            mst.receiving_report_date,
             mst.receiving_amount,
             mst.receiving_complete_date,
             mst.account_code,
-            mst.activity_code,
             mst.accounting_department_code,
             mst.acq_department_code,
-            mst.production_vendor_id,
             mst.remark,
-            mst.develope_request_code,
-            mst.develope_request_empno,
-            mst.pdm_id,
             mst.eco_number,
             mst.set_id,
-            mst.ap_transfer_flag,
-            mst.import_order_report_number,
-            mst.import_order_report_date,
-            mst.po_status_code,
             mst.market_type_code,
             mst.product_group_code,
             mst.product_group_type_code,
-            mst.complete_report_number,
-            mst.complete_report_date,
-            mst.order_contract_sequence,
-            mst.lease_contract_sequence,
-            mst.bms_status_code,
-            mst.bms_id,
             mst.provisional_budget_amount,
             mst.book_currency_code,
             mst.budget_exrate_date,
@@ -93,30 +55,16 @@ service BudgetExecutionApprovalService {
             mst.prepay_rate,
             mst.progresspay_rate,
             mst.rpay_rate,
-            mst.sales_status_code,
             mst.pr_number,
-            mst.boi_number,
             mst.import_company_code,
             mst.import_company_org_code,
-            mst.prodvendor_update_report_number,
-            mst.prodvendor_update_report_date,
-            mst.receiving_complete_tr_date,
             mst.inspection_date,
-            mst.temp_ap_flag,
-            mst.tax_exempt_flag,
             mst.family_part_number_1,
             mst.family_part_number_2,
             mst.family_part_number_3,
             mst.family_part_number_4,
             mst.family_part_number_5,
-            mst.original_fa_mold_id,
-            mst.t_est_use_flag,
             mst.mold_type_code,
-            mst.mold_vendor_id,
-            mst.mold_developer_id,
-            mst.pdm_project_code,
-            mst.pdm_project_name,
-            mst.buyer_asset_type_code,
             mst.asset_type_code,
             mst.asset_status_code,
             mst.scrap_date,
@@ -130,7 +78,7 @@ service BudgetExecutionApprovalService {
             mst.system_create_dtm,
             mst.system_update_dtm
     from approvalDtl.Md_Approval_Dtl dtl 
-    join moldMst.Mold_Mst mst on dtl.mold_id = mst.mold_id;       
+    join moldMst.Md_Mst mst on dtl.mold_id = mst.mold_id;       
        
 
 }

@@ -7,9 +7,9 @@
 		
 		<core:Title text="기본정보" />
 		<Label text="통화코드" required="true"/>
-        <Input id="midObjectForm1EditCurrencyCode" value="{master>/currency_code}" liveChange=".onLiveChange"/>
+        <Input id="midObjectForm1EditCurrencyCode" value="{master>/currency_code}" liveChange=".onLiveChange" enabled="{= ${editMode>/newcheck} === 'new' ? true : false}" required="true"/>
 		<Label text="소수점자리" />
-		<Input value="{master>/scale}"/>
+		<Input value="{master>/scale}" type="Number" />
 		<Label text="확장소수점자리" />
 		<Input value="{master>/extension_scale}"/>
 

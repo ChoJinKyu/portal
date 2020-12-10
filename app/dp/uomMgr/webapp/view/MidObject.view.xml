@@ -119,7 +119,7 @@
 									<Button id="midTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMidTableDeleteButtonPress" />
 									<!-- <Button id="midTableSaveButton" text="Save" type="Emphasized" press=".onMidTableSaveButtonPress" /> -->
 									<ToolbarSeparator/>
-									<SearchField id="midTableSearchField" placeholder="Class Text" width="10rem" search=".onMidTableFilterPress" />
+									<!-- <SearchField id="midTableSearchField" placeholder="Class Text" width="10rem" search=".onMidTableFilterPress" /> -->
 									<!-- <Button id="midTableApplyFilterButton" text="Apply" type="Transparent" press=".onMidTableApplyFilterButton" /> -->
 								</OverflowToolbar>
 							</headerToolbar>
@@ -155,7 +155,7 @@
 										<Input value="{details>commercial_uom_name}"/>
                                         <Input value="{details>technical_uom_code}"/>
 										<Input value="{details>technical_uom_name}"/>
-                                        <Input value="{details>uom_description}"/>
+                                        <Input value="{details>uom_desc}"/>
 									</cells>
 								</ColumnListItem>
 							</items>
@@ -168,6 +168,13 @@
 		
 		<uxap:footer>
 			<OverflowToolbar>
+                <Button
+                    icon="sap-icon://alert"
+                    type="Emphasized"
+                    text="{= ${message>/}.length }"
+                    visible="{= ${message>/}.length > 0 }"
+                    ariaHasPopup="Dialog"
+                    press=".onMessagePopoverPress" />
 				<ToolbarSpacer />
 				<Button type="Emphasized" text="Save" press=".onPageSaveButtonPress" />
 				<Button type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>

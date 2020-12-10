@@ -25,17 +25,17 @@ entity Categories : CodeList {
 
 @cds.persistence.exists
 entity Categories_h {
-  key NODE_ID   : Integer;
-      PARENT_ID : Integer;
-      NAME      : String;
-      DESCR     : String;
+  key node_id   : Integer;
+      parent_id : Integer;
+      name      : String;
+      descr     : String;
 }
 
 @cds.persistence.exists
 entity Categories_haa {
-  key NODE_ID   : Integer;
-      PARENT_ID : Integer;
-      NAME      : String;
-      DESCR     : String;
-      PATH      : String;
+  key node_id   : Integer;
+      parent_id : Integer;
+      name      : String;
+      descr     : String;
+      path      : String;
 }

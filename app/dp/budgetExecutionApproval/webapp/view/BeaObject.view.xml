@@ -112,24 +112,29 @@
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
                         <layout:VerticalLayout class="sapUiSmallMarginBeginEnd"> 
-                                <HBox alignItems="Center">
-                                    <Label
-                                        text="Subject "
-                                        class="sapUiTinyMarginEnd"
-                                        textAlign="Left"
-                                        labelFor="input"
-                                        required="true"/>
-                                    <Text
-                                        text="{appMaster>/approval_title}"
-                                        visible="true"
-                                        />
-                                   
-                                </HBox>
+                            <HBox width="100%">
+                                <Label
+                                    text="Subject "
+                                    class="sapUiTinyMarginEnd"
+                                    textAlign="Left"
+                                    labelFor="input"
+                                    required="true"/>
+                                <Text
+                                    text="{appMaster>/approval_title}"
+                                    visible="true"
+                                    />
+                                 
+                            </HBox>
                             <VBox>
                                 <Label text="Description" labelFor="input" required="true"></Label> 
                                 <layout:VerticalLayout id="idVerticalLayout" class="sapUiContentPadding" width="100%">
+                                    <layout:content>
+                                        <core:HTML content="{appMaster>/approval_contents}">
+                                        </core:HTML>
+                                    </layout:content>
                                 </layout:VerticalLayout>
                             </VBox>
+                             
                         </layout:VerticalLayout> 						
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
@@ -190,14 +195,14 @@
                          <VBox class="sapUiSmallMargin">
                             <Label text="Affiliate" />
                             <ObjectStatus
-                                text="{company>/Org_Company/0/company_name}" 
+                                text="[{appMaster>/company_code}] {company>/company_name}" 
                                 state="Error"
                                 />
                          </VBox>
                          <VBox class="sapUiSmallMargin">
                             <Label text="Division" />
                             <ObjectStatus
-                                text="{plant>/Org_Plant/0/plant_name}" 
+                                text="[{appMaster>/org_code}] {plant>/plant_name}" 
                                 state="Error"
                                 />
                          </VBox>
@@ -228,7 +233,7 @@
                                     <table:Column id="c_moldPartNo" width="10em" hAlign="Center">
                                         <Label text="Mold&#10;Part No"/>           
                                         <table:template>
-                                            <Text id="t_mold_part_no" text="{appDetail>part_number}"/>
+                                            <Text id="t_mold_part_no" text="{appDetail>mold_number}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_seq" width="5em" hAlign="Center">
@@ -242,23 +247,7 @@
                                         <table:template>
                                             <Text id="description" text="{appDetail>spec_name}"/>
                                         </table:template>
-                                    </table:Column>       
-                                    <table:Column id="c_MoldItemType" width="10em" hAlign="Center">
-                                        <Label text="Mold Item Type"/>           
-                                        <table:template>
-                                            <ComboBox selectedKey="{appDetail>mold_item_type_code}"
-                                                items="{ path : 'util>/CodeDetails',
-                                                            filters : [
-                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
-                                                            ]
-                                                        }"
-                                                editable="false" >  
-                                                <core:Item key="{util>code}" text="{util>code_description}" />
-                                            </ComboBox>
-                                        </table:template>
-                                    </table:Column>                                     
-                                                              
+                                    </table:Column>                                           
                                     <table:Column id="c_productionType" width="10em" hAlign="Center">
                                         <Label text="Production Type"/>           
                                         <table:template>
@@ -278,7 +267,7 @@
                                     <table:Column id="c_itemType" width="10em" hAlign="Center">
                                         <Label text="Item Type"/>           
                                         <table:template>
-                                            <ComboBox selectedKey="{appDetail>mold_type_code}" 
+                                            <ComboBox selectedKey="{appDetail>mold_production_type_code}" 
                                                 editable="false"
                                                 items="{ path : 'util>/CodeDetails',
                                                             filters : [
@@ -291,11 +280,24 @@
                                             </ComboBox>
                                         </table:template>
                                     </table:Column>  
-
+                                  <table:Column id="c_bookCurrency" width="10em" hAlign="Center">
+                                        <Label text="Book Currency"/>           
+                                                
+                                        <table:template>
+                                           <Text  text="{appDetail>book_currency_code}"/>
+                                        </table:template>
+                                    </table:Column>  
+                                     <table:Column id="c_budget_amount" width="10em" hAlign="Center">
+                                        <Label text="Budget Amount"/>           
+                                      
+                                        <table:template>
+                                           <Text  text="{appDetail>budget_amount}"/>
+                                        </table:template>
+                                    </table:Column>  
                                     <table:Column id="c_assetType" width="10em" hAlign="Center">
                                         <Label text="Asset Type"/>           
                                         <table:template>
-                                            <ComboBox selectedKey="{appDetail>mold_production_type_code}" 
+                                            <ComboBox selectedKey="{appDetail>asset_type_code}" 
                                                 editable="false"
                                                 items="{ path : 'util>/CodeDetails',
                                                             filters : [
@@ -366,8 +368,6 @@
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
-
-			
 
 			<uxap:ObjectPageSection titleUppercase="false" title="Approval Line">
 				<uxap:subSections>

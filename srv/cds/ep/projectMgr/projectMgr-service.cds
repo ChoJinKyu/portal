@@ -1,4 +1,4 @@
-using {ep as project} from '../../../../db/cds/ep/projectMgr/EP_PROJECT-model';
+using {ep as project} from '../../../../db/cds/ep/projectMgr/EP_PO_PROJECT-model';
 using {cm as orgUnit} from '../../../../db/cds/cm/orgMgr/CM_ORG_UNIT-model';
 using {cm as orgDivision} from '../../../../db/cds/cm/orgMgr/CM_ORG_DIVISION-model';
 using {cm as orgPlant} from '../../../../db/cds/cm/orgMgr/CM_ORG_PLANT-model';
@@ -8,7 +8,7 @@ namespace ep;
 
 service ProjectMgrService{
 
-    entity Project as projection on project.Project;
+    entity Project as projection on project.Po_Project;
 
     // plant_name, bizunit_name, bizdivision_name 조회를 위한 View 추가
     view ProjectView as
@@ -31,7 +31,7 @@ service ProjectMgrService{
         ep.update_user_id,
         ep.system_create_dtm,
         ep.system_update_dtm        
-        from project.Project as ep
+        from project.Po_Project as ep
         left outer join orgUnit.Org_Unit as unit
         on ep.tenant_id = unit.tenant_id and ep.bizunit_code = unit.bizunit_code
         left outer join orgDivision.Org_Division as div

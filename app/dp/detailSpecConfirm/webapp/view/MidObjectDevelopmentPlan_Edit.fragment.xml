@@ -25,19 +25,19 @@
                         <Text text="Settled Drawing" />
                     </Column>
                     <Column>
-                        <Text text="1st Prod Date" />
+                        <Text text="1st Prod Date" required="true"/>
                     </Column>
                     <Column>
-                        <Text text="Complete Date" />
+                        <Text text="Complete Date" required="true"/>
                     </Column>
                     <Column>
-                        <Text text="Inspection Date" />
+                        <Text text="Inspection Date" required="true"/>
                     </Column>
                 </columns>
                 <items>
                     <ColumnListItem>
                         <cells>
-                            <ComboBox   width="100%"
+                            <Select   width="100%"
                                         selectedKey="{schedule>mold_develope_date_type_code}"
                                         items="{
                                                     path : 'util>/CodeDetails',
@@ -50,12 +50,12 @@
                                         class="readonlyField"
                             >
                                 <core:Item key="{util>code}" text="{util>code_description}" />
-                            </ComboBox>
+                            </Select>
                             <DatePicker value="{schedule>drawing_agreement_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
                             <DatePicker value="{schedule>drawing_confirmed_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
-                            <DatePicker value="{schedule>first_production_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
-                            <DatePicker value="{schedule>production_complete_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
-                            <DatePicker value="{schedule>inspection_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
+                            <DatePicker value="{schedule>first_production_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" required="true"/>
+                            <DatePicker value="{schedule>production_complete_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" required="true"/>
+                            <DatePicker value="{schedule>inspection_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" required="true"/>
                         </cells>
                     </ColumnListItem>
                 </items>
@@ -93,7 +93,7 @@
                 <items>
                     <ColumnListItem>
                         <cells>
-                            <ComboBox   width="100%"
+                            <Select   width="100%"
                                         selectedKey="{schedule>mold_develope_date_type_code}"
                                         items="{
                                                     path : 'util>/CodeDetails',
@@ -106,7 +106,7 @@
                                         class="readonlyField"
                             >
                                 <core:Item key="{util>code}" text="{util>code_description}" />
-                            </ComboBox>
+                            </Select>
                             <DatePicker value="{schedule/first_production_update_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
                             <DatePicker value="{schedule/second_production_update_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
                             <DatePicker value="{schedule/third_production_update_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>

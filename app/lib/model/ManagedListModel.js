@@ -1,6 +1,8 @@
 sap.ui.define([
-  "./AbstractModel"
-], function (JSONModel) {
+    "./AbstractModel",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator"
+], function (JSONModel, Filter, FilterOperator) {
     "use strict";
 
     var STATE_COL = "_row_state_";
@@ -30,7 +32,7 @@ sap.ui.define([
         },
 
         setProperty: function (sPath, oValue, oContext, bAsyncUpdate) {
-            if(!!oContext){
+            if (!!oContext) {
                 var _oRecord = this.getObject(oContext.getPath());
                 if (typeof _oRecord == "object" && !_oRecord[STATE_COL]) _oRecord[STATE_COL] = "U";
             }
@@ -40,10 +42,10 @@ sap.ui.define([
         addRecord: function (oRecord, sPath, nIndex) {
             var sEntityName = this.getProperty("/entityName") || (sPath && sPath.startsWith("/") ? sPath.substring(1) : sPath),
                 aRecords = this.getProperty("/" + sEntityName);
-            if(!aRecords) aRecords = [];
-            if(typeof sPath == "number") nIndex = sPath;
+            if (!aRecords) aRecords = [];
+            if (typeof sPath == "number") nIndex = sPath;
             if (nIndex == undefined) nIndex = aRecords.length;
-            if(!!sPath) oRecord.__entity = sPath;
+            if (!!sPath) oRecord.__entity = sPath;
             oRecord[STATE_COL] = "C";
             aRecords.splice(nIndex || 0, 0, oRecord);
             JSONModel.prototype.setProperty.call(this, "/" + sEntityName, aRecords);
@@ -69,7 +71,7 @@ sap.ui.define([
             JSONModel.prototype.setProperty.call(this, "/" + sEntityName, aRecords);
         },
 
-        isChanged: function(){
+        isChanged: function () {
             return this.getChanges().length > 0;
         },
 
@@ -107,13 +109,54 @@ sap.ui.define([
             }));
         },
 
-        _executeBatch: function(sGroupId){
+        tree: function (path, filters) {
+            var that = this;
+            return new Promise(function (resolve, reject) {
+                that._oTransactionModel.read(path, {
+                    filters: [...filters],
+                    success: resolve,
+                    error: reject
+                })
+            }).then(function (oData) {
+
+                // 검색조건 및 결과가 없는 경우 종료
+                if (!filters || filters.length <= 0 || !oData || !(oData.results) || oData.results.length <= 0) {
+                    return oData;
+                }
+
+                var predicates = oData.results
+                    .reduce(function (acc, e) {
+                        return [...acc, ...((e["path"]).split("/"))];
+                    }, [])
+                    .reduce(function (acc, e) {
+                        return acc.includes(e) ? acc : [...acc, e];
+                    }, [])
+                    .reduce(function (acc, e) {
+                        return [...acc, new Filter({
+                            path: 'node_id', operator: FilterOperator.EQ, value1: e
+                        })];
+                    }, []);
+
+                return new Promise(function (resolve, reject) {
+                    that._oTransactionModel.read(path, {
+                        filters: [...predicates],
+                        success: resolve,
+                        error: reject
+                    })
+                }).then(function (oData) {
+                    that.setData(oData, path, false);
+                    return oData;
+                })
+            })
+        },
+
+        _executeBatch: function (sGroupId) {
             var oServiceModel = this._oTransactionModel,
                 sTransactionPath = this._transactionPath,
                 cs = this.getCreatedRecords(),
                 us = this.getUpdatedRecords(),
                 ds = this.getDeletedRecords();
-                
+
             (cs || []).forEach(function (oItem) {
                 var sPath = oItem.__entity || sTransactionPath;
                 delete oItem[STATE_COL];
@@ -146,7 +189,7 @@ sap.ui.define([
             });
         },
 
-        _onSuccessSubmitChanges: function(){
+        _onSuccessSubmitChanges: function () {
             this.commit();
         },
 
@@ -172,6 +215,10 @@ sap.ui.define([
             var sEntityName = this.getProperty("/entityName"),
                 aRecords = this.getProperty("/" + sEntityName) || [],
                 aResults = [];
+
+            if(sStates == "D")
+                aResults = this._aRemovedRows;
+
             aRecords.forEach(function (oRecord) {
                 if (sStates.indexOf(oRecord[STATE_COL]) > -1) aResults.push(oRecord);
             });

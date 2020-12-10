@@ -176,9 +176,16 @@ sap.ui.define([
 		 * @public
 		 */
         onPageSaveButtonPress: function(){
-			var oView = this.getView(),
+            var oView = this.getView(),
+                oMasterModel = this.getModel("master"),
+                oDetailsModel = this.getModel("details"),
                 that = this;
                 
+			if(!oMasterModel.isChanged() && !oDetailsModel.isChanged()) {
+				MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
+				return;
+            }
+
             if(this.validator.validate(this.byId("page")) !== true) return;
 
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
@@ -373,14 +380,14 @@ sap.ui.define([
                         selectedKey: "{details>control_option_level_code}",
                         items: {
                             id: "testCombo1",
-                            path: 'util>/CodeDetails',
+                            path: 'common>/CodeDetails',
                             filters: [
                                 new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
                                 new Filter("group_code", FilterOperator.EQ, 'TEST')
                             ],
                             template: new Item({
-                                key: "{util>code}",
-                                text: "{util>code_description}"
+                                key: "{common>code}",
+                                text: "{common>code_description}"
                             })
                         },
                         required: true

@@ -68,6 +68,7 @@
                                             required="{contModel>/detail/createMode}"
                                             value="{viewModel>/detail/group_code}"
                                             visible="{contModel>/detail/createMode}"
+                                            maxLength="{= parseInt(${/#CodeMasters/group_code/@maxLength})}"
                                             fieldGroupIds="requiredField">
                                         </m:Input>
                                         <m:layoutData>
@@ -86,6 +87,7 @@
                                         <m:Input
                                             id="group_name"
                                             value="{viewModel>/detail/group_name}"
+                                            maxLength="{= parseInt(${/#CodeMasters/group_name/@maxLength})}"
                                             visible="{contModel>/detail/editMode}">
                                         </m:Input>
                                         <m:layoutData>
@@ -105,6 +107,7 @@
                                             id="group_description"
                                             visible="{contModel>/detail/editMode}"
                                             value="{viewModel>/detail/group_description}"
+                                            maxLength="{= parseInt(${/#CodeMasters/group_description/@maxLength})}"
                                             placeholder="">
                                         </m:Input>
                                         <m:layoutData>
@@ -121,11 +124,18 @@
                                             text="{
                                                 path:'viewModel>/detail/tenant_id'
                                             }"/>
-                                        <m:Input
+                                        <m:ComboBox   
                                             id="tenant_id"
+                                            showSecondaryValues= "true"
+                                            selectedKey="{viewModel>/detail/tenant_id}"
                                             visible="{contModel>/detail/editMode}"
-                                            value="{viewModel>/detail/tenant_id}">
-                                        </m:Input>
+                                            selectionChange=".onTenantChange"
+                                            items="{orgMgr>/Org_Tenant}">
+                                            <core:ListItem 
+                                                key="{orgMgr>tenant_id}" 
+                                                text="{orgMgr>tenant_name}"
+                                                additionalText="{orgMgr>tenant_id}"/>
+                                        </m:ComboBox>
                                         <m:layoutData>
                                             <layout:GridData
                                                 span="XL2 L3 M6 S12" />
@@ -145,21 +155,11 @@
                                             id="chain_code"
                                             visible="{contModel>/detail/editMode}"
                                             selectedKey="{viewModel>/detail/chain_code}"
-                                            showSecondaryValues="true"
-                                            items="{
-                                                path : 'util>/CodeDetails',
-                                                filters : [
-                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
-                                                    {path : 'group_code', operator : 'EQ', value1 : 'CM_CHAIN_CD'}                                                               
-                                                ]
-                                            }"
-                                        >
-                                            <core:Item key="{util>code}" text="{util>code}: {util>code_description}"/>
-                                        </m:ComboBox>
+                                            showSecondaryValues="true"/>
                                         <m:layoutData>
                                             <layout:GridData
                                                 span="XL2 L3 M6 S12" />
-                                        </m:layoutData>
+                                        </m:layoutData>   
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
@@ -171,7 +171,7 @@
                                             colorScheme="7" 
                                             displayOnly= "true" />
                                         <tnt:InfoLabel 
-                                            text="false" 
+                                            text="False" 
                                             visible="{= (${contModel>/detail/readMode} &amp;&amp; !${viewModel>/detail/use_flag}) ? true : false}"
                                             renderMode="Narrow" 
                                             colorScheme="5" 
@@ -197,6 +197,81 @@
 						</blocks>
 					</ObjectPageSubSection>
 
+				</subSections>
+			</ObjectPageSection>
+
+            <ObjectPageSection titleUppercase="false" id="managed_values_section" title="Managed Values">
+				<subSections>
+					<ObjectPageSubSection>
+						<blocks>
+                            <form:SimpleForm
+                                maxContainerCols="2"
+                                editable="true"
+                                layout="ResponsiveGridLayout"
+                                adjustLabelSpan="false"
+                                labelSpanL="4"
+                                labelSpanM="4"
+                                emptySpanL="0"
+                                emptySpanM="0"
+                                columnsL="2"
+                                columnsM="2">
+                                <form:content>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Created by: "/>
+                                        <m:Text
+                                            text="{viewModel>/detail/create_user_id}"/>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Created At: "/>
+                                        <m:Text
+                                            text="{
+                                                    path: 'viewModel>/detail/local_create_dtm',
+                                                    type: 'sap.ui.model.type.Date',
+                                                    formatOptions: {
+                                                    pattern: 'yyyy/MM/dd'
+                                                    }
+                                                }"/>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Updated by: "/>
+                                        <m:Text
+                                            text="{viewModel>/detail/update_user_id}"/>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Updated At: "/>
+                                        <m:Text
+                                            text="{
+                                                    path: 'viewModel>/detail/local_update_dtm',
+                                                    type: 'sap.ui.model.type.Date',
+                                                    formatOptions: {
+                                                    pattern: 'yyyy/MM/dd'
+                                                    }
+                                                }"/>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                </form:content>
+                            </form:SimpleForm>
+						</blocks>
+					</ObjectPageSubSection>
 				</subSections>
 			</ObjectPageSection>
 

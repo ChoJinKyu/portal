@@ -47,8 +47,8 @@ sap.ui.define([
 
             this.getView().setModel(new ManagedModel(), "appMaster");
             this.getView().setModel(new ManagedListModel(), "appDetail");
-            this.getView().setModel(new ManagedListModel(), "company");
-            this.getView().setModel(new ManagedListModel(), "plant");
+            this.getView().setModel(new ManagedModel(), "company");
+            this.getView().setModel(new ManagedModel(), "plant");
 
 
             oTransactionManager = new TransactionManager();
@@ -79,7 +79,14 @@ sap.ui.define([
                 this.getRouter().navTo("approvalList", {}, true);
             }
         },
+        onEditModeBea: function (oEvent) {
+            var oModel = this.getModel("appMaster")
+                , oData = oModel.oData;
+            this.getRouter().navTo("beaEditObject", {
+                approval_number: oData.approval_number
+            }, true);
 
+        },
 		/**
 		 * Event handler for page edit button press
 		 * @public
@@ -164,21 +171,15 @@ sap.ui.define([
         _onObjectMatched: function (oEvent) {
             var oArgs = oEvent.getParameter("arguments"),
                 approval_number = oArgs.approval_number;
-
-            console.log("oArgs >>>>> ", oArgs);
-            // ApprovalMasters(approval_number='218619-20B-00005') 
-            //	this._loadApprovalInfo();
             this._onRoutedThisPage(oArgs);
         },
-        _onRoutedThisPage: function (args) {
-            this._bindView("/ApprovalMasters('" + args.approval_number + "')", "appMaster", [], function (oData) { });
-            var schFilter = [new Filter("approval_number", FilterOperator.EQ, args.approval_number)];
-
-            var sResult = {};
+        _onRoutedThisPage: function (args) { 
             var that = this;
-            this._bindView("/ItemBudgetExecution", "appDetail", schFilter, function (oData) {
-                sResult = oData.results[0];
-                that._createViewBindData(sResult);
+            this._bindView("/ApprovalMasters(tenant_id='L1100',approval_number='" + args.approval_number + "')", "appMaster", [], function (oData) {
+                that._createViewBindData(oData);
+            });
+            var schFilter = [new Filter("approval_number", FilterOperator.EQ, args.approval_number)];
+            this._bindView("/ItemBudgetExecution", "appDetail", schFilter, function (oData) {  
             });
             // mold_id 
             oTransactionManager.setServiceModel(this.getModel());
@@ -220,37 +221,27 @@ sap.ui.define([
                 , plant_name: ""
             });
 
-            var oView = this.getView(),
-                oModel = this.getModel("company");
+           var oModel = this.getModel("company");
 
             oModel.setTransactionModel(this.getModel("org"));
 
-            var searchFilter = [];
-            searchFilter.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100'));
-            searchFilter.push(new Filter("company_code", FilterOperator.EQ, company_code));
-
-            oModel.read("/Org_Company", {
-                filters: searchFilter,
+            oModel.read("/Org_Company(tenant_id='L1100',company_code='" + company_code + "')", {
+                filters: [],
                 success: function (oData) {
-                    console.log(" Org_Company ", oData)
-                    appModel.oData.company_name = oData.results[0].company_name
+                    console.log("Org_Company oData>>> ", oData);
                 }
             });
 
-            var oView = this.getView(),
-                oModel2 = this.getModel("plant");
+
+            var oModel2 = this.getModel("plant");
             oModel2.setTransactionModel(this.getModel("org"));
-            searchFilter = [];
-            searchFilter.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100'));
-            searchFilter.push(new Filter("plant_code", FilterOperator.EQ, plant_code));
 
-            oModel2.read("/Org_Plant", {
-                filters: searchFilter,
+            oModel2.read("/Org_Plant(tenant_id='L1100',company_code='" + company_code + "',plant_code='" + plant_code + "')", {
+                filters: [],
                 success: function (oData) {
-                    appModel.oData.plant_name = oData.results[0].plant_name;
+                    console.log("Org_Plant oData>>> ", oData);
                 }
             });
-            console.log("oMasterModel >>> ", appModel);
         },
 
         _onBindingChange: function () {
@@ -268,14 +259,7 @@ sap.ui.define([
             console.log(" oViewModel >>> ", oViewModel);
 
         },
-        onEditModeBea: function (oEvent) {
-            console.log("move");
-            this.getRouter().navTo("beaCreateObject", {
-                company_code: ""
-                , plant_code: ""
-                , approval_number: ""
-            });
-        },
+
         _oFragments: {},
     });
 });

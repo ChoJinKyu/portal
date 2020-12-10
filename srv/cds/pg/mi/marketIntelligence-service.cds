@@ -13,7 +13,7 @@ using {pg as MIMatPrcMngtView} from '../../../../db/cds/pg/mi/PG_MI_MAT_PRC_MANA
 using {pg as MICategDetlView} from '../../../../db/cds/pg/mi/PG_MI_CATEGORY_DETAIL_VIEW';
 using {pg as MIMatCostInfoView} from '../../../../db/cds/pg/mi/PG_MI_MATERIAL_COST_INFO_VIEW';
 //Material
-using {dp.Mm_Material_Desc_Lng as MaterialDesc} from '../../../../db/cds/dp/materialMgr/materialMasterMgr/DP_MM_MATERIAL_DESC_LNG-model';
+using {dp.Mm_Material_Desc_Lng as MaterialDesc} from '../../../../db/cds/dp/mm/DP_MM_MATERIAL_DESC_LNG-model';
 //Supplier
 using {sp.Sm_Supplier_Mst as SupplierMaster} from '../../../../db/cds/sp/supplierMgr/SP_SM_SUPPLIER_MST-model';
 //CM ORG
@@ -26,7 +26,7 @@ using {cm.Code_Dtl as CodeDtl} from '../../../../db/cds/cm/codeMgr/CM_CODE_DTL-m
 using {cm.Code_Lng as CodeLng} from '../../../../db/cds/cm/codeMgr/CM_CODE_LNG-model';
 //Unit Code
 using {cm.Currency_Lng as CurrencyLanguage} from '../../../../db/cds/cm/currencyMgr/CM_CURRENCY_LNG-model';
-using {dp.Mm_Unit_Of_Measure_Lng as UnitOfMeasure} from '../../../../db/cds/dp/materialMgr/uomMgr/DP_MM_UNIT_OF_MEASURE_LNG-model';
+// using {dp.Mm_Unit_Of_Measure_Lng as UnitOfMeasure} from '../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE_LNG-model';
 
 namespace pg;
 
@@ -107,7 +107,7 @@ service marketIntelligenceService {
             key main.category_code as category_code, //카테고리코드
                 main.category_name as category_name //카테고리코드명
         from MICategoryText as main
-        left join MICategory as catg
+        left join MICategoryHierarchyStructure as catg
             on  main.tenant_id     = catg.tenant_id
             and main.company_code  = catg.company_code
             and main.org_type_code = catg.org_type_code
@@ -134,7 +134,7 @@ service marketIntelligenceService {
             key main.category_code as category_code, //카테고리코드
                 main.category_name as category_text //카테고리코드명
         from MICategoryText as main
-        left join MICategory as catg
+        left join MICategoryHierarchyStructure as catg
             on  main.tenant_id     = catg.tenant_id
             and main.company_code  = catg.company_code
             and main.org_type_code = catg.org_type_code
@@ -159,8 +159,8 @@ service marketIntelligenceService {
                 code_name //사용여부명
         from CodeLng
         where
-                group_code  = 'CM_USE_FLAG'
-            and language_cd = 'KO';
+                group_code  = 'CM_TF_FLAG'
+            and language_cd = 'EN';
 
     // Language View
     view LanguageView @(title : '언어코드 View') as
@@ -183,13 +183,13 @@ service marketIntelligenceService {
         from CurrencyLanguage;
 
     // Unit of Measure View
-    view UnitOfMeasureView @(title : '수량단위코드 View') as
-        select
-            key tenant_id, //회사코드
-            key uom_code, //수량단위코드
-            key language_code, //언어코드
-                uom_description //수량단위코드명
-        from UnitOfMeasure;
+    // view UnitOfMeasureView @(title : '수량단위코드 View') as
+    //     select
+    //         key tenant_id, //회사코드
+    //         key uom_code, //수량단위코드
+    //         key language_code, //언어코드
+    //             uom_desc //수량단위코드명
+    //     from UnitOfMeasure;
 
     // MI Material Category List View
     view MIMatCategListView @(title : '시황자재 카테고리 List View') as
@@ -203,7 +203,7 @@ service marketIntelligenceService {
             key main.category_code        as category_code, //카테고리코드
                 catgText.category_name    as category_name, //카테고리코드명
                 main.use_flag             as use_flag //사용여부
-        from MICategory as main
+        from MICategoryHierarchyStructure as main
         left join MICategoryText as prtCatgText
             on  main.tenant_id            = prtCatgText.tenant_id
             and main.company_code         = prtCatgText.company_code
@@ -272,22 +272,11 @@ service marketIntelligenceService {
         select distinct
             key tenant_id, //회사코드
             key material_code, //자재코드
-                material_description //자재코드명
-        from MIMaterialCodeBOMManagement
+                material_desc //자재코드명
+        from MaterialDesc
         order by
             tenant_id,
             material_code;
-
-    // Enrollment Material View
-    // view EnrollmentMaterialView @(title : '자재코드 등록 View') as
-    //     select distinct
-    //         key tenant_id, //회사코드
-    //         key material_code, //자재코드
-    //             material_description //자재코드명
-    //     from MaterialDesc
-    //     order by
-    //         tenant_id,
-    //         material_code;
 
     // // Supplier View
     view SupplierView @(title : '공급업체 조회 View') as
@@ -296,22 +285,10 @@ service marketIntelligenceService {
             key supplier_code, //공급업체코드
                 supplier_local_name, //공급업체로컬명
                 supplier_english_name //공급업체영어명
-        from MIMaterialCodeBOMManagement
+        from SupplierMaster
         order by
             tenant_id,
             supplier_code;
-
-    // Enrollment Supplier View
-    // view EnrollmentSupplierView @(title : '공급업체 등록 View') as
-    //     select distinct
-    //         key tenant_id, //회사코드
-    //         key supplier_code, //공급업체코드
-    //             supplier_local_name, //공급업체로컬명
-    //             supplier_engligh_name //공급업체영어명
-    //     from SupplierMaster
-    //     order by
-    //         tenant_id,
-    //         supplier_code;
 
     // Category&MI Material View
     view CategoryMIMaterialView @(title : '카테고리&시황자재 View') as

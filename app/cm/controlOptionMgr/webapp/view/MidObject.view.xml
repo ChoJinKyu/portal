@@ -169,10 +169,11 @@
                       </items>
                     </ComboBox>
                     <!-- 조직유형 -->
+										<!-- selectedKey="{details>org_type_code}" -->
                     <ComboBox
 											enabled="{= ${details>control_option_level_code} === 'O'}"
                       id="midOrgTypeCombo"
-                      selectedKey="{details>org_type_code}"
+                      selectedKey="{= ${details>control_option_level_code} === 'O' ? ${details>org_type_code} : ''}"
                       width="100%"
                       selectionChange=".selectionChange"
                       items="{
