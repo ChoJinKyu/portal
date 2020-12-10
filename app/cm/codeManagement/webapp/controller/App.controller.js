@@ -99,7 +99,6 @@ sap.ui.define([
         },
 
         onBeforeRouteMatched: function(oEvent) {
-            console.log('onBeforeRouteMatched')
 			var oModel = this.getModel("fcl");
 
 			var sLayout = oEvent.getParameters().arguments.layout;

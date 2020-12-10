@@ -70,7 +70,12 @@ sap.ui.define([
 
             var oViewModel = this.getModel("viewModel");
             var oParam = oViewModel.getProperty("/detailDetailClone");
-            oViewModel.setProperty("/detailDetail", oParam);
+            oViewModel.setProperty("/detailDetail", $.extend(true, {}, oParam));
+
+            var sTenantId = oParam.tenant_id;
+            var sGroupCode = oParam.group_code;
+            var sCode = oParam.code;
+            this._fnReadLanguages(sTenantId, sGroupCode, sCode);
         },
 
         _fnSetCreateData : function(){
