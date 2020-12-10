@@ -170,10 +170,7 @@ sap.ui.define([
 				return;
             }
             
-            if(this.validator.validate(this.byId("mainTable")) !== true)
-            { 
-                debugger;
-                return;}
+            if(this.validator.validate(this.byId("mainTable")) !== true) return;
 
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
 				title : this.getModel("I18N").getText("/SAVE"),
@@ -218,7 +215,7 @@ sap.ui.define([
                 sorters: [
 					new Sorter("chain_code"),
 					new Sorter("message_code"),
-					new Sorter("language_code", true)
+                    new Sorter("language_code", true)
 				],
 				success: function(oData){
                     this.validator.clearValueState(this.byId("mainTable"));
@@ -231,7 +228,7 @@ sap.ui.define([
 			// 		new Sorter("message_code"),
 			// 		new Sorter("language_code", true)
 			// 	]
-			// oTransactionManager.setServiceModel(this.getModel());
+			//oTransactionManager.setServiceModel(this.getModel());
 		},
 		
 		_getSearchStates: function(){

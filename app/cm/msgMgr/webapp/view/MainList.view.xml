@@ -23,7 +23,7 @@
                         <form:content>
                             <VBox>
                                 <Label text="{I18N>/CHAIN}: " labelFor="searchChainS" ></Label>
-                                <ComboBox id="searchChainS" width="100%" selectedKey="" items="{
+                                <ComboBox id="searchChainS" width="100%" items="{
                                         path: 'util>/CodeDetails',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
@@ -40,7 +40,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="{I18N>/LANGUAGE}: " labelFor="searchLanguageS"></Label>
-                                <ComboBox id="searchLanguageS" selectedKey="" width="100%" items="{
+                                <ComboBox id="searchLanguageS" width="100%" items="{
                                         path: 'util>/CodeDetails',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
@@ -71,7 +71,7 @@
                         <form:content>
                             <VBox>
                                 <Label text="{I18N>/CHAIN}: " labelFor="searchChainE"></Label>
-                                <ComboBox id="searchChainE" selectedKey="" width="100%" items="{
+                                <ComboBox id="searchChainE" width="100%" items="{
                                         path: 'util>/CodeDetails',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
@@ -88,7 +88,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="{I18N>/LANGUAGE}: " labelFor="searchLanguageE"></Label>
-                                <ComboBox id="searchLanguageE" selectedKey="" width="100%" items="{
+                                <ComboBox id="searchLanguageE" width="100%" items="{
                                         path: 'util>/CodeDetails',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
@@ -136,7 +136,7 @@
                     updateFinished=".onMainTableUpdateFinished"
                     items="{list>/Message}"
                     mode="MultiSelect" 
-                    growing="true"
+                    growing="false"
                     growingThreshold="50"
                     width="auto">
                 <headerToolbar>

@@ -87,6 +87,8 @@ sap.ui.define([
         },
 
         onSelectedKey: function (oEvent) {
+            var aTableSearchState = [];
+            aTableSearchState.push(new Filter("tenant_id", FilterOperator.EQ, "NotTenant"));
             var oCtx = this.getView().getBindingContext();
             var selectedKey = oEvent.getParameter("selectedKey");
             this.getRouter().navTo("mainList", {
@@ -95,7 +97,8 @@ sap.ui.define([
                 }
             }, false /*without history*/);
             this.validator.clearValueState(this.byId("page"));
-            this._applySearch(null, selectedKey);
+            //this.onPageSearchButtonPress();
+            //this._applySearch(aTableSearchState, selectedKey);
 
         },
 
@@ -196,12 +199,8 @@ sap.ui.define([
                 tenant_id = this.getModel("view").getProperty("/tenant_id"),
                 company_code = this.getModel("view").getProperty("/company_code");
 
-            // tenant_id : "",
-            // company_code : "",
-
             switch (vSelectKey) {
                 case "TenantTable":
-                    console.group("TenantTab");
                     oModel.addRecord({
                         "tenant_id": "",
                         "tenant_name": "",
@@ -210,11 +209,9 @@ sap.ui.define([
                         "local_update_dtm": new Date()
                     }, "/Org_Tenant", 0);
                     this.validator.clearValueState(this.byId(vSelectKey));
-                    console.groupEnd();
                     return 0;
 
                 case "CompanyTable":
-                    console.group("Company");
                     oModel.addRecord({
                         "tenant_id": tenant_id,
                         "company_code": "",
@@ -229,11 +226,9 @@ sap.ui.define([
                         "local_update_dtm": new Date()
                     }, "/Org_Company", 0);
                     this.validator.clearValueState(this.byId(vSelectKey));
-                    console.groupEnd();
                     return 0;
 
                 case "PurchasingTable":
-                    console.group("Purchasing");
                     oModel.addRecord({
                         "tenant_id": tenant_id,
                         "purchase_org_code": "",
@@ -243,11 +238,9 @@ sap.ui.define([
                         "local_update_dtm": new Date()
                     }, "/Org_Purchasing", 0);
                     this.validator.clearValueState(this.byId(vSelectKey));
-                    console.groupEnd();
                     return 0;
 
                 case "PlantTable":
-                    console.group("Plant");
                     oModel.addRecord({
                         "tenant_id": tenant_id,
                         "company_code": company_code,
@@ -262,11 +255,9 @@ sap.ui.define([
                         "local_update_dtm": new Date()
                     }, "/Org_Plant", 0);
                     this.validator.clearValueState(this.byId(vSelectKey));
-                    console.groupEnd();
                     return 0;
 
                 case "UnitTable":
-                    console.group("Unit");
                     oModel.addRecord({
                         "tenant_id": tenant_id,
                         "bizunit_code": "",
@@ -276,11 +267,9 @@ sap.ui.define([
                         "local_update_dtm": new Date()
                     }, "/Org_Unit", 0);
                     this.validator.clearValueState(this.byId(vSelectKey));
-                    console.groupEnd();
                     return 0;
 
                 case "DivisionTable":
-                    console.group("Division");
                     oModel.addRecord({
                         "tenant_id": tenant_id,
                         "bizdivision_code": "",
@@ -291,7 +280,6 @@ sap.ui.define([
                         "local_update_dtm": new Date()
                     }, "/Org_Division", 0);
                     this.validator.clearValueState(this.byId(vSelectKey));
-                    console.groupEnd();
                     return 0;
             }
         },
@@ -365,49 +353,29 @@ sap.ui.define([
             oModel.setTransactionModel(this.getModel());
             oModel.read(oTable, {
                 filters: aTableSearchState,
-                // sorters: [
-                // 	new Sorter("chain_code"),
-                // 	new Sorter("message_code"),
-                // 	new Sorter("language_code", true)
-                // ],
                 success: function (oData) {
                     //this.validator.clearValueState(this.byId("mainTable"));
                     oView.setBusy(false);
                 }.bind(this)
             });
-            // ,
-            // 	sorters: [
-            // 		new Sorter("chain_code"),
-            // 		new Sorter("message_code"),
-            // 		new Sorter("language_code", true)
-            // 	]
-            // oTransactionManager.setServiceModel(this.getModel());
         },
 
         _getSearchStates: function () {
             var oModel = this.getModel("list");
-            // 	oView = this.getView();
-
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S";
             var tenant,
                 company,
                 keyword = this.getView().byId("midTableSearchField").getValue(),
                 selectedKey = this.getModel("view").getProperty("/selectedTabKey"),
                 nameFilter;
-            // tenant_id : "",
-            // company_code : "",
-            // if (!oModel.isChanged()) {
-            //     MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
-            //     return;
-            // }
 
-
-            if (this.getView().byId("search_tenant")) {
-                tenant = this.getView().byId("search_tenant").getSelectedKey();
-                this.getView().getModel("view").setProperty("/tenant_id", this.byId("search_tenant").getSelectedKey());
+            if (this.getView().byId("search_tenant"+sSurffix)) {
+                tenant = this.getView().byId("search_tenant"+sSurffix).getSelectedKey();
+                this.getView().getModel("view").setProperty("/tenant_id", this.byId("search_tenant"+sSurffix).getSelectedKey());
             }
-            if (this.getView().byId("search_company")) {
-                company = this.getView().byId("search_company").getSelectedKey();
-                this.getView().getModel("view").setProperty("/company_code", this.byId("search_company").getSelectedKey());
+            if (this.getView().byId("search_company"+sSurffix)) {
+                company = this.getView().byId("search_company"+sSurffix).getSelectedKey();
+                this.getView().getModel("view").setProperty("/company_code", this.byId("search_company"+sSurffix).getSelectedKey());
             }
             // "Tenant", "Company", "Plant", "Purchasing",  "Unit", "Division"
             if (selectedKey == "Tenant" || selectedKey == "Company" || selectedKey == "Plant" || selectedKey == "Purchasing") {
@@ -447,6 +415,7 @@ sap.ui.define([
         },
         onTenantChange: function (oEvent) {
             // var sTenant = oEvent.getSource().getSelectedKey();
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S";
             var oContModel = this.getModel("view");
             var sTenant = oContModel.getProperty("/tenant_id");
             var aFilters = [
@@ -457,10 +426,7 @@ sap.ui.define([
                 text: "{company_name}",
                 additionalText: "{company_code}"
             });
-
-
-
-            var oChain = this.byId("search_company");
+            var oChain = this.byId("search_company"+sSurffix);
             oChain.setSelectedKey(null);
             oChain.bindItems("/Org_Company", oItemTemplate, null, aFilters);
         }
