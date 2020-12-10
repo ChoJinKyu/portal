@@ -26,7 +26,7 @@ entity MI_Material_Code_Bom_Mngt {
     key org_type_code         : String(30) not null @title : '조직유형코드';
     key org_code              : String(10) not null @title : '조직코드';
     key material_code         : String(40) not null @title : '자재코드';
-        material_description  : String(300)         @title : '자재내역';
+        material_desc         : String(300)         @title : '자재내역';
     key supplier_code         : String(15) not null @title : '공급업체코드';
         supplier_local_name   : String(240)         @title : '공급업체로컬명';
         supplier_english_name : String(240)         @title : '공급업체영문명';
@@ -34,7 +34,7 @@ entity MI_Material_Code_Bom_Mngt {
         processing_cost       : Decimal             @title : '가공비';
         pcst_currency_unit    : String(30)          @title : '가공비통화단위';
     key mi_material_code      : String(40) not null @title : '시황자재코드';
-        mi_material_code_name : String(240)         @title : '시황자재코드명';
+        mi_material_name      : String(240)         @title : '시황자재명';
         category_code         : String(40)          @title : '카테고리코드';
         category_name         : String(240)         @title : '카테고리명';
         reqm_quantity_unit    : String(3)           @title : '소요수량단위';
