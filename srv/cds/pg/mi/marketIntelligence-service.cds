@@ -26,7 +26,7 @@ using {cm.Code_Dtl as CodeDtl} from '../../../../db/cds/cm/codeMgr/CM_CODE_DTL-m
 using {cm.Code_Lng as CodeLng} from '../../../../db/cds/cm/codeMgr/CM_CODE_LNG-model';
 //Unit Code
 using {cm.Currency_Lng as CurrencyLanguage} from '../../../../db/cds/cm/currencyMgr/CM_CURRENCY_LNG-model';
-using {dp.Mm_Unit_Of_Measure_Lng as UnitOfMeasure} from '../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE_LNG-model';
+// using {dp.Mm_Unit_Of_Measure_Lng as UnitOfMeasure} from '../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE_LNG-model';
 
 namespace pg;
 
@@ -183,13 +183,13 @@ service marketIntelligenceService {
         from CurrencyLanguage;
 
     // Unit of Measure View
-    view UnitOfMeasureView @(title : '수량단위코드 View') as
-        select
-            key tenant_id, //회사코드
-            key uom_code, //수량단위코드
-            key language_code, //언어코드
-                uom_description //수량단위코드명
-        from UnitOfMeasure;
+    // view UnitOfMeasureView @(title : '수량단위코드 View') as
+    //     select
+    //         key tenant_id, //회사코드
+    //         key uom_code, //수량단위코드
+    //         key language_code, //언어코드
+    //             uom_desc //수량단위코드명
+    //     from UnitOfMeasure;
 
     // MI Material Category List View
     view MIMatCategListView @(title : '시황자재 카테고리 List View') as
@@ -272,17 +272,6 @@ service marketIntelligenceService {
         select distinct
             key tenant_id, //회사코드
             key material_code, //자재코드
-                material_description //자재코드명
-        from MIMaterialCodeBOMManagement
-        order by
-            tenant_id,
-            material_code;
-
-    // Enrollment Material View
-    view EnrollmentMaterialView @(title : '자재코드 등록 View') as
-        select distinct
-            key tenant_id, //회사코드
-            key material_code, //자재코드
                 material_desc //자재코드명
         from MaterialDesc
         order by
@@ -291,18 +280,6 @@ service marketIntelligenceService {
 
     // // Supplier View
     view SupplierView @(title : '공급업체 조회 View') as
-        select distinct
-            key tenant_id, //회사코드
-            key supplier_code, //공급업체코드
-                supplier_local_name, //공급업체로컬명
-                supplier_english_name //공급업체영어명
-        from MIMaterialCodeBOMManagement
-        order by
-            tenant_id,
-            supplier_code;
-
-    // Enrollment Supplier View
-    view EnrollmentSupplierView @(title : '공급업체 등록 View') as
         select distinct
             key tenant_id, //회사코드
             key supplier_code, //공급업체코드
