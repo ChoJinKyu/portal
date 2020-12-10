@@ -183,24 +183,10 @@
           ]
         },
         {
-          "pattern": "example6",
-          "name": "example6",
-          "target": [
-            "example6"
-          ]
-        },
-        {
           "pattern": "example7",
           "name": "example7",
           "target": [
             "example7"
-          ]
-        },        
-        {
-          "pattern": "example8",
-          "name": "example8",
-          "target": [
-            "example8"
           ]
         }
       ],
@@ -229,17 +215,9 @@
           "viewName": "CodeCombo",
           "viewId": "example5"
         },
-        "example6": {
-          "viewName": "ExcelUtilExam",
-          "viewId": "example6"
-        },
         "example7": {
           "viewName": "PivotTable",
           "viewId": "example7"
-        },
-        "example8": {
-          "viewName": "NumberFormat",
-          "viewId": "example8"
         },
         "notFound": {
           "viewName": "NotFound",

@@ -1,5 +1,18 @@
 /**
+<<<<<<< HEAD
+<<<<<<< HEAD
+ * message box 변경 mi 참고 
+=======
+=======
+>>>>>>> ca36fa1e9d0ae7f95aada19172b7849dd1a460bd
+<<<<<<< Updated upstream
  * 
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+>>>>>>> 4cf5f4b3... db 필드 매핑 수정 pg
+=======
+>>>>>>> ca36fa1e9d0ae7f95aada19172b7849dd1a460bd
  * _BonSelectedLeftTableItem 임시 제거 
 * 신규 등록 Fragment에서 값 던지고 받기 marteial supply Fragment 동일화면 처리 
 -스크롤 되는부분 테이블만 스크롤 되도록 수정
@@ -90,7 +103,7 @@ sap.ui.define([
                 mIMaterialPriceManagement: "/MIMaterialPriceManagement",  //시황자재리스트
                 mIMaterialPriceManagementView: "/MIMaterialPriceManagementView",  //X MIMaterialPriceManagementView
                 orgTenantView: "/OrgTenantView", //관리조직 View
-                currencyUnitView : "/CurrencyUnitView", //통화단위 View
+                currencyUnitView : "/CurrencyUnitView아 ㄴ", //통화단위 View
                 mIMaterialCodeList : "/MIMaterialCodeList", //자재코드 View(검색)
                 unitOfMeasureView : "/UnitOfMeasureView", //수량단위 View
                 enrollmentMaterialView : "/EnrollmentMaterialView", //서비스 안됨 자재코드  등록View
@@ -117,7 +130,7 @@ sap.ui.define([
             },
             itemMode : {
                 create : "C",  //테이블 아이템 신규등록
-                read : "R",    //테이블 아이템 기존 존재 데이타 로드
+                read : "　",    //테이블 아이템 기존 존재 데이타 로드
                 update : "U",  //업데이트 상태
                 delete : "D"   //삭제 상태 
             },
@@ -141,7 +154,7 @@ sap.ui.define([
         },
         _imsiData : {
             material_code : "ERCA00006AB",
-            material_description : "ERCA00006AB",
+            material_desc : "ERCA00006AB",
             supplier_code : "KR00002600",
             supplier_local_name : "(주)네패스",
             supplier_english_name : "Ne"
@@ -178,7 +191,7 @@ sap.ui.define([
                     create: "",
                     createdata: "",
                     material_code :"",
-                    material_description :"",
+                    material_desc :"",
                     supplier_code :"",
                     supplier_local_name :"",
                     processing_cost :"",
@@ -441,7 +454,7 @@ sap.ui.define([
                 that = this,
                 comboBox_materialView=this._findFragmentControlId(this._m.fragementId.materialDialog, "comboBox_materialView").getSelectedKey(),
                 comboBox_supplierView=this._findFragmentControlId(this._m.fragementId.materialDialog, "comboBox_supplierView").getSelectedKey(),
-                input_material_description=this._findFragmentControlId(this._m.fragementId.materialDialog, "input_material_description").getValue(),
+                input_material_desc=this._findFragmentControlId(this._m.fragementId.materialDialog, "input_material_desc").getValue(),
                 input_supplier_local_name=this._findFragmentControlId(this._m.fragementId.materialDialog, "input_supplier_local_name").getValue();
            
         
@@ -457,7 +470,7 @@ sap.ui.define([
                     sFilters.push(new Filter("material_code", FilterOperator.Contains, comboBox_materialView));
                 }
                 if(comboBox_materialView.length>0){
-                    sFilters.push(new Filter("material_description", FilterOperator.Contains, input_material_description));
+                    sFilters.push(new Filter("material_desc", FilterOperator.Contains, input_material_desc));
                 }
 
                 oModel.read(this._m.serviceName.enrollmentMaterialView, {
@@ -516,7 +529,7 @@ sap.ui.define([
             //         "org_type_code":  "BU",
             //         "org_code": "BIZ00100",
             //         "material_code": "",
-            //         "material_description": oData.material_description,
+            //         "material_desc": oData.material_desc,
             //         "supplier_code": "",
             //         "supplier_local_name": "",
             //         "supplier_english_name": "",
@@ -524,7 +537,7 @@ sap.ui.define([
             //         "processing_cost": oData.processing_cost,//이 값들은?
             //         "pcst_currency_unit": oData.pcst_currency_unit,//이 값들은?
             //         "mi_material_code": oData.mi_material_code,
-            //         "mi_material_code_name": oData.mi_material_code_name,
+            //         "mi_material_name": oData.mi_material_name,
             //         "category_code": oData.category_code,//이 값들은?
             //         "category_name": oData.category_name,//이 값들은?
             //         "reqm_quantity_unit": oData.reqm_quantity_unit,/이 값들은?
@@ -678,20 +691,15 @@ sap.ui.define([
 
             //관리조직 이름 
             var bFilters = [
-                new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id)
+                new Filter("tenant_id", FilterOperator.EQ, this._sso.dept.tenant_id)
             ];
 
             oModel.read(this._m.serviceName.orgTenantView, {
                 async: false,
                 filters: bFilters,
                 success: function (rData, reponse) {
-
-                    console.log("json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
-                    var oData = reponse.data.results[0];
-
-                    debugger;
-                    if(oData.length>0){
-                        this.getView().byId("label_tenant_name").setValue(reponse.data.results[0].tenant_name);
+                   // console.log("json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
+                    if(reponse.data.results.length>0){
                         _oUiData.setProperty("/tenant_name", reponse.data.results[0].tenant_name );
                     }
                 }
@@ -739,7 +747,7 @@ sap.ui.define([
                             oUiData.setData(oData);
                             oUiData.tenant_name =  "";
                             // oUiData.setProperty("/material_code", oData.material_code); 
-                            // oUiData.setProperty("/material_description", oData.material_description); 
+                            // oUiData.setProperty("/material_desc", oData.material_desc); 
                             // oUiData.setProperty("/supplier_code", oData.supplier_code); 
                             // oUiData.setProperty("/supplier_local_name", oData.supplier_local_name); 
                             // oUiData.setProperty("/processing_cost", oData.processing_cost);
@@ -819,9 +827,8 @@ sap.ui.define([
                 success: function (rData, reponse) {
 
                     console.log("json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
-                    var oData = reponse.data.results[0];
 
-                    if(oData.length>0){
+                    if(reponse.data.results.length>0){
                         _oUiData.setProperty("/tenant_name", reponse.data.results[0].tenant_name);
                     }
                 }
@@ -836,6 +843,38 @@ sap.ui.define([
          */
         onRead : function () {
             this._fnSetReadMode(); 
+        },
+
+        /**
+         * 작업 취소? 리스트 이동..
+         */
+        onCancel : function () {
+            var that = this;
+
+            that._onExit();
+            // MessageBox.show("리스트로 이동합니다.", {
+            //     icon: MessageBox.Icon.SUCCESS,
+            //     title: "저장 확인",
+            //     actions: [MessageBox.Action.OK],
+            //     onClose: function (sButton) {
+            //         if (sButton === MessageBox.Action.OK) {
+            //             var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+            //             that._onExit();
+            //             that.getRouter().navTo("mainPage", { layout: sNextLayout });
+            //         }
+            //     }
+            // });
+            // MessageBox.confirm("작업내용을 취소 하게 됩니다. 취소 하시 겠습니까?", {
+            //     title : "Create",
+            //     initialFocus : sap.m.MessageBox.Action.CANCEL,
+            //     onClose : function(sButton) {
+            //         if (sButton === MessageBox.Action.OK) {
+            //             this._onExit();
+            //         }else{
+            //             return;
+            //         }
+            //     }.bind(this)
+            // });            
         },
 
         /**
@@ -890,7 +929,7 @@ sap.ui.define([
 
         _handleCreateSuccess: function (oData) {
             var that = this;
-            MessageBox.show("저장에 성공 하였습니다.", {
+            MessageBox.show("저장 성공 하였습니다.", {
                 icon: MessageBox.Icon.SUCCESS,
                 title: "저장 확인",
                 actions: [MessageBox.Action.OK],
@@ -940,7 +979,7 @@ sap.ui.define([
             }
             
             if(searchField_category.length>0){
-                aFilter.push(new Filter("mi_material_code_name", FilterOperator.Contains, searchField_code));
+                aFilter.push(new Filter("mi_material_name", FilterOperator.Contains, searchField_code));
             }
             
             if(searchField_category.length>0){
@@ -971,7 +1010,7 @@ sap.ui.define([
                     "org_type_code":  "BU",
                     "org_code": "BIZ00100",
                     "material_code": "ERCA00006A4",
-                    "material_description": "ERCA00006A4",
+                    "material_desc": "ERCA00006A4",
                     "supplier_code": "KR00008",
                     "supplier_local_name": "이지금",
                     "supplier_english_name": "",
@@ -979,7 +1018,7 @@ sap.ui.define([
                     "processing_cost":"45000",
                     "pcst_currency_unit": "HHH",
                     "mi_material_code": "COP-001-02",
-                    "mi_material_code_name": "COP-001-02",
+                    "mi_material_name": "COP-001-02",
                     "category_code": "Non-Ferrous Metal",
                     "category_name":"비철금속",
                     "reqm_quantity_unit": "MT",
@@ -1025,7 +1064,7 @@ sap.ui.define([
             aFilter.push(new Filter("org_code", FilterOperator.Contains, this._m.filter.org_code));
             
             //aFilter.push(new Filter("mi_material_code", FilterOperator.Contains, fCode));
-            //aFilter.push(new Filter("mi_material_code_name", FilterOperator.Contains, fName));
+            //aFilter.push(new Filter("mi_material_name", FilterOperator.Contains, fName));
 
             //시황자재 가격정보 
             var sServiceUrl = this._m.serviceName.mIMaterialCostInformationView;
@@ -1106,13 +1145,13 @@ sap.ui.define([
                 //수정대상 알수 없는 자재코드 및 서플라이로 인하여 임시로 할당 
                 if(oType == 0 && oModel.oData[idx].material_code.length>0){
                     odata.material_code = oModel.oData[idx].material_code;
-                    odata.material_description = oModel.oData[idx].material_description;
+                    odata.material_desc = oModel.oData[idx].material_desc;
 
 
 
                 } else {
                     odata.material_code = this._imsiData.material_code;
-                    odata.material_description = this._imsiData.material_description;
+                    odata.material_desc = this._imsiData.material_desc;
                 }
 
 
@@ -1129,17 +1168,47 @@ sap.ui.define([
                 
   
                 // input_material_code.addToken([
-                //     new Token({text: odata.material_description, key: odata.material_code})                   
+                //     new Token({text: odata.material_desc, key: odata.material_code})                   
                 // ]);
                     //             text: oItem.getTitle()
                     //         }));                
                 // if (aSelectedItems && aSelectedItems.length > 0) {
                    
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< Updated upstream
                     input_material_code.removeAllTokens();
                     input_material_code.addToken(new Token({
                         text: odata.material_code,
                         key: odata.material_description
                     }));
+=======
+>>>>>>> ca36fa1e9d0ae7f95aada19172b7849dd1a460bd
+                    // input_material_code.removeAllTokens();
+                    // input_material_code.addToken(new Token({
+                    //     text: odata.material_code,
+                    //     key: odata.material_desc
+                    // }));
+<<<<<<< HEAD
+=======
+<<<<<<< Updated upstream
+                    input_material_code.removeAllTokens();
+                    input_material_code.addToken(new Token({
+                        text: odata.material_code,
+                        key: odata.material_description
+                    }));
+=======
+                    // input_material_code.removeAllTokens();
+                    // input_material_code.addToken(new Token({
+                    //     text: odata.material_code,
+                    //     key: odata.material_desc
+                    // }));
+>>>>>>> Stashed changes
+>>>>>>> 4cf5f4b3... db 필드 매핑 수정 pg
+=======
+>>>>>>> Stashed changes
+>>>>>>> ca36fa1e9d0ae7f95aada19172b7849dd1a460bd
                    
                     // var sData = aTokens.map(function(oToken) {
                     //     return oToken.getKey();
@@ -1181,15 +1250,15 @@ sap.ui.define([
                 "org_type_code": odata.org_type_code,
                 "org_code": odata.org_code,
                 "material_code": odata.material_code,
-                "material_description": odata.material_description,
+                "material_desc": odata.material_desc,
                 "supplier_code": odata.supplier_code,
                 "supplier_local_name": odata.supplier_local_name,
                 "supplier_english_name": odata.supplier_english_name,
                 "base_quantity": odata.base_quantity,
-                "processing_cost": odata.material_description,
-                "pcst_currency_unit": odata.material_description,
+                "processing_cost": odata.material_desc,
+                "pcst_currency_unit": odata.material_desc,
                 "mi_material_code": odata.mi_material_code,
-                "mi_material_code_name": odata.mi_material_code_name,
+                "mi_material_name": odata.mi_material_name,
                 "category_code": odata.category_code,
                 "category_name": odata.category_name,
                 "reqm_quantity_unit": odata.reqm_quantity_unit,
@@ -1266,6 +1335,14 @@ sap.ui.define([
                 onClose: closeEvent,
             });
         },
+
+        /**
+         *MessageToast 
+         * @param {*} content 
+         */
+        _showMessageToast : function(content){
+            MessageToast.show(content);
+        },        
 
         /**
           * 버튼 액션 저장
@@ -1345,7 +1422,7 @@ sap.ui.define([
                 if(imputReqm_quantity.length<1){
                     this._showMessageBox(
                         "소요량 확인",
-                        "소요량 을 입력 하여 주십시요.",
+                        "소요량을 입력 하여 주십시요.",
                         this._m.messageType.Warning,
                         function(){return;}
                     );
@@ -1481,7 +1558,7 @@ sap.ui.define([
                     "org_type_code":  oData.org_type_code,
                     "org_code": oData.org_code,
                     "material_code": oData.material_code,
-                    "material_description": oData.material_description,
+                    "material_desc": oData.material_desc,
                     "supplier_code": oData.supplier_code,
                     "supplier_local_name": oData.supplier_local_name,
                     "supplier_english_name": oData.supplier_english_name,
@@ -1489,7 +1566,7 @@ sap.ui.define([
                     "processing_cost": oData.processing_cost,
                     "pcst_currency_unit": oData.pcst_currency_unit,
                     "mi_material_code": oData.mi_material_code,
-                    "mi_material_code_name": oData.mi_material_code_name,
+                    "mi_material_name": oData.mi_material_name,
                     "category_code": oData.category_code,
                     "category_name": oData.category_name,
                     "reqm_quantity_unit": oData.reqm_quantity_unit,
@@ -1540,7 +1617,7 @@ sap.ui.define([
                 "base_quantity" : oData.base_quantity,
                 "supplier_local_name" : oData.supplier_local_name,
                 "supplier_english_name" : oData.supplier_english_name,
-                "mi_material_code_name" : oData.mi_material_code_name,
+                "mi_material_name" : oData.mi_material_name,
                 "category_code" : oData.category_code,
                 "category_name" : oData.category_name,
                 "currency_unit" : oData.currency_unit,
@@ -1644,25 +1721,25 @@ sap.ui.define([
         },
 
         _handleCreateError: function (oError) {
-            MessageBox.error("저장에 실패 하였습니다.");
+            this._showMessageBox(
+                "저장 실패",
+                "저장 실패 하였습니다.",
+                this._m.messageType.Error,
+                function(){return;}
+            );
         },
 
         _handleUpdateSuccess: function (oData) {
-            MessageBox.show("수정 확인", {
-                icon: MessageBox.Icon.SUCCESS,
-                title: "수정에 성공 하였습니다.",
-                actions: [MessageBox.Action.OK],
-                styleClass: "sapUiSizeCompact"
-            });
+            this._showMessageToast("수정 성공 하였습니다.");
         },
         
         _handleUpdateError: function (oError) {
-            MessageBox.show("수정 실패 확인", {
-                icon: MessageBox.Icon.ERROR,
-                title: "수정에 실패 하였습니다.",
-                actions: [MessageBox.Action.OK],
-                styleClass: "sapUiSizeCompact"
-            });
+            this._showMessageBox(
+                "수정 실패",
+                "수정 실패 하였습니다.",
+                this._m.messageType.Error,
+                function(){return;}
+            );
         },
         /**
          * 삭제 성공
@@ -1670,13 +1747,7 @@ sap.ui.define([
          * @private
          */
         _handleDeleteSuccess: function (oData) {
-            MessageBox.show("삭제 실패 확인", {
-                icon: MessageBox.Icon.ERROR,
-                title: "삭제가 실패 하였습니다.",
-                actions: [MessageBox.Action.OK],
-                styleClass: "sapUiSizeCompact"
-            });
-            //this.getView().byId("buttonMainTableDelete").setEnabled(false);
+            this._showMessageToast("삭제 성공 하였습니다.");
         },
 
         /**
@@ -1685,12 +1756,12 @@ sap.ui.define([
          * @private
          */
         _handleDeleteError: function (oError) {
-            MessageBox.show("삭제 실패 확인", {
-                icon: MessageBox.Icon.ERROR,
-                title: "삭제가 실패 하였습니다.",
-                actions: [MessageBox.Action.OK],
-                styleClass: "sapUiSizeCompact"
-            });
+            this._showMessageBox(
+                "삭제 실패",
+                "삭제 실패 하였습니다.",
+                this._m.messageType.Error,
+                function(){return;}
+            );
         }        
            
     });

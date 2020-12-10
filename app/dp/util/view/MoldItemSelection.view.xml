@@ -5,10 +5,7 @@
     xmlns:f="sap.f"
     height="100%">
 
-    <f:DynamicPage
-        id="page"
-        headerExpanded="{mainListView>/headerExpanded}"
-        toggleHeaderOnTitleClick="true">
-        
-    </f:DynamicPage>
+
+        <Button text="선택" />
+   
 </mvc:View>

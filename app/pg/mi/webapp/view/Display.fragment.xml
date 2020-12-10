@@ -111,7 +111,7 @@
                                         <ColumnListItem>
                                             <cells>
                                                 <Text text="{jCodeText>language_code}"/>                                                            
-                                                <Text text="{jCodeText>mi_material_code_name}"/>
+                                                <Text text="{jCodeText>mi_material_name}"/>
                                             </cells>
                                         </ColumnListItem>
                                     </items>

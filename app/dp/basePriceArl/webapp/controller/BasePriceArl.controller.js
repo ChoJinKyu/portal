@@ -7,12 +7,15 @@ sap.ui.define([
 	"ext/lib/formatter/Formatter",
     "sap/m/TablePersoController",
     "sap/ui/model/json/JSONModel",
-    "sap/ui/richtexteditor/RichTextEditor"
+    "sap/ui/richtexteditor/RichTextEditor",
+    "sap/m/MessageBox"
 ], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Validator, Formatter, 
-        TablePersoController, JSONModel, RichTextEditor) {
+        TablePersoController, JSONModel, RichTextEditor, MessageBox) {
 	"use strict";
 
-	// var oTransactionManager;
+    // var oTransactionManager;
+    let iTestNumber = 1;
+    let iMaterialCode = 1;
 
 	return BaseController.extend("dp.basePriceArl.controller.BasePriceArl", {
 
@@ -26,7 +29,10 @@ sap.ui.define([
 		 */
 		onInit : function () {
 			let oMultilingual = new Multilingual();
-			this.setModel(oMultilingual.getModel(), "I18N");
+            this.setModel(oMultilingual.getModel(), "I18N");
+            
+            let sDateOnly = this._getNowDayAndTimes();
+            let sDateAndTimes = this._getNowDayAndTimes(true);
 
             // 하드코딩
             let oNewBasePriceData = {
@@ -37,40 +43,55 @@ sap.ui.define([
                                     "approval_type_code": "10",
                                     "new_change_code": "10",
                                     "approval_status_code": "10",
-                                    "approval_request_desc": "품의 테스트_Y",
+                                    "approval_request_desc": "품의 테스트",
                                     "approval_requestor_empno": "15",
-                                    "approval_request_date": "2020-12-10T00:00:00",
-                                    "local_create_dtm": "2020-12-03T10:18:46Z",
-                                    "local_update_dtm": "2020-12-03T10:18:46Z",
-                                    "details": [{ "au_code": "10", 
-                                                "material_code": "1", 
-                                                "supplier_code": "KR00002600", 
-                                                "base_date": "2020-12-10T00:00:00", 
-                                                "local_create_dtm": "2020-12-06T10:18:46Z", 
-                                                "local_update_dtm": "2020-12-06T10:18:46Z",
-                                                "prices": [{"market_code": "1",
-                                                            "new_base_price": "0.4824",
-                                                            "new_base_price_currency_code": "USD",
-                                                            "local_create_dtm": "2020-12-03T10:18:46Z",
-                                                            "local_update_dtm": "2020-12-03T10:18:46Z"}]},
-                                            { "au_code": "10", 
-                                                "material_code": "2", 
-                                                "supplier_code": "KR00002600", 
-                                                "base_date": "2020-12-10T00:00:00", 
-                                                "local_create_dtm": "2020-12-06T10:18:46Z", 
-                                                "local_update_dtm": "2020-12-06T10:18:46Z",
-                                                "prices": [{"market_code": "1",
-                                                            "new_base_price": "0.2222",
-                                                            "new_base_price_currency_code": "USD",
-                                                            "local_create_dtm": "2020-12-03T10:18:46Z",
-                                                            "local_update_dtm": "2020-12-03T10:18:46Z"},
-                                                            {"market_code": "2",
-                                                            "new_base_price": "0.3333",
-                                                            "new_base_price_currency_code": "KRW",
-                                                            "local_create_dtm": "2020-12-03T10:18:46Z",
-                                                            "local_update_dtm": "2020-12-03T10:18:46Z"}]}]
-                                    };
-            this.setModel(new JSONModel(oNewBasePriceData), "list");
+                                    "approval_request_date": sDateOnly,
+                                    "local_create_dtm": sDateAndTimes,
+                                    "local_update_dtm": sDateAndTimes,
+                                    "details": []};
+
+            // let oNewBasePriceData = {
+            //                         "tenant_id": "L2100",
+            //                         "company_code": "LGEKR",
+            //                         "org_type_code": "PU",
+            //                         "org_code": "EKHQ",
+            //                         "approval_type_code": "10",
+            //                         "new_change_code": "10",
+            //                         "approval_status_code": "10",
+            //                         "approval_request_desc": "품의 테스트_Y",
+            //                         "approval_requestor_empno": "15",
+            //                         "approval_request_date": sDateOnly,
+            //                         "local_create_dtm": sDateAndTimes,
+            //                         "local_update_dtm": sDateAndTimes,
+            //                         "details": [{ "au_code": "10", 
+            //                                     "material_code": "1", 
+            //                                     "supplier_code": "KR00002600", 
+            //                                     "base_date": sDateOnly, 
+            //                                     "local_create_dtm": sDateAndTimes, 
+            //                                     "local_update_dtm": sDateAndTimes,
+            //                                     "prices": [{"market_code": "1",
+            //                                                 "new_base_price": "0.4824",
+            //                                                 "new_base_price_currency_code": "USD",
+            //                                                 "local_create_dtm": sDateAndTimes,
+            //                                                 "local_update_dtm": sDateAndTimes}]},
+            //                                 { "au_code": "10", 
+            //                                     "material_code": "2", 
+            //                                     "supplier_code": "KR00002600", 
+            //                                     "base_date": "2020-12-10T00:00:00", 
+            //                                     "local_create_dtm": sDateAndTimes, 
+            //                                     "local_update_dtm": sDateAndTimes,
+            //                                     "prices": [{"market_code": "1",
+            //                                                 "new_base_price": "0.2222",
+            //                                                 "new_base_price_currency_code": "USD",
+            //                                                 "local_create_dtm": sDateAndTimes,
+            //                                                 "local_update_dtm": sDateAndTimes},
+            //                                                 {"market_code": "2",
+            //                                                 "new_base_price": "0.3333",
+            //                                                 "new_base_price_currency_code": "KRW",
+            //                                                 "local_create_dtm": sDateAndTimes,
+            //                                                 "local_update_dtm": sDateAndTimes}]}]
+            //                         };
+            this.setModel(new JSONModel(oNewBasePriceData), "listModel");
 
             let oCodeData = {
                 basis: [{code: "1", text: "Cost Analysis (Cost Table)"}, 
@@ -116,44 +137,75 @@ sap.ui.define([
 					that.getView().byId("idVerticalLayout").addContent(oRichTextEditor);
 			});
         },
+
+        onOpenParNtoList: function () {
+            //MessageBox.success("Part No List Dialog Open ");
+            let oListModel = this.getModel("listModel");
+            let sDateOnly = this._getNowDayAndTimes();
+            let sDateAndTimes = this._getNowDayAndTimes(true);
+
+            oListModel.getData().details.push({ "au_code": "10", 
+                                            "material_code": ""+iMaterialCode, 
+                                            "supplier_code": "KR00002600", 
+                                            "base_date": sDateOnly, 
+                                            "local_create_dtm": sDateAndTimes, 
+                                            "local_update_dtm": sDateAndTimes});
+            iMaterialCode++;
+            oListModel.refresh();
+        },
     
+        onOpenFamilyPartNo: function () {
+            MessageBox.success("Family Part No Dialog Open ");
+        },
+
+        /**
+         * Table CheckBox 클릭 시
+         */
+        onRowSelectionChange: function (oEvent) {
+            let oListModel = this.getModel("listModel");
+            let sPath = oEvent.getParameter("rowContext").getPath();
+            //oListModel.setProperty
+        },
+
+        _getNowDayAndTimes: function (bTimesParam) {
+            let oDate = new Date(),
+                iYear = oDate.getFullYear(),
+                iMonth = oDate.getMonth()+1,
+                iDate = oDate.getDate(),
+                iHours = oDate.getHours(),
+                iMinutes = oDate.getMinutes(),
+                iSeconds = oDate.getSeconds();
+
+            let sReturnValue = "" + iYear + "-" + this._getPreZero(iMonth) + "-" + this._getPreZero(iDate) + "T";
+            let sTimes = "" + this._getPreZero(iHours) + ":" + this._getPreZero(iMinutes) + ":" + this._getPreZero(iSeconds) + "Z";
+
+            if( bTimesParam ) {
+                sReturnValue += sTimes;
+            }else {
+                sReturnValue += "00:00:00";
+            }
+
+            return sReturnValue;
+        },
+
+        _getPreZero: function (iDataParam) {
+            return (iDataParam<10 ? "0"+iDataParam : iDataParam);
+        },
+        
         /**
          * 저장
          */
-        onSave : function () {
-            let oListModel = this.getModel("list");
+        onSave: function () {
+            let oListModel = this.getModel("listModel");
             let oModel = this.getModel();
 
-            // let oParam1 = {
-            //                 "tenant_id": "L2100",
-            //                 "company_code": "LGEKR",
-            //                 "org_type_code": "PU",
-            //                 "org_code": "EKHQ",
-            //                 "approval_type_code": "10",
-            //                 "new_change_code": "10",
-            //                 "approval_status_code": "10",
-            //                 "approval_request_desc": "품의 테스트_Y",
-            //                 "approval_requestor_empno": "15",
-            //                 "approval_request_date": "2020-12-10T00:00:00",
-            //                 "local_create_dtm": "2020-12-03T10:18:46Z",
-            //                 "local_update_dtm": "2020-12-03T10:18:46Z",
-            //                 "details": []
-            //                 };
+            oListModel.approval_request_desc = oListModel.approval_request_desc + iTestNumber;
+            iTestNumber++;
 
-            // oParam1.details.push({ "au_code": "10", 
-            //                     "material_code": "1", 
-            //                     "supplier_code": "KR00002600", 
-            //                     "base_date": "2020-12-10T00:00:00", 
-            //                     "local_create_dtm": "2020-12-06T10:18:46Z", 
-            //                     "local_update_dtm": "2020-12-06T10:18:46Z"});
-            // oParam1.details.push({ "au_code": "10", 
-            //                     "material_code": "2", 
-            //                     "supplier_code": "KR00002600", 
-            //                     "base_date": "2020-12-10T00:00:00", 
-            //                     "local_create_dtm": "2020-12-06T10:18:46Z", 
-            //                     "local_update_dtm": "2020-12-06T10:18:46Z"});                    
+            let oData = $.extend(true, {}, oListModel.getData());
+            //oData.details = [] ;
 
-            oModel.create("/Base_Price_Arl_Master", oListModel.getData(), {
+            oModel.create("/Base_Price_Arl_Master", oData, {
                 groupId: "saveBasePriceArl",
                 success: function(data){
                     console.log("=========1");
@@ -167,6 +219,7 @@ sap.ui.define([
                 groupId: "saveBasePriceArl",
                 success: function(data){
                     console.log("submitChanges");
+                    MessageBox.success("저장되었습니다.");
                 }.bind(this),
                 error: function(data){
                     console.log('Create error', data);

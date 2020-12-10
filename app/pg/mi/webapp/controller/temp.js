@@ -1,4 +1,5 @@
 
+
 MidObject.controller.js:159 _showFormFragment
 남은작업  11월 23일에 진행해야할 작업 ===============================
 -main page
@@ -1093,7 +1094,7 @@ UseYNView(tenant_id='L2100',code='TRUE'): {__metadata: {…}, tenant_id: "L2100"
                     "org_code": midObjectData.getProperty("/org_code"),
                     "mi_material_code": midObjectData.getProperty("/mi_material_code"),
                     "language_code": "KO",
-                    "mi_material_code_name": "",
+                    "mi_material_name": "",
                     "local_create_dtm": new Date(),
                     "local_update_dtm": new Date(),
                     "create_user_id": "Admin",
@@ -1160,7 +1161,7 @@ UseYNView(tenant_id='L2100',code='TRUE'): {__metadata: {…}, tenant_id: "L2100"
         "org_code": midObjectData.getProperty("/org_code"),
         "mi_material_code": midObjectData.getProperty("/mi_material_code"),
         "language_code": "CO",
-        "mi_material_code_name": "",
+        "mi_material_name": "",
         "local_create_dtm": new Date(),
         "local_update_dtm": new Date(),
         "create_user_id": "Admin",
@@ -1223,7 +1224,7 @@ UseYNView(tenant_id='L2100',code='TRUE'): {__metadata: {…}, tenant_id: "L2100"
                 midObjectData.setProperty("/category_name", odata.category_name);
                 midObjectData.setProperty("/category_code", odata.category_code);
                 midObjectData.setProperty("/mi_material_code", odata.mi_material_code);                
-                midObjectData.setProperty("/mi_material_code_name", odata.mi_material_code_name);                
+                midObjectData.setProperty("/mi_material_name", odata.mi_material_name);                
                 midObjectData.setProperty("/use_flag", odata.use_flag);
            
 
@@ -1355,7 +1356,7 @@ var mParameters = {
         "org_type_code": "BU",
         "org_code": "BIZ00100",
         "mi_material_code": mi_material_code,
-        "mi_material_code_name": "",
+        "mi_material_name": "",
         "category_code": "Non-Ferrous Metal",
         "category_name": "비철금속",
         "use_flag": true,
@@ -1429,7 +1430,7 @@ this.iIndex = oParent.indexOfItem(oItem);
 					"org_type_code": "BU",
 					"org_code": "BIZ00100",
 					"mi_material_code": mi_material_code,
-					"mi_material_code_name": "",
+					"mi_material_name": "",
 					"category_code": "Non-Ferrous Metal",
 					"category_name": "비철금속",
 					"use_flag": true,

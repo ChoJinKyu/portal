@@ -67,12 +67,12 @@
                                             <Label text="자재정보:" required="true"/>
                                         </FlexBox>
                                         <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiSmallMarginBottom">        
-                                            <Text text="[{oUiData>/material_code}] {oUiData>/material_description} / [{oUiData>/supplier_code}] {oUiData>/supplier_local_name}" design="Bold"/>
+                                            <Text text="[{oUiData>/material_code}] {oUiData>/material_desc} / [{oUiData>/supplier_code}] {oUiData>/supplier_local_name}" design="Bold"/>
                                         </FlexBox>                                        
                                         <FlexBox height="70px" alignItems="Start" justifyContent="Start" class="sapUiTinyMarginTop">
                                             <layout:VerticalLayout class="sapUiLargeMarginEnd">
                                                 <Label text="기준수량:" required="true" class="sapUiTinyMarginBottom"/>
-                                                <Text text="{oUiData>/material_description}" design="Bold"/>
+                                                <Text text="{oUiData>/material_desc}" design="Bold"/>
                                             </layout:VerticalLayout>  
                                             <layout:VerticalLayout class="sapUiLargeMarginBegin sapUiLargeMarginEnd">
                                                 <Label text="가공비:" required="true" class="sapUiTinyMarginBottom"/>
@@ -155,7 +155,7 @@
                                                 <ColumnListItem>
                                                     <cells>   
                                                         <Text text="{midList>mi_material_code}" />                                          
-                                                        <Text text="{midList>mi_material_code_name}" />                                          
+                                                        <Text text="{midList>mi_material_name}" />                                          
                                                         <Text text="{midList>category_name}" />                                          
                                                         <Text text="{midList>reqm_quantity}" />                                          
                                                         <Text text="{

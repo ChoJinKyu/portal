@@ -85,16 +85,16 @@ sap.m.PopinDisplay.WithoutHeader Inside the table popin, only the cell content w
 OrgTenantView Tent정보 
 
 테이블 리스트 
-https://lgcommondev-workspaces-ws-k8gvf-app1.jp10.applicationstudio.cloud.sap/pg/mi/webapp/srv-api/odata/v2/pg.marketIntelligenceService/MIMaterialCodeBOMManagement/?$filter=material_description eq 'Cathode Active Material LCH20D' 
+https://lgcommondev-workspaces-ws-k8gvf-app1.jp10.applicationstudio.cloud.sap/pg/mi/webapp/srv-api/odata/v2/pg.marketIntelligenceService/MIMaterialCodeBOMManagement/?$filter=material_desc eq 'Cathode Active Material LCH20D' 
 
-material_code,material_description,supplier_code,base_quantity,processing_cost,mi_material_code,mi_material_code_name,category_name,reqm_quantity_unit,reqm_quantity,currency_unit,mi_base_reqm_quantity,quantity_unit,exchange,termsdelv,use_flag
+material_code,material_desc,supplier_code,base_quantity,processing_cost,mi_material_code,mi_material_name,category_name,reqm_quantity_unit,reqm_quantity,currency_unit,mi_base_reqm_quantity,quantity_unit,exchange,termsdelv,use_flag
 entity MI_Material_Code_Bom_Mngt {
     key tenant_id             : String(5) not null  @title : '회사코드';
     key company_code          : String(10) not null @title : '법인코드';
     key org_type_code         : String(30) not null @title : '조직유형코드';
     key org_code              : String(10) not null @title : '조직코드';
     key material_code         : String(40) not null @title : '자재코드';
-        material_description  : String(300)         @title : '자재내역';
+        material_desc  : String(300)         @title : '자재내역';
     key supplier_code         : String(15) not null @title : '공급업체코드';
         supplier_local_name   : String(240)         @title : '공급업체로컬명';
         supplier_english_name : String(240)         @title : '공급업체영문명';
@@ -102,7 +102,7 @@ entity MI_Material_Code_Bom_Mngt {
         processing_cost       : Decimal not null    @title : '가공비';
         pcst_currency_unit    : String(30) not null @title : '가공비통화단위';
     key mi_material_code      : String(40) not null @title : '시황자재코드';
-        mi_material_code_name : String(240)         @title : '시황자재코드명';
+        mi_material_name : String(240)         @title : '시황자재코드명';
         category_code         : String(40)          @title : '카테고리코드';
         category_name         : String(240)         @title : '카테고리명';
         reqm_quantity_unit    : String(3) not null  @title : '소요수량단위';

@@ -182,7 +182,7 @@
                                                                 placeholder="-선택하세요-">
                                                                 <core:Item key="{jLanguageView>code}" text="{jLanguageView>code_name}" />                                                                    
                                                             </ComboBox>
-                                                            <Input value="{jCodeText>mi_material_code_name}" />
+                                                            <Input value="{jCodeText>mi_material_name}" />
                                                         </cells>
                                                     </ColumnListItem>
                                                 </items>
