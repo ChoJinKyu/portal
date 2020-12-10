@@ -1,4 +1,5 @@
-sap.ui.define([
+sap.ui.define([ 
+    "ext/lib/controller/BaseController",
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/odata/v2/ODataModel",
     "sap/m/Dialog",
@@ -14,10 +15,11 @@ sap.ui.define([
     "sap/m/ColumnListItem",
     "sap/ui/core/Fragment",
     "ext/lib/util/Multilingual",
-    "ext/lib/model/ManagedListModel",
-], function (Controller, ODataModel, Dialog, Renderer, ODataV2ServiceProvider,
+    "ext/lib/model/ManagedListModel", 
+       "sap/ui/model/json/JSONModel",
+], function (BaseController,Controller, ODataModel, Dialog, Renderer, ODataV2ServiceProvider,
     Sorter, Filter, FilterOperator,
-    Button, Text, Table, Column, ColumnListItem, Fragment, ManagedListModel) {
+    Button, Text, Table, Column, ColumnListItem, Fragment,Multilingual , ManagedListModel,JSONModel) {
     "use strict";
 
     var oServiceModel = new ODataModel({
@@ -39,13 +41,14 @@ sap.ui.define([
      * @author jinseon.lee
      * @date   2020.12.02 
      */
-    return Controller.extend("dp.util.controller.MoldItemSelection", {
+    return BaseController.extend("dp.util.controller.MoldItemSelection", {
+
 
         onInit: function () {
 
-            /* 다국어 처리*/
+             /* 다국어 처리*/
             var oMultilingual = new Multilingual();
-            this.setModel(oMultilingual.getModel(), "I18N");
+            this.setModel(oMultilingual.getModel(), "I18N"); 
 
             console.log("MoldItemSelection Controller 호출");
 
@@ -57,6 +60,7 @@ sap.ui.define([
             this.setModel(oViewModel, "moldItemPop");
             this.setModel(new ManagedListModel(), "moldItemPopList");
         },
+
         /**
          * @param vThis : view page의 this 
          *       , oEvent : 이벤트 
@@ -65,6 +69,7 @@ sap.ui.define([
 		 * @public
 		 */
         openMoldItemSelectionPop : function (pThis, oEvent, pArges, callback) { 
+
 
             oThis = pThis;
             oArges = pArges;
