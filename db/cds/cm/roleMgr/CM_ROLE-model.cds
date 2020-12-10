@@ -8,6 +8,6 @@ entity Role {
     chian_code : String(30)  not null;	
     role_name : String(30)  not null;	
     role_desc : String(300)  not null;	
-    use_flag : Boolean  not null @title: '사용여부';
+    use_flag : Boolean  default true not null @title: '사용여부';
 }	
 extend Role with util.Managed;
