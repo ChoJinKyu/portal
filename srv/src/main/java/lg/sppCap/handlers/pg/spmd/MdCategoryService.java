@@ -6,9 +6,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Iterator;
 import java.time.Instant;
+import java.beans.Introspector;
+import java.beans.BeanInfo;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -35,9 +43,53 @@ import cds.gen.pg.mdcategoryservice.*;
 public class MdCategoryService implements EventHandler {
 
     private static final Logger log = LogManager.getLogger();
-
+    
     @Autowired
     private JdbcTemplate jdbc;
+    
+	// 건별 attr parsing
+	private MdVpMappingItemView setVpItemMappingAttr (MdVpMappingItemView list) {
+
+        //log.info("### setVpItemMappingAttr ###");
+        
+        Map<String, Object> hMap = new HashMap<String, Object>();
+        hMap = objectToMap(list, null);
+		String[] arrStr = new String[300];
+		int iColCnt = 0;
+		for (int i=1; i<=300; i++) {
+            String sFillZeroNo = getFillZero(String.valueOf(i), 3);
+			if("Y".equals(hMap.get("spmdAttr"+sFillZeroNo))) {
+				 arrStr[iColCnt++] = StringUtils.defaultString((String) hMap.get("spmdAttrInfo"+sFillZeroNo), "");
+			}
+			// Attr init
+			hMap.put("spmdAttr"+sFillZeroNo, "");
+			hMap.put("spmdAttrInfo"+sFillZeroNo, "");
+		}
+		
+		// reSet Value
+		for (int i=1; i<=iColCnt; i++) {
+            String sFillZeroNo = getFillZero(String.valueOf(i), 3);
+			hMap.put("spmdAttr"+sFillZeroNo, "Y");
+			hMap.put("spmdAttrInfo"+sFillZeroNo, arrStr[i-1]);
+		}
+		
+        return (MdVpMappingItemView) mapToObject(hMap, list);
+
+    }
+    
+	// Vendor Pool Item매핑View 목록
+	@After(event = CdsService.EVENT_READ, entity=MdVpMappingItemView_.CDS_NAME)
+	public void readOnMdVpMappingItemViewProc(List<MdVpMappingItemView> lists) {
+
+		log.info("### readOnMdVpMappingItemViewProc Read [On] ###");
+
+		if(!lists.isEmpty() && lists.size() > 0){
+			for(MdVpMappingItemView list : lists) {
+				//log.info("###["+list.getVendorPoolCode()+"]###["+list.getVendorPoolLocalName()+"]###["+list.getConfirmedStatusCode()+"]###["+list.getSpmdAttr001()+"]###["+list.getSpmdAttrInfo001()+"]###");
+                list = setVpItemMappingAttr(list);
+			}
+		}
+    }
     
     // 카테고리 Id 저장 전
     @Before(event=CdsService.EVENT_CREATE, entity=MdCategory_.CDS_NAME)
@@ -301,6 +353,65 @@ public class MdCategoryService implements EventHandler {
 		str.append(des);
 
 		return str.toString();
+    }
+    
+    /**
+    * Map을 Vo로 변환
+    * @param map
+    * @param obj
+    * @return
+    */
+    public Object mapToObject(Map<String, Object> map, Object obj){
+        String keyAttribute = null;
+        String setMethodString = "set";
+        String methodString = null;
+        Iterator itr = map.keySet().iterator();
+
+        while(itr.hasNext()){
+            keyAttribute = (String) itr.next();
+            methodString = setMethodString+keyAttribute.substring(0,1).toUpperCase()+keyAttribute.substring(1);
+            Method[] methods = obj.getClass().getDeclaredMethods();
+            for(int i=0;i<methods.length;i++){
+                if(methodString.equals(methods[i].getName())){
+                    try{
+                        methods[i].invoke(obj, map.get(keyAttribute));
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return obj;
+    }
+    
+	/**
+	* 특정 변수를 제외해서 vo를 map형식으로 변환해서 반환.
+	* @param vo VO
+	* @param arrExceptList 제외할 property 명 리스트
+	* @return
+	* @throws Exception
+	*/
+	public Map<String, Object> objectToMap(Object vo, String[] arrExceptList) {
+        Map<String, Object> result = new HashMap<String, Object>();
+        try {
+            BeanInfo info = Introspector.getBeanInfo(vo.getClass());
+            for (PropertyDescriptor pd : info.getPropertyDescriptors()) {
+                Method reader = pd.getReadMethod();
+                if (reader != null) {
+                    if(arrExceptList != null && arrExceptList.length > 0 && isContain(arrExceptList, pd.getName())) continue;
+                    result.put(pd.getName(), reader.invoke(vo));
+                }
+            }
+        } catch (Exception ex) { log.error(ex.getMessage()); }
+		return result;
+    }
+    
+	public Boolean isContain(String[] arrList, String name) {
+		for (String arr : arrList) {
+			if (StringUtils.contains(arr, name))
+				return true;
+		}
+		return false;
 	}
 
 }
