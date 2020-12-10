@@ -13,6 +13,7 @@ entity Menu {
       sort_number       : Decimal not null;
       menu_display_flag : Boolean not null;
       menu_type_code    : String(30) not null;
+      menu_path_info    : String(300) not null;
       use_flag          : Boolean not null;
 
       parent            : Association to Menu

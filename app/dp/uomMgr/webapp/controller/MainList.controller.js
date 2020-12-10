@@ -202,11 +202,15 @@ sap.ui.define([
 		},
 		
 		_getSearchStates: function(){
-            var sUomClass = this.getView().byId("searchUomClass").getSelectedKey(),			
+            var sTenantId = "L2600",
+                sUomClass = this.getView().byId("searchUomClass").getSelectedKey(),			
                 // sUom = this.getView().byId("searchUom").getSelectedKey(),
 			 	sBU = this.getView().byId("searchBUSegmentButton").getSelectedKey();
 			
-			var aSearchFilters = [];
+            var aSearchFilters = [];
+            
+            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenantId));
+
 			if (sUomClass && sUomClass.length > 0) {
 				aSearchFilters.push(new Filter("uom_class_code", FilterOperator.EQ, sUomClass));
             }

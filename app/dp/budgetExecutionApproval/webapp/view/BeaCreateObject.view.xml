@@ -9,7 +9,8 @@
     xmlns:si="sap.suite.ui.commons.statusindicator"
     xmlns:u="sap.ui.unified" 
     xmlns:table="sap.ui.table" 
-    xmlns="sap.m"
+    xmlns="sap.m" 
+    xmlns:moditemPop="dp.util.view"
 	height="100%">
 
 	<uxap:ObjectPageLayout 
@@ -68,7 +69,7 @@
 					<Label text="{I18N>/STATUS} :"/>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
-                        text="{=${appMaster>/approval_number}?'Update':'New'}"
+                        text="{=${beaCreateObjectView>/editMode}?'Update':'New'}"
                         state="Error" />
 				</layout:VerticalLayout>
 
@@ -195,14 +196,14 @@
                          <VBox class="sapUiSmallMargin">
                             <Label text="{I18N>/AFFILIATE}" />
                             <ObjectStatus
-                                text="{company>/company_name}" 
+                                text="[{appMaster>/company_code}] {company>/company_name}" 
                                 state="Error"
                                 />
                          </VBox>
                          <VBox class="sapUiSmallMargin">
                             <Label text="{I18N>/BUSINESS_DIVISION}" />
                             <ObjectStatus
-                                text="{plant>/plant_name}" 
+                                text="[{appMaster>/org_code}] {plant>/plant_name}" 
                                 state="Error"
                                 />
                          </VBox>
@@ -212,7 +213,7 @@
                         <!-- Participating Supplier Table -->
                         <table:Table id="psTable"
                                 selectionMode="MultiToggle"
-                                fixedColumnCount="4"
+                                fixedColumnCount="7"
                                 visibleRowCountMode="Auto"
                                 rows="{path:'appDetail>/ApprovalDetails'}"
                                 >
@@ -220,18 +221,26 @@
                                 <OverflowToolbar>
                                     <ToolbarSpacer/>
                                     <!-- Add the Personalization button -->
+                                    <moditemPop:MoldItemSelection />
                                     <Button id="btnPsAdd"  type="Transparent" text="{I18N>/ROW_ADD}" press=".handleTableSelectDialogPress" > <!-- Add -->
                                     	<customData>
                                             <core:CustomData key="multi" value="true" />
                                         </customData>
                                     </Button>
                                     <Button id="btnPsDelete"   type="Transparent" text="{I18N>/ROW_DELETE}"  press=".onPsDelRow" />
-                                   
                                 </OverflowToolbar>
                             </table:extension>          
-
                                 <table:columns>
-                                    <table:Column id="c_mold_id"  visible="false">
+                                    <table:Column id=""  visible="true" width="3.5em">
+                                        <Label text="Status"/>           
+                                        <table:template>
+                                           <ObjectStatus icon="{
+                                                    path: 'appDetail>_row_state_',
+                                                    formatter: '.formatter.toModelStateColumnIcon'
+                                                }" />
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column id="c_mold_id"  visible="true">
                                         <Label text="mold_id"/>           
                                         <table:template>
                                             <Text id="t_mold_id" text="{path:'appDetail>mold_id', type: 'sap.ui.model.type.Integer'}"/>
@@ -386,8 +395,6 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			
-
 			<uxap:ObjectPageSection titleUppercase="false" title="Approval Line">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
@@ -399,7 +406,7 @@
                             rowSelectionChange=".onCheck"
                             mode="None"
                             width="auto"
-                            items="{appList>/undefined}"
+                            items="{appList>/Approver}"
                             >
                         <headerToolbar>
                             <OverflowToolbar>
@@ -436,23 +443,23 @@
                              <ColumnListItem>
                                 <cells>
                                     <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
-                                    <Text text="{appList>no}" />
+                                    <Text text="{appList>approve_sequence}" />
                                     <ComboBox  id="searchItemType" width="100%"
                                         selectedKey="{appList>type}" 
-                                        enabled="{appList>editMode}"
-                                        items="{
-                                            path: 'org>/Org_Company',
-                                            filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                            ],
-                                            sorter: { path: 'company_code'}
-                                        }"
-                                        >
-                                    <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                                        enabled="{appList>editMode}" 
+                                        items="{ path : 'util>/CodeDetails',
+                                                    filters : [
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                        {path : 'group_code', operator : 'EQ', value1 : 'CM_APPROVER_TYPE'}
+                                                    ]
+                                                }"
+                                        >  
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+
                                     </ComboBox>
-                                    <SearchField id="searchField" enabled="{appList>editMode}" search=".onSearch" width="100%" placeholder="Search employee" value="{appList>nameDept}"/>
-                                    <Text text="{appList>status}" />
-                                    <Text text="{appList>comment}" />
+                                    <SearchField id="searchField" enabled="{appList>editMode}" search=".onSearch" width="100%" placeholder="Search employee" value="{appList>approver_empno}"/>
+                                    <Text text="{appList>approve_status_code}" />
+                                    <Text text="{appList>approve_comment}" />
                                     <Button id="btnSortUp" icon="{appList>arrowUp}" press=".onSortUp(${appList>no})" tooltip="sort" visible="{= ${appList>arrowUp}===''?false:true }"></Button>
                                     <Button id="btnSortDown" icon="{appList>arrowDown}" press=".onSortDown(${appList>no})"  visible="{= ${appList>arrowDown}===''?false:true }" tooltip="sort"></Button>
                                     <Button id="btnDelete" icon="sap-icon://delete" press=".setApprovalRemoveRow(${appList>no})" tooltip="삭제" visible="{appList>trashShow}"></Button>

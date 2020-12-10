@@ -155,66 +155,34 @@ sap.ui.define([
     },
 
     onMidTableAddButtonPress: function () {
-      var oTable = this.byId("midTable"),
-        oDetailsModel = this.getModel("details");
-
-      var transition = function (f) {
-        return function (v) {
-          return f(v);
-        };
-      };
-
-      var utc = transition(function (lDate) {
-        var yyyy = lDate.getFullYear() + "";
-        var mm = lDate.getMonth() + 1 + "";
-        var dd = lDate.getDate() + "";
-        var hh = lDate.getHours() + "";
-        var mi = lDate.getHours() + "";
-        var ss = lDate.getSeconds() + "";
-        // YYYY-MM-DDTHH:mm:ss.sssZ
-        return new Date([
-          yyyy,
-          mm.length == 1 ? "0" + mm : mm,
-          dd.length == 1 ? "0" + dd : dd
-        ].join("-") + (function () {
-          if (!hh && !mi && !ss) {
-            return "";
-          }
-          return "T" + [
-            hh.length == 1 ? "0" + hh : hh,
-            mi.length == 1 ? "0" + mi : mi,
-            ss.length == 1 ? "0" + ss : ss,
-          ].join(":");
-        })());
-      });
-
-      oDetailsModel.addRecord({
-        "tenant_id": "L2100",
-        "user_id": this._sUserId || "",
-        "role_group_code": "",
-        "start_date": new Date(),
-        "end_date": new Date(),
-        "local_create_dtm": new Date(),
-        "local_update_dtm": new Date()
-      }, 0);
-
+        var oTable = this.byId("midTable"),
+            oDetailsModel = this.getModel("details");
+        oDetailsModel.addRecord({
+            "tenant_id": "L2100",
+            "user_id": this._sUserId,
+            "role_group_code": "",
+            "start_date": new Date(),
+            "end_date": new Date(),
+            "local_create_dtm": new Date(),
+            "local_update_dtm": new Date()
+        }, "/UserRoleGroupMgr", 0);
     },
 
     onMidTableDeleteButtonPress: function () {
-      var [tId, mName, sEntity] = arguments;
-      var table = this.byId(tId);
-      var model = this.getView().getModel(mName);
- 
-      table
-        .getSelectedItems()
-        .map(item => model.getData()[sEntity].indexOf(item.getBindingContext("details").getObject()))
-        .reverse()
-        // 삭제
-        .forEach(function (idx) {
-          model.markRemoved(idx);
+        var oTable = this.byId("midTable"),
+            oModel = this.getModel("details"),
+            aItems = oTable.getSelectedItems(),
+            aIndices = [];
+        aItems.forEach(function(oItem){
+            aIndices.push(oModel.getProperty("/UserRoleGroupMgr").indexOf(oItem.getBindingContext("details").getObject()));
         });
-      table
-        .removeSelections(true);
+        aIndices = aIndices.sort(function(a, b){return b-a;});
+        aIndices.forEach(function(nIndex){
+            //oModel.removeRecord(nIndex);
+            oModel.markRemoved(nIndex);
+        });
+        oTable.removeSelections(true);
+        this.validator.clearValueState(this.byId("midTable"));      
     },
 
     /**
@@ -227,7 +195,6 @@ sap.ui.define([
         detail = view.getModel("details"),
         that = this;
 
-        console.log("onPageSaveButtonPress>>> master", master.getData());
         console.log("onPageSaveButtonPress>>> detail", detail.getData());
 
         master.getData()["user_name"] = master.getData()["employee_name"];
@@ -265,8 +232,7 @@ sap.ui.define([
         return;
       }
 
-      this._onMasterDataChanged();
-
+      
       if (master.getData()["_state_"] != "U") {
         if (master.getData()["_state_"] != "C" && detail.getChanges() <= 0) {
             MessageBox.alert("변경사항이 없습니다.");
@@ -281,6 +247,8 @@ sap.ui.define([
             return r;
         });
       }
+
+      this._onMasterDataChanged();
 
       MessageBox.confirm("Are you sure ?", {
         title: "Comfirmation",
@@ -379,8 +347,10 @@ sap.ui.define([
             "local_update_dtm": new Date()
         }, "/UserMgr", 0);
 
+
         var oDetailsModel = this.getModel("details");
         oDetailsModel.setTransactionModel(this.getModel());
+
         oDetailsModel.read("/UserRoleGroupMgr", {
           filters: [
             new Filter("user_id", FilterOperator.EQ, this._sUserId)
@@ -391,12 +361,14 @@ sap.ui.define([
         });
 
         this._toEditMode();
-      }
-      else {
+
+      } else {
+  
         this.getModel("midObjectView").setProperty("/isAddedMode", false);
 
         this._bindView("/UserMgr('" + this._sUserId + "')");
         oView.setBusy(true);
+
         var oDetailsModel = this.getModel("details");
         oDetailsModel.setTransactionModel(this.getModel());
         oDetailsModel.read("/UserRoleGroupMgr", {   
@@ -481,14 +453,12 @@ sap.ui.define([
           new ComboBox({
             selectedKey: "{details>role_group_code}",
             items: {
-              path: 'util>/CodeDetails',
+              path: 'roleGroup>/RoleGroupMgr',
               filters: [
-                new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
-                new Filter("group_code", FilterOperator.EQ, 'CM_CTRL_OPTION_LEVEL_CODE')
               ],
               template: new Item({
-                key: "{util>code}",
-                text: "{= ${util>code} + ':' + ${util>code_description}}"
+                key: "{roleGroup>role_group_code}",
+                text: "{= ${roleGroup>role_group_code} + ':' + ${roleGroup>role_group_name}}"
               })
             },
             editable: "{= ${details>_row_state_} === 'C' }",
@@ -528,6 +498,7 @@ sap.ui.define([
                 if (oHandler) oHandler(this._oFragments[sFragmentName]);
             }
         }
+
 
 
     });
