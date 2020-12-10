@@ -30,12 +30,26 @@ sap.ui.define([
 
 		dateFormatter: DateFormatter,
 
+<<<<<<< HEAD
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> 4cf5f4b3... db 필드 매핑 수정 pg
 		_m : {  //수정대상 등록된 필터값들은 삭제한다. 
             page : "page",
             groupID : "pgGroup",
             tableItem : {
                 items : "items" //or rows
+<<<<<<< HEAD
             },
+=======
+			},
+            serviceName : {
+                marketIntelligenceService : "pg.marketIntelligenceService", //main Service
+                orgTenantView : "/OrgTenantView", //관리조직 View
+                mIMaterialCodeBOMManagement : ",MIMaterialCodeBOMManagement"
+            },			
+>>>>>>> 4cf5f4b3... db 필드 매핑 수정 pg
             tableName : "maindTable",
             filter : {  
                 tenant_id : "",
@@ -58,6 +72,10 @@ sap.ui.define([
             }          
 		},
 		
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+>>>>>>> 4cf5f4b3... db 필드 매핑 수정 pg
 		/**
 		 * Called when the mainList controller is instantiated.
 		 * @public
@@ -75,13 +93,25 @@ sap.ui.define([
 				mainListTableTitle : oResourceBundle.getText("mainListTableTitle")
 			});
 
+<<<<<<< HEAD
+=======
+<<<<<<< Updated upstream
+			this.setModel(oViewModel, "mainListView");
+=======
+>>>>>>> 4cf5f4b3... db 필드 매핑 수정 pg
 			oUiData = new JSONModel({
 				tenant_id : this._sso.dept.tenant_id
 			});
 
+<<<<<<< HEAD
 			
 			this.setModel(oUi, "oUi");
 			this.setModel(oUiData, "oUiData");
+=======
+			this.setModel(oUi, "oUi");
+			this.setModel(oUiData, "oUiData");
+>>>>>>> Stashed changes
+>>>>>>> 4cf5f4b3... db 필드 매핑 수정 pg
 		
 			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
@@ -215,7 +245,7 @@ sap.ui.define([
             //combobox value
             var oMi_tenant_id = oSmtFilter.getControlByKey("tenant_id").getSelectedKey();    
 			var oMi_material_code = oSmtFilter.getControlByKey("mi_material_code").getSelectedKey();   
-			var oMi_material_code_name = oSmtFilter.getControlByKey("mi_material_code_name").getSelectedKey();            
+			var oMi_material_name = oSmtFilter.getControlByKey("mi_material_name").getSelectedKey();            
 			var oCategory_code = oSmtFilter.getControlByKey("category_code").getSelectedKey();    
             var oUse_flag = oSmtFilter.getControlByKey("use_flag").getSelectedKey();   
             var fOcode = oUse_flag =="FALSE" ? false : true;
@@ -230,9 +260,9 @@ sap.ui.define([
 				mBindingParams.filters.push(oMi_material_codeFilter);
 			}
 
-			if (oMi_material_code_name.length > 0) {
-				var oMi_material_code_nameFilter = new Filter("mi_material_code_name", FilterOperator.EQ, oMi_material_code_name);
-				mBindingParams.filters.push(oMi_material_code_nameFilter);
+			if (oMi_material_name.length > 0) {
+				var oMi_material_nameFilter = new Filter("mi_material_name", FilterOperator.EQ, oMi_material_name);
+				mBindingParams.filters.push(oMi_material_nameFilter);
 			}
 
 			if (oCategory_code.length > 0) {
@@ -339,6 +369,8 @@ sap.ui.define([
 				this._getSmartTableById().getTable().getSelectedItems().forEach(function(oItem){
                     var sPath = oItem.getBindingContextPath();	
 					var mParameters = {"groupId":"deleteGroup"};
+					//시황자재 가격관리 등록이 되어 있거나 자재별 시황자재 BOM 에 등록되어 있는 데이타는 삭제 할수 없다.
+					//MIMaterialCodeBOMManagement - 시황자재 BOM
 					oItem.getBindingContext().getModel().remove(sPath, mParameters);
 				});
 				
@@ -352,6 +384,75 @@ sap.ui.define([
             console.groupEnd();
 		},
    
+
+		/**
+		 * 시황자재 가격관리 등록이 되어 있거나 자재별 시황자재 BOM 에 등록되어 있는 데이타 존재유무 확인
+		 */
+		_deleteCheck : function (oItemData) {
+			// var oModel = this.getModel(),
+			// 	checkFilters = [],
+			// 	bDeleteCheck = false;
+				
+			// 	function checkMIMaterialCodeBOMManagement (oItemData){
+
+			// 		checkFilters.push(new Filter("tenant_id", FilterOperator.Contains, oItemData.tenant_id));
+			// 		checkFilters.push(new Filter("company_code", FilterOperator.Contains, oItemData.company_code));
+			// 		checkFilters.push(new Filter("org_type_code", FilterOperator.Contains, oItemData.org_type_code));
+			// 		checkFilters.push(new Filter("org_code", FilterOperator.Contains, oItemData.org_code));				
+			// 		checkFilters.push(new Filter("mi_material_code", FilterOperator.Contains, oItemData.mi_material_code));				
+	
+			// 		oModel.read(this._m.serviceName.mIMaterialCodeBOMManagement, {
+			// 			async: false,
+			// 			filters: checkFilters,
+			// 			success: function (rData, reponse) {
+	
+			// 				if(reponse.data.results.length>0){
+			// 					return true;
+			// 				}
+			// 			}
+			// 		});					
+			// 	}
+
+			// 	function checkPriceManage() {
+			// 		checkFilters.push(new Filter("tenant_id", FilterOperator.Contains, oItemData.tenant_id));
+			// 		checkFilters.push(new Filter("company_code", FilterOperator.Contains, oItemData.company_code));
+			// 		checkFilters.push(new Filter("org_type_code", FilterOperator.Contains, oItemData.org_type_code));
+			// 		checkFilters.push(new Filter("org_code", FilterOperator.Contains, oItemData.org_code));				
+			// 		checkFilters.push(new Filter("mi_material_code", FilterOperator.Contains, oItemData.mi_material_code));				
+	
+			// 		oModel.read(this._m.serviceName.mIMaterialCodeBOMManagement, {
+			// 			async: false,
+			// 			filters: checkFilters,
+			// 			success: function (rData, reponse) {
+	
+			// 				if(reponse.data.results.length>0){
+			// 					return true;
+			// 				}
+			// 			}
+			// 		});		
+			// 	}
+
+			// 	var oPromise = new Promise(
+			// 		function(resolve, reject) {
+			// 			console.log("_deleteCheck Promise Start------");
+			// 			function() {
+			// 				console.log("_deleteCheck Promise resolve------");
+			// 				resolve(checkMIMaterialCodeBOMManagement(oItemData));
+			// 			}
+			// 		}
+			// 	);
+
+			// 	oPromise.then(
+			// 		function(val) {
+			// 			bDeleteCheck = val;
+			// 		})
+			// 	.catch(
+			// 		function(reason) {
+			// 			console.log("Error (' + reason + ')");
+			// 	});
+
+		},
+
 		/**
 		 * Event handler when a table add button pressed
 		 * @param {sap.ui.base.Event} oEvent

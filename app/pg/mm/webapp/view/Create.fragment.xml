@@ -165,7 +165,7 @@
                                                     <ColumnListItem>
                                                         <cells>   
                                                             <Label text="{mIMaterialPriceManagement>mi_material_code}" />                                          
-                                                            <Label text="{mIMaterialPriceManagement>mi_material_code_name}" />                                          
+                                                            <Label text="{mIMaterialPriceManagement>mi_material_name}" />                                          
                                                             <Label text="{mIMaterialPriceManagement>category_name}" />  
                                                             <Input id="inputReqm_quantity" value="{mIMaterialPriceManagement>reqm_quantity}"/>                                        
                                                             <Label text="{mIMaterialPriceManagement>use_flag}" />  

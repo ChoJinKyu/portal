@@ -42,8 +42,17 @@
                                     ],                            
                                     templateShareable:true}"                     
                             placeholder="선택 하세요.">
+<<<<<<< Updated upstream
                             <core:Item key="{material_code}" text="{material_description}"/>
+<<<<<<< HEAD
                         </ComboBox> 
+=======
+                        </ComboBox>
+=======
+                            <core:Item key="{material_code}" text="{material_desc}"/>
+                        </ComboBox> 
+>>>>>>> Stashed changes
+>>>>>>> 4cf5f4b3... db 필드 매핑 수정 pg
                     </VBox>
                     <VBox visible="{= ${_oUiData>/radioButtonGroup} === 1 }">
                         <Label text="공급업체코드"/>
@@ -63,7 +72,7 @@
                 <layout:VerticalLayout class="sapUiLargeMarginEnd">
                     <VBox visible="{= ${_oUiData>/radioButtonGroup} === 0}">
                         <Label  text="자재명"/>
-                        <Input  id="input_material_description"
+                        <Input  id="input_material_desc"
                                 class="sapUiSmallMarginBottom" 
                         />   
                     </VBox>
