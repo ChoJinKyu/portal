@@ -763,16 +763,6 @@ sap.ui.define([
         },
         
         /*
-		_applySearch: function(aTableSearchState) {
-			var oTable = this.byId("moldMstTable"),
-				oViewModel = this.getModel("developmentReceiptView");
-			oTable.getBinding("items").filter(aTableSearchState, "Application");
-			// changes the noDataText of the list in case there are no filter results
-			if (aTableSearchState.length !== 0) {
-				oViewModel.setProperty("/tableNoDataText", this.getResourceBundle().getText("developmentReceiptNoDataWithSearchText"));
-			}
-		},
-
 		_rebindTable: function(oTemplate, sKeyboardMode) {
 			var aFilters = this._getSearchStates();
 			this.byId("moldMstTable").bindItems({
