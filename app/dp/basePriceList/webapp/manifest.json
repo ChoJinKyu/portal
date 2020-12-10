@@ -108,16 +108,22 @@
         {
           "pattern": "",
           "name": "basePriceList",
-          "target": [
-            "basePriceList"
-          ]
+          "target": "basePriceList"
+        },
+        {
+          "pattern": "basePriceDetail",
+          "name": "basePriceDetail",
+          "target": "basePriceDetail"
         }
       ],
       "targets": {
         "basePriceList": {
           "viewId": "basePriceList",
-          "viewName": "BasePriceList",
-          "viewLevel": 1
+          "viewName": "BasePriceList"
+        },
+        "basePriceDetail": {
+          "viewId": "basePriceDetail",
+          "viewName": "BasePriceDetail"
         }
       }
     }

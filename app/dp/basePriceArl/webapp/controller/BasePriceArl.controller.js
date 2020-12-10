@@ -31,7 +31,7 @@ sap.ui.define([
 			let oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             
-            let sDateOnly = this._getNowDayAndTimes();
+            let sDateOnly = this._getNowDayAndTimes(false);
             let sDateAndTimes = this._getNowDayAndTimes(true);
 
             // 하드코딩
@@ -141,7 +141,7 @@ sap.ui.define([
         onOpenParNtoList: function () {
             //MessageBox.success("Part No List Dialog Open ");
             let oListModel = this.getModel("listModel");
-            let sDateOnly = this._getNowDayAndTimes();
+            let sDateOnly = this._getNowDayAndTimes(false);
             let sDateAndTimes = this._getNowDayAndTimes(true);
 
             oListModel.getData().details.push({ "au_code": "10", 
@@ -167,8 +167,8 @@ sap.ui.define([
             //oListModel.setProperty
         },
 
-        _getNowDayAndTimes: function (bTimesParam) {
-            let oDate = new Date(),
+        _getNowDayAndTimes: function (bTimesParam, oDateParam) {
+            let oDate = oDateParam || new Date(),
                 iYear = oDate.getFullYear(),
                 iMonth = oDate.getMonth()+1,
                 iDate = oDate.getDate(),
@@ -209,6 +209,10 @@ sap.ui.define([
                 groupId: "saveBasePriceArl",
                 success: function(data){
                     console.log("=========1");
+                    // return 값이 있고 approval_number가 있는 경우에만 저장 완료
+                    if( data && data.approval_number ) {
+                        MessageBox.success("저장되었습니다.");
+                    }
                 }.bind(this),
                 error: function(data){
                     console.log('error', data);
@@ -219,7 +223,6 @@ sap.ui.define([
                 groupId: "saveBasePriceArl",
                 success: function(data){
                     console.log("submitChanges");
-                    MessageBox.success("저장되었습니다.");
                 }.bind(this),
                 error: function(data){
                     console.log('Create error', data);

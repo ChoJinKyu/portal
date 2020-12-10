@@ -20,7 +20,7 @@
           <!-- 조회 -->
           <f:actions>
             <Button text="Search" type="Emphasized" press=".onSearch"/>
-            <Button text="Search2" type="Emphasized" press=".onSearch2"/>
+            <!-- <Button text="Search2" type="Emphasized" press=".onSearch2"/> -->
           </f:actions>
         </f:DynamicPageTitle>
       </f:title>
@@ -43,20 +43,20 @@
                             <Label text="Type"></Label>
                             <ComboBox
                               width="100%"
-                              selectedKey="{codeModel>/type}"
+                              selectedKey="{filterModel>/type}"
                               items="{
-                                path: 'codeModel>/type_list',
+                                path: 'filterModel>/type_list',
                                 filters: [
                                 ]
                               }">
                               <items>
-                                <core:Item key="{codeModel>code}" text="{codeModel>text}" />
+                                <core:Item key="{filterModel>code}" text="{filterModel>text}" />
                               </items>
                             </ComboBox>
                             <!-- <Label text="Request Data"></Label>
                             <DateRangeSelection 
-                                dateValue="{codeModel>/dateValue}" 
-                                dateSecondValue="{codeModel>/dateSecondValue}" /> -->
+                                dateValue="{filterModel>/dateValue}" 
+                                dateSecondValue="{filterModel>/dateSecondValue}" /> -->
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
@@ -65,27 +65,27 @@
                             <Label text="Divistion"></Label>
                             <ComboBox
                               width="100%"
-                              selectedKey="{codeModel>/divistion}"
+                              selectedKey="{filterModel>/divistion}"
                               items="{
-                                path: 'codeModel>/divistion_list',
+                                path: 'filterModel>/divistion_list',
                                 filters: [
                                 ]
                               }">
                               <items>
-                                <core:Item key="{codeModel>code}" text="{codeModel>text}" />
+                                <core:Item key="{filterModel>code}" text="{filterModel>text}" />
                               </items>
                             </ComboBox>
                             <!-- <Label text="Request By"></Label>
-                            <SearchField value="{codeModel>/request_by}" /> -->
+                            <SearchField value="{filterModel>/request_by}" /> -->
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                           </VBox>
                           <VBox>
                             <Label text="Part-No"></Label>
-                            <SearchField value="{codeModel>/part_no}" />
+                            <SearchField value="{filterModel>/part_no}" />
                             <!-- <Label text="Agreed By"></Label>
-                            <SearchField value="{codeModel>/agreed_by}" /> -->
+                            <SearchField value="{filterModel>/agreed_by}" /> -->
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
@@ -94,14 +94,14 @@
                             <Label text="Status"></Label>
                             <ComboBox
                               width="100%"
-                              selectedKey="{codeModel>/Status}"
+                              selectedKey="{filterModel>/Status}"
                               items="{
-                                path: 'codeModel>/status_list',
+                                path: 'filterModel>/status_list',
                                 filters: [
                                 ]
                               }">
                               <items>
-                                <core:Item key="{codeModel>code}" text="{codeModel>text}" />
+                                <core:Item key="{filterModel>code}" text="{filterModel>text}" />
                               </items>
                             </ComboBox>
                             <layoutData>
@@ -110,7 +110,7 @@
                           </VBox>
                           <VBox>
                             <Label text="RFA No"></Label>
-                            <Input value="{codeModel>/rfa_no}" />
+                            <Input value="{filterModel>/rfa_no}" />
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
@@ -118,22 +118,22 @@
                           <VBox>
                             <Label text="Request Data"></Label>
                             <DateRangeSelection 
-                                dateValue="{codeModel>/dateValue}" 
-                                dateSecondValue="{codeModel>/dateSecondValue}" />
+                                dateValue="{filterModel>/dateValue}" 
+                                secondDateValue="{filterModel>/secondDateValue}" />
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                           </VBox>
                           <VBox>
                             <Label text="Request By"></Label>
-                            <SearchField value="{codeModel>/request_by}" />
+                            <SearchField value="{filterModel>/request_by}" />
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                           </VBox>
                           <VBox>
                             <Label text="Agreed By"></Label>
-                            <SearchField value="{codeModel>/agreed_by}" />
+                            <SearchField value="{filterModel>/agreed_by}" />
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
@@ -145,8 +145,9 @@
       <f:content>
         <!--Part No List 시작-->
         <t:Table id="mainTable"
-            selectionMode="MultiToggle"
-            rows="{listModel>/results}"
+            selectionMode="None"
+            rows="{listModel>/}"
+            
             visibleRowCountMode="Auto">
             <t:extension>
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
@@ -159,7 +160,7 @@
                     <!-- <Label text="{I18N>/DIV}" textAlign="Center" /> -->
                     <Label text="RFA No" />
                     <t:template>
-                        <Text text="{listModel>approval_number}" />
+                        <Link text="{listModel>approval_number}" press=".onGoDetail" />
                     </t:template>
                 </t:Column>
                 <t:Column hAlign="Center" width="4rem">
@@ -171,9 +172,9 @@
                 </t:Column>
                 <t:Column hAlign="Center" width="8rem">
                     <!-- <Label text="{I18N>/PART_NO}" /> -->
-                    <Label text="Part_No" />
+                    <Label text="Material Code" />
                     <t:template>
-                        <Text text="{listModel>timezone_code}" />
+                        <Text text="{listModel>material_code}" />
                     </t:template>
                 </t:Column>
                 <t:Column hAlign="Center" width="16rem">
