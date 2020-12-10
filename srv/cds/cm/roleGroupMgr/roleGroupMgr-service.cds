@@ -2,7 +2,8 @@ using { cm as roleGroupMgr } from '../../../../db/cds/cm/roleGroupMgr/CM_ROLE_GR
 
 namespace cm;
 
-service roleGroupMgrService {
+@path : '/cm.RoleGroupMgrService'
+service RoleGroupMgrService {
 
     entity RoleGroupMgr as projection on roleGroupMgr.Role_Group;
 

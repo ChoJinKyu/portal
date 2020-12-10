@@ -204,9 +204,12 @@ sap.ui.define([
 		_getSearchStates: function(){
 			// var sChain = this.getView().byId("searchChain").getSelectedKey(),
 			// 	sKeyword = this.getView().byId("searchKeyword").getValue(),
-			// 	sUsage = this.getView().byId("searchUsageSegmentButton").getSelectedKey();
+            // 	sUsage = this.getView().byId("searchUsageSegmentButton").getSelectedKey();
+            var sTenantId = "L2600"
 			
-			var aSearchFilters = [];
+            var aSearchFilters = [];
+            
+            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenantId));
 			// if (sChain && sChain.length > 0) {
 			// 	aSearchFilters.push(new Filter("chain_code", FilterOperator.EQ, sChain));
 			// }

@@ -31,7 +31,7 @@ service UomMgrService {
           ,ifnull(l.technical_uom_name, u.technical_uom_name) as technical_uom_name
           ,u.uom_class_code
           ,u.base_unit_flag
-          ,u.uom_description
+          ,u.uom_desc
           ,u.decimal_places
           ,u.floating_decpoint_index
           ,u.conversion_numerator

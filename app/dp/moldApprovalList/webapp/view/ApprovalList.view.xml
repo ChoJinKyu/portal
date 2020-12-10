@@ -68,7 +68,7 @@
                                             path : 'util>/CodeDetails',
                                             filters : [
                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_APPROVAL_CATEGORY'}
+                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_APPROVAL_TYPE'}
                                             ],
                                             sorter: { path: 'code'}
                                         }">
@@ -132,7 +132,7 @@
                                             path : 'util>/CodeDetails',
                                             filters : [
                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_APPROVAL_CATEGORY'}
+                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_APPROVAL_TYPE'}
                                             ],
                                             sorter: { path: 'code'}
                                         }">
@@ -187,9 +187,9 @@
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                         ],
-                                        sorter: { path: 'part_number' }
+                                        sorter: { path: 'mold_number' }
                             }">
-                                <core:Item key="{part_number}" text="{part_number}" />
+                                <core:Item key="{mold_number}" text="{mold_number}" />
                             </Input>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
@@ -203,18 +203,18 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Requester" labelFor="searchRequester"></Label>
-                            <Input id="searchRequester" 
+                            <Label text="Requestor" labelFor="searchRequestor"></Label>
+                            <Input id="searchRequestor" 
                                     showValueHelp="true"  
                                     valueHelpRequest=".onValueHelpRequested"
                                     suggestionItems="{
-                                        path: '/CreateUsers',
+                                        path: '/Requestors',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                         ],
-                                        sorter: { path: 'create_user_id' }
+                                        sorter: { path: 'user_id' }
                             }">
-                                <core:Item key="{create_user_id}" text="{create_user_id}" />
+                            <core:Item key="{user_id}" text="{user_id}" />
                                 
                             </Input>
                            
@@ -227,10 +227,11 @@
                             <SegmentedButton id="searchStatus" selectedKey="" width="100%">
                                 <items>
                                     <SegmentedButtonItem text="All" key="" />
-                                    <SegmentedButtonItem text="Draft" key="D" width="5em" />
-                                    <SegmentedButtonItem text="In-Appr" key="I" width="5em" />
-                                    <SegmentedButtonItem text="Apprvd" key="A" width="5em" />
-                                    <SegmentedButtonItem text="Rejected" key="F" width="5em" />
+                                    <SegmentedButtonItem text="Appr-Req" key="AR" width="5em"/>
+                                    <SegmentedButtonItem text="Draft" key="DR" width="5em" />
+                                    <SegmentedButtonItem text="In-Appr" key="IA" width="5em" />
+                                    <SegmentedButtonItem text="Apprvd" key="AP" width="5em" />
+                                    <SegmentedButtonItem text="Rejected" key="RJ" width="5em" />
                                      
                                 </items>
                             </SegmentedButton>
@@ -286,35 +287,35 @@
                         <Column width="4em" >
                             <CheckBox selected="false" select=".onColumnChecBox"/>
                         </Column>
-                        <Column id="mainColumnApprovalCategory" width="15em" >
+                        <Column id="mainColumnApprovalCategory" >
                             <Text text="Approval&#10;Category" />
                         </Column>
-                        <Column id="mainColumnCompany" width="20em" >
+                        <Column id="mainColumnCompany" >
                             <Text text="Company" />
                         </Column>
-                        <Column id="mainColumnPlant" width="20em" >
+                        <Column id="mainColumnPlant" >
                             <Text text="Plant" />
                         </Column>
-                        <Column id="mainColumnApprovalNo" width="10em">
+                        <Column id="mainColumnApprovalNo">
                             <Text text="Approval No" />
                         </Column>
-                        <Column id="mainColumnSubject"  width="20em" >
+                        <Column id="mainColumnSubject"  >
                             <Text text="Subject" />
                         </Column>
-                        <Column id="mainColumnRequester"  width="5em" >
-                            <Text text="Requester" />
+                        <Column id="mainColumnRequestor"  >
+                            <Text text="Requestor" />
                         </Column>
-                        <Column id="mainColumnRequestDate"  width="10em" >
+                        <Column id="mainColumnRequestDate"  >
                             <Text text="Request Date" />
                         </Column>
-                        <Column id="mainColumnStatus"  width="5em" >
+                        <Column id="mainColumnStatus"  >
                             <Text text="Status" />
                         </Column>
                     </columns>
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>                  
-                                <CheckBox fieldGroupIds="{= ${list>approval_type_code}==='B'? 'checkBoxs':''}"  visible="{= ${list>approval_type_code}==='B'? true:false }" select=".onCheck" />       
+                                <CheckBox fieldGroupIds="{= ${list>approve_status_code}==='DR'? 'checkBoxs':''}"  visible="{= ${list>approve_status_code}==='DR'? true:false }" select=".onCheck" />       
                                 <ComboBox 
                                         editable="false"   
                                         class="readonlyField"
@@ -323,7 +324,7 @@
                                                     path : 'util>/CodeDetails',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_APPROVAL_CATEGORY'}
+                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_APPROVAL_TYPE'}
                                                     ]
                                                 }"
                                         width='100%'
@@ -347,7 +348,7 @@
                                 </ComboBox>
                                 <ComboBox
                                         editable="false" 
-                                        class="sapMInputBaseReadonlyWrapper"  
+                                        class="readonlyField"  
                                         selectedKey="{list>org_code}" 
                                         items="{
                                                     path: 'purOrg>/Pur_Operation_Org',
@@ -362,8 +363,37 @@
                                 <ObjectIdentifier text="{list>approval_number}" />
                                 <ObjectIdentifier text="{list>approval_title}" />
                                 <ObjectIdentifier text="{list>requestor_empno}" />
+                                <ComboBox
+                                        editable="false"   
+                                        class="readonlyField"
+                                        selectedKey="{list>requestor_empno}"
+                                        items="{
+                                                    path : 'user>/UserMgr',
+                                                    filters : [
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'}
+                                                    ]
+                                                }"
+                                        width='100%'
+                                        >
+                                    <core:Item key="{user>employee_number}" text="[{user>english_employee_name}]{user>user_name}" />
+                                </ComboBox>
                                 <DatePicker value="{list>request_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
-                                <ObjectIdentifier text="{list>approve_status_code}" />
+                                <ComboBox
+                                        editable="false"   
+                                        class="readonlyField"
+                                        selectedKey="{list>approve_status_code}"
+                                        items="{
+                                                    path : 'util>/CodeDetails',
+                                                    filters : [
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                        {path : 'group_code', operator : 'EQ', value1 : 'CM_APPROVE_STATUS'}
+                                                    ]
+                                                }"
+                                        width='100%'
+                                        >
+                                    <core:Item key="{util>code}" text="{util>code_description}" />
+                                </ComboBox>
+
                             </cells>
                         </ColumnListItem>
                     </items>

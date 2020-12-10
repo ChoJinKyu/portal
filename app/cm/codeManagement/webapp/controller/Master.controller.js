@@ -3,29 +3,23 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
     "sap/m/MessageBox",
+    "sap/f/LayoutType",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "ext/lib/model/ManagedListModel",
-    "ext/lib/util/ValidatorUtil"
+    "ext/lib/util/ValidatorUtil",
+    "ext/lib/util/ControlUtil"
 ],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (BaseController, JSONModel, MessageToast, MessageBox, Filter, FilterOperator, ManagedListModel, ValidatorUtil) {
+	function (BaseController, JSONModel, MessageToast, MessageBox, LayoutType, Filter, FilterOperator, ManagedListModel, ValidatorUtil, ControlUtil) {
 		"use strict";
 
 		return BaseController.extend("cm.codeManagement.controller.Master", {
 
             onInit: function () {
 
-            },
-
-            isValNull: function (p_val) {
-                if(!p_val || p_val == "" || p_val == null){
-                    return true
-                }else{
-                    return false;
-                }
             },
 
             onBeforeRendering : function(){
@@ -47,10 +41,6 @@ sap.ui.define([
                 var sSearchChain = this.getView().byId("search_chain").getSelectedKey();
                 var sUseFlag = this.getView().byId("search_useflag").getSelectedKey();
                 var sSearchKeyword = this.getView().byId("search_keyword").getValue();
-
-                console.log(this.getView().byId("search_keyword"))
-
-                // alert(ValidatorUtil.validate(this))
 
                 var aFilters = [];
                 if(!this.isValNull(sSearchTenant)){
@@ -89,74 +79,6 @@ sap.ui.define([
                         oCodeMasterTable.setBusy(false);
                     }
                 });
-                /*
-                var filters = [];
-
-                var search_tenant_id = "";
-                var search_company_code = "";
-                var search_chain_code = "";
-                var search_use_yn = "";
-                var search_group_code = this.getView().byId("search_group_code").getValue();
-                var search_group_name = this.getView().byId("search_group_name").getValue();
-                var search_group_description = this.getView().byId("search_group_description").getValue();
-                
-
-                if(this.byId("search_tenant_id").getSelectedItem()){
-                    search_tenant_id = this.byId("search_tenant_id").getSelectedItem().getKey();
-                }
-
-                if(this.byId("search_company_code").getSelectedItem()){
-                    search_company_code = this.byId("search_company_code").getSelectedItem().getKey();
-                }
-
-                if(this.byId("search_chain_code").getSelectedItem()){
-                    search_chain_code = this.byId("search_chain_code").getSelectedItem().getKey();
-                }
-
-                if(this.byId("search_use_yn").getSelectedItem()){
-                    search_use_yn = this.byId("search_use_yn").getSelectedItem().getKey();
-                }
-
-                // 필터 추가 
-                if(!this.isValNull(search_tenant_id)){
-                    filters.push(new Filter("tenant_id", FilterOperator.Contains, search_tenant_id));
-                }
-
-                if(!this.isValNull(search_company_code)){
-                    filters.push(new Filter("company_code", FilterOperator.Contains, search_company_code));
-                }
-
-                if(!this.isValNull(search_chain_code)){
-                    filters.push(new Filter("chain_code", FilterOperator.Contains, search_chain_code));
-                }
-
-                if(!this.isValNull(search_use_yn)){
-                    //filters.push(new Filter("use_yn", FilterOperator.Contains, search_use_yn));
-                }
-
-                if(!this.isValNull(search_group_code)){
-                    filters.push(new Filter("group_code", FilterOperator.Contains, search_group_code));
-                }
-
-                if(!this.isValNull(search_group_name)){
-                    filters.push(new Filter("group_name", FilterOperator.Contains, search_group_name));
-                }
-
-                if(!this.isValNull(search_group_description)){
-                    filters.push(new Filter("group_description", FilterOperator.Contains, search_group_description));
-                }
-
-                var mstBinding = this.byId("codeMstTable").getBinding("items");
-                //var mstBinding = this.byId("codeMstTable").getBinding("rows");
-                mstBinding.resetChanges();
-                this._retrieveParam.mstParam = "";
-                this._retrieveParam.dtlParam = "";
-                this._retrieveParam.lngParam = "";
-
-                this.getView().setBusy(true);
-                mstBinding.filter(filters);
-                this.getView().setBusy(false);
-                */
             },
 
             onListItemPress : function(oEvent){
@@ -168,6 +90,8 @@ sap.ui.define([
 
                 oViewModel.setProperty("/detail", $.extend(true, {}, oTargetData));
                 oViewModel.setProperty("/detailClone", $.extend(true, {}, oTargetData));
+
+                ControlUtil.scrollToIndexOneColumnMTable(oEvent.getSource());
 
                 var oNavParam = {
                     layout: oNextUIState.layout,

@@ -75,28 +75,28 @@
                                             width="100%" 
                                             visible="true" 
                                             items="{
-                                                path: 'util>/CodeDetails',
+                                                path: 'common>/CodeDetails',
                                                 filters: [
                                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                                     {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                                                 ]
                                     }">
                                     <items>
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                        <core:Item key="{common>code}" text="{common>code_description}" />
                                     </items>
                                 </ComboBox>
                             </HBox>
                             <HBox>
                                 <!-- <Text text="{language_code}" visible="true"></Text> -->
                                 <ComboBox selectedKey="{language_code}" width="100%" visible="true" items="{
-                                        path: 'util>/CodeDetails',
+                                        path: 'common>/CodeDetails',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
                                         ]
                                     }">
                                     <items>
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                        <core:Item key="{common>code}" text="{common>code_description}" />
                                     </items>
                                 </ComboBox>
                             </HBox>
@@ -111,14 +111,14 @@
                             <HBox>
                                 <!-- <Text text="{message_type_code}" visible="true"></Text> -->
                                 <ComboBox selectedKey="{message_type_code}" width="100%" visible="true" items="{
-                                        path: 'util>/CodeDetails',
+                                        path: 'common>/CodeDetails',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_MESSAGE_TYPE_CODE'}
                                         ]
                                     }">
                                     <items>
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                        <core:Item key="{common>code}" text="{common>code_description}" />
                                     </items>
                                 </ComboBox>
                             </HBox>

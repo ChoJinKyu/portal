@@ -122,6 +122,7 @@ sap.ui.define([
         return oData;
       })
     },
+
     tree: function (path, parameters) {
       var that = this;
       return new Promise(function (resolve, reject) {
@@ -137,7 +138,6 @@ sap.ui.define([
         if (!filters || filters.length <= 0 || !oData || !(oData.results) || oData.results.length <= 0) {
           return oData;
         }
-
         var predicates = oData.results
           .reduce(function (acc, e) {
             return [...acc, ...((e["path"]).split("/"))];
@@ -161,7 +161,7 @@ sap.ui.define([
           that.setData(oData, path, false);
           return oData;
         })
-      })
+      });
     },
 
     _executeBatch: function (sGroupId) {

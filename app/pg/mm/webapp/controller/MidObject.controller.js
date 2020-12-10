@@ -1,5 +1,5 @@
 /**
- * 
+ * message box 변경 mi 참고 
  * _BonSelectedLeftTableItem 임시 제거 
 * 신규 등록 Fragment에서 값 던지고 받기 marteial supply Fragment 동일화면 처리 
 -스크롤 되는부분 테이블만 스크롤 되도록 수정
@@ -63,7 +63,7 @@ sap.ui.define([
                 supplierDialog : "SupplierDialog_ID"
             },
             input : {
-                multiInput_material_code : "multiInput",
+                input_material_code : "input_material_code",
             },
             button : {
                 buttonMidTableCreate : "buttonMidTableCreate",
@@ -185,7 +185,7 @@ sap.ui.define([
                     pcst_currency_unit :"",
                     base_quantity : "",
                     radioButtonGroup : "",
-                    multiInput_material_code : ""
+                    input_material_code : ""
                 });
 
                 
@@ -196,7 +196,7 @@ sap.ui.define([
             }else{
                 var _oUiData = new JSONModel({
                     tenant_name: "",
-                    multiInput_material_code : ""
+                    input_material_code : ""
                 });
 
                 
@@ -430,9 +430,7 @@ sap.ui.define([
          * @param {*} oEvent 
          */
 		onValueHelpMaterialDialogSearch: function (oEvent) {
-
             console.log("_onValueHelpMaterialDialogSearch");
-
             //수정대상 comboBox_vendorView 준비되지 않음(20201206)
             //comboBox_vendorView=this._findFragmentControlId(this._m.materialDialog, "comboBox_vendorView").getSelectedKey(), 
             var oModel = this.getModel(),
@@ -550,15 +548,17 @@ sap.ui.define([
 
 		_handleValueHelpMaterialClose: function (evt) {
 			var aSelectedItems = evt.getParameter("selectedItems"),
-				oMultiInput = this.byId(this._m.input.multiInput_material_code);
+				oInput_material_code = this.byId(this._m.input.input_material_code);
 
-			if (aSelectedItems && aSelectedItems.length > 0) {
-				aSelectedItems.forEach(function (oItem) {
-					oMultiInput.addToken(new Token({
-						text: oItem.getTitle()
-					}));
-				});
-			}
+                oInput_material_code.setValue = oInput_material_code;
+
+			// if (aSelectedItems && aSelectedItems.length > 0) {
+			// 	aSelectedItems.forEach(function (oItem) {
+			// 		oMultiInput.addToken(new Token({
+			// 			text: oItem.getTitle()
+			// 		}));
+			// 	});
+			// }
 		},
 		/**
 		 * Event handler for Enter Full Screen Button pressed
@@ -918,6 +918,12 @@ sap.ui.define([
         onMaterialDetailFilter : function (oEvent) {
             console.log("onMaterialDetailFilter");
 
+            if(ValidatorUtil.isValid(this.getView(),"requiredField")){
+                console.log("ValidatorUtil true");
+            } else {
+                console.log("ValidatorUtil false");
+            }
+
             var oModel = this.getOwnerComponent().getModel(),
                 aFilter = [],
                 that = this,
@@ -1017,10 +1023,10 @@ sap.ui.define([
            
             //수정대상 확인 통화 단위 이상함             
             //하기 주석은 사용자 조직 과  자재 관리 마스터 권한에 따라 변경될수 있다. 
-            aFilter.push(new Filter("tenant_id", FilterOperator.Contains, this._m.filter.tenant_id));
-            aFilter.push(new Filter("company_code", FilterOperator.Contains, this._m.filter.company_code));
-            aFilter.push(new Filter("org_type_code", FilterOperator.Contains, this._m.filter.org_type_code));
-            aFilter.push(new Filter("org_code", FilterOperator.Contains, this._m.filter.org_code));
+            aFilter.push(new Filter("tenant_id", FilterOperator.Contains, this._sso.dept.tenant_id));
+            aFilter.push(new Filter("company_code", FilterOperator.Contains, this._sso.dept.company_code));
+            aFilter.push(new Filter("org_type_code", FilterOperator.Contains, this._sso.dept.org_type_code));
+            aFilter.push(new Filter("org_code", FilterOperator.Contains, this._sso.dept.org_code));
             
             //aFilter.push(new Filter("mi_material_code", FilterOperator.Contains, fCode));
             //aFilter.push(new Filter("mi_material_code_name", FilterOperator.Contains, fName));
@@ -1089,7 +1095,7 @@ sap.ui.define([
                 return;
             }
 
-            var multiInput_material_code = this.byId("multiInput_material_code");
+            var input_material_code = this.byId("input_material_code");
             //다수 일수 있는 경우를 대비. 현재 한건. 
             
             for(var i=0;i<oSelected.length;i++){
@@ -1126,18 +1132,19 @@ sap.ui.define([
                 } 
                 
   
-                // multiInput_material_code.addToken([
+                input_material_code.setValue(odata.material_code);
+                // input_material_code.addToken([
                 //     new Token({text: odata.material_description, key: odata.material_code})                   
                 // ]);
                     //             text: oItem.getTitle()
                     //         }));                
                 // if (aSelectedItems && aSelectedItems.length > 0) {
                    
-                    multiInput_material_code.removeAllTokens();
-                    multiInput_material_code.addToken(new Token({
-                        text: odata.material_code,
-                        key: odata.material_description
-                    }));
+                    // input_material_code.removeAllTokens();
+                    // input_material_code.addToken(new Token({
+                    //     text: odata.material_code,
+                    //     key: odata.material_description
+                    // }));
                    
                     // var sData = aTokens.map(function(oToken) {
                     //     return oToken.getKey();
@@ -1365,7 +1372,7 @@ sap.ui.define([
                 }
 
                 //수정사항 신규 자재 등록일때. 자재코드 및 정보를 추가 한다. 
-                //mi_material_code 는 multiInput_material_code 값으로 대체 자재코드
+                //mi_material_code 는 input_material_code 값으로 대체 자재코드
                 //input_base_quantity 기준수량
                 if(!bValueCheckFlag) return;
                 
