@@ -82,9 +82,9 @@ sap.ui.define([
 
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("appMaster"));
-           // oTransactionManager.addDataModel(this.getModel("appDetail"));
+            oTransactionManager.addDataModel(this.getModel("appDetail"));
             // oTransactionManager.addDataModel(this.getModel("MoldMasterList"));
-          //  oTransactionManager.addDataModel(this.getModel("Approvers"));
+            oTransactionManager.addDataModel(this.getModel("Approvers"));
 
 
         },
@@ -473,8 +473,18 @@ sap.ui.define([
          * @description : Popup 창 : 품의서 Item for Budget Execution 항목의 Add 버튼 클릭
          */
         handleTableSelectDialogPress: function (oEvent) {
- 
-            this.moldItemPop.handleTableSelectDialogPress(this, oEvent);
+ /**
+  * this.getModel('appMaster').setProperty('/company_code', args.company_code);
+            this.getModel('appMaster').setProperty('/org_code', args.plant_code); 
+  */
+            var oArgs = {
+                company_code : this.getModel('appMaster').oData.company_code , 
+                org_code : this.getModel('appMaster').oData.org_code
+            }
+
+            this.moldItemPop.openMoldItemSelectionPop(this, oEvent, oArgs , function (rData) {
+                console.log("rData >>>> ", rData);
+            });
   /*
             console.log("[ step ] handleTableSelectDialogPress Item for Budget Execution 항목의 Add 버튼 클릭 ");
 
