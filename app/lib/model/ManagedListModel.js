@@ -109,15 +109,29 @@ sap.ui.define([
       }));
     },
 
-    tree: function (path, filters) {
+    readP: function (sPath, oParameters) {
       var that = this;
       return new Promise(function (resolve, reject) {
-        that._oTransactionModel.read(path, {
-          filters: [...filters],
+        that._oTransactionModel.read(sPath, jQuery.extend(oParameters, {
           success: resolve,
           error: reject
-        })
+        }))
       }).then(function (oData) {
+        that._transactionPath = sPath;
+        that.setData(oData, sPath, false);
+        return oData;
+      })
+    },
+    tree: function (path, parameters) {
+      var that = this;
+      return new Promise(function (resolve, reject) {
+        that._oTransactionModel.read(path, jQuery.extend(parameters, {
+          success: resolve,
+          error: reject
+        }));
+      }).then(function (oData) {
+        // filter
+        var filters = parameters.filters;
 
         // 검색조건 및 결과가 없는 경우 종료
         if (!filters || filters.length <= 0 || !oData || !(oData.results) || oData.results.length <= 0) {
@@ -138,11 +152,11 @@ sap.ui.define([
           }, []);
 
         return new Promise(function (resolve, reject) {
-          that._oTransactionModel.read(path, {
+          that._oTransactionModel.read(path, jQuery.extend(parameters, {
             filters: [...predicates],
             success: resolve,
             error: reject
-          })
+          }))
         }).then(function (oData) {
           that.setData(oData, path, false);
           return oData;

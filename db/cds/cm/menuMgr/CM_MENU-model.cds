@@ -35,6 +35,7 @@ entity Menu_haa {
       parent_id         : String;
       tenant_id         : String;
       menu_code         : String;
+      menu_name         : String;
       parent_menu_code  : String;
       chain_code        : String;
       menu_desc         : String;
@@ -43,6 +44,7 @@ entity Menu_haa {
       menu_display_flag : Boolean;
       menu_type_code    : String;
       use_flag          : Boolean;
+      language_code     : String;
 }
 
 extend Menu_haa with util.Managed;
