@@ -29,7 +29,7 @@
                     <form:content>
                         <VBox>
                             <Label text = "Company" required="true"/> 
-                            <ComboBox id="MoldItemSearchCompany"  width="100%" selectedKey="{beaCreateObjectView>/company_code}" enabled="false" items="{
+                            <ComboBox id="pCompany"  width="100%" selectedKey="{moldItemPop>/company_code}" enabled="false" items="{
                                         path: 'org>/Org_Company',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
@@ -47,7 +47,7 @@
                         
                         <VBox>
                             <Label text = "Plant" required="true"/> 
-                            <ComboBox id="MoldItemSearchPlant"  width="100%" selectedKey="{beaCreateObjectView>/plant_code}" enabled="false" items="{
+                            <ComboBox id="pPlant"  width="100%" selectedKey="{moldItemPop>/plant_code}" enabled="false" items="{
                                         path: 'purOrg>/Pur_Operation_Org',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
@@ -63,21 +63,21 @@
                             </layoutData> 
                         </VBox>
                         <VBox>
-                            <Button id="moldItemSelectionSearch" text="Search" class="sapUiSmallMargin" type="Emphasized" press=".onMoldItemSelection"/>
+                            <Button id="mItemPopSrch" text="Search" class="sapUiSmallMargin" type="Emphasized" press=".onMoldItemSelection"/>
                                <layoutData>
                                 <layout:GridData span="XL2 L2 M2 S2" />
                             </layoutData> 
                         </VBox>
                         <VBox>
                             <Label text = "Model"/> 
-                             <Input id="moldItemModel" width="100%"/>
+                             <Input id="mItemModel" width="100%"/>
                              <layoutData>
                                 <layout:GridData span="XL5 L5 M5 S5" />
                             </layoutData> 
                         </VBox>
                         <VBox>
                             <Label text = "Part No"/>
-                             <Input id="moldItemPartNo" width="100%"/> 
+                             <Input id="mItemPartNo" width="100%"/> 
                              <layoutData>
                                 <layout:GridData span="XL5 L5 M5 S5" />
                             </layoutData> 
@@ -85,7 +85,7 @@
                        </form:content>
                     <form:content>
                     <HBox>
-                        <Table id="moldItemSelectTable"       
+                        <Table id="popMoldItemSelectTable"       
                             growing="true"
                             growingThreshold="3"
                             class="sapFDynamicPageAlignContent" 
@@ -97,7 +97,7 @@
                             >
                          <headerToolbar>
                             <OverflowToolbar>
-                                <Label text="{= ${beaCreateObjectView>/moldItemLength} > 0 ? ( 'Selected : '+${beaCreateObjectView>/moldItemLength} ) : '' }"/>
+                                <Label text="{= ${moldItemPop>/moldItemLength} > 0 ? ( 'Selected : '+${moldItemPop>/moldItemLength} ) : '' }"/>
                             </OverflowToolbar>
                         </headerToolbar> 
                         <columns>
