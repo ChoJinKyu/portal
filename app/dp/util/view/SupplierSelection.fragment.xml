@@ -25,7 +25,40 @@
 		descriptionKey="supplier_local_name"
 	>
     <filterBar>
-			<fb:FilterBar advancedMode="true" search=".onFilterBarSuppSearch">
+			<fb:FilterBar advancedMode="true" search=".onFilterBarSuppSearch" isRunningInValueHelpDialog="true" >
+                <fb:filterGroupItems>
+					<fb:FilterGroupItem
+						groupName="__$INTERNAL$"
+						name="supplier_code"
+						label="Supplier Code"
+						visibleInFilterBar="true"
+					>
+						<fb:control>
+							<m:Input name="supplier_code" />
+						</fb:control>
+					</fb:FilterGroupItem>
+					<fb:FilterGroupItem
+						groupName="__$INTERNAL$"
+						name="supplier_local_name"
+						label="Supplier Local Name"
+						visibleInFilterBar="true"
+					>
+						<fb:control>
+							<m:Input name="supplier_local_name" />
+						</fb:control>
+					</fb:FilterGroupItem>
+
+					<fb:FilterGroupItem
+						groupName="__$INTERNAL$"
+						name="supplier_english_name"
+						label="Supplier English Name"
+						visibleInFilterBar="true"
+					>
+						<fb:control>
+							<m:Input name="supplier_english_name" />
+						</fb:control>
+					</fb:FilterGroupItem>
+				</fb:filterGroupItems>
 			</fb:FilterBar>
 		</filterBar>
 	</ValueHelpDialog>
