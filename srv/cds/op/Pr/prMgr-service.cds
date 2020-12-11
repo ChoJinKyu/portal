@@ -1,11 +1,11 @@
-namespace op;
+namespace op.pu;
 
-using {op as prMst} from '../../../../db/cds/op/pr/OP_PR_MST-model';
-using {op as prDtl} from '../../../../db/cds/op/pr/OP_PR_DTL-model';
+using {op.pu as prMst} from '../../../../db/cds/op/pr/OP_PU_PR_MST-model';
 
-
-@path : '/op.PrMgrService'
+@path : '/op.pu.PrMgrService'
 service PrMgrService {
-    entity Pr_Mst as projection on op.Pr_Mst;
-    entity Pr_Dtl as projection on op.Pr_Dtl;  
+    entity Pr_Mst as projection on pu.Pr_Mst;    
+    entity Pr_Dtl as projection on pu.Pr_Dtl;    
+    entity Pr_Account as projection on pu.Pr_Account;    
+    entity Pr_Service as projection on pu.Pr_Service;    
 }
