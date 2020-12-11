@@ -196,7 +196,7 @@
                                     <Label text="Part No"/>
                                     </VBox>
                                     <table:template>
-                                        <Text id="part_number" text="{appDetail>part_number}"/>
+                                        <Text id="mold_number" text="{appDetail>mold_number}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="moldSeqColumn" width="3em" hAlign="Center">
@@ -396,7 +396,7 @@
 			<uxap:ObjectPageSection titleUppercase="false" title="Approval Line">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
-                        <Table id="ApprovalTable"       
+                        <Table id="ApproverTable"       
                             growing="true"
                             growingThreshold="20"
                             class="sapFDynamicPageAlignContent" 
@@ -404,7 +404,7 @@
                             rowSelectionChange=".onCheck"
                             mode="None"
                             width="auto"
-                            items="{appList>/undefined}"
+                            items="{approver>/Approvers}"
                             >
                         <headerToolbar>
                             <OverflowToolbar>
@@ -415,7 +415,7 @@
                             <Column id="no" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="1.5em" >
                                 <Text text="No." />
                             </Column>
-                            <Column id="type" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
+                            <Column id="type" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="7em" >
                                 <Text text="Type" />
                             </Column>
                             <Column id="nameDept" minScreenWidth="Tablet" hAlign="Center" width="12em" >
@@ -438,31 +438,32 @@
                             </Column>					
                         </columns>
                         <items>
-                             <ColumnListItem>
+                            <ColumnListItem>
                                 <cells>
                                     <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
-                                    <Text text="{appList>no}" />
+                                    <Text text="{approver>approve_sequence}" />
                                     <ComboBox  id="searchItemType" width="100%"
-                                        selectedKey="{appList>type}" 
-                                        enabled="{appList>editMode}"
-                                        items="{
-                                            path: 'org>/Org_Company',
-                                            filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                            ],
-                                            sorter: { path: 'company_code'}
-                                        }"
-                                        >
-                                    <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                                        selectedKey="{approver>approver_type_code}" 
+                                        enabled="{approver>editMode}" 
+                                        items="{ path : 'util>/CodeDetails',
+                                                    filters : [
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                        {path : 'group_code', operator : 'EQ', value1 : 'CM_APPROVER_TYPE'}
+                                                    ]
+                                                }"
+                                        >  
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+
                                     </ComboBox>
-                                    <SearchField id="searchField" enabled="{appList>editMode}" search=".onSearch" width="100%" placeholder="Search employee" value="{appList>nameDept}"/>
-                                    <Text text="{appList>status}" />
-                                    <Text text="{appList>comment}" />
-                                    <Button id="btnSortUp" icon="{appList>arrowUp}" press=".onSortUp(${appList>no})" tooltip="sort" visible="{= ${appList>arrowUp}===''?false:true }"></Button>
-                                    <Button id="btnSortDown" icon="{appList>arrowDown}" press=".onSortDown(${appList>no})"  visible="{= ${appList>arrowDown}===''?false:true }" tooltip="sort"></Button>
-                                    <Button id="btnDelete" icon="sap-icon://delete" press=".setApprovalRemoveRow(${appList>no})" tooltip="삭제" visible="{appList>trashShow}"></Button>
+                                    <SearchField id="searchField" enabled="{approver>editMode}" search=".onApproverSearch" width="100%" placeholder="Search employee" value="{approver>approver_empno}"/>
+                                    <!--<Input value="{approver>approver_empno}" />-->
+                                    <Text text="{approver>approve_status_code}" />
+                                    <Text text="{approver>approve_comment}" />
+                                    <Button id="btnSortUp" icon="{approver>arrowUp}" press=".onSortUp(${approver>approve_sequence})" tooltip="sort" visible="{= ${approver>arrowUp}===''?false:true }"></Button>
+                                    <Button id="btnSortDown" icon="{approver>arrowDown}" press=".onSortDown(${approver>approve_sequence})"  visible="{= ${approver>arrowDown}===''?false:true }" tooltip="sort"></Button>
+                                    <Button id="btnDelete" icon="sap-icon://delete" press=".setApproverRemoveRow(${approver>approve_sequence})" tooltip="삭제" visible="{approver>trashShow}"></Button>
                                 </cells>
-                            </ColumnListItem>   
+                            </ColumnListItem>
                         </items>
                         </Table>                           
 					</uxap:ObjectPageSubSection> 
