@@ -77,4 +77,5 @@ entity Md_Mst_View {
         use_department_code             : String(30)            @title:'사용부서코드';
         die_form                        : String(10)	        @title:'다이형상';
         mold_size                       : String(10)	        @title:'금형크기';
+        local_create_dtm                : DateTime    not null  @title: '로컬등록시간';
 }
