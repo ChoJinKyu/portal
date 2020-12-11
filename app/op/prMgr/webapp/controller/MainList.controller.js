@@ -137,13 +137,16 @@ sap.ui.define([
             this.byId("dialogTemplateSelection").close();
         },
 
-		onMainTableAddButtonPress: function(){
-			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-			this.getRouter().navTo("midPage", {
+		onMainTableAddButtonPress: function(){           
+            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);            
+                oNextUIState.layout = "MidColumnFullScreen";
+			this.getRouter().navTo("midCreate", {
 				layout: oNextUIState.layout, 
 				tenantId: "new",
 				controlOptionCode: "code"
-			});
+            });
+            
+            this.byId("dialogTemplateSelection").close();
 		},
 
 		/**
@@ -170,7 +173,7 @@ sap.ui.define([
 		 * @public
 		 */
 		onMainTableItemPress: function(oEvent) {
-			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
+			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(0),
 				sPath = oEvent.getSource().getBindingContext("list").getPath(),
 				oRecord = this.getModel("list").getProperty(sPath);
 

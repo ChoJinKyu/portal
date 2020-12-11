@@ -61,6 +61,7 @@ sap.ui.define([
                 marketIntelligenceService : "pg.marketIntelligenceService", //main Service
                 orgTenantView : "/OrgTenantView", //관리조직 View
                 mIMaterialCodeList : "/MIMaterialCodeList",
+                mIMatListView : "/MIMatListView",
                 mIMaterialCodeText : "/MIMaterialCodeText", 
                 languageView : "/LanguageView",
                 mICategoryHierarchyStructure : "/MICategoryHierarchyStructure",
@@ -133,7 +134,9 @@ sap.ui.define([
                 createMode : false
             });
 
+            var  _deleteItem = new JSONModel({oData:[]});
             var _oUiData = new JSONModel({tenant_name:""});
+            this.setModel(_deleteItem, "_deleteItem");
             this.setModel(_oUiData, "_oUiData");
             this.setModel(oUi, "oUi");
 
@@ -259,7 +262,7 @@ sap.ui.define([
                 return;
             }
             else {
-                var oMIMaterialCodeListFilters = [
+                var omIMatListViewFilters = [
                     new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id),
                     new Filter("company_code", FilterOperator.EQ, this._m.filter.company_code),
                     new Filter("org_type_code", FilterOperator.EQ, this._m.filter.org_type_code),
@@ -267,11 +270,11 @@ sap.ui.define([
                     new Filter("mi_material_code", FilterOperator.EQ, input_mi_material_code.getValue())
                 ];
 
-                var sServiceUrl = this._m.serviceName.mIMaterialCodeList;
+                var sServiceUrl = this._m.serviceName.mIMatListView;
                 var itemLength = 0;
                 oModel.read(sServiceUrl, {
                     async: false,
-                    filters: oMIMaterialCodeListFilters,
+                    filters: omIMatListViewFilters,
                     success: function (rData, reponse) {
 
                         console.log(sServiceUrl + " - 자재건수 :" + reponse.data.results.length);
@@ -411,12 +414,21 @@ sap.ui.define([
                 mICategoryHierarchyStructure =  this.getOwnerComponent().getModel("mICategoryHierarchyStructure"),
                 oUi =  this.getOwnerComponent().getModel("oUi");
                   
-            if(mIMaterialCodeText){midmIMaterialCodeTextList.setData(null);mIMaterialCodeText.updateBindings(true);}
-            if(oUiData){oUiData.setData(null);oUiData.updateBindings(true);}
-            if(_oUiData){_oUiData.setData(null);_oUiData.updateBindings(true);}        
-            if(languageView){languageView.setData(null);languageView.updateBindings(true);}  
-            if(mICategoryHierarchyStructure){lanmICategoryHierarchyStructureguageView.setData(null);mICategoryHierarchyStructure.updateBindings(true);}          
-            if(oUi){oUi.setData(null);oUi.updateBindings(true);}
+                function setModelNull(model){
+
+                    if(model){
+                        model.setData(null);
+                        model.updateBindings(true);
+                    }
+
+                }
+                setModelNull(mIMaterialCodeText);
+                setModelNull(oUiData);
+                setModelNull(_oUiData);
+                setModelNull(languageView);
+                setModelNull(mICategoryHierarchyStructure);
+                setModelNull(oUi);
+
         },
 
 
@@ -493,7 +505,7 @@ sap.ui.define([
                 this._fnSetReadMode();
             }
 
-            sServiceUrl = this._m.serviceName.mIMaterialCodeList;
+            sServiceUrl = this._m.serviceName.mIMatListView;
             var oUiData = new JSONModel();
             oModel.read(sServiceUrl, {
                 async: false,
@@ -628,31 +640,28 @@ sap.ui.define([
         onMidTableDelete: function (oEvent) {
             console.log("onMidTableDelete");
 
-            var oModel = this.getOwnerComponent().getModel("mIMaterialCodeText"),
+            var oModel = this.getModel("mIMaterialCodeText"),
+                _deleteItem = this.getModel("_deleteItem"),
                 oTable = this.getView().byId(this._m.tableName),
                 that = this;
 
-            
+                
             var oSelected = oTable.getSelectedContexts();
-            var items = oTable.getSelectedItems();
             
             if (oSelected.length > 0) {
                 
+                var _deleteItemOdata = _deleteItem.getProperty("/oData");
                 for (var i = 0; i < oSelected.length; i++) {
-                    var idx = parseInt(oSelected[0].sPath.substring(oSelected[0].sPath.lastIndexOf('/') + 1));
+                    var idx = parseInt(oSelected[i].sPath.substring(oSelected[i].sPath.lastIndexOf('/') + 1));
                         oModel.oData[idx].itemMode =  this._m.itemMode.delete;
-                        //oTable.removeItem(item);
-                }
-               
-                // for(var x=0; x < items.length; x++){
-                //     var item=items[x];
-                //     oTable.removeItem(item);
-                // }
-                
-                oModel.refresh();
+                        _deleteItemOdata.push(oModel.oData[idx]);
+                        oModel.oData.splice(idx, 1);
+                } 
+               _deleteItem.setProperty("/oData", _deleteItemOdata);
                 that.getView().setBusy(false);
                 oTable.removeSelections();
-                oModel.refresh(true);
+                oTable.getBinding("items").refresh();
+                oModel.refresh(true);                 
 
             } else {
 
@@ -679,7 +688,7 @@ sap.ui.define([
             // supplier_code='KR00008',
             // mi_material_code='COP-001-01')
 
-            // var oMIMaterialCodeListFilters = [
+            // var oMIMatListViewFilters = [
             //     new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id),
             //     new Filter("company_code", FilterOperator.EQ, this._m.filter.company_code),
             //     new Filter("org_type_code", FilterOperator.EQ, this._m.filter.org_type_code),
@@ -687,11 +696,11 @@ sap.ui.define([
             //     new Filter("mi_material_code", FilterOperator.EQ, input_mi_material_code.getValue())
             // ];
 
-            // var sServiceUrl = this._m.serviceName.mIMaterialCodeList;
+            // var sServiceUrl = this._m.serviceName.mIMatListView;
             // var itemLength = 0;
             // oModel.read(sServiceUrl, {
             //     async: false,
-            //     filters: oMIMaterialCodeListFilters,
+            //     filters: oMIMatListViewFilters,
             //     success: function (rData, reponse) {
 
             //         console.log(sServiceUrl + " - 자재건수 :" + reponse.data.results.length);
@@ -722,7 +731,7 @@ sap.ui.define([
             //sap.ui.controller("pg.mi.controller.MainList").onMainTableDelete();
             var that = this, 
                 oUiData = this.getOwnerComponent().getModel("oUiData"),
-                mimaterialEntirySetName=this._m.serviceName.mIMaterialCodeList;
+                mimaterialEntirySetName=this._m.serviceName.mIMatListView;
             
                 MessageBox.confirm("선택한 항목을 삭제 하시겠습니까?", {
                     title: "삭제 확인",                                    
@@ -1048,7 +1057,7 @@ sap.ui.define([
         _inputMartetial : function(input_mi_material_code){
             var oUi = this.getModel("oUi");
             var oModel = this.getModel();
-            var oMIMaterialCodeListFilters = [
+            var oMIMatListViewFilters = [
                 new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id),
                 new Filter("company_code", FilterOperator.EQ, this._m.filter.company_code),
                 new Filter("org_type_code", FilterOperator.EQ, this._m.filter.org_type_code),
@@ -1059,11 +1068,11 @@ sap.ui.define([
             
 
 
-            var sServiceUrl = this._m.serviceName.mIMaterialCodeList;
+            var sServiceUrl = this._m.serviceName.mIMatListView;
             var itemLength = 0;
             oModel.read(sServiceUrl, {
                 async: false,
-                filters: oMIMaterialCodeListFilters,
+                filters: oMIMatListViewFilters,
                 success: function (rData, reponse) {
 
                     console.log(sServiceUrl + " - 자재건수 :" + reponse.data.results.length);
@@ -1270,13 +1279,13 @@ sap.ui.define([
                 } //end for
 
 
-                //MIMaterialCodeList ---------------------------------------------------------------------------
+                //MIMatListView ---------------------------------------------------------------------------
                 //대표자재가 지정 및 변경될경우 -----------------------------------------
-                var oMIMaterialCodeListParameters;
+                var oMIMatListViewParameters;
 
                 //수정대상 or 확인대상 imsi 데이타로 등록 진행중 (20201208 현재 상위 코드 정의되지 않았음.)
-                //MIMaterialCodeList db key : update delete 
-                var oMIMaterialCodeListKey = {
+                //MIMatListView db key : update delete 
+                var oMIMatListViewKey = {
                     tenant_id : oUiData.getProperty("/tenant_id"),
                     company_code : oUiData.getProperty("/company_code"),
                     org_type_code : oUiData.getProperty("/org_type_code"),
@@ -1284,17 +1293,17 @@ sap.ui.define([
                     mi_material_code: o_mi_material_code
                 }
 
-                var oMIMaterialCodeListPath = oModel.createKey(
-                    this._m.serviceName.mIMaterialCodeList, 
-                    oMIMaterialCodeListKey
+                var oMIMatListViewPath = oModel.createKey(
+                    this._m.serviceName.mIMatListView, 
+                    oMIMatListViewKey
                 );
 
                 if (oUi.getProperty("/editMode")) {
-                    console.log(oMIMaterialCodeListPath+" -- editMode");    
+                    console.log(oMIMatListViewPath+" -- editMode");    
                     //널 수정대상 : 값을 넣지 않으면 null 할당
                     //"category_code": comboBoxCategory_code.getSelectedKey(),
                     //"category_name": comboBoxCategory_name,
-                    oMIMaterialCodeListParameters = {
+                    oMIMatListViewParameters = {
                         "category_code": oUiData.getProperty("/category_code"),
                         "category_name": oUiData.getProperty("/category_name"),           
                         "mi_material_name": vMi_material_name,
@@ -1306,9 +1315,9 @@ sap.ui.define([
                         "system_create_dtm": new Date(),
                         "system_update_dtm": new Date()
                     };
-                    console.log(oMIMaterialCodeListPath+" -- update");
-                    oModel.update(oMIMaterialCodeListPath, 
-                        oMIMaterialCodeListParameters, { 
+                    console.log(oMIMatListViewPath+" -- update");
+                    oModel.update(oMIMatListViewPath, 
+                        oMIMatListViewParameters, { 
                             groupId: this._m.groupID 
                         }
                     );  
@@ -1320,7 +1329,7 @@ sap.ui.define([
                         vMi_material_name = mi_material_name;
                     }
                     
-                    oMIMaterialCodeListParameters = {
+                    oMIMatListViewParameters = {
                         "groupId": this._m.groupID ,
                         "properties": {
                             "tenant_id": this._sso.dept.tenant_id,
@@ -1341,8 +1350,8 @@ sap.ui.define([
                         }
                     };
                 
-                    console.log(this._m.serviceName.mIMaterialCodeList+" -- createEntry");
-                    oModel.createEntry(this._m.serviceName.mIMaterialCodeList, oMIMaterialCodeListParameters);
+                    console.log(this._m.serviceName.mIMatListView+" -- createEntry");
+                    oModel.createEntry(this._m.serviceName.mIMatListView, oMIMatListViewParameters);
                     createItem++;
                 }            
                 
@@ -1365,7 +1374,7 @@ sap.ui.define([
         },
         
         /**
-         * MIMaterialCodeList delete button action
+         * MIMatListView delete button action
          * @public
          */
         onDeleteAction : function () {
@@ -1388,7 +1397,7 @@ sap.ui.define([
         },
 
         /**
-         * MIMaterialCodeList delete action
+         * MIMatListView delete action
          * @private
          */
         _deleteAction : function () {
@@ -1396,8 +1405,8 @@ sap.ui.define([
             var oModel = this.getOwnerComponent().getModel(),            
                 oMIMaterialCodeText = this.getOwnerComponent().getModel("mIMaterialCodeText"),
                 oUiData = this.getModel("oUiData");
-            //MIMaterialCodeList(tenant_id='L2100',company_code='%2A',org_type_code='BU',org_code='BIZ00100',mi_material_code='TIN-001-01')"    
-            var oMIMaterialCodeListKey = {
+            //MIMatListView(tenant_id='L2100',company_code='%2A',org_type_code='BU',org_code='BIZ00100',mi_material_code='TIN-001-01')"    
+            var oMIMatListViewKey = {
                 tenant_id : oUiData.getProperty("/tenant_id"),
                 company_code : oUiData.getProperty("/company_code"),
                 org_type_code : oUiData.getProperty("/org_type_code"),
@@ -1405,13 +1414,13 @@ sap.ui.define([
                 mi_material_code: oUiData.getProperty("/mi_material_code")
             }
 
-            var oMIMaterialCodeListPath = oModel.createKey(
-                this._m.serviceName.mIMaterialCodeList, 
-                oMIMaterialCodeListKey
+            var oMIMatListViewPath = oModel.createKey(
+                this._m.serviceName.mIMatListView, 
+                oMIMatListViewKey
             );
                     
-            console.log(oMIMaterialCodeListPath+"--delete");
-            oModel.remove(oMIMaterialCodeListPath);
+            console.log(oMIMatListViewPath+"--delete");
+            oModel.remove(oMIMatListViewPath);
 
             //MIMaterialCodeText(tenant_id='L2100',company_code='%2A',org_type_code='BU',org_code='BIZ00100',mi_material_code='ALU-001-01',language_code='EN')"
             for(var i=0;i<oMIMaterialCodeText.oData.length;i++){

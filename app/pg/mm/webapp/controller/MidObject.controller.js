@@ -1,21 +1,15 @@
 sap.ui.define([
     "./BaseController",
-    "sap/ui/core/routing/History",
     "sap/ui/model/json/JSONModel",
-    "ext/lib/model/ManagedModel",
-    "ext/lib/model/ManagedListModel",
     "ext/lib/formatter/DateFormatter",
     "ext/lib/util/ValidatorUtil",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
-    "sap/ui/core/Fragment",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "sap/ui/core/ValueState",
-    "./Validator",
-    "sap/base/Log",
-    "sap/m/Token"
-], function (BaseController, History, JSONModel, ManagedModel, ManagedListModel, DateFormatter, ValidatorUtil, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ValueState, Validator, Log, Token) {
+    "./Validator"
+], function (BaseController, JSONModel,   DateFormatter, ValidatorUtil, Filter, FilterOperator, MessageBox, MessageToast, ValueState, Validator) {
     "use strict";
     return BaseController.extend("pg.mm.controller.MidObject", {
 
@@ -207,8 +201,9 @@ sap.ui.define([
                 editMode : false,
                 createMode : false
             });
-
-         
+            var  _deleteItem = new JSONModel({oData:[]});
+            
+            this.setModel(_deleteItem, "_deleteItem");
             this.setModel(oUi, "oUi");
 
             this._fnControlSetting();
@@ -659,25 +654,18 @@ sap.ui.define([
                 _oUi =  this.getOwnerComponent().getModel("_oUi"),
                 oUi =  this.getOwnerComponent().getModel("oUi");
     
-            if(midList){
-                midList.setData(null);
-                midList.updateBindings(true);
-            }
+                function setModelNull(model){
 
-            if(oUiData){
-                oUiData.setData(null);
-                oUiData.updateBindings(true);
-            }
-            
-            if(_oUi){
-                _oUi.setData(null);
-                _oUi.updateBindings(true);
-            }           
+                    if(model){
+                        model.setData(null);
+                        model.updateBindings(true);
+                    }
 
-            if(oUi){
-                oUi.setData(null);
-                oUi.updateBindings(true);
-            }
+                }
+                setModelNull(midList);
+                setModelNull(oUiData);
+                setModelNull(_oUi);
+                setModelNull(oUi);
         },
 		/**
 		 * When it routed to this page from the other page.
@@ -1170,6 +1158,7 @@ sap.ui.define([
         onMidListItemDelete : function () {
             console.log("onMidListItemDelete");
             var oModel = this.getOwnerComponent().getModel("midList"),
+                _deleteItem = this.getModel("_deleteItem"),
                 that = this,
                 oTable = this.getView().byId("midTableChange"),
                 oSelected = oTable.getSelectedContexts();
@@ -1183,17 +1172,21 @@ sap.ui.define([
                 );
                 return;
             }
-
+            var _deleteItemOdata = _deleteItem.getProperty("/oData");
             for(var i=0;i<oSelected.length;i++){
 
-                var idx = parseInt(oSelected[0].sPath.substring(oSelected[0].sPath.lastIndexOf('/') + 1));
+                var idx = parseInt(oSelected[i].sPath.substring(oSelected[i].sPath.lastIndexOf('/') + 1));
                 oModel.oData[idx].itemMode=this._m.itemMode.delete;
-
+                _deleteItemOdata.push(oModel.oData[idx]);
+                oModel.oData.splice(idx, 1);                
             }
 
             
+            _deleteItem.setProperty("/oData", _deleteItemOdata);
+            that.getView().setBusy(false);
             oTable.removeSelections();
-            oModel.refresh(true);            
+            oTable.getBinding("items").refresh();
+            oModel.refresh(true);               
         },
 
         /**

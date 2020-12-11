@@ -71,11 +71,11 @@ sap.ui.define([
 			
 			console.group("onInit");
 
-			var oViewModel,
+			var oUi,
 				oResourceBundle = this.getResourceBundle();
 
 			// Model used to manipulate control states
-			oViewModel = new JSONModel({
+			oUi = new JSONModel({
 				headerExpanded: true,
 				mainListTableTitle : oResourceBundle.getText("mainListTableTitle"),
 				tableNoDataText : oResourceBundle.getText("tableNoDataText")
@@ -87,7 +87,7 @@ sap.ui.define([
 
 			this.setModel(oUiData, "oUiData");
 
-			this.setModel(oViewModel, "oUI");
+			this.setModel(oUi, "oUi");
 		
 			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
@@ -179,7 +179,6 @@ sap.ui.define([
         },
 		
         /**
-		 * note 데이타베이스 변경으로..실행 안됨.
          * Smart Table Filter Event onBeforeRebindTable
          * @param {sap.ui.base.Event} oEvent 
          */
@@ -208,7 +207,7 @@ sap.ui.define([
 			var oCategory_code = oSmtFilter.getControlByKey("category_code").getSelectedKey();    
             var oUse_flag = oSmtFilter.getControlByKey("use_flag").getSelectedKey();   
             var fOcode = oUse_flag =="FALSE" ? false : true;
-
+			
 			if (oMi_tenant_id.length > 0) {
 				var oMi_tenant_idFilter = new Filter("tenant_id", FilterOperator.EQ, oMi_tenant_id);
 				mBindingParams.filters.push(oMi_tenant_idFilter);

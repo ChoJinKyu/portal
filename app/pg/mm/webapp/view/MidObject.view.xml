@@ -188,12 +188,7 @@
                                                     </content>
                                                 </OverflowToolbar>
                                             </headerToolbar>                                            
-                                            <columns>  
-                                                <Column hAlign="Center" width="50px">
-                                                    <header>
-                                                        <Label text="상태"/>
-                                                    </header>
-                                                </Column>                                                 
+                                            <columns>                                                                                              
                                                 <Column hAlign="Center" width="150px">
                                                     <header>
                                                         <Label text="Code"/>
@@ -243,7 +238,6 @@
                                             <items>
                                                 <ColumnListItem>
                                                     <cells> 
-                                                        <Text text="{midList>itemMode}" />  
                                                         <Text text="{midList>mi_material_code}" />                                          
                                                         <Text text="{midList>mi_material_name}" />                                          
                                                         <Text text="{midList>category_name}" />  
@@ -251,8 +245,7 @@
                                                             <Text   text="{midList>reqm_quantity}"
                                                                     visible="{oUi>/readMode}"
                                                              />                                      
-                                                            <Input  id="imputReqm_quantity" 
-                                                                    visible="{oUi>/editMode}"
+                                                            <Input  visible="{oUi>/editMode}"
                                                                     required="true"
                                                                     fieldGroupIds="requiredField"
                                                                     type = "Number"  
@@ -265,9 +258,9 @@
                                                                         path : 'midList>use_flag',
                                                                         formatter: '.formatter.toYesNo'
                                                                         }"
-                                                                    visible="{oUi>/readMode}"/>                                                          
+                                                                    visible="{=!${oUi>/createMode}}"/>                                                          
                                                             <ComboBox   placeholder="선택"
-                                                                        visible="{oUi>/editMode}"  
+                                                                        visible="{oUi>/createMode}"  
                                                                         items ="{
                                                                             path : '/UseYNView',
                                                                             formatter: '.formatter.toYesNo'
