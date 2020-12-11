@@ -50,8 +50,6 @@ sap.ui.define([
             /* 다국어 처리*/
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
-
-            console.log("BeaCreateObject Controller 호출");
             // Model used to manipulate control states. The chosen values make sure,
             // detail page shows busy indication immediately so there is no break in
             // between the busy indication for loading the view's meta data
@@ -229,28 +227,29 @@ sap.ui.define([
 		 * @private
 		 */
         _onCreatePagetData : function (args) {  
-            var d = new Date();
-            this.getModel('appMaster').setProperty('/company_code', args.company_code);
-            this.getModel('appMaster').setProperty('/org_code', args.plant_code); 
-            this.getModel('appMaster').setProperty('/org_type_code', 'AU'); 
-            this.getModel('appMaster').setProperty('/tenant_id', 'L1100' ); 
-            this.getModel('appMaster').setProperty('/chain_code', 'DP' ); 
-            this.getModel('appMaster').setProperty('/approval_type_code', 'B' ); 
-            this.getModel('appMaster').setProperty('/requestor_empno', '888888' ); 
-            this.getModel('appMaster').setProperty('/approval_number', '326857-20E-88847' ); 
-            this.getModel('appMaster').setProperty('/request_date', this._getToday() ); 
-            this.getModel('appMaster').setProperty('/local_create_dtm', new Date() ); 
-            this.getModel('appMaster').setProperty('/local_update_dtm', new Date() ); 
-            this.getModel('appMaster').setProperty('/_state_', "C"); 
-            this.getModel('appMaster').setProperty('/__entity', "/ApprovalMasters(tenant_id='L1100',approval_number='326857-20E-88847')");
-           //  "/ApprovalMasters(tenant_id='L1100',approval_number='" + args.approval_number + "')"
+            var d = new Date(); 
+            var oModel = this.getModel();
+            var cParam = { 
+                 "tenant_id": 'L1100',
+                    "company_code":  args.company_code,
+                    "org_type_code":  'AU' ,
+                    "org_code": args.plant_code, 
+                    "chain_code" : "DP",
+                    "approval_type_code" : "B",
+                    "requestor_empno" : "999999",
+                    "approval_number" : "326857-20E-88848",
+                    "request_date" : this._getToday(),
+                    "local_create_dtm": new Date(),
+                    "local_update_dtm": new Date()                     
+            }
+ 
+            //oModel.createEntry("/ApprovalMasters(tenant_id='L1100',approval_number='326857-20E-88847')", cParameters); 
+            this.getModel("appMaster").setData(cParam);
 
-            console.log("appMaster>>>> " , this.getModel("appMaster"));
-
-            oTransactionManager.setServiceModel(this.getModel());
-
-            this._createViewBindData(args);
+            this._createViewBindData(args); 
+   
         },
+
 
         /**
          * today
@@ -314,7 +313,7 @@ sap.ui.define([
             });
 
             this._bindView("/ApprovalDetails", "appDetail", schFilter, function (oData) {
-                console.log("approvalDetails >>>> ", oData);
+                console.log("approvalDetails >>>> ", that.getModel("appDetail"));
                 // that._bindView("/MoldMasters", "MoldMasterList", [
                 //     new Filter("company_code", FilterOperator.EQ, sResult.company_code)
                 //     , new Filter("org_code", FilterOperator.EQ, sResult.org_code)
@@ -323,7 +322,7 @@ sap.ui.define([
             });
 
             this._bindView("/Approver", "Approvers", schFilter, function (oData) {
-                console.log("Approver >>>> ", oData);
+                console.log("Approver >>>> ", that.getModel("Approvers"));
             });
    
             oTransactionManager.setServiceModel(this.getModel());
@@ -920,11 +919,93 @@ sap.ui.define([
                 width: "auto"
             });
         },
+
+        _setCreateData: function () {
+            var oModel = this.getOwnerComponent().getModel();
+          
+             var cParam = { 
+                 "tenant_id": 'L1100',
+                 "company_code": this.getModel("appMaster").oData.company_code,
+                 "org_type_code": 'AU',
+                 "org_code": this.getModel("appMaster").oData.org_code,
+                 "approve_status_code": 'AP',
+                 "chain_code": "DP",
+                 "approval_type_code": "B",
+                 "requestor_empno":this.getModel('appMaster').oData.requestor_empno ,
+                 "approval_number": this.getModel('appMaster').oData.approval_number ,
+                 "request_date": this._getToday(),
+                 "local_create_dtm": new Date(),
+                 "local_update_dtm": new Date(),
+                 "approval_title": this.getModel('appMaster').oData.approval_title ,
+                 "approval_contents" : this.getModel('appMaster').oData.approval_contents 
+             }
+
+            this.getModel("appMaster").createKey("/ApprovalMasters",cParam);
+            this.getModel('appDetail').createKey("/ApprovalDetails", []);
+            this.getModel('Approvers').createKey("/Approver",[]);
+       
+            oTransactionManager.setServiceModel(this.getModel());
+
+         
+
+            // this.getModel('appMaster').setData(cParam, "/ApprovalMasters");
+            // this.getModel('appDetail').setProperty("/");
+            this.update();
+            // ApprovalDetails 
+        //    var dtl = this.getModel("appDetail");
+
+        //     console.log("dtl>>> " , dtl.oData.ApprovalDetails);
+   
+
+        //     MessageBox.confirm("Are you sure ?", {
+        //         title: "Comfirmation",
+        //         initialFocus: sap.m.MessageBox.Action.CANCEL,
+        //         onClose: function (sButton) {
+        //             if (sButton === MessageBox.Action.OK) {
+        //                 oView.setBusy(true);
+        //                 oModel.create("/ApprovalMasters", cParam, {
+        //                     groupId: "appMaster",
+        //                     success: function (data) {
+        //                         oView.setBusy(false);
+                               
+        //                     }.bind(this),
+        //                     error: function (data) {
+        //                         console.log('error', data)
+        //                     }
+        //                 });
+        //                 oModel.create("/ApprovalDetails",  dtl.oData.ApprovalDetails, {
+        //                     groupId: "appDetail",
+        //                     success: function (data) {
+        //                         oView.setBusy(false);
+        //                        // MessageToast.show("Success to save.");
+        //                     }.bind(this),
+        //                     error: function (data) {
+        //                         console.log('error', data)
+        //                     }
+        //                 });
+        //                  MessageToast.show("Success to save.");
+
+        //             };
+        //         }
+        //     });
+
+        },
+
         /**
          * @description save
          */
         onPageDraftButtonPress: function () {
+            var oModel = this.getModel(mainViewName);
 
+            if(oModel.oData.editMode){
+                this.update();
+            }else{
+                this._setCreateData();
+            }
+
+        },
+
+        update : function(){
             var oView = this.getView();
             MessageBox.confirm("Are you sure ?", {
                 title: "Comfirmation",
@@ -941,8 +1022,7 @@ sap.ui.define([
                     };
                 }
             });
-        },
-
+        }
 
     });
 });
