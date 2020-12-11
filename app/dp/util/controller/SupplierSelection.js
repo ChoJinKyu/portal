@@ -53,7 +53,7 @@ sap.ui.define([
             oSuppValueHelpDialog.attachAfterClose(this.onValueHelpSuppAfterClose);
 
             this._oBasicSearchField = new SearchField({
-                showSearchButton: false
+                showSearchButton: true
             });
 
             // this._oBasicSearchField.attachSearch(this.onFilterBarSuppSearch);

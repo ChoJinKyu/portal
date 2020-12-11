@@ -20,7 +20,7 @@
         }
       },
       "uomClassService": {
-        "uri": "srv-api/odata/v2/dp.UomClassMgrService/",
+        "uri": "srv-api/odata/v2/dp.UomClassMgtService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"

@@ -24,7 +24,7 @@ sap.ui.define([
      * @author jinseon.lee
      * @date 2020.12.01
      */
-	return BaseController.extend("dp.budgetExecutionApproval.controller.BeaCreateObject", {
+	return BaseController.extend("op.prMgr.controller.MidCreateObject", {
 
 		dateFormatter: DateFormatter,
 
@@ -37,7 +37,7 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () { 
-              console.log("BeaCreateObject Controller 호출");
+              console.log("MidCreateObject Controller 호출");
 			// Model used to manipulate control states. The chosen values make sure,
 			// detail page shows busy indication immediately so there is no break in
 			// between the busy indication for loading the view's meta data
@@ -46,8 +46,8 @@ sap.ui.define([
 					delay : 0
                 });
                 
-            this.setModel(oViewModel, "beaCreateObjectView");
-            this.getRouter().getRoute("beaCreateObject").attachPatternMatched(this._onObjectMatched, this);
+            this.setModel(oViewModel, "midCreateObjectView");
+            this.getRouter().getRoute("midCreate").attachPatternMatched(this._onObjectMatched, this);
             this.getView().setModel(new ManagedListModel(),"company");
             this.getView().setModel(new ManagedListModel(),"plant");
             this.getView().setModel(new ManagedListModel(),"createlist"); // Participating Supplier

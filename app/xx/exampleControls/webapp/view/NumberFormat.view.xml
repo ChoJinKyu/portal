@@ -1,0 +1,96 @@
+<mvc:View
+	controllerName="xx.exampleControls.controller.NumberFormat"
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m" 
+    xmlns:core="sap.ui.core" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:lib-m="ext.lib.m"
+	xmlns:u="sap.ui.unified"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+    height="100%">
+
+    <Page id="page" title="Number Format with Locale and Currency" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
+        <content>
+            <Table id="idProductsTable"
+                items="{
+                    path: '/modelData'
+                }">
+                <columns>
+                    <Column id="exapnseColumn" hAlign="Start">
+                        <Text text="Expense"/>
+                    </Column>
+                    <Column id="transactionAmountColumn0" hAlign="End">
+                        <Text text="No formatted" />
+                    </Column>
+                    <Column id="transactionAmountColumn1" hAlign="End">
+                        <Text text="Default" />
+                    </Column>
+                    <Column id="transactionAmountColumn2" hAlign="End">
+                        <Text text="Locale &#10;(ko-KR)" />
+                    </Column>
+                    <Column id="transactionAmountColumn3" hAlign="End">
+                        <Text text="Locale/Currency &#10;(ko-KR / KRW)" />
+                    </Column>
+                    <Column id="transactionAmountColumn4" hAlign="End">
+                        <Text text="Locale/Currency &#10;(de-DE / EUR)" />
+                    </Column>
+                    <Column id="transactionAmountColumn5" hAlign="End">
+                        <Text text="Locale/Currency &#10;(en-US / USD)" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <ObjectIdentifier
+                                text="{expense}"/>
+                            <ObjectIdentifier
+                                text="{amount}"/>
+                            <ObjectIdentifier text="{
+                                    path: 'amount',
+                                    formatter: '.numberFormatter.numberFormat'
+                                }"/>
+                            <ObjectIdentifier text="{
+                                    parts: [
+                                        {path: 'amount'},
+                                        {value: 'ko-KR'}
+                                    ],
+                                    formatter: '.numberFormatter.numberFormat'
+                                }"/>
+                            <ObjectIdentifier text="{
+                                    parts: [
+                                        {path: 'amount'},
+                                        {value: 'ko-KR'},
+                                        {value: 'KRW'}
+                                    ],
+                                    formatter: '.numberFormatter.numberFormat'
+                                }"/>
+                            <ObjectIdentifier text="{
+                                    parts: [
+                                        {path: 'amount'},
+                                        {value: 'de-DE'},
+                                        {value: 'EUR'}
+                                    ],
+                                    formatter: '.numberFormatter.numberFormat'
+                                }"/>
+                            <ObjectIdentifier text="{
+                                parts: [
+                                    {path: 'amount'},
+                                    {value: 'en-US'},
+                                    {value: 'USD'}
+                                ],
+                                formatter: '.numberFormatter.numberFormat'
+                            }"/>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+
+            <MessageStrip
+                class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom"
+                type="Warning"
+                text='controller에 Define 후 사용합니다.&#10;&#10;----------&#10;&#10;sap.ui.define(["ext/lib/formatter/NumberFormatter"], function (NumberFormatter) .. &#10;&#10;&#160;&#160;&#160;&#160;numberFormatter: NumberFormatter' />
+            
+        </content>
+    </Page>
+</mvc:View>
