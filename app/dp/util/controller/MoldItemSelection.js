@@ -68,16 +68,18 @@ sap.ui.define([
 		 * @public
 		 */
         openMoldItemSelectionPop : function (pThis, oEvent, pArges, callback) { 
-  
+            console.log("org_code >>>> " , pArges);
             oThis = pThis;
             oArges = pArges;
             oCallback = callback;
+
             oThis.setModel(new ManagedModel(), "moldItemPop");
             oThis.setModel(new ManagedListModel(), "moldItemPopList");
-            oThis.setModel(new ManagedListModel(), "company");
-            oThis.setModel(new ManagedListModel(), "plant");
+            oThis.setModel(new ManagedListModel(), "moldSelectionCompanyPopList");
+            oThis.setModel(new ManagedListModel(), "moldSelectionPlantPopList");
+
             oThis.getModel('moldItemPop').setProperty('/company_code', oArges.company_code);
-            oThis.getModel('moldItemPop').setProperty('/org_code', oArges.plant_code); 
+            oThis.getModel('moldItemPop').setProperty('/org_code', oArges.org_code); 
 
             var oView = oThis.getView();
             var oButton = oEvent.getSource();
@@ -95,7 +97,7 @@ sap.ui.define([
             var that = this;
             this._oDialogTableSelect.then(function (oDialog) {
                 oDialog.open();
-                oThis.byId("mItemPopSrch").firePress(); // open 하자마자 조회 하여 보여줌 
+                oThis.byId("btnMoldItemPopSearch").firePress(); // open 하자마자 조회 하여 보여줌 
 
             });
         }, 
@@ -103,10 +105,10 @@ sap.ui.define([
             var aSearchFilters = [];
             // tenant_id  
             aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100'));
-            var company = oThis.byId('pCompany').mProperties.selectedKey;
-            var plant = oThis.byId('pPlant').mProperties.selectedKey;
-            var model = oThis.byId('mItemModel').getValue().trim();
-            var partNo = oThis.byId('mItemPartNo').getValue().trim();
+            var company = oThis.byId('moldItemPopCompany').mProperties.selectedKey;
+            var plant = oThis.byId('moldItemPopPlant').mProperties.selectedKey;
+            var model = oThis.byId('moldItemPopModel').getValue().trim();
+            var partNo = oThis.byId('moldItemPopPartNo').getValue().trim();
 
             if (company != undefined && company != "" && company != null) {
                 aSearchFilters.push(new Filter("company_code", FilterOperator.EQ, company))
@@ -118,7 +120,7 @@ sap.ui.define([
                 aSearchFilters.push(new Filter("model", FilterOperator.Contains, model))
             }
             if (partNo != undefined && partNo != "" && partNo != null) {
-                aSearchFilters.push(new Filter("part_number", FilterOperator.Contains, partNo))
+                aSearchFilters.push(new Filter("mold_number", FilterOperator.Contains, partNo))
             }
 
             return aSearchFilters;
@@ -145,14 +147,11 @@ sap.ui.define([
             console.log(" [step] Mold Item Selection Search Button Serch ", aSearchFilters);
             var oView = oThis.getView(),
                 oModel = oThis.getModel("moldItemPopList"),
-                companyModel = oThis.getModel("company"),
-                plantModel = oThis.getModel("plant")
+                companyModel = oThis.getModel("moldSelectionCompanyPopList"),
+                plantModel = oThis.getModel("moldSelectionPlantPopList")
                 
                 ;
-/**
- *          oThis.setModel(new ManagedListModel(), "org");
-            oThis.setModel(new ManagedListModel(), "purOrg");
- */
+
             oView.setBusy(true);
             oModel.setTransactionModel(oServiceModel);
             oModel.read("/MoldItemSelect", {
@@ -185,18 +184,33 @@ sap.ui.define([
                 }
             });
 
-
-            console.log("omdel", oModel);
         },
            /**
          * @public 
          * @see 사용처 Participating Supplier Fragment 취소 이벤트
          */
         onExit: function () {
+           // this._setInitPop();
             oThis.byId("dialogMolItemSelection").close();
         },
+        selectMoldItemChange: function (oEvent) {
+            var oTable = oThis.byId("popMoldItemSelectTable");
+            var aItems = oTable.getSelectedItems();
+        
+                oThis.getModel('moldItemPop').setProperty('/sLength', aItems == undefined ? 0 : aItems.length); 
+           
+        },
+        /**
+         * @description  클릭한거랑 검색 조건 초기화 
+         */
+        _setInitPop : function(){ 
+            // var oTable = oThis.byId("popMoldItemSelectTable");
+           //  oTable.clearSelection();
+             oThis.byId('moldItemPopModel').setVaue("");
+             oThis.byId('moldItemPopPartNo').setVaue("");
+        },
 
-          /**
+        /**
         * @description  Participating Supplier Fragment Apply 버튼 클릭시 
         */
         onMoldItemSelectionApply: function (oEvent) {
@@ -240,7 +254,6 @@ sap.ui.define([
             });
 
             oCallback(datas);
-
             this.onExit();
         },
 

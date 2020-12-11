@@ -196,7 +196,7 @@ service marketIntelligenceService {
             key main.company_code         as company_code, //법인코드
             key main.org_type_code        as org_type_code, //조직유형코드
             key main.org_code             as org_code, //조직코드
-            key main.parent_category_code as parent_category_code, //상위카테고리코드
+                main.parent_category_code as parent_category_code, //상위카테고리코드
                 prtCatgText.category_name as parent_category_name, //상위카테고리코드명
             key main.category_code        as category_code, //카테고리코드
                 catgText.category_name    as category_name, //카테고리코드명

@@ -23,30 +23,27 @@
                 emptySpanL="4"
                 emptySpanM="0"
                 emptySpanS="0"
-     
                 singleContainerFullSize="false" >
                     
                     <form:content>
                         <VBox>
                             <Label text = "Company" required="true"/> 
-                            <ComboBox id="pCompany"  width="100%" selectedKey="{moldItemPop>/company_code}" enabled="false" items="{
-                                        path: 'company>/Org_Company' }">
+                            <ComboBox id="moldItemPopCompany"  width="100%" selectedKey="{moldItemPop>/company_code}" 
+                                        enabled="false" items="{ path: 'moldSelectionCompanyPopList>/Org_Company' }">
                                 <items>
-                                    <core:Item key="{company>company_code}"  text="[{company>company_code}] {company>company_name}" />
+                                    <core:Item key="{moldSelectionCompanyPopList>company_code}"  text="[{moldSelectionCompanyPopList>company_code}] {moldSelectionCompanyPopList>company_name}" />
                                 </items>
                             </ComboBox>
                             <layoutData>
                                 <layout:GridData span="XL5 L5 M5 S5" />
                             </layoutData> 
                         </VBox>
-                        
                         <VBox>
                             <Label text = "Plant" required="true"/> 
-                            <ComboBox id="pPlant"  width="100%" selectedKey="{moldItemPop>/org_code}" enabled="false" items="{
-                                        path: 'plant>/Pur_Operation_Org'
-                                    }">
+                            <ComboBox id="moldItemPopPlant"  width="100%" selectedKey="{moldItemPop>/org_code}" 
+                                    enabled="false" items="{ path: 'moldSelectionPlantPopList>/Pur_Operation_Org'}">
                                 <items>
-                                    <core:Item key="{plant>org_code}" text="[{plant>org_code}]{plant>org_name}" />
+                                    <core:Item key="{moldSelectionPlantPopList>org_code}" text="[{moldSelectionPlantPopList>org_code}]{moldSelectionPlantPopList>org_name}" />
                                 </items>
                             </ComboBox>
                             <layoutData>
@@ -54,21 +51,21 @@
                             </layoutData> 
                         </VBox>
                         <VBox>
-                            <Button id="mItemPopSrch" text="Search" class="sapUiSmallMargin" type="Emphasized" press=".onMoldItemSelection"/>
+                            <Button id="btnMoldItemPopSearch" text="Search" class="sapUiSmallMargin" type="Emphasized" press=".onMoldItemSelection"/>
                                <layoutData>
                                 <layout:GridData span="XL2 L2 M2 S2" />
                             </layoutData> 
                         </VBox>
                         <VBox>
                             <Label text = "Model"/> 
-                             <Input id="mItemModel" width="100%"/>
+                             <Input id="moldItemPopModel" width="100%"/>
                              <layoutData>
                                 <layout:GridData span="XL5 L5 M5 S5" />
                             </layoutData> 
                         </VBox>
                         <VBox>
                             <Label text = "Part No"/>
-                             <Input id="mItemPartNo" width="100%"/> 
+                             <Input id="moldItemPopPartNo" width="100%"/> 
                              <layoutData>
                                 <layout:GridData span="XL5 L5 M5 S5" />
                             </layoutData> 
@@ -88,7 +85,7 @@
                             >
                          <headerToolbar>
                             <OverflowToolbar>
-                                <Label text="{= ${moldItemPop>/moldItemLength} > 0 ? ( 'Selected : '+${moldItemPop>/moldItemLength} ) : '' }"/>
+                                <Label text="{= ${moldItemPop>/sLength} > 0 ? ( 'Selected : '+${moldItemPop>/sLength} ) : '' }"/>
                             </OverflowToolbar>
                         </headerToolbar> 
                         <columns>
@@ -151,7 +148,6 @@
 								        editable="false" >
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>
-
                                     <Text text="{moldItemPopList>book_currency_code}" />
                                     <Text text="{moldItemPopList>budget_amount}" />
                                     <Text text="{moldItemPopList>family_part_number_1}" />
