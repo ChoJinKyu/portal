@@ -26,6 +26,11 @@ entity MI_Category_Lng {
     key org_type_code : String(30) not null @title : '조직유형코드';
     key org_code      : String(10) not null @title : '조직코드';
     key category_code : String(40) not null @title : '카테고리코드';
+
+        parent        : Association to pg.MI_Category_Hichy_Stru
+                            on  parent.tenant_id     = tenant_id
+                            and parent.category_code = category_code;
+
     key language_code : String(4) not null  @title : '언어코드';
         category_name : String(240)         @title : '카테고리명';
 }

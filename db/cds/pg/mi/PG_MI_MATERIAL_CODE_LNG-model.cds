@@ -26,6 +26,11 @@ entity MI_Material_Code_Lng {
     key org_type_code    : String(30) not null @title : '조직유형코드';
     key org_code         : String(10) not null @title : '조직코드';
     key mi_material_code : String(40) not null @title : '시황자재코드';
+
+        parent           : Association to pg.MI_Material_Code
+                               on  parent.tenant_id        = tenant_id
+                               and parent.mi_material_code = mi_material_code;
+
     key language_code    : String(4) not null  @title : '언어코드';
         mi_material_name : String(240)         @title : '시황자재명';
 }

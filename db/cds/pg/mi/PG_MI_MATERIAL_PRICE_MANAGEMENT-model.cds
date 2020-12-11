@@ -26,8 +26,18 @@ entity MI_Material_Price_Management {
     key org_type_code       : String(30) not null @title : '조직유형코드';
     key org_code            : String(10) not null @title : '조직코드';
     key mi_material_code    : String(40) not null @title : '시황자재코드';
+
+        mi_material_codes   : Association to pg.MI_Material_Code
+                                  on  mi_material_codes.tenant_id        = tenant_id
+                                  and mi_material_codes.mi_material_code = mi_material_code;
+
         mi_material_name    : String(240)         @title : '시황자재명';
     key category_code       : String(40) not null @title : '카테고리코드';
+
+        category_codes      : Association to pg.MI_Category_Hichy_Stru
+                                  on  category_codes.tenant_id     = tenant_id
+                                  and category_codes.category_code = category_code;
+
         category_name       : String(240)         @title : '카테고리명';
         use_flag            : Boolean not null    @title : '사용여부';
     key exchange            : String(10) not null @title : '거래소';
