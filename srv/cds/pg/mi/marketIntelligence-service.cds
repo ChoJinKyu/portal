@@ -11,6 +11,8 @@ using {pg as MIMatCdBOMMngt} from '../../../../db/cds/pg/mi/PG_MI_MATERIAL_CODE_
 using {pg as MIMatPrcMngtView} from '../../../../db/cds/pg/mi/PG_MI_MAT_PRC_MANAGEMENT_VIEW-model';
 using {pg as MICategDetlView} from '../../../../db/cds/pg/mi/PG_MI_CATEGORY_DETAIL_VIEW-model';
 using {pg as MIMatCostInfoView} from '../../../../db/cds/pg/mi/PG_MI_MATERIAL_COST_INFO_VIEW-model';
+using {pg as MICategHierStrView} from '../../../../db/cds/pg/mi/PG_MI_CATEGORY_HICHY_STRU_VIEW-model';
+using {pg as MIMaxNIDView} from '../../../../db/cds/pg/mi/PG_MI_MAX_NODE_ID_VIEW-model';
 //Material
 using {dp.Mm_Material_Desc_Lng as MaterialDesc} from '../../../../db/cds/dp/mm/DP_MM_MATERIAL_DESC_LNG-model';
 //Supplier
@@ -40,11 +42,13 @@ service marketIntelligenceService {
     entity Exchange @(title : '거래소명') as projection on MIExchange.MI_Exchange_Lng;
     entity TermsOfDelivery @(title : '인도조건명') as projection on MITermsdelv.MI_Termsdelv_Lng;
     entity MIMaterialPriceManagement @(title : '시황자재 가격관리') as projection on MIMatPrcMngt.MI_Material_Price_Management;    
-    entity MIMaterialCodeBOMManagement @(title : '자제별 시황자재 BOM 관리') as projection on MIMatCdBOMMngt.MI_Material_Code_Bom_Mngt;
+    entity MIMaterialCodeBOMManagement @(title : '자재별 시황자재 BOM 관리') as projection on MIMatCdBOMMngt.MI_Material_Code_Bom_Mngt;
     // View List
     view MIMaterialPriceManagementView @(title : '시황자재 가격관리 View') as select from MIMatPrcMngtView.MI_Mat_Prc_Management_View;
     view MICategoryDetailView @(title : '카테고리 상세내용 View') as select from MICategDetlView.MI_Cateogry_Detail_View;
     view MIMaterialCostInformationView @(title : '시황자재 가격정보 View') as select from MIMatCostInfoView.MI_Material_Cost_Info_View;
+    view MICategoryHierarchyStructureView @(title : '시황자재 카테고리 계층구조 View') as select from MICategHierStrView.MI_Cateogry_Hichy_Stru_View;
+    view MIMaxNodeIDView @(title : '최대노드ID View')  as select from MIMaxNIDView.MI_Max_Node_ID_View;
 
     // Tenant View
     view OrgTenantView @(title : '회사코드 View') as
@@ -296,7 +300,7 @@ service marketIntelligenceService {
             key mi_mat_cd.org_type_code         as org_type_code, //조직유형코드
             key mi_mat_cd.org_code              as org_code, //조직코드
             key mi_mat_cd.mi_material_code      as mi_material_code, //시황자재코드
-                mi_mat_cd_lang.language_code    as mi_material_language_code, //시황자재 언어코드
+            key mi_mat_cd_lang.language_code    as mi_material_language_code, //시황자재 언어코드
                 mi_mat_cd_lang.mi_material_name as mi_material_name, //시황자재명
                 mi_mat_cd.category_code         as category_code, //카테고리코드
                 mi_cat_lang.language_code       as category_code_language_code, //카테고리 언어코드

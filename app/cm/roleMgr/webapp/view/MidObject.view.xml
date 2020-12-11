@@ -3,8 +3,9 @@
 	xmlns="sap.m" 
 	xmlns:uxap="sap.uxap" 
 	xmlns:layout="sap.ui.layout" 
-  xmlns:form="sap.ui.layout.form"
+    xmlns:form="sap.ui.layout.form"
 	xmlns:core="sap.ui.core"
+    xmlns:table="sap.ui.table"
 	height="100%">
 	<uxap:ObjectPageLayout id="page"
 		toggleHeaderOnTitleClick="true"
@@ -20,23 +21,25 @@
 			<!-- 타이틀 영역 -->
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="User Details" wrapping="true" />
+					<Title text="Role Details" wrapping="true" />
 				</uxap:expandedHeading>
 				<uxap:snappedHeading>
-					<Title text="User Details" wrapping="true" />
+					<Title text="Role Details" wrapping="true" />
 				</uxap:snappedHeading>
 				<uxap:expandedContent>
-					<Text text="Details for User Info {user_id}" />
+					<Text text="Details for Role Info {Role_code}" />
 				</uxap:expandedContent>
 				<uxap:snappedContent>
-					<Text text="Details for User Info {user_id}" />
+					<Text text="Details for Role Info {Role_code}" />
 				</uxap:snappedContent>
 				<uxap:snappedTitleOnMobile>
-					<Title text="User Details" />
+					<Title text="Role Details" />
 				</uxap:snappedTitleOnMobile>
 				<uxap:actions>
 					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" />
 					<Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" />
+                    <Button id="pageSaveButton" text="Save" type="Emphasized" press=".onPageSaveButtonPress" />
+				    <Button id="pageCancelEditButton" text="Cancel" type="Transparent" press=".onPageCancelEditButtonPress"/>
 				</uxap:actions>
                 <uxap:navigationActions>
 					<OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press="onPageEnterFullScreenButtonPress" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
@@ -71,7 +74,7 @@
 
 		<uxap:sections>
 			<!-- Master 에 관한 정보 -->
-			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="User Info Details">
+			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="Role Info Details">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection1" >
 					</uxap:ObjectPageSubSection>
@@ -103,85 +106,77 @@
 			</uxap:ObjectPageSection>
 
 			<!-- Detail 에 관한 정보 -->
-			<uxap:ObjectPageSection titleUppercase="false" title="역할목록">
+			<uxap:ObjectPageSection titleUppercase="false" title="역할별 메뉴관리">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
-						<Table id="midTable" 
-								sticky="HeaderToolbar,ColumnHeaders" 
-								inset="false" 
-								items="{details>/UserRoleGroupMgr}"
-								class="sapFDynamicPageAlignContent" 
-								updateFinished=".onMidTableUpdateFinished"
-								mode="MultiSelect" 
-								width="auto">
-							<headerToolbar>
-								<OverflowToolbar>
-									<Title text="역할목록" level="H2"/>
-									<ToolbarSpacer/>
-									<Button id="midTableAddButton" text="Add" type="Transparent" press=".onMidTableAddButtonPress" />
-									<Button id="midTableDeleteButton" text="Delete" type="Transparent" press=".onMidTableDeleteButtonPress('midTable', 'details', 'UserRoleGroupMgr')" />
-								</OverflowToolbar>
-							</headerToolbar>
-							<columns>
-								<Column id="midStateColumn" minScreenWidth="Tablet" hAlign="Center" width="40px" >
-									<Text text="S" />
-								</Column>
-								<Column id="midRoleGroupCodeColumn" minScreenWidth="Tablet" hAlign="Center">
-									<Text text="역할명" />
-								</Column>
-                                <Column id="midStartDateColumn" minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="시작일자" />
-								</Column>
-                                <Column id="midEndDateColumn" minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="종료일자" />
-								</Column>
-							</columns>
-							<items>
-								<ColumnListItem press=".onMidTableItemPress">
-									<cells>
-                                        <!-- 상태 -->
-										<Text text="{details>_row_state_}"/>
-                                        <!-- 역할그룹코드 -->
+                        <table:TreeTable
+                            id="midTable"
+                            selectionMode="MultiToggle"
+                            rows="{path:'details>/Menu_haa'}">
+
+                            <table:extension>
+                                <OverflowToolbar>
+                                    <Title text="역할별 메뉴관리 ({= ${details>/Menu_haa}.length || 0})" level="H2"/>
+                                <ToolbarSpacer/>
+                                    <HBox>
                                         <ComboBox
-                                            id="searchRoleGroupCode"
-                                            selectedKey="{details>role_group_code}"
+                                            id="searchChain"
+                                            selectedKey="CM"
                                             width="100%"
                                             items="{
-                                                path: 'roleGroup>/RoleGroupMgr',
+                                                path: 'util>/CodeDetails',
                                                 filters: [
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                    {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
                                                 ]
                                             }">
                                             <items>
-                                                <core:Item key="{roleGroup>role_group_code}" text="{roleGroup>role_group_code} : {roleGroup>role_group_name}" />
+                                                <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
                                             </items>
                                         </ComboBox>
-                                        <!-- 시작일자 -->
-                                        <DatePicker value="{ path: 'details>start_date', type: 'sap.ui.model.odata.type.Date', formatOptions: { UTC: true, format: 'yMd' } }" />
-                                        <!-- 종료일자 -->
-                                        <DatePicker value="{ path: 'details>end_date', type: 'sap.ui.model.odata.type.Date', formatOptions: { UTC: true, format: 'yMd' } }" />
-                                    </cells>
-								</ColumnListItem>
-							</items>
-						</Table>
+                                    </HBox>
+                                <ToolbarSeparator/>
+                                    <Button id="pageSaveButton2" text="Save" type="Emphasized" press=".onPageSaveButtonPress2" />
+                                </OverflowToolbar>
+                            </table:extension>
+
+                            <table:columns>
+                                <table:Column label="시스템" hAlign="Center">
+                                    <table:template>
+                                        <ComboBox
+                                            id="searchChainCode"
+                                            selectedKey="{details>chain_code}"
+                                            width="100%"
+                                            items="{
+                                                path: 'util>/CodeDetails',
+                                                filters: [
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                    {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
+                                                ]
+                                            }">
+                                            <items>
+                                                <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+                                            </items>
+                                        </ComboBox>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="메뉴명" hAlign="Center">
+                                    <table:template>
+                                        <Text text="{details>menu_name}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="메뉴코드" hAlign="Center">
+                                    <table:template>
+                                        <Text text="{details>menu_code}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                            </table:columns>
+                        </table:TreeTable>
+						
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 		</uxap:sections>
 
-		<!-- 하단 버튼 처리 툴바 -->
-		<uxap:footer>
-			<OverflowToolbar>
-        <Button
-            icon="sap-icon://alert"
-            type="Emphasized"
-            text="{= ${message>/}.length }"
-            visible="{= ${message>/}.length > 0 }"
-            ariaHasPopup="Dialog"
-            press=".onMessagePopoverPress" />
-				<ToolbarSpacer />
-				<Button type="Emphasized" text="Save" press=".onPageSaveButtonPress" />
-				<Button type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
-			</OverflowToolbar>
-		</uxap:footer>
 	</uxap:ObjectPageLayout>
 </mvc:View>

@@ -119,10 +119,12 @@ sap.ui.define([
 
         onMainTableAddButtonPress: function () {
             var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
+            var tenantId = this.byId("searchTenantCombo").getSelectedKey();
+
             this.getRouter().navTo("midPage", {
                 layout: oNextUIState.layout,
-                tenantId: "ID",
-                roleCode: "CODE",
+                tenantId: tenantId,
+                roleCode: "code",
                 "?query": {
                     //param1: "1111111111"
                 }
@@ -155,7 +157,8 @@ sap.ui.define([
 
             this.getRouter().navTo("midPage", {
                 layout: oNextUIState.layout,
-                userId: oRecord.user_id
+                tenantId: oRecord.tenant_id,
+                roleCode: oRecord.role_code
             });
 
             if (oNextUIState.layout === 'TwoColumnsMidExpanded') {

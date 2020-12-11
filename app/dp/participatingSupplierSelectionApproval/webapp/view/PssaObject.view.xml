@@ -7,6 +7,7 @@
     xmlns:co="sap.suite.ui.commons"
     xmlns:si="sap.suite.ui.commons.statusindicator"
     xmlns:u="sap.ui.unified" 
+    xmlns:table="sap.ui.table" 
     xmlns="sap.m"
 	height="100%">
 
@@ -52,30 +53,21 @@
 			<FlexBox wrap="Wrap" >
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <ObjectStatus
-                        title="Report No"
-                        text="332424-20B-00144"/>
+                        title="Approval No"
+                        text="{appMaster>/approval_number}"/>
                     <ObjectStatus
                         title="Requester"
-                        text="김갑수[ks.kim]"/>
+                        text="{appMaster>/requestor_empno}"/>
                     <ObjectStatus
                         title="Request Date"
-                        text="2020-07-02"/>
+                        text="{appMaster>/request_date}"/>
 				</layout:VerticalLayout>
 
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-				    <ObjectStatus
-                        title="Affiliate"
-                        text="EKHQ"/>
-                    <ObjectStatus
-                        title="Division"
-                        text="DFZ"/>
-				</layout:VerticalLayout> 
-
-                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
 					<Label text="Status :"/>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
-                        text="Veiw"
+                        text="New"
                         state="Error" />
 				</layout:VerticalLayout>
 
@@ -86,8 +78,8 @@
                     <HBox>
                         <co:MicroProcessFlow>
                             <co:content>
-                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete"/>
+                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete"/>
                                 <co:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
                                 <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
                                 <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
@@ -119,22 +111,28 @@
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
                         <layout:VerticalLayout class="sapUiSmallMarginBeginEnd"> 
-                                <HBox alignItems="Center">
-                                    <Label
-                                        text="Subject "
-                                        design="Normal"
-                                        class="sapUiTinyMarginEnd"
-                                        textAlign="Left"
-                                        labelFor="input"
-                                        required="true"/>
-                                    <Text
-                                        text="Input data"
-                                        visible="true">
-                                    </Text>
-                                </HBox>
-
-                            <Label text="Description" labelFor="input" required="true"></Label> 
-                            <Text text="Description!!!" />
+                            <HBox alignItems="Center">
+                                <Label
+                                    text="Subject "
+                                    design="Normal"
+                                    class="sapUiTinyMarginEnd"
+                                    textAlign="Left"
+                                    labelFor="input"
+                                    required="true"/>
+                                <Text
+                                    text="{appMaster>/approval_title}"
+                                    visible="true"
+                                />
+                            </HBox>
+                            <VBox>
+                                <Label text="Description" labelFor="input" required="true"></Label> 
+                                <layout:VerticalLayout id="idVerticalLayout" class="sapUiContentPadding" width="100%">
+                                    <layout:content>
+                                        <!-- <core:HTML content="{appMaster>/approval_contents}">
+                                        </core:HTML> -->
+                                    </layout:content>
+                                </layout:VerticalLayout>
+                            </VBox>
                         </layout:VerticalLayout> 						
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>

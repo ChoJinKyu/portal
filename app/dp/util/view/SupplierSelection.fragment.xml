@@ -25,7 +25,12 @@
 		descriptionKey="supplier_local_name"
 	>
     <filterBar>
-			<fb:FilterBar advancedMode="true" search=".onFilterBarSuppSearch" isRunningInValueHelpDialog="true" >
+			<fb:FilterBar advancedMode="true" 
+                        search=".onFilterBarSuppSearch" 
+                        isRunningInValueHelpDialog="true" 
+                        showFilterConfiguration="false"
+                        useToolbar="false"
+                        showGoOnFB="false" >
                 <fb:filterGroupItems>
 					<fb:FilterGroupItem
 						groupName="__$INTERNAL$"
