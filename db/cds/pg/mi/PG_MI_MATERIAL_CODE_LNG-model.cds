@@ -29,6 +29,9 @@ entity MI_Material_Code_Lng {
 
         parent           : Association to pg.MI_Material_Code
                                on  parent.tenant_id        = tenant_id
+                               and parent.company_code     = company_code
+                               and parent.org_type_code    = org_type_code
+                               and parent.org_code         = org_code
                                and parent.mi_material_code = mi_material_code;
 
     key language_code    : String(4) not null  @title : '언어코드';

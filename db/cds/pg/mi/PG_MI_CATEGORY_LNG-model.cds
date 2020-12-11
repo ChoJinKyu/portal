@@ -29,6 +29,9 @@ entity MI_Category_Lng {
 
         parent        : Association to pg.MI_Category_Hichy_Stru
                             on  parent.tenant_id     = tenant_id
+                            and parent.company_code  = company_code
+                            and parent.org_type_code = org_type_code
+                            and parent.org_code      = org_code
                             and parent.category_code = category_code;
 
     key language_code : String(4) not null  @title : '언어코드';

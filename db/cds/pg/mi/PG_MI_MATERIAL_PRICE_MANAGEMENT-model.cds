@@ -29,6 +29,9 @@ entity MI_Material_Price_Management {
 
         mi_material_codes   : Association to pg.MI_Material_Code
                                   on  mi_material_codes.tenant_id        = tenant_id
+                                  and mi_material_codes.company_code     = company_code
+                                  and mi_material_codes.org_type_code    = org_type_code
+                                  and mi_material_codes.org_code         = org_code
                                   and mi_material_codes.mi_material_code = mi_material_code;
 
         mi_material_name    : String(240)         @title : '시황자재명';
@@ -36,6 +39,9 @@ entity MI_Material_Price_Management {
 
         category_codes      : Association to pg.MI_Category_Hichy_Stru
                                   on  category_codes.tenant_id     = tenant_id
+                                  and category_codes.company_code  = company_code
+                                  and category_codes.org_type_code = org_type_code
+                                  and category_codes.org_code      = org_code
                                   and category_codes.category_code = category_code;
 
         category_name       : String(240)         @title : '카테고리명';

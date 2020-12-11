@@ -300,7 +300,7 @@ sap.ui.define([
 
         onSuppValueHelpRequested: function(oEvent){
             
-            this.supplierSelection.showSupplierSelection(this, oEvent);
+            this.supplierSelection.showSupplierSelection(this, oEvent, false);
         },
 
 		/* =========================================================== */

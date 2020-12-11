@@ -197,15 +197,7 @@
                                                         </content>
                                                     </OverflowToolbar>
                                                 </headerToolbar>                                                
-                                                <columns>
-                                                    <Column hAlign="Center" 
-                                                     width="50px"
-                                                     visible="{= ${oUi>/readMode}?'None':'MultiSelect'}" 
-                                                    >
-                                                        <header>
-                                                            <Label text="상태"/>
-                                                        </header>
-                                                    </Column>                                                
+                                                <columns>                                                            
                                                     <Column hAlign="Center">
                                                         <header>
                                                             <Label text="Language"/>
@@ -220,21 +212,22 @@
                                                 <items>
                                                     <ColumnListItem>
                                                         <cells>
-                                                            <Text text="{mIMaterialCodeText>itemMode}"/>
+                                                            
                                                             <VBox>
-                                                                <ComboBox   id="comboBox_language"
-                                                                            selectionChange=".onComboBoxLanguageChange"
+                                                                <Text   text="{mIMaterialCodeText>language_code}"
+                                                                        visible="{=!${oUi>/createMode}}"/>
+                                                                        
+                                                                <ComboBox   selectionChange=".onComboBoxLanguageChange"
                                                                             selectedKey="{mIMaterialCodeText>language_code}"
                                                                             items="{
                                                                                 path: 'languageView>/',                                                                                                                            
                                                                                 templateShareable:false}"
-                                                                            visible="{=!${oUi>/readMode}}"
+                                                                            visible="{oUi>/createMode}"
                                                                             placeholder="선택">
                                                                     <core:Item key="{languageView>code}" 
                                                                                text="{languageView>code_name}"/>                                                                    
                                                                 </ComboBox>                           
-                                                                <Text   text="{mIMaterialCodeText>language_code}"
-                                                                        visible="{oUi>/readMode}"/>
+                                                                
                                                             </VBox>
                                                             <VBox>
                                                                 <Input  value="{mIMaterialCodeText>mi_material_name}" 
