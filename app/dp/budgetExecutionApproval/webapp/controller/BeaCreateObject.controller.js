@@ -471,160 +471,168 @@ sap.ui.define([
         },
 
         /**
-         * 
-         * @description moldItemSelect 공통팝업  
-         */
+         * @description moldItemSelect 공통팝업   
+         * @param vThis : view page의 this 
+         *       , oEvent : 이벤트 
+         * ,     , oArges : company_code , org_code 
+		 */ 
         onMoldItemPopPress : function (oEvent){
              var oArgs = {
                 company_code : this.getModel('appMaster').oData.company_code , 
                 org_code : this.getModel('appMaster').oData.org_code
             }
-
-            this.moldItemPop.openMoldItemSelectionPop(this, oEvent, oArgs , function (rData) {
-                console.log("rData >>>> ", rData);
+            var that = this;
+    
+            this.moldItemPop.openMoldItemSelectionPop(this, oEvent, oArgs , function (oDataMold) {
+                console.log("selected data list >>>> ", oDataMold); 
+                if(oDataMold.length > 0){
+                    oDataMold.forEach(function(item){
+                        that._addPsTable(item); 
+                    })
+                }
             });
         },
         /**
          * @description : Popup 창 : 품의서 Item for Budget Execution 항목의 Add 버튼 클릭
          */
-        handleTableSelectDialogPress: function (oEvent) {
+        // handleTableSelectDialogPress: function (oEvent) {
   
-            console.log("[ step ] handleTableSelectDialogPress Item for Budget Execution 항목의 Add 버튼 클릭 ");
+        //     console.log("[ step ] handleTableSelectDialogPress Item for Budget Execution 항목의 Add 버튼 클릭 ");
 
-            var oView = this.getView();
-            var oButton = oEvent.getSource();
-            if (!this._oDialogTableSelect) {
-                this._oDialogTableSelect = Fragment.load({
-                    id: oView.getId(),
-                    name: "dp.budgetExecutionApproval.view.MoldItemSelection",
-                    controller: this
-                }).then(function (oDialog) {
-                    oView.addDependent(oDialog);
-                    return oDialog;
-                }.bind(this));
-            }
+        //     var oView = this.getView();
+        //     var oButton = oEvent.getSource();
+        //     if (!this._oDialogTableSelect) {
+        //         this._oDialogTableSelect = Fragment.load({
+        //             id: oView.getId(),
+        //             name: "dp.budgetExecutionApproval.view.MoldItemSelection",
+        //             controller: this
+        //         }).then(function (oDialog) {
+        //             oView.addDependent(oDialog);
+        //             return oDialog;
+        //         }.bind(this));
+        //     }
 
-            var that = this;
-            this._oDialogTableSelect.then(function (oDialog) {
-                oDialog.open();
-                that.byId("moldItemSelectionSearch").firePress(); // open 하자마자 조회 하여 보여줌 
+        //     var that = this;
+        //     this._oDialogTableSelect.then(function (oDialog) {
+        //         oDialog.open();
+        //         that.byId("moldItemSelectionSearch").firePress(); // open 하자마자 조회 하여 보여줌 
 
-            }); 
-        },
+        //     }); 
+        // },
         /**
          * @public 
          * @see 사용처 Participating Supplier Fragment 취소 이벤트
          */
-        onExit: function () {
-            this.byId("dialogMolItemSelection").close();
-        },
+        // onExit: function () {
+        //     this.byId("dialogMolItemSelection").close();
+        // },
 
         /**
          * @description Mold Item Selection Search Button 누를시 
          * @param {*} oEvent 
          */
-        onMoldItemSelection: function (oEvent) {
-            console.log(oEvent.getParameters());
-            if (oEvent.getParameters().refreshButtonPressed) {
-                this.onRefresh();
-            } else {
-                var aSearchFilters = this._getSearchMoldSelection();
-                this._applyMoldSelection(aSearchFilters); // 로드하자마자 조회 
-            }
-        },
+        // onMoldItemSelection: function (oEvent) {
+        //     console.log(oEvent.getParameters());
+        //     if (oEvent.getParameters().refreshButtonPressed) {
+        //         this.onRefresh();
+        //     } else {
+        //         var aSearchFilters = this._getSearchMoldSelection();
+        //         this._applyMoldSelection(aSearchFilters); // 로드하자마자 조회 
+        //     }
+        // },
         /**
         * @description Mold Item Selection Search 조건 리턴  
         * @param {*} oEvent 
         */
-        _getSearchMoldSelection: function () {
-            var aSearchFilters = [];
-            // tenant_id  
-            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100'));
-            var company = this.byId('MoldItemSearchCompany').mProperties.selectedKey;
-            var plant = this.byId('MoldItemSearchPlant').mProperties.selectedKey;
-            var model = this.byId('moldItemModel').getValue().trim();
-            var partNo = this.byId('moldItemPartNo').getValue().trim();
+        // _getSearchMoldSelection: function () {
+        //     var aSearchFilters = [];
+        //     // tenant_id  
+        //     aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100'));
+        //     var company = this.byId('MoldItemSearchCompany').mProperties.selectedKey;
+        //     var plant = this.byId('MoldItemSearchPlant').mProperties.selectedKey;
+        //     var model = this.byId('moldItemModel').getValue().trim();
+        //     var partNo = this.byId('moldItemPartNo').getValue().trim();
 
-            if (company != undefined && company != "" && company != null) {
-                aSearchFilters.push(new Filter("company_code", FilterOperator.EQ, company))
-            }
-            if (plant != undefined && plant != "" && plant != null) {
-                aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, plant))
-            }
-            if (model != undefined && model != "" && model != null) {
-                aSearchFilters.push(new Filter("model", FilterOperator.Contains, model))
-            }
-            if (partNo != undefined && partNo != "" && partNo != null) {
-                aSearchFilters.push(new Filter("part_number", FilterOperator.Contains, partNo))
-            }
+        //     if (company != undefined && company != "" && company != null) {
+        //         aSearchFilters.push(new Filter("company_code", FilterOperator.EQ, company))
+        //     }
+        //     if (plant != undefined && plant != "" && plant != null) {
+        //         aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, plant))
+        //     }
+        //     if (model != undefined && model != "" && model != null) {
+        //         aSearchFilters.push(new Filter("model", FilterOperator.Contains, model))
+        //     }
+        //     if (partNo != undefined && partNo != "" && partNo != null) {
+        //         aSearchFilters.push(new Filter("part_number", FilterOperator.Contains, partNo))
+        //     }
 
-            return aSearchFilters;
-        },
+        //     return aSearchFilters;
+        // },
         /**
          * @description Mold Item Selection Search Button 누를시 
          * @param {*} oEvent 
          */
-        _applyMoldSelection: function (aSearchFilters) {
-            console.log(" [step] Mold Item Selection Search Button Serch ", aSearchFilters);
-            var oView = this.getView(),
-                oModel = this.getModel("MoldItemSelect");
+        // _applyMoldSelection: function (aSearchFilters) {
+        //     console.log(" [step] Mold Item Selection Search Button Serch ", aSearchFilters);
+        //     var oView = this.getView(),
+        //         oModel = this.getModel("MoldItemSelect");
 
-            console.log(" model >>> ", this.getModel("moldItem"));
+        //     console.log(" model >>> ", this.getModel("moldItem"));
 
-            oView.setBusy(true);
-            oModel.setTransactionModel(this.getModel("moldItem"));
-            oModel.read("/MoldItemSelect", {
-                filters: aSearchFilters,
-                success: function (oData) {
-                    console.log(" oData ", oData);
-                    oView.setBusy(false);
-                }
-            });
-            console.log("omdel", oModel);
-        },
+        //     oView.setBusy(true);
+        //     oModel.setTransactionModel(this.getModel("moldItem"));
+        //     oModel.read("/MoldItemSelect", {
+        //         filters: aSearchFilters,
+        //         success: function (oData) {
+        //             console.log(" oData ", oData);
+        //             oView.setBusy(false);
+        //         }
+        //     });
+        //     console.log("omdel", oModel);
+        // },
         /**
         * @description  Participating Supplier Fragment Apply 버튼 클릭시 
         */
-        onMoldItemSelectionApply: function (oEvent) {
-            console.log(" [step] Participating Supplier Fragment Apply 버튼 클릭시 ", oEvent);
+        // onMoldItemSelectionApply: function (oEvent) {
+        //     console.log(" [step] Participating Supplier Fragment Apply 버튼 클릭시 ", oEvent);
 
-            var oTable = this.byId("moldItemSelectTable");
-            var aItems = oTable.getSelectedItems();
-            var that = this;
-            aItems.forEach(function (oItem) {
-                console.log(" getSelectedItems >>>", oItem);
-                var famList = [];
-                if (oItem.getCells()[8].getText()) {
-                    famList.push(oItem.getCells()[8].getText()); // family_part_number_1 
-                }
-                if (oItem.getCells()[9].getText()) {
-                    famList.push(oItem.getCells()[9].getText()); // family_part_number_2 
-                }
-                if (oItem.getCells()[10].getText()) {
-                    famList.push(oItem.getCells()[10].getText()); // family_part_number_3 
-                }
-                if (oItem.getCells()[11].getText()) {
-                    famList.push(oItem.getCells()[11].getText()); // family_part_number_4 
-                }
-                if (oItem.getCells()[12].getText()) {
-                    famList.push(oItem.getCells()[12].getText()); // family_part_number_5 
-                }
+        //     var oTable = this.byId("moldItemSelectTable");
+        //     var aItems = oTable.getSelectedItems();
+        //     var that = this;
+        //     aItems.forEach(function (oItem) {
+        //         console.log(" getSelectedItems >>>", oItem);
+        //         var famList = [];
+        //         if (oItem.getCells()[8].getText()) {
+        //             famList.push(oItem.getCells()[8].getText()); // family_part_number_1 
+        //         }
+        //         if (oItem.getCells()[9].getText()) {
+        //             famList.push(oItem.getCells()[9].getText()); // family_part_number_2 
+        //         }
+        //         if (oItem.getCells()[10].getText()) {
+        //             famList.push(oItem.getCells()[10].getText()); // family_part_number_3 
+        //         }
+        //         if (oItem.getCells()[11].getText()) {
+        //             famList.push(oItem.getCells()[11].getText()); // family_part_number_4 
+        //         }
+        //         if (oItem.getCells()[12].getText()) {
+        //             famList.push(oItem.getCells()[12].getText()); // family_part_number_5 
+        //         }
 
-                var obj = new JSONModel({
-                    mold_id: Number(oItem.getCells()[0].getText())
-                    , model: oItem.getCells()[1].getText()
-                    , mold_number: oItem.getCells()[2].getText()
-                    , mold_sequence: oItem.getCells()[3].getText()
-                    , spec_name: oItem.getCells()[4].getText()
-                    , mold_item_type_code: oItem.getCells()[5].getSelectedKey()
-                    , book_currency_code: oItem.getCells()[6].getText()
-                    , budget_amount: oItem.getCells()[7].getText()
-                    , family_part_number_1: famList.join(",")
-                });
-                that._addPsTable(obj);
-            });
-            this.onExit();
-        },
+        //         var obj = new JSONModel({
+        //             mold_id: Number(oItem.getCells()[0].getText())
+        //             , model: oItem.getCells()[1].getText()
+        //             , mold_number: oItem.getCells()[2].getText()
+        //             , mold_sequence: oItem.getCells()[3].getText()
+        //             , spec_name: oItem.getCells()[4].getText()
+        //             , mold_item_type_code: oItem.getCells()[5].getSelectedKey()
+        //             , book_currency_code: oItem.getCells()[6].getText()
+        //             , budget_amount: oItem.getCells()[7].getText()
+        //             , family_part_number_1: famList.join(",")
+        //         });
+        //         that._addPsTable(obj);
+        //     });
+        //     this.onExit();
+        // },
         /**
          * @description  Participating Supplier Fragment 몇개 선택 되어 있는지 표기 하기 위함
          */
