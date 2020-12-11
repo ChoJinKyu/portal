@@ -42,7 +42,7 @@
 				             persistencyKey="PageVariantPKey" />                     
                     <!-- Smart Filter -->
                     <smartFilterBar:SmartFilterBar id="smartFilterBar" 
-                    entitySet="MIMatCategListView " 
+                    entitySet="MIMatListView " 
                     smartVariant="pageVariantId"
                     persistencyKey="SmartFilterPKey"
                     considerSelectionVariants="true" 
@@ -51,7 +51,7 @@
                             <!-- 관리조직 -->
                             <smartFilterBar:ControlConfiguration  
                             key="tenant_id" 
-                            groupId="_BASIC" 
+                            groupId="_BASIC"    
                             index="1" 
                             label="관리조직"
                             visibleInAdvancedArea="true">
@@ -123,8 +123,8 @@
                     height="100%"
                     smartVariant="pageVariantId"
                     id="smartTable_MainTable_ResponsiveTable"
-                    entitySet="MIMatCategListView "
-                    tableBindingPath="{MIMatCategListView }"
+                    entitySet="MIMatListView"
+                    tableBindingPath="{MIMatListView}"
                     initiallyVisibleFields="mi_material_code,mi_material_name,category_name,use_flag"
                     smartFilterId="smartFilterBar"
                     ignoreFromPersonalisation="tenant_id,company_code,org_type_code"
@@ -207,7 +207,7 @@
                                              <Text text="{mi_material_code}"></Text>
                                              <Text text="{mi_material_name}"></Text>
                                              <Text text="{category_name}"></Text>
-                                             <Text text="{= ${oUiData>/use_flag} ? 'Yes':'No'}"></Text>  
+                                             <Text text="{= ${use_flag} ? 'Yes':'No'}"></Text>  
                                         </ColumnListItem>
                                     </items>
                                 </Table>
