@@ -4,8 +4,10 @@ sap.ui.define([
     "sap/ui/model/odata/v2/ODataModel",
     'sap/m/SearchField',
     "sap/ui/model/json/JSONModel",
-    'sap/m/Token'
-], function (EventProvider, I18nModel, ODataModel, SearchField, JSONModel, Token) {
+    'sap/m/Token',
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator"
+], function (EventProvider, I18nModel, ODataModel, SearchField, JSONModel, Token, Filter, FilterOperator) {
     "use strict";
 
     // var oServiceModel = new ODataModel({
@@ -20,6 +22,8 @@ sap.ui.define([
     
     var SupplierSelection = EventProvider.extend("dp.util.SupplierSelection", {
 
+        self: null,
+
         oServiceModel: new ODataModel({
             serviceUrl: "srv-api/odata/v2/dp.util.SupplierSelectionService/",
             defaultBindingMode: "OneWay",
@@ -29,29 +33,35 @@ sap.ui.define([
         }),
 
 
-        showSupplierSelection: function(oThis, oEvent, isMulti){
+        showSupplierSelection: function(oThis, oEvent){
 
-            gIsMulti = isMulti;
+            self = this;
+            oThis.getView().setModel(this.oServiceModel, 'supplierModel');
+            oInput = oEvent.getSource();
+
+            if(oInput.getMetadata().getName().indexOf('MultiInput') > -1){
+                gIsMulti = true;
+            }else{
+                gIsMulti = false;
+            }
 
             oSuppValueHelpDialog = sap.ui.xmlfragment("dp.util.view.SupplierSelection", oThis);
 
-            oSuppValueHelpDialog.setSupportMultiselect(isMulti);
+            oSuppValueHelpDialog.setSupportMultiselect(gIsMulti);
+            oSuppValueHelpDialog.attachOk(this.onValueHelpSuppOkPress);
+            oSuppValueHelpDialog.attachCancel(this.onValueHelpSuppCancelPress);
+            oSuppValueHelpDialog.attachAfterClose(this.onValueHelpSuppAfterClose);
 
             this._oBasicSearchField = new SearchField({
                 showSearchButton: false
             });
+
+            // this._oBasicSearchField.attachSearch(this.onFilterBarSuppSearch);
             
             var oFilterBar = oSuppValueHelpDialog.getFilterBar();
-            oFilterBar.setFilterBarExpanded(false);
+            // oFilterBar.setFilterBarExpanded(false);
             oFilterBar.setBasicSearch(this._oBasicSearchField);
-            
-            oThis.getView().setModel(this.oServiceModel, 'supplierModel');
-
-            oInput = oEvent.getSource();
-
-            console.log(oInput);
-
-            var self = this;
+            oFilterBar.attachSearch(this.onFilterBarSuppSearch);
 
             if (!oInput.getSuggestionItems().length) {
                 oInput.bindAggregation("suggestionItems", {
@@ -107,27 +117,18 @@ sap.ui.define([
 
             }.bind(this));
 
-            // debugger
-
-            
-
             var tokens = [];
 
-            if(isMulti){
+            if(gIsMulti){
                 tokens = oInput.getTokens()
             }else{
                 var oToken = new Token();
                 oToken.setKey(oInput.getSelectedKey());
                 oToken.setText(oInput.getValue());
-                oSuppValueHelpDialog.setTokens([oToken]);
+                tokens = [oToken];
             }
 
             oSuppValueHelpDialog.setTokens(tokens);
-
-            oSuppValueHelpDialog.attachOk(this.onValueHelpSuppOkPress);
-            oSuppValueHelpDialog.attachCancel(this.onValueHelpSuppCancelPress);
-            oSuppValueHelpDialog.attachAfterClose(this.onValueHelpSuppAfterClose);
-
             oSuppValueHelpDialog.open();
         },
 
@@ -141,83 +142,73 @@ sap.ui.define([
                 oInput.setSelectedKey(aTokens[0].getKey());
             }
 
-			oSuppValueHelpDialog.close();
+            oSuppValueHelpDialog.close();
         },
         
 
-		onValueHelpSuppCancelPress: function () {
-			oSuppValueHelpDialog.close();
-		},
+        onValueHelpSuppCancelPress: function () {
+            oSuppValueHelpDialog.close();
+        },
 
-		onValueHelpSuppAfterClose: function () {
+        onValueHelpSuppAfterClose: function () {
             oSuppValueHelpDialog.destroy();
         },
 
         onFilterBarSuppSearch: function (oEvent) {
-			
-			var	aSelectionSet = oEvent.getParameter("selectionSet");
-			var aFilters = aSelectionSet.reduce(function (aResult, oControl) {
-				if (oControl.getValue()) {
-					aResult.push(new Filter({
-						path: oControl.getName(),
-						operator: FilterOperator.Contains,
-						value1: oControl.getValue()
-					}));
-				}
+            
+            var aSelectionSet = oEvent.getParameter("selectionSet");
+            var aFilters = aSelectionSet.reduce(function (aResult, oControl) {
+                if (oControl.getValue()) {
+                    aResult.push(new Filter({
+                        path: oControl.getName(),
+                        operator: FilterOperator.Contains,
+                        value1: oControl.getValue()
+                    }));
+                }
 
-				return aResult;
+                return aResult;
             }, []);
             
-            var _tempFilters = this.getFiltersFilterBar();
+            var _tempFilters = self.getFiltersFilterBar();
 
-			aFilters.push(new Filter({
-				filters: _tempFilters,
-				and: false
-			}));
+            aFilters.push(new Filter({
+                filters: _tempFilters,
+                and: false
+            }));
 
-			this._filterTable(new Filter({
-				filters: aFilters,
-				and: true
-			}));
+            self._filterTable(new Filter({
+                filters: aFilters,
+                and: true
+            }));
         },
 
         getFiltersFilterBar: function(){
 
-            var sSearchQuery = this._oBasicSearchField.getValue();
+            var sSearchQuery = self._oBasicSearchField.getValue();
             var _tempFilters = [];
 
-            if(oSuppValueHelpDialog.oRows.sPath.indexOf('/Models') > -1){
-                // /Models
-                _tempFilters.push(new Filter("tolower(model)", FilterOperator.Contains, "'"+sSearchQuery.toLowerCase().replace("'","''")+"'"));
-
-            }else if(oSuppValueHelpDialog.oRows.sPath.indexOf('/PartNumbers') > -1){
-                //PartNumbers
-                _tempFilters.push(new Filter({ path: "tolower(mold_number)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
-                _tempFilters.push(new Filter({ path: "tolower(mold_item_type_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
-                _tempFilters.push(new Filter({ path: "tolower(spec_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
-            }else if(oSuppValueHelpDialog.oRows.sPath.indexOf('/CreateUsers') > -1){
-                _tempFilters.push(new Filter({ path: "tolower(create_user_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
-                _tempFilters.push(new Filter({ path: "tolower(create_user_id)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
-            }
+            _tempFilters.push(new Filter({ path: "tolower(supplier_code)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
+            _tempFilters.push(new Filter({ path: "tolower(supplier_local_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
+            _tempFilters.push(new Filter({ path: "tolower(supplier_english_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
 
             return _tempFilters;
         },
-        
+
         _filterTable: function (oFilter) {
-			var oValueHelpDialog = oSuppValueHelpDialog;
+            var oValueHelpDialog = oSuppValueHelpDialog;
 
-			oValueHelpDialog.getTableAsync().then(function (oTable) {
-				if (oTable.bindRows) {
-					oTable.getBinding("rows").filter(oFilter);
-				}
+            oValueHelpDialog.getTableAsync().then(function (oTable) {
+                if (oTable.bindRows) {
+                    oTable.getBinding("rows").filter(oFilter);
+                }
 
-				if (oTable.bindItems) {
-					oTable.getBinding("items").filter(oFilter);
-				}
+                if (oTable.bindItems) {
+                    oTable.getBinding("items").filter(oFilter);
+                }
 
-				oValueHelpDialog.update();
-			});
-		},
+                oValueHelpDialog.update();
+            });
+        },
     });
 
     return SupplierSelection;
