@@ -7,6 +7,7 @@ using from './moldMgt/moldApprovalList-service';
 using from './moldMgt/participatingSupplierSelectionApproval-service';
 using from './mm/uomMgr/uomClass-service';
 using from './mm/uomMgr/uomMgr-service';
+using from './mm/uomMgt/uomClassMgt-service';
 using from './mm/basicDataMgr/hsCodeMgr-service';
 using from './mm/basicDataMgr/materialClassMgr-service';
 using from './mm/basicDataMgr/materialGroupMgr-service';
