@@ -169,59 +169,109 @@
 
 			<uxap:ObjectPageSection titleUppercase="false" title="Approval Line">
 				<uxap:subSections>
-					<uxap:ObjectPageSubSection>
-							
-                    <Table id="appTable"       
-                        growing="true"
-                        growingThreshold="20"
-                        class="sapFDynamicPageAlignContent" 
-                        updateFinished=".onListMainTableUpdateFinished"
-                        rowSelectionChange = ".onCheck"
-                        mode="MultiSelect"
-                        width="auto"
-                     
-						>
-                    <headerToolbar>
-                        <OverflowToolbar>
-                          <Label text="Approval Line"/>
-                        </OverflowToolbar>
-                    </headerToolbar>
-                    <columns>
-                        <Column id="no" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
-                            <Text text="No" />
-                        </Column>
-                        <Column id="type" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
-                            <Text text="Type" />
-                        </Column>
-                        <Column id="nameDept" minScreenWidth="Tablet" hAlign="Center" width="12em" >
-                            <Text text="Name/Dept" />
-                        </Column>
-                         <Column id="status" minScreenWidth="Tablet" hAlign="Center" width="12em" >
-                            <Text text="Status" />
-                        </Column> 
-						<Column id="comment" minScreenWidth="Tablet" hAlign="Center" width="12em" >
-                            <Text text="Comment" />
-                        </Column> 						
-                    </columns>
-                    <items>
-                        <ColumnListItem type="Navigation">
-                         <!-- 
-                            <cells>
-                                <ObjectIdentifier text="{list>mold_id}"/>
-                                <ObjectIdentifier text="{list>use_material_value}"/>
-                                <ObjectIdentifier text="{list>inspection_flag}"/>
-                                <ObjectIdentifier text="{list>assembly_approval_flag}"/>
-                                <ObjectIdentifier text="{list>request_life_shot_count}"/>
-                                <ObjectIdentifier text="{list>order_qty}"/>
-                                <ObjectIdentifier text="{list>cavity_process_qty}"/>
-                                <ObjectIdentifier text="{list>mold_tonnage}"/>
-                            </cells> 
-                            -->
-                        </ColumnListItem>
-                    </items>
-                </Table>
-                            
+                    <!-- <uxap:ObjectPageSubSection>
+                        <Table id="ApprovalTable"       
+                            growing="true"
+                            growingThreshold="20"
+                            class="sapFDynamicPageAlignContent" 
+                            updateFinished=".onListMainTableUpdateFinished"
+                            rowSelectionChange=".onCheck"
+                            mode="None"
+                            width="auto"
+                            items="{appList>/undefined}"
+                            >
+                            <headerToolbar>
+                                <OverflowToolbar>
+                                <Label text="Approval Line"/>
+                                </OverflowToolbar>
+                            </headerToolbar>
+                            <columns>
+                                <Column id="no" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="1.5em" >
+                                    <Text text="No." />
+                                </Column>
+                                <Column id="type" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
+                                    <Text text="Type" />
+                                </Column>
+                                <Column id="nameDept" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                                    <Text text="Name/Dept" />
+                                </Column>
+                                <Column id="status" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                                    <Text text="Status" />
+                                </Column> 
+                                <Column id="comment" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                                    <Text text="Comment" />
+                                </Column>
+                                <Column id="up" minScreenWidth="Tablet" hAlign="Center" width="1.5em" >
+                                    <Text text="" />
+                                </Column>					
+                                <Column id="down" minScreenWidth="Tablet" hAlign="Center" width="1.5em" >
+                                    <Text text="" />
+                                </Column>					
+                                <Column id="action" minScreenWidth="Tablet" hAlign="Center" width="1.5em" >
+                                    <Text text="" />
+                                </Column>					
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{appList>no}" />
+                                        <ComboBox  id="searchItemType" width="100%"
+                                            selectedKey="{appList>type}" 
+                                            enabled="{appList>editMode}"
+                                            items="{
+                                                path: 'org>/Org_Company',
+                                                filters: [
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                                ],
+                                                sorter: { path: 'company_code'}
+                                            }"
+                                            >
+                                        <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                                        </ComboBox>
+                                        <SearchField id="searchField" enabled="{appList>editMode}" search=".onSearch" width="100%" placeholder="Search employee" value="{appList>nameDept}"/>
+                                        <Text text="{appList>status}" />
+                                        <Text text="{appList>comment}" />
+                                        <Button id="btnSortUp" icon="{appList>arrowUp}" press=".onSortUp(${appList>no})" tooltip="sort" visible="{= ${appList>arrowUp}===''?false:true }"></Button>
+                                        <Button id="btnSortDown" icon="{appList>arrowDown}" press=".onSortDown(${appList>no})"  visible="{= ${appList>arrowDown}===''?false:true }" tooltip="sort"></Button>
+                                        <Button id="btnDelete" icon="sap-icon://delete" press=".setApprovalRemoveRow(${appList>no})" tooltip="삭제" visible="{appList>trashShow}"></Button>
+                                    </cells>
+                                </ColumnListItem>   
+                            </items>
+                        </Table>                           
 					</uxap:ObjectPageSubSection>
+					<uxap:ObjectPageSubSection>
+                        <VBox class="sapUiSmallMarginBegin">
+                            <Toolbar>
+                            <Label text="Referrer" />
+                            <ToolbarSpacer/>
+                            <HBox alignItems="End" justifyContent="End" >
+                                <Label text="Adress Book" class=""/>
+                                <core:Icon 
+                                    src="sap-icon://contacts"
+                                    class="size2 sapUiSmallMarginBeginEnd" 
+                                    >
+                                </core:Icon>
+                            </HBox>
+                            </Toolbar>
+                            <layout:VerticalLayout class="sapUiContentPadding" width="100%">
+                                <MultiComboBox
+                                    selectionChange="handleSelectionChangeReferrer"
+                                    selectionFinish="handleSelectionFinishReferrer"
+                                    width="100%"
+                                    items="{ path: 'org>/Org_Company',
+                                                filters: [
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                                ],
+                                                sorter: { path: 'company_code'}
+                                            }">
+                                    <core:Item key="{org>company_code}" text="{org>company_name}" />
+                                </MultiComboBox>
+                            </layout:VerticalLayout>
+                            <layoutData>
+                                <layout:GridData span="XL12 L12 M12 S12" />
+                            </layoutData> 
+                         </VBox>
+                    </uxap:ObjectPageSubSection> -->
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
@@ -229,8 +279,9 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
-				<Button type="Emphasized" text="Save" press=".onPageSaveButtonPress" />
-				<Button type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
+				<Button type="Emphasized" text="Edit" press=".onEditModePssa" />
+				<!-- <Button type="Transparent" text="Preview" press=".onPageSaveButtonPress" /> -->
+				<Button type="Transparent" text="Delete" press=".onDeletePssa" />
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>
