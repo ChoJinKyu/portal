@@ -25,14 +25,14 @@ sap.ui.define([
 
 		/**
 		 * Called when the mainList controller is instantiated.
-		 * @public
 		 */
 		onInit : function () {
 			let oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             
-            let sDateOnly = this._getNowDayAndTimes(false);
-            let sDateAndTimes = this._getNowDayAndTimes(true);
+            // let sDateOnly = this._getNowDayAndTimes(false);
+            // let sDateAndTimes = this._getNowDayAndTimes(true);
+            let oToday = new Date();
 
             // 하드코딩
             let oNewBasePriceData = {
@@ -45,9 +45,9 @@ sap.ui.define([
                                     "approval_status_code": "10",
                                     "approval_request_desc": "품의 테스트",
                                     "approval_requestor_empno": "15",
-                                    "approval_request_date": sDateOnly,
-                                    "local_create_dtm": sDateAndTimes,
-                                    "local_update_dtm": sDateAndTimes,
+                                    "approval_request_date": oToday,
+                                    "local_create_dtm": oToday,
+                                    "local_update_dtm": oToday,
                                     "details": []};
 
             // let oNewBasePriceData = {
@@ -138,18 +138,20 @@ sap.ui.define([
 			});
         },
 
-        onOpenParNtoList: function () {
+        onAdd: function () {
             //MessageBox.success("Part No List Dialog Open ");
             let oListModel = this.getModel("listModel");
-            let sDateOnly = this._getNowDayAndTimes(false);
-            let sDateAndTimes = this._getNowDayAndTimes(true);
+            let oToday = new Date();
+            
+            // let sDateOnly = this._getNowDayAndTimes(false);
+            // let sDateAndTimes = this._getNowDayAndTimes(true);
 
             oListModel.getData().details.push({ "au_code": "10", 
                                             "material_code": ""+iMaterialCode, 
                                             "supplier_code": "KR00002600", 
-                                            "base_date": sDateOnly, 
-                                            "local_create_dtm": sDateAndTimes, 
-                                            "local_update_dtm": sDateAndTimes});
+                                            "base_date": oToday, 
+                                            "local_create_dtm": oToday, 
+                                            "local_update_dtm": oToday});
             iMaterialCode++;
             oListModel.refresh();
         },
@@ -199,7 +201,7 @@ sap.ui.define([
             let oListModel = this.getModel("listModel");
             let oModel = this.getModel();
 
-            oListModel.approval_request_desc = oListModel.approval_request_desc + iTestNumber;
+            oListModel.setProperty("/approval_request_desc", oListModel.getProperty("/approval_request_desc")+iTestNumber);
             iTestNumber++;
 
             let oData = $.extend(true, {}, oListModel.getData());

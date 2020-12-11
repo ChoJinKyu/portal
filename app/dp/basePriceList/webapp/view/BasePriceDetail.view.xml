@@ -33,7 +33,7 @@
                 <!--Part No List 시작-->
                 <t:Table id="mainTable"
                     selectionMode="MultiToggle"
-                    rows="{listModel>/details}"
+                    rows="{listModel>/details/results}"
                     rowSelectionChange=".onRowSelectionChange"
                     visibleRowCountMode="Auto">
                     <t:extension>
@@ -105,7 +105,9 @@
                                 <Label text="Base Date" />
                             </t:multiLabels>
                             <t:template>
-                                <Text text="{listModel>domestic_base_date}" />
+                                <Text text="{
+                                    path: 'listModel>base_date',
+                                    formatter: '.dateFormatter.toDateString'}" />
                             </t:template>
                             </t:Column>
                         <t:Column width="12rem" hAlign="Center">
@@ -144,7 +146,9 @@
                                 <Label text="Base Date" />
                             </t:multiLabels>
                             <t:template>
-                                <Text text="{listModel>export_base_date}" />
+                                <Text text="{
+                                    path: 'listModel>base_date',
+                                    formatter: '.dateFormatter.toDateString'}" />
                             </t:template>
                             </t:Column>
                         <t:Column width="12rem" hAlign="Center">
@@ -204,7 +208,7 @@
                                 <Label text="Part-No" />
                             </t:multiLabels>
                             <t:template>
-                                <Input 
+                                <Input  
                                     value="{listModel>PART_NO}" 
                                     visible="{= ${listModel>basis} === '3' ? true : false }"
                                     showValueHelp="true"

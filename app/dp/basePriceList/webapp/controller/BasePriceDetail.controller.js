@@ -13,6 +13,7 @@ sap.ui.define([
         dateFormatter: DateFormatter,
 
         onInit: function () {
+            this.setModel(new JSONModel(), "listModel");
             this.oRouter = this.getOwnerComponent().getRouter();
 			this.oRouter.getRoute("basePriceDetail").attachPatternMatched(this._getBasePriceDetail, this);
         },
@@ -20,13 +21,36 @@ sap.ui.define([
         onAfterRendering: function () {
            
         },
-
-        _getBasePriceDetail: function (oEvent) {
-            let oSelectedData = oEvent.getParameter("arguments");
+        
+        _getBasePriceDetail: function () {
+            let oView = this.getView();
+            let oBasePriceListRootModel = this.getModel("basePriceListRootModel");
+            let oSelectedData = oBasePriceListRootModel.getData();
             let oModel = this.getModel();
+            let aFilters = [];
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oSelectedData.tenant_id));
+            aFilters.push(new Filter("approval_number", FilterOperator.EQ, oSelectedData.approval_number));
 
-            oModel.read
+            oView.setBusy(true);
 
+            oModel.read("/Base_Price_Arl_Master", {
+                filters : aFilters,
+                urlParameters: {
+                    "$expand": "details"
+                },
+                success : function(data){
+                    oView.setBusy(false);
+                     console.log("success", data);
+
+                    if( data && data.results && 0<data.results.length ) {
+                        oView.getModel("listModel").setData(data.results[0]);
+                    }
+                },
+                error : function(data){
+                    oView.setBusy(false);
+                    console.log("error", data);
+                }
+            });
         },
 
         onBack: function () {
