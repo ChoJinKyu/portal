@@ -1,0 +1,55 @@
+view DP_TC_PROJECT_VIEW as
+select pjt.tenant_id                  /*테넌트ID*/
+     , pjt.project_code               /*프로젝트코드*/
+     , pjt.model_code                 /*모델코드*/
+     , pjt.project_name               /*프로젝트명*/
+     , pjt.company_code               /*회사코드*/
+     , pjt.org_type_code              /*조직유형코드*/
+     , pjt.org_code                   /*조직코드*/
+     , pjt.bizdivision_code           /*사업부코드*/
+     , pjt.product_group_code         /*제품군코드*/
+     , (select ccl.code_name
+          from cm_code_lng ccl
+         where ccl.group_code = 'DC_TC_PRODUCT_GROUP_CODE'
+           and ccl.code = pjt.product_group_code
+           and ccl.language_cd = 'KO') AS product_group_text  /*제품군코드명*/
+     , pjt.source_type_code           /*출처구분코드*/
+     , (select ccl.code_name
+          from cm_code_lng ccl
+         where ccl.group_code = 'DP_TC_SOURCE_TYPE_CODE'
+           and ccl.code = pjt.product_group_code
+           and ccl.language_cd = 'KO') AS product_group_text  /*출처구분코드명(용도)*/     
+     , pjt.quotation_project_code     /*견적프로젝트코드*/
+     , pjt.project_status_code        /*프로젝트상태코드*/
+     , pjt.project_grade_code         /*프로젝트등급코드*/
+     , pjt.production_company_code    /*생산회사코드*/
+     , pjt.project_leader_empno       /*프로젝트리더사번*/
+     , (select cu.employee_name
+     	  from cm_user cu
+     	 where cu.employee_number = pjt.project_leader_empno) AS project_leader_name  /*empno key가 user_id임 이름가져오는거 변경해야 함.*/
+     , pjt.buyer_empno                /*구매담당자사번*/
+     , (select cu.employee_name
+     	  from cm_user cu
+     	 where cu.employee_number = pjt.buyer_empno) AS buyer_name  /*empno key가 user_id임 이름가져오는거 변경해야 함.*/
+     , pjt.customer_local_name        /*고객로컬명*/
+     , pjt.oem_customer_name          /*OEM고객명*/
+     , pjt.car_type_name              /*차종명*/
+     , pjt.mcst_yield_rate            /*재료비수율*/
+     , pjt.bom_type_code              /*자재명세서유형코드*/
+     , (select ccl.code_name
+          from cm_code_lng ccl
+         where ccl.group_code = 'DP_TC_BOM_TYPE_CODE'
+           and ccl.code = pjt.product_group_code
+           and ccl.language_cd = 'KO') AS product_group_text  /*자재명세서유형코드명*/       
+     , pjt.sales_currency_code        /*매출통화코드*/
+     , pjt.massprod_start_date        /*양산시작일자*/
+     , pjt.massprod_end_date          /*양산종료일자*/
+     , pjt.mcst_excl_flag             /*재료비제외여부*/
+     , pjt.mcst_excl_reason           /*재료비제외사유*/
+     , 'CP' AS project_event          /*현재 Event 산정하는 로직 넣어야 함*/
+     , to_varchar(current_date, 'yyyy-mm-dd') AS last_regist_date   /*최종 재료비 등록일 로직 넣어야 함*/
+     , '접수' AS estimate             /*각 재료비 정보 조회 로직 넣어야 함*/
+     , '접수' AS target
+     , '접수' AS forecast
+  from dp_tc_project pjt
+  ;
