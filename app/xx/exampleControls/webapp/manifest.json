@@ -232,11 +232,11 @@
         "example6": {
           "viewName": "ExcelUtils",
           "viewId": "example6"
-        },,
+        },
         "example7": {
           "viewName": "PivotTable",
           "viewId": "example7"
-        },,
+        },
         "example8": {
           "viewName": "NumberFormat",
           "viewId": "example8"
