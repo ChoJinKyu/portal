@@ -16,11 +16,9 @@ sap.ui.define([
     //     useBatch: true
     // });
 
-    var oInput = null;
+    var oInput, oSuppValueHelpDialog, gIsMulti;
     
     var SupplierSelection = EventProvider.extend("dp.util.SupplierSelection", {
-        
-        // oInput: null,
 
         oServiceModel: new ODataModel({
             serviceUrl: "srv-api/odata/v2/dp.util.SupplierSelectionService/",
@@ -31,59 +29,40 @@ sap.ui.define([
         }),
 
 
-        showSupplierSelection: function(oThis, oEvent){
+        showSupplierSelection: function(oThis, oEvent, isMulti){
 
-            var path = '';
-            this._oValueHelpDialog = sap.ui.xmlfragment("dp.util.view.SupplierSelection", oThis);
+            gIsMulti = isMulti;
+
+            oSuppValueHelpDialog = sap.ui.xmlfragment("dp.util.view.SupplierSelection", oThis);
+
+            oSuppValueHelpDialog.setSupportMultiselect(isMulti);
 
             this._oBasicSearchField = new SearchField({
                 showSearchButton: false
             });
             
-            var oFilterBar = this._oValueHelpDialog.getFilterBar();
+            var oFilterBar = oSuppValueHelpDialog.getFilterBar();
             oFilterBar.setFilterBarExpanded(false);
             oFilterBar.setBasicSearch(this._oBasicSearchField);
             
-            // console.log( 'oThis.getView()',oThis.getView() );
-
             oThis.getView().setModel(this.oServiceModel, 'supplierModel');
 
-            this.oInput = oEvent.getSource();
+            oInput = oEvent.getSource();
+
+            console.log(oInput);
 
             var self = this;
 
-            if (!this.oInput.getSuggestionItems().length) {
-                this.oInput.bindAggregation("suggestionItems", {
+            if (!oInput.getSuggestionItems().length) {
+                oInput.bindAggregation("suggestionItems", {
                     path: "supplierModel>/Suppliers",
                     template: new sap.ui.core.Item({
                         key: "{supplierModel>supplier_code}",
+                        // text: "[{supplierModel>supplier_code}] {supplierModel>supplier_local_name}",
                         text: "{supplierModel>supplier_code}"
                     })
                 });
             }
-
-
-            console.log( 'supplierModel', oThis.getView().getModel('supplierModel') );
-
-            console.log('this.oInput.getSuggestionItems()',this.oInput.getSuggestionItems());
-
-            console.log('this.oInput',this.oInput);
-
-            // this.oServiceModel.read("/Suppliers",{
-            //     success : function(data){
-
-            //         this.getModel().setData(data.results, false);
-
-                    
-
-            //         console.log('this.oInput.getSuggestionItems()',self.oInput.getSuggestionItems());
-            //     }.bind(this),
-            //     error : function(data){
-            //         console.log('error',data);
-            //     }
-            // });
-
-            
 
             var oColModel = new JSONModel({
                 "cols": [
@@ -104,9 +83,9 @@ sap.ui.define([
 
             var aCols = oColModel.getData().cols;
             
-            oThis.getView().addDependent(this._oValueHelpDialog);
+            oThis.getView().addDependent(oSuppValueHelpDialog);
 
-            this._oValueHelpDialog.getTableAsync().then(function (oTable) {
+            oSuppValueHelpDialog.getTableAsync().then(function (oTable) {
                 
                 oTable.setModel(this.oServiceModel);
                 oTable.setModel(oColModel, "columns");
@@ -124,40 +103,54 @@ sap.ui.define([
                         });
                     });
                 }
-                this._oValueHelpDialog.update();
+                oSuppValueHelpDialog.update();
 
             }.bind(this));
 
             // debugger
 
-            var oToken = new Token();
-            oToken.setKey(this.oInput.getSelectedKey());
-            oToken.setText(this.oInput.getValue());
-            this._oValueHelpDialog.setTokens([oToken]);
+            
 
-            this._oValueHelpDialog.attachOk(this.onValueHelpSuppOkPress);
+            var tokens = [];
 
-            this._oValueHelpDialog.open();
+            if(isMulti){
+                tokens = oInput.getTokens()
+            }else{
+                var oToken = new Token();
+                oToken.setKey(oInput.getSelectedKey());
+                oToken.setText(oInput.getValue());
+                oSuppValueHelpDialog.setTokens([oToken]);
+            }
+
+            oSuppValueHelpDialog.setTokens(tokens);
+
+            oSuppValueHelpDialog.attachOk(this.onValueHelpSuppOkPress);
+            oSuppValueHelpDialog.attachCancel(this.onValueHelpSuppCancelPress);
+            oSuppValueHelpDialog.attachAfterClose(this.onValueHelpSuppAfterClose);
+
+            oSuppValueHelpDialog.open();
         },
 
         onValueHelpSuppOkPress: function (oEvent) {
-            // console.log('this.oInput22',this.oInput);
-
-            console.log('this.getOwnerComponent()',this.getOwnerComponent());
-
-            
 
             var aTokens = oEvent.getParameter("tokens");
-            this.oInput.setSelectedKey(aTokens[0].getKey());
-			this._oValueHelpDialog.close();
-		},
+
+            if(gIsMulti){
+                oInput.setTokens(aTokens);
+            }else{
+                oInput.setSelectedKey(aTokens[0].getKey());
+            }
+
+			oSuppValueHelpDialog.close();
+        },
+        
 
 		onValueHelpSuppCancelPress: function () {
-			this._oValueHelpDialog.close();
+			oSuppValueHelpDialog.close();
 		},
 
 		onValueHelpSuppAfterClose: function () {
-			this._oValueHelpDialog.destroy();
+            oSuppValueHelpDialog.destroy();
         },
 
         onFilterBarSuppSearch: function (oEvent) {
@@ -193,16 +186,16 @@ sap.ui.define([
             var sSearchQuery = this._oBasicSearchField.getValue();
             var _tempFilters = [];
 
-            if(this._oValueHelpDialog.oRows.sPath.indexOf('/Models') > -1){
+            if(oSuppValueHelpDialog.oRows.sPath.indexOf('/Models') > -1){
                 // /Models
                 _tempFilters.push(new Filter("tolower(model)", FilterOperator.Contains, "'"+sSearchQuery.toLowerCase().replace("'","''")+"'"));
 
-            }else if(this._oValueHelpDialog.oRows.sPath.indexOf('/PartNumbers') > -1){
+            }else if(oSuppValueHelpDialog.oRows.sPath.indexOf('/PartNumbers') > -1){
                 //PartNumbers
                 _tempFilters.push(new Filter({ path: "tolower(mold_number)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
                 _tempFilters.push(new Filter({ path: "tolower(mold_item_type_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
                 _tempFilters.push(new Filter({ path: "tolower(spec_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
-            }else if(this._oValueHelpDialog.oRows.sPath.indexOf('/CreateUsers') > -1){
+            }else if(oSuppValueHelpDialog.oRows.sPath.indexOf('/CreateUsers') > -1){
                 _tempFilters.push(new Filter({ path: "tolower(create_user_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
                 _tempFilters.push(new Filter({ path: "tolower(create_user_id)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
             }
@@ -211,7 +204,7 @@ sap.ui.define([
         },
         
         _filterTable: function (oFilter) {
-			var oValueHelpDialog = this._oValueHelpDialog;
+			var oValueHelpDialog = oSuppValueHelpDialog;
 
 			oValueHelpDialog.getTableAsync().then(function (oTable) {
 				if (oTable.bindRows) {
