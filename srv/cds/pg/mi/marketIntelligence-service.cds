@@ -8,9 +8,9 @@ using {pg as MITermsdelv} from '../../../../db/cds/pg/mi/PG_MI_TERMSDELV_LNG-mod
 using {pg as MIMatPrcMngt} from '../../../../db/cds/pg/mi/PG_MI_MATERIAL_PRICE_MANAGEMENT-model';
 using {pg as MIMatCdBOMMngt} from '../../../../db/cds/pg/mi/PG_MI_MATERIAL_CODE_BOM_MNGT-model';
 //View
-using {pg as MIMatPrcMngtView} from '../../../../db/cds/pg/mi/PG_MI_MAT_PRC_MANAGEMENT_VIEW';
-using {pg as MICategDetlView} from '../../../../db/cds/pg/mi/PG_MI_CATEGORY_DETAIL_VIEW';
-using {pg as MIMatCostInfoView} from '../../../../db/cds/pg/mi/PG_MI_MATERIAL_COST_INFO_VIEW';
+using {pg as MIMatPrcMngtView} from '../../../../db/cds/pg/mi/PG_MI_MAT_PRC_MANAGEMENT_VIEW-model';
+using {pg as MICategDetlView} from '../../../../db/cds/pg/mi/PG_MI_CATEGORY_DETAIL_VIEW-model';
+using {pg as MIMatCostInfoView} from '../../../../db/cds/pg/mi/PG_MI_MATERIAL_COST_INFO_VIEW-model';
 //Material
 using {dp.Mm_Material_Desc_Lng as MaterialDesc} from '../../../../db/cds/dp/mm/DP_MM_MATERIAL_DESC_LNG-model';
 //Supplier
@@ -103,7 +103,7 @@ service marketIntelligenceService {
             key main.org_type_code as org_type_code, //조직유형코드
             key main.org_code      as org_code, //조직코드
             key main.category_code as category_code, //카테고리코드
-                main.category_name as category_name //카테고리코드명
+                main.category_name as category_name //카테고리명
         from MICategoryText as main
         left join MICategoryHierarchyStructure as catg
             on  main.tenant_id     = catg.tenant_id
@@ -123,14 +123,14 @@ service marketIntelligenceService {
             main.category_name;
 
     // MI Category View
-    view MICategoryView @(title : 'Category View') as
+    view MICategoryView @(title : '카테고리 View') as
         select
             key main.tenant_id     as tenant_id, //회사코드
             key main.company_code  as company_code, //법인코드
             key main.org_type_code as org_type_code, //조직유형코드
             key main.org_code      as org_code, //조직코드
             key main.category_code as category_code, //카테고리코드
-                main.category_name as category_text //카테고리코드명
+                main.category_name as category_text //카테고리명
         from MICategoryText as main
         left join MICategoryHierarchyStructure as catg
             on  main.tenant_id     = catg.tenant_id
@@ -190,16 +190,16 @@ service marketIntelligenceService {
         from UnitOfMeasure;
 
     // MI Material Category List View
-    view MIMatCategListView @(title : '시황자재 카테고리 List View') as
+    view MIMatCategListView @(title : '시황자재 상위카테고리/카테고리 List View') as
         select
             key main.tenant_id            as tenant_id, //회사코드
             key main.company_code         as company_code, //법인코드
             key main.org_type_code        as org_type_code, //조직유형코드
             key main.org_code             as org_code, //조직코드
                 main.parent_category_code as parent_category_code, //상위카테고리코드
-                prtCatgText.category_name as parent_category_name, //상위카테고리코드명
+                prtCatgText.category_name as parent_category_name, //상위카테고리명
             key main.category_code        as category_code, //카테고리코드
-                catgText.category_name    as category_name, //카테고리코드명
+                catgText.category_name    as category_name, //카테고리명
                 main.use_flag             as use_flag //사용여부
         from MICategoryHierarchyStructure as main
         left join MICategoryText as prtCatgText
@@ -235,9 +235,9 @@ service marketIntelligenceService {
             key main.org_type_code       as org_type_code, //조직유형코드
             key main.org_code            as org_code, //조직코드
             key main.mi_material_code    as mi_material_code, //시황자재
-                matText.mi_material_name as mi_material_code_name, //시황자재명
+                matText.mi_material_name as mi_material_name, //시황자재명
                 main.category_code       as category_code, //카테고리코드
-                catg.category_name       as category_name, //카테고리코드명
+                catg.category_name       as category_name, //카테고리명
                 main.use_flag            as use_flag //사용여부
         from MIMaterialCode as main
         left join MIMaterialCodeText as matText
@@ -297,10 +297,10 @@ service marketIntelligenceService {
             key mi_mat_cd.org_code              as org_code, //조직코드
             key mi_mat_cd.mi_material_code      as mi_material_code, //시황자재코드
                 mi_mat_cd_lang.language_code    as mi_material_language_code, //시황자재 언어코드
-                mi_mat_cd_lang.mi_material_name as mi_material_code_name, //시황자재코드명
+                mi_mat_cd_lang.mi_material_name as mi_material_name, //시황자재명
                 mi_mat_cd.category_code         as category_code, //카테고리코드
                 mi_cat_lang.language_code       as category_code_language_code, //카테고리 언어코드
-                mi_cat_lang.category_name       as category_name //카테고리코드명
+                mi_cat_lang.category_name       as category_name //카테고리명
         from MIMaterialCode as mi_mat_cd
         left join MIMaterialCodeText as mi_mat_cd_lang
             on  mi_mat_cd.tenant_id        = mi_mat_cd_lang.tenant_id
