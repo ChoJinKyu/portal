@@ -23,7 +23,10 @@
                 }" editable="{midObjectView>/isAddedMode}" required="true"></Input>
             <Label text="Class" required="true"/>
             <ComboBox id="editClassCode" width="100%" selectedKey="{master>/uom_class_code}" items="{
-                path: 'uomClass>/UomClass'
+                    path: 'uomClass>/UomClass',
+                    filters: [
+                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}                                        
+                    ]
                 }" editable="{midObjectView>/isAddedMode}" required="true"> 
                 <items>
                     <core:Item key="{uomClass>uom_class_code}" text="{uomClass>uom_class_name}" />
