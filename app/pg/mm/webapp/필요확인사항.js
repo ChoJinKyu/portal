@@ -1,6 +1,31 @@
-/*
+작업 라인 - dev2111-1956
+-- 테이블이 준비되면 다 변경해야할듯 
+-- 자재 선택후 시황자재 리스트에서 add를 선택 가격정보 detail fragment 오픈 
+-- 가격정보 선택하고 시황자재 리스트에 추가. (use_flag, 화폐단위 선택하게끔함)
+-- 시황자재 리스트 등록, 수정, 삭제 테스트,
+-- bom 자재 등록 
+
+1. 수정사항 아래 함수 검색 부분 전체 수정 대상 
+onValueHelpMaterialDialogSearch 필터 하드코딩  L1100 다른자재가 없어서...
+onValueHelpMaterialDialogApply
+http://127.0.0.1:8080/odata/v2/pg.marketIntelligenceService/MaterialView/?$top=5&$filter=tenant_id eq 'L1100' and material_code eq '6910BLC0006'
+
+//수정대상 임시데이타..(데이타 없음)
+
+
 MIMaterialCostInformationView 데이타 확인되지 않고 있음
 
+MaterialDialog.fragment < --  Part (자재코드)  -> Masterial_Code 사용  ===============================
+
+input getValue 반환 자재코드 
+
+-사용테이블
+MaterialView / SupplierView
+materialView / supplierView
+
+MaterialDetail.fragment.xml<-- 가격정보 확인==============================
+materialTableList
+code, name, category
 
 팝업 닫기 버튼 필요 
 
@@ -11,70 +36,85 @@ https://lgcommondev-workspaces-ws-k8gvf-app1.jp10.applicationstudio.cloud.sap/pg
 onMainTableCreate
 
 maint list view 화면 작성
-수정 예정====
 
-mi, mm 모두 수정해야함 
--mi 메인에서 항목 삭제시 언어도 삭제해야함 
-
---controller
-
---view
-controll 파일 작업
-자재별 시황자재 BOM 등록 view ,.controller 작업
-참조 삭제시 json등록 데이타라도 바로 삭제 하지 않는다. 
-
-sap.ui.core.Fragment.byId("Change_id", "inputMaterialCode").getValue();
-
-https://lgcommondev-workspaces-ws-k8gvf-app1.jp10.applicationstudio.cloud.sap/pg/mi/webapp/srv-api/odata/v2/pg.marketIntelligenceService/MIMaterialCodeBOMManagement/?$filter=
+5. material_desc 확인해야함.. 96라인 initiallyVisibleFields 다시 추가해야함. 
+자재명과 공급업체 명 검색 필드 있어서 추가 해야함. 
+2020/12/11
+material_desc 사라짐...
+supplier_local_name 사라짐...
+mi_material_name 사라짐...
+category_name  사라짐...
 
 
-                       <Label text="{midObjectData>/tenant_name}"  class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
-                                    <Label text="Create :"  class="sapUiLargeMarginBegin"/>
-                                    <Label text="{midObjectData>/create}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
-                                    <Label text="Create Data :" class="sapUiLargeMarginBegin" />
-                                    <Label text="{midObjectData>/createdata}"  class="sapUiTinyMarginBegin"  design="Bold"/>    
+    <Column hAlign="Center"  demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+    <customData>
+    <core:CustomData key="p13nData"
+    value='\{"columnKey": "material_code", "leadingProperty": "material_code", "sortProperty": "material_code", "filterProperty": "material_code", "columnIndex": 1}'/>
+    </customData>
+        <Text text="자재코드"></Text>
+    </Column>
+    <Column hAlign="Center" demandPopin="true" importance="High" >
+        <customData>
+    <core:CustomData key="p13nData"
+    value='\{"columnKey": "material_desc", "leadingProperty": "material_desc", "sortProperty": "material_desc", "filterProperty": "material_desc", "columnIndex": 2}'/>
+    </customData>
+            <Text text="자재명"></Text>
+    </Column>
+_deleteCheck
+_checkMIMaterialPriceManagement
+_checkMIMaterialCodeBOMManagement
+
+MIMaterialPriceManagement-------------------------------------
+    key tenant_id           : String(5) not null  @title : '회사코드';
+    key company_code        : String(10) not null @title : '법인코드';
+    key org_type_code       : String(30) not null @title : '조직유형코드';
+    key org_code            : String(10) not null @title : '조직코드';
+    key mi_material_code    : String(40) not null @title : '시황자재코드';
+    key category_code       : String(40) not null @title : '카테고리코드';
+   
+MIMaterialCodeBOMManagement-------------------------------------
+문제점 : material_code, supplier_code 구할수 없음
+
+entity MI_Material_Code_Bom_Mngt {
+    key tenant_id             : String(5) not null  @title : '회사코드';
+    key company_code          : String(10) not null @title : '법인코드';
+    key org_type_code         : String(30) not null @title : '조직유형코드';
+    key org_code              : String(10) not null @title : '조직코드';
+    key material_code         : String(40) not null @title : '자재코드';
+    key supplier_code         : String(15) not null @title : '공급업체코드';
+    key mi_material_code      : String(40) not null @title : '시황자재코드';
+        category_code         : String(40)          @title : '카테고리코드';
+
+}
+
+MIMaterialCodeBOMManagement ==============================
+<d:tenant_id>L2100</d:tenant_id>
+<d:company_code>*</d:company_code>
+<d:org_type_code>BU</d:org_type_code>
+<d:org_code>BIZ00100</d:org_code>
+<d:material_code>ERCA00007AA</d:material_code>
+<d:supplier_code>KR01812701</d:supplier_code>
+<d:base_quantity>1</d:base_quantity>
+<d:processing_cost>75000</d:processing_cost>
+<d:pcst_currency_unit>KRW</d:pcst_currency_unit>
+<d:mi_material_code>A001-01-01</d:mi_material_code>
+<d:reqm_quantity_unit>TON</d:reqm_quantity_unit>
+<d:reqm_quantity>10</d:reqm_quantity>
+<d:currency_unit>USD</d:currency_unit>
+<d:mi_base_reqm_quantity>15</d:mi_base_reqm_quantity>
+<d:quantity_unit>TON</d:quantity_unit>
+<d:exchange>ICIS</d:exchange>
+<d:termsdelv>CFR KOR</d:termsdelv>
+<d:use_flag>true</d:use_flag>
+<d:local_create_dtm>2020-11-30T15:29:00Z</d:local_create_dtm>
+<d:local_update_dtm>2020-11-30T15:29:00Z</d:local_update_dtm>
+<d:create_user_id>Admin</d:create_user_id>
+<d:update_user_id>Admin</d:update_user_id>
+<d:system_create_dtm>2020-11-30T15:29:00Z</d:system_create_dtm>
+<d:system_update_dtm>2020-11-30T15:29:00Z</d:system_update_dtm>
 
 
-                            <FlexBox height="40px" alignItems="Start" justifyContent="Start">
-                                    <Label text="관리조직 :" />
-                                    <Label text="LGE_MC" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
-                                    <Label text="Create :" class="sapUiLargeMarginBegin"/>
-                                    <Label text="LGE_MC" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
-                                    <Label text="Create Data :" class="sapUiLargeMarginBegin" />
-                                    <Label text="2020-08-02" class="sapUiTinyMarginBegin"  design="Bold"/>                                                                                                        
-                            </FlexBox>  
 
-                        <FlexBox
-				class="ne-flexbox2"
-				renderType="List"
-				justifyContent="SpaceBetween"
-				alignItems="Center">
-                            <layout:VerticalLayout>
-                                <ObjectStatus title="관리조직" design="Bold" text="LGE_MC"/>                        
-                            </layout:VerticalLayout>
-                            <layout:VerticalLayout>
-                                <ObjectStatus title="Create" design="Bold" text="Je..."/>                        
-                            </layout:VerticalLayout>
-                            <layout:VerticalLayout>
-                                <ObjectStatus title="Create Date" design="Bold" text="2020-08-02"/>                        
-                            </layout:VerticalLayout>
-                        </FlexBox>           
-
-                                <VBox>   
-                                <HBox>
-                                 <Label text="자재정보" design="Bold" class="sapMLabelNoText" required="true" labelFor="inputMaterialCode"/>                              
-                                </HBox>   
-                                <HBox >  
-                                        	<RadioButtonGroup id="rbg1" columns="3" width="100%">
-                                                <RadioButton id="RB1-1" text="자재명/코드" />
-                                                <RadioButton id="RB1-2" text="공급업체/코드" />
-                                            </RadioButtonGroup>                                            
-                                </HBox>  
-                                 <HBox width="100%">        
-                                            <Input text="ss"/>
-                                        </HBox>
-                                    </VBox>
-$filter=Alias eq 'random' 
 ---data
 자재명 뷰 
 MaterialView

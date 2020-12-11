@@ -39,9 +39,10 @@ sap.ui.define([
             serviceName : {
                 marketIntelligenceService : "pg.marketIntelligenceService", //main Service
                 orgTenantView : "/OrgTenantView", //관리조직 View
-                mIMaterialCodeBOMManagement : ",MIMaterialCodeBOMManagement"
+				mIMaterialCodeBOMManagement : "/MIMaterialCodeBOMManagement",//자재별 시황자재 BOM
+				mIMaterialPriceManagement : "/MIMaterialCodeBOMManagement"//시황자재 가격관리
             },			
-            tableName : "maindTable",
+            tableName : "maindTable", 
             filter : {  
                 tenant_id : "",
                 company_code : "",
@@ -203,7 +204,7 @@ sap.ui.define([
             //combobox value
             var oMi_tenant_id = oSmtFilter.getControlByKey("tenant_id").getSelectedKey();    
 			var oMi_material_code = oSmtFilter.getControlByKey("mi_material_code").getSelectedKey();   
-			var oMi_material_name = oSmtFilter.getControlByKey("mi_material_name").getSelectedKey();            
+			var oMi_material_name = oSmtFilter.getControlByKey("mi_material_name").getValue();            
 			var oCategory_code = oSmtFilter.getControlByKey("category_code").getSelectedKey();    
             var oUse_flag = oSmtFilter.getControlByKey("use_flag").getSelectedKey();   
             var fOcode = oUse_flag =="FALSE" ? false : true;
@@ -219,7 +220,7 @@ sap.ui.define([
 			}
 
 			if (oMi_material_name.length > 0) {
-				var oMi_material_nameFilter = new Filter("mi_material_name", FilterOperator.EQ, oMi_material_name);
+				var oMi_material_nameFilter = new Filter("mi_material_name", FilterOperator.Contains, oMi_material_name);
 				mBindingParams.filters.push(oMi_material_nameFilter);
 			}
 
@@ -342,52 +343,74 @@ sap.ui.define([
             } 
             console.groupEnd();
 		},
+
+		/**
+		 * 자재별 시황자재 BOM 등록 내역 확인
+		 * @private
+		 */
+		_checkMIMaterialCodeBOMManagement : function (oItemData) {
+			
+			var oModel = this.getModel(),
+			checkFilters = [],
+			bDeleteCheck = false;	
+					
+			checkFilters.push(new Filter("tenant_id", FilterOperator.Contains, oItemData.tenant_id));
+			checkFilters.push(new Filter("company_code", FilterOperator.Contains, oItemData.company_code));
+			checkFilters.push(new Filter("org_type_code", FilterOperator.Contains, oItemData.org_type_code));
+			checkFilters.push(new Filter("org_code", FilterOperator.Contains, oItemData.org_code));				
+			checkFilters.push(new Filter("mi_material_code", FilterOperator.Contains, oItemData.mi_material_code));				
+
+			oModel.read(this._m.serviceName.mIMaterialCodeBOMManagement, {
+				async: false,
+				filters: checkFilters,
+				success: function (rData, reponse) {
+
+					if(reponse.data.results.length>0){
+						return true;
+					}
+				}
+			});		
+		},
+
+		/**
+		 * 시황자재 가격관리 등록 데이타
+		 * @private
+		 */
+		_checkMIMaterialPriceManagement : function (oItemData) {
+			
+			var oModel = this.getModel(),
+			checkFilters = [],
+			bDeleteCheck = false;	
+					
+			checkFilters.push(new Filter("tenant_id", FilterOperator.Contains, oItemData.tenant_id));
+			checkFilters.push(new Filter("company_code", FilterOperator.Contains, oItemData.company_code));
+			checkFilters.push(new Filter("org_type_code", FilterOperator.Contains, oItemData.org_type_code));
+			checkFilters.push(new Filter("org_code", FilterOperator.Contains, oItemData.org_code));				
+			checkFilters.push(new Filter("mi_material_code", FilterOperator.Contains, oItemData.mi_material_code));				
+
+			oModel.read(this._m.serviceName.mIMaterialPriceManagement, {
+				async: false,
+				filters: checkFilters,
+				success: function (rData, reponse) {
+
+					if(reponse.data.results.length>0){
+						return true;
+					}
+				}
+			});		
+	
+		},
+
    		/**
 		 * 시황자재 가격관리 등록이 되어 있거나 자재별 시황자재 BOM 에 등록되어 있는 데이타 존재유무 확인
 		 */
 		_deleteCheck : function (oItemData) {
-			// var oModel = this.getModel(),
-			// 	checkFilters = [],
-			// 	bDeleteCheck = false;
-
-			// 	function checkMIMaterialCodeBOMManagement (oItemData){
-
-			// 		checkFilters.push(new Filter("tenant_id", FilterOperator.Contains, oItemData.tenant_id));
-			// 		checkFilters.push(new Filter("company_code", FilterOperator.Contains, oItemData.company_code));
-			// 		checkFilters.push(new Filter("org_type_code", FilterOperator.Contains, oItemData.org_type_code));
-			// 		checkFilters.push(new Filter("org_code", FilterOperator.Contains, oItemData.org_code));				
-			// 		checkFilters.push(new Filter("mi_material_code", FilterOperator.Contains, oItemData.mi_material_code));				
-
-			// 		oModel.read(this._m.serviceName.mIMaterialCodeBOMManagement, {
-			// 			async: false,
-			// 			filters: checkFilters,
-			// 			success: function (rData, reponse) {
-
-			// 				if(reponse.data.results.length>0){
-			// 					return true;
-			// 				}
-			// 			}
-			// 		});					
-			// 	}
+			 var oModel = this.getModel(),
+			 	checkFilters = [],
+			 	bDeleteCheck = false;
 
 			// 	function checkPriceManage() {
-			// 		checkFilters.push(new Filter("tenant_id", FilterOperator.Contains, oItemData.tenant_id));
-			// 		checkFilters.push(new Filter("company_code", FilterOperator.Contains, oItemData.company_code));
-			// 		checkFilters.push(new Filter("org_type_code", FilterOperator.Contains, oItemData.org_type_code));
-			// 		checkFilters.push(new Filter("org_code", FilterOperator.Contains, oItemData.org_code));				
-			// 		checkFilters.push(new Filter("mi_material_code", FilterOperator.Contains, oItemData.mi_material_code));				
 
-			// 		oModel.read(this._m.serviceName.mIMaterialCodeBOMManagement, {
-			// 			async: false,
-			// 			filters: checkFilters,
-			// 			success: function (rData, reponse) {
-
-			// 				if(reponse.data.results.length>0){
-			// 					return true;
-			// 				}
-			// 			}
-			// 		});		
-			// 	}
 
 			// 	var oPromise = new Promise(
 			// 		function(resolve, reject) {

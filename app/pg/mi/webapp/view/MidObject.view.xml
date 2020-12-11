@@ -158,7 +158,7 @@
                                                 class="sapMLabelNoText"/>
                                         <Switch id="switchUse_flag" 
                                                 visible="{=!${oUi>/readMode}}"
-                                                state="{= ${oUiData>/use_flag}!=='' ? false:${oUiData>/use_flag}}"
+                                                state="{= !${oUi>/createMode} ? ${oUiData>/use_flag} : true}"
                                         >
                                             <layoutData>
                                                 <FlexItemData growFactor="1"/>
@@ -197,7 +197,15 @@
                                                         </content>
                                                     </OverflowToolbar>
                                                 </headerToolbar>                                                
-                                                <columns>                                                            
+                                                <columns>        
+                                                    <Column hAlign="Center" 
+                                                     width="50px"
+                                                     visible="false" 
+                                                    >
+                                                        <header>
+                                                            <Label text="상태"/>
+                                                        </header>
+                                                    </Column>                                                                                                      
                                                     <Column hAlign="Center">
                                                         <header>
                                                             <Label text="Language"/>
@@ -212,22 +220,20 @@
                                                 <items>
                                                     <ColumnListItem>
                                                         <cells>
-                                                            
+                                                            <Text text="{mIMaterialCodeText>itemMode}"/>
                                                             <VBox>
-                                                                <Text   text="{mIMaterialCodeText>language_code}"
-                                                                        visible="{=!${oUi>/createMode}}"/>
-                                                                        
                                                                 <ComboBox   selectionChange=".onComboBoxLanguageChange"
                                                                             selectedKey="{mIMaterialCodeText>language_code}"
                                                                             items="{
                                                                                 path: 'languageView>/',                                                                                                                            
                                                                                 templateShareable:false}"
-                                                                            visible="{oUi>/createMode}"
+                                                                            visible="{= ${mIMaterialCodeText>itemMode}==='C'}"
                                                                             placeholder="선택">
                                                                     <core:Item key="{languageView>code}" 
                                                                                text="{languageView>code_name}"/>                                                                    
-                                                                </ComboBox>                           
-                                                                
+                                                                </ComboBox>
+                                                                <Text   text="{mIMaterialCodeText>language_code}"
+                                                                        visible="{=${mIMaterialCodeText>itemMode}!=='C'}"/>
                                                             </VBox>
                                                             <VBox>
                                                                 <Input  value="{mIMaterialCodeText>mi_material_name}" 

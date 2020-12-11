@@ -62,6 +62,7 @@ sap.ui.define([
                 orgTenantView : "/OrgTenantView", //관리조직 View
                 mIMaterialCodeList : "/MIMaterialCodeList",
                 mIMatListView : "/MIMatListView",
+                mIMaterialCode : "/MIMaterialCode",
                 mIMaterialCodeText : "/MIMaterialCodeText", 
                 languageView : "/LanguageView",
                 mICategoryHierarchyStructure : "/MICategoryHierarchyStructure",
@@ -399,36 +400,24 @@ sap.ui.define([
 
             oBindingComboBox.filter(aFiltersComboBox);  
         },
-
-
         
         /**
          * jsoon model data null initial
          * @private
          */
         _initialModel : function() {
-            var mIMaterialCodeText = this.getOwnerComponent().getModel("mIMaterialCodeText"),
-                oUiData =  this.getOwnerComponent().getModel("oUiData"),
-                _oUiData =  this.getOwnerComponent().getModel("_oUiData"),
-                languageView =  this.getOwnerComponent().getModel("languageView"),
-                mICategoryHierarchyStructure =  this.getOwnerComponent().getModel("mICategoryHierarchyStructure"),
-                oUi =  this.getOwnerComponent().getModel("oUi");
-                  
-                function setModelNull(model){
 
-                    if(model){
-                        model.setData(null);
-                        model.updateBindings(true);
-                    }
+            var arrayModel = [
+                "mIMaterialCodeText",
+                "oUiData",
+                "_oUiData",
+                "languageView",
+                "_deleteItemOdata",
+                "mICategoryHierarchyStructure",
+                "oUi"
+            ];
 
-                }
-                setModelNull(mIMaterialCodeText);
-                setModelNull(oUiData);
-                setModelNull(_oUiData);
-                setModelNull(languageView);
-                setModelNull(mICategoryHierarchyStructure);
-                setModelNull(oUi);
-
+            this.setArrayModelNullAndUpdateBindings(arrayModel);
         },
 
 
@@ -653,11 +642,20 @@ sap.ui.define([
                 var _deleteItemOdata = _deleteItem.getProperty("/oData");
                 for (var i = 0; i < oSelected.length; i++) {
                     var idx = parseInt(oSelected[i].sPath.substring(oSelected[i].sPath.lastIndexOf('/') + 1));
-                        oModel.oData[idx].itemMode =  this._m.itemMode.delete;
+
+                    if(oModel.oData[idx].itemMode != this._m.itemMode.create){
                         _deleteItemOdata.push(oModel.oData[idx]);
-                        oModel.oData.splice(idx, 1);
+                    }
+                    //mode 표시 사용시 사용
+                    //oModel.oData[idx].itemMode =  this._m.itemMode.delete;
+
+                    //mode 표시 사용시 주석
+                    oModel.oData.splice(idx, 1);
                 } 
+
+               //mode 표시 사용시 주석
                _deleteItem.setProperty("/oData", _deleteItemOdata);
+
                 that.getView().setBusy(false);
                 oTable.removeSelections();
                 oTable.getBinding("items").refresh();
@@ -862,9 +860,9 @@ sap.ui.define([
              var bCreateFlag = oUi.getProperty("/createMode");
              var bOkActionFlag = false;
  
-             if(!this._onPageValidate()){
-                return;
-             }
+            //  if(!this._onPageValidate()){
+            //     return;
+            //  }
 
              if(!this._checkData()){
                  return;
@@ -923,9 +921,13 @@ sap.ui.define([
             console.log("_onTableItemUpdate");
         },
 
+        /**
+         * 필수값 체크
+         * @private
+         */
         _checkData : function(){
 
-            console.log("call function ==================== onSaveAction ====================");
+            console.log("call function ==================== _checkData ====================");
             // if(!ValidatorUtil.isValid(this.getView(),"requiredField")){
             //     return;
             // }
@@ -993,13 +995,6 @@ sap.ui.define([
                 return false;
             }
 
-            for(var i=0; i<oTableLength;i++) {
-                if(oTable.getItems()[i].getCells()[2].mAggregations.items[0].getValue().length<1){
-                    bValidator = false;
-                    break;
-                }
-            }
-            
             if(oUi.getProperty("/createMode")){
                 o_mi_material_code =   input_mi_material_code; 
             }else{
@@ -1024,29 +1019,39 @@ sap.ui.define([
             }
 
 
-            if(!bNullCheck && odataMode==this._m.odataMode.yes){
-
-                this._showMessageToast("자재명은 빈값일수 없습니다.");
+            // && odataMode==this._m.odataMode.yes
+            if(!bNullCheck){
+                this._showMessageToast("자재명은 빈 값 일수 없습니다.");
                 return false;
             }
 
-            var oldLanguage_code,
-                newLanguage_code
+            // var oldLanguage_code,
+            //     newLanguage_code
 
-            for (var idx = 0; idx < oTable.getItems().length; idx++) {
+            // for (var idx = 0; idx < oTable.getItems().length; idx++) {
     
-                var items = oTable.getItems()[idx],
-                    language_code = items.getCells()[1].mAggregations.items[0].getSelectedKey(),
-                    newLanguage_code = language_code;
+            //     var items = oTable.getItems()[idx], language_code ;                
 
-                if(newLanguage_code==oldLanguage_code){
+            //     var itemMode = items.getCells()[0].getText();
 
-                    bValidator = false; 
-                    this._showMessageToast("Language Code는 유일 해야합니다.");                    
-                    return false;
-                    break;  
-                }
-            }
+            //     if(itemMode!=this._m.itemMode.read){
+            //         newLanguage_code = items.getCells()[1].mAggregations.items[0].getSelectedKey();
+            //     } else {
+            //         newLanguage_code = items.getCells()[1].mAggregations.items[1].getText();
+            //     }
+                
+            //     newLanguage_code = language_code;
+
+            //     if(newLanguage_code==oldLanguage_code){
+
+            //         bValidator = false; 
+            //         this._showMessageToast("중복된 Language Code 입니다.");                    
+            //         return false;
+            //         break;  
+            //     }
+
+            //     oldLanguage_code = newLanguage_code;
+            // }
             return bValidator;
         },
 
@@ -1117,6 +1122,7 @@ sap.ui.define([
  
             var omIMaterialCodeText = this.getOwnerComponent().getModel("mIMaterialCodeText"),
                 oUiData = this.getModel("oUiData"),
+                _deleteItem = this.getModel("_deleteItem"),                
                 odataMode, o_mi_material_code,
                 oUi = this.getModel("oUi"),
                 oTable = this.getView().byId(this._m.tableName),
@@ -1124,6 +1130,7 @@ sap.ui.define([
                 materialCheck = oUi.getProperty("/materialCheck");
 
             if (materialCheck==false && oUi.getProperty("/createMode") == true) {
+               // return;
             } else {
 
                 var input_mi_material_code,
@@ -1149,8 +1156,6 @@ sap.ui.define([
                 }else{
                     o_mi_material_code =   oUiData.getProperty("/mi_material_code");
                 }
-
-
                                 
                 var mi_material_name,
                     oldLanguage_code,
@@ -1163,12 +1168,17 @@ sap.ui.define([
                 var mIMaterialCodeText= this._m.serviceName.mIMaterialCodeText;
 
                 for (var idx = 0; idx < oTable.getItems().length; idx++) {
-      
-                    var items = oTable.getItems()[idx],
-                        itemMode = items.getCells()[0].mProperties.text,
-                        language_code = items.getCells()[1].mAggregations.items[0].getSelectedKey(),
-                        mi_material_name = items.getCells()[2].mAggregations.items[0].getValue(),
-                        newLanguage_code = language_code;
+            
+                    var items = oTable.getItems()[idx], language_code,                
+                        itemMode = items.getCells()[0].getText();
+
+                    if(itemMode!=this._m.itemMode.read){
+                        language_code = items.getCells()[1].mAggregations.items[0].getSelectedKey();
+                    } else {
+                        language_code = items.getCells()[1].mAggregations.items[1].getText();
+                    }
+
+                    mi_material_name = items.getCells()[2].mAggregations.items[0].getValue();
 
                     var updateTableItem = 0;
                     var createTableItem = 0;
@@ -1182,15 +1192,15 @@ sap.ui.define([
                     }
 
                     var o_mi_material_code;
-
-                    //MIMaterialCodeText db key : update delete 
+                    
+                    // MIMaterialCodeText table key : update delete 
                     var oMIMaterialCodeTextKey = {
                         tenant_id : oUiData.getProperty("/tenant_id"),
                         company_code : oUiData.getProperty("/company_code"),
                         org_type_code : oUiData.getProperty("/org_type_code"),
                         org_code: oUiData.getProperty("/org_code"),
-                        mi_material_code: o_mi_material_code,
-                        language_code: language_code
+                        mi_material_code: oUiData.getProperty("/mi_material_code"),
+                        language_code: language_code,
                     }
 
                     var oMIMaterialCodeTextPath = oModel.createKey(
@@ -1251,18 +1261,39 @@ sap.ui.define([
                         updateTableItem++;               
                     }
 
-                    console.log("itemMode==this._m.itemMode.delete");
-                    for(var i=0;i<omIMaterialCodeText.oData.length;i++){
-
-                        if(omIMaterialCodeText.oData[i].mi_material_code == o_mi_material_code){
-                            odataMode =  omIMaterialCodeText.oData[i].odataMode;
-                            break;
-                        }                        
+                    //신규자재명 할당을 위해 KO가 없다면 한건이라도 등록한다. 
+                    if (newLanguage_code == "") {
+                        vMi_material_name = mi_material_name;
                     }
-                    if(itemMode==this._m.itemMode.delete && odataMode == this._m.odataMode.yes){
-                        console.log(oMIMaterialCodeTextPath+"--remove");
+                } //end for
+
+
+                /**delete MIMaterialCodeText table item  */
+                var _deleteItemOdata = _deleteItem.getProperty("/oData");
+                
+                //table item delete action _deleteItem odata push data
+                if(_deleteItemOdata.length>0){
+                    var oDeleteMIMaterialCodeTextKey, oDeleteMIMaterialCodeTextPath;
+                    
+                    //적재 할때 신규는 담지 않는다. (수정이나 신규시 아이템 추가는 바로 삭제)
+                    for(var i=0;i<_deleteItemOdata.length;i++){
+                        oDeleteMIMaterialCodeTextKey = {
+                            tenant_id : _deleteItemOdata[i].tenant_id,
+                            company_code : _deleteItemOdata[i].company_code,
+                            org_type_code : _deleteItemOdata[i].org_type_code,
+                            org_code: _deleteItemOdata[i].org_code,
+                            mi_material_code: _deleteItemOdata[i].mi_material_code,
+                            language_code:  _deleteItemOdata[i].language_code
+                        }
+        
+                        debugger;
+                        oDeleteMIMaterialCodeTextPath = oModel.createKey(
+                                this._m.serviceName.mIMaterialCodeText,
+                                oDeleteMIMaterialCodeTextKey
+                        );
+
                         oModel.remove(
-                            oMIMaterialCodeTextPath, 
+                            oDeleteMIMaterialCodeTextPath, 
                             { 
                                 groupId: this._m.groupID 
                             }
@@ -1270,58 +1301,53 @@ sap.ui.define([
 
                         deleteTableItem++;    
                     }
-
-                    //신규자재명 할당을 위해 KO가 없다면 한건이라도 등록한다. 
-                    //초기 KO는 필수로 정해야한다...
-                    if (newLanguage_code == "") {
-                        vMi_material_name = mi_material_name;
-                    }
-                } //end for
-
-
-                //MIMatListView ---------------------------------------------------------------------------
+                    
+                }
+   
+                //MIMaterialCode ---------------------------------------------------------------------------
                 //대표자재가 지정 및 변경될경우 -----------------------------------------
-                var oMIMatListViewParameters;
+
+
+                var oMIMaterialCodeParameters;
 
                 //수정대상 or 확인대상 imsi 데이타로 등록 진행중 (20201208 현재 상위 코드 정의되지 않았음.)
                 //MIMatListView db key : update delete 
-                var oMIMatListViewKey = {
+                var oMIMaterialCodeKey = {
                     tenant_id : oUiData.getProperty("/tenant_id"),
                     company_code : oUiData.getProperty("/company_code"),
                     org_type_code : oUiData.getProperty("/org_type_code"),
                     org_code: oUiData.getProperty("/org_code"),
+                    category_code: oUiData.getProperty("/category_code"),                    
                     mi_material_code: o_mi_material_code
                 }
 
-                var oMIMatListViewPath = oModel.createKey(
-                    this._m.serviceName.mIMatListView, 
-                    oMIMatListViewKey
+                var oMIMaterialCodePath = oModel.createKey(
+                    this._m.serviceName.mIMaterialCode, 
+                    oMIMaterialCodeKey
                 );
 
                 if (oUi.getProperty("/editMode")) {
-                    console.log(oMIMatListViewPath+" -- editMode");    
-                    //널 수정대상 : 값을 넣지 않으면 null 할당
-                    //"category_code": comboBoxCategory_code.getSelectedKey(),
-                    //"category_name": comboBoxCategory_name,
-                    oMIMatListViewParameters = {
-                        "category_code": oUiData.getProperty("/category_code"),
-                        "category_name": oUiData.getProperty("/category_name"),           
-                        "mi_material_name": vMi_material_name,
-                        "use_flag": switchUse_flag,
-                        "local_create_dtm": new Date(),
-                        "local_update_dtm": new Date(),
-                        "create_user_id": this._sso.user.id,
-                        "update_user_id": this._sso.user.id,
-                        "system_create_dtm": new Date(),
-                        "system_update_dtm": new Date()
-                    };
-                    console.log(oMIMatListViewPath+" -- update");
-                    oModel.update(oMIMatListViewPath, 
-                        oMIMatListViewParameters, { 
-                            groupId: this._m.groupID 
-                        }
-                    );  
-                    updateItem++;
+                    console.log(oMIMaterialCodePath+" -- editMode");    
+
+                    //사용여부를 변경했을때에만 수정
+                    if(switchUse_flag!=oUiData.getProperty("/use_flag")){
+                        oMIMaterialCodeParameters = {
+                            "use_flag": switchUse_flag,
+                            "local_create_dtm": new Date(),
+                            "local_update_dtm": new Date(),
+                            "create_user_id": this._sso.user.id,
+                            "update_user_id": this._sso.user.id,
+                            "system_create_dtm": new Date(),
+                            "system_update_dtm": new Date()
+                        };
+                        console.log(oMIMaterialCodePath+" -- update");
+                        oModel.update(oMIMaterialCodePath, 
+                            oMIMaterialCodeParameters, { 
+                                groupId: this._m.groupID 
+                            }
+                        );  
+                        updateItem++;
+                    }
 
                 } else if (oUi.getProperty("/createMode")){
          
@@ -1329,7 +1355,7 @@ sap.ui.define([
                         vMi_material_name = mi_material_name;
                     }
                     
-                    oMIMatListViewParameters = {
+                    oMIMaterialCodeParameters = {
                         "groupId": this._m.groupID ,
                         "properties": {
                             "tenant_id": this._sso.dept.tenant_id,
@@ -1337,9 +1363,7 @@ sap.ui.define([
                             "org_type_code": this._sso.dept.org_type_code,
                             "org_code": this._sso.dept.org_code,
                             "mi_material_code": input_mi_material_code,
-                            "mi_material_name": vMi_material_name,
                             "category_code": comboBoxCategory_code,
-                            "category_name": comboBoxCategory_name,
                             "use_flag": switchUse_flag,
                             "local_create_dtm": new Date(),
                             "local_update_dtm": new Date(),
@@ -1350,8 +1374,8 @@ sap.ui.define([
                         }
                     };
                 
-                    console.log(this._m.serviceName.mIMatListView+" -- createEntry");
-                    oModel.createEntry(this._m.serviceName.mIMatListView, oMIMatListViewParameters);
+                    console.log(this._m.serviceName.mIMaterialCode+" -- createEntry");
+                    oModel.createEntry(this._m.serviceName.mIMaterialCode, oMIMaterialCodeParameters);
                     createItem++;
                 }            
                 
@@ -1370,6 +1394,7 @@ sap.ui.define([
                 });
 
                 oModel.refresh();
+                
             }
         },
         
