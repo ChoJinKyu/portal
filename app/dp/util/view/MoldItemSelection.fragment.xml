@@ -30,14 +30,9 @@
                         <VBox>
                             <Label text = "Company" required="true"/> 
                             <ComboBox id="pCompany"  width="100%" selectedKey="{moldItemPop>/company_code}" enabled="false" items="{
-                                        path: 'org>/Org_Company',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                        ],
-                                        sorter: { path: 'company_code'}
-                                    }">
+                                        path: 'company>/Org_Company' }">
                                 <items>
-                                    <core:Item key="{org>company_code}"  text="[{org>company_code}] {org>company_name}" />
+                                    <core:Item key="{company>company_code}"  text="[{company>company_code}] {company>company_name}" />
                                 </items>
                             </ComboBox>
                             <layoutData>
@@ -47,15 +42,11 @@
                         
                         <VBox>
                             <Label text = "Plant" required="true"/> 
-                            <ComboBox id="pPlant"  width="100%" selectedKey="{moldItemPop>/plant_code}" enabled="false" items="{
-                                        path: 'purOrg>/Pur_Operation_Org',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                          
-                                        ]
+                            <ComboBox id="pPlant"  width="100%" selectedKey="{moldItemPop>/org_code}" enabled="false" items="{
+                                        path: 'plant>/Pur_Operation_Org'
                                     }">
                                 <items>
-                                    <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
+                                    <core:Item key="{plant>org_code}" text="[{plant>org_code}]{plant>org_name}" />
                                 </items>
                             </ComboBox>
                             <layoutData>
@@ -93,7 +84,7 @@
                             selectionChange=".selectMoldItemChange" 
                             mode="MultiSelect"
                             width="auto"
-                            items="{MoldItemSelect>/MoldItemSelect}"
+                            items="{moldItemPopList>/MoldItemSelect}"
                             >
                          <headerToolbar>
                             <OverflowToolbar>
@@ -145,12 +136,12 @@
                              <ColumnListItem>
                                 <cells>
                                     <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
-                                    <Text text="{MoldItemSelect>mold_id}" />
-                                    <Text text="{MoldItemSelect>model}" />
-                                    <Text text="{MoldItemSelect>mold_number}" />
-                                    <Text text="{MoldItemSelect>mold_sequence}" />
-                                    <Text text="{MoldItemSelect>spec_name}" />
-                                    <ComboBox selectedKey="{MoldItemSelect>mold_item_type_code}"
+                                    <Text text="{moldItemPopList>mold_id}" />
+                                    <Text text="{moldItemPopList>model}" />
+                                    <Text text="{moldItemPopList>mold_number}" />
+                                    <Text text="{moldItemPopList>mold_sequence}" />
+                                    <Text text="{moldItemPopList>spec_name}" />
+                                    <ComboBox selectedKey="{moldItemPopList>mold_item_type_code}"
                                         items="{ path : 'util>/CodeDetails',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
@@ -161,13 +152,13 @@
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>
 
-                                    <Text text="{MoldItemSelect>book_currency_code}" />
-                                    <Text text="{MoldItemSelect>budget_amount}" />
-                                    <Text text="{MoldItemSelect>family_part_number_1}" />
-                                    <Text text="{MoldItemSelect>family_part_number_2}" />
-                                    <Text text="{MoldItemSelect>family_part_number_3}" />
-                                    <Text text="{MoldItemSelect>family_part_number_4}" />
-                                    <Text text="{MoldItemSelect>family_part_number_5}" />
+                                    <Text text="{moldItemPopList>book_currency_code}" />
+                                    <Text text="{moldItemPopList>budget_amount}" />
+                                    <Text text="{moldItemPopList>family_part_number_1}" />
+                                    <Text text="{moldItemPopList>family_part_number_2}" />
+                                    <Text text="{moldItemPopList>family_part_number_3}" />
+                                    <Text text="{moldItemPopList>family_part_number_4}" />
+                                    <Text text="{moldItemPopList>family_part_number_5}" />
                                 </cells>
                             </ColumnListItem>   
                             </items>

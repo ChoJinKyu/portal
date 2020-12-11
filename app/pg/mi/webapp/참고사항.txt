@@ -1,0 +1,43 @@
+[김종현 디포커스] [오후 7:41] 테이블: PG_MI_MATERIAL_CODE_LIST
+[김종현 디포커스] [오후 7:42] 서비스: MIMaterialCodeList
+[김종현 디포커스] [오후 7:42] 삭제했습니다.
+[김종현 디포커스] [오후 7:42] 해당 화면의 리스트를 바인딩 하시려면
+[김종현 디포커스] [오후 7:42] 서비스: MIMatCategListView 
+[김종현 디포커스] [오후 7:42] 이 View로 바인딩하시면 됩니다.
+[김종현 디포커스] [오후 7:43] 저장/수정/삭제 시 
+[김종현 디포커스] [오후 7:43] 서비스: MIMaterialCode
+[김종현 디포커스] [오후 7:43] 서비스: MIMaterialCodeText
+[김종현 디포커스] [오후 7:43] 에 각각 속성과 언어별 텍스르로 
+[김종현 디포커스] [오후 7:44] 텍스트로 구분하여 작업하셔야 합니다.
+[김종현 디포커스] [오후 7:44] 방금 Git Hub에 반영하였습니다.
+
+visible="{contModel>/detailDetail/editMode}"
+
+
+                  <m:Column
+                                            minScreenWidth="Tablet"
+                                            demandPopin="true">
+                                        <m:Text text="Part No" />
+titleUppercase="false"
+
+
+            //관리조직 이름 
+            var bFilters = [
+                new Filter("tenant_id", FilterOperator.EQ, this._sso.dept.tenant_id)
+            ];
+
+            oModel.read(this._m.serviceName.orgTenantView, {
+                async: false,
+                filters: bFilters,
+                success: function (rData, reponse) {
+
+                    //console.log("json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
+                    var oData = reponse.data.results[0];
+
+                    debugger;
+                    if(reponse.data.results.length>0){
+                        this.getView().byId("label_tenant_name").setValue(reponse.data.results[0].tenant_name);
+                        _oUiData.setProperty("/tenant_name", reponse.data.results[0].tenant_name );
+                    }
+                }
+            });

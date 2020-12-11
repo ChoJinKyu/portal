@@ -145,7 +145,7 @@
                     ]
                 },
                 {
-                    "pattern": "midObject/{layout}/{userId}/:?query:",
+                    "pattern": "midObject/{layout}/{tenantId}/{roleCode}/:?query:",
                     "name": "midPage",
                     "target": [
                         "mainObject",

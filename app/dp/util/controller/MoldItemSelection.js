@@ -17,9 +17,10 @@ sap.ui.define([
     "ext/lib/util/Multilingual",
     "ext/lib/model/ManagedListModel", 
        "sap/ui/model/json/JSONModel",
+        "ext/lib/model/ManagedModel",
 ], function (BaseController,Controller, ODataModel, Dialog, Renderer, ODataV2ServiceProvider,
     Sorter, Filter, FilterOperator,
-    Button, Text, Table, Column, ColumnListItem, Fragment,Multilingual , ManagedListModel,JSONModel) {
+    Button, Text, Table, Column, ColumnListItem, Fragment,Multilingual , ManagedListModel,JSONModel,ManagedModel) {
     "use strict";
 
     var oServiceModel = new ODataModel({
@@ -29,6 +30,22 @@ sap.ui.define([
         refreshAfterChange: false,
         useBatch: true
     });
+
+    var oServiceModel2 = new ODataModel({
+        serviceUrl: "srv-api/odata/v2/cm.OrgMgrService/",
+        defaultBindingMode: "OneWay",
+        defaultCountMode: "Inline",
+        refreshAfterChange: false,
+        useBatch: true
+    });
+    var oServiceModel3 = new ODataModel({
+        serviceUrl: "srv-api/odata/v2/cm.PurOrgMgrService/",
+        defaultBindingMode: "OneWay",
+        defaultCountMode: "Inline",
+        refreshAfterChange: false,
+        useBatch: true
+    });
+
     /**
      * @param : oThis 호출한 페이지의 this 
      * @param : oTableName 호출한 페이지에 추가할 테이블 아이디 
@@ -41,25 +58,7 @@ sap.ui.define([
      * @author jinseon.lee
      * @date   2020.12.02 
      */
-    return BaseController.extend("dp.util.controller.MoldItemSelection", {
-
-
-        onInit: function () {
-
-             /* 다국어 처리*/
-            var oMultilingual = new Multilingual();
-            this.setModel(oMultilingual.getModel(), "I18N"); 
-
-            console.log("MoldItemSelection Controller 호출");
-
-            var oViewModel = new JSONModel({
-                busy: true,
-                delay: 0
-            });
-
-            this.setModel(oViewModel, "moldItemPop");
-            this.setModel(new ManagedListModel(), "moldItemPopList");
-        },
+    return Controller.extend("dp.util.controller.MoldItemSelection", {
 
         /**
          * @param vThis : view page의 this 
@@ -69,13 +68,16 @@ sap.ui.define([
 		 * @public
 		 */
         openMoldItemSelectionPop : function (pThis, oEvent, pArges, callback) { 
-
-
+  
             oThis = pThis;
             oArges = pArges;
             oCallback = callback;
-            this.getModel('moldItemPop').setProperty('/company_code', oArges.company_code);
-            this.getModel('moldItemPop').setProperty('/org_code', oArges.plant_code); 
+            oThis.setModel(new ManagedModel(), "moldItemPop");
+            oThis.setModel(new ManagedListModel(), "moldItemPopList");
+            oThis.setModel(new ManagedListModel(), "company");
+            oThis.setModel(new ManagedListModel(), "plant");
+            oThis.getModel('moldItemPop').setProperty('/company_code', oArges.company_code);
+            oThis.getModel('moldItemPop').setProperty('/org_code', oArges.plant_code); 
 
             var oView = oThis.getView();
             var oButton = oEvent.getSource();
@@ -101,10 +103,10 @@ sap.ui.define([
             var aSearchFilters = [];
             // tenant_id  
             aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100'));
-            var company = pView.byId('pCompany').mProperties.selectedKey;
-            var plant = pView.byId('Plant').mProperties.selectedKey;
-            var model = pView.byId('mItemModel').getValue().trim();
-            var partNo = pView.byId('mItemPartNo').getValue().trim();
+            var company = oThis.byId('pCompany').mProperties.selectedKey;
+            var plant = oThis.byId('pPlant').mProperties.selectedKey;
+            var model = oThis.byId('mItemModel').getValue().trim();
+            var partNo = oThis.byId('mItemPartNo').getValue().trim();
 
             if (company != undefined && company != "" && company != null) {
                 aSearchFilters.push(new Filter("company_code", FilterOperator.EQ, company))
@@ -141,11 +143,16 @@ sap.ui.define([
          */
         _applyMoldSelection: function (aSearchFilters) {
             console.log(" [step] Mold Item Selection Search Button Serch ", aSearchFilters);
-            var oView = pView.getView(),
-                oModel = pView.getModel("moldItemPopList");
-
-         
-
+            var oView = oThis.getView(),
+                oModel = oThis.getModel("moldItemPopList"),
+                companyModel = oThis.getModel("company"),
+                plantModel = oThis.getModel("plant")
+                
+                ;
+/**
+ *          oThis.setModel(new ManagedListModel(), "org");
+            oThis.setModel(new ManagedListModel(), "purOrg");
+ */
             oView.setBusy(true);
             oModel.setTransactionModel(oServiceModel);
             oModel.read("/MoldItemSelect", {
@@ -155,6 +162,30 @@ sap.ui.define([
                     oView.setBusy(false);
                 }
             });
+
+            oView.setBusy(true);
+            companyModel.setTransactionModel(oServiceModel2);
+            companyModel.read("/Org_Company", {
+                filters: [new Filter("tenant_id", FilterOperator.EQ, 'L1100')],
+                success: function (oData) {
+                    console.log(" company >>>>  ", oData);
+                    oView.setBusy(false);
+                }
+            });
+
+            oView.setBusy(true);
+            plantModel.setTransactionModel(oServiceModel3);
+            plantModel.read("/Pur_Operation_Org", {
+                filters: [new Filter("tenant_id", FilterOperator.EQ, 'L1100')
+                        , new Filter("company_code", FilterOperator.EQ, oThis.getModel('moldItemPop').oData.company_code)
+                    ],
+                success: function (oData) {
+                    console.log(" plant >>>>> ", oData);
+                    oView.setBusy(false);
+                }
+            });
+
+
             console.log("omdel", oModel);
         },
            /**
@@ -162,7 +193,7 @@ sap.ui.define([
          * @see 사용처 Participating Supplier Fragment 취소 이벤트
          */
         onExit: function () {
-            pView.byId("dialogMolItemSelection").close();
+            oThis.byId("dialogMolItemSelection").close();
         },
 
           /**
@@ -171,7 +202,7 @@ sap.ui.define([
         onMoldItemSelectionApply: function (oEvent) {
             console.log(" [step] Participating Supplier Fragment Apply 버튼 클릭시 ", oEvent);
 
-            var oTable = pView.byId("popMoldItemSelectTable");
+            var oTable = oThis.byId("popMoldItemSelectTable");
             var aItems = oTable.getSelectedItems();
             var that = this; 
             var datas = [];

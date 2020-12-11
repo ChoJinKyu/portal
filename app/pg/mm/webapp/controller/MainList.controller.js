@@ -41,9 +41,7 @@ sap.ui.define([
 		onInit : function () {
 			
 			console.group("onInit");
-
-			var oUi,oUiData,
-				oResourceBundle = this.getResourceBundle();
+			var oUi,oUiData, oResourceBundle = this.getResourceBundle();
 
 			// Model used to manipulate control states
 			oUi = new JSONModel({
@@ -57,8 +55,9 @@ sap.ui.define([
 			});
 
 
-			this.setModel(oUi, "mainListView");
+			this.setModel(oUi, "oUi");
 			this.setModel(oUiData, "oUiData");
+
 
 			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
@@ -287,7 +286,7 @@ sap.ui.define([
 
 			
             if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
-                this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
+                this.getView().getModel('oUi').setProperty("/headerExpandFlag", false);
             }
 
 			//var oItem = oEvent.getSource();
@@ -299,6 +298,7 @@ sap.ui.define([
 			
 		},
 
+		
 		/**
 		 * Event handler when a search button pressed
 		 * @param {sap.ui.base.Event} oEvent the button press event
@@ -354,7 +354,7 @@ sap.ui.define([
 
 
             if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
-                this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
+                this.getView().getModel('oUi').setProperty("/headerExpandFlag", false);
             }
 
 			var oItem = oEvent.getSource();
@@ -372,7 +372,7 @@ sap.ui.define([
 		 */
 		_onRoutedThisPage: function(){
 			console.group("_onRoutedThisPage");
-			this.getModel("mainListView").setProperty("/headerExpanded", true);
+			this.getModel("oUi").setProperty("/headerExpanded", true);
 			console.groupEnd();
 		},
 
@@ -442,8 +442,7 @@ sap.ui.define([
 		},
 
 
-
-        /**
+/**
          * mainTable Item Delete
          * @param {sap.ui.base.Event} oEvent 
          */
@@ -454,17 +453,17 @@ sap.ui.define([
                 oData = oModel.getData(),
                 oPath,
                 that = this;
-                  
+
             var oSelected = this._mainTable.getSelectedContexts();   
             if (oSelected.length > 0) { 
-                            
+
                 MessageBox.confirm("선택한 항목을 삭제 하시겠습니까?", {
                     title: "삭제 확인",                                    
                     onClose: this._deleteAction.bind(this),                                    
                     actions: [sap.m.MessageBox.Action.DELETE, sap.m.MessageBox.Action.CANCEL],
                     textDirection: sap.ui.core.TextDirection.Inherit    
                 });
-              
+
             }
             console.groupEnd();
         },
@@ -475,14 +474,14 @@ sap.ui.define([
          */
 		_deleteAction: function(oAction) {
             console.group("_deleteAction");
-            
+
 			if(oAction === sap.m.MessageBox.Action.DELETE) {
 				this._getSmartTableById().getTable().getSelectedItems().forEach(function(oItem){
                     var sPath = oItem.getBindingContextPath();	
 					var mParameters = {"groupId":"deleteGroup"};
 					oItem.getBindingContext().getModel().remove(sPath, mParameters);
 				});
-				
+
 				var oModel = this.getView().getModel();
 				oModel.submitChanges({
 		      		groupId: "deleteGroup", 
@@ -492,7 +491,8 @@ sap.ui.define([
             } 
             console.groupEnd();
 		},
-				
+
+
 		_handleUpdateSuccess: function(oData) {
 			MessageToast.show(this.getResourceBundle().getText("updateSuccess"));
 		},

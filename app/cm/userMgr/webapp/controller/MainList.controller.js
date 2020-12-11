@@ -218,9 +218,11 @@ sap.ui.define([
         },
 
         handleChange: function (oEvent) {
+            var combo = this.byId("searchOrgCombo");
+            combo.setSelectedKey(null);
 
             this.getModel("org");
-            var combo = this.byId("searchOrgCombo");
+            
             combo.bindItems({
                 path: 'org>/Org_Company',
                 filters: [

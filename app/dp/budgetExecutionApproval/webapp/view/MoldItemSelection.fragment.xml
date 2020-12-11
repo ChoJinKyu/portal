@@ -27,7 +27,7 @@
                     <form:content>
                         <VBox>
                             <Label text = "Company" required="true"/> 
-                            <ComboBox id="MoldItemSearchCompany"  width="100%" selectedKey="{beaCreateObjectView>/company_code}" enabled="false" items="{
+                            <ComboBox id="MoldItemSearchCompany"  width="100%" selectedKey="{appMaster>/company_code}" enabled="false" items="{
                                         path: 'org>/Org_Company',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
@@ -45,11 +45,10 @@
                         
                         <VBox>
                             <Label text = "Plant" required="true"/> 
-                            <ComboBox id="MoldItemSearchPlant"  width="100%" selectedKey="{beaCreateObjectView>/plant_code}" enabled="false" items="{
+                            <ComboBox id="MoldItemSearchPlant"  width="100%" selectedKey="{appMaster>/org_code}" enabled="false" items="{
                                         path: 'purOrg>/Pur_Operation_Org',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                          
                                         ]
                                     }">
                                 <items>

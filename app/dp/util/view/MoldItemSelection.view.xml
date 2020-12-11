@@ -5,7 +5,6 @@
     xmlns:f="sap.f"
     height="100%">
 
-
-        <Button text="선택" />
+    <Text text="false" />
    
 </mvc:View>
