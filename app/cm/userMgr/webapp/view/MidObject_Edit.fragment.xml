@@ -42,7 +42,8 @@
                     path: 'org>/Org_Tenant',
                     filters: [
                     ]
-                }">
+                }"
+                change="searchETenantComboChange">
             <items>
                 <core:Item key="{org>tenant_id}" text="{org>tenant_id} : {org>tenant_name}" />
             </items>
@@ -123,15 +124,12 @@
             />
 
             <Label text="회사" labelFor="searchEOrgCombo" required="true"></Label>
-            <ComboBox
-                id="searchEOrgCombo"
-                width="100%"
-                selectedKey="{master>/company_code}"
-                items="{
-                    path: 'org>/Org_Company',
-                    filters: [
-                    ]
-                }">
+            <ComboBox id="searchEOrgCombo" width="100%" selectedKey="{master>/company_code}"
+            items="{
+                path: 'org>/Org_Company',
+                filters: [
+                ]
+            }">
             <items>
                 <core:Item key="{org>company_code}" text="{org>company_code}: {org>company_name}" />
             </items>
@@ -145,7 +143,8 @@
                     items="{
                         path: 'timeZoneMgr>/TimeZone',
                         filters: [
-                        ]
+                        ],
+                        templateShareable: false
                     }">
                 <items>
                     <core:Item key="{timeZoneMgr>timezone_code}" text="{timeZoneMgr>timezone_code}: {timeZoneMgr>timezone_name}" />

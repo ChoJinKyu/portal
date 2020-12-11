@@ -17,7 +17,7 @@
 
     <f:DynamicPage
         id="page"
-        headerExpanded="{mainListView>/headerExpanded}"
+        headerExpanded="{oUi>/headerExpanded}"
         toggleHeaderOnTitleClick="true">
         <!-- DynamicPage Title -->
         <f:title>
@@ -42,7 +42,7 @@
 				             persistencyKey="PageVariantPKey" />                     
                     <!-- Smart Filter -->
                     <smartFilterBar:SmartFilterBar id="smartFilterBar" 
-                    entitySet="MIMaterialCodeList" 
+                    entitySet="MIMatCategListView " 
                     smartVariant="pageVariantId"
                     persistencyKey="SmartFilterPKey"
                     considerSelectionVariants="true" 
@@ -56,11 +56,11 @@
                             label="관리조직"
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
-                                        <ComboBox id="sf_tenant_id" 
-                                        items="{path: '/OrgTenantView', templateShareable:true}" 
-                                        placeholder="선택하세요.">
+                                    <Select id="select_tenant_id" 
+                                            selectedKey = "{oUiData>/tenant_id}"
+                                            items="{path: '/OrgTenantView', templateShareable:true}">
                                         <core:Item key="{tenant_id}" text="{tenant_name}"/>
-                                    </ComboBox>
+                                    </Select>
                                 </smartFilterBar:customControl>
                                 
                             </smartFilterBar:ControlConfiguration>
@@ -69,7 +69,7 @@
                             <smartFilterBar:ControlConfiguration  key="mi_material_code" groupId="_BASIC" index="1" label="시황자재코드"
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
-                                        <ComboBox id="sf_mi_material_code" items="{path: '/MIMatListView', templateShareable:true}" placeholder="선택하세요.">
+                                        <ComboBox id="combobox_mi_material_code" items="{path: '/MIMatListView', templateShareable:true}" placeholder="선택하세요.">
                                         <core:Item key="{mi_material_code}" text="{mi_material_code}"/>
                                     </ComboBox>
                                 </smartFilterBar:customControl>
@@ -77,12 +77,10 @@
                             </smartFilterBar:ControlConfiguration>
 
                             <!-- 시황자재명 -->
-                            <smartFilterBar:ControlConfiguration key="mi_material_code_name" groupId="_BASIC" index="2" label="시황자재명"  
+                            <smartFilterBar:ControlConfiguration key="mi_material_name" groupId="_BASIC" index="2" label="시황자재명"  
                             visibleInAdvancedArea="true" >
                                 <smartFilterBar:customControl>
-                                        <ComboBox id="sf_mi_material_code_name" items="{path: '/MIMatListView', templateShareable:true}" placeholder="선택하세요.">
-                                        <core:Item key="{mi_material_code_name}" text="{mi_material_code_name}"/>
-                                    </ComboBox>
+                                        <Input id="input_mi_material_name" placeholder="입력 해주세요."/>
                                 </smartFilterBar:customControl>
                             </smartFilterBar:ControlConfiguration>
 
@@ -90,7 +88,7 @@
                             <smartFilterBar:ControlConfiguration key="category_code" groupId="_BASIC" index="3" label="Category명" 
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
-                                        <ComboBox id="sf_category_code" items="{path: '/MICategoryView', templateShareable:true}" placeholder="선택하세요.">
+                                        <ComboBox id="combobox_category_code" items="{path: '/MICategoryView', templateShareable:true}" placeholder="선택하세요.">
                                         <core:Item key="{category_code}" text="{category_text}"/>
                                     </ComboBox>
                                 </smartFilterBar:customControl>
@@ -100,7 +98,7 @@
                           <smartFilterBar:ControlConfiguration key="use_flag" groupId="_BASIC" index="4" label="사용여부" 
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
-                                        <ComboBox id="sf_use_flag" items="{path: '/UseYNView', templateShareable:true}" placeholder="선택하세요.">
+                                        <ComboBox id="combobox_use_flag" items="{path: '/UseYNView', templateShareable:true}" placeholder="선택하세요.">
                                         <core:Item key="{code}" text="{code_name}"/>
                                     </ComboBox>
                                 </smartFilterBar:customControl>
@@ -125,9 +123,9 @@
                     height="100%"
                     smartVariant="pageVariantId"
                     id="smartTable_MainTable_ResponsiveTable"
-                    entitySet="MIMaterialCodeList"
-                    tableBindingPath="{MIMaterialCodeList}"
-                    initiallyVisibleFields="mi_material_code,mi_material_code_name,category_name,use_flag"
+                    entitySet="MIMatCategListView "
+                    tableBindingPath="{MIMatCategListView }"
+                    initiallyVisibleFields="mi_material_code,mi_material_name,category_name,use_flag"
                     smartFilterId="smartFilterBar"
                     ignoreFromPersonalisation="tenant_id,company_code,org_type_code"
                     tableType="ResponsiveTable"
@@ -150,7 +148,7 @@
                             <ToolbarSpacer/>
                             <Button text="Create" id="buttonMainTableCreate" type="Transparent" press=".onMainTableCreate"/>                            
                             <!-- <Button text="Copy" id="buttonMainTableCopy"  type="Transparent" enabled="false" press=".onMainTableCopy"/> -->
-                            <!-- <Button text="Delete" id="buttonMainTableDelete" type="Transparent" enabled="false" press=".onMainTableDelete"/> -->
+                            <Button text="Delete" id="buttonMainTableDelete" type="Transparent" enabled="false" press=".onMainTableDelete"/>
                             <OverflowToolbarButton
                                 icon="sap-icon://sort"
                                 tooltip="Sort"
@@ -168,7 +166,7 @@
                                 press=".onMainTableColumns"/>
                         </OverflowToolbar>
                     </smartTable:customToolbar>
-                            <Table id="mainTable" mode="None" sticky="HeaderToolbar,ColumnHeaders">
+                            <Table id="mainTable" mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders">
                                  <columns>  
                                  
                                        <Column hAlign="Center"  demandPopin="true" importance="High" popinDisplay="WithoutHeader">
@@ -182,7 +180,7 @@
                                         <Column hAlign="Center" demandPopin="true" importance="High" popinDisplay="Inline">
                                           <customData>
                                         <core:CustomData key="p13nData"
-                                        value='\{"columnKey": "mi_material_code_name", "leadingProperty": "mi_material_code_name", "sortProperty": "mi_material_code_name", "filterProperty": "mi_material_code_name", "columnIndex": 5}'/>
+                                        value='\{"columnKey": "mi_material_name", "leadingProperty": "mi_material_name", "sortProperty": "mi_material_name", "filterProperty": "mi_material_name", "columnIndex": 5}'/>
                                         </customData>
                                              <Text text="시황자재명"></Text>
                                         </Column>
@@ -207,7 +205,7 @@
                                     <items>
                                         <ColumnListItem type="Navigation" hAlign="Middle" press=".onMainTableItemPress">
                                              <Text text="{mi_material_code}"></Text>
-                                             <Text text="{mi_material_code_name}"></Text>
+                                             <Text text="{mi_material_name}"></Text>
                                              <Text text="{category_name}"></Text>
                                              <Text text="{= ${oUiData>/use_flag} ? 'Yes':'No'}"></Text>  
                                         </ColumnListItem>

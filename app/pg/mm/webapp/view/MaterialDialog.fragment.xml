@@ -42,7 +42,7 @@
                                     ],                            
                                     templateShareable:true}"                     
                             placeholder="선택 하세요.">
-                            <core:Item key="{material_code}" text="{material_description}"/>
+                            <core:Item key="{material_code}" text="{material_desc}"/>
                         </ComboBox>
                     </VBox>
                     <VBox visible="{= ${_oUiData>/radioButtonGroup} === 1 }">
@@ -63,7 +63,7 @@
                 <layout:VerticalLayout class="sapUiLargeMarginEnd">
                     <VBox visible="{= ${_oUiData>/radioButtonGroup} === 0}">
                         <Label  text="자재명"/>
-                        <Input  id="input_material_description"
+                        <Input  id="input_material_desc"
                                 class="sapUiSmallMarginBottom" 
                         />   
                     </VBox>

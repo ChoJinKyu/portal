@@ -37,7 +37,7 @@
             </Switch>
             <Label text="Description" required="false"/>
             <Input value="{
-                    path: 'master>/uom_description',
+                    path: 'master>/uom_desc',
                     type: 'sap.ui.model.type.String',
                     constraints: {
                         maxLength: 50

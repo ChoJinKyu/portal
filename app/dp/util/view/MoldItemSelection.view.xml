@@ -5,10 +5,6 @@
     xmlns:f="sap.f"
     height="100%">
 
-    <f:DynamicPage
-        id="page"
-        headerExpanded="{mainListView>/headerExpanded}"
-        toggleHeaderOnTitleClick="true">
-        
-    </f:DynamicPage>
+    <Text text="false" />
+   
 </mvc:View>

@@ -24,6 +24,13 @@ service orgProcOrgTypeMgrService {
              and    l.tenant_id = p.tenant_id
             )  as process_type_name: String(240),
            p.org_type_code,
+           ( select l.code_name
+             from   codeLng.Code_Lng l
+             where  l.group_code = 'CM_ORG_TYPE_CODE'
+             and    l.code = p.org_type_code
+             and    l.language_cd = 'KO'
+             and    l.tenant_id = p.tenant_id
+            )  as org_type_name: String(240),
            p.use_flag
     from   purOrgTypeMap.Pur_Org_Type_Mapping p
     ;

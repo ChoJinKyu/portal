@@ -203,8 +203,8 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Requester" labelFor="searchRequester"></Label>
-                            <Input id="searchRequester" 
+                            <Label text="Requestor" labelFor="searchRequestor"></Label>
+                            <Input id="searchRequestor" 
                                     showValueHelp="true"  
                                     valueHelpRequest=".onValueHelpRequested"
                                     suggestionItems="{
@@ -302,8 +302,8 @@
                         <Column id="mainColumnSubject"  >
                             <Text text="Subject" />
                         </Column>
-                        <Column id="mainColumnRequester"  >
-                            <Text text="Requester" />
+                        <Column id="mainColumnRequestor"  >
+                            <Text text="Requestor" />
                         </Column>
                         <Column id="mainColumnRequestDate"  >
                             <Text text="Request Date" />
@@ -348,7 +348,7 @@
                                 </ComboBox>
                                 <ComboBox
                                         editable="false" 
-                                        class="sapMInputBaseReadonlyWrapper"  
+                                        class="readonlyField"  
                                         selectedKey="{list>org_code}" 
                                         items="{
                                                     path: 'purOrg>/Pur_Operation_Org',
@@ -362,7 +362,7 @@
                                 </ComboBox>
                                 <ObjectIdentifier text="{list>approval_number}" />
                                 <ObjectIdentifier text="{list>approval_title}" />
-                                <!-- <ObjectIdentifier text="{list>requestor_empno}" /> -->
+                                <ObjectIdentifier text="{list>requestor_empno}" />
                                 <ComboBox
                                         editable="false"   
                                         class="readonlyField"

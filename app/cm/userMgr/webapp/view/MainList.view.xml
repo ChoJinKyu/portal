@@ -45,25 +45,19 @@
                                 path: 'org>/Org_Tenant',
                                 filters: [
                                 ]
-                              }">
+                              }"
+                              change="handleChange">
                               <items>
                                 <core:Item key="{org>tenant_id}" text="{org>tenant_id} : {org>tenant_name}" />
                               </items>
                             </ComboBox>
                             <!-- 회사 -->
                             <Label text="회사" labelFor="searchOrgCombo" required="false"></Label>
-                            <ComboBox
-                              id="searchOrgCombo"
-                              width="100%"
-                              items="{
-                                path: 'org>/Org_Company',
-                                filters: [
-                                ]
-                              }">
+                            <ComboBox id="searchOrgCombo" width="100%" >
                               <!-- {path: 'tenant_id', operator: 'EQ', value1: 'L2100'} -->
                               <items>
-                                <core:Item key="{org>company_code}" text="{org>company_code}: {org>company_name}" />
-                              </items>
+                              <!--   <core:Item key="{org>company_code}" text="{org>company_code}: {org>company_name}" />-->
+                              </items> 
                             </ComboBox>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />

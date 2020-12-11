@@ -17,7 +17,7 @@
 	<ValueHelpDialog
         id="valueHelpDialogSupplier"
 		title="Supplier"
-		ok=".onValueHelpSuppOkPress"
+		ok="onValueHelpSuppOkPress"
 		cancel=".onValueHelpSuppCancelPress"
 		afterClose=".onValueHelpSuppAfterClose"
         supportMultiselect="false"

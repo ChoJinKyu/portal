@@ -171,7 +171,8 @@
             ]
         },
         "resourceRoots": {
-            "ext.lib": "../../../lib"
+            "ext.lib": "../../../lib",
+            "dp.util": "../../util" 
         },
         "routing": {
             "config": {
@@ -196,6 +197,13 @@
                     ]
                 },
                 {
+                    "pattern": "PssaEditObject/{approval_number}",
+                    "name": "pssaEditObject",
+                    "target": [
+                        "pssaEditObject"
+                    ]
+                },
+                {
                     "pattern": "PssaObject/{approval_number}",
                     "name": "pssaObject",
                     "target": [
@@ -213,6 +221,12 @@
                 "pssaCreateObject": {
                     "viewName": "PssaCreateObject",
                     "viewId": "pssaCreateObject",
+                    "viewLevel": 2,
+                    "title": "{i18n>viewObjectTitle3}"
+                },
+                "pssaEditObject": {
+                    "viewName": "PssaCreateObject",
+                    "viewId": "pssaEditObject",
                     "viewLevel": 2,
                     "title": "{i18n>viewObjectTitle3}"
                 },
