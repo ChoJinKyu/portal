@@ -39,7 +39,8 @@ sap.ui.define([
             serviceName : {
                 marketIntelligenceService : "pg.marketIntelligenceService", //main Service
                 orgTenantView : "/OrgTenantView", //관리조직 View
-				mIMatListView : "/MIMatListView"//자재별 시황자재 
+				mIMatListView : "/MIMatListView",//자재별 시황자재,
+				mIMaterialCode : "/MIMaterialCode"
             },			
             tableName : "maindTable", 
             filter : {  
@@ -317,24 +318,37 @@ sap.ui.define([
         },
 
         /**
-         * mainTable Delete Action
-		 * category code 코드를 알수 없음 화면은 보이고 있음.
+         * dev12121937 mainTable Delete Action
          * @param {sap.m.MessageBox.Action} oAction 
          */
 		_deleteAction: function(oAction) {
 			console.group("_deleteAction");
-			var that = this;
+			var oModel = this.getOwnerComponent().getModel(),
+				that = this;
             
 			if(oAction === sap.m.MessageBox.Action.DELETE) {
 				this._getSmartTableById().getTable().getSelectedItems().forEach(function(oItem){
                     var sPath = oItem.getBindingContextPath();	
 					var mParameters = {"groupId":that._m.groupID};
+					var oRecord = that.getModel().getProperty(sPath);
+
+					var oDeleteMIMaterialCodeKey = {
+						tenant_id : oRecord.tenant_id,
+						company_code : oRecord.company_code,
+						org_type_code : oRecord.org_type_code,
+						org_code: oRecord.org_code,
+						mi_material_code: oRecord.mi_material_code,
+						category_code:  oRecord.category_code
+					}
+					//console.log("oDeleteMIMaterialCodeKey", oDeleteMIMaterialCodeKey );
+					var oDeleteMaterialCodePath = oModel.createKey(
+							that._m.serviceName.mIMaterialCode,
+							oDeleteMIMaterialCodeKey
+					);
+					//console.log("oDeleteMaterialCodePath", oDeleteMaterialCodePath );
 					//수정대상
 					//시황자재 가격관리 등록이 되어 있거나 자재별 시황자재 BOM 에 등록되어 있는 데이타는 삭제 할수 없다.
-					//MIMatListView - 시황자재 BOM
-					sPath = sPath.replace("MIMatListView", "MIMaterialCode");
-					
-					oItem.getBindingContext().getModel().remove(sPath, mParameters);
+					oItem.getBindingContext().getModel().remove(oDeleteMaterialCodePath, mParameters);
 				});
 				
 				var oModel = this.getView().getModel();
@@ -342,7 +356,8 @@ sap.ui.define([
 		      		groupId: this._m.groupID, 
 		        	success: this._handleDeleteSuccess.bind(this),
 		        	error: this._handleDeleteError.bind(this)
-		     	});
+				});
+				oModel.refresh(true); 
             } 
             console.groupEnd();
 		},
@@ -448,10 +463,10 @@ sap.ui.define([
 			//수정대상 : 수정 검색한 값을 기준으로 데이타를 수정해야한다. 
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
-				tenant_id: "L2100",
-				company_code: "*",
-				org_type_code: "BU",
-				org_code: "BIZ00100",
+				tenant_id: this._sso.dept.tenant_id,
+				company_code: this._sso.dept.company_code,
+				org_type_code: this._sso.dept.org_type_code,
+				org_code: this._sso.dept.org_code,
 				mi_material_code: "new"				
             });
 			

@@ -1,15 +1,12 @@
 
 MICategoryHierarchyStructure category_name 안보임 
 MIMaterialCostInformationView 오류
-mainList category_code 부재로 삭제 안됨.  확인해야함 
-mi main 삭제 오류 _deleteAction category_key가 아님 
 
 "/MIMatListView(tenant_id='L2100',company_code='*',org_type_code='BU',org_code='BIZ00100',mi_material_code='2-1234')"
 "/MIMaterialCodeText(tenant_id='L2100',company_code='*',org_type_code='BU',org_code='BIZ00100',mi_material_code='2-12
 
 /MIMaterialCode(tenant_id='L2100',company_code='*',org_type_code='BU',
-org_code='BIZ00100',mi_material_code='2-1234',
-category_code=null)
+org_code='BIZ00100',mi_material_code='2-1234',category_code=null)
 1. 남은 작업 우선순위 3
 카테고리 표현 변경 
 

@@ -621,7 +621,7 @@ sap.ui.define([
         /* =========================================================== */
 
         /**
-         * 자재정보 MIMaterialCodeBOMManagement Read
+         * 자재정보 MIMaterialCodeBOMManagement Read dev121212
          * @private
          */
         _onMidServiceRead : function(){
@@ -1049,6 +1049,7 @@ sap.ui.define([
             this.onMaterialDetailClose();
         },
 
+        
         /**
          * 자재코드/서플라이어 검색후 Dialog Apply 
          */
@@ -1057,8 +1058,11 @@ sap.ui.define([
             var oTable = this._findFragmentControlId(this._m.fragementId.materialDialog, "materialTable"),            
                 oSelected = oTable.getSelectedContexts(),
                 _oUiData = this.getModel("_oUiData"),                
-                oModel = this.getModel("materialTableList");
-                
+                midTable = this.getModel("midTable");
+
+                //테이블에 충분한 데이타가 있다면 Record로 찻는다. 
+                //oRecord
+            
             if(oSelected.length<1){
                 this._showMessageBox(
                     "선택 확인",
@@ -1069,41 +1073,27 @@ sap.ui.define([
                 return;
             }
 
+            var aSelectedItems = oTable.getSelectedItems(),
+                vendor = aSelectedItems[0].getCells()[0].getText(),
+                vendor_name= aSelectedItems[0].getCells()[1].getText(),
+                material_code= aSelectedItems[0].getCells()[2].getText(),
+                material_desc= aSelectedItems[0].getCells()[3].getText(),
+                supplier_code= aSelectedItems[0].getCells()[4].getText(),
+                supplier_local_name= aSelectedItems[0].getCells()[5].getText();
+
+            var sourceName = "[" + material_code + "] ";
+            sourceName = sourceName.concat(material_desc);
+            sourceName = sourceName.concat(" / ");
+            sourceName = sourceName.concat(" [");
+            sourceName = sourceName.concat(supplier_code);
+            sourceName = sourceName.concat("] ");
+            sourceName = sourceName.concat(supplier_local_name);
+
             var input_material_code = this.byId("input_material_code");
-            //다수 일수 있는 경우를 대비. 현재 한건. 
-            
-            for(var i=0;i<oSelected.length;i++){
+            input_material_code.setValue(sourceName);
 
-                var idx = parseInt(oSelected[i].sPath.substring(oSelected[i].sPath.lastIndexOf('/') + 1));
-
-                //dev2111-1956 테이블 정보를 확인하고  모델과 같은 시황자재를 찾고..그 정보를 담는다..
-                /*
-                var odata = oModel.oData[idx];
-                var oType = _oUiData.getProperty("/radioButtonGroup");
-
-            
-                odata.material_code = oModel.oData[idx].supplier_code;
-                odata.material_desc = oModel.oData[idx].supplier_code;          
-                odata.supplier_code = oModel.oData[idx].supplier_code;
-                odata.supplier_local_name = oModel.oData[idx].supplier_local_name;
-                odata.supplier_english_name = this._imsiData.supplier_english_name;  
-                input_material_code.setValue(odata.material_code);
-                _oUiData.setProperty("/material_code",); 
-                _oUiData.setProperty("/supplier_code",); 
-                //     tenant_name: "",
-                //     radioButtonGroup:0,
-                //     material_code : "",
-                //     supplier_code : ""
-                // });
-
-                //[자재코드] 자재명 / [서플라이 코드] 서플라이 명
-
-                //code, name,  category, 
-                //추가일경우 다음 값들은 없음.
-                //수정일경우 자재와 연동된 데이타를 로드함 
-                //소요량, use flag, 화폐단위, 수량단위, 거래소, 인도조건
-                */
-            }
+            var input_hidden_material_code = this.byId("input_hidden_material_code");
+            input_hidden_material_code.setValue(material_code);
 
             this.onMaterialDialog_close();
         },
@@ -1256,9 +1246,9 @@ sap.ui.define([
                 bCheckValidate = true;
 
             if(_oUi.getProperty("/createMode")){
-                bCheckValidate =  this.validator.validate(this.byId("page"));
+                bCheckValidate =  this.validator.validate(this.byId(this._m.page));
                 if(bCheckValidate) {
-                    this.validator.clearValueState(this.byId("page"));
+                    this.validator.clearValueState(this.byId(this._m.page));
                 }
             }
             
@@ -1536,9 +1526,45 @@ sap.ui.define([
         /*
         * MaterialDialog.fragment  에서 값을 받아 테이블에 등록 처리 
          */
-        _fnMarteialCreateItem : function () {
+        _fnMarteialCreateItem : function (oModel, oData) {
+            console.log("_fnMarteialCreateItem");
+            var createItemParameters = {
+                    "tenant_id": oData.tenant_id,
+                    "company_code": oData.company_code,
+                    "org_type_code":  oData.org_type_code,
+                    "org_code": oData.org_code,
+                    "material_code": oData.material_code,
+                    "material_desc": oData.material_desc,
+                    "supplier_code": oData.supplier_code,
+                    "supplier_local_name": oData.supplier_local_name,
+                    "supplier_english_name": oData.supplier_english_name,
+                    "base_quantity": oData.base_quantity,
+                    "processing_cost": oData.processing_cost,
+                    "pcst_currency_unit": oData.pcst_currency_unit,
+                    "mi_material_code": oData.mi_material_code,
+                    "mi_material_name": oData.mi_material_name,
+                    "category_code": oData.category_code,
+                    "category_name": oData.category_name,
+                    "reqm_quantity_unit": oData.reqm_quantity_unit,
+                    "reqm_quantity": oData.reqm_quantity,
+                    "currency_unit": oData.currency_unit,
+                    "mi_base_reqm_quantity": oData.mi_base_reqm_quantity,
+                    "quantity_unit": oData.quantity_unit,
+                    "exchange": oData.exchange,
+                    "termsdelv": oData.termsdelv,
+                    "use_flag": oData.use_flag,
+                    "local_create_dtm": new Date(),
+                    "local_update_dtm": new Date(),
+                    "create_user_id": this._sso.user.id,
+                    "update_user_id": this._sso.user.id,
+                    "system_create_dtm": new Date(),
+                    "system_update_dtm": new Date(),
+                    "itemMode" : "C",
+                    "odataMode" : "N"                      
+            };
+            
+            //midTable 모델에 추가. 
 
-            //this.onMidListItemAdd();
         },
         /**
          * Crate

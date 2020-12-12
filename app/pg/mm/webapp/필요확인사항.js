@@ -12,11 +12,11 @@ category_name  사라짐...
 
 
 작업 라인 - dev2111-1956
--- 테이블이 준비되면 다 변경해야할듯 
--- 자재 선택후 시황자재 리스트에서 add를 선택 가격정보 detail fragment 오픈 
--- 가격정보 선택하고 시황자재 리스트에 추가. (use_flag, 화폐단위 선택하게끔함)
--- 시황자재 리스트 등록, 수정, 삭제 테스트,
--- bom 자재 등록 
+테이블이 준비되면 다 변경해야할듯 
+자재 선택후 시황자재 리스트에서 add를 선택 가격정보 detail fragment 오픈 
+가격정보 선택하고 시황자재 리스트에 추가. (use_flag, 화폐단위 선택하게끔함)
+시황자재 리스트 등록, 수정, 삭제 테스트,
+om 자재 등록 
 
 1. 수정사항 아래 함수 검색 부분 전체 수정 대상 
 
@@ -171,158 +171,47 @@ entity MI_Material_Code_Bom_Mngt {
 https://lgcommondev-workspaces-ws-k8gvf-app1.jp10.applicationstudio.cloud.sap/pg/mi/webapp/srv-api/odata/v2/pg.marketIntelligenceService/MIMaterialCodeBOMManagement/?$format=json
 
 
-manifest.json back
+var aSelectedItems = oTable.getSelectedItems();
+var vendor = aSelectedItems[0].getCells()[0].getText(),
+    vendor_name= aSelectedItems[0].getCells()[1].getText(),
+    material_code= aSelectedItems[0].getCells()[2].getText(),
+    material_desc= aSelectedItems[0].getCells()[3].getText(),
+    supplier_code= aSelectedItems[0].getCells()[4].getText(),
+    supplier_local_name= aSelectedItems[0].getCells()[5].getText();
 
-{
-  "_version": "1.12.0",
-  "sap.app": {
-    "id": "pg.mm",
-    "type": "application",
-    "i18n": "i18n/i18n.properties",
-    "title": "{{appTitle}}",
-    "description": "{{appDescription}}",
-    "applicationVersion": {
-      "version": "1.0.0"
-    },
-    "ach": "set-ach",
-    "resources": "resources.json",
-    "dataSources": {
-      "mainService": {
-        "uri": "srv-api/odata/v2/pg.marketIntelligenceService/",
-        "type": "OData",
-        "settings": {
-          "odataVersion": "2.0"
-        }
-      },
-      "commonUtilService": {
-        "uri": "srv-api/odata/v2/util.CommonService/",
-        "type": "OData",
-        "settings": {
-          "odataVersion": "2.0"
-        }
-      }
-    }
-  },
-  "sap.fiori": {
-    "registrationIds": [],
-    "archeType": "transactional"
-  },
-  "sap.ui": {
-    "technology": "UI5",
-    "icons": {
-      "icon": "sap-icon://task",
-      "favIcon": "",
-      "phone": "",
-      "phone@2": "",
-      "tablet": "",
-      "tablet@2": ""
-    },
-    "deviceTypes": {
-      "desktop": true,
-      "tablet": true,
-      "phone": true
-    }
-  },
-  "sap.ui5": {
-    "rootView": {
-      "viewName": "pg.mm.view.App",
-      "type": "XML",
-      "async": true,
-      "id": "app"
-    },
-    "dependencies": {
-      "minUI5Version": "1.66.0",
-      "libs": {
-        "sap.ui.core": {},
-        "sap.m": {},
-        "sap.f": {}
-      }
-    },
-    "contentDensities": {
-      "compact": true,
-      "cozy": true
-    },
-    "handleValidation": true,
-    "models": {
-      "i18n": {
-        "type": "sap.ui.model.resource.ResourceModel",
-        "settings": {
-          "bundleName": "pg.mm.i18n.i18n"
-        }
-      },
-      "util": {
-        "dataSource": "commonUtilService",
-        "preload": true,
-        "settings": {
-          "defaultBindingMode": "TwoWay",
-          "defaultCountMode": "Inline",
-          "refreshAfterChange": false,
-          "useBatch": true
-        }
-      },
-      "": {
-        "dataSource": "mainService",
-        "preload": true,
-        "settings": {
-          "defaultBindingMode": "TwoWay",
-          "defaultCountMode": "Inline",
-          "refreshAfterChange": true,
-          "useBatch": true
-        }
-      }
-    },
-    "resourceRoots": {
-      "ext.lib": "../../../lib"
-    },
-    "routing": {
-      "config": {
-        "routerClass": "sap.m.routing.Router",
-        "viewType": "XML",
-        "viewPath": "pg.mm.view",
-        "controlId": "fcl",
-				"transition": "slide",
-        "bypassed": {
-          "target": [
-            "notFound"
-          ]
-        },
-        "async": true
-      },
-      "routes": [
-          {
-              "pattern": ":layout:",
-              "name": "mainPage",
-              "target": [
-                  "mainObject"
-              ]
-          },
-          {  
-              "pattern": "midObject/{layout}/{tenant_id}/{company_code}/{org_type_code}/{org_code}/{mi_material_code}",
-              "name": "midPage",
-              "target": [
-                  "mainObject",
-                  "midObject"
-              ]
-          }
-      ],
-      "targets": {
-          "mainObject": {
-              "viewName": "MainList",
-              "controlAggregation": "beginColumnPages"
-          },
-          "midObject": {
-              "viewName": "MidObject",
-              "controlAggregation": "midColumnPages"
-          },
-          "notFound": {
-            "viewName": "MidObjectNotFound",
-            "viewId": "notFound"
-          }
-      }
-    }
-  },
-  "sap.cloud": {
-    "public": true,
-    "service": "sppCap_ui_dev"
-  }
-}
+//todo : 12122045    가격정보 Fragment 오픈후 Applay 할때 참조 
+//_fnMarteialCreateItem(oModel, oData)     
+var insertData = {
+    "tenant_id": this._sso.dept.tenant_id,
+    "company_code": this._sso.dept.company_code,
+    "org_type_code":  this._sso.dept.org_type_code,
+    "org_code": this._sso.dept.org_code,
+    "material_code": material_code,
+    "material_desc": material_desc,
+    "supplier_code": supplier_code,
+    "supplier_local_name": supplier_local_name,
+    "supplier_english_name": supplier_local_name,
+    "base_quantity": "0",
+    "processing_cost": "0",
+    "pcst_currency_unit": "0",
+    "mi_material_code": oData.mi_material_code,
+    "mi_material_name": oData.mi_material_name,
+    "category_code": oData.category_code,
+    "category_name": oData.category_name,
+    "reqm_quantity_unit": oData.reqm_quantity_unit,
+    "reqm_quantity": oData.reqm_quantity,
+    "currency_unit": oData.currency_unit,
+    "mi_base_reqm_quantity": oData.mi_base_reqm_quantity,
+    "quantity_unit": oData.quantity_unit,
+    "exchange": oData.exchange,
+    "termsdelv": oData.termsdelv,
+    "use_flag": oData.use_flag,
+    "local_create_dtm": new Date(),
+    "local_update_dtm": new Date(),
+    "create_user_id": this._sso.user.id,
+    "update_user_id": this._sso.user.id,
+    "system_create_dtm": new Date(),
+    "system_update_dtm": new Date(),
+    "itemMode" : "C",
+    "odataMode" : "N"                      
+};            
