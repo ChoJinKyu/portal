@@ -1,3 +1,16 @@
+onValueHelpMaterialDialogSearch 필터 하드코딩  L1100 다른자재가 없어서...
+onValueHelpMaterialDialogApply
+MIMaterialCostInformationView 데이타 확인되지 않고 있음
+
+material_desc 확인해야함.. 96라인 initiallyVisibleFields 다시 추가해야함. 
+자재명과 공급업체 명 검색 필드 있어서 추가 해야함. 
+2020/12/11
+material_desc 사라짐...
+supplier_local_name 사라짐...
+mi_material_name 사라짐...
+category_name  사라짐...
+
+
 작업 라인 - dev2111-1956
 -- 테이블이 준비되면 다 변경해야할듯 
 -- 자재 선택후 시황자재 리스트에서 add를 선택 가격정보 detail fragment 오픈 
@@ -6,14 +19,20 @@
 -- bom 자재 등록 
 
 1. 수정사항 아래 함수 검색 부분 전체 수정 대상 
-onValueHelpMaterialDialogSearch 필터 하드코딩  L1100 다른자재가 없어서...
-onValueHelpMaterialDialogApply
+
+
+
 http://127.0.0.1:8080/odata/v2/pg.marketIntelligenceService/MaterialView/?$top=5&$filter=tenant_id eq 'L1100' and material_code eq '6910BLC0006'
 
-//수정대상 임시데이타..(데이타 없음)
+http://127.0.0.1:8080/odata/v2/pg.marketIntelligenceService/?$format=json&$top=5
+
+http://127.0.0.1:8080/odata/v2/pg.marketIntelligenceService/MIMaterialCodeBOMManagement/?$format=json&$top=5
+
+http://127.0.0.1:8080/odata/v2/pg.marketIntelligenceService/MIMaterialCodeList/?$format=json&$top=5
+
+http://127.0.0.1:8080/odata/v2/pg.marketIntelligenceService/SupplierView/?$format=json&$top=5
 
 
-MIMaterialCostInformationView 데이타 확인되지 않고 있음
 
 MaterialDialog.fragment < --  Part (자재코드)  -> Masterial_Code 사용  ===============================
 
@@ -37,13 +56,7 @@ onMainTableCreate
 
 maint list view 화면 작성
 
-5. material_desc 확인해야함.. 96라인 initiallyVisibleFields 다시 추가해야함. 
-자재명과 공급업체 명 검색 필드 있어서 추가 해야함. 
-2020/12/11
-material_desc 사라짐...
-supplier_local_name 사라짐...
-mi_material_name 사라짐...
-category_name  사라짐...
+
 
 
     <Column hAlign="Center"  demandPopin="true" importance="High" popinDisplay="WithoutHeader">

@@ -39,8 +39,7 @@ sap.ui.define([
             serviceName : {
                 marketIntelligenceService : "pg.marketIntelligenceService", //main Service
                 orgTenantView : "/OrgTenantView", //관리조직 View
-				mIMaterialCodeBOMManagement : "/MIMaterialCodeBOMManagement",//자재별 시황자재 BOM
-				mIMaterialPriceManagement : "/MIMaterialCodeBOMManagement"//시황자재 가격관리
+				mIMatListView : "/MIMatListView"//자재별 시황자재 
             },			
             tableName : "maindTable", 
             filter : {  
@@ -319,24 +318,28 @@ sap.ui.define([
 
         /**
          * mainTable Delete Action
+		 * category code 코드를 알수 없음 화면은 보이고 있음.
          * @param {sap.m.MessageBox.Action} oAction 
          */
 		_deleteAction: function(oAction) {
-            console.group("_deleteAction");
+			console.group("_deleteAction");
+			var that = this;
             
 			if(oAction === sap.m.MessageBox.Action.DELETE) {
 				this._getSmartTableById().getTable().getSelectedItems().forEach(function(oItem){
                     var sPath = oItem.getBindingContextPath();	
-					var mParameters = {"groupId":"deleteGroup"};
+					var mParameters = {"groupId":that._m.groupID};
 					//수정대상
 					//시황자재 가격관리 등록이 되어 있거나 자재별 시황자재 BOM 에 등록되어 있는 데이타는 삭제 할수 없다.
-					//MIMaterialCodeBOMManagement - 시황자재 BOM
+					//MIMatListView - 시황자재 BOM
+					sPath = sPath.replace("MIMatListView", "MIMaterialCode");
+					
 					oItem.getBindingContext().getModel().remove(sPath, mParameters);
 				});
 				
 				var oModel = this.getView().getModel();
 				oModel.submitChanges({
-		      		groupId: "deleteGroup", 
+		      		groupId: this._m.groupID, 
 		        	success: this._handleDeleteSuccess.bind(this),
 		        	error: this._handleDeleteError.bind(this)
 		     	});
@@ -348,7 +351,7 @@ sap.ui.define([
 		 * 자재별 시황자재 BOM 등록 내역 확인
 		 * @private
 		 */
-		_checkMIMaterialCodeBOMManagement : function (oItemData) {
+		_checkMIMatListView : function (oItemData) {
 			
 			var oModel = this.getModel(),
 			checkFilters = [],
@@ -360,7 +363,7 @@ sap.ui.define([
 			checkFilters.push(new Filter("org_code", FilterOperator.Contains, oItemData.org_code));				
 			checkFilters.push(new Filter("mi_material_code", FilterOperator.Contains, oItemData.mi_material_code));				
 
-			oModel.read(this._m.serviceName.mIMaterialCodeBOMManagement, {
+			oModel.read(this._m.serviceName.mIMatListView, {
 				async: false,
 				filters: checkFilters,
 				success: function (rData, reponse) {
@@ -417,7 +420,7 @@ sap.ui.define([
 			// 			console.log("_deleteCheck Promise Start------");
 			// 			function() {
 			// 				console.log("_deleteCheck Promise resolve------");
-			// 				resolve(checkMIMaterialCodeBOMManagement(oItemData));
+			// 				resolve(checkMIMatListView(oItemData));
 			// 			}
 			// 		}
 			// 	);

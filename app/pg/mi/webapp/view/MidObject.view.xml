@@ -93,7 +93,7 @@
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection>                                       
                                     <form:SimpleForm
-                                        id="mainObjectForm1"
+                                        id="mid_simpleForm"
                                         editable="true"
                                         layout="ColumnLayout"
                                         columnsM="2"
@@ -112,11 +112,11 @@
                                                 liveChange=".onMiMaterialCodeCheck"
                                                 class="sapUiSmallMarginEnd"
                                                 value="{
-                                                            path : '{_oUiData>/mi_material_code}',
+                                                            path : '{_oUiData>/string}',
                                                             type : 'sap.ui.model.type.String',
                                                             constraints : {
                                                                 minLength: 1,
-                                                                maxLength: 3
+                                                                maxLength: 30
                                                             }
                                                 }"                                                
                                                 visible="{oUi>/createMode}"
@@ -147,7 +147,7 @@
                                             visible="{oUi>/createMode}"
                                             required="{oUi>/createMode}"
                                             placeholder="선택하세요">
-                                            <core:Item key="{category_code}" text="{category_name}" />
+                                            <core:Item key="{category_code}" text="{category_code}" />
                                         </ComboBox>
                                         <Label  text="사용여부" 
                                                 design="Bold" 
@@ -171,7 +171,7 @@
                         </uxap:ObjectPageSection>
                     </uxap:sections>
                     <uxap:sections>
-                        <uxap:ObjectPageSection title="Material Language Manage">
+                        <uxap:ObjectPageSection titleUppercase="false" title="Material Language Manage">
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection>
                                     <uxap:blocks>
@@ -223,10 +223,11 @@
                                                             <Text text="{mIMaterialCodeText>itemMode}"/>
                                                             <VBox>
                                                                 <ComboBox   selectionChange=".onComboBoxLanguageChange"
-                                                                            selectedKey="{mIMaterialCodeText>language_code}"
+                                                                            selectedKey="KO"
                                                                             items="{
                                                                                 path: 'languageView>/',                                                                                                                            
                                                                                 templateShareable:false}"
+                                                                            required="{= ${mIMaterialCodeText>itemMode}==='C'}"
                                                                             visible="{= ${mIMaterialCodeText>itemMode}==='C'}"
                                                                             placeholder="선택">
                                                                     <core:Item key="{languageView>code}" 
@@ -237,6 +238,8 @@
                                                             </VBox>
                                                             <VBox>
                                                                 <Input  value="{mIMaterialCodeText>mi_material_name}" 
+                                                                        required="{=!${oUi>/readMode}}"
+                                                                        liveChange=".onRequiredCheckTable"
                                                                         visible="{=!${oUi>/readMode}}"/>
                                                                 <Text   text="{mIMaterialCodeText>mi_material_name}"
                                                                         visible="{oUi>/readMode}"/>

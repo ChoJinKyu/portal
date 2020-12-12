@@ -8,7 +8,7 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "sap/ui/core/ValueState",
-    "./Validator"
+    "ext/lib/util/Validator"
 ], function (BaseController, JSONModel,   DateFormatter, ValidatorUtil, Filter, FilterOperator, MessageBox, MessageToast, ValueState, Validator) {
     "use strict";
     return BaseController.extend("pg.mm.controller.MidObject", {
@@ -162,7 +162,9 @@ sap.ui.define([
                     pcst_currency_unit :"",
                     base_quantity : "",
                     radioButtonGroup : "",
-                    input_material_code : ""
+                    input_material_code : "",
+                    string:null,
+                    number:0                    
                 });
 
                 
@@ -643,7 +645,7 @@ sap.ui.define([
                 filters: aFilters,
                 success: function (rData, reponse) {
 
-                    console.log( sServiceUrl + " json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
+                    //console.log( sServiceUrl + " json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
 
                     
 
@@ -680,11 +682,13 @@ sap.ui.define([
                     "oUiData",
                     "_oUi",
                     "_oUiData",
-                    "_deleteItemOdata",
+                    "_deleteItem",
+                    "midList",
                     "oUi"
                 ];
     
                 this.setArrayModelNullAndUpdateBindings(arrayModel);
+
         },
 		/**
 		 * When it routed to this page from the other page.
@@ -694,8 +698,8 @@ sap.ui.define([
         _onRoutedThisPage: function (oEvent) {
             console.log("_onRoutedThisPage");
 
-
             this._initialModel();
+            this._onPageClearValidate();
 
             var _oUiData = this.getModel("_oUiData"),
                 oArgs = oEvent.getParameter("arguments"),
@@ -732,7 +736,7 @@ sap.ui.define([
                 else {
                     this._fnSetEditMode();
                 }
-        } 
+            } 
         
             //자재정보 MIMaterialCodeBOMManagement Read
 
@@ -746,7 +750,7 @@ sap.ui.define([
                 filters: bFilters,
                 success: function (rData, reponse) {
 
-                    console.log("json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
+                    //console.log("json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
 
                     if(reponse.data.results.length>0){
                         _oUiData.setProperty("/tenant_name", reponse.data.results[0].tenant_name);
@@ -928,7 +932,7 @@ sap.ui.define([
                 filters: aFilter,
                 success: function (rData, reponse) {
 
-                    console.log( sServiceUrl + " json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
+                    //console.log( sServiceUrl + " json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
                     mIMaterialCodeList.setData(reponse.data.results);
                     that.getOwnerComponent().setModel(mIMaterialCodeList, "mIMaterialCodeList");
                 }
@@ -1008,7 +1012,7 @@ sap.ui.define([
                 async: false,
                 filters: aFilter,
                 success: function (rData, reponse) {
-                    console.log( sServiceUrl + " json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
+                    //console.log( sServiceUrl + " json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
                     mIMaterialCostInformationView.setData(reponse.data.results);
                     that.getOwnerComponent().setModel(mIMaterialCostInformationView, "mIMaterialCostInformationView");
                 }
@@ -1022,7 +1026,7 @@ sap.ui.define([
         onMaterialDetailApply : function () {
             console.log("onMaterialDetailApply");
             var oMaterialTableList = this.getModel("materialTableList");
-            var rightTable = this._findFragmentControlId(this._m.fragementId.materialDetail, "rightTable"),            
+            var rightTable = this._findFragmentControlId(this._m.fragementId.materialDetail, "rightTable");            
 
             if(rightTable.getSelectedItems().length<1){
                 this._showMessageBox(
@@ -1176,7 +1180,7 @@ sap.ui.define([
             var oModel = this.getOwnerComponent().getModel("midList"),
                 _deleteItem = this.getModel("_deleteItem"),
                 that = this,
-                oTable = this.getView().byId("midTableChange"),
+                oTable = this.getView().byId("midTable"),
                 oSelected = oTable.getSelectedContexts();
 
             if(oSelected.length<1){
@@ -1241,6 +1245,49 @@ sap.ui.define([
             MessageToast.show(content);
         },        
 
+
+
+        /**
+         * Validate
+         * @private 
+         */
+        _onPageValidate: function(){
+            var _oUi = this.getModel("oUi"),
+                bCheckValidate = true;
+
+            if(_oUi.getProperty("/createMode")){
+                bCheckValidate =  this.validator.validate(this.byId("page"));
+                if(bCheckValidate) {
+                    this.validator.clearValueState(this.byId("page"));
+                }
+            }
+            
+            bCheckValidate =  this.validator.validate(this.byId("midTable"));
+            if(bCheckValidate){
+                this.validator.clearValueState(this.byId("midTable"));
+            }
+            return bCheckValidate;
+
+        },
+
+        /**
+         * midTable required live check
+         */
+        onRequiredCheckTable : function() {            
+            //if(this.validator.validate(this.byId("midTable"))){
+                this.validator.clearValueState(this.byId("midTable"));
+           // }
+        },
+        /**
+         * Clear Validate
+         * @private 
+         */
+        _onPageClearValidate: function(){
+            this.validator.clearValueState(this.byId("page"));
+            this.validator.clearValueState(this.byId("midTable"));
+        },
+        
+
         /**
          * 필수값 체크
          * @private
@@ -1250,13 +1297,13 @@ sap.ui.define([
             var oUi = this.getModel("oUi"),
                 bValueCheckFlag = true;
 
-            var oTable = this.getView().byId("midTableChange");
+            var oTable = this.getView().byId("midTable");
 
             for (var idx = 0; idx < oTable.getItems().length; idx++) {
                 
                 var items = oTable.getItems()[idx];
 
-                debugger;
+                //debugger;
 
                 var imputReqm_quantity = items.getCells()[4].mAggregations.items[0].mProperties.value,
                     comboboxUse_flag = items.getCells()[5].mAggregations.items[0].mProperties.selectedKey;
@@ -1268,6 +1315,7 @@ sap.ui.define([
                         this._m.messageType.Warning,
                         function(){return;}
                     );
+                    bValueCheckFlag  =false;
                     return false;
                 }
 
@@ -1277,9 +1325,12 @@ sap.ui.define([
                         "Use Flag 를 선택하여 주십시요.",
                         function(){return;}
                     );
+                    bValueCheckFlag  =false;
                     return false;
+                    
                 }
             }
+            return bValueCheckFlag;
 
         },
         /**
@@ -1290,8 +1341,11 @@ sap.ui.define([
             // this.getView().getModel().attachPropertyChange(this._propertyChanged.bind(this));
              var oUi = this.getModel("oUi");
              var bCreateFlag = oUi.getProperty("/createMode");
-             var bOkActionFlag = false;
  
+             if(!this._onPageValidate()){
+                return;
+             }
+
             if(!this._checkData()){
                 return false;
             }
@@ -1326,6 +1380,9 @@ sap.ui.define([
                  });
              }
         },
+
+
+
          /**
           * 저장
           */
@@ -1338,8 +1395,8 @@ sap.ui.define([
             var bOkActionFlag = false;
 
             //comboBox_pcst_currency_unit=this._findFragmentControlId(this._m.fragementId.change, "comboBox_pcst_currency_unit").getSelectedKey(),
-            //this._findFragmentControlId(this._m.fragementId.change, "midTableChange"),
-            var oTable = this.getView().byId("midTableChange"),
+            //this._findFragmentControlId(this._m.fragementId.change, "midTable"),
+            var oTable = this.getView().byId("midTable"),
                 oModel = this.getOwnerComponent().getModel(),
                 midList = this.getOwnerComponent().getModel("midList"),
                 oUiData = this.getModel("oUiData"),
@@ -1439,8 +1496,7 @@ sap.ui.define([
                         mi_material_code: _deleteItemOdata[i].mi_material_code,
                         language_code:  _deleteItemOdata[i].language_code
                     }
-
-                    debugger;
+                 
                     oDeleteMIMaterialCodeBOMManagementPath = oModel.createKey(
                             this._m.serviceName.mIMaterialCodeText,
                             oDeleteMIMaterialCodeBOMManagementKey
@@ -1649,13 +1705,15 @@ sap.ui.define([
                 //     oItem.getBindingContext().getModel().remove(sPath, mParameters);
                     
                 // });
-				
+                
+                this.getView().busy(true);
 				var oModel = this.getView().getModel();
 				oModel.submitChanges({
 		      		groupId: "deleteGroup", 
 		        	success: this._handleDeleteSuccess.bind(this),
 		        	error: this._handleDeleteError.bind(this)
-		     	});
+                 });
+                 this.getView().busy(false);
             } 
 
         },

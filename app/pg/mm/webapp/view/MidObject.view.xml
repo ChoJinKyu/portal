@@ -96,8 +96,17 @@
                                                     class="sapUiSmallMarginBottom"                                                    
                                                     showValueHelp="true" 
                                                     enabled = "true"
-                                                    placeholder="선택해주세요"
-                                                    valueHelpRequest=".handleValueHelpMaterial"/>
+                                                    placeholder="자재를 선택해주세요"
+                                                    valueHelpRequest=".handleValueHelpMaterial"
+                                                    value="{
+                                                            path : '{_oUiData>/string}',
+                                                            type : 'sap.ui.model.type.String',
+                                                            constraints : {
+                                                                minLength: 1,
+                                                                maxLength: 30
+                                                            }
+                                                        }"  
+                                                    />
                                                                                 
                                         <FlexBox    height="40px" 
                                                     alignItems="Start" 
@@ -119,7 +128,16 @@
                                                         class="sapUiSmallMarginBottom"
                                                         type = "Number"
                                                         placeholder="Number"                                                                                                
-                                                        visible="{oUi>/createMode}"/>       
+                                                        visible="{oUi>/createMode}"
+                                                        value="{
+                                                            path : '{_oUiData>/number}',
+                                                            type : 'sap.ui.model.type.Integer',
+                                                            constraints : {
+                                                                minLength: 1,
+                                                                maxLength: 10
+                                                            }
+                                                        }"                                                         
+                                                        />       
                                             </layout:VerticalLayout>  
                                             <layout:VerticalLayout class="sapUiTinyMarginBottom sapUiLargeMarginBegin sapUiLargeMarginEnd">
                                                 <Label  text="가공비:" 
@@ -133,7 +151,15 @@
                                                         fieldGroupIds="requiredField"
                                                         visible="{oUi>/createMode}"
                                                         type = "Number"
-                                                        placeholder="Number"                                                                                                               
+                                                        placeholder="Number"
+                                                        value="{
+                                                            path : '{_oUiData>/number}',
+                                                            type : 'sap.ui.model.type.Integer',
+                                                            constraints : {
+                                                                minLength: 1,
+                                                                maxLength: 10
+                                                            }
+                                                        }"                                                                                                                                                                        
                                                 />
                                             </layout:VerticalLayout>                                          
                                             <layout:VerticalLayout class="sapUiLargeMarginBegin sapUiLargeMarginBottom" >
@@ -175,7 +201,7 @@
                                         Note : 수정대상 mi_material_code 전달 받은 값으로 수정 
                                          -->  
                                          <Table
-                                            id="midTableChange" 
+                                            id="midTable" 
                                             items="{midList>/}"
                                             mode="{= ${oUi>/readMode}?'None':'MultiSelect'}"
                                             width="100%">
@@ -260,9 +286,9 @@
                                                         <Text text="{midList>category_name}" />  
                                                         <VBox alignItems="Center">
                                                             <Input  visible="{=!${oUi>/readMode}}"
-                                                                    required="true"
-                                                                    fieldGroupIds="requiredField"
+                                                                    required="{=!${oUi>/readMode}}"
                                                                     type = "Number" 
+                                                                    liveChange=".onRequiredCheckTable"
                                                                     value="{ path: 'midList>reqm_quantity',
                                                                             type: 'sap.ui.model.type.Number',
                                                                             constraints: {minLength : 1, maxLength : 10} }"/>                                                        
@@ -273,6 +299,7 @@
                                                         <VBox  alignItems="Center">  
                                                             <ComboBox   placeholder="선택"
                                                                         visible="{=!${oUi>/readMode}}" 
+                                                                        required="{=!${oUi>/readMode}}"
                                                                         items ="{
                                                                             path : '/UseYNView',
                                                                             formatter: '.formatter.toYesNo'
@@ -309,7 +336,7 @@
                 <OverflowToolbar id="overflowToolbar">
                     <ToolbarSpacer/>
                         <HBox visible="{oUi>/readMode}">
-                            <Button type="Transparent" text="Cancel" enabled="true" press=".onCancel"/>                        
+                            <Button type="Transparent" text="Cancel" enabled="false" />                        
                             <Button type="Transparent" text="Edit" enabled="true" press=".onEdit"/>
                             <Button type="Transparent" text="Delete" enabled="false" />
                             <Button type="Emphasized" text="Save"  enabled="false"  />
