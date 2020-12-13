@@ -365,12 +365,13 @@ sap.ui.define([
         onPsDelRow: function () {
             var psTable = this.byId("psTable")
                 , psModel = this.getModel("appDetail")
-                , oSelected = psTable.getSelectedIndices()
+                , oSelected = psTable.getSelectedIndices();
                
                 ;
             if (oSelected.length > 0) {
                 oSelected.forEach(function (idx) {
-                    psModel.markRemoved(idx)
+                    psModel.removeRecord(idx)
+                  //  psModel.markRemoved(idx)
                 });
                 psTable.clearSelection();
 
