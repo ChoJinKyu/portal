@@ -11,27 +11,31 @@
   entity 위에 @cds.persistence.exists 명시  
   
   5. namespace : db
-  6. service : uomClassView
-  7. service description : UOM 클래스 View
+  6. service : uomClass
+  7. service description : UOM 클래스 서비스
   8. history
   -. 2020.11.24 : 최미희 최초작성
 *************************************************/
-using { dp as uomClass } from '../../../../../db/cds/dp/mm/DP_MM_UOM_CLASS-model';
-using { dp as uomClassLng } from '../../../../../db/cds/dp/mm/DP_MM_UOM_CLASS_LNG-model';
+using { dp as Class } from '../../../../../db/cds/dp/mm/DP_MM_UOM_CLASS-model';
+using { dp as ClassLng } from '../../../../../db/cds/dp/mm/DP_MM_UOM_CLASS_LNG-model';
 namespace dp;
-@path : '/dp.UomClassMgrService'
+@path : '/dp.UomClassMgtService'
 
-service UomClassMgrService {
+service UomClassMgtService {
+
+    entity UomClass as projection on Class.Mm_Uom_Class;
+    entity UomClassLng as projection on ClassLng.Mm_Uom_Class_Lng;
+
     view UomClassView(language_code: String) as
-    select m.tenant_id
-          ,m.uom_class_code
-          ,ifnull(l.uom_class_name, m.uom_class_name) as uom_class_name
-          ,ifnull(l.uom_class_desc, m.uom_class_desc) as uom_class_desc
+    select Key m.tenant_id,
+           Key m.uom_class_code
+          ,ifnull(l.uom_class_name, m.uom_class_name) as uom_class_name : String(20)
+          ,ifnull(l.uom_class_desc, m.uom_class_desc) as uom_class_desc : String(50)
           ,m.base_uom_code
           ,m.base_uom_name
           ,m.disable_date
-    from  uomClass.Mm_Uom_Class  m
-    left join uomClassLng.Mm_Uom_Class_Lng l
+    from  Class.Mm_Uom_Class  m
+    left join ClassLng.Mm_Uom_Class_Lng l
     on l.tenant_id = m.tenant_id
     and l.uom_class_code = m.uom_class_code
     and l.language_code = :language_code

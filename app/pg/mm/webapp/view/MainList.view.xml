@@ -93,6 +93,7 @@
         
 
                 <!-- Smart Table -->
+                <!-- initiallyVisibleFields="material_code,material_desc,supplier_code,base_quantity,processing_cost,mi_material_code,mi_material_name,category_name,reqm_quantity_unit,reqm_quantity,currency_unit,mi_base_reqm_quantity,quantity_unit,exchange,termsdelv,use_flag" -->
                 <smartTable:SmartTable
                     width="100%"
                     height="100%"
@@ -100,7 +101,7 @@
                     id="smartTable_MainTable_ResponsiveTable"
                     entitySet="MIMaterialCodeBOMManagement"
                     tableBindingPath="{MIMaterialCodeBOMManagement}"
-                    initiallyVisibleFields="material_code,material_desc,supplier_code,base_quantity,processing_cost,mi_material_code,mi_material_name,category_name,reqm_quantity_unit,reqm_quantity,currency_unit,mi_base_reqm_quantity,quantity_unit,exchange,termsdelv,use_flag"
+                    initiallyVisibleFields="material_code,supplier_code,base_quantity,processing_cost,mi_material_code,mi_material_name,category_name,reqm_quantity_unit,reqm_quantity,currency_unit,mi_base_reqm_quantity,quantity_unit,exchange,termsdelv,use_flag"
                     smartFilterId="smartFilterBar"
                     tableType="ResponsiveTable"
                     useExportToExcel="true"
@@ -151,13 +152,13 @@
                                         </customData>
                                             <Text text="자재코드"></Text>
                                         </Column>
-                                        <Column hAlign="Center" demandPopin="true" importance="High" >
+                                        <!-- <Column hAlign="Center" demandPopin="true" importance="High" >
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "material_desc", "leadingProperty": "material_desc", "sortProperty": "material_desc", "filterProperty": "material_desc", "columnIndex": 2}'/>
                                         </customData>
                                              <Text text="자재명"></Text>
-                                        </Column>
+                                        </Column> -->
 
                                         <Column hAlign="Center" demandPopin="true" importance="High">
                                           <customData>
@@ -166,14 +167,14 @@
                                         </customData>
                                              <Text text="공급업체코드"></Text>
                                         </Column>
-
+<!-- 
                                         <Column hAlign="Center" demandPopin="true" importance="High">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "supplier_local_name", "leadingProperty": "supplier_local_name", "sortProperty": "supplier_local_name", "filterProperty": "supplier_local_name", "columnIndex": 4}'/>
                                         </customData>
                                              <Text text="공급업체명"></Text>
-                                        </Column>
+                                        </Column> -->
 
                                         <Column hAlign="Center" demandPopin="true" importance="High">
                                           <customData>
@@ -207,21 +208,21 @@
                                              <Text text="시황자재코드"></Text>
                                         </Column>
 
-                                        <Column hAlign="Center" demandPopin="false" importance="Low">
+                                        <!-- <Column hAlign="Center" demandPopin="false" importance="Low">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "mi_material_name", "leadingProperty": "mi_material_name", "sortProperty": "mi_material_name", "filterProperty": "mi_material_name", "columnIndex": 9}'/>
                                         </customData>
                                              <Text text="시황자재명"></Text>
-                                        </Column>
+                                        </Column> -->
 
-                                        <Column hAlign="Center" demandPopin="false" importance="Low">
+                                        <!-- <Column hAlign="Center" demandPopin="false" importance="Low">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "category_name", "leadingProperty": "category_name", "sortProperty": "category_name", "filterProperty": "category_name", "columnIndex": 10}'/>
                                         </customData>
                                              <Text text="시황자재Category"></Text>
-                                        </Column>
+                                        </Column> -->
                                         <Column hAlign="Center" minScreenWidth="Desktop" demandPopin="false" importance="Low">
                                           <customData>
                                         <core:CustomData key="p13nData"
@@ -292,13 +293,13 @@
                                             <Text text="{material_code}"></Text>
                                             <Text text="{material_desc}"></Text>
                                             <Text text="{supplier_code}"></Text>
-                                            <Text text="{supplier_local_name}"></Text>
+                                            <!-- <Text text="{supplier_local_name}"></Text> -->
                                             <Text text="{base_quantity}"></Text>
                                             <Text text="{processing_cost}"></Text>
                                             <Text text="{pcst_currency_unit}"></Text>
                                             <Text text="{mi_material_code}"></Text>
-                                            <Text text="{mi_material_name}"></Text>
-                                            <Text text="{category_name}"></Text>
+                                            <!-- <Text text="{mi_material_name}"></Text> -->
+                                            <!-- <Text text="{category_name}"></Text> -->
                                             <Text text="{reqm_quantity_unit}"></Text>
                                             <Text text="{reqm_quantity}"></Text>
                                             <Text text="{currency_unit}"></Text>

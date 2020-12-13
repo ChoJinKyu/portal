@@ -4,8 +4,8 @@
     xmlns:f="sap.f" 
     xmlns:form="sap.ui.layout.form" 
     xmlns:layout="sap.ui.layout" 
-    xmlns:core="sap.ui.core" 
-    xmlns:lib-m="ext.lib.m"
+    xmlns:core="sap.ui.core"     
+    xmlns:lib-m="ext.lib.control.m"
     height="100%">
 
     <f:DynamicPage id="page"
@@ -52,18 +52,42 @@
                             </layoutData>
                         </VBox>
                         <!-- <VBox>
-                            <Label text="UOM :" labelFor="searchUom" ></Label>
-                            <ComboBox id="searchUom" width="100%" selectedKey="" items="{
-                                    path: '/Uom'                                    
+                            <Label text="UOM :"></Label>
+                            <lib-m:CodePicker id="searchUom"
+                                placeholder="Enter a UOM name"
+                                keyField="uom_code"
+                                textField="uom_name"
+                                suggestionItems="{
+                                    path: '/',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                    ],
+                                    serviceName: 'dp.UomMgtService',
+                                    entityName: 'Uom'
+                                }">
+                                <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a UOM"
+                                    keyFieldHeaderText="UOM Code" textFieldHeaderText="UOM Name" />
+                            </lib-m:CodePicker>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M5 S10" />
+                            </layoutData>
+                        </VBox> -->
+                        <VBox>
+                            <Label text="UOM :" labelFor="searchUom1" ></Label>
+                            <ComboBox id="searchUom1" width="100%" selectedKey="" items="{
+                                    path: '/UomView',
+                                    filters: [
+                                        {path: 'language_code', operator: 'EQ', value1: 'EN'}
+                                    ]                                    
                                 }">
                                 <items>
-                                    <core:Item key="{uom_code}" text="{uom_code}" />
+                                    <core:Item key="{uom_code}" text="{uom_name}" />
                                 </items>
                             </ComboBox>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
-                        </VBox> -->
+                        </VBox>
                         <VBox>
                             <Label text="Base Unit :" labelFor="searchBUSegmentButton"></Label>
                             <SegmentedButton id="searchBUSegmentButton" selectedKey="" class="sapUiSmallMarginBottom" width="100%" >

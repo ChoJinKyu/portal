@@ -50,6 +50,9 @@
                                 <core:Item key="{org>tenant_id}" text="{org>tenant_id} : {org>tenant_name}" />
                               </items>
                             </ComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData>
                         </VBox>
                         <!-- Chain -->
                         <VBox>
@@ -67,6 +70,9 @@
                                     <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
                                 </items>
                             </ComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData>
                         </VBox>
 
                         <VBox>

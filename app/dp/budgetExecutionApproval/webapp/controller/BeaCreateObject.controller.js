@@ -50,8 +50,6 @@ sap.ui.define([
             /* 다국어 처리*/
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
-
-            console.log("BeaCreateObject Controller 호출");
             // Model used to manipulate control states. The chosen values make sure,
             // detail page shows busy indication immediately so there is no break in
             // between the busy indication for loading the view's meta data
@@ -229,28 +227,29 @@ sap.ui.define([
 		 * @private
 		 */
         _onCreatePagetData : function (args) {  
-            var d = new Date();
-            this.getModel('appMaster').setProperty('/company_code', args.company_code);
-            this.getModel('appMaster').setProperty('/org_code', args.plant_code); 
-            this.getModel('appMaster').setProperty('/org_type_code', 'AU'); 
-            this.getModel('appMaster').setProperty('/tenant_id', 'L1100' ); 
-            this.getModel('appMaster').setProperty('/chain_code', 'DP' ); 
-            this.getModel('appMaster').setProperty('/approval_type_code', 'B' ); 
-            this.getModel('appMaster').setProperty('/requestor_empno', '888888' ); 
-            this.getModel('appMaster').setProperty('/approval_number', '326857-20E-88847' ); 
-            this.getModel('appMaster').setProperty('/request_date', this._getToday() ); 
-            this.getModel('appMaster').setProperty('/local_create_dtm', new Date() ); 
-            this.getModel('appMaster').setProperty('/local_update_dtm', new Date() ); 
-            this.getModel('appMaster').setProperty('/_state_', "C"); 
-            this.getModel('appMaster').setProperty('/__entity', "/ApprovalMasters(tenant_id='L1100',approval_number='326857-20E-88847')");
-           //  "/ApprovalMasters(tenant_id='L1100',approval_number='" + args.approval_number + "')"
+            var d = new Date(); 
+            var oModel = this.getModel();
+            var cParam = { 
+                 "tenant_id": 'L1100',
+                    "company_code":  args.company_code,
+                    "org_type_code":  'AU' ,
+                    "org_code": args.plant_code, 
+                    "chain_code" : "DP",
+                    "approval_type_code" : "B",
+                    "requestor_empno" : "999999",
+                    "approval_number" : "326857-20E-88848",
+                    "request_date" : this._getToday(),
+                    "local_create_dtm": new Date(),
+                    "local_update_dtm": new Date()                     
+            }
+ 
+            //oModel.createEntry("/ApprovalMasters(tenant_id='L1100',approval_number='326857-20E-88847')", cParameters); 
+            this.getModel("appMaster").setData(cParam);
 
-            console.log("appMaster>>>> " , this.getModel("appMaster"));
-
-            oTransactionManager.setServiceModel(this.getModel());
-
-            this._createViewBindData(args);
+            this._createViewBindData(args); 
+   
         },
+
 
         /**
          * today
@@ -314,7 +313,7 @@ sap.ui.define([
             });
 
             this._bindView("/ApprovalDetails", "appDetail", schFilter, function (oData) {
-                console.log("approvalDetails >>>> ", oData);
+                console.log("approvalDetails >>>> ", that.getModel("appDetail"));
                 // that._bindView("/MoldMasters", "MoldMasterList", [
                 //     new Filter("company_code", FilterOperator.EQ, sResult.company_code)
                 //     , new Filter("org_code", FilterOperator.EQ, sResult.org_code)
@@ -323,7 +322,7 @@ sap.ui.define([
             });
 
             this._bindView("/Approver", "Approvers", schFilter, function (oData) {
-                console.log("Approver >>>> ", oData);
+                console.log("Approver >>>> ", that.getModel("Approvers"));
             });
    
             oTransactionManager.setServiceModel(this.getModel());
@@ -491,156 +490,6 @@ sap.ui.define([
                     })
                 }
             });
-        },
-        /**
-         * @description : Popup 창 : 품의서 Item for Budget Execution 항목의 Add 버튼 클릭
-         */
-        // handleTableSelectDialogPress: function (oEvent) {
-  
-        //     console.log("[ step ] handleTableSelectDialogPress Item for Budget Execution 항목의 Add 버튼 클릭 ");
-
-        //     var oView = this.getView();
-        //     var oButton = oEvent.getSource();
-        //     if (!this._oDialogTableSelect) {
-        //         this._oDialogTableSelect = Fragment.load({
-        //             id: oView.getId(),
-        //             name: "dp.budgetExecutionApproval.view.MoldItemSelection",
-        //             controller: this
-        //         }).then(function (oDialog) {
-        //             oView.addDependent(oDialog);
-        //             return oDialog;
-        //         }.bind(this));
-        //     }
-
-        //     var that = this;
-        //     this._oDialogTableSelect.then(function (oDialog) {
-        //         oDialog.open();
-        //         that.byId("moldItemSelectionSearch").firePress(); // open 하자마자 조회 하여 보여줌 
-
-        //     }); 
-        // },
-        /**
-         * @public 
-         * @see 사용처 Participating Supplier Fragment 취소 이벤트
-         */
-        // onExit: function () {
-        //     this.byId("dialogMolItemSelection").close();
-        // },
-
-        /**
-         * @description Mold Item Selection Search Button 누를시 
-         * @param {*} oEvent 
-         */
-        // onMoldItemSelection: function (oEvent) {
-        //     console.log(oEvent.getParameters());
-        //     if (oEvent.getParameters().refreshButtonPressed) {
-        //         this.onRefresh();
-        //     } else {
-        //         var aSearchFilters = this._getSearchMoldSelection();
-        //         this._applyMoldSelection(aSearchFilters); // 로드하자마자 조회 
-        //     }
-        // },
-        /**
-        * @description Mold Item Selection Search 조건 리턴  
-        * @param {*} oEvent 
-        */
-        // _getSearchMoldSelection: function () {
-        //     var aSearchFilters = [];
-        //     // tenant_id  
-        //     aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100'));
-        //     var company = this.byId('MoldItemSearchCompany').mProperties.selectedKey;
-        //     var plant = this.byId('MoldItemSearchPlant').mProperties.selectedKey;
-        //     var model = this.byId('moldItemModel').getValue().trim();
-        //     var partNo = this.byId('moldItemPartNo').getValue().trim();
-
-        //     if (company != undefined && company != "" && company != null) {
-        //         aSearchFilters.push(new Filter("company_code", FilterOperator.EQ, company))
-        //     }
-        //     if (plant != undefined && plant != "" && plant != null) {
-        //         aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, plant))
-        //     }
-        //     if (model != undefined && model != "" && model != null) {
-        //         aSearchFilters.push(new Filter("model", FilterOperator.Contains, model))
-        //     }
-        //     if (partNo != undefined && partNo != "" && partNo != null) {
-        //         aSearchFilters.push(new Filter("part_number", FilterOperator.Contains, partNo))
-        //     }
-
-        //     return aSearchFilters;
-        // },
-        /**
-         * @description Mold Item Selection Search Button 누를시 
-         * @param {*} oEvent 
-         */
-        // _applyMoldSelection: function (aSearchFilters) {
-        //     console.log(" [step] Mold Item Selection Search Button Serch ", aSearchFilters);
-        //     var oView = this.getView(),
-        //         oModel = this.getModel("MoldItemSelect");
-
-        //     console.log(" model >>> ", this.getModel("moldItem"));
-
-        //     oView.setBusy(true);
-        //     oModel.setTransactionModel(this.getModel("moldItem"));
-        //     oModel.read("/MoldItemSelect", {
-        //         filters: aSearchFilters,
-        //         success: function (oData) {
-        //             console.log(" oData ", oData);
-        //             oView.setBusy(false);
-        //         }
-        //     });
-        //     console.log("omdel", oModel);
-        // },
-        /**
-        * @description  Participating Supplier Fragment Apply 버튼 클릭시 
-        */
-        // onMoldItemSelectionApply: function (oEvent) {
-        //     console.log(" [step] Participating Supplier Fragment Apply 버튼 클릭시 ", oEvent);
-
-        //     var oTable = this.byId("moldItemSelectTable");
-        //     var aItems = oTable.getSelectedItems();
-        //     var that = this;
-        //     aItems.forEach(function (oItem) {
-        //         console.log(" getSelectedItems >>>", oItem);
-        //         var famList = [];
-        //         if (oItem.getCells()[8].getText()) {
-        //             famList.push(oItem.getCells()[8].getText()); // family_part_number_1 
-        //         }
-        //         if (oItem.getCells()[9].getText()) {
-        //             famList.push(oItem.getCells()[9].getText()); // family_part_number_2 
-        //         }
-        //         if (oItem.getCells()[10].getText()) {
-        //             famList.push(oItem.getCells()[10].getText()); // family_part_number_3 
-        //         }
-        //         if (oItem.getCells()[11].getText()) {
-        //             famList.push(oItem.getCells()[11].getText()); // family_part_number_4 
-        //         }
-        //         if (oItem.getCells()[12].getText()) {
-        //             famList.push(oItem.getCells()[12].getText()); // family_part_number_5 
-        //         }
-
-        //         var obj = new JSONModel({
-        //             mold_id: Number(oItem.getCells()[0].getText())
-        //             , model: oItem.getCells()[1].getText()
-        //             , mold_number: oItem.getCells()[2].getText()
-        //             , mold_sequence: oItem.getCells()[3].getText()
-        //             , spec_name: oItem.getCells()[4].getText()
-        //             , mold_item_type_code: oItem.getCells()[5].getSelectedKey()
-        //             , book_currency_code: oItem.getCells()[6].getText()
-        //             , budget_amount: oItem.getCells()[7].getText()
-        //             , family_part_number_1: famList.join(",")
-        //         });
-        //         that._addPsTable(obj);
-        //     });
-        //     this.onExit();
-        // },
-        /**
-         * @description  Participating Supplier Fragment 몇개 선택 되어 있는지 표기 하기 위함
-         */
-        selectMoldItemChange: function (oEvent) {
-            var oTable = this.byId("moldItemSelectTable");
-            var aItems = oTable.getSelectedItems();
-            var oModel = this.getModel(mainViewName);
-            // oModel.setData({ moldItemLength: aItems == undefined ? 0 : aItems.length });
         },
 
         /**
@@ -1070,11 +919,93 @@ sap.ui.define([
                 width: "auto"
             });
         },
+
+        _setCreateData: function () {
+            var oModel = this.getOwnerComponent().getModel();
+          
+             var cParam = { 
+                 "tenant_id": 'L1100',
+                 "company_code": this.getModel("appMaster").oData.company_code,
+                 "org_type_code": 'AU',
+                 "org_code": this.getModel("appMaster").oData.org_code,
+                 "approve_status_code": 'AP',
+                 "chain_code": "DP",
+                 "approval_type_code": "B",
+                 "requestor_empno":this.getModel('appMaster').oData.requestor_empno ,
+                 "approval_number": this.getModel('appMaster').oData.approval_number ,
+                 "request_date": this._getToday(),
+                 "local_create_dtm": new Date(),
+                 "local_update_dtm": new Date(),
+                 "approval_title": this.getModel('appMaster').oData.approval_title ,
+                 "approval_contents" : this.getModel('appMaster').oData.approval_contents 
+             }
+
+            this.getModel("appMaster").createKey("/ApprovalMasters",cParam);
+            this.getModel('appDetail').createKey("/ApprovalDetails", []);
+            this.getModel('Approvers').createKey("/Approver",[]);
+       
+            oTransactionManager.setServiceModel(this.getModel());
+
+         
+
+            // this.getModel('appMaster').setData(cParam, "/ApprovalMasters");
+            // this.getModel('appDetail').setProperty("/");
+            this.update();
+            // ApprovalDetails 
+        //    var dtl = this.getModel("appDetail");
+
+        //     console.log("dtl>>> " , dtl.oData.ApprovalDetails);
+   
+
+        //     MessageBox.confirm("Are you sure ?", {
+        //         title: "Comfirmation",
+        //         initialFocus: sap.m.MessageBox.Action.CANCEL,
+        //         onClose: function (sButton) {
+        //             if (sButton === MessageBox.Action.OK) {
+        //                 oView.setBusy(true);
+        //                 oModel.create("/ApprovalMasters", cParam, {
+        //                     groupId: "appMaster",
+        //                     success: function (data) {
+        //                         oView.setBusy(false);
+                               
+        //                     }.bind(this),
+        //                     error: function (data) {
+        //                         console.log('error', data)
+        //                     }
+        //                 });
+        //                 oModel.create("/ApprovalDetails",  dtl.oData.ApprovalDetails, {
+        //                     groupId: "appDetail",
+        //                     success: function (data) {
+        //                         oView.setBusy(false);
+        //                        // MessageToast.show("Success to save.");
+        //                     }.bind(this),
+        //                     error: function (data) {
+        //                         console.log('error', data)
+        //                     }
+        //                 });
+        //                  MessageToast.show("Success to save.");
+
+        //             };
+        //         }
+        //     });
+
+        },
+
         /**
          * @description save
          */
         onPageDraftButtonPress: function () {
+            var oModel = this.getModel(mainViewName);
 
+            if(oModel.oData.editMode){
+                this.update();
+            }else{
+                this._setCreateData();
+            }
+
+        },
+
+        update : function(){
             var oView = this.getView();
             MessageBox.confirm("Are you sure ?", {
                 title: "Comfirmation",
@@ -1091,8 +1022,7 @@ sap.ui.define([
                     };
                 }
             });
-        },
-
+        }
 
     });
 });

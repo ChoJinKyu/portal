@@ -150,14 +150,14 @@
       }
     },
     "resources": {
-        "css": [
-            {
-                "uri": "css/style.css"
-            }
-        ]
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
     },
     "resourceRoots": {
-        "ext.lib": "../../../lib"
+      "ext.lib": "../../../lib"
     },
     "routing": {
       "config": {
@@ -217,6 +217,13 @@
           ]
         },
         {
+          "pattern": "example6",
+          "name": "example6",
+          "target": [
+            "example6"
+          ]
+        },
+        {
           "pattern": "example7",
           "name": "example7",
           "target": [
@@ -224,10 +231,10 @@
           ]
         },
         {
-          "pattern": "example9",
-          "name": "example9",
+          "pattern": "example8",
+          "name": "example8",
           "target": [
-            "example9"
+            "example8"
           ]
         }
       ],
@@ -256,9 +263,17 @@
           "viewName": "CodeCombo",
           "viewId": "example5"
         },
+        "example6": {
+          "viewName": "ExcelUtils",
+          "viewId": "example6"
+        },
         "example7": {
           "viewName": "PivotTable",
           "viewId": "example7"
+        },
+        "example8": {
+          "viewName": "NumberFormat",
+          "viewId": "example8"
         },
         "example9": {
           "viewName": "UsingODataV4",

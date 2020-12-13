@@ -42,7 +42,7 @@
 				             persistencyKey="PageVariantPKey" />                     
                     <!-- Smart Filter -->
                     <smartFilterBar:SmartFilterBar id="smartFilterBar" 
-                    entitySet="MIMatCategListView " 
+                    entitySet="MIMatListView " 
                     smartVariant="pageVariantId"
                     persistencyKey="SmartFilterPKey"
                     considerSelectionVariants="true" 
@@ -51,7 +51,7 @@
                             <!-- 관리조직 -->
                             <smartFilterBar:ControlConfiguration  
                             key="tenant_id" 
-                            groupId="_BASIC" 
+                            groupId="_BASIC"    
                             index="1" 
                             label="관리조직"
                             visibleInAdvancedArea="true">
@@ -123,9 +123,9 @@
                     height="100%"
                     smartVariant="pageVariantId"
                     id="smartTable_MainTable_ResponsiveTable"
-                    entitySet="MIMatCategListView "
-                    tableBindingPath="{MIMatCategListView }"
-                    initiallyVisibleFields="mi_material_code,mi_material_name,category_name,use_flag"
+                    entitySet="MIMatListView"
+                    tableBindingPath="{MIMatListView}"
+                    initiallyVisibleFields="mi_material_code,mi_material_name,category_code,category_name,use_flag"
                     smartFilterId="smartFilterBar"
                     ignoreFromPersonalisation="tenant_id,company_code,org_type_code"
                     tableType="ResponsiveTable"
@@ -166,7 +166,9 @@
                                 press=".onMainTableColumns"/>
                         </OverflowToolbar>
                     </smartTable:customToolbar>
-                            <Table id="mainTable" mode="MultiSelect" sticky="HeaderToolbar,ColumnHeaders">
+                            <Table id="mainTable" 
+                                    mode="MultiSelect"
+                                    sticky="HeaderToolbar,ColumnHeaders">
                                  <columns>  
                                  
                                        <Column hAlign="Center"  demandPopin="true" importance="High" popinDisplay="WithoutHeader">
@@ -184,11 +186,10 @@
                                         </customData>
                                              <Text text="시황자재명"></Text>
                                         </Column>
-
                                         <Column hAlign="Center" demandPopin="true" popinDisplay="Inline">
                                           <customData>
                                         <core:CustomData key="p13nData"
-                                        value='\{"columnKey": "category_name", "leadingProperty": "category_name", "sortProperty": "category_name", "filterProperty": "category_name", "columnIndex": 6}'/>
+                                        value='\{"columnKey": "category_name", "leadingProperty": "category_name", "sortProperty": "category_name", "filterProperty": "category_name", "columnIndex": 7}'/>
                                         </customData>
                                              <Text text="Category명"></Text>
                                         </Column>
@@ -196,7 +197,7 @@
                                         <Column hAlign="Center" demandPopin="true" popinDisplay="Inline">
                                           <customData>
                                         <core:CustomData key="p13nData"
-                                        value='\{"columnKey": "use_flag", "leadingProperty": "use_flag", "sortProperty": "use_flag", "filterProperty": "use_flag", "columnIndex": 7}'/>
+                                        value='\{"columnKey": "use_flag", "leadingProperty": "use_flag", "sortProperty": "use_flag", "filterProperty": "use_flag", "columnIndex": 8}'/>
                                         </customData>
                                              <Text text="사용여부"></Text>                                                                             
                                         </Column>
@@ -207,7 +208,7 @@
                                              <Text text="{mi_material_code}"></Text>
                                              <Text text="{mi_material_name}"></Text>
                                              <Text text="{category_name}"></Text>
-                                             <Text text="{= ${oUiData>/use_flag} ? 'Yes':'No'}"></Text>  
+                                             <Text text="{= ${use_flag} ? 'Yes':'No'}"></Text>  
                                         </ColumnListItem>
                                     </items>
                                 </Table>
