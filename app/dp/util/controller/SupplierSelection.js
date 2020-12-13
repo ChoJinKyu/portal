@@ -33,15 +33,21 @@ sap.ui.define([
         }),
 
 
-        showSupplierSelection: function(oThis, oEvent, isMulti){
+        showSupplierSelection: function(oThis, oEvent){
 
             self = this;
+            oThis.getView().setModel(this.oServiceModel, 'supplierModel');
+            oInput = oEvent.getSource();
 
-            gIsMulti = isMulti;
+            if(oInput.getMetadata().getName().indexOf('MultiInput') > -1){
+                gIsMulti = true;
+            }else{
+                gIsMulti = false;
+            }
 
             oSuppValueHelpDialog = sap.ui.xmlfragment("dp.util.view.SupplierSelection", oThis);
 
-            oSuppValueHelpDialog.setSupportMultiselect(isMulti);
+            oSuppValueHelpDialog.setSupportMultiselect(gIsMulti);
             oSuppValueHelpDialog.attachOk(this.onValueHelpSuppOkPress);
             oSuppValueHelpDialog.attachCancel(this.onValueHelpSuppCancelPress);
             oSuppValueHelpDialog.attachAfterClose(this.onValueHelpSuppAfterClose);
@@ -49,16 +55,13 @@ sap.ui.define([
             this._oBasicSearchField = new SearchField({
                 showSearchButton: true
             });
+
+            // this._oBasicSearchField.attachSearch(this.onFilterBarSuppSearch);
             
             var oFilterBar = oSuppValueHelpDialog.getFilterBar();
             // oFilterBar.setFilterBarExpanded(false);
             oFilterBar.setBasicSearch(this._oBasicSearchField);
             oFilterBar.attachSearch(this.onFilterBarSuppSearch);
-
-            
-            oThis.getView().setModel(this.oServiceModel, 'supplierModel');
-
-            oInput = oEvent.getSource();
 
             if (!oInput.getSuggestionItems().length) {
                 oInput.bindAggregation("suggestionItems", {
@@ -116,7 +119,7 @@ sap.ui.define([
 
             var tokens = [];
 
-            if(isMulti){
+            if(gIsMulti){
                 tokens = oInput.getTokens()
             }else{
                 var oToken = new Token();

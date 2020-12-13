@@ -25,14 +25,14 @@ sap.ui.define([
 
 		/**
 		 * Called when the mainList controller is instantiated.
-		 * @public
 		 */
 		onInit : function () {
 			let oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             
-            let sDateOnly = this._getNowDayAndTimes();
-            let sDateAndTimes = this._getNowDayAndTimes(true);
+            // let sDateOnly = this._getNowDayAndTimes(false);
+            // let sDateAndTimes = this._getNowDayAndTimes(true);
+            let oToday = new Date();
 
             // 하드코딩
             let oNewBasePriceData = {
@@ -45,9 +45,9 @@ sap.ui.define([
                                     "approval_status_code": "10",
                                     "approval_request_desc": "품의 테스트",
                                     "approval_requestor_empno": "15",
-                                    "approval_request_date": sDateOnly,
-                                    "local_create_dtm": sDateAndTimes,
-                                    "local_update_dtm": sDateAndTimes,
+                                    "approval_request_date": oToday,
+                                    "local_create_dtm": oToday,
+                                    "local_update_dtm": oToday,
                                     "details": []};
 
             // let oNewBasePriceData = {
@@ -138,18 +138,20 @@ sap.ui.define([
 			});
         },
 
-        onOpenParNtoList: function () {
+        onAdd: function () {
             //MessageBox.success("Part No List Dialog Open ");
             let oListModel = this.getModel("listModel");
-            let sDateOnly = this._getNowDayAndTimes();
-            let sDateAndTimes = this._getNowDayAndTimes(true);
+            let oToday = new Date();
+            
+            // let sDateOnly = this._getNowDayAndTimes(false);
+            // let sDateAndTimes = this._getNowDayAndTimes(true);
 
             oListModel.getData().details.push({ "au_code": "10", 
                                             "material_code": ""+iMaterialCode, 
                                             "supplier_code": "KR00002600", 
-                                            "base_date": sDateOnly, 
-                                            "local_create_dtm": sDateAndTimes, 
-                                            "local_update_dtm": sDateAndTimes});
+                                            "base_date": oToday, 
+                                            "local_create_dtm": oToday, 
+                                            "local_update_dtm": oToday});
             iMaterialCode++;
             oListModel.refresh();
         },
@@ -167,8 +169,8 @@ sap.ui.define([
             //oListModel.setProperty
         },
 
-        _getNowDayAndTimes: function (bTimesParam) {
-            let oDate = new Date(),
+        _getNowDayAndTimes: function (bTimesParam, oDateParam) {
+            let oDate = oDateParam || new Date(),
                 iYear = oDate.getFullYear(),
                 iMonth = oDate.getMonth()+1,
                 iDate = oDate.getDate(),
@@ -199,7 +201,7 @@ sap.ui.define([
             let oListModel = this.getModel("listModel");
             let oModel = this.getModel();
 
-            oListModel.approval_request_desc = oListModel.approval_request_desc + iTestNumber;
+            oListModel.setProperty("/approval_request_desc", oListModel.getProperty("/approval_request_desc")+iTestNumber);
             iTestNumber++;
 
             let oData = $.extend(true, {}, oListModel.getData());
@@ -209,6 +211,10 @@ sap.ui.define([
                 groupId: "saveBasePriceArl",
                 success: function(data){
                     console.log("=========1");
+                    // return 값이 있고 approval_number가 있는 경우에만 저장 완료
+                    if( data && data.approval_number ) {
+                        MessageBox.success("저장되었습니다.");
+                    }
                 }.bind(this),
                 error: function(data){
                     console.log('error', data);
@@ -219,7 +225,6 @@ sap.ui.define([
                 groupId: "saveBasePriceArl",
                 success: function(data){
                     console.log("submitChanges");
-                    MessageBox.success("저장되었습니다.");
                 }.bind(this),
                 error: function(data){
                     console.log('Create error', data);
