@@ -1,0 +1,268 @@
+<mvc:View controllerName="xx.exampleControls.controller.ExcelUtilExam" 
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m" 
+    xmlns:core="sap.ui.core" 
+    xmlns:u="sap.ui.unified"
+    xmlns:layout="sap.ui.layout" 
+    xmlns:table="sap.ui.table"
+    xmlns:lib-m="ext.lib.m"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+    height="100%">
+
+    <Page id="page" title="Excel Util" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
+        <content>
+
+           <Table id="rTable" 
+                  title="ResponsibleTable"
+                  sticky="HeaderToolbar,ColumnHeaders" 
+                  inset="false"
+                  noDataText="No Data"
+                  class="sapFDynamicPageAlignContent" 
+                  updateFinished=".onMainTableUpdateFinished"
+                  items="{rModelList>/Message}"
+                  mode="MultiSelect" 
+                  width="auto">
+                <headerToolbar>
+                    <OverflowToolbar>
+                        <Title text="Responsible Table / Total : {= ${rModelList>/Message}.length > 0 ? '(' + ${rModelList>/Message}.length + ')' : '0'}" level="H2"/>
+                        <ToolbarSpacer/>
+                        <Button text="Load Data" type="Transparent" press=".onRLoadPress"/>
+                        <Button text="Reset Data" type="Transparent" press=".onResetRModelListPress"/>
+                        <Button id="rTableExportButton" text="Export" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment"/>
+                        <u:FileUploader id="rFileUploader" uploadComplete="handleUploadComplete" change=".onImportChange"/>
+                        <!--<Button text="Import" type="Transparent" press=".onImportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment"/>-->
+                    </OverflowToolbar>
+                </headerToolbar>
+                <columns>
+                    <Column minScreenWidth="Tablet" hAlign="Center" width="40px"  >
+                        <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
+                    </Column>
+                    <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="10em" >
+                        <Text text="Chain" />
+                        <!--specify customData for Excel Imporing-->
+                        <customData>
+                            <core:CustomData key="bindName" value="chain_code" />
+                        </customData>
+                    </Column>
+                    <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="10em" >
+                        <Text text="Language" />
+                        <customData>
+                            <core:CustomData key="bindName" value="language_code" />
+                        </customData>
+                    </Column>
+                    <Column minScreenWidth="Tablet" hAlign="Center" width="15em" >
+                        <Text text="Code" />
+                        <customData>
+                            <core:CustomData key="bindName" value="message_code" />
+                        </customData>
+                    </Column>
+                    <Column minScreenWidth="Tablet" hAlign="Left">
+                        <Text text="Content" textAlign="Center"/>
+                        <customData>
+                            <core:CustomData key="bindName" value="message_contents" />
+                        </customData>
+                    </Column>
+                    <Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
+                        <Text text="Type" />
+                        <customData>
+                            <core:CustomData key="bindName" value="message_type_code" />
+                        </customData>
+                    </Column>
+                    <Column minScreenWidth="Tablet" hAlign="End" width="10em" >
+                        <Text text="Price" textAlign="Center"/>
+                        <customData>
+                            <core:CustomData key="bindName" value="price" />
+                        </customData>
+                    </Column>
+                    <Column minScreenWidth="Tablet" hAlign="End" width="10em" >
+                        <Text text="Using" textAlign="Center"/>
+                        <customData>
+                            <core:CustomData key="bindName" value="use_flag" />
+                        </customData>
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <ObjectStatus icon="{
+                                path: 'rModelList>_row_state_',
+                                formatter: '.formatter.toModelStateColumnIcon'
+                            }" />
+                            <ComboBox selectedKey="{rModelList>chain_code}" width="100%" items="{
+                                    path: 'common>/CodeDetails',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
+                                    ]
+                                }" editable="{= ${rModelList>_row_state_} === 'C' }" required="true">
+                                <items>
+                                    <core:Item key="{common>code}" text="{common>code_description}" />
+                                </items>
+                            </ComboBox>
+                            <ComboBox selectedKey="{rModelList>language_code}" width="100%" items="{
+                                    path: 'common>/CodeDetails',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
+                                    ]
+                                }" editable="{= ${rModelList>_row_state_} === 'C' }" required="true">
+                                <items>
+                                    <core:Item key="{common>code}" text="{common>code_description}" />
+                                </items>
+                            </ComboBox>
+                            <Input textAlign="End" value="{
+                                    path: 'rModelList>message_code',
+                                    type: 'sap.ui.model.type.String',
+                                    constraints: {
+                                        maxLength: 30
+                                    }
+                                }" editable="{= ${rModelList>_row_state_} === 'C' }" required="true"></Input>
+                            <Text text="{rModelList>message_contents}" width="100%"/>
+                            <Select
+                                forceSelection="false"
+                                selectedKey="{rModelList>message_type_code}"
+                                autoAdjustWidth="true"
+                                items="{
+                                    path: 'common>/CodeDetails',
+                                    type: 'sap.ui.model.type.String',
+                                    constraints: {
+                                        maxLength: 1000
+                                    },
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'group_code', operator: 'EQ', value1: 'CM_MESSAGE_TYPE_CODE'}
+                                    ]
+                                }">
+                                <core:Item key="{common>code}" text="{common>code_description}" />
+                            </Select>
+                            <ObjectNumber
+							    number="{
+                                    parts:[{path:'rModelList>price'},{path:'rModelList>currency_code'}],
+                                    type: 'sap.ui.model.type.Currency',
+                                    formatOptions: {showMeasure: false}
+                                }"
+                                unit="{rModelList>currency_code}"
+                                textAlign="End" />
+                            <Switch state="{= typeof ${rModelList>use_flag} === 'string' ? JSON.parse(${rModelList>use_flag}) : ${rModelList>use_flag}}" customTextOn="Yes" customTextOff="No">
+                                <layoutData>
+                                    <FlexItemData growFactor="1" />
+                                </layoutData>
+                            </Switch>                            
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+            <OverflowToolbar/>
+ 		    <table:Table
+                id="gTable" 
+                title="GridTable"
+                sticky="HeaderToolbar,ColumnHeaders" 
+                inset="false"
+                noDataText="{I18N>/NCM0001}"
+                class="sapFDynamicPageAlignContent" 
+                updateFinished=".onMainTableUpdateFinished"
+                rows="{gModelList>/Message}"
+                width="auto">
+				<table:extension>
+					<OverflowToolbar>
+						<Title text="Grid Table / Total : {= ${gModelList>/Message}.length > 0 ? '(' + ${gModelList>/Message}.length + ')' : '0'}" level="H2"/>
+                        <ToolbarSpacer/>
+                        <Button text="Load Data" type="Transparent" press=".onGLoadPress"/>
+                        <Button text="Reset Data" type="Transparent" press=".onResetGModelListPress"/>
+                        <Button id="gTableExportButton" text="Export" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment"/>
+                        <u:FileUploader id="gFileUploader" uploadComplete="handleUploadComplete" change=".onImportChange"/>
+					</OverflowToolbar>
+				</table:extension>
+				<table:columns>
+					<table:Column width="11rem">
+                        <!--specify customData for Excel Imporing-->
+                        <table:customData>
+								<core:CustomData key="bindName" value="chain_code" />
+						</table:customData>
+						<Label text="Chain" />
+						<table:template>
+							<ComboBox selectedKey="{gModelList>chain_code}" width="100%" items="{
+                                    path: 'common>/CodeDetails',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
+                                    ]
+                                }" editable="{= ${gModelList>_row_state_} === 'C' }" required="true">
+                                <items>
+                                    <core:Item key="{common>code}" text="{common>code_description}" />
+                                </items>
+                            </ComboBox>
+						</table:template>
+					</table:Column>
+					<table:Column width="11rem">
+                        <table:customData>
+								<core:CustomData key="bindName" value="language_code" />
+						</table:customData>
+						<Label text="Language" />
+						<table:template>
+							<ComboBox selectedKey="{gModelList>language_code}" width="100%" items="{
+                                    path: 'common>/CodeDetails',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
+                                    ]
+                                }" editable="{= ${gModelList>_row_state_} === 'C' }" required="true">
+                                <items>
+                                    <core:Item key="{common>code}" text="{common>code_description}" />
+                                </items>
+                            </ComboBox>
+						</table:template>
+					</table:Column>
+					<table:Column width="6rem" hAlign="End">
+                        <table:customData>
+								<core:CustomData key="bindName" value="message_code" />
+						</table:customData>
+						<Label text="Code" />
+						<table:template>
+							<Input textAlign="End" value="{
+                                    path: 'gModelList>message_code',
+                                    type: 'sap.ui.model.type.String',
+                                    constraints: {
+                                        maxLength: 30
+                                    }
+                                }" editable="{= ${gModelList>_row_state_} === 'C' }" required="true"></Input>
+						</table:template>
+					</table:Column>
+					<table:Column width="9rem">
+                        <table:customData>
+								<core:CustomData key="bindName" value="message_contents" />
+						</table:customData>
+						<Label text="Content" />
+						<table:template>
+							<Text text="{gModelList>message_contents}" textAlign="Begin" width="100%"/>
+						</table:template>
+					</table:Column>
+					<table:Column width="9rem">
+                        <table:customData>
+								<core:CustomData key="bindName" value="message_type_code" />
+						</table:customData>
+						<Label text="Type" />
+						<table:template>
+							<ComboBox selectedKey="{gModelList>message_type_code}" width="100%" items="{
+                                    path: 'common>/CodeDetails',
+                                    type: 'sap.ui.model.type.String',
+                                    constraints: {
+                                        maxLength: 1000
+                                    },
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'group_code', operator: 'EQ', value1: 'CM_MESSAGE_TYPE_CODE'}
+                                    ]
+                                }">
+                                <items>
+                                    <core:Item key="{common>code}" text="{common>code_description}" />
+                                </items>
+                            </ComboBox>
+						</table:template>
+					</table:Column>
+				</table:columns>
+			</table:Table>
+        </content>
+    </Page>
+</mvc:View>
