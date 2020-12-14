@@ -70,7 +70,6 @@ service VpMappingService {
                key md.org_code,
                key md.vendor_pool_code,
                key md.vendor_pool_person_empno,
-               he.user_korean_name,
                he.user_english_name,
                he.job_title,
                hd.department_korean_name,
