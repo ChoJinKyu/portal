@@ -91,8 +91,7 @@ service CommonService {
     view Employee as
         select 
             key e.tenant_id,
-            key e.employee_number,
-            e.user_korean_name
+            key e.employee_number
         from employee as e
             left join user as u
                 on e.employee_number = u.employee_number
