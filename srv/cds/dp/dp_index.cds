@@ -19,5 +19,6 @@ using from './mm/basicDataMgr/materialGroupMgr-service';
 using from './mm/basicDataMgr/materialCommodityMgr-service';
 using from './sc/categoryMgr/category-service';
 using from './dc/vi/basePriceArl-service';
+using from './dc/tc/projectMgt-service';
 using from './util/moldItemSelection-service';
 using from './util/supplierSelection-service';
