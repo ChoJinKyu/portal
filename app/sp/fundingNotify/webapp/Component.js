@@ -6,7 +6,7 @@ sap.ui.define([
 ], function (jQuery, UIComponent, JSONModel, FlexibleColumnLayoutSemanticHelper) {
 	"use strict";
 
-	return UIComponent.extend("sp.fundingNotifyMgr.Component", {
+	return UIComponent.extend("sp.fundingNotify.Component", {
 
 		metadata : {
 			manifest: "json"

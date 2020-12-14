@@ -4,55 +4,55 @@ sap.ui.define(["jquery.sap.global"],
 
         var _columns = [
             {
-                id: "fundingNotifyMgr-mainList-mainColumnCode",
+                id: "fundingNotify-mainList-mainColumnCode",
                 order: 0,
                 text: "Code",
                 visible: true
             },
             {
-                id: "fundingNotifyMgr-mainList-mainColumnName",
+                id: "fundingNotify-mainList-mainColumnName",
                 order: 1,
                 text: "Name",
                 visible: false
             },
             {
-                id: "fundingNotifyMgr-mainList-mainColumnStartDate",
+                id: "fundingNotify-mainList-mainColumnStartDate",
                 order: 2,
                 text: "Start Date",
                 visible: false
             },
             {
-                id: "fundingNotifyMgr-mainList-mainColumnEndDate",
+                id: "fundingNotify-mainList-mainColumnEndDate",
                 order: 3,
                 text: "End Date",
                 visible: true
             },
             {
-                id: "fundingNotifyMgr-mainList-mainColumnSiteFlag",
+                id: "fundingNotify-mainList-mainColumnSiteFlag",
                 order: 4,
                 text: "Site",
                 visible: true
             },
             {
-                id: "fundingNotifyMgr-mainList-mainColumnCompanyFlag",
+                id: "fundingNotify-mainList-mainColumnCompanyFlag",
                 order: 5,
                 text: "Company",
                 visible: true
             },
             {
-                id: "fundingNotifyMgr-mainList-mainColumnRoleFlag",
+                id: "fundingNotify-mainList-mainColumnRoleFlag",
                 order: 5,
                 text: "Role",
                 visible: true
             },
             {
-                id: "fundingNotifyMgr-mainList-mainColumnOrganizationFlag",
+                id: "fundingNotify-mainList-mainColumnOrganizationFlag",
                 order: 6,
                 text: "Organization",
                 visible: true
             },
             {
-                id: "fundingNotifyMgr-mainList-mainColumnUserFlag",
+                id: "fundingNotify-mainList-mainColumnUserFlag",
                 order: 7,
                 text: "User",
                 visible: true

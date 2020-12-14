@@ -1,4 +1,4 @@
-<mvc:View controllerName="sp.fundingNotifyMgr.controller.MidObject" 
+<mvc:View controllerName="sp.fundingNotify.controller.MidObject" 
 	xmlns:mvc="sap.ui.core.mvc" 
 	xmlns="sap.m" 
 	xmlns:uxap="sap.uxap" 

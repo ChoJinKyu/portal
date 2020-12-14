@@ -1,4 +1,4 @@
-<mvc:View controllerName="sp.fundingNotifyMgr.controller.MainList"
+<mvc:View controllerName="sp.fundingNotify.controller.MainList"
     xmlns:mvc="sap.ui.core.mvc" 
     xmlns="sap.m" 
     xmlns:f="sap.f" 

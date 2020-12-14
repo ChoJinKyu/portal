@@ -1,5 +1,5 @@
 <mvc:View
-	controllerName="sp.fundingNotifyMgr.controller.App"
+	controllerName="sp.fundingNotify.controller.App"
 	displayBlock="true"
 	xmlns="sap.m"
 	xmlns:f="sap.f"
