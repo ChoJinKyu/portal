@@ -1,0 +1,55 @@
+view pg_MI_Mat_Code_Bom_Management_View as
+	select
+			main.tenant_id					as tenant_id,
+			main.company_code				as company_code,
+			main.org_type_code				as org_type_code,
+			main.org_code					as org_code,
+			main.material_code				as material_code,
+			mattext.material_desc			as material_desc,
+			main.supplier_code				as supplier_code,
+			supplier.supplier_local_name	as supplier_local_name,
+			supplier.supplier_english_name	as supplier_english_name,
+			main.base_quantity				as base_quantity,
+			main.processing_cost			as processing_cost,
+			main.pcst_currency_unit			as pcst_currency_unit,
+			main.mi_material_code			as mi_material_code,
+			mimattext.mi_material_name		as mi_material_name,
+			mimatcode.category_code			as category_code,
+			catgtext.category_name			as category_name,
+			main.reqm_quantity_unit			as reqm_quantity_unit,
+			main.reqm_quantity				as reqm_quantity,
+			main.currency_unit				as currency_unit,
+			main.mi_base_reqm_quantity		as mi_base_reqm_quantity,
+			main.quantity_unit				as quantity_unit,
+			main.exchange					as exchange,
+			main.termsdelv					as termsdelv,
+			main.use_flag					as use_flag
+	from pg_mi_material_code_bom_mngt as main
+	left join dp_mm_material_desc_lng as mattext
+		on	main.tenant_id			= mattext.tenant_id
+		and	main.material_code		= mattext.material_code
+		and mattext.language_code	= 'EN'
+	left join sp_sm_supplier_mst as supplier
+		on	main.tenant_id		= supplier.tenant_id
+		and	main.supplier_code	= supplier.supplier_code
+	left join pg_mi_material_code_lng as mimattext
+		on  main.tenant_id			= mimattext.tenant_id
+		and main.company_code		= mimattext.company_code
+		and main.org_type_code		= mimattext.org_type_code
+		and main.org_code			= mimattext.org_code
+		and main.mi_material_code	= mimattext.mi_material_code
+		and mimattext.language_code	= 'KO'
+	left join pg_mi_material_code as mimatcode
+		on  main.tenant_id    		= mimatcode.tenant_id
+		and main.company_code 		= mimatcode.company_code
+		and main.org_type_code		= mimatcode.org_type_code
+		and main.org_code	    	= mimatcode.org_code
+		and main.mi_material_code	= mimatcode.mi_material_code
+	left join pg_mi_category_lng as catgtext
+		on  mimatcode.tenant_id    	= catgtext.tenant_id
+		and mimatcode.company_code 	= catgtext.company_code
+		and mimatcode.org_type_code	= catgtext.org_type_code
+		and mimatcode.org_code	    = catgtext.org_code
+		and mimatcode.category_code	= catgtext.category_code
+		and catgtext.language_code	= 'KO'
+	;
