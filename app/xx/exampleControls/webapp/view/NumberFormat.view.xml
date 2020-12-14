@@ -12,10 +12,9 @@
 
     <Page id="page" title="Number Format with Locale and Currency" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
         <content>
-            <Table id="idProductsTable"
-                items="{/}">
+            <Table items="{/}">
                 <columns>
-                    <Column id="exapnseColumn" hAlign="Begin">
+                    <Column hAlign="Begin">
                         <Text text="Expense"/>
                     </Column>
                     <Column hAlign="End">
@@ -38,6 +37,9 @@
                     </Column>
                     <Column hAlign="End">
                         <Text text="Locale / Currency&#10;(pl-PL / PLN)" />
+                    </Column>
+                    <Column hAlign="End">
+                        <Text text="User Choices" />
                     </Column>
                 </columns>
                 <items>
@@ -87,6 +89,10 @@
                                     {value: 'PLN'}
                                 ],
                                 formatter: '.numberFormatter.toNumberString'
+                            }"/>
+                            <ObjectIdentifier text="{
+                                path: 'amount',
+                                formatter: '.numberFormatter.toCurrencyString'
                             }"/>
                         </cells>
                     </ColumnListItem>
