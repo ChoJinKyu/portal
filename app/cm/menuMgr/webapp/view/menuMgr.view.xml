@@ -70,38 +70,59 @@
         </f:header>
         <f:content>
             <VBox>
+                <!-- rows="{path: 'tree>/Menu_haa'}"  -->
                 <table:TreeTable
-                  id="menuTree"
+                  id="menuTreeTable"
                   rowSelectionChange=".onRowSelectionChange"
-                  rows="{path: 'tree>/menu_haa'}">
+                  selectionMode="Single"
+                  selectionBehavior="Row"
+                  enableColumnReordering="false"
+                  expandFirstLevel="false"
+                  rows="{
+                      path : '/Menu_haa',
+                      parameters : {
+                          countMode: 'Inline',
+                          treeAnnotationProperties : {
+                              hierarchyLevelFor : 'hierarchy_level',
+                              hierarchyNodeFor : 'node_id',
+                              hierarchyParentNodeFor : 'parent_id',
+                              hierarchyDrillStateFor : 'drill_state'
+                          }
+                      }
+                  }"
+                  >
                   <table:extension>
                     <OverflowToolbar>
-                      <Title text="메뉴관리 ({= ${list>/}.length || 0})" level="H2"/>
+                      <!-- <Title text="메뉴관리 ({= ${/}.length || 0})" level="H2"/> -->
                       <ToolbarSpacer/>
-                      <Button id="mainTableCreateSameLevelButton" text="Create Same Level" type="Transparent" press=".onAdd('S')" />
-                      <Button id="mainTableCreateLowerLevelButton" text="Create Lower Level" type="Transparent" press=".onAdd('L')" />
-                      <ToolbarSeparator/>
-                      <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+                      <Button id="mainTableCreateSameLevelButton" text="Create Same Level" type="Transparent" press=".onAdd('S')">
                         <layoutData>
                           <OverflowToolbarLayoutData priority="NeverOverflow" />
                         </layoutData>
                       </Button>
+                      <Button id="mainTableCreateLowerLevelButton" text="Create Lower Level" type="Transparent" press=".onAdd('L')">
+                        <layoutData>
+                          <OverflowToolbarLayoutData priority="NeverOverflow" />
+                        </layoutData>
+                      </Button>
+                      <ToolbarSeparator/>
+                      <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed"/>
                     </OverflowToolbar>
                   </table:extension>
                   <table:columns>
                     <table:Column label="메뉴명" >
                         <table:template>
-                            <Text text="{tree>menu_name}" wrapping="false" />
+                            <Text text="{menu_name}" wrapping="false" />
                         </table:template>
                     </table:Column>
                     <table:Column label="메뉴코드" >
                         <table:template>
-                            <Text text="{tree>menu_code}" wrapping="false" />
+                            <Text text="{menu_code}" wrapping="false" />
                         </table:template>
                     </table:Column>
                     <table:Column label="메뉴구분" >
                         <table:template>
-                            <Text text="{tree>menu_level_number}" wrapping="false" />
+                            <Text text="{menu_level_number}" wrapping="false" />
                         </table:template>
                     </table:Column>
                   </table:columns>

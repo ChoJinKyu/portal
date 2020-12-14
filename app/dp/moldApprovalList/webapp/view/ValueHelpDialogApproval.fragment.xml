@@ -25,7 +25,30 @@
 		descriptionKey="part_number"
 	>
     <filterBar>
-			<fb:FilterBar advancedMode="true" search=".onFilterBarSearch">
+			<fb:FilterBar advancedMode="true" search=".onFilterBarSearch"  isRunningInValueHelpDialog="true">
+				<fb:filterGroupItems>
+                    <fb:FilterGroupItem
+                                groupName="__$INTERNAL$"
+                                name="TenantId"
+                                label="Tenant ID"
+                                visibleInFilterBar="true"
+                        >
+                        <fb:control>
+                            <m:Input
+                                    name="tenant_id"
+                                    selectedKey="L1100"
+                                    showSuggestion="true"
+                                    showValueHelp="false"
+                                    suggestionItems="{
+                                        path: '/Requestors',
+                                        sorter: { path: 'user_id' }
+                                    }"
+                            >
+                                <core:Item key="{tenant_id}" text="{tenant_id}" />
+                            </m:Input>
+                        </fb:control>
+					</fb:FilterGroupItem>
+                </fb:filterGroupItems>
 			</fb:FilterBar>
 		</filterBar>
 	</ValueHelpDialog>

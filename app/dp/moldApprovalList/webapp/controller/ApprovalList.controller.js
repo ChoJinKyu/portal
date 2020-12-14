@@ -32,6 +32,7 @@ sap.ui.define([
      */
     var toggleButtonId = "";
     var dialogId = "";
+    var path = '';
 
     return BaseController.extend("dp.moldApprovalList.controller.ApprovalList", {
 
@@ -287,7 +288,7 @@ sap.ui.define([
         onValueHelpRequested: function (oEvent) {
 
 
-            var path = '';
+            //var path = '';
             
             this._oValueHelpDialog = sap.ui.xmlfragment("dp.moldApprovalList.view.ValueHelpDialogApproval", this);
 
@@ -298,6 +299,11 @@ sap.ui.define([
             var oFilterBar = this._oValueHelpDialog.getFilterBar();
             oFilterBar.setFilterBarExpanded(false);
             oFilterBar.setBasicSearch(this._oBasicSearchField);
+            
+
+            if (oFilterBar) {
+				oFilterBar.variantsInitialized();
+			}
 
             if (oEvent.getSource().sId.indexOf("searchModel") > -1) {
                 //model
@@ -363,7 +369,6 @@ sap.ui.define([
                 });
 
                 path = '/Requestors';
-                //filters = new Filter("tenant_id", FilterOperator.EQ, 'L1100')
                 this._oValueHelpDialog.setTitle('Requestor');
                 this._oValueHelpDialog.setKey('user_id');
                 // this._oValueHelpDialog.setDescriptionKey('english_employee_name');
@@ -397,6 +402,7 @@ sap.ui.define([
                     });
                 }
                 this._oValueHelpDialog.update();
+                
 
             }.bind(this));
 
@@ -409,7 +415,9 @@ sap.ui.define([
             oToken.setText(this._oInputModel.getValue());
             this._oValueHelpDialog.setTokens([oToken]);
             this._oValueHelpDialog.open();
-
+            oFilterBar.search();
+            //this.onFilterBarSearch(oFilterBar.search());
+            
 
         },
 
@@ -428,6 +436,7 @@ sap.ui.define([
         },
 
         onFilterBarSearch: function (oEvent) {
+
             var sSearchQuery = this._oBasicSearchField.getValue(),
                 aSelectionSet = oEvent.getParameter("selectionSet");
             var aFilters = aSelectionSet.reduce(function (aResult, oControl) {
@@ -437,27 +446,37 @@ sap.ui.define([
                         operator: FilterOperator.Contains,
                         value1: oControl.getValue()
                     }));
+                }else{
+                     aResult.push(new Filter({
+                        path: oControl.mProperties.name,
+                        operator: FilterOperator.Contains,
+                        value1: oControl.mProperties.selectedKey
+                    }));
+      
+                    
                 }
-
+                
+                console.log(aResult);
                 return aResult;
             }, []);
-
-
+            
+            console.log(this._oValueHelpDialog);
             var _tempFilters = [];
 
-            if (this._oValueHelpDialog.oRows.sPath.indexOf('/Models') > -1) {
+            if (path == '/Models') {
                 // /Models
                 _tempFilters.push(new Filter("tolower(model)", FilterOperator.Contains, "'" + sSearchQuery.toLowerCase().replace("'", "''") + "'"));
 
-            } else if (this._oValueHelpDialog.oRows.sPath.indexOf('/PartNumbers') > -1) {
+            } else if (path == '/PartNumbers') {
                 //PartNumbers
                 _tempFilters.push(new Filter({ path: "tolower(part_number)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter({ path: "tolower(mold_item_type_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter({ path: "tolower(spec_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
             }
 
-            else if (this._oValueHelpDialog.oRows.sPath.indexOf('/Requestors') > -1) {
-                //PartNumbers
+            else if (path == '/Requestors') {
+                //Requestors
+                _tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter({ path: "tolower(user_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter({ path: "tolower(english_employee_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
             }
