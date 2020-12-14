@@ -15,7 +15,6 @@
 
            <Table id="rTable" 
                   title="ResponsibleTable"
-                  sticky="HeaderToolbar,ColumnHeaders" 
                   inset="false"
                   noDataText="No Data"
                   class="sapFDynamicPageAlignContent" 
