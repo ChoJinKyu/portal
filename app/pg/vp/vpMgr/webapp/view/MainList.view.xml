@@ -19,8 +19,9 @@
                         <Title text="{i18n>appTitle}" />
                     </f:heading>
                     <f:snappedContent>
-                        <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                        <form:SimpleForm id="pageSearchFormS" maxContainerCols="3" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                             <form:content>
+                            <HBox>
                                 <VBox>
                                     <Label text="Operation ORG" labelFor="search_Operation_ORG_S" required="true"></Label>
                                     <ComboBox id="search_Operation_ORG_S" width="100%" selectedKey="BIZ00200" items="{
@@ -38,13 +39,28 @@
                                         <layout:GridData span="XL2 L3 M6 S12" />
                                     </layoutData>
                                 </VBox>
-                                
+                                <VBox>
+                                    <Label text="Operation UINT" labelFor="search_Operation_UNIT_S" required="true"></Label>
+                                    <ComboBox id="search_Operation_UNIT_S" width="100%" selectedKey="" items="{
+                                        path: '/util>/CodeDetails',
+                                        filters: [
+                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                    {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_OPERATION_UNIT'}      
+                                        ]
+                                    }">
+                                        <items>
+                                            <core:Item key="{util>code}" text="{util>code_description}" />
+                                        </items>
+                                    </ComboBox>
+                                </VBox>                                
+                            </HBox>    
                             </form:content>
                         </form:SimpleForm>
                     </f:snappedContent>
                     <f:expandedContent>
                         <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                             <form:content>
+                            <HBox>
                                 <VBox>
                                     <Label text="Operation ORG" labelFor="search_Operation_ORG_E" required="true"></Label>
                                     <ComboBox id="search_Operation_ORG_E" width="100%" selectedKey="BIZ00200"  items="{
@@ -62,7 +78,21 @@
                                         <layout:GridData span="XL2 L3 M6 S12" />
                                     </layoutData>
                                 </VBox>
-                            
+                                <VBox>
+                                    <Label text="Operation UINT" labelFor="search_Operation_UNIT_E" required="true"></Label>
+                                    <ComboBox id="search_Operation_UNIT_E" width="100%" selectedKey="" items="{
+                                        path: '/util>/CodeDetails',
+                                        filters: [
+                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                    {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_OPERATION_UNIT'}      
+                                        ]
+                                    }">
+                                        <items>
+                                            <core:Item key="{util>code}" text="{util>code_description}" />
+                                        </items>
+                                    </ComboBox>
+                                </VBox>
+                            </HBox>                             
                             </form:content>
                         </form:SimpleForm>
                     </f:expandedContent>
