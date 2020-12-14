@@ -1,8 +1,8 @@
 namespace dp;	
 using util from '../../cm/util/util-model'; 	
-// using {dp as partCategory} from '../standardCommon/DP_SC_PART_CATEGORY-model';
-using {dp as categoryClass} from '../standardCommon/DP_SC_PART_CATEGORY_CLASS-model';
-using {dp as categoryAuth} from '../standardCommon/DP_SC_PART_CATEGORY_AUTH-model';
+// using {dp as partCategory} from '../sc/DP_SC_PART_CATEGORY-model';
+using {dp as categoryClass} from '../sc/DP_SC_PART_CATEGORY_CLASS-model';
+using {dp as categoryAuth} from '../sc/DP_SC_PART_CATEGORY_AUTH-model';
 	
 entity Sc_Part_Category {	
   key tenant_id : String(5)  not null @title: '테넌트ID' ;	

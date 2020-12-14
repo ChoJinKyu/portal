@@ -17,7 +17,7 @@ using from './mm/basicDataMgr/hsCodeMgr-service';
 using from './mm/basicDataMgr/materialClassMgr-service';
 using from './mm/basicDataMgr/materialGroupMgr-service';
 using from './mm/basicDataMgr/materialCommodityMgr-service';
-using from './standardCommon/categoryMgr/category-service';
+using from './sc/categoryMgr/category-service';
 using from './dc/vi/basePriceArl-service';
 using from './util/moldItemSelection-service';
 using from './util/supplierSelection-service';
