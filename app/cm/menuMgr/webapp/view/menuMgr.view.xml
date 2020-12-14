@@ -76,19 +76,23 @@
                   rowSelectionChange=".onRowSelectionChange"
                   selectionMode="Single"
                   selectionBehavior="Row"
+                  
                   enableColumnReordering="false"
-                  expandFirstLevel="false"
+                  expandFirstLevel="true"
                   rows="{
-                      path : '/Menu_haa',
-                      parameters : {
-                          countMode: 'Inline',
-                          treeAnnotationProperties : {
-                              hierarchyLevelFor : 'hierarchy_level',
-                              hierarchyNodeFor : 'node_id',
-                              hierarchyParentNodeFor : 'parent_id',
-                              hierarchyDrillStateFor : 'drill_state'
-                          }
-                      }
+                    path : 'tree>/Menu_haa',
+                    filters: [
+                    ],
+                    parameters : {
+                        countMode: 'Inline',
+                        treeAnnotationProperties : {
+                            hierarchyLevelFor : 'hierarchy_level',
+                            hierarchyNodeFor : 'node_id',
+                            hierarchyParentNodeFor : 'parent_id',
+                            hierarchyDrillStateFor : 'drill_state'
+                        },
+                        numberOfExpandedLevels: 2
+                    }
                   }"
                   >
                   <table:extension>
@@ -112,17 +116,17 @@
                   <table:columns>
                     <table:Column label="메뉴명" >
                         <table:template>
-                            <Text text="{menu_name}" wrapping="false" />
+                            <Text text="{tree>menu_name}" wrapping="false" />
                         </table:template>
                     </table:Column>
                     <table:Column label="메뉴코드" >
                         <table:template>
-                            <Text text="{menu_code}" wrapping="false" />
+                            <Text text="{tree>menu_code}" wrapping="false" />
                         </table:template>
                     </table:Column>
                     <table:Column label="메뉴구분" >
                         <table:template>
-                            <Text text="{menu_level_number}" wrapping="false" />
+                            <Text text="{tree>menu_level_number}" wrapping="false" />
                         </table:template>
                     </table:Column>
                   </table:columns>
