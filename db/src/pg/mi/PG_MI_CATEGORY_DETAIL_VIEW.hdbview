@@ -1,35 +1,56 @@
 view pg_MI_Cateogry_Detail_View as
     select
-        tenant_id,
-        company_code,
-        org_type_code,
-        org_code,
-        mi_material_code,
-        mi_material_name,
-        category_code,
-        category_name,
-        cast(null as nvarchar(3)) reqm_quantity_unit,
-        cast(null as decimal) reqm_quantity,
-        use_flag,
-        currency_unit,
-        quantity_unit,
-        exchange,
-        termsdelv,
-        cast(max(mi_date) as date) mi_date,
-        amount
-    from pg_mi_material_price_management
-    group by
-        tenant_id,
-        company_code,
-        org_type_code,
-        org_code,
-        mi_material_code,
-        mi_material_name,
-        category_code,
-        category_name,
-        use_flag,
-        currency_unit,
-        quantity_unit,
-        exchange,
-        termsdelv,
-        amount;
+        main.tenant_id					as tenant_id,
+        main.company_code				as company_code,
+        main.org_type_code				as org_type_code,
+        main.org_code					as org_code,
+        main.mi_material_code			as mi_material_code,
+        mattext.mi_material_name		as mi_material_name,
+        matcode.category_code			as category_code,
+        categtext.category_name			as category_name,
+        cast(null as nvarchar(3))		   reqm_quantity_unit,
+        cast(null as decimal)			   reqm_quantity,
+        main.use_flag					as use_flag,
+        main.currency_unit				as currency_unit,
+        main.quantity_unit				as quantity_unit,
+        main.exchange					as exchange,
+        main.termsdelv					as termsdelv,
+        cast(max(main.mi_date) as date)	   mi_date,
+        main.amount						as amount
+    from pg_mi_material_price_management as main
+    left join pg_mi_material_code_lng as mattext
+        on  main.tenant_id			= mattext.tenant_id
+        and main.company_code		= mattext.company_code
+        and main.org_type_code		= mattext.org_type_code
+        and main.org_code			= mattext.org_code
+        and main.mi_material_code	= mattext.mi_material_code
+		and	mattext.language_code	= 'KO'
+    left join pg_mi_material_code as matcode
+		on	main.tenant_id			= matcode.tenant_id
+		and	main.company_code		= matcode.company_code
+		and	main.org_type_code		= matcode.org_type_code
+		and	main.org_code			= matcode.org_code
+		and	main.mi_material_code	= matcode.mi_material_code
+	left join PG_MI_CATEGORY_LNG as categtext
+		on	matcode.tenant_id		= categtext.tenant_id
+		and	matcode.company_code	= categtext.company_code
+		and	matcode.org_type_code	= categtext.org_type_code
+		and	matcode.org_code		= categtext.org_code
+		and	matcode.category_code	= categtext.category_code
+		and	categtext.language_code	= 'KO'
+    group by	
+        main.tenant_id,
+        main.company_code,
+        main.org_type_code,
+        main.org_code,
+        main.mi_material_code,
+        mattext.mi_material_name,
+        matcode.category_code,
+        categtext.category_name,
+        main.use_flag,
+        main.currency_unit,
+        main.quantity_unit,
+        main.exchange,
+        main.termsdelv,
+        main.amount
+	;

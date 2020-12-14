@@ -19,7 +19,7 @@ public class CommonService implements EventHandler {
 
     private List<Map<String, Object>> list = new ArrayList<>();
 
-    @On(event = CdsService.EVENT_READ, entity="xx.util.CommonService.Code")
+    @On(event = CdsService.EVENT_READ, entity="xx.util.CommonService.Code1")
     public void onReadCode(CdsReadEventContext context) {
         Map<String, Object> data1 = new HashMap<>();
         data1.put("tenant_id", "TID");

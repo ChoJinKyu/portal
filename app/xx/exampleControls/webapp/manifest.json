@@ -19,11 +19,25 @@
           "odataVersion": "2.0"
         }
       },
+      "mainV4Service": {
+        "uri": "srv-api/odata/v4/xx.TemplateService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0"
+        }
+      },
       "commonService": {
-        "uri": "srv-api/odata/v2/cm.util.CommonService/",
+        "uri": "srv-api/odata/v2/xx.util.CommonService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
+        }
+      },
+      "commonV4Service": {
+        "uri": "srv-api/odata/v4/xx.util.CommonService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0"
         }
       },
       "orgService": {
@@ -104,7 +118,7 @@
           "useBatch": true
         }
       },
-      "odata": {
+      "main": {
         "dataSource": "mainService",
         "preload": true,
         "settings": {
@@ -113,17 +127,37 @@
           "refreshAfterChange": true,
           "useBatch": true
         }
+      },
+      "main-v4": {
+        "dataSource": "mainV4Service",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "groupId": "$direct",
+          "synchronizationMode": "None",
+          "autoExpandSelect": true
+        }
+      },
+      "common-v4": {
+        "dataSource": "commonV4Service",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "groupId": "$auto",
+          "synchronizationMode": "None",
+          "autoExpandSelect": true
+        }
       }
     },
     "resources": {
-        "css": [
-            {
-                "uri": "css/style.css"
-            }
-        ]
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
     },
     "resourceRoots": {
-        "ext.lib": "../../../lib"
+      "ext.lib": "../../../lib"
     },
     "routing": {
       "config": {
@@ -240,6 +274,10 @@
         "example8": {
           "viewName": "NumberFormat",
           "viewId": "example8"
+        },
+        "example9": {
+          "viewName": "UsingODataV4",
+          "viewId": "example9"
         },
         "notFound": {
           "viewName": "NotFound",
