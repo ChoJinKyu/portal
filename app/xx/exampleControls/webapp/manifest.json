@@ -236,6 +236,13 @@
           "target": [
             "example8"
           ]
+        },
+        {
+          "pattern": "example9",
+          "name": "example9",
+          "target": [
+            "example9"
+          ]
         }
       ],
       "targets": {
