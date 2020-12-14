@@ -271,7 +271,7 @@
                             <Button id="mainTableCreateButton" text="Create" type="Emphasized" press=".onDialogCreate" />
                             <Button id="mainTableDeleteButton" text="Delete" type="Transparent" press=".onApplovalDeletePress" />
                             <ToolbarSeparator/>
-                            <Button icon="sap-icon://excel-attachment" press=".onListMainTablePersoButtonPressed" >
+                            <Button icon="sap-icon://excel-attachment" press=".onDataExport" >
                                 <layoutData>
                                     <OverflowToolbarLayoutData priority="NeverOverflow" />
                                 </layoutData>
