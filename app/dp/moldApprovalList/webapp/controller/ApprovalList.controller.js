@@ -296,8 +296,13 @@ sap.ui.define([
             });
 
             var oFilterBar = this._oValueHelpDialog.getFilterBar();
-            oFilterBar.setFilterBarExpanded(false);
+            oFilterBar.setFilterBarExpanded(true);
             oFilterBar.setBasicSearch(this._oBasicSearchField);
+            
+
+            if (oFilterBar) {
+				oFilterBar.variantsInitialized();
+			}
 
             if (oEvent.getSource().sId.indexOf("searchModel") > -1) {
                 //model
@@ -363,7 +368,6 @@ sap.ui.define([
                 });
 
                 path = '/Requestors';
-                //filters = new Filter("tenant_id", FilterOperator.EQ, 'L1100')
                 this._oValueHelpDialog.setTitle('Requestor');
                 this._oValueHelpDialog.setKey('user_id');
                 // this._oValueHelpDialog.setDescriptionKey('english_employee_name');
@@ -397,6 +401,7 @@ sap.ui.define([
                     });
                 }
                 this._oValueHelpDialog.update();
+                
 
             }.bind(this));
 
@@ -409,7 +414,8 @@ sap.ui.define([
             oToken.setText(this._oInputModel.getValue());
             this._oValueHelpDialog.setTokens([oToken]);
             this._oValueHelpDialog.open();
-
+            oFilterBar.search();
+            
 
         },
 
@@ -441,8 +447,8 @@ sap.ui.define([
 
                 return aResult;
             }, []);
-
-
+            
+            console.log(this._oValueHelpDialog);
             var _tempFilters = [];
 
             if (this._oValueHelpDialog.oRows.sPath.indexOf('/Models') > -1) {
@@ -457,7 +463,8 @@ sap.ui.define([
             }
 
             else if (this._oValueHelpDialog.oRows.sPath.indexOf('/Requestors') > -1) {
-                //PartNumbers
+                //Requestors
+                _tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter({ path: "tolower(user_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter({ path: "tolower(english_employee_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
             }
