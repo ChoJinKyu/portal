@@ -16,7 +16,16 @@
 			<Label text="UOM" required="true"/>
 			<Input value="{master>/uom_code}" editable="false" class="readonlyField"/>
 			<Label text="Class" required="true"/>
-			<Input value="{master>/uom_class_code}" editable="false" class="readonlyField"/>
+			<ComboBox id="showClassCode" width="100%" selectedKey="{master>/uom_class_code}" items="{
+                    path: 'uomClass>/UomClass',
+                    filters: [
+                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}                                        
+                    ]
+                }" editable="false" required="true"> 
+                <items>
+                    <core:Item key="{uomClass>uom_class_code}" text="{uomClass>uom_class_name}" />
+                </items>
+            </ComboBox>
 			<Label text="Base Unit"/>
 			<!-- <Text text="{
 					path: 'master>/base_unit_flag',
