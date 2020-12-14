@@ -1,4 +1,4 @@
-sap.ui.define([ 
+sap.ui.define([
     "ext/lib/controller/BaseController",
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/odata/v2/ODataModel",
@@ -15,12 +15,12 @@ sap.ui.define([
     "sap/m/ColumnListItem",
     "sap/ui/core/Fragment",
     "ext/lib/util/Multilingual",
-    "ext/lib/model/ManagedListModel", 
-       "sap/ui/model/json/JSONModel",
-        "ext/lib/model/ManagedModel",
-], function (BaseController,Controller, ODataModel, Dialog, Renderer, ODataV2ServiceProvider,
+    "ext/lib/model/ManagedListModel",
+    "sap/ui/model/json/JSONModel",
+    "ext/lib/model/ManagedModel",
+], function (BaseController, Controller, ODataModel, Dialog, Renderer, ODataV2ServiceProvider,
     Sorter, Filter, FilterOperator,
-    Button, Text, Table, Column, ColumnListItem, Fragment,Multilingual , ManagedListModel,JSONModel,ManagedModel) {
+    Button, Text, Table, Column, ColumnListItem, Fragment, Multilingual, ManagedListModel, JSONModel, ManagedModel) {
     "use strict";
 
     var oServiceModel = new ODataModel({
@@ -51,7 +51,7 @@ sap.ui.define([
      * @param : oTableName 호출한 페이지에 추가할 테이블 아이디 
      * @param : oArges (company_code, org_code) 
      */
-    var oThis, oTableName, oArges, oCallback ; 
+    var oThis, oTableName, oArges, oCallback;
 
     /**
      * @description MoldSelection 
@@ -67,8 +67,8 @@ sap.ui.define([
 		 * Called when the mainObject controller is instantiated.
 		 * @public
 		 */
-        openMoldItemSelectionPop : function (pThis, oEvent, pArges, callback) { 
-            console.log("org_code >>>> " , pArges);
+        openMoldItemSelectionPop: function (pThis, oEvent, pArges, callback) {
+            console.log("org_code >>>> ", pArges);
             oThis = pThis;
             oArges = pArges;
             oCallback = callback;
@@ -79,7 +79,7 @@ sap.ui.define([
             oThis.setModel(new ManagedListModel(), "moldSelectionPlantPopList");
 
             oThis.getModel('moldItemPop').setProperty('/company_code', oArges.company_code);
-            oThis.getModel('moldItemPop').setProperty('/org_code', oArges.org_code); 
+            oThis.getModel('moldItemPop').setProperty('/org_code', oArges.org_code);
 
             var oView = oThis.getView();
             var oButton = oEvent.getSource();
@@ -100,8 +100,8 @@ sap.ui.define([
                 oThis.byId("btnMoldItemPopSearch").firePress(); // open 하자마자 조회 하여 보여줌 
 
             });
-        }, 
-         _getSearchMoldSelection: function () {
+        },
+        _getSearchMoldSelection: function () {
             var aSearchFilters = [];
             // tenant_id  
             aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100'));
@@ -121,6 +121,11 @@ sap.ui.define([
             }
             if (partNo != undefined && partNo != "" && partNo != null) {
                 aSearchFilters.push(new Filter("mold_number", FilterOperator.Contains, partNo))
+            }
+
+            // 추가 검색 조건 
+            if(oArges.mold_progress_status_code != undefined){
+                aSearchFilters.push(new Filter("mold_progress_status_code", FilterOperator.EQ , oArges.mold_progress_status_code));
             }
 
             return aSearchFilters;
@@ -149,7 +154,7 @@ sap.ui.define([
                 oModel = oThis.getModel("moldItemPopList"),
                 companyModel = oThis.getModel("moldSelectionCompanyPopList"),
                 plantModel = oThis.getModel("moldSelectionPlantPopList")
-                
+
                 ;
 
             oView.setBusy(true);
@@ -176,8 +181,8 @@ sap.ui.define([
             plantModel.setTransactionModel(oServiceModel3);
             plantModel.read("/Pur_Operation_Org", {
                 filters: [new Filter("tenant_id", FilterOperator.EQ, 'L1100')
-                        , new Filter("company_code", FilterOperator.EQ, oThis.getModel('moldItemPop').oData.company_code)
-                    ],
+                      , new Filter("company_code", FilterOperator.EQ, oThis.getModel('moldItemPop').oData.company_code)
+                ],
                 success: function (oData) {
                     console.log(" plant >>>>> ", oData);
                     oView.setBusy(false);
@@ -185,29 +190,29 @@ sap.ui.define([
             });
 
         },
-           /**
-         * @public 
-         * @see 사용처 Participating Supplier Fragment 취소 이벤트
-         */
+        /**
+      * @public 
+      * @see 사용처 Participating Supplier Fragment 취소 이벤트
+      */
         onExit: function () {
-           // this._setInitPop();
+            // this._setInitPop();
             oThis.byId("dialogMolItemSelection").close();
         },
         selectMoldItemChange: function (oEvent) {
             var oTable = oThis.byId("popMoldItemSelectTable");
             var aItems = oTable.getSelectedItems();
-        
-                oThis.getModel('moldItemPop').setProperty('/sLength', aItems == undefined ? 0 : aItems.length); 
-           
+
+            oThis.getModel('moldItemPop').setProperty('/sLength', aItems == undefined ? 0 : aItems.length);
+
         },
         /**
          * @description  클릭한거랑 검색 조건 초기화 
          */
-        _setInitPop : function(){ 
+        _setInitPop: function () {
             // var oTable = oThis.byId("popMoldItemSelectTable");
-           //  oTable.clearSelection();
-             oThis.byId('moldItemPopModel').setVaue("");
-             oThis.byId('moldItemPopPartNo').setVaue("");
+            //  oTable.clearSelection();
+            oThis.byId('moldItemPopModel').setVaue("");
+            oThis.byId('moldItemPopPartNo').setVaue("");
         },
 
         /**
@@ -218,7 +223,7 @@ sap.ui.define([
 
             var oTable = oThis.byId("popMoldItemSelectTable");
             var aItems = oTable.getSelectedItems();
-            var that = this; 
+            var that = this;
             var datas = [];
             aItems.forEach(function (oItem) {
                 console.log(" getSelectedItems >>>", oItem);
@@ -249,7 +254,7 @@ sap.ui.define([
                     , book_currency_code: oItem.getCells()[6].getText()
                     , provisional_budget_amount: oItem.getCells()[7].getText()
                     , family_part_number_1: famList.join(",")
-                    , currency_code:oItem.getCells()[13].getText()
+                    , currency_code: oItem.getCells()[13].getText()
                     , purchasing_amount: oItem.getCells()[14].getText()
                     , supplier_code: oItem.getCells()[15].getText()
                     , target_amount: oItem.getCells()[16].getText()

@@ -486,7 +486,8 @@ sap.ui.define([
         onMoldItemPopPress : function (oEvent){
              var oArgs = {
                 company_code : this.getModel('appMaster').oData.company_code , 
-                org_code : this.getModel('appMaster').oData.org_code
+                org_code : this.getModel('appMaster').oData.org_code,
+                mold_progress_status_code : 'DEV_RCV'
             }
             var that = this;
     
