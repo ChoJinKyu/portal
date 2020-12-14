@@ -13,75 +13,32 @@
     <Page id="page" title="Smart Table" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
         <content>
 
-			<smartFilterBar:SmartFilterBar id="smartFilterBar"
-				entitySet="Message" persistencyKey="SmartFilter_Explored">
-				<!-- <smartFilterBar:controlConfiguration>
-					<smartFilterBar:ControlConfiguration key="Bukrs">
-						<smartFilterBar:defaultFilterValues>
-							<smartFilterBar:SelectOption low="0001">
+			<smartFilterBar:SmartFilterBar id="smartFilterBar" entitySet="Message" persistencyKey="SmartFilter_Explored" basicSearchFieldName="Bukrs" enableBasicSearch="true" >
+				<smartFilterBar:controlConfiguration>
+					<smartFilterBar:ControlConfiguration key="tenant_id">
+					<smartFilterBar:defaultFilterValues>
+							<smartFilterBar:SelectOption low="L2100">
 							</smartFilterBar:SelectOption>
 						</smartFilterBar:defaultFilterValues>
 					</smartFilterBar:ControlConfiguration>
-					<smartFilterBar:ControlConfiguration key="Gjahr">
+					<smartFilterBar:ControlConfiguration key="language_code">
 						<smartFilterBar:defaultFilterValues>
-							<smartFilterBar:SelectOption low="2014">
-							</smartFilterBar:SelectOption>
-						</smartFilterBar:defaultFilterValues>
-					</smartFilterBar:ControlConfiguration>
-				</smartFilterBar:controlConfiguration> -->
+								<smartFilterBar:SelectOption low="EN">
+								</smartFilterBar:SelectOption>
+							</smartFilterBar:defaultFilterValues>
+						</smartFilterBar:ControlConfiguration>
+				</smartFilterBar:controlConfiguration>
+				<!-- layout data used to make the table growing but the filter bar fixed -->
+				<smartFilterBar:layoutData>
+					<FlexItemData shrinkFactor="0"/>
+				</smartFilterBar:layoutData>
 			</smartFilterBar:SmartFilterBar>
-
-            <smartTable:SmartTable id="smartTable" 
-                tableBindingPath="{list>/Message}"
-                entitySet="Message" tableType="ResponsiveTable" useExportToExcel="true"
-                useVariantManagement="false" useTablePersonalisation="true" header="Smart Table"
-                showRowCount="true" enableAutoBinding="true" beforeRebindTable="onBeforeRebindTable"
-				initiallyVisibleFields="tenant_id,language_code,message_code,message_contents">
-
-        <Table mode="MultiSelect">
-			<columns>
-				<Column id="tenant_id" width="100px" hAlign="Begin">
-					<customData>
-						<core:CustomData key="p13nData"
-							value='\{"columnKey": "tenant_id", "columnIndex":"1", "leadingProperty": "tenant_id", "sortProperty": "tenant_id"}' />
-					</customData>
-					<Text text="{/#Message/tenant_id/@sap:label}" />
-				</Column>
-				<Column id="language_code" width="100px" hAlign="Begin">
-					<customData>
-						<core:CustomData key="p13nData"
-							value='\{"columnKey": "language_code", "columnIndex":"2", "leadingProperty": "language_code", "sortProperty": "language_code"}' />
-					</customData>
-					<Text text="{/#Message/language_code/@sap:label}" />
-				</Column>
-				<Column id="message_code" width="100px" hAlign="Begin">
-					<customData>
-						<core:CustomData key="p13nData"
-							value='\{"columnKey": "message_code", "columnIndex":"3", "leadingProperty": "message_code", "sortProperty": "message_code"}' />
-					</customData>
-					<Text text="Msg code" />
-				</Column>
-				<Column id="message_contents" width="100px" hAlign="Begin">
-					<customData>
-						<core:CustomData key="p13nData"
-							value='\{"columnKey": "message_contents", "columnIndex":"4", "leadingProperty": "message_contents", "sortProperty": "message_contents"}' />
-					</customData>
-					<Text text="Msg Content" />
-				</Column>
-			</columns>
-			<items>
-				<ColumnListItem>
-					<cells>
-						<Text text="{tenant_id}" />
-						<Text text="{language_code}" />
-						<Text text="{message_code}" />
-						<Text text="{message_contents}" />
-					</cells>
-				</ColumnListItem>
-			</items>
-		</Table>
-
-            </smartTable:SmartTable>
+			<smartTable:SmartTable id="smartTable" entitySet="Message" smartFilterId="smartFilterBar" tableType="Table" useExportToExcel="true" beforeExport="onBeforeExport" useVariantManagement="true" useTablePersonalisation="true" header="Line Items" showRowCount="true" persistencyKey="SmartTableAnalytical_Explored" enableAutoBinding="true" class="sapUiResponsiveContentPadding">
+				<!-- layout data used to make the table growing but the filter bar fixed -->
+				<smartTable:layoutData>
+					<FlexItemData growFactor="1" baseSize="0%"/>
+				</smartTable:layoutData>
+			</smartTable:SmartTable>
 
         </content>
     </Page>

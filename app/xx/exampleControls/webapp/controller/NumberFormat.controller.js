@@ -1,11 +1,8 @@
 sap.ui.define([
 	"./Empty.controller",
-	"ext/lib/model/v2/ODataDelegateModel",
 	"sap/ui/model/json/JSONModel",
-	"sap/m/MessageBox",
-	"sap/m/MessageToast",
 	"ext/lib/formatter/NumberFormatter"
-], function (Controller, DelegateModel, JSONModel, MessageBox, MessageToast, NumberFormatter) {
+], function (Controller, JSONModel, NumberFormatter) {
 	"use strict";
 
 	return Controller.extend("xx.exampleControls.controller.NumberFormat", {
@@ -61,10 +58,7 @@ sap.ui.define([
 				}
 			];
 
-			var oModel = new JSONModel({
-				modelData: aData
-			});
-			this.getView().setModel(oModel);
+			this.getView().setModel(new JSONModel(aData));
 		}
 	});
 });

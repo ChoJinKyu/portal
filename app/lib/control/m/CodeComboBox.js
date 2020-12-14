@@ -45,7 +45,9 @@ sap.ui.define([
 
                 this.oServiceModel = oBindingInfo.serviceName ? 
                     ODataV2ServiceProvider.getService(oBindingInfo.serviceName) : ODataV2ServiceProvider.getServiceByUrl(oBindingInfo.serviceUrl);
-                    
+                
+                if(!oBindingInfo.hasOwnProperty('templateShareable')) oBindingInfo.templateShareable = true;
+
                 this.oServiceModel.read("/" + oBindingInfo.entityName, jQuery.extend(oBindingInfo, {
                     success: function(oData){
                         var aRecords = oData.results;
