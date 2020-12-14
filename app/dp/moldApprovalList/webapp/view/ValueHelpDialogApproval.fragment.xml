@@ -37,7 +37,7 @@
                             <m:Input
                                     name="tenant_id"
                                     selectedKey="L1100"
-                                    showSuggestion="true"
+                                    showSuggestion="false"
                                     showValueHelp="false"
                                     suggestionItems="{
                                         path: '/Requestors',
