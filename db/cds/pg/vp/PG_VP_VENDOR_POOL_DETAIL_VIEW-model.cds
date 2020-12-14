@@ -13,7 +13,7 @@ entity Vp_Vendor_Pool_Detail_View {
     vendor_pool_local_name: String(240)   @title: '협력사풀로칼명';
     vendor_pool_english_name: String(240)   @title: '협력사풀영문명';
     repr_department_code: String(50)   @title: '대표부서코드';
-    department_korean_name: String(240)   @title: '대표부서명';
+    department_local_name: String(240)   @title: '대표부서명';
     parent_vendor_pool_code: String(20)   @title: '상위협력사풀코드';
     higher_level_path_name: String @title: '상위레벨경로(같은레벨)';
     inp_type_code: String(30)   @title: '상벌유형코드';
