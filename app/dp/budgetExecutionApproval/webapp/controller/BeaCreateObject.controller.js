@@ -21,7 +21,7 @@ sap.ui.define([
     "ext/lib/formatter/Formatter", 
     "dp/util/controller/MoldItemSelection",
     "sap/ui/richtexteditor/RichTextEditor",
-   // "sap/ui/richtexteditor/EditorType"
+  //  "sap/ui/richtexteditor/EditorType"
 ], function (BaseController, JSONModel, History, ManagedListModel, ManagedModel,  DateFormatter, Filter, FilterOperator, Fragment
     , MessageBox, MessageToast, UploadCollectionParameter, Device, syncStyleClass, ColumnListItem, Label, TransactionManager, Multilingual
     , Validator, Formatter, MoldItemSelection,RichTextEditor
@@ -91,6 +91,8 @@ sap.ui.define([
             // oTransactionManager.addDataModel(this.getModel("MoldMasterList"));
             oTransactionManager.addDataModel(this.getModel("Approvers"));
 
+            this.setRichEditor(); // 한번만 로드 
+           
 
         },
 
@@ -98,40 +100,34 @@ sap.ui.define([
 
         },
 
-
         /**
          * 폅집기 창 
          */
         setRichEditor : function (){ 
             sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
-				function (RTE, EditorType) {  
-
-                    var sStereotype = this.getMetadata().getStereotype();
-                    console.log(" sStereotype " , sStereotype);
-                 //   var d = new Date();
-					this.oRichTextEditor = new RTE("myRTE", { 
-						editorType: EditorType.TinyMCE4,
-						width: "100%",
-						height: "600px",
-						customToolbar: true,
-						showGroupFont: true,
-						showGroupLink: true,
-						showGroupInsert: true,
-						value: "",
-						ready: function () {
-							this.addButtonGroup("styleselect").addButtonGroup("table");
-						}
-					});
+                function (RTE, EditorType) {  
+                    this.oRichTextEditor = new RTE("myRTE", { 
+                        editorType: EditorType.TinyMCE4,
+                        width: "100%",
+                        height: "600px",
+                        customToolbar: true,
+                        showGroupFont: true,
+                        showGroupLink: true,
+                        showGroupInsert: true,
+                        value: "",
+                        ready: function () {
+                            this.addButtonGroup("styleselect").addButtonGroup("table");
+                        }
+                    });
 
                     this.getView().byId("approvalContents").addContent(this.oRichTextEditor);
                     
                     this.oRichTextEditor.attachEvent("change", function(oEvent){
                         this.getModel('appMaster').setProperty('/approval_contents', oEvent.getSource().getValue());
                     });
-			}.bind(this));
+             }.bind(this));
         },
-
-
+ 
         /* =========================================================== */
         /* event handlers                                              */
         /* =========================================================== */
@@ -218,7 +214,7 @@ sap.ui.define([
 		 * @private
 		 */
         _onObjectMatched: function (oEvent) {
-            this.setRichEditor();
+            //this.setRichEditor();
             var oArgs = oEvent.getParameter("arguments");
             var mModel = this.getModel(mainViewName);
             console.log("[ step ] _onObjectMatched args ", oArgs);

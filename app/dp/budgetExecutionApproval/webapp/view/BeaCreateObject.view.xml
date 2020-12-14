@@ -385,7 +385,7 @@
                                 uploadComplete="onUploadComplete"
                                 beforeUploadStarts="onBeforeUploadStarts" />
                                 
-                            <Button id="Button" text="Upload Now" press="onStartUpload" />
+                            <Button id="uploadButton" text="Upload Now" press="onStartUpload" />
                         </layout:VerticalLayout> 
 
 					</uxap:ObjectPageSubSection>
