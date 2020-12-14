@@ -1,29 +1,29 @@
-namespace op.pu;	
+namespace op;	
 
-using util from '../../cm/util/util-model';
-using { op.pu as mst } from './OP_PU_PR_MST-model';
-using { op.pu as accounts } from './OP_PU_PR_ACCOUNT-model';
-using { op.pu as services } from './OP_PU_PR_SERVICE-model';
+using util from '../../../cm/util/util-model';
+using { op.Pu_Pr_Mst as mst } from './OP_PU_PR_MST-model';
+using { op.Pu_Pr_Account as accounts } from './OP_PU_PR_ACCOUNT-model';
+using { op.Pu_Pr_Service as services } from './OP_PU_PR_SERVICE-model';
 
-entity Pr_Dtl {	
+entity Pu_Pr_Dtl {	
 
     key tenant_id				: String(5)     not null	 @title: '테넌트id';
     key company_code			: String(10)    not null	 @title: '회사코드';
     key pr_number				: String(50)    not null	 @title: '구매요청번호';
     key pr_item_number			: String(10)    not null	 @title: '구매요청품목번호';
     
-        mst : Association to mst.Pr_Mst
+        mst : Association to mst
             on mst.tenant_id = tenant_id 
             and mst.company_code  =  company_code
             and mst.pr_number  =  pr_number;       
 
-        accounts : Composition of many accounts.Pr_Account
+        accounts : Composition of many accounts
 			on  accounts.tenant_id = tenant_id 
 			and accounts.company_code = company_code 
 			and accounts.pr_number = pr_number  
             and accounts.pr_item_number = pr_item_number  ;	
 
-        services : Composition of many services.Pr_Service
+        services : Composition of many services
 			on  services.tenant_id = tenant_id 
 			and services.company_code = company_code 
 			and services.pr_number = pr_number  
@@ -47,4 +47,4 @@ entity Pr_Dtl {
         attch_group_number		: String(100)   not null	 @title: '첨부파일그룹번호';
     }	
 
-extend Pr_Dtl with util.Managed;
+extend Pu_Pr_Dtl with util.Managed;
