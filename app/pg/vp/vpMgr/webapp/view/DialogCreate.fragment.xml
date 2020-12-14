@@ -69,7 +69,6 @@
                             <table:TreeTable
                                 id="treeTable"
                                 selectionMode="Single"
-                                cellClick=".onCellClick"
                                 rowSelectionChange=".onCheck"                    
                                 enableColumnReordering="false"
                                 expandFirstLevel="false"
@@ -89,8 +88,8 @@
                             <table:extension>
                                 <OverflowToolbar>
                                     <ToolbarSpacer/>
-                                    <Button id="popTableCreateButton"          text="Create Same Level"     press=".onDialogCreate"     enabled="{mode>/viewFlag}" />
-                                    <Button id="popTableEditButton"            text="Create Lower Level"    press=".onMainTableEditButtonPress"     enabled="{mode>/viewFlag}" />
+                                    <Button id="popTableCreateButton"          text="Create Same Level"     press=".onDialogCreateSame"     enabled="{mode>/viewFlag}" />
+                                    <Button id="popTableEditButton"            text="Create Lower Level"    press=".onDialogCreatelower"     enabled="{mode>/viewFlag}" />
                                     <ToolbarSeparator/>
                                 </OverflowToolbar>
                             </table:extension>     
@@ -98,9 +97,55 @@
                             <table:columns>
                                     <table:Column label="Vendor Pool" >
                                         <table:template>
-                                            <Text text="{vendor_pool_local_name}" wrapping="false" />
+                                            <Text id="t_vpNm" text="{vendor_pool_local_name}" wrapping="false" />
                                         </table:template>
                                     </table:Column>
+                                    <table:Column label="Higher Level" width="0rem" >
+                                        <table:template>
+                                            <Text text="{higher_level_path}" wrapping="false" />
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column label="Level" width="0rem">
+                                        <table:template>
+                                            <Text text="{level_path}" wrapping="false" />
+                                        </table:template>
+                                    </table:Column>                                                                          
+                                    <table:Column label="Operation Unit" width="0rem">
+                                        <table:template>
+                                            <Text text="{org_code}" wrapping="false" />
+                                        </table:template>
+                                    </table:Column> 
+                                    <table:Column label="Hierarchy Level" width="0rem">
+                                        <table:template>
+                                            <Text text="{hierarchy_level}" wrapping="false" />
+                                        </table:template>
+                                    </table:Column>                                      
+                                    <table:Column label="TENANT ID" width="0rem">
+                                        <table:template>
+                                            <Text text="{tenant_id}" wrapping="false" />
+                                        </table:template>
+                                    </table:Column>  
+                                    <table:Column label="COMPANY" width="0rem">
+                                        <table:template>
+                                            <Text text="{company_code}" wrapping="false" />
+                                        </table:template>
+                                    </table:Column>  
+                                    <table:Column label="ORG TYPE" width="0rem">
+                                        <table:template>
+                                            <Text text="{org_type_code}" wrapping="false" />
+                                        </table:template>
+                                    </table:Column> 
+                                    <table:Column label="PARENT VENDOR POOL" width="0rem">
+                                        <table:template>
+                                            <Text text="{parent_vendor_pool_code}" wrapping="false" />
+                                        </table:template>
+                                    </table:Column> 
+                                    <table:Column label="Operation Unit" width="0rem">
+                                        <table:template>
+                                            <Text text="{operation_unit_code}" wrapping="false" />
+                                        </table:template>
+                                    </table:Column>                                                                                                                                                    
+
                             </table:columns>
                             </table:TreeTable>  
                             <layoutData>
@@ -176,7 +221,17 @@
                         </VBox>
                         <VBox>
                             <Label text = "Industrial Classification" design="Bold"/> 
-                                <Input id="pop_industry_class_code"></Input> 
+                                <ComboBox   id="pop_industry_class_code"
+                                            items="{
+                                                        path : 'util>/CodeDetails',
+                                                        filters : [
+                                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                            {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_INDUSTRY_CLASS_CODE'}                               
+                                                        ]
+                                                    }"
+                                >
+                                    <core:Item key="{util>code}" text="{util>code_description}" />
+                                </ComboBox>                                                                 
                             <layoutData>
                                 <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
@@ -184,15 +239,28 @@
                         <VBox>
                             <Label text = "Mtl. Attribute/Planning Base" design="Bold"/> 
                                 <HBox>
-                                    <ComboBox id="pop_inp_type_code" selectedKey="000"  width="12em">
-                                        <core:Item key="000" text="Mtl. Attribute"/>
-                                        <core:Item key="MBLMOB" text="물동InP"/>
-                                    </ComboBox>  
-                                    <ComboBox id="pop_plan_base" selectedKey="000"  width="12em">
-                                        <core:Item key="000" text="Planning Base"/>                                      
-                                        <core:Item key="1" text="1000000"/>                                                            
-                                        <core:Item key="2" text="2000000"/>
-                                    </ComboBox> 
+                                    <ComboBox   id="pop_inp_type_code"
+                                                items="{
+                                                            path : 'util>/CodeDetails',
+                                                            filters : [
+                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_INP_TYPE_CODE'}                                
+                                                            ]
+                                                        }"
+                                    >
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </ComboBox>                                       
+                                    <ComboBox   id="pop_plan_base"
+                                                items="{
+                                                            path : 'util>/CodeDetails',
+                                                            filters : [
+                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_MTLMOB_BASE_CODE'}                                
+                                                            ]
+                                                        }"
+                                    >
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </ComboBox>                                       
                                 </HBox>                               
                             <layoutData>
                                 <layout:GridData span="XL6 L6 M6 S12" />
@@ -200,7 +268,7 @@
                         </VBox>
                         <VBox>
                             <Label text = "Evaluation" design="Bold"/> 
-                                <Switch id="pop_regular_evaluation_flag" state="true" customTextOn="Yes" customTextOff="No">
+                                <Switch id="pop_regular_evaluation_flag" state="false" customTextOn="Yes" customTextOff="No">
                                     <layoutData>
                                         <FlexItemData growFactor="1" />
                                     </layoutData>
@@ -211,7 +279,7 @@
                         </VBox> 
                         <VBox>
                             <Label text = "SD Flag" design="Bold"/> 
-                                <Switch id="pop_sd_exception_flag" state="true" customTextOn="Yes" customTextOff="No">
+                                <Switch id="pop_sd_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
                                     <layoutData>
                                         <FlexItemData growFactor="1" />
                                     </layoutData>
@@ -222,7 +290,7 @@
                         </VBox> 
                         <VBox>
                             <Label text = "V/P Exception" design="Bold"/> 
-                                <Switch id="pop_vendor_pool_apply_exception_flag" state="true" customTextOn="Yes" customTextOff="No">
+                                <Switch id="pop_vendor_pool_apply_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
                                     <layoutData>
                                         <FlexItemData growFactor="1" />
                                     </layoutData>
@@ -234,9 +302,18 @@
                         <VBox>
                             <Label text = "Review Grade" design="Bold"/> 
                                 <HBox>
-                                    <ComboBox id="pop_equipment_grade_code" selectedKey="000"  width="20em">
-                                        <core:Item key="000" text="Review Grade"/>
-                                    </ComboBox>  
+                                    <ComboBox   id="pop_equipment_grade_code"
+                                                items="{
+                                                            path : 'util>/CodeDetails',
+                                                            filters : [
+                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_EQUIPMENT_GRADE_CODE'}                                
+                                                            ]
+                                                        }"
+                                    >
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </ComboBox>                                    
+
                                 </HBox>                               
                             <layoutData>
                                 <layout:GridData span="XL6 L6 M6 S12" />
@@ -245,9 +322,17 @@
                         <VBox>
                             <Label text = "Equipment Type" design="Bold"/> 
                                 <HBox>
-                                    <ComboBox id="pop_equipment_type_code" selectedKey="000"  width="20em">
-                                        <core:Item key="000" text="Equipment Type"/>
-                                    </ComboBox>  
+                                    <ComboBox   id="pop_equipment_type_code"
+                                                items="{
+                                                            path : 'util>/CodeDetails',
+                                                            filters : [
+                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_EQUIPMENT_TYPE_CODE'}                                
+                                                            ]
+                                                        }"
+                                    >
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </ComboBox>                                        
                                 </HBox>                               
                             <layoutData>
                                 <layout:GridData span="XL6 L6 M6 S12" />
@@ -255,14 +340,14 @@
                         </VBox>  
                         <VBox>
                             <Label text = "Site Internal Rate(%)" design="Bold"/> 
-                                <Input id="pop_dom_oversea_netprice_diff_rate"></Input> 
+                                <Input id="pop_dom_oversea_netprice_diff_rate" type="type: 'sap.ui.model.type.Decimal'" ></Input> 
                             <layoutData>
                                 <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox> 
                         <VBox>
                             <Label text = "Site External Rate(%)" design="Bold"/> 
-                                <Input id="pop_domestic_net_price_diff_rate"></Input> 
+                                <Input id="pop_domestic_net_price_diff_rate" type="type: 'sap.ui.model.type.Decimal'"  ></Input> 
                             <layoutData>
                                 <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
@@ -275,7 +360,7 @@
         <ToolbarSpacer/>
         <HBox justifyContent="End" >
             <Button text="Cancel" type="Transparent" press=".createPopupClose"/>
-            <Button text="Save" class="sapUiSmallMarginBeginEnd" type="Emphasized" press=".handleSave"/>
+            <Button id= "pop_save_bt" text="Save" class="sapUiSmallMarginBeginEnd" type="Emphasized" press=".handleSave"/>
         </HBox>
     </Dialog>
 </core:FragmentDefinition>
