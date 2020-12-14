@@ -194,7 +194,7 @@ sap.ui.define([
 		}
 		
 		/**
-         * 사용 안함
+         * 수정중
 		 * exel로 데이터를 export 하는 함수 (주로 table)
 		 * @param {object} _oParam
 		 * {
