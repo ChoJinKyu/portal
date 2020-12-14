@@ -16,13 +16,14 @@
   8. history
   -. 2020.12.14 : 박근록 최초작성
 *************************************************/
-using { dp as ProductActivityTemplate } from '../../../../../db/cds/dp/pd/DP_PD_PRODUCT_ACTIVITY_TEMPLATE-model';
+using { dp as ProdActivityTemplate } from '../../../../../db/cds/dp/pd/DP_PD_PRODUCT_ACTIVITY_TEMPLATE-model';
 
 namespace dp;
 @path : '/dp.ProductActivityService'
 
-service ProductActivityMgrService {
+service ProductActivityService {
 
-    entity ProductActivityTemplate as projection on ProductActivityTemplate.Product_Activity_Template;
+    entity PdProdActivityTemplate as projection on ProdActivityTemplate.Pd_Product_Activity_Template
+;
 
 }
