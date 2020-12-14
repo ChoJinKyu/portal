@@ -1,4 +1,6 @@
 
+
+
         dateFormatter: DateFormatter,
         dataPath : "resources",
         _m : {
@@ -194,3 +196,15 @@
                 org_code: "BIZ00100",
                 material_code: "ERCA00006AA" //자재코드 (시황자재코드와 다름 값이 있다면 View Mode)
             });
+
+            
+자재별 시황자재 BOM	관리조직	OrgCodeView	View	조직유형코드/조직유형명, 조직코드/조직명 조회 View
+	자재	MaterialView	View	자재코드/자재명 조회 View
+	공급업체	SupplierView	View	공급업체코드/공급업체로컬명/공급업체영문명 조회 View
+	자재별 시황자재 BOM	MIMaterialCodeBOMManagementView	View	자재별 시황자재 BOM 조회 View
+	자재별 시황자재 BOM 관리 Header	MIMaterialCodeBOMManagementHeader	Table	자재별 시황자재 BOM Header 정보 저장 Table
+	자재별 시황자재 BOM 관리 Item	MIMaterialCodeBOMManagementItem	Table	자재별 시황자재 BOM Item 정보 저장 Table
+	시황자재 가격관리	MIMaterialPriceManagementView	View	시황자재 List 정보 조회 View
+	시황자재 가격정보	MIMaterialCostInformationView	View	시황자재 가격정보 조회 View
+	카테고리 상세내용	MICategoryDetailView	View	시황자재 가격정보 상세조회 View
+
