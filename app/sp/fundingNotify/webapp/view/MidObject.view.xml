@@ -120,6 +120,18 @@
                                 
                                 <VBox id="idEditLayout">
                                     <Label text="내용 :" required="true"/>
+                                    <richtexteditor:RichTextEditor
+                                        editorType="TinyMCE4"
+                                        width="100%"
+                                        height="400px"
+                                        editable="{midObjectView>/editMode}"
+                                        customToolbar="true"
+                                        showGroupFont="true"
+                                        showGroupLink="true"
+                                        showGroupInsert="true"
+                                        value="{master>/funding_notify_contents}">
+
+                                    </richtexteditor:RichTextEditor>
                                     <layoutData>
                                         <layout:GridData span="XL12 L12 M12 S12" />
                                     </layoutData>

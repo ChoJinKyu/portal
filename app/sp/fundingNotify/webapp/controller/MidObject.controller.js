@@ -69,32 +69,32 @@ sap.ui.define([
             
         },
 
-        onRichTextEditorRendering : function () {
-            var view = this.getView(),
-                master = view.getModel("master"),
-                that = this;
-                // sHtmlValue = master.getData()["funding_notify_contents"];
+        // onRichTextEditorRendering : function () {
+        //     var view = this.getView(),
+        //         master = view.getModel("master"),
+        //         that = this;
+        //         // sHtmlValue = master.getData()["funding_notify_contents"];
                 
-			sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
-				function (RTE, EditorType) {
-					var oRichTextEditor = new RTE("myRTE", {
-						editorType: EditorType.TinyMCE4,
-						width: "100%",
-                        height: "400px",
-                        editable: "{midObjectView>/editMode}",
-						customToolbar: true,
-						showGroupFont: true,
-						showGroupLink: true,
-						showGroupInsert: true,
-						value: "{master>/funding_notify_contents}",
-						ready: function () {
-							this.addButtonGroup("styleselect").addButtonGroup("table");
-						}
-                });
+		// 	sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
+		// 		function (RTE, EditorType) {
+		// 			var oRichTextEditor = new RTE("myRTE", {
+		// 				editorType: EditorType.TinyMCE4,
+		// 				width: "100%",
+        //                 height: "400px",
+        //                 editable: "{midObjectView>/editMode}",
+		// 				customToolbar: true,
+		// 				showGroupFont: true,
+		// 				showGroupLink: true,
+		// 				showGroupInsert: true,
+		// 				value: "{master>/funding_notify_contents}",
+		// 				ready: function () {
+		// 					this.addButtonGroup("styleselect").addButtonGroup("table");
+		// 				}
+        //         });
 
-                that.getView().byId("idEditLayout").addItem(oRichTextEditor);
-            });
-        },
+        //         that.getView().byId("idEditLayout").addItem(oRichTextEditor);
+        //     });
+        // },
 
         /* =========================================================== */
         /* event handlers                                              */
@@ -289,7 +289,7 @@ sap.ui.define([
                     "update_user_id": "Admin"
                     
                 }, "/FsFundingNotify", 0);
-                this.onRichTextEditorRendering()
+                
                 this._toEditMode();
             }
             else {
@@ -308,7 +308,6 @@ sap.ui.define([
                     success: function (oData) {
                         this.getModel("master").setData(oData.results[0]);
                         oView.setBusy(false);
-                        this.onRichTextEditorRendering();
                     }.bind(this)
                 });
                 this._toShowMode();
