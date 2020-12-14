@@ -87,7 +87,8 @@
           "operationMode": "Server",
           "groupId": "$direct",
           "synchronizationMode": "None",
-          "autoExpandSelect": true
+          "autoExpandSelect": true,
+          "useBatch": false
         }
       },
       "util": {
@@ -99,7 +100,13 @@
           "refreshAfterChange": false,
           "useBatch": true
         }
-      }
+      },
+      "viewModel": {
+            "type": "sap.ui.model.json.JSONModel",
+            "settings": {
+                "defaultBindingMode": "TwoWay"
+            }
+        }
     },
     "resources": {
       "css": [
