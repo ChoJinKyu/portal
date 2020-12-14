@@ -397,7 +397,7 @@
                             rowSelectionChange=".onCheck"
                             mode="None"
                             width="auto"
-                            items="{appList>/Approver}"
+                            items="{Approvers>/Approver}"
                             >
                         <headerToolbar>
                             <OverflowToolbar>
@@ -434,10 +434,10 @@
                              <ColumnListItem>
                                 <cells>
                                     <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
-                                    <Text text="{appList>approve_sequence}" />
+                                    <Text text="{Approvers>approve_sequence}" />
                                     <ComboBox  id="searchItemType" width="100%"
-                                        selectedKey="{appList>type}" 
-                                        enabled="{appList>editMode}" 
+                                        selectedKey="{Approvers>approver_type_code}" 
+                                        enabled="{Approvers>editMode}" 
                                         items="{ path : 'util>/CodeDetails',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
@@ -448,15 +448,16 @@
                                         <core:Item key="{util>code}" text="{util>code_description}" />
 
                                     </ComboBox>
-                                    <SearchField id="searchField" enabled="{appList>editMode}" search=".onSearch" width="100%" placeholder="Search employee" value="{appList>approver_empno}"/>
-                                    <Text text="{appList>approve_status_code}" />
-                                    <Text text="{appList>approve_comment}" />
-                                    <Button id="btnSortUp" icon="{appList>arrowUp}" press=".onSortUp(${appList>no})" tooltip="sort" visible="{= ${appList>arrowUp}===''?false:true }"></Button>
-                                    <Button id="btnSortDown" icon="{appList>arrowDown}" press=".onSortDown(${appList>no})"  visible="{= ${appList>arrowDown}===''?false:true }" tooltip="sort"></Button>
-                                    <Button id="btnDelete" icon="sap-icon://delete" press=".setApprovalRemoveRow(${appList>no})" tooltip="삭제" visible="{appList>trashShow}"></Button>
+                                    <SearchField id="searchField" enabled="{Approvers>editMode}" search=".onSearch" width="100%" 
+                                                placeholder="Search employee" value="{Approvers>approver_empno}"/>
+                                    <Text text="{Approvers>approve_status_code}" />
+                                    <Text text="{Approvers>approve_comment}" />
+                                    <Button id="btnSortUp" icon="{Approvers>arrowUp}" press=".onSortUp(${Approvers>no})" tooltip="sort" visible="{= ${Approvers>arrowUp}===''?false:true }"></Button>
+                                    <Button id="btnSortDown" icon="{Approvers>arrowDown}" press=".onSortDown(${Approvers>no})"  visible="{= ${Approvers>arrowDown}===''?false:true }" tooltip="sort"></Button>
+                                    <Button id="btnDelete" icon="sap-icon://delete" press=".setApprovalRemoveRow(${Approvers>no})" tooltip="삭제" visible="{Approvers>trashShow}"></Button>
                                 </cells>
-                            </ColumnListItem>   
-                        </items>
+                            </ColumnListItem>  
+                        </items>                           
                         </Table>                           
 					</uxap:ObjectPageSubSection> 
                     <uxap:ObjectPageSubSection>

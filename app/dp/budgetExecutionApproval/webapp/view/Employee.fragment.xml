@@ -44,7 +44,7 @@
                             selectionChange="vendorSelect" 
                             mode="SingleSelectMaster"
                             width="auto"
-                            items="{purOrg>/Pur_Operation_Org}"
+                            items="{userMgr>/UserMgr}"
                             >
                         <!-- <headerToolbar>
                             <OverflowToolbar>
@@ -52,39 +52,31 @@
                             </OverflowToolbar>
                         </headerToolbar> -->
                         <columns>
-                            <Column id="modelItem_model2" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true"  >
-                                <Text text="Model" />
+                            <Column id="employ_user_name" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true"  >
+                                <Text text="user_name" />
                             </Column>
-                            <Column id="modelItem_modelPartNo2" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" >
-                                <Text text="Model Part No" />
+                            <Column id="employ_employee_number" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" >
+                                <Text text="employee_number" />
                             </Column>
-                            <Column id="modelItem_seq2" minScreenWidth="Tablet" hAlign="Center"  >
-                                <Text text="Seq" />
+                            <Column id="employ_employee_name" minScreenWidth="Tablet" hAlign="Center"  >
+                                <Text text="employee_name" />
                             </Column>
-                            <Column id="modelItem_description2" minScreenWidth="Tablet" hAlign="Center"  >
-                                <Text text="Description" />
+                            <Column id="employ_english_employee_name" minScreenWidth="Tablet" hAlign="Center"  >
+                                <Text text="english_employee_name" />
                             </Column> 
-                            <Column id="modelItem_moldItemType2" minScreenWidth="Tablet" hAlign="Center"  >
-                                <Text text="Mold Item Type" />
-                            </Column>
-                            <Column id="modelItem_bookCurrency2" minScreenWidth="Tablet" hAlign="Center"  >
-                                  <Text text="Book Currency" />
-                            </Column>					
-                            <Column id="modelItem_budgetAmount2" minScreenWidth="Tablet" hAlign="Center"  >
-                                  <Text text="Budget Amount" />
-                            </Column>					
+                            <Column id="employ_email" minScreenWidth="Tablet" hAlign="Center"  >
+                                <Text text="email" />
+                            </Column>								
                         </columns>
                         <items>
                              <ColumnListItem>
                                 <cells>
                                     <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
-                                    <Text text="{purOrg>org_name}" />
-                                    <Text text="{purOrg>plant_code}" />
-                                    <Text text="{purOrg>affiliate_code}" />
-                                    <Text text="{purOrg>bizdivision_code}" />
-                                    <Text text="{purOrg>bizunit_code}" />
-                                    <Text text="{purOrg>au_code}" />
-                                    <Text text="{purOrg>hq_au_code}" />
+                                    <Text text="{userMgr>user_name}" />
+                                    <Text text="{userMgr>employee_number}" />
+                                    <Text text="{userMgr>employee_name}" />
+                                    <Text text="{userMgr>english_employee_name}" />
+                                    <Text text="{userMgr>email}" />
                                 </cells>
                             </ColumnListItem>   
                             </items>
