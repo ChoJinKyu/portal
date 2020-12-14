@@ -37,7 +37,7 @@
                 "uri": "srv-api/odata/v2/cm.menuMgrService/",
                 "type": "OData",
                 "settings": {
-                "odataVersion": "2.0"
+                    "odataVersion": "2.0"
                 }
             }
         }
