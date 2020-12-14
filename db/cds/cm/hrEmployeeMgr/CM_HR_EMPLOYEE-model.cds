@@ -7,7 +7,7 @@ entity Hr_Employee {
   key employee_number : String(30)  not null;	
     user_status_code : String(30)  not null;	 
     email_id : String(240)  ;	
-    user_korean_name : String(240)  not null;	
+    user_local_name : String(240)  not null;	
     user_english_name : String(240)  ;	
     mobile_phone_number : String(50)  ;	
     office_phone_number : String(50)  ;	
