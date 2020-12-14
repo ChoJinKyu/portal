@@ -1,1 +1,1 @@
-using from './Pr/prMgr-service';
+using from './pu/pr/prMgr-service';

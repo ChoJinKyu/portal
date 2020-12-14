@@ -6,8 +6,8 @@
             "subMenus": [
                 {
                     "name": "Funding",
-                    "url": "../sp/fundingNotifyMgr/webapp",
-                    "component": "sp.fundingNotifyMgr"
+                    "url": "../sp/fundingNotify/webapp",
+                    "component": "sp.fundingNotify"
                 },
                 {
                     "name": "App #2",

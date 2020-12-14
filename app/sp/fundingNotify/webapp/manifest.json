@@ -1,7 +1,7 @@
 {
   "_version": "1.12.0",
   "sap.app": {
-    "id": "vp.vpMgr",
+    "id": "sp.fundingNotify",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "title": "{{appTitle}}",
@@ -13,7 +13,7 @@
     "resources": "resources.json",
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v2/pg.vendorPoolSearchService/",
+        "uri": "srv-api/odata/v2/sp.fundingNotifyService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -50,7 +50,7 @@
   },
   "sap.ui5": {
     "rootView": {
-      "viewName": "vp.vpMgr.view.App",
+      "viewName": "sp.fundingNotify.view.App",
       "type": "XML",
       "async": true,
       "id": "app"
@@ -72,7 +72,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "vp.vpMgr.i18n.i18n"
+          "bundleName": "sp.fundingNotify.i18n.i18n"
         }
       },
       "util": {
@@ -95,25 +95,24 @@
           "useBatch": true
         }
       }
-    
     },
     "resources": {
-        "css": [
-            {
-                "uri": "css/style.css"
-            }
-        ]
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
     },
     "resourceRoots": {
-      "ext.lib": "../../../../lib"
+      "ext.lib": "../../../lib"
     },
     "routing": {
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
-        "viewPath": "vp.vpMgr.view",
+        "viewPath": "sp.fundingNotify.view",
         "controlId": "fcl",
-		"transition": "slide",
+        "transition": "slide",
         "bypassed": {
           "target": [
             "notFound"
@@ -122,35 +121,36 @@
         "async": true
       },
       "routes": [
-          {
-              "pattern": ":layout:",
-              "name": "mainPage",
-              "target": [
-                  "mainObject"
-              ]
-          },
-          {
-              "pattern": "midObject/{layout}/{tenantId}/{moldId}",
-              "name": "midPage",
-              "target": [
-                  "mainObject",
-                  "midObject"
-              ]
-          }
+        {
+          "pattern": ":layout:",
+          "name": "mainPage",
+          "target": [
+            "mainObject"
+          ]
+        },
+        {
+          "pattern": "midObject/{layout}/{tenantId}/{fundingNotifyNumber}",
+          "name": "midPage",
+          "target": [
+            "mainObject",
+            "midObject"
+          ]
+        }
       ],
       "targets": {
-          "mainObject": {
-              "viewName": "MainList",
-              "controlAggregation": "beginColumnPages"
-          },
-          "midObject": {
-              "viewName": "MidObject",
-              "controlAggregation": "midColumnPages"
-          },
-          "notFound": {
-            "viewName": "MidObjectNotFound",
-            "viewId": "notFound"
-          }
+        "mainObject": {
+          "viewName": "MainList",
+          "controlAggregation": "beginColumnPages"
+        },
+        "midObject": {
+          "viewName": "MidObject",
+          "controlAggregation": "midColumnPages"
+        },
+        "notFound": {
+          "viewName": "NotFound",
+          "viewPath": "ext.lib.view",
+          "viewId": "notFound"
+        }
       }
     }
   },
