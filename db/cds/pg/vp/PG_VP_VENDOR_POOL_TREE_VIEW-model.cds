@@ -15,7 +15,7 @@ entity Vp_Vendor_Pool_Tree_View {
     higher_level_path : String @title: '상위레벨경로';
     level_path : String @title: '현재레벨경로';
     repr_department_code : String(50)   @title: '대표부서코드';
-    department_korean_name : String(240)   @title: '대표부서명';
+    department_local_name : String(240)   @title: '대표부서명';
     inp_type_code : String(30)   @title: '상벌유형코드';
     inp_type_name : String(240)   @title: '상벌유형명';
     mtlmob_base_code : String(30)   @title: '물동기준코드';

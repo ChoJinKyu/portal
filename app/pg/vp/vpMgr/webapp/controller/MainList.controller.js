@@ -1,7 +1,9 @@
 sap.ui.define([
     "ext/lib/controller/BaseController",
 	"sap/ui/core/routing/History",
-	"sap/ui/model/json/JSONModel",
+    "sap/ui/model/json/JSONModel",
+    "ext/lib/model/TransactionManager",
+    "ext/lib/model/ManagedModel",    
 	"ext/lib/model/ManagedListModel",
 	"ext/lib/formatter/DateFormatter",
 	"sap/m/TablePersoController",
@@ -24,10 +26,24 @@ sap.ui.define([
     "sap/ui/core/Item",
     'sap/m/Label',    
     'sap/m/SearchField',    
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, Fragment, Sorter, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, Fragment, Sorter, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
     "use strict";
     
     var dialogId = "";
+    var pop_h_path = "";
+    var pop_lv = "";
+    var pop_org = "";
+    var pop_h_lv = "";
+    var pop_t_id = "";
+    var pop_com_cd = "";
+    var pop_orgtype = "";
+    var pop_o_unitcode = "";
+    // var pop_vp_cd = "";
+    var pop_p_vp_cd = "";
+
+
+    var oTransactionManager;
+    
     
 	return BaseController.extend("vp.vpMgr.controller.MainList", {
 
@@ -53,7 +69,8 @@ sap.ui.define([
 				tableNoDataText : oResourceBundle.getText("tableNoDataText")
 			});
             this.setModel(oViewModel, "mainListView");
-            
+
+
 			// Add the mainList page to the flp routing history
 			this.addHistoryEntry({
 				title: oResourceBundle.getText("mainListViewTitle"),
@@ -64,10 +81,15 @@ sap.ui.define([
             this._doInitSearch();            
 
             this.setModel(new ManagedListModel(), "list");
-            this.setModel(new ManagedListModel(), "orgMap");
-            this.setModel(new ManagedListModel(), "division");
+            // this.getView().setModel(new ManagedListModel(), "VpMst");            
+            this.setModel(new ManagedListModel(), "VpMst");
+
+            // oTransactionManager = new TransactionManager();
+            // oTransactionManager.addDataModel(this.getModel("VpMst"));
+
 
 			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
+
 
 			// this._doInitTablePerso();
         },
@@ -110,15 +132,303 @@ sap.ui.define([
 				});
 			} 
 			this.pDialog.then(function(oDialog) {
-				oDialog.open();
-			});
+                oDialog.open();
+                this.onAfterDialog();
+			}.bind(this));
+        },
+
+        onAfterDialog:function(){
+
+            //화면 LAYOUT
+            this.byId("pop_save_bt").setVisible(false);
+            this.byId("pop_vendor_pool_local_name").setEnabled(false);
+            this.byId("pop_vendor_pool_english_name").setEnabled(false);
+            this.byId("pop_vendor_pool_desc").setEnabled(false);
+            this.byId("pop_repr_department_code").setEnabled(false);
+            this.byId("pop_industry_class_code").setEnabled(false);
+            this.byId("pop_inp_type_code").setEnabled(false);
+            this.byId("pop_plan_base").setEnabled(false);
+            this.byId("pop_regular_evaluation_flag").setEnabled(false);
+            this.byId("pop_sd_exception_flag").setEnabled(false);
+            this.byId("pop_vendor_pool_apply_exception_flag").setEnabled(false);
+            this.byId("pop_equipment_grade_code").setEnabled(false);
+            this.byId("pop_equipment_type_code").setEnabled(false);
+            this.byId("pop_dom_oversea_netprice_diff_rate").setEnabled(false);
+            this.byId("pop_domestic_net_price_diff_rate").setEnabled(false);
+
+            var oView = this.getView();
+            var oModel = oView.getModel("VpMst");  
+            oModel.setTransactionModel(oView.getModel());
+            oModel.read("/VpMst", {
+                success: function(oData){
+                    oView.setBusy(false);
+                }
+            });   
+
+
+        }
+        ,
+        onDialogCreatelower: function (){
+  
+            if(pop_h_lv === "2")
+            {
+                MessageBox.error("Lower Level를 생성 할 수 없습니다.  *임시*");
+            }
+            else
+            {
+                this.byId("pop_higher_level_path").setText(pop_lv);
+                this.byId("pop_operation_unit_name").setText(pop_org);
+                
+                //화면 LAYOUT
+                this.byId("pop_save_bt").setVisible(true);
+                this.byId("pop_vendor_pool_local_name").setEnabled(true);
+                this.byId("pop_vendor_pool_english_name").setEnabled(true);
+                this.byId("pop_vendor_pool_desc").setEnabled(true);
+                this.byId("pop_repr_department_code").setEnabled(true);
+                this.byId("pop_industry_class_code").setEnabled(true);
+                this.byId("pop_inp_type_code").setEnabled(true);
+                this.byId("pop_plan_base").setEnabled(true);
+                this.byId("pop_regular_evaluation_flag").setEnabled(true);
+                this.byId("pop_sd_exception_flag").setEnabled(true);
+                this.byId("pop_vendor_pool_apply_exception_flag").setEnabled(true);
+                this.byId("pop_equipment_grade_code").setEnabled(true);
+                this.byId("pop_equipment_type_code").setEnabled(true);
+                this.byId("pop_dom_oversea_netprice_diff_rate").setEnabled(true);
+                this.byId("pop_domestic_net_price_diff_rate").setEnabled(true);
+            }
+        },
+
+        onDialogCreateSame: function (){
+ 
+            if(pop_h_lv === "0")
+            {
+                MessageBox.error("추후 ORG UNIT 입력가능 콤보로 변경  *임시*");
+                this.byId("pop_higher_level_path").setText(pop_h_path);
+                this.byId("pop_operation_unit_name").setText(pop_org);
+            }
+            else
+            {
+                this.byId("pop_higher_level_path").setText(pop_h_path);
+                this.byId("pop_operation_unit_name").setText(pop_org);
+            }       
+            //화면 LAYOUT
+            this.byId("pop_save_bt").setVisible(true);
+            this.byId("pop_vendor_pool_local_name").setEnabled(true);
+            this.byId("pop_vendor_pool_english_name").setEnabled(true);
+            this.byId("pop_vendor_pool_desc").setEnabled(true);
+            this.byId("pop_repr_department_code").setEnabled(true);
+            this.byId("pop_industry_class_code").setEnabled(true);
+            this.byId("pop_inp_type_code").setEnabled(true);
+            this.byId("pop_plan_base").setEnabled(true);
+            this.byId("pop_regular_evaluation_flag").setEnabled(true);
+            this.byId("pop_sd_exception_flag").setEnabled(true);
+            this.byId("pop_vendor_pool_apply_exception_flag").setEnabled(true);
+            this.byId("pop_equipment_grade_code").setEnabled(true);
+            this.byId("pop_equipment_type_code").setEnabled(true);
+            this.byId("pop_dom_oversea_netprice_diff_rate").setEnabled(true);
+            this.byId("pop_domestic_net_price_diff_rate").setEnabled(true);    
+            
+            // this.getView().byId("pop_vendor_pool_local_name").setValue("");
+
 		
         },
+
+        
+        
+        onCheck: function (oEvent){
+            // debugger;
+
+            //선택된 Tree Table Index
+            var oTable = this.byId("treeTable");
+            var aIndices = oTable.getSelectedIndices();
+            //선택된 Tree Table Value 
+            var p_vendor_pool_local_name = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[0].mProperties.text
+            var p_higher_level_path = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[1].mProperties.text            
+            var p_level_path = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[2].mProperties.text
+            var p_org_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[3].mProperties.text            
+            var p_hierarchy_level = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[4].mProperties.text            
+            var p_tenant_id = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[5].mProperties.text
+            var p_company_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[6].mProperties.text            
+            var p_org_type_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[7].mProperties.text            
+            var p_parent_vendor_pool_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[8].mProperties.text   
+            var p_operation_unit_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[9].mProperties.text   
+
+            // alert("p_vendor_pool_local_name : " + p_vendor_pool_local_name  + 
+            // "   p_higher_level_path : " + p_higher_level_path + 
+            // "   p_level_path : " + p_level_path + 
+            // "   p_hierarchy_level : " + p_hierarchy_level + 
+            // "   p_operation_unit_code : " + p_operation_unit_code);
+            
+            //Tree Table 선택된 값을 변수에 선언하여 후에 Create Action 활용
+            pop_h_lv = p_hierarchy_level;
+            pop_h_path = p_higher_level_path;
+            pop_lv = p_level_path;
+            pop_org = p_org_code;
+            pop_t_id = p_tenant_id;
+            pop_com_cd = p_company_code;
+            pop_orgtype = p_org_type_code;
+            pop_p_vp_cd = p_parent_vendor_pool_code;
+            pop_o_unitcode = p_operation_unit_code;
+            console.log(this.getModel("util"));
+
+        },                 
 
         createPopupClose: function (oEvent){
             console.log(oEvent);
             this.byId("ceateVpCategory").close();
-        },        
+        },      
+
+        handleSave: function (oEvent){
+
+            var stenant_id = pop_t_id;
+            var scompany_code = pop_com_cd; 
+            var sorg_type_code = pop_orgtype;
+            var sorg_code = pop_org;
+            var soperation_unit_code = pop_o_unitcode;
+            var sparent_vendor_pool_code = pop_p_vp_cd;
+            var svendor_pool_code = "VP202010280410";
+            var svendor_pool_use_flag = true;
+            var svendor_pool_local_name = this.getView().byId("pop_vendor_pool_local_name").getValue().trim();
+            var svendor_pool_english_name = this.getView().byId("pop_vendor_pool_english_name").getValue().trim();
+            var svendor_pool_desc = this.getView().byId("pop_vendor_pool_desc").getValue().trim();
+            var srepr_department_code = this.getView().byId("pop_repr_department_code").getValue().trim();
+			var sindustry_class_code = this.getView().byId("pop_industry_class_code").getSelectedKey();
+            var	sinp_type_code = this.getView().byId("pop_inp_type_code").getSelectedKey();
+            var splan_base = this.getView().byId("pop_plan_base").getSelectedKey();
+            var sregular_evaluation_flag = this.getView().byId("pop_regular_evaluation_flag").getState();
+            var ssd_exception_flag = this.getView().byId("pop_sd_exception_flag").getState();
+            var svendor_pool_apply_exception_flag = this.getView().byId("pop_vendor_pool_apply_exception_flag").getState();
+			var sequipment_grade_code = this.getView().byId("pop_equipment_grade_code").getSelectedKey();
+            var	sequipment_type_code = this.getView().byId("pop_equipment_type_code").getSelectedKey();    
+			var sdom_oversea_netprice_diff_rate = this.getView().byId("pop_dom_oversea_netprice_diff_rate").getValue().trim();
+            var	sdomestic_net_price_diff_rate = this.getView().byId("pop_domestic_net_price_diff_rate").getValue().trim();                        
+
+            // alert(" stenant_id  " + stenant_id +
+            // "  scompany_code  " + scompany_code +
+            // "  sorg_type_code  " + sorg_type_code +
+            // "  sorg_code  " + sorg_code +
+            // "  svendor_pool_code  " + svendor_pool_code +
+            // "  svendor_pool_local_name  " + svendor_pool_local_name +
+            // "  svendor_pool_english_name  " + svendor_pool_english_name +
+            // "  svendor_pool_desc  " + svendor_pool_desc +
+            // "  srepr_department_code  " + srepr_department_code +
+            // "  sindustry_class_code  " + sindustry_class_code +
+            // "  sinp_type_code  " + sinp_type_code +
+            // "  splan_base  " + splan_base +
+            // "  sregular_evaluation_flag  " + sregular_evaluation_flag +
+            // "  ssd_exception_flag  " + ssd_exception_flag +
+            // "  svendor_pool_apply_exception_flag  " + svendor_pool_apply_exception_flag +
+            // "  sequipment_grade_code  " + sequipment_grade_code +
+            // "  sequipment_type_code  " + sequipment_type_code +
+            // "  sdom_oversea_netprice_diff_rate  " + sdom_oversea_netprice_diff_rate +
+            // "  sdomestic_net_price_diff_rate  " + sdomestic_net_price_diff_rate
+            // );
+            alert( "  soperation_unit_code :  " + soperation_unit_code  + 
+                   "  sparent_vendor_pool_code " + sparent_vendor_pool_code);
+
+
+            var oView = this.getView();
+            var oModel = this.getModel("VpMst");
+            // var oModel =  oView.getModel();
+            // console.log(oModel);
+            // oModel.setTransactionModel(this.getModel());
+            oModel.addRecord({
+                "tenant_id" : stenant_id,
+                "company_code" : scompany_code,
+                "org_type_code" : sorg_type_code,
+                "org_code" : sorg_code,
+                "operation_unit_code" : soperation_unit_code,
+                "parent_vendor_pool_code" : sparent_vendor_pool_code,
+                "vendor_pool_use_flag" : svendor_pool_use_flag,
+                // "vendor_pool_code" : svendor_pool_code,
+                "vendor_pool_local_name" : svendor_pool_local_name,
+                "vendor_pool_english_name" : svendor_pool_english_name,
+                "vendor_pool_desc" : svendor_pool_desc,
+                "repr_department_code" : srepr_department_code,
+                "industry_class_code" : sindustry_class_code,
+                "inp_type_code" : sinp_type_code,
+                "mtlmob_base_code" : splan_base,
+                "regular_evaluation_flag" : sregular_evaluation_flag,
+                "sd_exception_flag" : ssd_exception_flag,
+                "vendor_pool_apply_exception_flag" : svendor_pool_apply_exception_flag,
+                "equipment_grade_code" : sequipment_grade_code,
+                "equipment_type_code" : sequipment_type_code,
+                // "local_create_dtm": "2020-11-09T00:00:00Z",
+                // "local_update_dtm": "2020-11-09T00:00:00Z",
+                "dom_oversea_netprice_diff_rate" : sdom_oversea_netprice_diff_rate,
+                "domestic_net_price_diff_rate" : sdomestic_net_price_diff_rate
+                
+            }, 0);
+            // var sServiceUrl = "/VpMst";
+            // var oParameters = {
+            //     "tenant_id" : stenant_id,
+            //     "company_code" : scompany_code,
+            //     "org_type_code" : sorg_type_code,
+            //     "org_code" : sorg_code,
+            //     "vendor_pool_code" : svendor_pool_code,
+            //     "vendor_pool_local_name" : svendor_pool_local_name,
+            //     "vendor_pool_english_name" : svendor_pool_english_name,
+            //     "vendor_pool_desc" : svendor_pool_desc,
+            //     "repr_department_code" : srepr_department_code,
+            //     "industry_class_code" : sindustry_class_code,
+            //     "inp_type_code" : sinp_type_code,
+            //     "plan_base" : splan_base,
+            //     "regular_evaluation_flag" : sregular_evaluation_flag,
+            //     "sd_exception_flag" : ssd_exception_flag,
+            //     "vendor_pool_apply_exception_flag" : svendor_pool_apply_exception_flag,
+            //     "equipment_grade_code" : sequipment_grade_code,
+            //     "equipment_type_code" : sequipment_type_code,
+            //     // "dom_oversea_netprice_diff_rate" : sdom_oversea_netprice_diff_rate,
+            //     // "domestic_net_price_diff_rate" : sdomestic_net_price_diff_rate,
+            //     "local_create_dtm": "2020-11-09T00:00:00Z",
+            //     "local_update_dtm": "2020-11-09T00:00:00Z"
+            // };
+
+
+               //oTransactionManager.setServiceModel(this.getModel());
+                // var test = this.getModel();
+                //test.Create()
+                // console.log(oModel);
+                MessageBox.confirm("저장 하시 겠습니까?", {
+                    title : "Comfirmation",
+                    initialFocus : sap.m.MessageBox.Action.CANCEL,
+                    onClose : function(sButton) {
+                        if (sButton === MessageBox.Action.OK) { 
+                            oView.setBusy(true);
+                            // oModel.submit({
+                            // oTransactionManager.submit({
+
+                            oModel.submitChanges({                                
+                                success: function(oEvent){
+                                    oView.setBusy(false);
+                                    MessageToast.show("저장 되었습니다.");
+                                },error: function (oError) {
+                                    oView.setBusy(false);
+                                    MessageBox.error(oError.message);
+                                }
+                            });
+                            // oModel.create(sServiceUrl, oParameters,null, function(oEvent){
+
+                            //         MessageToast.show("저장 되었습니다.");
+
+                            //     },function(oError){
+
+                            //         MessageBox.error(oError.message);
+
+                            // });
+                            //  oModel.create(sServiceUrl, oParameters);
+                            //  oView.setBusy(false);
+
+                        } else if (sButton === MessageBox.Action.CANCEL) {
+                            
+                        };
+                    }
+                });
+
+
+            // console.log(oEvent);
+            // this.byId("ceateVpCategory").close();
+        }, 
 
         onAfterRendering : function () {
 			// this.byId("pageSearchButton").firePress();

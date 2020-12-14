@@ -150,6 +150,20 @@ sap.ui.define([
             })
         },
 
+        readP: function (sPath, oParameters) {
+            var that = this;
+            return new Promise(function (resolve, reject) {
+                that._oTransactionModel.read(sPath, jQuery.extend(oParameters, {
+                    success: resolve,
+                    error: reject
+                }))
+            }).then(function (oData) {
+                that._transactionPath = sPath;
+                that.setData(oData, sPath, false);
+                return oData;
+            })
+        },
+
         _executeBatch: function (sGroupId) {
             var oServiceModel = this._oTransactionModel,
                 sTransactionPath = this._transactionPath,
@@ -216,7 +230,7 @@ sap.ui.define([
                 aRecords = this.getProperty("/" + sEntityName) || [],
                 aResults = [];
 
-            if(sStates == "D")
+            if (sStates == "D")
                 aResults = this._aRemovedRows;
 
             aRecords.forEach(function (oRecord) {

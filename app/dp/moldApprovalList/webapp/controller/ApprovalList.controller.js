@@ -23,7 +23,11 @@ sap.ui.define([
     'sap/m/Label',
     'sap/m/SearchField',
     "ext/lib/util/Multilingual",
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item, Element, syncStyleClass, Label, SearchField, Multilingual) {
+    'sap/ui/core/util/Export',
+    'sap/ui/core/util/ExportTypeCSV',
+], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter
+    , FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text
+    , Token, Input, ComboBox, Item, Element, syncStyleClass, Label, SearchField, Multilingual, Export, ExportTypeCSV) {
     "use strict";
     /**
      * @description 품의 목록 (총 품의 공통)
@@ -32,6 +36,7 @@ sap.ui.define([
      */
     var toggleButtonId = "";
     var dialogId = "";
+    var path = '';
 
     return BaseController.extend("dp.moldApprovalList.controller.ApprovalList", {
 
@@ -287,7 +292,8 @@ sap.ui.define([
         onValueHelpRequested: function (oEvent) {
 
 
-            var path = '';
+            //var path = '';
+            
             this._oValueHelpDialog = sap.ui.xmlfragment("dp.moldApprovalList.view.ValueHelpDialogApproval", this);
 
             this._oBasicSearchField = new SearchField({
@@ -297,6 +303,11 @@ sap.ui.define([
             var oFilterBar = this._oValueHelpDialog.getFilterBar();
             oFilterBar.setFilterBarExpanded(false);
             oFilterBar.setBasicSearch(this._oBasicSearchField);
+            
+
+            if (oFilterBar) {
+				oFilterBar.variantsInitialized();
+			}
 
             if (oEvent.getSource().sId.indexOf("searchModel") > -1) {
                 //model
@@ -344,9 +355,9 @@ sap.ui.define([
                 this._oValueHelpDialog.setKey('mold_number');
                 this._oValueHelpDialog.setDescriptionKey('spec_name');
 
-            } else if (oEvent.getSource().sId.indexOf("searchRequester") > -1) {
+            } else if (oEvent.getSource().sId.indexOf("searchRequestor") > -1) {
 
-                this._oInputModel = this.getView().byId("searchRequester");
+                this._oInputModel = this.getView().byId("searchRequestor");
 
                 this.oColModel = new JSONModel({
                     "cols": [
@@ -362,7 +373,7 @@ sap.ui.define([
                 });
 
                 path = '/Requestors';
-                this._oValueHelpDialog.setTitle('Requester');
+                this._oValueHelpDialog.setTitle('Requestor');
                 this._oValueHelpDialog.setKey('user_id');
                 // this._oValueHelpDialog.setDescriptionKey('english_employee_name');
             }
@@ -395,6 +406,7 @@ sap.ui.define([
                     });
                 }
                 this._oValueHelpDialog.update();
+                
 
             }.bind(this));
 
@@ -407,7 +419,9 @@ sap.ui.define([
             oToken.setText(this._oInputModel.getValue());
             this._oValueHelpDialog.setTokens([oToken]);
             this._oValueHelpDialog.open();
-
+            oFilterBar.search();
+            //this.onFilterBarSearch(oFilterBar.search());
+            
 
         },
 
@@ -426,6 +440,7 @@ sap.ui.define([
         },
 
         onFilterBarSearch: function (oEvent) {
+
             var sSearchQuery = this._oBasicSearchField.getValue(),
                 aSelectionSet = oEvent.getParameter("selectionSet");
             var aFilters = aSelectionSet.reduce(function (aResult, oControl) {
@@ -435,27 +450,39 @@ sap.ui.define([
                         operator: FilterOperator.Contains,
                         value1: oControl.getValue()
                     }));
+                }else{
+                     aResult.push(new Filter({
+                        path: oControl.mProperties.name,
+                        operator: FilterOperator.Contains,
+                        value1: oControl.mProperties.selectedKey
+                    }));
+      
+                    
                 }
-
+                
+                console.log(aResult);
                 return aResult;
             }, []);
-
-
+            
+            console.log(this._oValueHelpDialog);
             var _tempFilters = [];
 
-            if (this._oValueHelpDialog.oRows.sPath.indexOf('/Models') > -1) {
+            if (path == '/Models') {
                 // /Models
+                _tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter("tolower(model)", FilterOperator.Contains, "'" + sSearchQuery.toLowerCase().replace("'", "''") + "'"));
 
-            } else if (this._oValueHelpDialog.oRows.sPath.indexOf('/PartNumbers') > -1) {
+            } else if (path == '/PartNumbers') {
                 //PartNumbers
-                _tempFilters.push(new Filter({ path: "tolower(part_number)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+                _tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+                _tempFilters.push(new Filter({ path: "tolower(mold_number)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter({ path: "tolower(mold_item_type_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter({ path: "tolower(spec_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
             }
 
-            else if (this._oValueHelpDialog.oRows.sPath.indexOf('/Requestors') > -1) {
-                //PartNumbers
+            else if (path == '/Requestors') {
+                //Requestors
+                _tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter({ path: "tolower(user_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter({ path: "tolower(english_employee_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
             }
@@ -623,7 +650,7 @@ sap.ui.define([
                 }
             }
         },
-
+        //
         onApplovalDeletePress: function () {
             var oTable = this.byId("mainTable"),
                 oModel = this.getModel(),
@@ -726,7 +753,7 @@ sap.ui.define([
             var sSubject = this.getView().byId("searchSubject").getValue().trim();
             var sModel = this.getView().byId("searchModel").getValue().trim();
             var sPart = this.getView().byId("searchPart").getValue().trim();
-            var sRequester = this.getView().byId("searchRequester").getValue().trim();
+            var sRequestor = this.getView().byId("searchRequestor").getValue().trim();
             var sStatus = this.getView().byId("searchStatus").getSelectedKey();
 
 
@@ -811,8 +838,8 @@ sap.ui.define([
                 aSearchFilters.push(new Filter("tolower(part_number)", FilterOperator.Contains, "'" + sPart.toLowerCase() + "'"));
             }
 
-            if (sRequester) {
-                aSearchFilters.push(new Filter("tolower(user_id)", FilterOperator.Contains, "'" + sRequester.toLowerCase() + "'"));
+            if (sRequestor) {
+                aSearchFilters.push(new Filter("tolower(user_id)", FilterOperator.Contains, "'" + sRequestor.toLowerCase() + "'"));
             }
 
             if (sSubject) {
@@ -834,8 +861,80 @@ sap.ui.define([
             var day = date.getDate();                   //d
             day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
             return year + '' + month + '' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
-        }
+        },
 
         ///////////////////// List search section End //////////////////////////
+
+        ///////////////////// Excel export Start //////////////////////////
+
+        onDataExport : function(oEvent) {
+
+			var oExport = new Export({
+
+				// Type that will be used to generate the content. Own ExportType's can be created to support other formats
+				exportType : new ExportTypeCSV({
+					separatorChar : ";"
+				}),
+
+				// Pass in the model created above
+				models : this.getView().getModel(),
+
+				// binding information for the rows aggregation
+				rows : {
+					path : "/ApprovalMasters"
+				},
+
+				// column definitions with column name and binding info for the content
+
+				columns : [{
+					name : "Approval Categori",
+					template : {
+						content : "{approval_type_code}"
+					}
+				}, {
+					name : "Company",
+					template : {
+						content : "{company_code}"
+					}
+				}, {
+					name : "Plant",
+					template : {
+						content : "{org_code}"
+					}
+				}, {
+					name : "Approval No",
+					template : {
+						content : "{approval_number}"
+					}
+				}, {
+					name : "Subject",
+					template : {
+						content : "{approval_title}"
+					}
+				}, {
+					name : "Requestor",
+					template : {
+						content : "{requestor_empno}"
+					}
+				}, {
+					name : "Request Date",
+					template : {
+						content : "{request_date}"
+					}
+                }, {
+					name : "Status",
+					template : {
+						content : "{approve_status_code}"
+					}
+				}]
+			});
+
+			// download exported file
+			oExport.saveFile().catch(function(oError) {
+				MessageBox.error("Error when downloading data. Browser might not be supported!\n\n" + oError);
+			}).then(function() {
+				oExport.destroy();
+			});
+		}
     });
 });

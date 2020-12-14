@@ -20,21 +20,7 @@
         }
       },
       "commonUtilService": {
-        "uri": "srv-api/odata/v2/util.CommonService/",
-        "type": "OData",
-        "settings": {
-          "odataVersion": "2.0"
-        }
-      },
-      "orgMgrService": {
-        "uri": "srv-api/odata/v2/cm.OrgMgrService/",
-        "type": "OData",
-        "settings": {
-          "odataVersion": "2.0"
-        }
-      },
-      "purOrgMgrService": {
-        "uri": "srv-api/odata/v2/cm.PurOrgMgrService/",
+        "uri": "srv-api/odata/v2/cm.util.CommonService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"

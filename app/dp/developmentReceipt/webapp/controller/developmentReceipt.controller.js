@@ -22,12 +22,13 @@ sap.ui.define([
 	"sap/m/Input",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-	"sap/m/ObjectIdentifier",
+    "sap/m/ObjectIdentifier",
+    'sap/m/SearchField',
 	"sap/m/Text",
     "sap/m/Token"
 ], function (BaseController, DateFormatter, ManagedListModel, Multilingual, Validator, developmentReceiptPersoService, 
     ManagedObject, History, Element, Fragment, JSONModel, Filter, FilterOperator, Sorter, Column, Row, TablePersoController, Item, 
-    ComboBox, ColumnListItem, Input, MessageBox, MessageToast, ObjectIdentifier, Text, Token) {
+    ComboBox, ColumnListItem, Input, MessageBox, MessageToast, ObjectIdentifier, SearchField, Text, Token) {
 	"use strict";
 
 	return BaseController.extend("dp.developmentReceipt.controller.developmentReceipt", {
@@ -61,17 +62,8 @@ sap.ui.define([
 				icon: "sap-icon://table-view",
 				intent: "#Template-display"
             }, true);
-
             
-            /** Receipt Date */
-            var today = new Date();
-            
-            this.getView().byId("searchCreationDateE").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
-            this.getView().byId("searchCreationDateE").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
-            this.getView().byId("searchCreationDateS").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
-            this.getView().byId("searchCreationDateS").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
-            
-            //this._doInitSearch();
+            this._doInitSearch();
             //this._doInitTablePerso();
             
             var oMultilingual = new Multilingual();
@@ -91,9 +83,55 @@ sap.ui.define([
         },
         
         onAfterRendering : function () {
-            this.getModel().setDeferredGroups(["delete", "receipt"]);
+            this.getModel().setDeferredGroups(["bindReceipt", "cancelBind", "delete", "receipt"]);
 			this.byId("pageSearchButton").firePress();
 			return;
+        },
+
+        /**
+         * @private
+         * @see 검색을 위한 컨트롤에 대하여 필요 초기화를 진행 합니다. 
+         */
+		_doInitSearch: function(){
+            this.getView().setModel(this.getOwnerComponent().getModel());
+
+            this.setDivision('LGEKR');
+
+            //접속자 법인 사업부로 바꿔줘야함
+            this.getView().byId("searchCompanyS").setSelectedKeys(['LGEKR']);
+            this.getView().byId("searchCompanyE").setSelectedKeys(['LGEKR']);
+            this.getView().byId("searchDivisionS").setSelectedKeys(['DFZ']);
+            this.getView().byId("searchDivisionE").setSelectedKeys(['DFZ']);
+
+            /** Create Date */
+            var today = new Date();
+            
+            this.getView().byId("searchCreationDateE").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
+            this.getView().byId("searchCreationDateE").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+            this.getView().byId("searchCreationDateS").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
+            this.getView().byId("searchCreationDateS").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+        },
+
+        setDivision: function(companyCode){
+            
+            var filter = new Filter({
+                            filters: [
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                    new Filter("company_code", FilterOperator.EQ, companyCode)
+                                ],
+                                and: true
+                        });
+
+            var bindItemInfo = {
+                    path: '/Divisions',
+                    filters: filter,
+                    template: new Item({
+                        key: "{org_code}", text: "[{org_code}] {org_name}"
+                    })
+                };
+
+            this.getView().byId("searchDivisionS").bindItems(bindItemInfo);
+            this.getView().byId("searchDivisionE").bindItems(bindItemInfo);
         },
 
 		/* =========================================================== */
@@ -250,11 +288,119 @@ sap.ui.define([
         },
         
         onMoldMstTableBindButtonPress: function(){
-			
+			var oTable = this.byId("moldMstTable"),
+                oModel = this.getModel(),
+                lModel = this.getModel("list"),
+                oView = this.getView(),
+                oSelected  = oTable.getSelectedIndices(),
+                today = new Date(),
+                randomNo = Math.floor(Math.random() * 10000) * 10,
+                statusChk = false;
+
+            if (oSelected.length > 0) {
+                oSelected.forEach(function (idx) {
+                    if(lModel.getData().MoldMasters[idx].mold_progress_status_code !== "DEV_REQ"){
+                        statusChk = true;
+                    }
+                });
+
+                if(statusChk){
+                    MessageToast.show( "Development Request 상태일 때만 Bind & Receipt 가능합니다." );
+                    return;
+                }
+                
+                MessageBox.confirm("Bind & Receipt 하시겠습니까?", {
+                    title : "Comfirmation",
+                    initialFocus : sap.m.MessageBox.Action.CANCEL,
+                    onClose : function(sButton) {
+                        if (sButton === MessageBox.Action.OK) {
+                            oSelected.forEach(function (idx) {
+                                var sEntity = lModel.getData().MoldMasters[idx].__entity;
+                                lModel.getData().MoldMasters[idx].mold_progress_status_code = "DEV_RCV";
+                                lModel.getData().MoldMasters[idx].set_id = lModel.getData().MoldMasters[idx].org_code+today.getFullYear()+randomNo;
+                                
+                                delete lModel.getData().MoldMasters[idx].__entity;
+                                oModel.update(sEntity, lModel.getData().MoldMasters[idx], {
+                                    groupId: "bindReceipt"
+                                });
+                            }.bind(this));
+                            
+                            oModel.submitChanges({
+                                groupId: "bindReceipt",
+                                success: function(){
+                                    oView.setBusy(false);
+                                    MessageToast.show("Success to Bind & Receipt.");
+                                    this.onPageSearchButtonPress();
+                                }.bind(this), error: function(oError){MessageToast.show("oError");
+                                    oView.setBusy(false);
+                                    MessageBox.error(oError.message);
+                                }
+                            });
+                        };
+                    }.bind(this)
+                });
+
+                oTable.clearSelection();
+
+            }else{
+                MessageBox.error("선택된 행이 없습니다.");
+            }
         },
 		
 		onMoldMstTableCancelButtonPress: function(){
-			
+			var oTable = this.byId("moldMstTable"),
+                oModel = this.getModel(),
+                lModel = this.getModel("list"),
+                oView = this.getView(),
+                oSelected  = oTable.getSelectedIndices(),
+                statusChk = false;
+
+            if (oSelected.length > 0) {
+                oSelected.forEach(function (idx) {
+                    if(lModel.getData().MoldMasters[idx].mold_progress_status_code !== "DEV_RCV"){
+                        statusChk = true;
+                    }
+                });
+
+                if(statusChk){
+                    MessageToast.show( "Development Receive 상태일 때만 Cancel Bind 가능합니다." );
+                    return;
+                }
+                
+                MessageBox.confirm("Cancel Bind 하시겠습니까?", {
+                    title : "Comfirmation",
+                    initialFocus : sap.m.MessageBox.Action.CANCEL,
+                    onClose : function(sButton) {
+                        if (sButton === MessageBox.Action.OK) {
+                            oSelected.forEach(function (idx) {
+                                var sEntity = lModel.getData().MoldMasters[idx].__entity;
+                                lModel.getData().MoldMasters[idx].set_id = null;
+                                
+                                delete lModel.getData().MoldMasters[idx].__entity;
+                                oModel.update(sEntity, lModel.getData().MoldMasters[idx], {
+                                    groupId: "cancelBind"
+                                });
+                            }.bind(this));
+                            
+                            oModel.submitChanges({
+                                groupId: "cancelBind",
+                                success: function(){
+                                    oView.setBusy(false);
+                                    MessageToast.show("Success to Cancel Bind.");
+                                    this.onPageSearchButtonPress();
+                                }.bind(this), error: function(oError){MessageToast.show("oError");
+                                    oView.setBusy(false);
+                                    MessageBox.error(oError.message);
+                                }
+                            });
+                        };
+                    }.bind(this)
+                });
+
+                oTable.clearSelection();
+            }else{
+                MessageBox.error("선택된 행이 없습니다.");
+            }
 		},
        
 		/**
@@ -268,9 +414,22 @@ sap.ui.define([
                 oModel = this.getModel(),
                 lModel = this.getModel("list"),
                 oView = this.getView(),
-                oSelected  = oTable.getSelectedIndices().reverse();
+                oSelected  = oTable.getSelectedIndices().reverse(),
+                statusChk = false;
                 
             if (oSelected.length > 0) {
+                oSelected.forEach(function (idx) {
+                    var statusCode = lModel.getData().MoldMasters[idx].mold_progress_status_code;
+                    if(!(statusCode === "DEV_REQ" || statusCode === "DEV_RCV")){
+                        statusChk = true;
+                    }
+                });
+
+                if(statusChk){
+                    MessageToast.show( "Development Request, Receive 상태일 때만 삭제 가능합니다." );
+                    return;
+                }
+                
                 MessageBox.confirm(this.getModel("I18N").getText("/NCM0104", oSelected.length, "삭제"), {//this.getModel("I18N").getText("/NCM0104", oSelected.length, "${I18N>/DELETE}")
                     title : "Comfirmation",
                     initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -306,82 +465,60 @@ sap.ui.define([
         },
         
         onMoldMstTableReceiptButtonPress: function(){
-			/*var oView = this.getView(),
-				me = this;
-			MessageBox.confirm("Are you sure ?", {
-				title : "Comfirmation",
-				initialFocus : sap.m.MessageBox.Action.CANCEL,
-				onClose : function(sButton) {
-					if (sButton === MessageBox.Action.OK) {
-						oView.setBusy(true);
-						oView.getModel().submitBatch("odataGroupIdForUpdate").then(function(ok){
-							me._toShowMode();
-							oView.setBusy(false);
-                            MessageToast.show("Success to save.");
-						}).catch(function(err){
-                            MessageBox.error("Error while saving.");
-                        });
-					};
-				}
-            });*/
-
             var oTable = this.byId("moldMstTable"),
                 oModel = this.getModel(),
                 lModel = this.getModel("list"),
                 oView = this.getView(),
-                oSelected  = oTable.getSelectedIndices();
-            
-			MessageBox.confirm("Receipt 하시겠습니까?", {
-                title : "Comfirmation",
-                initialFocus : sap.m.MessageBox.Action.CANCEL,
-                onClose : function(sButton) {
-                    if (sButton === MessageBox.Action.OK) {
-                        oSelected.forEach(function (idx) {//console.log(lModel.getData().MoldMasters[idx]);console.log(oModel.oData);
-                            var sEntity = lModel.getData().MoldMasters[idx].__entity;
-                            lModel.getData().MoldMasters[idx].mold_progress_status_code = "DEV_RCV";
-                            //lModel.getData().MoldMasters[idx].receiving_report_date = this.getFormatDate(new Date());
+                oSelected  = oTable.getSelectedIndices(),
+                statusChk = false;
+
+            if (oSelected.length > 0) {
+                oSelected.forEach(function (idx) {
+                    if(lModel.getData().MoldMasters[idx].mold_progress_status_code !== "DEV_REQ"){
+                        statusChk = true;
+                    }
+                });
+
+                if(statusChk){
+                    MessageToast.show( "Development Request 상태일 때만 Receipt 가능합니다." );
+                    return;
+                }
+                
+                MessageBox.confirm("Receipt 하시겠습니까?", {
+                    title : "Comfirmation",
+                    initialFocus : sap.m.MessageBox.Action.CANCEL,
+                    onClose : function(sButton) {
+                        if (sButton === MessageBox.Action.OK) {
+                            oSelected.forEach(function (idx) {
+                                var sEntity = lModel.getData().MoldMasters[idx].__entity;
+                                lModel.getData().MoldMasters[idx].mold_progress_status_code = "DEV_RCV";
+                                
+                                delete lModel.getData().MoldMasters[idx].__entity;
+                                oModel.update(sEntity, lModel.getData().MoldMasters[idx], {
+                                    groupId: "receipt"
+                                });
+                            }.bind(this));
                             
-                            delete lModel.getData().MoldMasters[idx].__entity;
-                            oModel.update(sEntity, lModel.getData().MoldMasters[idx], {
-                                groupId: "receipt"
+                            oModel.submitChanges({
+                                groupId: "receipt",
+                                success: function(){
+                                    oView.setBusy(false);
+                                    MessageToast.show("Success to Receipt.");
+                                    this.onPageSearchButtonPress();
+                                }.bind(this), error: function(oError){MessageToast.show("oError");
+                                    oView.setBusy(false);
+                                    MessageBox.error(oError.message);
+                                }
                             });
-                        }.bind(this));
-                        
-                        oModel.submitChanges({
-                            groupId: "receipt",
-                            success: function(){
-                                oView.setBusy(false);
-                                MessageToast.show("Success to Receipt.");
-                                this.onPageSearchButtonPress();
-                            }.bind(this), error: function(oError){MessageToast.show("oError");
-                                oView.setBusy(false);
-                                MessageBox.error(oError.message);
-                            }
-                        });
-                    };
-                }.bind(this)
-            });
+                        };
+                    }.bind(this)
+                });
 
-            oTable.clearSelection();
+                oTable.clearSelection();
 
-/*
-			MessageBox.confirm("Receipt 하시겠습니까?", {
-				title : "Comfirmation",
-				initialFocus : sap.m.MessageBox.Action.CANCEL,
-				onClose : function(sButton) {
-					if (sButton === MessageBox.Action.OK) {
-						oView.setBusy(true);
-						lModel.submitChanges({
-							success: function(){
-								oView.setBusy(false);
-                                MessageToast.show("Success to Receipt.");
-							}
-						});
-					};
-				}
-            });
-            
-            oTable.clearSelection();*/
+            }else{
+                MessageBox.error("선택된 행이 없습니다.");
+            }
         },
 /*
         inputFieldChange : function (oEvent) {
@@ -418,11 +555,12 @@ sap.ui.define([
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
-						oView.setBusy(true);
+						oView.setBusy(true);console.log(oModel);
 						oModel.submitChanges({
 							success: function(oEvent){
 								oView.setBusy(false);
-								MessageToast.show(this.getModel("I18N").getText("/NCM0005"));
+                                MessageToast.show(this.getModel("I18N").getText("/NCM0005"));
+                                this._toShowMode();
 							}.bind(this)
 						});
 					};
@@ -536,10 +674,10 @@ sap.ui.define([
         
 		_getSearchStates: function(){
 			var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S",
-				company = this.getView().byId("searchCompany"+sSurffix).getSelectedItems(),
-                division = this.getView().byId("searchDivision"+sSurffix).getSelectedItems(),
-                statusSelectedItemId = this.getView().byId("searchStatus"+sSurffix).getSelectedItem(),
-                status = Element.registry.get(statusSelectedItemId).getText(),
+				company = this.getView().byId("searchCompany"+sSurffix).getSelectedKeys(),
+                division = this.getView().byId("searchDivision"+sSurffix).getSelectedKeys(),
+                status = this.getView().byId("searchStatus"+sSurffix).getSelectedKey(),
+                //status = Element.registry.get(statusSelectedItemId).getText(),
                 receiptFromDate = this.getView().byId("searchCreationDate"+sSurffix).getDateValue(),
                 receiptToDate = this.getView().byId("searchCreationDate"+sSurffix).getSecondDateValue(),
                 itemType = this.getView().byId("searchItemType").getSelectedKey(),
@@ -547,7 +685,7 @@ sap.ui.define([
                 eDType = this.getView().byId("searchEDType").getSelectedKey(),
                 description = this.getView().byId("searchDescription").getValue(),
                 model = this.getView().byId("searchModel").getValue(),
-                partNo = this.getView().byId("searchPartNo").getValue(),
+                moldNo = this.getView().byId("searchMoldNo").getValue(),
                 familyPartNo = this.getView().byId("searchFamilyPartNo").getValue();
 				
             var aTableSearchState = [];
@@ -557,7 +695,7 @@ sap.ui.define([
             if(company.length > 0){
 
                 company.forEach(function(item){
-                    companyFilters.push(new Filter("company_code", FilterOperator.EQ, item.mProperties.key ));
+                    companyFilters.push(new Filter("company_code", FilterOperator.EQ, item ));
                 });
 
                 aTableSearchState.push(
@@ -571,7 +709,7 @@ sap.ui.define([
             if(division.length > 0){
 
                 division.forEach(function(item){
-                    divisionFilters.push(new Filter("org_code", FilterOperator.EQ, item.mProperties.key ));
+                    divisionFilters.push(new Filter("org_code", FilterOperator.EQ, item ));
                 });
 
                 aTableSearchState.push(
@@ -588,8 +726,8 @@ sap.ui.define([
             } else {
                 aTableSearchState.push(new Filter("local_create_dtm", FilterOperator.BT, receiptFromDate, receiptToDate));
             }
-			if (status !== "All") {
-				aTableSearchState.push(new Filter("mold_progress_status_code", FilterOperator.EQ, (status == "Received" ? "DEV_RCV" : "DEV_REQ")));
+			if (status) {
+				aTableSearchState.push(new Filter("mold_progress_status_code", FilterOperator.EQ, status));
 			}
 			if (itemType && itemType.length > 0) {
 				aTableSearchState.push(new Filter("mold_item_type_code", FilterOperator.EQ, itemType));
@@ -603,8 +741,8 @@ sap.ui.define([
 			if (model && model.length > 0) {
                 aTableSearchState.push(new Filter("tolower(model)", FilterOperator.Contains, "'" + model.toLowerCase() + "'"));
 			}
-			if (partNo && partNo.length > 0) {
-                aTableSearchState.push(new Filter("mold_number", FilterOperator.Contains, partNo.toUpperCase()));
+			if (moldNo && moldNo.length > 0) {
+                aTableSearchState.push(new Filter("mold_number", FilterOperator.Contains, moldNo.toUpperCase()));
 			}
 			if (description && description.length > 0) {
                 aTableSearchState.push(new Filter("tolower(spec_name)", FilterOperator.Contains, "'" + description.toLowerCase() + "'"));
@@ -625,16 +763,6 @@ sap.ui.define([
         },
         
         /*
-		_applySearch: function(aTableSearchState) {
-			var oTable = this.byId("moldMstTable"),
-				oViewModel = this.getModel("developmentReceiptView");
-			oTable.getBinding("items").filter(aTableSearchState, "Application");
-			// changes the noDataText of the list in case there are no filter results
-			if (aTableSearchState.length !== 0) {
-				oViewModel.setProperty("/tableNoDataText", this.getResourceBundle().getText("developmentReceiptNoDataWithSearchText"));
-			}
-		},
-
 		_rebindTable: function(oTemplate, sKeyboardMode) {
 			var aFilters = this._getSearchStates();
 			this.byId("moldMstTable").bindItems({
@@ -744,6 +872,217 @@ sap.ui.define([
             this.getView().byId(idPreFix+'E').setSelectedKeys(selectedKeys);
         },
 
+        onValueHelpRequested : function (oEvent) {
+
+            var path = '';
+            this._oValueHelpDialog = sap.ui.xmlfragment("dp.developmentReceipt.view.ValueHelpDialogModel", this);
+
+            this._oBasicSearchField = new SearchField({
+				showSearchButton: false
+            });
+            
+            var oFilterBar = this._oValueHelpDialog.getFilterBar();
+			oFilterBar.setFilterBarExpanded(false);
+            oFilterBar.setBasicSearch(this._oBasicSearchField);
+            
+            this.setValuHelpDialog(oEvent);
+
+            
+
+            var aCols = this.oColModel.getData().cols;
+
+            
+            this.getView().addDependent(this._oValueHelpDialog);
+
+            this._oValueHelpDialog.getTableAsync().then(function (oTable) {
+                
+                oTable.setModel(this.getOwnerComponent().getModel(this.modelName));
+                oTable.setModel(this.oColModel, "columns");
+
+                if (oTable.bindRows) {
+                    oTable.bindAggregation("rows", this.vhdPath);
+                }
+
+                if (oTable.bindItems) {
+                    oTable.bindAggregation("items", this.vhdPath, function () {
+                        return new ColumnListItem({
+                            cells: aCols.map(function (column) {
+                                return new Label({ text: "{" + column.template + "}" });
+                            })
+                        });
+                    });
+                }
+                this._oValueHelpDialog.update();
+
+            }.bind(this));
+
+            
+
+            // debugger
+
+            var oToken = new Token();
+			oToken.setKey(this._oInputModel.getSelectedKey());
+			oToken.setText(this._oInputModel.getValue());
+			this._oValueHelpDialog.setTokens([oToken]);
+            this._oValueHelpDialog.open();
+            
+
+        },
+
+        setValuHelpDialog: function(oEvent){
+
+            if(oEvent.getSource().sId.indexOf("searchModel") > -1){
+                //model
+                this._oInputModel = this.getView().byId("searchModel");
+
+                this.oColModel = new JSONModel({
+                    "cols": [
+                        {
+                            "label": "Model",
+                            "template": "model"
+                        }
+                    ]
+                });
+
+                this.modelName = '';
+                this.vhdPath = '/Models';
+                
+                this._oValueHelpDialog.setTitle('Model');
+                this._oValueHelpDialog.setKey('model');
+                this._oValueHelpDialog.setDescriptionKey('model');
+
+            }else if(oEvent.getSource().sId.indexOf("searchMoldNo") > -1){
+                //part
+                this._oInputModel = this.getView().byId("searchMoldNo");
+
+                this.oColModel = new JSONModel({
+                    "cols": [
+                        {
+                            "label": "Mold No",
+                            "template": "mold_number"
+                        },
+                        {
+                            "label": "Item Type",
+                            "template": "mold_item_type_name"
+                        },
+                        {
+                            "label": "Description",
+                            "template": "spec_name"
+                        }
+                    ]
+                });
+
+                this.modelName = '';
+                this.vhdPath = '/MoldNumbers';
+                this._oValueHelpDialog.setTitle('Mold No');
+                this._oValueHelpDialog.setKey('mold_number');
+                this._oValueHelpDialog.setDescriptionKey('spec_name');
+
+            }else if(oEvent.getSource().sId.indexOf("searchRequester") > -1){
+
+                this._oInputModel = this.getView().byId("searchRequester");
+
+                this.oColModel = new JSONModel({
+                    "cols": [
+                        {
+                            "label": "Name",
+                            "template": "create_user_name"
+                        },
+                        {
+                            "label": "ID",
+                            "template": "create_user_id"
+                        }
+                    ]
+                });
+
+                this.modelName = 'dsc';
+                this.vhdPath = '/CreateUsers';
+                this._oValueHelpDialog.setTitle('Requester');
+                this._oValueHelpDialog.setKey('create_user_id');
+                this._oValueHelpDialog.setDescriptionKey('create_user_id');
+            }
+        },
+
+        onValueHelpOkPress: function (oEvent) {
+            var aTokens = oEvent.getParameter("tokens");
+            this._oInputModel.setSelectedKey(aTokens[0].getKey());
+			this._oValueHelpDialog.close();
+		},
+
+		onValueHelpCancelPress: function () {
+			this._oValueHelpDialog.close();
+		},
+
+		onValueHelpAfterClose: function () {
+			this._oValueHelpDialog.destroy();
+        },
+
+        onFilterBarSearch: function (oEvent) {
+			
+			var	aSelectionSet = oEvent.getParameter("selectionSet");
+			var aFilters = aSelectionSet.reduce(function (aResult, oControl) {
+				if (oControl.getValue()) {
+					aResult.push(new Filter({
+						path: oControl.getName(),
+						operator: FilterOperator.Contains,
+						value1: oControl.getValue()
+					}));
+				}
+
+				return aResult;
+            }, []);
+            
+            var _tempFilters = this.getFiltersFilterBar();
+
+			aFilters.push(new Filter({
+				filters: _tempFilters,
+				and: false
+			}));
+
+			this._filterTable(new Filter({
+				filters: aFilters,
+				and: true
+			}));
+        },
+
+        getFiltersFilterBar: function(){
+
+            var sSearchQuery = this._oBasicSearchField.getValue();
+            var _tempFilters = [];
+
+            if(this._oValueHelpDialog.oRows.sPath.indexOf('/Models') > -1){
+                // /Models
+                _tempFilters.push(new Filter("tolower(model)", FilterOperator.Contains, "'"+sSearchQuery.toLowerCase().replace("'","''")+"'"));
+
+            }else if(this._oValueHelpDialog.oRows.sPath.indexOf('/MoldNumbers') > -1){
+                //MoldNumbers
+                _tempFilters.push(new Filter({ path: "tolower(mold_number)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
+                _tempFilters.push(new Filter({ path: "tolower(mold_item_type_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
+                _tempFilters.push(new Filter({ path: "tolower(spec_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
+            }else if(this._oValueHelpDialog.oRows.sPath.indexOf('/CreateUsers') > -1){
+                _tempFilters.push(new Filter({ path: "tolower(create_user_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
+                _tempFilters.push(new Filter({ path: "tolower(create_user_id)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
+            }
+
+            return _tempFilters;
+        },
+        
+        _filterTable: function (oFilter) {
+			var oValueHelpDialog = this._oValueHelpDialog;
+
+			oValueHelpDialog.getTableAsync().then(function (oTable) {
+				if (oTable.bindRows) {
+					oTable.getBinding("rows").filter(oFilter);
+				}
+
+				if (oTable.bindItems) {
+					oTable.getBinding("items").filter(oFilter);
+				}
+
+				oValueHelpDialog.update();
+			});
+        },
+        
 		_doInitTablePerso: function(){
 			// init and activate controller
 			this._oTPC = new TablePersoController({

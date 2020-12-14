@@ -70,7 +70,12 @@ sap.ui.define([
 
             var oViewModel = this.getModel("viewModel");
             var oParam = oViewModel.getProperty("/detailDetailClone");
-            oViewModel.setProperty("/detailDetail", oParam);
+            oViewModel.setProperty("/detailDetail", $.extend(true, {}, oParam));
+
+            var sTenantId = oParam.tenant_id;
+            var sGroupCode = oParam.group_code;
+            var sCode = oParam.code;
+            this._fnReadLanguages(sTenantId, sGroupCode, sCode);
         },
 
         _fnSetCreateData : function(){
@@ -256,7 +261,7 @@ sap.ui.define([
             oModel.create("/CodeDetails", oParam, {
                 groupId: "createDetail",
                 success: function(data){
-                    console.log(data)
+                    this._fnReadDetails(oParam.tenant_id, oParam.group_code);
                     // this._fnSetReadMode();
                 }.bind(this),
                 error: function(data){
@@ -277,7 +282,8 @@ sap.ui.define([
                     oLangModel.submitChanges({
                         groupId: "CodeLanguages",
                         success: (function (oEvent) {
-                            this._fnSetReadMode();
+                            // this._fnSetReadMode();
+                            this.handleClose();
                             MessageToast.show("Success to save.");
                         }.bind(this))
                     });
@@ -301,6 +307,8 @@ sap.ui.define([
             var sCreatePath = oModel.createKey("/CodeDetails", oKey);
             oModel.update(sCreatePath, oParam, {
                 success: function(data){
+                    this._fnReadDetails(oParam.tenant_id, oParam.group_code);
+
                     var oLangModel = this.getModel("languages");
                     oLangModel.getProperty("/CodeLanguages").forEach(function(item, i){
                         if(item["tenant_id"] === ""){
@@ -355,24 +363,6 @@ sap.ui.define([
                 local_update_dtm: new Date()
             }
             model.addRecord(oData, "/CodeLanguages", 0);
-        },
-
-        onAddLangPressT : function(oEvent){
-            var oViewModel = this.getModel('viewModel');
-            var oDetailData = oViewModel.getProperty("/detailDetail");
-            var oInitLangData = {
-                code: "",
-                code_name: "",
-                group_code: oDetailData.group_code,
-                language_cd: "EN",
-                tenant_id: oDetailData.tenant_id,
-                local_create_dtm: new Date(),
-                local_update_dtm: new Date()
-            };
-            
-            var aCodeLanguages = oViewModel.getProperty("/CodeLanguages");
-            aCodeLanguages.unshift(oInitLangData);
-            oViewModel.setProperty("/CodeLanguages", aCodeLanguages)
         },
 
         onDeletePress : function(){

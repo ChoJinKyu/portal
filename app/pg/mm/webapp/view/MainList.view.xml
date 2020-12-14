@@ -42,7 +42,7 @@
 				             persistencyKey="PageVariantPKey" />                     
                     <!-- Smart Filter -->
                     <smartFilterBar:SmartFilterBar id="smartFilterBar" 
-                    entitySet="MIMaterialCodeList" 
+                    entitySet="MIMaterialCodeBOMManagement" 
                     smartVariant="pageVariantId"
                     persistencyKey="SmartFilterPKey"
                     considerSelectionVariants="true" 
@@ -56,19 +56,19 @@
                             label="관리조직"
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
-                                        <ComboBox id="tenant_id" 
-                                        items="{path: '/OrgTenantView', templateShareable:true}" 
-                                        placeholder="선택하세요.">
+                                    <Select id="select_tenant_id" 
+                                            selectedKey = "{oUiData>/tenant_id}"
+                                            items="{path: '/OrgTenantView', templateShareable:true}">
                                         <core:Item key="{tenant_id}" text="{tenant_name}"/>
-                                    </ComboBox>
+                                    </Select>
                                 </smartFilterBar:customControl>                                
                             </smartFilterBar:ControlConfiguration>
 
                             <!-- 자재명 -->
-                            <smartFilterBar:ControlConfiguration key="material_description" groupId="_BASIC" index="2" label="자재명"  
+                            <smartFilterBar:ControlConfiguration key="material_desc" groupId="_BASIC" index="2" label="자재명"  
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
-                                    <Input key="material_description" tooltip="자재명" placeholder="자재명을 입력하세요."/>
+                                    <Input key="material_desc" tooltip="자재명" placeholder="자재명을 입력하세요."/>
                                 </smartFilterBar:customControl>
                             </smartFilterBar:ControlConfiguration>
                             <!-- 공급업체명 -->
@@ -93,6 +93,7 @@
         
 
                 <!-- Smart Table -->
+                <!-- initiallyVisibleFields="material_code,material_desc,supplier_code,base_quantity,processing_cost,mi_material_code,mi_material_name,category_name,reqm_quantity_unit,reqm_quantity,currency_unit,mi_base_reqm_quantity,quantity_unit,exchange,termsdelv,use_flag" -->
                 <smartTable:SmartTable
                     width="100%"
                     height="100%"
@@ -100,7 +101,7 @@
                     id="smartTable_MainTable_ResponsiveTable"
                     entitySet="MIMaterialCodeBOMManagement"
                     tableBindingPath="{MIMaterialCodeBOMManagement}"
-                    initiallyVisibleFields="material_code,material_description,supplier_code,base_quantity,processing_cost,mi_material_code,mi_material_code_name,category_name,reqm_quantity_unit,reqm_quantity,currency_unit,mi_base_reqm_quantity,quantity_unit,exchange,termsdelv,use_flag"
+                    initiallyVisibleFields="material_code,supplier_code,base_quantity,processing_cost,mi_material_code,mi_material_name,category_name,reqm_quantity_unit,reqm_quantity,currency_unit,mi_base_reqm_quantity,quantity_unit,exchange,termsdelv,use_flag"
                     smartFilterId="smartFilterBar"
                     tableType="ResponsiveTable"
                     useExportToExcel="true"
@@ -120,7 +121,8 @@
                     <smartTable:customToolbar>
                         <OverflowToolbar design="Transparent">
                             <ToolbarSpacer/>
-                            <Button text="Create" id="buttonMainTableCreate" type="Transparent" press=".onMainTableCreate"/>                            
+                            <Button text="Create" id="buttonMainTableCreate" type="Transparent" press=".onMainTableCreate"/>    
+                            <Button text="Delete" id="buttonMainTableDelete" type="Transparent" enabled="false" press=".onMainTableDelete"/>                        
                             <OverflowToolbarButton
                                 icon="sap-icon://sort"
                                 tooltip="Sort"
@@ -139,7 +141,7 @@
                         </OverflowToolbar>
                     </smartTable:customToolbar>
                             <Table id="mainTable" 
-                            mode="SingleSeletLeft" 
+                            mode="MultiSelect" 
                             sticky="HeaderToolbar,ColumnHeaders"
                             >
                                  <columns>  
@@ -150,13 +152,13 @@
                                         </customData>
                                             <Text text="자재코드"></Text>
                                         </Column>
-                                        <Column hAlign="Center" demandPopin="true" importance="High" >
+                                        <!-- <Column hAlign="Center" demandPopin="true" importance="High" >
                                           <customData>
                                         <core:CustomData key="p13nData"
-                                        value='\{"columnKey": "material_description", "leadingProperty": "material_description", "sortProperty": "material_description", "filterProperty": "material_description", "columnIndex": 2}'/>
+                                        value='\{"columnKey": "material_desc", "leadingProperty": "material_desc", "sortProperty": "material_desc", "filterProperty": "material_desc", "columnIndex": 2}'/>
                                         </customData>
                                              <Text text="자재명"></Text>
-                                        </Column>
+                                        </Column> -->
 
                                         <Column hAlign="Center" demandPopin="true" importance="High">
                                           <customData>
@@ -165,14 +167,14 @@
                                         </customData>
                                              <Text text="공급업체코드"></Text>
                                         </Column>
-
+<!-- 
                                         <Column hAlign="Center" demandPopin="true" importance="High">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "supplier_local_name", "leadingProperty": "supplier_local_name", "sortProperty": "supplier_local_name", "filterProperty": "supplier_local_name", "columnIndex": 4}'/>
                                         </customData>
                                              <Text text="공급업체명"></Text>
-                                        </Column>
+                                        </Column> -->
 
                                         <Column hAlign="Center" demandPopin="true" importance="High">
                                           <customData>
@@ -206,21 +208,21 @@
                                              <Text text="시황자재코드"></Text>
                                         </Column>
 
-                                        <Column hAlign="Center" demandPopin="false" importance="Low">
+                                        <!-- <Column hAlign="Center" demandPopin="false" importance="Low">
                                           <customData>
                                         <core:CustomData key="p13nData"
-                                        value='\{"columnKey": "mi_material_code_name", "leadingProperty": "mi_material_code_name", "sortProperty": "mi_material_code_name", "filterProperty": "mi_material_code_name", "columnIndex": 9}'/>
+                                        value='\{"columnKey": "mi_material_name", "leadingProperty": "mi_material_name", "sortProperty": "mi_material_name", "filterProperty": "mi_material_name", "columnIndex": 9}'/>
                                         </customData>
                                              <Text text="시황자재명"></Text>
-                                        </Column>
+                                        </Column> -->
 
-                                        <Column hAlign="Center" demandPopin="false" importance="Low">
+                                        <!-- <Column hAlign="Center" demandPopin="false" importance="Low">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "category_name", "leadingProperty": "category_name", "sortProperty": "category_name", "filterProperty": "category_name", "columnIndex": 10}'/>
                                         </customData>
                                              <Text text="시황자재Category"></Text>
-                                        </Column>
+                                        </Column> -->
                                         <Column hAlign="Center" minScreenWidth="Desktop" demandPopin="false" importance="Low">
                                           <customData>
                                         <core:CustomData key="p13nData"
@@ -289,15 +291,15 @@
                                         hAlign="Middle" 
                                         press=".onMainTableItemPress">
                                             <Text text="{material_code}"></Text>
-                                            <Text text="{material_description}"></Text>
+                                            <Text text="{material_desc}"></Text>
                                             <Text text="{supplier_code}"></Text>
-                                            <Text text="{supplier_local_name}"></Text>
+                                            <!-- <Text text="{supplier_local_name}"></Text> -->
                                             <Text text="{base_quantity}"></Text>
                                             <Text text="{processing_cost}"></Text>
                                             <Text text="{pcst_currency_unit}"></Text>
                                             <Text text="{mi_material_code}"></Text>
-                                            <Text text="{mi_material_code_name}"></Text>
-                                            <Text text="{category_name}"></Text>
+                                            <!-- <Text text="{mi_material_name}"></Text> -->
+                                            <!-- <Text text="{category_name}"></Text> -->
                                             <Text text="{reqm_quantity_unit}"></Text>
                                             <Text text="{reqm_quantity}"></Text>
                                             <Text text="{currency_unit}"></Text>

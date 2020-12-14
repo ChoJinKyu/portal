@@ -53,10 +53,13 @@ sap.ui.define([
             }, true);
         
             this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
+
+
         },
 
         onRenderedFirst: function () {
-        //this.byId("pageSearchButton").firePress();
+            //this.byId("pageSearchButton").firePress();
+            this.byId("searchTenantCombo").fireChange();
         },
 
         /* =========================================================== */
@@ -212,7 +215,26 @@ sap.ui.define([
             if (!!this.byId("searchUseflag").getSelectedKey()) aSearchFilters.push(new Filter("use_flag", FilterOperator.EQ, this.byId("searchUseflag").getSelectedKey()));
 
             return aSearchFilters;
-        }
+        },
+
+        handleChange: function (oEvent) {
+            var combo = this.byId("searchOrgCombo");
+            combo.setSelectedKey(null);
+
+            this.getModel("org");
+            
+            combo.bindItems({
+                path: 'org>/Org_Company',
+                filters: [
+                    new Filter('tenant_id', FilterOperator.EQ, oEvent.getSource().getSelectedKey())
+                ],
+                template: new Item({
+                    key: "{org>company_code}", text:"{org>company_code}: {org>company_name}"
+                })
+            });
+
+
+		}
 
     });
 });

@@ -28,7 +28,7 @@
 				</layoutData>
 			</Switch>
 			<Label text="Description"/>
-			<Input value="{master>/uom_description}" editable="false" class="readonlyField"/>
+			<Input value="{master>/uom_desc}" editable="false" class="readonlyField"/>
 			<Label text="Disable Date"/>
 			<Input value="{path: 'master>/disable_date',formatter: '.dateFormatter.toDateString'}" editable="false" class="readonlyField"/>
 	    </form:content>

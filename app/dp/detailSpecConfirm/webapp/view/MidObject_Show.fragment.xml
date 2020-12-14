@@ -18,7 +18,7 @@
             <Label text="Production Type"/>
             <Text text="{mstSpecView>/mold_production_type_name}"/>
             <Label text="Mold Supplier"/>
-            <Text text="{master>/mold_vendor_id}"></Text>
+            <Text text="{master>/mold_mfger_code}"></Text>
 
             <Label text="Account Department"/>
             <Text text="{master>/accounting_department_code}"></Text>
@@ -76,7 +76,7 @@
             <Label text="{I18N>/DESCRIPTION}"/>
             <Text text="{master>/spec_name}"></Text>
             <Label text="Production Supplier"/>
-            <Text text="{master>/production_vendor_id}"></Text>
+            <Text text="{master>/production_supplier_code}"></Text>
 
             <Label text="Account"/>
             <Select width="100%"

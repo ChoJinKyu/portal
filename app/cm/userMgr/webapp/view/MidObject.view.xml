@@ -137,13 +137,12 @@
 								</Column>
 							</columns>
 							<items>
-								<ColumnListItem press=".onMidTableItemPress">
+								<ColumnListItem>
 									<cells>
                                         <!-- 상태 -->
 										<Text text="{details>_row_state_}"/>
                                         <!-- 역할그룹코드 -->
                                         <ComboBox
-                                            id="searchRoleGroupCode"
                                             selectedKey="{details>role_group_code}"
                                             width="100%"
                                             items="{

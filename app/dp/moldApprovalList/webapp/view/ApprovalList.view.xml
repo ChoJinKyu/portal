@@ -203,8 +203,8 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Requester" labelFor="searchRequester"></Label>
-                            <Input id="searchRequester" 
+                            <Label text="Requestor" labelFor="searchRequestor"></Label>
+                            <Input id="searchRequestor" 
                                     showValueHelp="true"  
                                     valueHelpRequest=".onValueHelpRequested"
                                     suggestionItems="{
@@ -271,7 +271,7 @@
                             <Button id="mainTableCreateButton" text="Create" type="Emphasized" press=".onDialogCreate" />
                             <Button id="mainTableDeleteButton" text="Delete" type="Transparent" press=".onApplovalDeletePress" />
                             <ToolbarSeparator/>
-                            <Button icon="sap-icon://excel-attachment" press=".onListMainTablePersoButtonPressed" >
+                            <Button icon="sap-icon://excel-attachment" press=".onDataExport" >
                                 <layoutData>
                                     <OverflowToolbarLayoutData priority="NeverOverflow" />
                                 </layoutData>
@@ -302,8 +302,8 @@
                         <Column id="mainColumnSubject"  >
                             <Text text="Subject" />
                         </Column>
-                        <Column id="mainColumnRequester"  >
-                            <Text text="Requester" />
+                        <Column id="mainColumnRequestor"  >
+                            <Text text="Requestor" />
                         </Column>
                         <Column id="mainColumnRequestDate"  >
                             <Text text="Request Date" />
@@ -314,8 +314,9 @@
                     </columns>
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
-                            <cells>                  
-                                <CheckBox fieldGroupIds="{= ${list>approve_status_code}==='DR'? 'checkBoxs':''}"  visible="{= ${list>approve_status_code}==='DR'? true:false }" select=".onCheck" />       
+                            <cells>
+                                <CheckBox fieldGroupIds="{= ${list>approval_type_code}==='E'? 'checkBoxs':''}"  visible="{= ${list>approval_type_code}==='E'? true:false }" select=".onCheck" />                  
+                                <!-- <CheckBox fieldGroupIds="{= ${list>approve_status_code}==='DR'? 'checkBoxs':''}"  visible="{= ${list>approve_status_code}==='DR'? true:false }" select=".onCheck" />        -->
                                 <ComboBox 
                                         editable="false"   
                                         class="readonlyField"
