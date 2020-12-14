@@ -47,6 +47,13 @@
                     "odataVersion": "2.0"
                 }
             },
+            "userMgrService": {
+                "uri": "srv-api/odata/v2/cm.UserMgrService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            },
             "moldItemService": {
                 "uri": "srv-api/odata/v2/dp.util.MoldItemSelectionService/",
                 "type": "OData",
@@ -124,6 +131,16 @@
             },
             "purOrg": {
                 "dataSource": "purOrgMgrService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false,
+                    "useBatch": true
+                }
+            },
+            "userMgr": {
+                "dataSource": "userMgrService",
                 "preload": true,
                 "settings": {
                     "defaultBindingMode": "TwoWay",
