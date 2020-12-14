@@ -1063,7 +1063,6 @@ sap.ui.define([
                 mstModel = this.getModel("appMaster"),
                 dtlModel = this.getModel("appDetail"),
                 verModel = this.getModel("Approvers"); 
-                  console.log("verModel >>>> " , this.getModel("Approvers"));
             MessageBox.confirm("Are you sure ?", {
                 title: "Comfirmation",
                 initialFocus: sap.m.MessageBox.Action.CANCEL,
@@ -1086,19 +1085,29 @@ sap.ui.define([
                             delete dtlModel.getData().ApprovalDetails[idx].mold_number;
                             delete dtlModel.getData().ApprovalDetails[idx].spec_name;
                         }
-
-                         
+    
                         for(var jdx=0; jdx<approverData.length; jdx++){
-                            delete verModel.getData().Approver[jdx].arrowUp;
-                            delete verModel.getData().Approver[jdx].arrowDown;
-                            delete verModel.getData().Approver[jdx].editMode;
-                            delete verModel.getData().Approver[jdx].trashShow;
-                            verModel.getData().Approver[jdx].approval_number = that.approval_number;
-                            verModel.getData().Approver[jdx].tenant_id = that.tenant_id;
-                            verModel.getData().Approver[jdx].local_create_dtm = new Date();
-                            verModel.getData().Approver[jdx].local_update_dtm = new Date();
+                            if(jdx == approverData.length-1){  
+                                var aRecords = verModel.oData.Approver;
+                                var bRecords = verModel.mContexts; 
+                                delete verModel.mContexts['/Approver/'+ jdx];
+                                aRecords.splice(jdx, 1); // 마지막 레코드는 삭제 
+                            }else{
+                                delete verModel.getData().Approver[jdx].arrowUp;
+                                delete verModel.getData().Approver[jdx].arrowDown;
+                                delete verModel.getData().Approver[jdx].editMode;
+                                delete verModel.getData().Approver[jdx].trashShow;
+                                verModel.getData().Approver[jdx].approve_sequence = String(verModel.getData().Approver[jdx].approve_sequence);
+                                verModel.getData().Approver[jdx].approval_number = that.approval_number;
+                                verModel.getData().Approver[jdx].tenant_id = that.tenant_id;
+                                verModel.getData().Approver[jdx].local_create_dtm = new Date();
+                                verModel.getData().Approver[jdx].local_update_dtm = new Date();
+                            }
                         }
 
+                        console.log(" verModel >>> " , verModel);
+                        
+                        console.log(" oTransactionManager >>> " , oTransactionManager);
 
                         oTransactionManager.submit({
                             success: function (ok) {
