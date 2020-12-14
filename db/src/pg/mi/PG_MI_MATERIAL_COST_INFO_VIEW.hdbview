@@ -10,7 +10,7 @@ view pg_MI_Material_Cost_Info_View as
         main.quantity_unit				as quantity_unit,
         main.exchange					as exchange,
         main.termsdelv					as termsdelv,
-        cast(max(main.mi_date) as date)	   mi_date,
+        cast(max(main.mi_date) as date)	as mi_date,
         main.amount						as amount
     from pg_mi_material_price_management as main
     left join pg_mi_material_code_lng as mattext

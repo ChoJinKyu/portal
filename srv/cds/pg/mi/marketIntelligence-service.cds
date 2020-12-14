@@ -300,24 +300,24 @@ service marketIntelligenceService {
             key mi_mat_cd.org_type_code         as org_type_code, //조직유형코드
             key mi_mat_cd.org_code              as org_code, //조직코드
             key mi_mat_cd.mi_material_code      as mi_material_code, //시황자재코드
-            key mi_mat_cd_lang.language_code    as mi_material_language_code, //시황자재 언어코드
                 mi_mat_cd_lang.mi_material_name as mi_material_name, //시황자재명
                 mi_mat_cd.category_code         as category_code, //카테고리코드
-                mi_cat_lang.language_code       as category_code_language_code, //카테고리 언어코드
                 mi_cat_lang.category_name       as category_name //카테고리명
         from MIMaterialCode as mi_mat_cd
         left join MIMaterialCodeText as mi_mat_cd_lang
-            on  mi_mat_cd.tenant_id        = mi_mat_cd_lang.tenant_id
-            and mi_mat_cd.company_code     = mi_mat_cd_lang.company_code
-            and mi_mat_cd.org_type_code    = mi_mat_cd_lang.org_type_code
-            and mi_mat_cd.org_code         = mi_mat_cd_lang.org_code
-            and mi_mat_cd.mi_material_code = mi_mat_cd_lang.mi_material_code
+            on  mi_mat_cd.tenant_id             = mi_mat_cd_lang.tenant_id
+            and mi_mat_cd.company_code          = mi_mat_cd_lang.company_code
+            and mi_mat_cd.org_type_code         = mi_mat_cd_lang.org_type_code
+            and mi_mat_cd.org_code              = mi_mat_cd_lang.org_code
+            and mi_mat_cd.mi_material_code      = mi_mat_cd_lang.mi_material_code
+            and mi_mat_cd_lang.language_code    = 'KO'
         left join MICategoryText as mi_cat_lang
-            on  mi_mat_cd.tenant_id     = mi_cat_lang.tenant_id
-            and mi_mat_cd.company_code  = mi_cat_lang.company_code
-            and mi_mat_cd.org_type_code = mi_cat_lang.org_type_code
-            and mi_mat_cd.org_code      = mi_cat_lang.org_code
-            and mi_mat_cd.category_code = mi_cat_lang.category_code
+            on  mi_mat_cd.tenant_id         = mi_cat_lang.tenant_id
+            and mi_mat_cd.company_code      = mi_cat_lang.company_code
+            and mi_mat_cd.org_type_code     = mi_cat_lang.org_type_code
+            and mi_mat_cd.org_code          = mi_cat_lang.org_code
+            and mi_mat_cd.category_code     = mi_cat_lang.category_code
+            and mi_cat_lang.language_code   = 'KO'
         group by
             mi_mat_cd.tenant_id,
             mi_mat_cd.company_code,
