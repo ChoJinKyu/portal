@@ -42,7 +42,7 @@
                                     ],                            
                                     templateShareable:true}"                     
                             placeholder="선택 하세요.">
-                            <core:Item key="{material_code}" text="{material_desc}"/>
+                            <core:Item key="{material_code}" text="{material_code}"/>
                         </ComboBox>
                     </VBox>
                     <VBox visible="{= ${_oUiData>/radioButtonGroup} === 1 }">
@@ -56,7 +56,7 @@
                                     ],                             
                                     templateShareable:true}"                     
                             placeholder="선택 하세요.">
-                            <core:Item key="{supplier_code}" text="{supplier_local_name}"/>
+                            <core:Item key="{supplier_code}" text="{supplier_code}"/>
                         </ComboBox>
                     </VBox>
                 </layout:VerticalLayout> 

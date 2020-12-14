@@ -12,58 +12,59 @@
 
     <Page id="page" title="Number Format with Locale and Currency" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
         <content>
-            <Table id="idProductsTable"
-                items="{
-                    path: '/modelData'
-                }">
+            <Table items="{/}">
                 <columns>
-                    <Column id="exapnseColumn" hAlign="Start">
+                    <Column hAlign="Begin">
                         <Text text="Expense"/>
                     </Column>
-                    <Column id="transactionAmountColumn0" hAlign="End">
-                        <Text text="No formatted" />
+                    <Column hAlign="End">
+                        <Text text="Raw" />
                     </Column>
-                    <Column id="transactionAmountColumn1" hAlign="End">
+                    <Column hAlign="End">
                         <Text text="Default" />
                     </Column>
-                    <Column id="transactionAmountColumn2" hAlign="End">
-                        <Text text="Locale &#10;(ko-KR)" />
+                    <Column hAlign="End">
+                        <Text text="Locale Only&#10;(ko-KR)" />
                     </Column>
-                    <Column id="transactionAmountColumn3" hAlign="End">
-                        <Text text="Locale/Currency &#10;(ko-KR / KRW)" />
+                    <Column hAlign="End">
+                        <Text text="Locale / Currency&#10;(ko / KRW)" />
                     </Column>
-                    <Column id="transactionAmountColumn4" hAlign="End">
-                        <Text text="Locale/Currency &#10;(de-DE / EUR)" />
+                    <Column hAlign="End">
+                        <Text text="Locale / Currency&#10;(de-DE / EUR)" />
                     </Column>
-                    <Column id="transactionAmountColumn5" hAlign="End">
-                        <Text text="Locale/Currency &#10;(en-US / USD)" />
+                    <Column hAlign="End">
+                        <Text text="Locale / Currency&#10;(en / USD)" />
+                    </Column>
+                    <Column hAlign="End">
+                        <Text text="Locale / Currency&#10;(pl-PL / PLN)" />
+                    </Column>
+                    <Column hAlign="End">
+                        <Text text="User Choices" />
                     </Column>
                 </columns>
                 <items>
                     <ColumnListItem>
                         <cells>
-                            <ObjectIdentifier
-                                text="{expense}"/>
-                            <ObjectIdentifier
-                                text="{amount}"/>
+                            <ObjectIdentifier text="{expense}"/>
+                            <ObjectIdentifier text="{amount}"/>
                             <ObjectIdentifier text="{
                                     path: 'amount',
-                                    formatter: '.numberFormatter.numberFormat'
+                                    formatter: '.numberFormatter.toNumberString'
                                 }"/>
                             <ObjectIdentifier text="{
                                     parts: [
                                         {path: 'amount'},
                                         {value: 'ko-KR'}
                                     ],
-                                    formatter: '.numberFormatter.numberFormat'
+                                    formatter: '.numberFormatter.toNumberString'
                                 }"/>
                             <ObjectIdentifier text="{
                                     parts: [
                                         {path: 'amount'},
-                                        {value: 'ko-KR'},
+                                        {value: 'ko'},
                                         {value: 'KRW'}
                                     ],
-                                    formatter: '.numberFormatter.numberFormat'
+                                    formatter: '.numberFormatter.toNumberString'
                                 }"/>
                             <ObjectIdentifier text="{
                                     parts: [
@@ -71,15 +72,27 @@
                                         {value: 'de-DE'},
                                         {value: 'EUR'}
                                     ],
-                                    formatter: '.numberFormatter.numberFormat'
+                                    formatter: '.numberFormatter.toNumberString'
                                 }"/>
                             <ObjectIdentifier text="{
                                 parts: [
                                     {path: 'amount'},
-                                    {value: 'en-US'},
+                                    {value: 'en'},
                                     {value: 'USD'}
                                 ],
-                                formatter: '.numberFormatter.numberFormat'
+                                formatter: '.numberFormatter.toNumberString'
+                            }"/>
+                            <ObjectIdentifier text="{
+                                parts: [
+                                    {path: 'amount'},
+                                    {value: 'pl-PL'},
+                                    {value: 'PLN'}
+                                ],
+                                formatter: '.numberFormatter.toNumberString'
+                            }"/>
+                            <ObjectIdentifier text="{
+                                path: 'amount',
+                                formatter: '.numberFormatter.toCurrencyString'
                             }"/>
                         </cells>
                     </ColumnListItem>
@@ -88,8 +101,8 @@
 
             <MessageStrip
                 class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom"
-                type="Warning"
-                text='controller에 Define 후 사용합니다.&#10;&#10;----------&#10;&#10;sap.ui.define(["ext/lib/formatter/NumberFormatter"], function (NumberFormatter) .. &#10;&#10;&#160;&#160;&#160;&#160;numberFormatter: NumberFormatter' />
+                type="Information"
+                text='sap.ui.define([&#10;&#10;&#160;&#160;&#160;&#160;"ext/lib/formatter/NumberFormatter"&#10;&#10;], function (NumberFormatter) .. &#10;&#10;&#160;&#160;&#160;&#160;numberFormatter: NumberFormatter' />
             
         </content>
     </Page>

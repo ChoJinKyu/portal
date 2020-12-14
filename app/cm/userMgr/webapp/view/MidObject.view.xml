@@ -149,7 +149,8 @@
                                                 path: 'roleGroup>/RoleGroupMgr',
                                                 filters: [
                                                 ]
-                                            }">
+                                            }"
+                                            change="roleGroupComboChange">
                                             <items>
                                                 <core:Item key="{roleGroup>role_group_code}" text="{roleGroup>role_group_code} : {roleGroup>role_group_name}" />
                                             </items>

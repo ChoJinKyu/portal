@@ -237,6 +237,10 @@ sap.ui.define([
 
       this._onMasterDataChanged();
 
+    //   var detailData = detail.
+    //   for (var i=0; i > )
+    //   debugger;
+
       MessageBox.confirm("Are you sure ?", {
         title: "Comfirmation",
         initialFocus: sap.m.MessageBox.Action.CANCEL,
@@ -509,6 +513,20 @@ sap.ui.define([
                 ],
                 template: new Item({
                     key: "{org>company_code}", text:"{org>company_code}: {org>company_name}"
+                })
+            });
+        },
+
+        roleGroupComboChange: function(oEvent) {
+            this.getModel("roleGroup");
+            var combo = this.byId("roleGroupCombo");
+            combo.bindItems({
+                path: 'roleGroup>/RoleGroupMgr',
+                filters: [
+                    new Filter('role_group_code', FilterOperator.NE, oEvent.getSource().getSelectedKey())
+                ],
+                template: new Item({
+                    key:"{roleGroup>role_group_code}", text:"{roleGroup>role_group_code} : {roleGroup>role_group_name}"
                 })
             });
         }

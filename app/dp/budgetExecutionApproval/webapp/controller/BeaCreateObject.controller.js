@@ -4,7 +4,6 @@ sap.ui.define([
     "sap/ui/core/routing/History",
     "ext/lib/model/ManagedListModel",
     "ext/lib/model/ManagedModel",
-    "sap/ui/richtexteditor/RichTextEditor",
     "ext/lib/formatter/DateFormatter",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
@@ -20,10 +19,14 @@ sap.ui.define([
     "ext/lib/util/Multilingual",
     "ext/lib/util/Validator", 
     "ext/lib/formatter/Formatter", 
-    "dp/util/controller/MoldItemSelection"
-], function (BaseController, JSONModel, History, ManagedListModel, ManagedModel, RichTextEditor, DateFormatter, Filter, FilterOperator, Fragment
+    "dp/util/controller/MoldItemSelection",
+    "sap/ui/richtexteditor/RichTextEditor",
+  //  "sap/ui/richtexteditor/EditorType"
+], function (BaseController, JSONModel, History, ManagedListModel, ManagedModel,  DateFormatter, Filter, FilterOperator, Fragment
     , MessageBox, MessageToast, UploadCollectionParameter, Device, syncStyleClass, ColumnListItem, Label, TransactionManager, Multilingual
-    , Validator, Formatter, MoldItemSelection) {
+    , Validator, Formatter, MoldItemSelection,RichTextEditor
+    // ,EditorType
+    ) {
     "use strict";
     /**
      * @description 예산집행품의 Create, update 화면 
@@ -31,9 +34,10 @@ sap.ui.define([
      * @date 2020.12.01
      */
     var mainViewName = "beaCreateObjectView";
+
     var oTransactionManager;
     return BaseController.extend("dp.budgetExecutionApproval.controller.BeaCreateObject", {
-         formatter: Formatter,
+        formatter: Formatter,
         dateFormatter: DateFormatter,
         validator: new Validator(), 
         moldItemPop: new MoldItemSelection(),
@@ -87,22 +91,22 @@ sap.ui.define([
             // oTransactionManager.addDataModel(this.getModel("MoldMasterList"));
             oTransactionManager.addDataModel(this.getModel("Approvers"));
 
+            this.setRichEditor(); // 한번만 로드 
+           
 
         },
 
         onAfterRendering: function () {
 
         },
+
         /**
          * 폅집기 창 
          */
-        setRichEditor: function (sValue) {
-            var that = this,
-                sHtmlValue = sValue;
+        setRichEditor : function (){ 
             sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
-                function (RTE, EditorType) {
-
-                    var oRichTextEditor = new RTE("myRTE", {
+                function (RTE, EditorType) {  
+                    this.oRichTextEditor = new RTE("myRTE", { 
                         editorType: EditorType.TinyMCE4,
                         width: "100%",
                         height: "600px",
@@ -110,19 +114,20 @@ sap.ui.define([
                         showGroupFont: true,
                         showGroupLink: true,
                         showGroupInsert: true,
-                        value: sHtmlValue,
+                        value: "",
                         ready: function () {
                             this.addButtonGroup("styleselect").addButtonGroup("table");
                         }
                     });
 
-                    that.getView().byId("idVerticalLayout").addContent(oRichTextEditor);
-                    oRichTextEditor.attachEvent("change", function (oEvent) {
-                        that.getModel('appMaster').setProperty('/approval_contents', oEvent.getSource().getValue());
+                    this.getView().byId("approvalContents").addContent(this.oRichTextEditor);
+                    
+                    this.oRichTextEditor.attachEvent("change", function(oEvent){
+                        this.getModel('appMaster').setProperty('/approval_contents', oEvent.getSource().getValue());
                     });
-                });
+             }.bind(this));
         },
-
+ 
         /* =========================================================== */
         /* event handlers                                              */
         /* =========================================================== */
@@ -209,14 +214,14 @@ sap.ui.define([
 		 * @private
 		 */
         _onObjectMatched: function (oEvent) {
-
+            //this.setRichEditor();
             var oArgs = oEvent.getParameter("arguments");
             var mModel = this.getModel(mainViewName);
             console.log("[ step ] _onObjectMatched args ", oArgs);
             if (oArgs.approval_number) {
                 this._onRoutedThisPage(oArgs);
             } else {
-                this.setRichEditor('');
+               
                 this._onCreatePagetData(oArgs);
                 this._onLoadApprovalRow();
             }
@@ -246,11 +251,8 @@ sap.ui.define([
                     "local_update_dtm": new Date()                     
             }
  
-            //oModel.createEntry("/ApprovalMasters(tenant_id='L1100',approval_number='326857-20E-88847')", cParameters); 
             this.getModel("appMaster").setData(cParam);
-
             this._createViewBindData(args); 
-   
         },
 
 
@@ -313,7 +315,7 @@ sap.ui.define([
                 , "appMaster", [], function (oData) { 
                     console.log(" appMaster " , that.getModel("appMaster")); 
                 that._createViewBindData(oData); // comapny , plant 조회 
-                that.setRichEditor(oData.approval_contents);
+                that.oRichTextEditor.setValue(oData.approval_contents);
             });
 
             this._bindView("/ApprovalDetails", "appDetail", schFilter, function (oData) {
@@ -484,7 +486,8 @@ sap.ui.define([
         onMoldItemPopPress : function (oEvent){
              var oArgs = {
                 company_code : this.getModel('appMaster').oData.company_code , 
-                org_code : this.getModel('appMaster').oData.org_code
+                org_code : this.getModel('appMaster').oData.org_code,
+                mold_progress_status_code : 'DEV_RCV'
             }
             var that = this;
     

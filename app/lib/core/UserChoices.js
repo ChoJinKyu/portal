@@ -3,10 +3,15 @@ sap.ui.define([
 ], function (Object) {
     "use strict";
 
-    var UserChoices = Object.extend("ext.lib.core.UserChoices", {
+    var UserChoices = {
 
         getTenantId: function(){
             return "L2100";
+        },
+
+        getLocaleString: function(){
+            var sLang = sap.ui.getCore().getConfiguration().getLocale().toString();
+            return sLang.substring(0, 2);
         },
 
         getLanguage: function(){
@@ -20,9 +25,13 @@ sap.ui.define([
 
         getFormatSettings: function(){
             return sap.ui.getCore().getConfiguration().getFormatSettings()   
+        },
+
+        getCurrencyCode: function(){
+            return "USD";
         }
         
-    });
+    };
 
     return UserChoices;
 

@@ -54,11 +54,14 @@
                     </uxap:headerTitle>
                     <uxap:headerContent>
                         <layout:VerticalLayout>
-                            <FlexBox height="30px" alignItems="Start" justifyContent="Start" visible="{=!${oUi>/createMode}}">
+                            <FlexBox height="30px" alignItems="Start" justifyContent="Start" >
                                     <Label text="관리조직 :" />
-                                    <Label text="{_oUiData>/tenant_name}" id="label_tenant_name"  class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                                    <Label text="{_oUiData>/tenant_name}" 
+                                    id="label_tenant_name"  
+                                    class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
                                     <Label text="Create :"  class="sapUiLargeMarginBegin" />
-                                    <Label text="{oUiData>/create_user_id}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                                    <Label text="{oUiData>/create_user_id}"  
+                                    class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
                                     <Label text="Create Data :" class="sapUiLargeMarginBegin" />
                                     <Label text="{
                                         path: 'oUiData>/system_create_dtm',
@@ -88,7 +91,11 @@
                                                 <RadioButton id="radioButtonType02" text="공급업체/코드" />
                                             </RadioButtonGroup>  
                                         </FlexBox>
-                                        <Input id="input_hidden_material_code" visible="false"/>       
+                                        <Input id="input_hidden_material_code" visible="false"/>
+                                        <Input id="input_hidden_material_desc" visible="false"/>
+                                        <Input id="input_hidden_supplier_code" visible="false"/>
+                                        <Input id="input_hidden_supplier_local_name" visible="false"/>
+                                        <Input id="input_hidden_supplier_english_name" visible="false"/>
                                         <Input id="input_material_code" 
                                                     required="{oUi>/createMode}"
                                                     width="100%"
@@ -168,11 +175,17 @@
                                                         design="Bold"                                                         
                                                         visible="{oUi>/readMode}"
                                                         />
-                                                                                                      
+                                                            <!-- required="{= !${oUi>/readMode}}"                                           -->
                                                 <ComboBox
                                                     id="comboBox_pcst_currency_unit"                                                     
-                                                    items="{/CurrencyUnitView}"
-                                                    required="{= !${oUi>/readMode}}"
+                                                    items ="{
+                                                        path : '/CurrencyUnitView',
+                                                        filters : [
+                                                                {path : 'tenant_id', 
+                                                                operator : 'EQ', 
+                                                                value1 : 'L2100'}                                                                            
+                                                        ]
+                                                    }"
                                                     width="100px"
                                                     selectedKey="{oUiData>/pcst_currency_unit}"                                       
                                                     placeholder="선택"
@@ -246,6 +259,11 @@
                                                 </Column>
                                                 <Column hAlign="Center">
                                                     <header>
+                                                        <Label text="소요량 단위"/>
+                                                    </header>
+                                                </Column>                                                
+                                                <Column hAlign="Center">
+                                                    <header>
                                                         <Label text="소요량"/>
                                                     </header>
                                                 </Column>
@@ -282,6 +300,26 @@
                                                         <Text text="{midList>mi_material_code}" />                                          
                                                         <Text text="{midList>mi_material_name}" />                                          
                                                         <Text text="{midList>category_name}" />  
+                                                        <VBox  alignItems="Center">  
+                                                            <ComboBox   placeholder="선택"
+                                                                        visible="{=!${oUi>/readMode}}" 
+                                                                        items ="{
+                                                                            path : '/UnitOfMeasureView',
+                                                                            filters : [
+                                                                                    {path : 'tenant_id', 
+                                                                                    operator : 'EQ', 
+                                                                                    value1 : 'L2100'}                                                                            
+                                                                            ]
+                                                                        }"
+                                                                        selectedKey="{midList>reqm_quantity_unit}">  
+                                                                <items> 
+                                                                    <core:ListItem key="{uom_code}" text="{uom_name}"/>
+                                                                </items>
+                                                            </ComboBox>                                                           
+                                                            <Text   text="{midList>reqm_quantity_unit}"
+                                                                    visible="{oUi>/readMode}"/>                                                          
+  
+                                                        </VBox>                                                          
                                                         <VBox alignItems="Center">
                                                             <Input  visible="{=!${oUi>/readMode}}"
                                                                     required="{=!${oUi>/readMode}}"
@@ -294,15 +332,16 @@
                                                                     visible="{oUi>/readMode}"
                                                              />                                      
                                                         </VBox>
+                                                        
+                                                        <!-- required="{=!${oUi>/readMode}}" -->
                                                         <VBox  alignItems="Center">  
                                                             <ComboBox   placeholder="선택"
                                                                         visible="{=!${oUi>/readMode}}" 
-                                                                        required="{=!${oUi>/readMode}}"
+                                                                        
                                                                         items ="{
                                                                             path : '/UseYNView',
                                                                             formatter: '.formatter.toYesNo'
                                                                         }"          
-                                                                        width="80px" 
                                                                         selectedKey="{midList>use_flag}">  
                                                                 <items> 
                                                                     <core:ListItem key="{code}" text="{code_name}"/>
@@ -315,8 +354,8 @@
                                                                     visible="{oUi>/readMode}"/>                                                          
   
                                                         </VBox>  
-                                                        <Text text="{midList>currency_unit}" />                                          
-                                                        <Text text="{midList>reqm_quantity_unit}" />                                          
+                                                        <Text text="{midList>currency_unit}" width="50px"/>                                          
+                                                        <Text text="{midList>reqm_quantity_unit}" width="50px"/>                                          
                                                         <Text text="{midList>exchange}" />                                          
                                                         <Text text="{midList>termsdelv}" />                                          
                                                     </cells>
