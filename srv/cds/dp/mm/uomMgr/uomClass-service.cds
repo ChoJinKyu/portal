@@ -26,4 +26,19 @@ service UomClassMgrService {
     entity UomClass as projection on Class.Mm_Uom_Class;
     entity UomClassLng as projection on ClassLng.Mm_Uom_Class_Lng;
 
+    view UomClassView(language_code: String) as
+    select m.tenant_id
+          ,m.uom_class_code
+          ,ifnull(l.uom_class_name, m.uom_class_name) as uom_class_name : String(20)
+          ,ifnull(l.uom_class_desc, m.uom_class_desc) as uom_class_desc : String(50)
+          ,m.base_uom_code
+          ,m.base_uom_name
+          ,m.disable_date
+    from  Class.Mm_Uom_Class  m
+    left join ClassLng.Mm_Uom_Class_Lng l
+    on l.tenant_id = m.tenant_id
+    and l.uom_class_code = m.uom_class_code
+    and l.language_code = :language_code
+    ;
+
 }

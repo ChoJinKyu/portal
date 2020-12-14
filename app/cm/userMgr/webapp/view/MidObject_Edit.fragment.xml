@@ -143,7 +143,8 @@
                     items="{
                         path: 'timeZoneMgr>/TimeZone',
                         filters: [
-                        ]
+                        ],
+                        templateShareable: false
                     }">
                 <items>
                     <core:Item key="{timeZoneMgr>timezone_code}" text="{timeZoneMgr>timezone_code}: {timeZoneMgr>timezone_name}" />

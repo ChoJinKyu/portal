@@ -27,7 +27,7 @@
                         <Text text="Default" />
                     </Column>
                     <Column id="transactionAmountColumn2" hAlign="End">
-                        <Text text="Locale &#10; (ko-KR)" />
+                        <Text text="Locale &#10;(ko-KR)" />
                     </Column>
                     <Column id="transactionAmountColumn3" hAlign="End">
                         <Text text="Locale/Currency &#10;(ko-KR / KRW)" />

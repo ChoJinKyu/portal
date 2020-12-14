@@ -1,0 +1,55 @@
+view EP_LI_PUBLISH_ITEM_VIEW as
+select 
+    dtl.tenant_id,
+    dtl.company_code,
+    dtl.loi_write_number,
+    dtl.loi_item_number,    
+    mst.loi_number,
+    dtl.item_sequence,
+    mst.requestor_empno,
+    mst.requestor_empno as requestor_name,
+    mst.request_department_code,
+    mst.request_department_code as request_department_name,
+    coalesce(dtl.buyer_empno, '') as buyer_empno,
+    coalesce(dtl.buyer_empno, '') as buyer_name,
+    coalesce(dtl.purchasing_department_code, '') as purchasing_department_code,
+    coalesce(dtl.purchasing_department_code, '') as purchasing_department_name,
+    mst.loi_request_title,
+    dtl.item_desc,
+    coalesce(dtl.quotation_number, 0) as quotation_number,
+    coalesce(dtl.quotation_item_number, 0) as quotation_item_number,
+    '' as supplier_name,
+    coalesce(pub.publish_date, '') as publish_date,
+    dtl.delivery_request_date,
+    dtl.request_quantity,
+    dtl.unit,
+    dtl.request_amount,
+    coalesce(dtl.currency_code, '') as currency_code,
+    dtl.loi_selection_number,
+    coalesce(sel.loi_selection_status_code, '') as loi_selection_status_code,
+    dtl.loi_publish_number,
+    coalesce(pub.loi_publish_status_code, '') as loi_publish_status_code,
+    dtl.po_number,
+    dtl.po_item_number,
+    dtl.po_number as po_status_code,
+    mst.request_date,
+    coalesce(dtl.supplier_opinion, '') as supplier_opinion,
+    dtl.local_create_dtm,
+    dtl.local_update_dtm,
+    dtl.create_user_id,
+    dtl.update_user_id,
+    dtl.system_create_dtm,
+    dtl.system_update_dtm
+    from ep_li_dtl as dtl
+    left outer join ep_li_mst as mst 
+    on dtl.tenant_id = mst.tenant_id 
+    and dtl.company_code = mst.company_code
+    and dtl.loi_write_number = mst.loi_write_number
+    left outer join ep_li_publish as pub
+    on dtl.tenant_id = pub.tenant_id 
+    and dtl.company_code = pub.company_code
+    and dtl.loi_publish_number = pub.loi_publish_number
+    left outer join ep_li_supplier_selection as sel
+    on dtl.tenant_id = sel.tenant_id 
+    and dtl.company_code = sel.company_code
+    and dtl.loi_selection_number = sel.loi_selection_number;

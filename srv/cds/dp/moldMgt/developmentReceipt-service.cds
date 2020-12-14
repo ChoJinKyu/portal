@@ -9,6 +9,7 @@ namespace dp;
 service DevelopmentReceiptService {
 
     entity MoldMasters as projection on moldMst.Md_Mst;
+    //entity MoldMasters as projection on moldMstView.Md_Mst_View;
     
     view Divisions as
     select key a.tenant_id       
@@ -35,8 +36,8 @@ service DevelopmentReceiptService {
     from moldMst.Md_Mst a
     where a.model is not null;
 
-    view PartNumbers as
-    select distinct key a.tenant_id, key a.mold_number, a.spec_name
+    view MoldNumbers as
+    select distinct key a.tenant_id, key a.mold_number, a.mold_item_type_code, a.spec_name
     from moldMst.Md_Mst a
     where a.mold_number is not null;
 }

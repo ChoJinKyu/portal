@@ -27,10 +27,13 @@ sap.ui.define([
                 name : "Hong Gil-dong"
             },
             dept : {
-                tenant_id : "L2100",
-                company_code : "*",
-                org_type_code : "BU",
-                org_code : "BIZ00100"
+				tenant_id: "L2100",
+				company_code: "*",
+				org_type_code: "BU",
+				org_code :"BIZ00100",
+				material_code:"new",	
+				supplier_code: "KR00008",	
+				mi_material_code: ""
             }          
 		},
 
@@ -41,9 +44,7 @@ sap.ui.define([
 		onInit : function () {
 			
 			console.group("onInit");
-
-			var oUi,oUiData,
-				oResourceBundle = this.getResourceBundle();
+			var oUi,oUiData, oResourceBundle = this.getResourceBundle();
 
 			// Model used to manipulate control states
 			oUi = new JSONModel({
@@ -57,8 +58,9 @@ sap.ui.define([
 			});
 
 
-			this.setModel(oUi, "mainListView");
+			this.setModel(oUi, "oUi");
 			this.setModel(oUiData, "oUiData");
+
 
 			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
@@ -85,7 +87,7 @@ sap.ui.define([
 		_onCreateModeMetadataLoaded: function() {
 			console.group("_onCreateModeMetadataLoaded");
 			this.getView().getModel().setUseBatch(true);
-			this.getView().getModel().setDeferredGroups(["pgGroup","deleteGroup"]);
+			this.getView().getModel().setDeferredGroups(["pgGroup"]);
             
             this.getView().getModel().setChangeGroups({
 			  "mIMaterialCodeBOMManagement": {
@@ -260,6 +262,7 @@ sap.ui.define([
 		 */
 		onMainTableCreate: function(){
 			console.group("onMainTableCreate");
+			var that = this;
 
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
 			
@@ -267,38 +270,37 @@ sap.ui.define([
 	//midObject/{layout}/{tenant_id}/{company_code}/{org_type_code}/{org_code}/{material_code}/{supplier_code}/{mi_material_code}
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
-				tenant_id: "L2100",
-				company_code: "*",
-				org_type_code: "BU",
-				org_code :"BIZ00100",
+				tenant_id: this._sso.dept.tenant_id,
+				company_code: this._sso.dept.company_code,
+				org_type_code: this._sso.dept.org_type_code,
+				org_code : this._sso.dept.org_code,
 				material_code:"new",	
-				supplier_code: "KR00008",	
-				mi_material_code: "TIN-001-41"
+				supplier_code: "　",	
+				mi_material_code: "　"
 			});
 
-			// layout: oNextUIState.layout, 
-			// tenant_id: aParameters["tenant_id"],
-			// company_code: aParameters["company_code"],
-			// org_type_code: aParameters["org_type_code"],
-			// org_code :aParameters["org_code"],
-			// material_code: oRecord.material_code,
-			// supplier_code: aParameters["supplier_code"],
-			// mi_material_code: aParameters["mi_material_code"]
+			// this.getRouter().navTo("midPage", {
+			// 	layout: oNextUIState.layout, 
+			// 	tenant_id: "L2100",
+			// 	company_code: "*",
+			// 	org_type_code: "BU",
+			// 	org_code :"BIZ00100",
+			// 	material_code:"new",	
+			// 	supplier_code: "KR00008",	
+			// 	mi_material_code: "TIN-001-41"
+			// });
+
 
 			
             if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
-                this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
+                this.getView().getModel('oUi').setProperty("/headerExpandFlag", false);
             }
 
-			//var oItem = oEvent.getSource();
-			//oItem.setNavigated(true);
-			//var oParent = oItem.getParent();
-			//this.iIndex = oParent.indexOfItem(oItem);
-			
 			console.groupEnd();
 			
 		},
 
+		
 		/**
 		 * Event handler when a search button pressed
 		 * @param {sap.ui.base.Event} oEvent the button press event
@@ -306,10 +308,6 @@ sap.ui.define([
 		 */
 		onPageSearchButtonPress : function (oEvent) {
 			if (oEvent.getParameters().refreshButtonPressed) {
-				// Search field's 'refresh' button has been pressed.
-				// This is visible if you select any master list item.
-				// In this case no new search is triggered, we only
-				// refresh the list binding.
 				this.onRefresh();
 			} else {
 				var aSearchFilters = this._getSearchStates();
@@ -354,7 +352,7 @@ sap.ui.define([
 
 
             if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
-                this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
+                this.getView().getModel('oUi').setProperty("/headerExpandFlag", false);
             }
 
 			var oItem = oEvent.getSource();
@@ -372,7 +370,7 @@ sap.ui.define([
 		 */
 		_onRoutedThisPage: function(){
 			console.group("_onRoutedThisPage");
-			this.getModel("mainListView").setProperty("/headerExpanded", true);
+			this.getModel("oUi").setProperty("/headerExpanded", true);
 			console.groupEnd();
 		},
 
@@ -382,16 +380,6 @@ sap.ui.define([
 		 * @private
 		 */
 		_applySearch: function(aSearchFilters) {
-			// var oView = this.getView(),
-			// 	oModel = this.getModel("list");
-			// oView.setBusy(true);
-			// oModel.setTransactionModel(this.getModel());
-			// oModel.read("/ControlOptionMasters", {
-			// 	filters: aSearchFilters,
-			// 	success: function(oData){
-			// 		oView.setBusy(false);
-			// 	}
-			// });
 		},
 		
 		 _getSearchStates: function(){
@@ -442,8 +430,7 @@ sap.ui.define([
 		},
 
 
-
-        /**
+/**
          * mainTable Item Delete
          * @param {sap.ui.base.Event} oEvent 
          */
@@ -454,17 +441,17 @@ sap.ui.define([
                 oData = oModel.getData(),
                 oPath,
                 that = this;
-                  
+
             var oSelected = this._mainTable.getSelectedContexts();   
             if (oSelected.length > 0) { 
-                            
+
                 MessageBox.confirm("선택한 항목을 삭제 하시겠습니까?", {
                     title: "삭제 확인",                                    
                     onClose: this._deleteAction.bind(this),                                    
                     actions: [sap.m.MessageBox.Action.DELETE, sap.m.MessageBox.Action.CANCEL],
                     textDirection: sap.ui.core.TextDirection.Inherit    
                 });
-              
+
             }
             console.groupEnd();
         },
@@ -475,24 +462,26 @@ sap.ui.define([
          */
 		_deleteAction: function(oAction) {
             console.group("_deleteAction");
-            
+
+			
 			if(oAction === sap.m.MessageBox.Action.DELETE) {
 				this._getSmartTableById().getTable().getSelectedItems().forEach(function(oItem){
                     var sPath = oItem.getBindingContextPath();	
-					var mParameters = {"groupId":"deleteGroup"};
+					var mParameters = {"groupId":"pgGroup"};
 					oItem.getBindingContext().getModel().remove(sPath, mParameters);
 				});
-				
+
 				var oModel = this.getView().getModel();
 				oModel.submitChanges({
-		      		groupId: "deleteGroup", 
+		      		groupId: "pgGroup", 
 		        	success: this._handleDeleteSuccess.bind(this),
 		        	error: this._handleDeleteError.bind(this)
 		     	});
             } 
             console.groupEnd();
 		},
-				
+
+
 		_handleUpdateSuccess: function(oData) {
 			MessageToast.show(this.getResourceBundle().getText("updateSuccess"));
 		},

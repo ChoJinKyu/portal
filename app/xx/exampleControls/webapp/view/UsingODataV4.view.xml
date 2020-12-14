@@ -1,0 +1,103 @@
+<mvc:View controllerName="xx.exampleControls.controller.UsingODataV4" 
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m" 
+    xmlns:core="sap.ui.core" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:lib-m="ext.lib.m"
+    height="100%">
+
+    <Page id="page" 
+        title="Inline Edit in Table with OData V4" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
+
+        <content>
+
+            <Table id="mainTable" 
+                    sticky="HeaderToolbar,ColumnHeaders" 
+                    inset="false" 
+                    class="sapFDynamicPageAlignContent" 
+                    updateFinished=".onMainTableUpdateFinished"
+                    items="{
+                        path: 'main-v4>/Message',
+                        filters: [
+                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                            {path: 'chain_code', operator: 'EQ', value1: 'CM'}
+                        ],
+                        sorter: {
+                            path: 'message_code,language_code,message_type_code'
+                        }
+                    }"
+                    mode="SingleSelectLeft"
+                    width="auto">
+                <headerToolbar>
+                    <OverflowToolbar>
+                        <Title text="Messages" level="H2"/>
+                        <ToolbarSpacer/>
+                        <Button id="mainTableTestButton" text="Test" type="Transparent" press=".onMainTableTestButtonPress" />
+                        <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
+                        <Button id="mainTableDeleteButton" text="Delete" type="Transparent" press=".onMainTableDeleteButtonPress" />
+                        <Button id="mainTableSaveButton" text="Save" type="Emphasized" press=".onMainTableSaveButtonPress" />
+                        <ToolbarSeparator/>
+                        <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+                            <layoutData>
+                                <OverflowToolbarLayoutData priority="NeverOverflow" />
+                            </layoutData>
+                        </Button>
+                    </OverflowToolbar>
+                </headerToolbar>
+                <columns>
+                    <Column id="mainColumnChainCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="12em" >
+                        <Text text="Chain" />
+                    </Column>
+                    <Column id="mainColumnLanguageCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="12em" >
+                        <Text text="Language" />
+                    </Column>
+                    <Column id="mainColumnMessageTypeCode" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                        <Text text="Type" />
+                    </Column>
+                    <Column id="mainColumnMessageCode" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                        <Text text="Code" />
+                    </Column>
+                    <Column id="mainColumnMessageContents" minScreenWidth="Tablet" hAlign="Center">
+                        <Text text="Content" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <Text text="{main-v4>chain_code}"></Text>
+                            <Text text="{main-v4>language_code}"></Text>
+                            <!-- <Input value="{main-v4>message_type_code}"></Input> -->
+                            <ComboBox selectedKey="{message_type_code}" width="100%" items="{
+                                    path: 'common-v4>/Code',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'group_code', operator: 'EQ', value1: 'CM_MESSAGE_TYPE_CODE'}
+                                    ]
+                                }">
+                                <items>
+                                    <core:Item key="{common-v4>code}" text="{common-v4>code_name}" />
+                                </items>
+                            </ComboBox>
+                            <!-- <ComboBox selectedKey="{language_code}" width="100%" items="{
+                                    path: 'common-v4>/CodeDetails',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
+                                    ]
+                                }">
+                                <items>
+                                    <core:Item key="{common-v4>code}" text="{common-v4>code_description}" />
+                                </items>
+                            </ComboBox> -->
+                            <!-- <Text text="{message_code}"></Text> -->
+                            <Input value="{main-v4>message_code}"></Input>
+                            <!-- <Text text="{message_contents}"></Text> -->
+                            <Input value="{main-v4>message_contents}" width="100%"></Input>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+
+        </content>
+    </Page>
+</mvc:View>

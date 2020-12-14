@@ -119,9 +119,12 @@ sap.ui.define([
 
         onMainTableAddButtonPress: function () {
             var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
+            var tenantId = this.byId("searchTenantCombo").getSelectedKey();
+
             this.getRouter().navTo("midPage", {
                 layout: oNextUIState.layout,
-                userId: "ID",
+                tenantId: tenantId,
+                roleCode: "code",
                 "?query": {
                     //param1: "1111111111"
                 }
@@ -154,7 +157,8 @@ sap.ui.define([
 
             this.getRouter().navTo("midPage", {
                 layout: oNextUIState.layout,
-                userId: oRecord.user_id
+                tenantId: oRecord.tenant_id,
+                roleCode: oRecord.role_code
             });
 
             if (oNextUIState.layout === 'TwoColumnsMidExpanded') {
@@ -191,7 +195,7 @@ sap.ui.define([
             oModel = this.getModel("list");
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
-            oModel.read("/roleMgr", {
+            oModel.read("/Role", {
                 filters: aSearchFilters,
                 success: function (oData) {
                     console.log(">>>> success", oData);
@@ -203,13 +207,11 @@ sap.ui.define([
         _getSearchStates: function () {
             var aSearchFilters = [];
             if (!!this.byId("searchTenantCombo").getSelectedKey()) aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.byId("searchTenantCombo").getSelectedKey()));
-            if (!!this.byId("searchOrgCombo").getSelectedKey()) aSearchFilters.push(new Filter("company_code", FilterOperator.EQ, this.byId("searchOrgCombo").getSelectedKey()));
+            if (!!this.byId("searchChainCombo").getSelectedKey()) aSearchFilters.push(new Filter("chain_code", FilterOperator.EQ, this.byId("searchChainCombo").getSelectedKey()));
 
-            if (!!this.byId("searchUserId").getValue()) aSearchFilters.push(new Filter("user_id", FilterOperator.EQ, this.byId("searchUserId").getValue()));
-            if (!!this.byId("searchUserName").getValue()) aSearchFilters.push(new Filter("user_name", FilterOperator.EQ, this.byId("searchUserName").getValue()));
-            if (!!this.byId("searchEngName").getValue()) aSearchFilters.push(new Filter("user_eng_name", FilterOperator.EQ, this.byId("searchEngName").getValue()));
-            if (!!this.byId("searchEmail").getValue()) aSearchFilters.push(new Filter("email", FilterOperator.EQ, this.byId("searchEmail").getValue()));
-            if (!!this.byId("searchUseflag").getSelectedKey()) aSearchFilters.push(new Filter("use_flag", FilterOperator.EQ, this.byId("searchUseflag").getSelectedKey()));
+            if (!!this.byId("searchRoleCode").getValue()) aSearchFilters.push(new Filter("role_code", FilterOperator.EQ, this.byId("searchRoleCode").getValue()));
+            if (!!this.byId("searchRoleName").getValue()) aSearchFilters.push(new Filter("role_name", FilterOperator.EQ, this.byId("searchRoleName").getValue()));
+             if (!!this.byId("searchUseflag").getSelectedKey()) aSearchFilters.push(new Filter("use_flag", FilterOperator.EQ, this.byId("searchUseflag").getSelectedKey()));
 
             return aSearchFilters;
         }

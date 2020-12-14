@@ -2,95 +2,119 @@
 	xmlns="sap.m"
 	xmlns:l="sap.ui.layout"
     xmlns:form="sap.ui.layout.form"
-	xmlns:core="sap.ui.core">
-	<form:SimpleForm id="midObjectForm1Edit" editable="false" 
-        layout="ColumnLayout"			
-			columnsM="1"
-			columnsL="1"
-			columnsXL="4">
+	xmlns:core="sap.ui.core"
+    xmlns:uxap="sap.uxap" >
+<VBox class="sapUiSmallMargin" id="midObjectForm1Edit">    
+	<form:SimpleForm         
+        editable="false"
+        layout="ColumnLayout"
+        columnsM="2"
+        columnsL="3"
+        columnsXL="3" >
 		
-		<core:Title text="Normal" />
-		<Label text="UOM" required="true"/>
-        <Input value="{
-                path: 'master>/uom_code',
-                type: 'sap.ui.model.type.String',
-                constraints: {
-                    maxLength: 5
-                }
-            }" editable="{midObjectView>/isAddedMode}" required="true"></Input>
-        <Label text="Class" required="true"/>
-        <ComboBox id="editClassCode" width="100%" selectedKey="{master>/uom_class_code}" items="{
-            path: 'uomClass>/UomClass'
-            }" editable="{midObjectView>/isAddedMode}" required="true"> 
-            <items>
-                <core:Item key="{uomClass>uom_class_code}" text="{uomClass>uom_class_name}" />
-            </items>
-        </ComboBox>
-        <Label text="Base Unit"/>
-		<Switch state="{master>/base_unit_flag}" customTextOn="Yes" customTextOff="No" enabled="{midObjectView>/isAddedMode}">
-			<layoutData>
-				<FlexItemData growFactor="1" />
-			</layoutData>
-		</Switch>
-        <Label text="Description" required="false"/>
-        <Input value="{
-                path: 'master>/uom_description',
-                type: 'sap.ui.model.type.String',
-                constraints: {
-                    maxLength: 50
-                }
-            }" ></Input>		
-        <Label text="Disable Date" required="false"/>
-        <DatePicker placeholder="Disable Date" value="{path: 'master>/disable_date',type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' }}"/>
+        <form:content>            
+            <Label text="UOM" required="true"/>
+            <Input value="{
+                    path: 'master>/uom_code',
+                    type: 'sap.ui.model.type.String',
+                    constraints: {
+                        maxLength: 5
+                    }
+                }" editable="{midObjectView>/isAddedMode}" required="true"></Input>
+            <Label text="Class" required="true"/>
+            <ComboBox id="editClassCode" width="100%" selectedKey="{master>/uom_class_code}" items="{
+                    path: 'uomClass>/UomClass',
+                    filters: [
+                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}                                        
+                    ]
+                }" editable="{midObjectView>/isAddedMode}" required="true"> 
+                <items>
+                    <core:Item key="{uomClass>uom_class_code}" text="{uomClass>uom_class_name}" />
+                </items>
+            </ComboBox>
+            <Label text="Base Unit"/>
+            <Switch state="{master>/base_unit_flag}" customTextOn="Yes" customTextOff="No" enabled="{midObjectView>/isAddedMode}">
+                <layoutData>
+                    <FlexItemData growFactor="1" />
+                </layoutData>
+            </Switch>
+            <Label text="Description" required="false"/>
+            <Input value="{
+                    path: 'master>/uom_desc',
+                    type: 'sap.ui.model.type.String',
+                    constraints: {
+                        maxLength: 50
+                    }
+                }" ></Input>		
+            <Label text="Disable Date" required="false"/>
+            <DatePicker placeholder="Disable Date" value="{path: 'master>/disable_date',type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' }}"/>
+	    </form:content>
+    </form:SimpleForm>
 
-        <core:Title text="Display" />
-        <Label text="Commercial"/>
-        <Input value="{
-                path: 'master>/commercial_uom_code',
-                type: 'sap.ui.model.type.String',
-                constraints: {
-                    maxLength: 3
-                }
-            }" required="true"></Input>        
-        <Label text="Commercial Text" required="true"/>
-        <Input value="{
-                path: 'master>/commercial_uom_name',
-                type: 'sap.ui.model.type.String',
-                constraints: {
-                    maxLength: 30
-                }
-            }" editable="{midObjectView>/isAddedMode}" required="true"></Input>        
-        <Label text="Technical"/>
-        <Input value="{
-                path: 'master>/technical_uom_code',
-                type: 'sap.ui.model.type.String',
-                constraints: {
-                    maxLength: 6
-                }
-            }" required="true"></Input>        
-        <Label text="Technical Text" required="true"/>
-        <Input value="{
-                path: 'master>/technical_uom_name',
-                type: 'sap.ui.model.type.String',
-                constraints: {
-                    maxLength: 30
-                }
-            }" editable="{midObjectView>/isAddedMode}" required="true"></Input>  
-        <Label text="Decimal Places"/>
-        <Input value="{master>/decimal_places}"/>
-        <Label text="Float. Point Idex"/>
-        <Input value="{master>/floating_decpoint_index}"/>
+    <form:SimpleForm 
+        editable="false"
+        layout="ColumnLayout"
+        columnsM="2"
+        columnsL="3"
+        columnsXL="3" >
+        <form:content>		
+            <core:Title text="Display" />
+            <Label text="Commercial"/>
+            <Input value="{
+                    path: 'master>/commercial_uom_code',
+                    type: 'sap.ui.model.type.String',
+                    constraints: {
+                        maxLength: 3
+                    }
+                }" required="true"></Input>
+            <Label text="Technical"/>
+            <Input value="{
+                    path: 'master>/technical_uom_code',
+                    type: 'sap.ui.model.type.String',
+                    constraints: {
+                        maxLength: 6
+                    }
+                }" required="true"></Input>
+            <Label text="Decimal Places"/>
+            <Input value="{master>/decimal_places}"/>            
+            <Label text="Commercial Text" required="true"/>
+            <Input value="{
+                    path: 'master>/commercial_uom_name',
+                    type: 'sap.ui.model.type.String',
+                    constraints: {
+                        maxLength: 30
+                    }
+                }" editable="{midObjectView>/isAddedMode}" required="true"></Input>
+            <Label text="Technical Text" required="true"/>
+            <Input value="{
+                    path: 'master>/technical_uom_name',
+                    type: 'sap.ui.model.type.String',
+                    constraints: {
+                        maxLength: 30
+                    }
+                }" editable="{midObjectView>/isAddedMode}" required="true"></Input>
+            <Label text="Float. Point Idex"/>
+            <Input value="{master>/floating_decpoint_index}"/>
+	    </form:content>
+    </form:SimpleForm>
 
-        <core:Title text="Conversion" />
-		<Label text="Numerator" required="true"/>
-        <Input value="{master>/conversion_numerator}" editable="{midObjectView>/isAddedMode}" required="true"/>
-        <Label text="Denominator" required="true"/>
-        <Input value="{master>/conversion_denominator}" editable="{midObjectView>/isAddedMode}" required="true"/>
-        <Label text="Index"/>
-        <Input value="{master>/conversion_index}" editable="{midObjectView>/isAddedMode}"/>
-        <Label text="Rate"/>
-        <Text text="{master>/conversion_rate}"/>
-       
-
+    <form:SimpleForm 
+        editable="false"
+        layout="ColumnLayout"
+        columnsM="2"
+        columnsL="3"
+        columnsXL="3" >
+        <form:content>
+            <core:Title text="Conversion" />
+            <Label text="Numerator" required="true"/>
+            <Input value="{master>/conversion_numerator}" editable="{midObjectView>/isAddedMode}" required="true"/>
+            <Label text="Index"/>
+            <Input value="{master>/conversion_index}" editable="{midObjectView>/isAddedMode}"/>
+            <Label text="Denominator" required="true"/>
+            <Input value="{master>/conversion_denominator}" editable="{midObjectView>/isAddedMode}" required="true"/>            
+            <Label text="Rate"/>
+            <Text text="{master>/conversion_rate}"/>       
+	    </form:content>
 	</form:SimpleForm>
+	</VBox>
 </core:FragmentDefinition>

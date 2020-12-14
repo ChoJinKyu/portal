@@ -1,27 +1,35 @@
 view pg_MI_Material_Cost_Info_View as
     select
-        tenant_id,
-        company_code,
-        org_type_code,
-        org_code,
-        mi_material_code,
-        mi_material_code_name,
-        currency_unit,
-        quantity_unit,
-        exchange,
-        termsdelv,
-        cast(max(mi_date) as Date) mi_date,
-        amount
-    from pg_mi_material_price_management
-    group by
-        tenant_id,
-        company_code,
-        org_type_code,
-        org_code,
-        mi_material_code,
-        mi_material_code_name,
-        currency_unit,
-        quantity_unit,
-        exchange,
-        termsdelv,
-        amount;
+        main.tenant_id					as tenant_id,
+        main.company_code				as company_code,
+        main.org_type_code				as org_type_code,
+        main.org_code					as org_code,
+        main.mi_material_code			as mi_material_code,
+        mattext.mi_material_name		as mi_material_name,
+        main.currency_unit				as currency_unit,
+        main.quantity_unit				as quantity_unit,
+        main.exchange					as exchange,
+        main.termsdelv					as termsdelv,
+        cast(max(main.mi_date) as date)	   mi_date,
+        main.amount						as amount
+    from pg_mi_material_price_management as main
+    left join pg_mi_material_code_lng as mattext
+        on  main.tenant_id			= mattext.tenant_id
+        and main.company_code		= mattext.company_code
+        and main.org_type_code		= mattext.org_type_code
+        and main.org_code			= mattext.org_code
+        and main.mi_material_code	= mattext.mi_material_code
+		and	mattext.language_code	= 'KO'
+    group by	
+        main.tenant_id,
+        main.company_code,
+        main.org_type_code,
+        main.org_code,
+        main.mi_material_code,
+        mattext.mi_material_name,
+        main.currency_unit,
+        main.quantity_unit,
+        main.exchange,
+        main.termsdelv,
+        main.amount
+	;

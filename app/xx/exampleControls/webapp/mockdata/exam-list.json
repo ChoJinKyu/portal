@@ -35,8 +35,13 @@
         "viewName": "example7"
     },
     {
-        "name": "Number Formatted - with Locale and Currency ",
+        "name": "Number formated - With Locale and Currency",
         "icon": "sap-icon://source-code",
         "viewName": "example8"
-    } 
+    },
+    {
+        "name": "Using OData V4",
+        "icon": "sap-icon://source-code",
+        "viewName": "example9"
+    }
 ]

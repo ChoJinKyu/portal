@@ -61,7 +61,32 @@ sap.ui.define([
 				oViewModel.getProperty("/shareSendEmailMessage")
 			);
 		},
+		/**
+		 * 모델 null 처리 
+		 * @param {Model} model 
+		 */
+		setModelNullAndUpdateBindings(model){
 
+			if(model){
+				model.setData(null);
+				model.updateBindings(true);
+			}
+
+		},
+
+		/**
+		 * set array setModelNullAndUpdateBindings
+		 */
+		setArrayModelNullAndUpdateBindings : function (arrJsonModelName) {
+
+			if(arrJsonModelName.length>0){
+				for(var i = 0 ;i<arrJsonModelName.length;i++){
+					var jsonModel = this.getOwnerComponent().getModel(arrJsonModelName[i]);
+					this.setModelNullAndUpdateBindings(jsonModel);
+				}
+			}
+
+		},
 		/**
 		* Adds a history entry in the FLP page history
 		* @public
