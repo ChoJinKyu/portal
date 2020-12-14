@@ -7,7 +7,7 @@ entity Hr_Department {
     department_local_name : String(240)  not null;	
     department_english_name : String(240)  ;	
     company_id : String(100)  ;	
-    company_korean_name : String(240)  ;	
+    company_local_name : String(240)  ;	
     company_english_name : String(240)  ;	
     parent_department_id : String(100)  not null;	
     department_leader_empno : String(30)  ;	
