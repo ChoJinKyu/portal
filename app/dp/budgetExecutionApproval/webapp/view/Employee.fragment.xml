@@ -44,7 +44,11 @@
                             selectionChange="vendorSelect" 
                             mode="SingleSelectMaster"
                             width="auto"
-                            items="{userMgr>/UserMgr}"
+                            items="{ path : 'util>/Employee',
+                                    filters : [
+                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'}
+                                    ]
+                                  }"
                             >
                         <!-- <headerToolbar>
                             <OverflowToolbar>
@@ -52,31 +56,23 @@
                             </OverflowToolbar>
                         </headerToolbar> -->
                         <columns>
-                            <Column id="employ_user_name" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true"  >
-                                <Text text="user_name" />
-                            </Column>
+           
                             <Column id="employ_employee_number" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" >
                                 <Text text="employee_number" />
                             </Column>
                             <Column id="employ_employee_name" minScreenWidth="Tablet" hAlign="Center"  >
                                 <Text text="employee_name" />
                             </Column>
-                            <Column id="employ_english_employee_name" minScreenWidth="Tablet" hAlign="Center"  >
-                                <Text text="english_employee_name" />
-                            </Column> 
-                            <Column id="employ_email" minScreenWidth="Tablet" hAlign="Center"  >
-                                <Text text="email" />
-                            </Column>								
+           								
                         </columns>
                         <items>
                              <ColumnListItem>
                                 <cells>
                                     <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
-                                    <Text text="{userMgr>user_name}" />
-                                    <Text text="{userMgr>employee_number}" />
-                                    <Text text="{userMgr>employee_name}" />
-                                    <Text text="{userMgr>english_employee_name}" />
-                                    <Text text="{userMgr>email}" />
+                                 
+                                    <Text text="{util>employee_number}" />
+                                    <Text text="{util>employee_name}" />
+                        
                                 </cells>
                             </ColumnListItem>   
                             </items>
