@@ -13,7 +13,15 @@
     <Page id="page" title="Excel Util" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
         <content>
 
-            <Table id="rTable" title="ResponsibleTable" sticky="HeaderToolbar,ColumnHeaders" inset="false" noDataText="No Data" class="sapFDynamicPageAlignContent" updateFinished=".onMainTableUpdateFinished" items="{rModelList>/Message}" mode="MultiSelect" width="auto">
+           <Table id="rTable" 
+                  title="ResponsibleTable"
+                  inset="false"
+                  noDataText="No Data"
+                  class="sapFDynamicPageAlignContent" 
+                  updateFinished=".onMainTableUpdateFinished"
+                  items="{rModelList>/Message}"
+                  mode="MultiSelect" 
+                  width="auto">
                 <headerToolbar>
                     <OverflowToolbar>
                         <Title text="Responsible Table / Total : {= ${rModelList>/Message}.length > 0 ? '(' + ${rModelList>/Message}.length + ')' : '0'}" level="H2" />
