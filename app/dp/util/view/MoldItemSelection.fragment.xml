@@ -127,7 +127,22 @@
                             </Column>					
                             <Column visible="false" >
                                   <Text text="family_part_number_5" />
+                            </Column>																	
+                            <Column visible="false" >
+                                  <Text text="currency_code" />
+                            </Column>
+                            <Column visible="false" >
+                                  <Text text="purchasing_amount" />
                             </Column>					
+                            <Column visible="false" >
+                                  <Text text="supplier_code" />
+                            </Column>					
+                            <Column  visible="false">
+                                  <Text text="target_amount" />
+                            </Column>					
+                            <Column visible="false" >
+                                  <Text text="mold_production_type_code" />
+                            </Column>	
                         </columns>
                         <items>
                              <ColumnListItem>
@@ -155,6 +170,11 @@
                                     <Text text="{moldItemPopList>family_part_number_3}" />
                                     <Text text="{moldItemPopList>family_part_number_4}" />
                                     <Text text="{moldItemPopList>family_part_number_5}" />
+                                    <Text text="{moldItemPopList>currency_code}" />
+                                    <Text text="{moldItemPopList>purchasing_amount}" />
+                                    <Text text="{moldItemPopList>supplier_code}" />
+                                    <Text text="{moldItemPopList>target_amount}" />
+                                    <Text text="{moldItemPopList>mold_production_type_code}" />
                                 </cells>
                             </ColumnListItem>   
                             </items>
