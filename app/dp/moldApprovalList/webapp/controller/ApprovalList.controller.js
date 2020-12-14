@@ -23,7 +23,11 @@ sap.ui.define([
     'sap/m/Label',
     'sap/m/SearchField',
     "ext/lib/util/Multilingual",
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Token, Input, ComboBox, Item, Element, syncStyleClass, Label, SearchField, Multilingual) {
+    'sap/ui/core/util/Export',
+    'sap/ui/core/util/ExportTypeCSV',
+], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter
+    , FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text
+    , Token, Input, ComboBox, Item, Element, syncStyleClass, Label, SearchField, Multilingual, Export, ExportTypeCSV) {
     "use strict";
     /**
      * @description 품의 목록 (총 품의 공통)
@@ -857,8 +861,80 @@ sap.ui.define([
             var day = date.getDate();                   //d
             day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
             return year + '' + month + '' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
-        }
+        },
 
         ///////////////////// List search section End //////////////////////////
+
+        ///////////////////// Excel export Start //////////////////////////
+
+        onDataExport : function(oEvent) {
+
+			var oExport = new Export({
+
+				// Type that will be used to generate the content. Own ExportType's can be created to support other formats
+				exportType : new ExportTypeCSV({
+					separatorChar : ";"
+				}),
+
+				// Pass in the model created above
+				models : this.getView().getModel(),
+
+				// binding information for the rows aggregation
+				rows : {
+					path : "/ApprovalMasters"
+				},
+
+				// column definitions with column name and binding info for the content
+
+				columns : [{
+					name : "Approval Categori",
+					template : {
+						content : "{approval_type_code}"
+					}
+				}, {
+					name : "Company",
+					template : {
+						content : "{company_code}"
+					}
+				}, {
+					name : "Plant",
+					template : {
+						content : "{org_code}"
+					}
+				}, {
+					name : "Approval No",
+					template : {
+						content : "{approval_number}"
+					}
+				}, {
+					name : "Subject",
+					template : {
+						content : "{approval_title}"
+					}
+				}, {
+					name : "Requestor",
+					template : {
+						content : "{requestor_empno}"
+					}
+				}, {
+					name : "Request Date",
+					template : {
+						content : "{request_date}"
+					}
+                }, {
+					name : "Status",
+					template : {
+						content : "{approve_status_code}"
+					}
+				}]
+			});
+
+			// download exported file
+			oExport.saveFile().catch(function(oError) {
+				MessageBox.error("Error when downloading data. Browser might not be supported!\n\n" + oError);
+			}).then(function() {
+				oExport.destroy();
+			});
+		}
     });
 });
