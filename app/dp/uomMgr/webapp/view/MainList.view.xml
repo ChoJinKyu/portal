@@ -51,7 +51,8 @@
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
-                        <!-- <VBox>
+                        <!-- UOM팝업 테스트 -->
+                        <VBox>
                             <Label text="UOM :"></Label>
                             <lib-m:CodePicker id="searchUom"
                                 placeholder="Enter a UOM name"
@@ -62,7 +63,7 @@
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                     ],
-                                    serviceName: 'dp.UomMgtService',
+                                    serviceUrl: 'srv-api/odata/v2/dp.UomMgtService/',
                                     entityName: 'Uom'
                                 }">
                                 <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a UOM"
@@ -71,23 +72,7 @@
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M5 S10" />
                             </layoutData>
-                        </VBox> -->
-                        <VBox>
-                            <Label text="UOM :" labelFor="searchUom1" ></Label>
-                            <ComboBox id="searchUom1" width="100%" selectedKey="" items="{
-                                    path: '/UomView',
-                                    filters: [
-                                        {path: 'language_code', operator: 'EQ', value1: 'EN'}
-                                    ]                                    
-                                }">
-                                <items>
-                                    <core:Item key="{uom_code}" text="{uom_name}" />
-                                </items>
-                            </ComboBox>
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
+                        </VBox>                        
                         <VBox>
                             <Label text="Base Unit :" labelFor="searchBUSegmentButton"></Label>
                             <SegmentedButton id="searchBUSegmentButton" selectedKey="" class="sapUiSmallMarginBottom" width="100%" >
@@ -148,24 +133,27 @@
                         <Column id="mainColumnUOM" minScreenWidth="Tablet" hAlign="Center">
                             <Text text="UOM" />
                         </Column>
-                        <Column id="mainColumnCC" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                        <Column id="mainColumnUN" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                            <Text text="UOM Name" />
+                        </Column>
+                        <!-- <Column id="mainColumnCC" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
                             <Text text="Commercial Code" />
                         </Column>
                         <Column id="mainColumnCN" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
                             <Text text="Commercial Name" />
-                        </Column>
+                        </Column> -->
                         <Column id="mainColumnBU" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
                             <Text text="Base Unit" />
                         </Column>
                         <Column id="mainColumnClass" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
                             <Text text="Class" />
                         </Column> 
-                        <Column id="mainColumnTC" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
+                        <!-- <Column id="mainColumnTC" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
                             <Text text="Technical Code" />
                         </Column>
                         <Column id="mainColumnTN" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
                             <Text text="Technical Name" />
-                        </Column>
+                        </Column> -->
                         <Column id="mainColumnDD" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
                             <Text text="Disable Date" />
                         </Column>                        
@@ -174,13 +162,14 @@
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>
                                 <ObjectIdentifier text="{list>uom_code}"/>
-                                <ObjectIdentifier text="{list>commercial_uom_code}"/>
-                                <ObjectIdentifier text="{list>commercial_uom_name}"/>                                
-                                <ObjectStatus 
+                                <ObjectIdentifier text="{list>uom_name}"/>
+                                <!-- <ObjectIdentifier text="{list>commercial_uom_code}"/>
+                                <ObjectIdentifier text="{list>commercial_uom_name}"/> -->
+                                <ObjectStatus
                                     icon="{= ${list>base_unit_flag} === true ? 'sap-icon://accept' : ''}"/>
                                 <ObjectIdentifier text="{list>uom_class_code}"/>
-                                <ObjectIdentifier text="{list>technical_uom_code}"/>
-                                <ObjectIdentifier text="{list>technical_uom_name}"/>                                
+                                <!-- <ObjectIdentifier text="{list>technical_uom_code}"/>
+                                <ObjectIdentifier text="{list>technical_uom_name}"/> -->
                                 <ObjectIdentifier text="{
                                         path: 'list>disable_date',
                                         formatter: '.dateFormatter.toDateString'

@@ -415,19 +415,22 @@ sap.ui.define([
 					}), 
 					new Text({
 						text: "{details>language_code}"
+                    }),
+                    new Text({
+						text: "{details>uom_name}"
 					}), 
-					new Text({
-						text: "{details>commercial_uom_code}"
-					}),					
-                    new Text({
-						text: "{details>commercial_uom_name}"
-                    }),
-                    new Text({
-						text: "{details>technical_uom_code}"
-                    }), 
-					new Text({
-						text: "{details>technical_uom_name}"
-                    }),
+					// new Text({
+					// 	text: "{details>commercial_uom_code}"
+					// }),					
+                    // new Text({
+					// 	text: "{details>commercial_uom_name}"
+                    // }),
+                    // new Text({
+					// 	text: "{details>technical_uom_code}"
+                    // }), 
+					// new Text({
+					// 	text: "{details>technical_uom_name}"
+                    // }),
                     new Text({
 						text: "{details>uom_desc}"
 					})
@@ -456,45 +459,55 @@ sap.ui.define([
                         icon:{ path:'details>_row_state_', formatter: this.formattericon
                                 }                              
                     }),
-					oLanguageCode, 
-					new Input({
+                    oLanguageCode,
+                    new Input({
                         value: {
-                            path: 'details>commercial_uom_code',
+                            path: 'details>uom_name',
                             type: 'sap.ui.model.type.String',
                             constraints: {
-                                maxLength: 3
+                                maxLength: 30
                             }
                         },
                         required : true
-                    }),
-                    new Input({
-                        value: {
-                            path: 'details>commercial_uom_name',
-                            type: 'sap.ui.model.type.String',
-                            constraints: {
-                                maxLength: 30
-                            }
-                        }						
-					}), 
-					new Input({
-                        value: {
-                            path: 'details>technical_uom_code',
-                            type: 'sap.ui.model.type.String',
-                            constraints: {
-                                maxLength: 6
-                            }
-                        },
-                        required : true                        
-                    }),                     
-					new Input({
-                        value: {
-                            path: 'details>technical_uom_name',
-                            type: 'sap.ui.model.type.String',
-                            constraints: {
-                                maxLength: 30
-                            }
-                        }						
-                    }),
+                    }), 
+					// new Input({
+                    //     value: {
+                    //         path: 'details>commercial_uom_code',
+                    //         type: 'sap.ui.model.type.String',
+                    //         constraints: {
+                    //             maxLength: 3
+                    //         }
+                    //     },
+                    //     required : true
+                    // }),
+                    // new Input({
+                    //     value: {
+                    //         path: 'details>commercial_uom_name',
+                    //         type: 'sap.ui.model.type.String',
+                    //         constraints: {
+                    //             maxLength: 30
+                    //         }
+                    //     }						
+					// }), 
+					// new Input({
+                    //     value: {
+                    //         path: 'details>technical_uom_code',
+                    //         type: 'sap.ui.model.type.String',
+                    //         constraints: {
+                    //             maxLength: 6
+                    //         }
+                    //     },
+                    //     required : true                        
+                    // }),                     
+					// new Input({
+                    //     value: {
+                    //         path: 'details>technical_uom_name',
+                    //         type: 'sap.ui.model.type.String',
+                    //         constraints: {
+                    //             maxLength: 30
+                    //         }
+                    //     }						
+                    // }),
                     new Input({
                         value: {
                             path: 'details>uom_desc',
@@ -548,7 +561,7 @@ sap.ui.define([
 
             var oView = this.getView(),
 				sValue = oView.byId("midTableSearchField").getValue(),
-				oFilter = new Filter("commercial_uom_code", FilterOperator.Contains, sValue);
+				oFilter = new Filter("uom_name", FilterOperator.Contains, sValue);
 
 			oView.byId("midTable").getBinding("items").filter(oFilter, sap.ui.model.FilterType.Application);
 
