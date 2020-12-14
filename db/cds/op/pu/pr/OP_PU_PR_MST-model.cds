@@ -1,13 +1,13 @@
-namespace op.pu;	
-using util from '../../cm/util/util-model';
-using { op.pu as dtl } from './OP_PU_PR_DTL-model';
+namespace op;	
+using util from '../../../cm/util/util-model';
+using { op.Pu_Pr_Dtl as dtl } from './OP_PU_PR_DTL-model';
 
-entity Pr_Mst {	
+entity Pu_Pr_Mst {	
 
     key tenant_id				: String(5)      not null	 @title: '테넌트id';
     key company_code			: String(10)     not null	 @title: '회사코드';
     key pr_number				: String(50)     not null	 @title: '구매요청번호';    	
-	    dtls : Composition of many dtl.Pr_Dtl
+	    dtls : Composition of many dtl
 			on  dtls.tenant_id = tenant_id 
 			and dtls.company_code = company_code 
 			and dtls.pr_number = pr_number  ;	
@@ -28,4 +28,4 @@ entity Pr_Mst {
         erp_pr_number			: String(50)     not null	 @title: 'erp구매요청번호';
     }	
 
-extend Pr_Mst with util.Managed;
+extend Pu_Pr_Mst with util.Managed;
