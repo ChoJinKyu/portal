@@ -60,7 +60,6 @@ sap.ui.define([
         }))
       }).then(function (oData) {
         that._transactionPath = sPath;
-        that.setData(oData, true);
         return oData;
       })
     },

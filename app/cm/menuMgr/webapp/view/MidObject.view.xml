@@ -35,8 +35,8 @@
 					<Title text="Menu Details" />
 				</uxap:snappedTitleOnMobile>
 				<uxap:actions>
-					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" enabled="{= ${midObjectView>/mode} === 'R'}"/>
-					<Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" enabled="{= ${midObjectView>/mode} !== 'C'}"/>
+					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEdit" enabled="{= ${midObjectView>/mode} === 'R'}"/>
+					<Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDelete" enabled="{= ${midObjectView>/mode} !== 'C'}"/>
 				</uxap:actions>
         <uxap:navigationActions>
 					<OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press=".onFull" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
@@ -135,9 +135,10 @@
                       <VBox>
                         <Label text="메뉴레벨 / 정렬순서" labelFor="menuLevelCombo" required="true"></Label>
                         <HBox>
+                          <!-- selectedKey="{master>/menu_level_number}" -->
                           <ComboBox id="menuLevelCombo" width="100%" 
                             editable="{= ${midObjectView>/mode} !== 'R'}"
-                            selectedKey="{master>/menu_level_number}"
+                            selectedKey="{path: 'master>/menu_level_number', type: 'sap.ui.model.type.Decimal'}"
                             items="{
                                 path: 'menu_level>/items',
                                 filters: [
@@ -147,8 +148,9 @@
                                 <core:Item key="{menu_level>level}" text="{menu_level>level}" />
                             </items>
                           </ComboBox>
+                          <!-- value="{master>/sort_number}" -->
                           <Input id="sortNumberInput" width="100%" 
-                            value="{master>/sort_number}"
+                            value="{path: 'master>/sort_number', type: 'sap.ui.model.type.Decimal'}"
                             editable="{= ${midObjectView>/mode} !== 'R'}"
                           />
                         </HBox>
@@ -157,8 +159,9 @@
                     <HBox>
                       <VBox class="sapUiContentPadding">
                         <Label text="화면표시" labelFor="menuDisplayFlagButton" required="true"/>
-                        <SegmentedButton id="menuDisplayFlagButton" selectedKey="{master>/menu_display_flag}" class="sapUiSmallMarginBottom" width="100%"
+                        <SegmentedButton id="menuDisplayFlagButton" class="sapUiSmallMarginBottom" width="100%"
                           enabled="{= ${midObjectView>/mode} !== 'R'}"
+                          selectedKey="{path: 'master>/menu_display_flag', type: 'sap.ui.model.type.Boolean'}"
                         >
                             <items>
                                 <SegmentedButtonItem text="Yes" key="true" width="4.1rem" />
@@ -171,8 +174,9 @@
                       </VBox>
                       <VBox class="sapUiContentPadding">
                         <Label text="사용여부" labelFor="useFlagButton" required="true"/>
-                        <SegmentedButton id="useFlagButton" selectedKey="{master>/use_flag}" class="sapUiSmallMarginBottom" width="100%"
+                        <SegmentedButton id="useFlagButton" class="sapUiSmallMarginBottom" width="100%"
                           enabled="{= ${midObjectView>/mode} !== 'R'}"
+                          selectedKey="{path: 'master>/use_flag', type: 'sap.ui.model.type.Boolean'}"
                         >
                             <items>
                                 <SegmentedButtonItem text="Yes" key="true" width="4.1rem" />
@@ -238,6 +242,7 @@
                       <Label text="메뉴설명" labelFor="" required="true"></Label>
                       <Input placeholder="Input Data" width="100%"
                         editable="{= ${midObjectView>/mode} !== 'R'}"
+                        value="{master>/menu_desc}"
                       />
                     </VBox>
                   </HBox>
@@ -247,6 +252,7 @@
                       <Label text="메뉴 경로" labelFor="" required="true"></Label>
                       <Input placeholder="Input Data" width="100%"
                         editable="{= ${midObjectView>/mode} !== 'R'}"
+                        value="{master>/menu_path_info}"
                       />
                     </VBox>
                   </HBox>
@@ -298,10 +304,9 @@
 									<Title text="Level and Values" level="H2"/>
 									<ToolbarSpacer/>
 									<!-- Add the Personalization button -->
-									<!-- <Button id="midTableAddButton" text="Add" type="Transparent" press=".onMidTableAddButtonPress('midTable', 'details', 'ControlOptionDetails', ['tenant_id'])" /> -->
                   <Button id="midTableAddButton" text="Add" type="Emphasized" press=".onAdd" 
                     enabled="{= ${midObjectView>/mode} !== 'R'}"/>
-									<Button id="midTableDeleteButton" text="Delete" type="Transparent" press=".onDel('midTable', 'details', 'MenuLng')"
+									<Button id="midTableDeleteButton" text="Delete" type="Transparent" press=".onDelete('midTable', 'details', 'MenuLng')"
                     enabled="{= ${midObjectView>/mode} !== 'R'}"/>
 								</OverflowToolbar>
 							</headerToolbar>
@@ -324,6 +329,7 @@
                     <!-- 언어코드 -->
                     <ComboBox
                       id="midLevelCombo"
+                      enabled="{=${midObjectView>/mode} !== 'R'}"
                       selectedKey="{details>language_code}"
                       width="100%"
                       items="{
@@ -334,11 +340,13 @@
                         ]
                       }">
                       <items>
-                        <core:Item key="{util>code}" text="{util>code} : {util>code_description}" />
+                        <core:Item key="{util>code}" text="{util>code} : {util>code_description}"/>
                       </items>
                     </ComboBox>
                     <!-- 메뉴명 -->
-										<Input value="{details>menu_name}"/>
+										<Input value="{details>menu_name}"
+                      enabled="{=${midObjectView>/mode} !== 'R'}"
+                    />
 									</cells>
 								</ColumnListItem>
 							</items>
@@ -352,15 +360,16 @@
 		<uxap:footer>
 			<OverflowToolbar>
         <Button
-            icon="sap-icon://alert"
-            type="Emphasized"
-            text="{= ${message>/}.length }"
-            visible="{= ${message>/}.length > 0 }"
-            ariaHasPopup="Dialog"
-            press=".onMessagePopoverPress" />
+          icon="sap-icon://alert"
+          type="Emphasized"
+          text="{= ${message>/}.length }"
+          visible="{= ${message>/}.length > 0 }"
+          ariaHasPopup="Dialog"
+          press=".onMessagePopoverPress"
+        />
 				<ToolbarSpacer />
-				<Button type="Emphasized" text="Save" press=".onPageSaveButtonPress" visible="{= ${midObjectView>/mode} !== 'R'}"/>
-				<Button type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
+				<Button type="Emphasized" text="Save" press=".onSave" visible="{= ${midObjectView>/mode} !== 'R'}"/>
+				<Button type="Transparent" text="Cancel" press=".onCancel"/>
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

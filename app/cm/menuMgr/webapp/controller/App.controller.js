@@ -57,20 +57,20 @@ sap.ui.define([
       this.sCurrentTenantId = oArguments.tenantId;
       this.sCurrentControlOptionCode = oArguments.supplier;
     },
-
+    // 화면분활된 레이아웃의 화살표에 의한 상태 변화시 호출됨
     onStateChanged: function (oEvent) {
       var bIsNavigationArrow = oEvent.getParameter("isNavigationArrow"),
         sLayout = oEvent.getParameter("layout");
 
-      this._updateUIElements();
-      // Replace the URL with the new layout if a navigation arrow was used
-      if (bIsNavigationArrow) {
-        this.oRouter.navTo(this.sCurrentRouteName, {
-          layout: sLayout,
-          tenantId: this.sCurrentTenantId,
-          controlOptionCode: this.sCurrentControlOptionCode
-        }, true);
-      }
+      // this._updateUIElements();
+      // // Replace the URL with the new layout if a navigation arrow was used
+      // if (bIsNavigationArrow) {
+      //   this.oRouter.navTo(this.sCurrentRouteName, {
+      //     layout: sLayout,
+      //     "?query": {
+      //     }
+      //   }, true);
+      // }
     },
 
     // Update the close/fullscreen buttons visibility
