@@ -26,7 +26,7 @@ sap.ui.define([
     ``
     var oTransactionManager;
 
-    return BaseController.extend("sp.fundingNotifyMgr.controller.MidObject", {
+    return BaseController.extend("sp.fundingNotify.controller.MidObject", {
 
         dateFormatter: DateFormatter,
 
@@ -373,7 +373,7 @@ sap.ui.define([
         //     if (!this._oFragments[sFragmentName]) {
         //         Fragment.load({
         //             id: this.getView().getId(),
-        //             name: "sp.fundingNotifyMgr.view." + sFragmentName,
+        //             name: "sp.fundingNotify.view." + sFragmentName,
         //             controller: this
         //         }).then(function (oFragment) {
         //             this._oFragments[sFragmentName] = oFragment;

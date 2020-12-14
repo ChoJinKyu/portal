@@ -1,4 +1,4 @@
-<mvc:View displayBlock="true" controllerName="sp.fundingNotifyMgr.controller.Master" height="100%"
+<mvc:View displayBlock="true" controllerName="sp.fundingNotify.controller.Master" height="100%"
 	  xmlns="sap.m"
       xmlns:form="sap.ui.layout.form"
       xmlns:layout="sap.ui.layout"

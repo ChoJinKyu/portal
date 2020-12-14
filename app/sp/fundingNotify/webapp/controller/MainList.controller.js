@@ -19,7 +19,7 @@ sap.ui.define([
 ], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
     "use strict";
 
-    return BaseController.extend("sp.fundingNotifyMgr.controller.MainList", {
+    return BaseController.extend("sp.fundingNotify.controller.MainList", {
 
         dateFormatter: DateFormatter,
 
@@ -218,7 +218,7 @@ sap.ui.define([
             // init and activate controller
             this._oTPC = new TablePersoController({
                 table: this.byId("mainTable"),
-                componentName: "fundingNotifyMgr",
+                componentName: "fundingNotify",
                 persoService: MainListPersoService,
                 hasGrouping: true
             }).activate();
