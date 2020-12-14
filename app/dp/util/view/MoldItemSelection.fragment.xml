@@ -149,7 +149,7 @@
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>
                                     <Text text="{moldItemPopList>book_currency_code}" />
-                                    <Text text="{moldItemPopList>budget_amount}" />
+                                    <Text text="{moldItemPopList>provisional_budget_amount}" />
                                     <Text text="{moldItemPopList>family_part_number_1}" />
                                     <Text text="{moldItemPopList>family_part_number_2}" />
                                     <Text text="{moldItemPopList>family_part_number_3}" />

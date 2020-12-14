@@ -162,27 +162,33 @@
                                         <RadioButton id="radio_Non-ledger_Customer" text="Non-ledger(Customer)" />
                                     </RadioButtonGroup>
                                     <Label text="Account Department"  required="true" />
-                                    <ComboBox width="100%"  id="acquisitionDepartment" selectedKey=""  items="{}" >
+                                    <ComboBox width="100%"  id="acquisitionDepartment" selectedKey="{appMaster>/accounting_department_code}"  items="{}" >
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>
                                     <Label text="{I18N>/PROJECT_CODE}"  required="true" />
-                                    <ComboBox width="100%" id="projectCode" selectedKey="" items="{}" >
+                                    <ComboBox width="100%" id="projectCode" selectedKey="{appMaster>/project_code}" items="{}" >
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>
                                     <Label text="{I18N>/ACCOUNT}"  required="true" />
-                                    <ComboBox width="100%" id="account" selectedKey="" items="{}" >
+                                    <ComboBox width="100%" id="account" selectedKey="{appMaster>/account_code}" 
+                                                    items="{ path : 'util>/CodeDetails',
+                                                            filters : [
+                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ACCOUNT_NEW'}
+                                                            ]
+                                                        }" >
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>
                                     <Label text="Balanced Budget"  />
                                     <ObjectStatus text="292,000,000" /> <ObjectStatus text="KRW" state="Error" />
                                      <Label text="Acquisition Department"  required="true" />
-                                    <Input value="" showValueHelp="true"/> 
-                                       <Label text="Import Company"  />
-                                    <ComboBox width="100%" id="importCompany" selectedKey="" items="{}" >
+                                     <Input value="" showValueHelp="true"/> 
+                                    <Label text="Import Company"  />
+                                    <ComboBox width="100%" id="importCompany" selectedKey="{appMaster>/import_company_code}" items="{}" >
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>                              
                                     <Label text="Import Plant" />
-                                    <ComboBox width="100%" id="importPlant" selectedKey="" items="{}" >
+                                    <ComboBox width="100%" id="importPlant" selectedKey="{appMaster>/import_company_org_code}" items="{}" >
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>
                                         <Label text="{I18N>/CUSTOMER}"  />
@@ -252,7 +258,7 @@
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_moldPartNo" width="10em" hAlign="Center">
-                                        <Label text="Mold&#10;Part No"/>           
+                                        <Label text="Mold No"/>           
                                         <table:template>
                                             <Text id="t_mold_part_no" text="{appDetail>mold_number}"/>
                                         </table:template>
@@ -260,7 +266,7 @@
                                     <table:Column id="c_seq" width="5em" hAlign="Center">
                                         <Label text="Seq"/>           
                                         <table:template>
-                                            <Text id="t_seq" text="{path:'appDetail>mold_sequence', type: 'sap.ui.model.type.Integer'}"/>
+                                            <Text id="t_seq" text="{appDetail>mold_sequence}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_description" width="15em" hAlign="Center">
@@ -308,9 +314,8 @@
                                     </table:Column>  
                                     <table:Column id="c_budget_amount" width="10em" hAlign="Center">
                                         <Label text="Budget Amount"/>           
-                                   
                                         <table:template>
-                                           <Input  value="{appDetail>budget_amount}"/>
+                                           <Input  value="{appDetail>provisional_budget_amount}"/>
                                         </table:template>
                                     </table:Column>  
 
@@ -321,7 +326,7 @@
                                                 items="{ path : 'util>/CodeDetails',
                                                             filters : [
                                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_BUDGET_TYPE'}
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ASSET_TYPE'}
                                                             ]
                                                         }"
                                                 >  
