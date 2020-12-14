@@ -101,21 +101,21 @@ sap.ui.define([
         //cm/menuMgr/webapp/srv-api/odata/v2/cm.menuMgrService/$metadata
         //var self = this;
         //console.log(">>>> result", self.getView().getModel().getMetadata());
-        console.log("33333");
         // self.getView().setModel(self.getView().getModel(), "tree");
+        
         this.getView().getModel().read("/Menu_haa", {
           filters: [
+            new Filter("language_code", FilterOperator.EQ, "KO")
             new Filter("menu_code", FilterOperator.EQ, "CM")
           ],
           success: (function (oData) {
-              console.log(this.getView().getModel())
-            console.log(">>>>>>> ", oData);
-            this.getView().getModel('viewModel').setData({"Menu_haa" : oData.results})
-            console.log(this.getView().getModel())
-            console.log(">>>>>>> ", oData);
-            //this.getView().setModel(this.getView().getModel(), "tree");
+            this.getView().getModel('tree').setData({"Menu_haa" : oData.results})
           }).bind(this)
         });
+
+
+        
+
 
         // TBD
         //console.log(">>>> Success - 2222");

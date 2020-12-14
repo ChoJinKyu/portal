@@ -80,7 +80,7 @@
                   enableColumnReordering="false"
                   expandFirstLevel="true"
                   rows="{
-                    path : 'viewModel>/Menu_haa',
+                    path : 'tree>/Menu_haa',
                     filters: [
                     ],
                     parameters : {
@@ -116,17 +116,17 @@
                   <table:columns>
                     <table:Column label="메뉴명" >
                         <table:template>
-                            <Text text="{viewModel>menu_name}" wrapping="false" />
+                            <Text text="{tree>menu_name}" wrapping="false" />
                         </table:template>
                     </table:Column>
                     <table:Column label="메뉴코드" >
                         <table:template>
-                            <Text text="{viewModel>menu_code}" wrapping="false" />
+                            <Text text="{tree>menu_code}" wrapping="false" />
                         </table:template>
                     </table:Column>
                     <table:Column label="메뉴구분" >
                         <table:template>
-                            <Text text="{viewModel>menu_level_number}" wrapping="false" />
+                            <Text text="{tree>menu_level_number}" wrapping="false" />
                         </table:template>
                     </table:Column>
                   </table:columns>

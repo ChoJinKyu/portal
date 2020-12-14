@@ -123,7 +123,6 @@ sap.ui.define([
                 if (!filters || filters.length <= 0 || !oData || !(oData.results) || oData.results.length <= 0) {
                     return oData;
                 }
-                con
                 var predicates = oData.results
                 // PATH를 분리한다.
                 .reduce(function (acc, e) {
