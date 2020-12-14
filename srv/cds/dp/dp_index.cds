@@ -22,3 +22,4 @@ using from './dc/vi/basePriceArl-service';
 using from './dc/tc/projectMgt-service';
 using from './util/moldItemSelection-service';
 using from './util/supplierSelection-service';
+using from './pd/productActivityMgr/productActivity-Service';
