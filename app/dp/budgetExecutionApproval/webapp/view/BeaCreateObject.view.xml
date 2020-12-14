@@ -153,7 +153,9 @@
                                 columnsXL="2" >
                                 <form:content>
                                     <Label text="{I18N>/INSPECTION}" required="true" />
-                                    <RadioButtonGroup id="radioInspection" columns="4" width="100%" class="sapUiMediumMarginBottom">
+                                    <RadioButtonGroup id="radioInspection" columns="4" width="100%" 
+                                        
+                                    class="sapUiMediumMarginBottom">
                                         <RadioButton id="radio_Invest" text="Invest" />
                                         <RadioButton id="radio_Supplies" text="Supplies"  />
                                         <RadioButton id="radio_Expense" text="Expense"  />
