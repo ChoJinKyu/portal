@@ -21,7 +21,8 @@ sap.ui.define([
     "ext/lib/util/Validator",
     "dp/util/controller/MoldItemSelection"
 ], function (BaseController, JSONModel, History, ManagedListModel, ManagedModel, RichTextEditor, DateFormatter, Filter, FilterOperator, Fragment
-    , MessageBox, MessageToast, UploadCollectionParameter, Device, syncStyleClass, ColumnListItem, Label, TransactionManager, Multilingual, Validator, MoldItemSelection) {
+    , MessageBox, MessageToast, UploadCollectionParameter, Device, syncStyleClass, ColumnListItem, Label, TransactionManager, Multilingual, Validator, MoldItemSelection
+    ) {
     "use strict";
     /**
      * @description 입찰대상 협력사 선정 품의 등록화면
@@ -1148,10 +1149,12 @@ sap.ui.define([
                                 MessageToast.show("Success to save.");
                             }
                         });
-                    };
+                    }
                 }
             });
         },
+
+        
 
 	});
 });

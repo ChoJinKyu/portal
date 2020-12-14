@@ -21,7 +21,7 @@
                         maxLength: 5
                     }
                 }" editable="{midObjectView>/isAddedMode}" required="true"></Input>
-            <Label text="Class" required="true"/>
+            <Label text="Class" required="true"/>            
             <ComboBox id="editClassCode" width="100%" selectedKey="{master>/uom_class_code}" items="{
                     path: 'uomClass>/UomClass',
                     filters: [
@@ -38,6 +38,14 @@
                     <FlexItemData growFactor="1" />
                 </layoutData>
             </Switch>
+            <Label text="UOM Name" required="true"/>
+            <Input value="{
+                    path: 'master>/uom_name',
+                    type: 'sap.ui.model.type.String',
+                    constraints: {
+                        maxLength: 30
+                    }
+                }" required="true"></Input>            
             <Label text="Description" required="false"/>
             <Input value="{
                     path: 'master>/uom_desc',
@@ -59,7 +67,7 @@
         columnsXL="3" >
         <form:content>		
             <core:Title text="Display" />
-            <Label text="Commercial"/>
+            <!-- <Label text="Commercial"/>
             <Input value="{
                     path: 'master>/commercial_uom_code',
                     type: 'sap.ui.model.type.String',
@@ -74,10 +82,10 @@
                     constraints: {
                         maxLength: 6
                     }
-                }" required="true"></Input>
+                }" required="true"></Input> -->
             <Label text="Decimal Places"/>
             <Input value="{master>/decimal_places}"/>            
-            <Label text="Commercial Text" required="true"/>
+            <!-- <Label text="Commercial Text" required="true"/>
             <Input value="{
                     path: 'master>/commercial_uom_name',
                     type: 'sap.ui.model.type.String',
@@ -92,7 +100,7 @@
                     constraints: {
                         maxLength: 30
                     }
-                }" editable="{midObjectView>/isAddedMode}" required="true"></Input>
+                }" editable="{midObjectView>/isAddedMode}" required="true"></Input> -->
             <Label text="Float. Point Idex"/>
             <Input value="{master>/floating_decpoint_index}"/>
 	    </form:content>

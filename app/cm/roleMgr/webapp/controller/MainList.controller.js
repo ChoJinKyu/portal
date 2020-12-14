@@ -211,7 +211,7 @@ sap.ui.define([
 
             if (!!this.byId("searchRoleCode").getValue()) aSearchFilters.push(new Filter("role_code", FilterOperator.EQ, this.byId("searchRoleCode").getValue()));
             if (!!this.byId("searchRoleName").getValue()) aSearchFilters.push(new Filter("role_name", FilterOperator.EQ, this.byId("searchRoleName").getValue()));
-             if (!!this.byId("searchUseflag").getSelectedKey()) aSearchFilters.push(new Filter("use_flag", FilterOperator.EQ, this.byId("searchUseflag").getSelectedKey()));
+            if (!!this.byId("searchUseflag").getSelectedKey()) aSearchFilters.push(new Filter("use_flag", FilterOperator.EQ, this.byId("searchUseflag").getSelectedKey()));
 
             return aSearchFilters;
         }

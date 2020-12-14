@@ -247,8 +247,13 @@ sap.ui.define([
                     , spec_name: oItem.getCells()[4].getText()
                     , mold_item_type_code: oItem.getCells()[5].getSelectedKey()
                     , book_currency_code: oItem.getCells()[6].getText()
-                    , budget_amount: oItem.getCells()[7].getText()
+                    , provisional_budget_amount: oItem.getCells()[7].getText()
                     , family_part_number_1: famList.join(",")
+                    , currency_code:oItem.getCells()[13].getText()
+                    , purchasing_amount: oItem.getCells()[14].getText()
+                    , supplier_code: oItem.getCells()[15].getText()
+                    , target_amount: oItem.getCells()[16].getText()
+                    , mold_production_type_code: oItem.getCells()[17].getText()
                 });
                 datas.push(obj);
             });

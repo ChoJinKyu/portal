@@ -69,7 +69,8 @@ service MoldItemSelectionService {
         m.create_user_id,
         m.update_user_id,
         m.system_create_dtm,
-        m.system_update_dtm
+        m.system_update_dtm,
+        m.supplier_code
     from moldMst.Md_Mst m 
     where  m.mold_id not in (
         select d.mold_id from approvalDtl.Md_Approval_Dtl d
