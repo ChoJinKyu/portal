@@ -230,15 +230,7 @@
                                 </OverflowToolbar>
                             </table:extension>          
                                 <table:columns>
-                                    <table:Column id=""  visible="true" width="3.5em">
-                                        <Label text="Status"/>           
-                                        <table:template>
-                                           <ObjectStatus icon="{
-                                                    path: 'appDetail>_row_state_',
-                                                    formatter: '.formatter.toModelStateColumnIcon'
-                                                }" />
-                                        </table:template>
-                                    </table:Column>
+                          
                                     <table:Column id="c_mold_id"  visible="true">
                                         <Label text="mold_id"/>           
                                         <table:template>
