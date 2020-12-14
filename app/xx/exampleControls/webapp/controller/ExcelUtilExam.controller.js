@@ -18,7 +18,6 @@ sap.ui.define([
 
             this._loadRModelData();
             this._loadGModelData();
-
             this.setModel(new JSONModel(), "excelModel");
 
             //sheet.js cdn url

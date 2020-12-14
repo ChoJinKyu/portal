@@ -254,7 +254,7 @@
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                         {path: 'group_code', operator: 'EQ', value1: 'CM_MESSAGE_TYPE_CODE'}
                                     ]
-                                }">
+                                }"> 
                                 <items>
                                     <core:Item key="{common>code}" text="{common>code_description}" />
                                 </items>

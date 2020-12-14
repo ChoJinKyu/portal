@@ -11,7 +11,7 @@ sap.ui.define([
          * Responsible table, Grid table 모두 적용 됨
          * @param {} _oParam
          * {   
-         *      fileName : 파일명,
+         *      fileName : 파일명, 
          *      table    : 대상 Table Control,
          *      data     : model data
          * }
