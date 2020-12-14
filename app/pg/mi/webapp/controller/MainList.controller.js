@@ -74,7 +74,7 @@ sap.ui.define([
 
 			var oUi,
 				oResourceBundle = this.getResourceBundle();
-
+				
 			// Model used to manipulate control states
 			oUi = new JSONModel({
 				headerExpanded: true,
@@ -99,6 +99,7 @@ sap.ui.define([
 			//Note : 초기 테이블 실행 
 			// this._mainTable.setModel(oModel);
 			// this._mainTable.rebindTable(); 
+			this.getModel("oUi").setProperty("/headerExpanded", true);
 			console.groupEnd();
 		},
 		
@@ -456,11 +457,11 @@ sap.ui.define([
 		 * @public
 		 */
 		onMainTableCreate: function(){
-			console.group("onMainTableCreate");
+			console.log("onMainTableCreate");
 
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
+	
 
-			//수정대상 : 수정 검색한 값을 기준으로 데이타를 수정해야한다. 
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
 				tenant_id: this._sso.dept.tenant_id,
@@ -469,17 +470,17 @@ sap.ui.define([
 				org_code: this._sso.dept.org_code,
 				mi_material_code: "new"				
             });
-			
-            if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
-                this.getView().getModel('oUi').setProperty("/headerExpandFlag", false);
-            }
+			//수정대상 : 수정 검색한 값을 기준으로 데이타를 수정해야한다. 
+			if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
+				this.getView().getModel('oUi').setProperty("/headerExpandFlag", false);
+			}	
 
 			//var oItem = oEvent.getSource();
 			//oItem.setNavigated(true);
 			//var oParent = oItem.getParent();
 			//this.iIndex = oParent.indexOfItem(oItem);
 			
-			console.groupEnd();
+
 			
 		},
 

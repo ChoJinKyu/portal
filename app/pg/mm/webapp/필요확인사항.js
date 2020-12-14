@@ -57,6 +57,9 @@ MIMaterialCostInformationView reqm_quantity_unit
 <d:amount>632.600</d:amount>
 </m:properties>
 
+//UnitOfMeasureView 
+수량단위 
+
             //자재정보 선택을 참조한다. 
             //supplier_code, supplier_local_name, hidden_supplier_local_name, supplier_english_name
             var material_code = this.getView().byId("input_hidden_material_code").getValue();

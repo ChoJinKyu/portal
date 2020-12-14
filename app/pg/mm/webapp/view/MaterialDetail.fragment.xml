@@ -70,7 +70,7 @@
                                 <Text text="{mIMatCategListView>org_code}"/>
                                 <Text text="{mIMatCategListView>category_code}"/>
                                 <Text text="{mIMatCategListView>mi_material_code}"/>
-                                <Text text="{mIMatCategListView>mi_material_desc}"/>
+                                <Text text="{mIMatCategListView>mi_material_name}"/>
                                 <Text text="{mIMatCategListView>category_name}"/>
                             </cells>
                         </ColumnListItem>
@@ -78,7 +78,7 @@
                 </Table>                      
             </VBox>
             <VBox class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginTop">
-                <Label text="2. 시황자재 > 가격정보 선택"/>
+                <Label text="  "/>
 
                 <Table  id="rightTable"
                         mode="SingleSelectLeft" 

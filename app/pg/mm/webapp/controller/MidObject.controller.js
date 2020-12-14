@@ -629,6 +629,7 @@ sap.ui.define([
                             oUiData.tenant_name =  "";
                        
                             that.getOwnerComponent().setModel(oUiData, "oUiData");
+                            
                         }
                     }
 
@@ -697,13 +698,13 @@ sap.ui.define([
                 // var midList = new JSONModel({oData:[]});
                 // this.getOwnerComponent().setModel(midList, "midList");
                 //dev1444
-                var oUiData = new JSONModel(
-                    {
-                        "create_user_id" : this._sso.user.id,
-                        "system_create_dtm" : new Date()
-                    }
-                )
-                this.setModel(oUiData, "oUiData");
+                // var oUiData = new JSONModel(
+                //     {
+                //         "create_user_id" : this._sso.user.id,
+                //         "system_create_dtm" : new Date()
+                //     }
+                // )
+                // this.setModel(oUiData, "oUiData");
                 this._fnSetCreateMode();
 
                 //oUiData>/create_user_id}"  system_create_dtm
@@ -804,9 +805,9 @@ sap.ui.define([
         onMaterialDetail : function () {
             console.log("call funtion onMaterialDetail");
 
-            var bValidate = this.validator.validate(this.byId("page"));
+            // var bValidate = this.validator.validate(this.byId("page"));
 
-            //dev12132202
+            // //dev12132202
             // if(!bValidate){
             //     return;
             // }            
@@ -934,7 +935,7 @@ sap.ui.define([
                     
                     //dev20201538 데이타 강제 등록
                     for(var i=0;i<reponse.data.results.length;i++){
-                        mIMatCategListView.oData[i].mi_material_desc = "A001-01-01";
+                        mIMatCategListView.oData[i].mi_material_name = "A001-01-01";
                         mIMatCategListView.oData[i].mi_material_code = "A001-01-01";
                     }     
 
@@ -1035,7 +1036,7 @@ sap.ui.define([
             var org_code = leftTable.getSelectedItems()[0].getCells()[3].mProperties.text;
             var category_code = leftTable.getSelectedItems()[0].getCells()[4].mProperties.text; 
             var mi_material_code = leftTable.getSelectedItems()[0].getCells()[5].mProperties.text; 
-            var mi_material_desc = leftTable.getSelectedItems()[0].getCells()[6].mProperties.text; 
+            var mi_material_name = leftTable.getSelectedItems()[0].getCells()[6].mProperties.text; //시황자재명
             var category_name = leftTable.getSelectedItems()[0].getCells()[7].mProperties.text; 
 
             var currency_unit = rightTable.getSelectedItems()[0].getCells()[0].mProperties.text;
@@ -1046,7 +1047,7 @@ sap.ui.define([
             //자재정보 선택을 참조한다. 
             //supplier_code, supplier_local_name, hidden_supplier_local_name, supplier_english_name
             var material_code = this.getView().byId("input_hidden_material_code").getValue();
-            var material_desc = this.getView().byId("input_hidden_material_desc").getValue();
+            var material_desc = this.getView().byId("input_hidden_material_desc").getValue(); //자재명
             var supplier_code = this.getView().byId("input_hidden_supplier_code").getValue();
             var supplier_local_name = this.getView().byId("input_hidden_supplier_local_name").getValue();
             var supplier_english_name = this.getView().byId("input_hidden_supplier_english_name").getValue();
@@ -1065,21 +1066,21 @@ sap.ui.define([
                 "processing_cost": "-1", 
                 "pcst_currency_unit": "-1",
                 "mi_material_code": mi_material_code,
-                "mi_material_name": mi_material_desc,
+                "mi_material_name": mi_material_name,
                 "category_code": category_code,
                 "category_name": category_name,
-                "reqm_quantity_unit": "-1", //소요수량단위 / 알수없음
+                "reqm_quantity_unit": "0.0", //소요수량단위 
                 "reqm_quantity": 0, //사용자 입력
                 "currency_unit": currency_unit,
-                "mi_base_reqm_quantity": 0.0,//시황기준소요수량 / 알수없음 소요수량단위 소요수량 시황기준소요수량
+                "mi_base_reqm_quantity": "0.0",//시황기준소요수량
                 "quantity_unit": quantity_unit,
                 "exchange": exchange,
                 "termsdelv": termsdelv,
-                "use_flag": "Y", //기본값
+                "use_flag": true, 
                 "local_create_dtm": new Date(),
                 "local_update_dtm": new Date(),
-                "create_user_id": new Date(),
-                "update_user_id": new Date(),
+                "create_user_id": this._sso.user.id,
+                "update_user_id": this._sso.user.id,
                 "system_create_dtm": new Date(),
                 "system_update_dtm": new Date(),
                 "itemMode" : that._m.itemMode.create,
@@ -1175,12 +1176,17 @@ sap.ui.define([
             var midList = this.getModel("midList"),
                 that = this;
             
+            var bCheck = true;
 
-            if(midList.oData==null){
-                midList.oData = [];
+            if(midList==null){
+                var omidList = new JSONModel();
+                omidList.setData([items]);
+                this.setModel(omidList,"midList");
+                return;
+                
             }
 
-            var bCheck = true;
+       
             for(var i=0;i<midList.oData.length;i++){
                 if(midList.oData[i].mi_material_code == items.mi_material_code){
                     bCheck = false;
@@ -1493,7 +1499,6 @@ sap.ui.define([
                             //     }
                             // }
                             
-                            //json 데이타는...따로 삭제 하지 않아도..페이지 이동하면 날라가는지 확인필요.
                         }                        
                                           
                     }          
