@@ -100,13 +100,7 @@
           "refreshAfterChange": false,
           "useBatch": true
         }
-      },
-      "tree": {
-            "type": "sap.ui.model.json.JSONModel",
-            "settings": {
-                "defaultBindingMode": "TwoWay"
-            }
-        }
+      }
     },
     "resources": {
       "css": [

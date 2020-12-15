@@ -72,29 +72,19 @@
             <VBox>
                 <!-- rows="{path: 'tree>/Menu_haa'}"  -->
                 <table:TreeTable
-                  id="menuTreeTable"
-                  rowSelectionChange=".onRowSelectionChange"
-                  selectionMode="Single"
-                  selectionBehavior="Row"
-                  
-                  enableColumnReordering="false"
-                  expandFirstLevel="true"
-                  rows="{
-                    path : 'tree>/Menu_haa',
-                    filters: [
-                    ],
-                    parameters : {
-                        countMode: 'Inline',
-                        treeAnnotationProperties : {
-                            hierarchyLevelFor : 'hierarchy_level',
-                            hierarchyNodeFor : 'node_id',
-                            hierarchyParentNodeFor : 'parent_id',
-                            hierarchyDrillStateFor : 'drill_state'
-                        },
-                        numberOfExpandedLevels: 2
-                    }
-                  }"
-                  >
+                    id="menuTreeTable"
+                    rowSelectionChange=".onRowSelectionChange"
+                    selectionMode="Single"
+                    selectionBehavior="Row"
+                    enableColumnReordering="false"
+                    expandFirstLevel="true"
+                    rows="{
+                        path : 'tree>/Menu_haa',
+                        parameters : {
+                            arrayNames: ['nodes']
+                        }
+                    }"
+                >
                   <table:extension>
                     <OverflowToolbar>
                       <!-- <Title text="메뉴관리 ({= ${/}.length || 0})" level="H2"/> -->
@@ -124,11 +114,11 @@
                             <Text text="{tree>menu_code}" wrapping="false" />
                         </table:template>
                     </table:Column>
-                    <table:Column label="메뉴구분" >
+                    <!-- <table:Column label="메뉴구분" >
                         <table:template>
-                            <Text text="{tree>menu_level_number}" wrapping="false" />
+                            <Text text="{menu_level_number}" wrapping="false" />
                         </table:template>
-                    </table:Column>
+                    </table:Column> -->
                   </table:columns>
                 </table:TreeTable>
             </VBox>
