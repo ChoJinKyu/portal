@@ -68,7 +68,7 @@ sap.ui.define([
 		 * @public
 		 */
         openMoldItemSelectionPop: function (pThis, oEvent, pArges, callback) {
-            console.log("org_code >>>> ", pArges);
+            console.log("args >>>> ", pArges);
             oThis = pThis;
             oArges = pArges;
             oCallback = callback;
@@ -127,6 +127,14 @@ sap.ui.define([
             if(oArges.mold_progress_status_code != undefined){
                 aSearchFilters.push(new Filter("mold_progress_status_code", FilterOperator.EQ , oArges.mold_progress_status_code));
             }
+            if (oArges.mold_id_arr != undefined && oArges.mold_id_arr.length > 0) { 
+                 console.log(" String >>>> ", String(oArges.mold_id_arr.join(","))); 
+                aSearchFilters.push(new Filter("mold_id", FilterOperator.NotContains, oArges.mold_id_arr.join(","),'', true))
+                // oArges.mold_id_arr.forEach(function (mold_id) { 
+                //     aSearchFilters.push(new Filter("mold_id", FilterOperator.NotContains, String(mold_id)));
+                // });
+            }
+            console.log("aSearchFilters >> " , aSearchFilters);
 
             return aSearchFilters;
         },
