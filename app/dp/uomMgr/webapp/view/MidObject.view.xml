@@ -119,7 +119,7 @@
 									<Button id="midTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMidTableDeleteButtonPress" />
 									<!-- <Button id="midTableSaveButton" text="Save" type="Emphasized" press=".onMidTableSaveButtonPress" /> -->
 									<ToolbarSeparator/>
-									<SearchField id="midTableSearchField" placeholder="Class Text" width="10rem" search=".onMidTableFilterPress" />
+									<!-- <SearchField id="midTableSearchField" placeholder="UOM Name" width="10rem" search=".onMidTableFilterPress" /> -->
 									<!-- <Button id="midTableApplyFilterButton" text="Apply" type="Transparent" press=".onMidTableApplyFilterButton" /> -->
 								</OverflowToolbar>
 							</headerToolbar>
@@ -130,7 +130,10 @@
 								<Column id="midColumnLanguage" minScreenWidth="Tablet" hAlign="Center" importance="High">
 									<Text text="Language" />
 								</Column>
-								<Column id="midColumnCC" minScreenWidth="Tablet" hAlign="Center" >
+                                <Column id="midColumnUN" minScreenWidth="Tablet" hAlign="Center" >
+									<Text text="UOM Name" />
+								</Column>
+								<!-- <Column id="midColumnCC" minScreenWidth="Tablet" hAlign="Center" >
 									<Text text="Commercial Code" />
 								</Column>
                                 <Column id="midColumnCN" minScreenWidth="Tablet" hAlign="Center" >
@@ -141,7 +144,7 @@
 								</Column>
                                 <Column id="midColumnTN" minScreenWidth="Tablet" hAlign="Center" >
 									<Text text="Technical Name" />
-								</Column>                               
+								</Column> -->
 								<Column id="midColumnDS" minScreenWidth="Tablet" hAlign="Center" >
 									<Text text="Description" />
 								</Column>
@@ -151,11 +154,12 @@
 									<cells>
 										<Text text="{details>_row_state_}"/>
 										<Input value="{details>language_code}"/>
-										<Input value="{details>commercial_uom_code}"/>
+                                        <Input value="{details>uom_name}"/>
+										<!-- <Input value="{details>commercial_uom_code}"/>
 										<Input value="{details>commercial_uom_name}"/>
                                         <Input value="{details>technical_uom_code}"/>
-										<Input value="{details>technical_uom_name}"/>
-                                        <Input value="{details>uom_description}"/>
+										<Input value="{details>technical_uom_name}"/> -->
+                                        <Input value="{details>uom_desc}"/>
 									</cells>
 								</ColumnListItem>
 							</items>

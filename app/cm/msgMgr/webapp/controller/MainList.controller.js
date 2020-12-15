@@ -52,7 +52,7 @@ sap.ui.define([
 				}, true);
 			}.bind(this));
 
-            this._doInitTablePerso();
+           //this._doInitTablePerso();
             this.enableMessagePopover();
         },
         
@@ -89,7 +89,7 @@ sap.ui.define([
 		 * @public
 		 */
 		onMainTablePersoButtonPressed: function(oEvent){
-			this._oTPC.openDialog();
+			//this._oTPC.openDialog();
 		},
 
 		/**
@@ -145,35 +145,40 @@ sap.ui.define([
 		},
 
 		onMainTableDeleteButtonPress: function(){
-			var oTable = this.byId("mainTable"),
-				oModel = this.getModel("list"),
-				aItems = oTable.getSelectedItems(),
-				aIndices = [];
-			aItems.forEach(function(oItem){
-				aIndices.push(oModel.getProperty("/Message").indexOf(oItem.getBindingContext("list").getObject()));
-			});
-			aIndices = aIndices.sort(function(a, b){return b-a;});
-			aIndices.forEach(function(nIndex){
-				//oModel.removeRecord(nIndex);
-				oModel.markRemoved(nIndex);
-			});
-            oTable.removeSelections(true);
-            this.validator.clearValueState(this.byId("mainTable"));
-		},
+			var table = this.byId("mainTable"),
+				model = this.getModel("list");
+				// aItems = oTable.getSelectedItems(),
+				// aIndices = [];
+			// aItems.forEach(function(oItem){
+			// 	aIndices.push(oModel.getProperty("/Message").indexOf(oItem.getBindingContext("list").getObject()));
+			// });
+			// aIndices = aIndices.sort(function(a, b){return b-a;});
+			// aIndices.forEach(function(nIndex){
+			// 	//oModel.removeRecord(nIndex);
+			// 	oModel.markRemoved(nIndex);
+			// });
+            // oTable.removeSelections(true);
+            // this.validator.clearValueState(this.byId("mainTable"));
+
+            // var [tId, mName] = arguments;
+            // var table = this.byId(oTable);
+            // var model = this.getView().getModel(oModel);
+            table.getSelectedIndices().reverse().forEach(function (idx) {
+                model.markRemoved(idx);
+            });
+        },
        
         onMainTableSaveButtonPress: function(){
 			var oModel = this.getModel("list"),
-				oView = this.getView();
+                oView = this.getView(),
+                table = this.byId("mainTable");
 			
-			if(!oModel.isChanged()) {
-				MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
-				return;
-            }
+			// if(!oModel.isChanged()) {
+			// 	MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
+			// 	return;
+            // }
             
-            if(this.validator.validate(this.byId("mainTable")) !== true)
-            { 
-                debugger;
-                return;}
+            if(this.validator.validate(this.byId("mainTable")) !== true) return;
 
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
 				title : this.getModel("I18N").getText("/SAVE"),
@@ -184,15 +189,11 @@ sap.ui.define([
 						oModel.submitChanges({
 							success: function(oEvent){
 								oView.setBusy(false);
-								MessageToast.show(this.getModel("I18N").getText("/NCM0005"));
+                                MessageToast.show(this.getModel("I18N").getText("/NCM0005"));
+                                this.byId("pageSearchButton").firePress();
+                                //table.clearSelection().removeSelections(true);
 							}.bind(this)
 						});
-						//oTransactionManager.submit({
-						// 	success: function(oEvent){
-						// 		oView.setBusy(false);
-						// 		MessageToast.show("Success to save.");
-						// 	}
-						// });
 					};
 				}.bind(this)
 			});
@@ -218,7 +219,7 @@ sap.ui.define([
                 sorters: [
 					new Sorter("chain_code"),
 					new Sorter("message_code"),
-					new Sorter("language_code", true)
+                    new Sorter("language_code", true)
 				],
 				success: function(oData){
                     this.validator.clearValueState(this.byId("mainTable"));
@@ -231,7 +232,7 @@ sap.ui.define([
 			// 		new Sorter("message_code"),
 			// 		new Sorter("language_code", true)
 			// 	]
-			// oTransactionManager.setServiceModel(this.getModel());
+			//oTransactionManager.setServiceModel(this.getModel());
 		},
 		
 		_getSearchStates: function(){

@@ -10,44 +10,26 @@ sap.ui.define(["jquery.sap.global"],
                 visible: true
             },
             {
-                id: "uomMgr-mainList-mainColumnCC",
+                id: "uomMgr-mainList-mainColumnUN",
                 order: 1,
                 text: "Commercial Code",
                 visible: false
-            },
-            {
-                id: "uomMgr-mainList-mainColumnCN",
-                order: 2,
-                text: "Commercial Name",
-                visible: false
-            },
+            },            
             {
                 id: "uomMgr-mainList-mainColumnBU",
-                order: 3,
+                order: 2,
                 text: "Base Unit",
                 visible: true
             },
             {
                 id: "uomMgr-mainList-mainColumnClass",
-                order: 4,
+                order: 3,
                 text: "Class",
                 visible: true
-            },
-            {
-                id: "uomMgr-mainList-mainColumnTC",
-                order: 5,
-                text: "Technical Code",
-                visible: true
-            },
-            {
-                id: "uomMgr-mainList-mainColumnTN",
-                order: 6,
-                text: "Technical Name",
-                visible: true
-            },
+            },            
             {
                 id: "uomMgr-mainList-mainColumnDD",
-                order: 7,
+                order: 4,
                 text: "Disable Date",
                 visible: true
             }

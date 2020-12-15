@@ -8,10 +8,10 @@
 	height="100%">
 
 	<uxap:ObjectPageLayout id="page"
-		toggleHeaderOnTitleClick="true"
+		toggleHeaderOnTitleClick="false"
 		alwaysShowContentHeader = "true"
 		preserveHeaderStateOnScroll="false"
-		headerContentPinnable="true"
+		headerContentPinnable="false"
 		isChildPage="true"
 		upperCaseAnchorBar="false"
 		showTitleInHeaderContent="true"
@@ -124,19 +124,19 @@
 									<Text text="S" />
 								</Column>
 								<Column id="midColumnLanguageCode" minScreenWidth="Tablet" hAlign="Center">
-									<Text text="{I18N>/TYPE}" />
+									<Text text="언어" />
 								</Column>
 								<Column id="midColumnCurrencyCodeName" minScreenWidth="Tablet" hAlign="Center">
-									<Text text="{I18N>/TYPE}" />
+									<Text text="통화코드명" />
 								</Column>
 								<Column id="midColumnCurrencyCodeDesc" minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="{I18N>/TYPE}" />
+									<Text text="통화코드설명" />
 								</Column>
                                 <Column id="midColumnCurrencyPrefix" minScreenWidth="Tablet" hAlign="Center">
-									<Text text="{I18N>/TYPE}" />
+									<Text text="Prefix" />
 								</Column>
 								<Column id="midColumnCurrencySuffix" minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="{I18N>/TYPE}" />
+									<Text text="Suffix" />
 								</Column>
 							</columns>
 							<items>
@@ -162,7 +162,7 @@
                     press=".onMessagePopoverPress" />
 				<ToolbarSpacer />
                 <Button id="pageEditButton" text="Edit" type="Transparent" press=".onPageEditButtonPress" />
-                <Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" />
+                <Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" visible="{= ${editMode>/newcheck} === 'new' ? false : true}"/>
 				<Button id="pageSaveButton" type="Emphasized" text="Save" press=".onPageSaveButtonPress" />
 				<Button id="pageCancelButton" type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
 			</OverflowToolbar>

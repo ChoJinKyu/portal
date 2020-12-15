@@ -19,8 +19,29 @@
           "odataVersion": "2.0"
         }
       },
-      "commonUtilService": {
-        "uri": "srv-api/odata/v2/cm.util.CommonService/",
+      "mainV4Service": {
+        "uri": "srv-api/odata/v4/xx.TemplateV4Service/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0"
+        }
+      },
+      "commonService": {
+        "uri": "srv-api/odata/v2/xx.util.CommonService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
+      },
+      "commonV4Service": {
+        "uri": "srv-api/odata/v4/xx.util.CommonService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0"
+        }
+      },
+      "orgService": {
+        "uri": "srv-api/odata/v2/cm.util.OrgService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -75,8 +96,8 @@
           "bundleName": "xx.exampleControls.i18n.i18n"
         }
       },
-      "util": {
-        "dataSource": "commonUtilService",
+      "common": {
+        "dataSource": "commonService",
         "type": "ext.lib.model.v2.ODataModel",
         "preload": true,
         "settings": {
@@ -86,7 +107,18 @@
           "useBatch": true
         }
       },
-      "odata": {
+      "org": {
+        "dataSource": "orgService",
+        "type": "ext.lib.model.v2.ODataModel",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "useBatch": true
+        }
+      },
+      "main": {
         "dataSource": "mainService",
         "preload": true,
         "settings": {
@@ -95,17 +127,37 @@
           "refreshAfterChange": true,
           "useBatch": true
         }
+      },
+      "main-v4": {
+        "dataSource": "mainV4Service",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "groupId": "$direct",
+          "synchronizationMode": "None",
+          "autoExpandSelect": true
+        }
+      },
+      "common-v4": {
+        "dataSource": "commonV4Service",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "groupId": "$auto",
+          "synchronizationMode": "None",
+          "autoExpandSelect": true
+        }
       }
     },
     "resources": {
-        "css": [
-            {
-                "uri": "css/style.css"
-            }
-        ]
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
     },
     "resourceRoots": {
-        "ext.lib": "../../../lib"
+      "ext.lib": "../../../lib"
     },
     "routing": {
       "config": {
@@ -163,6 +215,34 @@
           "target": [
             "example5"
           ]
+        },
+        {
+          "pattern": "example6",
+          "name": "example6",
+          "target": [
+            "example6"
+          ]
+        },
+        {
+          "pattern": "example7",
+          "name": "example7",
+          "target": [
+            "example7"
+          ]
+        },
+        {
+          "pattern": "example8",
+          "name": "example8",
+          "target": [
+            "example8"
+          ]
+        },
+        {
+          "pattern": "example9",
+          "name": "example9",
+          "target": [
+            "example9"
+          ]
         }
       ],
       "targets": {
@@ -189,6 +269,22 @@
         "example5": {
           "viewName": "CodeCombo",
           "viewId": "example5"
+        },
+        "example6": {
+          "viewName": "ExcelUtilExam",
+          "viewId": "example6"
+        },
+        "example7": {
+          "viewName": "PivotTable",
+          "viewId": "example7"
+        },
+        "example8": {
+          "viewName": "NumberFormat",
+          "viewId": "example8"
+        },
+        "example9": {
+          "viewName": "UsingODataV4",
+          "viewId": "example9"
         },
         "notFound": {
           "viewName": "NotFound",

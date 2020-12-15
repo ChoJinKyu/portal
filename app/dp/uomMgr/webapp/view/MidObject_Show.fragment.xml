@@ -2,50 +2,89 @@
 	xmlns="sap.m"
 	xmlns:l="sap.ui.layout"
     xmlns:form="sap.ui.layout.form"
-	xmlns:core="sap.ui.core">
-	<form:SimpleForm id="midObjectForm1Show" editable="false"
-            layout="ColumnLayout"			
-			columnsM="1"
-			columnsL="1"
-			columnsXL="4">
-		<core:Title text="Normal" />
-        <Label text="UOM" required="true"/>
-        <Text text="{master>/uom_code}"/>
-        <Label text="Class" required="true"/>
-        <Text text="{master>/uom_class_code}"/>
-        <Label text="Base Unit"/>
-		<Text text="{
-				path: 'master>/base_unit_flag',
-				formatter: '.formatter.toYesNo'
-			}"/>
-        <Label text="Description"/>
-        <Text text="{master>/uom_description}"/>
-        <Label text="Disable Date"/>
-        <Text text="{path: 'master>/disable_date',formatter: '.dateFormatter.toDateString'}"/>
+	xmlns:core="sap.ui.core"
+    xmlns:uxap="sap.uxap" >
+<VBox class="sapUiSmallMargin" id="midObjectForm1Show">    
+	<form:SimpleForm         
+        editable="false"
+        layout="ColumnLayout"			
+        columnsM="2"
+        columnsL="2"
+        columnsXL="3" >
+		
+        <form:content>            
+			<Label text="UOM" required="true"/>
+			<Input value="{master>/uom_code}" editable="false" class="readonlyField"/>
+			<Label text="Class" required="true"/>
+			<ComboBox id="showClassCode" width="100%" selectedKey="{master>/uom_class_code}" items="{
+                    path: 'uomClass>/UomClass',
+                    filters: [
+                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}                                        
+                    ]
+                }" editable="false" required="true"> 
+                <items>
+                    <core:Item key="{uomClass>uom_class_code}" text="{uomClass>uom_class_name}" />
+                </items>
+            </ComboBox>
+			<Label text="Base Unit"/>
+			<!-- <Text text="{
+					path: 'master>/base_unit_flag',
+					formatter: '.formatter.toYesNo'
+				}"/> -->
+			<Switch state="{master>/base_unit_flag}" customTextOn="Yes" customTextOff="No" enabled="false">
+				<layoutData>
+					<FlexItemData growFactor="1" />
+				</layoutData>
+			</Switch>
+            <Label text="UOM Name"/>
+			<Input value="{master>/uom_name}" editable="false" class="readonlyField"/>
+			<Label text="Description"/>
+			<Input value="{master>/uom_desc}" editable="false" class="readonlyField"/>
+			<Label text="Disable Date"/>
+			<Input value="{path: 'master>/disable_date',formatter: '.dateFormatter.toDateString'}" editable="false" class="readonlyField"/>
+	    </form:content>
+    </form:SimpleForm>
+    
+    <form:SimpleForm 
+        editable="false"
+        layout="ColumnLayout"
+        columnsM="2"
+        columnsL="3"
+        columnsXL="3" >
+        <form:content>		
+            <core:Title text="Display" />
+			<!-- <Label text="Commercial" required="true"/>
+			<Input value="{master>/commercial_uom_code}" editable="false" class="readonlyField"/>			
+			<Label text="Technical" required="true"/>
+			<Input value="{master>/technical_uom_code}" editable="false" class="readonlyField"/> -->
+            <Label text="Decimal Places"/>
+			<Input value="{master>/decimal_places}" editable="false" class="readonlyField"/>			
+            <!-- <Label text="Commercial Text" required="true"/>
+			<Input value="{master>/commercial_uom_name}" editable="false" class="readonlyField"/>
+            <Label text="Technical Text" required="true"/>
+			<Input value="{master>/technical_uom_name}" editable="false" class="readonlyField"/>			 -->
+			<Label text="Float. Point Idex"/>
+			<Input value="{master>/floating_decpoint_index}" editable="false" class="readonlyField"/>
+	    </form:content>
+    </form:SimpleForm>
 
-        <core:Title text="Display" />
-		<Label text="Commercial" required="true"/>
-        <Text text="{master>/commercial_uom_code}"/>
-        <Label text="Commercial Text" required="true"/>
-        <Text text="{master>/commercial_uom_name}"/>
-        <Label text="Technical" required="true"/>
-        <Text text="{master>/technical_uom_code}"/>
-        <Label text="Technical Text" required="true"/>
-        <Text text="{master>/technical_uom_name}"/>
-        <Label text="Decimal Places"/>
-        <Text text="{master>/decimal_places}"/>
-        <Label text="Float. Point Idex"/>
-        <Text text="{master>/floating_decpoint_index}"/>
-
-        <core:Title text="Conversion" />
-		<Label text="Numerator"/>
-        <Text text="{master>/conversion_numerator}"/>
-        <Label text="Denominator"/>
-        <Text text="{master>/conversion_denominator}"/>
-        <Label text="Index"/>
-        <Text text="{master>/conversion_index}"/>
-        <Label text="Rate"/>
-        <Text text="{master>/conversion_rate}"/>
-        
+    <form:SimpleForm 
+        editable="false"
+        layout="ColumnLayout"
+        columnsM="2"
+        columnsL="3"
+        columnsXL="3" >
+        <form:content>
+            <core:Title text="Conversion" />
+			<Label text="Numerator" required="true"/>
+			<Input value="{master>/conversion_numerator}" editable="false" class="readonlyField"/>
+            <Label text="Index"/>
+			<Input value="{master>/conversion_index}" editable="false" class="readonlyField"/>
+			<Label text="Denominator" required="true"/>
+			<Input value="{master>/conversion_denominator}" editable="false" class="readonlyField"/>			
+			<Label text="Rate"/>
+			<Text text="{master>/conversion_rate}" />      
+	    </form:content>
 	</form:SimpleForm>
+	</VBox>
 </core:FragmentDefinition>

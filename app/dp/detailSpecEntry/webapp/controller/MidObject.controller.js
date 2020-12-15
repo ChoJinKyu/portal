@@ -11,14 +11,20 @@ sap.ui.define([
 	"sap/ui/core/Fragment",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
+    "ext/lib/util/Validator",
+    "dp/util/controller/SupplierSelection"
+], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, Validator, SupplierSelection) {
     "use strict";
     
     var oTransactionManager;
 
 	return BaseController.extend("dp.detailSpecEntry.controller.MidObject", {
 
-		dateFormatter: DateFormatter,
+        dateFormatter: DateFormatter,
+        
+        validator: new Validator(),
+
+        supplierSelection: new SupplierSelection(),
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -92,8 +98,15 @@ sap.ui.define([
 		 * @public
 		 */
 		onPageEditButtonPress: function(){
-			this._toEditMode();
-		},
+            this._toEditMode();
+            this.clearValueState();
+        },
+        
+        clearValueState: function(){
+            this.validator.clearValueState( this.byId('scheduleTable1E') );
+            this.validator.clearValueState( this.byId('frmMold') );
+            this.validator.clearValueState( this.byId('frmPress') );
+        },
 		
 		/**
 		 * Event handler for delete page entity
@@ -125,8 +138,23 @@ sap.ui.define([
 			var oView = this.getView(),
                 me = this;
                 
-            console.log('뭐지?');
-            console.log('oTransactionManager.isChanged()',oTransactionManager.isChanged());
+            if(this.validator.validate( this.byId('scheduleTable1E') ) !== true){
+                MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
+                return;
+            }
+
+            //mold 인지 press 인지 구분해야한다..
+            var dtlForm = '';
+            if(this.itemType == 'P' || this.itemType == 'E'){
+                dtlForm = 'frmPress';
+            }else{
+                dtlForm = 'frmMold';
+            }
+
+            if(this.validator.validate( this.byId(dtlForm) ) !== true){
+                MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
+                return;
+            }
             
 			MessageBox.confirm("Are you sure ?", {
 				title : "Comfirmation",
@@ -160,6 +188,14 @@ sap.ui.define([
 			this._toShowMode();
         },
 
+         onSuppValueHelpRequested: function(oEvent){
+
+            var sCompanyCode  = this.getModel('master').getProperty('/company_code')
+            var sPlantCode = this.getModel('master').getProperty('/org_code')
+            
+            this.supplierSelection.showSupplierSelection(this, oEvent, sCompanyCode, sPlantCode);
+        },
+
 		/* =========================================================== */
 		/* internal methods                                            */
 		/* =========================================================== */
@@ -185,11 +221,11 @@ sap.ui.define([
 			}else{
 
                 var self = this;
-				this._bindView("/MoldMasters(" + this._sMoldId + ")", "master", [], function(oData){
+				this._bindView("/MoldMasters('" + this._sMoldId + "')", "master", [], function(oData){
                     self._toShowMode();
                 });
 
-                this._bindView("/MoldMasterSpec(" + this._sMoldId + ")", "mstSpecView", [], function(oData){
+                this._bindView("/MoldMasterSpec('" + this._sMoldId + "')", "mstSpecView", [], function(oData){
                     
                 });
 
@@ -198,7 +234,7 @@ sap.ui.define([
                     
                 });
 
-                this._bindView("/MoldSpec("+this._sMoldId+")", "spec", [], function(oData){
+                this._bindView("/MoldSpec('"+this._sMoldId+"')", "spec", [], function(oData){
                     
                 });
             }

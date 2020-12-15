@@ -1,0 +1,111 @@
+<mvc:View controllerName="pg.mdCategory.controller.mdCategory"
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m" 
+    xmlns:f="sap.f" 
+    xmlns:form="sap.ui.layout.form" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:core="sap.ui.core" 
+    xmlns:lib-m="ext.lib.m"
+    height="100%">
+
+    <f:DynamicPage id="page" 
+    toggleHeaderOnTitleClick="false" 
+    headerExpanded="true" 
+    fitContent="true">
+      <!--DynamicPage Title -->
+      <f:title>
+        <f:DynamicPageTitle>
+          <f:heading>
+            <Title text="{i18n>appTitle}" />
+          </f:heading>
+          <!-- 조회 -->
+          <f:actions>
+            <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onSearch"/>
+          </f:actions>
+          <!-- 즐겨찾기 -->
+          <f:navigationActions>
+            <Button icon="sap-icon://unfavorite" type="Transparent" />
+          </f:navigationActions>
+        </f:DynamicPageTitle>
+      </f:title>
+      <!--DynamicPage Header -->
+      <f:header>
+      </f:header>
+      <f:content>
+        <VBox>
+        <Table id="mainTable"
+                selectionMode="None"
+                noDataText="{I18N>/NCM0001}"
+                items="{
+                    path: 'list>/MdCategory'
+                }"
+                columnResize="onColumnResize">
+            <headerToolbar>
+            <OverflowToolbar class="sapFDynamicPageAlignContent">
+              <Title text="범주 설정" level="H2"/>
+              <ToolbarSpacer/>
+              <Button text="Add" id="buttonMainCreateRow" press=".onAdd('mainTable', 'list', 'MdCategory', 'tenant_id')"  type="Transparent"/>
+              <Button text="Save" id="buttonMainSaveRow" press=".onSave('mainTable', 'list')"   type="Emphasized"/>
+              <ToolbarSeparator/>
+              <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+                <layoutData>
+                  <OverflowToolbarLayoutData priority="NeverOverflow"/>
+                </layoutData>
+              </Button>
+            </OverflowToolbar>
+            </headerToolbar>
+
+            <columns>
+                <Column id="mainColumnCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="12em" >
+                    <Text text="범주코드" />
+                </Column>
+                <Column id="mainColumnSort" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="20em" >
+                    <Text text="범주정렬순서" />
+                </Column>
+                <Column id="mainColumnCodeName" minScreenWidth="Tablet" hAlign="Center" >
+                    <Text text="범주명" />
+                </Column>
+                <Column id="mainColumnFontCode" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                    <Text text="RGB글꼴색상코드" />
+                </Column>
+                <Column id="mainColumnCellCode" minScreenWidth="Tablet" hAlign="Center" width="20em" >
+                    <Text text="RGB셀색상코드" />
+                </Column>
+                <Column id="mainColumnWHO" minScreenWidth="Tablet" hAlign="Center" width="20em" >
+                    <Text text="공통WHO 컬럼" />
+                </Column>
+            </columns>
+
+            <items>
+                <ColumnListItem>
+                    <cells>
+                        <HBox align="Center">
+                            <Text text="{list>spmd_category_code}"></Text>
+                        </HBox>
+                        <HBox align="Center">
+                            <Text text="{list>spmd_category_sort_sequence}"></Text>
+                        </HBox>
+                        <HBox>
+                            <Text text="{list>spmd_category_code_name}" visible="true"></Text>
+                            <Input value="{list>spmd_category_code_name}" visible="false"></Input>
+                        </HBox>
+                        <HBox align="Center">
+                            <Text text="{list>rgb_font_color_code}" visible="true"></Text>
+                            <Input value="{list>rgb_font_color_code}" visible="false"></Input>
+                        </HBox>
+                        <HBox align="Center">
+                            <Text text="{list>rgb_cell_clolor_code}" visible="true"></Text>
+                            <Input value="{list>rgb_cell_clolor_code}" visible="false"></Input>
+                        </HBox>
+                        <HBox align="Center">
+                            <Text text=""></Text>
+                        </HBox>
+                    </cells>
+                </ColumnListItem>
+            </items>
+            
+        </Table>
+        </VBox>
+      </f:content>
+    </f:DynamicPage>
+</mvc:View>

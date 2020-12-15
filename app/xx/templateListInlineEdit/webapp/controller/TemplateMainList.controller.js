@@ -139,9 +139,7 @@ sap.ui.define([
 				"language_code": "",
 				"message_code": "",
 				"message_type_code": "LBL",
-				"message_contents": "",
-				"local_create_dtm": new Date(),
-				"local_update_dtm": new Date()
+				"message_contents": ""
             }, "/Message", 0);
             this.validator.clearValueState(this.byId("mainTable"));
 		},

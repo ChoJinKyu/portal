@@ -26,6 +26,8 @@ entity Li_Dtl {
         spec_desc                       : String(1000);
         plant_code                      : String(10);
         delivery_request_date           : String(8);
+        buyer_empno                     : String(30);
+        purchasing_department_code      : String(50);
         loi_selection_number            : String(50);
         loi_publish_number              : String(50);
 
@@ -47,6 +49,7 @@ entity Li_Dtl {
         purchasing_approval_item_number : String(50);
         po_number                       : String(50);
         po_item_number                  : String(10);
+        supplier_opinion                : String(3000);
         remark                          : String(3000);
 }
 

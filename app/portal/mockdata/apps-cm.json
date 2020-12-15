@@ -42,8 +42,8 @@
         },
         {
           "name": "조직 관리",
-          "url": "../cm/orgMgr/webapp",
-          "component": "cm.orgMgr"
+          "url": "../cm/organizationMgr/webapp",
+          "component": "cm.organizationMgr"
         },
         {
           "name": "구매 관리 (TBD)",
@@ -74,8 +74,8 @@
       "subMenus": [
         {
           "name": "사용자 관리",
-          "url": "../cm/codeMgr/webapp",
-          "component": "cm.codeMgr"
+          "url": "../cm/userMgr/webapp",
+          "component": "cm.userMgr"
         },
         {
           "name": "권한관리",

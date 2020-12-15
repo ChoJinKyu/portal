@@ -1,23 +1,25 @@
 sap.ui.define([
-	"jquery.sap.global",
-	"sap/ui/core/UIComponent",
-	"sap/ui/model/json/JSONModel",
+    "sap/base/util/UriParameters",
+	"ext/lib/UIComponent",
 	"sap/ui/Device",
 	"./model/models",
-	"./controller/ErrorHandler",
-	"sap/f/FlexibleColumnLayoutSemanticHelper"
-], function (jQuery, UIComponent, JSONModel, Device, models, ErrorHandler, FlexibleColumnLayoutSemanticHelper) {
-	"use strict";
+    "sap/f/library",
+    "sap/f/FlexibleColumnLayoutSemanticHelper",
+    "sap/ui/model/json/JSONModel"
+], function (UriParameters, UIComponent, Device, models, library, FlexibleColumnLayoutSemanticHelper, JSONModel) {
+    "use strict";
+    
+    var LayoutType = library.LayoutType;
 
 	return UIComponent.extend("pg.mm.Component", {
-
-		metadata : {
+    
+		metadata: {
 			manifest: "json"
 		},
 
-		/**
+        /**
 		 * The component is initialized by UI5 automatically during the startup of the app and calls the init method once.
-		 * In this function, the device models are set and the router is initialized.
+		 * In this function, the FLP and device models are set and the router is initialized.
 		 * @public
 		 * @override
 		 */
@@ -25,33 +27,13 @@ sap.ui.define([
 			// call the base component's init function
 			UIComponent.prototype.init.apply(this, arguments);
 
-			// initialize the error handler with the component
-			this._oErrorHandler = new ErrorHandler(this);
-
 			// set the device model
 			this.setModel(models.createDeviceModel(), "device");
-			
-			this.setModel(new JSONModel(), "fcl");
 
-			// create the views based on the url/hash
-			this.getRouter().initialize();
-		},
+            this.setModel(new JSONModel({layout:LayoutType.OneColumn}), "fcl");
 
-		/**
-		 * Returns an instance of the semantic helper
-		 * @returns {sap.f.FlexibleColumnLayoutSemanticHelper} An instance of the semantic helper
-		 */
-		getHelper: function () {
-			var oFCL = this.getRootControl().byId("fcl"),
-				oParams = jQuery.sap.getUriParameters(),
-				oSettings = {
-					defaultTwoColumnLayoutType: sap.f.LayoutType.TwoColumnsMidExpanded,
-					//defaultThreeColumnLayoutType: sap.f.LayoutType.ThreeColumnsMidExpanded,
-					mode: oParams.get("mode"),
-					maxColumnsCount: oParams.get("max")
-				};
-
-			return FlexibleColumnLayoutSemanticHelper.getInstanceFor(oFCL, oSettings);
+            // create the views based on the url/hash
+            this.getRouter().initialize();
 		},
 
 		/**
@@ -66,6 +48,23 @@ sap.ui.define([
 			UIComponent.prototype.destroy.apply(this, arguments);
 		},
 
+        /**
+		 * Returns an instance of the semantic helper
+		 * @returns {sap.f.FlexibleColumnLayoutSemanticHelper} An instance of the semantic helper
+		 */
+		getHelper: function () {
+			var oFCL = this.getRootControl().byId("fcl"),
+			oParams = UriParameters.fromQuery(location.search),
+				oSettings = {
+					defaultTwoColumnLayoutType: LayoutType.TwoColumnsMidExpanded,
+					defaultThreeColumnLayoutType: LayoutType.ThreeColumnsEndExpanded,
+					mode: oParams.get("mode"),
+					initialColumnsCount: 2,
+					maxColumnsCount: oParams.get("max")
+				};
+
+			return FlexibleColumnLayoutSemanticHelper.getInstanceFor(oFCL, oSettings);
+		},
 		/**
 		 * This method can be called to determine whether the sapUiSizeCompact or sapUiSizeCozy
 		 * design mode class should be set, which influences the size appearance of some controls.
@@ -86,8 +85,6 @@ sap.ui.define([
 				}
 			}
 			return this._sContentDensityClass;
-		}
-
+		}		
 	});
-
 });

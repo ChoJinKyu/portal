@@ -1,3 +1,71 @@
+"tenant_id": "L2100",
+"company_code": "*",
+"org_type_code": "BU",
+"org_code": "BIZ00100",
+"org_name": "석유화학"
+
+_deleteMIMaterialCodeBOMManagementItem
+MIMaterialCodeBOMManagementHeader(
+    tenant_id='L2100',
+company_code='%2A',
+org_type_code='BU',
+org_code='BIZ00100',
+material_code='PRIACT0001',
+supplier_code='KR01818601',
+mi_bom_id='2')
+
+MIMaterialCodeBOMManagementItem(
+    tenant_id='L2100',
+    company_code='%2A',
+    org_type_code='BU',
+    org_code='BIZ00100',
+    mi_bom_id='1',
+    mi_material_code='A001-01-01')
+    "tenant_id": "L2100",
+    "company_code": "*",
+    "org_type_code": "BU",
+    "org_code": "BIZ00100",
+    "mi_bom_id": "1",
+    "mi_material_code": "A001-01-01",
+    "reqm_quantity_unit": "TON",
+    "reqm_quantity": "10",
+    "currency_unit": "USD",
+    "quantity_unit": "TON",
+    "exchange": "ICIS",
+    "termsdelv": "CFR KOR",
+    "use_flag": true,
+    "local_create_dtm": "/Date(1606750140000)/",
+    "local_update_dtm": "/Date(1606750140000)/",
+    "create_user_id": "Admin",
+    "update_user_id": "Admin",
+    "system_create_dtm": "/Date(1606750140000)/",
+    "system_update_dtm": "/Date(1606750140000)/" 
+            
+            업데이트, 삭제 시에 해더와 아이템은  mi_bom_id 는 부모의 키를 갖는다. 
+            //material_code, supplier_code, 기준수량, 가공비, 가공비 통화
+            var material_code = this.byId("input_hidden_material_code"),
+            supplier_code = this.byId("input_hidden_supplier_code"),
+            base_quantity = this.byId("input_base_quantity"),
+            processing_cost = this.byId("input_processing_cost"),
+            pcst_currency_unit = this.byId("comboBox_pcst_currency_unit");
+
+
+
+//material_code, supplier_code, 기준수량, 가공비, 가공비 통화
+                        var material_code = this.byId("input_hidden_material_code"),
+                            supplier_code = this.byId("input_hidden_supplier_code"),
+                            base_quantity = this.byId("input_base_quantity"),
+                            processing_cost = this.byId("input_processing_cost"),
+                            pcst_currency_unit = this.byId("comboBox_pcst_currency_unit"),
+                                                        
+                        midList.oData[i].pcst_currency_unit = pcst_currency_unit.getSelectedKey();
+                        midList.oData[i].pcst_currency_unit = pcst_currency_unit.getSelectedKey();
+                        midList.oData[i].pcst_currency_unit = pcst_currency_unit.getSelectedKey();
+                        midList.oData[i].pcst_currency_unit = pcst_currency_unit.getSelectedKey();
+
+var oModel = card_view.byId("main_Table").getModel();
+var oData = oModel.getData(); 
+
 
         dateFormatter: DateFormatter,
         dataPath : "resources",
@@ -39,7 +107,7 @@
             serviceName : {
                 mIMaterialPriceManagement: "/mIMaterialPriceManagement",  //자재리스트
                 mIMaterialCodeBOMManagement: "/MIMaterialCodeBOMManagement",  //mainList
-                orgTenantView: "/OrgTenantView", //관리조직 View
+                orgCodeView: "/orgCodeView", //관리조직 View
                 currencyUnitView : "/CurrencyUnitView", //통화단위 View
                 mIMaterialCodeList : "/MIMaterialCodeList", //자재코드 View
                 unitOfMeasureView : "/UnitOfMeasureView", //수량단위 View
@@ -194,3 +262,195 @@
                 org_code: "BIZ00100",
                 material_code: "ERCA00006AA" //자재코드 (시황자재코드와 다름 값이 있다면 View Mode)
             });
+            http://127.0.0.1:8080/odata/v2/pg.marketIntelligenceService/MIMaterialCodeBOMManagementView/?$top=5&filter=org_code%20eq%20%27BIZ00100%27&$format=json
+
+            
+자재별 시황자재 BOM	관리조직	OrgCodeView	View	조직유형코드/조직유형명, 조직코드/조직명 조회 View
+자재	MaterialView	View	자재코드/자재명 조회 View
+공급업체	SupplierView	View	공급업체코드/공급업체로컬명/공급업체영문명 조회 View
+자재별 시황자재 BOM	MIMaterialCodeBOMManagementView	View	자재별 시황자재 BOM 조회 View
+자재별 시황자재 BOM 관리 Header	MIMaterialCodeBOMManagementHeader	Table	자재별 시황자재 BOM Header 정보 저장 Table
+자재별 시황자재 BOM 관리 Item	MIMaterialCodeBOMManagementItem	Table	자재별 시황자재 BOM Item 정보 저장 Table
+시황자재 가격관리	MIMaterialPriceManagementView	View	시황자재 List 정보 조회 View
+시황자재 가격정보	MIMaterialCostInformationView	View	시황자재 가격정보 조회 View
+
+http://127.0.0.1:8080/odata/v2/pg.marketIntelligenceService/MICategoryDetailView/?$top=5&$format=json
+카테고리 상세내용	MICategoryDetailView	View	시황자재 가격정보 상세조회 View
+"tenant_id": "L2100",
+"company_code": "*",
+"org_type_code": "BU",
+"org_code": "BIZ00100",
+"mi_material_code": "A001-01-01",
+"mi_material_name": "원유(서부텍사스중질유)",
+"category_code": "FEEDSTOCK",
+"category_name": "NA",
+"reqm_quantity_unit": null,
+"reqm_quantity": null,
+"use_flag": true,
+"currency_unit": "USD",
+"quantity_unit": "MT",
+"exchange": "Platts",
+"termsdelv": "CFR China",
+"mi_date": "/Date(1595289600000)/",
+"amount": "632.600"
+
+
+//마스터 페이지 변경내역 없음.
+http://127.0.0.1:8080/odata/v2/pg.marketIntelligenceService/MIMaterialCodeBOMManagementView/?$format=json&$top=5
+MIMaterialCodeBOMManagementView ===================================
+        "tenant_id": "L2100",
+        "company_code": "*",
+        "org_type_code": "BU",
+        "org_code": "BIZ00100",
+        "material_code": "PRIACT0002",
+        "material_desc": "MODIPER A1401",
+        "supplier_code": "KR01812701",
+        "supplier_local_name": "삼성전자 평택공장",
+        "supplier_english_name": null,
+        "base_quantity": "1",
+        "processing_cost": "75000",
+        "pcst_currency_unit": "KRW",
+        "mi_material_code": "A001-01-01",
+        "mi_material_name": "원유(서부텍사스중질유)",
+        "category_code": "FEEDSTOCK",
+        "category_name": "NA",
+        "reqm_quantity_unit": "TON",
+        "reqm_quantity": "10",
+        "currency_unit": "USD",
+        "mi_base_reqm_quantity": "10000",
+        "quantity_unit": "TON",
+        "exchange": "ICIS",
+        "termsdelv": "CFR KOR",
+        "use_flag": true
+        key tenant_id             : String(40)    @title : '회사코드';
+        key company_code          : String(240)   @title : '법인코드';
+        key org_type_code         : String(40)    @title : '조직유형코드';
+        key org_code              : String(240)   @title : '조직코드';
+        key material_code         : String(40)    @title : '자재코드';
+            material_desc         : String(240)   @title : '자재명';
+        key supplier_code         : String(10)    @title : '공급업체코드';
+            supplier_local_name   : String(240)   @title : '공급업체로컬명';
+            supplier_english_name : String(240)   @title : '공급업체영문명';
+            base_quantity         : Decimal(17, 3)@title : '기준수량';
+            processing_cost       : Decimal(17, 3)@title : '가공비';
+            pcst_currency_unit    : String(30)    @title : '가공비통화단위';
+        key mi_material_code      : String(40)    @title : '시황자재코드';
+            mi_material_name      : String(240)   @title : '시황자재명';
+            category_code         : String(40)    @title : '카테고리코드';
+            category_name         : String(240)   @title : '카테고리코드명';
+            reqm_quantity_unit    : String(10)    @title : '소요수량단위';
+            reqm_quantity         : Decimal(17, 3)@title : '소요수량';
+        key currency_unit         : String(30)    @title : '통화단위';
+            mi_base_reqm_quantity : Decimal(17, 3)@title : '시황자재기준소요수량';
+        key quantity_unit         : String(10)    @title : '수량단위';
+        key exchange              : String(10)    @title : '거래소';
+        key termsdelv             : String(10)    @title : '인도조건';
+            use_flag              : Boolean       @title : '사용여부';
+
+            http://127.0.0.1:8080/odata/v2/pg.marketIntelligenceService/MaterialView/?$format=json&$top=5            
+=============MaterialView
+        "tenant_id": "L1100",
+        "material_code": "6910BLC0006",
+        "material_desc": "Primary Cell Battery,Lithium"
+
+        http://127.0.0.1:8080/odata/v2/pg.marketIntelligenceService/MIMaterialCodeBOMManagementHeader/?$format=json&$top=5
+        /MIMaterialCodeBOMManagementHeader(
+        tenant_id='L2100',
+        company_code='%2A',
+        org_type_code='BU',
+        org_code='BIZ00100',
+        material_code='PRIACT0001',
+        supplier_code='KR01820500',
+        mi_bom_id='1')",
+
+============= MIMaterialCodeBOMManagementHeader
+"tenant_id": "L2100",
+"company_code": "*",
+"org_type_code": "BU",
+"org_code": "BIZ00100",
+"material_code": "PRIACT0001",
+"supplier_code": "KR01820500",
+"base_quantity": "1",
+"processing_cost": "50000",
+"pcst_currency_unit": "KRW",
+"mi_bom_id": "1",
+"local_create_dtm": "/Date(1606750140000)/",
+"local_update_dtm": "/Date(1606750140000)/",
+"create_user_id": "Admin",
+"update_user_id": "Admin",
+"system_create_dtm": "/Date(1606750140000)/",
+"system_update_dtm": "/Date(1606750140000)/"
+
+http://127.0.0.1:8080/odata/v2/pg.marketIntelligenceService/MIMaterialCodeBOMManagementItem/?$format=json&$top=5
+=============  MIMaterialCodeBOMManagementItem
+
+"tenant_id": "L2100",
+"company_code": "*",
+"org_type_code": "BU",
+"org_code": "BIZ00100",
+"mi_bom_id": "1",
+"mi_material_code": "A001-01-01",
+"reqm_quantity_unit": "TON",
+"reqm_quantity": "10",
+"currency_unit": "USD",
+"quantity_unit": "TON",
+"exchange": "ICIS",
+"termsdelv": "CFR KOR",
+"use_flag": true, 
+"local_create_dtm": "/Date(1606750140000)/",
+"local_update_dtm": "/Date(1606750140000)/",
+"create_user_id": "Admin",
+"update_user_id": "Admin",
+"system_create_dtm": "/Date(1606750140000)/",
+"system_update_dtm": "/Date(1606750140000)/"
+
+
+if(comboboxUse_unitOfMeasureView.length<1){
+<ComboBox   placeholder="선택"
+    visible="{=!${oUi>/readMode}}" 
+    items ="{
+        path : '/UnitOfMeasureView',
+        filters : [
+                {path : 'tenant_id', 
+                operator : 'EQ', 
+                value1 : 'L2100'},  
+                {path : 'language_code', 
+                operator : 'EQ', 
+                value1 : 'KO'}                                                                                                                                                                
+        ]
+    }"
+    selectedKey="TON">  
+<items> 
+<core:ListItem key="{uom_code}" text="{uom_name}"/>
+</items>
+</ComboBox>                            
+
+
+
+
+
+
+
+            //var sInputValue = oEvent.getSource().getValue();
+            var _oUiData = this.getModel("_oUiData"),
+                materialTable = this.getModel("materialTable");
+            _oUiData.setProperty("/radioButtonGroup", this.getView().byId("radioButtonGroup").getSelectedIndex());
+
+			// create value help dialog
+			if (!this._valueHelpMaterialDialog) {
+
+                this._valueHelpMaterialDialog = sap.ui.xmlfragment(
+                    this._m.fragementId.materialDialog, 
+                    this._m.fragementPath.materialDialog,this
+                );
+                this.getView().addDependent(this._valueHelpMaterialDialog);
+
+            }                
+            
+            //기존 검색 데이타 초기화
+            this.setModelNullAndUpdateBindings(materialTable);
+
+			this._openValueHelpMaterialDialog();
+
+
+

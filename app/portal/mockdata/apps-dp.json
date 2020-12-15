@@ -48,18 +48,18 @@
             ]
         },
         {
-            "name": "Exam2",
+            "name": "NPD",
             "icon": "sap-icon://locate-me",
             "subMenus": [
                 {
-                    "name": "App #3",
-                    "url": "../cm/codeMgr/webapp",
-                    "component": "cm.codeMgr"
+                    "name": "(NPD) New Base Price",
+                    "url": "../dp/basePriceArl/webapp",
+                    "component": "dp.basePriceArl"
                 },
                 {
-                    "name": "App #4",
-                    "url": "../cm/controlOptionMgr/webapp",
-                    "component": "cm.controlOptionMgr"
+                    "name": "Base Price Progress Status",
+                    "url": "../dp/basePriceList/webapp",
+                    "component": "dp.basePriceList"
                 }
             ]
         }

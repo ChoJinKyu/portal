@@ -21,6 +21,22 @@ sap.ui.define([
 
 		dateFormatter: DateFormatter,
 
+		_sso : { //수정대상 공통 사용자 정보 확인될시 //MaterialDialog
+            user : {
+                id : "Admin",
+                name : "Hong Gil-dong"
+            },
+            dept : {
+				tenant_id: "L2100",
+				company_code: "*",
+				org_type_code: "BU",
+				org_code :"BIZ00100",
+				material_code:"new",	
+				supplier_code: "KR00008",	
+				mi_material_code: ""
+            }          
+		},
+
 		/**
 		 * Called when the mainList controller is instantiated.
 		 * @public
@@ -28,18 +44,23 @@ sap.ui.define([
 		onInit : function () {
 			
 			console.group("onInit");
-
-			var oViewModel,
-				oResourceBundle = this.getResourceBundle();
+			var oUi,oUiData, oResourceBundle = this.getResourceBundle();
 
 			// Model used to manipulate control states
-			oViewModel = new JSONModel({
+			oUi = new JSONModel({
 				headerExpanded: true,
 				mainListTableTitle : oResourceBundle.getText("mainListTableTitle"),
 				tableNoDataText : oResourceBundle.getText("tableNoDataText")
 			});
 
-			this.setModel(oViewModel, "mainListView");
+			oUiData = new JSONModel({
+				org_code : this._sso.dept.org_code
+			});
+
+
+			this.setModel(oUi, "oUi");
+			this.setModel(oUiData, "oUiData");
+
 
 			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
@@ -66,14 +87,18 @@ sap.ui.define([
 		_onCreateModeMetadataLoaded: function() {
 			console.group("_onCreateModeMetadataLoaded");
 			this.getView().getModel().setUseBatch(true);
-			this.getView().getModel().setDeferredGroups(["pgGroup","deleteGroup"]);
+			this.getView().getModel().setDeferredGroups(["pgGroup"]);
             
-            this.getView().getModel().setChangeGroups({
-			  "mIMaterialCodeBOMManagement": {
-			    groupId: "pgGroup",
-			    changeSetId: "pgGroup"
-              }
-            });            
+            // this.getView().getModel().setChangeGroups({
+			//   "MIMaterialCodeBOMManagementHeader": {
+			//     groupId: "pgGroup",
+			//     changeSetId: "pgGroup"
+			//   },
+			//   "MIMaterialCodeBOMManagementItem": {
+			//     groupId: "pgGroup",
+			//     changeSetId: "pgGroup"
+			//   },
+            // });            
            
 
             this.getView().getModel().attachPropertyChange(this._propertyChanged.bind(this));
@@ -134,22 +159,25 @@ sap.ui.define([
 			var mBindingParams = oEvent.getParameter("bindingParams");
 			var oSmtFilter = this.getView().byId("smartFilterBar");         
 
-            var oTenant_id = oSmtFilter.getControlByKey("tenant_id").getSelectedKey();    
-            var oMaterial_description = oSmtFilter.getControlByKey("material_description").getValue();   
+            var oOrg_code = oSmtFilter.getControlByKey("org_code").getSelectedKey();    
+            var oMaterial_desc = oSmtFilter.getControlByKey("material_desc").getValue();   
             var oSupplier_local_name = oSmtFilter.getControlByKey("supplier_local_name").getValue();    
-            /*material_code,material_description,supplier_code,supplier_local_name,base_quantity,
-            processing_cost,pcst_currency_unit,mi_material_code,mi_material_code_name,category_name,
+            /*material_code,material_desc,supplier_code,supplier_local_name,base_quantity,
+            processing_cost,pcst_currency_unit,mi_material_code,mi_material_name,category_name,
             reqm_quantity_unit,reqm_quantity,currency_unit,mi_base_reqm_quantity,quantity_unit,
             exchange,termsdelv,use_flag*/
-     
-	        if (oTenant_id.length > 0) {
-				var oTenant_idFilter = new Filter("tenant_id", FilterOperator.EQ, oTenant_id);
-				mBindingParams.filters.push(oTenant_idFilter);
+	 
+			var otenant_idFilter = new Filter("tenant_id", FilterOperator.EQ, this._sso.dept.tenant_id);
+			mBindingParams.filters.push(otenant_idFilter);
+
+	        if (oOrg_code.length > 0) {
+				var oOrg_codeFilter = new Filter("org_code", FilterOperator.EQ, oOrg_code);
+				mBindingParams.filters.push(oOrg_codeFilter);
             }
 
-			if (oMaterial_description.length > 0) {
-				var oMaterial_descriptionFilter = new Filter("material_description", FilterOperator.Contains, oMaterial_description);
-				mBindingParams.filters.push(oMaterial_descriptionFilter);
+			if (oMaterial_desc.length > 0) {
+				var oMaterial_descFilter = new Filter("material_desc", FilterOperator.Contains, oMaterial_desc);
+				mBindingParams.filters.push(oMaterial_descFilter);
 			}
 
 			if (oSupplier_local_name.length > 0) {
@@ -168,7 +196,7 @@ sap.ui.define([
             if (keyWorld1.length > 0 && keyWorld2.length > 0) {
                 return new Filter({
                         filters: [
-                        new Filter("material_description", FilterOperator.Contains, keyWorld1),
+                        new Filter("material_desc", FilterOperator.Contains, keyWorld1),
                         new Filter("supplier_local_name", FilterOperator.Contains, keyWorld2),
                         ],
                         and: false,
@@ -177,7 +205,7 @@ sap.ui.define([
 
                 return new Filter({
                         filters: [
-                        new Filter("material_description", FilterOperator.Contains, keyWorld1)
+                        new Filter("material_desc", FilterOperator.Contains, keyWorld1)
                         ],
                         and: false,
                 });
@@ -240,33 +268,28 @@ sap.ui.define([
 		 * @public
 		 */
 		onMainTableCreate: function(){
-			console.group("onMainTableCreate");
+			console.log("==== mm onMainTableCreate");
+			var that = this;
 
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-			
-			//note수정 검색한 값을 기준으로 데이타를 수정해야한다. 
-			this.getRouter().navTo("midPage", {
-				layout: oNextUIState.layout, 
-				tenant_id: "L2100",
-				company_code: "*",
-				org_type_code: "BU",
-				org_code: "BIZ00100",
-				mi_material_code: "new"				
-            });
-			
-            if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
-                this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
-            }
+			var sLayout = oNextUIState.layout;
+			// console.log("sLayout", sLayout);
+			//  sLayout = "MidColumnFullScreen";	
 
-			//var oItem = oEvent.getSource();
-			//oItem.setNavigated(true);
-			//var oParent = oItem.getParent();
-			//this.iIndex = oParent.indexOfItem(oItem);
-			
-			console.groupEnd();
+			var oNavParam = {
+				layout: sLayout, 
+				tenant_id: this._sso.dept.tenant_id,
+				company_code: this._sso.dept.company_code,
+				org_type_code: this._sso.dept.org_type_code,
+				org_code : this._sso.dept.org_code,
+				material_code:"new",	
+				supplier_code: "　",	
+				mi_material_code: "　"
+			};
+			this.getRouter().navTo("midPage", oNavParam);
 			
 		},
-
+		
 		/**
 		 * Event handler when a search button pressed
 		 * @param {sap.ui.base.Event} oEvent the button press event
@@ -274,10 +297,6 @@ sap.ui.define([
 		 */
 		onPageSearchButtonPress : function (oEvent) {
 			if (oEvent.getParameters().refreshButtonPressed) {
-				// Search field's 'refresh' button has been pressed.
-				// This is visible if you select any master list item.
-				// In this case no new search is triggered, we only
-				// refresh the list binding.
 				this.onRefresh();
 			} else {
 				var aSearchFilters = this._getSearchStates();
@@ -307,46 +326,22 @@ sap.ui.define([
 					value = aParameters[i].split("=")[1];			 
 					aParameters[key] = value;
 				}
-				
 			
-/**
-oRecord: Object
-category_code: "Non-Ferrous Metal"
-mi_material_code: "LED-001-01"
-mi_material_code_name: "니켈"
-use_flag: true
+				this.getRouter().navTo("midPage", {
+					layout: oNextUIState.layout, 
+					tenant_id: aParameters["tenant_id"],
+					company_code: aParameters["company_code"],
+					org_type_code: aParameters["org_type_code"],
+					org_code :aParameters["org_code"],
+					material_code: oRecord.material_code,
+					supplier_code: aParameters["supplier_code"],
+					mi_material_code: aParameters["mi_material_code"]
+					
+				});
 
- * / */
- //note category_name 수정해야함
-			this.getRouter().navTo("midPage", {
-				layout: oNextUIState.layout, 
-				tenant_id: aParameters["tenant_id"],
-                company_code: aParameters["company_code"],
-				org_type_code: aParameters["org_type_code"],
-				org_code :aParameters["org_code"],
-				category_name : "oRecord.category_code",
-				category_code : oRecord.category_code,
-				mi_material_code: oRecord.mi_material_code,
-				mi_material_code_name: oRecord.mi_material_code_name,
-				use_flag: oRecord.use_flag
-				
-            });
-/*
-				"pattern": "midObject/
-				{layout}/
-				{tenant_id}/
-				{company_code}/
-				{org_type_code}/
-				{org_code}/
-				{category_name}/
-				{category_code}/
-				{mi_material_code}/
-				{use_flag}",
-
-				*/
 
             if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
-                this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
+                this.getView().getModel('oUi').setProperty("/headerExpandFlag", false);
             }
 
 			var oItem = oEvent.getSource();
@@ -364,7 +359,7 @@ use_flag: true
 		 */
 		_onRoutedThisPage: function(){
 			console.group("_onRoutedThisPage");
-			this.getModel("mainListView").setProperty("/headerExpanded", true);
+			this.getModel("oUi").setProperty("/headerExpanded", true);
 			console.groupEnd();
 		},
 
@@ -374,16 +369,6 @@ use_flag: true
 		 * @private
 		 */
 		_applySearch: function(aSearchFilters) {
-			// var oView = this.getView(),
-			// 	oModel = this.getModel("list");
-			// oView.setBusy(true);
-			// oModel.setTransactionModel(this.getModel());
-			// oModel.read("/ControlOptionMasters", {
-			// 	filters: aSearchFilters,
-			// 	success: function(oData){
-			// 		oView.setBusy(false);
-			// 	}
-			// });
 		},
 		
 		 _getSearchStates: function(){
@@ -432,6 +417,60 @@ use_flag: true
 				hasGrouping: true
 			}).activate();
 		},
+
+
+/**
+         * mainTable Item Delete
+         * @param {sap.ui.base.Event} oEvent 
+         */
+        onMainTableDelete : function (oEvent){
+            console.group("onMainTableDelete");
+
+            var oModel = this.getOwnerComponent().getModel(),
+                oData = oModel.getData(),
+                oPath,
+                that = this;
+
+            var oSelected = this._mainTable.getSelectedContexts();   
+            if (oSelected.length > 0) { 
+
+                MessageBox.confirm("선택한 항목을 삭제 하시겠습니까?", {
+                    title: "삭제 확인",                                    
+                    onClose: this._deleteAction.bind(this),                                    
+                    actions: [sap.m.MessageBox.Action.DELETE, sap.m.MessageBox.Action.CANCEL],
+                    textDirection: sap.ui.core.TextDirection.Inherit    
+                });
+
+            }
+            console.groupEnd();
+        },
+
+        /**
+         * mainTable Delete Action
+         * @param {sap.m.MessageBox.Action} oAction 
+         */
+		_deleteAction: function(oAction) {
+            console.group("_deleteAction");
+
+			
+			if(oAction === sap.m.MessageBox.Action.DELETE) {
+				this._getSmartTableById().getTable().getSelectedItems().forEach(function(oItem){
+                    var sPath = oItem.getBindingContextPath();	
+					var mParameters = {"groupId":"pgGroup"};
+					oItem.getBindingContext().getModel().remove(sPath, mParameters);
+				});
+
+				var oModel = this.getView().getModel();
+				oModel.submitChanges({
+		      		groupId: "pgGroup", 
+		        	success: this._handleDeleteSuccess.bind(this),
+		        	error: this._handleDeleteError.bind(this)
+		     	});
+            } 
+            console.groupEnd();
+		},
+
+
 		_handleUpdateSuccess: function(oData) {
 			MessageToast.show(this.getResourceBundle().getText("updateSuccess"));
 		},

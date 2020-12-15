@@ -9,7 +9,7 @@
     xmlns:si="sap.suite.ui.commons.statusindicator"
     xmlns:u="sap.ui.unified" 
     xmlns:table="sap.ui.table" 
-    xmlns="sap.m"
+    xmlns="sap.m" 
 	height="100%">
 
 	<uxap:ObjectPageLayout 
@@ -68,7 +68,7 @@
 					<Label text="{I18N>/STATUS} :"/>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
-                        text="{=${appMaster>/approval_number}?'Update':'New'}"
+                        text="{=${beaCreateObjectView>/editMode}?'Update':'New'}"
                         state="Error" />
 				</layout:VerticalLayout>
 
@@ -131,7 +131,7 @@
                                 </HBox>
                             <VBox>
                                 <Label text="{I18N>/DESCRIPTION}" labelFor="input" required="true"></Label> 
-                                <layout:VerticalLayout name="approval_contents" id="idVerticalLayout" class="sapUiContentPadding" width="100%" >
+                                <layout:VerticalLayout name="approval_contents" id="approvalContents" class="sapUiContentPadding" width="100%"  >
 
                                 </layout:VerticalLayout>
                             </VBox>
@@ -152,34 +152,49 @@
                                 columnsXL="2" >
                                 <form:content>
                                     <Label text="{I18N>/INSPECTION}" required="true" />
-                                    <RadioButtonGroup id="radioInspection" columns="4" width="100%" class="sapUiMediumMarginBottom">
-                                        <RadioButton id="radio_Invest" text="Invest" />
-                                        <RadioButton id="radio_Supplies" text="Supplies"  />
-                                        <RadioButton id="radio_Expense" text="Expense"  />
-                                        <RadioButton id="radio_Non-ledger_Customer" text="Non-ledger(Customer)" />
-                                    </RadioButtonGroup>
+                                     <SegmentedButton 
+                                        id="segInspection"
+                                        selectedKey="{mdItemMaster>/investment_ecst_type_code}" 
+                                        width="100%"
+                                        items="{ path : 'util>/CodeDetails',
+                                                 filters : [
+                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                    {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_BUDGET_TYPE'}
+                                                    ]
+                                                }"
+                                        >
+                                        <items>
+                                            <SegmentedButtonItem  width="6em" text="{util>code_description}" key="{util>code}"/>
+                                        </items>
+                                    </SegmentedButton>
                                     <Label text="Account Department"  required="true" />
-                                    <ComboBox width="100%"  id="acquisitionDepartment" selectedKey=""  items="{}" >
+                                    <ComboBox width="100%"  id="acquisitionDepartment" selectedKey="{mdItemMaster>/accounting_department_code}"  items="{}" >
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>
                                     <Label text="{I18N>/PROJECT_CODE}"  required="true" />
-                                    <ComboBox width="100%" id="projectCode" selectedKey="" items="{}" >
+                                    <ComboBox width="100%" id="projectCode" selectedKey="{mdItemMaster>/project_code}" items="{}" >
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>
                                     <Label text="{I18N>/ACCOUNT}"  required="true" />
-                                    <ComboBox width="100%" id="account" selectedKey="" items="{}" >
+                                    <ComboBox width="100%" id="account" selectedKey="{mdItemMaster>/account_code}" 
+                                                    items="{ path : 'util>/CodeDetails',
+                                                            filters : [
+                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ACCOUNT_NEW'}
+                                                            ]
+                                                        }" >
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>
                                     <Label text="Balanced Budget"  />
-                                    <ObjectStatus text="292,000,000" /> <ObjectStatus text="KRW" state="Error" />
+                                     <ObjectStatus text="{mdItemMaster>/provisional_budget_amount}" /> <ObjectStatus text="KRW" state="Error" />
                                      <Label text="Acquisition Department"  required="true" />
-                                    <Input value="" showValueHelp="true"/> 
-                                       <Label text="Import Company"  />
-                                    <ComboBox width="100%" id="importCompany" selectedKey="" items="{}" >
+                                     <Input value="" showValueHelp="true"/> 
+                                    <Label text="Import Company"  />
+                                    <ComboBox width="100%" id="importCompany" selectedKey="{mdItemMaster>/import_company_code}" items="{}" >
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>                              
                                     <Label text="Import Plant" />
-                                    <ComboBox width="100%" id="importPlant" selectedKey="" items="{}" >
+                                    <ComboBox width="100%" id="importPlant" selectedKey="{mdItemMaster>/import_company_org_code}" items="{}" >
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>
                                         <Label text="{I18N>/CUSTOMER}"  />
@@ -195,14 +210,14 @@
                          <VBox class="sapUiSmallMargin">
                             <Label text="{I18N>/AFFILIATE}" />
                             <ObjectStatus
-                                text="{company>/company_name}" 
+                                text="[{appMaster>/company_code}] {company>/company_name}" 
                                 state="Error"
                                 />
                          </VBox>
                          <VBox class="sapUiSmallMargin">
                             <Label text="{I18N>/BUSINESS_DIVISION}" />
                             <ObjectStatus
-                                text="{plant>/plant_name}" 
+                                text="[{appMaster>/org_code}] {plant>/plant_name}" 
                                 state="Error"
                                 />
                          </VBox>
@@ -212,29 +227,34 @@
                         <!-- Participating Supplier Table -->
                         <table:Table id="psTable"
                                 selectionMode="MultiToggle"
-                                fixedColumnCount="4"
+                                fixedColumnCount="7"
                                 visibleRowCountMode="Auto"
-                                rows="{appDetail>/ApprovalDetails}"
+                                rows="{path:'appDetail>/ApprovalDetails'}"
                                 >
                              <table:extension>
                                 <OverflowToolbar>
                                     <ToolbarSpacer/>
                                     <!-- Add the Personalization button -->
-                                    <Button id="btnPsAdd"  type="Transparent" text="{I18N>/ROW_ADD}" press=".handleTableSelectDialogPress" > <!-- Add -->
+                                    <Button id="btnPsAdd"  type="Transparent" text="{I18N>/ROW_ADD}" press=".onMoldItemPopPress" > <!-- Add -->
                                     	<customData>
                                             <core:CustomData key="multi" value="true" />
                                         </customData>
                                     </Button>
                                     <Button id="btnPsDelete"   type="Transparent" text="{I18N>/ROW_DELETE}"  press=".onPsDelRow" />
-                                   
                                 </OverflowToolbar>
                             </table:extension>          
-
                                 <table:columns>
-                                    <table:Column id="c_mold_id"  visible="false">
+                          
+                                    <table:Column id="c_mold_id"  visible="true">
                                         <Label text="mold_id"/>           
                                         <table:template>
                                             <Text id="t_mold_id" text="{path:'appDetail>mold_id', type: 'sap.ui.model.type.Integer'}"/>
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column id="c_approval_number"  visible="true">
+                                        <Label text="approval_number"/>           
+                                        <table:template>
+                                            <Text id="t_approval_number" text="{path:'appDetail>approval_number'}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_model" width="20em" hAlign="Center">
@@ -244,7 +264,7 @@
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_moldPartNo" width="10em" hAlign="Center">
-                                        <Label text="Mold&#10;Part No"/>           
+                                        <Label text="Mold No"/>           
                                         <table:template>
                                             <Text id="t_mold_part_no" text="{appDetail>mold_number}"/>
                                         </table:template>
@@ -252,7 +272,7 @@
                                     <table:Column id="c_seq" width="5em" hAlign="Center">
                                         <Label text="Seq"/>           
                                         <table:template>
-                                            <Text id="t_seq" text="{path:'appDetail>mold_sequence', type: 'sap.ui.model.type.Integer'}"/>
+                                            <Text id="t_seq" text="{appDetail>mold_sequence}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_description" width="15em" hAlign="Center">
@@ -300,9 +320,8 @@
                                     </table:Column>  
                                     <table:Column id="c_budget_amount" width="10em" hAlign="Center">
                                         <Label text="Budget Amount"/>           
-                                   
                                         <table:template>
-                                           <Input  value="{appDetail>budget_amount}"/>
+                                           <Input  value="{appDetail>provisional_budget_amount}"/>
                                         </table:template>
                                     </table:Column>  
 
@@ -313,7 +332,7 @@
                                                 items="{ path : 'util>/CodeDetails',
                                                             filters : [
                                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_BUDGET_TYPE'}
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ASSET_TYPE'}
                                                             ]
                                                         }"
                                                 >  
@@ -373,14 +392,12 @@
                                 uploadComplete="onUploadComplete"
                                 beforeUploadStarts="onBeforeUploadStarts" />
                                 
-                            <Button id="Button" text="Upload Now" press="onStartUpload" />
+                            <Button id="uploadButton" text="Upload Now" press="onStartUpload" />
                         </layout:VerticalLayout> 
 
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
-
-			
 
 			<uxap:ObjectPageSection titleUppercase="false" title="Approval Line">
 				<uxap:subSections>
@@ -393,7 +410,7 @@
                             rowSelectionChange=".onCheck"
                             mode="None"
                             width="auto"
-                            items="{appList>/undefined}"
+                            items="{Approvers>/Approver}"
                             >
                         <headerToolbar>
                             <OverflowToolbar>
@@ -430,29 +447,30 @@
                              <ColumnListItem>
                                 <cells>
                                     <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
-                                    <Text text="{appList>no}" />
+                                    <Text text="{Approvers>approve_sequence}" />
                                     <ComboBox  id="searchItemType" width="100%"
-                                        selectedKey="{appList>type}" 
-                                        enabled="{appList>editMode}"
-                                        items="{
-                                            path: 'org>/Org_Company',
-                                            filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                            ],
-                                            sorter: { path: 'company_code'}
-                                        }"
-                                        >
-                                    <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                                        selectedKey="{Approvers>approver_type_code}" 
+                                        enabled="{Approvers>editMode}" 
+                                        items="{ path : 'util>/CodeDetails',
+                                                    filters : [
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                        {path : 'group_code', operator : 'EQ', value1 : 'CM_APPROVER_TYPE'}
+                                                    ]
+                                                }"
+                                        >  
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+
                                     </ComboBox>
-                                    <SearchField id="searchField" enabled="{appList>editMode}" search=".onSearch" width="100%" placeholder="Search employee" value="{appList>nameDept}"/>
-                                    <Text text="{appList>status}" />
-                                    <Text text="{appList>comment}" />
-                                    <Button id="btnSortUp" icon="{appList>arrowUp}" press=".onSortUp(${appList>no})" tooltip="sort" visible="{= ${appList>arrowUp}===''?false:true }"></Button>
-                                    <Button id="btnSortDown" icon="{appList>arrowDown}" press=".onSortDown(${appList>no})"  visible="{= ${appList>arrowDown}===''?false:true }" tooltip="sort"></Button>
-                                    <Button id="btnDelete" icon="sap-icon://delete" press=".setApprovalRemoveRow(${appList>no})" tooltip="삭제" visible="{appList>trashShow}"></Button>
+                                    <SearchField id="searchField" enabled="{Approvers>editMode}" search=".onSearch" width="100%" 
+                                                placeholder="Search employee" value="{Approvers>approver_empno}"/>
+                                    <Text text="{Approvers>approve_status_code}" />
+                                    <Text text="{Approvers>approve_comment}" />
+                                    <Button id="btnSortUp" icon="{Approvers>arrowUp}" press=".onSortUp(${Approvers>no})" tooltip="sort" visible="{= ${Approvers>arrowUp}===''?false:true }"></Button>
+                                    <Button id="btnSortDown" icon="{Approvers>arrowDown}" press=".onSortDown(${Approvers>no})"  visible="{= ${Approvers>arrowDown}===''?false:true }" tooltip="sort"></Button>
+                                    <Button id="btnDelete" icon="sap-icon://delete" press=".setApprovalRemoveRow(${Approvers>no})" tooltip="삭제" visible="{Approvers>trashShow}"></Button>
                                 </cells>
-                            </ColumnListItem>   
-                        </items>
+                            </ColumnListItem>  
+                        </items>                           
                         </Table>                           
 					</uxap:ObjectPageSubSection> 
                     <uxap:ObjectPageSubSection>
@@ -470,17 +488,17 @@
                         </HBox>
                         </Toolbar>
                             <layout:VerticalLayout class="sapUiContentPadding" width="100%">
-                                <MultiComboBox
+                                <MultiComboBox 
+                                    id="referrers"
                                     selectionChange="handleSelectionChangeReferrer"
                                     selectionFinish="handleSelectionFinishReferrer"
                                     width="100%"
-                                    items="{ path: 'org>/Org_Company',
+                                    items="{ path: 'util>/Employee',
                                                 filters: [
                                                     {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                                ],
-                                                sorter: { path: 'company_code'}
+                                                ]
                                             }">
-                                    <core:Item key="{org>company_code}" text="{org>company_name}" />
+                                    <core:Item key="{util>employee_number}" text="{util>user_local_name}" />
                                 </MultiComboBox>
                             </layout:VerticalLayout>
                             <layoutData>
@@ -496,7 +514,7 @@
 			<OverflowToolbar>
 				<ToolbarSpacer />
 				<Button type="Transparent" text="Draft" press=".onPageDraftButtonPress" />
-				<!-- <Button type="Transparent" text="Preview" press=".onPageSaveButtonPress" /> -->
+				<Button type="Transparent" text="Preview" press=".onPagePreviewButtonPress" /> 
 				<Button type="Transparent" text="Cancel" visible="{=${beaCreateObjectView>/editMode}?true:false}" press=".onPageCancelButtonPress" /> 
 				<Button type="Emphasized" text="Request" press=".onPageCancelEditButtonPress"/>
 			</OverflowToolbar>

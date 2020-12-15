@@ -1,0 +1,64 @@
+view DP_TC_PROJECT_VIEW as
+select pjt.tenant_id
+     , pjt.project_code
+     , pjt.model_code
+     , pjt.project_name
+     , pjt.company_code
+     , pjt.org_type_code
+     , pjt.org_code
+     , pjt.bizdivision_code
+     , pjt.product_group_code
+     , pjt.source_type_code
+     , pjt.quotation_project_code
+     , pjt.project_status_code
+     , pjt.project_grade_code
+     , pjt.production_company_code
+     , pjt.project_leader_empno
+     , pjt.buyer_empno
+     , pjt.customer_local_name
+     , pjt.oem_customer_name
+     , pjt.car_type_name
+     , pjt.mcst_yield_rate
+     , pjt.bom_type_code
+     , pjt.sales_currency_code
+     , pjt.massprod_start_date
+     , pjt.massprod_end_date
+     , pjt.mcst_excl_flag
+     , pjt.mcst_excl_reason
+     , (select ccl.code_name
+          from cm_code_lng ccl
+         where ccl.group_code = 'DC_TC_PRODUCT_GROUP_CODE'
+           and ccl.code = pjt.product_group_code
+           and ccl.language_cd = 'KO') AS product_group_text
+     , (select ccl.code_name
+          from cm_code_lng ccl
+         where ccl.group_code = 'DP_TC_PROJECT_GRADE_CODE'
+           and ccl.code = pjt.project_grade_code
+           and ccl.language_cd = 'KO') AS project_grade_text
+     , (select ccl.code_name
+          from cm_code_lng ccl
+         where ccl.group_code = 'DP_TC_SOURCE_TYPE_CODE'
+           and ccl.code = pjt.source_type_code
+           and ccl.language_cd = 'KO') AS source_type_text
+     , (select ccl.code_name
+          from cm_code_lng ccl
+         where ccl.group_code = 'DP_TC_BOM_TYPE_CODE'
+           and ccl.code = pjt.bom_type_code
+           and ccl.language_cd = 'KO') AS bom_type_text
+     , (select ccl.code_name
+          from cm_code_lng ccl
+         where ccl.group_code = 'DP_TC_PROJECT_STATUS_CODE'
+           and ccl.code = pjt.project_status_code
+           and ccl.language_cd = 'KO') AS project_status_text
+     , '김PL' AS project_leader_name  /*empno key가 user_id임 이름가져오는거 변경해야 함.*/
+     , '박구매' AS buyer_name  /*empno key가 user_id임 이름가져오는거 변경해야 함.*/
+     , 'CP' AS project_develope_event_code
+     , to_varchar(current_date, 'yyyy-mm-dd') AS last_register_date
+     , '접수' AS estimate_status_name
+     , 'ACCEPT' AS estimate_status_code
+     , 'Confirmed(1차)' AS target_status_name
+     , 'CONFIRMED' AS target_status_code
+     , 'Draft(2차)' AS forecast_status_name
+     , 'DRAFT' AS forecast_status_code
+  from dp_tc_project pjt
+  ;

@@ -1,21 +1,27 @@
 sap.ui.define([
-	"ext/lib/controller/BaseController",
-	"sap/ui/model/json/JSONModel",
-	"sap/ui/core/routing/History",
-	"ext/lib/formatter/DateFormatter",
-	"sap/ui/model/Filter",
-	"sap/ui/model/FilterOperator",
-	"sap/ui/core/Fragment",
+    "ext/lib/controller/BaseController",
+    "sap/ui/model/json/JSONModel",
+    "sap/ui/core/routing/History",
+    "ext/lib/formatter/DateFormatter",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator",
+    "sap/ui/core/Fragment",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-], function (BaseController, JSONModel, History, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
-	"use strict";
+    "ext/lib/model/ManagedListModel",
+    "ext/lib/model/ManagedModel",
+    "ext/lib/model/TransactionManager",
+], function (BaseController, JSONModel, History, DateFormatter, Filter, FilterOperator, Fragment
+    , MessageBox, MessageToast, ManagedListModel, ManagedModel, TransactionManager) {
+    "use strict";
+
     /**
      * @description 입찰대상 협력사 선정 품의화면
      * @date 2020.12.07
      * @author daun.lee 
      */
-
+    var mainViewName = "pssaObjectView";
+    var oTransactionManager;
 	return BaseController.extend("dp.participatingSupplierSelectionApproval.controller.PssaObject", {
 
 		dateFormatter: DateFormatter,
@@ -28,18 +34,30 @@ sap.ui.define([
 		 * Called when the mainObject controller is instantiated.
 		 * @public
 		 */
-		onInit : function () { 
-              console.log("PssaObject Controller 호출");
-			// Model used to manipulate control states. The chosen values make sure,
-			// detail page shows busy indication immediately so there is no break in
-			// between the busy indication for loading the view's meta data
-			var oViewModel = new JSONModel({
-					busy : true,
-					delay : 0
-				});
-			this.getRouter().getRoute("pssaObject").attachPatternMatched(this._onObjectMatched, this);
-			this.setModel(oViewModel, "pssaObjectView");
-		},
+		onInit: function () {
+            console.log("pssaObject Controller 호출");
+            // Model used to manipulate control states. The chosen values make sure,
+            // detail page shows busy indication immediately so there is no break in
+            // between the busy indication for loading the view's meta data
+            var oViewModel = new JSONModel({
+                busy: true,
+                delay: 0
+            });
+            this.setModel(oViewModel, mainViewName);
+
+            this.getView().setModel(new ManagedModel(), "appMaster");
+            this.getView().setModel(new ManagedListModel(), "appDetail");
+            this.getView().setModel(new ManagedModel(), "company");
+            this.getView().setModel(new ManagedModel(), "plant");
+
+
+            oTransactionManager = new TransactionManager();
+            oTransactionManager.addDataModel(this.getModel("appMaster"));
+            oTransactionManager.addDataModel(this.getModel("appDetail"));
+
+            this.getRouter().getRoute("pssaObject").attachPatternMatched(this._onObjectMatched, this);
+
+        },
 
 		/* =========================================================== */
 		/* event handlers                                              */
@@ -60,7 +78,16 @@ sap.ui.define([
 			} else {
 				this.getRouter().navTo("approvalList", {}, true);
 			}
-		},
+        },
+        onEditModePssa: function (oEvent) {
+            console.log(oEvent);
+            var oModel = this.getModel("appMaster")
+                , oData = oModel.oData;
+            this.getRouter().navTo("pssaEditObject", {
+                approval_number: oData.approval_number
+            }, true);
+
+        },
 
 		/**
 		 * Event handler for page edit button press
@@ -145,15 +172,22 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
 		 * @private
 		 */
-		_onObjectMatched : function (oEvent) {
-			var oArgs = oEvent.getParameter("arguments"),
-                sMoldId = oArgs.moldId;
-            console.log(oArgs);
-            this._bindView("/MoldSpec(mold_id=" + sMoldId + ")"); 
-            
-            this._toShowMode(); 
-            //this._toEditMode();
-		},
+		_onObjectMatched: function (oEvent) {
+            var oArgs = oEvent.getParameter("arguments"),
+                approval_number = oArgs.approval_number;
+            this._onRoutedThisPage(oArgs);
+        },
+        _onRoutedThisPage: function (args) { 
+            var that = this;
+            this._bindView("/ApprovalMasters(tenant_id='L1100',approval_number='" + args.approval_number + "')", "appMaster", [], function (oData) {
+                that._createViewBindData(oData);
+            });
+            // var schFilter = [new Filter("approval_number", FilterOperator.EQ, args.approval_number)];
+            // this._bindView("/ItemBudgetExecution", "appDetail", schFilter, function (oData) {  
+            // });
+            // mold_id 
+            oTransactionManager.setServiceModel(this.getModel());
+        },
 
 		/**
 		 * Binds the view to the object path.
@@ -161,22 +195,58 @@ sap.ui.define([
 		 * @param {string} sObjectPath path to the object to be bound
 		 * @private
 		 */
-		_bindView : function (sObjectPath) {
-			var oViewModel = this.getModel("pssaObjectView");
+        _bindView: function (sObjectPath, sModel, aFilter, callback) {
+            var oView = this.getView(),
+                oModel = this.getModel(sModel);
+            oView.setBusy(true);
+            oModel.setTransactionModel(this.getModel());
+            oModel.read(sObjectPath, {
+                filters: aFilter,
+                success: function (oData) {
+                    oView.setBusy(false);
+                    callback(oData);
+                }
+            });
+        },
 
-			this.getView().bindElement({
-				path: sObjectPath,
-				events: {
-					change: this._onBindingChange.bind(this),
-					dataRequested: function () {
-						oViewModel.setProperty("/busy", true);
-					},
-					dataReceived: function () {
-						oViewModel.setProperty("/busy", false);
-					}
-				}
-			});
-		},
+        /**
+        * @description approval_number 로 조회 후 넘어옴 
+        * @param {*} args : company , plant   
+        */
+        _createViewBindData: function (args) {
+            console.log(" args ", args)
+            /** 초기 데이터 조회 */
+            var company_code = args.company_code, plant_code = args.org_code;
+            var appModel = this.getModel(mainViewName);
+            appModel.setData({
+                company_code: company_code
+                , company_name: ""
+                , plant_code: plant_code
+                , plant_name: ""
+            });
+
+           var oModel = this.getModel("company");
+
+            oModel.setTransactionModel(this.getModel("org"));
+
+            oModel.read("/Org_Company(tenant_id='L1100',company_code='" + company_code + "')", {
+                filters: [],
+                success: function (oData) {
+                    console.log("Org_Company oData>>> ", oData);
+                }
+            });
+
+
+            var oModel2 = this.getModel("plant");
+            oModel2.setTransactionModel(this.getModel("org"));
+
+            oModel2.read("/Org_Plant(tenant_id='L1100',company_code='" + company_code + "',plant_code='" + plant_code + "')", {
+                filters: [],
+                success: function (oData) {
+                    console.log("Org_Plant oData>>> ", oData);
+                }
+            });
+        },
 
 		_onBindingChange : function () {
 			var oView = this.getView(),

@@ -10,7 +10,7 @@ entity Fs_Funding_Notify {
         funding_notify_start_date : Date not null        @title : '자금지원공고시작일자';
         funding_notify_end_date   : Date not null        @title : '자금지원공고종료일자';
         funding_appl_closing_date : Date                 @title : '자금지원신청마감일자';
-        funding_notify_contents   : LargeBinary          @title : '자금지원공고내용';
+        funding_notify_contents   : LargeString          @title : '자금지원공고내용';
         attch_group_number        : String(100)          @title : '첨부파일그룹번호';
 }
 

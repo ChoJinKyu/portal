@@ -1,0 +1,177 @@
+view pg_MI_Cateogry_Hichy_Stru_View as
+select
+		max(tenant_id)															as tenant_id,
+		node_id,									
+		max(hier_level)															as hierarchy_level,
+		max(category_code)														as category_code,
+		max(category_name)														as category_name,
+		max(parent_id)															as parent_node_id,
+		max(parent_category_code)												as parent_category_code,
+		max(sort_sequence)														as sort_sequence,
+		max(drillstate)															as drillstate,
+		use_flag,
+		max(local_create_dtm)													as local_create_dtm,
+		max(local_update_dtm)													as local_update_dtm,
+		max(create_user_id)														as create_user_id,
+		max(update_user_id)														as update_user_id,
+		max(system_create_dtm)													as system_create_dtm,
+		max(system_update_dtm)													as system_update_dtm,
+		max(start_rank)															as start_rank,
+		max(case when parent_id is null then path_code else category_code end)	as path_code,
+		max(case when parent_id is null then path_text else category_name end)	as path_text
+from	
+(
+		select
+				tenant_id,
+				node_id,
+				hier_level,
+				category_code,
+				category_name,
+				parent_id,
+				parent_category_code,
+				sort_sequence,
+				drillstate,
+				use_flag,
+				local_create_dtm,
+				local_update_dtm,
+				create_user_id,
+				update_user_id,
+				system_create_dtm,
+				system_update_dtm,
+				start_rank,
+				path_code,
+				path_text
+		from	hierarchy_ancestors_aggregate 
+		(
+				source hierarchy 
+				(
+						source 
+						(
+								select
+										master.tenant_id			as tenant_id,
+										master.node_id				as node_id,
+										master.hierarchy_level		as hier_level,
+										master.category_code		as category_code,
+										text.category_name			as category_name,
+										master.parent_node_id		as parent_id,
+										master.parent_category_code	as parent_category_code,
+										master.sort_sequence		as sort_sequence,
+										master.drillstate			as drillstate,
+										master.use_flag				as use_flag,
+										master.local_create_dtm		as local_create_dtm,
+										master.local_update_dtm		as local_update_dtm,
+										master.create_user_id		as create_user_id,
+										master.update_user_id		as update_user_id,
+										master.system_create_dtm	as system_create_dtm,
+										master.system_update_dtm	as system_update_dtm
+								from pg_mi_category_hichy_stru as master
+								left join pg_mi_category_lng as text
+									on	master.tenant_id		= text.tenant_id
+									and	master.category_code	= text.category_code
+									and text.language_code		= 'KO'
+						)
+						start where master.parent_node_id is null
+						sibling order by parent_id
+				)
+				measures 
+				(
+					string_agg(category_code, '/') as path_code,
+					string_agg(category_name, '/') as path_text
+				)
+		)
+		union all    
+		select
+				null 																as tenant_id,
+				start_rank 															as node_id,
+				null 																as hier_level,
+				null 																as category_code,
+				null 																as category_name,
+				null 																as parent_id,
+				null 																as parent_category_code,
+				null 																as sort_sequence,
+				null 																as drillstate,
+				use_flag 															as use_flag,
+				null 																as local_create_dtm,
+				null 																as local_update_dtm,
+				null 																as create_user_id,
+				null 																as update_user_id,
+				null 																as system_create_dtm,
+				null 																as system_update_dtm,
+				null																as start_rank,
+				substr_before(path_code, '/')||'/'||string_agg(category_code, '/')	as path_code,
+				substr_before(path_text, '/')||'/'||string_agg(category_name, '/')	as path_text
+		from 
+		(
+				select
+						tenant_id,
+						node_id,
+						hier_level,
+						category_code,
+						category_name,
+						parent_id,
+						parent_category_code,
+						sort_sequence,
+						drillstate,
+						use_flag,
+						local_create_dtm,
+						local_update_dtm,
+						create_user_id,
+						update_user_id,
+						system_create_dtm,
+						system_update_dtm,
+						start_rank,
+						path_code,
+						path_text
+				from	hierarchy_ancestors_aggregate 
+				(
+						source hierarchy 
+						(
+								source 
+								(
+										select
+												master.tenant_id			as tenant_id,
+												master.node_id				as node_id,
+												master.hierarchy_level		as hier_level,
+												master.category_code		as category_code,
+												text.category_name			as category_name,
+												master.parent_node_id		as parent_id,
+												master.parent_category_code	as parent_category_code,
+												master.sort_sequence		as sort_sequence,
+												master.drillstate			as drillstate,
+												master.use_flag				as use_flag,
+												master.local_create_dtm		as local_create_dtm,
+												master.local_update_dtm		as local_update_dtm,
+												master.create_user_id		as create_user_id,
+												master.update_user_id		as update_user_id,
+												master.system_create_dtm	as system_create_dtm,
+												master.system_update_dtm	as system_update_dtm
+										from pg_mi_category_hichy_stru as master
+										left join pg_mi_category_lng as text
+											on	master.tenant_id		= text.tenant_id
+											and	master.category_code	= text.category_code
+											and text.language_code		= 'KO'
+								)
+								start where master.parent_node_id is null
+								sibling order by parent_id
+						)
+						measures 
+						(
+							string_agg(category_code, '/') as path_code,
+							string_agg(category_name, '/') as path_text
+						)
+				)
+		)
+	where	1 = 1
+	and		parent_id is not null
+	group by 
+			start_rank,
+			use_flag,
+			substr_before(path_code, '/'),
+			substr_before(path_text, '/')
+)
+group by	
+	node_id,
+	use_flag
+order by
+	node_id
+;

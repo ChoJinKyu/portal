@@ -50,7 +50,7 @@
   },
   "sap.ui5": {
     "rootView": {
-      "viewName": "pg.mm.view.MidObject",
+      "viewName": "pg.mm.view.App",
       "type": "XML",
       "async": true,
       "id": "app"
@@ -72,7 +72,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "pg.mm.i18n.i18n"
+          "bundleName": "pg.mi.i18n.i18n"
         }
       },
       "util": {
@@ -115,19 +115,19 @@
       },
       "routes": [
           {
-              "pattern": "MidObject",
-              "name": "midPage",
+              "pattern": ":layout:",
+              "name": "mainPage",
               "target": [
                   "mainObject"
               ]
           },
           {  
-              "pattern": "midObject/{layout}/{tenant_id}/{company_code}/{org_type_code}/{org_code}/{mi_material_code}",
-              "name": "midPage",
-              "target": [
-                  "mainObject",
-                  "midObject"
-              ]
+            "pattern": "midObject/{layout}/{tenant_id}/{company_code}/{org_type_code}/{org_code}/{material_code}/{supplier_code}/{mi_material_code}",
+            "name": "midPage",
+            "target": [
+                "mainObject",
+                "midObject"
+            ]
           }
       ],
       "targets": {

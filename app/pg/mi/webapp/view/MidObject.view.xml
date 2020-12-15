@@ -58,7 +58,24 @@
                             </uxap:navigationActions>
                         </uxap:ObjectPageDynamicHeaderTitle>
                     </uxap:headerTitle>
-                    <uxap:headerContent></uxap:headerContent>
+                    <uxap:headerContent>
+                        <layout:VerticalLayout>
+                            <FlexBox height="30px" alignItems="Start" justifyContent="Start" visible="{=!${oUi>/createMode}}">
+                                    <Label text="Update :"  class="sapUiLargeMarginBegin" />
+                                    <Label text="{oUiData>/update_user_id}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                                    <Label text="Update Data :" class="sapUiLargeMarginBegin" />
+                                    <Label text="{
+                                        path: 'oUiData>/system_update_dtm',
+                                        type: 'sap.ui.model.type.Date',
+                                        formatOptions: {
+                                            pattern: 'yyyy/MM/dd'
+                                        }                                        
+                                    }"  
+                                    class="sapUiTinyMarginBegin"  
+                                    design="Bold"/>  
+                            </FlexBox>          
+                        </layout:VerticalLayout>  
+                    </uxap:headerContent>
                     <uxap:sections>
                         <uxap:ObjectPageSection
                             id="pageSectionMain"
@@ -74,7 +91,7 @@
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection>                                       
                                     <form:SimpleForm
-                                        id="mainObjectForm1"
+                                        id="mid_simpleForm"
                                         editable="true"
                                         layout="ColumnLayout"
                                         columnsM="2"
@@ -88,42 +105,47 @@
                                                 text="{oUiData>/mi_material_code}" 
                                                 class="sapMLabelNoText"/>                                     
                                         <Input  id="input_mi_material_code"
+                                                valueStateText="필수"
                                                 placeholder="자재코드 입력"
-                                                value="{ 
-                                                    path : 'oUiData>/mi_material_code', 
-                                                    type : 'sap.ui.model.type.String', 
-                                                    constraints : { 
-                                                        minLength : 1, 
-                                                        maxLength : 40 
-                                                }}"
+                                                liveChange=".onMiMaterialCodeCheck"
                                                 class="sapUiSmallMarginEnd"
+                                                value="{
+                                                            path : '{_oUiData>/string}',
+                                                            type : 'sap.ui.model.type.String',
+                                                            constraints : {
+                                                                minLength: 1,
+                                                                maxLength: 30
+                                                            }
+                                                }"                                                
                                                 visible="{oUi>/createMode}"
+                                                required="{oUi>/createMode}"
                                         />
                                         <Button
                                             id="buttonMaterialCheck"
-                                            width="9em"
+                                            width="8em"
                                             text="중복Check"
-                                            visible="{oUi>/createMode}"
+                                            visible="false"
                                             press=".onMaterialCodeCheck"/> 
+
                                         <Label  text="Category 명" 
                                                 design="Bold" 
                                                 class="sapMLabelNoText"/>
+
                                         <Text   id="textcategoryName" 
                                                 text="{oUiData>/category_name}" 
                                                 class="sapMLabelNoText"
-                                                required="{oUi>/readMode}"
-                                                /> 
+                                                visible="{=!${oUi>/createMode}}"
+                                        /> 
                                         <ComboBox
                                             id="comboBoxCategory_code"
-                                            selectedKey="{oUiData>/category_code}"
-                                            visible="{oUi>/createMode}"
                                             items="{
                                                 path: '/MICategoryHierarchyStructure', 
                                                 templateShareable:false
                                             }" 
-                                            required="{=!${oUi>/readMode}}"
+                                            visible="{oUi>/createMode}"
+                                            required="{oUi>/createMode}"
                                             placeholder="선택하세요">
-                                            <core:Item key="{mICategoryView>category_code}" text="{mICategoryView>category_text}" />
+                                            <core:Item key="{category_code}" text="{category_code}" />
                                         </ComboBox>
                                         <Label  text="사용여부" 
                                                 design="Bold" 
@@ -134,6 +156,7 @@
                                                 class="sapMLabelNoText"/>
                                         <Switch id="switchUse_flag" 
                                                 visible="{=!${oUi>/readMode}}"
+                                                state="{= !${oUi>/createMode} ? ${oUiData>/use_flag} : true}"
                                         >
                                             <layoutData>
                                                 <FlexItemData growFactor="1"/>
@@ -146,7 +169,7 @@
                         </uxap:ObjectPageSection>
                     </uxap:sections>
                     <uxap:sections>
-                        <uxap:ObjectPageSection title="Material Language Manage">
+                        <uxap:ObjectPageSection titleUppercase="false" title="Material Language Manage">
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection>
                                     <uxap:blocks>
@@ -172,12 +195,15 @@
                                                         </content>
                                                     </OverflowToolbar>
                                                 </headerToolbar>                                                
-                                                <columns>
-                                                    <Column hAlign="Center" width="50px">
+                                                <columns>        
+                                                    <Column hAlign="Center" 
+                                                     width="50px"
+                                                     visible="false" 
+                                                    >
                                                         <header>
                                                             <Label text="상태"/>
                                                         </header>
-                                                    </Column>                                                
+                                                    </Column>                                                                                                      
                                                     <Column hAlign="Center">
                                                         <header>
                                                             <Label text="Language"/>
@@ -194,24 +220,26 @@
                                                         <cells>
                                                             <Text text="{mIMaterialCodeText>itemMode}"/>
                                                             <VBox>
-                                                                <ComboBox   id="comboBox_language"
-                                                                            selectionChange=".onComboBoxLanguageChange"
-                                                                            selectedKey="{mIMaterialCodeText>language_code}"
+                                                                <ComboBox   selectionChange=".onComboBoxLanguageChange"
+                                                                            selectedKey="KO"
                                                                             items="{
                                                                                 path: 'languageView>/',                                                                                                                            
                                                                                 templateShareable:false}"
-                                                                            visible="{=!${oUi>/readMode}}"
+                                                                            required="{= ${mIMaterialCodeText>itemMode}==='C'}"
+                                                                            visible="{= ${mIMaterialCodeText>itemMode}==='C'}"
                                                                             placeholder="선택">
                                                                     <core:Item key="{languageView>code}" 
                                                                                text="{languageView>code_name}"/>                                                                    
-                                                                </ComboBox>                           
+                                                                </ComboBox>
                                                                 <Text   text="{mIMaterialCodeText>language_code}"
-                                                                        visible="{oUi>/readMode}"/>
+                                                                        visible="{=${mIMaterialCodeText>itemMode}!=='C'}"/>
                                                             </VBox>
                                                             <VBox>
-                                                                <Input  value="{mIMaterialCodeText>mi_material_code_name}" 
+                                                                <Input  value="{mIMaterialCodeText>mi_material_name}" 
+                                                                        required="{=!${oUi>/readMode}}"
+                                                                        liveChange=".onRequiredCheckTable"
                                                                         visible="{=!${oUi>/readMode}}"/>
-                                                                <Text   text="{mIMaterialCodeText>mi_material_code_name}"
+                                                                <Text   text="{mIMaterialCodeText>mi_material_name}"
                                                                         visible="{oUi>/readMode}"/>
                                                             </VBox>
                                                         </cells>
@@ -222,23 +250,26 @@
                                 </uxap:ObjectPageSubSection>
                             </uxap:subSections>
                         </uxap:ObjectPageSection>
-                    </uxap:sections>
+                    </uxap:sections>             
                 </uxap:ObjectPageLayout>                        
             </content>
             <footer>
                 <OverflowToolbar id="overflowToolbar">
                     <ToolbarSpacer/>
                         <HBox visible="{oUi>/readMode}">
+                            <Button type="Transparent" text="Cancel" enabled="false"/>  
                             <Button type="Transparent" text="Edit" enabled="true" press=".onEdit"/>
                             <Button type="Transparent" text="Delete" enabled="false" />
                             <Button type="Emphasized" text="Save"  enabled="false"  />
                         </HBox>
                         <HBox visible="{oUi>/editMode}">
-                            <Button type="Transparent" text="Show" enabled="true" press=".onRead"/>
+                            <Button type="Transparent" text="Cancel" enabled="true" press=".onCancel"/>                                                
+                            <Button type="Transparent" text="Edit" enabled="false"/>
                             <Button type="Transparent" text="Delete" enabled="true" press=".onDeleteAction"/>                    
                             <Button type="Emphasized" text="Save"  enabled="true" press=".onSaveAction"/>
                         </HBox>
                         <HBox visible="{oUi>/createMode}">
+                           <Button type="Transparent" text="Cancel" enabled="true" press=".onCancel"/>  
                             <Button type="Transparent" text="Edit" enabled="false"/>
                             <Button type="Transparent" text="Delete" enabled="false"/>
                             <Button type="Emphasized" text="Save" press=".onSaveAction"/>

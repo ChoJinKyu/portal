@@ -23,7 +23,7 @@
                     <uxap:headerTitle>
                         <uxap:ObjectPageDynamicHeaderTitle>
                             <uxap:expandedHeading>
-                                <Title text="{i18n>appTitle}" wrapping="true"/>
+                                <Title text="자재별 시황자재 BOM 등록" wrapping="true"/>
                             </uxap:expandedHeading>
 
                             <uxap:navigationActions>
@@ -54,14 +54,17 @@
                     </uxap:headerTitle>
                     <uxap:headerContent>
                         <layout:VerticalLayout>
-                            <FlexBox height="30px" alignItems="Start" justifyContent="Start" visible="{=!${oUi>/createMode}}">
-                                    <Label text="관리조직 :" required="true" />
-                                    <Label text="{oUiData>/tenant_name}"  class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
-                                    <Label text="Create :"  class="sapUiLargeMarginBegin" />
-                                    <Label text="{oUiData>/create_user_id}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
-                                    <Label text="Create Data :" class="sapUiLargeMarginBegin" />
+                            <FlexBox height="30px" alignItems="Start" justifyContent="Start" visible="{=!${oUi>/createMode}}"> 
+                                    <Label text="관리조직 :" />
+                                    <Label text="{_oUiData>/org_name}" 
+                                    id="label_tenant_name"  
+                                    class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                                    <Label text="Update :"  class="sapUiLargeMarginBegin" />
+                                    <Label text="{oUiData>/update_user_id}"  
+                                    class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                                    <Label text="Update Data :" class="sapUiLargeMarginBegin" />
                                     <Label text="{
-                                        path: 'oUiData>/system_create_dtm',
+                                        path: 'oUiData>/system_update_dtm',
                                         type: 'sap.ui.model.type.Date',
                                         formatOptions: {
                                             pattern: 'yyyy/MM/dd'
@@ -87,58 +90,86 @@
                                                 <RadioButton id="radioButtonType01" text="자재명/코드" />
                                                 <RadioButton id="radioButtonType02" text="공급업체/코드" />
                                             </RadioButtonGroup>  
-                                        </FlexBox>        
-                                        <MultiInput id="multiInput_material_code" 
+                                        </FlexBox>
+                                        <Input id="input_hidden_material_code" visible="false"/>
+                                        <Input id="input_hidden_material_desc" visible="false"/>
+                                        <Input id="input_hidden_supplier_code" visible="false"/>
+                                        <Input id="input_hidden_supplier_local_name" visible="false"/>
+                                        <Input id="input_hidden_supplier_english_name" visible="false"/>
+                                        <Input id="input_material_code" 
                                                     required="{oUi>/createMode}"
-                                                    fieldGroupIds="requiredField"
                                                     width="100%"
                                                     visible="{oUi>/createMode}"
-                                                    class="sapUiSmallMarginBottom" 
-                                                    valueHelpRequest="handleValueHelpMaterial">
-                                                    <core:Item key="" text="" />
-                                        </MultiInput>                                                                            
+                                                    class="sapUiSmallMarginBottom"                                                    
+                                                    showValueHelp="true" 
+                                                    enabled = "true"
+                                                    placeholder="자재를 선택해주세요"
+                                                    valueHelpRequest=".handleValueHelpMaterial"
+                                                    value="{
+                                                            path : '{_oUiData>/string}',
+                                                            type : 'sap.ui.model.type.String',
+                                                            constraints : {
+                                                                minLength: 1,
+                                                                maxLength: 30
+                                                            }
+                                                        }"  
+                                                    />
+                                                                                
                                         <FlexBox    height="40px" 
                                                     alignItems="Start" 
                                                     justifyContent="Start" 
                                                     class="sapUiTinyMarginBottom"
                                                     visible="{=!${oUi>/createMode}}">        
-                                            <Label  text="[{oUiData>/material_code}] {oUiData>/material_description} / [{oUiData>/supplier_code}] {oUiData>/supplier_local_name}" design="Bold"/>
+                                            <Label  text="[{oUiData>/material_code}] {oUiData>/material_desc} / [{oUiData>/supplier_code}] {oUiData>/supplier_local_name}" design="Bold"/>
                                         </FlexBox>                                          
                                         <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiLargeMarginBottom" >        
                                             <layout:VerticalLayout class="sapUiLargeMarginEnd">
-                                                <Label  text="기준수량:" required="{oUi>/createMode}" class="sapUiTinyMarginBottom"/>                                               
+                                                <Label  text="기준수량:" 
+                                                        required="{oUi>/createMode}"
+                                                        textAlign="Right" 
+                                                        class="sapUiTinyMarginBottom"/>                                               
                                                 <Label  text="{oUiData>/base_quantity}" textAlign="Center"
                                                         visible="{=!${oUi>/createMode}}"
+                                                        type="Number"
                                                         design="Bold"/>
                                                 <Input  id="input_base_quantity"
                                                         required="{oUi>/createMode}"
-                                                        fieldGroupIds="requiredField"
-                                                        class="sapUiSmallMarginBottom" 
-                                                        value="{ 
-                                                            path : 'oUiData>/base_quantity', 
-                                                            type : 'sap.ui.model.type.Number', 
-                                                            constraints : { 
-                                                                minLength : 1, 
-                                                                maxLength : 15 
-                                                        }}"                                                        
-                                                        visible="{oUi>/createMode}"/>       
+                                                        class="sapUiSmallMarginBottom"
+                                                        type = "Number"
+                                                        placeholder="Number" 
+                                                        textAlign="Right"                                                                                               
+                                                        visible="{oUi>/createMode}"
+                                                        value="{
+                                                            path : '{_oUiData>/number}',
+                                                            type : 'sap.ui.model.type.Integer',
+                                                            constraints : {
+                                                                minLength: 1,
+                                                                maxLength: 10
+                                                            }
+                                                        }"                                                         
+                                                        />       
                                             </layout:VerticalLayout>  
                                             <layout:VerticalLayout class="sapUiTinyMarginBottom sapUiLargeMarginBegin sapUiLargeMarginEnd">
-                                                <Label  text="가공비:" required="{oUi>/createMode}" class="sapUiTinyMarginBottom"/>
+                                                <Label  text="가공비:" 
+                                                required="{oUi>/createMode}" 
+                                                class="sapUiTinyMarginBottom"/>
                                                 <Label  text="{oUiData>/processing_cost}" design="Bold"
                                                         visible="{=!${oUi>/createMode}}" 
                                                         class="sapUiLargeMarginEnd"/>
                                                 <Input  id="input_processing_cost"
                                                         required="{oUi>/createMode}"
-                                                        fieldGroupIds="requiredField"
                                                         visible="{oUi>/createMode}"
-                                                        value="{ 
-                                                            path : 'oUiData>/processing_cost', 
-                                                            type : 'sap.ui.model.type.Number', 
-                                                            constraints : { 
-                                                                minLength : 1, 
-                                                                maxLength : 15 
-                                                        }}"                                                           
+                                                        type = "Number"
+                                                        placeholder="Number"
+                                                        textAlign="Right"
+                                                        value="{
+                                                            path : '{_oUiData>/number}',
+                                                            type : 'sap.ui.model.type.Integer',
+                                                            constraints : {
+                                                                minLength: 1,
+                                                                maxLength: 10
+                                                            }
+                                                        }"                                                                                                                                                                        
                                                 />
                                             </layout:VerticalLayout>                                          
                                             <layout:VerticalLayout class="sapUiLargeMarginBegin sapUiLargeMarginBottom" >
@@ -149,10 +180,17 @@
                                                         design="Bold"                                                         
                                                         visible="{oUi>/readMode}"
                                                         />
-                                                <!-- 수정대상 보기와 수정이 다르다. 테스트 데이타 확인 필요   -->                                                        
+                                                            <!-- required="{= !${oUi>/readMode}}"                                           -->
                                                 <ComboBox
                                                     id="comboBox_pcst_currency_unit"                                                     
-                                                    items="{/CurrencyUnitView}"
+                                                    items ="{
+                                                        path : '/CurrencyUnitView',
+                                                        filters : [
+                                                                {path : 'tenant_id', 
+                                                                operator : 'EQ', 
+                                                                value1 : 'L2100'}                                                                            
+                                                        ]
+                                                    }"
                                                     width="100px"
                                                     selectedKey="{oUiData>/pcst_currency_unit}"                                       
                                                     placeholder="선택"
@@ -179,7 +217,7 @@
                                         Note : 수정대상 mi_material_code 전달 받은 값으로 수정 
                                          -->  
                                          <Table
-                                            id="midTableChange" 
+                                            id="midTable" 
                                             items="{midList>/}"
                                             mode="{= ${oUi>/readMode}?'None':'MultiSelect'}"
                                             width="100%">
@@ -187,17 +225,36 @@
                                                 <OverflowToolbar>
                                                     <content>
                                                         <ToolbarSpacer />
-                                                            <Button id="buttonMidTableCreate" text="Add" type="Transparent" visible="{oUi>/editMode}" press=".onMaterialDetail"/>
-                                                            <Button id="buttonMidTableDelete" text="Delete" type="Transparent" visible="{oUi>/editMode}" press=".onMidListItemDelete"/>
+                                                            <Button id="buttonMidTableCreate" 
+                                                                    text="Add" 
+                                                                    type="Transparent" 
+                                                                    visible="{=!${oUi>/readMode}}" 
+                                                                    press=".onMaterialDetail"/>
+                                                            <Button id="buttonMidTableDelete" 
+                                                                    text="Delete" 
+                                                                    type="Transparent" 
+                                                                    visible="{=!${oUi>/readMode}}" 
+                                                                    press=".onMidListItemDelete"/>
                                                     </content>
                                                 </OverflowToolbar>
                                             </headerToolbar>                                            
-                                            <columns>  
-                                                <Column hAlign="Center" width="50px">
+                                            <columns> 
+                                                <Column hAlign="Center" 
+                                                    width="10px"
+                                                    visible="false" 
+                                                >
                                                     <header>
                                                         <Label text="상태"/>
                                                     </header>
-                                                </Column>                                                 
+                                                </Column>    
+                                                <Column hAlign="Center" 
+                                                    width="10px"
+                                                    visible="false" 
+                                                >
+                                                    <header>
+                                                        <Label text="ODATA"/>
+                                                    </header>
+                                                </Column>                                                                                                                                                                                          
                                                 <Column hAlign="Center" width="150px">
                                                     <header>
                                                         <Label text="Code"/>
@@ -213,6 +270,11 @@
                                                         <Label text="Category"/>
                                                     </header>
                                                 </Column>
+                                                <Column hAlign="Center">
+                                                    <header>
+                                                        <Label text="소요량 단위"/>
+                                                    </header>
+                                                </Column>                                                
                                                 <Column hAlign="Center">
                                                     <header>
                                                         <Label text="소요량"/>
@@ -246,46 +308,59 @@
                                             </columns>
                                             <items>
                                                 <ColumnListItem>
-                                                    <cells> 
-                                                        <Text text="{midList>itemMode}" />  
+                                                    <cells>
+                                                        <Text text="{midList>itemMode}"/>
+                                                        <Text text="{midList>odataMode}"/>
                                                         <Text text="{midList>mi_material_code}" />                                          
-                                                        <Text text="{midList>mi_material_code_name}" />                                          
+                                                        <Text text="{midList>mi_material_name}" />                                          
                                                         <Text text="{midList>category_name}" />  
+                                                        <VBox  alignItems="Center">  
+                                                            <Input value="{midList>reqm_quantity_unit}" 
+                                                                visible="{=!${oUi>/readMode}}"
+                                                                submit=".onReqmQuantityUnit" 
+                                                                valueHelpRequest=".onReqmQuantityUnit" 
+                                                                showValueHelp="true"
+                                                                width="90px"/> 
+                                                            <Text   text="{midList>reqm_quantity_unit}"
+                                                                    visible="{oUi>/readMode}"/>                                                          
+  
+                                                        </VBox>                                                          
                                                         <VBox alignItems="Center">
-                                                            <Text   text="{midList>reqm_quantity}"
-                                                                    visible="{oUi>/readMode}"
-                                                             />                                      
-                                                            <Input  id="imputReqm_quantity" 
-                                                                    visible="{oUi>/editMode}"
-                                                                    required="true"
-                                                                    fieldGroupIds="requiredField"  
+                                                            <Input  visible="{=!${oUi>/readMode}}"
+                                                                    required="{=!${oUi>/readMode}}"
+                                                                    type = "Number" 
+                                                                    textAlign="Right"
+                                                                    width="30px" 
+                                                                    liveChange=".onRequiredCheckTable"
                                                                     value="{ path: 'midList>reqm_quantity',
                                                                             type: 'sap.ui.model.type.Number',
                                                                             constraints: {minLength : 1, maxLength : 10} }"/>                                                        
+                                                            <Text   text="{midList>reqm_quantity}"
+                                                                    visible="{oUi>/readMode}"
+                                                             />                                      
                                                         </VBox>
-                                                        <VBox  alignItems="Center">    
-                                                            <Text   text="{
-                                                                        path : 'midList>use_flag',
-                                                                        formatter: '.formatter.toYesNo'
-                                                                        }"
-                                                                    visible="{oUi>/readMode}"/>                                                          
-                                                            <ComboBox   id="comboboxUse_flag"
-                                                                        placeholder="선택"
-                                                                        visible="{oUi>/editMode}"  
+                                                        <VBox  alignItems="Center">  
+                                                            <ComboBox   placeholder="선택"
+                                                                        visible="{=!${oUi>/readMode}}" 
+                                                                        required="{=!${oUi>/readMode}}"
                                                                         items ="{
                                                                             path : '/UseYNView',
                                                                             formatter: '.formatter.toYesNo'
-                                                                        }"          
-                                                                        width="80px" 
+                                                                        }"        
                                                                         selectedKey="{midList>use_flag}">  
                                                                 <items> 
                                                                     <core:ListItem key="{code}" text="{code_name}"/>
                                                                 </items>
-                                                            </ComboBox>   
-                                                        </VBox>  
-                                                        <Text text="{midList>currency_unit}" />                                          
-                                                        <Text text="{midList>reqm_quantity_unit}" />                                          
-                                                        <Text text="{midList>exchange}" />                                          
+                                                            </ComboBox>                                                         
+                                                            <Text   text="{
+                                                                            path : 'midList>use_flag',
+                                                                            formatter: '.formatter.toYesNo'
+                                                                            }"
+                                                                    visible="{oUi>/readMode}"/> 
+                                                        </VBox>         
+                                                        <Text text="{midList>currency_unit}" width="40px"/>                                          
+                                                        <Text text="{midList>quantity_unit}" width="40px"/>                                          
+                                                        <Text text="{midList>exchange}" width="40px"/>                                          
                                                         <Text text="{midList>termsdelv}" />                                          
                                                     </cells>
                                                 </ColumnListItem>
@@ -302,16 +377,20 @@
                 <OverflowToolbar id="overflowToolbar">
                     <ToolbarSpacer/>
                         <HBox visible="{oUi>/readMode}">
+                            <Button type="Transparent" text="Cancel" enabled="false" />                        
                             <Button type="Transparent" text="Edit" enabled="true" press=".onEdit"/>
                             <Button type="Transparent" text="Delete" enabled="false" />
                             <Button type="Emphasized" text="Save"  enabled="false"  />
                         </HBox>
                         <HBox visible="{oUi>/editMode}">
-                            <Button type="Transparent" text="Show" enabled="true" press=".onRead"/>
+                            <!-- <Button type="Transparent" text="Show" enabled="true" press=".onRead"/> -->
+                            <Button type="Transparent" text="Cancel" enabled="true" press=".onCancel"/>
+                            <Button type="Transparent" text="Edit" enabled="false"/>
                             <Button type="Transparent" text="Delete" enabled="true" press=".onDeleteAction"/>                    
                             <Button type="Emphasized" text="Save"  enabled="true" press=".onSaveAction"/>
                         </HBox>
                         <HBox visible="{oUi>/createMode}">
+                            <Button type="Transparent" text="Cancel" enabled="true" press=".onCancel"/>                        
                             <Button type="Transparent" text="Edit" enabled="false"/>
                             <Button type="Transparent" text="Delete" enabled="false"/>
                             <Button type="Emphasized" text="Save" press=".onSaveAction"/>
