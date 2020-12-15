@@ -1,4 +1,3 @@
-
 {
   "_version": "1.12.0",
   "sap.app": {
@@ -21,7 +20,7 @@
         }
       },
       "commonUtilService": {
-        "uri": "srv-api/odata/v2/util.CommonService/",
+        "uri": "srv-api/odata/v2/cm.util.CommonService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -73,7 +72,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "pg.mm.i18n.i18n"
+          "bundleName": "pg.mi.i18n.i18n"
         }
       },
       "util": {
@@ -106,7 +105,7 @@
         "viewType": "XML",
         "viewPath": "pg.mm.view",
         "controlId": "fcl",
-                "transition": "slide",
+				"transition": "slide",
         "bypassed": {
           "target": [
             "notFound"
@@ -123,13 +122,12 @@
               ]
           },
           {  
-           
-              "pattern": "midObject/{layout}/{tenant_id}/{company_code}/{org_type_code}/{org_code}/{material_code}/{supplier_code}/{mi_material_code}",
-              "name": "midPage",
-              "target": [
-                  "mainObject",
-                  "midObject"
-              ]
+            "pattern": "midObject/{layout}/{tenant_id}/{company_code}/{org_type_code}/{org_code}/{material_code}/{supplier_code}/{mi_material_code}",
+            "name": "midPage",
+            "target": [
+                "mainObject",
+                "midObject"
+            ]
           }
       ],
       "targets": {

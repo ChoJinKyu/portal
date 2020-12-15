@@ -59,7 +59,7 @@ sap.ui.define([
             },
             serviceName : {
                 marketIntelligenceService : "pg.marketIntelligenceService", //main Service
-                orgTenantView : "/OrgTenantView", //관리조직 View
+                orgCodeView : "/orgCodeView", //관리조직 View
                 mIMaterialCodeList : "/MIMaterialCodeList",
                 mIMatListView : "/MIMatListView",
                 mIMaterialCode : "/MIMaterialCode",
@@ -469,24 +469,7 @@ sap.ui.define([
             this._m.filter.org_code = oArgs.org_code;
             this._m.filter.mi_material_code = oArgs.mi_material_code;
             
-            //관리조직 명 확인
-            //관리조직 이름 
-            var orgTenantViewFilters = [
-                new Filter("tenant_id", FilterOperator.EQ, oArgs.tenant_id)
-            ];
-
-            oModel.read(this._m.serviceName.orgTenantView, {
-                async: false,
-                filters: orgTenantViewFilters,
-                success: function (rData, reponse) {
-
-                    //console.log("json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
-                    if(reponse.data.results.length>0){
-                        _oUiData.setProperty("/tenant_name", reponse.data.results[0].tenant_name);
-                    }
-                }
-            });
-
+ 
             if (oArgs.mi_material_code == "new") {
                 console.log("---------- New Create item ----------");
 

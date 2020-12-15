@@ -23,7 +23,7 @@
                     <uxap:headerTitle>
                         <uxap:ObjectPageDynamicHeaderTitle>
                             <uxap:expandedHeading>
-                                <Title text="{i18n>appTitle}" wrapping="true"/>
+                                <Title text="자재별 시황자재 BOM 등록" wrapping="true"/>
                             </uxap:expandedHeading>
 
                             <uxap:navigationActions>
@@ -54,17 +54,17 @@
                     </uxap:headerTitle>
                     <uxap:headerContent>
                         <layout:VerticalLayout>
-                            <FlexBox height="30px" alignItems="Start" justifyContent="Start" >
+                            <FlexBox height="30px" alignItems="Start" justifyContent="Start" visible="{=!${oUi>/createMode}}"> 
                                     <Label text="관리조직 :" />
-                                    <Label text="{_oUiData>/tenant_name}" 
+                                    <Label text="{_oUiData>/org_name}" 
                                     id="label_tenant_name"  
                                     class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
-                                    <Label text="Create :"  class="sapUiLargeMarginBegin" />
-                                    <Label text="{oUiData>/create_user_id}"  
+                                    <Label text="Update :"  class="sapUiLargeMarginBegin" />
+                                    <Label text="{oUiData>/update_user_id}"  
                                     class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
-                                    <Label text="Create Data :" class="sapUiLargeMarginBegin" />
+                                    <Label text="Update Data :" class="sapUiLargeMarginBegin" />
                                     <Label text="{
-                                        path: 'oUiData>/system_create_dtm',
+                                        path: 'oUiData>/system_update_dtm',
                                         type: 'sap.ui.model.type.Date',
                                         formatOptions: {
                                             pattern: 'yyyy/MM/dd'
@@ -124,7 +124,10 @@
                                         </FlexBox>                                          
                                         <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiLargeMarginBottom" >        
                                             <layout:VerticalLayout class="sapUiLargeMarginEnd">
-                                                <Label  text="기준수량:" required="{oUi>/createMode}" class="sapUiTinyMarginBottom"/>                                               
+                                                <Label  text="기준수량:" 
+                                                        required="{oUi>/createMode}"
+                                                        textAlign="Right" 
+                                                        class="sapUiTinyMarginBottom"/>                                               
                                                 <Label  text="{oUiData>/base_quantity}" textAlign="Center"
                                                         visible="{=!${oUi>/createMode}}"
                                                         type="Number"
@@ -133,7 +136,8 @@
                                                         required="{oUi>/createMode}"
                                                         class="sapUiSmallMarginBottom"
                                                         type = "Number"
-                                                        placeholder="Number"                                                                                                
+                                                        placeholder="Number" 
+                                                        textAlign="Right"                                                                                               
                                                         visible="{oUi>/createMode}"
                                                         value="{
                                                             path : '{_oUiData>/number}',
@@ -157,6 +161,7 @@
                                                         visible="{oUi>/createMode}"
                                                         type = "Number"
                                                         placeholder="Number"
+                                                        textAlign="Right"
                                                         value="{
                                                             path : '{_oUiData>/number}',
                                                             type : 'sap.ui.model.type.Integer',
@@ -241,7 +246,15 @@
                                                     <header>
                                                         <Label text="상태"/>
                                                     </header>
-                                                </Column>                                                                                                                                           
+                                                </Column>    
+                                                <Column hAlign="Center" 
+                                                    width="10px"
+                                                    visible="false" 
+                                                >
+                                                    <header>
+                                                        <Label text="ODATA"/>
+                                                    </header>
+                                                </Column>                                                                                                                                                                                          
                                                 <Column hAlign="Center" width="150px">
                                                     <header>
                                                         <Label text="Code"/>
@@ -297,25 +310,17 @@
                                                 <ColumnListItem>
                                                     <cells>
                                                         <Text text="{midList>itemMode}"/>
+                                                        <Text text="{midList>odataMode}"/>
                                                         <Text text="{midList>mi_material_code}" />                                          
                                                         <Text text="{midList>mi_material_name}" />                                          
                                                         <Text text="{midList>category_name}" />  
                                                         <VBox  alignItems="Center">  
-                                                            <ComboBox   placeholder="선택"
-                                                                        visible="{=!${oUi>/readMode}}" 
-                                                                        items ="{
-                                                                            path : '/UnitOfMeasureView',
-                                                                            filters : [
-                                                                                    {path : 'tenant_id', 
-                                                                                    operator : 'EQ', 
-                                                                                    value1 : 'L2100'}                                                                            
-                                                                            ]
-                                                                        }"
-                                                                        selectedKey="{midList>reqm_quantity_unit}">  
-                                                                <items> 
-                                                                    <core:ListItem key="{uom_code}" text="{uom_name}"/>
-                                                                </items>
-                                                            </ComboBox>                                                           
+                                                            <Input value="{midList>reqm_quantity_unit}" 
+                                                                visible="{=!${oUi>/readMode}}"
+                                                                submit=".onReqmQuantityUnit" 
+                                                                valueHelpRequest=".onReqmQuantityUnit" 
+                                                                showValueHelp="true"
+                                                                width="90px"/> 
                                                             <Text   text="{midList>reqm_quantity_unit}"
                                                                     visible="{oUi>/readMode}"/>                                                          
   
@@ -324,6 +329,8 @@
                                                             <Input  visible="{=!${oUi>/readMode}}"
                                                                     required="{=!${oUi>/readMode}}"
                                                                     type = "Number" 
+                                                                    textAlign="Right"
+                                                                    width="30px" 
                                                                     liveChange=".onRequiredCheckTable"
                                                                     value="{ path: 'midList>reqm_quantity',
                                                                             type: 'sap.ui.model.type.Number',
@@ -332,31 +339,28 @@
                                                                     visible="{oUi>/readMode}"
                                                              />                                      
                                                         </VBox>
-                                                        
-                                                        <!-- required="{=!${oUi>/readMode}}" -->
                                                         <VBox  alignItems="Center">  
                                                             <ComboBox   placeholder="선택"
                                                                         visible="{=!${oUi>/readMode}}" 
-                                                                        
+                                                                        required="{=!${oUi>/readMode}}"
                                                                         items ="{
                                                                             path : '/UseYNView',
                                                                             formatter: '.formatter.toYesNo'
-                                                                        }"          
+                                                                        }"        
                                                                         selectedKey="{midList>use_flag}">  
                                                                 <items> 
                                                                     <core:ListItem key="{code}" text="{code_name}"/>
                                                                 </items>
-                                                            </ComboBox>                                                           
+                                                            </ComboBox>                                                         
                                                             <Text   text="{
-                                                                        path : 'midList>use_flag',
-                                                                        formatter: '.formatter.toYesNo'
-                                                                        }"
-                                                                    visible="{oUi>/readMode}"/>                                                          
-  
-                                                        </VBox>  
-                                                        <Text text="{midList>currency_unit}" width="50px"/>                                          
-                                                        <Text text="{midList>reqm_quantity_unit}" width="50px"/>                                          
-                                                        <Text text="{midList>exchange}" />                                          
+                                                                            path : 'midList>use_flag',
+                                                                            formatter: '.formatter.toYesNo'
+                                                                            }"
+                                                                    visible="{oUi>/readMode}"/> 
+                                                        </VBox>         
+                                                        <Text text="{midList>currency_unit}" width="40px"/>                                          
+                                                        <Text text="{midList>quantity_unit}" width="40px"/>                                          
+                                                        <Text text="{midList>exchange}" width="40px"/>                                          
                                                         <Text text="{midList>termsdelv}" />                                          
                                                     </cells>
                                                 </ColumnListItem>
