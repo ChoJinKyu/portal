@@ -10,8 +10,12 @@ public class TimezoneUtil {
     
     public static ZonedDateTime getZonedNow(){
         // ZoneId KST = ZoneId.of("UTC+9");
+        long offsetHour = 9L;
+        long offsetMinute = 0L;
 		ZonedDateTime localNow = ZonedDateTime.now();
-		return localNow.plusHours(9);
+        localNow = localNow.plusHours(offsetHour);
+        localNow = localNow.plusMinutes(offsetMinute);
+        return localNow;
     }
 
 }
