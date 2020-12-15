@@ -58,11 +58,14 @@ sap.ui.define([
 
       this.setModel(new ManagedModel(), "master");
       this.setModel(new ManagedListModel(), "details");
+      //this.setModel(new ManagedListModel(), "menu");
 
       oTransactionManager = new TransactionManager();
       oTransactionManager.addDataModel(this.getModel("master"));
      oTransactionManager.addDataModel(this.getModel("details"));
+     //oTransactionManager.addDataModel(this.getModel("menu"));
     
+     //this.byId("searchChain").fireChange();
       //this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
       this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
       this.enableMessagePopover();
@@ -84,32 +87,17 @@ sap.ui.define([
       },
 
     // 역할별 메뉴관리 콤보박스 변경시 
-    // chainComboChange: function (event) {
-    //     this.getView()
-    //       .setBusy(true)
-    //       .getModel("details")
-    //       .setTransactionModel(this.getView().getModel())
-    //       .details("/Role_Menu", {
-    //         filters: [
-    //           // 조회조건
-    //           new Filter("menu_code", FilterOperator.EQ, "CM1200"),
-    //           new Filter("chain_code", FilterOperator.EQ, this.byId("searchChain").getSelectedKey())
-    //         ]
-    //       })
-    //       // 성공시
-    //       .then((function (oData) {
-    //         console.log(">>>> success", oData);
-    //       }).bind(this))
-    //       // 실패시
-    //       .catch(function (oError) {
-    //         console.log(">>>> fail", oError);
-    //       })
-    //       // 모래시계해제
-    //       .finally((function () {
-    //         console.log(">>>> finally");
-    //         this.getView().setBusy(false);
-    //       }).bind(this));
-    //   },
+    chainComboChange: function (oEvent) {
+        this.getView().getModel().read("/Menu_haa", {
+          filters: [
+            new Filter("language_code", FilterOperator.EQ, "KO"),
+            new Filter("menu_code", FilterOperator.EQ, oEvent.getSource().getSelectedKey())
+          ],
+          success: (function (oData) {
+            this.getView().getModel("menu").setData({"Menu_haa" : oData.results})
+          }).bind(this)
+        });
+    },
     /* =========================================================== */
     /* event handlers                                              */
     /* =========================================================== */
@@ -308,9 +296,20 @@ sap.ui.define([
             oTable.expandToLevel(i);
         }
 
+        // var oMenuModel = this.getModel("menu");
+        // oMenuModel.setTransactionModel(this.getModel());
+        // oMenuModel.read("/Menu_haa", {
+        //   filters: [
+        //     new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+        //     new Filter("role_code", FilterOperator.EQ, this._sRoleCode)
+        //   ],
+        //   success: function (oData) {
+        //     console.log("Menu_haa new ##### ", oData, oMenuModel);
+        //   }
+        // });
+
         var oDetailsModel = this.getModel("details");
         oDetailsModel.setTransactionModel(this.getModel());
-
         oDetailsModel.read("/Role_Menu", {
           filters: [
             new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
@@ -333,9 +332,20 @@ sap.ui.define([
             oTable.expandToLevel(i);
         }
 
+        // var oMenuModel = this.getModel("menu");
+        // oMenuModel.setTransactionModel(this.getModel());
+        // oMenuModel.read("/Menu_haa", {
+        //   filters: [
+        //     new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+        //     new Filter("role_code", FilterOperator.EQ, this._sRoleCode)
+        //   ],
+        //   success: function (oData) {
+        //     console.log("Menu_haa new ##### ", oData, oMenuModel);
+        //   }
+        // });
+
         var oDetailsModel = this.getModel("details");
         oDetailsModel.setTransactionModel(this.getModel());
-
         oDetailsModel.read("/Role_Menu", {
           filters: [
             new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
@@ -343,7 +353,7 @@ sap.ui.define([
           ],
           success: function (oData) {
             console.log("_onRoutedThisPage new ##### ", oData, oDetailsModel);
-          }
+          }      
         });
 
         this._toShowMode();

@@ -74,8 +74,8 @@
       "subMenus": [
         {
           "name": "사용자 관리",
-          "url": "../cm/codeMgr/webapp",
-          "component": "cm.codeMgr"
+          "url": "../cm/userMgr/webapp",
+          "component": "cm.userMgr"
         },
         {
           "name": "권한관리",

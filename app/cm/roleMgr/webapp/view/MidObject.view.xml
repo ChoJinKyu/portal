@@ -115,8 +115,11 @@
                             selectionMode="MultiToggle"
                             selectionBehavior="Row"
                             enableColumnReordering="false"
+                            expandFirstLevel="true"
                             rows="{
                                 path : 'menu>/Menu_haa',
+                                filters: [
+                                ],
                                 parameters : {
                                     countMode: 'Inline',
                                     treeAnnotationProperties : {
@@ -124,7 +127,8 @@
                                         hierarchyNodeFor : 'node_id',
                                         hierarchyParentNodeFor : 'parent_id',
                                         hierarchyDrillStateFor : 'drill_state'
-                                    }
+                                    },
+                                    numberOfExpandedLevels: 2
                                 }
                             }"
                             >
