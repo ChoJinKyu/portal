@@ -29,9 +29,53 @@
                         search=".onFilterBarSuppSearch" 
                         isRunningInValueHelpDialog="true" 
                         showFilterConfiguration="false"
-                        useToolbar="false"
-                        showGoOnFB="false" >
+                        useToolbar="false" >
                 <fb:filterGroupItems>
+                <fb:FilterGroupItem
+						groupName="__$INTERNAL$"
+						name="company"
+						label="Company"
+						visibleInFilterBar="true"
+					>
+						<fb:control>
+							<m:Select id="supplierCompany" editable="false" forceSelection="false" width="100%" selectedKey="" change="handleChangeImpComp" items="{
+                                path: 'cmOrgModel>/Org_Company',
+                                filters: [
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                ],
+                                sorter: { path: 'company_code'}
+                            }">
+                                <m:items>
+                                    <core:Item key="{cmOrgModel>company_code}" text="[{cmOrgModel>company_code}] {cmOrgModel>company_name}" />
+                                </m:items>
+                            </m:Select>
+						</fb:control>
+					</fb:FilterGroupItem>
+
+                    <fb:FilterGroupItem
+						groupName="__$INTERNAL$"
+						name="plant"
+						label="Plant"
+						visibleInFilterBar="true"
+					>
+						<fb:control>
+							<m:Select id="supplierPlant" editable="false" forceSelection="false" width="100%" selectedKey="" selectionFinish="" items="{
+                                path: 'dseModel>/Divisions',
+                                filters: [
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                    
+                                    
+                                ],
+                                sorter: { path: 'org_code'}
+                            }">
+                                <m:items>
+                                    <core:Item key="{dseModel>org_code}" text="[{dseModel>org_code}] {dseModel>org_name}" />
+                                </m:items>
+                            </m:Select>
+						</fb:control>
+					</fb:FilterGroupItem>
+                
+
 					<fb:FilterGroupItem
 						groupName="__$INTERNAL$"
 						name="supplier_code"
