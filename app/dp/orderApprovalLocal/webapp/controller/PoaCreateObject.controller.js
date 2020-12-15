@@ -72,12 +72,14 @@ sap.ui.define([
             this.getView().setModel(new ManagedListModel(), "appDetail");
             this.getView().setModel(new ManagedListModel(), "moldMaster");
             this.getView().setModel(new ManagedListModel(), "approver");
+            this.getView().setModel(new ManagedListModel(), "referer");
 
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("appMaster"));
             oTransactionManager.addDataModel(this.getModel("appDetail"));
             oTransactionManager.addDataModel(this.getModel("moldMaster"));
             oTransactionManager.addDataModel(this.getModel("approver"));
+            //oTransactionManager.addDataModel(this.getModel("referer"));
             
             this.setRichEditor();
         },
@@ -270,6 +272,10 @@ sap.ui.define([
 
             this._bindView("/Approvers", "approver", filter, function (oData) {
                 this._onLoadApproverRow(oData.results);
+            }.bind(this));
+
+            this._bindView("/Referers", "referer", filter, function (oData) {
+                
             }.bind(this));
 
             oTransactionManager.setServiceModel(this.getModel());
