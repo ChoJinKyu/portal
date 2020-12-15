@@ -314,7 +314,7 @@
                                     <Label text="Part No"/>
                                     </VBox>
                                     <table:template>
-                                        <Text id="family_part_number_1" text="{appDetail>familyPartNumber1}" />
+                                        <Text id="family_part_number_1" text="{appDetail>family_part_number_1}" />
                                     </table:template>
                                 </table:Column>
                             </table:columns>
@@ -439,7 +439,7 @@
                                 <cells>
                                     <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
                                     <Text text="{approver>approve_sequence}" />
-                                    <ComboBox  id="searchItemType" width="100%"
+                                    <ComboBox  id="approverType" width="100%"
                                         selectedKey="{approver>approver_type_code}" 
                                         enabled="{approver>editMode}" 
                                         items="{ path : 'util>/CodeDetails',
@@ -467,7 +467,7 @@
                     <uxap:ObjectPageSubSection>
                         <VBox class="sapUiSmallMarginBegin">
                          <Toolbar>
-                          <Label text="Referrer" />
+                          <Label text="Referer" />
                           <ToolbarSpacer/>
                         <HBox alignItems="End" justifyContent="End" >
                             <Label text="Adress Book" class=""/>
@@ -481,16 +481,15 @@
                         </Toolbar>
                             <layout:VerticalLayout class="sapUiContentPadding" width="100%">
                                 <MultiComboBox
-                                    selectionChange="handleSelectionChangeReferrer"
-                                    selectionFinish="handleSelectionFinishReferrer"
+                                    selectionChange="handleSelectionChangeReferer"
+                                    selectionFinish="handleSelectionFinishReferer"
                                     width="100%"
-                                    items="{ path: 'org>/Org_Company',
+                                    items="{ path: 'util>/Employee',
                                                 filters: [
                                                     {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                                ],
-                                                sorter: { path: 'company_code'}
+                                                ]
                                             }">
-                                    <core:Item key="{org>company_code}" text="{org>company_name}" />
+                                    <core:Item key="{util>employee_number}" text="{util>user_local_name}" />
                                 </MultiComboBox>
                             </layout:VerticalLayout>
                             <layoutData>
