@@ -34,8 +34,9 @@ sap.ui.define([
     /**
      * @description 품의 목록 (총 품의 공통)
      * @date 2020.11.19 
-     * @author jinseon.lee , daun.lee 
+     * @author daun.lee 
      */
+    
     var toggleButtonId = "";
     var dialogId = "";
     var path = '';
@@ -79,7 +80,7 @@ sap.ui.define([
             this.getRouter().getRoute("approvalList").attachPatternMatched(this._onRoutedThisPage, this);
 
             this._oTPC = new TablePersoController({
-                customDataKey: "moldApprovalList",
+                customDataKey: "approvalList",
                 persoService: ApprovalListPersoService
             }).setTable(this.byId("mainTable"));
             //console.log(this.byId("moldMstTable"));
@@ -91,7 +92,7 @@ sap.ui.define([
             // init and activate controller
             this._oTPC = new TablePersoController({
                 table: this.byId("mainTable"),
-                componentName: "moldApprovalList",
+                componentName: "approvalList",
                 persoService: ApprovalListPersoService,
                 hasGrouping: true
             }).activate();
@@ -160,6 +161,9 @@ sap.ui.define([
 		 * @public
 		 */
         onMainTablePersoButtonPressed: function (oEvent) {
+            this._oTPC.getAggregation("_tablePersoDialog").open();
+            console.log(this._oTPC.getAggregation("_tablePersoDialog"));
+            console.log(this._oTPC.openDialog);
             this._oTPC.openDialog();
         },
 
@@ -342,7 +346,7 @@ sap.ui.define([
                 this.oColModel = new JSONModel({
                     "cols": [
                         {
-                            "label": "Part No",
+                            "label": "Mold No",
                             "template": "mold_number"
                         },
                         {
@@ -358,7 +362,7 @@ sap.ui.define([
 
                 path = '/PartNumbers';
 
-                this._oValueHelpDialog.setTitle('Part No');
+                this._oValueHelpDialog.setTitle('Mold No');
                 this._oValueHelpDialog.setKey('mold_number');
                 this._oValueHelpDialog.setDescriptionKey('spec_name');
 
@@ -666,7 +670,7 @@ sap.ui.define([
                 //oSelected  = oTable.getSelectedItems(),
                 oSelected = [],
                 checkBoxs = this.getView().getControlsByFieldGroupId("checkBoxs");
-            console.log(checkBoxs);
+            
             for (var i = 0; i < checkBoxs.length; i++) {
                 if (checkBoxs[i].mProperties.selected == true) {
                     oSelected.push(i);
@@ -966,7 +970,7 @@ sap.ui.define([
 				}, {
 					name : "Requestor",
 					template : {
-						content : "{requestor_number}"
+						content : "{requestor_empno}"
 					}
 				}, {
 					name : "Request Date",
