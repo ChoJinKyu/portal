@@ -30,13 +30,15 @@ entity TC_Project_View {
         mcst_excl_flag              : Boolean             @title : '재료비제외여부';
         mcst_excl_reason            : String(3000)        @title : '재료비제외사유';
         product_group_text          : String(30)          @title : '제품군코드명';
+        project_grade_text          : String(30)          @title : '프로젝트등급코드명';
         source_type_text            : String(30)          @title : '출처구분코드명(용도)';
+        bom_type_text               : String(30)          @title : '자재명세서유형코드명';
+        project_status_text         : String(30)          @title : '프로젝트상태코드명';
         project_leader_name         : String(30)          @title : 'PL명';
         buyer_name                  : String(30)          @title : '구매담당자(PM)명';
-        bom_type_text               : String(30)          @title : '자재명세서유형코드명';
         project_develope_event_code : String(30)          @title : '프로젝트개발이벤트코드';
         last_register_date          : Date                @title : '최종등록일자';
         estimate_status_name        : String(30)          @title : '견적재료비상태명';
-        target_status_name          : String(30)          @title : '목표료비상태명';
+        target_status_name          : String(30)          @title : '목표재료비상태명';
         forecast_status_name        : String(30)          @title : '예상재료비상태명';
 }
