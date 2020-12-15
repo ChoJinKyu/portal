@@ -16,6 +16,7 @@ entity MI_Mat_Code_BOM_Management_View {
         base_quantity         : Decimal(17, 3)@title : '기준수량';
         processing_cost       : Decimal(17, 3)@title : '가공비';
         pcst_currency_unit    : String(30)    @title : '가공비통화단위';
+    key mi_bom_id             : String(100)   @title : '시황자재명세서ID';
     key mi_material_code      : String(40)    @title : '시황자재코드';
         mi_material_name      : String(240)   @title : '시황자재명';
         category_code         : String(40)    @title : '카테고리코드';

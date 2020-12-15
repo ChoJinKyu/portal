@@ -13,6 +13,7 @@ view pg_MI_Mat_Code_Bom_Management_View as
 			header.base_quantity			as base_quantity,
 			header.processing_cost			as processing_cost,
 			header.pcst_currency_unit		as pcst_currency_unit,
+            header.mi_bom_id                as mi_bom_id,
 			item.mi_material_code			as mi_material_code,
 			mimattext.mi_material_name		as mi_material_name,
 			mimatcode.category_code			as category_code,

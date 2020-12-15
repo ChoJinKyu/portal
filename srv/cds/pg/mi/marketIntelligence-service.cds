@@ -35,7 +35,7 @@ namespace pg;
 service marketIntelligenceService {
 
     // Entity List
-    entity MICategoryHierarchyStructure @(title : 'Category 계층구조')  as projection on MICategHierStru.MI_Category_Hichy_Stru;
+    entity MICategoryHierarchyStructure @(title : 'Category 계층구조') as projection on MICategHierStru.MI_Category_Hichy_Stru;
     entity MICategoryText @(title : '카테고리명') as projection on MICategText.MI_Category_Lng;
     entity MIMaterialCode @(title : '시황자재 속성') as projection on MIMatCode.MI_Material_Code;
     entity MIMaterialCodeText @(title : '시황자재명') as projection on MIMatCodetext.MI_Material_Code_Lng;

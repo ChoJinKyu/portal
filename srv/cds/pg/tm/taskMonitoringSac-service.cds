@@ -6,8 +6,8 @@ using {cm.Org_Plant as OrgPlant} from '../../../../db/cds/cm/orgMgr/CM_ORG_PLANT
 
 namespace pg;
 
-@path : '/pg.monitorSacService'
-service monitorSacService {
+@path : '/pg.taskMonitoringSacService'
+service taskMonitoringSacService {
 
     // Entity List
     // View List
