@@ -631,8 +631,8 @@ sap.ui.define([
             var that = this;
             aItems.forEach(function (oItem) {
                 var obj = new JSONModel({
-                    user_name: oItem.getCells()[0].getText()
-                    , employee_number: oItem.getCells()[1].getText()
+                    user_name: oItem.getCells()[1].getText()
+                    , employee_number: oItem.getCells()[0].getText()
                 });
                 that._approvalRowAdd(obj);
             });
