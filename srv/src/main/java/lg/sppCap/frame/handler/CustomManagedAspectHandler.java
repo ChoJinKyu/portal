@@ -1,7 +1,5 @@
 package lg.sppCap.frame.handler;
 
-import java.time.Instant;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +16,11 @@ import com.sap.cds.services.utils.OrderConstants;
 import org.springframework.stereotype.Component;
 
 import lg.sppCap.util.CustomCdsServiceUtils;
+import lg.sppCap.util.TimezoneUtil;
 
+/**
+ * copied from com.sap.cds.services.impl.persistence.ManagedAspectHandler;
+ */
 @Component
 @ServiceName(value = "*", type = PersistenceService.class)
 public class CustomManagedAspectHandler implements EventHandler {
@@ -36,14 +38,9 @@ public class CustomManagedAspectHandler implements EventHandler {
 	@HandlerOrder(OrderConstants.Before.CALCULATE_FIELDS)
 	public void calculateManagedFields(EventContext context) {
 		String event = context.getEvent();
-
 		List<Map<String, Object>> entries = CustomCdsServiceUtils.getEntities(context);
-
-        Instant now = Instant.now();
-        ZoneId KST = ZoneId.of("UTC+9");
-        // LocalDateTime localNow = now.atZone(KST).toLocalDateTime();
-        ZonedDateTime localNow = ZonedDateTime.now(KST);
-        
+		
+		ZonedDateTime localNow = TimezoneUtil.getZonedNow();
         if(CdsService.EVENT_CREATE.equals(event)){
             for(int i = 0; i < entries.size(); i++){
                 entries.get(i).put("local_create_dtm", localNow);
