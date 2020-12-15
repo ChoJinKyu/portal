@@ -1,34 +1,35 @@
 sap.ui.define(["jquery.sap.global"],
     function (jQuery) {
         "use strict";
+        var i = 0;
 
         var _columns = [
             {
-                id: "moldApprovalList-approvalList-mainColumnChainCode",
+                id: "moldApprovalList-approvalList-mainColumnApprovalCategory",
                 order: 0,
-                text: "Chain",
+                text: "Approval Category",
                 visible: true
             },
             {
-                id: "moldApprovalList-approvalList-mainColumnLanguageCode",
+                id: "moldApprovalList-approvalList-mainColumnCompany",
                 order: 1,
-                text: "Language",
+                text: "Company",
                 visible: false
             },
             {
-                id: "moldApprovalList-approvalList-mainColumnMessageCode",
+                id: "moldApprovalList-approvalList-mainColumnPlant",
                 order: 4,
-                text: "Code",
+                text: "Plant",
                 visible: false
             },
             {
-                id: "moldApprovalList-approvalList-mainColumnMessageContents",
+                id: "moldApprovalList-approvalList-mainColumnApprovalNo",
                 order: 2,
                 text: "Contents",
                 visible: true
             },
             {
-                id: "moldApprovalList-approvalList-mainColumnMessageTypeCode",
+                id: "moldApprovalList-approvalList-mainColumnSubject",
                 order: 3,
                 text: "Type",
                 visible: true
@@ -87,15 +88,19 @@ sap.ui.define(["jquery.sap.global"],
 
             getGroup: function (oColumn) {
                 var sId = oColumn.getId();
-                if (sId.indexOf("mainColumnChainCode") != -1 ||
-                    sId.indexOf("mainColumnLanguageCode") != -1 ||
-                    sId.indexOf("mainColumnMessageCode") != -1) {
-                    return "Keys";
+                
+                if (sId.indexOf("moldProductionTypeColumn") != -1 ||
+                    sId.indexOf("mainColumnCompany") != -1 ||
+                    sId.indexOf("mainColumnPlant") != -1 ||
+                    sId.indexOf("mainColumnApprovalNo") != -1 ||
+                    sId.indexOf("mainColumnSubject") != -1) {
+                    return "Primary Group";
                 }
                 return "Others";
             }
         };
 
+        ApprovalListPersoService.delPersData = ApprovalListPersoService.resetPersData;
         return ApprovalListPersoService;
 
     });

@@ -78,6 +78,11 @@ sap.ui.define([
 
             this.getRouter().getRoute("approvalList").attachPatternMatched(this._onRoutedThisPage, this);
 
+            this._oTPC = new TablePersoController({
+                customDataKey: "moldApprovalList",
+                persoService: ApprovalListPersoService
+            }).setTable(this.byId("mainTable"));
+            //console.log(this.byId("moldMstTable"));
             this._doInitTablePerso();
 
         },
