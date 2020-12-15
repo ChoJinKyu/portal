@@ -1070,6 +1070,27 @@ sap.ui.define([
         },
 
         /**
+         * @description 미리보기 
+         */
+        onPagePreviewButtonPress : function(oEvent){
+                var oView = this.getView();
+                var oButton = oEvent.getSource();
+                if (!this._oDialog) {
+                    this._oDialog = Fragment.load({
+                        id: oView.getId(),
+                        name: "dp.budgetExecutionApproval.view.BeaObjectPreview",
+                        controller: this
+                    }).then(function (oDialog) {
+                        oView.addDependent(oDialog);
+                        return oDialog;
+                    }.bind(this));
+                }
+
+                this._oDialog.then(function (oDialog) {
+                    oDialog.open();
+                });
+        },
+        /**
          * @description save
          */
         onPageDraftButtonPress: function () {
