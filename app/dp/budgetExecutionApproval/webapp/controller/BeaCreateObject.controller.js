@@ -80,18 +80,18 @@ sap.ui.define([
             this.getView().setModel(new ManagedModel(), "appMaster");
             this.getView().setModel(new ManagedListModel(), "appDetail");
             // this.getView().setModel(new ManagedListModel(), "MoldMasterList");
-            this.getView().setModel(new ManagedListModel(), "Approvers");
+            this.getView().setModel(new ManagedListModel(), "Approvers"); // 승인자 
+            this.getView().setModel(new ManagedListModel(), "Referer"); // 참조자 
 
 
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("appMaster"));
             oTransactionManager.addDataModel(this.getModel("appDetail"));
+            oTransactionManager.addDataModel(this.getModel("Referer"));
             // oTransactionManager.addDataModel(this.getModel("MoldMasterList"));
             oTransactionManager.addDataModel(this.getModel("Approvers"));
 
             this.setRichEditor(); // 한번만 로드 
-           
-
         },
 
         onAfterRendering: function () {
@@ -328,6 +328,16 @@ sap.ui.define([
             this._bindView("/Approver", "Approvers", schFilter, function (oData) {
                 console.log("Approver >>>>>>", oData);
                  that._onLoadApprovalRow();
+            });
+   
+            this._bindView("/Referers", "Referer", schFilter, function (oData) { 
+                that.getView().byId("referrers");
+			    if(oData.results.length > 0){ 
+                    oData.results.forEach(function(rfData){
+                        that.getView().byId("referrers").mProperties.selectedKeys.push(rfData.referer_empno);
+                    });
+                    
+                }
             });
    
             oTransactionManager.setServiceModel(this.getModel());
@@ -956,8 +966,9 @@ sap.ui.define([
             }
         },
 
-
         handleSelectionChangeReferrer: function (oEvent) { // Referrer 
+            console.log(" handleSelectionChangeReferrer oEvent >>> " , oEvent);
+
             var changedItem = oEvent.getParameter("changedItem");
             var isSelected = oEvent.getParameter("selected");
 
@@ -966,27 +977,21 @@ sap.ui.define([
                 state = "Deselected";
             }
 
-            MessageToast.show("Event 'selectionChange': " + state + " '" + changedItem.getText() + "'", {
+          /*  MessageToast.show("Event 'selectionChange': " + state + " '" + changedItem.getText() + "'", {
                 width: "auto"
-            });
+            }); */ 
         },
 
         handleSelectionFinishReferrer: function (oEvent) { // Referrer 
-            var selectedItems = oEvent.getParameter("selectedItems");
-            var messageText = "Event 'selectionFinished': [";
+           
+            this.selectedReferrerItems = oEvent.getParameter("selectedItems");
+            console.log(" handleSelectionFinishReferrer oEvent >>> " , this.selectedReferrerItems);
 
-            for (var i = 0; i < selectedItems.length; i++) {
-                messageText += "'" + selectedItems[i].getText() + "'";
-                if (i != selectedItems.length - 1) {
-                    messageText += ",";
-                }
+            for(var i = 0 ; i < this.selectedReferrerItems.length; i++){
+                console.log(" selected Items >>> ", this.selectedReferrerItems[i]);
+                console.log(" selected Items >>> ", this.selectedReferrerItems[i].getKey());
             }
 
-            messageText += "]";
-
-            MessageToast.show(messageText, {
-                width: "auto"
-            });
         },
 
         _setCreateData: function () {
@@ -1009,10 +1014,7 @@ sap.ui.define([
                  "approval_contents" : this.getModel('appMaster').oData.approval_contents 
              }
 
-
             oTransactionManager.setServiceModel(this.getModel());
-
-         
 
             // this.getModel('appMaster').setData(cParam, "/ApprovalMasters");
             // this.getModel('appDetail').setProperty("/");
@@ -1064,7 +1066,6 @@ sap.ui.define([
             var oModel = this.getModel(mainViewName);
 
             if(oModel.oData.editMode){
-
                 this.update();
             }else{
                 this._setCreateData();
@@ -1077,7 +1078,12 @@ sap.ui.define([
             var oView = this.getView(),
                 mstModel = this.getModel("appMaster"),
                 dtlModel = this.getModel("appDetail"),
-                verModel = this.getModel("Approvers"); 
+                verModel = this.getModel("Approvers"),
+                referModel = this.getModel("Referer")
+                ; 
+
+            console.log("rereferModel >> " , referModel);
+
             MessageBox.confirm("Are you sure ?", {
                 title: "Comfirmation",
                 initialFocus: sap.m.MessageBox.Action.CANCEL,
@@ -1120,7 +1126,24 @@ sap.ui.define([
                             }
                         }
 
-                        console.log(" verModel >>> " , verModel);
+                        if(referModel.length > 0){
+                            for(var i = 0 ; i < referModel.length ; i++){
+                                referModel.getData().Referers[jdx]["_row_state_"] = "D";
+                            }
+                        }
+
+                        for(var i = 0 ; i < that.selectedReferrerItems.length; i++){ 
+                              referModel.addRecord({
+                                "referer_empno": that.selectedReferrerItems[i].getKey(), 
+                                "local_create_dtm" : new Date() ,
+                                "local_update_dtm" : new Date() ,
+                                "approval_number" : that.approval_number ,
+                                "tenant_id" : that.tenant_id ,
+                                "_row_state_": "C"
+                            }, "/Referers");
+                        }
+       
+                        console.log(" referModel >>> " , referModel);
                         
                         console.log(" oTransactionManager >>> " , oTransactionManager);
 

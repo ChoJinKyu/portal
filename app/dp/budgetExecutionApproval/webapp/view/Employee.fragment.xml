@@ -61,7 +61,7 @@
                                 <Text text="employee_number" />
                             </Column>
                             <Column id="employ_employee_name" minScreenWidth="Tablet" hAlign="Center"  >
-                                <Text text="employee_name" />
+                                <Text text="user_local_name" />
                             </Column>
            								
                         </columns>

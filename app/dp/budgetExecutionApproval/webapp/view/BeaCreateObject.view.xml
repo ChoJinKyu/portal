@@ -152,15 +152,6 @@
                                 columnsXL="2" >
                                 <form:content>
                                     <Label text="{I18N>/INSPECTION}" required="true" />
-                                    <!-- <RadioButtonGroup id="radioInspection" columns="4" width="100%" 
-                                        
-                                    class="sapUiMediumMarginBottom">
-                                        <RadioButton id="radio_Invest" text="Invest" />
-                                        <RadioButton id="radio_Supplies" text="Supplies"  />
-                                        <RadioButton id="radio_Expense" text="Expense"  />
-                                        <RadioButton id="radio_Non-ledger_Customer" text="Non-ledger(Customer)" />
-                                    </RadioButtonGroup> -->
-
                                      <SegmentedButton 
                                         id="segInspection"
                                         selectedKey="{mdItemMaster>/investment_ecst_type_code}" 
@@ -497,17 +488,17 @@
                         </HBox>
                         </Toolbar>
                             <layout:VerticalLayout class="sapUiContentPadding" width="100%">
-                                <MultiComboBox
+                                <MultiComboBox 
+                                    id="referrers"
                                     selectionChange="handleSelectionChangeReferrer"
                                     selectionFinish="handleSelectionFinishReferrer"
                                     width="100%"
-                                    items="{ path: 'org>/Org_Company',
+                                    items="{ path: 'util>/Employee',
                                                 filters: [
                                                     {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                                ],
-                                                sorter: { path: 'company_code'}
+                                                ]
                                             }">
-                                    <core:Item key="{org>company_code}" text="{org>company_name}" />
+                                    <core:Item key="{util>employee_number}" text="{util>user_local_name}" />
                                 </MultiComboBox>
                             </layout:VerticalLayout>
                             <layoutData>
