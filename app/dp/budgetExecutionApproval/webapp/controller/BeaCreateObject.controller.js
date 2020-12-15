@@ -76,8 +76,6 @@ sap.ui.define([
 
             this.getView().setModel(new ManagedListModel(), "MoldItemSelect"); // MoldItemSelect 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
-            this.setModel(new ManagedListModel(), "moldList");  // view 임 
-
 
             this.getView().setModel(new ManagedModel(), "appMaster");
             this.getView().setModel(new ManagedListModel(), "appDetail");
@@ -481,14 +479,28 @@ sap.ui.define([
          * @description moldItemSelect 공통팝업   
          * @param vThis : view page의 this 
          *       , oEvent : 이벤트 
-         * ,     , oArges : company_code , org_code 
+         * ,     , oArges : company_code , org_code (필수)
 		 */ 
-        onMoldItemPopPress : function (oEvent){
+        onMoldItemPopPress : function (oEvent){ 
+
+             var oModel = this.getModel("appDetail");
+             
+            console.log(" appDetail >>>> " , oModel);
+
+			 var mIdArr = [];
+			 if(oModel.oData.ApprovalDetails != undefined && oModel.oData.ApprovalDetails.length >0){
+				 oModel.oData.ApprovalDetails.forEach(function(item){
+					 mIdArr.push(item.mold_id);
+				 });
+			 }
+
              var oArgs = {
                 company_code : this.getModel('appMaster').oData.company_code , 
                 org_code : this.getModel('appMaster').oData.org_code,
-                mold_progress_status_code : 'DEV_RCV'
+                mold_progress_status_code : 'DEV_RCV' ,
+                mold_id_arr : mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
             }
+			
             var that = this;
     
             this.moldItemPop.openMoldItemSelectionPop(this, oEvent, oArgs , function (oDataMold) {
