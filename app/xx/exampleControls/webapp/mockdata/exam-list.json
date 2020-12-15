@@ -15,6 +15,11 @@
         "viewName": "example3"
     },
     {
+        "name": "Smart Table_Ex",
+        "icon": "sap-icon://source-code",
+        "viewName": "example3-1"
+    },
+    {
         "name": "X - Inline Edit Table for ext.lib.model.v2.ODataModel",
         "icon": "sap-icon://source-code",
         "viewName": "example4"

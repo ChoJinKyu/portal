@@ -203,6 +203,13 @@
           ]
         },
         {
+          "pattern": "example3-1",
+          "name": "example3-1",
+          "target": [
+            "example3-1"
+          ]
+        },
+        {
           "pattern": "example4",
           "name": "example4",
           "target": [
@@ -261,6 +268,10 @@
         "example3": {
           "viewName": "SmartTable",
           "viewId": "example3"
+        },
+        "example3-1": {
+          "viewName": "SmartTable_Ex",
+          "viewId": "example3-1"
         },
         "example4": {
           "viewName": "InlineEditTable",
