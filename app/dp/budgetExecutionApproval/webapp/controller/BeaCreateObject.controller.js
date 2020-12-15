@@ -968,30 +968,40 @@ sap.ui.define([
 
         handleSelectionChangeReferrer: function (oEvent) { // Referrer 
             console.log(" handleSelectionChangeReferrer oEvent >>> " , oEvent);
-
+            var that = this;
+            var referModel = this.getModel('Referer');
             var changedItem = oEvent.getParameter("changedItem");
             var isSelected = oEvent.getParameter("selected");
-
+            console.log(" changedItem >>> " , changedItem);
             var state = "Selected";
             if (!isSelected) {
                 state = "Deselected";
             }
 
-          /*  MessageToast.show("Event 'selectionChange': " + state + " '" + changedItem.getText() + "'", {
-                width: "auto"
-            }); */ 
+            if(state == "Selected"){
+                 referModel.addRecord({
+                      "referer_empno": changedItem.getKey(), 
+                      "local_create_dtm" : new Date() ,
+                      "local_update_dtm" : new Date() ,
+                      "approval_number" : that.approval_number ,
+                      "tenant_id" : that.tenant_id 
+                  }, "/Referers");
+            }else{
+                console.log(" referModel >>> " , referModel.getData());
+
+                for(var i = 0 ; i < referModel.getData().Referers.length ; i++){
+                    console.log(" referModel.getData().Referers[i] ", referModel.getData().Referers[i]);
+                    if(referModel.getData().Referers[i].referer_empno == changedItem.getKey()){
+                        referModel.markRemoved(i);
+                    }
+                }
+            }
         },
 
         handleSelectionFinishReferrer: function (oEvent) { // Referrer 
            
-            this.selectedReferrerItems = oEvent.getParameter("selectedItems");
-            console.log(" handleSelectionFinishReferrer oEvent >>> " , this.selectedReferrerItems);
-
-            for(var i = 0 ; i < this.selectedReferrerItems.length; i++){
-                console.log(" selected Items >>> ", this.selectedReferrerItems[i]);
-                console.log(" selected Items >>> ", this.selectedReferrerItems[i].getKey());
-            }
-
+            oEvent.getParameter("selectedItems");
+    
         },
 
         _setCreateData: function () {
@@ -1126,22 +1136,6 @@ sap.ui.define([
                             }
                         }
 
-                        if(referModel.length > 0){
-                            for(var i = 0 ; i < referModel.length ; i++){
-                                referModel.getData().Referers[jdx]["_row_state_"] = "D";
-                            }
-                        }
-
-                        for(var i = 0 ; i < that.selectedReferrerItems.length; i++){ 
-                              referModel.addRecord({
-                                "referer_empno": that.selectedReferrerItems[i].getKey(), 
-                                "local_create_dtm" : new Date() ,
-                                "local_update_dtm" : new Date() ,
-                                "approval_number" : that.approval_number ,
-                                "tenant_id" : that.tenant_id ,
-                                "_row_state_": "C"
-                            }, "/Referers");
-                        }
        
                         console.log(" referModel >>> " , referModel);
                         
