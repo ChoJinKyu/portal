@@ -129,7 +129,7 @@
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="역할 목록 ({= ${list>/Role}.length || 0})" level="H2"/>
+                            <Title text="역할 목록 ({=${list>/Role}.length || (0)})" level="H2"/>
                             <ToolbarSpacer/>
                             <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
                         </OverflowToolbar>

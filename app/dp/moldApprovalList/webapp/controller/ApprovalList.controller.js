@@ -1,3 +1,5 @@
+jQuery.sap.require("sap.ui.core.util.Export");
+jQuery.sap.require("sap.ui.core.util.ExportTypeCSV");
 sap.ui.define([
     "./BaseController",
     "sap/ui/core/routing/History",
@@ -32,8 +34,9 @@ sap.ui.define([
     /**
      * @description 품의 목록 (총 품의 공통)
      * @date 2020.11.19 
-     * @author jinseon.lee , daun.lee 
+     * @author daun.lee 
      */
+    
     var toggleButtonId = "";
     var dialogId = "";
     var path = '';
@@ -76,6 +79,11 @@ sap.ui.define([
 
             this.getRouter().getRoute("approvalList").attachPatternMatched(this._onRoutedThisPage, this);
 
+            this._oTPC = new TablePersoController({
+                customDataKey: "approvalList",
+                persoService: ApprovalListPersoService
+            }).setTable(this.byId("mainTable"));
+            //console.log(this.byId("moldMstTable"));
             this._doInitTablePerso();
 
         },
@@ -84,7 +92,7 @@ sap.ui.define([
             // init and activate controller
             this._oTPC = new TablePersoController({
                 table: this.byId("mainTable"),
-                componentName: "moldApprovalList",
+                componentName: "approvalList",
                 persoService: ApprovalListPersoService,
                 hasGrouping: true
             }).activate();
@@ -153,6 +161,9 @@ sap.ui.define([
 		 * @public
 		 */
         onMainTablePersoButtonPressed: function (oEvent) {
+            this._oTPC.getAggregation("_tablePersoDialog").open();
+            console.log(this._oTPC.getAggregation("_tablePersoDialog"));
+            console.log(this._oTPC.openDialog);
             this._oTPC.openDialog();
         },
 
@@ -335,7 +346,7 @@ sap.ui.define([
                 this.oColModel = new JSONModel({
                     "cols": [
                         {
-                            "label": "Part No",
+                            "label": "Mold No",
                             "template": "mold_number"
                         },
                         {
@@ -351,7 +362,7 @@ sap.ui.define([
 
                 path = '/PartNumbers';
 
-                this._oValueHelpDialog.setTitle('Part No');
+                this._oValueHelpDialog.setTitle('Mold No');
                 this._oValueHelpDialog.setKey('mold_number');
                 this._oValueHelpDialog.setDescriptionKey('spec_name');
 
@@ -659,7 +670,7 @@ sap.ui.define([
                 //oSelected  = oTable.getSelectedItems(),
                 oSelected = [],
                 checkBoxs = this.getView().getControlsByFieldGroupId("checkBoxs");
-            console.log(checkBoxs);
+            
             for (var i = 0; i < checkBoxs.length; i++) {
                 if (checkBoxs[i].mProperties.selected == true) {
                     oSelected.push(i);
@@ -866,14 +877,59 @@ sap.ui.define([
         ///////////////////// List search section End //////////////////////////
 
         ///////////////////// Excel export Start //////////////////////////
+        // exportToExcel: function (oTable) {
+        //     oTable = this.byId("mainTable");
+        //     console.log(this.byId("mainTable"));
+        //     var aColumns = oTable.getColumns();
+        //     console.log(oTable.getModel("list"));
+        //     //var aCells = oTable.getCells();
+        //     var aItems = oTable.getItems();
+        //     var aTemplate = [];
+        //     for (var i = 0; i < aColumns.length; i++) {
+        //         var oColumn = {
+        //             name: aColumns[i].getHeader().getText(),
+        //             template: {
+        //                 content: {
+        //                     path: null
+                            
+        //                 }
+        //             }
+        //         };
+                
+        //         if (aItems.length > 0) {
+        //             oColumn.template.content.path = aItems[0].getBindingContext("list").getPath();
+        //         }
+        //         aTemplate.push(oColumn);
+        //     }
+        //     var oExport = new Export({
+        //         // Type that will be used to generate the content. Own ExportType’s can be created to support other formats
+        //         exportType: new ExportTypeCSV({
+        //             separatorChar: ",",
+        //             charset: "utf-8"
+        //         }),
+        //         // Pass in the model created above
+        //         models: oTable.getModel(),
+        //         // binding information for the rows aggregation
+        //         rows: {
+        //             path: "/ApprovalMasters"
+        //         },
+        //         // column definitions with column name and binding info for the content
+        //         columns: aTemplate
+        //     });
+        //     oExport.saveFile().always(function () {
+        //         this.destroy();
+        //     });
+        // },
 
+        
         onDataExport : function(oEvent) {
-
+            console.log(this.getView());
 			var oExport = new Export({
 
 				// Type that will be used to generate the content. Own ExportType's can be created to support other formats
 				exportType : new ExportTypeCSV({
-					separatorChar : ";"
+					separatorChar: ",",
+                    charset: "utf-8"
 				}),
 
 				// Pass in the model created above
@@ -929,7 +985,7 @@ sap.ui.define([
 				}]
 			});
 
-			// download exported file
+			//download exported file
 			oExport.saveFile().catch(function(oError) {
 				MessageBox.error("Error when downloading data. Browser might not be supported!\n\n" + oError);
 			}).then(function() {

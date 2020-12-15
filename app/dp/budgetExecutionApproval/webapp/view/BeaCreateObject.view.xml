@@ -152,14 +152,21 @@
                                 columnsXL="2" >
                                 <form:content>
                                     <Label text="{I18N>/INSPECTION}" required="true" />
-                                    <RadioButtonGroup id="radioInspection" columns="4" width="100%" 
-                                        
-                                    class="sapUiMediumMarginBottom">
-                                        <RadioButton id="radio_Invest" text="Invest" />
-                                        <RadioButton id="radio_Supplies" text="Supplies"  />
-                                        <RadioButton id="radio_Expense" text="Expense"  />
-                                        <RadioButton id="radio_Non-ledger_Customer" text="Non-ledger(Customer)" />
-                                    </RadioButtonGroup>
+                                     <SegmentedButton 
+                                        id="segInspection"
+                                        selectedKey="{mdItemMaster>/investment_ecst_type_code}" 
+                                        width="100%"
+                                        items="{ path : 'util>/CodeDetails',
+                                                 filters : [
+                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                    {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_BUDGET_TYPE'}
+                                                    ]
+                                                }"
+                                        >
+                                        <items>
+                                            <SegmentedButtonItem  width="6em" text="{util>code_description}" key="{util>code}"/>
+                                        </items>
+                                    </SegmentedButton>
                                     <Label text="Account Department"  required="true" />
                                     <ComboBox width="100%"  id="acquisitionDepartment" selectedKey="{mdItemMaster>/accounting_department_code}"  items="{}" >
                                         <core:Item key="{util>code}" text="{util>code_description}" />
@@ -179,7 +186,7 @@
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>
                                     <Label text="Balanced Budget"  />
-                                    <ObjectStatus text="292,000,000" /> <ObjectStatus text="KRW" state="Error" />
+                                     <ObjectStatus text="{mdItemMaster>/provisional_budget_amount}" /> <ObjectStatus text="KRW" state="Error" />
                                      <Label text="Acquisition Department"  required="true" />
                                      <Input value="" showValueHelp="true"/> 
                                     <Label text="Import Company"  />
@@ -481,17 +488,17 @@
                         </HBox>
                         </Toolbar>
                             <layout:VerticalLayout class="sapUiContentPadding" width="100%">
-                                <MultiComboBox
+                                <MultiComboBox 
+                                    id="referrers"
                                     selectionChange="handleSelectionChangeReferrer"
                                     selectionFinish="handleSelectionFinishReferrer"
                                     width="100%"
-                                    items="{ path: 'org>/Org_Company',
+                                    items="{ path: 'util>/Employee',
                                                 filters: [
                                                     {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                                ],
-                                                sorter: { path: 'company_code'}
+                                                ]
                                             }">
-                                    <core:Item key="{org>company_code}" text="{org>company_name}" />
+                                    <core:Item key="{util>employee_number}" text="{util>user_local_name}" />
                                 </MultiComboBox>
                             </layout:VerticalLayout>
                             <layoutData>
@@ -507,7 +514,7 @@
 			<OverflowToolbar>
 				<ToolbarSpacer />
 				<Button type="Transparent" text="Draft" press=".onPageDraftButtonPress" />
-				<!-- <Button type="Transparent" text="Preview" press=".onPageSaveButtonPress" /> -->
+				<Button type="Transparent" text="Preview" press=".onPagePreviewButtonPress" /> 
 				<Button type="Transparent" text="Cancel" visible="{=${beaCreateObjectView>/editMode}?true:false}" press=".onPageCancelButtonPress" /> 
 				<Button type="Emphasized" text="Request" press=".onPageCancelEditButtonPress"/>
 			</OverflowToolbar>

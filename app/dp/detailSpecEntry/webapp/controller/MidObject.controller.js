@@ -11,8 +11,9 @@ sap.ui.define([
 	"sap/ui/core/Fragment",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-    "ext/lib/util/Validator"
-], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, Validator) {
+    "ext/lib/util/Validator",
+    "dp/util/controller/SupplierSelection"
+], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, Validator, SupplierSelection) {
     "use strict";
     
     var oTransactionManager;
@@ -22,6 +23,8 @@ sap.ui.define([
         dateFormatter: DateFormatter,
         
         validator: new Validator(),
+
+        supplierSelection: new SupplierSelection(),
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -183,6 +186,14 @@ sap.ui.define([
 		 */
         onPageCancelEditButtonPress: function(){
 			this._toShowMode();
+        },
+
+         onSuppValueHelpRequested: function(oEvent){
+
+            var sCompanyCode  = this.getModel('master').getProperty('/company_code')
+            var sPlantCode = this.getModel('master').getProperty('/org_code')
+            
+            this.supplierSelection.showSupplierSelection(this, oEvent, sCompanyCode, sPlantCode);
         },
 
 		/* =========================================================== */

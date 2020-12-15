@@ -11,11 +11,10 @@
 	height			= "50%"    
     displayBlock="true">
 	
-	<Dialog>
+	<Dialog title="1. 시황자재 선택">
 		<content>
         <HBox width="100%">
             <VBox class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginTop" width="500px">
-                <Label text="1. 시황자재 선택"/>
                 <SearchField id="searchField_material_code" 
                              width="90%"
                              required="true" 
@@ -78,8 +77,6 @@
                 </Table>                      
             </VBox>
             <VBox class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginTop">
-                <Label text="  "/>
-
                 <Table  id="rightTable"
                         mode="SingleSelectLeft" 
                         items="{mIMaterialCostInformationView>/}"  

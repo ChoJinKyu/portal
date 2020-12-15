@@ -16,22 +16,13 @@ view pg_MI_Mat_Prc_Management_View as
 	from pg_mi_material_price_management as main
 	left join pg_mi_material_code_lng as mattext
 		on  main.tenant_id			= mattext.tenant_id
-		and main.company_code		= mattext.company_code
-		and main.org_type_code		= mattext.org_type_code
-		and main.org_code			= mattext.org_code
 		and main.mi_material_code	= mattext.mi_material_code
 		and mattext.language_code	= 'KO'
 	left join pg_mi_material_code as matcode
 		on  main.tenant_id    		= matcode.tenant_id
-		and main.company_code 		= matcode.company_code
-		and main.org_type_code		= matcode.org_type_code
-		and main.org_code	    	= matcode.org_code
 		and main.mi_material_code	= matcode.mi_material_code
 	left join pg_mi_category_lng as catgtext
 		on  matcode.tenant_id    	= catgtext.tenant_id
-		and matcode.company_code 	= catgtext.company_code
-		and matcode.org_type_code	= catgtext.org_type_code
-		and matcode.org_code	    = catgtext.org_code
 		and matcode.category_code	= catgtext.category_code
 		and catgtext.language_code	= 'KO'
 	;

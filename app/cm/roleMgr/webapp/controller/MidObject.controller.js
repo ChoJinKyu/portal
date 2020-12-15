@@ -57,11 +57,11 @@ sap.ui.define([
       this.setModel(oViewModel, "midObjectView");
 
       this.setModel(new ManagedModel(), "master");
-      //this.setModel(new ManagedListModel(), "details");
+      this.setModel(new ManagedListModel(), "details");
 
       oTransactionManager = new TransactionManager();
       oTransactionManager.addDataModel(this.getModel("master"));
-     //oTransactionManager.addDataModel(this.getModel("details"));
+     oTransactionManager.addDataModel(this.getModel("details"));
     
       //this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
       this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
@@ -87,9 +87,9 @@ sap.ui.define([
     // chainComboChange: function (event) {
     //     this.getView()
     //       .setBusy(true)
-    //       .getModel("menu")
+    //       .getModel("details")
     //       .setTransactionModel(this.getView().getModel())
-    //       .menu("/Menu_haa", {
+    //       .details("/Role_Menu", {
     //         filters: [
     //           // 조회조건
     //           new Filter("menu_code", FilterOperator.EQ, "CM1200"),
@@ -303,39 +303,48 @@ sap.ui.define([
             "local_update_dtm": new Date()
         }, "/Role", 0);
 
+        var oTable = this.byId("midTable");
+        for (var i=0; i<oTable.getRows().length; i++) {
+            oTable.expandToLevel(i);
+        }
 
-        // var oDetailsModel = this.getModel("menu");
-        // oDetailsModel.setTransactionModel(this.getModel());
+        var oDetailsModel = this.getModel("details");
+        oDetailsModel.setTransactionModel(this.getModel());
 
-        // oDetailsModel.read("/Menu_haa", {
-        //   filters: [
-        //       new Filter("menu_code", FilterOperator.EQ, "CM1200"),
-        //     new Filter("chain_code", FilterOperator.EQ, this.byId("searchChain").getSelectedKey())
-        //   ],
-        //   success: function (oData) {
-        //     console.log("_onRoutedThisPage new ##### ", oData, oDetailsModel);
-        //   }
-        // });
+        oDetailsModel.read("/Role_Menu", {
+          filters: [
+            new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+            new Filter("role_code", FilterOperator.EQ, this._sRoleCode)
+          ],
+          success: function (oData) {
+            console.log("_onRoutedThisPage new ##### ", oData, oDetailsModel);
+          }
+        });
 
         this._toEditMode();
-
+        
       } else {
         this.getModel("midObjectView").setProperty("/isAddedMode", false);
         this._bindView("/Role(tenant_id='" + this._sTenantId + "',role_code='" + this._sRoleCode + "')");
         oView.setBusy(true);
 
-        // var oDetailsModel = this.getModel("menu");
-        // oDetailsModel.setTransactionModel(this.getModel());
-        // oDetailsModel.read("/Menu_haa", {   
-        //   filters: [
-        //       new Filter("menu_code", FilterOperator.EQ, "CM1200"),
-        //     new Filter("chain_code", FilterOperator.EQ, this.byId("searchChain").getSelectedKey())
-        //   ],
-        //   success: function (oData) {
-        //       console.log("_onRoutedThisPage newfalse ##### ", oData, oDetailsModel);
-        //     oView.setBusy(false);
-        //   }
-        // });
+        var oTable = this.byId("midTable");
+        for (var i=0; i<oTable.getRows().length; i++) {
+            oTable.expandToLevel(i);
+        }
+
+        var oDetailsModel = this.getModel("details");
+        oDetailsModel.setTransactionModel(this.getModel());
+
+        oDetailsModel.read("/Role_Menu", {
+          filters: [
+            new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+            new Filter("role_code", FilterOperator.EQ, this._sRoleCode)
+          ],
+          success: function (oData) {
+            console.log("_onRoutedThisPage new ##### ", oData, oDetailsModel);
+          }
+        });
 
         this._toShowMode();
       }
@@ -369,9 +378,6 @@ sap.ui.define([
       this.byId("pageEditButton").setEnabled(FALSE);
       this.byId("pageDeleteButton").setEnabled(FALSE);
       this.byId("pageNavBackButton").setEnabled(FALSE);
-
-      //this.byId("midTableAddButton").setEnabled(!FALSE);
-      //this.byId("midTableDeleteButton").setEnabled(!FALSE);
     },
 
     _toShowMode: function () {
@@ -382,36 +388,31 @@ sap.ui.define([
       this.byId("pageEditButton").setEnabled(TRUE);
       this.byId("pageDeleteButton").setEnabled(TRUE);
       this.byId("pageNavBackButton").setEnabled(TRUE);
-
-      //this.byId("midTableAddButton").setEnabled(!TRUE);
-      //this.byId("midTableDeleteButton").setEnabled(!TRUE);
     },
 
-        _oFragments: {},
-        _showFormFragment: function (sFragmentName) {
-            var oPageSubSection = this.byId("pageSubSection1");
-            this._loadFragment(sFragmentName, function (oFragment) {
-                oPageSubSection.removeAllBlocks();
-                oPageSubSection.addBlock(oFragment);
-            })
-        },
+    _oFragments: {},
+    _showFormFragment: function (sFragmentName) {
+        var oPageSubSection = this.byId("pageSubSection1");
+        this._loadFragment(sFragmentName, function (oFragment) {
+            oPageSubSection.removeAllBlocks();
+            oPageSubSection.addBlock(oFragment);
+        })
+    },
 
-        _loadFragment: function (sFragmentName, oHandler) {
-            if (!this._oFragments[sFragmentName]) {
-                Fragment.load({
-                    id: this.getView().getId(),
-                    name: "cm.roleMgr.view." + sFragmentName,
-                    controller: this
-                }).then(function (oFragment) {
-                    this._oFragments[sFragmentName] = oFragment;
-                    if (oHandler) oHandler(oFragment);
-                }.bind(this));
-            } else {
-                if (oHandler) oHandler(this._oFragments[sFragmentName]);
-            }
+    _loadFragment: function (sFragmentName, oHandler) {
+        if (!this._oFragments[sFragmentName]) {
+            Fragment.load({
+                id: this.getView().getId(),
+                name: "cm.roleMgr.view." + sFragmentName,
+                controller: this
+            }).then(function (oFragment) {
+                this._oFragments[sFragmentName] = oFragment;
+                if (oHandler) oHandler(oFragment);
+            }.bind(this));
+        } else {
+            if (oHandler) oHandler(this._oFragments[sFragmentName]);
         }
-
-
+    }
 
     });
 });

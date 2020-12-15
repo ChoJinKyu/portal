@@ -221,12 +221,6 @@ sap.ui.define([
 			});
 		},
         
-        
-		/**
-		 * Internal helper method to apply both filter and search state together on the list binding
-		 * @param {sap.ui.model.Filter[]} aTableSearchState An array of filters for the search
-		 * @private
-		 */
 		_refreshSearch: function() {
 			var oView = this.getView(),
                 oTable = this.byId("mainTable"),
@@ -269,7 +263,7 @@ sap.ui.define([
 			// init and activate controller
 			this._oTPC = new TablePersoController({
 				table: this.byId("mainTable"),
-				componentName: "mdCategory",
+				componentName: "mdCategoryItem",
 				persoService: MainListPersoService,
 				hasGrouping: true
 			}).activate();

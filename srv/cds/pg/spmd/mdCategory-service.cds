@@ -27,7 +27,6 @@ service MdCategoryService {
     //@cds.query.limit.max: 20
     view MdVpMappingItemView as select from vpItemMappingView.Md_Vp_Mapping_Item_View;
 
-/*
     // VendorPool Category Item Mapping 1건 Procedure 호출
     action MdVpMappingItemProc(
         tenant_id : String(5), 
@@ -41,7 +40,6 @@ service MdCategoryService {
         update_user_id : String(500)
     ) returns String; 
 
-
     type MdVpMappingItemProcType {
         tenant_id : String(5); 
         company_code : String(10); 
@@ -54,8 +52,7 @@ service MdCategoryService {
         update_user_id : String(500);
     }
     // VendorPool Category Item Mapping array multi건 Procedure 호출
-    action MdVpMappingItemMultiProc( items : array of MdVpMappingItemProcType ) returns String; 
-
+    //action MdVpMappingItemMultiProc( items : array of MdVpMappingItemProcType ) returns String; 
 
 
     // VendorPool Mapping 상태(신규/저장/확정)처리 1건 Procedure 호출
@@ -79,9 +76,8 @@ service MdCategoryService {
         update_user_id : String(500);
     }
     // VendorPool Mapping 상태(신규/저장/확정)처리 array multi건 Procedure 호출
-    action MdVpMappingStatusMultiProc( items : array of MdVpMappingStatusProcType ) returns String; 
-*/
-
+    //action MdVpMappingStatusMultiProc( items : array of MdVpMappingStatusProcType ) returns String; 
+    
     // Category별 Item View
     view MdCategoryCodeItemView @(title : 'Category Item Mapping View') as
     	select 

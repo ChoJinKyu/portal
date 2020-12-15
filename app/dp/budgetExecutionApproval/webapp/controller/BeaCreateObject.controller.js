@@ -76,24 +76,22 @@ sap.ui.define([
 
             this.getView().setModel(new ManagedListModel(), "MoldItemSelect"); // MoldItemSelect 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
-            this.setModel(new ManagedListModel(), "moldList");  // view 임 
-
 
             this.getView().setModel(new ManagedModel(), "appMaster");
             this.getView().setModel(new ManagedListModel(), "appDetail");
             // this.getView().setModel(new ManagedListModel(), "MoldMasterList");
-            this.getView().setModel(new ManagedListModel(), "Approvers");
+            this.getView().setModel(new ManagedListModel(), "Approvers"); // 승인자 
+            this.getView().setModel(new ManagedListModel(), "Referer"); // 참조자 
 
 
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("appMaster"));
             oTransactionManager.addDataModel(this.getModel("appDetail"));
+            oTransactionManager.addDataModel(this.getModel("Referer"));
             // oTransactionManager.addDataModel(this.getModel("MoldMasterList"));
             oTransactionManager.addDataModel(this.getModel("Approvers"));
 
             this.setRichEditor(); // 한번만 로드 
-           
-
         },
 
         onAfterRendering: function () {
@@ -332,6 +330,16 @@ sap.ui.define([
                  that._onLoadApprovalRow();
             });
    
+            this._bindView("/Referers", "Referer", schFilter, function (oData) { 
+                that.getView().byId("referrers");
+			    if(oData.results.length > 0){ 
+                    oData.results.forEach(function(rfData){
+                        that.getView().byId("referrers").mProperties.selectedKeys.push(rfData.referer_empno);
+                    });
+                    
+                }
+            });
+   
             oTransactionManager.setServiceModel(this.getModel());
         },
 
@@ -481,14 +489,28 @@ sap.ui.define([
          * @description moldItemSelect 공통팝업   
          * @param vThis : view page의 this 
          *       , oEvent : 이벤트 
-         * ,     , oArges : company_code , org_code 
+         * ,     , oArges : company_code , org_code (필수)
 		 */ 
-        onMoldItemPopPress : function (oEvent){
+        onMoldItemPopPress : function (oEvent){ 
+
+             var oModel = this.getModel("appDetail");
+             
+            console.log(" appDetail >>>> " , oModel);
+
+			 var mIdArr = [];
+			 if(oModel.oData.ApprovalDetails != undefined && oModel.oData.ApprovalDetails.length >0){
+				 oModel.oData.ApprovalDetails.forEach(function(item){
+					 mIdArr.push(item.mold_id);
+				 });
+			 }
+
              var oArgs = {
                 company_code : this.getModel('appMaster').oData.company_code , 
                 org_code : this.getModel('appMaster').oData.org_code,
-                mold_progress_status_code : 'DEV_RCV'
+                mold_progress_status_code : 'DEV_RCV' ,
+                mold_id_arr : mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
             }
+			
             var that = this;
     
             this.moldItemPop.openMoldItemSelectionPop(this, oEvent, oArgs , function (oDataMold) {
@@ -619,8 +641,8 @@ sap.ui.define([
             var that = this;
             aItems.forEach(function (oItem) {
                 var obj = new JSONModel({
-                    user_name: oItem.getCells()[0].getText()
-                    , employee_number: oItem.getCells()[1].getText()
+                    user_name: oItem.getCells()[1].getText()
+                    , employee_number: oItem.getCells()[0].getText()
                 });
                 that._approvalRowAdd(obj);
             });
@@ -944,37 +966,42 @@ sap.ui.define([
             }
         },
 
-
         handleSelectionChangeReferrer: function (oEvent) { // Referrer 
+            console.log(" handleSelectionChangeReferrer oEvent >>> " , oEvent);
+            var that = this;
+            var referModel = this.getModel('Referer');
             var changedItem = oEvent.getParameter("changedItem");
             var isSelected = oEvent.getParameter("selected");
-
+            console.log(" changedItem >>> " , changedItem);
             var state = "Selected";
             if (!isSelected) {
                 state = "Deselected";
             }
 
-            MessageToast.show("Event 'selectionChange': " + state + " '" + changedItem.getText() + "'", {
-                width: "auto"
-            });
+            if(state == "Selected"){
+                 referModel.addRecord({
+                      "referer_empno": changedItem.getKey(), 
+                      "local_create_dtm" : new Date() ,
+                      "local_update_dtm" : new Date() ,
+                      "approval_number" : that.approval_number ,
+                      "tenant_id" : that.tenant_id 
+                  }, "/Referers");
+            }else{
+                console.log(" referModel >>> " , referModel.getData());
+
+                for(var i = 0 ; i < referModel.getData().Referers.length ; i++){
+                    console.log(" referModel.getData().Referers[i] ", referModel.getData().Referers[i]);
+                    if(referModel.getData().Referers[i].referer_empno == changedItem.getKey()){
+                        referModel.markRemoved(i);
+                    }
+                }
+            }
         },
 
         handleSelectionFinishReferrer: function (oEvent) { // Referrer 
-            var selectedItems = oEvent.getParameter("selectedItems");
-            var messageText = "Event 'selectionFinished': [";
-
-            for (var i = 0; i < selectedItems.length; i++) {
-                messageText += "'" + selectedItems[i].getText() + "'";
-                if (i != selectedItems.length - 1) {
-                    messageText += ",";
-                }
-            }
-
-            messageText += "]";
-
-            MessageToast.show(messageText, {
-                width: "auto"
-            });
+           
+            oEvent.getParameter("selectedItems");
+    
         },
 
         _setCreateData: function () {
@@ -997,10 +1024,7 @@ sap.ui.define([
                  "approval_contents" : this.getModel('appMaster').oData.approval_contents 
              }
 
-
             oTransactionManager.setServiceModel(this.getModel());
-
-         
 
             // this.getModel('appMaster').setData(cParam, "/ApprovalMasters");
             // this.getModel('appDetail').setProperty("/");
@@ -1046,13 +1070,33 @@ sap.ui.define([
         },
 
         /**
+         * @description 미리보기 
+         */
+        onPagePreviewButtonPress : function(oEvent){
+                var oView = this.getView();
+                var oButton = oEvent.getSource();
+                if (!this._oDialog) {
+                    this._oDialog = Fragment.load({
+                        id: oView.getId(),
+                        name: "dp.budgetExecutionApproval.view.BeaObjectPreview",
+                        controller: this
+                    }).then(function (oDialog) {
+                        oView.addDependent(oDialog);
+                        return oDialog;
+                    }.bind(this));
+                }
+
+                this._oDialog.then(function (oDialog) {
+                    oDialog.open();
+                });
+        },
+        /**
          * @description save
          */
         onPageDraftButtonPress: function () {
             var oModel = this.getModel(mainViewName);
 
             if(oModel.oData.editMode){
-
                 this.update();
             }else{
                 this._setCreateData();
@@ -1065,7 +1109,12 @@ sap.ui.define([
             var oView = this.getView(),
                 mstModel = this.getModel("appMaster"),
                 dtlModel = this.getModel("appDetail"),
-                verModel = this.getModel("Approvers"); 
+                verModel = this.getModel("Approvers"),
+                referModel = this.getModel("Referer")
+                ; 
+
+            console.log("rereferModel >> " , referModel);
+
             MessageBox.confirm("Are you sure ?", {
                 title: "Comfirmation",
                 initialFocus: sap.m.MessageBox.Action.CANCEL,
@@ -1108,7 +1157,8 @@ sap.ui.define([
                             }
                         }
 
-                        console.log(" verModel >>> " , verModel);
+       
+                        console.log(" referModel >>> " , referModel);
                         
                         console.log(" oTransactionManager >>> " , oTransactionManager);
 

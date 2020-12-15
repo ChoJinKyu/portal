@@ -9,9 +9,9 @@ entity Pd_Product_Activity_Template {
   key org_code : String(10)  not null @title: '조직코드' ;	
   key product_activity_code : String(30)  not null @title: '제품활동코드' ;	
     develope_event_code : String(30)   @title: '이벤트' ;	
-    seq : Decimal default 1  @title: '순번' ;	
+    sequence : Decimal default 1  @title: '순번' ;	
     product_activity_name : String(240)   @title: '제품활동명' ;	
-    product_activity_eng_name : String(240)   @title: '제품활동영문명' ;	
+    product_activity_english_name : String(240)   @title: '제품활동영문명' ;	
     milestone_flag : Boolean   @title: '마일스톤여부' ;	
     active_flag : Boolean   @title: '활성여부' ;	
 }	

@@ -8,7 +8,7 @@ entity Li_Request_Detail_View {
     key tenant_id                  : String(5) not null  @title : '테넌트ID';
     key company_code               : String(10) not null @title : '회사코드';
     key loi_write_number           : String(50) not null @title : 'LOI작성번호';
-    key loi_item_number            : String(50) not null @title : 'LOI품목번호';
+        loi_item_number            : String(50) not null @title : 'LOI품목번호';
         loi_number                 : String(50) not null @title : 'LOI번호';
         item_sequence              : Decimal not null    @title : '품목순번';
         ep_item_code               : String(50)          @title : '설비공사용품목코드';
