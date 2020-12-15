@@ -86,25 +86,5 @@ service CommonService {
             gmt_offset
         from timezone as a
     ;
-
-    @readonly
-    view Employee as
-        select 
-            key e.tenant_id,
-            key e.employee_number,
-                e.user_local_name
-        from employee as e
-            left join user as u
-                on e.employee_number = u.employee_number
-    ;
-
-    @readonly
-    view Department as
-        select 
-            key d.tenant_id,
-            key d.department_id,
-                d.department_local_name
-        from Dept as d
-    ;
     
 }

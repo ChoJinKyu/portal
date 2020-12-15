@@ -14,4 +14,6 @@ using from './roleMgr/roleMgr-service';
 using from './roleGroupMgr/roleGroupMgr-service';
 using from './menuMgr/menuMgr-service';
 using from './util/common-service';
+using from './orgProcOrgTypeMgr/orgProcOrgType-service';
 using from './util/org-service';
+using from './util/hr-service';
