@@ -19,6 +19,8 @@ using {dp.Mm_Material_Desc_Lng as MaterialDesc} from '../../../../db/cds/dp/mm/D
 using {sp.Sm_Supplier_Mst as SupplierMaster} from '../../../../db/cds/sp/supplierMgr/SP_SM_SUPPLIER_MST-model';
 //CM ORG
 using {cm.Org_Tenant as OrgTenant} from '../../../../db/cds/cm/orgMgr/CM_ORG_TENANT-model';
+using {cm.Org_Company as OrgCompany} from '../../../../db/cds/cm/orgMgr/CM_ORG_COMPANY-model';	
+using {cm.Pur_Operation_Org as OrgPurchasingOperation} from '../../../../db/cds/cm/purOrgMgr/CM_PUR_OPERATION_ORG-model';
 //CM Code
 using {cm.Code_Mst as CodeMst} from '../../../../db/cds/cm/codeMgr/CM_CODE_MST-model';
 using {cm.Code_Dtl as CodeDtl} from '../../../../db/cds/cm/codeMgr/CM_CODE_DTL-model';
@@ -54,6 +56,35 @@ service marketIntelligenceService {
             key tenant_id, //회사코드
                 tenant_name //회사코드명
         from OrgTenant;
+
+    // Company View	
+    view OrgCompanyView @(title : '법인코드 View') as	
+        select	
+            key tenant_id, //회사코드	
+            key company_code, //법인코드	
+                company_name //법인코드명	
+        from OrgCompany;	
+
+    // Organizaiton Type Code View	
+    view OrgTypeCodeView @(title : '조직유형코드 View') as	
+        select	
+            key tenant_id, //회사코드	
+            key code, //조직유형코드	
+                code_name //조직유형코드명	
+        from CodeLng	
+        where	
+                group_code  = 'CM_ORG_TYPE_CODE'	
+            and language_cd = 'KO';	
+
+    // Organizaiton Code View	
+    view OrgCodeView @(title : '조직코드 View') as	
+        select	
+            key tenant_id, //회사코드	
+            key company_code, //법인코드	
+            key org_type_code, //조직유형코드	
+            key org_code, //조직코드	
+                org_name //조직코드명	
+        from OrgPurchasingOperation;
 
     // Exchange View
     view MIExchangeView @(title : '거래소 View') as
