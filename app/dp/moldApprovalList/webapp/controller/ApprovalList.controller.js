@@ -1,3 +1,5 @@
+jQuery.sap.require("sap.ui.core.util.Export");
+jQuery.sap.require("sap.ui.core.util.ExportTypeCSV");
 sap.ui.define([
     "./BaseController",
     "sap/ui/core/routing/History",
@@ -866,14 +868,59 @@ sap.ui.define([
         ///////////////////// List search section End //////////////////////////
 
         ///////////////////// Excel export Start //////////////////////////
+        // exportToExcel: function (oTable) {
+        //     oTable = this.byId("mainTable");
+        //     console.log(this.byId("mainTable"));
+        //     var aColumns = oTable.getColumns();
+        //     console.log(oTable.getModel("list"));
+        //     //var aCells = oTable.getCells();
+        //     var aItems = oTable.getItems();
+        //     var aTemplate = [];
+        //     for (var i = 0; i < aColumns.length; i++) {
+        //         var oColumn = {
+        //             name: aColumns[i].getHeader().getText(),
+        //             template: {
+        //                 content: {
+        //                     path: null
+                            
+        //                 }
+        //             }
+        //         };
+                
+        //         if (aItems.length > 0) {
+        //             oColumn.template.content.path = aItems[0].getBindingContext("list").getPath();
+        //         }
+        //         aTemplate.push(oColumn);
+        //     }
+        //     var oExport = new Export({
+        //         // Type that will be used to generate the content. Own ExportType’s can be created to support other formats
+        //         exportType: new ExportTypeCSV({
+        //             separatorChar: ",",
+        //             charset: "utf-8"
+        //         }),
+        //         // Pass in the model created above
+        //         models: oTable.getModel(),
+        //         // binding information for the rows aggregation
+        //         rows: {
+        //             path: "/ApprovalMasters"
+        //         },
+        //         // column definitions with column name and binding info for the content
+        //         columns: aTemplate
+        //     });
+        //     oExport.saveFile().always(function () {
+        //         this.destroy();
+        //     });
+        // },
 
+        
         onDataExport : function(oEvent) {
-
+            console.log(this.getView());
 			var oExport = new Export({
 
 				// Type that will be used to generate the content. Own ExportType's can be created to support other formats
 				exportType : new ExportTypeCSV({
-					separatorChar : ";"
+					separatorChar: ",",
+                    charset: "utf-8"
 				}),
 
 				// Pass in the model created above
@@ -914,7 +961,7 @@ sap.ui.define([
 				}, {
 					name : "Requestor",
 					template : {
-						content : "{requestor_empno}"
+						content : "{requestor_number}"
 					}
 				}, {
 					name : "Request Date",
@@ -929,7 +976,7 @@ sap.ui.define([
 				}]
 			});
 
-			// download exported file
+			//download exported file
 			oExport.saveFile().catch(function(oError) {
 				MessageBox.error("Error when downloading data. Browser might not be supported!\n\n" + oError);
 			}).then(function() {
