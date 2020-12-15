@@ -129,10 +129,18 @@ sap.ui.define([
             }
             if (oArges.mold_id_arr != undefined && oArges.mold_id_arr.length > 0) { 
                  console.log(" String >>>> ", String(oArges.mold_id_arr.join(","))); 
-                aSearchFilters.push(new Filter("mold_id", FilterOperator.NotContains, oArges.mold_id_arr.join(","),'', true))
-                // oArges.mold_id_arr.forEach(function (mold_id) { 
-                //     aSearchFilters.push(new Filter("mold_id", FilterOperator.NotContains, String(mold_id)));
-                // });
+                 var nFilters = [];
+                 //aSearchFilters.push(new Filter("mold_id", FilterOperator.NotContains, oArges.mold_id_arr.join(","),'', true))
+                oArges.mold_id_arr.forEach(function (mold_id) { 
+                    nFilters.push(new Filter("mold_id", FilterOperator.NotContains, String(mold_id)));
+                 });
+
+                var oNotInFilter = {
+                    filters: nFilters,
+                    and: true
+                 };
+                console.log("oNotInFilter >> " , oNotInFilter);
+                aSearchFilters.push(oNotInFilter);
             }
             console.log("aSearchFilters >> " , aSearchFilters);
 
