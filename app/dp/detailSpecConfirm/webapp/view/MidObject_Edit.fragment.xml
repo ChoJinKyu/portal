@@ -17,7 +17,7 @@
             <Label text="Production Type"/>
             <Text text="{mstSpecView>/mold_production_type_name}"/>
             <Label text="Mold Supplier"/>
-            <MultiInput id="inpMoldSupplier" 
+            <Input id="inpMoldSupplier" 
                     value="{master>/mold_mfger_code}" 
                     showValueHelp="true"
                     valueHelpOnly="true"
