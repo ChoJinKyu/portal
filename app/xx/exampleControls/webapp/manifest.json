@@ -20,7 +20,7 @@
         }
       },
       "mainV4Service": {
-        "uri": "srv-api/odata/v4/xx.TemplateService/",
+        "uri": "srv-api/odata/v4/xx.TemplateV4Service/",
         "type": "OData",
         "settings": {
           "odataVersion": "4.0"
@@ -235,6 +235,13 @@
           "name": "example8",
           "target": [
             "example8"
+          ]
+        },
+        {
+          "pattern": "example9",
+          "name": "example9",
+          "target": [
+            "example9"
           ]
         }
       ],

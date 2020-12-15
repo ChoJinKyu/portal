@@ -8,17 +8,34 @@ sap.ui.define([
   'sap/ui/model/Sorter',
   "sap/m/MessageBox",
   "sap/m/MessageToast",
-  "sap/ui/model/odata/v2/ODataTreeBinding"
+  "sap/ui/model/odata/v2/ODataTreeBinding",
+  "sap/ui/model/odata/v2/ODataModel"
 ],
 	/**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
    */
-  function (Controller, JSONModel, ManagedListModel, Filter, FilterOperator, Fragment, Sorter, MessageBox, MessageToast, ODataTreeBinding) {
+  function (Controller, JSONModel, ManagedListModel, Filter, FilterOperator, Fragment, Sorter, MessageBox, MessageToast, ODataTreeBinding, ODataModel) {
     "use strict";
 
     return Controller.extend("cm.menuMgr.controller.menuMgr", {
       onInit: function () {
-        this.getView().setModel(new ManagedListModel(), "tree");
+
+
+        //console.log("111111111111");
+        //this.getView().setModel(new ManagedListModel(), "tree");
+        // this.getView().setModel(
+        //     new ODataModel("cm/menuMgr/webapp/srv-api/odata/v2/cm.menuMgrService", {
+        //         json : true,
+        //         useBatch : true,
+        //         serviceUrlParams: {
+        //             menu_code: 'CM'
+        //         }
+        //     })
+        // , "tree");
+
+        // this.getView().byId("menuTreeTable").attachFilter(function(oData){
+        //     console.log(">>>>>>>>>>> oData", oData);
+        // }, this);
       },
       onAdd: function () {
         var [flag] = arguments;
@@ -56,6 +73,7 @@ sap.ui.define([
         });
       },
       onSearch: function (event) {
+        // this.getView().byId("menuTreeTable").fireFilter();
         // Menu
         // this
         //   .getView()
@@ -79,44 +97,56 @@ sap.ui.define([
         //     this.getView().setBusy(false);
         //   }).bind(this));
 
-        // console.log(">>>> result", this.getView().getModel("tree").getMetadata());
-        // var self = this;
-        // this.getView().getModel("tree").read("/Menu_haa", {
-        //   filters: [
-        //     new Filter("menu_code", FilterOperator.EQ, "CM1110")
-        //   ],
-        //   success: function (oData) {
-        //     console.log(">>>>>>> oData", oData);
-        //     self.getView().getModel("tree").update("/Menu_haa", oData);
-        //   }
-        // });
+        //console.log(">>>> result", this.getView().getModel("tree").getMetadata());
+        //cm/menuMgr/webapp/srv-api/odata/v2/cm.menuMgrService/$metadata
+        //var self = this;
+        //console.log(">>>> result", self.getView().getModel().getMetadata());
+        // self.getView().setModel(self.getView().getModel(), "tree");
+        
+        this.getView().getModel().read("/Menu_haa", {
+          filters: [
+            new Filter("language_code", FilterOperator.EQ, "KO")
+            new Filter("menu_code", FilterOperator.EQ, "CM")
+          ],
+          success: (function (oData) {
+            this.getView().getModel('tree').setData({"Menu_haa" : oData.results})
+          }).bind(this)
+        });
+
+
+        
+
+
         // TBD
-        console.log(">>>> Success - 1");
-        this.getView()
-          .setBusy(true)
-          .getModel("tree")
-          .setTransactionModel(this.getView().getModel())
-          .tree("/Menu_haa", {
-            // urlParameters: {
-            //   language_code: 'KO'
-            // },
-            filters: [
-              // 조회조건
-              new Filter("language_code", FilterOperator.EQ, "KO"),
-              new Filter("menu_code", FilterOperator.EQ, "CM1200")
-            ]
-          })
-          // 성공시
-          .then((function (oData) {
-            console.log(">>>> Success", oData);
-          }).bind(this))
-          // 실패시
-          .catch(function (oError) {
-          })
-          // 모래시계해제
-          .finally((function () {
-            this.getView().setBusy(false);
-          }).bind(this));
+        //console.log(">>>> Success - 2222");
+        // this.getView()
+        //   .setBusy(true)
+        //   .getModel("tree")
+        //   .setTransactionModel(this.getView().getModel())
+        //   .tree("/Menu_haa", {
+        //     // urlParameters: {
+        //     //   language_code: 'KO'
+        //     // },
+        //     filters: [
+        //       // 조회조건
+        //       new Filter("language_code", FilterOperator.EQ, "KO"),
+        //       new Filter("menu_code", FilterOperator.EQ, "CM1100")
+        //     ]
+        //   })
+        //   // 성공시
+        //   .then((function (oData) {
+        //       //this.getView().getModel("tree2").setJSON(oData.results);
+        //       console.log(">>>>>> results", oData);
+        //      this.getView().getModel('viewModel').setData({"Menu_haa" : oData.results})
+        //   }).bind(this))
+        //   // 실패시
+        //   .catch(function (oError) {
+        //       console.log(">>>> failure", oError);
+        //   })
+        //   // 모래시계해제
+        //   .finally((function () {
+        //     this.getView().setBusy(false);
+        //   }).bind(this));
       }
     });
   }

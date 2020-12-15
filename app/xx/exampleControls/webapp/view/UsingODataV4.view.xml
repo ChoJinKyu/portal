@@ -3,14 +3,18 @@
     xmlns="sap.m" 
     xmlns:core="sap.ui.core" 
     xmlns:layout="sap.ui.layout" 
-    xmlns:lib-m="ext.lib.m"
+    xmlns:lib-m="ext.lib.control.m"
     height="100%">
 
     <Page id="page" 
         title="Inline Edit in Table with OData V4" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
 
         <content>
-
+<!-- 
+            parameters: {
+                $$updateGroupId : 'odata_gid_cud'
+                            $expand: 'message_type'
+            }, -->
             <Table id="mainTable" 
                     sticky="HeaderToolbar,ColumnHeaders" 
                     inset="false" 
@@ -18,6 +22,9 @@
                     updateFinished=".onMainTableUpdateFinished"
                     items="{
                         path: 'main-v4>/Message',
+                        parameters: {
+                            $$updateGroupId : 'odata_gid_cud'
+                        },
                         filters: [
                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                             {path: 'chain_code', operator: 'EQ', value1: 'CM'}
@@ -66,32 +73,20 @@
                         <cells>
                             <Text text="{main-v4>chain_code}"></Text>
                             <Text text="{main-v4>language_code}"></Text>
-                            <!-- <Input value="{main-v4>message_type_code}"></Input> -->
-                            <ComboBox selectedKey="{message_type_code}" width="100%" items="{
-                                    path: 'common-v4>/Code',
+                            <lib-m:CodeComboBox selectedKey="{main-v4>message_type_code}" width="100%" showSecondaryValues="true" 
+                                useEmpty="true" 
+                                items="{
+                                    path: '/',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                         {path: 'group_code', operator: 'EQ', value1: 'CM_MESSAGE_TYPE_CODE'}
-                                    ]
+                                    ],
+                                    serviceName: 'cm.util.CommonService',
+                                    entityName: 'Code'
                                 }">
-                                <items>
-                                    <core:Item key="{common-v4>code}" text="{common-v4>code_name}" />
-                                </items>
-                            </ComboBox>
-                            <!-- <ComboBox selectedKey="{language_code}" width="100%" items="{
-                                    path: 'common-v4>/CodeDetails',
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                        {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
-                                    ]
-                                }">
-                                <items>
-                                    <core:Item key="{common-v4>code}" text="{common-v4>code_description}" />
-                                </items>
-                            </ComboBox> -->
-                            <!-- <Text text="{message_code}"></Text> -->
+                            </lib-m:CodeComboBox>
+                            <!-- <Input value="{main-v4>message_type_code}"></Input> -->
                             <Input value="{main-v4>message_code}"></Input>
-                            <!-- <Text text="{message_contents}"></Text> -->
                             <Input value="{main-v4>message_contents}" width="100%"></Input>
                         </cells>
                     </ColumnListItem>

@@ -261,15 +261,16 @@ sap.ui.define([
 		 * @public
 		 */
 		onMainTableCreate: function(){
-			console.group("onMainTableCreate");
+			console.log("==== mm onMainTableCreate");
 			var that = this;
 
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-			
-			//note수정 검색한 값을 기준으로 데이타를 수정해야한다. 
-	//midObject/{layout}/{tenant_id}/{company_code}/{org_type_code}/{org_code}/{material_code}/{supplier_code}/{mi_material_code}
-			this.getRouter().navTo("midPage", {
-				layout: oNextUIState.layout, 
+			var sLayout = oNextUIState.layout;
+			// console.log("sLayout", sLayout);
+			//  sLayout = "MidColumnFullScreen";	
+
+			var oNavParam = {
+				layout: sLayout, 
 				tenant_id: this._sso.dept.tenant_id,
 				company_code: this._sso.dept.company_code,
 				org_type_code: this._sso.dept.org_type_code,
@@ -277,29 +278,10 @@ sap.ui.define([
 				material_code:"new",	
 				supplier_code: "　",	
 				mi_material_code: "　"
-			});
-
-			// this.getRouter().navTo("midPage", {
-			// 	layout: oNextUIState.layout, 
-			// 	tenant_id: "L2100",
-			// 	company_code: "*",
-			// 	org_type_code: "BU",
-			// 	org_code :"BIZ00100",
-			// 	material_code:"new",	
-			// 	supplier_code: "KR00008",	
-			// 	mi_material_code: "TIN-001-41"
-			// });
-
-
-			
-            if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
-                this.getView().getModel('oUi').setProperty("/headerExpandFlag", false);
-            }
-
-			console.groupEnd();
+			};
+			this.getRouter().navTo("midPage", oNavParam);
 			
 		},
-
 		
 		/**
 		 * Event handler when a search button pressed

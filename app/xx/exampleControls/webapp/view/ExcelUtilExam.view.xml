@@ -15,7 +15,6 @@
 
            <Table id="rTable" 
                   title="ResponsibleTable"
-                  sticky="HeaderToolbar,ColumnHeaders" 
                   inset="false"
                   noDataText="No Data"
                   class="sapFDynamicPageAlignContent" 
@@ -25,58 +24,58 @@
                   width="auto">
                 <headerToolbar>
                     <OverflowToolbar>
-                        <Title text="Responsible Table / Total : {= ${rModelList>/Message}.length > 0 ? '(' + ${rModelList>/Message}.length + ')' : '0'}" level="H2"/>
-                        <ToolbarSpacer/>
-                        <Button text="Load Data" type="Transparent" press=".onRLoadPress"/>
-                        <Button text="Reset Data" type="Transparent" press=".onResetRModelListPress"/>
-                        <Button id="rTableExportButton" text="Export" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment"/>
-                        <u:FileUploader id="rFileUploader" uploadComplete="handleUploadComplete" change=".onImportChange"/>
+                        <Title text="Responsible Table / Total : {= ${rModelList>/Message}.length > 0 ? '(' + ${rModelList>/Message}.length + ')' : '0'}" level="H2" />
+                        <ToolbarSpacer />
+                        <Button text="Load Data" type="Transparent" press=".onRLoadPress" />
+                        <Button text="Reset Data" type="Transparent" press=".onResetRModelListPress" />
+                        <Button id="rTableExportButton" text="Export" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
+                        <u:FileUploader id="rFileUploader" uploadComplete="handleUploadComplete" change=".onImportChange" />
                         <!--<Button text="Import" type="Transparent" press=".onImportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment"/>-->
                     </OverflowToolbar>
                 </headerToolbar>
                 <columns>
-                    <Column minScreenWidth="Tablet" hAlign="Center" width="40px"  >
+                    <Column minScreenWidth="Tablet" hAlign="Center" width="40px">
                         <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
                     </Column>
-                    <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="10em" >
+                    <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="10em">
                         <Text text="Chain" />
                         <!--specify customData for Excel Imporing-->
                         <customData>
                             <core:CustomData key="bindName" value="chain_code" />
                         </customData>
                     </Column>
-                    <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="10em" >
+                    <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="10em">
                         <Text text="Language" />
                         <customData>
                             <core:CustomData key="bindName" value="language_code" />
                         </customData>
                     </Column>
-                    <Column minScreenWidth="Tablet" hAlign="Center" width="15em" >
+                    <Column minScreenWidth="Tablet" hAlign="Center" width="15em">
                         <Text text="Code" />
                         <customData>
                             <core:CustomData key="bindName" value="message_code" />
                         </customData>
                     </Column>
                     <Column minScreenWidth="Tablet" hAlign="Left">
-                        <Text text="Content" textAlign="Center"/>
+                        <Text text="Content" textAlign="Center" />
                         <customData>
                             <core:CustomData key="bindName" value="message_contents" />
                         </customData>
                     </Column>
-                    <Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
+                    <Column minScreenWidth="Tablet" hAlign="Center" width="10em">
                         <Text text="Type" />
                         <customData>
                             <core:CustomData key="bindName" value="message_type_code" />
                         </customData>
                     </Column>
-                    <Column minScreenWidth="Tablet" hAlign="End" width="10em" >
-                        <Text text="Price" textAlign="Center"/>
+                    <Column minScreenWidth="Tablet" hAlign="End" width="10em">
+                        <Text text="Price" textAlign="Center" />
                         <customData>
                             <core:CustomData key="bindName" value="price" />
                         </customData>
                     </Column>
-                    <Column minScreenWidth="Tablet" hAlign="End" width="10em" >
-                        <Text text="Using" textAlign="Center"/>
+                    <Column minScreenWidth="Tablet" hAlign="End" width="10em">
+                        <Text text="Using" textAlign="Center" />
                         <customData>
                             <core:CustomData key="bindName" value="use_flag" />
                         </customData>
@@ -118,12 +117,8 @@
                                         maxLength: 30
                                     }
                                 }" editable="{= ${rModelList>_row_state_} === 'C' }" required="true"></Input>
-                            <Text text="{rModelList>message_contents}" width="100%"/>
-                            <Select
-                                forceSelection="false"
-                                selectedKey="{rModelList>message_type_code}"
-                                autoAdjustWidth="true"
-                                items="{
+                            <Text text="{rModelList>message_contents}" width="100%" />
+                            <Select forceSelection="false" selectedKey="{rModelList>message_type_code}" autoAdjustWidth="true" items="{
                                     path: 'common>/CodeDetails',
                                     type: 'sap.ui.model.type.String',
                                     constraints: {
@@ -136,53 +131,44 @@
                                 }">
                                 <core:Item key="{common>code}" text="{common>code_description}" />
                             </Select>
-                            <ObjectNumber
-							    number="{
-                                    parts:[{path:'rModelList>price'},{path:'rModelList>currency_code'}],
+                            <ObjectNumber number="{
+                                    parts:[
+                                        {path:'rModelList>price'},
+                                        {path:'rModelList>currency_code'}
+                                    ],
                                     type: 'sap.ui.model.type.Currency',
                                     formatOptions: {showMeasure: false}
-                                }"
-                                unit="{rModelList>currency_code}"
-                                textAlign="End" />
+                                }" unit="{rModelList>currency_code}" textAlign="End" />
                             <Switch state="{= typeof ${rModelList>use_flag} === 'string' ? JSON.parse(${rModelList>use_flag}) : ${rModelList>use_flag}}" customTextOn="Yes" customTextOff="No">
                                 <layoutData>
                                     <FlexItemData growFactor="1" />
                                 </layoutData>
-                            </Switch>                            
+                            </Switch>
                         </cells>
                     </ColumnListItem>
                 </items>
             </Table>
-            <OverflowToolbar/>
- 		    <table:Table
-                id="gTable" 
-                title="GridTable"
-                sticky="HeaderToolbar,ColumnHeaders" 
-                inset="false"
-                noDataText="{I18N>/NCM0001}"
-                class="sapFDynamicPageAlignContent" 
-                updateFinished=".onMainTableUpdateFinished"
-                rows="{gModelList>/Message}"
-                width="auto">
-				<table:extension>
-					<OverflowToolbar>
-						<Title text="Grid Table / Total : {= ${gModelList>/Message}.length > 0 ? '(' + ${gModelList>/Message}.length + ')' : '0'}" level="H2"/>
-                        <ToolbarSpacer/>
-                        <Button text="Load Data" type="Transparent" press=".onGLoadPress"/>
-                        <Button text="Reset Data" type="Transparent" press=".onResetGModelListPress"/>
-                        <Button id="gTableExportButton" text="Export" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment"/>
-                        <u:FileUploader id="gFileUploader" uploadComplete="handleUploadComplete" change=".onImportChange"/>
-					</OverflowToolbar>
-				</table:extension>
-				<table:columns>
-					<table:Column width="11rem">
+            <OverflowToolbar />
+            <table:Table id="gTable" title="GridTable" sticky="HeaderToolbar,ColumnHeaders" inset="false" noDataText="{I18N>/NCM0001}" class="sapFDynamicPageAlignContent" updateFinished=".onMainTableUpdateFinished" rows="{gModelList>/Message}" width="auto">
+                <table:extension>
+                    <OverflowToolbar>
+                        <Title text="Grid Table / Total : {= ${gModelList>/Message}.length > 0 ? '(' + ${gModelList>/Message}.length + ')' : '0'}" level="H2" />
+                        <ToolbarSpacer />
+                        <Button text="Load Data" type="Transparent" press=".onGLoadPress" />
+                        <Button text="Reset Data" type="Transparent" press=".onResetGModelListPress" />
+                        <Button id="gTableExportButton" text="Export" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
+                        <u:FileUploader id="gFileUploader" uploadComplete="handleUploadComplete" change=".onImportChange" />
+                    </OverflowToolbar>
+                </table:extension>
+                <table:columns>
+                    <table:Column width="11rem">
                         <!--specify customData for Excel Imporing-->
                         <table:customData>
-								<core:CustomData key="bindName" value="chain_code" />
-						</table:customData>
-						<Label text="Chain" />
-						<table:template>
-							<ComboBox selectedKey="{gModelList>chain_code}" width="100%" items="{
+                            <core:CustomData key="bindName" value="chain_code" />
+                        </table:customData>
+                        <Label text="Chain" />
+                        <table:template>
+                            <ComboBox selectedKey="{gModelList>chain_code}" width="100%" items="{
                                     path: 'common>/CodeDetails',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
@@ -193,15 +179,15 @@
                                     <core:Item key="{common>code}" text="{common>code_description}" />
                                 </items>
                             </ComboBox>
-						</table:template>
-					</table:Column>
-					<table:Column width="11rem">
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="11rem">
                         <table:customData>
-								<core:CustomData key="bindName" value="language_code" />
-						</table:customData>
-						<Label text="Language" />
-						<table:template>
-							<ComboBox selectedKey="{gModelList>language_code}" width="100%" items="{
+                            <core:CustomData key="bindName" value="language_code" />
+                        </table:customData>
+                        <Label text="Language" />
+                        <table:template>
+                            <ComboBox selectedKey="{gModelList>language_code}" width="100%" items="{
                                     path: 'common>/CodeDetails',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
@@ -212,39 +198,39 @@
                                     <core:Item key="{common>code}" text="{common>code_description}" />
                                 </items>
                             </ComboBox>
-						</table:template>
-					</table:Column>
-					<table:Column width="6rem" hAlign="End">
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="6rem" hAlign="End">
                         <table:customData>
-								<core:CustomData key="bindName" value="message_code" />
-						</table:customData>
-						<Label text="Code" />
-						<table:template>
-							<Input textAlign="End" value="{
+                            <core:CustomData key="bindName" value="message_code" />
+                        </table:customData>
+                        <Label text="Code" />
+                        <table:template>
+                            <Input textAlign="End" value="{
                                     path: 'gModelList>message_code',
                                     type: 'sap.ui.model.type.String',
                                     constraints: {
                                         maxLength: 30
                                     }
                                 }" editable="{= ${gModelList>_row_state_} === 'C' }" required="true"></Input>
-						</table:template>
-					</table:Column>
-					<table:Column width="9rem">
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="9rem">
                         <table:customData>
-								<core:CustomData key="bindName" value="message_contents" />
-						</table:customData>
-						<Label text="Content" />
-						<table:template>
-							<Text text="{gModelList>message_contents}" textAlign="Begin" width="100%"/>
-						</table:template>
-					</table:Column>
-					<table:Column width="9rem">
+                            <core:CustomData key="bindName" value="message_contents" />
+                        </table:customData>
+                        <Label text="Content" />
+                        <table:template>
+                            <Text text="{gModelList>message_contents}" textAlign="Begin" width="100%" />
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="9rem">
                         <table:customData>
-								<core:CustomData key="bindName" value="message_type_code" />
-						</table:customData>
-						<Label text="Type" />
-						<table:template>
-							<ComboBox selectedKey="{gModelList>message_type_code}" width="100%" items="{
+                            <core:CustomData key="bindName" value="message_type_code" />
+                        </table:customData>
+                        <Label text="Type" />
+                        <table:template>
+                            <ComboBox selectedKey="{gModelList>message_type_code}" width="100%" items="{
                                     path: 'common>/CodeDetails',
                                     type: 'sap.ui.model.type.String',
                                     constraints: {
@@ -254,15 +240,15 @@
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                         {path: 'group_code', operator: 'EQ', value1: 'CM_MESSAGE_TYPE_CODE'}
                                     ]
-                                }"> 
+                                }">
                                 <items>
                                     <core:Item key="{common>code}" text="{common>code_description}" />
                                 </items>
                             </ComboBox>
-						</table:template>
-					</table:Column>
-				</table:columns>
-			</table:Table>
+                        </table:template>
+                    </table:Column>
+                </table:columns>
+            </table:Table>
         </content>
     </Page>
 </mvc:View>

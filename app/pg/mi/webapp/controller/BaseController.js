@@ -10,6 +10,13 @@ sap.ui.define([
 
 	return Controller.extend("pg.mi.controller.BaseController", {
 		
+		init: function () {
+			// set dialog
+			this.helloDialog = new HelloDialog();
+			// create the views based on the url/hash
+			this.getRouter().initialize();
+		},
+
 		/**
 		 * Convenience method for accessing the router.
 		 * @public

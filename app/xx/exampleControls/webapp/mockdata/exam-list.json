@@ -1,11 +1,11 @@
 [
     {
-        "name": "Search Area Controls",
+        "name": "Search Controls",
         "icon": "sap-icon://source-code",
         "viewName": "example1"
     },
     {
-        "name": "Control Validations",
+        "name": "Validations",
         "icon": "sap-icon://source-code",
         "viewName": "example2"
     },
@@ -15,17 +15,17 @@
         "viewName": "example3"
     },
     {
-        "name": "Inline Edit Table for ext.lib.model.v2.ODataModel",
+        "name": "X - Inline Edit Table for ext.lib.model.v2.ODataModel",
         "icon": "sap-icon://source-code",
         "viewName": "example4"
     },
     {
-        "name": "Extended Controls - e.g. Code Combo",
+        "name": "Code Combo",
         "icon": "sap-icon://source-code",
         "viewName": "example5"
     },
     {
-        "name": "Excel Utils",
+        "name": "Import / Export Excel",
         "icon": "sap-icon://source-code",
         "viewName": "example6"
     },

@@ -1,3 +1,6 @@
+ 요청 
+2. 시황자재 > 가격정보 선택 - MIMaterialCostInformationView reqm_quantity_unit mi_base_reqm_quantity
+
 onValueHelpMaterialDialogSearch 필터 하드코딩  L1100 다른자재가 없어서...
 onValueHelpMaterialDialogApply
 MIMaterialCostInformationView 데이타 확인되지 않고 있음
@@ -17,7 +20,61 @@ category_name  사라짐...
 가격정보 선택하고 시황자재 리스트에 추가. (use_flag, 화폐단위 선택하게끔함)
 시황자재 리스트 등록, 수정, 삭제 테스트,
 om 자재 등록 
+http://127.0.0.1:8080/odata/v2/pg.marketIntelligenceService/CurrencyUnitView/?$top=5
+<d:tenant_id>L2100</d:tenant_id>
+<d:currency_code>USD</d:currency_code>
+<d:language_code>EN</d:language_code>
+<d:currency_code_name>Dollar</d:currency_code_name>
 
+http://127.0.0.1:8080/odata/v2/pg.marketIntelligenceService/MaterialView/?$top=5
+<m:properties>
+<d:tenant_id>L1100</d:tenant_id>
+<d:material_code>6910BLC0006</d:material_code>
+<d:material_desc>Primary Cell Battery,Lithium</d:material_desc>
+</m:properties>
+http://127.0.0.1:8080/odata/v2/pg.marketIntelligenceService/SupplierView/?$top=5
+<m:properties>
+<d:tenant_id>L1100</d:tenant_id>
+<d:supplier_code>KR01818401</d:supplier_code>
+<d:supplier_local_name>한국유나이티드제약(주)</d:supplier_local_name>
+<d:supplier_english_name m:null="true"/>
+</m:properties>
+</content>
+
+MIMaterialCostInformationView reqm_quantity_unit
+<m:properties>
+<d:tenant_id>L2100</d:tenant_id>
+<d:company_code>*</d:company_code>
+<d:org_type_code>BU</d:org_type_code>
+<d:org_code>BIZ00100</d:org_code>
+<d:mi_material_code>A001-01-01</d:mi_material_code>
+<d:mi_material_name>원유(서부텍사스중질유)</d:mi_material_name>
+<d:currency_unit>USD</d:currency_unit>
+<d:quantity_unit>MT</d:quantity_unit>
+<d:exchange>Platts</d:exchange>
+<d:termsdelv>CFR China</d:termsdelv>
+<d:mi_date>2020-07-21T00:00:00</d:mi_date>
+<d:amount>632.600</d:amount>
+</m:properties>
+
+//UnitOfMeasureView 
+수량단위 
+
+            //자재정보 선택을 참조한다. 
+            //supplier_code, supplier_local_name, hidden_supplier_local_name, supplier_english_name
+            var material_code = this.getView().byId("input_hidden_material_code").getValue();
+            var material_desc = this.getView().byId("input_hidden_material_desc").getValue();
+            var supplier_code = this.getView().byId("input_hidden_supplier_code").getValue();
+            var supplier_local_name = this.getView().byId("input_hidden_supplier_local_name").getValue();
+            var supplier_english_name = this.getView().byId("input_hidden_supplier_english_name").getValue();
+
+            //기준수량
+            var base_quantity = this.getView().byId("input_base_quantity").getValue();
+            //가공비
+            var processing_cost = this.getView().byId("input_processing_cost").getValue();
+            //가공비 통화 가공비통화단위
+            var pcst_currency_unit = this.getView().byId("comboBox_pcst_currency_unit").getSelectedKey();
+            
 1. 수정사항 아래 함수 검색 부분 전체 수정 대상 
 
 
@@ -100,6 +157,7 @@ entity MI_Material_Code_Bom_Mngt {
 
 }
 
+http://127.0.0.1:8080/odata/v2/pg.marketIntelligenceService/MIMaterialCodeBOMManagement/?$top=5
 MIMaterialCodeBOMManagement ==============================
 <d:tenant_id>L2100</d:tenant_id>
 <d:company_code>*</d:company_code>
@@ -126,7 +184,7 @@ MIMaterialCodeBOMManagement ==============================
 <d:system_create_dtm>2020-11-30T15:29:00Z</d:system_create_dtm>
 <d:system_update_dtm>2020-11-30T15:29:00Z</d:system_update_dtm>
 
-
+http://127.0.0.1:8080/odata/v2/pg.marketIntelligenceService/MIMaterialCodeBOMManagementView/?$top=5
 
 ---data
 자재명 뷰 
