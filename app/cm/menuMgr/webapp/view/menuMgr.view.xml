@@ -81,7 +81,8 @@
                     rows="{
                         path : 'tree>/Menu_haa',
                         parameters : {
-                            arrayNames: ['nodes']
+                            arrayNames: ['nodes'],
+                            numberOfExpandedLevels: 4
                         }
                     }"
                 >

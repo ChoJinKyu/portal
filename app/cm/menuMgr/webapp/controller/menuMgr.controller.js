@@ -58,13 +58,26 @@ sap.ui.define([
             onSearch: function (event) {
                 this.treeListModel = this.treeListModel || new TreeListModel(this.getView().getModel());
                 this.getView().setBusy(true);
+                var predicates = [];
+                if (!!this.byId("searchChainCombo").getSelectedKey()) predicates.push(new Filter("chain_code", FilterOperator.Contains, this.byId("searchChainCombo").getSelectedKey()));
+                if (!!this.byId("searchKeyword").getValue()) {
+                    predicates.push(new Filter({
+                        filters: [
+                        new Filter("menu_code", FilterOperator.Contains, this.byId("searchKeyword").getValue()),
+                        new Filter("menu_name", FilterOperator.Contains, this.byId("searchKeyword").getValue())
+                        ],
+                        and: false
+                    }));
+                }
+                predicates.push(new Filter("language_code", FilterOperator.EQ, "KO"));
                 this.treeListModel
                     .read("/Menu_haa", {
-                        filters: [
-                            // 조회조건
-                            new Filter("language_code", FilterOperator.EQ, "KO"),
-                            new Filter("menu_code", FilterOperator.EQ, "CM1200")
-                        ]
+                        // filters: [
+                        //     // 조회조건
+                        //     new Filter("language_code", FilterOperator.EQ, "KO"),
+                        //     new Filter("menu_code", FilterOperator.EQ, "CM1200")
+                        // ]
+                        filters: predicates
                     })
                     // 성공시
                     .then((function (jNodes) {
