@@ -16,7 +16,16 @@
 			<Label text="UOM" required="true"/>
 			<Input value="{master>/uom_code}" editable="false" class="readonlyField"/>
 			<Label text="Class" required="true"/>
-			<Input value="{master>/uom_class_code}" editable="false" class="readonlyField"/>
+			<ComboBox id="showClassCode" width="100%" selectedKey="{master>/uom_class_code}" items="{
+                    path: 'uomClass>/UomClass',
+                    filters: [
+                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}                                        
+                    ]
+                }" editable="false" required="true"> 
+                <items>
+                    <core:Item key="{uomClass>uom_class_code}" text="{uomClass>uom_class_name}" />
+                </items>
+            </ComboBox>
 			<Label text="Base Unit"/>
 			<!-- <Text text="{
 					path: 'master>/base_unit_flag',
@@ -27,6 +36,8 @@
 					<FlexItemData growFactor="1" />
 				</layoutData>
 			</Switch>
+            <Label text="UOM Name"/>
+			<Input value="{master>/uom_name}" editable="false" class="readonlyField"/>
 			<Label text="Description"/>
 			<Input value="{master>/uom_desc}" editable="false" class="readonlyField"/>
 			<Label text="Disable Date"/>
@@ -42,16 +53,16 @@
         columnsXL="3" >
         <form:content>		
             <core:Title text="Display" />
-			<Label text="Commercial" required="true"/>
+			<!-- <Label text="Commercial" required="true"/>
 			<Input value="{master>/commercial_uom_code}" editable="false" class="readonlyField"/>			
 			<Label text="Technical" required="true"/>
-			<Input value="{master>/technical_uom_code}" editable="false" class="readonlyField"/>
+			<Input value="{master>/technical_uom_code}" editable="false" class="readonlyField"/> -->
             <Label text="Decimal Places"/>
 			<Input value="{master>/decimal_places}" editable="false" class="readonlyField"/>			
-            <Label text="Commercial Text" required="true"/>
+            <!-- <Label text="Commercial Text" required="true"/>
 			<Input value="{master>/commercial_uom_name}" editable="false" class="readonlyField"/>
             <Label text="Technical Text" required="true"/>
-			<Input value="{master>/technical_uom_name}" editable="false" class="readonlyField"/>			
+			<Input value="{master>/technical_uom_name}" editable="false" class="readonlyField"/>			 -->
 			<Label text="Float. Point Idex"/>
 			<Input value="{master>/floating_decpoint_index}" editable="false" class="readonlyField"/>
 	    </form:content>

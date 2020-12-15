@@ -83,7 +83,7 @@
           "defaultBindingMode": "TwoWay",
           "defaultCountMode": "Inline",
           "refreshAfterChange": false,
-          "useBatch": true
+          "useBatch": false
         }
       },
       "": {
@@ -93,7 +93,7 @@
           "defaultBindingMode": "TwoWay",
           "defaultCountMode": "Inline",
           "refreshAfterChange": true,
-          "useBatch": true
+          "useBatch": false
         }
       }
     },

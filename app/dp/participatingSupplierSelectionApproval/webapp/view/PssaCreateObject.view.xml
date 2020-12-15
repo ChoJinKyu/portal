@@ -172,7 +172,7 @@
                                 <OverflowToolbar>
                                     <ToolbarSpacer/>
                                     <!-- Add the Personalization button -->
-                                    <Button id="btnPsAdd"  type="Transparent" text="{I18N>/ROW_ADD}" press=".handleTableSelectDialogPress" > <!-- Add -->
+                                    <Button id="btnPsAdd"  type="Transparent" text="{I18N>/ROW_ADD}" press=".onMoldItemPopPress" > <!-- Add -->
                                     	<customData>
                                             <core:CustomData key="multi" value="true" />
                                         </customData>

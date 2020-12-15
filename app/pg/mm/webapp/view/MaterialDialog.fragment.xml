@@ -42,8 +42,8 @@
                                     ],                            
                                     templateShareable:true}"                     
                             placeholder="선택 하세요.">
-                            <core:Item key="{material_code}" text="{material_description}"/>
-                        </ComboBox> 
+                            <core:Item key="{material_code}" text="{material_code}"/>
+                        </ComboBox>
                     </VBox>
                     <VBox visible="{= ${_oUiData>/radioButtonGroup} === 1 }">
                         <Label text="공급업체코드"/>
@@ -56,14 +56,14 @@
                                     ],                             
                                     templateShareable:true}"                     
                             placeholder="선택 하세요.">
-                            <core:Item key="{supplier_code}" text="{supplier_local_name}"/>
+                            <core:Item key="{supplier_code}" text="{supplier_code}"/>
                         </ComboBox>
                     </VBox>
                 </layout:VerticalLayout> 
                 <layout:VerticalLayout class="sapUiLargeMarginEnd">
                     <VBox visible="{= ${_oUiData>/radioButtonGroup} === 0}">
                         <Label  text="자재명"/>
-                        <Input  id="input_material_description"
+                        <Input  id="input_material_desc"
                                 class="sapUiSmallMarginBottom" 
                         />   
                     </VBox>
@@ -90,7 +90,7 @@
 		    focusable="true"
             > 
             <Table  id="materialTable"
-                    items="{materialTableList>/}"                    
+                    items="{materialTable>/}"                    
                     mode="SingleSelectLeft"
                     updateFinished="onDtlUpdateFinished" 
                     class="sapUiSmallMarginTop"
@@ -132,12 +132,12 @@
                 <items>
                     <ColumnListItem type="Active" id="materialColumnListItem" press="onMaterialTableItemPress">
                         <cells>
-                            <Text text="{materialTableList>Vendor}"/>
-                            <Text text="{materialTableList>Vendor}"/>
-                            <Text text="{materialTableList>material_code}"/>
-                            <Text text="{materialTableList>material_desc}"/>
-                            <Text text="{materialTableList>supplier_code}"/>
-                            <Text text="{materialTableList>supplier_local_name}"/>
+                            <Text text="{materialTable>vendor}"/>
+                            <Text text="{materialTable>vendor_name}"/>
+                            <Text text="{materialTable>material_code}"/>
+                            <Text text="{materialTable>material_desc}"/>
+                            <Text text="{materialTable>supplier_code}"/>
+                            <Text text="{materialTable>supplier_local_name}"/>
                         </cells>
                     </ColumnListItem>
                 </items>

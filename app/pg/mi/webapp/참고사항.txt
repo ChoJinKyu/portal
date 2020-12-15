@@ -1,0 +1,138 @@
+
+MICategoryHierarchyStructure category_name 안보임 
+MIMaterialCostInformationView 오류
+
+"/MIMatListView(tenant_id='L2100',company_code='*',org_type_code='BU',org_code='BIZ00100',mi_material_code='2-1234')"
+"/MIMaterialCodeText(tenant_id='L2100',company_code='*',org_type_code='BU',org_code='BIZ00100',mi_material_code='2-12
+
+/MIMaterialCode(tenant_id='L2100',company_code='*',org_type_code='BU',
+org_code='BIZ00100',mi_material_code='2-1234',category_code=null)
+1. 남은 작업 우선순위 3
+카테고리 표현 변경 
+
+2. 추가 기능 우선순위 3
+저장후 등록된 데이타 보이게
+                    create_user_id: this._sso.user.id,
+                    system_create_dtm : new Date(),
+
+                    
+onMidListItemAdd
+                var arrayModel = [
+                    "oUiData",
+                    "_oUi",
+                    "_oUiData",
+                    "_deleteItem",
+                    "midList",
+                    "oUi",
+                    "mIMaterialCostInformationView",
+                    "mIMatCategListView"
+
+                ];
+                var mIMaterialCostInformationView = this.getModel(mIMaterialCostInformationView);
+            var mIMatCategListView = this.getModel(mIMatCategListView);
+                this.setArrayModelNullAndUpdateBindings(arrayModel);
+
+
+            //기준수량
+            var base_quantity = this.getView().byId("input_base_quantity").getValue();
+            //가공비
+            var processing_cost = this.getView().byId("input_processing_cost").getValue();
+            //가공비 통화 가공비통화단위
+            var pcst_currency_unit = this.getView().byId("comboBox_pcst_currency_unit").getSelectedKey();
+
+
+                    for(var i=0;i< reponse.data.results.length;i++){
+
+                        var oData = reponse.data.results[i];
+
+                        if(i==0){
+                            oUiData.setData(oData);
+                            oUiData.tenant_name =  "";
+                            that.getOwnerComponent().setModel(oUiData, "oUiData");
+                        }
+                    }
+
+                    oMidList.setData(reponse.data.results);
+
+                    
+우선순위 1
+3. 메인에서 / 상세 데이타 삭제시 조건 충족해야 삭제 
+시황자재 가격관리 등록 데이타 
+자재별 시황자재 BOM 등록 데이타 제외 삭제 
+
+우선순위 2
+4. cancel 작업
+
+                //onValueHelpMaterialDialogApply
+                
+                comboBox_supplierView=this._findFragmentControlId(this._m.fragementId.materialDialog, "comboBox_supplierView").getSelectedKey(),
+                input_material_desc=this._findFragmentControlId(this._m.fragementId.materialDialog, "input_material_desc").getValue(),
+                input_supplier_local_name=this._findFragmentControlId(this._m.fragementId.materialDialog, "input_supplier_local_name").getValue(),
+                input_hidden_supplier_english_name=this._findFragmentControlId(this._m.fragementId.materialDialog, "input_supplier_local_name").getValue();
+        
+
+
+작업중
+entity MI_Material_Code_Bom_Mngt {
+    key tenant_id             : String(5) not null  @title : '회사코드';
+    key company_code          : String(10) not null @title : '법인코드';
+    key org_type_code         : String(30) not null @title : '조직유형코드';
+    key org_code              : String(10) not null @title : '조직코드';
+    key material_code         : String(40) not null @title : '자재코드';
+    key supplier_code         : String(15) not null @title : '공급업체코드';
+        base_quantity         : Decimal             @title : '기준수량';
+        processing_cost       : Decimal             @title : '가공비';
+        pcst_currency_unit    : String(30)          @title : '가공비통화단위';
+    key mi_material_code      : String(40) not null @title : '시황자재코드';
+        reqm_quantity_unit    : String(3)           @title : '소요수량단위';
+        reqm_quantity         : Decimal             @title : '소요수량';
+        currency_unit         : String(30)          @title : '통화단위';
+        mi_base_reqm_quantity : Decimal             @title : '시황기준소요수량';
+        quantity_unit         : String(3)           @title : '수량단위';
+        exchange              : String(10)          @title : '거래소';
+        termsdelv             : String(10)          @title : '인도조건';
+        use_flag              : Boolean not null    @title : '사용여부';
+
+[김종현 디포커스] [오후 7:41] 테이블: PG_MI_MATERIAL_CODE_LIST
+[김종현 디포커스] [오후 7:42] 서비스: MIMaterialCodeList
+[김종현 디포커스] [오후 7:42] 삭제했습니다.
+[김종현 디포커스] [오후 7:42] 해당 화면의 리스트를 바인딩 하시려면
+[김종현 디포커스] [오후 7:42] 서비스: MIMatCategListView 
+[김종현 디포커스] [오후 7:42] 이 View로 바인딩하시면 됩니다.
+[김종현 디포커스] [오후 7:43] 저장/수정/삭제 시 
+[김종현 디포커스] [오후 7:43] 서비스: MIMaterialCode
+[김종현 디포커스] [오후 7:43] 서비스: MIMaterialCodeText
+[김종현 디포커스] [오후 7:43] 에 각각 속성과 언어별 텍스르로 
+[김종현 디포커스] [오후 7:44] 텍스트로 구분하여 작업하셔야 합니다.
+[김종현 디포커스] [오후 7:44] 방금 Git Hub에 반영하였습니다.
+
+visible="{contModel>/detailDetail/editMode}"
+
+
+                  <m:Column
+                                            minScreenWidth="Tablet"
+                                            demandPopin="true">
+                                        <m:Text text="Part No" />
+titleUppercase="false"
+
+
+            //관리조직 이름 
+            var bFilters = [
+                new Filter("tenant_id", FilterOperator.EQ, this._sso.dept.tenant_id)
+            ];
+
+            oModel.read(this._m.serviceName.orgTenantView, {
+                async: false,
+                filters: bFilters,
+                success: function (rData, reponse) {
+
+                    //console.log("json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
+                    var oData = reponse.data.results[0];
+
+                    debugger;
+                    if(reponse.data.results.length>0){
+                        this.getView().byId("label_tenant_name").setValue(reponse.data.results[0].tenant_name);
+                        _oUiData.setProperty("/tenant_name", reponse.data.results[0].tenant_name );
+                    }
+                }
+            });

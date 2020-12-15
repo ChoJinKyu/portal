@@ -74,6 +74,50 @@
                             </layoutData>
                         </VBox>
 
+                         <VBox>
+                            <Label text="Picker (Employee): "></Label>
+                            <lib-m:CodePicker id="searchEmployeePicker"
+                                placeholder="Enter a Employee name"
+                                keyField="employee_number"
+                                textField="user_local_name"
+                                suggestionItems="{
+                                    path: '/',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                    ],
+                                    serviceUrl: 'srv-api/odata/v2/cm.util.CommonService/',
+                                    entityName: 'Employee'
+                                }">
+                                <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
+                                    keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
+                            </lib-m:CodePicker>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M5 S10" />
+                            </layoutData>
+                        </VBox>
+
+                         <VBox>
+                            <Label text="Picker (Department): "></Label>
+                            <lib-m:CodePicker id="searchDepartmentPicker"
+                                placeholder="Enter a department name"
+                                keyField="department_id"
+                                textField="department_local_name"
+                                suggestionItems="{
+                                    path: '/',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                    ],
+                                    serviceUrl: 'srv-api/odata/v2/cm.util.CommonService/',
+                                    entityName: 'Department'
+                                }">
+                                <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Department"
+                                    keyFieldHeaderText="Department ID" textFieldHeaderText="Department" />
+                            </lib-m:CodePicker>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M5 S10" />
+                            </layoutData>
+                        </VBox>
+
                         <VBox>
                             <Label text="ComboBox (Code): "></Label>
                             <lib-m:CodeComboBox id="searchCodeCombo" width="100%" showSecondaryValues="true" 
@@ -123,6 +167,42 @@
                                     },
                                     serviceName: 'cm.util.CommonService',
                                     entityName: 'Currency'
+                                }">
+                            </lib-m:CodeComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M5 S10" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="ComboBox (Employee): "></Label>
+                            <lib-m:CodeComboBox id="searchEmployeeCombo" width="100%" showSecondaryValues="true" 
+                                keyField="employee_number" textField="user_local_name" 
+                                useEmpty="true" emptyText="전체"
+                                items="{
+                                    path: '/',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                    ],
+                                    serviceUrl: 'srv-api/odata/v2/cm.util.CommonService/',
+                                    entityName: 'Employee'
+                                }">
+                            </lib-m:CodeComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M5 S10" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="ComboBox (Department): "></Label>
+                            <lib-m:CodeComboBox id="searchDepartmentCombo" width="100%" showSecondaryValues="true" 
+                                keyField="department_id" textField="department_local_name" 
+                                useEmpty="true" emptyText="전체"
+                                items="{
+                                    path: '/',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                    ],
+                                    serviceUrl: 'srv-api/odata/v2/cm.util.CommonService/',
+                                    entityName: 'Department'
                                 }">
                             </lib-m:CodeComboBox>
                             <layoutData>
@@ -181,6 +261,34 @@
                                 <layout:GridData span="XL2 L3 M5 S10" />
                             </layoutData>
                         </VBox>
+                        <!-- <VBox>
+                            <Label text="MultiCoboBox (Employee): "></Label>
+                            <MultiComboBox id="searchMultiComboEmployee" width="100%"
+                                items="{
+                                    path: 'common>/Employee'
+                                }">
+                                <items>
+                                    <core:ListItem key="{common>employee_number}" text="{common>user_local_name}" additionalText="{common>employee_number}"/>
+                                </items>
+                            </MultiComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M5 S10" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="MultiCoboBox (Department): "></Label>
+                            <MultiComboBox id="searchMultiComboDepartmentt" width="100%"
+                                items="{
+                                    path: 'common/Department'
+                                }">
+                                <items>
+                                    <core:ListItem key="{department_id}" text="{department_local_name}" additionalText="{department_id}"/>
+                                </items>
+                            </MultiComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M5 S10" />
+                            </layoutData>
+                        </VBox> -->
 
                         <FlexBox alignItems="End" justifyContent="End" class="searchBoxButtonArea">
                             <Button text="Check" type="Emphasized" press=".onCheckButtonPress"/>

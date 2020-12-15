@@ -438,7 +438,7 @@
                                                         {path : 'group_code', operator : 'EQ', value1 : 'CM_YN'}
                                                     ]
                                                 }"
-                            editable="{mode>/editFlag}" class="readonlyField">
+                            change="familyFlagChange" editable="{mode>/editFlag}" class="readonlyField">
                                 <core:Item key="{util>code}" text="{util>code_description}" />
                             </ComboBox>-->
                         </table:template>

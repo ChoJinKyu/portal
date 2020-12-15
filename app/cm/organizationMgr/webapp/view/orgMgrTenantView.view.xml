@@ -14,9 +14,9 @@
         <headerToolbar>
             <OverflowToolbar>
                 <content>
-                    <Title text="{I18N>/TENANT}" level="H2"/>
+                    <!-- <Title text="{I18N>/TENANT}" level="H2"/>
                     <SearchField id="midTableSearchField" width="10rem" search=".onPageSearchButtonPress" />
-                    <Button id="midTableApplyFilterButton" text="조회" type="Transparent" press=".onPageSearchButtonPress" />
+                    <Button id="midTableApplyFilterButton" text="조회" type="Transparent" press=".onPageSearchButtonPress" /> -->
                     <ToolbarSpacer/>
                     <Button id="mainTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onMainTableAddButtonPress" />
                     <Button id="mainTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMainTableDeleteButtonPress" />

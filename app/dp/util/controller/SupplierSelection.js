@@ -4,8 +4,10 @@ sap.ui.define([
     "sap/ui/model/odata/v2/ODataModel",
     'sap/m/SearchField',
     "sap/ui/model/json/JSONModel",
-    'sap/m/Token'
-], function (EventProvider, I18nModel, ODataModel, SearchField, JSONModel, Token) {
+    'sap/m/Token',
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator"
+], function (EventProvider, I18nModel, ODataModel, SearchField, JSONModel, Token, Filter, FilterOperator) {
     "use strict";
 
     // var oServiceModel = new ODataModel({
@@ -15,8 +17,12 @@ sap.ui.define([
     //     refreshAfterChange: false,
     //     useBatch: true
     // });
+
+    var oInput, oSuppValueHelpDialog, gIsMulti;
     
     var SupplierSelection = EventProvider.extend("dp.util.SupplierSelection", {
+
+        self: null,
 
         oServiceModel: new ODataModel({
             serviceUrl: "srv-api/odata/v2/dp.util.SupplierSelectionService/",
@@ -26,20 +32,47 @@ sap.ui.define([
             useBatch: true
         }),
 
-        showSupplierSelection: function(oThis, oEvent, sInputId){
 
-            var path = '';
-            this._oValueHelpDialog = sap.ui.xmlfragment("dp.util.view.SupplierSelection", oThis);
+        showSupplierSelection: function(oThis, oEvent){
+
+            self = this;
+            oThis.getView().setModel(this.oServiceModel, 'supplierModel');
+            oInput = oEvent.getSource();
+
+            if(oInput.getMetadata().getName().indexOf('MultiInput') > -1){
+                gIsMulti = true;
+            }else{
+                gIsMulti = false;
+            }
+
+            oSuppValueHelpDialog = sap.ui.xmlfragment("dp.util.view.SupplierSelection", oThis);
+
+            oSuppValueHelpDialog.setSupportMultiselect(gIsMulti);
+            oSuppValueHelpDialog.attachOk(this.onValueHelpSuppOkPress);
+            oSuppValueHelpDialog.attachCancel(this.onValueHelpSuppCancelPress);
+            oSuppValueHelpDialog.attachAfterClose(this.onValueHelpSuppAfterClose);
 
             this._oBasicSearchField = new SearchField({
-                showSearchButton: false
+                showSearchButton: true
             });
+
+            // this._oBasicSearchField.attachSearch(this.onFilterBarSuppSearch);
             
-            var oFilterBar = this._oValueHelpDialog.getFilterBar();
-            oFilterBar.setFilterBarExpanded(false);
+            var oFilterBar = oSuppValueHelpDialog.getFilterBar();
+            // oFilterBar.setFilterBarExpanded(false);
             oFilterBar.setBasicSearch(this._oBasicSearchField);
-            
-            this._oInputModel = oEvent.getSource();
+            oFilterBar.attachSearch(this.onFilterBarSuppSearch);
+
+            if (!oInput.getSuggestionItems().length) {
+                oInput.bindAggregation("suggestionItems", {
+                    path: "supplierModel>/Suppliers",
+                    template: new sap.ui.core.Item({
+                        key: "{supplierModel>supplier_code}",
+                        // text: "[{supplierModel>supplier_code}] {supplierModel>supplier_local_name}",
+                        text: "{supplierModel>supplier_code}"
+                    })
+                });
+            }
 
             var oColModel = new JSONModel({
                 "cols": [
@@ -60,9 +93,9 @@ sap.ui.define([
 
             var aCols = oColModel.getData().cols;
             
-            oThis.getView().addDependent(this._oValueHelpDialog);
+            oThis.getView().addDependent(oSuppValueHelpDialog);
 
-            this._oValueHelpDialog.getTableAsync().then(function (oTable) {
+            oSuppValueHelpDialog.getTableAsync().then(function (oTable) {
                 
                 oTable.setModel(this.oServiceModel);
                 oTable.setModel(oColModel, "columns");
@@ -80,18 +113,102 @@ sap.ui.define([
                         });
                     });
                 }
-                this._oValueHelpDialog.update();
+                oSuppValueHelpDialog.update();
 
             }.bind(this));
 
-            // debugger
+            var tokens = [];
 
-            var oToken = new Token();
-            oToken.setKey(this._oInputModel.getSelectedKey());
-            oToken.setText(this._oInputModel.getValue());
-            this._oValueHelpDialog.setTokens([oToken]);
-            this._oValueHelpDialog.open();
-        }
+            if(gIsMulti){
+                tokens = oInput.getTokens()
+            }else{
+                var oToken = new Token();
+                oToken.setKey(oInput.getSelectedKey());
+                oToken.setText(oInput.getValue());
+                tokens = [oToken];
+            }
+
+            oSuppValueHelpDialog.setTokens(tokens);
+            oSuppValueHelpDialog.open();
+        },
+
+        onValueHelpSuppOkPress: function (oEvent) {
+
+            var aTokens = oEvent.getParameter("tokens");
+
+            if(gIsMulti){
+                oInput.setTokens(aTokens);
+            }else{
+                oInput.setSelectedKey(aTokens[0].getKey());
+            }
+
+            oSuppValueHelpDialog.close();
+        },
+        
+
+        onValueHelpSuppCancelPress: function () {
+            oSuppValueHelpDialog.close();
+        },
+
+        onValueHelpSuppAfterClose: function () {
+            oSuppValueHelpDialog.destroy();
+        },
+
+        onFilterBarSuppSearch: function (oEvent) {
+            
+            var aSelectionSet = oEvent.getParameter("selectionSet");
+            var aFilters = aSelectionSet.reduce(function (aResult, oControl) {
+                if (oControl.getValue()) {
+                    aResult.push(new Filter({
+                        path: oControl.getName(),
+                        operator: FilterOperator.Contains,
+                        value1: oControl.getValue()
+                    }));
+                }
+
+                return aResult;
+            }, []);
+            
+            var _tempFilters = self.getFiltersFilterBar();
+
+            aFilters.push(new Filter({
+                filters: _tempFilters,
+                and: false
+            }));
+
+            self._filterTable(new Filter({
+                filters: aFilters,
+                and: true
+            }));
+        },
+
+        getFiltersFilterBar: function(){
+
+            var sSearchQuery = self._oBasicSearchField.getValue();
+            var _tempFilters = [];
+
+            _tempFilters.push(new Filter({ path: "tolower(supplier_code)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
+            _tempFilters.push(new Filter({ path: "tolower(supplier_local_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
+            _tempFilters.push(new Filter({ path: "tolower(supplier_english_name)", operator: FilterOperator.Contains, value1: "'"+sSearchQuery.toLowerCase()+"'" }));
+
+            return _tempFilters;
+        },
+
+        _filterTable: function (oFilter) {
+            var oValueHelpDialog = oSuppValueHelpDialog;
+
+            oValueHelpDialog.getTableAsync().then(function (oTable) {
+                if (oTable.bindRows) {
+                    oTable.getBinding("rows").filter(oFilter);
+                }
+
+                if (oTable.bindItems) {
+                    oTable.getBinding("items").filter(oFilter);
+                }
+
+                oValueHelpDialog.update();
+            });
+        },
     });
 
     return SupplierSelection;

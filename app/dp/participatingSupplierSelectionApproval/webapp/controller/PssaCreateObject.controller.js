@@ -19,8 +19,10 @@ sap.ui.define([
     "ext/lib/model/TransactionManager",
     "ext/lib/util/Multilingual",
     "ext/lib/util/Validator",
+    "dp/util/controller/MoldItemSelection"
 ], function (BaseController, JSONModel, History, ManagedListModel, ManagedModel, RichTextEditor, DateFormatter, Filter, FilterOperator, Fragment
-    , MessageBox, MessageToast, UploadCollectionParameter, Device, syncStyleClass, ColumnListItem, Label, TransactionManager, Multilingual, Validator) {
+    , MessageBox, MessageToast, UploadCollectionParameter, Device, syncStyleClass, ColumnListItem, Label, TransactionManager, Multilingual, Validator, MoldItemSelection
+    ) {
     "use strict";
     /**
      * @description 입찰대상 협력사 선정 품의 등록화면
@@ -31,7 +33,8 @@ sap.ui.define([
     var mainViewName = "pssaCreateObjectView";
 	return BaseController.extend("dp.participatingSupplierSelectionApproval.controller.PssaCreateObject", {
         
-		dateFormatter: DateFormatter,
+        dateFormatter: DateFormatter,
+        moldItemPop : new MoldItemSelection(),
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -435,7 +438,31 @@ sap.ui.define([
         onSelectChange: function (oEvent) {
             var oUploadCollection = this.byId("UploadCollection");
             oUploadCollection.setShowSeparators(oEvent.getParameters().selectedItem.getProperty("key"));
-        },        
+        },   
+        
+        /**
+         * @description moldItemSelect 공통팝업   
+         * @param vThis : view page의 this 
+         *       , oEvent : 이벤트 
+         * ,     , oArges : company_code , org_code 
+		 */ 
+        onMoldItemPopPress : function (oEvent){
+             var oArgs = {
+                company_code : this.getModel('appMaster').oData.company_code , 
+                org_code : this.getModel('appMaster').oData.org_code
+            }
+            var that = this;
+    
+            this.moldItemPop.openMoldItemSelectionPop(this, oEvent, oArgs , function (oDataMold) {
+                console.log("selected data list >>>> ", oDataMold); 
+                if(oDataMold.length > 0){
+                    oDataMold.forEach(function(item){
+                        that._addPsTable(item); 
+                    })
+                }
+            });
+        },
+
         /**
          * @description Participating Supplier 의 Supplier Select 버튼 누를시 나오는 팝업 
          *              , 테이블의 row 가 선택되어 있지 않으면 supplier 세팅 안됨 
@@ -531,32 +558,33 @@ sap.ui.define([
 			this._oSupplierDialog.close();
 		},
 		
-        /**
-         * @description : Popup 창 : 품의서 Participating Supplier 항목의 Add 버튼 클릭
-         */
-        handleTableSelectDialogPress : function (oEvent) {
-            console.group("handleTableSelectDialogPress");   
+        // /**
+        //  * @description : Popup 창 : 품의서 Participating Supplier 항목의 Add 버튼 클릭
+        //  */
+        // handleTableSelectDialogPress : function (oEvent) {
+        //     console.group("handleTableSelectDialogPress");   
         
-            var oView = this.getView();
-            var oButton = oEvent.getSource();
-			if (!this._oDialogTableSelect) {
-				this._oDialogTableSelect = Fragment.load({ 
-                    id: oView.getId(),
-					name: "dp.participatingSupplierSelectionApproval.view.MoldItemSelection",
-					controller: this
-				}).then(function (oDialog) {
-				    oView.addDependent(oDialog);
-					return oDialog;
-				}.bind(this));
-            } 
+        //     var oView = this.getView();
+        //     var oButton = oEvent.getSource();
+		// 	if (!this._oDialogTableSelect) {
+		// 		this._oDialogTableSelect = Fragment.load({ 
+        //             id: oView.getId(),
+		// 			name: "dp.participatingSupplierSelectionApproval.view.MoldItemSelection",
+		// 			controller: this
+		// 		}).then(function (oDialog) {
+		// 		    oView.addDependent(oDialog);
+		// 			return oDialog;
+		// 		}.bind(this));
+        //     } 
             
-           var that = this;
-            this._oDialogTableSelect.then(function (oDialog) {
-                oDialog.open();
-                that.byId("moldItemSelectionSearch").firePress(); // open 하자마자 조회 하여 보여줌 
+        //    var that = this;
+        //     this._oDialogTableSelect.then(function (oDialog) {
+        //         oDialog.open();
+        //         that.byId("moldItemSelectionSearch").firePress(); // open 하자마자 조회 하여 보여줌 
 
-            });
-        },
+        //     });
+        // },
+        
         /**
          * @public 
          * @see 사용처 Participating Supplier Fragment 취소 이벤트
@@ -682,28 +710,32 @@ sap.ui.define([
          * @description participating row 추가 
          * @param {*} data 
          */
-        _addPsTable : function (data){     
+        _addPsTable: function (data) {
             var oTable = this.byId("psTable"),
-                oModel = this.getModel("appDetail");
-                console.log(data.oData);
-                oModel.addRecord({
-                    "model": data.oData.model,
-                    "mold_number": data.oData.moldPartNo,
-                    "seq" : data.oData.seq,
-                    "description" : data.oData.description,
-                    // "moldSupplier1" : "",
-                    // "moldSupplier2" : "",
-                    // "moldSupplier3" : "",
-                    // "moldSupplier4" : "",
-                    // "moldSupplier5" : "",
-                    // "moldSupplier6" : "",
-                    // "moldSupplier7" : "",
-                    // "moldSupplier8" : "",
-                    // "moldSupplier9" : "",
-                    // "moldSupplier10" : "",
-                    "local_create_dtm": new Date(),
-                    "local_update_dtm": new Date()
-                }, "/ApprovalDetails", 0);
+                oModel = this.getModel("appDetail"),
+                mstModel = this.getModel("appMaster");
+            
+            /** add record 시 저장할 model 과 다른 컬럼이 있을 경우 submit 안됨 */
+            var approval_number = mstModel.oData.approval_number;
+            oModel.addRecord({
+                "tenant_id": "L1100",
+                "mold_id": String(data.oData.mold_id),
+                "approval_number": approval_number,
+                /*  "model": data.oData.model,
+                  "mold_number": data.oData.mold_number,
+                  "mold_sequence": data.oData.mold_sequence,
+                  "spec_name": data.oData.spec_name,
+                  "mold_item_type_code": data.oData.mold_item_type_code,
+                  "book_currency_code": data.oData.book_currency_code,
+                  "budget_amount": data.oData.budget_amount,
+                  "mold_production_type_code": "",
+                  "asset_type_code": "",
+                  "family_part_number_1": "",
+                  "budget_exrate_date": "",
+                  "inspection_date": "",  */
+                "local_create_dtm": new Date(),
+                "local_update_dtm": new Date()
+            }, "/ApprovalDetails", 0);
         },
 
         /**
@@ -1117,10 +1149,12 @@ sap.ui.define([
                                 MessageToast.show("Success to save.");
                             }
                         });
-                    };
+                    }
                 }
             });
         },
+
+        
 
 	});
 });

@@ -28,10 +28,9 @@ entity MI_Category_Hichy_Stru {
         node_id              : Integer not null    @title : '노드ID';
         hierarchy_level      : Integer             @title : '계층레벨';
     key category_code        : String(40) not null @title : '카테고리코드';
-        category_name        : String(240)         @title : '카테고리명';
         parent_node_id       : Integer             @title : '상위노드ID';
         parent_category_code : String(40)          @title : '상위카테고리코드';
-        filter_category_code : String(500)         @title : '필터카테고리코드';
+        sort_sequence        : String              @title : '정렬순서';
         drillstate           : String(10)          @title : '노드상태';
         use_flag             : Boolean not null    @title : '사용여부';
 }

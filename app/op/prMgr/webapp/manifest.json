@@ -13,7 +13,7 @@
     "resources": "resources.json",
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v2/op.PrMgrService/",
+        "uri": "srv-api/odata/v2/op.pu.PrMgrService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -135,7 +135,16 @@
                   "mainObject",
                   "midObject"
               ]
+          },
+          {
+              "pattern": "midCreate/{layout}/{tenantId}/{controlOptionCode}",
+              "name": "midCreate",
+              "target": [
+                  "mainObject",
+                  "midCreateObject"
+              ]
           }
+
       ],
       "targets": {
           "mainObject": {
@@ -144,6 +153,10 @@
           },
           "midObject": {
               "viewName": "MidObject",
+              "controlAggregation": "midColumnPages"
+          },
+          "midCreateObject": {
+              "viewName": "MidCreateObject",
               "controlAggregation": "midColumnPages"
           },
           "notFound": {

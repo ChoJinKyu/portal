@@ -109,44 +109,70 @@ sap.ui.define([
             }));
         },
 
-        tree: function (path, filters) {
+        tree: function (path, parameters) {
             var that = this;
             return new Promise(function (resolve, reject) {
-                that._oTransactionModel.read(path, {
-                    filters: [...filters],
-                    success: resolve,
-                    error: reject
-                })
+                that._oTransactionModel.read(path, jQuery.extend(parameters, {
+                success: resolve,
+                error: reject
+                }));
             }).then(function (oData) {
-
+                // filter
+                var filters = parameters.filters;
                 // 검색조건 및 결과가 없는 경우 종료
                 if (!filters || filters.length <= 0 || !oData || !(oData.results) || oData.results.length <= 0) {
                     return oData;
                 }
-
                 var predicates = oData.results
-                    .reduce(function (acc, e) {
-                        return [...acc, ...((e["path"]).split("/"))];
-                    }, [])
-                    .reduce(function (acc, e) {
-                        return acc.includes(e) ? acc : [...acc, e];
-                    }, [])
-                    .reduce(function (acc, e) {
-                        return [...acc, new Filter({
-                            path: 'node_id', operator: FilterOperator.EQ, value1: e
-                        })];
-                    }, []);
-
+                // PATH를 분리한다.
+                .reduce(function (acc, e) {
+                    var nodes = e["path"].split("/");
+                    for (var i = 0; i < e.length; i++) {
+                        acc.push(nodes[i]);
+                    }
+                    return acc;
+                    //return [...acc, ...((e["path"]).split("/"))];
+                }, [])
+                // 중복을 제거한다.
+                .reduce(function (acc, e) {
+                    if (!acc.includes(e)) acc.push(e);
+                    return acc;
+                    //return acc.includes(e) ? acc : [...acc, e];
+                }, [])
+                .reduce(function (acc, e) {
+                    acc.push(new Filter({
+                        path: 'node_id', operator: FilterOperator.EQ, value1: e
+                    }));
+                    return acc;
+                    // return [...acc, new Filter({
+                    //   path: 'node_id', operator: FilterOperator.EQ, value1: e
+                    // })];
+                }, []);
                 return new Promise(function (resolve, reject) {
-                    that._oTransactionModel.read(path, {
+                    that._oTransactionModel.read(path, jQuery.extend(parameters, {
                         filters: [...predicates],
                         success: resolve,
                         error: reject
-                    })
+                    }))
                 }).then(function (oData) {
+                    console.log(">>>>>>>>>>>>>>>>", oData);
                     that.setData(oData, path, false);
                     return oData;
                 })
+            });
+        },
+
+        readP: function (sPath, oParameters) {
+            var that = this;
+            return new Promise(function (resolve, reject) {
+                that._oTransactionModel.read(sPath, jQuery.extend(oParameters, {
+                    success: resolve,
+                    error: reject
+                }))
+            }).then(function (oData) {
+                that._transactionPath = sPath;
+                that.setData(oData, sPath, false);
+                return oData;
             })
         },
 
@@ -216,7 +242,7 @@ sap.ui.define([
                 aRecords = this.getProperty("/" + sEntityName) || [],
                 aResults = [];
 
-            if(sStates == "D")
+            if (sStates == "D")
                 aResults = this._aRemovedRows;
 
             aRecords.forEach(function (oRecord) {

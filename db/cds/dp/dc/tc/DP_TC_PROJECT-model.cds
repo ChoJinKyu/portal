@@ -32,7 +32,6 @@ using {dp as Project} from './DP_TC_PROJECT-model';
 using {dp as Project_Event} from './DP_TC_PROJECT_EVENT-model';
 using {dp as Project_Mcst_Ver} from './DP_TC_PROJECT_MCST_VERSION-model';
 using {dp as Project_Similar_model} from './DP_TC_PROJECT_SIMILAR_MODEL-model';
-using {cm as language } from '../../../cm/codeMgr/CM_CODE_LNG-model';
 
 entity Tc_Project {
     key tenant_id               : String(5) not null  @title : '테넌트ID';

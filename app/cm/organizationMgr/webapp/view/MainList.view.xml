@@ -8,50 +8,43 @@
     xmlns:lib-m="ext.lib.m"
     height="100%">
 
-    <!-- <f:DynamicPage id="page"
-        headerExpanded="false" 
-        showFooter="{= ${message>/}.length > 0 }"
-        toggleHeaderOnTitleClick="true">
-
-        <f:title>
-            <f:DynamicPageTitle>
-                <f:heading>
-                    <Title text="{I18N>/MESSAGE_MANAGEMENT}" />
-                </f:heading>
-                <f:snappedContent>
+    <f:DynamicPage id="page" toggleHeaderOnTitleClick="true" headerExpanded="true" showFooter="{= ${message>/}.length > 0 }">
+            <f:title>
+                <f:DynamicPageTitle>
+                    <f:heading>
+                        <Title text="조직관리"/>
+                    </f:heading>
+                    <f:snappedContent>
                     <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
-                            <VBox>
-                                <Label text="{I18N>/CHAIN}: " labelFor="searchChainS" ></Label>
-                                <ComboBox id="searchChainS" width="100%" selectedKey="" items="{
-                                        path: 'util>/CodeDetails',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                            {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
-                                        ]
-                                    }">
-                                    <items>
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
-                                    </items>
+                            <VBox visible="{= ${view>/selectedTabKey} !== 'Tenant' }">
+                                <Label text="{I18N>/TENANT}: " labelFor="searchChainS" ></Label>
+                                <ComboBox   
+                                    selectionChange=".onTenantChange"
+                                    required="true"
+                                    id="search_tenantS"
+                                    showSecondaryValues= "true"
+                                    selectedKey="{view>/tenant_id}"
+                                    width="100%"
+                                    items="{path : '/Org_Tenant'}"
+                                    >
+                                    <core:ListItem 
+                                        key="{tenant_id}" 
+                                        text="{tenant_name}"
+                                        additionalText="{tenant_id}"/>
                                 </ComboBox>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
-                            <VBox>
-                                <Label text="{I18N>/LANGUAGE}: " labelFor="searchLanguageS"></Label>
-                                <ComboBox id="searchLanguageS" selectedKey="" width="100%" items="{
-                                        path: 'util>/CodeDetails',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                            {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
-                                        ]
-                                    }">
-                                    <items>
-                                        <core:Item key="" text="Choose a Language" />
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
-                                    </items>
-                                </ComboBox>
+                            <VBox visible="{= ${view>/selectedTabKey} !== 'Tenant' }">
+                                <Label text="{I18N>/COMPANY}: "/>
+                                <ComboBox   
+                                    id="search_companyS"
+                                    required="true"
+                                    width="100%"
+                                    showSecondaryValues= "true"
+                                />
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
@@ -69,37 +62,36 @@
                 <f:expandedContent>
                     <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
-                            <VBox>
-                                <Label text="{I18N>/CHAIN}: " labelFor="searchChainE"></Label>
-                                <ComboBox id="searchChainE" selectedKey="" width="100%" items="{
-                                        path: 'util>/CodeDetails',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                            {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
-                                        ]
-                                    }">
-                                    <items>
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
-                                    </items>
+                            <VBox visible="{= ${view>/selectedTabKey} !== 'Tenant' }">
+                                <Label text="{I18N>/TENANT}: " ></Label>
+                                <ComboBox   
+                                    selectionChange=".onTenantChange"
+                                    required="true"
+                                    id="search_tenantE"
+                                    showSecondaryValues= "true"
+                                    selectedKey="{view>/tenant_id}"
+                                    width="100%"
+                                    items="{
+                                        path : '/Org_Tenant'
+                                    }"
+                                    >
+                                    <core:ListItem 
+                                        key="{tenant_id}" 
+                                        text="{tenant_name}"
+                                        additionalText="{tenant_id}"/>
                                 </ComboBox>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
-                            <VBox>
-                                <Label text="{I18N>/LANGUAGE}: " labelFor="searchLanguageE"></Label>
-                                <ComboBox id="searchLanguageE" selectedKey="" width="100%" items="{
-                                        path: 'util>/CodeDetails',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                            {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
-                                        ]
-                                    }">
-                                    <items>
-                                        <core:Item key="" text="Choose a Language" />
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
-                                    </items>
-                                </ComboBox>
+                            <VBox visible="{= ${view>/selectedTabKey} !== 'Tenant' }">
+                                <Label text="{I18N>/COMPANY}: "/>
+                                <ComboBox   
+                                    id="search_companyE"
+                                    required="true"
+                                    width="100%"
+                                    showSecondaryValues= "true"
+                                />
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
@@ -120,128 +112,7 @@
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
                 </f:navigationActions>
-            </f:DynamicPageTitle>
-        </f:title>
-
-        <f:header>
-            <f:DynamicPageHeader pinnable="true">
-            </f:DynamicPageHeader>
-        </f:header>
-        <f:content>
-            <Table id="mainTable" 
-                    sticky="HeaderToolbar,ColumnHeaders" 
-                    inset="false"
-                    noDataText="{I18N>/NCM0001}"
-                    class="sapFDynamicPageAlignContent" 
-                    updateFinished=".onMainTableUpdateFinished"
-                    items="{list>/Message}"
-                    mode="MultiSelect" 
-                    growing="true"
-                    growingThreshold="50"
-                    width="auto">
-                <headerToolbar>
-                    <OverflowToolbar>
-                        <Title text="{I18N>/MESSAGE} {= ${list>/Message}.length > 0 ? '(' + ${list>/Message}.length + ')' : ''}" level="H2"/>
-                        <ToolbarSpacer/>
-                        <Button id="mainTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onMainTableAddButtonPress" />
-                        <Button id="mainTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMainTableDeleteButtonPress" />
-                        <Button id="mainTableSaveButton" text="{I18N>/SAVE}" type="Emphasized" press=".onMainTableSaveButtonPress" />
-                        <ToolbarSeparator/>
-                        <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
-                            <layoutData>
-                                <OverflowToolbarLayoutData priority="NeverOverflow" />
-                            </layoutData>
-                        </Button>
-                    </OverflowToolbar>
-                </headerToolbar>
-                <columns>
-                    <Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="40px" >
-                        <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
-                    </Column>
-                    <Column id="mainColumnChainCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="10em" >
-                        <Text text="{I18N>/CHAIN}" />
-                    </Column>
-                    <Column id="mainColumnLanguageCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="10em" >
-                        <Text text="{I18N>/LANGUAGE}" />
-                    </Column>
-                    <Column id="mainColumnMessageCode" minScreenWidth="Tablet" hAlign="Center" width="15em" >
-                        <Text text="{I18N>/CODE}" />
-                    </Column>
-                    <Column id="mainColumnMessageContents" minScreenWidth="Tablet" hAlign="Center">
-                        <Text text="{I18N>/CONTENTS}" />
-                    </Column>
-                    <Column id="mainColumnMessageTypeCode" minScreenWidth="Tablet" hAlign="Center" width="10em" >
-                        <Text text="{I18N>/TYPE}" />
-                    </Column>
-                </columns>
-                <items>
-                    <ColumnListItem>
-                        <cells>
-                            <ObjectStatus icon="{
-                                path: 'list>_row_state_',
-                                formatter: '.formatter.toModelStateColumnIcon'
-                            }" />
-                            <ComboBox selectedKey="{list>chain_code}" width="100%" items="{
-                                    path: 'util>/CodeDetails',
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                        {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
-                                    ]
-                                }" editable="{= ${list>_row_state_} === 'C' }" required="true">
-                                <items>
-                                    <core:Item key="{util>code}" text="{util>code_description}" />
-                                </items>
-                            </ComboBox>
-                            <ComboBox selectedKey="{list>language_code}" width="100%" items="{
-                                    path: 'util>/CodeDetails',
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                        {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
-                                    ]
-                                }" editable="{= ${list>_row_state_} === 'C' }" required="true">
-                                <items>
-                                    <core:Item key="{util>code}" text="{util>code_description}" />
-                                </items>
-                            </ComboBox>
-                            <Input value="{list>message_code}" editable="{= ${list>_row_state_} === 'C' }"  required="true"></Input>
-                            <Input value="{list>message_contents}" required="true"></Input>
-                            <ComboBox selectedKey="{list>message_type_code}" width="100%" items="{
-                                    path: 'util>/CodeDetails',
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                        {path: 'group_code', operator: 'EQ', value1: 'CM_MESSAGE_TYPE_CODE'}
-                                    ]
-                                }">
-                                <items>
-                                    <core:Item key="{util>code}" text="{util>code_description}" />
-                                </items>
-                            </ComboBox>
-                        </cells>
-                    </ColumnListItem>
-                </items>
-            </Table>
-        </f:content>
-
-        <f:footer>
-			<OverflowToolbar>
-                <Button
-                    icon="sap-icon://alert"
-                    type="Reject"
-                    text="{= ${message>/}.length }"
-                    visible="{= ${message>/}.length > 0 }"
-                    ariaHasPopup="Dialog"
-                    press=".onMessagePopoverPress" />
-				<ToolbarSpacer />
-			</OverflowToolbar>
-		</f:footer>
-    </f:DynamicPage> -->
-
-    <f:DynamicPage id="page" toggleHeaderOnTitleClick="true" headerExpanded="true" showFooter="{= ${message>/}.length > 0 }">
-            <f:title>
-                <f:DynamicPageTitle>
-                    <f:heading>
-                        <Title text="조직관리"/>
-                    </f:heading>
+            
                 </f:DynamicPageTitle>
             </f:title>
             <f:header>

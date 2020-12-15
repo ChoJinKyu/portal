@@ -271,7 +271,7 @@
                             <Button id="mainTableCreateButton" text="Create" type="Emphasized" press=".onDialogCreate" />
                             <Button id="mainTableDeleteButton" text="Delete" type="Transparent" press=".onApplovalDeletePress" />
                             <ToolbarSeparator/>
-                            <Button icon="sap-icon://excel-attachment" press=".onListMainTablePersoButtonPressed" >
+                            <Button icon="sap-icon://excel-attachment" press=".onDataExport" >
                                 <layoutData>
                                     <OverflowToolbarLayoutData priority="NeverOverflow" />
                                 </layoutData>
@@ -314,8 +314,9 @@
                     </columns>
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
-                            <cells>                  
-                                <CheckBox fieldGroupIds="{= ${list>approve_status_code}==='DR'? 'checkBoxs':''}"  visible="{= ${list>approve_status_code}==='DR'? true:false }" select=".onCheck" />       
+                            <cells>
+                                <CheckBox fieldGroupIds="{= ${list>approval_type_code}==='E'? 'checkBoxs':''}"  visible="{= ${list>approval_type_code}==='E'? true:false }" select=".onCheck" />                  
+                                <!-- <CheckBox fieldGroupIds="{= ${list>approve_status_code}==='DR'? 'checkBoxs':''}"  visible="{= ${list>approve_status_code}==='DR'? true:false }" select=".onCheck" />        -->
                                 <ComboBox 
                                         editable="false"   
                                         class="readonlyField"
@@ -362,7 +363,7 @@
                                 </ComboBox>
                                 <ObjectIdentifier text="{list>approval_number}" />
                                 <ObjectIdentifier text="{list>approval_title}" />
-                                <ObjectIdentifier text="{list>requestor_empno}" />
+                                <!-- <ObjectIdentifier text="{list>requestor_empno}" /> -->
                                 <ComboBox
                                         editable="false"   
                                         class="readonlyField"
