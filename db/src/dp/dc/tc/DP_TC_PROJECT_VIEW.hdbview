@@ -55,7 +55,10 @@ select pjt.tenant_id
      , 'CP' AS project_develope_event_code
      , to_varchar(current_date, 'yyyy-mm-dd') AS last_register_date
      , '접수' AS estimate_status_name
-     , '접수' AS target_status_name
-     , '접수' AS forecast_status_name
+     , 'ACCEPT' AS estimate_status_code
+     , 'Confirmed(1차)' AS target_status_name
+     , 'CONFIRMED' AS target_status_code
+     , 'Draft(2차)' AS forecast_status_name
+     , 'DRAFT' AS forecast_status_code
   from dp_tc_project pjt
   ;

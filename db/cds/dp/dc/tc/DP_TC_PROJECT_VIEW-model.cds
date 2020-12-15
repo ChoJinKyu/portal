@@ -39,6 +39,9 @@ entity TC_Project_View {
         project_develope_event_code : String(30)          @title : '프로젝트개발이벤트코드';
         last_register_date          : Date                @title : '최종등록일자';
         estimate_status_name        : String(30)          @title : '견적재료비상태명';
+        estimate_status_code        : String(30)          @title : '견적재료비상태코드';
         target_status_name          : String(30)          @title : '목표재료비상태명';
+        target_status_code          : String(30)          @title : '목표재료비상태코드';
         forecast_status_name        : String(30)          @title : '예상재료비상태명';
+        forecast_status_code        : String(30)          @title : '예상재료비상태코드';
 }
