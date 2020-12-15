@@ -48,22 +48,13 @@ view pg_MI_Mat_Code_Bom_Management_View as
 		and	header.supplier_code	= supplier.supplier_code
 	left join pg_mi_material_code_lng as mimattext
 		on  item.tenant_id			= mimattext.tenant_id
-		and item.company_code		= mimattext.company_code
-		and item.org_type_code		= mimattext.org_type_code
-		and item.org_code			= mimattext.org_code
 		and item.mi_material_code	= mimattext.mi_material_code
 		and mimattext.language_code	= 'KO'
 	left join pg_mi_material_code as mimatcode
 		on  item.tenant_id    		= mimatcode.tenant_id
-		and item.company_code 		= mimatcode.company_code
-		and item.org_type_code		= mimatcode.org_type_code
-		and item.org_code	    	= mimatcode.org_code
 		and item.mi_material_code	= mimatcode.mi_material_code
 	left join pg_mi_category_lng as catgtext
 		on  mimatcode.tenant_id    	= catgtext.tenant_id
-		and mimatcode.company_code 	= catgtext.company_code
-		and mimatcode.org_type_code	= catgtext.org_type_code
-		and mimatcode.org_code	    = catgtext.org_code
 		and mimatcode.category_code	= catgtext.category_code
 		and catgtext.language_code	= 'KO'
 	left join cm_org_tenant as tenant
