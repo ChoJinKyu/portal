@@ -6,6 +6,5 @@ namespace cm;
 service roleMgrService {
 
     entity Role as projection on roleMgr.Role;
-    entity Role_Menu as projection on roleMenuMgr.Role;
-
+    entity Role_Menu as projection on roleMenuMgr.Role_Menu;
 }
