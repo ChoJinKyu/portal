@@ -30,6 +30,8 @@ sap.ui.define([
             var sPickerTimezoneText = this.byId("searchTimezonePicker").getValue();
             var sPickerTenant = this.byId("searchTenantPicker").getSelectedKey();
             var sPickerTenantText = this.byId("searchTenantPicker").getValue();
+            var sPickerDepartment = this.byId("searchDepartmentPicker").getSelectedKey();
+            var sPickerDepartmentText = this.byId("searchDepartmentPicker").getValue();
             
             var sComboCode = this.byId("searchCodeCombo").getSelectedKey();
             var sComboCodeText = this.byId("searchCodeCombo").getValue();
@@ -38,9 +40,9 @@ sap.ui.define([
             var sComboTenant = this.byId("searchTenantCombo").getSelectedKey();
             var sComboTenantText = this.byId("searchTenantCombo").getValue();
 
-            MessageBox.show("sPickerCode: " + sPickerCode + ", sPickerTimezone: " + sPickerTimezone + ", sPickerTenant: " + sPickerTenant, {
+            MessageBox.show("sPickerCode: " + sPickerCode + ", sPickerTimezone: " + sPickerTimezone + ", sPickerTenant: " + sPickerTenant + ",sPickerDepartment" + sPickerDepartment,{
                 onClose : function(sButton) {
-                    MessageBox.show("sPickerCodeText: " + sPickerCodeText + ", sPickerTimezone: " + sPickerTimezoneText + ", sPickerTenant: " + sPickerTenantText);
+                    MessageBox.show("sPickerCodeText: " + sPickerCodeText + ", sPickerTimezone: " + sPickerTimezoneText + ", sPickerTenant: " + sPickerTenantText + ",sPickerDepartmentText" + sPickerDepartmentText);
                 }.bind(this)
             });
             
