@@ -33,15 +33,15 @@ entity VI_Base_Price_Arl_Mst {
         approval_type_code_fk       : Association to code
                                           on  approval_type_code_fk.tenant_id  = tenant_id
                                           and approval_type_code_fk.group_code = 'DP_VI_APPROVAL_TYPE_CODE'
-                                          and approval_type_code_fk.group_code = approval_type_code;
+                                          and approval_type_code_fk.code = approval_type_code;
         new_change_code_fk          : Association to code
                                           on  new_change_code_fk.tenant_id  = tenant_id
                                           and new_change_code_fk.group_code = 'DP_VI_NEW_CHANGE_CODE'
-                                          and new_change_code_fk.group_code = new_change_code;
+                                          and new_change_code_fk.code = new_change_code;
         approval_status_code_fk     : Association to code
                                           on  approval_status_code_fk.tenant_id  = tenant_id
                                           and approval_status_code_fk.group_code = 'DP_VI_APPROVAL_STATUS_CODE'
-                                          and approval_status_code_fk.group_code = new_change_code;
+                                          and approval_status_code_fk.code = new_change_code;
         approval_requestor_empno_fk : Association to employee
                                           on  approval_requestor_empno_fk.tenant_id       = tenant_id
                                           and approval_requestor_empno_fk.employee_number = approval_requestor_empno;

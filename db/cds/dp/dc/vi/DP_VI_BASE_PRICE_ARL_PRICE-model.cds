@@ -22,10 +22,10 @@ entity VI_Base_Price_Arl_Price {
                                                on  item_sequence_fk.tenant_id       = tenant_id
                                                and item_sequence_fk.approval_number = approval_number
                                                and item_sequence_fk.item_sequence   = item_sequence;
-        market_code_code_fk              : Association to code
-                                               on  market_code_code_fk.tenant_id  = tenant_id
-                                               and market_code_code_fk.group_code = 'DP_VI_MARKET_CODE'
-                                               and market_code_code_fk.group_code = market_code;
+        market_code_fk                   : Association to code
+                                               on  market_code_fk.tenant_id  = tenant_id
+                                               and market_code_fk.group_code = 'DP_VI_MARKET_CODE'
+                                               and market_code_fk.code       = market_code;
         tenant_id_fk                     : Association to tenant
                                                on tenant_id_fk.tenant_id = tenant_id;
 }
@@ -46,4 +46,4 @@ annotate VI_Base_Price_Arl_Price with {
     first_purchasing_net_price       @title : '최초구매단가'  @description     : '최초구매단가';
     first_pur_netprice_curr_cd       @title : '최초구매단가통화코드'  @description : '최초구매단가통화코드';
     first_pur_netprice_str_dt        @title : '최초구매시작일자'  @description   : '최초구매시작일자';
-}
+};
