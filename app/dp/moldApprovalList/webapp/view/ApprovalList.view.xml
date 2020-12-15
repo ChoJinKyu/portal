@@ -178,7 +178,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Mold Part No " labelFor="searchPart"></Label>
+                            <Label text="Mold No " labelFor="searchPart"></Label>
                             <Input id="searchPart" 
                                     showValueHelp="true"  
                                     valueHelpRequest=".onValueHelpRequested"

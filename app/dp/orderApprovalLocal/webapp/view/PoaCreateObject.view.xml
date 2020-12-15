@@ -489,7 +489,7 @@
                                                     {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                                 ]
                                             }">
-                                    <core:Item key="{util>employee_number}" text="{util>user_local_name}" />
+                                    <core:Item key="{referer>referer_empno}" text="{util>user_local_name}" />
                                 </MultiComboBox>
                             </layout:VerticalLayout>
                             <layoutData>
