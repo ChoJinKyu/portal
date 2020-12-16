@@ -42,9 +42,10 @@
                 columnResize="onColumnResize">
             <headerToolbar>
             <OverflowToolbar class="sapFDynamicPageAlignContent">
-              <Title text="범주 설정" level="H2"/>
+              <Title text="SPMD Category List" level="H2"/>
               <ToolbarSpacer/>
-              <Button text="Add" id="buttonMainCreateRow" press=".onAdd('mainTable', 'list', 'MdCategory', 'tenant_id')"  type="Transparent"/>
+              <Button text="Add" id="buttonMainAddRow" press=".onAdd('mainTable', 'list', 'MdCategory', 'tenant_id')"  type="Transparent"/>
+              <Button text="Delete" id="buttonMainDeleteRow" press=".onDelete('mainTable', 'list')"   type="Transparent" enabled="false" />
               <Button text="Save" id="buttonMainSaveRow" press=".onSave('mainTable', 'list')"   type="Emphasized"/>
               <ToolbarSeparator/>
               <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
