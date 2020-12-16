@@ -69,16 +69,18 @@ public class Multilingual {
 
             CqnSelect selectMessage = Select.from(Message_.class)
                 .columns("message_contents", "message_type_code")
-                .where(b -> b.tenant_id().eq(tenantId))
-                .where(b -> b.language_code().eq(languageCode))
-                .where(b -> b.message_code().eq(messageCode));
+                .where(b -> 
+                    b.tenant_id().eq(tenantId)
+                    .and(b.language_code().eq(languageCode))
+                    .and(b.message_code().eq(messageCode))
+                );
             Message message = db.run(selectMessage)
                 .first(Message.class)
                 .orElseThrow(() -> new Exception(String.format("Message Not Exists. %s, %s, %s", tenantId, languageCode, messageCode)));
             
             this.addMessage(messageCode, languageCode, message);
-            if(log.isDebugEnabled())
-            log.info("Pooled a message {}_{}: {}", languageCode, messageCode, message.getMessageContents());
+            if(log.isInfoEnabled())
+                log.info("Pooled a message {}_{}: {}", languageCode, messageCode, message.getMessageContents());
 
             messageByLang = getCachedMessageByLang(messageCode);
             return messageByLang.getMessage(languageCode);

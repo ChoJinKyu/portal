@@ -10,7 +10,6 @@ import com.sap.cds.services.cds.CdsService;
 import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.persistence.PersistenceService;
-import com.sap.cds.services.request.UserInfo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +21,6 @@ import cds.gen.xx.templateservice.ControlOptionMasters_;
 import cds.gen.xx.templateservice.Message;
 import cds.gen.xx.templateservice.Message_;
 import cds.gen.xx.templateservice.TemplateService_;
-import lg.sppCap.frame.i18n.Multilingual;
 import lg.sppCap.handlers.base.BaseEventHandler;
 
 @Component
@@ -35,14 +33,10 @@ public class TemplateService extends BaseEventHandler {
     PersistenceService db;
 
     @Autowired
-    Multilingual i18n;
-
-    @Autowired
     XsuaaUserInfo userInfo;
     
     @Before(event = {CdsService.EVENT_CREATE, CdsService.EVENT_UPDATE}, entity = Message_.CDS_NAME)
     public void validateMessageContents(EventContext context, List<Message> messages) {
-        
         for(Message message : messages){
             String tenantId = message.getTenantId();
             String messageCode = message.getMessageCode();
@@ -51,7 +45,7 @@ public class TemplateService extends BaseEventHandler {
             String messageContents = message.getMessageContents();
     
             try{
-                String msg = this.getMessage("ACCOUNT_PAYABLES");
+                String msg = this.getMessage("ACCOUNT_CODE", context);
                 if(log.isInfoEnabled())
                     log.info(msg);
             }catch(Exception e){
@@ -80,7 +74,6 @@ public class TemplateService extends BaseEventHandler {
     public void validateControlOptionMasterContents(List<ControlOptionMasters> items) {
         for (ControlOptionMasters item : items) {
             String tenantId = item.getTenantId();
-            String messageCode = item.getChainCode();
             String controlOptionName = item.getControlOptionName();
 
             if(!this.getTenantId().equals(tenantId))
