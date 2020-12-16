@@ -27,28 +27,29 @@ public class TemplateService extends BaseEventHandler {
     PersistenceService db;
     
     @Before(event = CdsService.EVENT_CREATE, entity = Message_.CDS_NAME)
-    public void validateMessageContents(List<Message> items) {
-        for (Message item : items) {
-            String tenantId = item.getTenantId();
-            String messageCode = item.getMessageCode();
-            String languageCode = item.getLanguageCode();
-            String messageContents = item.getMessageContents();
+    public void validateMessageContents(Message message) {
+        String tenantId = message.getTenantId();
+        String messageCode = message.getMessageCode();
+        String languageCode = message.getLanguageCode();
+        String typeCode = message.getMessageTypeCode();
+        String messageContents = message.getMessageContents();
 
-            if(!this.getTenantId().equals(tenantId))
-                throw new ServiceException(ErrorStatuses.SERVER_ERROR, "tenantId is not matches with this session.");
+        if(!this.getTenantId().equals(tenantId))
+            throw new ServiceException(ErrorStatuses.SERVER_ERROR, "tenantId is not matches with this session.");
 
-            if(languageCode == null)
-                throw new ServiceException(ErrorStatuses.BAD_REQUEST, "Not supported languageCode or it is empty.");
+        if(languageCode == null)
+            throw new ServiceException(ErrorStatuses.BAD_REQUEST, "Not supported languageCode or it is empty.");
 
-            if(messageCode == null)
-                throw new ServiceException(ErrorStatuses.BAD_REQUEST, "messageCode shouldn't be empty.");
+        if(messageCode == null)
+            throw new ServiceException(ErrorStatuses.BAD_REQUEST, "messageCode shouldn't be empty.");
+
+        if(messageContents == null)
+            throw new ServiceException(ErrorStatuses.BAD_REQUEST, "messageContents shouldn't be empty.");
     
-            if(messageContents == null)
-                throw new ServiceException(ErrorStatuses.BAD_REQUEST, "messageContents shouldn't be empty.");
-    
+        if("MSG".equals(typeCode) && messageCode.length() != 8){
+            throw new ServiceException(ErrorStatuses.BAD_REQUEST, "Message type message must have 8 byte message_code value. likes NCM0001");
         }
     }
-
     
     @Before(event = CdsService.EVENT_CREATE, entity = ControlOptionMasters_.CDS_NAME)
     public void validateControlOptionMasterContents(List<ControlOptionMasters> items) {
@@ -62,8 +63,6 @@ public class TemplateService extends BaseEventHandler {
 
             if(controlOptionName == null || controlOptionName.length() < 10)
                 throw new ServiceException(ErrorStatuses.BAD_REQUEST, "Not supported controlOptionName. null or very short.");
-
-    
         }
     }
 

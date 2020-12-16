@@ -178,7 +178,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Mold Part No " labelFor="searchPart"></Label>
+                            <Label text="Mold No " labelFor="searchPart"></Label>
                             <Input id="searchPart" 
                                     showValueHelp="true"  
                                     valueHelpRequest=".onValueHelpRequested"
@@ -276,7 +276,7 @@
                                     <OverflowToolbarLayoutData priority="NeverOverflow" />
                                 </layoutData>
                             </Button>
-                            <Button icon="sap-icon://action-settings" press=".onListMainTablePersoButtonPressed" >
+                            <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                                 <layoutData>
                                     <OverflowToolbarLayoutData priority="NeverOverflow" />
                                 </layoutData>

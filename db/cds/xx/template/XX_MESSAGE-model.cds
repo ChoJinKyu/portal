@@ -1,6 +1,5 @@
 namespace xx;
 
-using {User} from '@sap/cds/common';
 using util from '../../cm/util/util-model';
 
 entity Message {
@@ -12,3 +11,10 @@ entity Message {
       message_contents  : String(1000) not null @title: '메시지';
 }
 extend Message with util.Managed;
+
+/*
+extend Message with Managed_Local;
+aspect Managed_Local {
+    test_dtm: DateTime null @cds.on.update: $local_now @title: '로컬등록시간';
+}
+*/

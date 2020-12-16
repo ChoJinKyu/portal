@@ -54,7 +54,7 @@ sap.ui.define([
 			});
 
 			oUiData = new JSONModel({
-				tenant_id : this._sso.dept.tenant_id
+				org_code : this._sso.dept.org_code
 			});
 
 
@@ -89,12 +89,16 @@ sap.ui.define([
 			this.getView().getModel().setUseBatch(true);
 			this.getView().getModel().setDeferredGroups(["pgGroup"]);
             
-            this.getView().getModel().setChangeGroups({
-			  "mIMaterialCodeBOMManagement": {
-			    groupId: "pgGroup",
-			    changeSetId: "pgGroup"
-              }
-            });            
+            // this.getView().getModel().setChangeGroups({
+			//   "MIMaterialCodeBOMManagementHeader": {
+			//     groupId: "pgGroup",
+			//     changeSetId: "pgGroup"
+			//   },
+			//   "MIMaterialCodeBOMManagementItem": {
+			//     groupId: "pgGroup",
+			//     changeSetId: "pgGroup"
+			//   },
+            // });            
            
 
             this.getView().getModel().attachPropertyChange(this._propertyChanged.bind(this));
@@ -155,17 +159,20 @@ sap.ui.define([
 			var mBindingParams = oEvent.getParameter("bindingParams");
 			var oSmtFilter = this.getView().byId("smartFilterBar");         
 
-            var oTenant_id = oSmtFilter.getControlByKey("tenant_id").getSelectedKey();    
+            var oOrg_code = oSmtFilter.getControlByKey("org_code").getSelectedKey();    
             var oMaterial_desc = oSmtFilter.getControlByKey("material_desc").getValue();   
             var oSupplier_local_name = oSmtFilter.getControlByKey("supplier_local_name").getValue();    
             /*material_code,material_desc,supplier_code,supplier_local_name,base_quantity,
             processing_cost,pcst_currency_unit,mi_material_code,mi_material_name,category_name,
             reqm_quantity_unit,reqm_quantity,currency_unit,mi_base_reqm_quantity,quantity_unit,
             exchange,termsdelv,use_flag*/
-     
-	        if (oTenant_id.length > 0) {
-				var oTenant_idFilter = new Filter("tenant_id", FilterOperator.EQ, oTenant_id);
-				mBindingParams.filters.push(oTenant_idFilter);
+	 
+			var otenant_idFilter = new Filter("tenant_id", FilterOperator.EQ, this._sso.dept.tenant_id);
+			mBindingParams.filters.push(otenant_idFilter);
+
+	        if (oOrg_code.length > 0) {
+				var oOrg_codeFilter = new Filter("org_code", FilterOperator.EQ, oOrg_code);
+				mBindingParams.filters.push(oOrg_codeFilter);
             }
 
 			if (oMaterial_desc.length > 0) {

@@ -48,22 +48,6 @@
                     considerSelectionVariants="true" 
                     enableBasicSearch="false" >
                         <smartFilterBar:controlConfiguration>
-                            <!-- 관리조직 -->
-                            <smartFilterBar:ControlConfiguration  
-                            key="tenant_id" 
-                            groupId="_BASIC"    
-                            index="1" 
-                            label="관리조직"
-                            visibleInAdvancedArea="true">
-                                <smartFilterBar:customControl>
-                                    <Select id="select_tenant_id" 
-                                            selectedKey = "{oUiData>/tenant_id}"
-                                            items="{path: '/OrgTenantView', templateShareable:true}">
-                                        <core:Item key="{tenant_id}" text="{tenant_name}"/>
-                                    </Select>
-                                </smartFilterBar:customControl>
-                                
-                            </smartFilterBar:ControlConfiguration>
 
                             <!-- 시황자재코드 -->
                             <smartFilterBar:ControlConfiguration  key="mi_material_code" groupId="_BASIC" index="1" label="시황자재코드"
@@ -127,7 +111,7 @@
                     tableBindingPath="{MIMatListView}"
                     initiallyVisibleFields="mi_material_code,mi_material_name,category_code,category_name,use_flag"
                     smartFilterId="smartFilterBar"
-                    ignoreFromPersonalisation="tenant_id,company_code,org_type_code"
+                    ignoreFromPersonalisation="company_code,org_type_code"
                     tableType="ResponsiveTable"
                     useExportToExcel="true"
                     beforeRebindTable=".onBeforeRebindTable"

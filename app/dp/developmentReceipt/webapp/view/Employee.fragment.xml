@@ -44,7 +44,11 @@
                             selectionChange="vendorSelect" 
                             mode="SingleSelectMaster"
                             width="auto"
-                            items="{purOrg>/Pur_Operation_Org}"
+                            items="{ path : 'util>/Employee',
+                                    filters : [
+                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'}
+                                    ]
+                                  }"
                             >
                         <!-- <headerToolbar>
                             <OverflowToolbar>
@@ -52,39 +56,23 @@
                             </OverflowToolbar>
                         </headerToolbar> -->
                         <columns>
-                            <Column id="modelItem_model2" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true"  >
-                                <Text text="Model" />
+           
+                            <Column id="employ_employee_number" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" >
+                                <Text text="employee_number" />
                             </Column>
-                            <Column id="modelItem_modelPartNo2" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" >
-                                <Text text="Model Part No" />
+                            <Column id="employ_employee_name" minScreenWidth="Tablet" hAlign="Center"  >
+                                <Text text="employee_name" />
                             </Column>
-                            <Column id="modelItem_seq2" minScreenWidth="Tablet" hAlign="Center"  >
-                                <Text text="Seq" />
-                            </Column>
-                            <Column id="modelItem_description2" minScreenWidth="Tablet" hAlign="Center"  >
-                                <Text text="Description" />
-                            </Column> 
-                            <Column id="modelItem_moldItemType2" minScreenWidth="Tablet" hAlign="Center"  >
-                                <Text text="Mold Item Type" />
-                            </Column>
-                            <Column id="modelItem_bookCurrency2" minScreenWidth="Tablet" hAlign="Center"  >
-                                  <Text text="Book Currency" />
-                            </Column>					
-                            <Column id="modelItem_budgetAmount2" minScreenWidth="Tablet" hAlign="Center"  >
-                                  <Text text="Budget Amount" />
-                            </Column>					
+           								
                         </columns>
                         <items>
                              <ColumnListItem>
                                 <cells>
                                     <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
-                                    <Text text="{purOrg>org_name}" />
-                                    <Text text="{purOrg>plant_code}" />
-                                    <Text text="{purOrg>affiliate_code}" />
-                                    <Text text="{purOrg>bizdivision_code}" />
-                                    <Text text="{purOrg>bizunit_code}" />
-                                    <Text text="{purOrg>au_code}" />
-                                    <Text text="{purOrg>hq_au_code}" />
+                                 
+                                    <Text text="{util>employee_number}" />
+                                    <Text text="{util>employee_name}" />
+                        
                                 </cells>
                             </ColumnListItem>   
                             </items>

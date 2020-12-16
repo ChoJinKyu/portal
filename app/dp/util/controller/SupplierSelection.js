@@ -6,8 +6,9 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     'sap/m/Token',
     "sap/ui/model/Filter",
-    "sap/ui/model/FilterOperator"
-], function (EventProvider, I18nModel, ODataModel, SearchField, JSONModel, Token, Filter, FilterOperator) {
+    "sap/ui/model/FilterOperator",
+    "sap/ui/core/Item",
+], function (EventProvider, I18nModel, ODataModel, SearchField, JSONModel, Token, Filter, FilterOperator, Item) {
     "use strict";
 
     // var oServiceModel = new ODataModel({
@@ -32,11 +33,29 @@ sap.ui.define([
             useBatch: true
         }),
 
+        oDSEServiceModel: new ODataModel({
+            serviceUrl: "srv-api/odata/v2/dp.DetailSpecEntryService/",
+            defaultBindingMode: "OneWay",
+            defaultCountMode: "Inline",
+            refreshAfterChange: false,
+            useBatch: true
+        }),
 
-        showSupplierSelection: function(oThis, oEvent){
+        oCmOrgServiceModel: new ODataModel({
+            serviceUrl: "srv-api/odata/v2/cm.OrgMgrService/",
+            defaultBindingMode: "OneWay",
+            defaultCountMode: "Inline",
+            refreshAfterChange: false,
+            useBatch: true
+        }),
+
+        showSupplierSelection: function(oThis, oEvent, sCompanyCode, sPlantCode){
 
             self = this;
             oThis.getView().setModel(this.oServiceModel, 'supplierModel');
+            oThis.getView().setModel(this.oDSEServiceModel, 'dseModel');
+            oThis.getView().setModel(this.oCmOrgServiceModel, 'cmOrgModel');
+            
             oInput = oEvent.getSource();
 
             if(oInput.getMetadata().getName().indexOf('MultiInput') > -1){
@@ -53,7 +72,7 @@ sap.ui.define([
             oSuppValueHelpDialog.attachAfterClose(this.onValueHelpSuppAfterClose);
 
             this._oBasicSearchField = new SearchField({
-                showSearchButton: true
+                showSearchButton: false
             });
 
             // this._oBasicSearchField.attachSearch(this.onFilterBarSuppSearch);
@@ -128,8 +147,41 @@ sap.ui.define([
                 tokens = [oToken];
             }
 
+            
             oSuppValueHelpDialog.setTokens(tokens);
             oSuppValueHelpDialog.open();
+            
+            //company, plant 값을 세팅해야한다..
+            this.setCompPlantVal(oThis, sCompanyCode, sPlantCode);
+        },
+
+        setCompPlantVal: function(oThis, sCompany, sPlant){
+
+            sap.ui.getCore().byId("supplierCompany").setSelectedKey(sCompany);
+            this.setPlant(sCompany, sPlant);
+        },
+
+        setPlant: function(sCompany, sPlant){
+            
+            var filter = new Filter({
+                            filters: [
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                    new Filter("company_code", FilterOperator.EQ, sCompany)
+                                ],
+                                and: true
+                        });
+
+            sap.ui.getCore().byId("supplierPlant").bindItems(
+                {
+                    path: 'dseModel>/Divisions',
+                    filters: filter,
+                    template: new Item({
+                    key: "{dseModel>org_code}", text: "[{dseModel>org_code}] {dseModel>org_name}"
+                    })
+                }
+            )
+
+            sap.ui.getCore().byId("supplierPlant").setSelectedKey(sPlant);
         },
 
         onValueHelpSuppOkPress: function (oEvent) {

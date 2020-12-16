@@ -22,16 +22,10 @@ using {pg as MI_Mat_Prc_Mngt} from '../mi/PG_MI_MATERIAL_PRICE_MANAGEMENT-model'
 
 entity MI_Material_Price_Management {
     key tenant_id           : String(5) not null  @title : '회사코드';
-    key company_code        : String(10) not null @title : '법인코드';
-    key org_type_code       : String(30) not null @title : '조직유형코드';
-    key org_code            : String(10) not null @title : '조직코드';
     key mi_material_code    : String(40) not null @title : '시황자재코드';
 
         mi_material_codes   : Association to pg.MI_Material_Code
                                   on  mi_material_codes.tenant_id        = tenant_id
-                                  and mi_material_codes.company_code     = company_code
-                                  and mi_material_codes.org_type_code    = org_type_code
-                                  and mi_material_codes.org_code         = org_code
                                   and mi_material_codes.mi_material_code = mi_material_code;
 
         use_flag            : Boolean not null    @title : '사용여부';

@@ -19,7 +19,7 @@ using {dp.Mm_Material_Desc_Lng as MaterialDesc} from '../../../../db/cds/dp/mm/D
 using {sp.Sm_Supplier_Mst as SupplierMaster} from '../../../../db/cds/sp/supplierMgr/SP_SM_SUPPLIER_MST-model';
 //CM ORG
 using {cm.Org_Tenant as OrgTenant} from '../../../../db/cds/cm/orgMgr/CM_ORG_TENANT-model';
-using {cm.Org_Company as OrgCompany} from '../../../../db/cds/cm/orgMgr/CM_ORG_COMPANY-model';
+using {cm.Org_Company as OrgCompany} from '../../../../db/cds/cm/orgMgr/CM_ORG_COMPANY-model';	
 using {cm.Pur_Operation_Org as OrgPurchasingOperation} from '../../../../db/cds/cm/purOrgMgr/CM_PUR_OPERATION_ORG-model';
 //CM Code
 using {cm.Code_Mst as CodeMst} from '../../../../db/cds/cm/codeMgr/CM_CODE_MST-model';
@@ -35,7 +35,7 @@ namespace pg;
 service marketIntelligenceService {
 
     // Entity List
-    entity MICategoryHierarchyStructure @(title : 'Category 계층구조')  as projection on MICategHierStru.MI_Category_Hichy_Stru;
+    entity MICategoryHierarchyStructure @(title : 'Category 계층구조') as projection on MICategHierStru.MI_Category_Hichy_Stru;
     entity MICategoryText @(title : '카테고리명') as projection on MICategText.MI_Category_Lng;
     entity MIMaterialCode @(title : '시황자재 속성') as projection on MIMatCode.MI_Material_Code;
     entity MIMaterialCodeText @(title : '시황자재명') as projection on MIMatCodetext.MI_Material_Code_Lng;
@@ -57,33 +57,33 @@ service marketIntelligenceService {
                 tenant_name //회사코드명
         from OrgTenant;
 
-    // Company View
-    view OrgCompanyView @(title : '법인코드 View') as
-        select
-            key tenant_id, //회사코드
-            key company_code, //법인코드
-                company_name //법인코드명
-        from OrgCompany;
+    // Company View	
+    view OrgCompanyView @(title : '법인코드 View') as	
+        select	
+            key tenant_id, //회사코드	
+            key company_code, //법인코드	
+                company_name //법인코드명	
+        from OrgCompany;	
 
-    // Organizaiton Type Code View
-    view OrgTypeCodeView @(title : '조직유형코드 View') as
-        select
-            key tenant_id, //회사코드
-            key code, //조직유형코드
-                code_name //조직유형코드명
-        from CodeLng
-        where
-                group_code  = 'CM_ORG_TYPE_CODE'
-            and language_cd = 'KO';
+    // Organizaiton Type Code View	
+    view OrgTypeCodeView @(title : '조직유형코드 View') as	
+        select	
+            key tenant_id, //회사코드	
+            key code, //조직유형코드	
+                code_name //조직유형코드명	
+        from CodeLng	
+        where	
+                group_code  = 'CM_ORG_TYPE_CODE'	
+            and language_cd = 'KO';	
 
-    // Organizaiton Code View
-    view OrgCodeView @(title : '조직코드 View') as
-        select
-            key tenant_id, //회사코드
-            key company_code, //법인코드
-            key org_type_code, //조직유형코드
-            key org_code, //조직코드
-                org_name //조직코드명
+    // Organizaiton Code View	
+    view OrgCodeView @(title : '조직코드 View') as	
+        select	
+            key tenant_id, //회사코드	
+            key company_code, //법인코드	
+            key org_type_code, //조직유형코드	
+            key org_code, //조직코드	
+                org_name //조직코드명	
         from OrgPurchasingOperation;
 
     // Exchange View
@@ -106,15 +106,12 @@ service marketIntelligenceService {
         from CodeLng
         where
                 group_code  = 'PG_MI_TERMSDELV_CODE'
-            and language_cd = 'KO';
+            and language_cd = 'EN';
 
     // MI Material Code View
     view MIMatCodeView @(title : '시황자재코드 View') as
         select
             key tenant_id, //회사코드
-            key company_code, //법인코드
-            key org_type_code, //조직유형코드
-            key org_code, //조직코드
             key mi_material_code, //시황자재
                 mi_material_name //시황자재명
         from MIMaterialCodeText
@@ -125,26 +122,17 @@ service marketIntelligenceService {
     view MIParentCategoryView @(title : '상위카테고리코드 View') as
         select
             key main.tenant_id     as tenant_id, //회사코드
-            key main.company_code  as company_code, //법인코드
-            key main.org_type_code as org_type_code, //조직유형코드
-            key main.org_code      as org_code, //조직코드
             key main.category_code as category_code, //카테고리코드
                 main.category_name as category_name //카테고리명
         from MICategoryText as main
         left join MICategoryHierarchyStructure as catg
             on  main.tenant_id     = catg.tenant_id
-            and main.company_code  = catg.company_code
-            and main.org_type_code = catg.org_type_code
-            and main.org_code      = catg.org_code
             and main.category_code = catg.category_code
         where
                 main.language_code        =  'KO'
             and catg.parent_category_code is null
         group by
             main.tenant_id,
-            main.company_code,
-            main.org_type_code,
-            main.org_code,
             main.category_code,
             main.category_name;
 
@@ -152,26 +140,17 @@ service marketIntelligenceService {
     view MICategoryView @(title : '하위카테고리 View') as
         select
             key main.tenant_id     as tenant_id, //회사코드
-            key main.company_code  as company_code, //법인코드
-            key main.org_type_code as org_type_code, //조직유형코드
-            key main.org_code      as org_code, //조직코드
             key main.category_code as category_code, //카테고리코드
                 main.category_name as category_text //카테고리명
         from MICategoryText as main
         left join MICategoryHierarchyStructure as catg
             on  main.tenant_id     = catg.tenant_id
-            and main.company_code  = catg.company_code
-            and main.org_type_code = catg.org_type_code
-            and main.org_code      = catg.org_code
             and main.category_code = catg.category_code
         where
                 main.language_code        =      'KO'
             and catg.parent_category_code is not null
         group by
             main.tenant_id,
-            main.company_code,
-            main.org_type_code,
-            main.org_code,
             main.category_code,
             main.category_name;
 
@@ -179,9 +158,6 @@ service marketIntelligenceService {
     view MIFullCategoryView @(title : '전체카테고리 View') as
         select
             key main.tenant_id     as tenant_id, //회사코드
-            key main.company_code  as company_code, //법인코드
-            key main.org_type_code as org_type_code, //조직유형코드
-            key main.org_code      as org_code, //조직코드
             key main.category_code as category_code, //카테고리코드
                 main.category_name as category_text //카테고리명
         from MICategoryText as main
@@ -189,9 +165,6 @@ service marketIntelligenceService {
                 main.language_code        =      'KO'
         group by
             main.tenant_id,
-            main.company_code,
-            main.org_type_code,
-            main.org_code,
             main.category_code,
             main.category_name;
 
@@ -243,9 +216,6 @@ service marketIntelligenceService {
     view MIMatCategListView @(title : '시황자재 상위카테고리/카테고리 List View') as
         select
             key main.tenant_id            as tenant_id, //회사코드
-            key main.company_code         as company_code, //법인코드
-            key main.org_type_code        as org_type_code, //조직유형코드
-            key main.org_code             as org_code, //조직코드
                 main.parent_category_code as parent_category_code, //상위카테고리코드
                 prtCatgText.category_name as parent_category_name, //상위카테고리명
             key main.category_code        as category_code, //카테고리코드
@@ -254,23 +224,14 @@ service marketIntelligenceService {
         from MICategoryHierarchyStructure as main
         left join MICategoryText as prtCatgText
             on  main.tenant_id            = prtCatgText.tenant_id
-            and main.company_code         = prtCatgText.company_code
-            and main.org_type_code        = prtCatgText.org_type_code
-            and main.org_code             = prtCatgText.org_code
             and main.parent_category_code = prtCatgText.category_code
             and prtCatgText.language_code = 'KO'
         left join MICategoryText as catgText
             on  main.tenant_id         = catgText.tenant_id
-            and main.company_code      = catgText.company_code
-            and main.org_type_code     = catgText.org_type_code
-            and main.org_code          = catgText.org_code
             and main.category_code     = catgText.category_code
             and catgText.language_code = 'KO'
         group by
             main.tenant_id,
-            main.company_code,
-            main.org_type_code,
-            main.org_code,
             main.parent_category_code,
             prtCatgText.category_name,
             main.category_code,
@@ -281,9 +242,6 @@ service marketIntelligenceService {
     view MIMatListView @(title : '시황자재/카테고리 List View') as
         select
             key main.tenant_id           as tenant_id, //회사코드
-            key main.company_code        as company_code, //법인코드
-            key main.org_type_code       as org_type_code, //조직유형코드
-            key main.org_code            as org_code, //조직코드
             key main.mi_material_code    as mi_material_code, //시황자재
                 matText.mi_material_name as mi_material_name, //시황자재명
                 main.category_code       as category_code, //카테고리코드
@@ -292,23 +250,14 @@ service marketIntelligenceService {
         from MIMaterialCode as main
         left join MIMaterialCodeText as matText
             on  main.tenant_id        = matText.tenant_id
-            and main.company_code     = matText.company_code
-            and main.org_type_code    = matText.org_type_code
-            and main.org_code         = matText.org_code
             and main.mi_material_code = matText.mi_material_code
             and matText.language_code = 'KO'
         left join MICategoryText as catg
             on  main.tenant_id     = catg.tenant_id
-            and main.company_code  = catg.company_code
-            and main.org_type_code = catg.org_type_code
-            and main.org_code      = catg.org_code
             and main.category_code = catg.category_code
             and catg.language_code = 'KO'
         group by
             main.tenant_id,
-            main.company_code,
-            main.org_type_code,
-            main.org_code,
             main.mi_material_code,
             matText.mi_material_name,
             main.category_code,

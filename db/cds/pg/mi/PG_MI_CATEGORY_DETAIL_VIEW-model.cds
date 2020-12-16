@@ -4,9 +4,6 @@ namespace pg;
 
 entity MI_Cateogry_Detail_View {
     key tenant_id          : String(40)    @title : '회사코드';
-    key company_code       : String(240)   @title : '법인코드';
-    key org_type_code      : String(40)    @title : '조직유형코드';
-    key org_code           : String(240)   @title : '조직코드';
     key mi_material_code   : String(40)    @title : '시황자재코드';
         mi_material_name   : String(240)   @title : '시황자재명';
         category_code      : String(40)    @title : '카테고리코드';
