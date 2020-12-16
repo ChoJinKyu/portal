@@ -70,7 +70,6 @@
         </f:header>
         <f:content>
             <VBox>
-                <!-- rows="{path: 'tree>/Menu_haa'}"  -->
                 <table:TreeTable
                     id="menuTreeTable"
                     rowSelectionChange=".onRowSelectionChange"
@@ -88,7 +87,6 @@
                 >
                   <table:extension>
                     <OverflowToolbar>
-                      <!-- <Title text="메뉴관리 ({= ${/}.length || 0})" level="H2"/> -->
                       <ToolbarSpacer/>
                       <Button id="mainTableCreateSameLevelButton" text="Create Same Level" type="Transparent" press=".onAdd('S')">
                         <layoutData>
@@ -105,21 +103,41 @@
                     </OverflowToolbar>
                   </table:extension>
                   <table:columns>
-                    <table:Column label="메뉴명" >
+                    <table:Column label="메뉴명">
                         <table:template>
                             <Text text="{tree>menu_name}" wrapping="false" />
                         </table:template>
                     </table:Column>
-                    <table:Column label="메뉴코드" >
+                    <table:Column label="메뉴코드">
                         <table:template>
                             <Text text="{tree>menu_code}" wrapping="false" />
                         </table:template>
                     </table:Column>
-                    <!-- <table:Column label="메뉴구분" >
+                    <table:Column label="메뉴레벨">
                         <table:template>
-                            <Text text="{menu_level_number}" wrapping="false" />
+                            <Text text="{tree>menu_level_number}" wrapping="false" />
                         </table:template>
-                    </table:Column> -->
+                    </table:Column>
+                    <table:Column label="화면표시">
+                        <table:template>
+                            <Text text="{= !!${tree>menu_display_flag} ? 'Yes' : 'No'}" wrapping="false" />
+                        </table:template>
+                    </table:Column>
+                    <table:Column label="사용여부">
+                        <table:template>
+                            <Text text="{= !!${tree>use_flag} ? 'Yes' : 'No'}" wrapping="false" />
+                        </table:template>
+                    </table:Column>
+                    <table:Column label="정렬순서">
+                        <table:template>
+                            <Text text="{tree>sort_number}" wrapping="false" />
+                        </table:template>
+                    </table:Column>
+                    <table:Column label="메뉴URL">
+                        <table:template>
+                            <Text text="{tree>menu_path_info}" wrapping="false" />
+                        </table:template>
+                    </table:Column>
                   </table:columns>
                 </table:TreeTable>
             </VBox>
