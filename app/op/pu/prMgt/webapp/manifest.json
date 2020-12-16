@@ -1,7 +1,7 @@
 {
   "_version": "1.12.0",
   "sap.app": {
-    "id": "op.prMgr",
+    "id": "op.pu.PrMgt",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "title": "{{appTitle}}",
@@ -13,7 +13,7 @@
     "resources": "resources.json",
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v2/op.pu.PrMgrService/",
+        "uri": "srv-api/odata/v2/op.pu.PrMgtService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -25,7 +25,21 @@
         "settings": {
           "odataVersion": "2.0"
         }
-      }
+      },
+      "purOrgMgrService": {
+            "uri": "srv-api/odata/v2/cm.PurOrgMgrService/",
+            "type": "OData",
+            "settings": {
+                "odataVersion": "2.0"
+            }
+       },
+      "userService": {
+                "uri": "srv-api/odata/v2/cm.UserMgrService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            }
     }
   },
   "sap.fiori": {
@@ -50,7 +64,7 @@
   },
   "sap.ui5": {
     "rootView": {
-      "viewName": "op.prMgr.view.App",
+      "viewName": "op.pu.PrMgt.view.App",
       "type": "XML",
       "async": true,
       "id": "app"
@@ -72,7 +86,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "op.prMgr.i18n.i18n"
+          "bundleName": "op.pu.PrMgt.i18n.i18n"
         }
       },
       "util": {
@@ -94,7 +108,27 @@
           "refreshAfterChange": true,
           "useBatch": true
         }
-      }
+      },
+        "purOrg": {
+            "dataSource": "purOrgMgrService",
+            "preload": true,
+            "settings": {
+                "defaultBindingMode": "TwoWay",
+                "defaultCountMode": "Inline",
+                "refreshAfterChange": false,
+                "useBatch": true
+            }
+        },
+        "user": {
+            "dataSource": "userService",
+            "preload": true,
+            "settings": {
+                "defaultBindingMode": "TwoWay",
+                "defaultCountMode": "Inline",
+                "refreshAfterChange": false,
+                "useBatch": true
+            }
+        }
     },
     "resources": {
         "css": [
@@ -104,13 +138,13 @@
         ]
     },
     "resourceRoots": {
-      "ext.lib": "../../../lib"
+      "ext.lib": "../../../../lib"
     },
     "routing": {
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
-        "viewPath": "op.prMgr.view",
+        "viewPath": "op.pu.PrMgt.view",
         "controlId": "fcl",
 				"transition": "slide",
         "bypassed": {

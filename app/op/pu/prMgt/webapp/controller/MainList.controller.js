@@ -14,9 +14,11 @@ sap.ui.define([
 ], function (BaseController, Multilingual, ManagedListModel, JSONModel, DateFormatter, 
         TablePersoController, MainListPersoService, 
         Filter, FilterOperator, MessageBox, MessageToast, Fragment) {
-	"use strict";
+    "use strict";
+    
+    var toggleButtonId = "";
 
-	return BaseController.extend("op.prMgr.controller.MainList", {
+	return BaseController.extend("op.pu.PrMgt.controller.MainList", {
 
 		dateFormatter: DateFormatter,
 
@@ -120,7 +122,7 @@ sap.ui.define([
 			if (!this._oDialogTableSelect) {
 				this._oDialogTableSelect = Fragment.load({ 
                     id: oView.getId(),
-					name: "op.prMgr.view.TemplateSelection",
+					name: "op.pu.PrMgt.view.TemplateSelection",
 					controller: this
 				}).then(function (oDialog) {
 				    oView.addDependent(oDialog);
@@ -136,6 +138,23 @@ sap.ui.define([
         onExit: function () {
             this.byId("dialogTemplateSelection").close();
         },
+         /**
+        * @public
+        * @see 사용처 create 팝업에서 나머지 버튼 비활성화 시키는 작업수행
+        */
+        onToggleHandleChange: function (oEvent) {
+            var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
+            var isPressedId;
+            isPressedId = oEvent.getSource().getId();
+            toggleButtonId = isPressedId;
+            for (var i = 0; i < groupId.length; i++) {
+                if (groupId[i].getId() != isPressedId) {
+                    groupId[i].setPressed(false);
+                }
+            }
+
+        },
+
 
 		onMainTableAddButtonPress: function(){           
             var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);            
@@ -272,7 +291,7 @@ sap.ui.define([
 			// init and activate controller
 			this._oTPC = new TablePersoController({
 				table: this.byId("mainTable"),
-				componentName: "prMgr",
+				componentName: "PrMgt",
 				persoService: MainListPersoService,
 				hasGrouping: true
 			}).activate();

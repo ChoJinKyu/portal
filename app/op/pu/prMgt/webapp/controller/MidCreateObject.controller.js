@@ -24,9 +24,10 @@ sap.ui.define([
      * @author jinseon.lee
      * @date 2020.12.01
      */
-	return BaseController.extend("op.prMgr.controller.MidCreateObject", {
+	return BaseController.extend("op.pu.PrMgt.controller.MidCreateObject", {
 
-		dateFormatter: DateFormatter,
+        dateFormatter: DateFormatter,
+        
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */

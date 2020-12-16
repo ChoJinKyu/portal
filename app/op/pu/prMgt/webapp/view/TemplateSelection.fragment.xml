@@ -100,6 +100,26 @@
                     emptySpanS="0"     
                     singleContainerFullSize="false" >                    
                     <form:content >  
+
+                        <VBox alignItems="Center" justifyContent="Center">
+                            <ToggleButton id="localBudget" fieldGroupIds="toggleButtons" text="LGC 석유화학 공사/용역 구매" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
+                            <layoutData>
+                                <layout:GridData span="XL6 L3 M6 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox alignItems="Center" justifyContent="Center">
+                            <ToggleButton id="supplierSelection" fieldGroupIds="toggleButtons" text="LGC 첨단소재 공사/용역 구매" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
+                            <layoutData>
+                                <layout:GridData span="XL6 L3 M6 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox alignItems="Center" justifyContent="Center">
+                            <ToggleButton id="localOrder" fieldGroupIds="toggleButtons" text="LGC 생명과학 공사/용역 구매" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
+                            <layoutData>
+                                <layout:GridData span="XL6 L3 M6 S12" />
+                            </layoutData> 
+                        </VBox>
+
                         <VBox>
                             <SegmentedButton id="searchUsageSegmentButton" selectedKey="all" class="sapUiSmallMarginBottom" width="100%" >
                                 <items>

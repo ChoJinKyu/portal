@@ -1,4 +1,4 @@
-<mvc:View controllerName="op.prMgr.controller.MidObject" 
+<mvc:View controllerName="op.pu.PrMgt.controller.MidObject" 
 	xmlns:mvc="sap.ui.core.mvc" 
 	xmlns="sap.m" 
 	xmlns:uxap="sap.uxap" 

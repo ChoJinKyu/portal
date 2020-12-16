@@ -1,4 +1,4 @@
-<mvc:View controllerName="op.prMgr.controller.MainList"
+<mvc:View controllerName="op.pu.PrMgt.controller.MainList"
     xmlns:mvc="sap.ui.core.mvc" 
     xmlns="sap.m" 
     xmlns:f="sap.f" 
@@ -72,8 +72,19 @@
                                 <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
                               </items>
                             </MultiComboBox>
-                            <Label text="{i18n>listHDBLgort}" labelFor="searchOrgCombo4" required="false"></Label>
-                            <Input id="searchKeyword4" placeholder="Search"></Input>
+                            <Label text="조직코드" labelFor="searchOrgCombo4" required="false"></Label>
+                            <MultiComboBox id="searchPlantS" width="100%" selectedKey="" items="{
+                                        path: 'purOrg>/Pur_Operation_Org',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
+                                            {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
+                                            {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
+                                        ]
+                                    }">
+                                    <items>
+                                        <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
+                                    </items>
+                                </MultiComboBox>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
@@ -143,18 +154,50 @@
                          <Column id="mainColumnStartDate" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
                             <Text text="구매요청 생성일자" />
                         </Column>
+                         <Column id="mainColumnpr_create_system_code" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
+                            <Text text="구매요청 생성 시스템" />
+                        </Column>
                     </columns>
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>                                
-                                <ObjectIdentifier text="{list>pr_create_status_code}"/>                                
-                                <ObjectIdentifier text="{list>erp_pr_type_code}"/>
+                                <ComboBox                                   
+                                    width="100%"
+                                    selectedKey="{list>pr_create_status_code}"
+                                    editable="false"
+                                    items="{
+                                        path: 'util>/CodeDetails',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                            {path: 'group_code', operator: 'EQ', value1: 'OP_PR_CREATE_STATUS'}
+                                        ]
+                                    }">
+                                    <items>
+                                        <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+                                    </items>
+                                </ComboBox>                                
+                                <ComboBox                                   
+                                    width="100%"
+                                    selectedKey="{list>pr_type_code}"
+                                    editable="false"
+                                    items="{
+                                        path: 'util>/CodeDetails',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                            {path: 'group_code', operator: 'EQ', value1: 'OP_PR_TYPE'}
+                                        ]
+                                    }">
+                                    <items>
+                                        <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+                                    </items>
+                                    </ComboBox>
                                 <ObjectIdentifier text="{list>pr_number}"/>
                                 <ObjectIdentifier text="{list>requestor_name}"/>
                                 <ObjectIdentifier text="{
                                         path: 'list>local_create_dtm',
                                         formatter: '.dateFormatter.toDateString'
-                                    }"/>                                
+                                    }"/>   
+                                <ObjectIdentifier text="{list>pr_create_system_code}"/>                             
                             </cells>
                         </ColumnListItem>
                     </items>

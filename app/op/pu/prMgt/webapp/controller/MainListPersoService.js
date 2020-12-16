@@ -4,55 +4,55 @@ sap.ui.define(["jquery.sap.global"],
 
         var _columns = [
             {
-                id: "prMgr-mainList-mainColumnCode",
+                id: "prMgt-mainList-mainColumnCode",
                 order: 0,
                 text: "Code",
                 visible: true
             },
             {
-                id: "prMgr-mainList-mainColumnName",
+                id: "prMgt-mainList-mainColumnName",
                 order: 1,
                 text: "Name",
                 visible: false
             },
             {
-                id: "prMgr-mainList-mainColumnStartDate",
+                id: "prMgt-mainList-mainColumnStartDate",
                 order: 2,
                 text: "Start Date",
                 visible: false
             },
             {
-                id: "prMgr-mainList-mainColumnEndDate",
+                id: "prMgt-mainList-mainColumnEndDate",
                 order: 3,
                 text: "End Date",
                 visible: true
             },
             {
-                id: "prMgr-mainList-mainColumnSiteFlag",
+                id: "prMgt-mainList-mainColumnSiteFlag",
                 order: 4,
                 text: "Site",
                 visible: true
             },
             {
-                id: "prMgr-mainList-mainColumnCompanyFlag",
+                id: "prMgt-mainList-mainColumnCompanyFlag",
                 order: 5,
                 text: "Company",
                 visible: true
             },
             {
-                id: "prMgr-mainList-mainColumnRoleFlag",
+                id: "prMgt-mainList-mainColumnRoleFlag",
                 order: 5,
                 text: "Role",
                 visible: true
             },
             {
-                id: "prMgr-mainList-mainColumnOrganizationFlag",
+                id: "prMgt-mainList-mainColumnOrganizationFlag",
                 order: 6,
                 text: "Organization",
                 visible: true
             },
             {
-                id: "prMgr-mainList-mainColumnUserFlag",
+                id: "prMgt-mainList-mainColumnUserFlag",
                 order: 7,
                 text: "User",
                 visible: true

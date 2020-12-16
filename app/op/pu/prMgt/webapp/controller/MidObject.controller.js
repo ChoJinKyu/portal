@@ -25,7 +25,7 @@ sap.ui.define([
 
 	var oTransactionManager;
 
-	return BaseController.extend("op.prMgr.controller.MidObject", {
+	return BaseController.extend("op.pu.PrMgt.controller.MidObject", {
 
 		dateFormatter: DateFormatter,
         
@@ -426,7 +426,7 @@ sap.ui.define([
 			if(!this._oFragments[sFragmentName]){
 				Fragment.load({
 					id: this.getView().getId(),
-					name: "op.prMgr.view." + sFragmentName,
+					name: "op.pu.PrMgt.view." + sFragmentName,
 					controller: this
 				}).then(function(oFragment){
 					this._oFragments[sFragmentName] = oFragment;
