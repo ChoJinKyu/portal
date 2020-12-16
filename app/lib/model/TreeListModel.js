@@ -70,6 +70,51 @@ sap.ui.define([
                 }
                 return t;
             }, JSON.parse(JSON.stringify(tree)));
+            // 4
+            tree = data.reduce(function (t, d) {
+                if (d.level == 4) {
+                    t.map(function (t0) {
+                        t0.nodes.map(function (t1) {
+                            t1.nodes.map(function (t2) {
+                                t2.nodes.map(function (t3) {
+                                    if (t3.node_id == d.parent_id) {
+                                        t3.nodes.push(d);
+                                    }
+                                    return t3;
+                                });
+                                return t2;
+                            });
+                            return t1;
+                        });
+                        return t0;
+                    });
+                }
+                return t;
+            }, JSON.parse(JSON.stringify(tree)));
+            // 5
+            tree = data.reduce(function (t, d) {
+                if (d.level == 5) {
+                    t.map(function (t0) {
+                        t0.nodes.map(function (t1) {
+                            t1.nodes.map(function (t2) {
+                                t2.nodes.map(function (t3) {
+                                    t3.nodes.map(function (t4) {
+                                        if (t4.node_id == d.parent_id) {
+                                            t4.nodes.push(d);
+                                        }
+                                        return t4;
+                                    });
+                                    return t3;
+                                });
+                                return t2;
+                            });
+                            return t1;
+                        });
+                        return t0;
+                    });
+                }
+                return t;
+            }, JSON.parse(JSON.stringify(tree)));
             return tree;
         },
 

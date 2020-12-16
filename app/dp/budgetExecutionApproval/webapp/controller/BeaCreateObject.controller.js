@@ -507,7 +507,7 @@ sap.ui.define([
              var oArgs = {
                 company_code : this.getModel('appMaster').oData.company_code , 
                 org_code : this.getModel('appMaster').oData.org_code,
-                mold_progress_status_code : 'DEV_RCV' ,
+              //  mold_progress_status_code : 'DEV_RCV' ,
                 mold_id_arr : mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
             }
 			
@@ -1139,24 +1139,17 @@ sap.ui.define([
                         }
     
                         for(var jdx=0; jdx<approverData.length; jdx++){
-                            if(jdx == approverData.length-1){  
-                                var aRecords = verModel.oData.Approver;
-                                var bRecords = verModel.mContexts; 
-                                delete verModel.mContexts['/Approver/'+ jdx];
-                                aRecords.splice(jdx, 1); // 마지막 레코드는 삭제 
-                            }else{
-                                delete verModel.getData().Approver[jdx].arrowUp;
-                                delete verModel.getData().Approver[jdx].arrowDown;
-                                delete verModel.getData().Approver[jdx].editMode;
-                                delete verModel.getData().Approver[jdx].trashShow;
-                                verModel.getData().Approver[jdx].approve_sequence = String(verModel.getData().Approver[jdx].approve_sequence);
-                                verModel.getData().Approver[jdx].approval_number = that.approval_number;
-                                verModel.getData().Approver[jdx].tenant_id = that.tenant_id;
-                                verModel.getData().Approver[jdx].local_create_dtm = new Date();
-                                verModel.getData().Approver[jdx].local_update_dtm = new Date();
-                            }
+                            delete verModel.getData().Approver[jdx].arrowUp;
+                            delete verModel.getData().Approver[jdx].arrowDown;
+                            delete verModel.getData().Approver[jdx].editMode;
+                            delete verModel.getData().Approver[jdx].trashShow;
+                            verModel.getData().Approver[jdx].approve_sequence = String(verModel.getData().Approver[jdx].approve_sequence);
+                            verModel.getData().Approver[jdx].approval_number = that.approval_number;
+                            verModel.getData().Approver[jdx].tenant_id = that.tenant_id;
+                            verModel.getData().Approver[jdx].local_create_dtm = new Date();
+                            verModel.getData().Approver[jdx].local_update_dtm = new Date();
                         }
-
+                          verModel.removeRecord(approverData.length-1);
        
                         console.log(" referModel >>> " , referModel);
                         
