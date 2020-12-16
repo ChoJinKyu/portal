@@ -64,7 +64,7 @@
                                         </m:Text>
                                         <m:Input
                                             id="group_code"
-                                            placeholder="필수"
+                                            placeholder="{I18N>/MANDATORY}"
                                             required="{contModel>/detail/createMode}"
                                             value="{viewModel>/detail/group_code}"
                                             visible="{contModel>/detail/createMode}"
@@ -97,7 +97,7 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="Description: "
+                                            text="{I18N>/DESCRIPTION}: "
                                             labelFor="group_description"/>
                                         <m:Text
                                             visible="{contModel>/detail/readMode}"
@@ -117,7 +117,7 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="Tenant: "
+                                            text="{I18N>/TENANT}: "
                                             labelFor="tenant_id"/>
                                         <m:Text
                                             visible="{contModel>/detail/readMode}"
@@ -143,7 +143,7 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="Chain : "
+                                            text="{I18N>/CHAIN}: "
                                             labelFor="chain_code"/>
                                         <m:Text
                                             text="{
@@ -159,7 +159,7 @@
                                         <m:layoutData>
                                             <layout:GridData
                                                 span="XL2 L3 M6 S12" />
-                                        </m:layoutData>   
+                                        </m:layoutData>
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
@@ -183,7 +183,7 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="Useflag: "/>
+                                            text="Use flag: "/>
                                         <tnt:InfoLabel 
                                             text="True" 
                                             visible="{= (${contModel>/detail/readMode} &amp;&amp; ${viewModel>/detail/use_flag}) ? true : false}"
@@ -238,7 +238,7 @@
                                 <form:content>
                                     <m:VBox>
                                         <m:Label
-                                            text="Created by: "/>
+                                            text="{I18N>/CREATE_USER_ID}: "/>
                                         <m:Text
                                             text="{viewModel>/detail/create_user_id}"/>
                                         <m:layoutData>
@@ -248,7 +248,7 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="Created At: "/>
+                                            text="{I18N>/LOCAL_CREATE_DTM}: "/>
                                         <m:Text
                                             text="{
                                                     path: 'viewModel>/detail/local_create_dtm',
@@ -264,7 +264,7 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="Updated by: "/>
+                                            text="{I18N>/UPDATE_USER_ID}: "/>
                                         <m:Text
                                             text="{viewModel>/detail/update_user_id}"/>
                                         <m:layoutData>
@@ -274,7 +274,7 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="Updated At: "/>
+                                            text="{I18N>/LOCAL_CHANGE_DTM}: "/>
                                         <m:Text
                                             text="{
                                                     path: 'viewModel>/detail/local_update_dtm',
@@ -328,13 +328,13 @@
                                 </m:headerToolbar>
                                 <m:columns>
                                     <m:Column>
-                                        <m:Text text="Code" />
+                                        <m:Text text="{I18N>/CODE}" />
                                     </m:Column>
                                     <m:Column>
-                                        <m:Text text="Code Description" />
+                                        <m:Text text="{I18N>/CODE_DESC}" />
                                     </m:Column>
                                     <m:Column>
-                                        <m:Text text="Sort" />
+                                        <m:Text text="{I18N>/SORT_NUMBER}" />
                                     </m:Column>
                                 </m:columns>
                                 <m:items>
@@ -360,19 +360,19 @@
 			<m:OverflowToolbar>
 				<m:ToolbarSpacer />
                 <m:HBox visible="{contModel>/detail/createMode}">
-                    <m:Button type="Emphasized" text="Save"  press=".onSavePress"/>
+                    <m:Button type="Emphasized" text="{I18N>/SAVE}"  press=".onSavePress"/>
                 </m:HBox>
                 <m:HBox visible="{contModel>/detail/readMode}">
                     <m:Button type="Transparent" text="Edit" press=".onEditPress"/>
-                    <m:Button type="Transparent" text="Cancel" press=".onCancelPress" enabled="false"/>
-                    <m:Button type="Transparent" text="Delete"  press=".onDeletePress"/>
-                    <m:Button type="Emphasized" text="Save"  press=".onSavePress" enabled="false"/>
+                    <m:Button type="Transparent" text="{I18N>/CANCEL}" press=".onCancelPress" enabled="false"/>
+                    <m:Button type="Transparent" text="{I18N>/DELETE}"  press=".onDeletePress"/>
+                    <m:Button type="Emphasized" text="{I18N>/SAVE}"  press=".onSavePress" enabled="false"/>
                 </m:HBox>
                 <m:HBox visible="{= !${contModel>/detail/createMode} &amp;&amp; ${contModel>/detail/editMode}}">
                     <m:Button type="Transparent" text="Edit" press=".onEditPress" enabled="false"/>
-                    <m:Button type="Transparent" text="Cancel" press=".onCancelPress"/>
-                    <m:Button type="Transparent" text="Delete"  press=".onDeletePress"/>
-                    <m:Button type="Emphasized" text="Save"  press=".onSavePress"/>
+                    <m:Button type="Transparent" text="{I18N>/CANCEL}" press=".onCancelPress"/>
+                    <m:Button type="Transparent" text="{I18N>/DELETE}"  press=".onDeletePress"/>
+                    <m:Button type="Emphasized" text="{I18N>/SAVE}"  press=".onSavePress"/>
                 </m:HBox>
 			</m:OverflowToolbar>
 		</footer>

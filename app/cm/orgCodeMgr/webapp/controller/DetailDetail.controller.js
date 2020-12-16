@@ -1,5 +1,6 @@
 sap.ui.define([
     "ext/lib/controller/BaseController",
+	"ext/lib/util/Multilingual",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/model/Sorter",
@@ -8,7 +9,7 @@ sap.ui.define([
     "sap/f/LayoutType",
     "ext/lib/util/ValidatorUtil",
     "ext/lib/model/ManagedListModel"
-], function (Controller, Filter, FilterOperator, Sorter, MessageBox, MessageToast, LayoutType, ValidatorUtil, ManagedListModel) {
+], function (Controller, Multilingual, Filter, FilterOperator, Sorter, MessageBox, MessageToast, LayoutType, ValidatorUtil, ManagedListModel) {
 	"use strict";
 
 	return Controller.extend("cm.orgCodeMgr.controller.DetailDetail", {
@@ -16,7 +17,8 @@ sap.ui.define([
 			this.oRouter = this.getOwnerComponent().getRouter();
 			this.oRouter.getRoute("detailDetail").attachPatternMatched(this._onCodeDetailMatched, this);
 
-            this.setModel(new ManagedListModel(), "languages");
+            var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
         },
         
         onAfterRendering : function(){

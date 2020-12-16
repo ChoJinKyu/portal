@@ -20,7 +20,7 @@
                 <f:expandedContent>
                 </f:expandedContent>
                 <f:actions>
-                    <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onSearch" />
+                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch" />
                 </f:actions>
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -43,7 +43,7 @@
                     <form:content>
                         <VBox>
                             <Label
-                                text="Tenant: "
+                                text="{I18N>/TENANT}: "
                                 labelFor="search_tenant">
                             </Label>
                             <ComboBox   
@@ -66,18 +66,18 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Chain: " labelFor="search_chain"></Label>
+                            <Label text="{I18N>/CHAIN}: " labelFor="search_chain"></Label>
                             <ComboBox id="search_chain" showSecondaryValues= "true"/>
                             <layoutData><layout:GridData span="XL2 L3 M6 S12" /></layoutData> 
                         </VBox>
                         <VBox>
-                            <Label text="Organization Type: " labelFor="search_orgtype"></Label>
+                            <Label text="{I18N>/ORGANIZATION} {I18N>/TYPE}: " labelFor="search_orgtype"></Label>
                             <ComboBox id="search_orgtype" showSecondaryValues= "true"/>
                             <layoutData><layout:GridData span="XL2 L3 M6 S12" /></layoutData>   
                         </VBox>
                         <VBox>
                             <Label
-                                text="Code Group Useflag: "
+                                text="Code Group Use Flag: "
                                 labelFor="search_codeGroupUseflag">
                             </Label>
                             <SegmentedButton 
@@ -97,7 +97,7 @@
                         </VBox>
                         <VBox>
                             <Label
-                                text="Keyword: "
+                                text="{I18N>/KEYWORD}: "
                                 labelFor="search_Keyword">
                             </Label>
                             <Input id="search_keyword" 
@@ -133,19 +133,19 @@
                         width="6em"
                         minScreenWidth="Tablet"
                         demandPopin="true">
-                        <Text text="Tenant ID" />
+                        <Text text="{I18N>/TENANT}" />
                     </Column>
                     <Column
                         width="7em"
                         minScreenWidth="Tablet"
                         demandPopin="true">
-                        <Text text="Chain Code" />
+                        <Text text="{I18N>/CHAIN_CODE}" />
                     </Column>
                     <Column
                         width="7em"
                         minScreenWidth="Tablet"
                         demandPopin="true">
-                        <Text text="Organization Type" />
+                        <Text text="{I18N>/ORGANIZATION} {I18N>/TYPE}" />
                     </Column>
                     <Column
                         width="18em">
@@ -159,13 +159,13 @@
                     <Column
                         minScreenWidth="Tablet"
                         demandPopin="true">
-                        <Text text="Description" />
+                        <Text text="{I18N>/DESCRIPTION}" />
                     </Column>
                     <Column
                         width="5em"
                         minScreenWidth="Tablet"
                         demandPopin="true">
-                        <Text text="Useflag" />
+                        <Text text="Use Flag" />
                     </Column>
                 </columns>
                 <items>

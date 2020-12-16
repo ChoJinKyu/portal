@@ -57,7 +57,7 @@
                                 <form:content>
                                     <m:VBox>
                                         <m:Label
-                                            text="Code: "
+                                            text="{I18N>/CODE}: "
                                             labelFor="code"/>
                                         <m:Text
                                             text="{viewModel>/detailDetail/code}"
@@ -66,7 +66,7 @@
                                         <m:Input
                                             id="code"
                                             required="{contModel>/detailDetail/createMode}"
-                                            placeholder="필수"
+                                            placeholder="{I18N>/MANDATORY}"
                                             value="{viewModel>/detailDetail/code}"
                                             maxLength="{= parseInt(${/#OrgCodeDetails/code/@maxLength})}"
                                             visible="{contModel>/detailDetail/createMode}"
@@ -79,7 +79,7 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="Code Description: "
+                                            text="{I18N>/CODE_DESC}: "
                                             labelFor="code_description"/>
                                         <m:Text
                                             text="{viewModel>/detailDetail/code_description}"
@@ -98,7 +98,7 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="시작 / 종료일자: "
+                                            text="{I18N>/CODE_DESC} / {I18N>/END_DATE}: "
                                             design="Bold"
                                             class="sapUiTinyMarginEnd"
                                             textAlign="Left"/>
@@ -148,7 +148,7 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="정렬번호: "
+                                            text="{I18N>/SORT_NUMBER}: "
                                             labelFor="sort_no"/>
                                         <m:Text
                                             visible="{contModel>/detailDetail/readMode}"
@@ -205,7 +205,7 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="비고: "
+                                            text="{I18N>/REMARK}: "
                                             labelFor="remark"/>
                                         <m:Text
                                             text="{viewModel>/detailDetail/remark}"
@@ -247,7 +247,7 @@
                                 <form:content>
                                     <m:VBox>
                                         <m:Label
-                                            text="Created by: "/>
+                                            text="{I18N>/CREATE_USER_ID}: "/>
                                         <m:Text
                                             text="{viewModel>/detailDetail/create_user_id}"/>
                                         <m:layoutData>
@@ -257,7 +257,7 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="Created At: "/>
+                                            text="{I18N>/LOCAL_CREATE_DTM}: "/>
                                         <m:Text
                                             text="{
                                                     path: 'viewModel>/detailDetail/local_create_dtm',
@@ -273,7 +273,7 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="Updated by: "/>
+                                            text="{I18N>/UPDATE_USER_ID}: "/>
                                         <m:Text
                                             text="{viewModel>/detailDetail/update_user_id}"/>
                                         <m:layoutData>
@@ -283,7 +283,7 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="Updated At: "/>
+                                            text="{I18N>/LOCAL_CHANGE_DTM}: "/>
                                         <m:Text
                                             text="{
                                                     path: 'viewModel>/detailDetail/local_update_dtm',
@@ -329,7 +329,7 @@
                                                 press=".onAddLangPress"/>
                                             <m:Button 
                                                 type="Transparent" 
-                                                text="Delete"
+                                                text="{I18N>/DELETE}"
                                                 press=".onDelLangPress"/>
                                         </m:HBox>
                                     </m:Toolbar>
@@ -341,10 +341,10 @@
                                         <m:Text text="S"/>
                                     </m:Column>
                                     <m:Column>
-                                        <m:Text text="언어" />
+                                        <m:Text text="{I18N>/LANGUAGE}" />
                                     </m:Column>
                                     <m:Column>
-                                        <m:Text text="코드명" />
+                                        <m:Text text="{I18N>/CODE_NAME}" />
                                     </m:Column>
                                 </m:columns>
                                 <m:items>
@@ -396,19 +396,19 @@
 			<m:OverflowToolbar>
                 <m:ToolbarSpacer />
                 <m:HBox visible="{contModel>/detailDetail/createMode}">
-                    <m:Button type="Emphasized" text="Save"  press=".onSavePress"/>
+                    <m:Button type="Emphasized" text="{I18N>/SAVE}"  press=".onSavePress"/>
                 </m:HBox>
                 <m:HBox visible="{contModel>/detailDetail/readMode}">
                     <m:Button type="Transparent" text="Edit" press=".onEditPress"/>
-                    <m:Button type="Transparent" text="Cancel" press=".onCancelPress" enabled="false"/>
-                    <m:Button type="Transparent" text="Delete"  press=".onDeletePress"/>
-                    <m:Button type="Emphasized" text="Save"  press=".onSavePress" enabled="false"/>
+                    <m:Button type="Transparent" text="{I18N>/CANCEL}" press=".onCancelPress" enabled="false"/>
+                    <m:Button type="Transparent" text="{I18N>/DELETE}"  press=".onDeletePress"/>
+                    <m:Button type="Emphasized" text="{I18N>/SAVE}"  press=".onSavePress" enabled="false"/>
                 </m:HBox>
                 <m:HBox visible="{= !${contModel>/detailDetail/createMode} &amp;&amp; ${contModel>/detailDetail/editMode}}">
                     <m:Button type="Transparent" text="Edit" press=".onEditPress" enabled="false"/>
-                    <m:Button type="Transparent" text="Cancel" press=".onCancelPress"/>
-                    <m:Button type="Transparent" text="Delete"  press=".onDeletePress"/>
-                    <m:Button type="Emphasized" text="Save"  press=".onSavePress"/>
+                    <m:Button type="Transparent" text="{I18N>/CANCEL}" press=".onCancelPress"/>
+                    <m:Button type="Transparent" text="{I18N>/DELETE}"  press=".onDeletePress"/>
+                    <m:Button type="Emphasized" text="{I18N>/SAVE}"  press=".onSavePress"/>
                 </m:HBox>
 			</m:OverflowToolbar>
 		</footer>
