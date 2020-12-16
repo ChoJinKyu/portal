@@ -1,6 +1,8 @@
 namespace dp.util;
 using { dp as moldMst } from '../../../../db/cds/dp/moldMgt/DP_MD_MST-model';
 using { dp as approvalDtl } from '../../../../db/cds/dp/moldMgt/DP_MD_APPROVAL_DTL-model';
+using { cm as codeDtl } from '../../../../db/cds/cm/codeMgr/CM_CODE_DTL-model';
+
 @path: '/dp.util.MoldItemSelectionService'
 service MoldItemSelectionService {
     entity MoldMasters as projection on moldMst.Md_Mst; 
@@ -19,7 +21,8 @@ service MoldItemSelectionService {
         m.model,
         m.asset_number,
         m.mold_item_type_code,
-        m.mold_production_type_code,
+        m.mold_production_type_code, 
+        cd.code_description as mold_item_type_code_nm ,
         m.first_production_date,
         m.production_complete_date,
         m.budget_amount,
@@ -73,6 +76,7 @@ service MoldItemSelectionService {
         m.supplier_code,
         m.mold_progress_status_code 
     from moldMst.Md_Mst m 
+    join ( select t.code_description , t.code from codeDtl.Code_Dtl t where t.group_code = 'DP_MD_ITEM_TYPE')  cd on cd.code = m.mold_item_type_code 
     where  m.mold_id not in (
         select d.mold_id from approvalDtl.Md_Approval_Dtl d
     );
