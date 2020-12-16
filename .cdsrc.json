@@ -40,8 +40,6 @@
             "db/cds/dp",
             "db/cds/dp/pd",
             "db/cds/dp/mm",
-            "db/cds/dp/mm/basicDataMgr",
-            "db/cds/dp/mm/uomMgr",
             "db/cds/dp/standardCommon",
             "db/cds/dp/standardCommon/categoryMgr",
             "db/cds/dp/moldMgt",

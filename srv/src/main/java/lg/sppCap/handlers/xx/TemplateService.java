@@ -2,13 +2,17 @@ package lg.sppCap.handlers.xx;
 
 import java.util.List;
 
+import com.sap.cds.feature.xsuaa.XsuaaUserInfo;
 import com.sap.cds.services.ErrorStatuses;
+import com.sap.cds.services.EventContext;
 import com.sap.cds.services.ServiceException;
 import com.sap.cds.services.cds.CdsService;
 import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.persistence.PersistenceService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,31 +27,46 @@ import lg.sppCap.handlers.base.BaseEventHandler;
 @ServiceName(TemplateService_.CDS_NAME)
 public class TemplateService extends BaseEventHandler {
 
+    Logger log = LoggerFactory.getLogger(TemplateService.class);
+
     @Autowired
     PersistenceService db;
+
+    @Autowired
+    XsuaaUserInfo userInfo;
     
-    @Before(event = CdsService.EVENT_CREATE, entity = Message_.CDS_NAME)
-    public void validateMessageContents(Message message) {
-        String tenantId = message.getTenantId();
-        String messageCode = message.getMessageCode();
-        String languageCode = message.getLanguageCode();
-        String typeCode = message.getMessageTypeCode();
-        String messageContents = message.getMessageContents();
-
-        if(!this.getTenantId().equals(tenantId))
-            throw new ServiceException(ErrorStatuses.SERVER_ERROR, "tenantId is not matches with this session.");
-
-        if(languageCode == null)
-            throw new ServiceException(ErrorStatuses.BAD_REQUEST, "Not supported languageCode or it is empty.");
-
-        if(messageCode == null)
-            throw new ServiceException(ErrorStatuses.BAD_REQUEST, "messageCode shouldn't be empty.");
-
-        if(messageContents == null)
-            throw new ServiceException(ErrorStatuses.BAD_REQUEST, "messageContents shouldn't be empty.");
+    @Before(event = {CdsService.EVENT_CREATE, CdsService.EVENT_UPDATE}, entity = Message_.CDS_NAME)
+    public void validateMessageContents(EventContext context, List<Message> messages) {
+        for(Message message : messages){
+            String tenantId = message.getTenantId();
+            String messageCode = message.getMessageCode();
+            String languageCode = message.getLanguageCode();
+            String typeCode = message.getMessageTypeCode();
+            String messageContents = message.getMessageContents();
     
-        if("MSG".equals(typeCode) && messageCode.length() != 8){
-            throw new ServiceException(ErrorStatuses.BAD_REQUEST, "Message type message must have 8 byte message_code value. likes NCM0001");
+            try{
+                String msg = this.getMessage("ACCOUNT_CODE", context);
+                if(log.isInfoEnabled())
+                    log.info(msg);
+            }catch(Exception e){
+                log.error(e.getLocalizedMessage(), e);
+            }
+    
+            if(!this.getTenantId().equals(tenantId))
+                throw new ServiceException(ErrorStatuses.SERVER_ERROR, "tenantId is not matches with this session.");
+    
+            if(languageCode == null)
+                throw new ServiceException(ErrorStatuses.BAD_REQUEST, "Not supported languageCode or it is empty.");
+    
+            if(messageCode == null)
+                throw new ServiceException(ErrorStatuses.BAD_REQUEST, "messageCode shouldn't be empty.");
+    
+            if(messageContents == null)
+                throw new ServiceException(ErrorStatuses.BAD_REQUEST, "messageContents shouldn't be empty.");
+        
+            if("MSG".equals(typeCode) && messageCode.length() != 8){
+                throw new ServiceException(ErrorStatuses.BAD_REQUEST, "Message type message must have 8 byte message_code value. likes NCM0001");
+            }
         }
     }
     
@@ -55,7 +74,6 @@ public class TemplateService extends BaseEventHandler {
     public void validateControlOptionMasterContents(List<ControlOptionMasters> items) {
         for (ControlOptionMasters item : items) {
             String tenantId = item.getTenantId();
-            String messageCode = item.getChainCode();
             String controlOptionName = item.getControlOptionName();
 
             if(!this.getTenantId().equals(tenantId))
