@@ -15,6 +15,7 @@ db/src/gen/
 db/node_modules/
 node_modules/
 app/uxFreeStyleDemo/
+app/node_modules/
 *.zip
 .hdiignore
 undeploy.json
