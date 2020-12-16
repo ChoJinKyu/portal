@@ -44,7 +44,7 @@
                             selectionChange="vendorSelect" 
                             mode="SingleSelectMaster"
                             width="auto"
-                            items="{ path : 'util>/Employee',
+                            items="{ path : 'hr>/Employee',
                                     filters : [
                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'}
                                     ]
@@ -70,8 +70,8 @@
                                 <cells>
                                     <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
                                  
-                                    <Text text="{util>employee_number}" />
-                                    <Text text="{util>employee_name}" />
+                                    <Text text="{hr>employee_number}" />
+                                    <Text text="{hr>user_local_name}" />
                         
                                 </cells>
                             </ColumnListItem>   

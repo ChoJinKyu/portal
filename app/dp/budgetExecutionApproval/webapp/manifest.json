@@ -33,6 +33,13 @@
                     "odataVersion": "2.0"
                 }
             },
+            "utilHrService": {
+                "uri": "srv-api/odata/v2/cm.util.HrService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            },
             "orgMgrService": {
                 "uri": "srv-api/odata/v2/cm.OrgMgrService/",
                 "type": "OData",
@@ -111,6 +118,16 @@
             },
             "util": {
                 "dataSource": "commonUtilService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false,
+                    "useBatch": true
+                }
+            },
+            "hr": {
+                "dataSource": "utilHrService",
                 "preload": true,
                 "settings": {
                     "defaultBindingMode": "TwoWay",
