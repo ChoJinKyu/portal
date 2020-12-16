@@ -234,7 +234,13 @@ service marketIntelligenceService {
                 prtCatgText.category_name as parent_category_name, //상위카테고리명
             key main.category_code        as category_code, //카테고리코드
                 catgText.category_name    as category_name, //카테고리명
-                main.use_flag             as use_flag //사용여부
+                main.use_flag             as use_flag, //사용여부
+                main.local_create_dtm     as local_create_dtm, //로컬생성시간
+                main.local_update_dtm     as local_update_dtm, //로컬수정시간
+                main.create_user_id       as create_user_id, //생성자
+                main.update_user_id       as update_user_id, //수정자
+                main.system_create_dtm    as system_create_dtm, //시스템생성시간
+                main.system_update_dtm    as system_update_dtm //시스템수정시간
         from MICategoryHierarchyStructure as main
         left join MICategoryText as prtCatgText
             on  main.tenant_id            = prtCatgText.tenant_id
@@ -250,24 +256,43 @@ service marketIntelligenceService {
             prtCatgText.category_name,
             main.category_code,
             catgText.category_name,
-            main.use_flag
+            main.use_flag,
+            main.local_create_dtm,
+            main.local_update_dtm,
+            main.create_user_id,
+            main.update_user_id,
+            main.system_create_dtm,
+            main.system_update_dtm
+        order by
+            main.tenant_id,
+            main.parent_category_code,
+            prtCatgText.category_name,
+            main.category_code,
+            catgText.category_name,
+            main.use_flag,
+            main.local_create_dtm,
+            main.local_update_dtm,
+            main.create_user_id,
+            main.update_user_id,
+            main.system_create_dtm,
+            main.system_update_dtm
         ;
 
     // MI Material List View
     view MIMatListView @(title : '시황자재/카테고리 List View') as
         select
-            key main.tenant_id           	as tenant_id, 			//회사코드
-            key main.mi_material_code    	as mi_material_code, 	//시황자재
-                matText.mi_material_name 	as mi_material_name, 	//시황자재명
-                main.category_code       	as category_code, 		//카테고리코드
-                catg.category_name       	as category_name, 		//카테고리명
-                main.use_flag            	as use_flag, 			//사용여부
-                main.local_create_dtm		as local_create_dtm,	//로컬생성시간
-				main.local_update_dtm		as local_update_dtm,	//로컬수정시간
-				main.create_user_id			as create_user_id,		//생성자
-				main.update_user_id			as update_user_id,		//수정자
-				main.system_create_dtm		as system_create_dtm,	//시스템생성시간
-				main.system_update_dtm		as system_update_dtm	//시스템수정시간
+            key main.tenant_id           as tenant_id, //회사코드
+            key main.mi_material_code    as mi_material_code, //시황자재
+                matText.mi_material_name as mi_material_name, //시황자재명
+                main.category_code       as category_code, //카테고리코드
+                catg.category_name       as category_name, //카테고리명
+                main.use_flag            as use_flag, //사용여부
+                main.local_create_dtm    as local_create_dtm, //로컬생성시간
+                main.local_update_dtm    as local_update_dtm, //로컬수정시간
+                main.create_user_id      as create_user_id, //생성자
+                main.update_user_id      as update_user_id, //수정자
+                main.system_create_dtm   as system_create_dtm, //시스템생성시간
+                main.system_update_dtm   as system_update_dtm //시스템수정시간
         from MIMaterialCode as main
         left join MIMaterialCodeText as matText
             on  main.tenant_id        = matText.tenant_id
@@ -284,7 +309,20 @@ service marketIntelligenceService {
             main.category_code,
             catg.category_name,
             main.use_flag,
-			main.local_create_dtm,
+            main.local_create_dtm,
+            main.local_update_dtm,
+            main.create_user_id,
+            main.update_user_id,
+            main.system_create_dtm,
+            main.system_update_dtm
+        order by
+            main.tenant_id,
+            main.mi_material_code,
+            matText.mi_material_name,
+            main.category_code,
+            catg.category_name,
+            main.use_flag,
+            main.local_create_dtm,
             main.local_update_dtm,
             main.create_user_id,
             main.update_user_id,
