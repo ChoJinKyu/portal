@@ -46,6 +46,7 @@ entity Menu_haa {
       menu_type_code        : String;
       use_flag              : Boolean;
       language_code         : String;
+      menu_path_info        : String;
       path                  : String;
       hierarchy_level       : Integer;
       drill_state           : String;

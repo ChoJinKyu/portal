@@ -7,14 +7,12 @@ sap.ui.define([
     'sap/ui/core/Fragment',
     'sap/ui/model/Sorter',
     "sap/m/MessageBox",
-    "sap/m/MessageToast",
-    "sap/ui/model/odata/v2/ODataTreeBinding",
-    "sap/ui/model/odata/v2/ODataModel"
+    "sap/m/MessageToast"
 ],
 	/**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
    */
-    function (Controller, JSONModel, TreeListModel, Filter, FilterOperator, Fragment, Sorter, MessageBox, MessageToast, ODataTreeBinding, ODataModel) {
+    function (Controller, JSONModel, TreeListModel, Filter, FilterOperator, Fragment, Sorter, MessageBox, MessageToast) {
         "use strict";
 
         return Controller.extend("cm.menuMgr.controller.menuMgr", {
@@ -56,7 +54,6 @@ sap.ui.define([
                 });
             },
             onSearch: function (event) {
-                // filter
                 var predicates = [];
                 if (!!this.byId("searchChainCombo").getSelectedKey()) {
                     predicates.push(new Filter("chain_code", FilterOperator.Contains, this.byId("searchChainCombo").getSelectedKey()));
@@ -64,14 +61,13 @@ sap.ui.define([
                 if (!!this.byId("searchKeyword").getValue()) {
                     predicates.push(new Filter({
                         filters: [
-                        new Filter("menu_code", FilterOperator.Contains, this.byId("searchKeyword").getValue()),
-                        new Filter("menu_name", FilterOperator.Contains, this.byId("searchKeyword").getValue())
+                            new Filter("menu_code", FilterOperator.Contains, this.byId("searchKeyword").getValue()),
+                            new Filter("menu_name", FilterOperator.Contains, this.byId("searchKeyword").getValue())
                         ],
                         and: false
                     }));
                 }
                 predicates.push(new Filter("language_code", FilterOperator.EQ, "KO"));
-                // treeListModel
                 this.treeListModel = this.treeListModel || new TreeListModel(this.getView().getModel());
                 this.getView().setBusy(true);
                 this.treeListModel
