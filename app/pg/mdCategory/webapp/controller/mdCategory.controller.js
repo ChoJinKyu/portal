@@ -22,12 +22,16 @@ sap.ui.define([
     return BaseController.extend("pg.mdCategory.controller.mdCategory", {
 
       //formatter: formatter,
+       Validator : new Validator(),
 
       onInit: function () {
+          
         var oMultilingual = new Multilingual();
         this.setModel(oMultilingual.getModel(), "I18N");
         this.getView().setModel(new ManagedListModel(), "list");
         
+        // var oDataLength,oDataArr;
+
         // 개인화 - UI 테이블의 경우만 해당
         this._oTPC = new TablePersoController({
           customDataKey: "mdCategory"
@@ -58,11 +62,19 @@ sap.ui.define([
       },
       
       onAdd: function () {
-        //
         var [tId, mName, sEntity, aCol] = arguments;
         //tableId modelName EntityName tenant_id
         var oTable = this.byId(tId), //mainTable
             oModel = this.getView().getModel(mName); //list
+        var oDataArr, oDataLength, lastCtgrSeq, ctgrSeq;
+
+        if(oModel.oData){
+            oDataArr = oModel.getProperty("/MdCategory"); //oModel.oData.MdCategory;
+            oDataLength = oDataArr.length;
+            lastCtgrSeq = oDataArr[oDataLength-1].spmd_category_sort_sequence;
+            ctgrSeq = String(parseInt(lastCtgrSeq)+1);
+        }
+
         oModel.addRecord({
 				"tenant_id": "L2100",
 				"company_code": "C100",
@@ -72,10 +84,10 @@ sap.ui.define([
 				"spmd_category_code_name": "",
 				"rgb_font_color_code": "#000000",
 				"rgb_cell_clolor_code": "#FFFFFF",
-                "spmd_category_sort_sequence": "8",
-                "system_update_dtm": new Date(),
-                "local_create_dtm": new Date(),
-                "local_update_dtm": new Date()
+                "spmd_category_sort_sequence": ctgrSeq
+                // "system_update_dtm": new Date(),
+                // "local_create_dtm": new Date(),
+                // "local_update_dtm": new Date()
             }, "/MdCategory" , 0);  
 
             oTable.getAggregation('items')[0].getCells()[2].getItems()[0].setVisible(false);
@@ -94,10 +106,8 @@ sap.ui.define([
         // Validation
         if (model.getChanges() <= 0) {
 			MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
-          //MessageBox.alert("변경사항이 없습니다.");
           return;
         }
-
         if(this.Validator.validate(this.byId(tId)) !== true){
             MessageToast.show(this.getModel("I18N").getText("/NCM0005"));
             return;
@@ -126,7 +136,7 @@ sap.ui.define([
                 oTable = this.byId("mainTable"),
                 oModel = this.getModel("list");
             oView.setBusy(true);
-            
+         
 			oModel.setTransactionModel(this.getModel());
 			oModel.read("/MdCategory", {
 				success: function(oData){
