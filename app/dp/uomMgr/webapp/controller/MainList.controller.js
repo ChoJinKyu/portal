@@ -16,8 +16,9 @@ sap.ui.define([
 	"sap/m/Text",
 	"sap/m/Input",
 	"sap/m/ComboBox",
-	"sap/ui/core/Item",
-], function (BaseController, Multilingual, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+    "sap/ui/core/Item",
+    "ext/lib/util/ExcelUtil"
+], function (BaseController, Multilingual, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ExcelUtil) {
 	"use strict";
 
 	return BaseController.extend("dp.uomMgr.controller.MainList", {
@@ -32,7 +33,8 @@ sap.ui.define([
 		 * Called when the mainList controller is instantiated.
 		 * @public
 		 */
-		onInit : function () {
+		onInit : function () {            
+
             var oMultilingual = new Multilingual();
 			this.setModel(oMultilingual.getModel(), "I18N");
 			var oViewModel,
@@ -168,7 +170,23 @@ sap.ui.define([
 			var oParent = oItem.getParent();
 			// store index of the item clicked, which can be used later in the columnResize event
 			this.iIndex = oParent.indexOfItem(oItem);
-		},
+        },
+        
+        onExportPress: function (_oEvent) {
+            var sTableId = _oEvent.getSource().getParent().getParent().getId();
+            if (!sTableId) { return; }
+
+            var oTable = this.byId(sTableId);
+            //var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
+            var sFileName = "Unit Of Measure";
+            var oData = this.getModel("list").getProperty("/Uom"); //binded Data
+            // var oData = oTable.getModel().getProperty("/Uom");
+            ExcelUtil.fnExportExcel({
+                fileName: sFileName || "SpreadSheet",
+                table: oTable,
+                data: oData
+            });
+        },
 
 		/* =========================================================== */
 		/* internal methods                                            */

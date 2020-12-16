@@ -173,9 +173,7 @@ sap.ui.define([
 				"uom_class_code": this._sUomClassCode,
 				"language_code": "",
 				"uom_class_name": "",
-				"uom_class_desc": "",
-				"local_create_dtm": new Date(),
-				"local_update_dtm": new Date()
+				"uom_class_desc": ""
 			}, "/UomClassLng");
 		},
 
@@ -313,9 +311,7 @@ sap.ui.define([
                     "uom_class_code": "",
                     "uom_class_name": "",
                     "uom_class_desc": "",
-                    "disable_date": null,                    
-					"local_create_dtm": new Date(),
-					"local_update_dtm": new Date()
+                    "disable_date": null
 				}, "/UomClass");
 				var oDetailsModel = this.getModel("details");
 				oDetailsModel.setTransactionModel(this.getModel());
@@ -325,9 +321,7 @@ sap.ui.define([
 					"uom_class_code": this._sUomClassCode,
 					"language_code": "",
 					"uom_class_name": "",
-					"uom_class_desc": "",
-					"local_create_dtm": new Date(),
-					"local_update_dtm": new Date()
+					"uom_class_desc": ""
 				}, "/UomClassLng");
 				this._toEditMode();
 			}else{

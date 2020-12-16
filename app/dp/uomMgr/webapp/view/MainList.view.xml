@@ -8,7 +8,7 @@
     xmlns:lib-m="ext.lib.control.m"
     height="100%">
 
-    <f:DynamicPage id="page"
+    <f:DynamicPage id="page"        
         headerExpanded="{mainListView>/headerExpanded}" 
         toggleHeaderOnTitleClick="true">
         <!-- DynamicPage Title -->
@@ -121,6 +121,7 @@
                             <ToolbarSpacer/>
                             <SearchField id="mainTableSearchField" placeholder="Uom" width="10rem" search=".onMainTableFilterPress" />
                             <Button id="mainTableAddButton" text="{I18N>/NEW}" type="Transparent" press=".onMainTableAddButtonPress" />
+                            <Button id="rTableExportButton" text="Export" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                                 <layoutData>
@@ -161,16 +162,21 @@
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>
-                                <ObjectIdentifier text="{list>uom_code}"/>
-                                <ObjectIdentifier text="{list>uom_name}"/>
+                                <Text text="{list>uom_code}"/>
+                                <Text text="{list>uom_name}"/>
                                 <!-- <ObjectIdentifier text="{list>commercial_uom_code}"/>
                                 <ObjectIdentifier text="{list>commercial_uom_name}"/> -->
-                                <ObjectStatus
-                                    icon="{= ${list>base_unit_flag} === true ? 'sap-icon://accept' : ''}"/>
-                                <ObjectIdentifier text="{list>uom_class_code}"/>
+                                <!-- <ObjectStatus
+                                    icon="{= ${list>base_unit_flag} === true ? 'sap-icon://accept' : ''}"/> -->
+                                <Switch enabled="false" state="{= typeof ${list>base_unit_flag} === 'string' ? JSON.parse(${list>base_unit_flag}) : ${list>base_unit_flag}}" customTextOn="Yes" customTextOff="No">
+                                    <layoutData>
+                                        <FlexItemData growFactor="1" />
+                                    </layoutData>
+                                </Switch>
+                                <Text text="{list>uom_class_code}"/>
                                 <!-- <ObjectIdentifier text="{list>technical_uom_code}"/>
                                 <ObjectIdentifier text="{list>technical_uom_name}"/> -->
-                                <ObjectIdentifier text="{
+                                <Text text="{
                                         path: 'list>disable_date',
                                         formatter: '.dateFormatter.toDateString'
                                     }"/>
