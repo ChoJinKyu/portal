@@ -2,20 +2,17 @@ sap.ui.define([
   "ext/lib/controller/BaseController",
   "sap/ui/model/json/JSONModel",
   "ext/lib/model/ManagedListModel",
-  "ext/lib/util/Multilingual",
   "ext/lib/formatter/DateFormatter",
   "sap/ui/model/Filter",
   "sap/ui/model/FilterOperator",
 ],
-  function (BaseController, JSONModel, ManagedListModel, Multilingual, DateFormatter, Filter, FilterOperator) {
+  function (BaseController, JSONModel, ManagedListModel, DateFormatter, Filter, FilterOperator) {
     "use strict";
 
     return BaseController.extend("dp.basePriceList.controller.BasePriceList", {
         dateFormatter: DateFormatter,
 
         onInit: function () {
-            let oMultilingual = new Multilingual();
-            this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new JSONModel(), "listModel");
             this.setModel(new JSONModel(), "filterModel");
 
@@ -26,16 +23,22 @@ sap.ui.define([
          * Search 버튼 클릭 시 List 조회
          */
         onSearch: function () {
-            let oFilterModel = this.getModel("filterModel"),
+            var oFilterModel = this.getModel("filterModel"),
                 oFilterModelData = oFilterModel.getData(),
                 aFilters = [], 
-                sRfaNo = oFilterModelData.rfa_no, 
+                sStatus = oFilterModelData.status, 
+                sApprovalNumber = oFilterModelData.approvalNumber, 
                 oDateValue = oFilterModelData.dateValue,
                 oSecondDateValue = oFilterModelData.secondDateValue;
 
+            // Status가 있는 경우
+            if( sStatus ) {
+                aFilters.push(new Filter("approval_status_code", FilterOperator.EQ, sStatus));
+            }
+
             // RFA No가 있는 경우
-            if( sRfaNo ) {
-                aFilters.push(new Filter("approval_number", FilterOperator.EQ, sRfaNo));
+            if( sApprovalNumber ) {
+                aFilters.push(new Filter("approval_number", FilterOperator.EQ, sApprovalNumber));
             }
 
             // RFA No가 있는 경우
@@ -50,7 +53,7 @@ sap.ui.define([
          * Date 데이터를 String 타입으로 변경. 예) 2020-10-10T00:00:00
          */
         _getNowDayAndTimes: function (bTimesParam, oDateParam) {
-            let oDate = oDateParam || new Date(),
+            var oDate = oDateParam || new Date(),
                 iYear = oDate.getFullYear(),
                 iMonth = oDate.getMonth()+1,
                 iDate = oDate.getDate(),
@@ -58,8 +61,8 @@ sap.ui.define([
                 iMinutes = oDate.getMinutes(),
                 iSeconds = oDate.getSeconds();
 
-            let sReturnValue = "" + iYear + "-" + this._getPreZero(iMonth) + "-" + this._getPreZero(iDate) + "T";
-            let sTimes = "" + this._getPreZero(iHours) + ":" + this._getPreZero(iMinutes) + ":" + this._getPreZero(iSeconds) + "Z";
+            var sReturnValue = "" + iYear + "-" + this._getPreZero(iMonth) + "-" + this._getPreZero(iDate) + "T";
+            var sTimes = "" + this._getPreZero(iHours) + ":" + this._getPreZero(iMinutes) + ":" + this._getPreZero(iSeconds) + "Z";
 
             if( bTimesParam ) {
                 sReturnValue += sTimes;
@@ -81,10 +84,14 @@ sap.ui.define([
          * 상세 페이지로 이동
          */
         onGoDetail: function (oEvent) {
-            let oListModel = this.getModel("listModel");
-            let sPath = oEvent.getSource().getBindingContext("listModel").getPath();
-            let oBasePriceListRootModel = this.getModel("basePriceListRootModel");
-            oBasePriceListRootModel.setData(oListModel.getProperty(sPath));
+            var oListModel = this.getModel("listModel");
+            var oBindingContext = oEvent.getSource().getBindingContext("listModel");
+
+            if( oBindingContext ) {
+                var sPath = oBindingContext.getPath();
+                var oBasePriceListRootModel = this.getModel("basePriceListRootModel");
+                oBasePriceListRootModel.setData(oListModel.getProperty(sPath));
+            }
 
             this.getRouter().navTo("basePriceDetail");
         },
@@ -93,8 +100,8 @@ sap.ui.define([
          * Base Price Progress List 조회
          */
         _getBasePriceList: function(filtersParam) {
-            let oView = this.getView();
-            let oModel = this.getModel();
+            var oView = this.getView();
+            var oModel = this.getModel();
             filtersParam =  Array.isArray(filtersParam) ? filtersParam : [];
             oView.setBusy(true);
 

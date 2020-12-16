@@ -42,6 +42,7 @@ entity Vp_Vendor_Pool_Search_View {
   supplier_rm_control_flag: Boolean @title: 'RM통제';
   sd_exception_flag: Boolean @title: 'SD예외';
   vendor_pool_apply_exception_flag: Boolean @title: 'V/P예외';
+  maker_material_code_mngt_flag    : Boolean             @title : '제조사자재코드관리여부';
   repr_department_code: String(50) @title: '구매부서코드';
   repr_department_name: String @title: '구매부서';
   managers_name: String @title: '담당자';

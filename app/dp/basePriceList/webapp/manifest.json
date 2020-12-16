@@ -23,6 +23,14 @@
           "odataVersion": "2.0",
           "localUri": "localService/metadata.xml"
         }
+      },
+      "currencyService": {
+        "uri": "srv-api/odata/v2/cm.CurrencyMgrService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0",
+          "localUri": "localService/metadata.xml"
+        }
       }
     }
   },
@@ -81,6 +89,16 @@
           "groupId": "$direct",
           "synchronizationMode": "None",
           "autoExpandSelect": true
+        }
+      },
+      "currencyModel": {
+        "dataSource": "currencyService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "useBatch": true
         }
       }
     },

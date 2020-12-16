@@ -98,6 +98,7 @@
                             <ToolbarSpacer/>
                             <SearchField id="mainTableSearchField" placeholder="Class" width="10rem" search=".onMainTableFilterPress" />
                             <Button id="mainTableAddButton" text="{I18N>/NEW}" type="Transparent" press=".onMainTableAddButtonPress" />
+                            <Button id="rTableExportButton" text="Export" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                                 <layoutData>
@@ -123,10 +124,10 @@
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>
-                                <ObjectIdentifier text="{list>uom_class_code}"/>
-                                <ObjectIdentifier text="{list>uom_class_name}"/>
-                                <ObjectIdentifier text="{list>base_uom_code}"/>
-                                <ObjectIdentifier text="{list>base_uom_name}"/>
+                                <Text text="{list>uom_class_code}"/>
+                                <Text text="{list>uom_class_name}"/>
+                                <Text text="{list>base_uom_code}"/>
+                                <Text text="{list>base_uom_name}"/>
                                 <!-- <ObjectIdentifier text="{
                                         path: 'list>start_date',
                                         formatter: '.dateFormatter.toDateString'

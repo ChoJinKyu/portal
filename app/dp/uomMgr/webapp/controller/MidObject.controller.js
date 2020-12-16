@@ -176,9 +176,7 @@ sap.ui.define([
                 "technical_uom_code": "",
                 "commercial_uom_name": "",
                 "technical_uom_name": "",
-                "uom_desc": "",
-				"local_create_dtm": new Date(),
-				"local_update_dtm": new Date()
+                "uom_desc": ""				
 			}, "/UomLng");
 		},
 
@@ -314,9 +312,7 @@ sap.ui.define([
 				oMasterModel.setData({
                     "tenant_id": "L2600",
                     "uom_code": "",
-                    "base_unit_flag": false,
-					"local_create_dtm": new Date(),
-					"local_update_dtm": new Date()
+                    "base_unit_flag": false					
 				}, "/Uom");
 				var oDetailsModel = this.getModel("details");
 				oDetailsModel.setTransactionModel(this.getModel());
@@ -329,9 +325,7 @@ sap.ui.define([
                     "technical_uom_code": "",
                     "commercial_uom_name": "",
                     "technical_uom_name": "",
-                    "uom_desc": "",
-					"local_create_dtm": new Date(),
-					"local_update_dtm": new Date()
+                    "uom_desc": ""					
 				}, "/UomLng");
 				this._toEditMode();
 			}else{

@@ -145,16 +145,29 @@
                     <uxap:ObjectPageSubSection>
                        <VBox class="sapUiSmallMargin">
                             <form:SimpleForm 
-                                editable="true"
-                                layout="ColumnLayout"
-                                columnsM="2"
-                                columnsL="2"
-                                columnsXL="2" >
-                                <form:content>
-                                    <Label text="{I18N>/INSPECTION}" required="true" />
+                                editable="true" 
+                                layout="ResponsiveGridLayout"
+                                labelSpanXL="2"
+                                labelSpanL="2"
+                                labelSpanM="2"
+                                labelSpanS="2"
+                                adjustLabelSpan="false"
+                                emptySpanXL="0"
+                                emptySpanL="0"
+                                emptySpanM="0"
+                                emptySpanS="0"
+                                columnsXL="2"
+                                columnsL="1"
+                                columnsM="1"
+                                singleContainerFullSize="true"
+                                >
+                                <form:content> 
+                                <VBox>
+                                    <!-- Budget Type -->
+                                    <Label text="Budget Type" required="true" />
                                      <SegmentedButton 
                                         id="segInspection"
-                                        selectedKey="{mdItemMaster>/investment_ecst_type_code}" 
+                                        selectedKey="{mdItemMaster>/MoldMasters/0/investment_ecst_type_code}" 
                                         width="100%"
                                         items="{ path : 'util>/CodeDetails',
                                                  filters : [
@@ -167,16 +180,57 @@
                                             <SegmentedButtonItem  width="6em" text="{util>code_description}" key="{util>code}"/>
                                         </items>
                                     </SegmentedButton>
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M12 S12" />
+                                    </layoutData> 
+                                </VBox> 
+                                <VBox>
+                                     <Label text="Acquisition Department"  required="true" />
+                                     <Input value="" showValueHelp="true"/> 
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M12 S12" />
+                                    </layoutData> 
+                                </VBox> 
+                                <VBox>  
                                     <Label text="Account Department"  required="true" />
-                                    <ComboBox width="100%"  id="acquisitionDepartment" selectedKey="{mdItemMaster>/accounting_department_code}"  items="{}" >
+                                    <ComboBox width="100%"  id="acquisitionDepartment" selectedKey="{mdItemMaster>/MoldMasters/0/accounting_department_code}"  items="{}" >
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>
-                                    <Label text="{I18N>/PROJECT_CODE}"  required="true" />
-                                    <ComboBox width="100%" id="projectCode" selectedKey="{mdItemMaster>/project_code}" items="{}" >
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M12 S12" />
+                                    </layoutData> 
+                                </VBox>  
+                                <VBox>     
+                                    <Label text="Import Company" />
+                                    <ComboBox width="100%" id="importCompany" selectedKey="{mdItemMaster>/MoldMasters/0/import_company_code}" items="{}" >
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </ComboBox>      
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M12 S12" />
+                                    </layoutData> 
+                                </VBox> 
+                                <VBox>    
+                                <!-- projectcode  {I18N>/PROJECT_CODE}-->
+                                    <Label text="Project Code"  required="true" />
+                                    <ComboBox width="100%" id="projectCode" selectedKey="{mdItemMaster>/MoldMasters/0/project_code}" items="{}" >
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M12 S12" />
+                                    </layoutData> 
+                                </VBox> 
+                                <VBox>                            
+                                    <Label text="Import Plant" />
+                                    <ComboBox width="100%" id="importPlant" selectedKey="mdItemMaster>/MoldMasters/0/import_company_org_code}" items="{}" >
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </ComboBox>
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M12 S12" />
+                                    </layoutData> 
+                                </VBox> 
+                                <VBox>       
                                     <Label text="{I18N>/ACCOUNT}"  required="true" />
-                                    <ComboBox width="100%" id="account" selectedKey="{mdItemMaster>/account_code}" 
+                                    <ComboBox width="100%" id="account" selectedKey="{mdItemMaster>/MoldMasters/0/account_code}" 
                                                     items="{ path : 'util>/CodeDetails',
                                                             filters : [
                                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
@@ -185,26 +239,37 @@
                                                         }" >
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>
-                                    <Label text="Balanced Budget"  />
-                                     <ObjectStatus text="{mdItemMaster>/provisional_budget_amount}" /> <ObjectStatus text="KRW" state="Error" />
-                                     <Label text="Acquisition Department"  required="true" />
-                                     <Input value="" showValueHelp="true"/> 
-                                    <Label text="Import Company"  />
-                                    <ComboBox width="100%" id="importCompany" selectedKey="{mdItemMaster>/import_company_code}" items="{}" >
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
-                                    </ComboBox>                              
-                                    <Label text="Import Plant" />
-                                    <ComboBox width="100%" id="importPlant" selectedKey="{mdItemMaster>/import_company_org_code}" items="{}" >
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
-                                    </ComboBox>
-                                        <Label text="{I18N>/CUSTOMER}"  />
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M12 S12" />
+                                    </layoutData> 
+                                </VBox>  
+                                <VBox>    
+                                    <Label text="{I18N>/CUSTOMER}"  />
                                     <Input value="" showValueHelp="true"/>
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M12 S12" />
+                                    </layoutData> 
+                                </VBox> 
+                                <VBox>   
+                                    <Label text="Balanced Budget"  />
+                                     <HBox alignItems="End" justifyContent="End"><ObjectStatus text="{mdItemMaster>/MoldMasters/0/provisional_budget_amount}" /> <ObjectStatus text="  KRW" state="Error" /></HBox>
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M12 S12" />
+                                    </layoutData> 
+                                </VBox> 
+                             
+                                <VBox>
                                     <Label text="Customer PO No"  />
                                     <Input value=""  />
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M12 S12" />
+                                    </layoutData> 
+                                </VBox> 
                                 </form:content>
                             </form:SimpleForm>
                         </VBox>
                     </uxap:ObjectPageSubSection>
+
 					<uxap:ObjectPageSubSection>
                        <HBox>
                          <VBox class="sapUiSmallMargin">
@@ -465,9 +530,9 @@
                                                 placeholder="Search employee" value="{Approvers>approver_empno}"/>
                                     <Text text="{Approvers>approve_status_code}" />
                                     <Text text="{Approvers>approve_comment}" />
-                                    <Button id="btnSortUp" icon="{Approvers>arrowUp}" press=".onSortUp(${Approvers>no})" tooltip="sort" visible="{= ${Approvers>arrowUp}===''?false:true }"></Button>
-                                    <Button id="btnSortDown" icon="{Approvers>arrowDown}" press=".onSortDown(${Approvers>no})"  visible="{= ${Approvers>arrowDown}===''?false:true }" tooltip="sort"></Button>
-                                    <Button id="btnDelete" icon="sap-icon://delete" press=".setApprovalRemoveRow(${Approvers>no})" tooltip="삭제" visible="{Approvers>trashShow}"></Button>
+                                    <Button id="btnSortUp" icon="{Approvers>arrowUp}" press=".onSortUp(${Approvers>approve_sequence})" tooltip="sort" visible="{= ${Approvers>arrowUp}===''?false:true }"></Button>
+                                    <Button id="btnSortDown" icon="{Approvers>arrowDown}" press=".onSortDown(${Approvers>approve_sequence})"  visible="{= ${Approvers>arrowDown}===''?false:true }" tooltip="sort"></Button>
+                                    <Button id="btnDelete" icon="sap-icon://delete" press=".setApprovalRemoveRow(${Approvers>approve_sequence})" tooltip="삭제" visible="{Approvers>trashShow}"></Button>
                                 </cells>
                             </ColumnListItem>  
                         </items>                           
@@ -493,12 +558,12 @@
                                     selectionChange="handleSelectionChangeReferrer"
                                     selectionFinish="handleSelectionFinishReferrer"
                                     width="100%"
-                                    items="{ path: 'util>/Employee',
+                                    items="{ path: 'hr>/Employee',
                                                 filters: [
                                                     {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                                 ]
                                             }">
-                                    <core:Item key="{util>employee_number}" text="{util>user_local_name}" />
+                                    <core:Item key="{hr>employee_number}" text="{hr>user_local_name}" />
                                 </MultiComboBox>
                             </layout:VerticalLayout>
                             <layoutData>

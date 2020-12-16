@@ -107,10 +107,10 @@
                             <Column id="modelItem_moldItemType" minScreenWidth="Tablet" hAlign="Center" width="8em"  >
                                 <Text text="Mold Item Type" />
                             </Column>
-                            <Column id="modelItem_bookCurrency" minScreenWidth="Tablet" hAlign="Center"  >
+                            <Column id="modelItem_bookCurrency" visible="false" minScreenWidth="Tablet" hAlign="Center"  >
                                   <Text text="Book Currency" />
                             </Column>					
-                            <Column id="modelItem_budgetAmount" minScreenWidth="Tablet" hAlign="Center"  >
+                            <Column id="modelItem_budgetAmount" visible="false" minScreenWidth="Tablet" hAlign="Center"  >
                                   <Text text="Budget Amount" />
                             </Column>					
                             <Column visible="false" >
