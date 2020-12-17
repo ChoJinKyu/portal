@@ -100,7 +100,7 @@ service BudgetExecutionApprovalService {
         from approvalDtl.Md_Approval_Dtl dtl
         join moldMst.Md_Mst mst
             on dtl.mold_id = mst.mold_id
-        left outer join (
+        left join (
             select
                 t.code_description,
                 t.code
@@ -109,7 +109,7 @@ service BudgetExecutionApprovalService {
                 t.group_code = 'DP_MD_ITEM_TYPE'
         ) as mit
             on mit.code = mst.mold_item_type_code
-        left outer join (
+        left join (
             select
                 t.code_description,
                 t.code
@@ -118,7 +118,7 @@ service BudgetExecutionApprovalService {
                 t.group_code = 'DP_MD_PROD_TYPE'
         ) as mpt
             on mpt.code = mst.mold_production_type_code
-        left outer join (
+        left join (
             select
                 t.code_description,
                 t.code
@@ -127,7 +127,7 @@ service BudgetExecutionApprovalService {
                 t.group_code = 'DP_MD_BUDGET_TYPE'
         ) as mbt
             on mbt.code = mst.investment_ecst_type_code
-        left outer join (
+        left join (
             select
                 t.code_description,
                 t.code
@@ -136,7 +136,7 @@ service BudgetExecutionApprovalService {
                 t.group_code = 'DP_MD_ACCOUNT_NEW'
         ) as man
             on man.code = mst.account_code
-        left outer join (
+        left join (
             select
                 t.code_description,
                 t.code
@@ -144,10 +144,7 @@ service BudgetExecutionApprovalService {
             where
                 t.group_code = 'DP_MD_ASSET_TYPE'
         ) as mstc
-            on mstc.code = mst.asset_type_code
-
-
-            ;
+            on mstc.code = mst.asset_type_code;
 
 
 }
