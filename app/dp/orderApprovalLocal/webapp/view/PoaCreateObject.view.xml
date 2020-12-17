@@ -456,8 +456,8 @@
                                     <!--<Input value="{approver>approver_empno}" />-->
                                     <Text text="{approver>approve_status_code}" />
                                     <Text text="{approver>approve_comment}" />
-                                    <Button id="btnSortUp" icon="{approver>arrowUp}" press=".onSortUp(${approver>approve_sequence})" tooltip="sort" visible="{= ${approver>arrowUp}===''?false:true }"></Button>
-                                    <Button id="btnSortDown" icon="{approver>arrowDown}" press=".onSortDown(${approver>approve_sequence})"  visible="{= ${approver>arrowDown}===''?false:true }" tooltip="sort"></Button>
+                                    <Button id="btnSortUp" icon="{approver>arrowUp}" press=".onApproverSortUp(${approver>approve_sequence})" tooltip="sort" visible="{= ${approver>arrowUp}===''?false:true }"></Button>
+                                    <Button id="btnSortDown" icon="{approver>arrowDown}" press=".onApproverSortDown(${approver>approve_sequence})"  visible="{= ${approver>arrowDown}===''?false:true }" tooltip="sort"></Button>
                                     <Button id="btnDelete" icon="sap-icon://delete" press=".setApproverRemoveRow(${approver>approve_sequence})" tooltip="삭제" visible="{approver>trashShow}"></Button>
                                 </cells>
                             </ColumnListItem>
@@ -481,15 +481,16 @@
                         </Toolbar>
                             <layout:VerticalLayout class="sapUiContentPadding" width="100%">
                                 <MultiComboBox
+                                    id="refererMultiCB"
                                     selectionChange="handleSelectionChangeReferer"
                                     selectionFinish="handleSelectionFinishReferer"
                                     width="100%"
-                                    items="{ path: 'util>/Employee',
+                                    items="{ path: 'hr>/Employee',
                                                 filters: [
                                                     {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                                 ]
                                             }">
-                                    <core:Item key="{referer>referer_empno}" text="{util>user_local_name}" />
+                                    <core:Item key="{hr>employee_number}" text="{hr>user_local_name}" />
                                 </MultiComboBox>
                             </layout:VerticalLayout>
                             <layoutData>
