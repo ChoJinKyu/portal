@@ -107,7 +107,7 @@
                             <Column id="modelItem_moldItemTypeNm" minScreenWidth="Tablet" hAlign="Center" width="8em"  >
                                 <Text text="Mold Item Type" />
                             </Column>
-                            <Column id="modelItem_moldItemType" minScreenWidth="Tablet" hAlign="Center" width="8em"  >
+                            <Column id="modelItem_moldItemTypeCode" visible="false"  minScreenWidth="Tablet" hAlign="Center" width="8em"  >
                                 <Text text="Mold Item Type" />
                             </Column>
                             <Column id="modelItem_bookCurrency" visible="false" minScreenWidth="Tablet" hAlign="Center"  >
