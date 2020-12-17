@@ -31,9 +31,9 @@ service BudgetExecutionApprovalService {
                 mst.model,
                 mst.asset_number,
                 mst.mold_item_type_code,
-                mit.code_description  as mold_item_type_code_nm,
+             
                 mst.mold_production_type_code,
-                mpt.code_description  as mold_production_type_code_nm,
+             
                 mst.mold_location_type_code,
                 mst.first_production_date,
                 mst.production_complete_date,
@@ -47,12 +47,12 @@ service BudgetExecutionApprovalService {
                 mst.purchasing_amount,
                 mst.order_number,
                 mst.investment_ecst_type_code,
-                mbt.code_description  as investment_ecst_type_code_nm,
+          
                 mst.project_code,
                 mst.receiving_amount,
                 mst.receiving_complete_date,
                 mst.account_code,
-                man.code_description  as account_code_nm,
+         
                 mst.accounting_department_code,
                 mst.acq_department_code,
                 mst.production_supplier_code,
@@ -91,7 +91,7 @@ service BudgetExecutionApprovalService {
                 mst.mold_developer_empno,
                 mst.customer_asset_type_code,
                 mst.asset_type_code,
-                mstc.code_description as asset_type_code_nm,
+             
                 mst.asset_status_code,
                 mst.scrap_date,
                 mst.acq_date,
@@ -100,51 +100,7 @@ service BudgetExecutionApprovalService {
         from approvalDtl.Md_Approval_Dtl dtl
         join moldMst.Md_Mst mst
             on dtl.mold_id = mst.mold_id
-        left join (
-            select
-                t.code_description,
-                t.code
-            from codeDtl.Code_Dtl as t
-            where
-                t.group_code = 'DP_MD_ITEM_TYPE'
-        ) as mit
-            on mit.code = mst.mold_item_type_code
-        left join (
-            select
-                t.code_description,
-                t.code
-            from codeDtl.Code_Dtl as t
-            where
-                t.group_code = 'DP_MD_PROD_TYPE'
-        ) as mpt
-            on mpt.code = mst.mold_production_type_code
-        left join (
-            select
-                t.code_description,
-                t.code
-            from codeDtl.Code_Dtl as t
-            where
-                t.group_code = 'DP_MD_BUDGET_TYPE'
-        ) as mbt
-            on mbt.code = mst.investment_ecst_type_code
-        left join (
-            select
-                t.code_description,
-                t.code
-            from codeDtl.Code_Dtl as t
-            where
-                t.group_code = 'DP_MD_ACCOUNT_NEW'
-        ) as man
-            on man.code = mst.account_code
-        left join (
-            select
-                t.code_description,
-                t.code
-            from codeDtl.Code_Dtl as t
-            where
-                t.group_code = 'DP_MD_ASSET_TYPE'
-        ) as mstc
-            on mstc.code = mst.asset_type_code;
+       ;
 
 
 }
