@@ -1,7 +1,7 @@
  view DP_MD_APPROVALS_VIEW as
    select 
 	a.approval_number
-    a.tenant_id
+    ,a.tenant_id
 	,a.approval_type_code
 	,(select code_description from CM_CODE_DTL where group_code='DP_MD_APPROVAL_TYPE' and code = a.approval_type_code) as approval_type
 	,a.approval_title
