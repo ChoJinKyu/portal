@@ -17,6 +17,7 @@ SELECT PARENT_ID
       ,null INDUSTRY_CLASS_NAME   /*코드 테이블 정보*/
       ,SD_EXCEPTION_FLAG
       ,VENDOR_POOL_APPLY_EXCEPTION_FLAG
+      ,MAKER_MATERIAL_CODE_MNGT_FLAG
       ,DOMESTIC_NET_PRICE_DIFF_RATE
       ,DOM_OVERSEA_NETPRICE_DIFF_RATE
       ,EQUIPMENT_GRADE_CODE
@@ -53,6 +54,7 @@ FROM   HIERARCHY (
                                  ,A.INDUSTRY_CLASS_CODE
                                  ,A.SD_EXCEPTION_FLAG
                                  ,A.VENDOR_POOL_APPLY_EXCEPTION_FLAG
+                                 ,A.MAKER_MATERIAL_CODE_MNGT_FLAG
                                  ,A.DOMESTIC_NET_PRICE_DIFF_RATE
                                  ,A.DOM_OVERSEA_NETPRICE_DIFF_RATE
                                  ,A.EQUIPMENT_GRADE_CODE

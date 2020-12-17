@@ -68,7 +68,7 @@ sap.ui.define([
 		 * @public
 		 */
         openMoldItemSelectionPop: function (pThis, oEvent, pArges, callback) {
-            console.log("org_code >>>> ", pArges);
+            console.log("args >>>> ", pArges);
             oThis = pThis;
             oArges = pArges;
             oCallback = callback;
@@ -128,6 +128,21 @@ sap.ui.define([
                 aSearchFilters.push(new Filter("mold_progress_status_code", FilterOperator.EQ , oArges.mold_progress_status_code));
             }
 
+            if (oArges.mold_id_arr != undefined && oArges.mold_id_arr.length > 0) { 
+
+                 var nFilters = [];
+                oArges.mold_id_arr.forEach(function (mold_id) { 
+                    nFilters.push(new Filter("mold_id", FilterOperator.NotContains, String(mold_id)));
+                 });
+
+                var oNotInFilter = {
+                    filters: nFilters,
+                    and: true
+                 };
+
+                aSearchFilters.push(new Filter(oNotInFilter));
+            }
+            console.log(" aSearchFilters >>>>> " , aSearchFilters);
             return aSearchFilters;
         },
         /**
@@ -228,37 +243,36 @@ sap.ui.define([
             aItems.forEach(function (oItem) {
                 console.log(" getSelectedItems >>>", oItem);
                 var famList = [];
-                if (oItem.getCells()[8].getText()) {
-                    famList.push(oItem.getCells()[8].getText()); // family_part_number_1 
-                }
                 if (oItem.getCells()[9].getText()) {
-                    famList.push(oItem.getCells()[9].getText()); // family_part_number_2 
+                    famList.push(oItem.getCells()[9].getText()); // family_part_number_1 
                 }
                 if (oItem.getCells()[10].getText()) {
-                    famList.push(oItem.getCells()[10].getText()); // family_part_number_3 
+                    famList.push(oItem.getCells()[10].getText()); // family_part_number_2  
                 }
                 if (oItem.getCells()[11].getText()) {
-                    famList.push(oItem.getCells()[11].getText()); // family_part_number_4 
+                    famList.push(oItem.getCells()[11].getText()); // family_part_number_3
                 }
                 if (oItem.getCells()[12].getText()) {
-                    famList.push(oItem.getCells()[12].getText()); // family_part_number_5 
+                    famList.push(oItem.getCells()[12].getText()); // family_part_number_4 
                 }
-
+                if (oItem.getCells()[13].getText()) {
+                    famList.push(oItem.getCells()[13].getText()); // family_part_number_5
+                }
                 var obj = new JSONModel({
                     mold_id: Number(oItem.getCells()[0].getText())
                     , model: oItem.getCells()[1].getText()
                     , mold_number: oItem.getCells()[2].getText()
                     , mold_sequence: oItem.getCells()[3].getText()
                     , spec_name: oItem.getCells()[4].getText()
-                    , mold_item_type_code: oItem.getCells()[5].getSelectedKey()
-                    , book_currency_code: oItem.getCells()[6].getText()
-                    , provisional_budget_amount: oItem.getCells()[7].getText()
+                    , mold_item_type_code: oItem.getCells()[6].getText()
+                    , book_currency_code: oItem.getCells()[7].getText()
+                    , provisional_budget_amount: oItem.getCells()[8].getText()
                     , family_part_number_1: famList.join(",")
-                    , currency_code: oItem.getCells()[13].getText()
-                    , purchasing_amount: oItem.getCells()[14].getText()
-                    , supplier_code: oItem.getCells()[15].getText()
-                    , target_amount: oItem.getCells()[16].getText()
-                    , mold_production_type_code: oItem.getCells()[17].getText()
+                    , currency_code: oItem.getCells()[14].getText()
+                    , purchasing_amount: oItem.getCells()[15].getText()
+                    , supplier_code: oItem.getCells()[16].getText()
+                    , target_amount: oItem.getCells()[17].getText()
+                    , mold_production_type_code: oItem.getCells()[18].getText()
                 });
                 datas.push(obj);
             });

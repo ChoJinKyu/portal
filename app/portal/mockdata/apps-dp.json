@@ -28,6 +28,11 @@
                     "name": "Detail Spec Confirm",
                     "url": "../dp/detailSpecConfirm/webapp",
                     "component": "dp.detailSpecConfirm"
+                },
+                {
+                    "name": "Mold Receipt Confirm",
+                    "url": "../dp/moldReceiptConfirm/webapp",
+                    "component": "dp.moldReceiptConfirm"
                 }
             ]
         },

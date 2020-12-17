@@ -10,6 +10,11 @@
           "component": "cm.codeManagement"
         },
         {
+          "name": "조직별코드관리",
+          "url": "../cm/orgCodeMgr/webapp",
+          "component": "cm.orgCodeMgr"
+        },
+        {
           "name": "제어옵션관리",
           "url": "../cm/controlOptionMgr/webapp",
           "component": "cm.controlOptionMgr"
@@ -74,8 +79,8 @@
       "subMenus": [
         {
           "name": "사용자 관리",
-          "url": "../cm/codeMgr/webapp",
-          "component": "cm.codeMgr"
+          "url": "../cm/userMgr/webapp",
+          "component": "cm.userMgr"
         },
         {
           "name": "권한관리",

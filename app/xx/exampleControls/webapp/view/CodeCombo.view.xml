@@ -85,7 +85,7 @@
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                     ],
-                                    serviceUrl: 'srv-api/odata/v2/cm.util.CommonService/',
+                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
                                     entityName: 'Employee'
                                 }">
                                 <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
@@ -107,7 +107,7 @@
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                     ],
-                                    serviceUrl: 'srv-api/odata/v2/cm.util.CommonService/',
+                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
                                     entityName: 'Department'
                                 }">
                                 <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Department"
@@ -183,7 +183,7 @@
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                     ],
-                                    serviceUrl: 'srv-api/odata/v2/cm.util.CommonService/',
+                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
                                     entityName: 'Employee'
                                 }">
                             </lib-m:CodeComboBox>
@@ -201,7 +201,7 @@
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                     ],
-                                    serviceUrl: 'srv-api/odata/v2/cm.util.CommonService/',
+                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
                                     entityName: 'Department'
                                 }">
                             </lib-m:CodeComboBox>

@@ -115,9 +115,11 @@
                             selectionMode="MultiToggle"
                             selectionBehavior="Row"
                             enableColumnReordering="false"
-                            expandFirstLevel="false"
+                            expandFirstLevel="true"
                             rows="{
                                 path : 'menu>/Menu_haa',
+                                filters: [
+                                ],
                                 parameters : {
                                     countMode: 'Inline',
                                     treeAnnotationProperties : {
@@ -125,7 +127,8 @@
                                         hierarchyNodeFor : 'node_id',
                                         hierarchyParentNodeFor : 'parent_id',
                                         hierarchyDrillStateFor : 'drill_state'
-                                    }
+                                    },
+                                    numberOfExpandedLevels: 2
                                 }
                             }"
                             >
@@ -167,12 +170,28 @@
                                     </table:template>
                                 </table:Column>
                             </table:columns>
-                            </table:TreeTable>
+                        </table:TreeTable>
 
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
-		</uxap:sections>
 
+            
+            <uxap:ObjectPageSection titleUppercase="false" title="역할별 메뉴관리">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+                        <FlexBox wrap="Wrap" visible="false">
+                            <form:SimpleForm editable="false">
+                                <Text text="{details>/tenant_id}"/>
+                                <Text text="{details>/role_code'}"/>
+                                <Text text="{details>/menu_code}"/>
+                            </form:SimpleForm>
+                        </FlexBox>
+                    </uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+            
+            
+		</uxap:sections>        
 	</uxap:ObjectPageLayout>
 </mvc:View>

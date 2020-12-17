@@ -299,8 +299,11 @@ sap.ui.define([
         },
 
         onSuppValueHelpRequested: function(oEvent){
+
+            var sCompanyCode  = this.getModel('master').getProperty('/company_code')
+            var sPlantCode = this.getModel('master').getProperty('/org_code')
             
-            this.supplierSelection.showSupplierSelection(this, oEvent);
+            this.supplierSelection.showSupplierSelection(this, oEvent, sCompanyCode, sPlantCode);
         },
 
 		/* =========================================================== */

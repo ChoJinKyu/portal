@@ -131,7 +131,7 @@
                                 </HBox>
                             <VBox>
                                 <Label text="{I18N>/DESCRIPTION}" labelFor="input" required="true"></Label> 
-                                <layout:VerticalLayout name="approval_contents" id="idVerticalLayout" class="sapUiContentPadding" width="100%"  >
+                                <layout:VerticalLayout name="approval_contents" id="approvalContents" class="sapUiContentPadding" width="100%"  >
 
                                 </layout:VerticalLayout>
                             </VBox>

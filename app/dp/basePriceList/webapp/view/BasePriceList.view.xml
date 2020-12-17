@@ -13,22 +13,20 @@
         headerExpanded="true"
         showFooter="true"
         toggleHeaderOnTitleClick="true">
-      <!--DynamicPage Title -->
       <f:title>
         <f:DynamicPageTitle>
           <f:heading>
             <Title text="{i18n>appTitle}" />
           </f:heading>
-          <!-- 조회 -->
           <f:actions>
             <Button text="Search" type="Emphasized" press=".onSearch"/>
             <!-- <Button text="Search2" type="Emphasized" press=".onSearch2"/> -->
           </f:actions>
         </f:DynamicPageTitle>
       </f:title>
-      <!--DynamicPage Header -->
       <f:header>
         <f:DynamicPageHeader pinnable="true">
+          <!--Filterbar 시작-->
           <form:SimpleForm 
             editable="true" 
             layout="ResponsiveGridLayout" 
@@ -78,7 +76,7 @@
                           </VBox>
                           <VBox>
                             <Label text="Material Code"></Label>
-                            <SearchField value="{filterModel>/part_no}" />
+                            <SearchField value="{filterModel>/materialCode}" />
                             <!-- <Label text="Agreed By"></Label>
                             <SearchField value="{filterModel>/agreed_by}" /> -->
                             <layoutData>
@@ -115,7 +113,7 @@
                           </VBox>
                           <VBox>
                             <Label text="Approval Number"></Label>
-                            <Input value="{filterModel>/rfa_no}" />
+                            <Input value="{filterModel>/approvalNumber}" />
                             <layoutData>
                                 <layout:GridData span="XL2 L4 M6 S12" />
                             </layoutData>
@@ -131,24 +129,25 @@
                           </VBox>
                           <VBox>
                             <Label text="Request By"></Label>
-                            <SearchField value="{filterModel>/request_by}" />
+                            <SearchField value="{filterModel>/requestBy}" />
                             <layoutData>
                                 <layout:GridData span="XL2 L4 M6 S12" />
                             </layoutData>
                           </VBox>
                           <VBox>
                             <Label text="Agreed By"></Label>
-                            <SearchField value="{filterModel>/agreed_by}" />
+                            <SearchField value="{filterModel>/agreedBy}" />
                             <layoutData>
                                 <layout:GridData span="XL2 L4 M6 S12" />
                             </layoutData>
                           </VBox>
                         </form:content>
             </form:SimpleForm>
+            <!--Filterbar 끝-->
         </f:DynamicPageHeader>
       </f:header>
       <f:content>
-        <!--Part No List 시작-->
+        <!--Base Price List 시작-->
         <t:Table id="mainTable"
             selectionMode="None"
             rows="{listModel>/results}"
@@ -157,7 +156,7 @@
             <t:extension>
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
                     <!-- <Title text="{I18N>/PART_NO_LIST}" level="H2"/> -->
-                    <Title text="Approval List ({= ${listModel>/results}.length})" level="H2"/>
+                    <Title text="Base Price List ({= ${listModel>/results}.length})" level="H2"/>
                 </OverflowToolbar>
             </t:extension>
             <t:columns>
@@ -187,7 +186,8 @@
                     <!-- <Label text="{I18N>/DESCRIPTION}" textAlign="Center" /> -->
                     <Label text="Description" />
                     <t:template>
-                        <Text text="{listModel>timezone_code}" />
+                        <Link text=">" press=".onGoDetail" />
+                        <!-- <Text text="{listModel>timezone_code}" /> -->
                     </t:template>
                 </t:Column>
                 <t:Column hAlign="Center" width="12rem">
@@ -352,8 +352,14 @@
                     </t:template>
                 </t:Column>
             </t:columns>
+            <t:footer>
+                <OverflowToolbar>
+                    <ToolbarSpacer />
+                    <Button text="Create" press=".onGoDetail" />
+                </OverflowToolbar>
+            </t:footer>
         </t:Table>
-        <!--Part No List 끝-->
+        <!--Base Price List 끝-->
       </f:content>
     </f:DynamicPage>
 </mvc:View>

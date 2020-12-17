@@ -1,4 +1,5 @@
 {
+  "i18n" : {"languages" : ["", "ko", "en"]},
   "build": {
     "target": ".",
     "tasks": [
@@ -39,8 +40,6 @@
             "db/cds/dp",
             "db/cds/dp/pd",
             "db/cds/dp/mm",
-            "db/cds/dp/mm/basicDataMgr",
-            "db/cds/dp/mm/uomMgr",
             "db/cds/dp/standardCommon",
             "db/cds/dp/standardCommon/categoryMgr",
             "db/cds/dp/moldMgt",
@@ -62,6 +61,7 @@
             "db/cds/pg/vp",
             "db/cds/sp",
             "db/cds/sp/fundingMgr",
+            "db/cds/sp/sf",
             "db/cds/mc",
             "db/cds/tmp",
             "db/cds/tmp/tmp1Mgr",

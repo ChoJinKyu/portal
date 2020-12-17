@@ -14,7 +14,8 @@ sap.ui.define([
 		/* =========================================================== */
 
 		onInit: function () {
-			this.byId("smartTable").setModel(this.getOwnerComponent().getModel("main"));
+            this.getView().setModel(this.getOwnerComponent().getModel("main"));
+			//this.byId("smartTable").setModel(this.getOwnerComponent().getModel("main"));
 		},
 
 		onAfterRendering: function(){

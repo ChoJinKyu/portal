@@ -21,7 +21,7 @@
                    <!--수정사항 tenant_id 정해지면 사용자 세션으로 바인딩 -->
                     <ComboBox
                         id="comboBox_vendorView"  
-                        items="{path: '/OrgTenantView', 
+                        items="{path: '/orgCodeView', 
                                 filters : [
                                     {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'}
                                 ],

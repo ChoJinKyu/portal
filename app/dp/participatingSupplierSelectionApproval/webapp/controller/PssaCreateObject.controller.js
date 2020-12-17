@@ -4,7 +4,6 @@ sap.ui.define([
     "sap/ui/core/routing/History",
     "ext/lib/model/ManagedListModel",
     "ext/lib/model/ManagedModel",
-    "sap/ui/richtexteditor/RichTextEditor",
     "ext/lib/formatter/DateFormatter",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
@@ -18,10 +17,15 @@ sap.ui.define([
     "sap/m/Label",
     "ext/lib/model/TransactionManager",
     "ext/lib/util/Multilingual",
-    "ext/lib/util/Validator",
-    "dp/util/controller/MoldItemSelection"
-], function (BaseController, JSONModel, History, ManagedListModel, ManagedModel, RichTextEditor, DateFormatter, Filter, FilterOperator, Fragment
-    , MessageBox, MessageToast, UploadCollectionParameter, Device, syncStyleClass, ColumnListItem, Label, TransactionManager, Multilingual, Validator, MoldItemSelection
+    "ext/lib/util/Validator", 
+    "ext/lib/formatter/Formatter", 
+    "dp/util/controller/MoldItemSelection",
+    "sap/ui/richtexteditor/RichTextEditor",
+  //  "sap/ui/richtexteditor/EditorType"
+], function (BaseController, JSONModel, History, ManagedListModel, ManagedModel,  DateFormatter, Filter, FilterOperator, Fragment
+    , MessageBox, MessageToast, UploadCollectionParameter, Device, syncStyleClass, ColumnListItem, Label, TransactionManager, Multilingual
+    , Validator, Formatter, MoldItemSelection,RichTextEditor
+    // ,EditorType
     ) {
     "use strict";
     /**
@@ -32,9 +36,10 @@ sap.ui.define([
     var oTransactionManager;
     var mainViewName = "pssaCreateObjectView";
 	return BaseController.extend("dp.participatingSupplierSelectionApproval.controller.PssaCreateObject", {
-        
+        formatter: Formatter,
         dateFormatter: DateFormatter,
-        moldItemPop : new MoldItemSelection(),
+        validator: new Validator(), 
+        moldItemPop: new MoldItemSelection(),
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -48,8 +53,6 @@ sap.ui.define([
             /* 다국어 처리*/
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
-
-            console.log("PssaCreateObject Controller 호출");
 			// Model used to manipulate control states. The chosen values make sure,
 			// detail page shows busy indication immediately so there is no break in
             // between the busy indication for loading the view's meta data 
@@ -57,6 +60,9 @@ sap.ui.define([
 					busy : true,
 					delay : 0
                 });
+
+            this.tenant_id = 'L1100';
+            this.approval_number = '';
            
             this.setModel(oViewModel, mainViewName); 
             
@@ -65,11 +71,12 @@ sap.ui.define([
             
             this.getView().setModel(new ManagedModel(),"company");
             this.getView().setModel(new ManagedModel(),"plant");
-            // this.getView().setModel(new ManagedListModel(),"company");
-            // this.getView().setModel(new ManagedListModel(),"plant");
+
+            this.getView().setModel(new ManagedListModel(), "MoldItemSelect"); // MoldItemSelect 
+            this.getView().setModel(new JSONModel(Device), "device"); // file upload 
+            
             this.getView().setModel(new ManagedListModel(),"createlist"); // Participating Supplier
             this.getView().setModel(new ManagedListModel(),"appList"); // apporval list 
-            this.getView().setModel(new JSONModel(Device), "device"); // file upload 
 
             this.getView().setModel(new ManagedModel(), "appMaster");
             this.getView().setModel(new ManagedListModel(), "appDetail");
@@ -80,7 +87,8 @@ sap.ui.define([
             oTransactionManager.addDataModel(this.getModel("appDetail"));
             oTransactionManager.addDataModel(this.getModel("Approvers"));
 
-              
+            this.setRichEditor(); // 한번만 로드 
+
         },   
         onAfterRendering : function () {
          
@@ -107,7 +115,7 @@ sap.ui.define([
 						}
 					});
 
-                    that.getView().byId("idVerticalLayout").addContent(oRichTextEditor);
+                    that.getView().byId("approvalContents").addContent(oRichTextEditor);
                     oRichTextEditor.attachEvent("change", function(oEvent){
                         this.getModel('appMaster').setProperty('/approval_contents', oEvent.getSource().getValue());
                     });
@@ -124,22 +132,27 @@ sap.ui.define([
 		 * @public
 		 */
 		onPageNavBackButtonPress : function() {
-			var sPreviousHash = History.getInstance().getPreviousHash();
-			if (sPreviousHash !== undefined) {
-				// eslint-disable-next-line sap-no-history-manipulation
-				history.go(-1);
-			} else {
-				this.getRouter().navTo("approvalList", {}, true);
-			}
+			// var sPreviousHash = History.getInstance().getPreviousHash();
+			// if (sPreviousHash !== undefined) {
+			// 	// eslint-disable-next-line sap-no-history-manipulation
+			// 	history.go(-1);
+			// } else {
+			// 	this.getRouter().navTo("approvalList", {}, true);
+			// }
 		},
 
 		/**
-		 * Event handler for page edit button press
+		 * Event handler for cancel page editing
 		 * @public
 		 */
-		onPageEditButtonPress: function(){
-			this._toEditMode();
-		},
+        onPageCancelButtonPress: function (oEvent) {
+            var oModel = this.getModel("appMaster")
+                , oData = oModel.oData;
+
+            this.getRouter().navTo("pssaObject", {
+                approval_number: oData.approval_number
+            }, true)
+        },
         
         /**
 		 * Event handler for saving page changes
@@ -171,19 +184,16 @@ sap.ui.define([
                 }
             });
         },
-
-		/**
-		 * Event handler for cancel page editing
+        
+        /**
+		 * Event handler for page edit button press
 		 * @public
 		 */
-        onPageCancelButtonPress: function (oEvent) {
-            var oModel = this.getModel("appMaster")
-                , oData = oModel.oData;
-
-            this.getRouter().navTo("pssaObject", {
-                approval_number: oData.approval_number
-            }, true)
+		onPageEditButtonPress: function(){
+			this._toEditMode();
         },
+        
+		
 
 		/* =========================================================== */
 		/* internal methods                                            */
@@ -202,9 +212,7 @@ sap.ui.define([
             console.log("[ step ] _onObjectMatched args ", oArgs);
             if (oArgs.approval_number) {
                 this._onRoutedThisPage(oArgs);
-                this._onLoadApprovalRow();
             } else {
-                this.setRichEditor('');
                 this._createViewBindData(oArgs);
                 this._onLoadApprovalRow();
             }
@@ -271,6 +279,7 @@ sap.ui.define([
 
         _onRoutedThisPage: function(args){
             console.log("[step] _onRoutedThisPage args>>>> ", args);
+            this.approval_number = args.approval_number;
             var that = this;
             var schFilter = [new Filter("approval_number", FilterOperator.EQ, args.approval_number)
                 , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
@@ -278,13 +287,13 @@ sap.ui.define([
 
             this._bindView("/ApprovalMasters(tenant_id='L1100',approval_number='" + args.approval_number + "')"
                 , "appMaster", [], function (oData) { 
-                    console.log(" ApprovalMasters oData " , oData); 
+                    console.log(" appMaster " , that.getModel("appMaster")); 
                 that._createViewBindData(oData); // comapny , plant 조회 
                 that.setRichEditor(oData.approval_contents);
             });
 
             this._bindView("/ApprovalDetails", "appDetail", schFilter, function (oData) {
-                console.log("approvalDetails >>>> ", oData);
+                console.log("approvalDetails >>>> ", that.getModel("appDetail"));
                 // that._bindView("/MoldMasters", "MoldMasterList", [
                 //     new Filter("company_code", FilterOperator.EQ, sResult.company_code)
                 //     , new Filter("org_code", FilterOperator.EQ, sResult.org_code)
@@ -294,6 +303,7 @@ sap.ui.define([
 
             this._bindView("/Approver", "Approvers", schFilter, function (oData) {
                 console.log("Approver >>>> ", oData);
+                that._onLoadApprovalRow();
             });
    
             oTransactionManager.setServiceModel(this.getModel());

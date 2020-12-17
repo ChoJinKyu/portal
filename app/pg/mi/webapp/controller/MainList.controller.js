@@ -38,7 +38,7 @@ sap.ui.define([
 			},
             serviceName : {
                 marketIntelligenceService : "pg.marketIntelligenceService", //main Service
-                orgTenantView : "/OrgTenantView", //관리조직 View
+                orgCodeView : "/OrgCodeView", //관리조직 View
 				mIMatListView : "/MIMatListView",//자재별 시황자재,
 				mIMaterialCode : "/MIMaterialCode"
             },			
@@ -203,17 +203,12 @@ sap.ui.define([
 			var oSmtFilter = this.getView().byId("smartFilterBar");             //smart filter
 			
             //combobox value
-            var oMi_tenant_id = oSmtFilter.getControlByKey("tenant_id").getSelectedKey();    
 			var oMi_material_code = oSmtFilter.getControlByKey("mi_material_code").getSelectedKey();   
 			var oMi_material_name = oSmtFilter.getControlByKey("mi_material_name").getValue();            
 			var oCategory_code = oSmtFilter.getControlByKey("category_code").getSelectedKey();    
             var oUse_flag = oSmtFilter.getControlByKey("use_flag").getSelectedKey();   
             var fOcode = oUse_flag =="FALSE" ? false : true;
-			
-			if (oMi_tenant_id.length > 0) {
-				var oMi_tenant_idFilter = new Filter("tenant_id", FilterOperator.EQ, oMi_tenant_id);
-				mBindingParams.filters.push(oMi_tenant_idFilter);
-            }
+	
             
 			if (oMi_material_code.length > 0) {
 				var oMi_material_codeFilter = new Filter("mi_material_code", FilterOperator.EQ, oMi_material_code);

@@ -1,7 +1,6 @@
 using { cm as approvalMst } from '../../../../db/cds/cm/apprReq/CM_APPROVAL_MST-model';
 using { cm as req } from '../../../../db/cds/cm/userMgr/CM_USER-model';
 using { dp as approvalDtl } from '../../../../db/cds/dp/moldMgt/DP_MD_APPROVAL_DTL-model';
-using { dp as apps } from '../../../../db/cds/dp/moldMgt/DP_MD_APPROVALS-model';
 
 
 using { dp as moldMstSpecView } from '../../../../db/cds/dp/moldMgt/DP_MD_MST_SPEC_VIEW-model';
@@ -13,8 +12,7 @@ service MoldApprovalListService {
 
     entity ApprovalMasters as projection on approvalMst.Approval_Mst;
     entity ApprovalDetails as projection on approvalDtl.Md_Approval_Dtl;
-    entity Approvals as projection on apps.Md_Approvals;
-
+    
     
     view Models as
     select distinct key a.tenant_id, key a.model

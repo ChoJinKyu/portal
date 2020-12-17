@@ -10,7 +10,6 @@
     xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
     xmlns:smartTable="sap.ui.comp.smarttable"
     xmlns:sv="sap.ui.comp.smartvariants"
-    xmlns:micro="sap.suite.ui.microchart"
     xmlns:smartVariantManagement="sap.ui.comp.smartvariants"
     xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
     height="100%">
@@ -50,16 +49,19 @@
                         <smartFilterBar:controlConfiguration>
                             <!-- 관리조직 -->
                             <smartFilterBar:ControlConfiguration  
-                            key="tenant_id" 
+                            key="org_code" 
                             groupId="_BASIC" 
                             index="1" 
                             label="관리조직"
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
-                                    <Select id="select_tenant_id" 
-                                            selectedKey = "{oUiData>/tenant_id}"
-                                            items="{path: '/OrgTenantView', templateShareable:true}">
-                                        <core:Item key="{tenant_id}" text="{tenant_name}"/>
+                                    <Select id="select_org_code" 
+                                            selectedKey = "{oUiData>/org_code}"
+                                            items="{path: '/OrgCodeView', 
+                                                  filters : [{path : 'tenant_id', operator : 'EQ', value1 : 'L2100'}],
+                                                  templateShareable:true
+                                            }">
+                                        <core:Item key="{org_code}" text="{org_name}"/>
                                     </Select>
                                 </smartFilterBar:customControl>                                
                             </smartFilterBar:ControlConfiguration>
@@ -71,7 +73,7 @@
                                     <Input key="material_desc" tooltip="자재명" placeholder="자재명을 입력하세요."/>
                                 </smartFilterBar:customControl>
                             </smartFilterBar:ControlConfiguration>
-                            <!-- 공급업체명 -->
+                            <!-- 공급업체명 -->  mvn
                             <smartFilterBar:ControlConfiguration key="supplier_local_name" groupId="_BASIC" index="3" label="공급업체명" 
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>

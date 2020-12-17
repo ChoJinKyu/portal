@@ -145,31 +145,92 @@
                     <uxap:ObjectPageSubSection>
                        <VBox class="sapUiSmallMargin">
                             <form:SimpleForm 
-                                editable="true"
-                                layout="ColumnLayout"
-                                columnsM="2"
-                                columnsL="2"
-                                columnsXL="2" >
-                                <form:content>
-                                    <Label text="{I18N>/INSPECTION}" required="true" />
-                                    <RadioButtonGroup id="radioInspection" columns="4" width="100%" 
-                                        
-                                    class="sapUiMediumMarginBottom">
-                                        <RadioButton id="radio_Invest" text="Invest" />
-                                        <RadioButton id="radio_Supplies" text="Supplies"  />
-                                        <RadioButton id="radio_Expense" text="Expense"  />
-                                        <RadioButton id="radio_Non-ledger_Customer" text="Non-ledger(Customer)" />
-                                    </RadioButtonGroup>
+                                editable="true" 
+                                layout="ResponsiveGridLayout"
+                                labelSpanXL="2"
+                                labelSpanL="2"
+                                labelSpanM="2"
+                                labelSpanS="2"
+                                adjustLabelSpan="false"
+                                emptySpanXL="0"
+                                emptySpanL="0"
+                                emptySpanM="0"
+                                emptySpanS="0"
+                                columnsXL="2"
+                                columnsL="1"
+                                columnsM="1"
+                                singleContainerFullSize="true"
+                                >
+                                <form:content> 
+                                <VBox>
+                                    <!-- Budget Type -->
+                                    <Label text="Budget Type" required="true" />
+                                     <SegmentedButton 
+                                        id="segInspection"
+                                        selectedKey="{mdItemMaster>/ItemBudgetExecution/0/investment_ecst_type_code}" 
+                                        width="100%"
+                                        items="{ path : 'util>/CodeDetails',
+                                                 filters : [
+                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                    {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_BUDGET_TYPE'}
+                                                    ]
+                                                }"
+                                        >
+                                        <items>
+                                            <SegmentedButtonItem  width="6em" text="{util>code_description}" key="{util>code}"/>
+                                        </items>
+                                    </SegmentedButton>
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M12 S12" />
+                                    </layoutData> 
+                                </VBox> 
+                                <VBox>
+                                     <Label text="Acquisition Department"  required="true" />
+                                     <Input value="" showValueHelp="true"/> 
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M12 S12" />
+                                    </layoutData> 
+                                </VBox> 
+                                <VBox>  
                                     <Label text="Account Department"  required="true" />
-                                    <ComboBox width="100%"  id="acquisitionDepartment" selectedKey="{mdItemMaster>/accounting_department_code}"  items="{}" >
+                                    <ComboBox width="100%"  id="acquisitionDepartment" selectedKey="{mdItemMaster>/ItemBudgetExecution/0/accounting_department_code}"  items="{}" >
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>
-                                    <Label text="{I18N>/PROJECT_CODE}"  required="true" />
-                                    <ComboBox width="100%" id="projectCode" selectedKey="{mdItemMaster>/project_code}" items="{}" >
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M12 S12" />
+                                    </layoutData> 
+                                </VBox>  
+                                <VBox>     
+                                    <Label text="Import Company" />
+                                    <ComboBox width="100%" id="importCompany" selectedKey="{mdItemMaster>/ItemBudgetExecution/0/import_company_code}" items="{}" >
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </ComboBox>      
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M12 S12" />
+                                    </layoutData> 
+                                </VBox> 
+                                <VBox>    
+                                <!-- projectcode  {I18N>/PROJECT_CODE}-->
+                                    <Label text="Project Code"  required="true" />
+                                    <ComboBox width="100%" id="projectCode" selectedKey="{mdItemMaster>/ItemBudgetExecution/0/project_code}" items="{}" >
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M12 S12" />
+                                    </layoutData> 
+                                </VBox> 
+                                <VBox>                            
+                                    <Label text="Import Plant" />
+                                    <ComboBox width="100%" id="importPlant" selectedKey="mdItemMaster>/ItemBudgetExecution/0/import_company_org_code}" items="{}" >
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </ComboBox>
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M12 S12" />
+                                    </layoutData> 
+                                </VBox> 
+                                <VBox>       
                                     <Label text="{I18N>/ACCOUNT}"  required="true" />
-                                    <ComboBox width="100%" id="account" selectedKey="{mdItemMaster>/account_code}" 
+                                    <ComboBox width="100%" id="account" selectedKey="{mdItemMaster>/ItemBudgetExecution/0/account_code}" 
                                                     items="{ path : 'util>/CodeDetails',
                                                             filters : [
                                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
@@ -178,26 +239,37 @@
                                                         }" >
                                         <core:Item key="{util>code}" text="{util>code_description}" />
                                     </ComboBox>
-                                    <Label text="Balanced Budget"  />
-                                    <ObjectStatus text="292,000,000" /> <ObjectStatus text="KRW" state="Error" />
-                                     <Label text="Acquisition Department"  required="true" />
-                                     <Input value="" showValueHelp="true"/> 
-                                    <Label text="Import Company"  />
-                                    <ComboBox width="100%" id="importCompany" selectedKey="{mdItemMaster>/import_company_code}" items="{}" >
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
-                                    </ComboBox>                              
-                                    <Label text="Import Plant" />
-                                    <ComboBox width="100%" id="importPlant" selectedKey="{mdItemMaster>/import_company_org_code}" items="{}" >
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
-                                    </ComboBox>
-                                        <Label text="{I18N>/CUSTOMER}"  />
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M12 S12" />
+                                    </layoutData> 
+                                </VBox>  
+                                <VBox>    
+                                    <Label text="{I18N>/CUSTOMER}"  />
                                     <Input value="" showValueHelp="true"/>
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M12 S12" />
+                                    </layoutData> 
+                                </VBox> 
+                                <VBox>   
+                                    <Label text="Balanced Budget"  />
+                                     <HBox alignItems="End" justifyContent="End"><ObjectStatus text="{mdItemMaster>/ItemBudgetExecution/0/provisional_budget_amount}" /> <ObjectStatus text="  KRW" state="Error" /></HBox>
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M12 S12" />
+                                    </layoutData> 
+                                </VBox> 
+                             
+                                <VBox>
                                     <Label text="Customer PO No"  />
                                     <Input value=""  />
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M12 S12" />
+                                    </layoutData> 
+                                </VBox> 
                                 </form:content>
                             </form:SimpleForm>
                         </VBox>
                     </uxap:ObjectPageSubSection>
+
 					<uxap:ObjectPageSubSection>
                        <HBox>
                          <VBox class="sapUiSmallMargin">
@@ -222,18 +294,18 @@
                                 selectionMode="MultiToggle"
                                 fixedColumnCount="7"
                                 visibleRowCountMode="Auto"
-                                rows="{path:'appDetail>/ApprovalDetails'}"
+                                rows="{path:'mdItemMaster>/ItemBudgetExecution'}"
                                 >
                              <table:extension>
                                 <OverflowToolbar>
                                     <ToolbarSpacer/>
                                     <!-- Add the Personalization button -->
-                                    <Button id="btnPsAdd"  type="Transparent" text="{I18N>/ROW_ADD}" press=".onMoldItemPopPress" > <!-- Add -->
+                                    <Button id="btnPsAdd" type="Transparent" text="{I18N>/ROW_ADD}" press=".onMoldItemPopPress" > <!-- Add -->
                                     	<customData>
                                             <core:CustomData key="multi" value="true" />
                                         </customData>
                                     </Button>
-                                    <Button id="btnPsDelete"   type="Transparent" text="{I18N>/ROW_DELETE}"  press=".onPsDelRow" />
+                                    <Button id="btnPsDelete" type="Transparent" text="{I18N>/ROW_DELETE}"  press=".onPsDelRow" />
                                 </OverflowToolbar>
                             </table:extension>          
                                 <table:columns>
@@ -241,43 +313,43 @@
                                     <table:Column id="c_mold_id"  visible="true">
                                         <Label text="mold_id"/>           
                                         <table:template>
-                                            <Text id="t_mold_id" text="{path:'appDetail>mold_id', type: 'sap.ui.model.type.Integer'}"/>
+                                            <Text id="t_mold_id" text="{path:'mdItemMaster>mold_id', type: 'sap.ui.model.type.Integer'}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_approval_number"  visible="true">
                                         <Label text="approval_number"/>           
                                         <table:template>
-                                            <Text id="t_approval_number" text="{path:'appDetail>approval_number'}"/>
+                                            <Text id="t_approval_number" text="{path:'mdItemMaster>approval_number'}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_model" width="20em" hAlign="Center">
                                         <Label text="{I18N>/MODEL}"/>           
                                         <table:template>
-                                            <Text id="t_model" text="{appDetail>model}"/>
+                                            <Text id="t_model" text="{mdItemMaster>model}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_moldPartNo" width="10em" hAlign="Center">
                                         <Label text="Mold No"/>           
                                         <table:template>
-                                            <Text id="t_mold_part_no" text="{appDetail>mold_number}"/>
+                                            <Text id="t_mold_part_no" text="{mdItemMaster>mold_number}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_seq" width="5em" hAlign="Center">
                                         <Label text="Seq"/>           
                                         <table:template>
-                                            <Text id="t_seq" text="{appDetail>mold_sequence}"/>
+                                            <Text id="t_seq" text="{mdItemMaster>mold_sequence}"/>
                                         </table:template>
                                     </table:Column>
                                     <table:Column id="c_description" width="15em" hAlign="Center">
                                         <Label text="{I18N>/DESCRIPTION}"/>           
                                         <table:template>
-                                            <Text id="description" text="{appDetail>spec_name}"/>
+                                            <Text id="description" text="{mdItemMaster>spec_name}"/>
                                         </table:template>
                                     </table:Column>                               
                                     <table:Column id="c_productionType" width="10em" hAlign="Center">
                                         <Label text="Production Type"/>           
                                         <table:template>
-                                            <ComboBox selectedKey="{appDetail>mold_production_type_code}"
+                                            <ComboBox selectedKey="{mdItemMaster>mold_production_type_code}"
                                                 items="{ path : 'util>/CodeDetails',
                                                             filters : [
                                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
@@ -292,7 +364,7 @@
                                     <table:Column id="c_itemType" width="10em" hAlign="Center">
                                         <Label text="Item Type"/>           
                                         <table:template>
-                                            <ComboBox selectedKey="{appDetail>mold_item_type_code}"
+                                            <ComboBox selectedKey="{mdItemMaster>mold_item_type_code}"
                                                 items="{ path : 'util>/CodeDetails',
                                                             filters : [
                                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
@@ -308,20 +380,20 @@
                                         <Label text="Book Currency"/>           
                                            
                                         <table:template>
-                                           <Text  text="{appDetail>book_currency_code}"/>
+                                           <Text  text="{mdItemMaster>book_currency_code}"/>
                                         </table:template>
                                     </table:Column>  
                                     <table:Column id="c_budget_amount" width="10em" hAlign="Center">
                                         <Label text="Budget Amount"/>           
                                         <table:template>
-                                           <Input  value="{appDetail>provisional_budget_amount}"/>
+                                           <Input  value="{mdItemMaster>provisional_budget_amount}"/>
                                         </table:template>
                                     </table:Column>  
 
                                     <table:Column id="c_assetType" width="10em" hAlign="Center">
                                         <Label text="Asset Type"/>           
                                         <table:template>
-                                            <ComboBox selectedKey="{appDetail>asset_type_code}"
+                                            <ComboBox selectedKey="{mdItemMaster>asset_type_code}"
                                                 items="{ path : 'util>/CodeDetails',
                                                             filters : [
                                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
@@ -336,7 +408,7 @@
                                     <table:Column id="c_familyPartNo" width="15em" hAlign="Center">
                                         <Label text="Family Part No"/>           
                                         <table:template>
-                                             <Text id="family_part_number_1" text="{appDetail>family_part_number_1}"/>
+                                             <Text id="family_part_number_1" text="{mdItemMaster>family_part_number_1}"/>
                                         </table:template>
                                     </table:Column>         
                            
@@ -345,7 +417,7 @@
                                              
                                         <table:template>
                                              <!-- 임시 컬럼명 -->
-                                             <DatePicker value="{appDetail>budget_exrate_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
+                                             <DatePicker value="{mdItemMaster>budget_exrate_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
                                         </table:template>
                                     </table:Column>                                     
                                     <table:Column id="c_expectedDisposalDate" width="10em" hAlign="Center">
@@ -353,7 +425,7 @@
                                       
                                         <table:template>
                                              <!-- 임시 컬럼명 -->
-                                             <DatePicker value="{appDetail>inspection_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
+                                             <DatePicker value="{mdItemMaster>inspection_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
                                         </table:template>
                                     </table:Column>                                     
                                 </table:columns>
@@ -458,9 +530,9 @@
                                                 placeholder="Search employee" value="{Approvers>approver_empno}"/>
                                     <Text text="{Approvers>approve_status_code}" />
                                     <Text text="{Approvers>approve_comment}" />
-                                    <Button id="btnSortUp" icon="{Approvers>arrowUp}" press=".onSortUp(${Approvers>no})" tooltip="sort" visible="{= ${Approvers>arrowUp}===''?false:true }"></Button>
-                                    <Button id="btnSortDown" icon="{Approvers>arrowDown}" press=".onSortDown(${Approvers>no})"  visible="{= ${Approvers>arrowDown}===''?false:true }" tooltip="sort"></Button>
-                                    <Button id="btnDelete" icon="sap-icon://delete" press=".setApprovalRemoveRow(${Approvers>no})" tooltip="삭제" visible="{Approvers>trashShow}"></Button>
+                                    <Button id="btnSortUp" icon="{Approvers>arrowUp}" press=".onSortUp(${Approvers>approve_sequence})" tooltip="sort" visible="{= ${Approvers>arrowUp}===''?false:true }"></Button>
+                                    <Button id="btnSortDown" icon="{Approvers>arrowDown}" press=".onSortDown(${Approvers>approve_sequence})"  visible="{= ${Approvers>arrowDown}===''?false:true }" tooltip="sort"></Button>
+                                    <Button id="btnDelete" icon="sap-icon://delete" press=".setApprovalRemoveRow(${Approvers>approve_sequence})" tooltip="삭제" visible="{Approvers>trashShow}"></Button>
                                 </cells>
                             </ColumnListItem>  
                         </items>                           
@@ -481,17 +553,17 @@
                         </HBox>
                         </Toolbar>
                             <layout:VerticalLayout class="sapUiContentPadding" width="100%">
-                                <MultiComboBox
+                                <MultiComboBox 
+                                    id="referrers"
                                     selectionChange="handleSelectionChangeReferrer"
                                     selectionFinish="handleSelectionFinishReferrer"
                                     width="100%"
-                                    items="{ path: 'org>/Org_Company',
+                                    items="{ path: 'hr>/Employee',
                                                 filters: [
                                                     {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                                ],
-                                                sorter: { path: 'company_code'}
+                                                ]
                                             }">
-                                    <core:Item key="{org>company_code}" text="{org>company_name}" />
+                                    <core:Item key="{hr>employee_number}" text="{hr>user_local_name}" />
                                 </MultiComboBox>
                             </layout:VerticalLayout>
                             <layoutData>
@@ -507,7 +579,7 @@
 			<OverflowToolbar>
 				<ToolbarSpacer />
 				<Button type="Transparent" text="Draft" press=".onPageDraftButtonPress" />
-				<!-- <Button type="Transparent" text="Preview" press=".onPageSaveButtonPress" /> -->
+				<Button type="Transparent" text="Preview" press=".onPagePreviewButtonPress" /> 
 				<Button type="Transparent" text="Cancel" visible="{=${beaCreateObjectView>/editMode}?true:false}" press=".onPageCancelButtonPress" /> 
 				<Button type="Emphasized" text="Request" press=".onPageCancelEditButtonPress"/>
 			</OverflowToolbar>

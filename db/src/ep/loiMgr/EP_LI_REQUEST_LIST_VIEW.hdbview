@@ -1,0 +1,37 @@
+view EP_LI_REQUEST_LIST_VIEW as
+select 
+    mst.tenant_id,
+    mst.company_code,
+    mst.loi_write_number,
+    mst.loi_number,
+    mst.request_date,
+    mst.loi_request_title,
+    mst.loi_publish_purpose_desc,
+    mst.loi_request_status_code,
+    mst.investment_review_flag,
+    sub.buyer_empno,	
+    sub.publish_date,
+    sub.supplier_code,
+    mst.local_create_dtm,
+    mst.local_update_dtm,
+    mst.create_user_id,
+    mst.update_user_id,
+    mst.system_create_dtm,
+    mst.system_update_dtm	
+from ep_Li_Mst as mst
+left outer join   (select TOP 1  
+    dtl.tenant_id,
+    dtl.company_code,
+    dtl.loi_write_number,
+    pub.buyer_empno,	
+    pub.publish_date,
+    pub.supplier_code	
+    from ep_li_dtl as dtl
+    left outer join ep_li_publish as pub
+    on dtl.tenant_id = pub.tenant_id 
+    and dtl.company_code = pub.company_code
+    and dtl.loi_publish_number = pub.loi_publish_number
+    order by pub.publish_date desc) as sub
+on  mst.tenant_id = sub.tenant_id
+and mst.company_code = sub.company_code
+and mst.loi_write_number = sub.loi_write_number;

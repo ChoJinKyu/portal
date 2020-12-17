@@ -19,6 +19,7 @@ entity Vp_Vendor_Pool_Export_Mst_View {
     industry_class_code: String(30) @title: '산업분류코드';
     sd_exception_flag: Boolean @title: '공급업체발굴예외여부';
     vendor_pool_apply_exception_flag: Boolean  @title:'협력사풀적용예외여부';
+    maker_material_code_mngt_flag    : Boolean             @title : '제조사자재코드관리여부';
     domestic_net_price_diff_rate: Decimal @title: '국내단가차이비율';
     dom_oversea_netprice_diff_rate: Decimal @title: '국내국외단가차이비율';
     equipment_grade_code: String(30) @title: '장비등급코드';

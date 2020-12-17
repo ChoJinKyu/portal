@@ -270,12 +270,11 @@ public class MdCategoryService implements EventHandler {
 		log.info("### Item Delete [After] ###");
     }
 
-/*    
     // VendorPool Category Item Mapping 프로시져 1건 처리
     @On(event=MdVpMappingItemProcContext.CDS_NAME)
 	public void onMdVpMappingItemProc(MdVpMappingItemProcContext context) {
 
-        log.info("### onMdVpMappingItemProc 1건 처리 ###");
+        log.info("### onMdVpMappingItemProc 1건 처리 [On] ###");
         
         StringBuffer v_sql = new StringBuffer();
         v_sql.append("CALL PG_SPMD_VENDOR_POOL_MAPPING_ITEM_PROC ( ")
@@ -321,11 +320,13 @@ public class MdCategoryService implements EventHandler {
         
     }
     
+
+/*    
     // VendorPool Category Item Mapping 프로시져 array건 처리
     @On(event=MdVpMappingItemMultiProcContext.CDS_NAME)
 	public void onMdVpMappingItemMultiProc(MdVpMappingItemMultiProcContext context) {
 
-        log.info("### onMdVpMappingItemMultiProc array건 처리 ###");
+        log.info("### onMdVpMappingItemMultiProc array건 처리 [On] ###");
 
         // local Temp table은 테이블명이 #(샵) 으로 시작해야 함
         StringBuffer v_sql_createTable = new StringBuffer();        
@@ -399,12 +400,13 @@ public class MdCategoryService implements EventHandler {
 		}
 
     }
+*/
 
     // VendorPool Category Item Mapping 상태처리 프로시져 1건 처리
     @On(event=MdVpMappingStatusProcContext.CDS_NAME)
-	public void onMdVpMappingStatusProcProc(MdVpMappingStatusProcContext context) {
+	public void onMdVpMappingStatusProc(MdVpMappingStatusProcContext context) {
 
-		log.info("### onMdVpMappingStatusProcProc 1건 처리 ###");
+		log.info("### onMdVpMappingStatusProc 1건 처리 [On] ###");
         
         StringBuffer v_sql = new StringBuffer();
         v_sql.append("CALL PG_SPMD_VENDOR_POOL_MAPPING_STATUS_PROC ( ")
@@ -427,7 +429,7 @@ public class MdCategoryService implements EventHandler {
             statement.setString(3, context.getOrgTypeCode());
             statement.setString(4, context.getOrgCode());
             statement.setString(5, context.getVendorPoolCode());
-            statement.setString(6, "200");      //  100:신규(최초), 200:저장, 300:확정(품위결제)
+            statement.setString(6, "300");      //  100:신규(최초), 200:저장, 300:확정(품위결제)
             statement.setString(9, "UpdateUserId");
             
             //statement.execute();
@@ -444,7 +446,9 @@ public class MdCategoryService implements EventHandler {
 			e.printStackTrace();
         }
     }
-    
+
+
+/*        
     // VendorPool Category Item Mapping 상태처리 프로시져 array건 처리
     @On(event=MdVpMappingStatusMultiProcContext.CDS_NAME)
 	public void onMdVpMappingStatusMultiProc(MdVpMappingStatusMultiProcContext context) {
@@ -524,7 +528,7 @@ public class MdCategoryService implements EventHandler {
 	@After(event = CdsService.EVENT_READ, entity=MdVpMappingItemView_.CDS_NAME)
 	public void readAfterMdVpMappingItemViewProc(List<MdVpMappingItemView> lists) {
 
-		log.info("### readOnMdVpMappingItemViewProc Read [On] ###");
+		log.info("### readAfterMdVpMappingItemViewProc Read [After] ###");
 
         /*
         // DB Function에서 가공 처리

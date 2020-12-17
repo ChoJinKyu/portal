@@ -104,13 +104,16 @@
                             <Column id="modelItem_description" minScreenWidth="Tablet" hAlign="Center"  >
                                 <Text text="Description" />
                             </Column> 
-                            <Column id="modelItem_moldItemType" minScreenWidth="Tablet" hAlign="Center" width="8em"  >
+                            <Column id="modelItem_moldItemTypeNm" minScreenWidth="Tablet" hAlign="Center" width="8em"  >
                                 <Text text="Mold Item Type" />
                             </Column>
-                            <Column id="modelItem_bookCurrency" minScreenWidth="Tablet" hAlign="Center"  >
+                            <Column id="modelItem_moldItemTypeCode" visible="false"  minScreenWidth="Tablet" hAlign="Center" width="8em"  >
+                                <Text text="Mold Item Type" />
+                            </Column>
+                            <Column id="modelItem_bookCurrency" visible="false" minScreenWidth="Tablet" hAlign="Center"  >
                                   <Text text="Book Currency" />
                             </Column>					
-                            <Column id="modelItem_budgetAmount" minScreenWidth="Tablet" hAlign="Center"  >
+                            <Column id="modelItem_budgetAmount" visible="false" minScreenWidth="Tablet" hAlign="Center"  >
                                   <Text text="Budget Amount" />
                             </Column>					
                             <Column visible="false" >
@@ -153,16 +156,8 @@
                                     <Text text="{moldItemPopList>mold_number}" />
                                     <Text text="{moldItemPopList>mold_sequence}" />
                                     <Text text="{moldItemPopList>spec_name}" />
-                                    <ComboBox selectedKey="{moldItemPopList>mold_item_type_code}"
-                                        items="{ path : 'util>/CodeDetails',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
-                                                    ]
-                                                }"
-								        editable="false" >
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
-                                    </ComboBox>
+                                    <Text text="{moldItemPopList>mold_item_type_code_nm}" />
+                                    <Text text="{moldItemPopList>mold_item_type_code}" />
                                     <Text text="{moldItemPopList>book_currency_code}" />
                                     <Text text="{moldItemPopList>provisional_budget_amount}" />
                                     <Text text="{moldItemPopList>family_part_number_1}" />
@@ -181,7 +176,7 @@
                             
                         </Table>
                          <layoutData>
-                                <layout:GridData span="XL12 L12 M12 S12" />
+                            <layout:GridData span="XL12 L12 M12 S12" />
                         </layoutData> 
                        </HBox>
                          </form:content>
