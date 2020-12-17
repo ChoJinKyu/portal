@@ -27,9 +27,11 @@ sap.ui.define([
     "ext/lib/util/Multilingual",
     'sap/ui/core/util/Export',
     'sap/ui/core/util/ExportTypeCSV',
+    "sap/ui/model/odata/v2/ODataModel",
+    "ext/lib/util/ExcelUtil",
 ], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter
     , FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text
-    , Token, Input, ComboBox, Item, Element, syncStyleClass, Label, SearchField, Multilingual, Export, ExportTypeCSV) {
+    , Token, Input, ComboBox, Item, Element, syncStyleClass, Label, SearchField, Multilingual, Export, ExportTypeCSV, ODataModel, ExcelUtil) {
     "use strict";
     /**
      * @description 품의 목록 (총 품의 공통)
@@ -42,12 +44,20 @@ sap.ui.define([
     var path = '';
 
     return BaseController.extend("dp.moldApprovalList.controller.ApprovalList", {
+        oRequestorModel: new ODataModel({
+            serviceUrl: "srv-api/odata/v2/dp.MoldApprovalListService/",
+            defaultBindingMode: "OneWay",
+            defaultCountMode: "Inline",
+            refreshAfterChange: false,
+            useBatch: true
+        }),
 
         dateFormatter: DateFormatter,
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
 
+        
 		/**
 		 * Called when the approvalList controller is instantiated.
 		 * @public
@@ -55,6 +65,7 @@ sap.ui.define([
         onInit: function () {
             var oViewModel,
                 oResourceBundle = this.getResourceBundle();
+            
 
             // Model used to manipulate control states
             oViewModel = new JSONModel({
@@ -71,11 +82,18 @@ sap.ui.define([
                 intent: "#Template-display"
             }, true);
 
+            
+
             this._doInitSearch();
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedListModel(), "list");
             this.setModel(new ManagedListModel(), "orgMap");
+            this.setModel(new ManagedListModel(), "requestors");
+            this.setModel(new JSONModel(), "excelModel");
+            this.getView().setModel(this.oServiceModel, 'supplierModel');
+
+    
 
             this.getRouter().getRoute("approvalList").attachPatternMatched(this._onRoutedThisPage, this);
 
@@ -87,12 +105,12 @@ sap.ui.define([
             this._doInitTablePerso();
 
         },
-
+       
         _doInitTablePerso: function () {
             // init and activate controller
             this._oTPC = new TablePersoController({
                 table: this.byId("mainTable"),
-                componentName: "approvalList",
+                componentName: "moldApprovalList",
                 persoService: ApprovalListPersoService,
                 hasGrouping: true
             }).activate();
@@ -161,9 +179,6 @@ sap.ui.define([
 		 * @public
 		 */
         onMainTablePersoButtonPressed: function (oEvent) {
-            this._oTPC.getAggregation("_tablePersoDialog").open();
-            console.log(this._oTPC.getAggregation("_tablePersoDialog"));
-            console.log(this._oTPC.openDialog);
             this._oTPC.openDialog();
         },
 
@@ -304,6 +319,11 @@ sap.ui.define([
 
 
             //var path = '';
+
+            var schFilter = [new Filter("tenant_id", FilterOperator.EQ, 'L1100')];
+                this._bindView("/Requestors", "requestors", schFilter, function(oData){
+                    
+                });
             
             this._oValueHelpDialog = sap.ui.xmlfragment("dp.moldApprovalList.view.ValueHelpDialogApproval", this);
 
@@ -374,19 +394,20 @@ sap.ui.define([
                     "cols": [
                         {
                             "label": "Name",
-                            "template": "english_employee_name"
+                            "template": "requestors>english_employee_name"
                         },
                         {
                             "label": "ID",
-                            "template": "user_id"
+                            "template": "requestors>user_id"
                         }
                     ]
                 });
 
-                path = '/Requestors';
+                path = 'requestors>/Requestors';
                 this._oValueHelpDialog.setTitle('Requestor');
-                this._oValueHelpDialog.setKey('user_id');
-                // this._oValueHelpDialog.setDescriptionKey('english_employee_name');
+                this._oValueHelpDialog.setKey('requestors>user_id');
+                this._oValueHelpDialog.setDescriptionKey('requestors>english_employee_name');
+               
             }
 
 
@@ -430,7 +451,7 @@ sap.ui.define([
             oToken.setText(this._oInputModel.getValue());
             this._oValueHelpDialog.setTokens([oToken]);
             this._oValueHelpDialog.open();
-            oFilterBar.search();
+            //oFilterBar.search();
             //this.onFilterBarSearch(oFilterBar.search());
             
 
@@ -454,8 +475,10 @@ sap.ui.define([
 
             var sSearchQuery = this._oBasicSearchField.getValue(),
                 aSelectionSet = oEvent.getParameter("selectionSet");
+                console.log("aSelectionSet ::::", aSelectionSet);
             var aFilters = aSelectionSet.reduce(function (aResult, oControl) {
                 if (oControl.getValue()) {
+                    console.log("oControl.getName()", oControl.getName());
                     aResult.push(new Filter({
                         path: oControl.getName(),
                         operator: FilterOperator.Contains,
@@ -471,32 +494,34 @@ sap.ui.define([
                     
                 }
                 
-                console.log(aResult);
                 return aResult;
-            }, []);
+            },
+            []);
             
             console.log(this._oValueHelpDialog);
             var _tempFilters = [];
+            console.log(path);
 
-            if (path == '/Models') {
+            if (path.indexOf("Models") > -1) {
                 // /Models
-                _tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+                //_tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter("tolower(model)", FilterOperator.Contains, "'" + sSearchQuery.toLowerCase().replace("'", "''") + "'"));
 
-            } else if (path == '/PartNumbers') {
+            } else if (path.indexOf("PartNumbers") > -1) {
                 //PartNumbers
-                _tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+                //_tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter({ path: "tolower(mold_number)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter({ path: "tolower(mold_item_type_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter({ path: "tolower(spec_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
             }
 
-            else if (path == '/Requestors') {
+            else if (path.indexOf("requestors") > -1) {
                 //Requestors
-                _tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
-                _tempFilters.push(new Filter({ path: "tolower(user_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
-                _tempFilters.push(new Filter({ path: "tolower(english_employee_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+                //_tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+                _tempFilters.push(new Filter({ path: "user_id", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+                _tempFilters.push(new Filter({ path: "english_employee_name", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
             }
+
 
             aFilters.push(new Filter({
                 filters: _tempFilters,
@@ -515,10 +540,12 @@ sap.ui.define([
             oValueHelpDialog.getTableAsync().then(function (oTable) {
                 if (oTable.bindRows) {
                     oTable.getBinding("rows").filter(oFilter);
+                    console.log("oTable.bindRows :::", oFilter);
                 }
 
                 if (oTable.bindItems) {
                     oTable.getBinding("items").filter(oFilter);
+                    console.log("oTable.bindItems :::", oFilter);
                 }
 
                 oValueHelpDialog.update();
@@ -528,6 +555,27 @@ sap.ui.define([
         ///////////////////// ValueHelpDialog section Start //////////////////////////
 
         ///////////////////// List create button pop up event Start //////////////////////////
+        /**
+         * Binds the view to the object path.
+         * @function
+         * @param {string} sObjectPath path to the object to be bound
+         * @private
+         */
+        _bindView: function (sObjectPath, sModel, aFilter, callback) {
+            var oView = this.getView(),
+                oModel = this.getModel(sModel);
+            console.log(oView);
+            console.log(oModel);
+            oView.setBusy(true);
+            oModel.setTransactionModel(this.getModel());
+            oModel.read(sObjectPath, {
+                filters: aFilter,
+                success: function (oData) {
+                    oView.setBusy(false);
+                    callback(oData);
+                }
+            });
+        },
 
         dialogChangeComp: function (oEvent) {
 
@@ -745,7 +793,7 @@ sap.ui.define([
                 oModel = this.getModel("list");
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
-            oModel.read("/ApprovalMasters", {
+            oModel.read("/Approvals", {
                 filters: aSearchFilters,
                 success: function (oData) {
                     oView.setBusy(false);
@@ -991,6 +1039,63 @@ sap.ui.define([
 			}).then(function() {
 				oExport.destroy();
 			});
-		}
+        },
+        onExportPress: function (_oEvent) {
+            var sTableId = _oEvent.getSource().getParent().getParent().getId();
+            console.log(sTableId);
+            if (!sTableId) { return; }
+
+            var oTable = this.byId(sTableId);
+            var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
+            //var oData = this.getModel("list").getProperty("/Message"); //binded Data
+            console.log(sFileName);
+            var oData = oTable.getModel().getProperty("/ApprovalMasters");
+            ExcelUtil.fnExportExcel({
+                fileName: sFileName || "SpreadSheet",
+                table: oTable,
+                data: oData
+            });
+        },
+        onImportChange: function (_oEvent) {
+            var oTable = _oEvent.getSource().getParent().getParent();
+            var oModel = oTable.getModel();
+            var oExcelModel = this.getModel("excelModel");
+            
+            oExcelModel.setData({});
+            ExcelUtil.fnImportExcel({
+                uploader: _oEvent.getSource(),
+                file: _oEvent.getParameter("files") && _oEvent.getParameter("files")[0],
+                model: oExcelModel,
+                success: function () {
+                    var aTableData = oModel.getProperty("/ApprovalMasters") || [],
+                        aCols = oTable.getColumns(),
+                        oExcelData = this.model.getData();
+
+                    if (oExcelData) {
+                        var aData = oExcelData[Object.keys(oExcelData)[0]];
+
+                        aData.forEach(function (oRow) {
+                            var aKeys = Object.keys(oRow),
+                                newObj = {};
+                            aCols.forEach(function (oCol, idx) {
+                                debugger;
+                                var sLabel = typeof oCol.getLabel === "function" ? oCol.getLabel().getText() : oCol.getHeader().getText();//As Grid or Responsible Table
+                                var sName = oCol.data("bindName") || "";
+                                var iKeyIdx = aKeys.indexOf(sLabel);
+                                if (iKeyIdx > -1 && sName) {
+                                    var oValue = oRow[aKeys[iKeyIdx]];
+                                    if (oValue) {
+                                        oValue = oValue.toString();
+                                    }
+                                    newObj[sName] = oValue !== "N/A" ? oValue : "";
+                                }
+                            });
+                            aTableData.push(newObj);
+                        });
+                        oModel.setProperty("/ApprovalMasters", aTableData);
+                    }
+                }
+            });
+        },
     });
 });

@@ -1,7 +1,8 @@
  view DP_MD_APPROVALS_VIEW as
    select 
 	a.approval_number
-	,approval_type_code
+    ,a.tenant_id
+	,a.approval_type_code
 	,(select code_description from CM_CODE_DTL where group_code='DP_MD_APPROVAL_TYPE' and code = a.approval_type_code) as approval_type
 	,a.approval_title
 	,'['||c.company_code||'] '||(select company_name from cm_org_company where company_code=c.company_code) as company_name
