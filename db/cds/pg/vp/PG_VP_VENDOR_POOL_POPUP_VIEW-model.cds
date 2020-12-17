@@ -16,6 +16,7 @@ entity Vp_Vendor_pool_Popup_View {
   temp_type: String(1) @title: '공급업체변경여부(Y/N)';
   node_id: String @title: 'node id';
   parent_id: String @title: 'parent node id';
+  path: String @title: 'node path';
   hierarchy_rank: Integer64;
   hierarchy_tree_size: Integer64;
   hierarchy_parent_rank: Integer64;
