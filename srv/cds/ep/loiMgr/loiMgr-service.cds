@@ -21,4 +21,11 @@ service LoiMgrService {
     entity LOIRequestDetailView as projection on loiReqDetailView.Li_Request_Detail_View;
     entity LOIRequestListView as projection on loiReqListView.Li_Request_List_View;
 
+    view LoiNumberGroupbyView as
+        select
+        key tenant_id,
+        key company_code,
+        key loi_number
+        from loiMst.Li_Mst 
+        group by tenant_id, company_code, loi_number;
 }

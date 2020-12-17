@@ -88,7 +88,7 @@ sap.ui.define([
             oTransactionManager.addDataModel(this.getModel("appMaster"));
             oTransactionManager.addDataModel(this.getModel("appDetail"));
             oTransactionManager.addDataModel(this.getModel("Referer"));
-            // oTransactionManager.addDataModel(this.getModel("mdItemMaster"));
+             oTransactionManager.addDataModel(this.getModel("mdItemMaster"));
             oTransactionManager.addDataModel(this.getModel("Approvers"));
 
             this.setRichEditor(); // 한번만 로드 
@@ -223,7 +223,7 @@ sap.ui.define([
                 this._onCreatePagetData(oArgs);
                 this._onLoadApprovalRow();
             }
-            this._setMdMst(); // temp 데이터 
+           // this._setMdMst(); // temp 데이터 
             this.oSF = this.getView().byId("searchField");
         },
         _setMdMst : function(){ 
@@ -351,6 +351,12 @@ sap.ui.define([
                 }
             });
    
+            console.log("ItemBudgetExecution >>>>>> 1 ");
+            this._bindView("/ItemBudgetExecution", "mdItemMaster", schFilter, function (oData) {
+                console.log("ItemBudgetExecution >>>>>>", oData);
+        
+            });
+            console.log("ItemBudgetExecution >>>>>> 2 ");
             oTransactionManager.setServiceModel(this.getModel());
         },
 
@@ -518,7 +524,7 @@ sap.ui.define([
              var oArgs = {
                 company_code : this.getModel('appMaster').oData.company_code , 
                 org_code : this.getModel('appMaster').oData.org_code,
-              //  mold_progress_status_code : 'DEV_RCV' ,
+                mold_progress_status_code : 'DEV_RCV' ,
                 mold_id_arr : mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
             }
 			

@@ -315,19 +315,6 @@ service marketIntelligenceService {
             main.update_user_id,
             main.system_create_dtm,
             main.system_update_dtm
-        order by
-            main.tenant_id,
-            main.mi_material_code,
-            matText.mi_material_name,
-            main.category_code,
-            catg.category_name,
-            main.use_flag,
-            main.local_create_dtm,
-            main.local_update_dtm,
-            main.create_user_id,
-            main.update_user_id,
-            main.system_create_dtm,
-            main.system_update_dtm
 		;
 
     // Material View
