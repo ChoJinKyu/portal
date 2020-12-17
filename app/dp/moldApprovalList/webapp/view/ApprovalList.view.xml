@@ -262,10 +262,10 @@
                     updateFinished=".onListMainTableUpdateFinished"
                     cellClick=".onCellClick"
                     width="auto"
-                    items="{list>/ApprovalMasters}">
+                    items="{list>/Approvals}">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="Approval List ({= ${list>/ApprovalMasters}.length || 0})" level="H2"/>
+                            <Title text="Approval List ({= ${list>/Approvals}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <!-- Add the Personalization button -->
                             <Button id="mainTableCreateButton" text="Create" type="Emphasized" press=".onDialogCreate" />
