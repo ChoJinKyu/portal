@@ -1,4 +1,4 @@
-FUNCTION DP_ITEM_SEQUENCE_FUNC (p_tenant_id NVARCHAR(5), p_approval_number NVARCHAR(50), p_increament DECIMAL)
+FUNCTION DP_VI_ITEM_SEQUENCE_FUNC (p_tenant_id NVARCHAR(5), p_approval_number NVARCHAR(50), p_increament DECIMAL)
     RETURNS D_RETURN DECIMAL
     LANGUAGE SQLSCRIPT
 AS
