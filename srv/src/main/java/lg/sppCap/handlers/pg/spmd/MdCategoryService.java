@@ -274,7 +274,7 @@ public class MdCategoryService implements EventHandler {
     @On(event=MdVpMappingItemProcContext.CDS_NAME)
 	public void onMdVpMappingItemProc(MdVpMappingItemProcContext context) {
 
-        log.info("### onMdVpMappingItemProc 1건 처리 ###");
+        log.info("### onMdVpMappingItemProc 1건 처리 [On] ###");
         
         StringBuffer v_sql = new StringBuffer();
         v_sql.append("CALL PG_SPMD_VENDOR_POOL_MAPPING_ITEM_PROC ( ")
@@ -326,7 +326,7 @@ public class MdCategoryService implements EventHandler {
     @On(event=MdVpMappingItemMultiProcContext.CDS_NAME)
 	public void onMdVpMappingItemMultiProc(MdVpMappingItemMultiProcContext context) {
 
-        log.info("### onMdVpMappingItemMultiProc array건 처리 ###");
+        log.info("### onMdVpMappingItemMultiProc array건 처리 [On] ###");
 
         // local Temp table은 테이블명이 #(샵) 으로 시작해야 함
         StringBuffer v_sql_createTable = new StringBuffer();        
@@ -406,7 +406,7 @@ public class MdCategoryService implements EventHandler {
     @On(event=MdVpMappingStatusProcContext.CDS_NAME)
 	public void onMdVpMappingStatusProc(MdVpMappingStatusProcContext context) {
 
-		log.info("### onMdVpMappingStatusProc 1건 처리 ###");
+		log.info("### onMdVpMappingStatusProc 1건 처리 [On] ###");
         
         StringBuffer v_sql = new StringBuffer();
         v_sql.append("CALL PG_SPMD_VENDOR_POOL_MAPPING_STATUS_PROC ( ")
