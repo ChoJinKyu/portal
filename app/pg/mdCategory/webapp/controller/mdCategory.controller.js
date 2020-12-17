@@ -60,7 +60,10 @@ sap.ui.define([
                     }).bind(this)
                 });
             var oTable = this.byId("mainTable");
-            this.byId("buttonMainAddRow").setEnabled(true);           
+            this.byId("buttonMainAddRow").setEnabled(true);  
+            this.byId("buttonMainEditRow").setEnabled(true);         
+            oTable.getAggregation('items')[0].getCells()[1].getItems()[0].setVisible(true);
+            oTable.getAggregation('items')[0].getCells()[1].getItems()[1].setVisible(false);  
             oTable.getAggregation('items')[0].getCells()[2].getItems()[0].setVisible(true);
             oTable.getAggregation('items')[0].getCells()[2].getItems()[1].setVisible(false);
             oTable.getAggregation('items')[0].getCells()[3].getItems()[0].setVisible(true);
@@ -86,9 +89,9 @@ sap.ui.define([
 
             oModel.addRecord({
 				"tenant_id": "L2100",
-				"company_code": "C100",
+				"company_code": "*",
 				"org_type_code": "BU",
-				"org_code": "L210000000",
+				"org_code": "BIZ00200",
 				"spmd_category_code": "",
 				"spmd_category_code_name": "",
 				"rgb_font_color_code": "#000000",
@@ -100,6 +103,9 @@ sap.ui.define([
             }, "/MdCategory" , 0);  
 
 		    this.byId("buttonMainAddRow").setEnabled(false);
+            this.byId("buttonMainEditRow").setEnabled(false); 
+            oTable.getAggregation('items')[0].getCells()[1].getItems()[0].setVisible(false);
+            oTable.getAggregation('items')[0].getCells()[1].getItems()[1].setVisible(true);
             oTable.getAggregation('items')[0].getCells()[2].getItems()[0].setVisible(false);
             oTable.getAggregation('items')[0].getCells()[2].getItems()[1].setVisible(true);
             oTable.getAggregation('items')[0].getCells()[3].getItems()[0].setVisible(false);
@@ -108,7 +114,26 @@ sap.ui.define([
             oTable.getAggregation('items')[0].getCells()[4].getItems()[1].setVisible(true);
             
         },
-      
+      onEdit: function () {
+            var [tId, mName, sEntity, aCol] = arguments;
+            //tableId modelName EntityName tenant_id
+            var oTable = this.byId(tId), //mainTable
+                oModel = this.getView().getModel(mName); //list
+            var idx;
+
+		    this.byId("buttonMainAddRow").setEnabled(false);
+            this.byId("buttonMainEditRow").setEnabled(false);
+            oTable.getAggregation('items')[idx].getCells()[1].getItems()[0].setVisible(false);
+            oTable.getAggregation('items')[idx].getCells()[1].getItems()[1].setVisible(true);
+            oTable.getAggregation('items')[idx].getCells()[2].getItems()[0].setVisible(false);
+            oTable.getAggregation('items')[idx].getCells()[2].getItems()[1].setVisible(true);
+            oTable.getAggregation('items')[idx].getCells()[3].getItems()[0].setVisible(false);
+            oTable.getAggregation('items')[idx].getCells()[3].getItems()[1].setVisible(true);
+            oTable.getAggregation('items')[idx].getCells()[4].getItems()[0].setVisible(false);
+            oTable.getAggregation('items')[idx].getCells()[4].getItems()[1].setVisible(true);
+            
+        },
+
       onSave: function () {
         var [tId, mName] = arguments;
         var view = this.getView();
