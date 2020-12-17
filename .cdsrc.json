@@ -80,8 +80,5 @@
     "db": {
       "kind": "hana"
     }
-  },
-  "odata": {
-    "version": "v2"
   }
 }
