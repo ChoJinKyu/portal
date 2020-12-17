@@ -9,8 +9,8 @@ namespace pg;
 
 //@cds.query.limit.default: 20
 //@cds.query.limit.max: 100
-@path : '/pg.MdCategoryService'
-service MdCategoryService {
+@path : '/pg.MdCategoryV4Service'
+service MdCategoryV4Service {
 
     entity MdCategory as projection on cateId.Md_Category_Id;
 
