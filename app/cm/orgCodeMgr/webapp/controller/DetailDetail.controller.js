@@ -17,6 +17,10 @@ sap.ui.define([
 			this.oRouter = this.getOwnerComponent().getRouter();
 			this.oRouter.getRoute("detailDetail").attachPatternMatched(this._onCodeDetailMatched, this);
 
+            // DetailDetail 언어별 코드명
+            this.setModel(new ManagedListModel(), "languages");
+
+            // 다국어 라벨/메시지
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
         },
@@ -76,8 +80,10 @@ sap.ui.define([
 
             var sTenantId = oParam.tenant_id;
             var sGroupCode = oParam.group_code;
+            var sOrgCode = oParam.orgCode;
             var sCode = oParam.code;
-            this._fnReadLanguages(sTenantId, sGroupCode, sCode);
+            var sOrgCode = oParam.orgCode;
+            this._fnReadLanguages(sTenantId, sGroupCode, sOrgCode, sCode);
         },
 
         _fnSetCreateData : function(){
@@ -172,6 +178,7 @@ sap.ui.define([
             
             var sTenantId = oEvent.getParameter("arguments").tenantId;
             var sGroupCode = oEvent.getParameter("arguments").groupCode;
+            var sOrgCode = oEvent.getParameter("arguments").orgCode;
             var sCode = oEvent.getParameter("arguments").code;
 
             var bCreateMode = true;
@@ -184,7 +191,7 @@ sap.ui.define([
                 this._fnSetCreateData();
             }else{
                 this._fnSetReadMode();
-                this._fnReadLanguages(sTenantId, sGroupCode, sCode);
+                this._fnReadLanguages(sTenantId, sGroupCode, sOrgCode, sCode);
             }
 
             //ScrollTop
@@ -193,10 +200,11 @@ sap.ui.define([
             oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);
         },
 
-        _fnReadLanguages : function(tenantId, groupCode, code){
+        _fnReadLanguages : function(tenantId, groupCode, orgCode, code){
             var aFilters = [];
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, tenantId));
             aFilters.push(new Filter("group_code", FilterOperator.EQ, groupCode));
+            aFilters.push(new Filter("org_code", FilterOperator.EQ, orgCode));
             aFilters.push(new Filter("code", FilterOperator.EQ, code));
 
             var oViewModel = this.getModel('viewModel');
