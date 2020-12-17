@@ -51,7 +51,7 @@
             "db/cds/ep/loiMgr",
             "db/cds/op",
             "db/cds/pg",
-            "db/cds/pg/interface",
+            "db/cds/pg/if",
             "db/cds/pg/kpi",
             "db/cds/pg/mi",
             "db/cds/pg/monitor",
