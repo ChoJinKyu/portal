@@ -6,7 +6,7 @@ sap.ui.getCore().attachInit(function() {
 	"use strict";
 
 	sap.ui.require([
-		"dp/uomMgr/test/integration/AllJourneys"
+		"dp/uomMgt/test/integration/AllJourneys"
 	], function() {
 		QUnit.start();
 	});

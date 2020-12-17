@@ -4,25 +4,25 @@ sap.ui.define(["jquery.sap.global"],
 
         var _columns = [
             {
-                id: "uomClassMgr-mainList-mainColumnClass",
+                id: "uomClassMgt-mainList-mainColumnClass",
                 order: 0,
                 text: "Class",
                 visible: true
             },
             {
-                id: "uomClassMgr-mainList-mainColumnText",
+                id: "uomClassMgt-mainList-mainColumnText",
                 order: 1,
                 text: "Class Text",
                 visible: false
             },
             {
-                id: "uomClassMgr-mainList-mainColumnBaseUom",
+                id: "uomClassMgt-mainList-mainColumnBaseUom",
                 order: 2,
                 text: "Base UOM",
                 visible: false
             },
             {
-                id: "uomClassMgr-mainList-mainColumnBaseUomText",
+                id: "uomClassMgt-mainList-mainColumnBaseUomText",
                 order: 3,
                 text: "Base UOM Text",
                 visible: true
