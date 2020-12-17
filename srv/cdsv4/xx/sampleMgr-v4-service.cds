@@ -6,22 +6,19 @@ using {xx as MasterF} from '../../../db/cds/xx/sampleMstMgr/XX_SAMPLE_MASTER_FUN
 namespace xx;
 @path : '/xx.SampleMgrV4Service'
 service SampleMgrV4Service {
-
-    entity SampleHeaders as projection on Header.Sample_Header;
-    entity SampleDetails as projection on Detail.Sample_Detail;
-/*
-    type SampleHeaders {
+   
+    type SavedHeaders : {
         header_id : Integer64;
         cd : String;
         name: String;
     };
-    type SampleDetails {
+
+    type SavedDetails : {
         detail_id : Integer64;
         header_id : Integer64;
         cd : String;
         name: String;
     };
-*/    
 
     // Procedure 호출해서 header 저장
     // Header Multi Row
@@ -34,8 +31,7 @@ service SampleMgrV4Service {
         ]
     }
     *********************************/
-    //action SaveSampleHeaderMultiProc (sampleHeaders : array of SampleHeaders) returns array of SampleHeaders;
-
+    action SaveSampleHeaderMultiProc (sampleHeaders : array of SavedHeaders) returns array of SavedHeaders;
 
     // Procedure 호출해서 header/Detail 저장
     // Header, Detail 둘다 multi
@@ -56,24 +52,14 @@ service SampleMgrV4Service {
         }
     }
     *********************************/
-/*
     type saveReturnType {
-        savedHeaders : array of {
-            header_id : Integer64;
-            cd : String;
-            name: String;
-        };
-        savedDetails : array of {
-            detail_id : Integer64;
-            header_id : Integer64;
-            cd : String;
-            name: String;
-        };
+        savedHeaders : array of SavedHeaders;
+        savedDetails : array of SavedDetails;
     }
     
 
     action SaveSampleMultiEnitylProc (inputData : saveReturnType) returns saveReturnType;
-*/  
+  
 
     // (단일 Header에 multi Detail) 가 multi
     // Test 데이터
@@ -101,23 +87,19 @@ service SampleMgrV4Service {
         ]
     }
     *********************************/
-/*
     type hdSaveType {
         header_id : Integer64;
         cd : String;
         name: String;
-        details:  array of {
-            detail_id : Integer64;
-            header_id : Integer64;
-            cd : String;
-            name: String;
-        };
+        details:  array of SavedDetails;
     }
    
     action SaveSampleHeaderDetailProc (inputData : array of hdSaveType) returns array of hdSaveType;
-*/
+
 
     //parameter를 필수로 받는 view
+
+    
     view SampleViewCondition (header_cd: String, detail_cd: String) as 
     select h.header_id
           ,h.cd as header_cd
@@ -131,6 +113,19 @@ service SampleMgrV4Service {
     and   d.cd = :detail_cd
     ;
 
+    view SampleViewCondition2 as 
+    select h.header_id
+          ,h.cd as header_cd
+          ,h.name as header_name
+          ,key d.detail_id
+          ,d.cd as detail_cd
+          ,d.name as detail_name
+    from Header.Sample_Header as h 
+    left join Detail.Sample_Detail as d on h.header_id = d.header_id
+
+    ;
+
     entity MasterFunc(CD : String) as select from MasterF.Sample_Master_Func(CD: :CD);
+
 
 }
