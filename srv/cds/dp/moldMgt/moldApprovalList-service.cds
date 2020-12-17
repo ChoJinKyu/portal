@@ -25,8 +25,8 @@ service MoldApprovalListService {
         ,a.approval_type_code
         ,d.code_name as approval_type : String(240)
         ,a.approval_title
-        ,'['||c.company_code||'] '||e.company_name as company_name
-        ,'['||c.org_code||'] '||f.plant_name as org_name
+        ,e.company_name 
+        ,f.plant_name as org_name
         ,c.company_code
         ,c.org_type_code
         ,c.org_code
@@ -34,7 +34,8 @@ service MoldApprovalListService {
         ,c.mold_id
         ,c.mold_number
         ,a.requestor_empno
-        ,'['||g.user_english_name||'] '||g.user_korean_name as requestor_name 
+        ,g.user_english_name
+        ,g.user_korean_name
         ,a.request_date
         ,a.approve_status_code
         ,h.code_name as approve_status : String(240)
