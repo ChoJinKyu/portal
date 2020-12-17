@@ -217,7 +217,11 @@ sap.ui.define([
             var mModel = this.getModel(mainViewName);
             console.log("[ step ] _onObjectMatched args ", oArgs);
             if (oArgs.approval_number) {
-                this._onRoutedThisPage(oArgs);
+              //  this._onRoutedThisPage(oArgs);
+                var oPageSubSection2 = this.byId("pageChange");
+            this._loadFragment("BudgetExecution", function(oFragment){
+                 oPageSubSection2.addBlock(oFragment);   
+            }) 
             } else {
                
                 this._onCreatePagetData(oArgs);
@@ -310,10 +314,31 @@ sap.ui.define([
                     console.log("Org_Plant oData>>> ", oData);
                 }
             });
+
+          
+
+        },
+
+        _loadFragment : function (sFragmentName, oHandler){
+                
+            if(!this._oFragments[sFragmentName]){
+				Fragment.load({
+					id: this.getView().getId(),
+					name: "dp.budgetExecutionApproval.view." + sFragmentName,
+					controller: this
+				}).then(function(oFragment){
+					this._oFragments[sFragmentName] = oFragment;
+                    if(oHandler) oHandler(oFragment);
+				}.bind(this));
+			}else{
+				if(oHandler) oHandler(this._oFragments[sFragmentName]);
+			}
+
         },
 
         _onRoutedThisPage: function (args) {
             console.log("[step] _onRoutedThisPage args>>>> ", args); 
+            // pageChange 
             this.approval_number = args.approval_number;
             var that = this;
             var schFilter = [new Filter("approval_number", FilterOperator.EQ, args.approval_number)
