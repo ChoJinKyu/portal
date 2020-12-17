@@ -19,6 +19,13 @@
           "odataVersion": "2.0"
         }
       },
+      "dseService": {
+        "uri": "srv-api/odata/v2/dp.DetailSpecEntryService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
+      },
       "commonUtilService": {
         "uri": "srv-api/odata/v2/cm.util.CommonService/",
         "type": "OData",
@@ -91,6 +98,16 @@
       },
       "": {
         "dataSource": "mainService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": true,
+          "useBatch": true
+        }
+      },
+      "dse": {
+        "dataSource": "dseService",
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",

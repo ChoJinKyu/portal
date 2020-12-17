@@ -19,12 +19,12 @@
 		showFooter="false">
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
-				<uxap:expandedHeading>
+				<!-- <uxap:expandedHeading>
 					<Title text="{master>/mold_id}" wrapping="true" />
 				</uxap:expandedHeading>
 				<uxap:snappedHeading>
 					<Title text="{master>/mold_id}" wrapping="true" />
-				</uxap:snappedHeading>
+				</uxap:snappedHeading> -->
 				<uxap:actions>
 					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" />
 					<!-- <Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" /> -->

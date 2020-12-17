@@ -106,10 +106,10 @@ sap.ui.define([
             /** Create Date */
             var today = new Date();
             
-            this.getView().byId("searchCreationDateE").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
-            this.getView().byId("searchCreationDateE").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
-            this.getView().byId("searchCreationDateS").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
-            this.getView().byId("searchCreationDateS").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+            // this.getView().byId("searchCreationDateE").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
+            // this.getView().byId("searchCreationDateE").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+            // this.getView().byId("searchCreationDateS").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
+            // this.getView().byId("searchCreationDateS").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
         },
 
         setDivision: function(companyCode){
@@ -228,46 +228,7 @@ sap.ui.define([
             
         },
 
-        /**
-         * @description employee 팝업에서 apply 버튼 누르기 
-         */
-        onEmploySelectionApply : function(){
-            var oTable = this.byId("employeeSelectTable");
-            var aItems = oTable.getSelectedItems();
-            var that = this;
-            aItems.forEach(function(oItem){   
-                var obj = new JSONModel({
-                    model : oItem.getCells()[0].getText()
-                    , moldPartNo : oItem.getCells()[1].getText()
-                });
-                that._approvalRowAdd(obj);
-            });
-            this.onExitEmployee();
-        },
-
         
-        /**
-         * @description Approval Row에 add 하기 
-         */
-        _approvalRowAdd : function (obj){
-            var oTable = this.byId("moldMstTable"),
-                oModel = this.getModel("list"); 
-            var aItems = oTable.getItems();
-            var oldItems = [];
-            var that = this;
-            aItems.forEach(function(oItem){ 
-               //  console.log("oItem >>> " , oItem.mAggregations.cells[0].mProperties.text);
-               //  console.log("oItem >>> " , oItem.mAggregations.cells[1].mProperties.selectedKey);
-               //  console.log("oItem >>> " , oItem.mAggregations.cells[2].mProperties.value);
-               var item = { "no" : oItem.mAggregations.cells[0].mProperties.text ,
-                            "type": oItem.mAggregations.cells[1].mProperties.selectedKey,
-                            "nameDept": oItem.mAggregations.cells[2].mProperties.value, } 
-                oldItems.push(item);
-            });
-
-            this.getView().setModel(new ManagedListModel(),"list"); // oldItems 에 기존 데이터를 담아 놓고 나서 다시 모델을 리셋해서 다시 담는 작업을 함 
-            
-        },
 
 		/**
 		 * Event handler when a search button pressed
@@ -720,15 +681,14 @@ sap.ui.define([
                 );
             }
 
-            if (receiptFromDate === null) {
-                MessageToast.show("Receipt Date를 입력해 주세요");
-                return false;
-            } else {
-                aTableSearchState.push(new Filter("local_create_dtm", FilterOperator.BT, receiptFromDate, receiptToDate));
+            if (receiptFromDate) {
+                aTableSearchState.push(new Filter("receiving_complete_date", FilterOperator.BT, receiptFromDate, receiptToDate));
             }
-			if (status) {
-				aTableSearchState.push(new Filter("mold_progress_status_code", FilterOperator.EQ, status));
-			}
+
+			// if (status) {
+			// 	aTableSearchState.push(new Filter("mold_progress_status_code", FilterOperator.EQ, status));
+            // }
+            
 			if (itemType && itemType.length > 0) {
 				aTableSearchState.push(new Filter("mold_item_type_code", FilterOperator.EQ, itemType));
 			}
