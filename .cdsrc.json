@@ -57,7 +57,7 @@
             "db/cds/pg/monitor",
             "db/cds/pg/risk",
             "db/cds/pg/spend",
-            "db/cds/pg/spmd",
+            "db/cds/pg/md",
             "db/cds/pg/vp",
             "db/cds/sp",
             "db/cds/sp/fundingMgr",
