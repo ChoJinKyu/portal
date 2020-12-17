@@ -83,8 +83,8 @@ sap.ui.define([
             }, true);
 
             
-
             this._doInitSearch();
+
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedListModel(), "list");
@@ -136,6 +136,12 @@ sap.ui.define([
 
             /** Date */
             var today = new Date();
+
+            //접속자 법인 사업부로 바꿔줘야함
+            this.getView().byId("searchCompanyS").setSelectedKeys(['LGEKR']);
+            this.getView().byId("searchCompanyE").setSelectedKeys(['LGEKR']);
+            this.getView().byId("searchPlantS").setSelectedKeys(['DFZ']);
+            this.getView().byId("searchPlantE").setSelectedKeys(['DFZ']);
 
             this.getView().byId("searchRequestDateS").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
             this.getView().byId("searchRequestDateS").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
@@ -214,6 +220,7 @@ sap.ui.define([
         onPageSearchButtonPress: function (oEvent) {
             //console.log(oEvent.getParameters());
             var aSearchFilters = this._getSearchStates();
+            console.log(aSearchFilters);
             this._applySearch(aSearchFilters);
         },
 
@@ -793,7 +800,7 @@ sap.ui.define([
                 oModel = this.getModel("list");
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
-            oModel.read("/Approvals", {
+            oModel.read("/ApprovalMasters", {
                 filters: aSearchFilters,
                 success: function (oData) {
                     oView.setBusy(false);
@@ -888,7 +895,7 @@ sap.ui.define([
                     })
                 );
             }
-
+            
             if (sModel) {
                 aSearchFilters.push(new Filter("tolower(model)", FilterOperator.Contains, "'" + sModel.toLowerCase().replace("'", "''") + "'"));
             }
