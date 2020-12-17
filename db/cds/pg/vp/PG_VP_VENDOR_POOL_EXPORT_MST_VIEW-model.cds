@@ -4,6 +4,7 @@ namespace pg;
 entity Vp_Vendor_Pool_Export_Mst_View {
     parent_id: String @title: '부모노드아이디';
     node_id: String @title: '노드아이디';
+    path: String @title: '노드PATH';
     key tenant_id: String(5) not null @title: '테넌트ID';
     key company_code: String(10) not null @title: '회사코드';
     key org_type_code:String(2) not null @title:'운영조직유형코드';

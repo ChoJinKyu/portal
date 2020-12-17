@@ -14,8 +14,8 @@ using from './mm/basicDataMgt/mtlGroupMgt-service';
 using from './mm/basicDataMgt/mtlClassMgt-service';
 // 표준화/공용화 관리
 using from './sc/categoryMgr/category-service';
-using from './dc/vi/basePriceArl-service';
-using from './dc/tc/projectMgt-service';
+using from './vi/basePriceArl-service';
+using from './tc/projectMgt-service';
 using from './util/moldItemSelection-service';
 using from './util/supplierSelection-service';
 // 선행부품개발

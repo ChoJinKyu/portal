@@ -21,7 +21,7 @@ sap.ui.define([
 ], function (BaseController, Multilingual, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ExcelUtil) {
 	"use strict";
 
-	return BaseController.extend("dp.uomClassMgr.controller.MainList", {
+	return BaseController.extend("dp.uomClassMgt.controller.MainList", {
 
 		dateFormatter: DateFormatter,
 
@@ -263,7 +263,7 @@ sap.ui.define([
 			// init and activate controller
 			this._oTPC = new TablePersoController({
 				table: this.byId("mainTable"),
-				componentName: "uomClassMgr",
+				componentName: "uomClassMgt",
 				persoService: MainListPersoService,
 				hasGrouping: true
 			}).activate();
