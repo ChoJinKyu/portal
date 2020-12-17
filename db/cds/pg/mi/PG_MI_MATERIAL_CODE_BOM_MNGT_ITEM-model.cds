@@ -29,10 +29,10 @@ entity MI_Material_Code_Bom_Mngt_Item {
     key mi_material_code   : String(40) not null  @title : '시황자재코드';
         reqm_quantity_unit : String(3)            @title : '소요수량단위';
         reqm_quantity      : Decimal              @title : '소요수량';
-        currency_unit      : String(30)           @title : '통화단위';
-        quantity_unit      : String(3)            @title : '수량단위';
-        exchange           : String(10)           @title : '거래소';
-        termsdelv          : String(10)           @title : '인도조건';
+    key currency_unit      : String(30)           @title : '통화단위';
+    key quantity_unit      : String(3)            @title : '수량단위';
+    key exchange           : String(10)           @title : '거래소';
+    key termsdelv          : String(10)           @title : '인도조건';
         use_flag           : Boolean not null     @title : '사용여부';
 }
 
