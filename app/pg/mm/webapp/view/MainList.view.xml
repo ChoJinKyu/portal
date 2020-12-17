@@ -12,12 +12,16 @@
     xmlns:sv="sap.ui.comp.smartvariants"
     xmlns:smartVariantManagement="sap.ui.comp.smartvariants"
     xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
-    height="100%">
+    height="100%"
+
+    >
 
     <f:DynamicPage
         id="page"
-        headerExpanded="{mainListView>/headerExpanded}"
-        toggleHeaderOnTitleClick="true">
+        headerExpanded="{oUi>/headerExpanded}"
+        toggleHeaderOnTitleClick="true"
+        busy="{oUi>/busy}"
+        >
         <!-- DynamicPage Title -->
         <f:title>
             <f:DynamicPageTitle>
@@ -70,14 +74,14 @@
                             <smartFilterBar:ControlConfiguration key="material_desc" groupId="_BASIC" index="2" label="자재명"  
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
-                                    <Input key="material_desc" tooltip="자재명" placeholder="자재명을 입력하세요."/>
+                                    <Input id="material_desc" tooltip="자재명" placeholder="자재명을 입력하세요."/>
                                 </smartFilterBar:customControl>
                             </smartFilterBar:ControlConfiguration>
-                            <!-- 공급업체명 -->  mvn
+                            <!-- 공급업체명 -->  
                             <smartFilterBar:ControlConfiguration key="supplier_local_name" groupId="_BASIC" index="3" label="공급업체명" 
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
-                                    <Input key="supplier_local_name" tooltip="공급업체명" placeholder="공급업체명을 입력하세요."/>
+                                    <Input id="supplier_local_name" tooltip="공급업체명" placeholder="공급업체명을 입력하세요."/>
                                 </smartFilterBar:customControl>
                             </smartFilterBar:ControlConfiguration>  
                             <smartFilterBar:ControlConfiguration key="Validated" filterType="single"/>          
@@ -103,7 +107,7 @@
                     id="smartTable_MainTable_ResponsiveTable"
                     entitySet="MIMaterialCodeBOMManagementView"
                     tableBindingPath="{MIMaterialCodeBOMManagementView}"
-                    initiallyVisibleFields="material_code,supplier_code,base_quantity,processing_cost,mi_material_code,mi_material_name,category_name,reqm_quantity_unit,reqm_quantity,currency_unit,mi_base_reqm_quantity,quantity_unit,exchange,termsdelv,use_flag"
+                    initiallyVisibleFields="material_code,material_desc,supplier_code,base_quantity,processing_cost,mi_material_code,mi_material_name,category_name,reqm_quantity_unit,reqm_quantity,currency_unit,mi_base_reqm_quantity,quantity_unit,exchange,termsdelv,use_flag"
                     smartFilterId="smartFilterBar"
                     tableType="ResponsiveTable"
                     useExportToExcel="true"

@@ -8,7 +8,9 @@
     xmlns:core="sap.ui.core"
     height="100%">
     <App>
-        <Page id="page" title="자재별 시황자재 BOM 등록">
+        <Page id="page" 
+        title="자재별 시황자재 BOM 등록" 
+        busy="{oUi>/busy}">
             <content>
                 <uxap:ObjectPageLayout                    
                     toggleHeaderOnTitleClick="true"
@@ -126,11 +128,13 @@
                                             <layout:VerticalLayout class="sapUiLargeMarginEnd">
                                                 <Label  text="기준수량:" 
                                                         required="{oUi>/createMode}"
-                                                        textAlign="Right" 
+
                                                         class="sapUiTinyMarginBottom"/>                                               
-                                                <Label  text="{oUiData>/base_quantity}" textAlign="Center"
+                                                <Label  text="{oUiData>/base_quantity}"
                                                         visible="{=!${oUi>/createMode}}"
                                                         type="Number"
+                                                        textAlign="Right" 
+                                                        width="60px"                                                        
                                                         design="Bold"/>
                                                 <Input  id="input_base_quantity"
                                                         required="{oUi>/createMode}"
@@ -155,6 +159,8 @@
                                                 class="sapUiTinyMarginBottom"/>
                                                 <Label  text="{oUiData>/processing_cost}" design="Bold"
                                                         visible="{=!${oUi>/createMode}}" 
+                                                        textAlign="Right" 
+                                                        width="50px"                                                              
                                                         class="sapUiLargeMarginEnd"/>
                                                 <Input  id="input_processing_cost"
                                                         required="{oUi>/createMode}"
@@ -177,7 +183,9 @@
                                                 <Label  text="가공비통화:"                                                        
                                                         class="sapUiTinyMarginBottom"/>
                                                 <Label  text="{oUiData>/pcst_currency_unit}" 
-                                                        design="Bold"                                                         
+                                                        design="Bold"    
+                                                        textAlign="Center" 
+                                                        width="70px"                                                                                                                 
                                                         visible="{oUi>/readMode}"
                                                         />
                                                             <!-- required="{= !${oUi>/readMode}}"                                           -->
@@ -186,17 +194,22 @@
                                                     items ="{
                                                         path : '/CurrencyUnitView',
                                                         filters : [
-                                                                {path : 'tenant_id', 
-                                                                operator : 'EQ', 
-                                                                value1 : 'L2100'}                                                                            
+                                                                {   path : 'tenant_id', 
+                                                                    operator : 'EQ', 
+                                                                    value1 : 'L2100'
+                                                                },
+                                                                {   path : 'language_code', 
+                                                                    operator : 'EQ', 
+                                                                    value1 : 'KO'
+                                                                }
                                                         ]
                                                     }"
-                                                    width="100px"
+                                                    width="120px"
                                                     selectedKey="{oUiData>/pcst_currency_unit}"                                       
                                                     placeholder="선택"
                                                     visible="{= !${oUi>/readMode}}" 
                                                 >
-                                                <core:Item key="{currency_code}" text="{currency_code_name}" />
+                                                <core:Item key="{currency_code}" text="{currency_code} : {currency_code_name}" />
                                                 </ComboBox>
                                             </layout:VerticalLayout>                                                                                        
                                         </FlexBox>    
@@ -211,11 +224,6 @@
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection>
                                     <uxap:blocks>
-                                        
-                                        <!-- items="{path : '/MIMaterialCodeText',filters: [{path: 'mi_material_code', operator: 'EQ', value1: '{= ${midObjectData>/mi_material_code}'}]}"
-                                        updateFinished="onMitTableUpdateFinished"
-                                        Note : 수정대상 mi_material_code 전달 받은 값으로 수정 
-                                         -->  
                                          <Table
                                             id="midTable" 
                                             items="{midList>/}"
@@ -229,7 +237,7 @@
                                                                     text="Add" 
                                                                     type="Transparent" 
                                                                     visible="{=!${oUi>/readMode}}" 
-                                                                    press=".onMaterialDetail"/>
+                                                                    press=".onMaterialDetail(false)"/>
                                                             <Button id="buttonMidTableDelete" 
                                                                     text="Delete" 
                                                                     type="Transparent" 
@@ -309,9 +317,17 @@
                                             <items>
                                                 <ColumnListItem>
                                                     <cells>
-                                                        <Text text="{midList>itemMode}"/>
+                                                        <Text text="{midList>itemMode}" />
                                                         <Text text="{midList>odataMode}"/>
-                                                        <Text text="{midList>mi_material_code}" />                                          
+                                                        <VBox>
+                                                            <Button text="{midList>mi_material_code}"
+                                                                    type="Transparent"
+                                                                    visible="{=!${oUi>/readMode}}"                                                                     
+                                                                    press=".onMaterialChange"/>  
+                                                            <Text text="{midList>mi_material_code}" 
+                                                                  visible="{oUi>/readMode}"/>                                                                                                                           
+                                                        </VBox>
+
                                                         <Text text="{midList>mi_material_name}" />                                          
                                                         <Text text="{midList>category_name}" />  
                                                         <VBox  alignItems="Center">  

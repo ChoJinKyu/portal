@@ -96,9 +96,6 @@ sap.ui.define([
 		
             this._getSmartTableById().getTable().attachSelectionChange(this._selectionChanged.bind(this));
 
-			//Note : 초기 테이블 실행 
-			// this._mainTable.setModel(oModel);
-			// this._mainTable.rebindTable(); 
 			this.getModel("oUi").setProperty("/headerExpanded", true);
 			console.groupEnd();
 		},
@@ -132,7 +129,6 @@ sap.ui.define([
 			  }
             });            
            
-
             this.getView().getModel().attachPropertyChange(this._propertyChanged.bind(this));
             
 			console.groupEnd();
@@ -166,7 +162,6 @@ sap.ui.define([
             return this._oSmartTable;
         },
 
-
 		/**
 		 * Item Select Change
 		 */
@@ -185,20 +180,8 @@ sap.ui.define([
          * @param {sap.ui.base.Event} oEvent 
          */
 		onBeforeRebindTable: function (oEvent) {
-		
-            console.group("onBeforeRebindTable");
-
-            // Object.keys(data.multi || {}).forEach(k => {
-            // var f = [];
-            // data.multi[k].forEach(v => {
-            //     if (v) f.push(new Filter(k, FilterOperator.EQ, v));
-            // });
-
-            // if (f.length > 0) {
-            //     this.aFilters.push(new Filter(f));
-            // }
-            // });
-
+			console.group("onBeforeRebindTable");
+			this._getSmartTableById().getTable().removeSelections(true);
 			var mBindingParams = oEvent.getParameter("bindingParams");
 			var oSmtFilter = this.getView().byId("smartFilterBar");             //smart filter
 			
@@ -327,23 +310,15 @@ sap.ui.define([
                     var sPath = oItem.getBindingContextPath();	
 					var mParameters = {"groupId":that._m.groupID};
 					var oRecord = that.getModel().getProperty(sPath);
-
 					var oDeleteMIMaterialCodeKey = {
 						tenant_id : oRecord.tenant_id,
-						company_code : oRecord.company_code,
-						org_type_code : oRecord.org_type_code,
-						org_code: oRecord.org_code,
 						mi_material_code: oRecord.mi_material_code,
 						category_code:  oRecord.category_code
 					}
-					//console.log("oDeleteMIMaterialCodeKey", oDeleteMIMaterialCodeKey );
 					var oDeleteMaterialCodePath = oModel.createKey(
 							that._m.serviceName.mIMaterialCode,
 							oDeleteMIMaterialCodeKey
 					);
-					//console.log("oDeleteMaterialCodePath", oDeleteMaterialCodePath );
-					//수정대상
-					//시황자재 가격관리 등록이 되어 있거나 자재별 시황자재 BOM 에 등록되어 있는 데이타는 삭제 할수 없다.
 					oItem.getBindingContext().getModel().remove(oDeleteMaterialCodePath, mParameters);
 				});
 				
@@ -367,11 +342,8 @@ sap.ui.define([
 			var oModel = this.getModel(),
 			checkFilters = [],
 			bDeleteCheck = false;	
-					
+
 			checkFilters.push(new Filter("tenant_id", FilterOperator.Contains, oItemData.tenant_id));
-			checkFilters.push(new Filter("company_code", FilterOperator.Contains, oItemData.company_code));
-			checkFilters.push(new Filter("org_type_code", FilterOperator.Contains, oItemData.org_type_code));
-			checkFilters.push(new Filter("org_code", FilterOperator.Contains, oItemData.org_code));				
 			checkFilters.push(new Filter("mi_material_code", FilterOperator.Contains, oItemData.mi_material_code));				
 
 			oModel.read(this._m.serviceName.mIMatListView, {
@@ -397,9 +369,6 @@ sap.ui.define([
 			bDeleteCheck = false;	
 					
 			checkFilters.push(new Filter("tenant_id", FilterOperator.Contains, oItemData.tenant_id));
-			checkFilters.push(new Filter("company_code", FilterOperator.Contains, oItemData.company_code));
-			checkFilters.push(new Filter("org_type_code", FilterOperator.Contains, oItemData.org_type_code));
-			checkFilters.push(new Filter("org_code", FilterOperator.Contains, oItemData.org_code));				
 			checkFilters.push(new Filter("mi_material_code", FilterOperator.Contains, oItemData.mi_material_code));				
 
 			oModel.read(this._m.serviceName.mIMaterialPriceManagement, {
@@ -455,28 +424,15 @@ sap.ui.define([
 			console.log("onMainTableCreate");
 
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-	
-
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
 				tenant_id: this._sso.dept.tenant_id,
-				company_code: this._sso.dept.company_code,
-				org_type_code: this._sso.dept.org_type_code,
-				org_code: this._sso.dept.org_code,
 				mi_material_code: "new"				
             });
 			//수정대상 : 수정 검색한 값을 기준으로 데이타를 수정해야한다. 
 			if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
 				this.getView().getModel('oUi').setProperty("/headerExpandFlag", false);
 			}	
-
-			//var oItem = oEvent.getSource();
-			//oItem.setNavigated(true);
-			//var oParent = oItem.getParent();
-			//this.iIndex = oParent.indexOfItem(oItem);
-			
-
-			
 		},
 
 		/**
@@ -486,10 +442,6 @@ sap.ui.define([
 		 */
 		onPageSearchButtonPress : function (oEvent) {
 			if (oEvent.getParameters().refreshButtonPressed) {
-				// Search field's 'refresh' button has been pressed.
-				// This is visible if you select any master list item.
-				// In this case no new search is triggered, we only
-				// refresh the list binding.
 				this.onRefresh();
 			} else {
 				var aSearchFilters = this._getSearchStates();
@@ -497,6 +449,14 @@ sap.ui.define([
 			}
 		},
 
+		_setReplace : function (str) {
+
+			if(str!=null){
+				return str.replace(/'/g, '');	
+			}else{
+				return  null;
+			}
+		},
 		/**
 		 * Event handler when pressed the item of table
 		 * @param {sap.ui.base.Event} oEvent
@@ -507,16 +467,6 @@ sap.ui.define([
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
 				sPath = oEvent.getSource().getBindingContext().getPath(),
 				oRecord = this.getModel().getProperty(sPath);
-				// ,
-				// oTable = this.get
-				// oSelected = oTable.getSelectedContexts();
-
-				// for (var i = 0; i < oSelected.length; i++) {
-                //     var idx = parseInt(oSelected[0].sPath.substring(oSelected[0].sPath.lastIndexOf('/') + 1));
-				// 		var itemData = oModel.oData[idx];
-				// 		debugger;
-				// }
-				
 				var aParameters = sPath.substring( sPath.indexOf('(')+1, sPath.length );		
 				aParameters = aParameters.split(",");
 		
@@ -527,13 +477,9 @@ sap.ui.define([
 					value = aParameters[i].split("=")[1];			 
 					aParameters[key] = value;
 				}
-
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
-				tenant_id: aParameters["tenant_id"],
-                company_code: aParameters["company_code"],
-				org_type_code: aParameters["org_type_code"],
-				org_code :aParameters["org_code"],
+				tenant_id: this._setReplace(aParameters["tenant_id"]),
 				mi_material_code: oRecord.mi_material_code
 				
             });

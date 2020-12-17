@@ -30,7 +30,7 @@
                              class="sapUiTinyMarginTop sapUiTinyMarginBegin" />
                 <Table  id="leftTable"
                         mode="SingleSelectLeft"
-                        items="{mIMatCategListView>/}"
+                        items="{mIMatListView>/}"
                         selectionChange=".onSelectedLeftTableItem"
                         itemPress=".onSelectedLeftTableItem"                        
                         noDataText="No Data"
@@ -49,9 +49,6 @@
 <d:use_flag>true</d:use_flag>                 -->
                     <columns>
                         <Column hAlign="Center" visible="false"><header><Label text="tenant_id"/></header></Column>
-                        <Column hAlign="Center" visible="false"><header><Label text="company_code"/></header></Column>
-                        <Column hAlign="Center" visible="false"><header><Label text="org_type_code"/></header></Column>
-                        <Column hAlign="Center" visible="false"><header><Label text="org_code"/></header></Column>
                         <Column hAlign="Center" visible="false"><header><Label text="category_code"/></header></Column>
                         <Column hAlign="Center" ><header><Label text="Code"/></header></Column>
                         <Column hAlign="Center" ><header><Label text="Name"/></header></Column>
@@ -60,17 +57,11 @@
                     <items>
                         <ColumnListItem type="Active">
                             <cells>
-                                <!-- dev20201213 <Text text="{mIMatCategListView>mi_material_code}"/>
-                                <Text text="{mIMatCategListView>mi_material_code}"/>
-                                <Text text="{mIMatCategListView>category_name}"/> -->
-                                <Text text="{mIMatCategListView>tenant_id}"/>
-                                <Text text="{mIMatCategListView>company_code}"/>
-                                <Text text="{mIMatCategListView>org_type_code}"/>
-                                <Text text="{mIMatCategListView>org_code}"/>
-                                <Text text="{mIMatCategListView>category_code}"/>
-                                <Text text="{mIMatCategListView>mi_material_code}"/>
-                                <Text text="{mIMatCategListView>mi_material_name}"/>
-                                <Text text="{mIMatCategListView>category_name}"/>
+                                <Text text="{mIMatListView>tenant_id}"/>
+                                <Text text="{mIMatListView>category_code}"/>
+                                <Text text="{mIMatListView>mi_material_code}"/>
+                                <Text text="{mIMatListView>mi_material_name}"/>
+                                <Text text="{mIMatListView>category_name}"/>
                             </cells>
                         </ColumnListItem>
                     </items>

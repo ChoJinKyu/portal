@@ -1,3 +1,167 @@
+removeSelections(true)
+
+
+this._selectedIndex = parseInt(obj.substring(1)); 
+this.onMaterialDetail(true);
+var searchField_material_code = this._findFragmentControlId(this._m.fragementId.materialDetail, "searchField_material_code");
+searchField_material_code.setValue(midList.oData[this._selectedIndex].mi_material_code);            
+this.onMaterialSearch();
+
+
+searchField_material_code = this._findFragmentControlId(this._m.fragementId.materialDetail, "searchField_material_code").getValue(),
+                  
+var oFirstItem = leftTable.getItems()[0];
+var venitems=leftTable.getItems();
+venitems[0].setSelected(true);
+that.onSelectedLeftTableItem();
+
+                                      
+                    var oFirstItem = leftTable.getItems()[0];
+
+                    var venitems=leftTable.getItems();
+
+                    venitems[0].setSelected(true);
+                    
+                    that.onSelectedLeftTableItem();
+
+
+
+midList.oData[this._selectedIndex].reqm_quantity_unit = uom_code;
+
+this._selectedIndex
+
+mIMatCategListView
+_deleteItemOdata
+"/MIMaterialCodeBOMManagementItem(tenant_id='L2100',
+company_code='*',
+org_type_code='BU',
+org_code='BIZ00100',
+mi_bom_id='2',
+mi_material_code='A001-01-01',
+currency_unit=null,
+quantity_unit=null,
+exchange=null,
+termsdelv=null)"
+ 
+"tenant_name": "-1", 
+"org_type_code": "-1", 
+"org_code": "-1", 
+					// return new Promise(
+					// 	function(resolve, reject) {
+                    // 					that.getModel().read(that._m.serviceName.mIMater
+                    ialCodeBOMManagementItem, {
+					// 					  filters: sFilters,
+					// 					  success: function(oData, reponse) {
+					// 						  if(reponse.data.results.length>0){
+					// 							  that._m.deleteCheckItemCount = reponse.data.results.length;
+					// 							  console.log("=========== length", reponse.data.results.length)
+					// 						  }									
+					// 						  resolve(oData);
+					// 					  },
+					// 					  error: function(oResult) {
+					// 						reject(oResult);
+					// 					  }
+					// 					});
+					// 		});
+					// },
+
+
+					// Promise.all([ this.readChecklistEntity(sFilters)
+					// ]).then(this._setUseBatch.bind(that), this._setUseBatch.bind(that));
+
+					// oModel.read(that._m.serviceName.mIMaterialCodeBOMManagementItem, {
+					// 	async: false,
+					// 	filters: sFilters,
+					// 	success: function (rData, reponse) {
+					// 		if(reponse.data.results.length>0){
+
+					// 			//삭제할 Item총수가 현재 남아 있는 아이템과 같을때 Header 까지 같이 실행한다.
+					// 			//비동기로..먼저 지나간다...
+					// 			if(reponse.data.results.length == deleteItemCount){
+
+					// 				var oDeleteMIMaterialCodeBOMManagementHeaderPath = oModel.createKey(
+					// 					that._m.serviceName.mIMaterialCodeBOMManagementHeader,
+					// 					mIMaterialCodeBOMManagementHeaderKey
+					// 				);
+
+					// 				oModel.remove(
+					// 					oDeleteMIMaterialCodeBOMManagementHeaderPath, 
+					// 					{ 
+					// 						groupId: that._m.groupID 
+					// 					}
+					// 				);
+					// 				_nDeleteHeaderItem++; 
+					// 				console.log("-----------_nDeleteHeaderItem--------", _nDeleteHeaderItem);
+					// 			}
+					// 		}
+					// 	}
+                    // });
+                    
+
+"/MIMaterialCodeBOMManagementView(tenant_id='L2100',
+company_code='*',org_type_code='BU',
+org_code='BIZ00100',
+material_code='PRIACT0001',
+supplier_code='KR01820500',
+mi_bom_id='1',
+mi_material_code='A001-01-01',
+currency_unit='USD',
+quantity_unit='TON',
+exchange='ICIS',
+termsdelv='CFR%20KOR')"
+
+pg.marketIntelligenceService.MIMaterialCodeText' with key(s) 
+'tenant_id=L2100,mi_material_code=2-EH1,language_code=EN' not found"}}} 
+-  sap.ui.model.odata.v2.ODataModel
+
+a.open()
+a.setBusyIndicatorDelay(40000);
+
+            oViewModel = new JSONModel({
+                selectedrows : [],
+                timeZoneCountryInput : "",
+                busy : false,
+                hasUIChanges : false,
+                usernameEmpty : true,
+                order : 0
+            });
+
+            _setBusy : function (bIsBusy) {
+                var oModel = this.getView().getModel("oUi");
+                oModel.setProperty("/busy", bIsBusy);
+            },
+            _setUIChanges : function (bHasUIChanges) {
+                if (this._bTechnicalErrors) {
+                    // If there is currently a technical error, then force 'true'.
+                    bHasUIChanges = true;
+                } else if (bHasUIChanges === undefined) {
+                    bHasUIChanges = this.getView().getModel().hasPendingChanges();
+                }
+                var oModel = this.getView().getModel("timeModel");
+                oModel.setProperty("/hasUIChanges", bHasUIChanges);
+            },
+
+
+                    this._setBusy(false);
+                    MessageToast.show("저장 업데이트 완료");
+                    this._setUIChanges(false);
+
+                    var oTable = this.byId(tableName);                    
+                    var oBinding = oTable.getBinding("items");
+    
+                    if(tableName!="mainList"){ bSub = true; }
+                    if (!oBinding.hasPendingChanges()) {
+                        MessageBox.error("수정한 내용이 없습니다.");
+                        return;
+                    }
+                                         //focus 이동
+                oTable.getRows().some(function (oRows) {
+                    if (oRows.getBindingContext() === oContext) {
+                        oRows.focus();
+                        oRows.setSelected(true);       
+                        return true;
+                    }
+                });               
 "tenant_id": "L2100",
 "company_code": "*",
 "org_type_code": "BU",

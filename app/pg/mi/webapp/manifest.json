@@ -122,7 +122,7 @@
               ]
           },
           {  
-              "pattern": "midObject/{layout}/{tenant_id}/{company_code}/{org_type_code}/{org_code}/{mi_material_code}",
+              "pattern": "midObject/{layout}/{tenant_id}/{mi_material_code}",
               "name": "midPage",
               "target": [
                   "mainObject",

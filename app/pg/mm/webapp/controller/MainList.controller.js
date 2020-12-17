@@ -20,7 +20,30 @@ sap.ui.define([
 	return BaseController.extend("pg.mm.controller.MainList", {
 
 		dateFormatter: DateFormatter,
+		_m : { 
+            page : "page",
+            groupID : "pgGroup",
+            mi_bom_id : 0,
+            serviceName : {
+                marketIntelligenceService : "pg.marketIntelligenceService", //main Service
+                mIMaterialCodeBOMManagementView: "/MIMaterialCodeBOMManagementView",  //자재별 시황자재 BOM 조회 View
+                mIMaterialCodeBOMManagementItem:"/MIMaterialCodeBOMManagementItem",//자재별 시황자재 BOM 관리 Item
+                mIMaterialCodeBOMManagementHeader:"/MIMaterialCodeBOMManagementHeader",//자재별 시황자재 BOM 관리 Header
+                orgCodeView: "/OrgCodeView" //관리조직 View
+            },
+            messageType : {
+                Warning : sap.ui.core.MessageType.Warning,
+                Error : sap.ui.core.MessageType.Error,
+                Information : sap.ui.core.MessageType.Information,
+                None : sap.ui.core.MessageType.None,
+                Success : sap.ui.core.MessageType.Success                
+			},
+			deleteCheckItemCount : 0,
+			deleteHeaderItemCount : 0,
+			deleteItemCount : 0,
 
+        },
+		
 		_sso : { //수정대상 공통 사용자 정보 확인될시 //MaterialDialog
             user : {
                 id : "Admin",
@@ -44,31 +67,34 @@ sap.ui.define([
 		onInit : function () {
 			
 			console.group("onInit");
-			var oUi,oUiData, oResourceBundle = this.getResourceBundle();
+			var oUi,oUiData, oDeleteInfo, oResourceBundle = this.getResourceBundle();
 
 			// Model used to manipulate control states
 			oUi = new JSONModel({
 				headerExpanded: true,
 				mainListTableTitle : oResourceBundle.getText("mainListTableTitle"),
-				tableNoDataText : oResourceBundle.getText("tableNoDataText")
+				tableNoDataText : oResourceBundle.getText("tableNoDataText"),
+				busy : false
 			});
 
 			oUiData = new JSONModel({
 				org_code : this._sso.dept.org_code
 			});
 
-
+			oDeleteInfo = new JSONModel({oData:[]});
 			this.setModel(oUi, "oUi");
 			this.setModel(oUiData, "oUiData");
+			this.setModel(oDeleteInfo, "oDeleteInfo");
 
 
 			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
             this._mainTable = this.getView().byId("mainTable");
 		
-           // this._getSmartTableById().getTable().attachSelectionChange(this._selectionChanged.bind(this));
-
-			console.groupEnd();
+            this._getSmartTableById().getTable().attachSelectionChange(this._selectionChanged.bind(this));
+		   	// var view = this.getView().byId("page"); 
+		   	// view.setBusy(true);
+			// console.groupEnd();
 		},
 		
 		/**
@@ -141,31 +167,35 @@ sap.ui.define([
         _selectionChanged: function(){
 			console.group("_selectionChanged");
             var oItemLength = this._getSmartTableById().getTable().getSelectedItems().length;
-			//var bDeleteEnabled = oItemLength > 0;
-            //this.getView().byId("buttonMainTableDelete").setEnabled(bDeleteEnabled);
+			var bDeleteEnabled = oItemLength > 0;
+            this.getView().byId("buttonMainTableDelete").setEnabled(bDeleteEnabled);
 
 			console.groupEnd();
         },
 
-		   
+		_setReplace : function (str) {
+
+			if(str!=null){
+				return str.replace(/'/g, '');	
+			}else{
+				return  null;
+			}
+		}, 
         /**
          * Smart Table Filter Event onBeforeRebindTable
          * @param {sap.ui.base.Event} oEvent 
          */
 		onBeforeRebindTable: function (oEvent) {
-		
-            console.group("onBeforeRebindTable");
-
+			console.log("onBeforeRebindTable");
+			
+			this._getSmartTableById().getTable().removeSelections(true);
 			var mBindingParams = oEvent.getParameter("bindingParams");
 			var oSmtFilter = this.getView().byId("smartFilterBar");         
 
             var oOrg_code = oSmtFilter.getControlByKey("org_code").getSelectedKey();    
             var oMaterial_desc = oSmtFilter.getControlByKey("material_desc").getValue();   
             var oSupplier_local_name = oSmtFilter.getControlByKey("supplier_local_name").getValue();    
-            /*material_code,material_desc,supplier_code,supplier_local_name,base_quantity,
-            processing_cost,pcst_currency_unit,mi_material_code,mi_material_name,category_name,
-            reqm_quantity_unit,reqm_quantity,currency_unit,mi_base_reqm_quantity,quantity_unit,
-            exchange,termsdelv,use_flag*/
+
 	 
 			var otenant_idFilter = new Filter("tenant_id", FilterOperator.EQ, this._sso.dept.tenant_id);
 			mBindingParams.filters.push(otenant_idFilter);
@@ -184,8 +214,6 @@ sap.ui.define([
 				var oSupplier_local_nameFilter = new Filter("supplier_local_name", FilterOperator.Contains, oSupplier_local_name);
 				mBindingParams.filters.push(oSupplier_local_nameFilter);
             }            
-			
-			console.groupEnd();              
         },
         
         /**
@@ -329,13 +357,13 @@ sap.ui.define([
 			
 				this.getRouter().navTo("midPage", {
 					layout: oNextUIState.layout, 
-					tenant_id: aParameters["tenant_id"],
-					company_code: aParameters["company_code"],
-					org_type_code: aParameters["org_type_code"],
-					org_code :aParameters["org_code"],
+					tenant_id: this._setReplace(aParameters["tenant_id"]),
+					company_code: this._setReplace(aParameters["company_code"]),
+					org_type_code: this._setReplace(aParameters["org_type_code"]),
+					org_code : this._setReplace(aParameters["org_code"]),
 					material_code: oRecord.material_code,
-					supplier_code: aParameters["supplier_code"],
-					mi_material_code: aParameters["mi_material_code"]
+					supplier_code: this._setReplace(aParameters["supplier_code"]),
+					mi_material_code: this._setReplace(aParameters["mi_material_code"])
 					
 				});
 
@@ -371,7 +399,7 @@ sap.ui.define([
 		_applySearch: function(aSearchFilters) {
 		},
 		
-		 _getSearchStates: function(){
+		_getSearchStates: function(){
 			var sChain = this.getView().byId("searchChain").getSelectedKey(),
 				sKeyword = this.getView().byId("searchKeyword").getValue(),
 				sUsage = this.getView().byId("searchUsageSegmentButton").getSelectedKey();
@@ -408,18 +436,7 @@ sap.ui.define([
 			return aSearchFilters;
 		},
 		
-		_doInitTablePerso: function(){
-			// init and activate controller
-			this._oTPC = new TablePersoController({
-				table: this.byId("mainTable"),
-				componentName: "mi",
-				persoService: MainListPersoService,
-				hasGrouping: true
-			}).activate();
-		},
-
-
-/**
+		/**
          * mainTable Item Delete
          * @param {sap.ui.base.Event} oEvent 
          */
@@ -451,25 +468,258 @@ sap.ui.define([
          */
 		_deleteAction: function(oAction) {
             console.group("_deleteAction");
-
 			
+			var oModel = this.getModel(),
+				oDeleteInfo = this.getModel("oDeleteInfo"),
+				that = this,
+			  	_deleteItem = new JSONModel({oData:[]}),
+				_deleteHeader = new JSONModel({oData:[]}),
+				_nDifferentDeleteHeaderItem = 0;
+				 
+			var oGlobalBusyDialog = new sap.m.BusyDialog();
+			 	oGlobalBusyDialog.open();
+
 			if(oAction === sap.m.MessageBox.Action.DELETE) {
+				
+				oDeleteInfo.setData({oData:[]});
+
+				//해당 테이블에 바인딩 되지 않아도 ITEM이 모두 삭제 되면 Header 정보도 삭제 되어야 한다. 
+				
 				this._getSmartTableById().getTable().getSelectedItems().forEach(function(oItem){
+
                     var sPath = oItem.getBindingContextPath();	
-					var mParameters = {"groupId":"pgGroup"};
-					oItem.getBindingContext().getModel().remove(sPath, mParameters);
+					var aParameters = sPath.substring( sPath.indexOf('(')+1, sPath.length );		
+					aParameters = aParameters.split(",");
+					var _nDeleteItem = 0;
+					var size = aParameters.length;
+					var key, value;
+					for(var i=0 ; i < size ; i++) {
+						key = aParameters[i].split("=")[0];
+						value = aParameters[i].split("=")[1];			 
+						aParameters[key] = value;
+					}
+
+					var o_tenant_id = that._setReplace(aParameters["tenant_id"]),
+						o_company_code = that._setReplace(aParameters["company_code"]),
+						o_org_type_code = that._setReplace(aParameters["org_type_code"]),
+						o_org_code = that._setReplace(aParameters["org_code"]),
+						o_material_code = that._setReplace(aParameters["material_code"]),
+						o_mi_material_code = that._setReplace(aParameters["mi_material_code"]),
+						o_supplier_code= that._setReplace(aParameters["supplier_code"]),
+						o_mi_bom_id =  that._setReplace(aParameters["mi_bom_id"]),
+						o_currency_unit =  that._setReplace(aParameters["currency_unit"]),
+						o_quantity_unit =  that._setReplace(aParameters["quantity_unit"]),
+						o_exchange =  that._setReplace(aParameters["exchange"]),
+						o_termsdelv =  that._setReplace(aParameters["termsdelv"]);
+						
+					//item =====================================================================
+					var oDeleteMIMaterialCodeBOMManagementItemKey = {
+                        tenant_id : o_tenant_id,
+                        company_code : o_company_code,
+                        org_type_code : o_org_type_code,
+                        org_code: o_org_code,
+						mi_material_code: o_mi_material_code,
+						supplier_code: o_supplier_code,
+						mi_bom_id: o_mi_bom_id,
+						currency_unit: o_currency_unit,
+                        quantity_unit: o_quantity_unit,																								
+						exchange:  o_exchange,
+						termsdelv:  o_termsdelv
+                    };
+					var _deleteItemOdata = _deleteItem.getProperty("/oData");
+
+                    var oDeleteMIMaterialCodeBOMManagementItemPath = oModel.createKey(
+							that._m.serviceName.mIMaterialCodeBOMManagementItem,
+                            oDeleteMIMaterialCodeBOMManagementItemKey
+					);
+
+					_deleteItemOdata.push(oDeleteMIMaterialCodeBOMManagementItemKey);
+                   
+					oModel.remove(
+						oDeleteMIMaterialCodeBOMManagementItemPath, 
+						{ 
+							groupId: that._m.groupID 
+						}
+					);
+					_nDeleteItem++;
+
+					var oDeleteMIMaterialCodeBOMManagementHeaderKey = {
+						tenant_id : o_tenant_id,
+						company_code : o_company_code,
+						org_type_code : o_org_type_code,
+						org_code: o_org_code,
+						material_code: o_material_code,
+						supplier_code: o_supplier_code,
+						mi_bom_id:  o_mi_bom_id	
+					};
+
+					//header에 등록된 데이타 인지 확인
+					var flag_deleteHeadel_mi_bom_id = true;
+					var _deleteHeaderOdata = _deleteHeader.getProperty("/oData");
+					var _deleteItemOdata = _deleteItem.getProperty("/oData");
+
+					for(var x=0; x<_deleteHeaderOdata.length;x++){
+
+						if(_deleteHeaderOdata[x].tenant_id== o_tenant_id  &&
+							_deleteHeaderOdata[x].company_code==o_company_code &&
+							_deleteHeaderOdata[x].org_type_code==o_org_type_code &&
+							_deleteHeaderOdata[x].org_code==o_org_code &&
+							_deleteHeaderOdata[x].material_code==o_material_code &&
+							_deleteHeaderOdata[x].supplier_code==o_supplier_code &&
+							_deleteHeaderOdata[x].mi_bom_id==o_mi_bom_id
+							){
+
+							flag_deleteHeadel_mi_bom_id = false;
+
+							break;
+						}
+					}
+
+					//기존에 담겨 있지 않을때에만 header 정보 등록
+					if(flag_deleteHeadel_mi_bom_id){
+						_deleteHeaderOdata.push(oDeleteMIMaterialCodeBOMManagementHeaderKey);
+						_nDifferentDeleteHeaderItem++;
+					
+					}
 				});
 
-				var oModel = this.getView().getModel();
-				oModel.submitChanges({
-		      		groupId: "pgGroup", 
-		        	success: this._handleDeleteSuccess.bind(this),
-		        	error: this._handleDeleteError.bind(this)
-		     	});
+				//header 작업 ---------------------------------------------------
+				var _deleteHeaderOdata = _deleteHeader.getProperty("/oData");
+				var _deleteItemOdata = _deleteItem.getProperty("/oData");
+
+				//배열에 담긴 key과 동일한 아이템 카운트 구함
+				for( var i=0; i < _deleteHeaderOdata.length; i++ ){
+
+					var oFilters=[];					
+					var deleteHeaderSameKeyItemCount = 0;
+					var oDeleteMIMaterialCodeBOMManagementHeaderKey;
+					var t = 0;					
+					for ( var x = 0; x < _deleteItemOdata.length; x++ ){
+						if(
+							_deleteItemOdata[x].tenant_id == _deleteHeaderOdata[i].tenant_id &&
+							_deleteItemOdata[x].company_code == _deleteHeaderOdata[i].company_code &&
+							_deleteItemOdata[x].org_type_code == _deleteHeaderOdata[i].org_type_code &&
+							_deleteItemOdata[x].org_code == _deleteHeaderOdata[i].org_code &&
+							_deleteItemOdata[x].mi_bom_id == _deleteHeaderOdata[i].mi_bom_id
+						 ){
+
+							if(t==0){
+								    oFilters = [
+									new Filter("tenant_id", FilterOperator.EQ, _deleteHeaderOdata[i].tenant_id),
+									new Filter("company_code", FilterOperator.EQ, _deleteHeaderOdata[i].company_code),
+									new Filter("org_type_code", FilterOperator.EQ, _deleteHeaderOdata[i].org_type_code),
+									new Filter("org_code", FilterOperator.EQ, _deleteHeaderOdata[i].org_code),
+									new Filter("mi_bom_id", FilterOperator.EQ, _deleteHeaderOdata[i].mi_bom_id)
+								];
+						                   
+								oDeleteMIMaterialCodeBOMManagementHeaderKey = {
+									tenant_id : _deleteHeaderOdata[i].tenant_id,
+									company_code : _deleteHeaderOdata[i].company_code,
+									org_type_code : _deleteHeaderOdata[i].org_type_code,
+									org_code: _deleteHeaderOdata[i].org_code,
+									material_code: _deleteHeaderOdata[i].material_code,
+									supplier_code: _deleteHeaderOdata[i].supplier_code,
+									mi_bom_id:  _deleteHeaderOdata[i].mi_bom_id	
+								};
+								t=1;
+							}
+							
+							deleteHeaderSameKeyItemCount++;
+						}
+					}
+
+					//console.log("deleteHeaderSameKeyItemCount ["+i+ "] : ", deleteHeaderSameKeyItemCount);
+					var oDeleteInfoOdata = oDeleteInfo.getProperty("/oData");
+
+					var deleteItemInfo = {
+						info_no : i,
+						filter : oFilters,
+						delete_bom_item_count : deleteHeaderSameKeyItemCount,
+						delete_bom_header_key : oDeleteMIMaterialCodeBOMManagementHeaderKey
+					};
+
+					oDeleteInfoOdata.push(deleteItemInfo);
+				}
+
+				//아이템 조사와 Header 최종 조사 내용을 실행한다. 
+				function readChecklistItemEntity(oDeleteInfoOdata) {
+					return new Promise(function(resolve, reject) {
+
+						console.log("readChecklistItemEntity Promise filter :", oDeleteInfoOdata.filter);
+						
+						that.getModel().read(that._m.serviceName.mIMaterialCodeBOMManagementItem, {
+							filters: oDeleteInfoOdata.filter,
+							success: function(oData, reponse) {
+								oDeleteInfoOdata.resultCount = reponse.data.results.length;
+								resolve(oDeleteInfoOdata);
+							},
+							error: function(oResult) {
+							reject(oResult);
+							}
+						});
+					});
+				}
+
+				for(var i=0; i < oDeleteInfoOdata.length ; i++ ){
+					
+					var deleteOdataPath = oModel.createKey(this._m.serviceName.mIMaterialCodeBOMManagementHeader, oDeleteInfoOdata[i].delete_bom_header_key);
+					oDeleteInfoOdata[i].deleteOdataPath = deleteOdataPath;
+
+					readChecklistItemEntity(oDeleteInfoOdata[i]).then(function(oDeleteInfoOdata) {
+						var that = this;
+						console.log(" >>>>>>>>>>>>>>>>>>> readChecklistItemEntity then <<<<<<<<<<<<<<<<<<<<<<<< ");
+						console.log("oDeleteInfoOdata.delete_bom_item_count : " + oDeleteInfoOdata.delete_bom_item_count);
+						console.log("oDeleteInfoOdata.resultCount : " + oDeleteInfoOdata.resultCount);
+						
+						//남아 있는 아이템과 삭제하는 아이템갯수가 같을때만 헤더정보를 삭제한다.
+						if(oDeleteInfoOdata.resultCount == oDeleteInfoOdata.delete_bom_item_count){
+
+							console.log(" >>>>>>>>>>>>>>>>>>> oModel.remove Header <<<<<<<<<<<<<<<<<<<<<<<< ");
+							console.log("delete odata path : ", oDeleteInfoOdata.deleteOdataPath);
+							
+							oModel.remove(oDeleteInfoOdata.deleteOdataPath,{ 
+									groupId: "pgGroup" 
+								}
+							);
+						}
+					}); //readChecklistItemEntity end
+				} //for end
+			
+				console.log(" >>>>>>>>>>>>>>>>>>> setUseBatch <<<<<<<<<<<<<<<<<<<<<<<< ");
+				// oModel.setUseBatch(true);
+				// oModel.submitChanges({
+				// 	groupId: that._m.groupID,
+				// 	success: that._handleDeleteSuccess.bind(this),
+				// 	error: that._handleDeleteError.bind(this)
+				// });
+				oGlobalBusyDialog.close();
+				oModel.refresh(true); 
             } 
             console.groupEnd();
 		},
+	
+		_setUseBatch : function (values) {
+			if( this._m.deleteItemCount > 0 || this._m.deleteHeaderItemCount > 0){
 
+				console.log("======================= delete setUseBatch =========================");
+				console.log("================================================================");
+				console.log("======================= Action DeleteItem : " + this._m.deleteItemCount);
+				console.log("======================= Action DeleteHeaderItem : " + this._m.deleteHeaderItemCount);
+				//console.log("======================= DifferentDeleteItem : " + _nDifferentDeleteItem);
+				//console.log("======================= DifferentDeleteHeaderItem : " + _nDifferentDeleteHeaderItem);
+				console.log("================================================================");
+				this._m.deleteItemCount = 0;
+				this._m.deleteHeaderItemCount = 0;
+				// oModel.setUseBatch(true);
+				// oModel.submitChanges({
+				// 	groupId: that._m.groupID,
+				// 	success: that._handleDeleteSuccess.bind(this),
+				// 	error: that._handleDeleteError.bind(this)
+				// });
+				//oGlobalBusyDialog.close();
+				//oModel.refresh(true); 
+			} 
+		},
 
 		_handleUpdateSuccess: function(oData) {
 			MessageToast.show(this.getResourceBundle().getText("updateSuccess"));
@@ -501,7 +751,12 @@ sap.ui.define([
          */
 		_handleDeleteError: function(oError) {
 			MessageToast.show("삭제가 실패 되었습니다.");
-		}
+		},
+
+		_setBusy : function (bIsBusy) {
+			var oModel = this.getView().getModel("oUi");
+			oModel.setProperty("/busy", bIsBusy);
+		}		
 
 	});
 });

@@ -21,13 +21,13 @@
                    <!--수정사항 tenant_id 정해지면 사용자 세션으로 바인딩 -->
                     <ComboBox
                         id="comboBox_vendorView"  
-                        items="{path: '/orgCodeView', 
+                        items="{path: '/OrgCodeView', 
                                 filters : [
                                     {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'}
                                 ],
                                 templateShareable:true}" 
                         placeholder="선택 하세요.">
-                        <core:Item key="{tenant_id}" text="{tenant_name}"/>
+                        <core:Item key="{org_code}" text="{org_name}"/>
                     </ComboBox>
                 </layout:VerticalLayout>  
                 <layout:VerticalLayout class="sapUiLargeMarginEnd">
@@ -42,7 +42,7 @@
                                     ],                            
                                     templateShareable:true}"                     
                             placeholder="선택 하세요.">
-                            <core:Item key="{material_code}" text="{material_code}"/>
+                            <core:Item key="{material_code}" text="{material_desc}"/>
                         </ComboBox>
                     </VBox>
                     <VBox visible="{= ${_oUiData>/radioButtonGroup} === 1 }">
@@ -56,7 +56,7 @@
                                     ],                             
                                     templateShareable:true}"                     
                             placeholder="선택 하세요.">
-                            <core:Item key="{supplier_code}" text="{supplier_code}"/>
+                            <core:Item key="{supplier_code}" text="{supplier_local_name}"/>
                         </ComboBox>
                     </VBox>
                 </layout:VerticalLayout> 

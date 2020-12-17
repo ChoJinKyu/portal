@@ -229,7 +229,7 @@
                                                                             visible="{= ${mIMaterialCodeText>itemMode}==='C'}"
                                                                             placeholder="선택">
                                                                     <core:Item key="{languageView>code}" 
-                                                                               text="{languageView>code_name}"/>                                                                    
+                                                                               text="{languageView>code} : {languageView>code_name}"/>                                                                    
                                                                 </ComboBox>
                                                                 <Text   text="{mIMaterialCodeText>language_code}"
                                                                         visible="{=${mIMaterialCodeText>itemMode}!=='C'}"/>
