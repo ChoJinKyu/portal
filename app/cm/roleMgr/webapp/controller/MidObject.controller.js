@@ -6,6 +6,7 @@ sap.ui.define([
   "ext/lib/model/ManagedModel",
   "ext/lib/model/ManagedListModel",
   "ext/lib/formatter/DateFormatter",
+  "ext/lib/model/TreeListModel",
   "sap/ui/model/Filter",
   "sap/ui/model/FilterOperator",
   "sap/ui/core/Fragment",
@@ -17,7 +18,7 @@ sap.ui.define([
   "sap/m/Input",
   "sap/m/ComboBox",
   "sap/ui/core/Item"
-], function (BaseController, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+], function (BaseController, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, TreeListModel, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
     
     "use strict";
 
@@ -54,49 +55,66 @@ sap.ui.define([
         editMode: ""
       });
       
+      this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
+
       this.setModel(oViewModel, "midObjectView");
 
       this.setModel(new ManagedModel(), "master");
       this.setModel(new ManagedListModel(), "details");
-      //this.setModel(new ManagedListModel(), "menu");
 
       oTransactionManager = new TransactionManager();
       oTransactionManager.addDataModel(this.getModel("master"));
-     oTransactionManager.addDataModel(this.getModel("details"));
-     //oTransactionManager.addDataModel(this.getModel("menu"));
+      oTransactionManager.addDataModel(this.getModel("details"));
     
-     //this.byId("searchChain").fireChange();
-      //this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
-      this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
       this.enableMessagePopover();
-      
+     
     },
 
-    onRowSelectionChange: function (event) {
-        // event 객체를 통해 레코드(ROW)를 가져온다.        
-        var row = this.getView().getModel("menu").getObject(event.getParameters().rowContext.sPath);
-        // 라우팅 한다.
-        this.getRouter().navTo("midPage", {
-          layout: this.getOwnerComponent().getHelper().getNextUIState(1).layout,
-          "?query": {
-            menuCode: row.menu_code,
-            menuName: row.menu_name,
-            parentMenuCode: row.parent_menu_code
-          }
-        });
-      },
-
     // 역할별 메뉴관리 콤보박스 변경시 
-    chainComboChange: function (oEvent) {
-        this.getView().getModel().read("/Menu_haa", {
-          filters: [
-            new Filter("language_code", FilterOperator.EQ, "KO"),
-            new Filter("menu_code", FilterOperator.EQ, oEvent.getSource().getSelectedKey())
-          ],
-          success: (function (oData) {
-            this.getView().getModel("menu").setData({"Menu_haa" : oData.results})
-          }).bind(this)
-        });
+    chainComboChange: function (event) {
+        var predicates = [];
+        predicates.push(new Filter("chain_code", FilterOperator.Contains, this.byId("searchChain").getSelectedKey()));
+        predicates.push(new Filter("language_code", FilterOperator.EQ, "KO"));
+
+        this.treeListModel = this.treeListModel || new TreeListModel(this.getView().getModel("menu"));
+        
+        this.treeListModel.read("/Menu_haa", {
+                filters: predicates
+            })
+            // 성공시
+            .then((function (jNodes) {
+                this.getView().setModel(new JSONModel({
+                    "Menu_haa": {
+                        "nodes": jNodes
+                    }
+                }), "menu");
+            }).bind(this))
+            // 실패시
+            .catch(function (oError) {
+            })
+            // 모래시계해제
+            .finally((function () {
+                this.getView().setBusy(false);
+            }).bind(this));
+            
+        // var mParameters = {
+        //     filters: [
+        //         new Filter("chain_code", FilterOperator.Contains, this.byId("searchChain").getSelectedKey()),
+        //         new Filter("language_code", FilterOperator.EQ, "KO")
+        //     ],
+        //     success : function (oData) {
+        //         console.log("success==============", oData);
+        //     },
+        //     error: function (oError) {
+        //         console.log("error==============", oError);
+        //     }
+        // };
+
+        // this.getModel("menu").read("/Menu_haa", mParameters);
+        
+        // this.getModel("menu").refresh();
+        // console.log("2", this.getModel("menu").getData("/"));
+
     },
     /* =========================================================== */
     /* event handlers                                              */
@@ -232,16 +250,17 @@ sap.ui.define([
       } else {
         this._toShowMode();
         // ljh - 재조회
-        this.getModel("menu")
-          .setTransactionModel(this.getModel())
-          .read("/Menu_haa", {
-            filters: [
-              new Filter("menu_code", FilterOperator.EQ, "CM1200"),
-              new Filter("chain_code", FilterOperator.EQ, this.byId("searchChain").getSelectedKey())
-            ],
-            success: function (oData) {
-            }
-          });
+        // this.getModel("menu")
+        //   .setTransactionModel(this.getModel())
+        //   .read("/Menu_haa", {
+        //     filters: [
+        //       new Filter("menu_code", FilterOperator.EQ, "CM1200"),
+        //       new Filter("chain_code", FilterOperator.EQ, this.byId("searchChain").getSelectedKey())
+        //     ],
+        //     success: function (oData) {
+        //     }
+        //   });
+        this.byId("searchChain").fireChange();
       }
     },
 
@@ -291,22 +310,7 @@ sap.ui.define([
             "local_update_dtm": new Date()
         }, "/Role", 0);
 
-        var oTable = this.byId("midTable");
-        for (var i=0; i<oTable.getRows().length; i++) {
-            oTable.expandToLevel(i);
-        }
-
-        // var oMenuModel = this.getModel("menu");
-        // oMenuModel.setTransactionModel(this.getModel());
-        // oMenuModel.read("/Menu_haa", {
-        //   filters: [
-        //     new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-        //     new Filter("role_code", FilterOperator.EQ, this._sRoleCode)
-        //   ],
-        //   success: function (oData) {
-        //     console.log("Menu_haa new ##### ", oData, oMenuModel);
-        //   }
-        // });
+        this.byId("searchChain").fireChange();
 
         var oDetailsModel = this.getModel("details");
         oDetailsModel.setTransactionModel(this.getModel());
@@ -327,22 +331,7 @@ sap.ui.define([
         this._bindView("/Role(tenant_id='" + this._sTenantId + "',role_code='" + this._sRoleCode + "')");
         oView.setBusy(true);
 
-        var oTable = this.byId("midTable");
-        for (var i=0; i<oTable.getRows().length; i++) {
-            oTable.expandToLevel(i);
-        }
-
-        // var oMenuModel = this.getModel("menu");
-        // oMenuModel.setTransactionModel(this.getModel());
-        // oMenuModel.read("/Menu_haa", {
-        //   filters: [
-        //     new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-        //     new Filter("role_code", FilterOperator.EQ, this._sRoleCode)
-        //   ],
-        //   success: function (oData) {
-        //     console.log("Menu_haa new ##### ", oData, oMenuModel);
-        //   }
-        // });
+        this.byId("searchChain").fireChange();
 
         var oDetailsModel = this.getModel("details");
         oDetailsModel.setTransactionModel(this.getModel());

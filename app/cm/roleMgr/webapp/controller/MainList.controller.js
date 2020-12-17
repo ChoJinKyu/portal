@@ -47,7 +47,7 @@ sap.ui.define([
             this.setModel(new ManagedListModel(), "list");
 
             this.addHistoryEntry({
-                title: oResourceBundle.getText("/USER_MANAGEMENT"),
+                title: oResourceBundle.getText("/ROLE_MANAGEMENT"),
                 icon: "sap-icon://table-view",
                 intent: "#Template-display"
             }, true);

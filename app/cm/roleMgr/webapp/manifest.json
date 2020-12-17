@@ -33,7 +33,7 @@
                     "odataVersion": "2.0"
                 }
             },
-            "menuMgrService" : {
+            "menuMgrService": {
                 "uri": "srv-api/odata/v2/cm.menuMgrService/",
                 "type": "OData",
                 "settings": {
@@ -113,10 +113,10 @@
                 "dataSource": "menuMgrService",
                 "preload": true,
                 "settings": {
-                "defaultBindingMode": "TwoWay",
-                "defaultCountMode": "Inline",
-                "refreshAfterChange": false,
-                "useBatch": true
+                    "operationMode": "Server",
+                    "groupId": "$direct",
+                    "synchronizationMode": "None",
+                    "autoExpandSelect": true
                 }
             },
             "": {
