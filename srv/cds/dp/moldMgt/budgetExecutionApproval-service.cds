@@ -4,7 +4,7 @@ using {cm as approver} from '../../../../db/cds/cm/apprReq/CM_APPROVER-model';
 using {dp as moldMst} from '../../../../db/cds/dp/moldMgt/DP_MD_MST-model';
 using {cm as referer} from '../../../../db/cds/cm/apprReq/CM_REFERER-model';
 using {cm as codeDtl} from '../../../../db/cds/cm/codeMgr/CM_CODE_DTL-model';
-
+using { cm as codeLng } from '../../../../db/cds/cm/codeMgr/CM_CODE_LNG-model';
 namespace dp;
 
 @path : '/dp.BudgetExecutionApprovalService'
@@ -31,9 +31,23 @@ service BudgetExecutionApprovalService {
                 mst.model,
                 mst.asset_number,
                 mst.mold_item_type_code,
-             
+                (
+                    select l.code_name from codeLng.Code_Lng l
+                    where
+                            l.group_code  = 'DP_MD_ITEM_TYPE'
+                        and l.code        = mst.mold_item_type_code
+                        and l.language_cd = 'KO'
+                        and l.tenant_id   = mst.tenant_id
+                ) as mold_item_type_code_nm       : String(240),
                 mst.mold_production_type_code,
-             
+                (
+                    select l.code_name from codeLng.Code_Lng l
+                    where
+                            l.group_code  = 'DP_MD_PROD_TYPE'
+                        and l.code        = mst.mold_production_type_code
+                        and l.language_cd = 'KO'
+                        and l.tenant_id   = mst.tenant_id
+                ) as mold_production_type_code_nm : String(240),
                 mst.mold_location_type_code,
                 mst.first_production_date,
                 mst.production_complete_date,
@@ -47,12 +61,26 @@ service BudgetExecutionApprovalService {
                 mst.purchasing_amount,
                 mst.order_number,
                 mst.investment_ecst_type_code,
-          
+                (
+                    select l.code_name from codeLng.Code_Lng l
+                    where
+                            l.group_code  = 'DP_MD_BUDGET_TYPE'
+                        and l.code        = mst.investment_ecst_type_code
+                        and l.language_cd = 'KO'
+                        and l.tenant_id   = mst.tenant_id
+                ) as investment_ecst_type_code_nm : String(240),
                 mst.project_code,
                 mst.receiving_amount,
                 mst.receiving_complete_date,
                 mst.account_code,
-         
+                (
+                    select l.code_name from codeLng.Code_Lng l
+                    where
+                            l.group_code  = 'DP_MD_ACCOUNT_NEW'
+                        and l.code        = mst.account_code
+                        and l.language_cd = 'KO'
+                        and l.tenant_id   = mst.tenant_id
+                ) as account_code_nm              : String(240),
                 mst.accounting_department_code,
                 mst.acq_department_code,
                 mst.production_supplier_code,
@@ -91,7 +119,14 @@ service BudgetExecutionApprovalService {
                 mst.mold_developer_empno,
                 mst.customer_asset_type_code,
                 mst.asset_type_code,
-             
+                (
+                    select l.code_name from codeLng.Code_Lng l
+                    where
+                            l.group_code  = 'DP_MD_ASSET_TYPE'
+                        and l.code        = mst.asset_type_code
+                        and l.language_cd = 'KO'
+                        and l.tenant_id   = mst.tenant_id
+                ) as asset_type_code_nm           : String(240),
                 mst.asset_status_code,
                 mst.scrap_date,
                 mst.acq_date,
@@ -99,8 +134,7 @@ service BudgetExecutionApprovalService {
                 mst.use_department_code
         from approvalDtl.Md_Approval_Dtl dtl
         join moldMst.Md_Mst mst
-            on dtl.mold_id = mst.mold_id
-       ;
+            on dtl.mold_id = mst.mold_id; 
 
 
 }
