@@ -1,10 +1,10 @@
-using from './moldMgt/developmentReceipt-service'; 
-using from './moldMgt/detailSpecEntry-service'; 
-using from './moldMgt/orderApproval-service';
-using from './moldMgt/detailSpecConfirm-service';
-using from './moldMgt/budgetExecutionApproval-service'; 
-using from './moldMgt/moldApprovalList-service';
-using from './moldMgt/participatingSupplierSelectionApproval-service';
+using from './md/developmentReceipt-service'; 
+using from './md/detailSpecEntry-service'; 
+using from './md/orderApproval-service';
+using from './md/detailSpecConfirm-service';
+using from './md/budgetExecutionApproval-service'; 
+using from './md/moldApprovalList-service';
+using from './md/participatingSupplierSelectionApproval-service';
 // 자재코드(품번)생성 관리
 using from './mm/uomMgt/uomMgt-service';
 using from './mm/uomMgt/uomClassMgt-service';
