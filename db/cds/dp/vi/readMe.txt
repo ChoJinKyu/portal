@@ -46,7 +46,7 @@ curl -X POST http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_Ar
 "approval_requestor_empno": "15", "approval_request_date": "2020-12-10T00:00:00", 
 "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z",
 "details": [ 
-{ "au_code": "10", "material_code": "1", "supplier_code": "KR00002600", "base_date": "2020-12-10T00:00:00", "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z", 
+{ "au_code": "10", "material_code": "2", "supplier_code": "KR00002600", "base_date": "2020-12-10T00:00:00", "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z", 
 "prices": [
 { "market_code": "1", "new_base_price": "120", "new_base_price_currency_code": "KRW", "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z"}
 ]} 
