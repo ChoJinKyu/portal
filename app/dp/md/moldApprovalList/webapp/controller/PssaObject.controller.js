@@ -11,7 +11,7 @@ sap.ui.define([
 ], function (BaseController, JSONModel, History, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
 	"use strict";
 
-	return BaseController.extend("dp.moldApprovalList.controller.PssaObject", {
+	return BaseController.extend("dp.md.moldApprovalList.controller.PssaObject", {
 
 		dateFormatter: DateFormatter,
 
@@ -215,7 +215,7 @@ sap.ui.define([
 			if(!this._oFragments[sFragmentName]){
 				Fragment.load({
 					id: this.getView().getId(),
-					name: "dp.moldApprovalList.view." + sFragmentName,
+					name: "dp.md.moldApprovalList.view." + sFragmentName,
 					controller: this
 				}).then(function(oFragment){
 					this._oFragments[sFragmentName] = oFragment;

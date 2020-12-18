@@ -3,7 +3,7 @@ sap.ui.define([
 ], function (BaseController) {
 	"use strict";
 
-	return BaseController.extend("dp.moldApprovalList.controller.App", {
+	return BaseController.extend("dp.md.moldApprovalList.controller.App", {
 
 		onInit : function () {
 			// apply content density mode to root view

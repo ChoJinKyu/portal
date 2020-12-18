@@ -8,7 +8,7 @@ sap.ui.define([
 	// shortcut for sap.m.URLHelper
 	var URLHelper = mobileLibrary.URLHelper;
 
-	return Controller.extend("dp.participatingSupplierSelectionApproval.controller.BaseController", {
+	return Controller.extend("dp.md.participatingSupplierSelectionApproval.controller.BaseController", {
 		
 		/**
 		 * Convenience method for accessing the router.

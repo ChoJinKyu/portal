@@ -36,7 +36,7 @@ sap.ui.define([
     var mainViewName = "beaCreateObjectView";
 
     var oTransactionManager;
-    return BaseController.extend("dp.budgetExecutionApproval.controller.BeaCreateObject", {
+    return BaseController.extend("dp.md.budgetExecutionApproval.controller.BeaCreateObject", {
         formatter: Formatter,
         dateFormatter: DateFormatter,
         validator: new Validator(), 
@@ -324,7 +324,7 @@ sap.ui.define([
             if(!this._oFragments[sFragmentName]){
 				Fragment.load({
 					id: this.getView().getId(),
-					name: "dp.budgetExecutionApproval.view." + sFragmentName,
+					name: "dp.md.budgetExecutionApproval.view." + sFragmentName,
 					controller: this
 				}).then(function(oFragment){
 					this._oFragments[sFragmentName] = oFragment;
@@ -652,7 +652,7 @@ sap.ui.define([
                 if (!this._oDialog) {
                     this._oDialog = Fragment.load({
                         id: oView.getId(),
-                        name: "dp.budgetExecutionApproval.view.Employee",
+                        name: "dp.md.budgetExecutionApproval.view.Employee",
                         controller: this
                     }).then(function (oDialog) {
                         oView.addDependent(oDialog);
@@ -1125,7 +1125,7 @@ sap.ui.define([
                 if (!this._oDialog) {
                     this._oDialog = Fragment.load({
                         id: oView.getId(),
-                        name: "dp.budgetExecutionApproval.view.BeaObjectPreview",
+                        name: "dp.md.budgetExecutionApproval.view.BeaObjectPreview",
                         controller: this
                     }).then(function (oDialog) {
                         oView.addDependent(oDialog);
