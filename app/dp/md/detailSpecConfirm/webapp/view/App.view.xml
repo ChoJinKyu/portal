@@ -1,5 +1,5 @@
 <mvc:View
-	controllerName="dp.detailSpecConfirm.controller.App"
+	controllerName="dp.md.detailSpecConfirm.controller.App"
 	displayBlock="true"
 	xmlns="sap.m"
 	xmlns:f="sap.f"

@@ -18,7 +18,7 @@ sap.ui.define([
     
     var oTransactionManager;
 
-	return BaseController.extend("dp.detailSpecEntry.controller.MidObject", {
+	return BaseController.extend("dp.md.detailSpecEntry.controller.MidObject", {
 
         dateFormatter: DateFormatter,
         
@@ -320,7 +320,7 @@ sap.ui.define([
 			if(!this._oFragments[sFragmentName]){
 				Fragment.load({
 					id: this.getView().getId(),
-					name: "dp.detailSpecEntry.view." + sFragmentName,
+					name: "dp.md.detailSpecEntry.view." + sFragmentName,
 					controller: this
 				}).then(function(oFragment){
 					this._oFragments[sFragmentName] = oFragment;

@@ -1,4 +1,4 @@
-<mvc:View controllerName="dp.detailSpecEntry.controller.MidObject" 
+<mvc:View controllerName="dp.md.detailSpecEntry.controller.MidObject" 
 	xmlns:mvc="sap.ui.core.mvc" 
 	xmlns="sap.m" 
 	xmlns:uxap="sap.uxap" 
