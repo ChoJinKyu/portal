@@ -1,6 +1,6 @@
 namespace sp;
 
-using util from '../../cm/util-model';
+using util from '../../cm/util/util-model';
 // using {sp as fundingNotify} from '../standardCommon/SP_FS_FUNDING_NOTIFY-model';
 
 entity Sf_Funding_Notify {
