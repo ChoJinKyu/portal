@@ -1,1 +1,1 @@
-using from './netpriceSearch/netpriceSearchMgr-service';
+using from './netpriceSearch/netpriceSearch-service';
