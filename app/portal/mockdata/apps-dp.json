@@ -7,12 +7,12 @@
                 {
                     "name": "Mold Development Receipt",
                     "url": "../dp/md/developmentReceipt/webapp",
-                    "component": "dp.developmentReceipt"
+                    "component": "dp.md.developmentReceipt"
                 },
                 {
                     "name": "Mold Approval List",
                     "url": "../dp/md/moldApprovalList/webapp",
-                    "component": "dp.moldApprovalList"
+                    "component": "dp.md.moldApprovalList"
                 },
                 {
                     "name": "App #2",
@@ -22,17 +22,17 @@
                 {
                     "name": "Detail Spec Entry",
                     "url": "../dp/md/detailSpecEntry/webapp",
-                    "component": "dp.detailSpecEntry"
+                    "component": "dp.md.detailSpecEntry"
                 },
                 {
                     "name": "Detail Spec Confirm",
                     "url": "../dp/md/detailSpecConfirm/webapp",
-                    "component": "dp.detailSpecConfirm"
+                    "component": "dp.md.detailSpecConfirm"
                 },
                 {
                     "name": "Mold Receipt Confirm",
                     "url": "../dp/md/moldReceiptConfirm/webapp",
-                    "component": "dp.moldReceiptConfirm"
+                    "component": "dp.md.moldReceiptConfirm"
                 }
             ]
         },
