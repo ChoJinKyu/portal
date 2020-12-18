@@ -1,4 +1,4 @@
-package lg.sppCap.handlers.xx;
+package lg.sppCap.handlers.pg.vp;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -56,7 +56,7 @@ public class VendorPoolV4 implements EventHandler {
     }
     *********************************/
 
-    @On(event = VpVendorPoolChangeProcContext.CDS_NAME)
+    @On(event=VpVendorPoolChangeProcContext.CDS_NAME)
     public void onVpVendorPoolChangeProc(VpVendorPoolChangeProcContext context) {
 
         // local Temp table은 테이블명이 #(샵) 으로 시작해야 함        
