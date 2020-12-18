@@ -1,10 +1,4 @@
-using from './moldMgt/developmentReceipt-service'; 
-using from './moldMgt/detailSpecEntry-service'; 
-using from './moldMgt/orderApproval-service';
-using from './moldMgt/detailSpecConfirm-service';
-using from './moldMgt/budgetExecutionApproval-service'; 
-using from './moldMgt/moldApprovalList-service';
-using from './moldMgt/participatingSupplierSelectionApproval-service';
+using from './md/md_index.cds'; 
 // 자재코드(품번)생성 관리
 using from './mm/uomMgt/uomMgt-service';
 using from './mm/uomMgt/uomClassMgt-service';
@@ -16,7 +10,5 @@ using from './mm/basicDataMgt/mtlClassMgt-service';
 using from './sc/categoryMgt/category-service';
 // using from './vi/basePriceArl-service';
 // using from './tc/projectMgt-service';
-using from './util/moldItemSelection-service';
-using from './util/supplierSelection-service';
 // 선행부품개발
 using from './pd/productActivityMgt/productActivity-Service';
