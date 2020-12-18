@@ -43,7 +43,7 @@ sap.ui.define([
     var dialogId = "";
     var path = '';
 
-    return BaseController.extend("dp.moldApprovalList.controller.ApprovalList", {
+    return BaseController.extend("dp.md.moldApprovalList.controller.ApprovalList", {
         oRequestorModel: new ODataModel({
             serviceUrl: "srv-api/odata/v2/dp.MoldApprovalListService/",
             defaultBindingMode: "OneWay",
@@ -332,7 +332,7 @@ sap.ui.define([
                     
                 });
             
-            this._oValueHelpDialog = sap.ui.xmlfragment("dp.moldApprovalList.view.ValueHelpDialogApproval", this);
+            this._oValueHelpDialog = sap.ui.xmlfragment("dp.md.moldApprovalList.view.ValueHelpDialogApproval", this);
 
             this._oBasicSearchField = new SearchField({
                 showSearchButton: false
@@ -627,7 +627,7 @@ sap.ui.define([
             if (!this.pDialog) {
                 this.pDialog = Fragment.load({
                     id: oView.getId(),
-                    name: "dp.moldApprovalList.view.DialogCreate",
+                    name: "dp.md.moldApprovalList.view.DialogCreate",
                     controller: this
                 }).then(function (oDialog) {
                     // connect dialog to the root view of this component (models, lifecycle)

@@ -23,7 +23,7 @@ sap.ui.define([
      * @author jinseon.lee
      * @date 2020.12.01
      */
-	return BaseController.extend("dp.moldApprovalList.controller.BeaCreateObject", {
+	return BaseController.extend("dp.md.moldApprovalList.controller.BeaCreateObject", {
 
 		dateFormatter: DateFormatter,
 
@@ -225,7 +225,7 @@ sap.ui.define([
             ;
 
             if(oSelected.length > 0){
-                    this._oSupplierDialog = sap.ui.xmlfragment("dp.moldApprovalList.view.SuplierSelect", this);
+                    this._oSupplierDialog = sap.ui.xmlfragment("dp.md.moldApprovalList.view.SuplierSelect", this);
                     
                     this.oSupplierModel = new JSONModel({
                         "cols": [  {
@@ -407,7 +407,7 @@ sap.ui.define([
 			if (!this._oDialogTableSelect) {
 				this._oDialogTableSelect = Fragment.load({ 
                     id: oView.getId(),
-					name: "dp.moldApprovalList.view.MoldItemSelection",
+					name: "dp.md.moldApprovalList.view.MoldItemSelection",
 					controller: this
 				}).then(function (oDialog) {
 				    oView.addDependent(oDialog);
@@ -543,7 +543,7 @@ sap.ui.define([
                 if (!this._oDialog) {
                     this._oDialog = Fragment.load({ 
                         id: oView.getId(),
-                        name: "dp.moldApprovalList.view.Employee",
+                        name: "dp.md.moldApprovalList.view.Employee",
                         controller: this
                     }).then(function (oDialog) {
                         oView.addDependent(oDialog);

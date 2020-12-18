@@ -1,4 +1,4 @@
-<mvc:View controllerName="dp.moldReceiptConfirm.controller.moldReceiptConfirm" 
+<mvc:View controllerName="dp.md.moldReceiptConfirm.controller.moldReceiptConfirm" 
     xmlns:mvc="sap.ui.core.mvc" 
     xmlns="sap.m" 
     xmlns:f="sap.f" 

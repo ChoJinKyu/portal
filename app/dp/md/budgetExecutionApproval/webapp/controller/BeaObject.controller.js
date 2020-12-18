@@ -22,7 +22,7 @@ sap.ui.define([
      */
     var mainViewName = "beaObjectView";
     var oTransactionManager;
-    return BaseController.extend("dp.budgetExecutionApproval.controller.BeaObject", {
+    return BaseController.extend("dp.md.budgetExecutionApproval.controller.BeaObject", {
 
         dateFormatter: DateFormatter,
 

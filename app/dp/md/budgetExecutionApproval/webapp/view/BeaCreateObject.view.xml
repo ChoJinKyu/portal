@@ -1,4 +1,4 @@
-<mvc:View controllerName="dp.budgetExecutionApproval.controller.BeaCreateObject" 
+<mvc:View controllerName="dp.md.budgetExecutionApproval.controller.BeaCreateObject" 
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:uxap="sap.uxap"
     xmlns:form="sap.ui.layout.form" 

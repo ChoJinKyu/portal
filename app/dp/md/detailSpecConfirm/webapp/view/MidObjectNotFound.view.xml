@@ -1,5 +1,5 @@
 <mvc:View
-	controllerName="dp.detailSpecConfirm.controller.MidObjectNotFound"
+	controllerName="dp.md.detailSpecConfirm.controller.MidObjectNotFound"
 	xmlns="sap.m"
 	xmlns:mvc="sap.ui.core.mvc">
 

@@ -1,7 +1,7 @@
 {
   "_version": "1.12.0",
   "sap.app": {
-    "id": "dp.detailSpecConfirm",
+    "id": "dp.md.detailSpecConfirm",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "title": "{{appTitle}}",
@@ -20,7 +20,7 @@
         }
       },
       "dscService": {
-        "uri": "srv-api/odata/v2/dp.DetailSpecConfirmService/",
+        "uri": "srv-api/odata/v2/dp.detailSpecConfirmService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -71,7 +71,7 @@
   },
   "sap.ui5": {
     "rootView": {
-      "viewName": "dp.detailSpecConfirm.view.App",
+      "viewName": "dp.md.detailSpecConfirm.view.App",
       "type": "XML",
       "async": true,
       "id": "app"
@@ -93,7 +93,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "dp.detailSpecConfirm.i18n.i18n"
+          "bundleName": "dp.md.detailSpecConfirm.i18n.i18n"
         }
       },
       "util": {
@@ -155,14 +155,14 @@
         ]
     },
     "resourceRoots": {
-      "ext.lib": "../../../lib",
+      "ext.lib": "../../../../lib",
       "dp.util": "../../util"
     },
     "routing": {
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
-        "viewPath": "dp.detailSpecConfirm.view",
+        "viewPath": "dp.md.detailSpecConfirm.view",
         "controlId": "fcl",
                 "transition": "slide",
         "bypassed": {
