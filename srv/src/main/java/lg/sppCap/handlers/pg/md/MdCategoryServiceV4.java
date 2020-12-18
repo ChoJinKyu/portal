@@ -41,234 +41,12 @@ import cds.gen.pg.mdcategoryv4service.*;
 
 @Component
 @ServiceName("pg.MdCategoryV4Service")
-public class MdCategoryV4Service implements EventHandler {
+public class MdCategoryServiceV4 implements EventHandler {
 
 	private static final Logger log = LogManager.getLogger();
 
 	@Autowired
 	private JdbcTemplate jdbc;
-
-	// 카테고리 Id 저장 전
-	@Before(event=CdsService.EVENT_CREATE, entity=MdCategory_.CDS_NAME)
-	public void createBeforeMdCategoryIdProc(List<MdCategory> cateIds) {
-
-		Instant current = Instant.now();
-
-		log.info("### ID Insert... [Before] ###");
-
-		if(!cateIds.isEmpty() && cateIds.size() > 0){
-
-			String cateCode = "";
-
-			for(MdCategory cateId : cateIds) {
-
-				cateId.setLocalCreateDtm(current);
-				cateId.setLocalUpdateDtm(current);
-
-				// DB처리
-				try {
-					Connection conn = jdbc.getDataSource().getConnection();
-					// Item SPMD범주코드 생성 Function
-					PreparedStatement v_statement_select = conn.prepareStatement("SELECT PG_SPMD_CATEGORY_CODE_FUNC(?) AS CATE_CODE FROM DUMMY");
-					v_statement_select.setObject(1, "");    // Category 채번 구분값 없음.
-					ResultSet rslt = v_statement_select.executeQuery();
-					if(rslt.next()) cateCode = rslt.getString("CATE_CODE");
-
-					//log.info("###[LOG-10]=> ["+cateCode+"]");
-
-				} catch (SQLException sqlE) {
-					sqlE.printStackTrace();
-					log.error("### ErrCode : "+sqlE.getErrorCode()+"###");
-					log.error("### ErrMesg : "+sqlE.getMessage()+"###");
-				}
-
-				//log.info("###[LOG-11]=> ["+cateCode+"]");
-
-				cateId.setSpmdCategoryCode(cateCode);
-			}
-		}
-
-	}
-
-	// 카테고리 Id 저장
-	@On(event={CdsService.EVENT_CREATE}, entity=MdCategory_.CDS_NAME)
-	public void createOnMdCategoryIdProc(List<MdCategory> cateId) {
-		log.info("### Id Insert [On] ###");
-	}
-
-	// 카테고리 Id 저장 후
-	@After(event={CdsService.EVENT_CREATE}, entity=MdCategory_.CDS_NAME)
-	public void createAfterMdCategoryIdProc(List<MdCategory> cateId) {
-		log.info("### Id Insert [After] ###");
-	}
-
-
-	// 카테고리 Id 수정 전
-	@Before(event=CdsService.EVENT_UPDATE, entity=MdCategory_.CDS_NAME)
-	public void updateBeforeMdCategoryIdProc(List<MdCategory> cateIds) {
-
-		Instant current = Instant.now();
-
-		log.info("### ID Update... [Before] ###");
-
-		for(MdCategory cateId : cateIds) {
-			cateId.setLocalUpdateDtm(current);
-		}
-
-	}
-
-
-	// 카테고리 Id 수정 후
-	@After(event=CdsService.EVENT_UPDATE, entity=MdCategory_.CDS_NAME)
-	public void updateAfterMdCategoryIdProc(List<MdCategory> cateIds) {
-
-		Instant current = Instant.now();
-
-		log.info("### ID Update... [After] ###");
-
-		for(MdCategory cateId : cateIds) {
-			cateId.setLocalUpdateDtm(current);
-		}
-
-	}
-
-	/*
-	**********************************
-	*** 카테고리 Item Event 처리
-	**********************************
-    */
-    
-	// 카테고리 Item 저장 전
-	@Before(event=CdsService.EVENT_CREATE, entity=MdCategoryItem_.CDS_NAME)
-	public void createBeforeMdCategoryItemProc(List<MdCategoryItem> items) {
-
-		log.info("### Item Insert [Before] ###");
-		//log.info("###"+items.toString()+"###");
-
-		if(!items.isEmpty() && items.size() > 0){
-
-			Instant current = Instant.now();
-
-			String cateCode = "";
-			String charCode = "";
-			int charSerialNo = 0;
-
-			for (MdCategoryItem item : items) {
-
-				//log.info("###"+item.toString()+"###");
-
-				item.setLocalCreateDtm(current);
-				item.setLocalUpdateDtm(current);
-				//item.setCreateUserId("guest");
-				//item.setUpdateUserId("guest");
-
-				cateCode = item.getSpmdCategoryCode();
-				charCode = item.getSpmdCharacterCode();
-
-				//if ("".equals(charCode) || charCode == null) {
-				if (StringUtils.isEmpty(charCode)) {
-
-					// DB처리
-					try {
-
-						Connection conn = jdbc.getDataSource().getConnection();
-
-						// Item SPMD특성코드 생성 Function
-						StringBuffer v_sql_get_code_fun = new StringBuffer();
-						v_sql_get_code_fun.append("SELECT ")
-							.append("   PG_SPMD_CHARACTER_CODE_FUNC(?) AS CHAR_CODE")
-							.append("   , (SELECT IFNULL(MAX(SPMD_CHARACTER_SERIAL_NO), 0)+1 FROM PG_MD_CATEGORY_ITEM) AS CHAR_SERIAL_NO")
-							.append(" FROM DUMMY");
-
-						PreparedStatement v_statement_select = conn.prepareStatement(v_sql_get_code_fun.toString());
-						v_statement_select.setObject(1, cateCode);
-
-						ResultSet rslt = v_statement_select.executeQuery();
-
-						if(rslt.next()) {
-							charCode = rslt.getString("CHAR_CODE");
-							charSerialNo = rslt.getInt("CHAR_SERIAL_NO");
-						}
-
-						log.info("###[LOG-10]=> ["+charCode+"] ["+charSerialNo+"] ["+new Long(charSerialNo)+"]");
-
-					} catch (SQLException sqlE) {
-						sqlE.printStackTrace();
-						log.error("### ErrCode : "+sqlE.getErrorCode()+"###");
-						log.error("### ErrMesg : "+sqlE.getMessage()+"###");
-					}
-				}
-
-				//charCode = item.getSpmdCharacterCode();
-				log.info("###[LOG-11]=> ["+charCode+"] ["+charSerialNo+"] ["+new Long(charSerialNo)+"]");
-
-				item.setSpmdCharacterCode(charCode);
-				item.setSpmdCharacterSerialNo(new Long(charSerialNo));
-
-			}
-		}
-
-	}
-
-
-	// 카테고리 Item 저장
-	@On(event={CdsService.EVENT_CREATE}, entity=MdCategoryItem_.CDS_NAME)
-	public void createOnMdCategoryItemItemProc(List<MdCategoryItem> items) {
-		log.info("### Item Insert [On] ###");
-	}
-
-	// 카테고리 Item 저장 후
-	@After(event={CdsService.EVENT_CREATE}, entity=MdCategoryItem_.CDS_NAME)
-	public void createAfterMdCategoryItemProc(List<MdCategoryItem> items) {
-		log.info("### Item Insert [After] ###");
-	}
-
-
-	// 카테고리 Item 수정 전
-	@Before(event=CdsService.EVENT_UPDATE, entity=MdCategoryItem_.CDS_NAME)
-	public void updateBeforeMdCategoryItemProc(List<MdCategoryItem> items) {
-
-		Instant current = Instant.now();
-
-		log.info("### Item Update... [Before] ###");
-
-		for(MdCategoryItem item : items) {
-			item.setLocalUpdateDtm(current);
-		}
-
-	}
-
-
-	// 카테고리 Item 수정 후
-	@After(event=CdsService.EVENT_UPDATE, entity=MdCategoryItem_.CDS_NAME)
-	public void updateAfterMdCategoryItemIdProc(List<MdCategoryItem> items) {
-
-		Instant current = Instant.now();
-
-		log.info("### Item Update... [After] ###");
-
-		for(MdCategoryItem item : items) {
-			item.setLocalUpdateDtm(current);
-		}
-
-	}
-	// 카테고리 Item 삭제 전
-	@Before(event={CdsService.EVENT_DELETE}, entity=MdCategoryItem_.CDS_NAME)
-	public void deleteBeforeMdCategoryItemItemProc(List<MdCategoryItem> items) {
-		log.info("### Item Delete [Before] ###");
-	}
-
-	// 카테고리 Item 삭제
-	@On(event={CdsService.EVENT_DELETE}, entity=MdCategoryItem_.CDS_NAME)
-	public void deleteOnMdCategoryItemItemProc(List<MdCategoryItem> items) {
-		log.info("### Item Delete [On] ###");
-	}
-
-	// 카테고리 Item 삭제 후
-	@After(event={CdsService.EVENT_DELETE}, entity=MdCategoryItem_.CDS_NAME)
-	public void deleteAfterMdCategoryItemProc(List<MdCategoryItem> items) {
-		log.info("### Item Delete [After] ###");
-    }
 
     // VendorPool Category Item Mapping 프로시져 1건 처리
     @On(event=MdVpMappingItemProcContext.CDS_NAME)
@@ -321,7 +99,6 @@ public class MdCategoryV4Service implements EventHandler {
     }
     
 
-/*    
     // VendorPool Category Item Mapping 프로시져 array건 처리
     @On(event=MdVpMappingItemMultiProcContext.CDS_NAME)
 	public void onMdVpMappingItemMultiProc(MdVpMappingItemMultiProcContext context) {
@@ -400,8 +177,7 @@ public class MdCategoryV4Service implements EventHandler {
 		}
 
     }
-*/
-
+    
     // VendorPool Category Item Mapping 상태처리 프로시져 1건 처리
     @On(event=MdVpMappingStatusProcContext.CDS_NAME)
 	public void onMdVpMappingStatusProc(MdVpMappingStatusProcContext context) {
@@ -446,9 +222,7 @@ public class MdCategoryV4Service implements EventHandler {
 			e.printStackTrace();
         }
     }
-
-
-/*        
+       
     // VendorPool Category Item Mapping 상태처리 프로시져 array건 처리
     @On(event=MdVpMappingStatusMultiProcContext.CDS_NAME)
 	public void onMdVpMappingStatusMultiProc(MdVpMappingStatusMultiProcContext context) {
@@ -522,8 +296,8 @@ public class MdCategoryV4Service implements EventHandler {
 			e.printStackTrace();
         }
         
-	}
-*/
+    }
+    
 	// Vendor Pool Item매핑 목록
 	@After(event = CdsService.EVENT_READ, entity=MdVpMappingItemView_.CDS_NAME)
 	public void readAfterMdVpMappingItemViewProc(List<MdVpMappingItemView> lists) {
