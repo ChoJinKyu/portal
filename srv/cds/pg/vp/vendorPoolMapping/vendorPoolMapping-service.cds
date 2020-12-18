@@ -4,20 +4,13 @@ using { pg as vpSupplierDtl} from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL
 using { pg as vpMaterialDtl} from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_ITEM_DTL-model';
 using { pg as vpMaterialMst} from '../../../../../db/cds/pg/vp/PG_VP_MATERIAL_MST_VIEW-model';
 using { pg as vpManagerDtl } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_MANAGER_DTL-model';
-using { cm as cmEmployeeMst } from '../../../../../db/cds/cm/hrEmployeeMgr/CM_HR_EMPLOYEE-model';
-using { cm as cmDeptMst } from '../../../../../db/cds/cm/hrDeptMgr/CM_HR_DEPARTMENT-model';
+using { cm as cmEmployeeMst } from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
+using { cm as cmDeptMst } from '../../../../../db/cds/cm/CM_HR_DEPARTMENT-model';
 using { pg as vpSupplierMst } from '../../../../../db/cds/pg/vp/PG_VP_SUPPLIER_MST_VIEW-model';
 
 
 //https://lgcommondev-workspaces-ws-xqwd6-app1.jp10.applicationstudio.cloud.sap/odata/v2/pg.vendorPoolMappingService/
 //https://lgcommondev2-workspaces-ws-7bzzl-app1.jp10.applicationstudio.cloud.sap/odata/v2/pg.vendorPoolMappingService/vpManagerDtlView(tenant_id='L2100',company_code='%2A',org_type_code='BU',org_code='BIZ00200',vendor_pool_code='VP201610280406',vendor_pool_person_empno='100')
-
-
-//using { pg as vpMstType } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_MST_TYPE-model';
-//using { pg as vpSupplierType } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_SUPPLIER_TYPE-model';
-//using { pg as vpItemType } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_ITEM_TYPE-model';
-//using { pg as vpManagerType } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_MANAGER_TYPE-model';
-//using { pg as vpOutType } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_PROC_OUT_TYPE-model';
 
 namespace pg; 
 @path : '/pg.vendorPoolMappingService'
@@ -119,16 +112,5 @@ service VpMappingService {
         and    md.vendor_pool_code = :sVendor_pool_code;
 
         entity VpSupplierMstView @(title : '공급업체마스터 View') as projection on vpSupplierMst.Vp_Supplier_Mst_View;
-
-
-
-//    entity VpMstType @(title : '협력사풀 테이블타입') as projection on vpMstType.Vp_Vendor_Pool_Mst_Type;
-//    entity VpSupplierType @(title : '협력사풀 공급업체 테이블타입') as projection on vpSupplierType.Vp_Vendor_Pool_Supplier_Type;
-//    entity VpItemType @(title : '협력사풀 품목 테이블타입') as projection on vpItemType.Vp_Vendor_Pool_Item_Type;
-//    entity VpManagerType @(title : '협력사풀 담당자 테이블타입') as projection on vpManagerType.Vp_Vendor_Pool_Manager_Type;
-//    entity VpOutType @(title : '협력사풀 변경 Out Parameter 테이블타입') as projection on vpOutType.Vp_Vendor_Pool_Proc_Out_Type;
-
-//    action VpVendorPoolChangeProc (vpMst : array of VpMstType, vpSupplier: array of VpSupplierType, vpItem: array of VpItemType, vpManager: array of VpManagerType, user_id: String(255), user_no: String(255)) returns array of VpOutType;
-
 
 }

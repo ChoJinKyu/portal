@@ -1,6 +1,6 @@
 using { pg.Vp_Vendor_Pool_supplier_Change_List_View as vpChangeList } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_SUPPLIER_CHANGE_LIST_VIEW-model';
-using { cm.Hr_Employee as cmEmp } from '../../../../../db/cds/cm/hrEmployeeMgr/CM_HR_EMPLOYEE-model';
-using { cm.Hr_Department as cmDept } from '../../../../../db/cds/cm/hrDeptMgr/CM_HR_DEPARTMENT-model';
+using { cm.Hr_Employee as cmEmp } from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
+using { cm.Hr_Department as cmDept } from '../../../../../db/cds/cm/CM_HR_DEPARTMENT-model';
 
 namespace pg; 
 @path : '/pg.vendorPoolChangeService'
