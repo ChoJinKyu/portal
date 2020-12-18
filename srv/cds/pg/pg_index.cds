@@ -5,9 +5,7 @@
 using from './md/pg_md_index'; 
 
 // Vendor Pool
-using from './vp/vendorPoolSearch/vendorPoolSearch-service';
-using from './vp/vendorPoolMapping/vendorPoolMapping-service';
-using from './vp/vendorPoolChange/vendorPoolChange-service';
+using from './vp/pg_vp_index';
 
 // // Task Monitor
 // using from './monitor/monitor-service';
