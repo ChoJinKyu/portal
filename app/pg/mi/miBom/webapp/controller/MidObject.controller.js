@@ -1,7 +1,6 @@
 sap.ui.define([
     "./BaseController",
     "sap/ui/model/json/JSONModel",
-    "ext/lib/formatter/DateFormatter",
     "ext/lib/util/ValidatorUtil",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
@@ -9,11 +8,10 @@ sap.ui.define([
     "sap/m/MessageToast",
     "sap/ui/core/ValueState",
     "ext/lib/util/Validator"
-], function (BaseController, JSONModel,   DateFormatter, ValidatorUtil, Filter, FilterOperator, MessageBox, MessageToast, ValueState, Validator) {
+], function (BaseController, JSONModel, ValidatorUtil, Filter, FilterOperator, MessageBox, MessageToast, ValueState, Validator) {
     "use strict";
     return BaseController.extend("pg.mi.miBom.controller.MidObject", {
 
-        dateFormatter: DateFormatter,
 
         validator: new Validator(),
 
@@ -63,12 +61,14 @@ sap.ui.define([
             },
             filter : {  
                 tenant_id : "L2100",
-                company_code : "*",
-                org_type_code : "BU",
-                org_code : "BIZ00100",
-                material_code : "ERCA00006AA",
-                supplier_code : "KR00008",
-                mi_material_code : "COP-001-01",
+                material_code : "",
+                supplier_code : "",
+                mi_bom_id : "",
+                mi_material_code : "",
+                currency_unit : "",
+                quantity_unit : "",
+                exchange : "",
+                termsdelv : "",
                 language_code : "KO"
             },
             serviceName : {
@@ -722,12 +722,10 @@ sap.ui.define([
                 sServiceUrl = this._m.serviceName.mIMaterialCodeBOMManagementView, //read는 master 페이지와 동일하게 사용한다. 
                 aFilters = [
                 new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id),
-                new Filter("company_code", FilterOperator.EQ, this._m.filter.company_code),
-                new Filter("org_type_code", FilterOperator.EQ, this._m.filter.org_type_code),
-                new Filter("org_code", FilterOperator.EQ, this._m.filter.org_code),
-                new Filter("material_code", FilterOperator.EQ, this._m.filter.material_code),
-                new Filter("supplier_code", FilterOperator.EQ, this._m.filter.supplier_code)
+                new Filter("mi_bom_id", FilterOperator.EQ, this._m.filter.mi_bom_id)
             ];
+            console.log(sServiceUrl);
+            console.log(aFilters);
             this._setBusy(true);
             oModel.read(sServiceUrl, {
                 async: false,
@@ -805,12 +803,14 @@ sap.ui.define([
 
             this._m.mi_bom_id = guid();
             this._m.filter.tenant_id = oArgs.tenant_id;
-            this._m.filter.company_code = oArgs.company_code;
-            this._m.filter.org_type_code = oArgs.org_type_code;
-            this._m.filter.org_code = oArgs.org_code;
             this._m.filter.material_code = oArgs.material_code;
             this._m.filter.supplier_code = oArgs.supplier_code;
+            this._m.filter.mi_bom_id = oArgs.mi_bom_id;
             this._m.filter.mi_material_code = oArgs.mi_material_code;
+            this._m.filter.currency_unit = oArgs.currency_unit;
+            this._m.filter.quantity_unit = oArgs.quantity_unit;
+            this._m.filter.exchange = oArgs.exchange;
+            this._m.filter.termsdelv = oArgs.termsdelv;
     
             if (this._m.filter.material_code == "new") {
                 console.log("=============== new item ===============");
@@ -829,24 +829,6 @@ sap.ui.define([
             } 
         
             //자재정보 MIMaterialCodeBOMManagement Read
-
-            //관리조직 이름 
-            var bFilters = [
-                new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id),
-                new Filter("org_code", FilterOperator.EQ, this._m.filter.org_code)
-            ];
-
-            oModel.read(this._m.serviceName.orgCodeView, {
-                async: false,
-                filters: bFilters,
-                success: function (rData, reponse) {
-
-                    //console.log("json oData~~~~~~~" + JSON.stringify(reponse.data.results[0]));
-                    if(reponse.data.results.length>0){
-                        _oUiData.setProperty("/org_name", reponse.data.results[0].org_name);
-                    }
-                }
-            });
 
        //this.getView().setBusy(false);            
         },
@@ -1118,12 +1100,10 @@ sap.ui.define([
             var supplier_english_name = this.getView().byId("input_hidden_supplier_english_name").getValue();
 
             //구성 MIMaterialCodeBOMManagementView
-            //this._m.filter 및 -1 값은 아직 준비되지 않아 하드코딩 으로 추가 변경. 12/17
+            //this._m.filter 및 -1 값은 아직 준비되지 않음 추가 변경. 12/17
+            //tenant_name 제외
             var items = {
                 "tenant_id": tenant_id,
-                "company_code": this._m.filter.company_code, 
-                "org_type_code": this._m.filter.org_type_code, 
-                "org_code": this._m.filter.org_code, 
                 "material_code": material_code,
                 "material_desc": material_desc,
                 "supplier_code": supplier_code,
@@ -1154,11 +1134,8 @@ sap.ui.define([
                 "itemMode" : that._m.itemMode.create,
                 "odataMode" : that._m.odataMode.yes                 
             };
-             
-      
 
             this.onMidListItemAdd(items);
-            
             this.onMaterialDetailClose();
         },
 
@@ -1572,8 +1549,6 @@ sap.ui.define([
             console.log("_fnMarteialCreateItem");
             var createItemParameters = {
                     "tenant_id": oData.tenant_id,
-                    "company_code": oData.company_code,
-                    "org_type_code":  oData.org_type_code,
                     "org_code": oData.org_code,
                     "material_code": oData.material_code,
                     "material_desc": oData.material_desc,
@@ -1623,9 +1598,6 @@ sap.ui.define([
                 "groupId": this._m.groupID,
                 "properties": {
                     "tenant_id": oData.tenant_id,
-                    "company_code": oData.company_code,
-                    "org_type_code":  oData.org_type_code,
-                    "org_code": oData.org_code,
                     "material_code": oData.material_code,
                     "supplier_code": oData.supplier_code,
                     "base_quantity": oData.base_quantity,
@@ -1637,7 +1609,7 @@ sap.ui.define([
                     "create_user_id": this._sso.user.id,
                     "update_user_id": this._sso.user.id,
                     "system_create_dtm": new Date(),
-                    "system_update_dtm": new Date()                    
+                    "system_update_dtm": new Date()  
                 }
             };
             try{
@@ -1658,9 +1630,6 @@ sap.ui.define([
                 "groupId": this._m.groupID,
                 "properties": {
                     "tenant_id": oData.tenant_id,
-                    "company_code": oData.company_code,
-                    "org_type_code":  oData.org_type_code,
-                    "org_code": oData.org_code,
                     "mi_bom_id": oData.mi_bom_id,
                     "mi_material_code": oData.mi_material_code,
                     "reqm_quantity_unit": oData.reqm_quantity_unit,
@@ -1731,9 +1700,6 @@ sap.ui.define([
         _fnUpdateItem : function( oModel, oData) {
             var oKey = {
                 tenant_id : oData.tenant_id,
-                company_code : oData.company_code,
-                org_type_code : oData.org_type_code,
-                org_code: oData.org_code,
                 mi_bom_id : oData.mi_bom_id,
                 mi_material_code : oData.mi_material_code,
                 currency_unit : oData.currency_unit,
@@ -1750,7 +1716,6 @@ sap.ui.define([
                 "local_update_dtm" : new Date()
             }
 
-  
             try{
                 var sUpdatePath = oModel.createKey(this._m.serviceName.mIMaterialCodeBOMManagementItem, oKey);
                 oModel.update(sUpdatePath, 
@@ -1766,9 +1731,6 @@ sap.ui.define([
         _fnDeleteHeader : function(oModel, oData) {
             var oKey = {
                 tenant_id : oData.tenant_id,
-                company_code : oData.company_code,
-                org_type_code : oData.org_type_code,
-                org_code: oData.org_code,
                 material_code : oData.material_code,
                 supplier_code : oData.supplier_code,
                 mi_bom_id : oData.mi_bom_id
@@ -1790,9 +1752,6 @@ sap.ui.define([
         _fnDeleteItem : function( oModel, oData) {
             var oKey = {
                 tenant_id : oData.tenant_id,
-                company_code : oData.company_code,
-                org_type_code : oData.org_type_code,
-                org_code: oData.org_code,
                 mi_bom_id : oData.mi_bom_id,
                 mi_material_code : oData.mi_material_code,
                 currency_unit : oData.currency_unit,
@@ -1847,9 +1806,6 @@ sap.ui.define([
                     //_fnDeleteItem 사용해도됨.
                     oDeleteMIMaterialCodeBOMManagementItemKey = {
                         tenant_id : _deleteItemOdata[i].tenant_id,
-                        company_code : _deleteItemOdata[i].company_code,
-                        org_type_code : _deleteItemOdata[i].org_type_code,
-                        org_code: _deleteItemOdata[i].org_code,
                         mi_material_code: _deleteItemOdata[i].mi_material_code,
                         mi_bom_id:  _deleteItemOdata[i].mi_bom_id,
                         currency_unit:  _deleteItemOdata[i].currency_unit,
