@@ -1,7 +1,7 @@
 using {ep as project} from '../../../../db/cds/ep/po/EP_PO_PROJECT-model';
-using {cm as orgUnit} from '../../../../db/cds/cm/orgMgr/CM_ORG_UNIT-model';
-using {cm as orgDivision} from '../../../../db/cds/cm/orgMgr/CM_ORG_DIVISION-model';
-using {cm as orgPlant} from '../../../../db/cds/cm/orgMgr/CM_ORG_PLANT-model';
+using {cm as orgUnit} from '../../../../db/cds/cm/CM_ORG_UNIT-model';
+using {cm as orgDivision} from '../../../../db/cds/cm/CM_ORG_DIVISION-model';
+using {cm as orgPlant} from '../../../../db/cds/cm/CM_ORG_PLANT-model';
 
 namespace ep;
 @path : 'ep.projectMgrService'
