@@ -369,7 +369,7 @@
                                         class="readonlyField"
                                         selectedKey="{list>requestor_empno}"
                                         items="{
-                                                    path : 'user>/UserMgr',
+                                                    path : 'user>/UserMgt',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'}
                                                     ]

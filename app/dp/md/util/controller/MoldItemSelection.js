@@ -32,14 +32,14 @@ sap.ui.define([
     });
 
     var oServiceModel2 = new ODataModel({
-        serviceUrl: "srv-api/odata/v2/cm.OrgMgrService/",
+        serviceUrl: "srv-api/odata/v2/cm.OrgMgtService/",
         defaultBindingMode: "OneWay",
         defaultCountMode: "Inline",
         refreshAfterChange: false,
         useBatch: true
     });
     var oServiceModel3 = new ODataModel({
-        serviceUrl: "srv-api/odata/v2/cm.PurOrgMgrService/",
+        serviceUrl: "srv-api/odata/v2/cm.PurOrgMgtService/",
         defaultBindingMode: "OneWay",
         defaultCountMode: "Inline",
         refreshAfterChange: false,
