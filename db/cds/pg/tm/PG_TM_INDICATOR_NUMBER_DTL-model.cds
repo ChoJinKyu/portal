@@ -23,8 +23,9 @@ using {pg as Task_Monitoring_Indicator} from '../tm/PG_TM_INDICATOR_NUMBER_DTL-m
 entity Tm_Indicator_Number_Dtl {
     key tenant_id                        : String(5) not null  @title : '회사코드';
     key scenario_number                  : Integer64 not null  @title : '시나리오번호';
-    key monitoring_indicator_number      : String(30) not null @title : '모니터링지표번호';
+    key monitoring_indicator_id          : Integer64 not null  @title : '모니터링지표ID';
     key monitoring_indicator_sequence    : Integer64 not null  @title : '모니터링지표순서';
+        monitoring_ind_number_cd         : String(30) not null @title : '모니터링지표번호코드';
         monitoring_ind_condition_cd      : String(10)          @title : '모니터링지표조건코드';
         monitoring_indicator_start_value : String(100)         @title : '모니터링지표시작값';
         monitoring_indicator_last_value  : String(100)         @title : '모니터링지표최종값';

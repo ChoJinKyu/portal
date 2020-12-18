@@ -6,12 +6,12 @@
             "subMenus": [
                 {
                     "name": "Mold Development Receipt",
-                    "url": "../dp/developmentReceipt/webapp",
+                    "url": "../dp/md/developmentReceipt/webapp",
                     "component": "dp.developmentReceipt"
                 },
                 {
                     "name": "Mold Approval List",
-                    "url": "../dp/moldApprovalList/webapp",
+                    "url": "../dp/md/moldApprovalList/webapp",
                     "component": "dp.moldApprovalList"
                 },
                 {
@@ -21,17 +21,17 @@
                 },
                 {
                     "name": "Detail Spec Entry",
-                    "url": "../dp/detailSpecEntry/webapp",
+                    "url": "../dp/md/detailSpecEntry/webapp",
                     "component": "dp.detailSpecEntry"
                 },
                 {
                     "name": "Detail Spec Confirm",
-                    "url": "../dp/detailSpecConfirm/webapp",
+                    "url": "../dp/md/detailSpecConfirm/webapp",
                     "component": "dp.detailSpecConfirm"
                 },
                 {
                     "name": "Mold Receipt Confirm",
-                    "url": "../dp/moldReceiptConfirm/webapp",
+                    "url": "../dp/md/moldReceiptConfirm/webapp",
                     "component": "dp.moldReceiptConfirm"
                 }
             ]
@@ -42,13 +42,13 @@
             "subMenus": [
                 {
                     "name": "UOM Class",
-                    "url": "../dp/uomClassMgr/webapp",
-                    "component": "dp.uomClassMgr"
+                    "url": "../dp/mm/uomClassMgt/webapp",
+                    "component": "dp.mm.uomClassMgt"
                 },
                 {
                     "name": "UOM Management",
-                    "url": "../dp/uomMgr/webapp",
-                    "component": "dp.uomMgr"
+                    "url": "../dp/mm/uomMgt/webapp",
+                    "component": "dp.mm.uomMgt"
                 }
             ]
         },

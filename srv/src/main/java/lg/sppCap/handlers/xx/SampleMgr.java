@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -28,6 +29,7 @@ import com.sap.cds.services.handler.annotations.After;
 import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.request.ParameterInfo;
 
+import com.sap.cds.feature.xsuaa.XsuaaUserInfo;
 import cds.gen.xx.samplemgrservice.*;
 
 @Component
@@ -37,8 +39,55 @@ public class SampleMgr implements EventHandler {
     @Autowired
     private JdbcTemplate jdbc;
 
+/*    
+    @Autowired
+    XsuaaUserInfo xsuaaUserInfo;
+
+    @After(event = CdsService.EVENT_READ, entity=SampleHeaders_.CDS_NAME)
+    public void afterReadSampleHeaders(List<SampleHeaders> sampleHeaders) { 
+        String userInfoStr = "";
+        userInfoStr = ("toString : " + xsuaaUserInfo.toString());
+
+        Map<String, List<String>> userInfoAttr = xsuaaUserInfo.getAttributes();
+        userInfoStr = userInfoStr + ("######################## getAttributes ");
+        for (String key : userInfoAttr.keySet()) {
+            userInfoStr = userInfoStr + (" key : " + key + " value : ");
+
+            for (int i = 0; i < userInfoAttr.get(key).size(); i++) {
+                userInfoStr = userInfoStr + userInfoAttr.get(key).get(i);
+            }
+        }
+
+        Map<String, Object> userInfo = xsuaaUserInfo.getAdditionalAttributes();
+        userInfoStr = userInfoStr + ("######################## getAdditionalAttributes ");
+        for (String key : userInfo.keySet()) {
+            userInfoStr = userInfoStr + (" key : " + key + " value : " + userInfo.get(key));
+        }
+
+        Set<String> roles = xsuaaUserInfo.getRoles();
+        userInfoStr = userInfoStr + ("######################## getRoles ");
+        for(String str : roles){
+            userInfoStr = userInfoStr + (" role : " + str);
+        }
+        
+        Set<String> usattr = xsuaaUserInfo.getUnrestrictedAttributes();
+        userInfoStr = userInfoStr + ("######################## getUnrestrictedAttributes ");
+        for(String str : usattr){
+            userInfoStr = userInfoStr + (" usattr : " + str);
+        }
+
+
+        for ( SampleHeaders sampleHeader : sampleHeaders ) {
+            sampleHeader.setName(userInfoStr);
+        }
+
+
+        
+    }
+*/    
+
     // Header만 Multi
-    
+/*    
     @On(event = CdsService.EVENT_CREATE,   entity=SampleMultiHeaderProc_.CDS_NAME)
     public void onCreateSampleMultiHeader(CdsCreateEventContext context) {
 
@@ -307,6 +356,7 @@ public class SampleMgr implements EventHandler {
         context.setCompleted();
         
     }
+*/    
 
     /*
     @On(entity=SampleHeaderProc_.CDS_NAME)

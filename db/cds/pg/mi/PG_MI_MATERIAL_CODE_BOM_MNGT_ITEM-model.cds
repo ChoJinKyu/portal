@@ -22,17 +22,14 @@ using {pg as MI_Mat_Cd_BOM_Mngt_Item} from '../mi/PG_MI_MATERIAL_CODE_BOM_MNGT_I
 
 entity MI_Material_Code_Bom_Mngt_Item {
     key tenant_id          : String(5) not null   @title : '회사코드';
-    key company_code       : String(10) not null  @title : '법인코드';
-    key org_type_code      : String(30) not null  @title : '조직유형코드';
-    key org_code           : String(10) not null  @title : '조직코드';
     key mi_bom_id          : String(100) not null @title : '시황자재명세서ID';
     key mi_material_code   : String(40) not null  @title : '시황자재코드';
         reqm_quantity_unit : String(3)            @title : '소요수량단위';
         reqm_quantity      : Decimal              @title : '소요수량';
-        currency_unit      : String(30)           @title : '통화단위';
-        quantity_unit      : String(3)            @title : '수량단위';
-        exchange           : String(10)           @title : '거래소';
-        termsdelv          : String(10)           @title : '인도조건';
+    key currency_unit      : String(30)           @title : '통화단위';
+    key quantity_unit      : String(3)            @title : '수량단위';
+    key exchange           : String(10)           @title : '거래소';
+    key termsdelv          : String(10)           @title : '인도조건';
         use_flag           : Boolean not null     @title : '사용여부';
 }
 

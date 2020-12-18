@@ -34,7 +34,8 @@
       <f:content>
         <VBox>
         <Table id="mainTable"
-                selectionMode="None"
+                mode="SingleSelectLeft" 
+                selectionBehavior="Row"
                 noDataText="{I18N>/NCM0001}"
                 items="{
                     path: 'list>/MdCategory'
@@ -42,9 +43,11 @@
                 columnResize="onColumnResize">
             <headerToolbar>
             <OverflowToolbar class="sapFDynamicPageAlignContent">
-              <Title text="범주 설정" level="H2"/>
+              <Title text="SPMD Category List" level="H2"/>
               <ToolbarSpacer/>
-              <Button text="Add" id="buttonMainCreateRow" press=".onAdd('mainTable', 'list', 'MdCategory', 'tenant_id')"  type="Transparent"/>
+              <Button text="Add" id="buttonMainAddRow" press=".onAdd('mainTable', 'list', 'MdCategory', 'tenant_id')"  type="Transparent"/>
+              <Button text="Edit" id="buttonMainEditRow" press=".onEdit('mainTable', 'list', 'MdCategory', 'tenant_id')"  type="Transparent"/>
+              <Button text="Delete" id="buttonMainDeleteRow" press=".onDelete('mainTable', 'list')"   type="Transparent" enabled="false" />
               <Button text="Save" id="buttonMainSaveRow" press=".onSave('mainTable', 'list')"   type="Emphasized"/>
               <ToolbarSeparator/>
               <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
@@ -98,7 +101,8 @@
                             <Text text="{list>spmd_category_code}"></Text>
                         </HBox>
                         <HBox alignItems="Center">
-                            <Text text="{list>spmd_category_sort_sequence}"></Text>
+                            <Text text="{list>spmd_category_sort_sequence}" visible="true"></Text>
+                            <Input value="{list>spmd_category_sort_sequence}" visible="false" required="true"></Input>
                         </HBox>
                         <HBox>
                             <Text text="{list>spmd_category_code_name}" visible="true"></Text>

@@ -1,0 +1,139 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core" 
+    xmlns:f="sap.f"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:layout="sap.ui.layout" >
+    <Dialog id="dialogEmployeeSelection" 
+        class="sapUiSmallMargin" 
+        title="Setting" 
+        titleAlignment="Center"
+        contentWidth="50%"
+        contentHeight="60%">
+        <content>
+            <SplitApp
+            id="splitAppUser"
+            initialDetail="detail"
+            initialMaster="master">
+                <masterPages>
+				    <List
+                        mode="SingleSelectMaster"
+                        select=".onPressGoToMaster">
+                        <StandardListItem   
+                            type="Active"
+                            title="User Account" 
+                            description="Default User"
+                            icon="sap-icon://account">
+                            <customData>
+                                <core:CustomData key="targetDetailId" value="userInfo"/>
+                            </customData>
+                        </StandardListItem>
+                        <StandardListItem 
+                            type="Active"
+                            title="User Personalization" 
+                            description="EN | Time Format: 12h"
+                            icon="sap-icon://globe">
+                            <customData>
+                                <core:CustomData key="targetDetailId" value="userLanguage"/>
+                            </customData>
+                        </StandardListItem>
+                    </List>
+                </masterPages>
+		        <detailPages>
+                    <Page
+                        id="userInfo"
+                        showNavButton="true"
+                        backgroundDesign="List"
+                        showHeader="false">
+                        <content>
+                            <ObjectHeader
+                                icon="sap-icon://person-placeholder"
+                                title="Default User"
+                                backgroundDesign="Solid">
+                            </ObjectHeader>
+                            <form:SimpleForm
+                                maxContainerCols="2"
+                                editable="true"
+                                layout="ResponsiveGridLayout"
+                                adjustLabelSpan="false"
+                                labelSpanL="5"
+                                labelSpanM="5"
+                                labelSpanS="5"
+                                emptySpanL="0"
+                                emptySpanM="0"
+                                columnsL="2"
+                                columnsM="2">
+                                <form:content>
+                                    <Label
+                                        text="Name"/>
+                                    <Text
+                                        text="Default User"/>
+                                    <Label
+                                        text="E-Mail"/>
+                                    <Text
+                                        text=""/>
+                                    <Label
+                                        text="Server"/>
+                                    <Text
+                                        text="ui5.sap.com"/>
+                                </form:content>
+                            </form:SimpleForm>
+                        </content>
+			        </Page>
+                    <Page
+                        id="userLanguage"
+                        showNavButton="true"
+                        backgroundDesign="List"
+                        showHeader="false">
+                        <content>
+                            <ObjectHeader
+                                title="User Personalization"
+                                backgroundDesign="Solid">
+                            </ObjectHeader>
+				            <form:SimpleForm
+                                maxContainerCols="2"
+                                editable="true"
+                                layout="ResponsiveGridLayout"
+                                adjustLabelSpan="false"
+                                labelSpanL="5"
+                                labelSpanM="5"
+                                labelSpanS="5"
+                                emptySpanL="0"
+                                emptySpanM="0"
+                                columnsL="2"
+                                columnsM="2">
+                                <form:content>
+                                    <Label
+                                        text="Language"/>
+                                    <Text
+                                        text="English"/>
+                                    <Label
+                                        text="Date Format"/>
+                                    <Text
+                                        text="MMM d, y"/>
+                                    <Label
+                                        text="Number Format"/>
+                                    <Text
+                                        text="xxx.xxx.xx"/>
+                                    <Label
+                                        text="TimeZone"/>
+                                    <SegmentedButton id="searchCodeSegmentButton" selectedKey="all" class="sapUiSmallMarginBottom" width="100%">
+                                        <items>
+                                            <SegmentedButtonItem text="12 h" key="all" />
+                                            <SegmentedButtonItem text="24 h" width="3em" />
+                                        </items>
+                                    </SegmentedButton>
+                                </form:content>
+                            </form:SimpleForm>
+                        </content>
+			        </Page>
+		        </detailPages>
+	        </SplitApp>
+        </content>
+        <buttons>
+            <Button id="pageSearchButton" text="Save" type="Emphasized" press=".onSearch" />
+            <Button id="" text="Cencel" press=".onDialogClosePress" />
+        </buttons>
+    </Dialog>
+</core:FragmentDefinition>

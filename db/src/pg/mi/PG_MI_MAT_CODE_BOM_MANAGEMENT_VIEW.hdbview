@@ -2,9 +2,6 @@ view pg_MI_Mat_Code_Bom_Management_View as
 	select
 			header.tenant_id				as tenant_id,
 			tenant.tenant_name				as tenant_name,
-			header.company_code				as company_code,
-			header.org_type_code			as org_type_code,
-			header.org_code					as org_code,
 			header.material_code			as material_code,
 			mattext.material_desc			as material_desc,
 			header.supplier_code			as supplier_code,

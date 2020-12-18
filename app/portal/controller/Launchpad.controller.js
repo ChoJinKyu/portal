@@ -3,13 +3,15 @@ sap.ui.define([
     "./BaseController",
     "sap/ui/core/routing/HashChanger",
     "sap/ui/model/json/JSONModel",
+    "sap/ui/core/Fragment",
     "sap/m/MessageToast",
     "sap/m/MessageBox",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
+    "sap/ui/model/Sorter",
     "sap/uxap/ObjectPageSection",
     "sap/ui/core/ComponentContainer"
-], function (Device, BaseController, HashChanger, JSONModel, MessageToast, MessageBox, Filter, FilterOperator, ObjectPageSection, ComponentContainer) {
+], function (Device, BaseController, HashChanger, JSONModel, Fragment, MessageToast, MessageBox, Filter, FilterOperator, Sorter, ObjectPageSection, ComponentContainer) {
         "use strict";
 
         return BaseController.extend("spp.portal.controller.Launchpad", {
@@ -28,6 +30,31 @@ sap.ui.define([
                 this.getView().setModel(oModel);
 
 			    this._setToggleButtonTooltip(!Device.system.desktop);
+            },
+
+            onAfterRendering : function(){
+                var oModel = this.getView().getModel('menuService');
+                oModel.read("/Menu",{
+                    filters : [
+                        new Filter("menu_code", FilterOperator.EQ, "CM1000")
+                    ],
+                    sorters : [
+                        new Sorter("sort_number", false)
+                    ],
+                    urlParameters : {
+                       $expand: "children,languages",
+                       $select : ["menu_code","menu_desc","children/languages"]
+                    },
+                    success : function(data){
+                        console.log(data)
+                        // oCodeMasterTable.setBusy(false);
+                    },
+                    error : function(data){
+                        console.log(data)
+                        // oCodeMasterTable.setBusy(false);
+                    }
+                });
+                this.onUserSettingPress();
             },
 
             onSideNavButtonPress: function(){
@@ -105,8 +132,40 @@ sap.ui.define([
                     async: true,
                     url: "../cm/controlOptionMgr/webapp"
                 }));
-            }
+            },
 
+            onUserSettingPress: function(oEvent){
+                var oView = this.getView();
+                // var oButton = oEvent.getSource();
+                if (!this._oDialog) {
+                    this._oDialog = Fragment.load({
+                        id: oView.getId(),
+                        name: "spp.portal.dialog.UserSettings",
+                        controller: this
+                    }).then(function (oDialog) {
+                        oView.addDependent(oDialog);
+                        return oDialog;
+                    }.bind(this));
+                }
+
+                var that = this;
+                this._oDialog.then(function (oDialog) {
+                    oDialog.open();
+                });
+            },
+            
+            onPressGoToMaster : function(oEvent){
+                var sTargetDetailId = oEvent.getSource().getSelectedItem().data('targetDetailId');
+                this.byId("splitAppUser").toDetail(this.createId(sTargetDetailId));
+            },
+
+            onDialogClosePress :  function(oEvent){
+                if (this._oDialog) {
+                    this._oDialog.then(function (oDialog) {
+                        oDialog.close();
+                    });
+                }
+            }
         });
     }
 );
