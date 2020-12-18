@@ -1,1 +1,1 @@
-using from './pu/pr/prMgt-service';
+using from './pu/pu_index';
