@@ -1,5 +1,5 @@
 <mvc:View
-	controllerName="dp.detailSpecEntry.controller.App"
+	controllerName="dp.md.detailSpecEntry.controller.App"
 	displayBlock="true"
 	xmlns="sap.m"
 	xmlns:f="sap.f"

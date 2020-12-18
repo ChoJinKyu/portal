@@ -61,7 +61,7 @@ sap.ui.define([
 								},
 								"resolutionResult": {
 									"applicationType": "SAPUI5",
-									"additionalInformation": "SAPUI5.Component=dp.moldReceiptConfirm",
+									"additionalInformation": "SAPUI5.Component=dp.md.moldReceiptConfirm",
 									"url": sap.ui.require.toUrl("dp/moldReceiptConfirm")
 								}
 							}

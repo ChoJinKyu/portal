@@ -7,7 +7,7 @@ sap.ui.define([
 ], function (UIComponent, models, ErrorHandler, jQuery, FlexibleColumnLayoutSemanticHelper) {
 	"use strict";
 
-	return UIComponent.extend("dp.detailSpecEntry.Component", {
+	return UIComponent.extend("dp.md.detailSpecEntry.Component", {
 
 		metadata : {
 			manifest: "json"

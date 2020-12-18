@@ -1,10 +1,10 @@
-using { dp as moldSpec } from '../../../../db/cds/dp/md/DP_MD_SPEC-model';
-using { dp as moldSchedule } from '../../../../db/cds/dp/md/DP_MD_SCHEDULE-model';
-using { dp as moldMst } from '../../../../db/cds/dp/md/DP_MD_MST-model';
-using { dp as moldMstSpecView } from '../../../../db/cds/dp/md/DP_MD_MST_SPEC_VIEW-model';
+using { dp as moldSpec } from '../../../../../db/cds/dp/md/DP_MD_SPEC-model';
+using { dp as moldSchedule } from '../../../../../db/cds/dp/md/DP_MD_SCHEDULE-model';
+using { dp as moldMst } from '../../../../../db/cds/dp/md/DP_MD_MST-model';
+using { dp as moldMstSpecView } from '../../../../../db/cds/dp/md/DP_MD_MST_SPEC_VIEW-model';
 
-using {cm as orgMapping} from '../../../../db/cds/cm/purOrgMgr/CM_PUR_ORG_TYPE_MAPPING-model';
-using {cm as Org} from '../../../../db/cds/cm/purOrgMgr/CM_PUR_OPERATION_ORG-model';
+using {cm as orgMapping} from '../../../../../db/cds/cm/purOrgMgr/CM_PUR_ORG_TYPE_MAPPING-model';
+using {cm as Org} from '../../../../../db/cds/cm/purOrgMgr/CM_PUR_OPERATION_ORG-model';
 
 namespace dp;
 @path : '/dp.DetailSpecEntryService'

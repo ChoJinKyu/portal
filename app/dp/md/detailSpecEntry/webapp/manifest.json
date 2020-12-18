@@ -1,7 +1,7 @@
 {
   "_version": "1.12.0",
   "sap.app": {
-    "id": "dp.detailSpecEntry",
+    "id": "dp.md.detailSpecEntry",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "title": "{{appTitle}}",
@@ -13,7 +13,7 @@
     "resources": "resources.json",
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v2/dp.DetailSpecEntryService/",
+        "uri": "srv-api/odata/v2/dp.detailSpecEntryService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -64,7 +64,7 @@
   },
   "sap.ui5": {
     "rootView": {
-      "viewName": "dp.detailSpecEntry.view.App",
+      "viewName": "dp.md.detailSpecEntry.view.App",
       "type": "XML",
       "async": true,
       "id": "app"
@@ -86,7 +86,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "dp.detailSpecEntry.i18n.i18n"
+          "bundleName": "dp.md.detailSpecEntry.i18n.i18n"
         }
       },
       "util": {
@@ -138,14 +138,14 @@
         ]
     },
     "resourceRoots": {
-      "ext.lib": "../../../lib",
+      "ext.lib": "../../../../lib",
       "dp.util": "../../util"
     },
     "routing": {
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
-        "viewPath": "dp.detailSpecEntry.view",
+        "viewPath": "dp.md.detailSpecEntry.view",
         "controlId": "fcl",
 				"transition": "slide",
         "bypassed": {

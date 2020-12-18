@@ -1,8 +1,8 @@
 //CM ORG
-using {cm.Org_Tenant as OrgTenant} from '../../../../db/cds/cm/orgMgr/CM_ORG_TENANT-model';     // Tenant(회사)
-using {cm.Org_Company as OrgCompany} from '../../../../db/cds/cm/orgMgr/CM_ORG_COMPANY-model';  // Company(법인)
-using {cm.Org_Unit as OrgUnit} from '../../../../db/cds/cm/orgMgr/CM_ORG_UNIT-model';           // Bizunit(사업본부)
-using {cm.Org_Plant as OrgPlant} from '../../../../db/cds/cm/orgMgr/CM_ORG_PLANT-model';                    // Plant(플랜트)
+using {cm.Org_Tenant as OrgTenant} from '../../../../db/cds/cm/CM_ORG_TENANT-model'; // Tenant(회사)
+using {cm.Org_Company as OrgCompany} from '../../../../db/cds/cm/CM_ORG_COMPANY-model'; // Company(법인)
+using {cm.Org_Unit as OrgUnit} from '../../../../db/cds/cm/CM_ORG_UNIT-model'; // Bizunit(사업본부)
+using {cm.Org_Plant as OrgPlant} from '../../../../db/cds/cm/CM_ORG_PLANT-model'; // Plant(플랜트)
 
 namespace pg;
 
