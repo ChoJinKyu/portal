@@ -58,7 +58,7 @@ sap.ui.define([
      * @author jinseon.lee
      * @date   2020.12.02 
      */
-    return Controller.extend("dp.util.controller.MoldItemSelection", {
+    return Controller.extend("dp.md.util.controller.MoldItemSelection", {
 
         /**
          * @param vThis : view page의 this 
@@ -86,7 +86,7 @@ sap.ui.define([
             if (!this._oDialogTableSelect) {
                 this._oDialogTableSelect = Fragment.load({
                     id: oView.getId(),
-                    name: "dp.util.view.MoldItemSelection",
+                    name: "dp.md.util.view.MoldItemSelection",
                     controller: this
                 }).then(function (oDialog) {
                     oView.addDependent(oDialog);
