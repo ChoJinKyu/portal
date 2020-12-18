@@ -1,4 +1,4 @@
-package lg.sppCap.handlers.dp.dc.vi;
+package lg.sppCap.handlers.dp.vi;
 
 import java.math.BigDecimal;
 import java.util.List;
