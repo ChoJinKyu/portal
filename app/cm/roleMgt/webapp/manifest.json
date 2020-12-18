@@ -1,7 +1,7 @@
 {
     "_version": "1.12.0",
     "sap.app": {
-        "id": "cm.roleMgr",
+        "id": "cm.roleMgt",
         "type": "application",
         "i18n": "i18n/i18n.properties",
         "title": "{{appTitle}}",
@@ -13,7 +13,7 @@
         "resources": "resources.json",
         "dataSources": {
             "mainService": {
-                "uri": "srv-api/odata/v2/cm.roleMgrService/",
+                "uri": "srv-api/odata/v2/cm.roleMgtService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
@@ -64,7 +64,7 @@
     },
     "sap.ui5": {
         "rootView": {
-            "viewName": "cm.roleMgr.view.App",
+            "viewName": "cm.roleMgt.view.App",
             "type": "XML",
             "async": true,
             "id": "app"
@@ -86,7 +86,7 @@
             "i18n": {
                 "type": "sap.ui.model.resource.ResourceModel",
                 "settings": {
-                    "bundleName": "cm.roleMgr.i18n.i18n"
+                    "bundleName": "cm.roleMgt.i18n.i18n"
                 }
             },
             "util": {
@@ -143,7 +143,7 @@
             "config": {
                 "routerClass": "sap.m.routing.Router",
                 "viewType": "XML",
-                "viewPath": "cm.roleMgr.view",
+                "viewPath": "cm.roleMgt.view",
                 "controlId": "fcl",
                 "transition": "slide",
                 "bypassed": {

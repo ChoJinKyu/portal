@@ -23,7 +23,7 @@ sap.ui.define([
 
     var oTransactionManager;
 
-    return BaseController.extend("cm.userMgr.controller.MidObject", {
+    return BaseController.extend("cm.userMgt.controller.MidObject", {
 
         dateFormatter: DateFormatter,
 
@@ -336,7 +336,7 @@ sap.ui.define([
             "password": "",
             "local_create_dtm": new Date(),
             "local_update_dtm": new Date()
-        }, "/UserMgr", 0);
+        }, "/userMgt", 0);
 
 
         var oDetailsModel = this.getModel("details");
@@ -357,7 +357,7 @@ sap.ui.define([
   
         this.getModel("midObjectView").setProperty("/isAddedMode", false);
 
-        this._bindView("/UserMgr('" + this._sUserId + "')");
+        this._bindView("/userMgt('" + this._sUserId + "')");
         oView.setBusy(true);
 
         var oDetailsModel = this.getModel("details");
@@ -478,7 +478,7 @@ sap.ui.define([
             if (!this._oFragments[sFragmentName]) {
                 Fragment.load({
                     id: this.getView().getId(),
-                    name: "cm.userMgr.view." + sFragmentName,
+                    name: "cm.userMgt.view." + sFragmentName,
                     controller: this
                 }).then(function (oFragment) {
                     this._oFragments[sFragmentName] = oFragment;
