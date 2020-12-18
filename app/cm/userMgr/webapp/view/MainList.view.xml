@@ -1,4 +1,4 @@
-<mvc:View controllerName="cm.userMgr.controller.MainList"
+<mvc:View controllerName="cm.userMgt.controller.MainList"
     xmlns:mvc="sap.ui.core.mvc" 
     xmlns="sap.m" 
     xmlns:f="sap.f" 
@@ -129,13 +129,13 @@
                         growingThreshold="10"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
-                        items="{list>/UserMgr}"
+                        items="{list>/userMgt}"
                         mode="None" 
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <!-- <Title text="{I18N>/USER_MANAGEMENT} ({=${list>/UserMgr}.length || 0})" level="H2"/> -->
-                            <Title text="사용자 관리 ({=(${list>/UserMgr})?${list>/UserMgr}.length:0})" level="H2"/>
+                            <!-- <Title text="{I18N>/USER_MANAGEMENT} ({=${list>/userMgt}.length || 0})" level="H2"/> -->
+                            <Title text="사용자 관리 ({=(${list>/userMgt})?${list>/userMgt}.length:0})" level="H2"/>
                             <ToolbarSpacer/>
                             <Button id="mainTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onMainTableAddButtonPress" />
                             <ToolbarSeparator/>
