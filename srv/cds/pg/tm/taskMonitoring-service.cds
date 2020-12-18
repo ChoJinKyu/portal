@@ -14,13 +14,13 @@ using {pg as TskMntrTpCodeLng} from '../../../../db/cds/pg/tm/PG_TM_TYPE_CODE_LN
 //View
 using {pg as TskMntrMstView} from '../../../../db/cds/pg/tm/PG_TM_MASTER_VIEW-model';
 //CM ORG
-using {cm.Org_Tenant as CommomOrgTenant} from '../../../../db/cds/cm/orgMgr/CM_ORG_TENANT-model';
-using {cm.Org_Company as CommomOrgCompany} from '../../../../db/cds/cm/orgMgr/CM_ORG_COMPANY-model';
-using {cm.Org_Unit as CommomOrgUnit} from '../../../../db/cds/cm/orgMgr/CM_ORG_UNIT-model';
+using {cm.Org_Tenant as CommomOrgTenant} from '../../../../db/cds/cm/CM_ORG_TENANT-model';
+using {cm.Org_Company as CommomOrgCompany} from '../../../../db/cds/cm/CM_ORG_COMPANY-model';
+using {cm.Org_Unit as CommomOrgUnit} from '../../../../db/cds/cm/CM_ORG_UNIT-model';
 //CM Code
-using {cm.Code_Mst as codeMst} from '../../../../db/cds/cm/codeMgr/CM_CODE_MST-model';
-using {cm.Code_Dtl as codeDtl} from '../../../../db/cds/cm/codeMgr/CM_CODE_DTL-model';
-using {cm.Code_Lng as codeLng} from '../../../../db/cds/cm/codeMgr/CM_CODE_LNG-model';
+using {cm.Code_Mst as codeMst} from '../../../../db/cds/cm/CM_CODE_MST-model';
+using {cm.Code_Dtl as codeDtl} from '../../../../db/cds/cm/CM_CODE_DTL-model';
+using {cm.Code_Lng as codeLng} from '../../../../db/cds/cm/CM_CODE_LNG-model';
 //Filte View
 using {pg as MngView} from '../../../../db/cds/pg/tm/PG_TM_MANAGER_VIEW-model';
 using {pg as EmpView} from '../../../../db/cds/pg/tm/PG_TM_EMPLOYEE_VIEW-model';
