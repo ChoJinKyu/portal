@@ -130,7 +130,7 @@
 						<OverflowToolbar>
 							<ToolbarSpacer/>
 							<!-- Add the Personalization button -->
-							<Button id="btnPsAdd" type="Transparent" text="{I18N>/ROW_ADD}" press=".onMoldItemPopPress">
+							    <Button id="btnPsAdd" type="Transparent" text="{I18N>/ROW_ADD}" press=".onMoldItemPopPress">
 								<!-- Add -->
 								<customData>
 									<core:CustomData key="multi" value="true"/>
@@ -143,13 +143,13 @@
 						<table:Column id="c_mold_id" visible="true">
 							<Label text="mold_id"/>
 							<table:template>
-								<Text id="t_mold_id" text="{path:'mdItemMaster>mold_id', type: 'sap.ui.model.type.Integer'}"/>
+								<Text id="t_mold_id" text="{mdItemMaster>mold_id}"/>
 							</table:template>
 						</table:Column>
 						<table:Column id="c_approval_number" visible="true">
 							<Label text="approval_number"/>
 							<table:template>
-								<Text id="t_approval_number" text="{path:'mdItemMaster>approval_number'}"/>
+								<Text id="t_approval_number" text="{mdItemMaster>approval_number}"/>
 							</table:template>
 						</table:Column>
 						<table:Column id="c_model" width="20em" hAlign="Center">
