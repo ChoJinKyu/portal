@@ -156,26 +156,47 @@ service taskMonitoringService {
     // Indicator Number Information View
     view TaskMonitoringIndicatorNumberView @(title : '모니터링 지표번호 정보 View') as
         select
-            key tenant_id,
-            key scenario_number,
-            key monitoring_indicator_number,
-                monitoring_indicator_sequence,
-                monitoring_ind_condition_cd,
-                monitoring_indicator_start_value,
-                monitoring_indicator_last_value,
-                monitoring_indicator_grade,
-                monitoring_ind_compare_base_cd,
-                local_create_dtm,
-                local_update_dtm,
-                create_user_id,
-                update_user_id,
-                system_create_dtm,
-                system_update_dtm
-        from TaskMonitoringIndicatorNumberDetail
+            key main.tenant_id							as tenant_id,
+            key main.scenario_number					as scenario_number,
+            key main.monitoring_indicator_id			as monitoring_indicator_id,
+                main.monitoring_indicator_sequence		as monitoring_indicator_sequence,
+                main.monitoring_ind_number_cd			as monitoring_ind_number_cd,
+				ind_number_cd.code_name					as monitoring_ind_number_cd_name,
+                main.monitoring_ind_condition_cd		as monitoring_ind_condition_cd,
+				ind_condition_cd.code_name				as monitoring_ind_condition_cd_name,
+                main.monitoring_indicator_start_value	as monitoring_indicator_start_value,
+                main.monitoring_indicator_last_value	as monitoring_indicator_last_value,
+                main.monitoring_indicator_grade			as monitoring_indicator_grade,
+				indicator_grade.code_name				as monitoring_indicator_grade_name,
+                main.monitoring_ind_compare_base_cd		as monitoring_ind_compare_base_cd,
+				ind_compare_base_cd.code_name			as monitoring_ind_compare_base_cd_name,
+                main.local_create_dtm					as local_create_dtm,
+                main.local_update_dtm					as local_update_dtm,
+                main.create_user_id						as create_user_id,
+                main.update_user_id						as update_user_id,
+                main.system_create_dtm					as system_create_dtm,
+                main.system_update_dtm					as system_update_dtm
+        from TaskMonitoringIndicatorNumberDetail as main
+		left join codeLng as ind_number_cd
+			on	main.tenant_id				= ind_number_cd.tenant_id
+			and	ind_number_cd.group_code 	= 'PG_TM_INDC_NUMBER_CODE'
+			and	ind_number_cd.language_cd	= 'KO'
+		left join codeLng as ind_condition_cd
+			on	main.tenant_id					= ind_condition_cd.tenant_id
+			and	ind_condition_cd.group_code		= 'PG_TM_INDC_CMPR_CONDITION_CODE'
+			and	ind_condition_cd.language_cd	= 'KO'
+		left join codeLng as indicator_grade
+			on	main.tenant_id					= indicator_grade.tenant_id
+			and	indicator_grade.group_code 	= 'PG_TM_INDC_CMPR_GRADE_CODE'
+			and	indicator_grade.language_cd	= 'KO'
+		left join codeLng as ind_compare_base_cd
+			on	main.tenant_id					= ind_compare_base_cd.tenant_id
+			and	ind_compare_base_cd.group_code 	= 'PG_TM_INDC_CMPR_BASIC_CODE'
+			and	ind_compare_base_cd.language_cd	= 'KO'
         order by
-            tenant_id,
-            scenario_number,
-            monitoring_indicator_number
+            main.tenant_id,
+            main.scenario_number,
+            main.monitoring_indicator_id
     ;
 
     // Indicator Number Code View
