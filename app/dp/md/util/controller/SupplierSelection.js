@@ -42,7 +42,7 @@ sap.ui.define([
         }),
 
         oCmOrgServiceModel: new ODataModel({
-            serviceUrl: "srv-api/odata/v2/cm.OrgMgrService/",
+            serviceUrl: "srv-api/odata/v2/cm.OrgMgtService/",
             defaultBindingMode: "OneWay",
             defaultCountMode: "Inline",
             refreshAfterChange: false,
