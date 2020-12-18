@@ -2,18 +2,15 @@ package lg.sppCap.handlers.xx;
 
 import java.util.List;
 
-import com.sap.cds.feature.xsuaa.XsuaaUserInfo;
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.EventContext;
 import com.sap.cds.services.ServiceException;
 import com.sap.cds.services.cds.CdsService;
 import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.ServiceName;
-import com.sap.cds.services.persistence.PersistenceService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import cds.gen.xx.templateservice.ControlOptionMasters;
@@ -28,13 +25,18 @@ import lg.sppCap.handlers.base.BaseEventHandler;
 public class TemplateService extends BaseEventHandler {
 
     Logger log = LoggerFactory.getLogger(TemplateService.class);
-
-    @Autowired
-    PersistenceService db;
-
-    @Autowired
-    XsuaaUserInfo userInfo;
     
+    @Before(event = {CdsService.EVENT_READ}, entity = Message_.CDS_NAME)
+    public void beforeGetMessageContents(EventContext context) {
+        try{
+            String msg = this.getMessage("REQUEST", context);
+            if(log.isDebugEnabled())
+                log.debug(msg);
+        }catch(Exception e){
+            log.error(e.getLocalizedMessage(), e);
+        }
+    }
+
     @Before(event = {CdsService.EVENT_CREATE, CdsService.EVENT_UPDATE}, entity = Message_.CDS_NAME)
     public void validateMessageContents(EventContext context, List<Message> messages) {
         for(Message message : messages){
@@ -43,14 +45,6 @@ public class TemplateService extends BaseEventHandler {
             String languageCode = message.getLanguageCode();
             String typeCode = message.getMessageTypeCode();
             String messageContents = message.getMessageContents();
-    
-            try{
-                String msg = this.getMessage("ACCOUNT_CODE", context);
-                if(log.isInfoEnabled())
-                    log.info(msg);
-            }catch(Exception e){
-                log.error(e.getLocalizedMessage(), e);
-            }
     
             if(!this.getTenantId().equals(tenantId))
                 throw new ServiceException(ErrorStatuses.SERVER_ERROR, "tenantId is not matches with this session.");

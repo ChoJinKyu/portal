@@ -1,6 +1,6 @@
 namespace cm;
 
-using util from './util-model';
+using util from './util/util-model';
 using {cm as lng} from './CM_MENU_LNG-model';
 
 entity Menu {

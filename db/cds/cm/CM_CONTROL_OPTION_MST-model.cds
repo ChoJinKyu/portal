@@ -1,6 +1,6 @@
 namespace cm;
 
-using util from './util-model';
+using util from './util/util-model';
 using {cm as detail} from './CM_CONTROL_OPTION_DTL-model';
 
 entity Control_Option_Mst {

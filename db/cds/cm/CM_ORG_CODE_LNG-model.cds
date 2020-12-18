@@ -1,6 +1,6 @@
 namespace cm;
 
-using util from './util-model';
+using util from './util/util-model';
 using {cm as detail} from './CM_ORG_CODE_DTL-model';
 
 entity Org_Code_Lng {
