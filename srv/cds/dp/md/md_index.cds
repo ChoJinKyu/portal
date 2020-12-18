@@ -1,6 +1,6 @@
-using from './developmentReceipt-service'; 
+using from './developmentReceipt/developmentReceipt-service'; 
 using from './detailSpecEntry-service'; 
-using from './orderApproval-service';
+using from './moldApprovalList/orderApproval-service';
 using from './detailSpecConfirm-service';
 using from './budgetExecutionApproval-service'; 
 using from './moldApprovalList-service';
