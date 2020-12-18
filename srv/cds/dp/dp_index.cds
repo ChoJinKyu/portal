@@ -8,7 +8,7 @@ using from './mm/basicDataMgt/mtlGroupMgt-service';
 using from './mm/basicDataMgt/mtlClassMgt-service';
 // 표준화/공용화 관리
 using from './sc/categoryMgt/category-service';
-// using from './vi/basePriceArl-service';
-// using from './tc/projectMgt-service';
+using from './vi/basePriceArl-service';
+using from './tc/projectMgt-service';
 // 선행부품개발
 using from './pd/productActivityMgt/productActivity-Service';

@@ -3,10 +3,10 @@ namespace dp;
 using util from '../../cm/util/util-model';
 using {dp.VI_Base_Price_Arl_Mst as master} from './DP_VI_BASE_PRICE_ARL_MST-model';
 using {dp.VI_Base_Price_Arl_Price as price} from './DP_VI_BASE_PRICE_ARL_PRICE-model';
-using {cm.Code_Dtl as code} from '../../cm/codeMgr/CM_CODE_DTL-model';
-using {cm.Org_Tenant as tenant} from '../../cm/orgMgr/CM_ORG_TENANT-model';
-using {cm.Org_Company as comp} from '../../cm/orgMgr/CM_ORG_COMPANY-model';
-using {sp.Sm_Supplier_Mst as supplier} from '../../sp/supplierMgr/SP_SM_SUPPLIER_MST-model';
+using {cm.Code_Dtl as code} from '../../cm/CM_CODE_DTL-model';
+using {cm.Org_Tenant as tenant} from '../../cm/CM_ORG_TENANT-model';
+using {cm.Org_Company as comp} from '../../cm/CM_ORG_COMPANY-model';
+using {sp.Sm_Supplier_Mst as supplier} from '../../sp/sm/SP_SM_SUPPLIER_MST-model';
 
 entity VI_Base_Price_Arl_Dtl {
     key tenant_id                 : String(5) not null;

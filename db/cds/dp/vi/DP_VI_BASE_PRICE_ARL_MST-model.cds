@@ -2,9 +2,9 @@ namespace dp;
 
 using util from '../../cm/util/util-model';
 using {dp.VI_Base_Price_Arl_Dtl as detail} from './DP_VI_BASE_PRICE_ARL_DTL-model';
-using {cm.Code_Dtl as code} from '../../cm/codeMgr/CM_CODE_DTL-model';
-using {cm.Org_Tenant as tenant} from '../../cm/orgMgr/CM_ORG_TENANT-model';
-using {cm.Hr_Employee as employee} from '../../cm/hrEmployeeMgr/CM_HR_EMPLOYEE-model';
+using {cm.Code_Dtl as code} from '../../cm/CM_CODE_DTL-model';
+using {cm.Org_Tenant as tenant} from '../../cm/CM_ORG_TENANT-model';
+using {cm.Hr_Employee as employee} from '../../cm/CM_HR_EMPLOYEE-model';
 
 entity VI_Base_Price_Arl_Mst {
     key tenant_id                   : String(5) not null;
