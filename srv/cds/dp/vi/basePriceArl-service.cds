@@ -2,10 +2,10 @@ using {dp as arlMaster} from '../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_MST-
 using {dp as arlDetail} from '../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_DTL-model';
 using {dp as arlPrice} from '../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_PRICE-model';
 
-using {cm.Org_Tenant as tenant} from '../../../../db/cds/cm/orgMgr/CM_ORG_TENANT-model';
-using {cm.Org_Company as comp} from '../../../../db/cds/cm/orgMgr/CM_ORG_COMPANY-model';
-using {cm.Hr_Employee as employee} from '../../../../db/cds/cm/hrEmployeeMgr/CM_HR_EMPLOYEE-model';
-using {sp.Sm_Supplier_Mst as supplier} from '../../../../db/cds/sp/supplierMgr/SP_SM_SUPPLIER_MST-model';
+using {cm.Org_Tenant as tenant} from '../../../../db/cds/cm/CM_ORG_TENANT-model';
+using {cm.Org_Company as comp} from '../../../../db/cds/cm/CM_ORG_COMPANY-model';
+using {cm.Hr_Employee as employee} from '../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
+using {sp.Sm_Supplier_Mst as supplier} from '../../../../db/cds/sp/sm/SP_SM_SUPPLIER_MST-model';
 
 namespace dp;
 

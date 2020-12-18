@@ -378,7 +378,7 @@ sap.ui.define([
       this.getModel("org").setSizeLimit(999999);
       this.getModel("util").setSizeLimit(999999);
       this.getModel("currency").setSizeLimit(999999);
-      this.getModel("timeZoneMgr").setSizeLimit(999999);
+      this.getModel("timeZoneMgt").setSizeLimit(999999);
       
     },
 

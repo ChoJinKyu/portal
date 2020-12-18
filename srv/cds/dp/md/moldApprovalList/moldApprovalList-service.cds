@@ -1,9 +1,9 @@
-using { cm as approvalMst } from '../../../../../db/cds/cm/apprReq/CM_APPROVAL_MST-model';
-using { cm as req } from '../../../../../db/cds/cm/userMgr/CM_USER-model';
-using { cm as lng } from '../../../../../db/cds/cm/codeMgr/CM_CODE_LNG-model';
-using { cm as com } from '../../../../../db/cds/cm/orgMgr/CM_ORG_COMPANY-model';
-using { cm as plt } from '../../../../../db/cds/cm/orgMgr/CM_ORG_PLANT-model';
-using { cm as emp } from '../../../../../db/cds/cm/hrEmployeeMgr/CM_HR_EMPLOYEE-model';
+using { cm as approvalMst } from '../../../../../db/cds/cm/CM_APPROVAL_MST-model';
+using { cm as req } from '../../../../../db/cds/cm/CM_USER-model';
+using { cm as lng } from '../../../../../db/cds/cm/CM_CODE_LNG-model';
+using { cm as com } from '../../../../../db/cds/cm/CM_ORG_COMPANY-model';
+using { cm as plt } from '../../../../../db/cds/cm/CM_ORG_PLANT-model';
+using { cm as emp } from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
 using { dp as approvalDtl } from '../../../../../db/cds/dp/md/DP_MD_APPROVAL_DTL-model';
 
 
@@ -45,17 +45,17 @@ service MoldApprovalListService {
         on a.approval_number = b.approval_number
     join moldMst.Md_Mst c on b.mold_id = c.mold_id
     join (select 
-            code, code_name, tenant_id
-            from lng.Code_Lng 
-            where group_code='DP_MD_APPROVAL_TYPE' and language_cd='KO') d 
+            l.code, l.code_name, l.tenant_id
+            from lng.Code_Lng l
+            where l.group_code='DP_MD_APPROVAL_TYPE' and l.language_cd='KO') d 
     on d.code = a.approval_type_code and d.tenant_id = a.tenant_id
     join com.Org_Company e on e.company_code = c.company_code
     join plt.Org_Plant f on f.au_code = c.org_code and f.company_code=c.company_code
     join emp.Hr_Employee g on g.employee_number = a.requestor_empno and g.tenant_id = a.tenant_id
     join (select 
-            code, code_name, tenant_id
-            from lng.Code_Lng 
-            where group_code='CM_APPROVE_STATUS' and language_cd='KO') h   
+            l.code, l.code_name, l.tenant_id
+            from lng.Code_Lng l 
+            where l.group_code='CM_APPROVE_STATUS' and l.language_cd='KO') h   
     on h.code = a.approve_status_code and h.tenant_id = a.tenant_id
     order by a.approval_number asc;
     
