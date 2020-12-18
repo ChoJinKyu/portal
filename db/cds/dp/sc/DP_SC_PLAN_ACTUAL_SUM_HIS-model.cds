@@ -1,6 +1,6 @@
 namespace dp;	
 using util from '../../cm/util/util-model';  	
-// using {dp as planActualHis} from '../standardCommon/DP_SC_PLAN_ACTUAL_SUM_HIS-model';	
+// using {dp as planActualHis} from '../sc/DP_SC_PLAN_ACTUAL_SUM_HIS-model';	
 	
 entity Sc_Plan_Actual_Sum_His {	
   key tenant_id : String(5)  not null @title: '테넌트ID' ;	

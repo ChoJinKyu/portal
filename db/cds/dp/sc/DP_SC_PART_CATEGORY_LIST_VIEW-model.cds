@@ -1,6 +1,6 @@
 namespace dp;	
  @cds.persistence.exists	
-// using {dp as partCategoryListView} from '../standardCommon/DP_SC_PART_CATEGORY_LIST_VIEW-model';	
+// using {dp as partCategoryListView} from '../sc/DP_SC_PART_CATEGORY_LIST_VIEW-model';	
 	
 entity Sc_Part_Category_List_View {	
   key hierarchy_rank : String(5)  not null @title: '테넌트ID' ;	

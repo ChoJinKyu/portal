@@ -20,21 +20,14 @@
                 "uri": "srv-api/odata/v2/xx.SampleMgrService/",
                 "type": "OData",
                 "settings": {
-                    "odataVersion": "2.0",
-                    "localUri": "localService/metadata.xml"
+                    "odataVersion": "2.0"
                 }
-            }
-        },
-        "crossNavigation": {
-            "inbounds": {
-                "intent1": {
-                    "signature": {
-                        "parameters": {},
-                        "additionalParameters": "allowed"
-                    },
-                    "semanticObject": "SampleMgr",
-                    "action": "display",
-                    "title": "SampleMgr"
+            },
+            "v4Proc": {
+                "uri": "srv-api/odata/v4/xx.SampleMgrV4Service/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "4.0"
                 }
             }
         }
@@ -62,13 +55,13 @@
     "sap.ui5": {
         "flexEnabled": false,
         "rootView": {
-            "viewName": "xx.sampleMgr.view.SampleMgr",
+            "viewName": "xx.sampleMgr.view.App",
             "type": "XML",
             "async": true,
-            "id": "SampleMgr"
+            "id": "app"
         },
         "dependencies": {
-            "minUI5Version": "1.60.1",
+            "minUI5Version": "1.66.0",
             "libs": {
                 "sap.ui.core": {},
                 "sap.m": {},
@@ -95,6 +88,15 @@
                     "refreshAfterChange": true,
                     "useBatch": true
                 }
+            },
+            "v4Proc": {
+                "dataSource": "v4Proc",
+                "preload": false,
+                "settings": {
+                    "synchronizationMode": "None",
+                    "operationMode": "Server",
+                    "autoExpandSelect": false
+                }
             }
         },
         "resources": {
@@ -104,6 +106,9 @@
                 }
             ]
         },
+        "resourceRoots": {
+            "ext.lib": "../../../lib"
+        },
         "routing": {
             "config": {
                 "routerClass": "sap.m.routing.Router",
@@ -112,24 +117,31 @@
                 "viewPath": "xx.sampleMgr.view",
                 "controlAggregation": "pages",
                 "controlId": "app",
-                "clearControlAggregation": false
+                "bypassed": {
+                    "target": [
+                        "notFound"
+                    ]
+                }
             },
             "routes": [
                 {
-                    "name": "RouteSampleMgr",
-                    "pattern": "RouteSampleMgr",
+                    "pattern": ":?query:",
+                    "name": "mainList",
                     "target": [
-                        "TargetSampleMgr"
+                        "mainList"
                     ]
                 }
             ],
             "targets": {
-                "TargetSampleMgr": {
-                    "viewType": "XML",
-                    "transition": "slide",
-                    "clearControlAggregation": false,
-                    "viewId": "SampleMgr",
-                    "viewName": "SampleMgr"
+                "mainList": {
+                    "viewName": "MainList",
+                    "viewId": "mainList",
+                    "viewLevel": 1
+                },
+                "notFound": {
+                    "viewName": "NotFound",
+                    "viewPath": "ext.lib.view",
+                    "viewId": "notFound"
                 }
             }
         }

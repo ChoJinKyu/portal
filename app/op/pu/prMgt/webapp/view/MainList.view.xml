@@ -65,7 +65,7 @@
                                 path: 'util>/CodeDetails',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                    {path: 'group_code', operator: 'EQ', value1: 'OP_PR_TYPE'}
+                                    {path: 'group_code', operator: 'EQ', value1: 'OP_PR_TYPE_CODE'}
                                 ]
                               }">
                               <items>
@@ -184,7 +184,7 @@
                                         path: 'util>/CodeDetails',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                            {path: 'group_code', operator: 'EQ', value1: 'OP_PR_TYPE'}
+                                            {path: 'group_code', operator: 'EQ', value1: 'OP_PR_TYPE_CODE'}
                                         ]
                                     }">
                                     <items>

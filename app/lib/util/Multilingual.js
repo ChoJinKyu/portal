@@ -1,17 +1,20 @@
 sap.ui.define([
     "sap/ui/base/EventProvider",
 	"ext/lib/model/I18nModel",
-	"sap/ui/model/odata/v2/ODataModel"
-], function (EventProvider, I18nModel, ODataModel) {
+	"ext/lib/core/service/ServiceProvider",
+	"ext/lib/core/UserChoices"
+], function (EventProvider, I18nModel, ServiceProvider, UserChoices) {
     "use strict";
 
-    var oServiceModel = new ODataModel({
-        serviceUrl: "srv-api/odata/v2/cm.util.CommonService/",
-        defaultBindingMode: "OneWay",
-        defaultCountMode: "Inline",
-        refreshAfterChange: false,
-        useBatch: true
-    });
+    var I18N_MODEL_NAME = "MultilingualModel";
+
+    // var oServiceModel = new ODataModel({
+    //     serviceUrl: "srv-api/odata/v2/cm.util.CommonService/",
+    //     defaultBindingMode: "OneWay",
+    //     defaultCountMode: "Inline",
+    //     refreshAfterChange: false,
+    //     useBatch: true
+    // });
     
     var Multilingual = EventProvider.extend("ext.lib.util.Multilingual", {
 
@@ -25,22 +28,57 @@ sap.ui.define([
             }
         },
 
+        // constructor_bak: function(){
+        //     this.oModel = sap.ui.getCore().getModel(I18N_MODEL_NAME);
+        //     if(this.oModel == null){
+        //         this.oModel = new I18nModel();
+        //         this.oModel
+        //             .setTransactionModel(oServiceModel)
+        //             .attachEvent("loaded", function(oEvent){
+        //                 this.isReady = true;
+        //                 this.fireEvent("ready", {
+        //                     model: this.oModel
+        //                 });
+        //             }.bind(this))
+        //             //.load(this.getOwnerComponent().getManifestEntry("sap.app").id)
+        //             // .load("cm.templateListInlineEdit");
+        //             .load();
+        //         sap.ui.getCore().setModel(this.oModel, I18N_MODEL_NAME);
+        //     }else{
+        //         setTimeout(function(){
+        //             this.fireEvent("ready", {
+        //                 model: this.oModel
+        //             });
+        //         }.bind(this), 10);
+        //     }
+        //     EventProvider.prototype.constructor.apply(this, arguments);
+        // },
+
         constructor: function(){
-            this.oModel = sap.ui.getCore().getModel("MultilingualModel");
+            this.oModel = sap.ui.getCore().getModel(I18N_MODEL_NAME);
             if(this.oModel == null){
                 this.oModel = new I18nModel();
-                this.oModel
-                    .setTransactionModel(oServiceModel)
-                    .attachEvent("loaded", function(oEvent){
-                        this.isReady = true;
+                sap.ui.getCore().setModel(this.oModel, I18N_MODEL_NAME);
+
+                var oXhr = ServiceProvider.getService("cm.util.CommonService");
+                var oQuery = oXhr.createQueryBuilder()
+                    .select("message_code,message_contents")
+                    .filter(f => f
+                        .filterExpression("tenant_id", "eq", "L2100")
+                        .filterExpression("language_code", "eq", UserChoices.getLanguage())
+                        )
+                    .orderBy("chain_code asc,message_code asc,language_code desc");
+                    oXhr.get("Message", oQuery, true).then(function(oData){
+                    oData.forEach(function(oItem){
+                        if(oItem && oItem.d && oItem.d.results)
+                            this.oModel.setData(oItem.d.results);
+                        else if(oItem.results)
+                            this.oModel.setData(oItem.results);
                         this.fireEvent("ready", {
                             model: this.oModel
                         });
-                    }.bind(this))
-                    //.load(this.getOwnerComponent().getManifestEntry("sap.app").id)
-                    // .load("cm.templateListInlineEdit");
-                    .load();
-                sap.ui.getCore().setModel(this.oModel, "MultilingualModel");
+                    }.bind(this));
+                }.bind(this));
             }else{
                 setTimeout(function(){
                     this.fireEvent("ready", {

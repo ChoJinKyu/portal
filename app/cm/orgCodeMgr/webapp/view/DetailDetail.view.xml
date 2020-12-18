@@ -26,7 +26,7 @@
         <headerTitle>
             <ObjectPageDynamicHeaderTitle>
                 <heading>
-                    <m:Title text="Code Detail" wrapping="true" class="sapUiSmallMarginEnd"/>
+                    <m:Title text="{I18N>/CODE_DETAIL}" wrapping="true" class="sapUiSmallMarginEnd"/>
                 </heading>
 
                 <navigationActions>
@@ -167,7 +167,7 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="상위그룹코드: "
+                                            text="{I18N>/PARENT_GROUP_CODE}: "
                                             labelFor="parent_group_code"/>
                                         <m:Text
                                             text="{viewModel>/detailDetail/parent_group_code}"
@@ -186,7 +186,7 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="상위코드: "
+                                            text="{I18N>/PARENT_CODE}: "
                                             labelFor="parent_code"/>
                                         <m:Text
                                             text="{viewModel>/detailDetail/parent_code}"
@@ -306,7 +306,7 @@
 
 			<ObjectPageSection 
                 titleUppercase="false" 
-                title="다국어 ({= (${languages>/OrgCodeLanguages})?${languages>/OrgCodeLanguages}.length:0})">
+                title="{I18N>/MULTILINGUAL} ({= (${languages>/OrgCodeLanguages})?${languages>/OrgCodeLanguages}.length:0})">
 				<subSections>
 					<ObjectPageSubSection>
 						<blocks>
@@ -399,13 +399,13 @@
                     <m:Button type="Emphasized" text="{I18N>/SAVE}"  press=".onSavePress"/>
                 </m:HBox>
                 <m:HBox visible="{contModel>/detailDetail/readMode}">
-                    <m:Button type="Transparent" text="Edit" press=".onEditPress"/>
+                    <m:Button type="Transparent" text="{I18N>/UPDATE}" press=".onEditPress"/>
                     <m:Button type="Transparent" text="{I18N>/CANCEL}" press=".onCancelPress" enabled="false"/>
                     <m:Button type="Transparent" text="{I18N>/DELETE}"  press=".onDeletePress"/>
                     <m:Button type="Emphasized" text="{I18N>/SAVE}"  press=".onSavePress" enabled="false"/>
                 </m:HBox>
                 <m:HBox visible="{= !${contModel>/detailDetail/createMode} &amp;&amp; ${contModel>/detailDetail/editMode}}">
-                    <m:Button type="Transparent" text="Edit" press=".onEditPress" enabled="false"/>
+                    <m:Button type="Transparent" text="{I18N>/UPDATE}" press=".onEditPress" enabled="false"/>
                     <m:Button type="Transparent" text="{I18N>/CANCEL}" press=".onCancelPress"/>
                     <m:Button type="Transparent" text="{I18N>/DELETE}"  press=".onDeletePress"/>
                     <m:Button type="Emphasized" text="{I18N>/SAVE}"  press=".onSavePress"/>

@@ -43,7 +43,9 @@ sap.ui.define([
 				tableNoDataText : oResourceBundle.getText("tableNoDataText")
             });
             1
-			this.setModel(oViewModel, "mainListView");
+            this.setModel(oViewModel, "mainListView");
+            
+			this.setModel(new JSONModel({readMode:true, editMode:false}), "contModel");
 
 			// Add the mainList page to the flp routing history
 			this.addHistoryEntry({
@@ -58,7 +60,7 @@ sap.ui.define([
 
 			this._doInitTablePerso();
         },
-        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
         onAfterRendering : function () {
 			this.byId("pageSearchButton").firePress();
 			return;
@@ -137,38 +139,39 @@ sap.ui.define([
                 2. rowIdx 억지로 뜯어내는 법 말고 함수 없나
             */
 
-            //var idx = parseInt(oTable.getSelectedContextPaths().split("/")[2])+1;
-            var idx = 0 ;
-
-            if(oSelected.length>0){
-                idx = parseInt(oSelected[0].getPath().split("/")[2])+1;
-            }
-
 			oModel.addRecord({
 				"tenant_id": "L2100",
-				"company_code": "C100",
+				"company_code": "*",
 				"org_type_code": "BU",
-				"org_code": "L210000000",
-				"spmd_category_code": "C101",
+				"org_code": "BIZ00200",
+				"spmd_category_code": "C001",
 				// "spmd_character_code": "T999",
-				"spmd_character_code_name": "TEST",
-				"spmd_character_desc": "TEST_DESC",
+				"spmd_character_code_name": "아이템 특성명 입력",
+				"spmd_character_desc": "아이템 특성설명 입력",
 				// "spmd_character_type_code": "T",
 				// "spmd_character_value_unit": "",
                 "spmd_character_sort_seq": "10",
                 "system_update_dtm": new Date(),
                 // "local_create_dtm": new Date(),
                 // "local_update_dtm": new Date()
-            }, "/MdCategoryItem" , idx);     //, "/MdCategoryItem"
-            
-            oTable.getAggregation('items')[idx].getCells()[1].getItems()[0].setVisible(false);
-            oTable.getAggregation('items')[idx].getCells()[1].getItems()[1].setVisible(true);
-            oTable.getAggregation('items')[idx].getCells()[2].getItems()[0].setVisible(false);
-            oTable.getAggregation('items')[idx].getCells()[2].getItems()[1].setVisible(true);
-            oTable.getAggregation('items')[idx].getCells()[4].getItems()[0].setVisible(false);
-            oTable.getAggregation('items')[idx].getCells()[4].getItems()[1].setVisible(true);
+            }, "/MdCategoryItem" , 0);     //, "/MdCategoryItem"
         },
         
+        onMainTableDelButtonPress: function(oEvent){
+            var table = oEvent.getSource().getParent().getParent();
+            console.log(table)
+            var model = this.getView().getModel(table.getBindingInfo('items').model);
+            model.setProperty("/entityName", "MdCategoryItem");
+
+            table.getSelectedItems().reverse().forEach(function(item){
+                var iSelectIndex = table.indexOfItem(item);
+                if(iSelectIndex > -1){
+                    model.markRemoved(iSelectIndex);
+                }
+             });
+
+        table.removeSelections(true);
+        },
 
         onMainTableSaveButtonPress: function(){
 			var oModel = this.getModel("list"),
@@ -177,8 +180,8 @@ sap.ui.define([
 			if(!oModel.isChanged()) {
 				MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
 				return;
-			}
-                
+            }
+            
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
 				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -186,10 +189,12 @@ sap.ui.define([
 					if (sButton === MessageBox.Action.OK) {
 						oView.setBusy(true);
 						oModel.submitChanges({
+                            groupId: "MdCategoryItem",
 							success: function(oEvent){
 								oView.setBusy(false);
                                 MessageToast.show(this.getModel("I18N").getText("/NCM0005"));
-                                this._refreshSearch();
+                                this._applySearch();
+                                // this._refreshSearch();
 							}.bind(this)
 						});
 					}
@@ -234,12 +239,12 @@ sap.ui.define([
 				}
             });
             var idx = 0 ;
-            oTable.getAggregation('items')[idx].getCells()[1].getItems()[0].setVisible(true);
-            oTable.getAggregation('items')[idx].getCells()[1].getItems()[1].setVisible(false);
-            oTable.getAggregation('items')[idx].getCells()[2].getItems()[0].setVisible(true);
-            oTable.getAggregation('items')[idx].getCells()[2].getItems()[1].setVisible(false);
-            oTable.getAggregation('items')[idx].getCells()[4].getItems()[0].setVisible(true);
-            oTable.getAggregation('items')[idx].getCells()[4].getItems()[1].setVisible(false);
+            // oTable.getAggregation('items')[idx].getCells()[1].getItems()[0].setVisible(true);
+            // oTable.getAggregation('items')[idx].getCells()[1].getItems()[1].setVisible(false);
+            // oTable.getAggregation('items')[idx].getCells()[2].getItems()[0].setVisible(true);
+            // oTable.getAggregation('items')[idx].getCells()[2].getItems()[1].setVisible(false);
+            // oTable.getAggregation('items')[idx].getCells()[4].getItems()[0].setVisible(true);
+            // oTable.getAggregation('items')[idx].getCells()[4].getItems()[1].setVisible(false);
         },
         
 		_getSearchStates: function(){
