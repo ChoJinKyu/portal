@@ -2,7 +2,7 @@
 //using from './Mi_Item_Master-service';
 
 // Spend용 기준정보
-using from './md/mdCategory-service.cds'; 
+using from './md/pg_md_index.cds'; 
 
 // Vendor Pool
 using from './vp/vendorPoolSearch/vendorPoolSearch-service';
