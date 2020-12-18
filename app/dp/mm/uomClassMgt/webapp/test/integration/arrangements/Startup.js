@@ -3,7 +3,7 @@ sap.ui.define([
 ], function(Opa5) {
 "use strict";
 
-return Opa5.extend("dp.uomClassMgt.test.integration.arrangements.Startup", {
+return Opa5.extend("dp.mm.uomClassMgt.test.integration.arrangements.Startup", {
 
 		/**
 		  * Initializes mock server, then starts the app component
@@ -21,7 +21,7 @@ return Opa5.extend("dp.uomClassMgt.test.integration.arrangements.Startup", {
 			// start the app UI component
 			this.iStartMyUIComponent({
 				componentConfig: {
-					name: "dp.uomClassMgt",
+					name: "dp.mm.uomClassMgt",
 					async: true
 				},
 				hash: oOptions.hash,

@@ -1,5 +1,5 @@
 sap.ui.define([
-"dp/uomClassMgt/model/formatter"
+"dp/mm/uomClassMgt/model/formatter"
 ], function (formatter) {
 	"use strict";
 

@@ -3,7 +3,7 @@ sap.ui.define([
 ], function (BaseController) {
 	"use strict";
 
-	return BaseController.extend("dp.uomClassMgt.controller.MidObjectNotFound", {
+	return BaseController.extend("dp.mm.uomClassMgt.controller.MidObjectNotFound", {
 
 		/**
 		 * Navigates to the worklist when the link is pressed

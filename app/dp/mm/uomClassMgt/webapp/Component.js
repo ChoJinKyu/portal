@@ -9,7 +9,7 @@ sap.ui.define([
 ], function (jQuery, UIComponent, JSONModel, Device, models, ErrorHandler, FlexibleColumnLayoutSemanticHelper) {
 	"use strict";
 
-	return UIComponent.extend("dp.uomClassMgt.Component", {
+	return UIComponent.extend("dp.mm.uomClassMgt.Component", {
 
 		metadata : {
 			manifest: "json"

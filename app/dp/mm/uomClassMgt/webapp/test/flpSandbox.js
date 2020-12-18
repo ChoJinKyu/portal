@@ -67,8 +67,8 @@ sap.ui.define([
 								},
 								"resolutionResult": {
 									"applicationType": "SAPUI5",
-									"additionalInformation": "SAPUI5.Component=dp.uomClassMgt",
-									"url": sap.ui.require.toUrl("dp/uomClassMgt")
+									"additionalInformation": "SAPUI5.Component=dp.mm.uomClassMgt",
+									"url": sap.ui.require.toUrl("dp/mm/uomClassMgt")
 								}
 							}
 						}

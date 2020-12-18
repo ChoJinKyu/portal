@@ -3,7 +3,7 @@ sap.ui.define([
 ], function (Model) {
 	"use strict";
 
-	return Model.extend("dp.uomClassMgt.test.unit.helper.FakeI18nModel", {
+	return Model.extend("dp.mm.uomClassMgt.test.unit.helper.FakeI18nModel", {
 
 		constructor : function (mTexts) {
 			Model.call(this);

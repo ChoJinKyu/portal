@@ -1,4 +1,4 @@
-<mvc:View controllerName="dp.uomClassMgt.controller.MainList"
+<mvc:View controllerName="dp.mm.uomClassMgt.controller.MainList"
     xmlns:mvc="sap.ui.core.mvc" 
     xmlns="sap.m" 
     xmlns:f="sap.f" 

@@ -3,7 +3,7 @@ sap.ui.define([
 ], function (BaseController) {
 	"use strict";
 
-	return BaseController.extend("dp.uomClassMgt.controller.App", {
+	return BaseController.extend("dp.mm.uomClassMgt.controller.App", {
 
 		onInit : function () {
 			// apply content density mode to root view

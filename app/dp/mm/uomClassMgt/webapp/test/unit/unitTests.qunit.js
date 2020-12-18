@@ -5,7 +5,7 @@ sap.ui.getCore().attachInit(function () {
 	"use strict";
 
 	sap.ui.require([
-		"dp/uomClassMgt/test/unit/AllTests"
+		"dp/mm/uomClassMgt/test/unit/AllTests"
 	], function () {
 		QUnit.start();
 	});

@@ -21,7 +21,7 @@ sap.ui.define([
 ], function (BaseController, Multilingual, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ExcelUtil) {
 	"use strict";
 
-	return BaseController.extend("dp.uomClassMgt.controller.MainList", {
+	return BaseController.extend("dp.mm.uomClassMgt.controller.MainList", {
 
 		dateFormatter: DateFormatter,
 

@@ -1,5 +1,5 @@
 sap.ui.define([
-	"dp/uomMgt/model/models",
+	"dp/mm/uomMgt/model/models",
 	"sap/ui/Device"
 ], function (models, Device) {
 	"use strict";

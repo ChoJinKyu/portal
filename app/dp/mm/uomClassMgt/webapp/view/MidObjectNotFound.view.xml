@@ -1,5 +1,5 @@
 <mvc:View
-	controllerName="dp.uomClassMgt.controller.MidObjectNotFound"
+	controllerName="dp.mm.uomClassMgt.controller.MidObjectNotFound"
 	xmlns="sap.m"
 	xmlns:mvc="sap.ui.core.mvc">
 
