@@ -5,9 +5,9 @@
 //using from './spmd/mdCategory-service.cds'; 
 
 // Vendor Pool
-using from './vp/vendorPoolSearchMgr/vendorPoolSearch-service';
-using from './vp/vendorPoolMappingMgr/vendorPoolMapping-service';
-using from './vp/vendorPoolChangeMgr/vendorPoolChange-service';
+using from './vp/vendorPoolSearch/vendorPoolSearch-service';
+using from './vp/vendorPoolMapping/vendorPoolMapping-service';
+using from './vp/vendorPoolChange/vendorPoolChange-service';
 
 // Task Monitor
 using from './monitor/monitor-service';
