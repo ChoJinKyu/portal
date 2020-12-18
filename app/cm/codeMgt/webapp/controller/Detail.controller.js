@@ -12,7 +12,7 @@ sap.ui.define([
 ], function (BaseController, JSONModel, Filter, Sorter, FilterOperator, MessageBox, MessageToast, LayoutType, ValidatorUtil, Master) {
 	"use strict";
 
-	return BaseController.extend("cm.codeManagement.controller.Detail", {
+	return BaseController.extend("cm.codeMgt.controller.Detail", {
 		onInit: function () {
 			this.oRouter = this.getOwnerComponent().getRouter();
 			this.oRouter.getRoute("detail").attachPatternMatched(this._onCodeGroupDetailMatched, this);

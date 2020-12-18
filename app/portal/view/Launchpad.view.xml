@@ -38,6 +38,13 @@
                         <m:OverflowToolbarLayoutData priority="NeverOverflow" />
                     </m:layoutData>
                 </m:Button>
+                <m:Button icon="sap-icon://employee" 
+                    press=".onUserSettingPress"
+                    type="Transparent">
+                    <m:layoutData>
+                        <m:OverflowToolbarLayoutData priority="NeverOverflow" />
+                    </m:layoutData>
+                </m:Button>
                 <m:MenuButton icon="sap-icon://hint" type="Transparent">
                     <m:layoutData>
                         <m:OverflowToolbarLayoutData priority="NeverOverflow" />

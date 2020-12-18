@@ -1,19 +1,21 @@
 sap.ui.define([
-	"ext/lib/controller/BaseController",
+    "ext/lib/controller/BaseController",
+    "ext/lib/util/Multilingual",
 	"sap/ui/core/UIComponent",
     "sap/m/library",
     "sap/ui/model/json/JSONModel"
-], function (BaseController, UIComponent, mobileLibrary, JSONModel) {
+], function (BaseController, Multilingual, UIComponent, mobileLibrary, JSONModel) {
     "use strict";
     
     // shortcut for sap.m.URLHelper
 	var URLHelper = mobileLibrary.URLHelper;
 
-	return BaseController.extend("cm.codeManagement.controller.App", {
+	return BaseController.extend("cm.codeMgt.controller.App", {
 
 		onInit : function () {
-            this.getView().setModel(new JSONModel(), "searchModel");
-            
+            var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
+                
 			// apply content density mode to root view
             this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
             

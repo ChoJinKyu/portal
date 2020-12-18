@@ -11,7 +11,7 @@ sap.ui.define([
 ], function (Controller, Filter, FilterOperator, Sorter, MessageBox, MessageToast, LayoutType, ValidatorUtil, ManagedListModel) {
 	"use strict";
 
-	return Controller.extend("cm.codeManagement.controller.DetailDetail", {
+	return Controller.extend("cm.codeMgt.controller.DetailDetail", {
 		onInit: function () {
 			this.oRouter = this.getOwnerComponent().getRouter();
 			this.oRouter.getRoute("detailDetail").attachPatternMatched(this._onCodeDetailMatched, this);

@@ -1,5 +1,5 @@
 <mvc:View
-    controllerName="cm.codeManagement.controller.Master"
+    controllerName="cm.codeMgt.controller.Master"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:core="sap.ui.core"
     xmlns="sap.m"
@@ -13,7 +13,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                        <Title text="Code Management"/>
+                        <Title text="{I18N>/CODE_MANAGEMENT}"/>
                 </f:heading>
             </f:DynamicPageTitle>
         </f:title>
@@ -34,7 +34,7 @@
                     <form:content>
                         <VBox>
                             <Label
-                                text="Tenant: "
+                                text="{I18N>/TENANT}: "
                                 labelFor="search_tenant">
                             </Label>
                             <ComboBox   
@@ -43,13 +43,13 @@
                                 selectionChange=".onTenantChange"
                                 selectedKey="{contModel>/tenant_id}"
                                 items="{
-                                    path : 'orgMgr>/Org_Tenant'
+                                    path : 'orgMgt>/Org_Tenant'
                                 }"
                             >
                                <core:ListItem 
-                                    key="{orgMgr>tenant_id}" 
-                                    text="{orgMgr>tenant_name}"
-                                    additionalText="{orgMgr>tenant_id}"/>
+                                    key="{orgMgt>tenant_id}" 
+                                    text="{orgMgt>tenant_name}"
+                                    additionalText="{orgMgt>tenant_id}"/>
                             </ComboBox>
                             <layoutData>
                                 <layout:GridData
@@ -58,7 +58,7 @@
                         </VBox>
                         <VBox>
                             <Label
-                                text="Chain: "
+                                text="{I18N>/CHAIN}: "
                                 labelFor="search_chain">
                             </Label>
                             <!-- <ComboBox   
@@ -107,7 +107,7 @@
                         </VBox>
                         <VBox>
                             <Label
-                                text="Keyword: "
+                                text="{I18N>/KEYWORD}: "
                                 labelFor="search_Keyword">
                             </Label>
                             <Input id="search_keyword" 
@@ -122,7 +122,7 @@
                             justifyContent="End">
                             <Button 
                                 id="btn_search"
-                                text="Search"
+                                text="{I18N>/SEARCH}"
                                 type="Emphasized"
                                 press=".onSearch"/>
                             <layoutData>
@@ -143,46 +143,46 @@
                     width="auto">
                 <headerToolbar>
                     <Toolbar>
-                        <Title text="Code Group ({= (${viewModel>/CodeMasters})?${viewModel>/CodeMasters}.length:0})" level="H2"/>
+                        <Title text="{I18N>/GROUP_CODE} ({= (${viewModel>/CodeMasters})?${viewModel>/CodeMasters}.length:0})" level="H2"/>
                         <ToolbarSpacer/>
                         <Button 
-                            text="Add"
+                            text="{I18N>/ROW_ADD}"
                             type="Transparent" 
                             press=".onCreatePress"/>
                     </Toolbar>
                 </headerToolbar>
                 <columns>
                     <Column
-                        width="6em"
+                        width="8em"
                         minScreenWidth="Tablet"
                         demandPopin="true">
-                        <Text text="Tenant ID" />
+                        <Text text="{I18N>/TENANT_ID}" />
                     </Column>
                     <Column
                         width="7em"
                         minScreenWidth="Tablet"
                         demandPopin="true">
-                        <Text text="Chain Code" />
+                        <Text text="{I18N>/CHAIN_CODE}" />
                     </Column>
                     <Column
                         width="18em">
-                        <Text text="Code Group" />
+                        <Text text="{I18N>/GROUP_CODE}" />
                     </Column>
                     <Column
                         minScreenWidth="Tablet"
                         demandPopin="true">
-                        <Text text="Code Group Name" />
+                        <Text text="{I18N>/GROUP_CODE_NAME}" />
                     </Column>
                     <Column
                         minScreenWidth="Tablet"
                         demandPopin="true">
-                        <Text text="Description" />
+                        <Text text="{I18N>/GROUP_DESC}" />
                     </Column>
                     <Column
                         width="5em"
                         minScreenWidth="Tablet"
                         demandPopin="true">
-                        <Text text="Useflag" />
+                        <Text text="{I18N>/USE_FLAG}" />
                     </Column>
                 </columns>
                 <items>

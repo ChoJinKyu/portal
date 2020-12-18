@@ -1,7 +1,7 @@
 {
     "_version": "1.12.0",
     "sap.app": {
-        "id": "cm.codeManagement",
+        "id": "cm.codeMgt",
         "type": "application",
         "i18n": "i18n/i18n.properties",
         "applicationVersion": {
@@ -17,7 +17,7 @@
         },
         "dataSources": {
             "mainService": {
-                "uri": "srv-api/odata/v2/cm.CodeMgrService/",
+                "uri": "srv-api/odata/v2/cm.CodeMgtService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
@@ -30,8 +30,8 @@
                     "odataVersion": "2.0"
                 }
             },
-            "orgMgrService": {
-                "uri": "srv-api/odata/v2/cm.OrgMgrService/",
+            "orgMgtService": {
+                "uri": "srv-api/odata/v2/cm.OrgMgtService/",
                 "type": "OData",
                 "settings": {
                 "odataVersion": "2.0",
@@ -78,7 +78,7 @@
         "flexEnabled": false,
         "handleValidation": true,
         "rootView": {
-            "viewName": "cm.codeManagement.view.App",
+            "viewName": "cm.codeMgt.view.App",
             "type": "XML",
             "async": true,
             "id": "app"
@@ -99,7 +99,7 @@
             "i18n": {
                 "type": "sap.ui.model.resource.ResourceModel",
                 "settings": {
-                    "bundleName": "cm.codeManagement.i18n.i18n"
+                    "bundleName": "cm.codeMgt.i18n.i18n"
                 }
             },
             "": {
@@ -125,8 +125,8 @@
                     "useBatch": false
                 }
             },
-            "orgMgr": {
-                "dataSource": "orgMgrService",
+            "orgMgt": {
+                "dataSource": "orgMgtService",
                 "preload": true,
                 "settings": {
                     "defaultBindingMode": "TwoWay",
@@ -156,7 +156,7 @@
                 "routerClass": "sap.m.routing.Router",
                 "viewType": "XML",
                 "async": true,
-                "viewPath": "cm.codeManagement.view",
+                "viewPath": "cm.codeMgt.view",
                 "controlId": "fcl"
             },
 
