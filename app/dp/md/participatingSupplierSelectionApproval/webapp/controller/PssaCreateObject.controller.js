@@ -19,7 +19,7 @@ sap.ui.define([
     "ext/lib/util/Multilingual",
     "ext/lib/util/Validator", 
     "ext/lib/formatter/Formatter", 
-    "dp/util/controller/MoldItemSelection",
+    "dp/md/util/controller/MoldItemSelection",
     "sap/ui/richtexteditor/RichTextEditor",
   //  "sap/ui/richtexteditor/EditorType"
 ], function (BaseController, JSONModel, History, ManagedListModel, ManagedModel,  DateFormatter, Filter, FilterOperator, Fragment
