@@ -1,7 +1,7 @@
-using { cm as approvalMst } from '../../../../../db/cds/cm/apprReq/CM_APPROVAL_MST-model';
+using { cm as approvalMst } from '../../../../../db/cds/cm/CM_APPROVAL_MST-model';
 using { dp as approvalDtl } from '../../../../../db/cds/dp/md/DP_MD_APPROVAL_DTL-model';
-using { cm as approver } from '../../../../../db/cds/cm/apprReq/CM_APPROVER-model';
-using { cm as referer } from '../../../../../db/cds/cm/apprReq/CM_REFERER-model';
+using { cm as approver } from '../../../../../db/cds/cm/CM_APPROVER-model';
+using { cm as referer } from '../../../../../db/cds/cm/CM_REFERER-model';
 using { dp as moldMst } from '../../../../../db/cds/dp/md/DP_MD_MST-model';
 
 namespace dp;
