@@ -1,7 +1,7 @@
 namespace xx;
 
 using {sap.common.CodeList as CodeList} from '@sap/cds/common';
-using util from '../../cm/util/util-model';
+using util from '../../cm/util-model';
 
 
 type MessageType : Association to xx.common.MessageTypes;

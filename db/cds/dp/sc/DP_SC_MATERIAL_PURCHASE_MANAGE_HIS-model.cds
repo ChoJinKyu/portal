@@ -1,6 +1,6 @@
 namespace dp;	
 using util from '../../cm/util/util-model';  	
-// using {dp as materialPurchaseManageHis} from '../standardCommon/DP_SC_MATERIAL_PURCHASE_MANAGE_HIS-model';	
+// using {dp as materialPurchaseManageHis} from '../sc/DP_SC_MATERIAL_PURCHASE_MANAGE_HIS-model';	
 	
 entity Sc_Material_Purchase_Manage_His {	
   key tenant_id : String(5)  not null;	

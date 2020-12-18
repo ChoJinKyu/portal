@@ -24,7 +24,7 @@ entity Pu_Pr_Account {
         asset_number			: String(30)    not null	 @title: '자산번호';
         order_number			: String(30)    not null	 @title: '오더번호';
         pr_quantity				: Decimal		not null	 @title: '구매요청수량';
-        distribution_rate		: Decimal		not null	 @title: '배분율';
+        distrb_rate		        : Decimal		not null	 @title: '배분율';
     }	
 
 extend Pu_Pr_Account with util.Managed;

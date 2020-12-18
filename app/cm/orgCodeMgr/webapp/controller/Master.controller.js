@@ -21,8 +21,7 @@ sap.ui.define([
 
             onInit: function () {
                 var oMultilingual = new Multilingual();
-            this.setModel(oMultilingual.getModel(), "I18N");
-
+                this.setModel(oMultilingual.getModel(), "I18N");
             },
 
             onBeforeRendering : function(){
@@ -42,6 +41,7 @@ sap.ui.define([
 			onSearch: function () {
                 var sSearchTenant = this.getView().byId("search_tenant").getSelectedKey();
                 var sSearchChain = this.getView().byId("search_chain").getSelectedKey();
+                var sOrgtype = this.getView().byId("search_orgtype").getSelectedKey();
                 var sUseFlag = this.getView().byId("search_useflag").getSelectedKey();
                 var sSearchKeyword = this.getView().byId("search_keyword").getValue();
 
@@ -51,6 +51,9 @@ sap.ui.define([
                 }
                 if(!this.isValNull(sSearchChain)){
                     aFilters.push(new Filter("chain_code", FilterOperator.EQ, sSearchChain));
+                }
+                if(!this.isValNull(sOrgtype)){
+                    aFilters.push(new Filter("code_conrol_org_type_code", FilterOperator.EQ, sOrgtype));
                 }
                 if(!this.isValNull(sUseFlag)){
                     var bUseFlag = (sUseFlag === "true")?true:false;

@@ -1,5 +1,6 @@
 sap.ui.define([
     "ext/lib/controller/BaseController",
+	"ext/lib/util/Multilingual",
 	"sap/ui/model/json/JSONModel",
     "sap/ui/model/Filter",
     "sap/ui/model/Sorter",
@@ -9,13 +10,16 @@ sap.ui.define([
     "sap/f/LayoutType",
     "ext/lib/util/ValidatorUtil",
     "./Master.controller"
-], function (BaseController, JSONModel, Filter, Sorter, FilterOperator, MessageBox, MessageToast, LayoutType, ValidatorUtil, Master) {
+], function (BaseController, Multilingual, JSONModel, Filter, Sorter, FilterOperator, MessageBox, MessageToast, LayoutType, ValidatorUtil, Master) {
 	"use strict";
 
 	return BaseController.extend("cm.orgCodeMgr.controller.Detail", {
 		onInit: function () {
 			this.oRouter = this.getOwnerComponent().getRouter();
-			this.oRouter.getRoute("detail").attachPatternMatched(this._onCodeGroupDetailMatched, this);
+            this.oRouter.getRoute("detail").attachPatternMatched(this._onCodeGroupDetailMatched, this);
+            
+            var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
         },
 
         onBeforeRendering : function(){
@@ -133,6 +137,7 @@ sap.ui.define([
                 tenantId : oTargetData.tenant_id,
                 companyCode : oTargetData.company_code,
                 groupCode : oTargetData.group_code,
+                orgCode : oTargetData.org_code,
                 code : oTargetData.code
             };
             this.getRouter().navTo("detailDetail", oNavParam);
@@ -363,6 +368,9 @@ sap.ui.define([
             // var sTenant = oEvent.getSource().getSelectedKey();
             var oViewModel = this.getModel("viewModel");
             var sTenant = oViewModel.getProperty("/detail/tenant_id");
+            var sChainCode = oViewModel.getProperty("/detail/chain_code");
+            var sOrgTypeCode = oViewModel.getProperty("/detail/code_conrol_org_type_code");
+            
             var aFilters = [
                 new Filter("tenant_id", FilterOperator.EQ, sTenant),
                 new Filter("group_code", FilterOperator.EQ, 'CM_CHAIN_CD')
@@ -374,7 +382,7 @@ sap.ui.define([
             });
 
             var oChain = this.byId("chain_code");
-            oChain.setSelectedKey(null);
+            oChain.setSelectedKey(sChainCode);
             oChain.bindItems("util>/CodeDetails", oItemTemplate, null, aFilters);
 
             // Organization type Combobox
@@ -388,7 +396,7 @@ sap.ui.define([
                 additionalText : "{util>code}"
             });
             var oOrgtype = this.byId("code_conrol_org_type_code");
-            oOrgtype.setSelectedKey(null);
+            oOrgtype.setSelectedKey(sOrgTypeCode);
             oOrgtype.bindItems("util>/CodeDetails", oOrgtypeItemTemplate, null, aOrgtypeFilters);
         }
 	});

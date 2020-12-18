@@ -177,7 +177,7 @@
 					]
 				},
 				{
-					"pattern": "detailDetail/{layout}/:tenantId:/:groupCode:/:code:",
+					"pattern": "detailDetail/{layout}/:tenantId:/:groupCode:/:orgCode:/:code:",
 					"name": "detailDetail",
 					"target": [
 						"master",

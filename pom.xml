@@ -58,6 +58,13 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
 				<configuration>
+                    <excludes>
+                        <!-- <exclude>lg/sppCap/handlers/dp/**</exclude> 
+                        <exclude>lg/sppCap/handlers/ep/**</exclude> 
+                        <exclude>lg/sppCap/handlers/op/**</exclude> 
+                        <exclude>lg/sppCap/handlers/pg/**</exclude> 
+                        <exclude>lg/sppCap/handlers/sp/**</exclude>  -->
+                    </excludes>
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>
                     <encoding>UTF-8</encoding>

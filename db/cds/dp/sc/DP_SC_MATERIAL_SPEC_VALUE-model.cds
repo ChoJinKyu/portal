@@ -1,6 +1,6 @@
 namespace dp;	
 using util from '../../cm/util/util-model';  	
-// using {dp as materialSpecValue} from '../standardCommon/DP_SC_MATERIAL_SPEC_VALUE-model';	
+// using {dp as materialSpecValue} from '../sc/DP_SC_MATERIAL_SPEC_VALUE-model';	
 	
 entity Sc_Material_Spec_Value {	
   key tenant_id : String(5)  not null;	

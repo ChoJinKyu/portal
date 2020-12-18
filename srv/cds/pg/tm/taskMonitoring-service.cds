@@ -44,7 +44,7 @@ service taskMonitoringService {
     entity TaskMonitoringMaster @(title : '모니터링 마스터') as projection on TskMntrMaster.Tm_Master;
     entity TaskMonitoringOperationModeLanguage @(title : '모니터링 운영방식 다국어') as projection on TskMntrOprtMdCodeLng.Tm_Operation_Mode_Code_Lng;
     entity TaskMonitoringSenarioNumberLanguage @(title : '모니터링 시나리오번호 다국어') as projection on TskMntrSnrNumLng.Tm_Scenario_Number_Lng;
-    entity TaskMonitoringSeparatedCodeLanguage @(title : '모니터링 구매유형코드 다국어') as projection on TskMntrPurTpCodeLng.Tm_Purchasing_Type_Code_Lng;
+    entity TaskMonitoringPurchasingTypeCodeLanguage @(title : '모니터링 구매유형코드 다국어') as projection on TskMntrPurTpCodeLng.Tm_Purchasing_Type_Code_Lng;
     entity TaskMonitoringTypeCodeLanguage @(title : '모니터링 구분코드 다국어') as projection on TskMntrTpCodeLng.Tm_Type_Code_Lng;
     // View List
     view TaskMonitoringMasterView @(title : '모니터링 마스터 View') as select from TskMntrMstView.Tm_Master_View;
@@ -60,7 +60,7 @@ service taskMonitoringService {
     // };
 
     // Tenant View
-    entity OrgTenant @(title : '회사 마스터 View') as
+    view OrgTenantView @(title : '회사 마스터 View') as
         select
             key tenant_id,
                 tenant_name
@@ -69,7 +69,7 @@ service taskMonitoringService {
             use_flag = 'true';
 
     // Company View
-    entity OrgCompany @(title : '법인 마스터 View') as
+    view OrgCompanyView @(title : '법인 마스터 View') as
         select
             key tenant_id,
             key company_code,
@@ -79,7 +79,7 @@ service taskMonitoringService {
             use_flag = 'true';
 
     // Biz Unit View
-    entity OrgUnit @(title : '사업부분 마스터 View') as
+    view OrgUnitView @(title : '사업부분 마스터 View') as
         select
             key tenant_id,
             key bizunit_code,
@@ -121,6 +121,27 @@ service taskMonitoringService {
                 group_code  = 'PG_TM_ACTIVATE_FLAG'
             and language_cd = 'KO';
 
+    // Operation Mode View
+    view TaskMonitoringOperationModeView @(title : '모니터링 운영방식 View') as
+        select
+            key tenant_id,
+            key scenario_number,
+            key monitoring_operation_mode_code,
+                monitoring_operation_mode_name,
+                local_create_dtm,
+                local_update_dtm,
+                create_user_id,
+                update_user_id,
+                system_create_dtm,
+                system_update_dtm
+        from TaskMonitoringOperationModeLanguage
+        where
+            language_code = 'KO'
+        order by
+            tenant_id,
+            scenario_number,
+            monitoring_operation_mode_code;
+
     // Cycle View
     view TaskMonitoringCycleCodeView @(title : '모니터링 주기코드 View') as
         select
@@ -131,6 +152,31 @@ service taskMonitoringService {
         where
                 group_code  = 'PG_TM_CYCLE_CODE'
             and language_cd = 'KO';
+
+    // Indicator Number Information View
+    view TaskMonitoringIndicatorNumberView @(title : '모니터링 지표번호 정보 View') as
+        select
+            key tenant_id,
+            key scenario_number,
+            key monitoring_indicator_number,
+                monitoring_indicator_sequence,
+                monitoring_ind_condition_cd,
+                monitoring_indicator_start_value,
+                monitoring_indicator_last_value,
+                monitoring_indicator_grade,
+                monitoring_ind_compare_base_cd,
+                local_create_dtm,
+                local_update_dtm,
+                create_user_id,
+                update_user_id,
+                system_create_dtm,
+                system_update_dtm
+        from TaskMonitoringIndicatorNumberDetail
+        order by
+            tenant_id,
+            scenario_number,
+            monitoring_indicator_number
+    ;
 
     // Indicator Number Code View
     view TaskMonitoringIndicatorNumberCodeView @(title : '모니터링 지표번호코드 View') as

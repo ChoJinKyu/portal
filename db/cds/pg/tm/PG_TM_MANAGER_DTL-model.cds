@@ -21,9 +21,10 @@ using util from '../../cm/util/util-model';
 using {pg as Task_Monitoring_Manager} from '../tm/PG_TM_MANAGER_DTL-model';
 
 entity Tm_Manager_Dtl {
-    key tenant_id          : String(5) not null  @title : '회사코드';
-    key scenario_number    : Integer64 not null  @title : '시나리오번호';
-    key monitoring_manager : String(30) not null @title : '모니터링관리자';
+    key tenant_id           : String(5) not null  @title : '회사코드';
+    key scenario_number     : Integer64 not null  @title : '시나리오번호';
+    key monitoring_manager  : String(30) not null @title : '모니터링관리자';
+        full_authority_flag : Boolean not null    @title : '전체권한여부';
 }
 
 extend Tm_Manager_Dtl with util.Managed;

@@ -1,6 +1,6 @@
 namespace xx.util;
 
-using { cm.Code_Dtl as codeDetail, cm.Code_Lng as codeLanguage } from '../../../../db/cds/cm/codeMgr/CM_CODE_LNG-model';
+using { cm.Code_Dtl as codeDetail, cm.Code_Lng as codeLanguage } from '../../../../db/cds/cm/CM_CODE_LNG-model';
 using { xx.Message as message } from '../../../../db/cds/xx/template/XX_MESSAGE-model';
 
 @path : '/xx.util.CommonService'
