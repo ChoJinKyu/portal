@@ -1,4 +1,4 @@
-using { dp as moldMstSpecView } from '../../../../db/cds/dp/md/DP_MD_MST_SPEC_VIEW-model';
+using { dp as moldMstSpecView } from '../../../../../db/cds/dp/md/DP_MD_MST_SPEC_VIEW-model';
 
 namespace dp;
 @path : '/dp.DetailSpecConfirmService'

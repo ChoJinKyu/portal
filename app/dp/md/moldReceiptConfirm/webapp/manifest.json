@@ -1,7 +1,7 @@
 {
   "_version": "1.12.0",
   "sap.app": {
-    "id": "dp.moldReceiptConfirm",
+    "id": "dp.md.moldReceiptConfirm",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "title": "{{appTitle}}",
@@ -71,7 +71,7 @@
   },
   "sap.ui5": {
     "rootView": {
-      "viewName": "dp.moldReceiptConfirm.view.App",
+      "viewName": "dp.md.moldReceiptConfirm.view.App",
       "type": "XML",
       "async": true,
       "id": "app"
@@ -93,7 +93,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "dp.moldReceiptConfirm.i18n.i18n"
+          "bundleName": "dp.md.moldReceiptConfirm.i18n.i18n"
         }
       },
       "": {
@@ -161,7 +161,7 @@
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
-        "viewPath": "dp.moldReceiptConfirm.view",
+        "viewPath": "dp.md.moldReceiptConfirm.view",
         "controlId": "app",
         "controlAggregation": "pages",
         "bypassed": {

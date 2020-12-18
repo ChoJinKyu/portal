@@ -5,7 +5,7 @@ sap.ui.define([
 ], function (BaseController, Multilingual, Validator) {
 	"use strict";
 
-	return BaseController.extend("dp.detailSpecConfirm.controller.App", {
+	return BaseController.extend("dp.md.detailSpecConfirm.controller.App", {
 
         validator: new Validator(),
 
