@@ -1,4 +1,4 @@
-using { ep as forexDeclaration } from '../../../../db/cds/ep/poApprMgr/EP_PO_FOREX_DECLARATION-model';
+using { ep as forexDeclaration } from '../../../../db/cds/ep/cm/EP_PO_FOREX_DECLARATION-model';
 
 namespace ep;
 @path : 'ep.PoApprMgrService'

@@ -1,4 +1,4 @@
-package lg.sppCap.handlers.ep;
+package lg.sppCap.handlers.ep.po;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

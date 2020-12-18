@@ -1,4 +1,4 @@
-using {ep as guarantee} from '../../../../db/cds/ep/guaranteeMgr/EP_GI_GUARANTEE-model';
+using {ep as guarantee} from '../../../../db/cds/ep/po/EP_GI_GUARANTEE-model';
 
 namespace ep;
 @path : 'ep.guaranteeMgrService'

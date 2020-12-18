@@ -1,11 +1,11 @@
-using { ep as loiMst } from '../../../../db/cds/ep/loiMgr/EP_LI_MST-model';
-using { ep as loiDtl } from '../../../../db/cds/ep/loiMgr/EP_LI_DTL-model';
-using { ep as loiVd } from '../../../../db/cds/ep/loiMgr/EP_LI_SUPPLIER-model';
-using { ep as loiVdSel } from '../../../../db/cds/ep/loiMgr/EP_LI_SUPPLIER_SELECTION-model';
-using { ep as loiPub } from '../../../../db/cds/ep/loiMgr/EP_LI_PUBLISH-model';
-using { ep as loiPubItemView } from '../../../../db/cds/ep/loiMgr/EP_LI_PUBLISH_ITEM_VIEW-model';
-using { ep as loiReqDetailView} from '../../../../db/cds/ep/loiMgr/EP_LI_REQUEST_DETAIL_VIEW-model';
-using { ep as loiReqListView} from '../../../../db/cds/ep/loiMgr/EP_LI_REQUEST_LIST_VIEW-model';
+using { ep as loiMst } from '../../../../db/cds/ep/po/EP_LI_MST-model';
+using { ep as loiDtl } from '../../../../db/cds/ep/po/EP_LI_DTL-model';
+using { ep as loiVd } from '../../../../db/cds/ep/po/EP_LI_SUPPLIER-model';
+using { ep as loiVdSel } from '../../../../db/cds/ep/po/EP_LI_SUPPLIER_SELECTION-model';
+using { ep as loiPub } from '../../../../db/cds/ep/po/EP_LI_PUBLISH-model';
+using { ep as loiPubItemView } from '../../../../db/cds/ep/po/EP_LI_PUBLISH_ITEM_VIEW-model';
+using { ep as loiReqDetailView} from '../../../../db/cds/ep/po/EP_LI_REQUEST_DETAIL_VIEW-model';
+using { ep as loiReqListView} from '../../../../db/cds/ep/po/EP_LI_REQUEST_LIST_VIEW-model';
 
 namespace ep;
 
