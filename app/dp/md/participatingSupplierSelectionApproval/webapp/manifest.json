@@ -172,7 +172,7 @@
         },
         "resourceRoots": {
             "ext.lib": "../../../../lib" ,
-            "dp.util": "../../util" 
+            "dp.md.util": "../../util" 
         },
         "routing": {
             "config": {
