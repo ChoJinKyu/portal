@@ -11,7 +11,7 @@ sap.ui.define([
 ], function (BaseController, Multilingual, ManagedListModel, DateFormatter, Filter, FilterOperator, Item, TablePersoController, MainListPersoService) {
   "use strict";
 
-    return BaseController.extend("cm.userMgr.controller.MainList", {
+    return BaseController.extend("cm.userMgt.controller.MainList", {
 
         dateFormatter: DateFormatter,
 
@@ -166,7 +166,7 @@ sap.ui.define([
             oModel = this.getModel("list");
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
-            oModel.read("/UserMgr", {
+            oModel.read("/userMgt", {
                 filters: aSearchFilters,
                 success: function (oData) {
                     console.log(">>>> success", oData);
@@ -212,7 +212,7 @@ sap.ui.define([
             // init and activate controller
             this._oTPC = new TablePersoController({
                 table: this.byId("mainTable"),
-                componentName: "userMgr",
+                componentName: "userMgt",
                 persoService: MainListPersoService,
                 hasGrouping: true
             }).activate();

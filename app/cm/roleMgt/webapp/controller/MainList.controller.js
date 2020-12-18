@@ -20,7 +20,7 @@ sap.ui.define([
 ], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
   "use strict";
 
-    return BaseController.extend("cm.roleMgr.controller.MainList", {
+    return BaseController.extend("cm.roleMgt.controller.MainList", {
 
         dateFormatter: DateFormatter,
 

@@ -24,7 +24,7 @@ sap.ui.define([
 
     var oTransactionManager;
 
-    return BaseController.extend("cm.roleMgr.controller.MidObject", {
+    return BaseController.extend("cm.roleMgt.controller.MidObject", {
 
         dateFormatter: DateFormatter,
 
@@ -72,6 +72,19 @@ sap.ui.define([
 
     // 역할별 메뉴관리 콤보박스 변경시 
     chainComboChange: function (event) {
+        var oDetailsModel = this.getModel("details");
+        oDetailsModel.setTransactionModel(this.getModel());
+        oDetailsModel.read("/Role_Menu", {
+          filters: [
+            new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+            new Filter("role_code", FilterOperator.EQ, this._sRoleCode)
+          ],
+          success: function (oData) {
+            console.log("_onRoutedThisPage new ##### ", oData, oDetailsModel);
+          }
+        });
+
+        
         var predicates = [];
         predicates.push(new Filter("chain_code", FilterOperator.Contains, this.byId("searchChain").getSelectedKey()));
         predicates.push(new Filter("language_code", FilterOperator.EQ, "KO"));
@@ -97,23 +110,7 @@ sap.ui.define([
                 this.getView().setBusy(false);
             }).bind(this));
             
-        // var mParameters = {
-        //     filters: [
-        //         new Filter("chain_code", FilterOperator.Contains, this.byId("searchChain").getSelectedKey()),
-        //         new Filter("language_code", FilterOperator.EQ, "KO")
-        //     ],
-        //     success : function (oData) {
-        //         console.log("success==============", oData);
-        //     },
-        //     error: function (oError) {
-        //         console.log("error==============", oError);
-        //     }
-        // };
-
-        // this.getModel("menu").read("/Menu_haa", mParameters);
         
-        // this.getModel("menu").refresh();
-        // console.log("2", this.getModel("menu").getData("/"));
 
     },
     /* =========================================================== */
@@ -249,17 +246,6 @@ sap.ui.define([
         this.onPageNavBackButtonPress.call(this);
       } else {
         this._toShowMode();
-        // ljh - 재조회
-        // this.getModel("menu")
-        //   .setTransactionModel(this.getModel())
-        //   .read("/Menu_haa", {
-        //     filters: [
-        //       new Filter("menu_code", FilterOperator.EQ, "CM1200"),
-        //       new Filter("chain_code", FilterOperator.EQ, this.byId("searchChain").getSelectedKey())
-        //     ],
-        //     success: function (oData) {
-        //     }
-        //   });
         this.byId("searchChain").fireChange();
       }
     },
@@ -402,7 +388,7 @@ sap.ui.define([
         if (!this._oFragments[sFragmentName]) {
             Fragment.load({
                 id: this.getView().getId(),
-                name: "cm.roleMgr.view." + sFragmentName,
+                name: "cm.roleMgt.view." + sFragmentName,
                 controller: this
             }).then(function (oFragment) {
                 this._oFragments[sFragmentName] = oFragment;

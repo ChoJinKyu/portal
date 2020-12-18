@@ -1,5 +1,5 @@
 <mvc:View
-	controllerName="cm.roleMgr.controller.App"
+	controllerName="cm.roleMgt.controller.App"
 	displayBlock="true"
 	xmlns="sap.m"
 	xmlns:f="sap.f"

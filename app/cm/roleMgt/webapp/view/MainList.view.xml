@@ -1,4 +1,4 @@
-<mvc:View controllerName="cm.roleMgr.controller.MainList"
+<mvc:View controllerName="cm.roleMgt.controller.MainList"
     xmlns:mvc="sap.ui.core.mvc" 
     xmlns="sap.m" 
     xmlns:f="sap.f" 

@@ -1,7 +1,7 @@
 {
     "_version": "1.12.0",
     "sap.app": {
-        "id": "cm.userMgr",
+        "id": "cm.userMgt",
         "type": "application",
         "i18n": "i18n/i18n.properties",
         "title": "{{appTitle}}",
@@ -13,7 +13,7 @@
         "resources": "resources.json",
         "dataSources": {
             "mainService": {
-                "uri": "srv-api/odata/v2/cm.UserMgrService/",
+                "uri": "srv-api/odata/v2/cm.userMgtService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
@@ -78,7 +78,7 @@
     },
     "sap.ui5": {
         "rootView": {
-            "viewName": "cm.userMgr.view.App",
+            "viewName": "cm.userMgt.view.App",
             "type": "XML",
             "async": true,
             "id": "app"
@@ -100,7 +100,7 @@
             "i18n": {
                 "type": "sap.ui.model.resource.ResourceModel",
                 "settings": {
-                    "bundleName": "cm.userMgr.i18n.i18n"
+                    "bundleName": "cm.userMgt.i18n.i18n"
                 }
             },
             "util": {
@@ -177,7 +177,7 @@
             "config": {
                 "routerClass": "sap.m.routing.Router",
                 "viewType": "XML",
-                "viewPath": "cm.userMgr.view",
+                "viewPath": "cm.userMgt.view",
                 "controlId": "fcl",
                 "transition": "slide",
                 "bypassed": {
