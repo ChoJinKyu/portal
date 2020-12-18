@@ -15,7 +15,7 @@ sap.ui.define([
      * @author jinseon.lee
      * @date 2020.12.01
      */
-	return BaseController.extend("dp.moldApprovalList.controller.BeaObject", {
+	return BaseController.extend("dp.md.moldApprovalList.controller.BeaObject", {
 
 		dateFormatter: DateFormatter,
 

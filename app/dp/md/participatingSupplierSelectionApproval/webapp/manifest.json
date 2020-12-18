@@ -1,7 +1,7 @@
 {
     "_version": "1.12.0",
     "sap.app": {
-        "id": "dp.participatingSupplierSelectionApproval",
+        "id": "dp.md.participatingSupplierSelectionApproval",
         "type": "application",
         "i18n": "i18n/i18n.properties",
         "title": "{{appTitle}}",
@@ -78,7 +78,7 @@
     },
     "sap.ui5": {
         "rootView": {
-            "viewName": "dp.participatingSupplierSelectionApproval.view.App",
+            "viewName": "dp.md.participatingSupplierSelectionApproval.view.App",
             "type": "XML",
             "async": true,
             "id": "app"
@@ -99,7 +99,7 @@
             "i18n": {
                 "type": "sap.ui.model.resource.ResourceModel",
                 "settings": {
-                    "bundleName": "dp.participatingSupplierSelectionApproval.i18n.i18n"
+                    "bundleName": "dp.md.participatingSupplierSelectionApproval.i18n.i18n"
                 }
             },
             "util": {
@@ -178,7 +178,7 @@
             "config": {
                 "routerClass": "sap.m.routing.Router",
                 "viewType": "XML",
-                "viewPath": "dp.participatingSupplierSelectionApproval.view",
+                "viewPath": "dp.md.participatingSupplierSelectionApproval.view",
                 "controlId": "app",
                 "controlAggregation": "pages",
                 "bypassed": {

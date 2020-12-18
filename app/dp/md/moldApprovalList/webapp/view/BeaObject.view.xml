@@ -1,4 +1,4 @@
-<mvc:View controllerName="dp.moldApprovalList.controller.BeaObject" 
+<mvc:View controllerName="dp.md.moldApprovalList.controller.BeaObject" 
 	xmlns:mvc="sap.ui.core.mvc" 
 	xmlns="sap.m" 
 	xmlns:uxap="sap.uxap" 

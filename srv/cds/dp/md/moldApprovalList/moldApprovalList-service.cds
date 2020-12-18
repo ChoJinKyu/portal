@@ -1,14 +1,14 @@
-using { cm as approvalMst } from '../../../../db/cds/cm/apprReq/CM_APPROVAL_MST-model';
-using { cm as req } from '../../../../db/cds/cm/userMgr/CM_USER-model';
-using { cm as lng } from '../../../../db/cds/cm/codeMgr/CM_CODE_LNG-model';
-using { cm as com } from '../../../../db/cds/cm/orgMgr/CM_ORG_COMPANY-model';
-using { cm as plt } from '../../../../db/cds/cm/orgMgr/CM_ORG_PLANT-model';
-using { cm as emp } from '../../../../db/cds/cm/hrEmployeeMgr/CM_HR_EMPLOYEE-model';
-using { dp as approvalDtl } from '../../../../db/cds/dp/md/DP_MD_APPROVAL_DTL-model';
+using { cm as approvalMst } from '../../../../../db/cds/cm/apprReq/CM_APPROVAL_MST-model';
+using { cm as req } from '../../../../../db/cds/cm/userMgr/CM_USER-model';
+using { cm as lng } from '../../../../../db/cds/cm/codeMgr/CM_CODE_LNG-model';
+using { cm as com } from '../../../../../db/cds/cm/orgMgr/CM_ORG_COMPANY-model';
+using { cm as plt } from '../../../../../db/cds/cm/orgMgr/CM_ORG_PLANT-model';
+using { cm as emp } from '../../../../../db/cds/cm/hrEmployeeMgr/CM_HR_EMPLOYEE-model';
+using { dp as approvalDtl } from '../../../../../db/cds/dp/md/DP_MD_APPROVAL_DTL-model';
 
 
-using { dp as moldMstSpecView } from '../../../../db/cds/dp/md/DP_MD_MST_SPEC_VIEW-model';
-using { dp as moldMst } from '../../../../db/cds/dp/md/DP_MD_MST-model';
+using { dp as moldMstSpecView } from '../../../../../db/cds/dp/md/DP_MD_MST_SPEC_VIEW-model';
+using { dp as moldMst } from '../../../../../db/cds/dp/md/DP_MD_MST-model';
 
 namespace dp;
 @path : '/dp.MoldApprovalListService'
