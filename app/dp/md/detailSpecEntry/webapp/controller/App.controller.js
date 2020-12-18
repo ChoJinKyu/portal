@@ -4,7 +4,7 @@ sap.ui.define([
 ], function (BaseController, Multilingual) {
 	"use strict";
 
-	return BaseController.extend("dp.detailSpecEntry.controller.App", {
+	return BaseController.extend("dp.md.detailSpecEntry.controller.App", {
 
 		onInit : function () {
 

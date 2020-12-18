@@ -35,7 +35,7 @@ sap.ui.define([
      */
     var oTransactionManager;
     var mainViewName = "pssaCreateObjectView";
-	return BaseController.extend("dp.participatingSupplierSelectionApproval.controller.PssaCreateObject", {
+	return BaseController.extend("dp.md.participatingSupplierSelectionApproval.controller.PssaCreateObject", {
         formatter: Formatter,
         dateFormatter: DateFormatter,
         validator: new Validator(), 
@@ -485,7 +485,7 @@ sap.ui.define([
             ;
 
             if(oSelected.length > 0){
-                    this._oSupplierDialog = sap.ui.xmlfragment("dp.participatingSupplierSelectionApproval.view.SuplierSelect", this);
+                    this._oSupplierDialog = sap.ui.xmlfragment("dp.md.participatingSupplierSelectionApproval.view.SuplierSelect", this);
                     
                     this.oSupplierModel = new JSONModel({
                         "cols": [  {
@@ -579,7 +579,7 @@ sap.ui.define([
 		// 	if (!this._oDialogTableSelect) {
 		// 		this._oDialogTableSelect = Fragment.load({ 
         //             id: oView.getId(),
-		// 			name: "dp.participatingSupplierSelectionApproval.view.MoldItemSelection",
+		// 			name: "dp.md.participatingSupplierSelectionApproval.view.MoldItemSelection",
 		// 			controller: this
 		// 		}).then(function (oDialog) {
 		// 		    oView.addDependent(oDialog);
@@ -809,7 +809,7 @@ sap.ui.define([
                 if (!this._oDialog) {
                     this._oDialog = Fragment.load({ 
                         id: oView.getId(),
-                        name: "dp.participatingSupplierSelectionApproval.view.Employee",
+                        name: "dp.md.participatingSupplierSelectionApproval.view.Employee",
                         controller: this
                     }).then(function (oDialog) {
                         oView.addDependent(oDialog);

@@ -1,14 +1,9 @@
-
-using { cm.Code_Dtl as codeDetail, cm.Code_Lng as codeLanguage } from '../../../../db/cds/cm/codeMgr/CM_CODE_LNG-model';
-
-using { cm.Message as message } from '../../../../db/cds/cm/msgMgr/CM_MESSAGE-model';
-using { cm as codeView } from '../../../../db/cds/cm/util/CM_CODE_VIEW-model';
-using { cm.Currency as currency, cm.Currency_Lng as currencyLanguage } from '../../../../db/cds/cm/currencyMgr/CM_CURRENCY_LNG-model';
-using { cm.Country as country, cm.Country_Lng as countryLanguage } from '../../../../db/cds/cm/countryMgr/CM_COUNTRY_LNG-model';
-using { cm.Time_Zone as timezone } from '../../../../db/cds/cm/timeZoneMgr/CM_TIME_ZONE-model';
-using { cm.Hr_Employee as employee } from '../../../../db/cds/cm/hrEmployeeMgr/CM_HR_EMPLOYEE-model';
-using { cm.User as user } from '../../../../db/cds/cm/userMgr/CM_USER-model';
-using { cm.Hr_Department as Dept } from '../../../../db/cds/cm/hrDeptMgr/CM_HR_DEPARTMENT-model';
+using { cm.Code_Dtl as codeDetail, cm.Code_Lng as codeLanguage } from '../../../../db/cds/cm/CM_CODE_LNG-model';
+using { cm.Message as message } from '../../../../db/cds/cm/CM_MESSAGE-model';
+using { cm as codeView } from '../../../../db/cds/cm/CM_CODE_VIEW-model';
+using { cm.Currency as currency, cm.Currency_Lng as currencyLanguage } from '../../../../db/cds/cm/CM_CURRENCY_LNG-model';
+using { cm.Country as country, cm.Country_Lng as countryLanguage } from '../../../../db/cds/cm/CM_COUNTRY_LNG-model';
+using { cm.Time_Zone as timezone } from '../../../../db/cds/cm/CM_TIME_ZONE-model';
 
 namespace cm.util;
 

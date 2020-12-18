@@ -1,6 +1,6 @@
 namespace dp;	
 using util from '../../cm/util/util-model';  	
-// using {dp as materialReplaceHis} from '../standardCommon/DP_SC_MATERIAL_REPLACE_HIS-model';	
+// using {dp as materialReplaceHis} from '../sc/DP_SC_MATERIAL_REPLACE_HIS-model';	
 	
 entity Sc_Material_Replace_His {	
   key tenant_id : String(5)  not null;	

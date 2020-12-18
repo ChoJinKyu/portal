@@ -19,7 +19,7 @@ sap.ui.define([
     
     var oTransactionManager;
 
-	return BaseController.extend("dp.detailSpecConfirm.controller.MidObject", {
+	return BaseController.extend("dp.md.detailSpecConfirm.controller.MidObject", {
 
         dateFormatter: DateFormatter,
         
@@ -444,7 +444,7 @@ sap.ui.define([
 			if(!this._oFragments[sFragmentName]){
 				Fragment.load({
 					id: this.getView().getId(),
-					name: "dp.detailSpecConfirm.view." + sFragmentName,
+					name: "dp.md.detailSpecConfirm.view." + sFragmentName,
 					controller: this
 				}).then(function(oFragment){
 					this._oFragments[sFragmentName] = oFragment;

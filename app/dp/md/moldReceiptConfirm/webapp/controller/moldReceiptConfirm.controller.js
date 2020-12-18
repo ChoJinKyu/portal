@@ -31,7 +31,7 @@ sap.ui.define([
     ComboBox, ColumnListItem, Input, MessageBox, MessageToast, ObjectIdentifier, SearchField, Text, Token) {
 	"use strict";
 
-	return BaseController.extend("dp.moldReceiptConfirm.controller.moldReceiptConfirm", {
+	return BaseController.extend("dp.md.moldReceiptConfirm.controller.moldReceiptConfirm", {
 
         dateFormatter: DateFormatter,
         
@@ -214,7 +214,7 @@ sap.ui.define([
             if (!this._oDialog) {
                 this._oDialog = Fragment.load({ 
                     id: oView.getId(),
-                    name: "dp.moldReceiptConfirm.view.Employee",
+                    name: "dp.md.moldReceiptConfirm.view.Employee",
                     controller: this
                 }).then(function (oDialog) {
                     oView.addDependent(oDialog);
@@ -835,7 +835,7 @@ sap.ui.define([
         onValueHelpRequested : function (oEvent) {
 
             var path = '';
-            this._oValueHelpDialog = sap.ui.xmlfragment("dp.moldReceiptConfirm.view.ValueHelpDialogModel", this);
+            this._oValueHelpDialog = sap.ui.xmlfragment("dp.md.moldReceiptConfirm.view.ValueHelpDialogModel", this);
 
             this._oBasicSearchField = new SearchField({
 				showSearchButton: false

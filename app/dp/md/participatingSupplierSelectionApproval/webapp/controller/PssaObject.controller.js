@@ -22,7 +22,7 @@ sap.ui.define([
      */
     var mainViewName = "pssaObjectView";
     var oTransactionManager;
-	return BaseController.extend("dp.participatingSupplierSelectionApproval.controller.PssaObject", {
+	return BaseController.extend("dp.md.participatingSupplierSelectionApproval.controller.PssaObject", {
 
 		dateFormatter: DateFormatter,
 
@@ -290,7 +290,7 @@ sap.ui.define([
 			if(!this._oFragments[sFragmentName]){
 				Fragment.load({
 					id: this.getView().getId(),
-					name: "dp.participatingSupplierSelectionApproval.view." + sFragmentName,
+					name: "dp.md.participatingSupplierSelectionApproval.view." + sFragmentName,
 					controller: this
 				}).then(function(oFragment){
 					this._oFragments[sFragmentName] = oFragment;

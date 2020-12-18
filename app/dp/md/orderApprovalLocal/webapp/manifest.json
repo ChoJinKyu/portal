@@ -13,7 +13,7 @@
         "resources": "resources.json",
         "dataSources": {
             "mainService": {
-                "uri": "srv-api/odata/v2/dp.md.OrderApprovalService/",
+                "uri": "srv-api/odata/v2/dp.OrderApprovalService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0",
@@ -21,7 +21,7 @@
                 }
             },
             "moldService": {
-                "uri": "srv-api/odata/v2/dp.md.DetailSpecEntryService/",
+                "uri": "srv-api/odata/v2/dp.DetailSpecEntryService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
@@ -172,7 +172,7 @@
             ]
         },
         "resourceRoots": {
-            "ext.lib": "../../../lib",
+            "ext.lib": "../../../../lib",
             "dp.md.util": "../../util"
         },
         "routing": {

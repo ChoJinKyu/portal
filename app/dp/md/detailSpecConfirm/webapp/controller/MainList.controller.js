@@ -24,7 +24,7 @@ sap.ui.define([
 ], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, Sorter, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, Label, Token, SearchField, Validator) {
 	"use strict";
 
-	return BaseController.extend("dp.detailSpecConfirm.controller.MainList", {
+	return BaseController.extend("dp.md.detailSpecConfirm.controller.MainList", {
 
         dateFormatter: DateFormatter,
         
@@ -430,7 +430,7 @@ sap.ui.define([
         onValueHelpRequested : function (oEvent) {
 
             var path = '';
-            this._oValueHelpDialog = sap.ui.xmlfragment("dp.detailSpecConfirm.view.ValueHelpDialogModel", this);
+            this._oValueHelpDialog = sap.ui.xmlfragment("dp.md.detailSpecConfirm.view.ValueHelpDialogModel", this);
 
             this._oBasicSearchField = new SearchField({
 				showSearchButton: false

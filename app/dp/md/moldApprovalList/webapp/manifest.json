@@ -1,7 +1,7 @@
 {
     "_version": "1.12.0",
     "sap.app": {
-        "id": "dp.moldApprovalList",
+        "id": "dp.md.moldApprovalList",
         "type": "application",
         "i18n": "i18n/i18n.properties",
         "title": "{{appTitle}}",
@@ -78,7 +78,7 @@
     },
     "sap.ui5": {
         "rootView": {
-            "viewName": "dp.moldApprovalList.view.App",
+            "viewName": "dp.md.moldApprovalList.view.App",
             "type": "XML",
             "async": true,
             "id": "app"
@@ -99,7 +99,7 @@
             "i18n": {
                 "type": "sap.ui.model.resource.ResourceModel",
                 "settings": {
-                    "bundleName": "dp.moldApprovalList.i18n.i18n"
+                    "bundleName": "dp.md.moldApprovalList.i18n.i18n"
                 }
             },
             "util": {
@@ -171,13 +171,13 @@
             ]
         },
         "resourceRoots": {
-            "ext.lib": "../../../lib"
+            "ext.lib": "../../../../lib" 
         },
         "routing": {
             "config": {
                 "routerClass": "sap.m.routing.Router",
                 "viewType": "XML",
-                "viewPath": "dp.moldApprovalList.view",
+                "viewPath": "dp.md.moldApprovalList.view",
                 "controlId": "app",
                 "controlAggregation": "pages",
                 "bypassed": {
