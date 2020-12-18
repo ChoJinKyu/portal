@@ -13,6 +13,11 @@ namespace pg;
 service MdCategoryV4Service {
 
     // VendorPool Category Item Mapping 1건 Procedure 호출
+    // Fiori Json Array 데이터 Ajax로 V4호출
+    // URL : /pg.MdCategoryV4Service/MdVpMappingItemProc
+    /*********************************
+    {"tenant_id":"L2100", "company_code":"*", "org_type_code":"BU", "org_code":"BIZ00200", "spmd_category_code":"C001", "spmd_character_code":"T001", "spmd_character_serial_no":1, "vendor_pool_code":"VP201610260092"}
+    *********************************/
     action MdVpMappingItemProc(
         tenant_id : String(5), 
         company_code : String(10), 
@@ -37,10 +42,25 @@ service MdCategoryV4Service {
         update_user_id : String(500);
     }
     // VendorPool Category Item Mapping array multi건 Procedure 호출
+    // Fiori Json Array 데이터 Ajax로 V4호출
+    // URL : /pg.MdCategoryV4Service/MdVpMappingItemMultiProc
+    /*********************************
+    {
+        "items" : [
+            {"tenant_id":"L2100", "company_code":"*", "org_type_code":"BU", "org_code":"BIZ00200", "spmd_category_code":"C001", "spmd_character_code":"T001", "spmd_character_serial_no":1, "vendor_pool_code":"VP201610260092"},
+            {"tenant_id":"L2100", "company_code":"*", "org_type_code":"BU", "org_code":"BIZ00200", "spmd_category_code":"C002", "spmd_character_code":"T013", "spmd_character_serial_no":13, "vendor_pool_code":"VP201610260092"}
+        ]
+    }
+    *********************************/
     action MdVpMappingItemMultiProc( items : array of MdVpMappingItemProcType ) returns String; 
 
 
     // VendorPool Mapping 상태(신규/저장/확정)처리 1건 Procedure 호출
+    // Fiori Json Array 데이터 Ajax로 V4호출
+    // URL : /pg.MdCategoryV4Service/MdVpMappingStatusProc
+    /*********************************
+    {"tenant_id":"L2100", "company_code":"*", "org_type_code":"BU", "org_code":"BIZ00200", "spmd_category_code":"C001", "spmd_character_code":"T001", "spmd_character_serial_no":1, "vendor_pool_code":"VP201610260092"}
+    *********************************/
     action MdVpMappingStatusProc(
         tenant_id : String(5), 
         company_code : String(10), 
@@ -61,10 +81,24 @@ service MdCategoryV4Service {
         update_user_id : String(500);
     }
     // VendorPool Mapping 상태(신규/저장/확정)처리 array multi건 Procedure 호출
+    // Fiori Json Array 데이터 Ajax로 V4호출
+    // URL : /pg.MdCategoryV4Service/MdVpMappingStatusMultiProc
+    /*********************************
+    {
+        "items" : [
+            {"tenant_id":"L2100", "company_code":"*", "org_type_code":"BU", "org_code":"BIZ00200", "vendor_pool_code":"VP201610260092"},
+            {"tenant_id":"L2100", "company_code":"*", "org_type_code":"BU", "org_code":"BIZ00200", "vendor_pool_code":"VP201610260092"}
+        ]
+    }
+    *********************************/
     action MdVpMappingStatusMultiProc( items : array of MdVpMappingStatusProcType ) returns String; 
     
     // Category별 Item Condition View
-    // 참고사항) oData v2에서 parameter있는 View가 호출이 안됨.
+    // Fiori Json Array 데이터 Ajax로 V4호출
+    // URL : /pg.MdCategoryV4Service/MdCategoryCodeItemConditionView
+    /*********************************
+    {"tenant_id":"L2100", "company_code":"*", "org_type_code":"BU", "org_code":"BIZ00200", "spmd_category_code":"C001"}
+    *********************************/
     view MdCategoryCodeItemConditionView (
                         tenant_id: String(5), 
                         company_code: String(10), 
