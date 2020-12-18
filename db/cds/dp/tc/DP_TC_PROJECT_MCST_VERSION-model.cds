@@ -27,7 +27,7 @@
 namespace dp;
 
 using {User} from '@sap/cds/common';
-using util from '../cm/util/util-model';
+using util from '../../cm/util/util-model';
 using {dp as Project_Member} from './DP_TC_PROJECT_MCST_VERSION-model';
 using {dp as Project} from './DP_TC_PROJECT-model';
 
