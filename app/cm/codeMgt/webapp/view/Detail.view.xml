@@ -1,5 +1,5 @@
 <mvc:View 
-    controllerName="cm.codeManagement.controller.Detail" 
+    controllerName="cm.codeMgt.controller.Detail" 
     displayBlock="true" 
     xmlns="sap.uxap"
     xmlns:mvc="sap.ui.core.mvc"
@@ -117,7 +117,7 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="Tenant: "
+                                            text="{I18N>/TENANT}: "
                                             labelFor="tenant_id"/>
                                         <m:Text
                                             visible="{contModel>/detail/readMode}"
@@ -130,11 +130,11 @@
                                             selectedKey="{viewModel>/detail/tenant_id}"
                                             visible="{contModel>/detail/editMode}"
                                             selectionChange=".onTenantChange"
-                                            items="{orgMgr>/Org_Tenant}">
+                                            items="{orgMgt>/Org_Tenant}">
                                             <core:ListItem 
-                                                key="{orgMgr>tenant_id}" 
-                                                text="{orgMgr>tenant_name}"
-                                                additionalText="{orgMgr>tenant_id}"/>
+                                                key="{orgMgt>tenant_id}" 
+                                                text="{orgMgt>tenant_name}"
+                                                additionalText="{orgMgt>tenant_id}"/>
                                         </m:ComboBox>
                                         <m:layoutData>
                                             <layout:GridData
@@ -197,6 +197,66 @@
 						</blocks>
 					</ObjectPageSubSection>
 
+				</subSections>
+			</ObjectPageSection>
+
+			<ObjectPageSection 
+                titleUppercase="false" 
+                title="Code List ({= (${viewModel>/CodeDetails})?${viewModel>/CodeDetails}.length:0})">
+				<subSections>
+					<ObjectPageSubSection>
+						<blocks>
+                            <m:Table id=""
+                                    mode="{= ${contModel>/detail/readMode}?'None':'None'}"
+                                    sticky="HeaderToolbar,ColumnHeaders"
+                                    inset="false"
+                                    class="sapFDynamicPageAlignContent"
+                                    width="auto"
+                                    items="{
+                                        path: 'viewModel>/CodeDetails'
+                                }">
+                                <m:headerToolbar>
+                                    <m:Toolbar
+                                        visible="{= !${contModel>/detail/createMode}}">
+                                        <m:ToolbarSpacer/>
+                                        <m:HBox>
+                                            <m:Button 
+                                                type="Transparent" 
+                                                text="Add" 
+                                                press=".onAddDetailDetailPress"/>
+                                            <!-- <m:Button 
+                                                type="Transparent" 
+                                                text="Delete"
+                                                visible="{contModel>/detail/editMode}"/> -->
+                                        </m:HBox>
+                                    </m:Toolbar>
+                                </m:headerToolbar>
+                                <m:columns>
+                                    <m:Column>
+                                        <m:Text text="Code" />
+                                    </m:Column>
+                                    <m:Column>
+                                        <m:Text text="Code Description" />
+                                    </m:Column>
+                                    <m:Column>
+                                        <m:Text text="Sort" />
+                                    </m:Column>
+                                </m:columns>
+                                <m:items>
+                                    <m:ColumnListItem type="Navigation" press=".onHandleItemPress">
+                                        <m:cells>
+                                            <m:Text
+                                                    text="{viewModel>code}" />
+                                            <m:Text
+                                                    text="{viewModel>code_description}" />
+                                            <m:Text
+                                                    text="{viewModel>sort_no}" />
+                                        </m:cells>
+                                    </m:ColumnListItem>
+                                </m:items>
+                            </m:Table>
+						</blocks>
+					</ObjectPageSubSection>
 				</subSections>
 			</ObjectPageSection>
 
@@ -270,66 +330,6 @@
                                     </m:VBox>
                                 </form:content>
                             </form:SimpleForm>
-						</blocks>
-					</ObjectPageSubSection>
-				</subSections>
-			</ObjectPageSection>
-
-			<ObjectPageSection 
-                titleUppercase="false" 
-                title="Code List ({= (${viewModel>/CodeDetails})?${viewModel>/CodeDetails}.length:0})">
-				<subSections>
-					<ObjectPageSubSection>
-						<blocks>
-                            <m:Table id=""
-                                    mode="{= ${contModel>/detail/readMode}?'None':'None'}"
-                                    sticky="HeaderToolbar,ColumnHeaders"
-                                    inset="false"
-                                    class="sapFDynamicPageAlignContent"
-                                    width="auto"
-                                    items="{
-                                        path: 'viewModel>/CodeDetails'
-                                }">
-                                <m:headerToolbar>
-                                    <m:Toolbar
-                                        visible="{= !${contModel>/detail/createMode}}">
-                                        <m:ToolbarSpacer/>
-                                        <m:HBox>
-                                            <m:Button 
-                                                type="Transparent" 
-                                                text="Add" 
-                                                press=".onAddDetailDetailPress"/>
-                                            <!-- <m:Button 
-                                                type="Transparent" 
-                                                text="Delete"
-                                                visible="{contModel>/detail/editMode}"/> -->
-                                        </m:HBox>
-                                    </m:Toolbar>
-                                </m:headerToolbar>
-                                <m:columns>
-                                    <m:Column>
-                                        <m:Text text="Code" />
-                                    </m:Column>
-                                    <m:Column>
-                                        <m:Text text="Code Description" />
-                                    </m:Column>
-                                    <m:Column>
-                                        <m:Text text="Sort" />
-                                    </m:Column>
-                                </m:columns>
-                                <m:items>
-                                    <m:ColumnListItem type="Navigation" press=".onHandleItemPress">
-                                        <m:cells>
-                                            <m:Text
-                                                    text="{viewModel>code}" />
-                                            <m:Text
-                                                    text="{viewModel>code_description}" />
-                                            <m:Text
-                                                    text="{viewModel>sort_no}" />
-                                        </m:cells>
-                                    </m:ColumnListItem>
-                                </m:items>
-                            </m:Table>
 						</blocks>
 					</ObjectPageSubSection>
 				</subSections>

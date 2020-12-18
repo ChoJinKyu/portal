@@ -1,5 +1,5 @@
 <mvc:View   
-    controllerName="cm.codeManagement.controller.DetailDetail" 
+    controllerName="cm.codeMgt.controller.DetailDetail" 
     displayBlock="true" 
     xmlns="sap.uxap"
     xmlns:mvc="sap.ui.core.mvc"
@@ -229,81 +229,6 @@
 				</subSections>
 			</ObjectPageSection>
 
-            <ObjectPageSection titleUppercase="false" id="managed_values_section" title="Managed Values">
-				<subSections>
-					<ObjectPageSubSection>
-						<blocks>
-                            <form:SimpleForm
-                                maxContainerCols="2"
-                                editable="true"
-                                layout="ResponsiveGridLayout"
-                                adjustLabelSpan="false"
-                                labelSpanL="4"
-                                labelSpanM="4"
-                                emptySpanL="0"
-                                emptySpanM="0"
-                                columnsL="2"
-                                columnsM="2">
-                                <form:content>
-                                    <m:VBox>
-                                        <m:Label
-                                            text="Created by: "/>
-                                        <m:Text
-                                            text="{viewModel>/detailDetail/create_user_id}"/>
-                                        <m:layoutData>
-                                            <layout:GridData
-                                                span="XL2 L3 M6 S12" />
-                                        </m:layoutData>
-                                    </m:VBox>
-                                    <m:VBox>
-                                        <m:Label
-                                            text="Created At: "/>
-                                        <m:Text
-                                            text="{
-                                                    path: 'viewModel>/detailDetail/local_create_dtm',
-                                                    type: 'sap.ui.model.type.Date',
-                                                    formatOptions: {
-                                                    pattern: 'yyyy/MM/dd'
-                                                    }
-                                                }"/>
-                                        <m:layoutData>
-                                            <layout:GridData
-                                                span="XL2 L3 M6 S12" />
-                                        </m:layoutData>
-                                    </m:VBox>
-                                    <m:VBox>
-                                        <m:Label
-                                            text="Updated by: "/>
-                                        <m:Text
-                                            text="{viewModel>/detailDetail/update_user_id}"/>
-                                        <m:layoutData>
-                                            <layout:GridData
-                                                span="XL2 L3 M6 S12" />
-                                        </m:layoutData>
-                                    </m:VBox>
-                                    <m:VBox>
-                                        <m:Label
-                                            text="Updated At: "/>
-                                        <m:Text
-                                            text="{
-                                                    path: 'viewModel>/detailDetail/local_update_dtm',
-                                                    type: 'sap.ui.model.type.Date',
-                                                    formatOptions: {
-                                                    pattern: 'yyyy/MM/dd'
-                                                    }
-                                                }"/>
-                                        <m:layoutData>
-                                            <layout:GridData
-                                                span="XL2 L3 M6 S12" />
-                                        </m:layoutData>
-                                    </m:VBox>
-                                </form:content>
-                            </form:SimpleForm>
-						</blocks>
-					</ObjectPageSubSection>
-				</subSections>
-			</ObjectPageSection>
-
 			<ObjectPageSection 
                 titleUppercase="false" 
                 title="다국어 ({= (${languages>/CodeLanguages})?${languages>/CodeLanguages}.length:0})">
@@ -386,6 +311,81 @@
                                     </m:ColumnListItem>
                                 </m:items>
                             </m:Table>
+						</blocks>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+
+            <ObjectPageSection titleUppercase="false" id="managed_values_section" title="Managed Values">
+				<subSections>
+					<ObjectPageSubSection>
+						<blocks>
+                            <form:SimpleForm
+                                maxContainerCols="2"
+                                editable="true"
+                                layout="ResponsiveGridLayout"
+                                adjustLabelSpan="false"
+                                labelSpanL="4"
+                                labelSpanM="4"
+                                emptySpanL="0"
+                                emptySpanM="0"
+                                columnsL="2"
+                                columnsM="2">
+                                <form:content>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Created by: "/>
+                                        <m:Text
+                                            text="{viewModel>/detailDetail/create_user_id}"/>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Created At: "/>
+                                        <m:Text
+                                            text="{
+                                                    path: 'viewModel>/detailDetail/local_create_dtm',
+                                                    type: 'sap.ui.model.type.Date',
+                                                    formatOptions: {
+                                                    pattern: 'yyyy/MM/dd'
+                                                    }
+                                                }"/>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Updated by: "/>
+                                        <m:Text
+                                            text="{viewModel>/detailDetail/update_user_id}"/>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Label
+                                            text="Updated At: "/>
+                                        <m:Text
+                                            text="{
+                                                    path: 'viewModel>/detailDetail/local_update_dtm',
+                                                    type: 'sap.ui.model.type.Date',
+                                                    formatOptions: {
+                                                    pattern: 'yyyy/MM/dd'
+                                                    }
+                                                }"/>
+                                        <m:layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </m:layoutData>
+                                    </m:VBox>
+                                </form:content>
+                            </form:SimpleForm>
 						</blocks>
 					</ObjectPageSubSection>
 				</subSections>

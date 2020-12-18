@@ -6,8 +6,8 @@
       "subMenus": [
         {
           "name": "코드관리",
-          "url": "../cm/codeManagement/webapp",
-          "component": "cm.codeManagement"
+          "url": "../cm/codeMgt/webapp",
+          "component": "cm.codeMgt"
         },
         {
           "name": "조직별코드관리",

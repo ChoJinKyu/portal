@@ -16,10 +16,10 @@ sap.ui.define([
 	function (BaseController, JSONModel, MessageToast, MessageBox, LayoutType, Filter, FilterOperator, ManagedListModel, ValidatorUtil, ControlUtil) {
 		"use strict";
 
-		return BaseController.extend("cm.codeManagement.controller.Master", {
+		return BaseController.extend("cm.codeMgt.controller.Master", {
 
             onInit: function () {
-
+                
             },
 
             onBeforeRendering : function(){
