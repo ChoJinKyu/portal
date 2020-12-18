@@ -1,6 +1,6 @@
 namespace cm;
 
-using util from './util-model';
+using util from './util/util-model';
 using {cm as curreny} from './CM_CURRENCY-model';
 
 entity Currency_Lng {

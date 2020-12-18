@@ -1,6 +1,6 @@
 namespace cm;
 
-using util from './util-model';
+using util from './util/util-model';
 
 entity Hr_Department {
     key tenant_id                    : String(5) not null;

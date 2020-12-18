@@ -1,6 +1,6 @@
 namespace cm;
 
-using util from './util-model';
+using util from './util/util-model';
 
 entity Approval_Mst {
     key tenant_id              : String(5) not null   @title : '테넌트ID';

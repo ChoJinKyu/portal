@@ -1,7 +1,7 @@
 namespace cm;
 
 using {cm.Country_Lng as country_Lng} from './CM_COUNTRY_LNG-model';
-using util from './util-model';
+using util from './util/util-model';
 
 entity Country {
     key tenant_id          : String(5) not null;
