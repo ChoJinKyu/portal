@@ -1,0 +1,89 @@
+{
+    "resources": [
+        {
+            "name": "../../sap-ui-version.json"
+        },
+        {
+            "name": "../../dp/developmentReceipt/controller/ErrorHandler.js"
+        },
+        {
+            "name": "../../dp/developmentReceipt/model/models.js"
+        },
+        {
+            "name": "../../dp/developmentReceipt/model/formatter.js"
+        },
+        {
+            "name": "../../dp/developmentReceipt/controller/developmentReceiptPersoService.js"
+        },
+        {
+            "name": "../../dp/developmentReceipt/controller/developmentReceipt.controller.js"
+        },
+        {
+            "name": "../../dp/developmentReceipt/manifest.json"
+        },
+        {
+            "name": "../../dp/developmentReceipt/controller/BaseController.js"
+        },
+        {
+            "name": "../../dp/developmentReceipt/controller/App.controller.js"
+        },
+        {
+            "name": "../../dp/developmentReceipt/Component.js"
+        },
+        {
+            "name": "../../dp/developmentReceipt/manifest-bundle.zip"
+        },
+        {
+            "name": "../../dp/developmentReceipt/Component-preload.js",
+            "merged": true
+        },
+        {
+            "name": "../../dp/developmentReceipt/controller/developmentReceipt-dbg.controller.js",
+            "isDebug": true
+        },
+        {
+            "name": "../../dp/developmentReceipt/model/formatter-dbg.js",
+            "isDebug": true
+        },
+        {
+            "name": "../../dp/developmentReceipt/controller/developmentReceiptPersoService-dbg.js",
+            "isDebug": true
+        },
+        {
+            "name": "../../dp/developmentReceipt/model/models-dbg.js",
+            "isDebug": true
+        },
+        {
+            "name": "../../dp/developmentReceipt/controller/ErrorHandler-dbg.js",
+            "isDebug": true
+        },
+        {
+            "name": "../../dp/developmentReceipt/controller/BaseController-dbg.js",
+            "isDebug": true
+        },
+        {
+            "name": "../../dp/developmentReceipt/controller/App-dbg.controller.js",
+            "isDebug": true
+        },
+        {
+            "name": "../../dp/developmentReceipt/Component-dbg.js",
+            "isDebug": true
+        },
+        {
+            "name": "../../dp/developmentReceipt/i18n/i18n.properties",
+            "raw": "i18n/i18n.properties"
+        },
+        {
+            "name": "../../dp/developmentReceipt/view/developmentReceipt.view.xml"
+        },
+        {
+            "name": "../../dp/developmentReceipt/view/ValueHelpDialogAffiliate.fragment.xml"
+        },
+        {
+            "name": "../../dp/developmentReceipt/view/App.view.xml"
+        },
+        {
+            "name": "../../dp/developmentReceipt/index.html"
+        }
+    ]
+}
