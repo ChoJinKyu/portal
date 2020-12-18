@@ -42,13 +42,13 @@
             "subMenus": [
                 {
                     "name": "UOM Class",
-                    "url": "../dp/uomClassMgt/webapp",
-                    "component": "dp.uomClassMgt"
+                    "url": "../dp/mm/uomClassMgt/webapp",
+                    "component": "dp.mm.uomClassMgt"
                 },
                 {
                     "name": "UOM Management",
-                    "url": "../dp/uomMgt/webapp",
-                    "component": "dp.uomMgt"
+                    "url": "../dp/mm/uomMgt/webapp",
+                    "component": "dp.mm.uomMgt"
                 }
             ]
         },
