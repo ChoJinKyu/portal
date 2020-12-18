@@ -9,8 +9,8 @@ using from './vp/vendorPoolSearchMgr/vendorPoolSearch-service';
 using from './vp/vendorPoolMappingMgr/vendorPoolMapping-service';
 using from './vp/vendorPoolChangeMgr/vendorPoolChange-service';
 
-// Task Monitor
-using from './monitor/monitor-service';
+// // Task Monitor
+// using from './monitor/monitor-service';
 using from './tm/taskMonitoring-service';
 
 //Market Intelligence
