@@ -1,0 +1,139 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core"
+    xmlns:uxap="sap.uxap" >
+<VBox class="sapUiSmallMargin">
+    <form:SimpleForm 
+        id="frmPress"
+        editable="false"
+        layout="ColumnLayout"
+        columnsM="2"
+        columnsL="3"
+        columnsXL="3" >
+        <form:content>
+
+                <Label text="Mold Test" required="true"/>
+                <Switch state="{spec>/inspection_flag}" customTextOn="Yes" customTextOff="No"  />
+                <Label text="Order Qty"/>
+                <Input value="{spec>/order_qty}"/>
+                <Label text="Demand Life" required="true"/>
+                <Input type="Number" value="{path: 'spec>/request_life_shot_count', type: 'sap.ui.model.type.Integer'}" required="true"/>
+                <Label text="Size" required="true"/>
+                <Select   width="100%"
+                            selectedKey="{spec>/mold_size}"
+                            items="{
+                                        path : 'util>/CodeDetails',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SIZE'}
+                                        ]
+                                    }"
+                            editable="true"
+                            required="true"
+                >
+                    <core:Item key="{util>code}" text="{util>code_description}" />
+                </Select>
+             <!-- </VBox>            
+            <VBox > -->
+                <Label text="Assembly Approval" required="true"/> 
+                <Switch state="{spec>/assembly_approval_flag}" customTextOn="Yes" customTextOff="No"  />
+                <Label text="Mold Structure" required="true"/>
+                <Select   width="100%"
+                            selectedKey="{spec>/die_form}"
+                            items="{
+                                        path : 'util>/CodeDetails',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_STRUCTURE'}
+                                        ]
+                                    }"
+                            editable="true"
+                >
+                    <core:Item key="{util>code}" text="{util>code_description}" />
+                </Select>
+                <Label text="Mold Weight"/>
+                <Input value="{spec>/mold_weight}"/>
+                <Label text="Open Size"/>
+                <Input value="{spec>/press_open_size}"/>
+
+
+            <!-- </VBox>            
+            <VBox > -->
+                <Label text="Use Material" required="true"/> 
+                <Input value="{spec>/use_material_value}" required="true"/>
+                <Label text="Process Qty" required="true"/>
+                <Input value="{spec>/cavity_process_qty}" required="true"/>
+                <Label text="Material Thickness"/>
+                <Input value="{spec>/press_material_thickness}"/>
+                <Label text="Material Size"/>
+                <Input value="{spec>/press_material_size}"/>
+             <!-- </VBox> -->
+        </form:content>
+    </form:SimpleForm>
+        <form:SimpleForm 
+        editable="false"
+        layout="ColumnLayout"
+        columnsM="2"
+        columnsL="3"
+        columnsXL="3" >
+        <form:content>
+            <core:Title text="Spare Parts" />
+            <!-- <VBox> -->
+                <Label text="P-Punch"/>
+                <Input type="Number" value="{path: 'spec>/spare_part_p_punch_count', type: 'sap.ui.model.type.Integer'}"/>
+                <Label text="Die Button"/>
+                <Input type="Number" value="{path: 'spec>/spare_part_die_button_count', type: 'sap.ui.model.type.Integer'}"/>
+
+            <!-- </VBox>            
+            <VBox > -->
+                <Label text="B-Punch"/> 
+                <Input type="Number" value="{path: 'spec>/spare_part_b_punch_count', type: 'sap.ui.model.type.Integer'}"/>
+                <Label text="Ejector Pin"/>
+                <Input type="Number" value="{path: 'spec>/spare_part_ejector_pin_count', type: 'sap.ui.model.type.Integer'}"/>
+
+            <!-- </VBox>            
+            <VBox > -->
+                <Label text="Spring"/> 
+                <Input type="Number" value="{path: 'spec>/spare_part_spring_count', type: 'sap.ui.model.type.Integer'}"/>
+                <Label text="Etc. Press"/>
+                <Input type="Number" value="{path: 'spec>/spare_part_etc_count', type: 'sap.ui.model.type.Integer'}"/>
+            <!-- </VBox> -->
+        </form:content>
+    </form:SimpleForm>
+
+    <form:SimpleForm 
+        editable="false"
+        layout="ColumnLayout"
+        columnsM="2"
+        columnsL="3"
+        columnsXL="3" >
+        <form:content>
+            <core:Title text="Press Meterial" />
+            <!-- <VBox> -->
+                <Label text="Top Holder"/>
+                <Input value="{spec>/top_holder_material_name}"/>
+                <Label text="Stripper"/>
+                <Input value="{spec>/stripper_material_name}"/>
+                <Label text="Pad Valve"/>
+                <Input value="{spec>/pad_valve_material_name}"/>
+            <!-- </VBox>            
+            <VBox > -->
+                <Label text="Bottom Holder"/> 
+                <Input value="{spec>/bottom_holder_material_name}"/>
+                <Label text="Punch Holder"/>
+                <Input value="{spec>/punch_holder_material_name}"/>
+                <Label text="Pad"/>
+                <Input value="{spec>/pad_material_name}"/>
+            <!-- </VBox>            
+            <VBox > -->
+                <Label text="Die"/> 
+                <Input value="{spec>/die_material_name}"/>
+                <Label text="Punch"/>
+                <Input value="{spec>/punch_material_name}"/>
+            <!-- </VBox> -->
+        </form:content>
+    </form:SimpleForm>
+	</VBox>
+</core:FragmentDefinition>

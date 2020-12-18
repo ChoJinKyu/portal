@@ -17,7 +17,7 @@
 		<!-- DEPENDENCIES VERSION -->
 		<jdk.version>1.8</jdk.version>
 		<cds.services.version>1.12.0</cds.services.version>
-		<spring.boot.version>2.3.1.RELEASE</spring.boot.version>
+		<spring.boot.version>2.3.3.RELEASE</spring.boot.version>
 
 		<cdsdk.version>^3.3.1</cdsdk.version>
 		<node.version>v12.16.1</node.version>
@@ -122,7 +122,7 @@
 						<configuration>
 							<rules>
 								<requireMavenVersion>
-									<version>3.5</version>
+									<version>3.5.0</version>
 								</requireMavenVersion>
 								<requireJavaVersion>
 									<version>${jdk.version}</version>
