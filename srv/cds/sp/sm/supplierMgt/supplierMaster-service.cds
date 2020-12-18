@@ -1,4 +1,4 @@
-using { sp as supplierMaster } from '../../../../db/cds/sp/supplierMgr/SP_SM_SUPPLIER_MST-model.cds';
+using { sp as supplierMaster } from '../../../../../db/cds/sp/sm/SP_SM_SUPPLIER_MST-model.cds';
 namespace sp; 
 @path : '/sp.supplierMasterService'
 service supplierMasterService {

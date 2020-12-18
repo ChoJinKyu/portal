@@ -1,4 +1,4 @@
-using { sp as supplierOrg } from '../../../../db/cds/sp/supplierMgr/SP_SM_SUPPLIER_ROLE-model.cds';
+using { sp as supplierOrg } from '../../../../../db/cds/sp/sm/SP_SM_SUPPLIER_ROLE-model.cds';
 namespace sp; 
 @path : '/sp.supplierRoleService'
 service supplierRoleService {
