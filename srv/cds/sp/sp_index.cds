@@ -1,4 +1,4 @@
-using from './sf/fundingNotify/fundingNotify-service';
+using from './sf/sp_sf_index';
 using from './np/sp_np_index';
 
 //Supplier 등록
