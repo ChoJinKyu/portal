@@ -52,11 +52,5 @@ curl -X POST http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_Ar
 ]} 
 ]}'
 
-# 등록 :detail
-curl -X POST http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_Arl_Detail \
--H "Content-Type: application/json" \
--d '{"tenant_id": "L2100", "approval_number": "B201807100044", "item_sequence": "3", "au_code": "10", "material_code": "1", "supplier_code": "KR00002600",
-"base_date": "2020-12-10T00:00:00", "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z"}'
-
 # 삭제
 curl -X DELETE http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_Arl_Master\(tenant_id=\'L2100\',approval_number=\'B202101019999\'\)
