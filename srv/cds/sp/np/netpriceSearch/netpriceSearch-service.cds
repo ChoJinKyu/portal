@@ -20,4 +20,5 @@ service NpSearchService {
            , net_price
       from spNetprice.Np_Net_Price_Mst;
 
+
 }
