@@ -1,6 +1,6 @@
 namespace dp;	
 using util from '../../cm/util/util-model'; 	
-// using {dp as specNameLov} from '../standardCommon/DP_SC_SPEC_NAME_LOV-model';	
+// using {dp as specNameLov} from '../sc/DP_SC_SPEC_NAME_LOV-model';	
 	
 entity Sc_Spec_Name_Lov {	
   key tenant_id : String(5)  not null @title: '테넌트ID' ;	

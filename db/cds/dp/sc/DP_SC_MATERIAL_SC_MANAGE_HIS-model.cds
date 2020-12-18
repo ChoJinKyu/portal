@@ -1,6 +1,6 @@
 namespace dp;	
 using util from '../../cm/util/util-model';  	
-// using {dp as materialScManageHis} from '../standardCommon/DP_SC_MATERIAL_SC_MANAGE_HIS-model';	
+// using {dp as materialScManageHis} from '../sc/DP_SC_MATERIAL_SC_MANAGE_HIS-model';	
 	
 entity Sc_Material_Sc_Manage_His {	
   key tenant_id : String(5)  not null @title: '테넌트ID' ;	
