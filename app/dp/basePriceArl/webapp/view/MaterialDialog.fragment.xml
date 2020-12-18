@@ -7,11 +7,11 @@
     xmlns:layout="sap.ui.layout"
     xmlns:table="sap.ui.table"
     xmlns:form="sap.ui.layout.form"
+	width="50%"
+	height="50%"    
     displayBlock="true">
 	
-	<Dialog title="Material Code"
-            contentWidth="50%"
-            contentHeight="50%">
+	<Dialog title="Material Code">
 		<content>
         <!-- <HBox width="100%">
             <VBox class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginTop"> -->
@@ -22,9 +22,8 @@
                     <Input value="" />
                     <Button text="Search" press="" class="sapUiSmallMarginBegin" />
                 </HBox> -->
-                <!-- Material Code List 시작 -->
                 <Table 
-                    items="{materialCodeModel>/materialCode}"
+                    items="{materialCodeModel>/}"
                     mode="MultiSelect"
                     selectionChange=".onSelectMaterialCode" >
                     <headerToolbar>
@@ -32,7 +31,7 @@
                             <content>
                                 <Title text="Material Code List" level="H2" />
                                 <ToolbarSpacer />
-                                <SearchField search="" width="15rem"/>
+                                <SearchField press="" />
                             </content>
                         </OverflowToolbar>
                     </headerToolbar>
@@ -57,7 +56,7 @@
                                 <Label text="Spec" />                            
                             </header>
                         </Column>
-                        <Column hAlign="Center" width="6rem" >
+                        <Column hAlign="Center" width="10rem" >
                             <header>
                                 <Label text="Commondify"/>                            
                             </header>
@@ -92,26 +91,17 @@
                             </cells>
                         </ColumnListItem>
                     </items>
-                </Table>
-                <!-- Material Code List 끝 -->        
+                </Table>             
             <!-- </VBox>
         </HBox> -->
 		</content>
 			<beginButton>
-				<Button text="Close" press=".onClose" >
-                    <customData>
-                        <core:CustomData key="fragmentName" value="_oMaterialDialog"  />
-                    </customData>
-                </Button>
+				<Button text="Close" press=".onClose" />
 			</beginButton>
             <endButton>
                 <Button  text="Apply" 
                     type="Emphasized"
-                    press=".onMaterialDetailApply" >
-                    <customData>
-                        <core:CustomData key="fragmentName" value="_oMaterialDialog"  />
-                    </customData>
-                </Button>
+                    press=".onMaterialDetailApply" />
             </endButton>
 	</Dialog>
 </core:FragmentDefinition>
