@@ -148,12 +148,12 @@
                 width="100%"
                 selectedKey="{master>/timezone_code}"
                 items="{
-                    path: 'timeZoneMgr>/TimeZone',
+                    path: 'timeZoneMgt>/TimeZone',
                     filters: [
                     ]
                 }">
             <items>
-                <core:Item key="{timeZoneMgr>timezone_code}" text="{timeZoneMgr>timezone_code}: {timeZoneMgr>timezone_name}" />
+                <core:Item key="{timeZoneMgt>timezone_code}" text="{timeZoneMgt>timezone_code}: {timeZoneMgt>timezone_name}" />
             </items>
             </ComboBox>
     

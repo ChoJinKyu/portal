@@ -19,8 +19,8 @@
                     "odataVersion": "2.0"
                 }
             },
-            "orgMgrService": {
-                "uri": "srv-api/odata/v2/cm.OrgMgrService/",
+            "orgMgtService": {
+                "uri": "srv-api/odata/v2/cm.OrgMgtService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
@@ -33,22 +33,22 @@
                     "odataVersion": "2.0"
                 }
             },
-            "currencyMgrService": {
-                "uri": "srv-api/odata/v2/cm.CurrencyMgrService/",
+            "currencyMgtService": {
+                "uri": "srv-api/odata/v2/cm.CurrencyMgtService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
                 }
             },
-            "timeZoneMgrService": {
-                "uri": "srv-api/odata/v2/cm.TimeZoneMgrService/",
+            "timeZoneMgtService": {
+                "uri": "srv-api/odata/v2/cm.TimeZoneMgtService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
                 }
             },
-            "roleGroupMgrService": {
-                "uri": "srv-api/odata/v2/cm.RoleGroupMgrService/",
+            "roleGroupMgtService": {
+                "uri": "srv-api/odata/v2/cm.RoleGroupMgtService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
@@ -114,7 +114,7 @@
                 }
             },
             "org": {
-                "dataSource": "orgMgrService",
+                "dataSource": "orgMgtService",
                 "preload": true,
                 "settings": {
                     "operationMode": "Server",
@@ -124,7 +124,7 @@
                 }
             },
             "currency": {
-                "dataSource": "currencyMgrService",
+                "dataSource": "currencyMgtService",
                 "preload": true,
                 "settings": {
                     "operationMode": "Server",
@@ -133,8 +133,8 @@
                     "autoExpandSelect": true
                 }
             },
-            "timeZoneMgr": {
-                "dataSource": "timeZoneMgrService",
+            "timeZoneMgt": {
+                "dataSource": "timeZoneMgtService",
                 "preload": true,
                 "settings": {
                     "operationMode": "Server",
@@ -144,7 +144,7 @@
                 }
             },
             "roleGroup": {
-                "dataSource": "roleGroupMgrService",
+                "dataSource": "roleGroupMgtservice",
                 "preload": true,
                 "settings": {
                     "operationMode": "Server",
