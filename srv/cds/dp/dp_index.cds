@@ -1,4 +1,4 @@
-using from './md/md_index.cds'; 
+using from './md/dp_md_index.cds';
 // 자재코드(품번)생성 관리
 using from './mm/uomMgt/uomMgt-service';
 using from './mm/uomMgt/uomClassMgt-service';
