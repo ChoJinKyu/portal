@@ -1,8 +1,8 @@
-using {dp as pjt} from '../../../db/cds/dp/tc/DP_TC_PROJECT-model';
-using {dp as pjtEvt} from '../../../db/cds/dp/tc/DP_TC_PROJECT_EVENT-model';
-using {dp as pjtMcstVer} from '../../../db/cds/dp/tc/DP_TC_PROJECT_MCST_VERSION-model';
-using {dp as pjtSimilarModel} from '../../../db/cds/dp/tc/DP_TC_PROJECT_SIMILAR_MODEL-model';
-using {dp as pjtView} from '../../../db/cds/dp/tc/DP_TC_PROJECT_VIEW-model';
+using {dp as pjt} from '../../../../db/cds/dp/tc/DP_TC_PROJECT-model';
+using {dp as pjtEvt} from '../../../../db/cds/dp/tc/DP_TC_PROJECT_EVENT-model';
+using {dp as pjtMcstVer} from '../../../../db/cds/dp/tc/DP_TC_PROJECT_MCST_VERSION-model';
+using {dp as pjtSimilarModel} from '../../../../db/cds/dp/tc/DP_TC_PROJECT_SIMILAR_MODEL-model';
+using {dp as pjtView} from '../../../../db/cds/dp/tc/DP_TC_PROJECT_VIEW-model';
 
 namespace dp;
 
