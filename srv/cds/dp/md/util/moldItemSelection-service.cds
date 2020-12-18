@@ -1,7 +1,7 @@
 namespace dp.util;
-using { dp as moldMst } from '../../../../db/cds/dp/md/DP_MD_MST-model';
-using { dp as approvalDtl } from '../../../../db/cds/dp/md/DP_MD_APPROVAL_DTL-model';
-using { cm as codeDtl } from '../../../../db/cds/cm/codeMgr/CM_CODE_DTL-model';
+using { dp as moldMst } from '../../../../../db/cds/dp/md/DP_MD_MST-model';
+using { dp as approvalDtl } from '../../../../../db/cds/dp/md/DP_MD_APPROVAL_DTL-model';
+using { cm as codeDtl } from '../../../../../db/cds/cm/codeMgr/CM_CODE_DTL-model';
 
 @path: '/dp.util.MoldItemSelectionService'
 service MoldItemSelectionService {
