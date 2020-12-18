@@ -10,13 +10,13 @@ import com.sap.cds.services.persistence.PersistenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import cds.gen.cm.msgmgrservice.Message;
-import cds.gen.cm.msgmgrservice.Message_;
-import cds.gen.cm.msgmgrservice.MsgMgrService_;
+import cds.gen.cm.msgmgtservice.Message;
+import cds.gen.cm.msgmgtservice.Message_;
+import cds.gen.cm.msgmgtservice.MsgMgtService_;
 import lg.sppCap.handlers.base.BaseEventHandler;
 
 @Component
-@ServiceName(MsgMgrService_.CDS_NAME)
+@ServiceName(MsgMgtService_.CDS_NAME)
 public class MsgMgrService extends BaseEventHandler {
 
     @Autowired

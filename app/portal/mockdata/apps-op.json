@@ -6,8 +6,8 @@
             "subMenus": [
                 {
                     "name": "PR",
-                    "url": "../op/pu/prMgr/webapp",
-                    "component": "op.pu.prMgr"
+                    "url": "../op/pu/prMgt/webapp",
+                    "component": "op.pu.prMgt"
                 },
                 {
                     "name": "App #2",

@@ -4,9 +4,8 @@ using {cm as orgDivision} from '../../../../db/cds/cm/CM_ORG_DIVISION-model';
 using {cm as orgPlant} from '../../../../db/cds/cm/CM_ORG_PLANT-model';
 
 namespace ep;
-@path : 'ep.projectMgrService'
-
-service ProjectMgrService{
+@path : 'ep.projectMgtService'
+service ProjectMgtService{
 
     entity Project as projection on project.Po_Project;
 

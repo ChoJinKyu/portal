@@ -16,13 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import cds.gen.ep.projectmgrservice.Project;
-import cds.gen.ep.projectmgrservice.ProjectMgrService_;
-import cds.gen.ep.projectmgrservice.Project_;
+import cds.gen.ep.projectmgtservice.Project;
+import cds.gen.ep.projectmgtservice.ProjectMgtService_;
+import cds.gen.ep.projectmgtservice.Project_;
 
 @Component
-@ServiceName(ProjectMgrService_.CDS_NAME)
-public class ProjectMgrService implements EventHandler {
+@ServiceName(ProjectMgtService_.CDS_NAME)
+public class ProjectMgtService implements EventHandler {
 
     private static final Logger log = LogManager.getLogger();
 

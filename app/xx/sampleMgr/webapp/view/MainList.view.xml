@@ -36,6 +36,9 @@
                         <IconTabFilter id="FunctionCallSample" text="Function call" key="FunctionCallSample" > 
                             <mvc:XMLView viewName="xx.sampleMgr.view.FunctionCallSample"></mvc:XMLView>
                         </IconTabFilter>
+                        <IconTabFilter id="ViewCrud" text="View CRUD" key="ViewCrud" > 
+                            <mvc:XMLView viewName="xx.sampleMgr.view.ViewCrud"></mvc:XMLView>
+                        </IconTabFilter>
                     </items>
                 </IconTabBar>
             </f:content>
