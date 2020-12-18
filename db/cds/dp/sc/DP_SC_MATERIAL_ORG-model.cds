@@ -1,6 +1,6 @@
 namespace dp;	
 using util from '../../cm/util/util-model';  	
-// using {dp as materialMst} from '../standardCommon/DP_SC_MATERIAL_ORG-model';	
+// using {dp as materialMst} from '../sc/DP_SC_MATERIAL_ORG-model';	
 	
 entity Sc_Material_Org {	
   key tenant_id : String(5)  not null @title: '테넌트ID' ;	
