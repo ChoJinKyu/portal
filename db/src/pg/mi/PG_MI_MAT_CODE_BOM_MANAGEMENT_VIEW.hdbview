@@ -32,9 +32,6 @@ view pg_MI_Mat_Code_Bom_Management_View as
 	from pg_mi_material_code_bom_mngt_header as header
 	left join pg_mi_material_code_bom_mngt_item as item
 		on	header.tenant_id		= item.tenant_id
-		and	header.company_code		= item.company_code
-		and	header.org_type_code	= item.org_type_code
-		and	header.org_code			= item.org_code
 		and	header.mi_bom_id		= item.mi_bom_id
 	left join dp_mm_material_desc_lng as mattext
 		on	header.tenant_id		= mattext.tenant_id
