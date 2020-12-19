@@ -101,9 +101,10 @@ service taskMonitoringSacService {
            ,    cd.code_description
         from  CodeDtl  cd
               inner join CodeLng  cl
-                  on  cd.tenant_id   =  cl.tenant_id
-                  and cd.group_code  =  cl.group_code
-                  and cd.code        =  cl.code;
+                  on  cd.tenant_id    =  cl.tenant_id
+                  and cd.group_code   =  cl.group_code
+                  and cd.code         =  cl.code
+                  and cl.language_cd  =  'KO';
 
     // MiExchangeCode View: 거래소코드
     view MiExchangeCodeView @(title : '거래소코드 View') as
