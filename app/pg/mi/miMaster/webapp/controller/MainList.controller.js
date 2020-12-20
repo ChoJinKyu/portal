@@ -11,25 +11,14 @@ sap.ui.define([
 	"./BaseController",
 	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
-	"ext/lib/formatter/DateFormatter",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
-    "sap/m/MessageToast",
-	"sap/m/ColumnListItem",
-	"sap/m/ObjectIdentifier",
-	"sap/m/Text",
-	"sap/m/Input",
-	"sap/m/ComboBox",
-	"sap/ui/core/Item",
-	"sap/base/Log"
-], function (BaseController, History, JSONModel, DateFormatter,  Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, Log) {
+    "sap/m/MessageToast"	
+], function (BaseController, History, JSONModel,  Filter, FilterOperator, MessageBox, MessageToast) {
 	"use strict";
 
 	return BaseController.extend("pg.mi.miMaster.controller.MainList", {
-
-		dateFormatter: DateFormatter,
-
 		_m : {  //수정대상 등록된 필터값들은 삭제한다. 
             page : "page",
             groupID : "pgGroup",

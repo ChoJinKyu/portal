@@ -9,8 +9,8 @@ using { ep as loiReqListView} from '../../../../db/cds/ep/po/EP_LI_REQUEST_LIST_
 
 namespace ep;
 
-@path : 'ep.LoiMgrService'
-service LoiMgrService {
+@path : 'ep.LoiMgtService'
+service LoiMgtService {
     entity LoiMst as projection on loiMst.Li_Mst;
     entity LoiDtl as projection on loiDtl.Li_Dtl;
     entity LoiVendor as projection on loiVd.Li_Supplier;

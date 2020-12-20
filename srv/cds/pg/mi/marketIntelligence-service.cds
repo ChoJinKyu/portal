@@ -16,17 +16,17 @@ using {pg as MIMaxNIDView} from '../../../../db/cds/pg/mi/PG_MI_MAX_NODE_ID_VIEW
 //Material
 using {dp.Mm_Material_Desc_Lng as MaterialDesc} from '../../../../db/cds/dp/mm/DP_MM_MATERIAL_DESC_LNG-model';
 //Supplier
-using {sp.Sm_Supplier_Mst as SupplierMaster} from '../../../../db/cds/sp/supplierMgr/SP_SM_SUPPLIER_MST-model';
+using {sp.Sm_Supplier_Mst as SupplierMaster} from '../../../../db/cds/sp/sm/SP_SM_SUPPLIER_MST-model';
 //CM ORG
-using {cm.Org_Tenant as OrgTenant} from '../../../../db/cds/cm/orgMgr/CM_ORG_TENANT-model';
-using {cm.Org_Company as OrgCompany} from '../../../../db/cds/cm/orgMgr/CM_ORG_COMPANY-model';	
-using {cm.Pur_Operation_Org as OrgPurchasingOperation} from '../../../../db/cds/cm/purOrgMgr/CM_PUR_OPERATION_ORG-model';
+using {cm.Org_Tenant as OrgTenant} from '../../../../db/cds/cm/CM_ORG_TENANT-model';
+using {cm.Org_Company as OrgCompany} from '../../../../db/cds/cm/CM_ORG_COMPANY-model';	
+using {cm.Pur_Operation_Org as OrgPurchasingOperation} from '../../../../db/cds/cm/CM_PUR_OPERATION_ORG-model';
 //CM Code
-using {cm.Code_Mst as CodeMst} from '../../../../db/cds/cm/codeMgr/CM_CODE_MST-model';
-using {cm.Code_Dtl as CodeDtl} from '../../../../db/cds/cm/codeMgr/CM_CODE_DTL-model';
-using {cm.Code_Lng as CodeLng} from '../../../../db/cds/cm/codeMgr/CM_CODE_LNG-model';
+using {cm.Code_Mst as CodeMst} from '../../../../db/cds/cm/CM_CODE_MST-model';
+using {cm.Code_Dtl as CodeDtl} from '../../../../db/cds/cm/CM_CODE_DTL-model';
+using {cm.Code_Lng as CodeLng} from '../../../../db/cds/cm/CM_CODE_LNG-model';
 //Unit Code
-using {cm.Currency_Lng as CurrencyLanguage} from '../../../../db/cds/cm/currencyMgr/CM_CURRENCY_LNG-model';
+using {cm.Currency_Lng as CurrencyLanguage} from '../../../../db/cds/cm/CM_CURRENCY_LNG-model';
 using {dp.Mm_Unit_Of_Measure_Lng as UnitOfMeasure} from '../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE_LNG-model';
 
 namespace pg;

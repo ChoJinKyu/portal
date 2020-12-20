@@ -6,13 +6,13 @@
             "subMenus": [
                 {
                     "name": "Mold Development Receipt",
-                    "url": "../dp/developmentReceipt/webapp",
-                    "component": "dp.developmentReceipt"
+                    "url": "../dp/md/developmentReceipt/webapp",
+                    "component": "dp.md.developmentReceipt"
                 },
                 {
                     "name": "Mold Approval List",
-                    "url": "../dp/moldApprovalList/webapp",
-                    "component": "dp.moldApprovalList"
+                    "url": "../dp/md/moldApprovalList/webapp",
+                    "component": "dp.md.moldApprovalList"
                 },
                 {
                     "name": "App #2",
@@ -21,18 +21,18 @@
                 },
                 {
                     "name": "Detail Spec Entry",
-                    "url": "../dp/detailSpecEntry/webapp",
-                    "component": "dp.detailSpecEntry"
+                    "url": "../dp/md/detailSpecEntry/webapp",
+                    "component": "dp.md.detailSpecEntry"
                 },
                 {
                     "name": "Detail Spec Confirm",
-                    "url": "../dp/detailSpecConfirm/webapp",
-                    "component": "dp.detailSpecConfirm"
+                    "url": "../dp/md/detailSpecConfirm/webapp",
+                    "component": "dp.md.detailSpecConfirm"
                 },
                 {
                     "name": "Mold Receipt Confirm",
-                    "url": "../dp/moldReceiptConfirm/webapp",
-                    "component": "dp.moldReceiptConfirm"
+                    "url": "../dp/md/moldReceiptConfirm/webapp",
+                    "component": "dp.md.moldReceiptConfirm"
                 }
             ]
         },

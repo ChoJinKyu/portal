@@ -1,0 +1,49 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<form:SimpleForm 
+        editable="false"
+        layout="ColumnLayout"
+        columnsM="2"
+        columnsL="3"
+        columnsXL="3"   
+    >
+        <form:content>
+		
+            <Label text="{I18N>/MODEL}"/>
+            <Text text="{master>/model}"/>
+            <Label text="Production Type"/>
+            <Text text="{mstSpecView>/mold_production_type_name}"/>
+            <Label text="Mold Supplier"/>
+            <Input id="inpMoldSupplier" 
+                    value="{master>/mold_mfger_code}" 
+                    showValueHelp="true"
+                    valueHelpOnly="true"
+                    valueHelpRequest=".onSuppValueHelpRequested"
+            />
+
+
+            <Label text="Mold Part No"/> 
+            <Text text="{master>/mold_number}"/>
+            <Label text="Item Type"/>
+            <Text text="{mstSpecView>/mold_item_type_name}"/>
+            <Label text="Order Supplier"/>
+            <Text text="{master>/order_vendor_id}"></Text>
+
+
+            <Label text="Mold Seq"/>
+            <Text text="{master>/mold_sequence}"/>
+            <Label text="{I18N>/DESCRIPTION}"/>
+            <Text text="{master>/spec_name}"></Text>
+            <Label text="Production Supplier"/>
+            <Input id="inpProductionSupplier"
+                    value="{master>/production_supplier_code}" 
+                    showValueHelp="true"
+                    valueHelpOnly="true"
+                    valueHelpRequest=".onSuppValueHelpRequested"
+            />
+        </form:content>
+	</form:SimpleForm>
+</core:FragmentDefinition>

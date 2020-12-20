@@ -1,5 +1,5 @@
 sap.ui.define([
-	"pg/mm/test/unit/controller/MainList.controller"
+	"pg/mi/miMaster/test/unit/controller/MainList.controller"
 ], function () {
 	"use strict";
 });

@@ -5,9 +5,6 @@ namespace pg;
 entity MI_Mat_Code_BOM_Management_View {
     key tenant_id             : String(5)     @title : '회사코드';
         tenant_name           : String(240)   @title : '회사명';
-    key company_code          : String(10)    @title : '법인코드';
-    key org_type_code         : String(30)    @title : '조직유형코드';
-    key org_code              : String(10)    @title : '조직코드';
     key material_code         : String(40)    @title : '자재코드';
         material_desc         : String(240)   @title : '자재명';
     key supplier_code         : String(10)    @title : '공급업체코드';

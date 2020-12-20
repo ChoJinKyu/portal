@@ -97,7 +97,7 @@
       }
     },
     "resourceRoots": {
-      "ext.lib": "../../../lib"
+      "ext.lib": "../../../../lib"
     },
     "routing": {
       "config": {

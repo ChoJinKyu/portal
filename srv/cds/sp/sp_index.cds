@@ -1,4 +1,5 @@
-using from './sf/fundingNotify/fundingNotify-service';
-using from './sm/supplierMgt/supplierMaster-service';
-using from './sm/supplierMgt/supplierOrg-service';
-using from './sm/supplierMgt/supplierRole-service';
+using from './sf/sp_sf_index';
+using from './np/sp_np_index';
+
+//Supplier 등록
+using from './sm/sp_sm_index';

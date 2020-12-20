@@ -1,0 +1,112 @@
+{
+    "resources": [
+        {
+            "name": "../../dp/detailSpecEntry/view/MidObject.view.xml"
+        },
+        {
+            "name": "../../dp/detailSpecEntry/Component.js"
+        },
+        {
+            "name": "../../dp/detailSpecEntry/controller/MidObjectNotFound.controller.js"
+        },
+        {
+            "name": "../../dp/detailSpecEntry/controller/MidObject.controller.js"
+        },
+        {
+            "name": "../../dp/detailSpecEntry/controller/MainListPersoService.js"
+        },
+        {
+            "name": "../../dp/detailSpecEntry/controller/MainList.controller.js"
+        },
+        {
+            "name": "../../dp/detailSpecEntry/controller/App.controller.js"
+        },
+        {
+            "name": "../../dp/detailSpecEntry/manifest.json"
+        },
+        {
+            "name": "../../dp/detailSpecEntry/Component-preload.js",
+            "merged": true
+        },
+        {
+            "name": "../../dp/detailSpecEntry/manifest-bundle.zip"
+        },
+        {
+            "name": "../../dp/detailSpecEntry/controller/MainList-dbg.controller.js",
+            "isDebug": true
+        },
+        {
+            "name": "../../dp/detailSpecEntry/controller/MidObject-dbg.controller.js",
+            "isDebug": true
+        },
+        {
+            "name": "../../dp/detailSpecEntry/controller/MainListPersoService-dbg.js",
+            "isDebug": true
+        },
+        {
+            "name": "../../dp/detailSpecEntry/controller/MidObjectNotFound-dbg.controller.js",
+            "isDebug": true
+        },
+        {
+            "name": "../../dp/detailSpecEntry/controller/App-dbg.controller.js",
+            "isDebug": true
+        },
+        {
+            "name": "../../dp/detailSpecEntry/Component-dbg.js",
+            "isDebug": true
+        },
+        {
+            "name": "../../dp/detailSpecEntry/Component-preload-dbg.js",
+            "isDebug": true
+        },
+        {
+            "name": "../../sap-ui-version.json"
+        },
+        {
+            "name": "../../dp/detailSpecEntry/view/ValueHelpDialogModel.fragment.xml"
+        },
+        {
+            "name": "../../dp/detailSpecEntry/view/MidObject_Show.fragment.xml"
+        },
+        {
+            "name": "../../dp/detailSpecEntry/view/MidObject_Edit.fragment.xml"
+        },
+        {
+            "name": "../../dp/detailSpecEntry/view/MidObjectNotFound.view.xml"
+        },
+        {
+            "name": "../../dp/detailSpecEntry/view/MidObjectDevelopmentPlan_Show.fragment.xml"
+        },
+        {
+            "name": "../../dp/detailSpecEntry/view/MidObjectDevelopmentPlan_Edit.fragment.xml"
+        },
+        {
+            "name": "../../dp/detailSpecEntry/view/MidObjectDetailSpecPress_Show.fragment.xml"
+        },
+        {
+            "name": "../../dp/detailSpecEntry/view/MidObjectDetailSpecPress_Edit.fragment.xml"
+        },
+        {
+            "name": "../../dp/detailSpecEntry/view/MidObjectDetailSpecMold_Show.fragment.xml"
+        },
+        {
+            "name": "../../dp/detailSpecEntry/view/MidObjectDetailSpecMold_Edit.fragment.xml"
+        },
+        {
+            "name": "../../dp/detailSpecEntry/i18n/i18n.properties",
+            "raw": "i18n/i18n.properties"
+        },
+        {
+            "name": "../../dp/detailSpecEntry/view/MainList.view.xml"
+        },
+        {
+            "name": "../../dp/detailSpecEntry/view/App.view.xml"
+        },
+        {
+            "name": "../../dp/detailSpecEntry/css/style.css"
+        },
+        {
+            "name": "../../dp/detailSpecEntry/index.html"
+        }
+    ]
+}

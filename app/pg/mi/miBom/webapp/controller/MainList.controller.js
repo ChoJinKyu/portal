@@ -18,8 +18,7 @@ sap.ui.define([
                 marketIntelligenceService : "pg.marketIntelligenceService", //main Service
                 mIMaterialCodeBOMManagementView: "/MIMaterialCodeBOMManagementView",  //자재별 시황자재 BOM 조회 View
                 mIMaterialCodeBOMManagementItem:"/MIMaterialCodeBOMManagementItem",//자재별 시황자재 BOM 관리 Item
-                mIMaterialCodeBOMManagementHeader:"/MIMaterialCodeBOMManagementHeader",//자재별 시황자재 BOM 관리 Header
-                orgCodeView: "/OrgCodeView" //관리조직 View
+                mIMaterialCodeBOMManagementHeader:"/MIMaterialCodeBOMManagementHeader"//자재별 시황자재 BOM 관리 Header
             },
             messageType : {
                 Warning : sap.ui.core.MessageType.Warning,
@@ -41,9 +40,6 @@ sap.ui.define([
             },
             dept : {
 				tenant_id: "L2100",
-				company_code: "*",
-				org_type_code: "BU",
-				org_code :"BIZ00100",
 				material_code:"new",	
 				supplier_code: "KR00008",	
 				mi_material_code: ""
@@ -57,7 +53,7 @@ sap.ui.define([
 		onInit : function () {
 			
 			console.group("onInit");
-			var oUi,oUiData, oDeleteInfo, oResourceBundle = this.getResourceBundle();
+			var oUi, oDeleteInfo, oResourceBundle = this.getResourceBundle();
 
 			// Model used to manipulate control states
 			oUi = new JSONModel({
@@ -67,13 +63,9 @@ sap.ui.define([
 				busy : false
 			});
 
-			oUiData = new JSONModel({
-				org_code : this._sso.dept.org_code
-			});
 
 			oDeleteInfo = new JSONModel({oData:[]});
 			this.setModel(oUi, "oUi");
-			this.setModel(oUiData, "oUiData");
 			this.setModel(oDeleteInfo, "oDeleteInfo");
 
 
@@ -104,21 +96,7 @@ sap.ui.define([
 			console.group("_onCreateModeMetadataLoaded");
 			this.getView().getModel().setUseBatch(true);
 			this.getView().getModel().setDeferredGroups(["pgGroup"]);
-            
-            // this.getView().getModel().setChangeGroups({
-			//   "MIMaterialCodeBOMManagementHeader": {
-			//     groupId: "pgGroup",
-			//     changeSetId: "pgGroup"
-			//   },
-			//   "MIMaterialCodeBOMManagementItem": {
-			//     groupId: "pgGroup",
-			//     changeSetId: "pgGroup"
-			//   },
-            // });            
-           
-
             this.getView().getModel().attachPropertyChange(this._propertyChanged.bind(this));
-            
 			console.groupEnd();
 		},
 			
@@ -149,7 +127,6 @@ sap.ui.define([
             }
             return this._oSmartTable;
         },
-
 
 		/**
 		 * Item Select Change
@@ -182,18 +159,12 @@ sap.ui.define([
 			var mBindingParams = oEvent.getParameter("bindingParams");
 			var oSmtFilter = this.getView().byId("smartFilterBar");         
 
-            var oOrg_code = oSmtFilter.getControlByKey("org_code").getSelectedKey();    
             var oMaterial_desc = oSmtFilter.getControlByKey("material_desc").getValue();   
             var oSupplier_local_name = oSmtFilter.getControlByKey("supplier_local_name").getValue();    
 
 	 
 			var otenant_idFilter = new Filter("tenant_id", FilterOperator.EQ, this._sso.dept.tenant_id);
 			mBindingParams.filters.push(otenant_idFilter);
-
-	        if (oOrg_code.length > 0) {
-				var oOrg_codeFilter = new Filter("org_code", FilterOperator.EQ, oOrg_code);
-				mBindingParams.filters.push(oOrg_codeFilter);
-            }
 
 			if (oMaterial_desc.length > 0) {
 				var oMaterial_descFilter = new Filter("material_desc", FilterOperator.Contains, oMaterial_desc);
@@ -297,9 +268,6 @@ sap.ui.define([
 			var oNavParam = {
 				layout: sLayout, 
 				tenant_id: this._sso.dept.tenant_id,
-				company_code: this._sso.dept.company_code,
-				org_type_code: this._sso.dept.org_type_code,
-				org_code : this._sso.dept.org_code,
 				material_code:"new",	
 				supplier_code: "　",	
 				mi_material_code: "　"
@@ -344,16 +312,21 @@ sap.ui.define([
 					value = aParameters[i].split("=")[1];			 
 					aParameters[key] = value;
 				}
-			
+
+				var otermsdelv = this._setReplace(aParameters["termsdelv"]);
+				otermsdelv = otermsdelv.replace(")",'');
+
 				this.getRouter().navTo("midPage", {
 					layout: oNextUIState.layout, 
 					tenant_id: this._setReplace(aParameters["tenant_id"]),
-					company_code: this._setReplace(aParameters["company_code"]),
-					org_type_code: this._setReplace(aParameters["org_type_code"]),
-					org_code : this._setReplace(aParameters["org_code"]),
 					material_code: oRecord.material_code,
 					supplier_code: this._setReplace(aParameters["supplier_code"]),
-					mi_material_code: this._setReplace(aParameters["mi_material_code"])
+					mi_bom_id: this._setReplace(aParameters["mi_bom_id"]),
+					mi_material_code: this._setReplace(aParameters["mi_material_code"]),
+					currency_unit: this._setReplace(aParameters["currency_unit"]),
+					quantity_unit: this._setReplace(aParameters["quantity_unit"]),
+					exchange: this._setReplace(aParameters["exchange"]),
+					termsdelv: otermsdelv
 					
 				});
 
@@ -411,12 +384,6 @@ sap.ui.define([
 				switch (sUsage) {
 					case "site":
 					aSearchFilters.push(new Filter("site_flag", FilterOperator.EQ, "true"));
-					break;
-					case "company":
-					aSearchFilters.push(new Filter("company_flag", FilterOperator.EQ, "true"));
-					break;
-					case "org":
-					aSearchFilters.push(new Filter("organization_flag", FilterOperator.EQ, "true"));
 					break;
 					case "user":
 					aSearchFilters.push(new Filter("user_flag", FilterOperator.EQ, "true"));
@@ -490,9 +457,6 @@ sap.ui.define([
 					}
 
 					var o_tenant_id = that._setReplace(aParameters["tenant_id"]),
-						o_company_code = that._setReplace(aParameters["company_code"]),
-						o_org_type_code = that._setReplace(aParameters["org_type_code"]),
-						o_org_code = that._setReplace(aParameters["org_code"]),
 						o_material_code = that._setReplace(aParameters["material_code"]),
 						o_mi_material_code = that._setReplace(aParameters["mi_material_code"]),
 						o_supplier_code= that._setReplace(aParameters["supplier_code"]),
@@ -504,13 +468,9 @@ sap.ui.define([
 						
 					//item =====================================================================
 					var oDeleteMIMaterialCodeBOMManagementItemKey = {
-                        tenant_id : o_tenant_id,
-                        company_code : o_company_code,
-                        org_type_code : o_org_type_code,
-                        org_code: o_org_code,
-						mi_material_code: o_mi_material_code,
-						supplier_code: o_supplier_code,
+						tenant_id : o_tenant_id,
 						mi_bom_id: o_mi_bom_id,
+						mi_material_code: o_mi_material_code,
 						currency_unit: o_currency_unit,
                         quantity_unit: o_quantity_unit,																								
 						exchange:  o_exchange,
@@ -535,12 +495,14 @@ sap.ui.define([
 
 					var oDeleteMIMaterialCodeBOMManagementHeaderKey = {
 						tenant_id : o_tenant_id,
-						company_code : o_company_code,
-						org_type_code : o_org_type_code,
-						org_code: o_org_code,
 						material_code: o_material_code,
 						supplier_code: o_supplier_code,
-						mi_bom_id:  o_mi_bom_id	
+						mi_bom_id: o_mi_bom_id,
+						mi_material_code: o_mi_material_code,
+						currency_unit: o_currency_unit,
+						quantity_unit: o_quantity_unit,
+						exchange: o_exchange,
+						termsdelv:  o_termsdelv	
 					};
 
 					//header에 등록된 데이타 인지 확인
@@ -550,14 +512,8 @@ sap.ui.define([
 
 					for(var x=0; x<_deleteHeaderOdata.length;x++){
 
-						if(_deleteHeaderOdata[x].tenant_id== o_tenant_id  &&
-							_deleteHeaderOdata[x].company_code==o_company_code &&
-							_deleteHeaderOdata[x].org_type_code==o_org_type_code &&
-							_deleteHeaderOdata[x].org_code==o_org_code &&
-							_deleteHeaderOdata[x].material_code==o_material_code &&
-							_deleteHeaderOdata[x].supplier_code==o_supplier_code &&
-							_deleteHeaderOdata[x].mi_bom_id==o_mi_bom_id
-							){
+						if( _deleteHeaderOdata[x].tenant_id == o_tenant_id  &&
+							_deleteHeaderOdata[x].mi_bom_id == o_mi_bom_id ){
 
 							flag_deleteHeadel_mi_bom_id = false;
 
@@ -569,7 +525,6 @@ sap.ui.define([
 					if(flag_deleteHeadel_mi_bom_id){
 						_deleteHeaderOdata.push(oDeleteMIMaterialCodeBOMManagementHeaderKey);
 						_nDifferentDeleteHeaderItem++;
-					
 					}
 				});
 
@@ -587,29 +542,25 @@ sap.ui.define([
 					for ( var x = 0; x < _deleteItemOdata.length; x++ ){
 						if(
 							_deleteItemOdata[x].tenant_id == _deleteHeaderOdata[i].tenant_id &&
-							_deleteItemOdata[x].company_code == _deleteHeaderOdata[i].company_code &&
-							_deleteItemOdata[x].org_type_code == _deleteHeaderOdata[i].org_type_code &&
-							_deleteItemOdata[x].org_code == _deleteHeaderOdata[i].org_code &&
 							_deleteItemOdata[x].mi_bom_id == _deleteHeaderOdata[i].mi_bom_id
 						 ){
 
 							if(t==0){
 								    oFilters = [
 									new Filter("tenant_id", FilterOperator.EQ, _deleteHeaderOdata[i].tenant_id),
-									new Filter("company_code", FilterOperator.EQ, _deleteHeaderOdata[i].company_code),
-									new Filter("org_type_code", FilterOperator.EQ, _deleteHeaderOdata[i].org_type_code),
-									new Filter("org_code", FilterOperator.EQ, _deleteHeaderOdata[i].org_code),
 									new Filter("mi_bom_id", FilterOperator.EQ, _deleteHeaderOdata[i].mi_bom_id)
 								];
 						                   
 								oDeleteMIMaterialCodeBOMManagementHeaderKey = {
 									tenant_id : _deleteHeaderOdata[i].tenant_id,
-									company_code : _deleteHeaderOdata[i].company_code,
-									org_type_code : _deleteHeaderOdata[i].org_type_code,
-									org_code: _deleteHeaderOdata[i].org_code,
 									material_code: _deleteHeaderOdata[i].material_code,
 									supplier_code: _deleteHeaderOdata[i].supplier_code,
-									mi_bom_id:  _deleteHeaderOdata[i].mi_bom_id	
+									mi_bom_id: _deleteHeaderOdata[i].mi_bom_id,
+									mi_material_code: _deleteHeaderOdata[i].mi_material_code,
+									currency_unit: _deleteHeaderOdata[i].currency_unit,
+									quantity_unit: _deleteHeaderOdata[i].quantity_unit,
+									exchange: _deleteHeaderOdata[i].exchange,
+									termsdelv: _deleteHeaderOdata[i].termsdelv
 								};
 								t=1;
 							}
@@ -618,7 +569,6 @@ sap.ui.define([
 						}
 					}
 
-					//console.log("deleteHeaderSameKeyItemCount ["+i+ "] : ", deleteHeaderSameKeyItemCount);
 					var oDeleteInfoOdata = oDeleteInfo.getProperty("/oData");
 
 					var deleteItemInfo = {

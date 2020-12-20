@@ -1,23 +1,11 @@
-// MI
-//using from './Mi_Item_Master-service';
-
 // Spend용 기준정보
-using from './md/mdCategory-service.cds'; 
+using from './md/pg_md_index'; 
 
 // Vendor Pool
-using from './vp/vendorPoolSearchMgr/vendorPoolSearch-service';
-using from './vp/vendorPoolMappingMgr/vendorPoolMapping-service';
-using from './vp/vendorPoolChangeMgr/vendorPoolChange-service';
+using from './vp/pg_vp_index';
 
-// // Task Monitor
-// using from './monitor/monitor-service';
-using from './tm/taskMonitoring-service';
+// // Task Monitor & SAC용 Task Monitoring
+using from './tm/pg_tm_index';
 
 //Market Intelligence
-using from './mi/marketIntelligence-service';
-
-//Market Intelligence Proceduer
-// using from './mi/miProcedure-service';
-
-//SAC용 Task Monitoring
-using from './tm/taskMonitoringSac-service';
+using from './mi/pg_mi_index';

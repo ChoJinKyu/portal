@@ -141,13 +141,13 @@ sap.ui.define([
 
 			oModel.addRecord({
 				"tenant_id": "L2100",
-				"company_code": "C100",
+				"company_code": "*",
 				"org_type_code": "BU",
-				"org_code": "L210000000",
-				"spmd_category_code": "C101",
+				"org_code": "BIZ00200",
+				"spmd_category_code": "C001",
 				// "spmd_character_code": "T999",
-				"spmd_character_code_name": "TEST",
-				"spmd_character_desc": "TEST_DESC",
+				"spmd_character_code_name": "아이템 특성명 입력",
+				"spmd_character_desc": "아이템 특성설명 입력",
 				// "spmd_character_type_code": "T",
 				// "spmd_character_value_unit": "",
                 "spmd_character_sort_seq": "10",

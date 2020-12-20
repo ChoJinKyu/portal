@@ -20,14 +20,14 @@ sap.ui.define([
         },
 
         /**
-         * Search 버튼 클릭 시 List 조회
+         * Search 버튼 클릭(Filter 추출)
          */
         onSearch: function () {
             var oFilterModel = this.getModel("filterModel"),
                 oFilterModelData = oFilterModel.getData(),
-                aFilters = [], 
-                sStatus = oFilterModelData.status, 
-                sApprovalNumber = oFilterModelData.approvalNumber, 
+                aFilters = [],
+                sStatus = oFilterModelData.status,
+                sApprovalNumber = oFilterModelData.approvalNumber,
                 oDateValue = oFilterModelData.dateValue,
                 oSecondDateValue = oFilterModelData.secondDateValue;
 
@@ -47,6 +47,32 @@ sap.ui.define([
             }
 
             this._getBasePriceList(aFilters);
+        },
+        
+        /**
+         * Base Price Progress List 조회
+         */
+        _getBasePriceList: function(filtersParam) {
+            var oView = this.getView();
+            var oModel = this.getModel();
+            filtersParam =  Array.isArray(filtersParam) ? filtersParam : [];
+            oView.setBusy(true);
+
+            oModel.read("/Base_Price_Arl_Detail", {
+                filters : filtersParam,
+                urlParameters: {
+                    "$expand": "approval_number_fk,prices"
+                },
+                success : function(data){
+                    oView.setBusy(false);
+
+                    oView.getModel("listModel").setData(data);
+                },
+                error : function(data){
+                    oView.setBusy(false);
+                    console.log("error", data);
+                }
+            });
         },
 
         /**
@@ -90,36 +116,10 @@ sap.ui.define([
             if( oBindingContext ) {
                 var sPath = oBindingContext.getPath();
                 var oBasePriceListRootModel = this.getModel("basePriceListRootModel");
-                oBasePriceListRootModel.setData(oListModel.getProperty(sPath));
+                oBasePriceListRootModel.setProperty("/selectedData", oListModel.getProperty(sPath));
             }
 
             this.getRouter().navTo("basePriceDetail");
-        },
-
-        /**
-         * Base Price Progress List 조회
-         */
-        _getBasePriceList: function(filtersParam) {
-            var oView = this.getView();
-            var oModel = this.getModel();
-            filtersParam =  Array.isArray(filtersParam) ? filtersParam : [];
-            oView.setBusy(true);
-
-            oModel.read("/Base_Price_Arl_Detail", {
-                filters : filtersParam,
-                urlParameters: {
-                    "$expand": "approval_number_fk"
-                },
-                success : function(data){
-                    oView.setBusy(false);
-
-                    oView.getModel("listModel").setData(data);
-                },
-                error : function(data){
-                    oView.setBusy(false);
-                    console.log("error", data);
-                }
-            });
         }
     });
   }

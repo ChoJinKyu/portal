@@ -22,9 +22,6 @@ using {pg as MI_Mat_Cd_BOM_Mngt_Item} from '../mi/PG_MI_MATERIAL_CODE_BOM_MNGT_I
 
 entity MI_Material_Code_Bom_Mngt_Item {
     key tenant_id          : String(5) not null   @title : '회사코드';
-    key company_code       : String(10) not null  @title : '법인코드';
-    key org_type_code      : String(30) not null  @title : '조직유형코드';
-    key org_code           : String(10) not null  @title : '조직코드';
     key mi_bom_id          : String(100) not null @title : '시황자재명세서ID';
     key mi_material_code   : String(40) not null  @title : '시황자재코드';
         reqm_quantity_unit : String(3)            @title : '소요수량단위';

@@ -24,15 +24,16 @@
                 singleContainerFullSize="false" >                    
                     <form:content >                      
                         <VBox>
-                            <Label text = "구매요청 유형" labelFor="TemplateSelectionBsart" required="false"/> 
+                            <Label text = "품목그룹" labelFor="TemplateSelectionBsart" required="false"/> 
                             <ComboBox
-                              id="TemplateSelectionBsart"
+                              id="SelectionPR_TYPE2"
                               width="100%"
+                              selectionChange=".OnPR_TYPEChange2"
                               items="{
                                 path: 'util>/CodeDetails',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                    {path: 'group_code', operator: 'EQ', value1: 'OP_TEST_BSART'}
+                                    {path: 'group_code', operator: 'EQ', value1: 'OP_PR_TYPE_CODE_2'}
                                 ]
                               }">
                               <items>
@@ -44,15 +45,16 @@
                             </layoutData> 
                         </VBox>
                         <VBox>
-                            <Label text = "구매계정 유형" labelFor="TemplateSelectionBsart2" required="false"/> 
+                            <Label text = "Category" labelFor="SelectionPR_TYPE3" required="false"/> 
                              <ComboBox
-                              id="TemplateSelectionBsart2"
+                              id="SelectionPR_TYPE3"
                               width="100%"
+                              selectionChange=".OnPR_TYPEChange3"
                               items="{
                                 path: 'util>/CodeDetails',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                    {path: 'group_code', operator: 'EQ', value1: 'OP_TEST_BSART'}
+                                    {path: 'group_code', operator: 'EQ', value1: 'OP_PR_TYPE_CODE_3'}
                                 ]
                               }">
                               <items>
@@ -64,15 +66,15 @@
                             </layoutData> 
                         </VBox>
                         <VBox>
-                            <Label text = "구매요청 품목 요청" labelFor="TemplateSelectionBsart3" required="false"/>
+                            <Label text = "구매요청 유형" labelFor="SelectionPR_TYPE" required="false"/>
                             <ComboBox
-                              id="TemplateSelectionBsart3"
+                              id="SelectionPR_TYPE"
                               width="100%"
                               items="{
                                 path: 'util>/CodeDetails',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                    {path: 'group_code', operator: 'EQ', value1: 'OP_TEST_BSART'}
+                                    {path: 'group_code', operator: 'EQ', value1: 'OP_PR_TYPE_CODE'}
                                 ]
                               }">
                               <items>
