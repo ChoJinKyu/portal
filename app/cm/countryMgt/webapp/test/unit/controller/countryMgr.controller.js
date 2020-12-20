@@ -1,13 +1,13 @@
 /*global QUnit*/
 
 sap.ui.define([
-	"cm/countryMgr/controller/countryMgr.controller"
+	"cm/countryMgt/controller/countryMgt.controller"
 ], function (Controller) {
 	"use strict";
 
-	QUnit.module("countryMgr Controller");
+	QUnit.module("countryMgt Controller");
 
-	QUnit.test("I should test the countryMgr controller", function (assert) {
+	QUnit.test("I should test the countryMgt controller", function (assert) {
 		var oAppController = new Controller();
 		oAppController.onInit();
 		assert.ok(oAppController);

@@ -5,7 +5,7 @@ sap.ui.define([
 ], function(Controller, History, UIComponent, formatter) {
   "use strict";
 
-  return Controller.extend("cm.countryMgr.controller.BaseController", {
+  return Controller.extend("cm.countryMgt.controller.BaseController", {
 
     formatter: formatter,
 

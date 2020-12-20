@@ -1,7 +1,7 @@
 {
     "_version": "1.12.0",
     "sap.app": {
-        "id": "cm.countryMgr",
+        "id": "cm.countryMgt",
         "type": "application",
         "i18n": "i18n/i18n.properties",
         "applicationVersion": {
@@ -17,10 +17,10 @@
         },
         "dataSources": {
             "mainService": {
-                "uri": "srv-api/odata/v4/cm.CountryMgrService/",
+                "uri": "srv-api/odata/v2/cm.CountryMgtService/",
                 "type": "OData",
                 "settings": {
-                    "odataVersion": "4.0",
+                    "odataVersion": "2.0",
                     "localUri": "localService/metadata.xml"
                 }
             }
@@ -32,7 +32,7 @@
                         "parameters": {},
                         "additionalParameters": "allowed"
                     },
-                    "semanticObject": "countryMgr",
+                    "semanticObject": "countryMgt",
                     "action": "display",
                     "title": "{{appTitle}}"
                 }
@@ -62,10 +62,10 @@
     "sap.ui5": {
         "flexEnabled": false,
         "rootView": {
-            "viewName": "cm.countryMgr.view.countryMgr",
+            "viewName": "cm.countryMgt.view.countryMgt",
             "type": "XML",
             "async": true,
-            "id": "countryMgr"
+            "id": "countryMgt"
         },
         "dependencies": {
             "minUI5Version": "1.60.1",
@@ -83,7 +83,7 @@
             "i18n": {
                 "type": "sap.ui.model.resource.ResourceModel",
                 "settings": {
-                    "bundleName": "cm.countryMgr.i18n.i18n"
+                    "bundleName": "cm.countryMgt.i18n.i18n"
                 }
             },
             "": {
@@ -109,27 +109,27 @@
                 "routerClass": "sap.m.routing.Router",
                 "viewType": "XML",
                 "async": true,
-                "viewPath": "cm.countryMgr.view",
+                "viewPath": "cm.countryMgt.view",
                 "controlAggregation": "pages",
                 "controlId": "app",
                 "clearControlAggregation": false
             },
             "routes": [
                 {
-                    "name": "RoutecountryMgr",
-                    "pattern": "RoutecountryMgr",
+                    "name": "RoutecountryMgt",
+                    "pattern": "RoutecountryMgt",
                     "target": [
-                        "TargetcountryMgr"
+                        "TargetcountryMgt"
                     ]
                 }
             ],
             "targets": {
-                "TargetcountryMgr": {
+                "TargetcountryMgt": {
                     "viewType": "XML",
                     "transition": "slide",
                     "clearControlAggregation": false,
-                    "viewId": "countryMgr",
-                    "viewName": "countryMgr"
+                    "viewId": "countryMgt",
+                    "viewName": "countryMgt"
                 }
             }
         }

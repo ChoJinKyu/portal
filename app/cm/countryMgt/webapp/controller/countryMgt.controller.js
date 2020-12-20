@@ -17,7 +17,7 @@ sap.ui.define([
 	function (BaseController, MessageBox, MessageToast, MessageStrip, DateFormat, jquery, Filter, FilterOperator, FilterType, Sorter, JSONModel) {
 		"use strict";
 
-		return BaseController.extend("cm.countryMgr.controller.countryMgr", {
+		return BaseController.extend("cm.countryMgt.controller.countryMgt", {
 
             isValNull: function (p_val) {
                 if(!p_val || p_val == "" || p_val == null){

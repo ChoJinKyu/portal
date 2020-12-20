@@ -1,6 +1,6 @@
 <mvc:View 
 	class="sapUiSizeCompact"
-    controllerName="cm.countryMgr.controller.countryMgr" 
+    controllerName="cm.countryMgt.controller.countryMgt" 
 	xmlns="sap.m"
     xmlns:f="sap.f"
 	xmlns:core="sap.ui.core"

@@ -7,7 +7,7 @@ sap.ui.define([
 
 	Opa5.extendConfig({
 		arrangements: new Startup(),
-		viewNamespace: "cm.countryMgr.view.",
+		viewNamespace: "cm.countryMgt.view.",
 		autoWait: true
 	});
 });
