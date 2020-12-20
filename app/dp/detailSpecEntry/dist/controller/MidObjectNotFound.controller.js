@@ -1,1 +1,0 @@
-sap.ui.define(["ext/lib/controller/BaseController"],function(e){"use strict";return e.extend("dp.detailSpecEntry.controller.MidObjectNotFound",{onLinkPressed:function(){this.getRouter().navTo("worklist")}})});
