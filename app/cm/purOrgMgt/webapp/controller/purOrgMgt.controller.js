@@ -10,7 +10,7 @@ sap.ui.define([
   function (Controller, JSONModel, Filter, FilterOperator) {
     "use strict";
 
-    return Controller.extend("cm.purOrgMgr.controller.purOrgMgr", {
+    return Controller.extend("cm.purOrgMgt.controller.purOrgMgt", {
       onInit: function () {
       },
       onSearch: function () {

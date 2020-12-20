@@ -7,7 +7,7 @@ sap.ui.define([
 
 	Opa5.extendConfig({
 		arrangements: new Startup(),
-		viewNamespace: "cm.purOrgMgr.view.",
+		viewNamespace: "cm.purOrgMgt.view.",
 		autoWait: true
 	});
 });

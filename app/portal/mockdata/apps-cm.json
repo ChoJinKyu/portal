@@ -52,8 +52,8 @@
         },
         {
           "name": "구매 관리 (TBD)",
-          "url": "../cm/purOrgMgr/webapp",
-          "component": "cm.purOrgMgr"
+          "url": "../cm/purOrgMgt/webapp",
+          "component": "cm.purOrgMgt"
         }
       ]
     },

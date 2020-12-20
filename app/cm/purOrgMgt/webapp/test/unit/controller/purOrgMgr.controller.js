@@ -1,13 +1,13 @@
 /*global QUnit*/
 
 sap.ui.define([
-	"cm/purOrgMgr/controller/purOrgMgr.controller"
+	"cm/purOrgMgt/controller/purOrgMgt.controller"
 ], function (Controller) {
 	"use strict";
 
-	QUnit.module("purOrgMgr Controller");
+	QUnit.module("purOrgMgt Controller");
 
-	QUnit.test("I should test the purOrgMgr controller", function (assert) {
+	QUnit.test("I should test the purOrgMgt controller", function (assert) {
 		var oAppController = new Controller();
 		oAppController.onInit();
 		assert.ok(oAppController);

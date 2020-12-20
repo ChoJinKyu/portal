@@ -1,7 +1,7 @@
 {
   "_version": "1.12.0",
   "sap.app": {
-    "id": "cm.purOrgMgr",
+    "id": "cm.purOrgMgt",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "applicationVersion": {
@@ -17,10 +17,10 @@
     },
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v4/cm.PurOrgMgrService/",
+        "uri": "srv-api/odata/v2/cm.PurOrgMgtService/",
         "type": "OData",
         "settings": {
-          "odataVersion": "4.0",
+          "odataVersion": "2.0",
           "localUri": "localService/metadata.xml"
         }
       },
@@ -57,10 +57,10 @@
   "sap.ui5": {
     "flexEnabled": false,
     "rootView": {
-      "viewName": "cm.purOrgMgr.view.purOrgMgr",
+      "viewName": "cm.purOrgMgt.view.purOrgMgt",
       "type": "XML",
       "async": true,
-      "id": "purOrgMgr"
+      "id": "purOrgMgt"
     },
     "dependencies": {
       "minUI5Version": "1.60.1",
@@ -78,7 +78,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "cm.purOrgMgr.i18n.i18n"
+          "bundleName": "cm.purOrgMgt.i18n.i18n"
         }
       },
       "": {
@@ -114,27 +114,27 @@
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
         "async": true,
-        "viewPath": "cm.purOrgMgr.view",
+        "viewPath": "cm.purOrgMgt.view",
         "controlAggregation": "pages",
         "controlId": "app",
         "clearControlAggregation": false
       },
       "routes": [
         {
-          "name": "RoutepurOrgMgr",
-          "pattern": "RoutepurOrgMgr",
+          "name": "RoutepurOrgMgt",
+          "pattern": "RoutepurOrgMgt",
           "target": [
-            "TargetpurOrgMgr"
+            "TargetpurOrgMgt"
           ]
         }
       ],
       "targets": {
-        "TargetpurOrgMgr": {
+        "TargetpurOrgMgt": {
           "viewType": "XML",
           "transition": "slide",
           "clearControlAggregation": false,
-          "viewId": "purOrgMgr",
-          "viewName": "purOrgMgr"
+          "viewId": "purOrgMgt",
+          "viewName": "purOrgMgt"
         }
       }
     }

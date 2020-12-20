@@ -3,7 +3,7 @@ sap.ui.define([
 ], function (Opa5) {
 	"use strict";
 
-	return Opa5.extend("cm.purOrgMgr.test.integration.arrangements.Startup", {
+	return Opa5.extend("cm.purOrgMgt.test.integration.arrangements.Startup", {
 
 		iStartMyApp: function (oOptionsParameter) {
 			var oOptions = oOptionsParameter || {};
@@ -14,7 +14,7 @@ sap.ui.define([
 			// start the app UI component
 			this.iStartMyUIComponent({
 				componentConfig: {
-					name: "cm.purOrgMgr",
+					name: "cm.purOrgMgt",
 					async: true
 				},
 				hash: oOptions.hash,

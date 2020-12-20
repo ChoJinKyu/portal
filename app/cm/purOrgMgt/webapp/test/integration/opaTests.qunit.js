@@ -5,7 +5,7 @@ sap.ui.getCore().attachInit(function () {
 	"use strict";
 
 	sap.ui.require([
-		"cm/purOrgMgr/test/integration/AllJourneys"
+		"cm/purOrgMgt/test/integration/AllJourneys"
 	], function () {
 		QUnit.start();
 	});
