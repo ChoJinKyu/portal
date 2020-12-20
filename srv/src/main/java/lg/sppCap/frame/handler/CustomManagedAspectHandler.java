@@ -43,12 +43,12 @@ public class CustomManagedAspectHandler implements EventHandler {
 		ZonedDateTime localNow = TimezoneUtil.getZonedNow();
         if(CdsService.EVENT_CREATE.equals(event)){
             for(int i = 0; i < entries.size(); i++){
-                //entries.get(i).put("local_create_dtm", localNow);
-                //entries.get(i).put("local_update_dtm", localNow);
+                entries.get(i).put("local_create_dtm", localNow);
+                entries.get(i).put("local_update_dtm", localNow);
             }
         }else if(CdsService.EVENT_UPDATE.equals(event)){
             for(int i = 0; i < entries.size(); i++){
-                //entries.get(i).put("local_update_dtm", localNow);
+                entries.get(i).put("local_update_dtm", localNow);
             }
         }
 	}
