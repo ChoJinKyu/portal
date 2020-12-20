@@ -20,7 +20,7 @@ sap.ui.define([
 ], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
   "use strict";
 
-  return BaseController.extend("cm.controlOptionMgr.controller.MainList", {
+  return BaseController.extend("cm.controlOptionMgt.controller.MainList", {
 
     dateFormatter: DateFormatter,
 
@@ -271,7 +271,7 @@ sap.ui.define([
       // init and activate controller
       this._oTPC = new TablePersoController({
         table: this.byId("mainTable"),
-        componentName: "controlOptionMgr",
+        componentName: "controlOptionMgt",
         persoService: MainListPersoService,
         hasGrouping: true
       }).activate();

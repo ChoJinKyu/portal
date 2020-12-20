@@ -16,8 +16,8 @@
         },
         {
           "name": "제어옵션관리",
-          "url": "../cm/controlOptionMgr/webapp",
-          "component": "cm.controlOptionMgr"
+          "url": "../cm/controlOptionMgt/webapp",
+          "component": "cm.controlOptionMgt"
         }
       ]
     },

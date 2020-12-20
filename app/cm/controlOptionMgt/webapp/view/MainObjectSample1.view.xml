@@ -1,4 +1,4 @@
-<mvc:View controllerName="cm.controlOptionMgr.controller.MainObjectSample1" 
+<mvc:View controllerName="cm.controlOptionMgt.controller.MainObjectSample1" 
     xmlns:mvc="sap.ui.core.mvc"
 	xmlns:uxap="sap.uxap"
     xmlns:form="sap.ui.layout.form"

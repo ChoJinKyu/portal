@@ -1,7 +1,7 @@
 {
   "_version": "1.12.0",
   "sap.app": {
-    "id": "cm.controlOptionMgr",
+    "id": "cm.controlOptionMgt",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "title": "{{appTitle}}",
@@ -13,7 +13,7 @@
     "resources": "resources.json",
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v2/cm.ControlOptionMgrService/",
+        "uri": "srv-api/odata/v2/cm.ControlOptionMgtService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -65,7 +65,7 @@
   },
   "sap.ui5": {
     "rootView": {
-      "viewName": "cm.controlOptionMgr.view.App",
+      "viewName": "cm.controlOptionMgt.view.App",
       "type": "XML",
       "async": true,
       "id": "app"
@@ -87,7 +87,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "cm.controlOptionMgr.i18n.i18n"
+          "bundleName": "cm.controlOptionMgt.i18n.i18n"
         }
       },
       "tree": {
@@ -146,7 +146,7 @@
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
-        "viewPath": "cm.controlOptionMgr.view",
+        "viewPath": "cm.controlOptionMgt.view",
         "controlId": "fcl",
         "transition": "slide",
         "bypassed": {

@@ -5,7 +5,7 @@ sap.ui.define([
 ], function (JSONModel, Controller, RichTextEditor) {
 	"use strict";
 
-	return Controller.extend("cm.controlOptionMgr.controller.Detail", {
+	return Controller.extend("cm.controlOptionMgt.controller.Detail", {
 		onInit: function () {
 			this.oRouter = this.getOwnerComponent().getRouter();
 			this.oModel = this.getOwnerComponent().getModel();

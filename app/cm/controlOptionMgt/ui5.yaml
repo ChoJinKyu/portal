@@ -1,6 +1,6 @@
 specVersion: '1.0'
 metadata:
-  name: controlOptionMgr
+  name: controlOptionMgt
 type: application
 resources:
   configuration:

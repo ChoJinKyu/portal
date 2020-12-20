@@ -1,5 +1,5 @@
 <mvc:View
-	controllerName="cm.controlOptionMgr.controller.App"
+	controllerName="cm.controlOptionMgt.controller.App"
 	displayBlock="true"
 	xmlns="sap.m"
 	xmlns:f="sap.f"

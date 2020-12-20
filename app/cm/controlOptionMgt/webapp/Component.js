@@ -6,7 +6,7 @@ sap.ui.define([
 ], function (jQuery, UIComponent, JSONModel, FlexibleColumnLayoutSemanticHelper) {
 	"use strict";
 
-	return UIComponent.extend("cm.controlOptionMgr.Component", {
+	return UIComponent.extend("cm.controlOptionMgt.Component", {
 
 		metadata : {
 			manifest: "json"
