@@ -1,12 +1,13 @@
 sap.ui.define([
     "sap/base/util/UriParameters",
-	"sap/ui/core/UIComponent",
+	"ext/lib/UIComponent",
 	"sap/ui/Device",
 	"./model/models",
     "sap/f/library",
     "sap/f/FlexibleColumnLayoutSemanticHelper",
-    "sap/ui/model/json/JSONModel"
-], function (UriParameters, UIComponent, Device, models, library, FlexibleColumnLayoutSemanticHelper, JSONModel) {
+	"sap/ui/model/json/JSONModel",
+    "sap/ui/core/routing/HashChanger"	
+], function (UriParameters, UIComponent, Device, models, library, FlexibleColumnLayoutSemanticHelper, JSONModel, HashChanger) {
     "use strict";
     
     var LayoutType = library.LayoutType;
@@ -24,6 +25,9 @@ sap.ui.define([
 		 * @override
 		 */
 		init : function () {
+
+			HashChanger.getInstance().replaceHash("");
+						
 			// call the base component's init function
 			UIComponent.prototype.init.apply(this, arguments);
 

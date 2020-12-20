@@ -121,12 +121,13 @@ sap.ui.define([
      */
     Validator.prototype._validateRequired = function (oControl) {
         // check control for any properties worth validating
-        var isValid = true;
+        var isValid = true,
+            oValue;
         
         if(aMultiValueControls.indexOf(oControl.getMetadata().getElementName()) > -1){
             for (var i = 0; i < _aValidateMultiValueProperties.length; i += 1) {
                 try {
-                    var oValue = oControl.getProperty(_aValidateMultiValueProperties[i]);
+                    oValue = oControl.getProperty(_aValidateMultiValueProperties[i]);
                     if(oValue.length == 0){
                         this._setValueState(oControl, ValueState.Error, this._i18n.getText("/ECM0202"));
                         isValid = false;
@@ -142,8 +143,7 @@ sap.ui.define([
             for (var i = 0; i < _aValidateProperties.length; i += 1) {
                 try {
                     //oControl.getBinding(_aValidateProperties[i]);
-                    var oValue = oControl.getProperty(_aValidateProperties[i]);
-    
+                    oValue = oControl.getProperty(_aValidateProperties[i]);
                     if (!oValue == undefined || oValue === "" || oValue === null) {
                         this._setValueState(oControl, ValueState.Error, this._i18n.getText("/ECM0201"));
                         isValid = false;
@@ -187,9 +187,13 @@ sap.ui.define([
                 // try validating the bound value
                 var oControlBinding = oControl.getBinding(_aValidateProperties[i]);
                 var oExternalValue = oControl.getProperty(_aValidateProperties[i]);
-                var oInternalValue = oControlBinding.getType().parseValue(oExternalValue, oControlBinding.sInternalType);
-                oControlBinding.getType().validateValue(oInternalValue);
-                oControl.setValueState(ValueState.None);
+                if(oExternalValue == undefined || oExternalValue == "") {
+                    isValid = true;
+                } else {
+                    var oInternalValue = oControlBinding.getType().parseValue(oExternalValue, oControlBinding.sInternalType);
+                    oControlBinding.getType().validateValue(oInternalValue);
+                    oControl.setValueState(ValueState.None);
+                }
             } catch (ex) {
                 // catch any validation errors
                 isValid = false;

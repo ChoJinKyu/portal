@@ -56,7 +56,7 @@
                                         minimum: '100',
                                         maximum: '999'
                                     }
-                                }" placeholder="Enter 100 to 999 digit number"/>
+                                }" required="true" placeholder="Enter 100 to 999 digit number"/>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>

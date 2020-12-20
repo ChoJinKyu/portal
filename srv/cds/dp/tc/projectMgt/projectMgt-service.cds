@@ -13,6 +13,6 @@ service ProjectMgtService {
     entity ProjectMcstVer as projection on pjtMcstVer.Tc_Project_Mcst_Version;
     entity ProjectSimilarModel as projection on pjtSimilarModel.Tc_Project_Similar_Model;
 
-    view Projects @(title : 'Project View') as select from pjtView.TC_Project_View;
+    view ProjectView @(title : 'Project View') as select from pjtView.TC_Project_View;
 
 }

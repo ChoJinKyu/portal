@@ -50,26 +50,7 @@
                     persistencyKey="SmartFilterPKey"
                     considerSelectionVariants="true" 
                     enableBasicSearch="false" >
-                        <smartFilterBar:controlConfiguration>
-                            <!-- 관리조직 -->
-                            <smartFilterBar:ControlConfiguration  
-                            key="org_code" 
-                            groupId="_BASIC" 
-                            index="1" 
-                            label="관리조직"
-                            visibleInAdvancedArea="true">
-                                <smartFilterBar:customControl>
-                                    <Select id="select_org_code" 
-                                            selectedKey = "{oUiData>/org_code}"
-                                            items="{path: '/OrgCodeView', 
-                                                  filters : [{path : 'tenant_id', operator : 'EQ', value1 : 'L2100'}],
-                                                  templateShareable:true
-                                            }">
-                                        <core:Item key="{org_code}" text="{org_name}"/>
-                                    </Select>
-                                </smartFilterBar:customControl>                                
-                            </smartFilterBar:ControlConfiguration>
-
+                        <smartFilterBar:controlConfiguration>                            
                             <!-- 자재명 -->
                             <smartFilterBar:ControlConfiguration key="material_desc" groupId="_BASIC" index="2" label="자재명"  
                             visibleInAdvancedArea="true">
@@ -151,15 +132,15 @@
                             sticky="HeaderToolbar,ColumnHeaders"
                             >
                                  <columns>  
-                                       <Column hAlign="Center"  importance="High" popinDisplay="WithoutHeader">
+                                       <Column minScreenWidth ="" demandPopin="false" mergeDuplicates="true" mergeFunctionName="data#material_code">
                                         <customData>
                                         <core:CustomData key="p13nData"
-                                        value='\{"columnKey": "material_code", "leadingProperty": "material_code", "sortProperty": "material_code", "filterProperty": "material_code", "columnIndex": 1}'/>
+                                        value='\{"columnKey": "material_code",  "leadingProperty": "material_code", "sortProperty": "material_code", "filterProperty": "material_code", "columnIndex": 1}'/>
                                         </customData>
                                             <Text text="자재코드"></Text>
                                         </Column>
                                         
-                                        <Column hAlign="Center" demandPopin="true" importance="High" >
+                                        <Column minScreenWidth ="" demandPopin="false" importance="High" >
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "material_desc", "leadingProperty": "material_desc", "sortProperty": "material_desc", "filterProperty": "material_desc", "columnIndex": 2}'/>
@@ -167,7 +148,7 @@
                                              <Text text="자재명"></Text>
                                         </Column>
 
-                                        <Column hAlign="Center" demandPopin="true" importance="High">
+                                        <Column minScreenWidth ="" demandPopin="false" importance="High">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "supplier_code", "leadingProperty": "supplier_code", "sortProperty": "supplier_code", "filterProperty": "supplier_code", "columnIndex": 3}'/>
@@ -175,7 +156,7 @@
                                              <Text text="공급업체코드"></Text>
                                         </Column>
 
-                                        <Column hAlign="Center" demandPopin="true" importance="High">
+                                        <Column minScreenWidth ="" demandPopin="false" importance="High">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "supplier_local_name", "leadingProperty": "supplier_local_name", "sortProperty": "supplier_local_name", "filterProperty": "supplier_local_name", "columnIndex": 4}'/>
@@ -183,7 +164,7 @@
                                              <Text text="공급업체명"></Text>
                                         </Column>
 
-                                        <Column hAlign="Center" demandPopin="true" importance="High">
+                                        <Column minScreenWidth ="" demandPopin="false" importance="High">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "base_quantity", "leadingProperty": "base_quantity", "sortProperty": "base_quantity", "filterProperty": "base_quantity", "columnIndex": 5}'/>
@@ -191,7 +172,7 @@
                                              <Text text="기준수량"></Text>
                                         </Column>
 
-                                        <Column hAlign="Center" demandPopin="true" importance="High">
+                                        <Column minScreenWidth ="" demandPopin="false" importance="High">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "processing_cost", "leadingProperty": "processing_cost", "sortProperty": "processing_cost", "filterProperty": "processing_cost", "columnIndex": 6}'/>
@@ -199,7 +180,7 @@
                                              <Text text="가공비"></Text>
                                         </Column>
 
-                                        <Column hAlign="Center" demandPopin="true" importance="High">
+                                        <Column minScreenWidth ="" demandPopin="false" importance="High">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "pcst_currency_unit", "leadingProperty": "pcst_currency_unit", "sortProperty": "pcst_currency_unit", "filterProperty": "pcst_currency_unit", "columnIndex": 7}'/>
@@ -207,7 +188,7 @@
                                              <Text text="가공비통화"></Text>
                                         </Column>
 
-                                        <Column hAlign="Center" demandPopin="false" importance="Low">
+                                        <Column minScreenWidth="Small" demandPopin="false">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "mi_material_code", "leadingProperty": "mi_material_code", "sortProperty": "mi_material_code", "filterProperty": "mi_material_code", "columnIndex": 8}'/>
@@ -215,7 +196,7 @@
                                              <Text text="시황자재코드"></Text>
                                         </Column>
 
-                                        <Column hAlign="Center" demandPopin="false" importance="Low">
+                                        <Column minScreenWidth="Small" demandPopin="false">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "mi_material_name", "leadingProperty": "mi_material_name", "sortProperty": "mi_material_name", "filterProperty": "mi_material_name", "columnIndex": 9}'/>
@@ -223,21 +204,21 @@
                                              <Text text="시황자재명"></Text>
                                         </Column>
 
-                                        <Column hAlign="Center" demandPopin="false" importance="Low">
+                                        <Column minScreenWidth="Small" demandPopin="false">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "category_name", "leadingProperty": "category_name", "sortProperty": "category_name", "filterProperty": "category_name", "columnIndex": 10}'/>
                                         </customData>
                                              <Text text="시황자재Category"></Text>
                                         </Column>
-                                        <Column hAlign="Center" minScreenWidth="Desktop" demandPopin="false" importance="Low">
+                                        <Column minScreenWidth="Small" demandPopin="false">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "reqm_quantity_unit", "leadingProperty": "reqm_quantity_unit", "sortProperty": "reqm_quantity_unit", "filterProperty": "reqm_quantity_unit", "columnIndex": 11}'/>
                                         </customData>
                                              <Text text="소요량 단위"></Text>
                                         </Column>                                        
-                                        <Column hAlign="Center" minScreenWidth="Desktop" demandPopin="false" importance="Low">
+                                        <Column minScreenWidth="Small" demandPopin="false" >
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "reqm_quantity", "leadingProperty": "reqm_quantity", "sortProperty": "reqm_quantity", "filterProperty": "reqm_quantity", "columnIndex": 12}'/>
@@ -245,7 +226,7 @@
                                              <Text text="소요량"></Text>
                                         </Column>
 
-                                        <Column hAlign="Center" demandPopin="false" importance="Low">
+                                        <Column minScreenWidth="Small" demandPopin="false">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "currency_unit", "leadingProperty": "currency_unit", "sortProperty": "currency_unit", "filterProperty": "currency_unit", "columnIndex": 13}'/>
@@ -253,7 +234,7 @@
                                              <Text text="화폐단위"></Text>
                                         </Column>
 
-                                        <Column hAlign="Center" demandPopin="false" importance="Low">
+                                        <Column minScreenWidth="Small" demandPopin="false">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "mi_base_reqm_quantity", "leadingProperty": "mi_base_reqm_quantity", "sortProperty": "mi_base_reqm_quantity", "filterProperty": "mi_base_reqm_quantity", "columnIndex": 14}'/>
@@ -261,7 +242,7 @@
                                              <Text text="시황기준소요량"></Text>
                                         </Column>
                                         
-                                        <Column hAlign="Center" demandPopin="false" importance="Low">
+                                        <Column minScreenWidth="Small" demandPopin="false">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "quantity_unit", "leadingProperty": "quantity_unit", "sortProperty": "quantity_unit", "filterProperty": "quantity_unit", "columnIndex": 15}'/>
@@ -269,7 +250,7 @@
                                              <Text text="수량단위"></Text>
                                         </Column>
                                         
-                                        <Column hAlign="Center" demandPopin="false" importance="Low">
+                                        <Column minScreenWidth="Small" demandPopin="false">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "exchange", "leadingProperty": "exchange", "sortProperty": "exchange", "filterProperty": "exchange", "columnIndex": 16}'/>
@@ -277,14 +258,14 @@
                                              <Text text="거래소"></Text>
                                         </Column>
 
-                                        <Column hAlign="Center" demandPopin="false" importance="Low">
+                                        <Column minScreenWidth="Small" demandPopin="false">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "termsdelv", "leadingProperty": "termsdelv", "sortProperty": "termsdelv", "filterProperty": "termsdelv", "columnIndex": 17}'/>
                                         </customData>
                                              <Text text="인도조건"></Text>
                                         </Column>
-                                        <Column hAlign="Center" demandPopin="false" importance="Low">
+                                        <Column minScreenWidth="Small" demandPopin="false" importance="Low">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "use_flag", "leadingProperty": "use_flag", "sortProperty": "use_flag", "filterProperty": "use_flag", "columnIndex": 18}'/>

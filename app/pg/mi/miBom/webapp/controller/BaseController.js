@@ -1,5 +1,5 @@
 sap.ui.define([
-	"sap/ui/core/mvc/Controller",
+	"ext/lib/controller/BaseController",
 	"sap/ui/core/UIComponent",
 	"sap/m/library"
 ], function (Controller, UIComponent, mobileLibrary) {

@@ -12,7 +12,7 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "ext/lib/util/Validator",
-    "dp/md/util/controller/SupplierSelection"
+    "dp/util/controller/SupplierSelection"
 ], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, Validator, SupplierSelection) {
     "use strict";
     

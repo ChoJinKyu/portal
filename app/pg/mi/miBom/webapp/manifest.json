@@ -97,7 +97,7 @@
       }
     },
     "resourceRoots": {
-      "ext.lib": "../../../lib"
+      "ext.lib": "../../../../lib"
     },
     "routing": {
       "config": {
@@ -122,7 +122,7 @@
               ]
           },
           {  
-            "pattern": "midObject/{layout}/{tenant_id}/{company_code}/{org_type_code}/{org_code}/{material_code}/{supplier_code}/{mi_material_code}",
+            "pattern": "midObject/{layout}/{tenant_id}/{material_code}/{supplier_code}/{mi_bom_id}/{mi_material_code}/{currency_unit}/{quantity_unit}/{exchange}/{termsdelv}",
             "name": "midPage",
             "target": [
                 "mainObject",

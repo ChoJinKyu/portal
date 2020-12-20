@@ -1,0 +1,107 @@
+<core:FragmentDefinition
+    class="sapUiSizeCompact"    
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:layout="sap.ui.layout"
+    xmlns:table="sap.ui.table"
+    xmlns:form="sap.ui.layout.form"
+	width="50%"
+	height="50%"    
+    displayBlock="true">
+	
+	<Dialog title="Material Code">
+		<content>
+        <!-- <HBox width="100%">
+            <VBox class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginTop"> -->
+                <!-- <HBox>
+                    <VBox justifyContent="Center" class="sapUiSmallMarginEnd" >
+                        <Label text="Material Code : " />
+                    </VBox>
+                    <Input value="" />
+                    <Button text="Search" press="" class="sapUiSmallMarginBegin" />
+                </HBox> -->
+                <Table 
+                    items="{materialCodeModel>/}"
+                    mode="MultiSelect"
+                    selectionChange=".onSelectMaterialCode" >
+                    <headerToolbar>
+                        <OverflowToolbar>
+                            <content>
+                                <Title text="Material Code List" level="H2" />
+                                <ToolbarSpacer />
+                                <SearchField press="" />
+                            </content>
+                        </OverflowToolbar>
+                    </headerToolbar>
+                    <columns>
+                        <Column hAlign="Center" width="3rem" >
+                            <header>
+                                <Label text="Div" />                            
+                            </header>
+                        </Column>
+                        <Column hAlign="Center" width="8rem" >
+                            <header>
+                                <Label text="Material Code" />                            
+                            </header>
+                        </Column>
+                        <Column hAlign="Center" >
+                            <header>
+                                <Label text="Description" />                            
+                            </header>
+                        </Column>
+                        <Column hAlign="Center" width="12rem" >
+                            <header>
+                                <Label text="Spec" />                            
+                            </header>
+                        </Column>
+                        <Column hAlign="Center" width="10rem" >
+                            <header>
+                                <Label text="Commondify"/>                            
+                            </header>
+                        </Column>    
+                        <Column hAlign="Center" width="3rem" >
+                            <header>
+                                <Label text="UOM"/>                            
+                            </header>
+                        </Column>                                                                                                 
+                        <Column hAlign="Center" width="3rem" >
+                            <header>
+                                <Label text="UIT"/>                            
+                            </header>
+                        </Column>                                                                                                 
+                        <Column hAlign="Center" width="8rem" >
+                            <header>
+                                <Label text="Item Status"/>                            
+                            </header>
+                        </Column>                                                                                                 
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="{materialCodeModel>org_code}"/>
+                                <Text text="{materialCodeModel>material_code}"/>
+                                <Text text="{materialCodeModel>description}"/>
+                                <Text text="{materialCodeModel>spec}"/>
+                                <Text text="{materialCodeModel>commondify}"/>
+                                <Text text="{materialCodeModel>uom}"/>
+                                <Text text="{materialCodeModel>uit}"/>
+                                <Text text="{materialCodeModel>item_status}"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>             
+            <!-- </VBox>
+        </HBox> -->
+		</content>
+			<beginButton>
+				<Button text="Close" press=".onClose" />
+			</beginButton>
+            <endButton>
+                <Button  text="Apply" 
+                    type="Emphasized"
+                    press=".onMaterialDetailApply" />
+            </endButton>
+	</Dialog>
+</core:FragmentDefinition>

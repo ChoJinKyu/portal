@@ -1,7 +1,7 @@
 /*global QUnit*/
 
 sap.ui.define([
-	"pg/mm/controller/MainList.controller"
+	"pg/mi/Master/controller/MainList.controller"
 ], function (Controller) {
 	"use strict";
 
