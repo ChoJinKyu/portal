@@ -6,7 +6,7 @@ sap.ui.define([
 ], function (UIComponent, Device, models, ErrorHandler) {
   "use strict";
 
-  return UIComponent.extend("cm.timeZoneMgr.Component", {
+  return UIComponent.extend("cm.timeZoneMgt.Component", {
 
     metadata: {
       manifest: "json"

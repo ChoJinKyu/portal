@@ -32,8 +32,8 @@
         },
         {
           "name": "타임존 관리",
-          "url": "../cm/timeZoneMgr/webapp",
-          "component": "cm.timeZoneMgr"
+          "url": "../cm/timeZoneMgt/webapp",
+          "component": "cm.timeZoneMgt"
         },
         {
           "name": "메시지 관리",

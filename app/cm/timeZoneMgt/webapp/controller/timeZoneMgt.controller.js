@@ -23,7 +23,7 @@ sap.ui.define([
     timeZonePersoService) {
     "use strict";
 
-    return BaseController.extend("cm.timeZoneMgr.controller.timeZoneMgr", {
+    return BaseController.extend("cm.timeZoneMgt.controller.timeZoneMgt", {
 
       //formatter: formatter,
 
@@ -31,7 +31,7 @@ sap.ui.define([
         this.getView().setModel(new ManagedListModel(), "list");
         // 개인화 - UI 테이블의 경우만 해당
         this._oTPC = new TablePersoController({
-          customDataKey: "timeZoneMgr",
+          customDataKey: "timeZoneMgt",
           persoService: timeZonePersoService
           // persoService: {
           //   getPersData: function () {

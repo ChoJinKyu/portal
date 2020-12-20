@@ -4,97 +4,97 @@ sap.ui.define(["jquery.sap.global"],
     var i = 0;
     var _columns = [
       {
-        id: "timeZoneMgr-mainTable-mainStateColumn",
+        id: "timeZoneMgt-mainTable-mainStateColumn",
         order: i++,
         text: "S",
         visible: true
       },
       {
-        id: "timeZoneMgr-mainTable-mainTimezoneCodeColumn",
+        id: "timeZoneMgt-mainTable-mainTimezoneCodeColumn",
         order: i++,
         text: "코드",
         visible: true
       },
       {
-        id: "timeZoneMgr-mainTable-mainTimezoneNameColumn",
+        id: "timeZoneMgt-mainTable-mainTimezoneNameColumn",
         order: i++,
         text: "타임존",
         visible: true
       },
       {
-        id: "timeZoneMgr-mainTable-mainCountryCodeColumn",
+        id: "timeZoneMgt-mainTable-mainCountryCodeColumn",
         order: i++,
         text: "국가",
         visible: true
       },
       {
-        id: "timeZoneMgr-mainTable-mainGmtOffsetColumn",
+        id: "timeZoneMgt-mainTable-mainGmtOffsetColumn",
         order: i++,
         text: "GMT",
         visible: true
       },
       {
-        id: "timeZoneMgr-mainTable-mainDstFlagColumn",
+        id: "timeZoneMgt-mainTable-mainDstFlagColumn",
         order: i++,
         text: "서머타임-적용여부",
         visible: true
       },
       {
-        id: "timeZoneMgr-mainTable-mainDstStartMonthColumn",
+        id: "timeZoneMgt-mainTable-mainDstStartMonthColumn",
         order: i++,
         text: "서머타임시작-월",
         visible: true
       },
       {
-        id: "timeZoneMgr-mainTable-mainDstStartDayColumn",
+        id: "timeZoneMgt-mainTable-mainDstStartDayColumn",
         order: i++,
         text: "서머타임시작-일",
         visible: true
       },
       {
-        id: "timeZoneMgr-mainTable-mainDstStartWeekColumn",
+        id: "timeZoneMgt-mainTable-mainDstStartWeekColumn",
         order: i++,
         text: "서머타임시작-주",
         visible: true
       },
       {
-        id: "timeZoneMgr-mainTable-mainDstStartDayOfWeekColumn",
+        id: "timeZoneMgt-mainTable-mainDstStartDayOfWeekColumn",
         order: i++,
         text: "서머타임시작-요일",
         visible: true
       },
       {
-        id: "timeZoneMgr-mainTable-mainDstStartTimeRateColumn",
+        id: "timeZoneMgt-mainTable-mainDstStartTimeRateColumn",
         order: i++,
         text: "서머타임시작-시간",
         visible: true
       },
       {
-        id: "timeZoneMgr-mainTable-mainDstEndMonthColumn",
+        id: "timeZoneMgt-mainTable-mainDstEndMonthColumn",
         order: i++,
         text: "서머타임종료-월",
         visible: true
       },
       {
-        id: "timeZoneMgr-mainTable-mainDstEndDayColumn",
+        id: "timeZoneMgt-mainTable-mainDstEndDayColumn",
         order: i++,
         text: "서머타임종료-일",
         visible: true
       },
       {
-        id: "timeZoneMgr-mainTable-mainDstEndWeekColumn",
+        id: "timeZoneMgt-mainTable-mainDstEndWeekColumn",
         order: i++,
         text: "서머타임종료-주",
         visible: true
       },
       {
-        id: "timeZoneMgr-mainTable-mainDstEndDayOfWeekColumn",
+        id: "timeZoneMgt-mainTable-mainDstEndDayOfWeekColumn",
         order: i++,
         text: "서머타임종료-요일",
         visible: true
       },
       {
-        id: "timeZoneMgr-mainTable-mainDstEndTimeRateColumn",
+        id: "timeZoneMgt-mainTable-mainDstEndTimeRateColumn",
         order: i++,
         text: "시간",
         visible: true

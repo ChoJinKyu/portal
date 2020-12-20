@@ -3,7 +3,7 @@ sap.ui.define([
 ], function (BaseController) {
   "use strict";
 
-  return BaseController.extend("cm.timeZoneMgr.controller.App", {
+  return BaseController.extend("cm.timeZoneMgt.controller.App", {
 
     onInit: function () {
       // apply content density mode to root view

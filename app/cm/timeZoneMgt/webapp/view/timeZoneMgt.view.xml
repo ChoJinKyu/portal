@@ -1,4 +1,4 @@
-<mvc:View controllerName="cm.timeZoneMgr.controller.timeZoneMgr"
+<mvc:View controllerName="cm.timeZoneMgt.controller.timeZoneMgt"
   xmlns:mvc="sap.ui.core.mvc"
   xmlns="sap.m"
   xmlns:f="sap.f"
