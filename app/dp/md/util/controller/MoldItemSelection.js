@@ -1,10 +1,8 @@
 sap.ui.define([
-    "ext/lib/controller/BaseController",
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/odata/v2/ODataModel",
     "sap/m/Dialog",
     "sap/m/DialogRenderer",
-    "ext/lib/core/service/ODataV2ServiceProvider",
     "sap/ui/model/Sorter",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
@@ -14,38 +12,42 @@ sap.ui.define([
     "sap/m/Column",
     "sap/m/ColumnListItem",
     "sap/ui/core/Fragment",
-    "ext/lib/util/Multilingual",
     "ext/lib/model/ManagedListModel",
     "sap/ui/model/json/JSONModel",
     "ext/lib/model/ManagedModel",
-], function (BaseController, Controller, ODataModel, Dialog, Renderer, ODataV2ServiceProvider,
+], function (
+    Controller, ODataModel, Dialog, Renderer,
     Sorter, Filter, FilterOperator,
-    Button, Text, Table, Column, ColumnListItem, Fragment, Multilingual, ManagedListModel, JSONModel, ManagedModel) {
+    Button, Text, Table, Column, ColumnListItem, Fragment
+    , ManagedListModel
+    , JSONModel
+    , ManagedModel 
+) {
     "use strict";
 
-    var oServiceModel = new ODataModel({
-        serviceUrl: "srv-api/odata/v2/dp.util.MoldItemSelectionService/",
-        defaultBindingMode: "OneWay",
-        defaultCountMode: "Inline",
-        refreshAfterChange: false,
-        useBatch: true
-    });
-
-    var oServiceModel2 = new ODataModel({
-        serviceUrl: "srv-api/odata/v2/cm.OrgMgtService/",
-        defaultBindingMode: "OneWay",
-        defaultCountMode: "Inline",
-        refreshAfterChange: false,
-        useBatch: true
-    });
-    var oServiceModel3 = new ODataModel({
-        serviceUrl: "srv-api/odata/v2/cm.PurOrgMgtService/",
-        defaultBindingMode: "OneWay",
-        defaultCountMode: "Inline",
-        refreshAfterChange: false,
-        useBatch: true
-    });
-
+        var oServiceModel = new ODataModel({
+            serviceUrl: "srv-api/odata/v2/dp.util.MoldItemSelectionService/",
+            defaultBindingMode: "OneWay",
+            defaultCountMode: "Inline",
+            refreshAfterChange: false,
+            useBatch: true
+        });
+    
+        var oServiceModel2 = new ODataModel({
+            serviceUrl: "srv-api/odata/v2/cm.OrgMgtService/",
+            defaultBindingMode: "OneWay",
+            defaultCountMode: "Inline",
+            refreshAfterChange: false,
+            useBatch: true
+        });
+        var oServiceModel3 = new ODataModel({
+            serviceUrl: "srv-api/odata/v2/cm.PurOrgMgtService/",
+            defaultBindingMode: "OneWay",
+            defaultCountMode: "Inline",
+            refreshAfterChange: false,
+            useBatch: true
+        });
+   
     /**
      * @param : oThis 호출한 페이지의 this 
      * @param : oTableName 호출한 페이지에 추가할 테이블 아이디 
@@ -124,25 +126,25 @@ sap.ui.define([
             }
 
             // 추가 검색 조건 
-            if(oArges.mold_progress_status_code != undefined){
-                aSearchFilters.push(new Filter("mold_progress_status_code", FilterOperator.EQ , oArges.mold_progress_status_code));
+            if (oArges.mold_progress_status_code != undefined) {
+                aSearchFilters.push(new Filter("mold_progress_status_code", FilterOperator.EQ, oArges.mold_progress_status_code));
             }
 
-            if (oArges.mold_id_arr != undefined && oArges.mold_id_arr.length > 0) { 
+            if (oArges.mold_id_arr != undefined && oArges.mold_id_arr.length > 0) {
 
-                 var nFilters = [];
-                oArges.mold_id_arr.forEach(function (mold_id) { 
+                var nFilters = [];
+                oArges.mold_id_arr.forEach(function (mold_id) {
                     nFilters.push(new Filter("mold_id", FilterOperator.NotContains, String(mold_id)));
-                 });
+                });
 
                 var oNotInFilter = {
                     filters: nFilters,
                     and: true
-                 };
+                };
 
                 aSearchFilters.push(new Filter(oNotInFilter));
             }
-            console.log(" aSearchFilters >>>>> " , aSearchFilters);
+            console.log(" aSearchFilters >>>>> ", aSearchFilters);
             return aSearchFilters;
         },
         /**
@@ -196,7 +198,7 @@ sap.ui.define([
             plantModel.setTransactionModel(oServiceModel3);
             plantModel.read("/Pur_Operation_Org", {
                 filters: [new Filter("tenant_id", FilterOperator.EQ, 'L1100')
-                      , new Filter("company_code", FilterOperator.EQ, oThis.getModel('moldItemPop').oData.company_code)
+                    , new Filter("company_code", FilterOperator.EQ, oThis.getModel('moldItemPop').oData.company_code)
                 ],
                 success: function (oData) {
                     console.log(" plant >>>>> ", oData);

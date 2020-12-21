@@ -83,7 +83,7 @@ sap.ui.define([
             }, true);
 
             
-            this._doInitSearch();
+            
 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
@@ -120,6 +120,7 @@ sap.ui.define([
          * @see init 이후 바로 실행됨
          */
         onAfterRendering: function () {
+            this._doInitSearch();
             this.getModel().setDeferredGroups(["delete"]);
             this.byId("pageSearchButton").firePress();
             return;
@@ -133,6 +134,8 @@ sap.ui.define([
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S";
 
             this.getView().setModel(this.getOwnerComponent().getModel());
+
+            this.setPlant('LGEKR');
 
             /** Date */
             var today = new Date();
@@ -149,6 +152,28 @@ sap.ui.define([
             this.getView().byId("searchRequestDateE").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
         },
 
+
+        setPlant: function(companyCode){
+            
+            var filter = new Filter({
+                            filters: [
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                    new Filter("company_code", FilterOperator.EQ, companyCode)
+                                ],
+                                and: true
+                        });
+
+            var bindItemInfo = {
+                    path: '/Divisions',
+                    filters: filter,
+                    template: new Item({
+                        key: "{org_code}", text: "[{org_code}] {org_name}"
+                    })
+                };
+
+            this.getView().byId("searchPlantS").bindItems(bindItemInfo);
+            this.getView().byId("searchPlantE").bindItems(bindItemInfo);
+        },
 
 
         /* =========================================================== */
@@ -795,7 +820,7 @@ sap.ui.define([
 		 * @private
 		 */
         _applySearch: function (aSearchFilters) {
-            console.log(aSearchFilters);
+            
             var oView = this.getView(),
                 oModel = this.getModel("list");
             oView.setBusy(true);
@@ -821,6 +846,9 @@ sap.ui.define([
             var sPart = this.getView().byId("searchPart").getValue().trim();
             var sRequestor = this.getView().byId("searchRequestor").getValue().trim();
             var sStatus = this.getView().byId("searchStatus").getSelectedKey();
+
+            console.log(aCompany);
+            console.log(aPlant);
 
 
             var aSearchFilters = [];

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="cm.CodeMgrService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="CodeDetails" EntityType="cm.CodeMgrService.CodeDetails">
+          <NavigationPropertyBinding Path="ref" Target="CodeMasters"/>
+        </EntitySet>
+        <EntitySet Name="CodeLanguages" EntityType="cm.CodeMgrService.CodeLanguages">
+          <NavigationPropertyBinding Path="ref" Target="CodeDetails"/>
+        </EntitySet>
+        <EntitySet Name="CodeMasters" EntityType="cm.CodeMgrService.CodeMasters"/>
+      </EntityContainer>
+      <EntityType Name="CodeDetails">
+        <Key>
+          <PropertyRef Name="tenant_id"/>
+          <PropertyRef Name="company_code"/>
+          <PropertyRef Name="group_code"/>
+          <PropertyRef Name="code"/>
+        </Key>
+        <Property Name="tenant_id" Type="Edm.String" MaxLength="4" Nullable="false"/>
+        <Property Name="company_code" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="group_code" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <NavigationProperty Name="ref" Type="cm.CodeMgrService.CodeMasters">
+          <ReferentialConstraint Property="tenant_id" ReferencedProperty="tenant_id"/>
+          <ReferentialConstraint Property="company_code" ReferencedProperty="company_code"/>
+          <ReferentialConstraint Property="group_code" ReferencedProperty="group_code"/>
+        </NavigationProperty>
+        <Property Name="code" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="code_description" Type="Edm.String" MaxLength="240" Nullable="false"/>
+        <Property Name="sort_no" Type="Edm.Decimal" Nullable="false" Scale="variable"/>
+        <Property Name="start_date" Type="Edm.Date" Nullable="false"/>
+        <Property Name="end_date" Type="Edm.Date" Nullable="false"/>
+        <Property Name="local_create_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+        <Property Name="local_update_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+        <Property Name="create_user_id" Type="Edm.String" MaxLength="50" Nullable="false"/>
+        <Property Name="update_user_id" Type="Edm.String" MaxLength="50" Nullable="false"/>
+        <Property Name="system_create_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+        <Property Name="system_update_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="CodeLanguages">
+        <Key>
+          <PropertyRef Name="tenant_id"/>
+          <PropertyRef Name="company_code"/>
+          <PropertyRef Name="group_code"/>
+          <PropertyRef Name="code"/>
+          <PropertyRef Name="language_cd"/>
+        </Key>
+        <Property Name="tenant_id" Type="Edm.String" MaxLength="4" Nullable="false"/>
+        <Property Name="company_code" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="group_code" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="code" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <NavigationProperty Name="ref" Type="cm.CodeMgrService.CodeDetails">
+          <ReferentialConstraint Property="tenant_id" ReferencedProperty="tenant_id"/>
+          <ReferentialConstraint Property="company_code" ReferencedProperty="company_code"/>
+          <ReferentialConstraint Property="group_code" ReferencedProperty="group_code"/>
+          <ReferentialConstraint Property="code" ReferencedProperty="code"/>
+        </NavigationProperty>
+        <Property Name="language_cd" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="code_name" Type="Edm.String" MaxLength="240" Nullable="false"/>
+        <Property Name="local_create_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+        <Property Name="local_update_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+        <Property Name="create_user_id" Type="Edm.String" MaxLength="50" Nullable="false"/>
+        <Property Name="update_user_id" Type="Edm.String" MaxLength="50" Nullable="false"/>
+        <Property Name="system_create_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+        <Property Name="system_update_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="CodeMasters">
+        <Key>
+          <PropertyRef Name="tenant_id"/>
+          <PropertyRef Name="company_code"/>
+          <PropertyRef Name="group_code"/>
+        </Key>
+        <Property Name="tenant_id" Type="Edm.String" MaxLength="4" Nullable="false"/>
+        <Property Name="company_code" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="group_code" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="chain_code" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="group_name" Type="Edm.String" MaxLength="240" Nullable="false"/>
+        <Property Name="group_description" Type="Edm.String" Nullable="false"/>
+        <Property Name="use_yn" Type="Edm.Boolean" Nullable="false"/>
+        <Property Name="local_create_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+        <Property Name="local_update_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+        <Property Name="create_user_id" Type="Edm.String" MaxLength="50" Nullable="false"/>
+        <Property Name="update_user_id" Type="Edm.String" MaxLength="50" Nullable="false"/>
+        <Property Name="system_create_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+        <Property Name="system_update_dtm" Type="Edm.DateTimeOffset" Nullable="false"/>
+      </EntityType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
