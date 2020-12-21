@@ -13,6 +13,8 @@ entity Po_Project {
         bizunit_code            : String(10);
         bizdivision_code        : String(10);
         remark                  : String(3000);
+        org_type_code           : String(2);
+        org_code                : String(10);
 }
 
 extend Po_Project with util.Managed;

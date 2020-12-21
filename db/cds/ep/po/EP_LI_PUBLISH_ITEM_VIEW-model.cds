@@ -34,8 +34,8 @@ entity Li_Publish_Item_View {
         loi_selection_status_code  : String(30)          @title : 'LOI선정상태코드';
         loi_publish_number         : String(50)          @title : 'LOI발행번호';
         loi_publish_status_code    : String(30)          @title : 'LOI발행상태코드';
-        po_number                  : String(50)          @title : '발주번호';
-        po_item_number             : String(10)          @title : '발주품목번호';
+        // po_number                  : String(50)          @title : '발주번호';
+        // po_item_number             : String(10)          @title : '발주품목번호';
         po_status_code             : String(30)          @title : '발주상태코드';
         request_date               : Date                @title : '요청일자';
         supplier_opinion           : String(3000)        @title : 'VOC';
