@@ -1,7 +1,7 @@
 sap.ui.define([
     "ext/lib/controller/BaseController",
-    "ext/lib/util/ValidatorUtil",
     "sap/ui/model/json/JSONModel",
+	"sap/ui/core/routing/History",
     "ext/lib/model/TransactionManager",
     "ext/lib/model/ManagedModel",
     "ext/lib/model/ManagedListModel",
@@ -18,7 +18,7 @@ sap.ui.define([
     "sap/m/ComboBox",
     "sap/ui/core/Item",
     "sap/ui/richtexteditor/RichTextEditor"
-], function (BaseController, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter,
+], function (BaseController, JSONModel, History, TransactionManager, ManagedModel, ManagedListModel, DateFormatter,
     Filter, FilterOperator, Fragment, MessageBox, MessageToast,
     ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, RichTextEditor) {
 
@@ -26,7 +26,7 @@ sap.ui.define([
     ``
     var oTransactionManager;
 
-    return BaseController.extend("sp.fundingNotify.controller.MidObject", {
+    return BaseController.extend("sp.sf.fundingNotify.controller.MidObject", {
 
         dateFormatter: DateFormatter,
 
@@ -57,7 +57,7 @@ sap.ui.define([
                 editMode: true
             });
 
-            this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
+            this.getRouter().getRoute("mainObject").attachPatternMatched(this._onRoutedThisPage, this);
             this.setModel(oViewModel, "midObjectView");
 
             this.setModel(new ManagedModel(), "master");
@@ -103,34 +103,42 @@ sap.ui.define([
 		 * Event handler for Enter Full Screen Button pressed
 		 * @public
 		 */
-        onPageEnterFullScreenButtonPress: function () {
-            var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
-            this.getRouter().navTo("midPage", {
-                layout: sNextLayout,
-                tenantId: this._sTenantId,
-                fundingNotifyNumber: this._sFundingNotifyNumber
-                // fundingNotifyNumber: oRecord.funding_notify_number
-            });
-        },
+        // onPageEnterFullScreenButtonPress: function () {
+        //     var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
+        //     this.getRouter().navTo("mainObject", {
+        //         layout: sNextLayout,
+        //         tenantId: this._sTenantId,
+        //         fundingNotifyNumber: this._sFundingNotifyNumber
+        //         // fundingNotifyNumber: oRecord.funding_notify_number
+        //     });
+        // },
+        
 		/**
 		 * Event handler for Exit Full Screen Button pressed
 		 * @public
 		 */
-        onPageExitFullScreenButtonPress: function () {
-            var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
-            this.getRouter().navTo("midPage", {
-                layout: sNextLayout,
-                tenantId: this._sTenantId,
-                fundingNotifyNumber: this._sFundingNotifyNumber
-            });
-        },
+        // onPageExitFullScreenButtonPressonPageExitFullScreenButtonPress: function () {
+        //     var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
+        //     this.getRouter().navTo("mainObject", {
+        //         layout: sNextLayout,
+        //         tenantId: this._sTenantId,
+        //         fundingNotifyNumber: this._sFundingNotifyNumber
+        //     });
+        // },
 		/**
 		 * Event handler for Nav Back Button pressed
 		 * @public
 		 */
         onPageNavBackButtonPress: function () {
-            var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
-            this.getRouter().navTo("mainPage", { layout: sNextLayout });
+            var sPreviousHash = History.getInstance().getPreviousHash();
+			if (sPreviousHash !== undefined) {
+				// eslint-disable-next-line sap-no-history-manipulation
+				history.go(-1);
+			} else {
+				this.getRouter().navTo("mainList", {}, true);
+			}
+            // var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+            // this.getRouter().navTo("mainObject");
         },
 
 		/**
@@ -227,7 +235,7 @@ sap.ui.define([
                             success: function (ok) {
                                 that._toShowMode();
                                 view.setBusy(false);
-                                that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                //that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                                 MessageToast.show("Success to save.");
                             }
                         });
@@ -267,6 +275,7 @@ sap.ui.define([
          * @private
          */
         _onRoutedThisPage: function (oEvent) {
+            
             var oArgs = oEvent.getParameter("arguments"),
                 oView = this.getView(), 
                 utcDate = this._getUtcSapDate();
@@ -287,20 +296,18 @@ sap.ui.define([
                     "local_update_dtm": utcDate,
                     "create_user_id": "Admin",
                     "update_user_id": "Admin"
-                    
-                }, "/FsFundingNotify", 0);
+                }, "/SfFundingNotify", 0);
                 
                 this._toEditMode();
-            }
-            else {
-                this.getModel("midObjectView").setProperty("/isAddedMode", false);
+            } else {
+                //this.getModel("midObjectView").setProperty("/isAddedMode", false);
 
-                this._bindView("/FsFundingNotify(tenant_id='" + this._sTenantId + "',funding_notify_number='" + this._sFundingNotifyNumber + "')");
+                this._bindView("/SfFundingNotify(tenant_id='" + this._sTenantId + "',funding_notify_number='" + this._sFundingNotifyNumber + "')");
 
                 oView.setBusy(true);
                 var oMasterModel = this.getModel("master");
                 //oDetailsModel.setTransactionModel(this.getModel());
-                oMasterModel.read("/FsFundingNotify", {
+                oMasterModel.read("/SfFundingNotify", {
                     filters: [
                         new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
                         new Filter("funding_notify_number", FilterOperator.EQ, this._sFundingNotifyNumber),
@@ -339,10 +346,13 @@ sap.ui.define([
             var FALSE = false;
             //this._showFormFragment('MidObject_Edit');
             this.byId("page").setSelectedSection("pageSectionMain");
-            this.byId("page").setProperty("showFooter", !FALSE);
+            //this.byId("page").setProperty("showFooter", !FALSE);
+            this.byId("pageEditButton").setProperty("type", "Emphasized");
             this.byId("pageEditButton").setEnabled(FALSE);
             this.byId("pageDeleteButton").setEnabled(FALSE);
             this.byId("pageNavBackButton").setEnabled(FALSE);
+            this.byId("pageCancelButton").setEnabled(true);
+            this.byId("pageSaveButton").setEnabled(true);
             oMidObjectView.setProperty("/editMode", true);
             
         },
@@ -352,10 +362,12 @@ sap.ui.define([
             var TRUE = true;
             //this._showFormFragment('MidObject_Show');
             this.byId("page").setSelectedSection("pageSectionMain");
-            this.byId("page").setProperty("showFooter", !TRUE);
+            //this.byId("page").setProperty("showFooter", !TRUE);
             this.byId("pageEditButton").setEnabled(TRUE);
             this.byId("pageDeleteButton").setEnabled(TRUE);
             this.byId("pageNavBackButton").setEnabled(TRUE);
+            this.byId("pageCancelButton").setEnabled(false);
+            this.byId("pageSaveButton").setEnabled(false);
             oMidObjectView.setProperty("/editMode", false);
             
         },

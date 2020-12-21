@@ -1,4 +1,4 @@
-<mvc:View controllerName="sp.fundingNotify.controller.MainList"
+<mvc:View controllerName="sp.sf.fundingNotify.controller.MainList"
     xmlns:mvc="sap.ui.core.mvc" 
     xmlns="sap.m" 
     xmlns:f="sap.f" 
@@ -55,18 +55,18 @@
         <f:content>
             <VBox>
                 <Table id="mainTable" 
-                        sticky="HeaderToolbar,ColumnHeaders" 
-                        inset="false" 
-                        growing="true"
-                        growingThreshold="10"
-                        class="sapFDynamicPageAlignContent" 
-                        updateFinished=".onMainTableUpdateFinished"
-                        items="{list>/FsFundingNotify}"
-                        mode="None" 
-                        width="auto">
+                    sticky="HeaderToolbar,ColumnHeaders" 
+                    inset="false" 
+                    growing="true"
+                    growingThreshold="10"
+                    class="sapFDynamicPageAlignContent" 
+                    updateFinished=".onMainTableUpdateFinished"
+                    items="{list>/SfFundingNotify}"
+                    mode="None" 
+                    width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="자금지원 공고 ({= ${list>/FsFundingNotify}.length || 0})" level="H2"/>
+                            <Title text="자금지원 공고 ({= ${list>/SfFundingNotify}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
                             <ToolbarSeparator/>

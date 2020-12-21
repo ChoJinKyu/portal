@@ -47,6 +47,7 @@
               <ToolbarSpacer/>
               <Button text="Add" id="buttonMainAddRow" press=".onAdd('mainTable', 'list', 'MdCategory', 'tenant_id')"  type="Transparent"/>
               <Button text="Edit" id="buttonMainEditRow" press=".onEdit('mainTable', 'list', 'MdCategory', 'tenant_id')"  type="Transparent"/>
+              <Button text="Cancel" id="buttonMainCancelRow" press=".onSearch"  type="Transparent" enabled="false"/>
               <Button text="Delete" id="buttonMainDeleteRow" press=".onDelete('mainTable', 'list')"   type="Transparent" enabled="false" />
               <Button text="Save" id="buttonMainSaveRow" press=".onSave('mainTable', 'list')"   type="Emphasized"/>
               <ToolbarSeparator/>
