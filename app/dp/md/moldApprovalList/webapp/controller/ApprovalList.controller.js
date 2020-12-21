@@ -141,8 +141,8 @@ sap.ui.define([
             this.getView().byId("searchCompanyE").setSelectedKeys(['LGEKR']);
             this.getView().byId("searchPlantS").setSelectedKeys(['DFZ']);
             this.getView().byId("searchPlantE").setSelectedKeys(['DFZ']);
-            this.getView().byId("searchApprovalCategoryS").setSelectedKeys(['V']);
-            this.getView().byId("searchApprovalCategoryE").setSelectedKeys(['V']);
+            this.getView().byId("searchApprovalCategoryS").setSelectedKeys(['I']);
+            this.getView().byId("searchApprovalCategoryE").setSelectedKeys(['I']);
 
             this.getView().byId("searchRequestDateS").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
             this.getView().byId("searchRequestDateS").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
