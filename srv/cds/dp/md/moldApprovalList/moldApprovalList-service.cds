@@ -10,6 +10,9 @@ using { dp as approvalDtl } from '../../../../../db/cds/dp/md/DP_MD_APPROVAL_DTL
 using { dp as moldMstSpecView } from '../../../../../db/cds/dp/md/DP_MD_MST_SPEC_VIEW-model';
 using { dp as moldMst } from '../../../../../db/cds/dp/md/DP_MD_MST-model';
 
+using {cm as orgMapping} from '../../../../../db/cds/cm/CM_PUR_ORG_TYPE_MAPPING-model';
+using {cm as Org} from '../../../../../db/cds/cm/CM_PUR_OPERATION_ORG-model';
+
 namespace dp;
 @path : '/dp.MoldApprovalListService'
 service MoldApprovalListService {
@@ -59,6 +62,26 @@ service MoldApprovalListService {
     on h.code = a.approve_status_code and h.tenant_id = a.tenant_id
     order by a.approval_number asc;
     
+
+    view Divisions as
+    select key a.tenant_id       
+            ,key a.company_code  
+            ,key a.org_type_code 
+            ,key a.org_code         
+                ,a.org_name          
+                ,a.purchase_org_code 
+                ,a.plant_code        
+                ,a.affiliate_code    
+                ,a.bizdivision_code  
+                ,a.bizunit_code      
+                ,a.au_code           
+                ,a.hq_au_code        
+                ,a.use_flag  
+    from Org.Pur_Operation_Org a  
+    left join orgMapping.Pur_Org_Type_Mapping b
+    on a.tenant_id=b.tenant_id
+    and a.org_type_code=b.org_type_code
+    where b.process_type_code='DP05';
     
     view Models as
     select distinct key a.tenant_id, key a.model
