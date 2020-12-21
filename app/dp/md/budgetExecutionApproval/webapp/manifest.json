@@ -249,20 +249,17 @@
                 "beaCreateObject": {
                     "viewName": "BeaCreateObject",
                     "viewId": "beaCreateObject",
-                    "viewLevel": 1,
-                    "title": "{i18n>beaCreateObjectTitle}"
+                    "viewLevel": 1
                 },
                 "beaEditObject": {
                     "viewName": "BeaCreateObject",
                     "viewId": "beaCreateObject",
-                    "viewLevel": 1,
-                    "title": "{i18n>beaCreateObjectTitle}"
+                    "viewLevel": 1
                 },
                 "beaObject": {
                     "viewName": "BeaObject",
                     "viewId": "beaObject",
-                    "viewLevel": 1,
-                    "title": "{i18n>beaObjectTitle}"
+                    "viewLevel": 1
                 },
                 "notFound": {
                     "viewName": "NotFound",

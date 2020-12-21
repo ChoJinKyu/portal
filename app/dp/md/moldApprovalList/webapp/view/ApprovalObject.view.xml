@@ -1,4 +1,4 @@
-<mvc:View controllerName="dp.md.orderApprovalLocal.controller.PoaCreateObject" 
+<mvc:View controllerName="dp.md.orderApprovalLocal.controller.ApprovalObject" 
   xmlns:mvc="sap.ui.core.mvc"
     xmlns:uxap="sap.uxap"
     xmlns:form="sap.ui.layout.form" 
@@ -112,21 +112,21 @@
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
                         <layout:VerticalLayout class="sapUiSmallMarginBeginEnd"> 
-                                <HBox alignItems="Center">
-                                    <Label
-                                        text="Subject"
-                                        class="sapUiTinyMarginEnd"
-                                        textAlign="Left"
-                                        labelFor="input"
-                                        required="true"/>
-                                    <Input
-                                        value="{appMaster>/approval_title}"
-                                        visible="true"
-                                        width="40em" 
-                                        placeholder="Input data"
-                                        >
-                                    </Input>
-                                </HBox>
+                            <HBox alignItems="Center">
+                                <Label
+                                    text="Subject"
+                                    class="sapUiTinyMarginEnd"
+                                    textAlign="Left"
+                                    labelFor="input"
+                                    required="true"/>
+                                <Input
+                                    value="{appMaster>/approval_title}"
+                                    visible="true"
+                                    width="40em" 
+                                    placeholder="Input data"
+                                    >
+                                </Input>
+                            </HBox>
                             <VBox>
                                 <Label text="Description" labelFor="input" required="true"></Label> 
                                 <layout:VerticalLayout id="approvalContents" class="sapUiContentPadding" width="100%">
@@ -137,29 +137,9 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-            <uxap:ObjectPageSection titleUppercase="false" title="Purchase Order Item">
+            <uxap:ObjectPageSection titleUppercase="false" title="{appType>/AppType/0/title}">
 				<uxap:subSections>
-					<uxap:ObjectPageSubSection>
-                        <HBox>
-                        <VBox class="sapUiSmallMargin">
-                            <Label text="{I18N>/AFFILIATE}" />
-                            <ObjectStatus
-                                text="[{company>/company_code}] {company>/company_name}" 
-                                state="Error"
-                                />
-                        </VBox>
-                        <VBox class="sapUiSmallMargin">
-                            <Label text="{I18N>/BUSINESS_DIVISION}" />
-                            <ObjectStatus
-                                text="[{plant>/plant_code}] {plant>/plant_name}" 
-                                state="Error"
-                                />
-                        </VBox>
-                        </HBox>
-                    </uxap:ObjectPageSubSection>
                     <uxap:ObjectPageSubSection id="pageSection">
-                        
-                        
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
@@ -213,28 +193,28 @@
                             </OverflowToolbar>
                         </headerToolbar>
                         <columns>
-                            <Column id="no" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="1.5em" >
+                            <Column id="no" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="3em" >
                                 <Text text="No." />
                             </Column>
-                            <Column id="type" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="7em" >
+                            <Column id="type" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="10em" >
                                 <Text text="Type" />
                             </Column>
-                            <Column id="nameDept" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                            <Column id="nameDept" minScreenWidth="Tablet" hAlign="Center" width="15em" >
                                 <Text text="Name/Dept" />
                             </Column>
                             <Column id="status" minScreenWidth="Tablet" hAlign="Center" width="12em" >
                                 <Text text="Status" />
                             </Column> 
-                            <Column id="comment" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                            <Column id="comment" minScreenWidth="Tablet" hAlign="Center" >
                                 <Text text="Comment" />
                             </Column>
-                            <Column id="up" minScreenWidth="Tablet" hAlign="Center" width="1.5em" >
+                            <Column id="up" minScreenWidth="Tablet" hAlign="Center" width="3em" >
                                   <Text text="" />
                             </Column>					
-                            <Column id="down" minScreenWidth="Tablet" hAlign="Center" width="1.5em" >
+                            <Column id="down" minScreenWidth="Tablet" hAlign="Center" width="3em" >
                                   <Text text="" />
                             </Column>					
-                            <Column id="action" minScreenWidth="Tablet" hAlign="Center" width="1.5em" >
+                            <Column id="action" minScreenWidth="Tablet" hAlign="Center" width="3em" >
                                   <Text text="" />
                             </Column>					
                         </columns>

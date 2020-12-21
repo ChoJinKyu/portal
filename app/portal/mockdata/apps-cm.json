@@ -11,8 +11,8 @@
         },
         {
           "name": "조직별코드관리",
-          "url": "../cm/orgCodeMgr/webapp",
-          "component": "cm.orgCodeMgr"
+          "url": "../cm/orgCodeMgt/webapp",
+          "component": "cm.orgCodeMgt"
         },
         {
           "name": "제어옵션관리",
