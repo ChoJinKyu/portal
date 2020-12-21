@@ -8,7 +8,7 @@ sap.ui.define([
 ], function (JSONModel, Controller, Filter, FilterOperator, Sorter, MessageBox) {
 	"use strict";
 
-	return Controller.extend("sp.fundingNotify.controller.Master", {
+	return Controller.extend("sp.sf.fundingNotify.controller.Master", {
 		onInit: function () {
 			this.oRouter = this.getOwnerComponent().getRouter();
 			this._bDescendingSort = false;

@@ -19,7 +19,7 @@ sap.ui.define([
 ], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
     "use strict";
 
-    return BaseController.extend("sp.fundingNotify.controller.MainList", {
+    return BaseController.extend("sp.sf.fundingNotify.controller.MainList", {
 
         dateFormatter: DateFormatter,
 
@@ -49,10 +49,10 @@ sap.ui.define([
                 icon: "sap-icon://table-view",
                 intent: "#Template-display"
             }, true);
-
+            
             this.setModel(new ManagedListModel(), "list");
 
-            this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
+            //this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
             this._doInitTablePerso();
         },
@@ -114,9 +114,9 @@ sap.ui.define([
 		 * @public
 		 */
         onMainTableAddButtonPress: function () {
-            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-            this.getRouter().navTo("midPage", {
-                layout: oNextUIState.layout,
+            //var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
+            this.getRouter().navTo("mainObject", {
+                //layout: oNextUIState.layout,
                 tenantId: "new",
                 fundingNotifyNumber: "number",
                 "?query": {
@@ -144,31 +144,40 @@ sap.ui.define([
             }
         },
 
-		/**
+        /**
 		 * Event handler when pressed the item of table
 		 * @param {sap.ui.base.Event} oEvent
 		 * @public
 		 */
         onMainTableItemPress: function (oEvent) {
-            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
-                sPath = oEvent.getSource().getBindingContext("list").getPath(),
+            //var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
+            var sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
             
-            this.getRouter().navTo("midPage", {
-                layout: oNextUIState.layout,
+            this.getRouter().navTo("mainObject", {
+                //layout: oNextUIState.layout,
                 tenantId: oRecord.tenant_id,
                 fundingNotifyNumber: oRecord.funding_notify_number
             });
+            // var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
+            //     sPath = oEvent.getSource().getBindingContext("list").getPath(),
+            //     oRecord = this.getModel("list").getProperty(sPath);
+            
+            // this.getRouter().navTo("mainObject", {
+            //     layout: oNextUIState.layout,
+            //     tenantId: oRecord.tenant_id,
+            //     fundingNotifyNumber: oRecord.funding_notify_number
+            // });
 
-            if (oNextUIState.layout === 'TwoColumnsMidExpanded') {
-                this.getView().getModel('mainListView').setProperty("/FsFundingNotify", false);
-            }
+            // if (oNextUIState.layout === 'TwoColumnsMidExpanded') {
+            //     this.getView().getModel('mainListView').setProperty("/FsFundingNotify", false);
+            // }
 
-            var oItem = oEvent.getSource();
-            oItem.setNavigated(true);
-            var oParent = oItem.getParent();
-            // store index of the item clicked, which can be used later in the columnResize event
-            this.iIndex = oParent.indexOfItem(oItem);
+            // var oItem = oEvent.getSource();
+            // oItem.setNavigated(true);
+            // var oParent = oItem.getParent();
+            // // store index of the item clicked, which can be used later in the columnResize event
+            // this.iIndex = oParent.indexOfItem(oItem);
         },
 
         /* =========================================================== */
@@ -194,11 +203,12 @@ sap.ui.define([
                 oModel = this.getModel("list");
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
-            oModel.read("/FsFundingNotify", {
+            
+            oModel.read("/SfFundingNotify", {
                 filters: aSearchFilters,
                 success: function (oData) {
                     oView.setBusy(false);
-                }
+                }                
             });
         },
 
@@ -207,9 +217,11 @@ sap.ui.define([
             if (!!(sTitle = this.byId("searchTitle").getValue())) {
                 aSearchFilters.push(new Filter({
                     filters: [
-                        new Filter("funding_notify_title", FilterOperator.Contains, sTitle)
+                        new Filter("funding_notify_title", FilterOperator.EQ, sTitle)
                     ]
                 }));
+
+                //aSearchFilters.push(new Filter())
             }
             return aSearchFilters;
         },

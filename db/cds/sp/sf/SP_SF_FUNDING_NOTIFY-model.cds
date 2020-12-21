@@ -5,7 +5,7 @@ using util from '../../cm/util/util-model';
 
 entity Sf_Funding_Notify {
     key tenant_id                 : String(5) not null   @title : '테넌트ID';
-    key funding_notify_number     : String(8) not null   @title : '자금지원공고번호';
+    key funding_notify_number     : String(10) not null  @title : '자금지원공고번호';
         funding_notify_title      : String(100) not null @title : '자금지원공고제목';
         funding_notify_start_date : Date not null        @title : '자금지원공고시작일자';
         funding_notify_end_date   : Date not null        @title : '자금지원공고종료일자';
