@@ -812,9 +812,9 @@ sap.ui.define([
                     onClose: function (sButton) {
                         if (sButton === MessageBox.Action.OK) {
                             oSelected.forEach(function (idx) {
-                                console.log(lModel.getData().ApprovalMasters[idx]);
-                                console.log(lModel.getData().ApprovalMasters[idx].__entity);
-                                oModel.remove(lModel.getData().ApprovalMasters[idx].__entity, {
+                                console.log(lModel.getData().Approvals[idx]);
+                                console.log(lModel.getData().Approvals[idx].__entity);
+                                oModel.remove(lModel.getData().Approvals[idx].__entity, {
                                     groupId: "delete"
                                 });
                             });
@@ -1063,7 +1063,7 @@ sap.ui.define([
 
 				// binding information for the rows aggregation
 				rows : {
-					path : "/ApprovalMasters"
+					path : "/Approvals"
 				},
 
 				// column definitions with column name and binding info for the content
@@ -1120,19 +1120,19 @@ sap.ui.define([
         },
         onExportPress: function (_oEvent) {
             var sTableId = _oEvent.getSource().getParent().getParent().getId();
-            console.log(sTableId);
             if (!sTableId) { return; }
 
             var oTable = this.byId(sTableId);
-            var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
-            //var oData = this.getModel("list").getProperty("/Message"); //binded Data
-            console.log(sFileName);
-            var oData = oTable.getModel().getProperty("/ApprovalMasters");
+                        //var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
+            var sFileName = "MOLD APPROVAL LIST"; //file name to exporting
+            var oData = oTable.getModel("list").getProperty("/Approvals");
+            console.log(oData);
             ExcelUtil.fnExportExcel({
                 fileName: sFileName || "SpreadSheet",
                 table: oTable,
                 data: oData
             });
+
         },
         onImportChange: function (_oEvent) {
             var oTable = _oEvent.getSource().getParent().getParent();
@@ -1145,7 +1145,7 @@ sap.ui.define([
                 file: _oEvent.getParameter("files") && _oEvent.getParameter("files")[0],
                 model: oExcelModel,
                 success: function () {
-                    var aTableData = oModel.getProperty("/ApprovalMasters") || [],
+                    var aTableData = oModel.getProperty("/Approvals") || [],
                         aCols = oTable.getColumns(),
                         oExcelData = this.model.getData();
 
@@ -1170,7 +1170,7 @@ sap.ui.define([
                             });
                             aTableData.push(newObj);
                         });
-                        oModel.setProperty("/ApprovalMasters", aTableData);
+                        oModel.setProperty("/Approvals", aTableData);
                     }
                 }
             });

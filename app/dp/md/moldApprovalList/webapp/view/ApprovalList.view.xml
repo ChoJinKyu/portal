@@ -272,7 +272,7 @@
                             <Button id="mainTableCreateButton" text="{path:'I18N>/CREATE', formatter:'I18NFormatter'}" type="Emphasized" press=".onDialogCreate" />
                             <Button id="mainTableDeleteButton" text="{path:'I18N>/DELETE', formatter:'I18NFormatter'}"  type="Transparent" press=".onApplovalDeletePress" />
                             <ToolbarSeparator/>
-                            <Button icon="sap-icon://excel-attachment" press=".onDataExport" >
+                            <Button icon="sap-icon://excel-attachment" press=".onExportPress" >
                                 <layoutData>
                                     <OverflowToolbarLayoutData priority="NeverOverflow" />
                                 </layoutData>
