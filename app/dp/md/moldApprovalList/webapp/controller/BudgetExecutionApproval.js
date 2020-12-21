@@ -120,13 +120,13 @@ sap.ui.define([
 		 */
         onBudgetExecutionAddPress: function (oEvent) {
             console.log("oEvent>>>>");
-            var oModel = this.oThis.getModel("appDetail");
+            var oModel = this.oThis.getModel("mdItemMaster");
 
-            console.log(" appDetail >>>> ", oModel);
+            console.log(" mdItemMaster >>>> ", oModel);
 
             var mIdArr = [];
-            if (oModel.oData.ApprovalDetails != undefined && oModel.oData.ApprovalDetails.length > 0) {
-                oModel.oData.ApprovalDetails.forEach(function (item) {
+            if (oModel.oData.ItemBudgetExecution != undefined && oModel.oData.ItemBudgetExecution.length > 0) {
+                oModel.oData.ItemBudgetExecution.forEach(function (item) {
                     mIdArr.push(item.mold_id);
                 });
             }
@@ -134,7 +134,7 @@ sap.ui.define([
             var oArgs = {
                 company_code: this.oThis.getModel('appMaster').oData.company_code,
                 org_code: this.oThis.getModel('appMaster').oData.org_code,
-                // mold_progress_status_code : 'DEV_RCV' ,
+                mold_progress_status_code : 'DEV_RCV' ,
                 mold_id_arr: mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
             }
 
