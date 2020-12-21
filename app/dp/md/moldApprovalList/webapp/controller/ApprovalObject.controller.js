@@ -253,10 +253,14 @@ sap.ui.define([
             var oPageSection = this.byId("pageSection");
             oPageSection.removeAllBlocks();
 
-            this._loadFragment(fragmentName, function (oFragment) {
-                oPageSection.addBlock(oFragment);
-            }.bind(this))
-
+            if(this.approval_type_code == "B"){
+               this.budget.openFragmentApproval(this);
+            }else{
+                this._loadFragment(fragmentName, function (oFragment) {
+                    oPageSection.addBlock(oFragment);
+                }.bind(this))
+            }
+           
         },
 
         _onRoutedThisPage: function (approvalNumber) {

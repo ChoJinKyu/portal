@@ -58,6 +58,9 @@ sap.ui.define([
 
         openFragmentApproval: function (oThis) {
             this.oThis = oThis;
+
+            console.log("oThis >>> " , this.oThis);
+
             var schFilter = [];
             this.oThis.getView().setModel(new ManagedListModel(), "mdItemMaster");
             if (this.oThis.approval_number == "New") {
@@ -67,7 +70,7 @@ sap.ui.define([
                     , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
                 ];
 
-                this._bindView("/ItemBudgetExecution", "mdItemMaster", schFilter, function (oData) {
+                this._bindView2("/ItemBudgetExecution", "mdItemMaster", schFilter, function (oData) {
                     console.log("ItemBudgetExecution >>>>>>", oData);
                 });
             }
@@ -78,7 +81,8 @@ sap.ui.define([
             })
         },
 
-        _bindView: function (sObjectPath, sModel, aFilter, callback) {
+        _bindView2 : function (sObjectPath, sModel, aFilter, callback) { 
+            console.log(" 호출 됐나??? ");
             var oView = this.oThis.getView(),
                 oModel = this.oThis.getModel(sModel);
             oView.setBusy(true);
