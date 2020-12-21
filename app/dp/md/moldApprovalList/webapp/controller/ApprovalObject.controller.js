@@ -19,23 +19,29 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/richtexteditor/RichTextEditor",
+    "dp/md/BudgetExecutionApproval",
+    "dp/md/PurchaseOrderItemLocal",
     "dp/md/util/controller/MoldItemSelection"
 ], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
-    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, MoldItemSelection
+    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, BudgetExecutionApproval, PurchaseOrderItemLocal, MoldItemSelection
 ) {
     "use strict";
 
     var oTransactionManager;
     var oRichTextEditor;
 
-    return BaseController.extend("dp.md.orderApprovalLocal.controller.ApprovalObject", {
+    return BaseController.extend("dp.md.moldApprovalList.controller.ApprovalObject", {
 
         dateFormatter: DateFormatter,
 
         validator: new Validator(),
 
         moldItemPop: new MoldItemSelection(),
+
+        budget : new BudgetExecutionApproval(),
+
+        orderLocal : new PurchaseOrderItemLocal(),
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -62,20 +68,16 @@ sap.ui.define([
 
             this.getView().setModel(new ManagedModel(), "company");
             this.getView().setModel(new ManagedModel(), "plant");
-            this.getView().setModel(new ManagedListModel(), "appType");
+            this.getView().setModel(new ManagedModel(), "appType");
 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
 
             this.getView().setModel(new ManagedModel(), "appMaster");
-            this.getView().setModel(new ManagedListModel(), "appDetail");
-            this.getView().setModel(new ManagedListModel(), "moldMaster");
             this.getView().setModel(new ManagedListModel(), "approver");
             this.getView().setModel(new ManagedListModel(), "referer");
 
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("appMaster"));
-            oTransactionManager.addDataModel(this.getModel("appDetail"));
-            oTransactionManager.addDataModel(this.getModel("moldMaster"));
             oTransactionManager.addDataModel(this.getModel("approver"));
             oTransactionManager.addDataModel(this.getModel("referer"));
 
@@ -230,15 +232,14 @@ sap.ui.define([
                 }
             });
 
-            this.appModel = this.getModel("appType");
-
-            this.appModel.addRecord({
-                "title": "Purchase Order Item",
-                "fragment_name": "PurchaseOrderItem",
-                "approver_type_code": "V"
-            }, "/AppType");
-
-            this._showFormFragment();
+            var appModel = this.getModel("appType");
+            appModel.setTransactionModel(this.getModel("util"));
+            appModel.read("/CodeDetails(tenant_id='" + this.tenant_id + "',group_code='DP_MD_APPROVAL_TYPE',code='" + this.approval_type_code + "')", {
+                filters: [],
+                success: function (oData) {
+                    this._showFormFragment(oData.parent_code);
+                }.bind(this)
+            });
 
             if (this.approval_number === "New") {
                 this._onApproverAddRow(0);
@@ -248,14 +249,21 @@ sap.ui.define([
         },
 
         _oFragments: {},
-        _showFormFragment: function () {
+        _showFormFragment: function (fragmentName) {
             var oPageSection = this.byId("pageSection");
             oPageSection.removeAllBlocks();
 
-            this._loadFragment(this.appModel.getData().AppType[0].fragment_name, function (oFragment) {
-                oPageSection.addBlock(oFragment);
-            })
-
+            if(this.approval_type_code == "B"){
+               this.budget.openFragmentApproval(this); 
+            } else if(this.approval_type_code == "V"){
+                this.orderLocal.openFragmentApproval(this);
+            }else{
+                /** 추후 공통 개발 가이드가 오면 이 함수로 호출 할 예정 */
+                this._loadFragment(fragmentName, function (oFragment) {
+                    oPageSection.addBlock(oFragment);
+                }.bind(this))
+            }
+           
         },
 
         _onRoutedThisPage: function (approvalNumber) {
@@ -266,28 +274,6 @@ sap.ui.define([
 
             this._bindView("/ApprovalMasters(tenant_id='" + this.tenant_id + "',approval_number='" + approvalNumber + "')", "appMaster", [], function (oData) {
                 this.oRichTextEditor.setValue(oData.approval_contents);
-            }.bind(this));
-
-            this._bindView("/ApprovalDetails", "appDetail", filter, function (oData) {
-                var moldIdFilter = [];
-                var moldMstFilter = [];
-
-                if (oData.results.length > 0) {
-                    oData.results.forEach(function (item) {
-                        moldIdFilter.push(new Filter("mold_id", FilterOperator.EQ, item.mold_id));
-                    });
-
-                    moldMstFilter.push(
-                        new Filter({
-                            filters: moldIdFilter,
-                            and: false
-                        })
-                    );
-
-                    this._bindView("/MoldMasters", "moldMaster", moldMstFilter, function (oData) {
-
-                    }.bind(this));
-                }
             }.bind(this));
 
             this._bindView("/Approvers", "approver", filter, function (oData) {
@@ -309,7 +295,7 @@ sap.ui.define([
             if (!this._oFragments[sFragmentName]) {
                 Fragment.load({
                     id: this.getView().getId(),
-                    name: "dp.md.orderApprovalLocal.view." + sFragmentName,
+                    name: "dp.md.moldApprovalList.view." + sFragmentName,
                     controller: this
                 }).then(function (oFragment) {
                     this._oFragments[sFragmentName] = oFragment;
@@ -379,100 +365,6 @@ sap.ui.define([
                 }
             });
         },
-
-        /** PO Item Start */
-        /**
-         * @description : Popup 창 : 품의서 PO Item 항목의 Add 버튼 클릭
-         */
-        onPoItemAddRow: function (oEvent) {
-            var oModel = this.getModel("appDetail");
-
-            var mIdArr = [];
-            if (oModel.oData.ApprovalDetails != undefined && oModel.oData.ApprovalDetails.length > 0) {
-                oModel.oData.ApprovalDetails.forEach(function (item) {
-                    mIdArr.push(item.mold_id);
-                });
-            }
-
-            var oArgs = {
-                company_code: this.company_code,
-                org_code: this.plant_code,
-                mold_progress_status_code: 'DEV_RCV',
-                mold_id_arr: mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
-            }
-            
-            this.moldItemPop.openMoldItemSelectionPop(this, oEvent, oArgs, function (oDataMold) {
-                if (oDataMold.length > 0) {
-                    oDataMold.forEach(function (item) {
-                        this._addMoldItemTable(item);
-                    }.bind(this))
-                }
-            }.bind(this));
-        },
-
-        /**
-         * @description Mold Item row 추가 
-         * @param {*} data 
-         */
-        _addMoldItemTable: function (data) {
-            var oModel = this.getModel("appDetail");
-
-            oModel.addRecord({
-                "tenant_id": this.tenant_id,
-                "approval_number": this.approval_number,
-                "mold_id": data.oData.mold_id + "",
-                "model": data.oData.model,
-                "mold_number": data.oData.mold_number,
-                "mold_sequence": data.oData.mold_sequence,
-                "spec_name": data.oData.spec_name,
-                "mold_item_type_code": data.oData.mold_item_type_code,
-                "book_currency_code": data.oData.book_currency_code,
-                "provisional_budget_amount": data.oData.provisional_budget_amount,
-                "currency_code": data.oData.currency_code,
-                "purchasing_amount": data.oData.purchasing_amount,
-                "supplier_code": data.oData.supplier_code,
-                "target_amount": data.oData.target_amount,
-                "mold_production_type_code": data.oData.mold_production_type_code,
-                "family_part_number_1": data.oData.family_part_number_1
-            }, "/ApprovalDetails", 0);
-            //this.validator.clearValueState(this.byId("poItemTable"));
-        },
-
-        /**
-         * @public 
-         * @see 사용처 Participating Supplier Fragment 취소 이벤트
-         */
-        onExit: function () {
-            this.byId("dialogMolItemSelection").close();
-        },
-
-        /**
-         * @description Purchase Order Item 의 delete 버튼 누를시 
-         */
-        onPoItemDelRow: function () {
-            var oTable = this.byId("poItemTable"),
-                oModel = this.getModel("appDetail"),
-                oSelected = oTable.getSelectedIndices().reverse();
-
-            if (oSelected.length > 0) {
-                oSelected.forEach(function (idx) {
-                    oModel.removeRecord(idx)
-                });
-
-                oTable.clearSelection();
-            } else {
-                MessageBox.error("삭제할 목록을 선택해주세요.");
-            }
-        },
-        
-        onChangePayment: function (oEvent) {
-            var oModel = this.getModel("moldMaster");
-            /*
-            approverData = verModel.getData().Approvers;*/
-            console.log();
-            console.log();
-        },
-        /** PO Item End */
 
         /**
          * @description file upload 관련 
@@ -863,9 +755,6 @@ sap.ui.define([
 
         onPageDraftButtonPress: function () {
             var oView = this.getView(),
-                mstModel = this.getModel("appMaster"),
-                dtlModel = this.getModel("appDetail"),
-                moldModel = this.getModel("moldMaster"),
                 verModel = this.getModel("approver");
 
             MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
@@ -875,34 +764,7 @@ sap.ui.define([
                     if (sButton === MessageBox.Action.OK) {
                         oView.setBusy(true);
 
-                        var appDtlData = dtlModel.getData().ApprovalDetails,
-                            approverData = verModel.getData().Approvers,
-                            moldMstData = moldModel.getData().MoldMasters;
-
-                        //oTransactionManager.addDataModel(verModel);
-
-                        for (var idx = 0; idx < appDtlData.length; idx++) {
-                            delete appDtlData[idx].model;
-                            delete appDtlData[idx].mold_number;
-                            delete appDtlData[idx].mold_sequence;
-                            delete appDtlData[idx].spec_name;
-                            delete appDtlData[idx].mold_item_type_code;
-                            delete appDtlData[idx].book_currency_code;
-                            delete appDtlData[idx].provisional_budget_amount;
-                            delete appDtlData[idx].currency_code;
-                            delete appDtlData[idx].purchasing_amount;
-                            delete appDtlData[idx].supplier_code;
-                            delete appDtlData[idx].target_amount;
-                            delete appDtlData[idx].mold_production_type_code;
-                            delete appDtlData[idx].family_part_number_1;
-                        }
-
-                        for (var mdx = 0; mdx < moldMstData.length; mdx++) {
-                            moldMstData[mdx].split_pay_flag = oView.byId("partialPayment").mProperties.selected;
-                            moldMstData[mdx].prepay_rate = oView.byId("advanced").mProperties.value;
-                            moldMstData[mdx].progresspay_rate = oView.byId("part").mProperties.value;
-                            moldMstData[mdx].rpay_rate = oView.byId("residual").mProperties.value;
-                        }
+                        var approverData = verModel.getData().Approvers;
 
                         for (var jdx = 0; jdx < approverData.length; jdx++) {
                             delete approverData[jdx].arrowUp;

@@ -62,7 +62,7 @@ sap.ui.define([
 
             this.getView().setModel(new ManagedModel(), "company");
             this.getView().setModel(new ManagedModel(), "plant");
-            this.getView().setModel(new ManagedListModel(), "appType");
+            this.getView().setModel(new ManagedModel(), "appType");
 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
 
@@ -210,9 +210,7 @@ sap.ui.define([
             this.getModel("approvalObjectView").setProperty('/editMode', this.plant_code != undefined ? true : false);
 
             var oModel = this.getModel("company");
-
             oModel.setTransactionModel(this.getModel("org"));
-
             oModel.read("/Company(tenant_id='" + this.tenant_id + "',company_code='" + this.company_code + "')", {
                 filters: [],
                 success: function (oData) {
@@ -222,7 +220,6 @@ sap.ui.define([
 
             var oModel2 = this.getModel("plant");
             oModel2.setTransactionModel(this.getModel("org"));
-
             oModel2.read("/Plant(tenant_id='" + this.tenant_id + "',company_code='" + this.company_code + "',plant_code='" + this.plant_code + "')", {
                 filters: [],
                 success: function (oData) {
@@ -230,15 +227,14 @@ sap.ui.define([
                 }
             });
 
-            this.appModel = this.getModel("appType");
-
-            this.appModel.addRecord({
-                "title": "Purchase Order Item",
-                "fragment_name": "PurchaseOrderItem",
-                "approver_type_code": "V"
-            }, "/AppType");
-
-            this._showFormFragment();
+            var appModel = this.getModel("appType");
+            appModel.setTransactionModel(this.getModel("util"));
+            appModel.read("/CodeDetails(tenant_id='" + this.tenant_id + "',group_code='DP_MD_APPROVAL_TYPE',code='" + this.approval_type_code + "')", {
+                filters: [],
+                success: function (oData) {
+                    this._showFormFragment(oData.parent_code);
+                }.bind(this)
+            });
 
             if (this.approval_number === "New") {
                 this._onApproverAddRow(0);
@@ -248,13 +244,13 @@ sap.ui.define([
         },
 
         _oFragments: {},
-        _showFormFragment: function () {
+        _showFormFragment: function (fragmentName) {
             var oPageSection = this.byId("pageSection");
             oPageSection.removeAllBlocks();
 
-            this._loadFragment(this.appModel.getData().AppType[0].fragment_name, function (oFragment) {
+            this._loadFragment(fragmentName, function (oFragment) {
                 oPageSection.addBlock(oFragment);
-            })
+            }.bind(this))
 
         },
 

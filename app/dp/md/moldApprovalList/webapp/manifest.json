@@ -60,6 +60,13 @@
                 "settings": {
                     "odataVersion": "2.0"
                 }
+            },
+             "budgetExecutionApprovalService": {
+                "uri": "srv-api/odata/v2/dp.BudgetExecutionApprovalService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
             }
         }
     },
@@ -169,6 +176,16 @@
                     "useBatch": true
                 }
             },
+            "budget": {
+                "dataSource": "budgetExecutionApprovalService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false,
+                    "useBatch": true
+                }
+            },
             "": {
                 "dataSource": "mainService",
                 "preload": true,
@@ -189,7 +206,8 @@
         },
         "resourceRoots": {
             "ext.lib": "../../../../lib",
-            "dp.md.util": "../../util"
+            "dp.md.util": "../../util",
+            "dp.md" : "controller"
         },
         "routing": {
             "config": {

@@ -145,11 +145,11 @@
 				<HBox>
 					<VBox class="sapUiSmallMargin">
 						<Label text="{I18N>/AFFILIATE}"/>
-						<ObjectStatus text="[{appMaster>/company_code}] {company>/company_name}" state="Error"/>
+						<ObjectStatus text="[{company>/company_code}] {company>/company_name}" state="Error"/>
 					</VBox>
 					<VBox class="sapUiSmallMargin">
 						<Label text="{I18N>/BUSINESS_DIVISION}"/>
-						<ObjectStatus text="[{appMaster>/org_code}] {plant>/plant_name}" state="Error"/>
+						<ObjectStatus text="[{plant>/plant_code}] {plant>/plant_name}" state="Error"/>
 					</VBox>
 				</HBox>
 			</form:content>
@@ -173,7 +173,7 @@
 				<!-- Participating Supplier Table -->
 				<table:Table id="budgetExecutionTable" 
                              selectionMode="MultiToggle" 
-                             fixedColumnCount="7" 
+                             fixedColumnCount="6" 
                              visibleRowCountMode="Auto" 
                              rows="{path:'mdItemMaster>/ItemBudgetExecution'}">
 					<table:extension>
@@ -190,13 +190,13 @@
 						</OverflowToolbar>
 					</table:extension>
 					<table:columns>
-						<table:Column id="c_mold_id" visible="true">
+						<table:Column id="c_mold_id" visible="false">
 							<Label text="mold_id"/>
 							<table:template>
 								<Text id="t_mold_id" text="{mdItemMaster>mold_id}"/>
 							</table:template>
 						</table:Column>
-						<table:Column id="c_approval_number" visible="true">
+						<table:Column id="c_approval_number" visible="false">
 							<Label text="approval_number"/>
 							<table:template>
 								<Text id="t_approval_number" text="{mdItemMaster>approval_number}"/>

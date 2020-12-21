@@ -35,7 +35,7 @@
 					<Title text="UOM Class Details" />
 				</uxap:snappedTitleOnMobile>
 				<uxap:actions>
-					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" />
+					<Button id="pageEditButton" text="{I18N>/UPDATE}" type="Emphasized" press=".onPageEditButtonPress" />
 					<!-- <Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" /> -->
 				</uxap:actions>
                 <uxap:navigationActions>
@@ -128,13 +128,13 @@
 									<Text text="S" />
 								</Column>
 								<Column id="midColumnLevelCode" minScreenWidth="Tablet" hAlign="Center" importance="High">
-									<Text text="Language" />
+									<Text text="{I18N>/LANGUAGE}" />
 								</Column>
 								<Column id="midColumnLevelValue" minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="Class Text" />
+									<Text text="{I18N>/UOM_CLASS_NAME}" />
 								</Column>
 								<Column id="midColumnValue" minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="Description" />
+									<Text text="{I18N>/UOM_CLASS_DESC}" />
 								</Column>
 							</columns>
 							<items>
@@ -164,8 +164,8 @@
                     ariaHasPopup="Dialog"
                     press=".onMessagePopoverPress" />				
 				<ToolbarSpacer />
-				<Button type="Emphasized" text="Save" press=".onPageSaveButtonPress" />
-				<Button type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
+				<Button type="Emphasized" text="{I18N>/SAVE}" press=".onPageSaveButtonPress" />
+				<Button type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress"/>
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

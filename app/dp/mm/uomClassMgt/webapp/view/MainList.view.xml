@@ -98,7 +98,7 @@
                             <ToolbarSpacer/>
                             <SearchField id="mainTableSearchField" placeholder="Class" width="10rem" search=".onMainTableFilterPress" />
                             <Button id="mainTableAddButton" text="{I18N>/NEW}" type="Transparent" press=".onMainTableAddButtonPress" />
-                            <Button id="rTableExportButton" text="Export" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
+                            <Button id="rTableExportButton" text="{I18N>/EXCEL}" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                                 <layoutData>
@@ -109,16 +109,16 @@
                     </headerToolbar>
                     <columns>
                         <Column id="mainColumnClass" minScreenWidth="Tablet" hAlign="Center">
-                            <Text text="Class" />
+                            <Text text="{I18N>/UOM_CLASS_CODE}" />
                         </Column>
                         <Column id="mainColumnText" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="Class Text" />
+                            <Text text="{I18N>/UOM_CLASS_NAME}" />
                         </Column>
                         <Column id="mainColumnBaseUom" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
-                            <Text text="Base UOM" />
+                            <Text text="{I18N>/BASE_UOM_CODE}" />
                         </Column>
                         <Column id="mainColumnBaseUomText" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
-                            <Text text="Base UOM Text" />
+                            <Text text="{I18N>/BASE_UOM_NAME}" />
                         </Column>                        
                     </columns>
                     <items>
@@ -154,8 +154,8 @@
         <f:footer>
             <OverflowToolbar>
                 <ToolbarSpacer />
-				<Button text="Save" type="Emphasized" press=".onPageSaveButtonPress" />
-				<Button text="Cancel" type="Transparent" press=".onPageCancelEditButtonPress"/>
+				<!-- <Button text="Save" type="Emphasized" press=".onPageSaveButtonPress" />
+				<Button text="Cancel" type="Transparent" press=".onPageCancelEditButtonPress"/> -->
             </OverflowToolbar>
         </f:footer>
     </f:DynamicPage>
