@@ -1,0 +1,16 @@
+{
+  "resources.json": 1608046277028,
+  "Component.js": 1605000348000,
+  "model/models.js": 1605000348000,
+  "controller/purOrgMgr.controller.js": 1605000348000,
+  "manifest.json": 1608046277026,
+  "manifest-bundle.zip": 1608046276827,
+  "Component-preload.js": 1608046276998,
+  "Component-dbg.js": 1605000348000,
+  "controller/purOrgMgr-dbg.controller.js": 1605000348000,
+  "model/models-dbg.js": 1605000348000,
+  "i18n/i18n.properties": 1605000348000,
+  "view/purOrgMgr.view.xml": 1605000348000,
+  "css/style.css": 1605000348000,
+  "index.html": 1605000348000
+}

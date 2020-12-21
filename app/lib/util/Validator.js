@@ -198,6 +198,9 @@ sap.ui.define([
                 // catch any validation errors
                 isValid = false;
                 this._setValueState(oControl, ValueState.Error, ex.message);
+                setTimeout(function(){
+                    this._setValueState(oControl, ValueState.Error, ex.message);
+                }.bind(this), 10);
             }
         }
         return isValid;
@@ -213,7 +216,7 @@ sap.ui.define([
         var sLabel,
             eMessageType = MessageType.Error;
 
-        if (sMessage === undefined) sMessage = this._i18n.getText("/ECM0203"); // Default message
+        if (sMessage === undefined || sMessage === null) sMessage = this._i18n.getText("/ECM0203"); // Default message
 
         switch (oControl.getMetadata().getName()) {
             case "sap.m.CheckBox":

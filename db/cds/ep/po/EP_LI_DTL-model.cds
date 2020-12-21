@@ -43,12 +43,12 @@ entity Li_Dtl {
 
         quotation_number                : Decimal;
         quotation_item_number           : Decimal;
-        contract_number                 : String(50);
-        contract_item_number            : String(10);
-        purchasing_approval_number      : String(50);
-        purchasing_approval_item_number : String(50);
-        po_number                       : String(50);
-        po_item_number                  : String(10);
+        // contract_number                 : String(50);
+        // contract_item_number            : String(10);
+        // purchasing_approval_number      : String(50);
+        // purchasing_approval_item_number : String(50);
+        // po_number                       : String(50);
+        // po_item_number                  : String(10);
         supplier_opinion                : String(3000);
         remark                          : String(3000);
 }
