@@ -53,6 +53,7 @@ service UomMgtService {
     left outer join uomLng.Mm_Unit_Of_Measure_Lng l
     on l.tenant_id = u.tenant_id
       and l.uom_code = u.uom_code
+      and l.language_code = 'EN'
     ;
 
 }
