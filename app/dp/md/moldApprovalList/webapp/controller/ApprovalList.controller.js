@@ -135,8 +135,8 @@ sap.ui.define([
 
             this.getView().setModel(this.getOwnerComponent().getModel());
 
-            this.setDivision('LGEKR');
-            
+            this.setPlant('LGEKR');
+
             /** Date */
             var today = new Date();
 
