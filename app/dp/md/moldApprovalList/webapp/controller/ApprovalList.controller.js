@@ -901,7 +901,7 @@ sap.ui.define([
                 var _tempFilters = [];
 
                 sCategory.forEach(function (item, idx, arr) {
-                    _tempFilters.push(new Filter("approval_type_code", FilterOperator.EQ, item.mProperties.key));
+                    _tempFilters.push(new Filter("approval_type_code", FilterOperator.EQ, item));
                 });
 
                 aSearchFilters.push(
