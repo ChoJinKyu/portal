@@ -224,7 +224,7 @@ sap.ui.define([
             if (oArgs.approval_number) {
                 this._onRoutedThisPage(oArgs);
                  var oPageSubSection2 = this.byId("pageChange");
-             this._loadFragment("BudgetExecution", function(oFragment){
+             this._loadFragment("BudgetExecutionApproval", function(oFragment){
                  oPageSubSection2.addBlock(oFragment);   
               }) 
             } else {
@@ -425,9 +425,9 @@ sap.ui.define([
          * @description Participating Supplier 의 delete 버튼 누를시 
          */
         onPsDelRow: function () {
-            var psTable = this.byId("psTable")
+            var budgetExecutionTable = this.byId("budgetExecutionTable")
                 , psModel = this.getModel("appDetail")
-                , oSelected = psTable.getSelectedIndices();
+                , oSelected = budgetExecutionTable.getSelectedIndices();
                
                 ;
             if (oSelected.length > 0) {
@@ -435,7 +435,7 @@ sap.ui.define([
                     psModel.removeRecord(idx)
                   //  psModel.markRemoved(idx)
                 });
-                psTable.clearSelection();
+                budgetExecutionTable.clearSelection();
 
                  console.log("psModel" ,  psModel);
             } else {
@@ -554,7 +554,7 @@ sap.ui.define([
              var oArgs = {
                 company_code : this.getModel('appMaster').oData.company_code , 
                 org_code : this.getModel('appMaster').oData.org_code,
-              //  mold_progress_status_code : 'DEV_RCV' ,
+                mold_progress_status_code : 'DEV_RCV' ,
                 mold_id_arr : mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
             }
 			
@@ -564,7 +564,7 @@ sap.ui.define([
                 console.log("selected data list >>>> ", oDataMold); 
                  if(oDataMold.length > 0){
                      oDataMold.forEach(function(item){
-                         that._addPsTable(item); 
+                         that._addbudgetExecutionTable(item); 
                     })
                 }
              });
@@ -574,9 +574,9 @@ sap.ui.define([
          * @description participating row 추가 
          * @param {*} data 
          */
-        _addPsTable: function (data) {
-            var oTable = this.byId("psTable"),
-                oModel = this.getModel("appDetail"),
+        _addbudgetExecutionTable: function (data) {
+            var oTable = this.byId("budgetExecutionTable"),
+                oModel = this.getModel("mdItemMaster"),
                 mstModel = this.getModel("appMaster");
             ;
             /** add record 시 저장할 model 과 다른 컬럼이 있을 경우 submit 안됨 */
@@ -585,18 +585,18 @@ sap.ui.define([
                 "tenant_id": "L1100",
                 "mold_id": String(data.oData.mold_id),
                 "approval_number": approval_number,
-                /*  "model": data.oData.model,
-                  "mold_number": data.oData.mold_number,
-                  "mold_sequence": data.oData.mold_sequence,
-                  "spec_name": data.oData.spec_name,
-                  "mold_item_type_code": data.oData.mold_item_type_code,
-                  "book_currency_code": data.oData.book_currency_code,
-                  "budget_amount": data.oData.budget_amount,
-                  "mold_production_type_code": "",
-                  "asset_type_code": "",
-                  "family_part_number_1": "",
-                  "budget_exrate_date": "",
-                  "inspection_date": "",  */
+                "model": data.oData.model,
+                "mold_number": data.oData.mold_number,
+                "mold_sequence": data.oData.mold_sequence,
+                "spec_name": data.oData.spec_name,
+                "mold_item_type_code": data.oData.mold_item_type_code,
+                "book_currency_code": data.oData.book_currency_code,
+                "budget_amount": data.oData.budget_amount,
+                "mold_production_type_code":  data.oData.mold_production_type_code,
+                "asset_type_code": data.oData.asset_type_code,
+                "family_part_number_1": data.oData.family_part_number_1,
+                "budget_exrate_date": "",
+                "inspection_date": "",  
                 "local_create_dtm": new Date(),
                 "local_update_dtm": new Date()
             }, "/ApprovalDetails", 0);
