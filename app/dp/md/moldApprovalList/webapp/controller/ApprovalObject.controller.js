@@ -254,8 +254,11 @@ sap.ui.define([
             oPageSection.removeAllBlocks();
 
             if(this.approval_type_code == "B"){
-               this.budget.openFragmentApproval(this);
+               this.budget.openFragmentApproval(this); 
+            } else if(this.approval_type_code == "V"){
+                this.orderLocal.openFragmentApproval(this);
             }else{
+                /** 추후 공통 개발 가이드가 오면 이 함수로 호출 할 예정 */
                 this._loadFragment(fragmentName, function (oFragment) {
                     oPageSection.addBlock(oFragment);
                 }.bind(this))
