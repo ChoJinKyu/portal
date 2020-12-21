@@ -19,10 +19,10 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/richtexteditor/RichTextEditor",
-    //"dp/util/controller/MoldItemSelection"
+    "dp/util/controller/MoldItemSelection"
 ], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
-    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor//, MoldItemSelection
+    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, MoldItemSelection
 ) {
     "use strict";
 
@@ -35,7 +35,7 @@ sap.ui.define([
 
         validator: new Validator(),
 
-        //moldItemPop: new MoldItemSelection(),
+        moldItemPop: new MoldItemSelection(),
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -400,14 +400,14 @@ sap.ui.define([
                 mold_progress_status_code: 'DEV_RCV',
                 mold_id_arr: mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
             }
-            /*
+            
             this.moldItemPop.openMoldItemSelectionPop(this, oEvent, oArgs, function (oDataMold) {
                 if (oDataMold.length > 0) {
                     oDataMold.forEach(function (item) {
                         this._addMoldItemTable(item);
                     }.bind(this))
                 }
-            }.bind(this));*/
+            }.bind(this));
         },
 
         /**

@@ -44,14 +44,7 @@ sap.ui.define([
     var path = '';
 
     return BaseController.extend("dp.md.moldApprovalList.controller.ApprovalList", {
-        oRequestorModel: new ODataModel({
-            serviceUrl: "srv-api/odata/v2/dp.MoldApprovalListService/",
-            defaultBindingMode: "OneWay",
-            defaultCountMode: "Inline",
-            refreshAfterChange: false,
-            useBatch: true
-        }),
-
+        
         dateFormatter: DateFormatter,
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -260,9 +253,13 @@ sap.ui.define([
             var sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
             console.log("oRecord >>>  ", oRecord);
+           
             var that = this;
-            that.getRouter().navTo("pssaObject", {
-
+            that.getRouter().navTo("approvalObject", {
+                company_code: oRecord.company_code
+                , plant_code: oRecord.org_code
+                , approval_type_code: "V"
+                , approval_number: oRecord.approval_number
             });
             // if (oRecord.mold_id % 3 == 0) {
             //     that.getRouter().navTo("pssaCreateObject", {
@@ -692,26 +689,52 @@ sap.ui.define([
 
             var id = toggleButtonId.split('--')[2];
             var page = ""
+            var appTypeCode = "";
             console.log(id);
-            if (id != "") {
-                if (id == "localBudget") {
-                    page = "beaCreateObject"
-                } else if (id == "supplierSelection") {
-                    page = "pssaCreateObject"
-                }
+
+            if(id.indexOf("localBudget") > -1){
+                appTypeCode ="B"
+            }else if(id.indexOf("supplierSelection") > -1){
+                appTypeCode ="E"
+            }else if(id.indexOf("localOrder") > -1){
+               appTypeCode ="V" 
+            }else if(id.indexOf("receipt") > -1){
+                appTypeCode ="I"
+            }else if(id.indexOf("export") > -1){
+                appTypeCode ="X"
             }
-            console.log("page >>>", page);
+            // else if(id.indexOf("importBudget") > -1){
+            //     appTypeCode ="E"
+            // }else if(id.indexOf("importOrder") > -1){
+            //     appTypeCode ="E"
+            // }else if(id.indexOf("importCompletion") > -1){
+            //     appTypeCode ="E"
+            // }else if(id.indexOf("repModCompletion") > -1){
+            //     appTypeCode ="E"
+            // }else if(id.indexOf("otherIn") > -1){
+            //     appTypeCode ="E"
+            // }else if(id.indexOf("otherOut") > -1){
+            //     appTypeCode ="E"
+            // }else if(id.indexOf("prodSupplierAmend") > -1){
+            //     appTypeCode ="E"
+            // }else if(id.indexOf("itemCancel") > -1){
+            //     appTypeCode ="E"
+            // }
+           
+
 
             var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
             for (var i = 0; i < groupId.length; i++) {
                 if (groupId[i].getPressed() == true) {
                     console.log(groupId[i].mProperties.text);
+                    console.log(appTypeCode);
                     console.log(this.byId("searchCompanyF").getValue());
                     console.log(this.byId("searchPlantF").getValue());
-                    this.getRouter().navTo(page, {
-                        company: this.byId("searchCompanyF").getValue()
-                        , plant: this.byId("searchPlantF").getValue()
-                        ,
+                    this.getRouter().navTo("approvalObject", {
+                        company_code: this.byId("searchCompanyF").getSelectedKey()
+                        , plant_code: this.byId("searchPlantF").getSelectedKey()
+                        , approval_type_code: appTypeCode
+                        , approval_number: "New"
                     });
                 }
             }
