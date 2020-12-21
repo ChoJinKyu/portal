@@ -180,13 +180,13 @@
 						<OverflowToolbar>
 							<ToolbarSpacer/>
 							<!-- Add the Personalization button -->
-							    <Button id="btnBeaAdd" type="Transparent" text="{I18N>/ROW_ADD}" press=".onMoldItemPopPress">
+							    <Button id="btnBeaAdd" type="Transparent" text="{I18N>/ROW_ADD}" press=".onBudgetExecutionAddPress">
 								<!-- Add -->
 								<customData>
 									<core:CustomData key="multi" value="true"/>
 								</customData>
 							</Button>
-							<Button id="btnPsDelete" type="Transparent" text="{I18N>/ROW_DELETE}" press=".onPsDelRow"/>
+							<Button id="btnBeaDelete" type="Transparent" text="{I18N>/ROW_DELETE}" press=".onBudgetExecutionDelRow"/>
 						</OverflowToolbar>
 					</table:extension>
 					<table:columns>
