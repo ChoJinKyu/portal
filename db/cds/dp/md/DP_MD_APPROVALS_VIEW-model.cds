@@ -1,5 +1,6 @@
 namespace dp;
 
+@cds.persistence.exists
 entity Md_Approvals_View {
 
     key approval_number : String(50)  not null  @title:'품의번호';
