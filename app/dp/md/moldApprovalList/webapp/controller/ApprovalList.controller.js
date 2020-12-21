@@ -565,7 +565,7 @@ sap.ui.define([
             this._filterTable(new Filter({
                 filters: aFilters,
                 and: true
-            // 필터 버튼 visible false 처리.
+            // 필터 버튼 visible false 처리..
             var searchFilterBtn = this.getView().getControlsByFieldGroupId("listFilterBar")[7];
             searchFilterBtn.setVisible(false);        _filterTable: function (oFilter) {
             var oValueHelpDialog = this._oValueHelpDialog;
