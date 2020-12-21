@@ -20,9 +20,6 @@ service MoldApprovalListService {
     entity ApprovalMasters as projection on approvalMst.Approval_Mst;
     entity ApprovalDetails as projection on approvalDtl.Md_Approval_Dtl;
     
-
-    view Approvals as
-    select 
         key a.approval_number
         ,key a.tenant_id
         ,a.approval_type_code
