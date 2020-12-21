@@ -56,8 +56,6 @@ public class SampleMgr implements EventHandler {
     public void onSampleViewUpdate(CdsUpdateEventContext context) { 
 
         List<SampleViewCud> v_results = new ArrayList<SampleViewCud>();
-        
-
 
         List<Map<String, Object>> entries = context.getCqn().entries();
         

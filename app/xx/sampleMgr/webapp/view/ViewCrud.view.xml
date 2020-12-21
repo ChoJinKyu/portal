@@ -10,6 +10,8 @@
         growingThreshold="30"
         items="{path : 'viewList>/SampleViewCud'}" 
         width="auto"
+        mode="MultiSelect"
+        width="auto"
     >
         <headerToolbar>
             <OverflowToolbar>
@@ -18,6 +20,7 @@
                         <ToolbarSpacer/>
                         <Button id="btnSearch" text="Search" press="onSearch"></Button>
                         <Button id="btnAdd" text="Add" press="onCreate" tooltip="추가"></Button>
+                        <Button id="btnDelete" text="Delete" press="onDelete" tooltip="삭제"></Button>
                         <Button id="btnSave" text="Save" press="onSave" tooltip="저장"></Button>
                 </content>
             </OverflowToolbar>

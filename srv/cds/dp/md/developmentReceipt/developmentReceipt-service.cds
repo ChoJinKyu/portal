@@ -8,8 +8,7 @@ namespace dp;
 @path : '/dp.DevelopmentReceiptService'
 service DevelopmentReceiptService {
 
-    entity MoldMasters as projection on moldMst.Md_Mst;
-    //entity MoldMasters as projection on moldMstView.Md_Mst_View;
+    entity MoldMasters as projection on moldMstView.Md_Mst_View;
     
     view Divisions as
     select key a.tenant_id       

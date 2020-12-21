@@ -16,7 +16,7 @@
                     <form:content>
                         <VBox>
                             <Label text="Multi Combo: " required="true"></Label>
-                            <MultiComboBox width="350px"
+                            <MultiComboBox id="multiCombo" width="350px"
                                 items="{
                                     path: 'common>/CodeDetails',
                                     filters: [
@@ -34,37 +34,37 @@
                         </VBox>
                         <VBox>
                             <Label text="Masked Number: "></Label>
-                            <MaskInput mask="999999" placeholderSymbol="_" width="100%"
+                            <MaskInput id="maskedNumber" mask="999999" placeholderSymbol="_" width="100%"
                                 placeholder="Enter a six digit number"/>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Required: " required="true"></Label>
-                            <Input required="true" placeholder="Required"></Input>
+                            <Label text="Required Input: " required="true"></Label>
+                            <Input id="requiredInput" required="true" placeholder="Required"></Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="100 to 999: "></Label>
-                            <Input type="Number" value="{
-                                    path: 'form>/number',
+                            <Input id="number100to999Input" type="Number" value="{
+                                    path: 'form>/number1',
                                     type: 'sap.ui.model.type.Integer',
                                     constraints: {
                                         minimum: '100',
                                         maximum: '999'
                                     }
-                                }" required="true" placeholder="Enter 100 to 999 digit number"/>
+                                }" placeholder="Enter 100 to 999 digit number"/>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="Currency: "></Label>
-                            <Input type="Number" value="{
-                                    path: 'form>/number',
+                            <Input id="currencyInput" type="Number" value="{
+                                    path: 'form>/number2',
                                     type: 'sap.ui.model.type.Integer',
                                     constraints: {
                                         minimum: '100',
@@ -77,7 +77,7 @@
                         </VBox>
                         <VBox>
                             <Label text="RegEx Search: "></Label>
-                            <Input value="{
+                            <Input id="emailInput" value="{
                                     path: 'form>/email',
                                     type: 'sap.ui.model.type.String',
                                     constraints: {

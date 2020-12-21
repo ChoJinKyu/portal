@@ -44,6 +44,14 @@ sap.ui.define([
                 }, 0);
             },
 
+            onDelete: function() {
+                var oTable = this.byId("sampleViewList");
+                var oModel = this.getModel("viewList");
+                oTable.getSelectedIndices().reverse().forEach(function (idx) {
+                    oModel.markRemoved(idx);
+                });
+            },
+
 
             onSave: function() {
                 var oModel = this.getModel("viewList");
