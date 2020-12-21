@@ -8,15 +8,15 @@
 		<!-- <core:Title text="Normal" /> -->
         <!-- <Label text="Class" required="true"/>
         <Text text="{master>/uom_class_code}"/> -->
-		<Label text="Class Text" required="true"/>
+		<Label text="{I18N>/UOM_CLASS_NAME}" required="true"/>
         <Text text="{master>/uom_class_name}"/>		
-		<Label text="Base UOM"/>
+		<Label text="{I18N>/BASE_UOM_CODE}"/>
         <Text text="{master>/base_uom_code}"/>
-		<Label text="Base UOM Text"/>
+		<Label text="{I18N>/BASE_UOM_NAME}"/>
         <Text text="{master>/base_uom_name}"/>
-        <Label text="Description"/>
+        <Label text="{I18N>/UOM_CLASS_DESC}"/>
         <Text text="{master>/uom_class_desc}"/>
-        <Label text="Disable Date"/>
+        <Label text="{I18N>/DISABLE_DATE}"/>
         <Text text="{path: 'master>/disable_date',formatter: '.dateFormatter.toDateString'}"/>
         
 	</form:SimpleForm>

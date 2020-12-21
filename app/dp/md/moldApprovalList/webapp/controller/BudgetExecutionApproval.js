@@ -59,25 +59,23 @@ sap.ui.define([
         openFragmentApproval : function (oThis){ 
             this.oThis = oThis; 
             var schFilter = [];
-            if(this.oThis.approval_number == "New"){
-
-            }else{
-                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.oThis.approval_number)
-                , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
-            ]; 
-            }
-
             this.oThis.getView().setModel(new ManagedListModel(), "mdItemMaster");
-            console.log("ItemBudgetExecution >>>>>> 1 ");
-          /*  this.oThis._bindView("/ItemBudgetExecution", "mdItemMaster", schFilter, function (oData) {
-                console.log("ItemBudgetExecution >>>>>>", oData);
-        
-            }); */
+            if (this.oThis.approval_number == "New") {
 
+            } else {
+                schFilter = [new Filter("approval_number", FilterOperator.EQ, this.oThis.approval_number)
+                    , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
+                ];
 
-            var oPageSubSection2 = this.oThis.byId("pageSection");
+                this.oThis._bindView("/ItemBudgetExecution", "mdItemMaster", schFilter, function (oData) {
+                    console.log("ItemBudgetExecution >>>>>>", oData);
+
+                });
+            }
+            
+            var oPageSubSection = this.oThis.byId("pageSection");
             this._loadFragmentBudget("BudgetExecutionApproval", function(oFragment){
-                 oPageSubSection2.addBlock(oFragment);   
+                 oPageSubSection.addBlock(oFragment);   
               }) 
         },
 

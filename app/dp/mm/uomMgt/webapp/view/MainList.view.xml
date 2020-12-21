@@ -63,7 +63,7 @@
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                     ],
-                                    serviceUrl: 'srv-api/odata/v2/dp.mm.uomMgtService/',
+                                    serviceUrl: 'srv-api/odata/v2/dp.UomMgtService/',
                                     entityName: 'Uom'
                                 }">
                                 <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a UOM"
