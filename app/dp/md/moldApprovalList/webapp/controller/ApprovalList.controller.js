@@ -976,7 +976,7 @@ sap.ui.define([
             }
 
             if (sRequestor) {
-                aSearchFilters.push(new Filter("tolower(user_id)", FilterOperator.Contains, "'" + sRequestor.toLowerCase() + "'"));
+                aSearchFilters.push(new Filter("tolower(email_id)", FilterOperator.Contains, "'" + sRequestor.toLowerCase() + "'"));
             }
 
             if (sSubject) {
