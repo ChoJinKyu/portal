@@ -9,6 +9,7 @@
     xmlns:sc="sap.suite.ui.commons" 
     xmlns:microchart="sap.suite.ui.microchart" 
     xmlns:lib-m="ext.lib.m"
+    core:require="{ I18NFormatter: 'dp/md/util/controller/I18NFormatter' }"
     height="100%">
 
     <f:DynamicPage id="page"
@@ -95,7 +96,7 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="{= ${I18N>/CONFIRM_DATE}? ${I18N>/CONFIRM_DATE}:'[CONFIRM_DATE]'}" labelFor="searchCreationDateS"></Label>
+                                <Label  text="{path:'I18N>/CONFIRM_DATE', formatter:'I18NFormatter'}" labelFor="searchCreationDateS"></Label>
                                 <DateRangeSelection id="searchCreationDateS" width="100%" change="creationDateChange"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
