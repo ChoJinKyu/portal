@@ -63,6 +63,7 @@ sap.ui.define([
             var oTable = this.byId("mainTable");
             this.byId("buttonMainAddRow").setEnabled(true);  
             this.byId("buttonMainEditRow").setEnabled(true);    
+            this.byId("buttonMainCancelRow").setEnabled(false);    
             var rowIndex = this.rowIndex;
             
             oTable.getAggregation('items')[rowIndex].getCells()[1].getItems()[0].setVisible(true);
@@ -107,6 +108,7 @@ sap.ui.define([
             this.rowIndex = 0;
 		    this.byId("buttonMainAddRow").setEnabled(false);
             this.byId("buttonMainEditRow").setEnabled(false); 
+            this.byId("buttonMainCancelRow").setEnabled(true);    
             oTable.getAggregation('items')[0].getCells()[1].getItems()[0].setVisible(false);
             oTable.getAggregation('items')[0].getCells()[1].getItems()[1].setVisible(true);
             oTable.getAggregation('items')[0].getCells()[2].getItems()[0].setVisible(false);
@@ -129,6 +131,7 @@ sap.ui.define([
 
 		    this.byId("buttonMainAddRow").setEnabled(false);
             this.byId("buttonMainEditRow").setEnabled(false);
+            this.byId("buttonMainCancelRow").setEnabled(true);  
             oTable.getAggregation('items')[idx].getCells()[1].getItems()[0].setVisible(false);
             oTable.getAggregation('items')[idx].getCells()[1].getItems()[1].setVisible(true);
             oTable.getAggregation('items')[idx].getCells()[2].getItems()[0].setVisible(false);
