@@ -44,14 +44,7 @@ sap.ui.define([
     var path = '';
 
     return BaseController.extend("dp.md.moldApprovalList.controller.ApprovalList", {
-        oRequestorModel: new ODataModel({
-            serviceUrl: "srv-api/odata/v2/dp.MoldApprovalListService/",
-            defaultBindingMode: "OneWay",
-            defaultCountMode: "Inline",
-            refreshAfterChange: false,
-            useBatch: true
-        }),
-
+        
         dateFormatter: DateFormatter,
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -260,9 +253,13 @@ sap.ui.define([
             var sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
             console.log("oRecord >>>  ", oRecord);
+           
             var that = this;
-            that.getRouter().navTo("pssaObject", {
-
+            that.getRouter().navTo("approvalObject", {
+                company_code: oRecord.company_code
+                , plant_code: oRecord.org_code
+                , approval_type_code: "V"
+                , approval_number: oRecord.approval_number
             });
             // if (oRecord.mold_id % 3 == 0) {
             //     that.getRouter().navTo("pssaCreateObject", {

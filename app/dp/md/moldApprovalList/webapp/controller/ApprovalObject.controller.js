@@ -79,6 +79,7 @@ sap.ui.define([
             oTransactionManager.addDataModel(this.getModel("approver"));
             oTransactionManager.addDataModel(this.getModel("referer"));
 
+            this.setRichEditor();
         },
 
         onAfterRendering: function () {
@@ -192,7 +193,6 @@ sap.ui.define([
         _onObjectMatched: function (oEvent) {
             var oArgs = oEvent.getParameter("arguments");
             this._createViewBindData(oArgs);
-            this.setRichEditor();
 
             this.oSF = this.getView().byId("approverSearch");
         },
