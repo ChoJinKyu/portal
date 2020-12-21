@@ -75,8 +75,7 @@ sap.ui.define([
                 intent: "#Template-display"
             }, true);
 
-            
-            
+            this._doInitSearch();
 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
@@ -113,7 +112,7 @@ sap.ui.define([
          * @see init 이후 바로 실행됨
          */
         onAfterRendering: function () {
-            this._doInitSearch();
+            
             this.getModel().setDeferredGroups(["delete"]);
             this.byId("pageSearchButton").firePress();
             return;
