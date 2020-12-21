@@ -81,7 +81,9 @@ SELECT
     ,a.scrap_date                      
     ,a.acq_date                        
     ,a.acq_amount                      
-    ,a.use_department_code             
+    ,a.use_department_code
+    ,a.receipt_confirmed_date
+    ,a.receipt_confirmed_user_empno            
 
     , b.use_material_value
     , b.inspection_flag               

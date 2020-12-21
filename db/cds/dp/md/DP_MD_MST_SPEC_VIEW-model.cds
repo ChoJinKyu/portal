@@ -88,6 +88,8 @@ entity Md_Mst_Spec_View {
         acq_date                        : String(8)             @title:'취득일자';
         acq_amount                      : Decimal(20,2)         @title:'취득금액';
         use_department_code             : String(30)            @title:'사용부서코드';
+        receipt_confirmed_date          : String(8)            @title : '입고확정일자';
+        receipt_confirmed_user_empno    : String(30)           @title : '입고확정사용자사번';
 
 
         use_material_value              : String(240)         @title : '사용재질값';
