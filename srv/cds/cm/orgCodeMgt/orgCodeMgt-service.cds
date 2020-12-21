@@ -6,7 +6,7 @@ namespace cm;
 @path : '/cm.OrgCodeMgtService'
 service OrgCodeMgtService {
 
-    entity OrgCodeMasters as projection on orgCodeMst.Org_Code_Mst;
+   /* entity OrgCodeMasters as projection on orgCodeMst.Org_Code_Mst; */
     entity OrgCodeDetails as projection on orgCodeDtl.Org_Code_Dtl;
     entity OrgCodeLanguages as projection on orgCodeLng.Org_Code_Lng;
 
