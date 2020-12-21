@@ -60,6 +60,13 @@
                 "settings": {
                     "odataVersion": "2.0"
                 }
+            },
+             "budgetExecutionApprovalService": {
+                "uri": "srv-api/odata/v2/dp.BudgetExecutionApprovalService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
             }
         }
     },
@@ -161,6 +168,16 @@
             },
             "mold": {
                 "dataSource": "moldService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false,
+                    "useBatch": true
+                }
+            },
+            "budget": {
+                "dataSource": "budgetExecutionApprovalService",
                 "preload": true,
                 "settings": {
                     "defaultBindingMode": "TwoWay",
