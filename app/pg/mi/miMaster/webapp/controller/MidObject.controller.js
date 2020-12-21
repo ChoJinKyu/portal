@@ -148,6 +148,9 @@ sap.ui.define([
 
             this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
 
+            this._Page = this.getView().byId("page");
+            this._Page.setFloatingFooter(true);
+
             console.groupEnd();
         },
 
@@ -280,7 +283,7 @@ sap.ui.define([
                     filters: omIMatListViewFilters,
                     success: function (rData, reponse) {
 
-                        console.log(sServiceUrl + " - 자재건수 :" + reponse.data.results.length);
+                        //console.log(sServiceUrl + " - 자재건수 :" + reponse.data.results.length);
 
                         itemLength = reponse.data.results.length;
 
@@ -744,7 +747,7 @@ sap.ui.define([
                 filters: andFilter,
                 success: function (rData, reponse) {
 
-                    console.log(sServiceUrl + " - Category 건수 :" + reponse.data.results.length);
+                    //console.log(sServiceUrl + " - Category 건수 :" + reponse.data.results.length);
                     if (reponse.data.results.length > 0) {
                         mICategoryView.setData(reponse.data.results);
                         that.getOwnerComponent().setModel(mICategoryView, "mICategoryView");                                         
@@ -1106,7 +1109,7 @@ sap.ui.define([
                 filters: oMIMatListViewFilters,
                 success: function (rData, reponse) {
 
-                    console.log(sServiceUrl + " - 자재건수 :" + reponse.data.results.length);
+                    //console.log(sServiceUrl + " - 자재건수 :" + reponse.data.results.length);
 
                     itemLength = reponse.data.results.length;
 

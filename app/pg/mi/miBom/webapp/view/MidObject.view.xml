@@ -89,7 +89,7 @@
                                                 <RadioButton id="radioButtonType02" text="공급업체/코드" />
                                             </RadioButtonGroup>  
                                         </FlexBox>
-                                        <Input id="input_hidden_material_code" visible="false"/>
+                                        <Input id="input_hidden_material_code" visible="false" />
                                         <Input id="input_hidden_material_desc" visible="false"/>
                                         <Input id="input_hidden_supplier_code" visible="false"/>
                                         <Input id="input_hidden_supplier_local_name" visible="false"/>
