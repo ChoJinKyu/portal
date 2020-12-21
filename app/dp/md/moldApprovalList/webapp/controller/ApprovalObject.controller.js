@@ -19,23 +19,26 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/richtexteditor/RichTextEditor",
+    "dp/md/BudgetExecutionApproval",
     "dp/md/util/controller/MoldItemSelection"
 ], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
-    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, MoldItemSelection
+    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, BudgetExecutionApproval, MoldItemSelection
 ) {
     "use strict";
 
     var oTransactionManager;
     var oRichTextEditor;
 
-    return BaseController.extend("dp.md.orderApprovalLocal.controller.ApprovalObject", {
+    return BaseController.extend("dp.md.moldApprovalList.controller.ApprovalObject", {
 
         dateFormatter: DateFormatter,
 
         validator: new Validator(),
 
         moldItemPop: new MoldItemSelection(),
+
+        budget : new BudgetExecutionApproval(),
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -248,13 +251,20 @@ sap.ui.define([
         },
 
         _oFragments: {},
-        _showFormFragment: function () {
+        _showFormFragment: function () { 
+            console.log("this.approval_type_code >> " , this.approval_type_code)
             var oPageSection = this.byId("pageSection");
             oPageSection.removeAllBlocks();
 
-            this._loadFragment(this.appModel.getData().AppType[0].fragment_name, function (oFragment) {
-                oPageSection.addBlock(oFragment);
-            })
+            if(this.approval_type_code == "B"){
+               this.budget.openFragmentApproval(this);
+
+            }else{
+                this._loadFragment(this.appModel.getData().AppType[0].fragment_name, function (oFragment) {
+                    oPageSection.addBlock(oFragment);
+                })
+            }
+           
 
         },
 
