@@ -64,7 +64,7 @@ sap.ui.define([
                 gIsMulti = false;
             }
 
-            oSuppValueHelpDialog = sap.ui.xmlfragment("dp.util.view.SupplierSelection", oThis);
+            oSuppValueHelpDialog = sap.ui.xmlfragment("dp.md.util.view.SupplierSelection", oThis);
 
             oSuppValueHelpDialog.setSupportMultiselect(gIsMulti);
             oSuppValueHelpDialog.attachOk(this.onValueHelpSuppOkPress);
