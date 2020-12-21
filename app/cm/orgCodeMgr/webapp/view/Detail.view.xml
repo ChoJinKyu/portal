@@ -26,7 +26,7 @@
         <headerTitle>
             <ObjectPageDynamicHeaderTitle>
                 <heading>
-                    <m:Title text="Code Group Detail" wrapping="true" class="sapUiSmallMarginEnd"/>
+                    <m:Title text="{I18N>/GROUP_CODE_DETAIL}" wrapping="true" class="sapUiSmallMarginEnd"/>
                 </heading>
 
                 <navigationActions>
@@ -55,7 +55,7 @@
                                 <form:content>
                                     <m:VBox>
                                         <m:Label
-                                            text="Code Group: "
+                                            text="{I18N>/GROUP_CODE}: "
                                             design="Bold"
                                             labelFor="group_code"/>
                                         <m:Text
@@ -78,7 +78,7 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="Code Group Name: "
+                                            text="{I18N>/GROUP_CODE_NAME}: "
                                             labelFor="group_name"/>
                                         <m:Text
                                             text="{viewModel>/detail/group_name}"
@@ -163,7 +163,7 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="Organization Type: "
+                                            text="{I18N>/ORG_TYPE_NAME}: "
                                             labelFor="code_conrol_org_type_code"/>
                                         <m:Text
                                             text="{
@@ -183,7 +183,7 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="Use flag: "/>
+                                            text="{I18N>/USE_FLAG}: "/>
                                         <tnt:InfoLabel 
                                             text="True" 
                                             visible="{= (${contModel>/detail/readMode} &amp;&amp; ${viewModel>/detail/use_flag}) ? true : false}"
@@ -363,13 +363,13 @@
                     <m:Button type="Emphasized" text="{I18N>/SAVE}"  press=".onSavePress"/>
                 </m:HBox>
                 <m:HBox visible="{contModel>/detail/readMode}">
-                    <m:Button type="Transparent" text="Edit" press=".onEditPress"/>
+                    <m:Button type="Transparent" text="{I18N>/UPDATE}" press=".onEditPress"/>
                     <m:Button type="Transparent" text="{I18N>/CANCEL}" press=".onCancelPress" enabled="false"/>
                     <m:Button type="Transparent" text="{I18N>/DELETE}"  press=".onDeletePress"/>
                     <m:Button type="Emphasized" text="{I18N>/SAVE}"  press=".onSavePress" enabled="false"/>
                 </m:HBox>
                 <m:HBox visible="{= !${contModel>/detail/createMode} &amp;&amp; ${contModel>/detail/editMode}}">
-                    <m:Button type="Transparent" text="Edit" press=".onEditPress" enabled="false"/>
+                    <m:Button type="Transparent" text="{I18N>/UPDATE}" press=".onEditPress" enabled="false"/>
                     <m:Button type="Transparent" text="{I18N>/CANCEL}" press=".onCancelPress"/>
                     <m:Button type="Transparent" text="{I18N>/DELETE}"  press=".onDeletePress"/>
                     <m:Button type="Emphasized" text="{I18N>/SAVE}"  press=".onSavePress"/>

@@ -27,7 +27,7 @@
 namespace dp;
 
 using {User} from '@sap/cds/common';
-using util from '../../../cm/util/util-model';
+using util from '../../cm/util/util-model';
 using {dp as Project_Master_His} from './DP_TC_PROJECT_EVENT-model';
 using {dp as Project} from './DP_TC_PROJECT-model';
 
@@ -39,7 +39,7 @@ entity Tc_Project_Event {
     key develope_event_code : String(30) not null @title : '개발이벤트코드';
         start_date          : Date                @title : '시작일자';
         end_date            : Date                @title : '종료일자';
-        sequence            : String              @title : '순서';
+        sequence            : Decimal             @title : '순서';
 
         event_ref           : Association[1..*] to dp.Tc_Project
                                   on  event_ref.tenant_id    = tenant_id

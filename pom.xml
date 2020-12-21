@@ -17,7 +17,7 @@
 		<!-- DEPENDENCIES VERSION -->
 		<jdk.version>1.8</jdk.version>
 		<cds.services.version>1.12.0</cds.services.version>
-		<spring.boot.version>2.3.1.RELEASE</spring.boot.version>
+		<spring.boot.version>2.3.3.RELEASE</spring.boot.version>
 
 		<cdsdk.version>^3.3.1</cdsdk.version>
 		<node.version>v12.16.1</node.version>
@@ -58,6 +58,13 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
 				<configuration>
+                    <excludes>
+                        <!-- <exclude>lg/sppCap/handlers/dp/**</exclude> 
+                        <exclude>lg/sppCap/handlers/ep/**</exclude> 
+                        <exclude>lg/sppCap/handlers/op/**</exclude> 
+                        <exclude>lg/sppCap/handlers/pg/**</exclude> 
+                        <exclude>lg/sppCap/handlers/sp/**</exclude>  -->
+                    </excludes>
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>
                     <encoding>UTF-8</encoding>
@@ -115,7 +122,7 @@
 						<configuration>
 							<rules>
 								<requireMavenVersion>
-									<version>3.5</version>
+									<version>3.5.0</version>
 								</requireMavenVersion>
 								<requireJavaVersion>
 									<version>${jdk.version}</version>

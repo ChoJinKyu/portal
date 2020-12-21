@@ -27,7 +27,7 @@
 namespace dp;
 
 using {User} from '@sap/cds/common';
-using util from '../../../cm/util/util-model';
+using util from '../../cm/util/util-model';
 using {dp as Project} from './DP_TC_PROJECT-model';
 using {dp as Project_Event} from './DP_TC_PROJECT_EVENT-model';
 using {dp as Project_Mcst_Ver} from './DP_TC_PROJECT_MCST_VERSION-model';
@@ -38,6 +38,7 @@ entity Tc_Project {
     key project_code            : String(30) not null @title : '프로젝트코드';
     key model_code              : String(40) not null @title : '모델코드';
         project_name            : String(100)         @title : '프로젝트명';
+        model_name              : String(100)         @title : '모델명';
         company_code            : String(10)          @title : '회사코드';
         org_type_code           : String(2)           @title : '조직유형코드';
         org_code                : String(10)          @title : '조직코드';

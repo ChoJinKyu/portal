@@ -1,6 +1,6 @@
 namespace dp;	
 using util from '../../cm/util/util-model'; 	
-// using {dp as classSpecName} from '../standardCommon/DP_SC_PART_CLASS_SPEC_NAME-model';	
+// using {dp as classSpecName} from '../sc/DP_SC_PART_CLASS_SPEC_NAME-model';	
 	
 entity Sc_Part_Class_Spec_Name {	
   key tenant_id : String(5)  not null @title: '테넌트ID' ;	

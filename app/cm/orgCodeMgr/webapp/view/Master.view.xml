@@ -13,7 +13,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="Code Management In Organization" />
+                    <Title text="{I18N>/ORG_CODE_MANAGEMENT}" />
                 </f:heading>
                 <f:snappedContent>
                 </f:snappedContent>
@@ -77,7 +77,7 @@
                         </VBox>
                         <VBox>
                             <Label
-                                text="Code Group Use Flag: "
+                                text="{I18N>/USE_FLAG}: "
                                 labelFor="search_codeGroupUseflag">
                             </Label>
                             <SegmentedButton 
@@ -120,7 +120,7 @@
                     width="auto">
                 <headerToolbar>
                     <Toolbar>
-                        <Title text="Code Group ({= (${viewModel>/OrgCodeMasters})?${viewModel>/OrgCodeMasters}.length:0})" level="H2"/>
+                        <Title text="{I18N>/GROUP_CODE} ({= (${viewModel>/OrgCodeMasters})?${viewModel>/OrgCodeMasters}.length:0})" level="H2"/>
                         <ToolbarSpacer/>
                         <Button 
                             text="Add"
@@ -149,12 +149,12 @@
                     </Column>
                     <Column
                         width="18em">
-                        <Text text="Code Group" />
+                        <Text text="{I18N>/GROUP_CODE}" />
                     </Column>
                     <Column
                         minScreenWidth="Tablet"
                         demandPopin="true">
-                        <Text text="Code Group Name" />
+                        <Text text="{I18N>/GROUP_CODE_NAME}" />
                     </Column>
                     <Column
                         minScreenWidth="Tablet"

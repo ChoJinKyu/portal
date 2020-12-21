@@ -1,0 +1,152 @@
+<core:FragmentDefinition
+    class="sapUiSizeCompact"    
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:layout="sap.ui.layout"
+    xmlns:table="sap.ui.table"
+    xmlns:form="sap.ui.layout.form"
+	width 			= "500px"
+	height			= "40%"
+    showHeader="false"    
+    displayBlock="true">
+	
+	<Dialog title="Part (자재코드)  -> Masterial_Code 사용" contentWidth="50%">
+		<content>
+            <Panel>
+            <FlexBox height="60px" alignItems="Start" justifyContent="End" class="sapUiSmallMarginTop">
+                <layout:VerticalLayout class="sapUiLargeMarginEnd">
+                    <Label text="Vendor"/>
+                   <!--수정사항 tenant_id 정해지면 사용자 세션으로 바인딩 -->
+                    <ComboBox
+                        id="comboBox_vendorView"  
+                        items="{path: '/OrgCodeView', 
+                                filters : [
+                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'}
+                                ],
+                                templateShareable:true}" 
+                        placeholder="선택 하세요.">
+                        <core:Item key="{org_code}" text="{org_name}"/>
+                    </ComboBox>
+                </layout:VerticalLayout>  
+                <layout:VerticalLayout class="sapUiLargeMarginEnd">
+                    <VBox visible="{= ${_oUiData>/radioButtonGroup} === 0 }">
+                        <Label text="자재코드"/>
+                        <!--수정사항 자재명 확인 -->
+                        <ComboBox  
+                            id="comboBox_materialView"
+                            items="{path: '/MaterialView', 
+                                    filters : [
+                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'}
+                                    ],                            
+                                    templateShareable:true}"                     
+                            placeholder="선택 하세요.">
+                            <core:Item key="{material_code}" text="{material_desc}"/>
+                        </ComboBox>
+                    </VBox>
+                    <VBox visible="{= ${_oUiData>/radioButtonGroup} === 1 }">
+                        <Label text="공급업체코드"/>
+                        <!--수정사항 tenant_id 정해지면 사용자 세션으로 바인딩 -->
+                        <ComboBox  
+                            id="comboBox_supplierView"
+                            items="{path: '/SupplierView', 
+                                    filters : [
+                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'}
+                                    ],                             
+                                    templateShareable:true}"                     
+                            placeholder="선택 하세요.">
+                            <core:Item key="{supplier_code}" text="{supplier_local_name}"/>
+                        </ComboBox>
+                    </VBox>
+                </layout:VerticalLayout> 
+                <layout:VerticalLayout class="sapUiLargeMarginEnd">
+                    <VBox visible="{= ${_oUiData>/radioButtonGroup} === 0}">
+                        <Label  text="자재명"/>
+                        <Input  id="input_material_desc"
+                                class="sapUiSmallMarginBottom" 
+                        />   
+                    </VBox>
+                    <VBox visible="{= ${_oUiData>/radioButtonGroup} === 1}">
+                        <Label text="공급업체명"/>
+                        <Input  id="input_supplier_local_name"
+                                class="sapUiSmallMarginBottom" 
+                        />  
+                    </VBox>                    
+                </layout:VerticalLayout>  
+                <layout:VerticalLayout class="sapUiTinyMarginEnd">
+                    <Label text="　"/>
+                    <Button type="Transparent" text="Search" press=".onValueHelpMaterialDialogSearch"/>
+                </layout:VerticalLayout>  
+                <layout:VerticalLayout class="sapUiTinyMarginEnd">
+                    <Label text="　"/>
+                    <Button type="Emphasized"  text="Apply" press=".onValueHelpMaterialDialogApply"/>
+                </layout:VerticalLayout>  
+            </FlexBox> 
+            </Panel>  
+            <ScrollContainer
+            width="100%"
+		    vertical="true"
+		    focusable="true"
+            > 
+            <Table  id="materialTable"
+                    items="{materialTable>/}"                    
+                    mode="SingleSelectLeft"
+                    updateFinished="onDtlUpdateFinished" 
+                    class="sapUiSmallMarginTop"
+            >
+            <layoutData>
+            </layoutData>
+                <columns>
+                    <Column hAlign="Center" >
+                        <header>
+                            <Label text="가격정보"/>                            
+                        </header>
+                    </Column>
+                    <Column hAlign="Center" >
+                        <header>
+                            <Label text="Vendor"/>                            
+                        </header>
+                    </Column>
+                    <Column hAlign="Center" >
+                        <header>
+                            <Label text="자재코드"/>                            
+                        </header>
+                    </Column>
+                    <Column hAlign="Center" >
+                        <header>
+                            <Label text="자재명"/>                            
+                        </header>
+                    </Column>
+                    <Column hAlign="Center" >
+                        <header>
+                            <Label text="공급업체"/>                            
+                        </header>
+                    </Column>    
+                    <Column hAlign="Center" >
+                        <header>
+                            <Label text="공급업체명"/>                            
+                        </header>
+                    </Column>                                                                                                 
+                </columns>
+                <items>
+                    <ColumnListItem type="Active" id="materialColumnListItem" press="onMaterialTableItemPress">
+                        <cells>
+                            <Text text="{materialTable>vendor}"/>
+                            <Text text="{materialTable>vendor_name}"/>
+                            <Text text="{materialTable>material_code}"/>
+                            <Text text="{materialTable>material_desc}"/>
+                            <Text text="{materialTable>supplier_code}"/>
+                            <Text text="{materialTable>supplier_local_name}"/>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+            </ScrollContainer> 
+		</content>
+			<beginButton>
+				<Button type="Transparent" text="Close" press="onMaterialDialog_close" />
+			</beginButton>
+	</Dialog>
+
+</core:FragmentDefinition>

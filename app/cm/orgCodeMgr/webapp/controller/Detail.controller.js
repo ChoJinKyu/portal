@@ -137,6 +137,7 @@ sap.ui.define([
                 tenantId : oTargetData.tenant_id,
                 companyCode : oTargetData.company_code,
                 groupCode : oTargetData.group_code,
+                orgCode : oTargetData.org_code,
                 code : oTargetData.code
             };
             this.getRouter().navTo("detailDetail", oNavParam);

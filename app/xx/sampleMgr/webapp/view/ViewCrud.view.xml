@@ -1,0 +1,75 @@
+<mvc:View 
+    xmlns="sap.m" 
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    controllerName="xx.sampleMgr.controller.ViewCrud"
+>
+	<Table
+        id="sampleViewList"
+        growing="true"
+        growingThreshold="30"
+        items="{path : 'viewList>/SampleViewCud'}" 
+        width="auto"
+        mode="MultiSelect"
+        width="auto"
+    >
+        <headerToolbar>
+            <OverflowToolbar>
+                <content>
+                    <Title text="Return" level="H2"/>
+                        <ToolbarSpacer/>
+                        <Button id="btnSearch" text="Search" press="onSearch"></Button>
+                        <Button id="btnAdd" text="Add" press="onCreate" tooltip="추가"></Button>
+                        <Button id="btnDelete" text="Delete" press="onDelete" tooltip="삭제"></Button>
+                        <Button id="btnSave" text="Save" press="onSave" tooltip="저장"></Button>
+                </content>
+            </OverflowToolbar>
+        </headerToolbar>
+        <columns>
+            <Column hAlign="Center">
+                <header>
+                    <Label text="Header ID"/>
+                </header>
+            </Column>
+            <Column hAlign="Center">
+                <header>
+                    <Label text="Header Code"/>
+                </header>
+            </Column>
+            <Column hAlign="Center">
+                <header>
+                    <Label text="Header Name"/>
+                </header>
+            </Column>
+            <Column hAlign="Center">
+                <header>
+                    <Label text="Detail ID"/>
+                </header>
+            </Column>
+            <Column hAlign="Center">
+                <header>
+                    <Label text="Detail Code"/>
+                </header>
+            </Column>
+            <Column hAlign="Center">
+                <header>
+                    <Label text="Detail Name"/>
+                </header>
+            </Column>
+        </columns>
+
+        <items>
+            <ColumnListItem>
+                <cells>
+                    <Input type="Text" value="{viewList>header_id}"/>
+                    <Input type="Text" value="{viewList>header_cd}"/>
+                    <Input type="Text" value="{viewList>header_name}"/>
+                    <Input type="Text" value="{viewList>detail_id}"/>
+                    <Input type="Text" value="{viewList>detail_cd}"/>
+                    <Input type="Text" value="{viewList>detail_name}"/>
+                </cells>
+            </ColumnListItem>
+        </items>
+    </Table>
+
+</mvc:View>

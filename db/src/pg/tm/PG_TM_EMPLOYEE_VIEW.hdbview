@@ -2,7 +2,10 @@ view Pg_Tm_Employee_View as
 select
 	tenant_id,
 	employee_number,
-	user_local_name||'('||user_english_name||')' as employee_name
+	user_local_name||'('||user_english_name||')' as employee_name,
+    job_title,
+    mobile_phone_number,
+    department_id
 from cm_hr_employee
 order by 
     employee_number;

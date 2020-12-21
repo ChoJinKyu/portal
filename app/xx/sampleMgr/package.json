@@ -17,8 +17,5 @@
         "dependencies": [
             "@sap/ui5-builder-webide-extension"
         ]
-    },
-    "dependencies": {
-        "@sap/approuter": "8.1.x"
     }
 }

@@ -1,0 +1,320 @@
+<mvc:View controllerName="dp.md.orderApprovalLocal.controller.PoaCreateObject" 
+  xmlns:mvc="sap.ui.core.mvc"
+    xmlns:uxap="sap.uxap"
+    xmlns:form="sap.ui.layout.form" 
+    xmlns:core="sap.ui.core" 
+    xmlns:layout="sap.ui.layout"
+    xmlns:tnt="sap.tnt"
+    xmlns:sc="sap.suite.ui.commons"
+    xmlns:si="sap.suite.ui.commons.statusindicator"
+    xmlns:u="sap.ui.unified" 
+    xmlns:table="sap.ui.table" 
+    xmlns="sap.m"
+	height="100%">
+
+	<uxap:ObjectPageLayout 
+        id="page"
+		showTitleInHeaderContent="true"
+		showEditHeaderButton="true" 
+        upperCaseAnchorBar="false"
+		showFooter="true"
+		editHeaderButtonPress="handleEditBtnPress" >
+		<uxap:headerTitle>
+			<uxap:ObjectPageDynamicHeaderTitle>
+				<uxap:expandedHeading>
+					<Title text="{i18n>appTitle}" wrapping="true" />
+				</uxap:expandedHeading>
+
+				<uxap:snappedHeading>
+                    <FlexBox fitContainer="true" alignItems="Center">
+						<Title text="{i18n>appTitle}" wrapping="true"/>
+					</FlexBox>
+				</uxap:snappedHeading>
+
+			    <uxap:expandedContent>
+				</uxap:expandedContent>
+
+				<uxap:snappedContent>
+				</uxap:snappedContent>
+
+				<uxap:snappedTitleOnMobile>
+				</uxap:snappedTitleOnMobile>
+
+				<uxap:actions>
+                    <!-- 상단 버튼 영역 -->
+				</uxap:actions>
+
+                <uxap:navigationActions>
+					<OverflowToolbarButton id="pageNavBackButton" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" />
+                </uxap:navigationActions>
+			</uxap:ObjectPageDynamicHeaderTitle>
+		</uxap:headerTitle>
+
+		<uxap:headerContent>
+			<FlexBox wrap="Wrap" >
+				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                    <ObjectStatus
+                        title="Report No"
+                        text="{appMaster>/approval_number}"/>
+                    <ObjectStatus
+                        title="Requester"
+                        text="{appMaster>/requestor_empno}"/>
+                    <ObjectStatus
+                        title="Request Date"
+                        text="{appMaster>/request_date}"/>
+				</layout:VerticalLayout>
+
+                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+					<Label text="Status :"/>
+                    <ObjectStatus
+                        class="sapMObjectStatusLarge"
+                        text="{= ${appMaster>/approval_number} !== null ? 'Update' : 'New' }"
+                        state="Error" />
+				</layout:VerticalLayout>
+
+                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                      <HBox>
+                        <Title text="Process"/>
+                    </HBox>
+                    <HBox>
+                        <sc:MicroProcessFlow>
+                            <sc:content>
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
+                                <sc:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                            </sc:content>
+                        </sc:MicroProcessFlow>
+                    </HBox>
+                    <HBox>
+                        <Text text=" PR" renderWhitespace="true" />
+                        <Text text="Budget" width="6em" textAlign="Right" />
+                        <Text text="RFQ" width="6em" textAlign="Center" />
+                        <Text text="   Mold&#10;   Spec" renderWhitespace="true" />
+                        <Text text="Purchase&#10; Contract" width="8em" textAlign="Center" />
+                        <Text text="PO" renderWhitespace="true" />
+                        <Text text="RCV" width="5em" textAlign="Right" />
+                        <Text text="Lease&#10;Contract" width="7.5em" textAlign="Center" />
+                        <Text text="Invoice" />
+                    </HBox>
+                </layout:VerticalLayout>
+			</FlexBox>
+		</uxap:headerContent>
+
+		<uxap:sections id="pss">
+
+			<uxap:ObjectPageSection  id="pageSectionMain" titleUppercase="true" title="General Info">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+                        <layout:VerticalLayout class="sapUiSmallMarginBeginEnd"> 
+                                <HBox alignItems="Center">
+                                    <Label
+                                        text="Subject"
+                                        class="sapUiTinyMarginEnd"
+                                        textAlign="Left"
+                                        labelFor="input"
+                                        required="true"/>
+                                    <Input
+                                        value="{appMaster>/approval_title}"
+                                        visible="true"
+                                        width="40em" 
+                                        placeholder="Input data"
+                                        >
+                                    </Input>
+                                </HBox>
+                            <VBox>
+                                <Label text="Description" labelFor="input" required="true"></Label> 
+                                <layout:VerticalLayout id="approvalContents" class="sapUiContentPadding" width="100%">
+                                </layout:VerticalLayout>
+                            </VBox>
+                        </layout:VerticalLayout> 						
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+            <uxap:ObjectPageSection titleUppercase="false" title="Purchase Order Item">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+                        <HBox>
+                        <VBox class="sapUiSmallMargin">
+                            <Label text="{I18N>/AFFILIATE}" />
+                            <ObjectStatus
+                                text="[{company>/company_code}] {company>/company_name}" 
+                                state="Error"
+                                />
+                        </VBox>
+                        <VBox class="sapUiSmallMargin">
+                            <Label text="{I18N>/BUSINESS_DIVISION}" />
+                            <ObjectStatus
+                                text="[{plant>/plant_code}] {plant>/plant_name}" 
+                                state="Error"
+                                />
+                        </VBox>
+                        </HBox>
+                    </uxap:ObjectPageSubSection>
+                    <uxap:ObjectPageSubSection id="pageSection">
+                        
+                        
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+			<uxap:ObjectPageSection titleUppercase="false" title="Attachments">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection >
+                        <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" width="100%">
+                    
+                            <UploadCollection
+                                id="UploadCollection"
+                                maximumFilenameLength="55"
+                                maximumFileSize="10"
+                                multiple="true"
+                                sameFilenameAllowed="true"
+                                instantUpload="false"
+                                noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
+                                change="onChange"
+                                fileDeleted="onFileDeleted"
+                                filenameLengthExceed="onFilenameLengthExceed"
+                                fileSizeExceed="onFileSizeExceed"
+                                typeMissmatch="onTypeMissmatch"
+                                uploadComplete="onUploadComplete"
+                                beforeUploadStarts="onBeforeUploadStarts" />
+                                
+                            <Button id="Button" text="Upload Now" press="onStartUpload" />
+                        </layout:VerticalLayout> 
+
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+			
+
+			<uxap:ObjectPageSection titleUppercase="false" title="Approval Line">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+                        <Table id="ApproverTable"       
+                            growing="true"
+                            growingThreshold="20"
+                            class="sapFDynamicPageAlignContent" 
+                            updateFinished=".onListMainTableUpdateFinished"
+                            rowSelectionChange=".onCheck"
+                            mode="None"
+                            width="auto"
+                            items="{approver>/Approvers}"
+                            >
+                        <headerToolbar>
+                            <OverflowToolbar>
+                            <Label text="Approval Line"/>
+                            </OverflowToolbar>
+                        </headerToolbar>
+                        <columns>
+                            <Column id="no" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="1.5em" >
+                                <Text text="No." />
+                            </Column>
+                            <Column id="type" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="7em" >
+                                <Text text="Type" />
+                            </Column>
+                            <Column id="nameDept" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                                <Text text="Name/Dept" />
+                            </Column>
+                            <Column id="status" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                                <Text text="Status" />
+                            </Column> 
+                            <Column id="comment" minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                                <Text text="Comment" />
+                            </Column>
+                            <Column id="up" minScreenWidth="Tablet" hAlign="Center" width="1.5em" >
+                                  <Text text="" />
+                            </Column>					
+                            <Column id="down" minScreenWidth="Tablet" hAlign="Center" width="1.5em" >
+                                  <Text text="" />
+                            </Column>					
+                            <Column id="action" minScreenWidth="Tablet" hAlign="Center" width="1.5em" >
+                                  <Text text="" />
+                            </Column>					
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
+                                    <Text text="{approver>approve_sequence}" />
+                                    <ComboBox  id="approverType" width="100%"
+                                        selectedKey="{approver>approver_type_code}" 
+                                        enabled="{approver>editMode}" 
+                                        items="{ path : 'util>/CodeDetails',
+                                                    filters : [
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                        {path : 'group_code', operator : 'EQ', value1 : 'CM_APPROVER_TYPE'}
+                                                    ]
+                                                }"
+                                        >  
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+
+                                    </ComboBox>
+                                    <SearchField id="approverSearch" enabled="{approver>editMode}" search=".onApproverSearch" width="100%" placeholder="Search employee" value="{approver>approver_empno}"/>
+                                    <!--<Input value="{approver>approver_empno}" />-->
+                                    <Text text="{approver>approve_status_code}" />
+                                    <Text text="{approver>approve_comment}" />
+                                    <Button id="btnSortUp" icon="{approver>arrowUp}" press=".onApproverSortUp(${approver>approve_sequence})" tooltip="sort" visible="{= ${approver>arrowUp}===''?false:true }"></Button>
+                                    <Button id="btnSortDown" icon="{approver>arrowDown}" press=".onApproverSortDown(${approver>approve_sequence})"  visible="{= ${approver>arrowDown}===''?false:true }" tooltip="sort"></Button>
+                                    <Button id="btnDelete" icon="sap-icon://delete" press=".setApproverRemoveRow(${approver>approve_sequence})" tooltip="삭제" visible="{approver>trashShow}"></Button>
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                        </Table>                           
+					</uxap:ObjectPageSubSection> 
+                    <uxap:ObjectPageSubSection>
+                        <VBox class="sapUiSmallMarginBegin">
+                         <Toolbar>
+                          <Label text="Referer" />
+                          <ToolbarSpacer/>
+                        <HBox alignItems="End" justifyContent="End" >
+                            <Label text="Adress Book" class=""/>
+                            <core:Icon 
+                                src="sap-icon://contacts"
+                                class="size2 sapUiSmallMarginBeginEnd" 
+                                >
+                            </core:Icon>
+                           
+                        </HBox>
+                        </Toolbar>
+                            <layout:VerticalLayout class="sapUiContentPadding" width="100%">
+                                <MultiComboBox
+                                    id="refererMultiCB"
+                                    selectionChange="handleSelectionChangeReferer"
+                                    selectionFinish="handleSelectionFinishReferer"
+                                    width="100%"
+                                    items="{ path: 'hr>/Employee',
+                                                filters: [
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                                ]
+                                            }">
+                                    <core:Item key="{hr>employee_number}" text="{hr>user_local_name}" />
+                                </MultiComboBox>
+                            </layout:VerticalLayout>
+                            <layoutData>
+                                <layout:GridData span="XL12 L12 M12 S12" />
+                            </layoutData> 
+                         </VBox>
+                    </uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+		</uxap:sections>
+		<uxap:footer>
+			<OverflowToolbar>
+				<ToolbarSpacer />
+				<Button type="Transparent" text="Draft"         press=".onPageDraftButtonPress" />
+				<Button type="Transparent" text="Preview"       press=".onPagePreviewButtonPress" />
+				<Button type="Transparent" text="PO Sheet"      press=".onPagePOSheetButtonPress" />
+				<Button type="Transparent" text="Request Cancel" press=".onPageRequestCancelButtonPress" />
+				<Button type="Emphasized"  text="Request"       press=".onPageRequestButtonPress"/>
+			</OverflowToolbar>
+		</uxap:footer>
+	</uxap:ObjectPageLayout>
+</mvc:View>

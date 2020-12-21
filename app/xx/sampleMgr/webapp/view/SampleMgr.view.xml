@@ -8,7 +8,7 @@
                     <HBox>
                         <VBox width="45%">
                             <Table  id="sampleHeaderList" 
-                                    items="{path : 'headerList>/', 
+                                    items="{path : 'headerList>/SampleHeaders', 
                                             parameters: {
                                                 $count: true,
                                                 $$updateGroupId : 'sampleHeaderGroup'
@@ -62,7 +62,7 @@
                         <VBox width="10%"></VBox>
                         <VBox width="45%">
                             <Table  id="sampleDetailList" 
-                                    items="{path : 'detailList>/', 
+                                    items="{path : 'detailList>/SampleDetails', 
                                             parameters: {
                                                 $count: true,
                                                 $$updateGroupId : 'sampleDetailGroup'
