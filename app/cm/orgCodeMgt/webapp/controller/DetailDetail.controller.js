@@ -82,7 +82,6 @@ sap.ui.define([
             var sGroupCode = oParam.group_code;
             var sOrgCode = oParam.orgCode;
             var sCode = oParam.code;
-            var sOrgCode = oParam.orgCode;
             this._fnReadLanguages(sTenantId, sGroupCode, sOrgCode, sCode);
         },
 
@@ -103,10 +102,9 @@ sap.ui.define([
                 local_create_dtm: new Date(),
                 local_update_dtm: new Date(),
                 tenant_id: oMasterData.tenant_id,
-                org_code: oMasterData.code_conrol_org_type_code
+                org_code: oMasterData.code_control_org_type_code
             }
             
-            var oViewModel = this.getModel("viewModel");
             oViewModel.setProperty("/detailDetail", oInitDetailData);
 
             var model = this.getModel('languages');
@@ -207,7 +205,7 @@ sap.ui.define([
             aFilters.push(new Filter("org_code", FilterOperator.EQ, orgCode));
             aFilters.push(new Filter("code", FilterOperator.EQ, code));
 
-            var oViewModel = this.getModel('viewModel');
+            //var oViewModel = this.getModel('viewModel');
             // var oServiceModel = this.getModel();
             var oServiceModel = this.getModel("languages").setTransactionModel(this.getModel());
             oServiceModel.read("/OrgCodeLanguages",{
@@ -270,41 +268,43 @@ sap.ui.define([
             var oParam = oViewModel.getProperty("/detailDetail");
 
             var oModel = this.getModel();
+
+            var sGroupId = "createDetail";
+            oModel.setDeferredGroups([sGroupId]);
             oModel.create("/OrgCodeDetails", oParam, {
-                groupId: "createDetail",
+                groupId: sGroupId,
                 success: function(data){
                     this._fnReadDetails(oParam.tenant_id, oParam.group_code);
-                    // this._fnSetReadMode();
                 }.bind(this),
                 error: function(data){
                     console.log('error',data)
                 }
             });
 
-
+            var oLangModel = this.getModel("languages");            
+            oLangModel.getProperty("/OrgCodeLanguages").forEach(function(item, i){
+                oModel.createEntry("/OrgCodeLanguages", {
+                    properties: {
+                        "tenant_id": oParam.tenant_id,
+                        "group_code": oParam.group_code,
+                        "org_code":oParam.org_code,
+                        "code": oParam.code,
+                        "code_name": item.code_name,
+                        "language_cd": item.language_cd
+                    }
+                });
+            });
+            
             oModel.submitChanges({
-                groupId: "createDetail",
+                groupId: sGroupId,
                 success: function(data){
-                    var oLangModel = this.getModel("languages");
-                    oLangModel.getProperty("/OrgCodeLanguages").forEach(function(item, i){
-                        oLangModel.setProperty("/OrgCodeLanguages/"+i+"/tenant_id", oParam.tenant_id);
-                        oLangModel.setProperty("/OrgCodeLanguages/"+i+"/group_code", oParam.group_code);
-                        oLangModel.setProperty("/OrgCodeLanguages/"+i+"/org_code", oParam.org_code);
-                        oLangModel.setProperty("/OrgCodeLanguages/"+i+"/code", oParam.code);
-                    })
-                    oLangModel.submitChanges({
-                        groupId: "OrgCodeLanguages",
-                        success: (function (oEvent) {
-                            // this._fnSetReadMode();
-                            this.handleClose();
-                            MessageToast.show("Success to save.");
-                        }.bind(this))
-                    });
+                    this.handleClose();
+                    MessageToast.show("Success to save.");
                 }.bind(this),
                 error: function(data){
                     console.log('Create error',data)
                 }
-            })
+            });
         },
 
         _fnUpdateCodeDetail : function(){

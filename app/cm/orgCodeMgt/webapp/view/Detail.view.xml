@@ -130,11 +130,11 @@
                                             selectedKey="{viewModel>/detail/tenant_id}"
                                             visible="{contModel>/detail/editMode}"
                                             selectionChange=".onTenantChange"
-                                            items="{orgMgr>/Org_Tenant}">
+                                            items="{orgMgt>/Org_Tenant}">
                                             <core:ListItem 
-                                                key="{orgMgr>tenant_id}" 
-                                                text="{orgMgr>tenant_name}"
-                                                additionalText="{orgMgr>tenant_id}"/>
+                                                key="{orgMgt>tenant_id}" 
+                                                text="{orgMgt>tenant_name}"
+                                                additionalText="{orgMgt>tenant_id}"/>
                                         </m:ComboBox>
                                         <m:layoutData>
                                             <layout:GridData
