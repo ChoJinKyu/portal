@@ -689,26 +689,52 @@ sap.ui.define([
 
             var id = toggleButtonId.split('--')[2];
             var page = ""
+            var appTypeCode = "";
             console.log(id);
-            if (id != "") {
-                if (id == "localBudget") {
-                    page = "beaCreateObject"
-                } else if (id == "supplierSelection") {
-                    page = "pssaCreateObject"
-                }
+
+            if(id.indexOf("localBudget") > -1){
+                appTypeCode ="B"
+            }else if(id.indexOf("supplierSelection") > -1){
+                appTypeCode ="E"
+            }else if(id.indexOf("localOrder") > -1){
+               appTypeCode ="V" 
+            }else if(id.indexOf("receipt") > -1){
+                appTypeCode ="I"
+            }else if(id.indexOf("export") > -1){
+                appTypeCode ="X"
             }
-            console.log("page >>>", page);
+            // else if(id.indexOf("importBudget") > -1){
+            //     appTypeCode ="E"
+            // }else if(id.indexOf("importOrder") > -1){
+            //     appTypeCode ="E"
+            // }else if(id.indexOf("importCompletion") > -1){
+            //     appTypeCode ="E"
+            // }else if(id.indexOf("repModCompletion") > -1){
+            //     appTypeCode ="E"
+            // }else if(id.indexOf("otherIn") > -1){
+            //     appTypeCode ="E"
+            // }else if(id.indexOf("otherOut") > -1){
+            //     appTypeCode ="E"
+            // }else if(id.indexOf("prodSupplierAmend") > -1){
+            //     appTypeCode ="E"
+            // }else if(id.indexOf("itemCancel") > -1){
+            //     appTypeCode ="E"
+            // }
+           
+
 
             var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
             for (var i = 0; i < groupId.length; i++) {
                 if (groupId[i].getPressed() == true) {
                     console.log(groupId[i].mProperties.text);
+                    console.log(appTypeCode);
                     console.log(this.byId("searchCompanyF").getValue());
                     console.log(this.byId("searchPlantF").getValue());
-                    this.getRouter().navTo(page, {
-                        company: this.byId("searchCompanyF").getValue()
-                        , plant: this.byId("searchPlantF").getValue()
-                        ,
+                    this.getRouter().navTo("approvalObject", {
+                        company_code: this.byId("searchCompanyF").getSelectedKey()
+                        , plant_code: this.byId("searchPlantF").getSelectedKey()
+                        , approval_type_code: appTypeCode
+                        , approval_number: "New"
                     });
                 }
             }

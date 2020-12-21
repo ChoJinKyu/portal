@@ -228,7 +228,17 @@ sap.ui.define([
             
         },
 
-        
+        // I18NFormatter: function(foo,bar){
+        //     console.log('I18NFormatter');
+        //     console.log(foo);
+        //     console.log(bar);
+
+        //     var myformatter = function(aa, bb){
+        //         console.log(aa,bb);
+        //         return null;
+        //     }
+        // },
+
 
 		/**
 		 * Event handler when a search button pressed
