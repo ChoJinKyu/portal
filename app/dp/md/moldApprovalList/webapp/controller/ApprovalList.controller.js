@@ -504,9 +504,7 @@ sap.ui.define([
         },
 
         onFilterBarSearch: function (oEvent) {
-            var groupId = this.getView().getControlsByFieldGroupId("listFilterBar");
-            console.log(groupId[7].mProperties);
-            groupId[7].mProperties.visiable("false");
+            
             var sSearchQuery = this._oBasicSearchField.getValue(),
                 aSelectionSet = oEvent.getParameter("selectionSet");
                 console.log("aSelectionSet ::::", aSelectionSet);
@@ -565,15 +563,21 @@ sap.ui.define([
             this._filterTable(new Filter({
                 filters: aFilters,
                 and: true
+            }));
+
             // 필터 버튼 visible false 처리..
             var searchFilterBtn = this.getView().getControlsByFieldGroupId("listFilterBar")[7];
-            searchFilterBtn.setVisible(false);        _filterTable: function (oFilter) {
-            var oValueHelpDialog = this._oValueHelpDialog;
+            searchFilterBtn.setVisible(false);
 
+        },
+
+        _filterTable: function (oFilter) {
+            var oValueHelpDialog = this._oValueHelpDialog;
+            
             oValueHelpDialog.getTableAsync().then(function (oTable) {
                 if (oTable.bindRows) {
                     oTable.getBinding("rows").filter(oFilter);
-                                console.log("oTable.bindRows :::", oFilter);
+                    console.log("oTable.bindRows :::", oFilter);
                 }
 
                 if (oTable.bindItems) {
@@ -583,13 +587,12 @@ sap.ui.define([
 
                 oValueHelpDialog.update();
             });
+            
         },
 
         ///////////////////// ValueHelpDialog section Start //////////////////////////
 
-
-().getControlsByFieldGroupId("listFilterBar")[7];
-            searchFilterBtn.setVisible(false);        ///////////////////// List create button pop up event Start //////////////////////////
+        ///////////////////// List create button pop up event Start //////////////////////////
         /**
          * Binds the view to the object path.
          * @function
