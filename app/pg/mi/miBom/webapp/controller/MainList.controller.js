@@ -176,7 +176,8 @@ sap.ui.define([
 				mBindingParams.filters.push(oSupplier_local_nameFilter);
             }            
         },
-        
+		
+			
         /**
          * filter and or not and 
          */
@@ -268,12 +269,16 @@ sap.ui.define([
 			var oNavParam = {
 				layout: sLayout, 
 				tenant_id: this._sso.dept.tenant_id,
-				material_code:"new",	
+				material_code:"new",
 				supplier_code: "　",	
-				mi_material_code: "　"
+				mi_bom_id: "　",	
+				mi_material_code: "　",
+				currency_unit: "　",
+				quantity_unit: "　",
+				exchange: "　",				
+				termsdelv: "　"
 			};
 			this.getRouter().navTo("midPage", oNavParam);
-			
 		},
 		
 		/**
@@ -351,6 +356,7 @@ sap.ui.define([
 		_onRoutedThisPage: function(){
 			console.group("_onRoutedThisPage");
 			this.getModel("oUi").setProperty("/headerExpanded", true);
+			this.getModel().refresh(true);
 			console.groupEnd();
 		},
 

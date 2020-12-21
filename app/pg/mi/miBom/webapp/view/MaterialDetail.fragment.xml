@@ -70,6 +70,7 @@
             <VBox class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginTop">
                 <Table  id="rightTable"
                         mode="SingleSelectLeft" 
+                        updateFinished=".onRightTableUpdateFinished"
                         items="{mIMaterialCostInformationView>/}"  
                         noDataText="No Data"
                         class="sapUiSmallMarginEnd" 
@@ -137,6 +138,7 @@
             <endButton>
              <Button  text="Apply" 
              type="Emphasized"
+             visible="{=!${oUi>/changeItem}}" 
              press=".onMaterialDetailApply" />
             </endButton>
 	</Dialog>

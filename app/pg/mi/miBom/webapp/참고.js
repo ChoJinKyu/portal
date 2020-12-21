@@ -1,5 +1,32 @@
+
+
+저장하였습니다.
+MessageToast.show(this.getModel("I18N").getText("/NCM0005"));
+
+onSelectedLeftTableItem
+
+        // if(searchField_material_code!=""){
+            //     this.onSelectedLeftTableItem();
+            // }
+
+
+
+onInit: function() {
+    const route = this.getOwnerComponent().getRouter().getRoute("thisPage");
+    route.attachPatternMatched(this.onPagePatternMatched, this);
+  },
+  
+  onPagePatternMatched: function() {
+    this.byId("page").scrollTo(0);
+  },
+
 removeSelections(true)
 
+comboBoxCategory_code
+
+onUomNameSearch
+
+https://sapui5.netweaver.ondemand.com/#/entity/sap.m.MultiInput/sample/sap.m.sample.MultiInputValueHelp
 
 this._selectedIndex = parseInt(obj.substring(1)); 
 this.onMaterialDetail(true);
@@ -616,5 +643,81 @@ if(comboboxUse_unitOfMeasureView.length<1){
 
 			this._openValueHelpMaterialDialog();
 
+
+
+
+
+
+
+            
+<Dialog title="Category 선택">
+		<content>
+        
+        <VBox class="sapUiSmallMarginBegin" width="500px">
+            <SearchField id="searchField_category_name" 
+                            width="90%"
+                            required="true" 
+                            search=".onCategorySearch" 
+                            selectOnFocus="false"
+                            placeholder="Search Name or Code"
+                            class="sapUiTinyMarginTop sapUiTinyMarginBegin" />
+             <Table  id="reqmTable"
+                    mode="SingleSelectLeft"
+                    items="{mICategoryHierarchyStructure>/}"
+                    noDataText="No Data"
+                    class="sapUiSmallMargin sapUiSmallMarginTop"
+            >
+                <columns>
+                    <Column hAlign="Center" ><header><Label text="Code"/></header></Column>
+                    <Column hAlign="Center" ><header><Label text="Name"/></header></Column>                                                                                                                    
+                </columns>
+                <items>
+                    <ColumnListItem type="Active">
+                        <cells>
+                            <Text text="{mICategoryHierarchyStructure>category_code}"/>
+                            <Text text="{mICategoryHierarchyStructure>category_name}"/>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>                      
+        </VBox>
+		</content>
+			<beginButton>
+				<Button type="Transparent"  text="Cancel" press=".closeCategorySearchApply" />
+               
+			</beginButton>
+            <endButton>
+             <Button  text="Apply" 
+             type="Emphasized"
+             press=".onCategorySearchApply" />
+            </endButton>
+	</Dialog>
+
+var input_mi_material_code = this.getView().byId("input_mi_material_code").getValue(),
+input_category_code = this.getView().byId("input_category_code").getValue(),            
+input_category_text = this.getView().byId("input_category_text").getValue();  
+
+
+
+category_code
+mICategoryView>/ category_text
+<Text text="{mICategoryView>category_code}"/>
+<Text text="{mICategoryView>category_text}"/>
+<SelectDialog
+id="valueHelpDialog"
+title="Products"
+class="sapUiPopupWithPadding"
+items="{/ProductCollection}"
+search="_handleValueHelpSearch"
+confirm="_handleValueHelpClose"
+cancel="_handleValueHelpClose"
+multiSelect="true">
+<StandardListItem
+    icon="{ProductPicUrl}"
+    iconDensityAware="false"
+    iconInset="false"
+    title="{Name}"
+    description="{ProductId}" />
+</SelectDialog>
 
 

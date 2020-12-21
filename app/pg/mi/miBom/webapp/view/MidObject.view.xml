@@ -57,14 +57,10 @@
                     <uxap:headerContent>
                         <layout:VerticalLayout>
                             <FlexBox height="30px" alignItems="Start" justifyContent="Start" visible="{=!${oUi>/createMode}}"> 
-                                    <Label text="관리조직 :" />
-                                    <Label text="{_oUiData>/org_name}" 
-                                    id="label_tenant_name"  
-                                    class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
-                                    <Label text="Update :"  class="sapUiLargeMarginBegin" />
+                                    <Label text="Update :"/>
                                     <Label text="{oUiData>/update_user_id}"  
                                     class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
-                                    <Label text="Update Data :" class="sapUiLargeMarginBegin" />
+                                    <Label text="Update Data :"/>
                                     <Label text="{
                                         path: 'oUiData>/system_update_dtm',
                                         type: 'sap.ui.model.type.Date',

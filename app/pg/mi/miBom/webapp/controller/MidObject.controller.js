@@ -122,11 +122,13 @@ sap.ui.define([
             }            
         },
         _imsiData : {
-            material_code : "ERCA00006AB",
-            material_desc : "ERCA00006AB",
-            supplier_code : "KR00002600",
-            supplier_local_name : "(주)네패스",
-            supplier_english_name : "Ne"
+            vendor : "KR01818401",
+            vendor_name: "한국유나이티드제약(주)",
+            material_code : "1000005",
+            material_desc : "OLEIC ACID",
+            supplier_code : "KR01818401",
+            supplier_local_name : "한국유나이티드제약(주)",
+            supplier_english_name : "korea"
         },
         _sso : { //수정대상 공통 사용자 정보 확인될시 //MaterialDialog
             user : {
@@ -219,8 +221,9 @@ sap.ui.define([
             var oUi = new JSONModel({
                 busy: false,
                 delay: 0,
+                changeItem : false,
                 readMode : true,
-                editMode : false,
+                editMode : false,                
                 createMode : false
             });
             var  _deleteItem = new JSONModel({oData:[]});
@@ -397,6 +400,7 @@ sap.ui.define([
                     this._m.fragementId.materialDialog, 
                     this._m.fragementPath.materialDialog,this
                 );
+              
                 this.getView().addDependent(this._valueHelpMaterialDialog);
 
             }                
@@ -443,10 +447,8 @@ sap.ui.define([
                 input_supplier_local_name=this._findFragmentControlId(this._m.fragementId.materialDialog, "input_supplier_local_name").getValue();
                 //input_hidden_supplier_english_name=this._findFragmentControlId(this._m.fragementId.materialDialog, "input_supplier_local_name").getValue();
         
-            //수정대상 데이타가 없음 사용자 로그인 정보 필터 등록해야함
-            //dev-2121-212 L1100 이것만 존재함. 
              var sFilters = [
-                new Filter("tenant_id", FilterOperator.EQ, 'L1100')
+                new Filter("tenant_id", FilterOperator.EQ,  this._m.filter.tenant_id)
             ];
 
             comboBox_materialView = "";
@@ -473,10 +475,10 @@ sap.ui.define([
                             materialTable.oData[i].itemMode = that._m.itemMode.read;
                             materialTable.oData[i].odataMode = that._m.odataMode.yes;
                             //dev12121715 강제 등록
-                            materialTable.oData[i].vendor = "vendor";
-                            materialTable.oData[i].vendor_name = "vendor_name";
-                            materialTable.oData[i].supplier_code = "supplier_code";
-                            materialTable.oData[i].supplier_local_name = "supplier_local_name";
+                            materialTable.oData[i].vendor = that._imsiData.vendor;
+                            materialTable.oData[i].vendor_name = that._imsiData.vendor_name;
+                            materialTable.oData[i].supplier_code = that._imsiData.supplier_code;
+                            materialTable.oData[i].supplier_local_name = that._imsiData.supplier_code;
                         }
                         that.getOwnerComponent().setModel(materialTable, "materialTable");                                         
                     }
@@ -503,11 +505,11 @@ sap.ui.define([
                     for(var i=0;i<reponse.data.results.length;i++){
                             materialTable.oData[i].itemMode = that._m.itemMode.read;
                             materialTable.oData[i].odataMode = that._m.odataMode.yes;
-
-                            materialTable.oData[i].vendor = "vendor";
-                            materialTable.oData[i].vendor_name = "vendor_name";
-                            materialTable.oData[i].material_code = "material_code";
-                            materialTable.oData[i].material_desc = "material_desc";
+                            //dev12121715 강제 등록
+                            materialTable.oData[i].vendor = that._imsiData.vendor;
+                            materialTable.oData[i].vendor_name = that._imsiData.vendor_name;
+                            materialTable.oData[i].material_code = that._imsiData.material_code;
+                            materialTable.oData[i].material_desc = that._imsiData.material_desc;
 
                         }
 
@@ -818,7 +820,7 @@ sap.ui.define([
             }else{
 
                 if(this._m.filter.material_code.length>0){
-                //보기 모드(수정화면 진입전 보기화면을 반드시 거쳐야 한다.)
+                
                     this._onMidServiceRead();
 
                     this._fnSetReadMode();
@@ -886,6 +888,7 @@ sap.ui.define([
             searchField_material_code.setValue(midList.oData[this._selectedIndex].mi_material_code);            
             
             this.onMaterialSearch();
+    
 
         },
 
@@ -895,6 +898,8 @@ sap.ui.define([
          */
         onMaterialDetail : function (bflag) {
             console.log("call funtion onMaterialDetail");
+
+            var oUi = this.getModel("oUi");
 			if (!this._valueHelpMaterialDetail) {
                 this._valueHelpMaterialDetail = sap.ui.xmlfragment(this._m.fragementId.materialDetail, this._m.fragementPath.materialDetail, this);
                 this.getView().addDependent(this._valueHelpMaterialDetail);
@@ -904,6 +909,8 @@ sap.ui.define([
 
             var searchField_material_code = this._findFragmentControlId(this._m.fragementId.materialDetail, "searchField_material_code");
             var searchField_category_name = this._findFragmentControlId(this._m.fragementId.materialDetail, "searchField_category_name");
+
+            oUi.setProperty("/changeItem", bflag);
 
             if(!bflag){
                 searchField_material_code.setValue("");
@@ -997,7 +1004,9 @@ sap.ui.define([
                 orFilter.push(new Filter("mi_material_name", FilterOperator.Contains, searchField_material_code));
             }
 
-            andFilter.push(new sap.ui.model.Filter(orFilter, false));
+            if(orFilter.length>0){
+                andFilter.push(new sap.ui.model.Filter(orFilter, false));
+            }
 
             var sServiceUrl = this._m.serviceName.mIMatListView;
             var leftTable =  this._findFragmentControlId(this._m.fragementId.materialDetail, "leftTable");            
@@ -1016,13 +1025,47 @@ sap.ui.define([
 
                     var venitems=leftTable.getItems();
 
-                    venitems[0].setSelected(true);
-                    
-                    that.onSelectedLeftTableItem();
+                    if(venitems.length>0){
+                        venitems[0].setSelected(true);
+
+                        that.onSelectedLeftTableItem();
+                    }
 
                     return reponse.data.results.length;             
                 }
             });
+        },
+
+  
+        onRightTableUpdateFinished : function () {
+            console.log("onRightTableUpdateFinished");
+            this._setSelectedRightTableItem();
+        },
+          
+
+        _setSelectedRightTableItem : function (){
+            console.log("_setSelectedRightTableItem");
+            var rightTable = this._findFragmentControlId(this._m.fragementId.materialDetail, "rightTable"),
+            midList =this.getModel("midList");
+            
+            for (var idx = 0; idx < rightTable.getItems().length; idx++) {
+                var items = rightTable.getItems()[idx];
+                var currency_unit = items.getCells()[0].mProperties.text;
+                var quantity_unit = items.getCells()[1].mProperties.text;
+                var exchange = items.getCells()[2].mProperties.text;
+                var termsdelv = items.getCells()[3].mProperties.text;
+
+                if(midList.oData[this._selectedIndex]){
+                    if(currency_unit==midList.oData[this._selectedIndex].currency_unit &&
+                        quantity_unit==midList.oData[this._selectedIndex].quantity_unit &&
+                        exchange==midList.oData[this._selectedIndex].exchange &&
+                        termsdelv==midList.oData[this._selectedIndex].termsdelv
+                    ){
+                        items.setSelected(true);
+                    }
+                }
+    
+            }
         },
 
         /**
@@ -1058,7 +1101,8 @@ sap.ui.define([
                 }
             });
         },
-  
+
+
         /**
          * 시황자재 > 가격정보 에서 Apply 선택
          * @param {Event} oEvent  아이템 선택 후 등록 
@@ -1136,6 +1180,7 @@ sap.ui.define([
             };
 
             this.onMidListItemAdd(items);
+            
             this.onMaterialDetailClose();
         },
 
@@ -1210,7 +1255,7 @@ sap.ui.define([
         onMaterialDetailClose : function() {
             this._valueHelpMaterialDetail.close();
         },
-
+        
         /**
          * 
          * 시황자재 리스트 아이템 추가. 
@@ -1219,10 +1264,12 @@ sap.ui.define([
         onMidListItemAdd : function(items){
             
             var midList = this.getModel("midList"),
+                oUi= this.getModel("oUi"),
                 that = this;
             
             var bCheck = true;
 
+            //Create
             if(midList==null){
                 var omidList = new JSONModel();
                 omidList.setData([items]);
@@ -1232,13 +1279,27 @@ sap.ui.define([
 
             if(midList.oData!=null){
                 for(var i=0;i<midList.oData.length;i++){
-                    if(midList.oData[i].mi_material_code == items.mi_material_code){
+                    if(midList.oData[i].mi_material_code == items.mi_material_code  &&
+                        midList.oData[i].category_code == items.category_code  &&
+                        midList.oData[i].currency_unit == items.currency_unit &&
+                        midList.oData[i].quantity_unit == items.quantity_unit &&
+                        midList.oData[i].exchange == items.exchange &&
+                        midList.oData[i].termsdelv == items.termsdelv
+                        ){
                         bCheck = false;
-                        this._showMessageToast("이미 추가된 항목 입니다.");
+                        this._showMessageToast("이미 등록된 항목 입니다.");
                         return;
                     }
                 }
+
+                //item Update
+                if(oUi.getProperty("/changeItem") == bCheck == oUi.getProperty("/editMode")){
+                    this.onMidListItemUpdate(items);
+                    return;
+                }
+
             }else{
+              
                 var omidList = new JSONModel();
                 omidList.setData([items]);
                 this.setModel(omidList,"midList");
@@ -1250,6 +1311,25 @@ sap.ui.define([
                 midList.refresh(true);
             }
         },
+
+        onMidListItemUpdate : function (items) {
+            var midList = this.getModel("midList");
+            debugger;
+            if( midList.oData[this._selectedIndex] ){
+                midList.oData[this._selectedIndex].mi_material_code = items.mi_material_code;
+                midList.oData[this._selectedIndex].mi_material_name = items.mi_material_name;
+                midList.oData[this._selectedIndex].category_code = items.category_code;
+                midList.oData[this._selectedIndex].category_name = items.category_name;
+                midList.oData[this._selectedIndex].currency_unit = items.currency_unit;
+                midList.oData[this._selectedIndex].quantity_unit = items.quantity_unit;
+                midList.oData[this._selectedIndex].exchange = items.exchange;
+                midList.oData[this._selectedIndex].termsdelv = items.termsdelv;
+                
+                midList.refresh(true);
+                this.onMaterialDetailClose();
+            }
+
+        },        
 
         /**
          * midTable 항목(열) 삭제 
@@ -1466,8 +1546,8 @@ sap.ui.define([
             var oUi = this.getModel("oUi"),
                 bCreateFlag = oUi.getProperty("/createMode"),
                 that = this,
-                oModel = this.getOwnerComponent().getModel(),
-                midList = this.getOwnerComponent().getModel("midList"),
+                oModel = this.getModel(),
+                midList = this.getModel("midList"),
                 updateHeader = 0, 
                 createHeader = 0,
                 updateItem = 0, 

@@ -10,6 +10,7 @@
  */
 sap.ui.define([
     "./BaseController",
+    "ext/lib/util/Multilingual",
     "sap/ui/model/json/JSONModel",
     "ext/lib/util/ValidatorUtil",
     "ext/lib/formatter/DateFormatter",
@@ -19,15 +20,13 @@ sap.ui.define([
     "sap/m/MessageToast",
     "sap/ui/core/ValueState",
     "ext/lib/util/Validator"
-], function (BaseController, JSONModel, ValidatorUtil, DateFormatter, Filter, FilterOperator,  MessageBox, MessageToast, ValueState, Validator) {
+], function (BaseController, Multilingual, JSONModel, ValidatorUtil, DateFormatter, Filter, FilterOperator,  MessageBox, MessageToast, ValueState, Validator) {
     "use strict";
 
     return BaseController.extend("pg.mi.miMaster.controller.MidObject", {
 
         dateFormatter: DateFormatter,
-
         validator: new Validator(),
-
 		formatter: (function(){
 			return {
 				toYesNo: function(oData){
@@ -35,7 +34,9 @@ sap.ui.define([
 				},
 			}
         })(),
+
         dataPath : "resources",
+
         _m : { 
             page : "page",
             groupID : "pgGroup",
@@ -43,6 +44,14 @@ sap.ui.define([
                 items : "items" //or rows
             },
             tableName : "midTable",
+            fragementPath : {
+                reqmQuantityUnit : "pg.mi.miMaster.view.ReqmQuantityUnit",
+                categoryValueHelp : "pg.mi.miMaster.view.CategoryValueHelp"
+            },            
+            fragementId : {
+                reqmQuantityUnit : "ReqmQuantityUnit_ID",
+                categoryValueHelp : "CategoryValueHelp_ID"
+            },            
             filter : {  
                 tenant_id : "",
                 material_code : "",
@@ -51,6 +60,7 @@ sap.ui.define([
             serviceName : {
                 marketIntelligenceService : "pg.marketIntelligenceService", //main Service
                 orgCodeView : "/orgCodeView", //관리조직 View
+                mICategoryView : "/MICategoryView",
                 mIMaterialCodeList : "/MIMaterialCodeList",
                 mIMatListView : "/MIMatListView",
                 mIMaterialCode : "/MIMaterialCode",
@@ -375,20 +385,20 @@ sap.ui.define([
         /* internal methods                                            */
         /* =========================================================== */
         /**
-         * control object filter 
+         * control object filter   사용하지 않음.
          * @private
          */
         _fnControlSetting : function() {
             console.log("_fnControlSetting");
-            var comboBox_pcst_currency_unit = this.getView().byId("comboBoxCategory_code");            
-            var oBindingComboBox = comboBox_pcst_currency_unit.getBinding("items");
+            // var input_category_code = this.getView().byId("input_category_code"),            
+            //     input_category_text = this.getView().byId("input_category_text"),            
 
-            var aFiltersComboBox = [
-                new Filter("tenant_id", "EQ", this._m.filter.tenant_id),
-                new Filter("use_flag", "EQ", true)
-            ];
+            // var aFiltersComboBox = [
+            //     new Filter("tenant_id", "EQ", this._m.filter.tenant_id),
+            //     new Filter("use_flag", "EQ", true)
+            // ];
 
-            oBindingComboBox.filter(aFiltersComboBox);  
+            //oBindingComboBox.filter(aFiltersComboBox);  
         },
         
         /**
@@ -423,7 +433,7 @@ sap.ui.define([
             this._onPageClearValidate();
 
             this.getView().byId("input_mi_material_code").setValue("");
-            this.getView().byId("comboBoxCategory_code").setSelectedKey("");
+            //this.getView().byId("comboBoxCategory_code").setSelectedKey("");
 
             var oArgs = oEvent.getParameter("arguments"),
                 oUiData = this.getModel("oUiData"),
@@ -474,7 +484,7 @@ sap.ui.define([
             });
 
             //Control Setting
-            this._fnControlSetting();
+            //this._fnControlSetting();
             
             var mIMaterialCodeText = new JSONModel();
 
@@ -650,6 +660,103 @@ sap.ui.define([
             controlId.setValueStateText(message);
             controlId.openValueStateMessage();   
         },
+
+        /**
+         * category value help
+         */
+        onValueHelpCategorySearchDialog : function () {
+            console.log("_valueHelpCategorySearchDialog");
+			// create value help dialog
+			if (!this._vHelpCategorySearchDialog) {
+
+                this._vHelpCategorySearchDialog = sap.ui.xmlfragment(
+                    this._m.fragementId.categoryValueHelp, 
+                    this._m.fragementPath.categoryValueHelp,this
+                );
+
+                this.getView().addDependent(this._vHelpCategorySearchDialog);
+            }  
+
+            this._openValueHelpCategoryCodeDialog();
+        },
+
+        _openValueHelpCategoryCodeDialog : function () {
+            var mICategoryView = this.getModel("mICategoryView")
+            this.setModelNullAndUpdateBindings(mICategoryView);
+			this._vHelpCategorySearchDialog.open();
+        },
+
+        /**
+         * Category Code Dialog Close
+         */
+        closeCategoryValueHelp : function (){
+            this._vHelpCategorySearchDialog.close();
+        },
+
+        onCategoryValueHelp : function () {
+            console.log("onReqmQuantityUnitApply");
+            var categoryTable =  this._findFragmentControlId(this._m.fragementId.categoryValueHelp, "categoryTable"), 
+            midList = this.getModel("midList"),
+                that = this;            
+
+            if(categoryTable.getSelectedItems().length<1){
+                this._showMessageBox(
+                    "선택 확인",
+                    "항목을 선택 하여 주십시요.",
+                    this._m.messageType.Warning,
+                    function(){return;}
+                );
+                return;
+            }
+
+            var category_code = categoryTable.getSelectedItems()[0].getCells()[0].mProperties.text;
+            var category_text = categoryTable.getSelectedItems()[0].getCells()[1].mProperties.text;
+
+            this.byId("input_category_text").setValue(category_text);
+            this.byId("input_category_code").setValue(category_code);
+
+            this.closeCategoryValueHelp();
+        },
+
+        onCategorySearch : function() {
+            var oModel = this.getModel(),
+                sServiceUrl = this._m.serviceName.mICategoryView,
+                that = this,
+                searchField_category_name = this._findFragmentControlId(this._m.fragementId.categoryValueHelp, "searchField_category_name").getValue();
+                
+            var andFilter = [
+                new Filter("tenant_id", FilterOperator.EQ, this._sso.dept.tenant_id)
+            ];
+
+            var orFilter = [                
+                new Filter("category_text", FilterOperator.Contains, searchField_category_name),
+                new Filter("category_code", FilterOperator.Contains, searchField_category_name)
+            ];
+
+            if(orFilter.length>0){
+                andFilter.push(new sap.ui.model.Filter(orFilter, false));
+            }
+
+            var mICategoryView = new JSONModel();
+            
+            oModel.read(sServiceUrl, {
+                async: false,
+                filters: andFilter,
+                success: function (rData, reponse) {
+
+                    console.log(sServiceUrl + " - Category 건수 :" + reponse.data.results.length);
+                    if (reponse.data.results.length > 0) {
+                        mICategoryView.setData(reponse.data.results);
+                        that.getOwnerComponent().setModel(mICategoryView, "mICategoryView");                                         
+                    }
+                }
+            });
+        },
+
+        _findFragmentControlId : function (fragmentID, controlID) {
+            return sap.ui.core.Fragment.byId(fragmentID, controlID);
+        },
+
 
         /**
          * 시황자제 삭제
@@ -890,23 +997,21 @@ sap.ui.define([
             } else {
 
                 var input_mi_material_code,
-                    comboBoxCategory_code="",
-                    comboBoxCategory_name="",
+                    input_category_code="",
+                    input_category_text="",
                     switchUse_flag = this.getView().byId("switchUse_flag").getState(),
                     msg = "";
 
                 if(oUi.getProperty("/createMode")){
 
-                    input_mi_material_code = this.getView().byId("input_mi_material_code").getValue();
-                    if(!this._isNull(this.getView().byId("comboBoxCategory_code").getSelectedItem())){
-                        comboBoxCategory_code = this.getView().byId("comboBoxCategory_code").getSelectedItem().mProperties.key;
-                        comboBoxCategory_name = this.getView().byId("comboBoxCategory_code").getSelectedItem().mProperties.text;
-                    } else {
+                    var input_mi_material_code = this.getView().byId("input_mi_material_code").getValue();
 
-                    }
+                    input_category_code = this.getView().byId("input_category_code").getValue(),            
+                    input_category_text = this.getView().byId("input_category_text").getValue();  
+
                     
 
-                    if (this._isNull(comboBoxCategory_code)) {
+                    if (this._isNull(input_category_code)) {
                         this._showMessageToast("카테고리를 선택 해야 합니다.");
                         return false;
                     }
@@ -1085,22 +1190,22 @@ sap.ui.define([
             } else {
 
                 var input_mi_material_code,
-                    comboBoxCategory_code,
-                    comboBoxCategory_name,
+                    input_category_code,
+                    input_category_text,
                     switchUse_flag = this.getView().byId("switchUse_flag").getState(),
                     msg = "";
 
                 if(oUi.getProperty("/createMode")){
 
                     input_mi_material_code = this.getView().byId("input_mi_material_code").getValue();
-                    comboBoxCategory_code = this.getView().byId("comboBoxCategory_code").getSelectedItem().mProperties.key;
-                    comboBoxCategory_name = this.getView().byId("comboBoxCategory_code").getSelectedItem().mProperties.text;
-                  
+                    input_category_code = this.getView().byId("input_category_code").getValue(),            
+                    input_category_text = this.getView().byId("input_category_text").getValue();  
+                    
                 } else if (oUi.getProperty("/editMode")){
 
                     input_mi_material_code = oUiData.getProperty("/mi_material_code");
-                    comboBoxCategory_code = oUiData.getProperty("/category_code");
-                    comboBoxCategory_name = oUiData.getProperty("/category_name");                    
+                    input_category_code = oUiData.getProperty("/category_code");
+                    input_category_text = oUiData.getProperty("/category_name");                    
                 }
                 if(oUi.getProperty("/createMode")){
                     o_mi_material_code =   input_mi_material_code; 
@@ -1295,7 +1400,7 @@ sap.ui.define([
                         "properties": {
                             "tenant_id": this._sso.dept.tenant_id,
                             "mi_material_code": input_mi_material_code,
-                            "category_code": comboBoxCategory_code,
+                            "category_code": input_category_code,
                             "use_flag": switchUse_flag,
                             "local_create_dtm": new Date(),
                             "local_update_dtm": new Date(),
@@ -1325,7 +1430,7 @@ sap.ui.define([
                     error: this._handleCreateError.bind(this)
                 });
 
-                oModel.refresh();
+                oModel.refresh(true);
                 
             }
         },
