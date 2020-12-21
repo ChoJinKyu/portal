@@ -21,7 +21,7 @@ service MoldApprovalListService {
 
     entity ApprovalMasters as projection on approvalMst.Approval_Mst;
     entity ApprovalDetails as projection on approvalDtl.Md_Approval_Dtl;
-    entity Approvals as projection on apps.Md_Approvals;
+    entity Approvals as projection on apps.Md_Approvals_View;
     
     view Divisions as
     select key a.tenant_id       
