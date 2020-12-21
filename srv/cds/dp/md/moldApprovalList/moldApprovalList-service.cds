@@ -20,8 +20,8 @@ service MoldApprovalListService {
 
     view Approvals as
     select 
-        a.approval_number
-        ,a.tenant_id
+        key a.approval_number
+        ,key a.tenant_id
         ,a.approval_type_code
         ,d.code_name as approval_type : String(240)
         ,a.approval_title
