@@ -1,0 +1,65 @@
+{
+    "resources": [
+        {
+            "name": "manifest.json"
+        },
+        {
+            "name": "controller/MainListPersoService.js"
+        },
+        {
+            "name": "i18n/i18n.properties",
+            "raw": "i18n/i18n.properties"
+        },
+        {
+            "name": "controller/MainList.controller.js"
+        },
+        {
+            "name": "controller/App.controller.js"
+        },
+        {
+            "name": "Component.js"
+        },
+        {
+            "name": "Component-preload.js",
+            "merged": true
+        },
+        {
+            "name": "manifest-bundle.zip"
+        },
+        {
+            "name": "controller/MainListPersoService-dbg.js",
+            "isDebug": true
+        },
+        {
+            "name": "controller/MainList-dbg.controller.js",
+            "isDebug": true
+        },
+        {
+            "name": "controller/App-dbg.controller.js",
+            "isDebug": true
+        },
+        {
+            "name": "Component-dbg.js",
+            "isDebug": true
+        },
+        {
+            "name": "Component-preload-dbg.js",
+            "isDebug": true
+        },
+        {
+            "name": "../../sap-ui-version.json"
+        },
+        {
+            "name": "view/MainList.view.xml"
+        },
+        {
+            "name": "view/App.view.xml"
+        },
+        {
+            "name": "css/style.css"
+        },
+        {
+            "name": "index.html"
+        }
+    ]
+}
