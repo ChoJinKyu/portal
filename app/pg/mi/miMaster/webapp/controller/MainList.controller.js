@@ -9,13 +9,14 @@
  */
 sap.ui.define([
 	"./BaseController",
+	"ext/lib/util/Multilingual",
 	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
     "sap/m/MessageToast"	
-], function (BaseController, History, JSONModel,  Filter, FilterOperator, MessageBox, MessageToast) {
+], function (BaseController, Multilingual, History, JSONModel,  Filter, FilterOperator, MessageBox, MessageToast) {
 	"use strict";
 
 	return BaseController.extend("pg.mi.miMaster.controller.MainList", {
@@ -61,6 +62,10 @@ sap.ui.define([
 			
 			console.group("onInit");
 
+			var oMultilingual = new Multilingual();
+			this.setModel(oMultilingual.getModel(), "I18N");
+
+
 			var oUi,
 				oResourceBundle = this.getResourceBundle();
 				
@@ -74,7 +79,7 @@ sap.ui.define([
 			var oUiData = new JSONModel({
 				tenant_id : this._sso.dept.tenant_id
 			});
-
+		
 			this.setModel(oUiData, "oUiData");
 
 			this.setModel(oUi, "oUi");
@@ -170,6 +175,7 @@ sap.ui.define([
          */
 		onBeforeRebindTable: function (oEvent) {
 			console.group("onBeforeRebindTable");
+			
 			this._getSmartTableById().getTable().removeSelections(true);
 			var mBindingParams = oEvent.getParameter("bindingParams");
 			var oSmtFilter = this.getView().byId("smartFilterBar");             //smart filter
@@ -493,6 +499,7 @@ sap.ui.define([
 		_onRoutedThisPage: function(){
 			console.group("_onRoutedThisPage");
 			this.getModel("oUi").setProperty("/headerExpanded", true);
+			this.getModel().refresh(true);
 			console.groupEnd();
 		},
 

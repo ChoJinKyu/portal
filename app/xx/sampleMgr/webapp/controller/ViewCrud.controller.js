@@ -3,14 +3,12 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "ext/lib/model/ManagedListModel",
     "sap/m/MessageToast",
-    "sap/m/MessageBox",
-    "sap/ui/model/Filter",
-    "sap/ui/model/FilterOperator"
+    "sap/m/MessageBox"
 ],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (BaseController, JSONModel, ManagedListModel, MessageToast, MessageBox, Filter, FilterOperator) {
+	function (BaseController, JSONModel, ManagedListModel, MessageToast, MessageBox) {
 		"use strict";
 
 		return BaseController.extend("xx.sampleMgr.controller.ViewCrud", {
@@ -47,15 +45,29 @@ sap.ui.define([
             onDelete: function() {
                 var oTable = this.byId("sampleViewList");
                 var oModel = this.getModel("viewList");
-                oTable.getSelectedIndices().reverse().forEach(function (idx) {
+				var aItems = oTable.getSelectedItems();
+				var aIndices = [];
+                aItems.forEach(function(oItem){
+                    aIndices.push(oModel.getProperty("/SampleViewCud").indexOf(oItem.getBindingContext("viewList").getObject()));
+                });
+                aIndices = aIndices.sort(function(a, b){return b-a;});
+                aIndices.forEach(function(nIndex){
+                    oModel.markRemoved(nIndex);
+                });
+                oTable.removeSelections(true);                
+
+                /*
+                oTable.getSelectedItems().reverse().forEach(function (idx) {
                     oModel.markRemoved(idx);
                 });
+                */
             },
 
 
             onSave: function() {
                 var oModel = this.getModel("viewList");
                 var oView = this.getView();
+                var v_this = this;
                 
                 MessageBox.confirm("Are you sure ?", {
                     title : "Comfirmation",
@@ -67,9 +79,10 @@ sap.ui.define([
                                 success: function(oEvent){
                                     oView.setBusy(false);
                                     MessageToast.show("Success to save.");
+                                    v_this.onSearch();
                                 }
                             });
-                        };
+                        }
                     }
                 });
             }

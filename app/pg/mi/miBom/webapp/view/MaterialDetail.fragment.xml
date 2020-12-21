@@ -36,17 +36,6 @@
                         noDataText="No Data"
                         class="sapUiSmallMarginBegin sapUiSmallMarginTop"
                 >
-<!-- dev20201213  mi_material_code, mi_material_code 필요함
-    20201213 10:53 화면과 다름 
-    <d:tenant_id>L2100</d:tenant_id>
-<d:company_code>*</d:company_code>
-<d:org_type_code>BU</d:org_type_code>
-<d:org_code>BIZ00100</d:org_code>
-<d:parent_category_code>BATTERY</d:parent_category_code>
-<d:parent_category_name>전지12</d:parent_category_name>
-<d:category_code>AL</d:category_code>
-<d:category_name>알루미늄</d:category_name>
-<d:use_flag>true</d:use_flag>                 -->
                     <columns>
                         <Column hAlign="Center" visible="false"><header><Label text="tenant_id"/></header></Column>
                         <Column hAlign="Center" visible="false"><header><Label text="category_code"/></header></Column>
@@ -70,6 +59,7 @@
             <VBox class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginTop">
                 <Table  id="rightTable"
                         mode="SingleSelectLeft" 
+                        updateFinished=".onRightTableUpdateFinished"
                         items="{mIMaterialCostInformationView>/}"  
                         noDataText="No Data"
                         class="sapUiSmallMarginEnd" 
@@ -137,6 +127,7 @@
             <endButton>
              <Button  text="Apply" 
              type="Emphasized"
+             visible="{=!${oUi>/changeItem}}" 
              press=".onMaterialDetailApply" />
             </endButton>
 	</Dialog>

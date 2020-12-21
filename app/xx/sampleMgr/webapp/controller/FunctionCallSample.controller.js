@@ -8,7 +8,7 @@ sap.ui.define([
 	function (BaseController, JSONModel) {
 		"use strict";
 
-		return BaseController.extend("xx.sampleMgr.controller.FunctionCallSample.controller", {
+		return BaseController.extend("xx.sampleMgr.controller.FunctionCallSample", {
 			onInit: function () {
 
                 this.viewModel = new JSONModel({

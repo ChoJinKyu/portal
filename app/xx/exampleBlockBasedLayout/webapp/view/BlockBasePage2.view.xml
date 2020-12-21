@@ -1,0 +1,34 @@
+<mvc:View controllerName="xx.exampleBlockBasedLayout.controller.BlockBasePage1"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:uxap="sap.uxap"
+    xmlns:block="xx.exampleBlockBasedLayout.block"
+    height="100%">
+
+	<uxap:ObjectPageLayout id="page">
+		<uxap:headerTitle>
+			<uxap:ObjectPageHeader objectTitle="Block Based View"/>
+		</uxap:headerTitle>
+
+		<uxap:sections>
+			<uxap:ObjectPageSection titleUppercase="false" title="example">
+				<uxap:subSections>
+
+					<uxap:ObjectPageSubSection title="Block 1" titleUppercase="false">
+						<uxap:blocks>
+							<block:Section1Block id="b1" />
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+
+					<uxap:ObjectPageSubSection title="Block 2" titleUppercase="false">
+						<uxap:blocks>
+							<block:Section2Block id="b2" />
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+		</uxap:sections>
+	</uxap:ObjectPageLayout>
+
+</mvc:View>

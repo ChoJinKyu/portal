@@ -595,6 +595,11 @@ sap.ui.define([
 		},
 
         getFormatDate : function (date) {
+
+            if(!date){
+                return '';
+            }
+
 			var year = date.getFullYear();              //yyyy
             var month = (1 + date.getMonth());          //M
             month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
@@ -633,8 +638,8 @@ sap.ui.define([
 			var oView = this.getView(),
 				oModel = this.getModel("list");
 			oView.setBusy(true);
-			oModel.setTransactionModel(this.getModel());
-			oModel.read("/MoldMasters", {
+			oModel.setTransactionModel(this.getModel('dse'));
+			oModel.read("/MoldMasterSpec", {
 				filters: aTableSearchState,
 				success: function(oData){
                     this.validator.clearValueState(this.byId("moldMstTable"));
@@ -691,8 +696,8 @@ sap.ui.define([
                 );
             }
 
-            if (receiptFromDate) {
-                aTableSearchState.push(new Filter("receiving_complete_date", FilterOperator.BT, receiptFromDate, receiptToDate));
+            if (receiptFromDate || receiptToDate) {
+                aTableSearchState.push(new Filter("receipt_confirmed_date", FilterOperator.BT, this.getFormatDate(receiptFromDate), this.getFormatDate(receiptToDate)));
             }
 
 			// if (status) {
