@@ -873,7 +873,7 @@ sap.ui.define([
                 oModel = this.getModel("list");
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
-            oModel.read("/ApprovalMasters", {
+            oModel.read("/Approvals", {
                 filters: aSearchFilters,
                 success: function (oData) {
                     oView.setBusy(false);
@@ -972,7 +972,7 @@ sap.ui.define([
             }
 
             if (sPart) {
-                aSearchFilters.push(new Filter("tolower(part_number)", FilterOperator.Contains, "'" + sPart.toLowerCase() + "'"));
+                aSearchFilters.push(new Filter("tolower(mold_number)", FilterOperator.Contains, "'" + sPart.toLowerCase() + "'"));
             }
 
             if (sRequestor) {

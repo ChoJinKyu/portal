@@ -19,6 +19,7 @@
         ,a.approve_status_code
         ,h.code_name as approve_status
         ,a.approval_contents
+        ,g.email_id
     from CM_APPROVAL_MST a
     left join (select approval_number, max(mold_id) as mold_id from dp_mold_approval_dtl group by approval_number) b 
         on a.approval_number = b.approval_number
