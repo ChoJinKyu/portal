@@ -36,7 +36,7 @@ service UomClassMgtService {
           ,m.disable_date
           ,l.language_code
     from  Class.Mm_Uom_Class  m
-    left join ClassLng.Mm_Uom_Class_Lng l
+    left outer join ClassLng.Mm_Uom_Class_Lng l
     on l.tenant_id = m.tenant_id
     and l.uom_class_code = m.uom_class_code
     ;
