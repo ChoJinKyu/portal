@@ -41,7 +41,7 @@
                 }
             },
             "orgMgtService": {
-                "uri": "srv-api/odata/v2/cm.OrgMgtService/",
+                "uri": "srv-api/odata/v2/cm.util.OrgService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
@@ -49,6 +49,13 @@
             },
             "purOrgMgtService": {
                 "uri": "srv-api/odata/v2/cm.PurOrgMgtService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            },
+            "hrUtilService": {
+                "uri": "srv-api/odata/v2/cm.util.HrService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
@@ -122,6 +129,16 @@
                     "useBatch": true
                 }
             },
+            "hr": {
+                "dataSource": "hrUtilService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false,
+                    "useBatch": true
+                }
+            },
             "org": {
                 "dataSource": "orgMgtService",
                 "preload": true,
@@ -171,7 +188,8 @@
             ]
         },
         "resourceRoots": {
-            "ext.lib": "../../../../lib" 
+            "ext.lib": "../../../../lib",
+            "dp.md.util": "../../util"
         },
         "routing": {
             "config": {
@@ -193,6 +211,13 @@
                     "name": "approvalList",
                     "target": [
                         "approvalList"
+                    ]
+                },
+                {
+                    "pattern": "approvalObject/{company_code}/{plant_code}/{approval_type_code}/{approval_number}",
+                    "name": "approvalObject",
+                    "target": [
+                        "approvalObject"
                     ]
                 },
                 {
@@ -230,6 +255,12 @@
                     "viewId": "approvalList",
                     "viewLevel": 1,
                     "title": "{i18n>approvalListViewTitle}"
+                },
+                "approvalObject": {
+                    "viewName": "ApprovalObject",
+                    "viewId": "approvalObject",
+                    "viewLevel": 2,
+                    "title": "{i18n>approvalObjectTitle}"
                 },
                 "mainObject": {
                     "viewName": "MainObject",

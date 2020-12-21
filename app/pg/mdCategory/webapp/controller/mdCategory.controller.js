@@ -2,6 +2,7 @@ sap.ui.define([
 	"ext/lib/controller/BaseController",
 	"ext/lib/util/Multilingual",
 	"ext/lib/util/Validator",
+	"ext/lib/formatter/DateFormatter",
 	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
 	"ext/lib/model/ManagedListModel",
@@ -16,13 +17,14 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/ui/core/Item"
 ],
-  function (BaseController, Multilingual, Validator, History, JSONModel, ManagedListModel, TablePersoController, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, Item) {
+  function (BaseController, Multilingual, Validator, DateFormatter, History, JSONModel, ManagedListModel, TablePersoController, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, Item) {
     "use strict";
 
     return BaseController.extend("pg.mdCategory.controller.mdCategory", {
 
       //formatter: formatter,
        Validator : new Validator(),
+	   dateFormatter: DateFormatter,
 
       onInit: function () {
           
@@ -35,7 +37,6 @@ sap.ui.define([
         // 개인화 - UI 테이블의 경우만 해당
         this._oTPC = new TablePersoController({
           customDataKey: "mdCategory"
-          //persoService: timeZonePersoService
         }).setTable(this.byId("mainTable"));
       },
 
@@ -163,7 +164,7 @@ sap.ui.define([
                 success: (function (oEvent) {
                   view.setBusy(false);
                   MessageToast.show(this.getModel("I18N").getText("/NCM0005"));
-                  this.onSearch();
+                  this.refresh();//this.onSearch();
                 }).bind(this)
               });
             }

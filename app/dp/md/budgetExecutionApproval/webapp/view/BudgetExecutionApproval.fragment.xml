@@ -171,7 +171,7 @@
                          singleContainerFullSize="true">
 			<form:content>
 				<!-- Participating Supplier Table -->
-				<table:Table id="psTable" 
+				<table:Table id="budgetExecutionTable" 
                              selectionMode="MultiToggle" 
                              fixedColumnCount="7" 
                              visibleRowCountMode="Auto" 
@@ -180,7 +180,7 @@
 						<OverflowToolbar>
 							<ToolbarSpacer/>
 							<!-- Add the Personalization button -->
-							    <Button id="btnPsAdd" type="Transparent" text="{I18N>/ROW_ADD}" press=".onMoldItemPopPress">
+							    <Button id="btnBeaAdd" type="Transparent" text="{I18N>/ROW_ADD}" press=".onMoldItemPopPress">
 								<!-- Add -->
 								<customData>
 									<core:CustomData key="multi" value="true"/>
