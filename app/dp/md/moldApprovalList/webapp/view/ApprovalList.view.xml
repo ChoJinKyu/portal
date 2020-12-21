@@ -88,7 +88,7 @@
                             <VBox>
                                 <Label text="{path:'I18N>/COMPANY_NAME', formatter:'I18NFormatter'}" labelFor="searchCompanyE" required="true"></Label>     
                                 <MultiComboBox id="searchCompanyE" width="100%" selectedKey="" selectionFinish="handleSelectionFinishComp" items="{
-                                        path: 'org>/Org_Company',
+                                       path: 'org>/Company',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                         ],

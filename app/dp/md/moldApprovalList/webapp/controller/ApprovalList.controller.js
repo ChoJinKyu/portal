@@ -29,9 +29,11 @@ sap.ui.define([
     'sap/ui/core/util/ExportTypeCSV',
     "sap/ui/model/odata/v2/ODataModel",
     "ext/lib/util/ExcelUtil",
+    "ext/lib/util/Validator"
 ], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter
     , FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text
-    , Token, Input, ComboBox, Item, Element, syncStyleClass, Label, SearchField, Multilingual, Export, ExportTypeCSV, ODataModel, ExcelUtil) {
+    , Token, Input, ComboBox, Item, Element, syncStyleClass, Label, SearchField, Multilingual, Export, ExportTypeCSV, ODataModel, ExcelUtil
+    , Validator) {
     "use strict";
     /**
      * @description 품의 목록 (총 품의 공통)
@@ -46,6 +48,7 @@ sap.ui.define([
     return BaseController.extend("dp.md.moldApprovalList.controller.ApprovalList", {
         
         dateFormatter: DateFormatter,
+        validator: new Validator(),
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -138,6 +141,8 @@ sap.ui.define([
             this.getView().byId("searchCompanyE").setSelectedKeys(['LGEKR']);
             this.getView().byId("searchPlantS").setSelectedKeys(['DFZ']);
             this.getView().byId("searchPlantE").setSelectedKeys(['DFZ']);
+            this.getView().byId("searchApprovalCategoryS").setSelectedKeys(['V']);
+            this.getView().byId("searchApprovalCategoryE").setSelectedKeys(['V']);
 
             this.getView().byId("searchRequestDateS").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
             this.getView().byId("searchRequestDateS").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
@@ -236,10 +241,21 @@ sap.ui.define([
 		 * @public
 		 */
         onPageSearchButtonPress: function (oEvent) {
-            //console.log(oEvent.getParameters());
-            var aSearchFilters = this._getSearchStates();
-            console.log(aSearchFilters);
-            this._applySearch(aSearchFilters);
+           if (oEvent.getParameters().refreshButtonPressed) {
+				// Search field's 'refresh' button has been pressed.
+				// This is visible if you select any master list item.
+				// In this case no new search is triggered, we only
+				// refresh the list binding.
+				this.onRefresh();
+			} else {
+
+                this.validator.validate( this.byId('pageSearchFormE'));
+                if(this.validator.validate( this.byId('pageSearchFormS') ) !== true) return;
+
+                var aSearchFilters = this._getSearchStates();
+                console.log(aSearchFilters);
+				this._applySearch(aSearchFilters);
+			}
         },
 
 		/**
@@ -437,8 +453,8 @@ sap.ui.define([
                 //path = 'requestors>/Requestors';
                 path = '/Requestors';
                 this._oValueHelpDialog.setTitle('Requestor');
-                this._oValueHelpDialog.setKey('requestors>user_id');
-                this._oValueHelpDialog.setDescriptionKey('requestors>english_employee_name');
+                this._oValueHelpDialog.setKey('user_id');
+                this._oValueHelpDialog.setDescriptionKey('english_employee_name');
                
             }
 
@@ -536,12 +552,12 @@ sap.ui.define([
 
             if (path.indexOf("Models") > -1) {
                 // /Models
-                //_tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+                _tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter("tolower(model)", FilterOperator.Contains, "'" + sSearchQuery.toLowerCase().replace("'", "''") + "'"));
 
             } else if (path.indexOf("PartNumbers") > -1) {
                 //PartNumbers
-                //_tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+                _tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter({ path: "tolower(mold_number)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter({ path: "tolower(mold_item_type_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter({ path: "tolower(spec_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
@@ -549,9 +565,9 @@ sap.ui.define([
 
             else if (path.indexOf("Requestors") > -1) {
                 //Requestors
-                //_tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
-                _tempFilters.push(new Filter({ path: "user_id", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
-                _tempFilters.push(new Filter({ path: "english_employee_name", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+                _tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+                _tempFilters.push(new Filter({ path: "tolower(user_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+                _tempFilters.push(new Filter({ path: "tolower(english_employee_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
             }
 
 
@@ -868,20 +884,16 @@ sap.ui.define([
         _getSearchStates: function () {
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S"
 
-            var aCompany = this.getView().byId("searchCompany" + sSurffix).getSelectedItems();
-            var aPlant = this.getView().byId("searchPlant" + sSurffix).getSelectedItems();
+            var aCompany = this.getView().byId("searchCompany" + sSurffix).getSelectedKeys();
+            var aPlant = this.getView().byId("searchPlant" + sSurffix).getSelectedKeys();
             var sDateFrom = this.getView().byId("searchRequestDate" + sSurffix).getDateValue();
             var sDateTo = this.getView().byId("searchRequestDate" + sSurffix).getSecondDateValue();
-            var sCategory = this.getView().byId("searchApprovalCategory" + sSurffix).getSelectedItems();
+            var sCategory = this.getView().byId("searchApprovalCategory" + sSurffix).getSelectedKeys();
             var sSubject = this.getView().byId("searchSubject").getValue().trim();
             var sModel = this.getView().byId("searchModel").getValue().trim();
             var sPart = this.getView().byId("searchPart").getValue().trim();
             var sRequestor = this.getView().byId("searchRequestor").getValue().trim();
             var sStatus = this.getView().byId("searchStatus").getSelectedKey();
-
-            console.log(aCompany);
-            console.log(aPlant);
-
 
             var aSearchFilters = [];
 
@@ -889,7 +901,6 @@ sap.ui.define([
                 var _tempFilters = [];
 
                 sCategory.forEach(function (item, idx, arr) {
-                    console.log(item.mProperties.key)
                     _tempFilters.push(new Filter("approval_type_code", FilterOperator.EQ, item.mProperties.key));
                 });
 
@@ -906,7 +917,7 @@ sap.ui.define([
                 var _tempFilters = [];
 
                 aCompany.forEach(function (item, idx, arr) {
-                    _tempFilters.push(new Filter("company_code", FilterOperator.EQ, item.mProperties.key));
+                    _tempFilters.push(new Filter("company_code", FilterOperator.EQ, item));
                 });
 
                 aSearchFilters.push(
@@ -921,7 +932,7 @@ sap.ui.define([
                 var _tempFilters = [];
 
                 aPlant.forEach(function (item, idx, arr) {
-                    _tempFilters.push(new Filter("org_code", FilterOperator.EQ, item.mProperties.key));
+                    _tempFilters.push(new Filter("org_code", FilterOperator.EQ, item));
                 });
 
                 aSearchFilters.push(
