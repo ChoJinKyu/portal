@@ -137,7 +137,7 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-            <uxap:ObjectPageSection titleUppercase="false" title="{appType>/AppType/0/title}">
+            <uxap:ObjectPageSection titleUppercase="false" title="{appType>/remark}">
 				<uxap:subSections>
                     <uxap:ObjectPageSubSection id="pageSection">
 					</uxap:ObjectPageSubSection>
