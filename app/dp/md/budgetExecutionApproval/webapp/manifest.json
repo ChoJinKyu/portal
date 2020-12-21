@@ -206,7 +206,8 @@
         },
         "resourceRoots": {
             "ext.lib": "../../../../lib" ,
-            "dp.md.util": "../../util"
+            "dp.md.util": "../../util",
+            "dp.md" : "controller"
         },
         "routing": {
             "config": {
