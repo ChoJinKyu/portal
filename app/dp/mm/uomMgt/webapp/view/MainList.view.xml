@@ -52,7 +52,7 @@
                             </layoutData>
                         </VBox>
                         <!-- UOM팝업 테스트 -->
-                        <VBox>
+                        <!-- <VBox>
                             <Label text="UOM :"></Label>
                             <lib-m:CodePicker id="searchUom"
                                 placeholder="Enter a UOM name"
@@ -72,7 +72,7 @@
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M5 S10" />
                             </layoutData>
-                        </VBox>                        
+                        </VBox>                         -->
                         <VBox>
                             <Label text="Base Unit :" labelFor="searchBUSegmentButton"></Label>
                             <SegmentedButton id="searchBUSegmentButton" selectedKey="" class="sapUiSmallMarginBottom" width="100%" >
@@ -121,7 +121,7 @@
                             <ToolbarSpacer/>
                             <SearchField id="mainTableSearchField" placeholder="Uom" width="10rem" search=".onMainTableFilterPress" />
                             <Button id="mainTableAddButton" text="{I18N>/NEW}" type="Transparent" press=".onMainTableAddButtonPress" />
-                            <Button id="rTableExportButton" text="Export" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
+                            <Button id="rTableExportButton" text="{I18N>/EXCEL}" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                                 <layoutData>
@@ -132,10 +132,10 @@
                     </headerToolbar>
                     <columns>
                         <Column id="mainColumnUOM" minScreenWidth="Tablet" hAlign="Center">
-                            <Text text="UOM" />
+                            <Text text="{I18N>/UOM_CODE}" />
                         </Column>
                         <Column id="mainColumnUN" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="UOM Name" />
+                            <Text text="{I18N>/UOM_NAME}" />
                         </Column>
                         <!-- <Column id="mainColumnCC" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
                             <Text text="Commercial Code" />
@@ -144,10 +144,10 @@
                             <Text text="Commercial Name" />
                         </Column> -->
                         <Column id="mainColumnBU" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
-                            <Text text="Base Unit" />
+                            <Text text="{I18N>/BASE_UNIT_FLAG}" />
                         </Column>
                         <Column id="mainColumnClass" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
-                            <Text text="Class" />
+                            <Text text="{I18N>/UOM_CLASS_CODE}" />
                         </Column> 
                         <!-- <Column id="mainColumnTC" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
                             <Text text="Technical Code" />
@@ -156,7 +156,7 @@
                             <Text text="Technical Name" />
                         </Column> -->
                         <Column id="mainColumnDD" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
-                            <Text text="Disable Date" />
+                            <Text text="{I18N>/DISABLE_DATE}" />
                         </Column>                        
                     </columns>
                     <items>
