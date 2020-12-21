@@ -20,6 +20,7 @@
 using { dp as General } from '../../../../../db/cds/dp/gs/DP_GS_SUPPLIER_GEN-model';
 using { dp as Finance } from '../../../../../db/cds/dp/gs/DP_GS_SUPPLIER_FIN-model';
 using { dp as Sales } from '../../../../../db/cds/dp/gs/DP_GS_SUPPLIER_SAL-model';
+using { cm as Employee } from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
 
 namespace dp;
 @path : '/dp.GsSupplierMgtService'
@@ -29,5 +30,30 @@ service GsSupplierMgtService {
     entity SupplierGen as projection on General.Gs_Supplier_Gen;
     entity SupplierFin as projection on Finance.Gs_Supplier_Fin;
     entity SupplierSal as projection on Sales.Gs_Supplier_Sal;
+
+    view SupplierGenView as
+    select key gen.tenant_id,
+           key gen.sourcing_supplier_nickname,
+           gen.develop_date,
+           gen.developer_empno,
+           emp.user_local_name  as developer_empname,
+           gen.email_address,
+           gen.sourcing_supplier_local_name,
+           gen.sourcing_supplier_english_name,
+           gen.local_full_address,
+           gen.english_full_address,
+           gen.an_profile,
+           gen.product_desc,
+           gen.remark,
+           gen.attch_group_number
+    from General.Gs_Supplier_Gen gen
+    left join Employee.Hr_Employee  emp
+    on emp.tenant_id = gen.tenant_id
+    and emp.employee_number = gen.developer_empno
+    ;
+
+    
+
+
     
 }

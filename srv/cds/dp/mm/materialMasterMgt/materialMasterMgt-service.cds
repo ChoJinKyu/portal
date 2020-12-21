@@ -181,10 +181,13 @@ view MaterialOrgAllView as
            mst.material_spec,
            mst.base_uom_code,
            mst.material_group_code,
+           ifnull(grp.material_group_name, grpl.material_group_name) as material_group_name : String(100),
            mst.purchasing_uom_code,
            mst.variable_po_unit_indicator,
            mst.material_class_code,
+           ifnull(clsl.material_class_name, cls.material_class_name) as material_class_name : String(100),
            mst.commodity_code,
+           ifnull(coml.commodity_name, com.commodity_name) as commodity_name : String(100),
            mst.maker_part_number,
            mst.maker_code,
            mst.maker_part_profile_code,
@@ -222,6 +225,27 @@ view MaterialOrgAllView as
     on des.tenant_id = mst.tenant_id
     and des.material_code = mst.material_code
     and des.language_code = 'EN'
+    left outer join mtlGroup.Mm_Material_Group  grp 
+    on grp.tenant_id = mst.tenant_id
+    and grp.material_group_code = mst.material_group_code
+    left outer join mtlGroup.Mm_Material_Group_Lng grpl 
+    on grpl.tenant_id = grp.tenant_id
+    and grpl.material_group_code = grp.material_group_code
+    and grpl.language_code = 'EN'
+    left outer join Class.Mm_Material_Class cls
+    on cls.tenant_id = mst.tenant_id
+    and cls.material_class_code = mst.material_class_code
+    left outer join ClassLng.Mm_Material_Class_Lng  clsl
+    on clsl.tenant_id = cls.tenant_id
+    and clsl.material_class_code = cls.material_class_code
+    and clsl.language_code = 'EN'
+    left outer join Commodity.Mm_Material_Commodity com
+    on com.tenant_id = mst.tenant_id
+    and com.commodity_code = mst.commodity_code
+    left outer join CommodityLng.Mm_Material_Commodity_Lng coml
+    on coml.tenant_id = com.tenant_id
+    and coml.commodity_code = com.commodity_code
+    and coml.language_code = 'EN'
     ;
     // 자재평가
     view MaterialValView as
