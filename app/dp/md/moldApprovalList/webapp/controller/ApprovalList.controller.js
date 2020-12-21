@@ -122,7 +122,8 @@ sap.ui.define([
          * @private
          * @see 검색을 위한 컨트롤에 대하여 필요 초기화를 진행 합니다. 
          */
-        _doInitSearch: function () {
+        _doInitSearch: function (oEvent) {
+        
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S";
 
             this.getView().setModel(this.getOwnerComponent().getModel());
@@ -348,10 +349,10 @@ sap.ui.define([
 
             //var path = '';
 
-            var schFilter = [new Filter("tenant_id", FilterOperator.EQ, 'L1100')];
-                this._bindView("/Requestors", "requestors", schFilter, function(oData){
+            // var schFilter = [new Filter("tenant_id", FilterOperator.EQ, 'L1100')];
+            //     this._bindView("/Requestors", "requestors", schFilter, function(oData){
                     
-                });
+            //     });
             
             this._oValueHelpDialog = sap.ui.xmlfragment("dp.md.moldApprovalList.view.ValueHelpDialogApproval", this);
 
@@ -422,16 +423,19 @@ sap.ui.define([
                     "cols": [
                         {
                             "label": "Name",
-                            "template": "requestors>english_employee_name"
+                            //"template": "requestors>english_employee_name"
+                            "template": "english_employee_name"
                         },
                         {
                             "label": "ID",
-                            "template": "requestors>user_id"
+                            //"template": "requestors>user_id"
+                            "template": "user_id"
                         }
                     ]
                 });
 
-                path = 'requestors>/Requestors';
+                //path = 'requestors>/Requestors';
+                path = '/Requestors';
                 this._oValueHelpDialog.setTitle('Requestor');
                 this._oValueHelpDialog.setKey('requestors>user_id');
                 this._oValueHelpDialog.setDescriptionKey('requestors>english_employee_name');
@@ -479,7 +483,7 @@ sap.ui.define([
             oToken.setText(this._oInputModel.getValue());
             this._oValueHelpDialog.setTokens([oToken]);
             this._oValueHelpDialog.open();
-            //oFilterBar.search();
+            oFilterBar.search();
             //this.onFilterBarSearch(oFilterBar.search());
             
 
@@ -500,7 +504,9 @@ sap.ui.define([
         },
 
         onFilterBarSearch: function (oEvent) {
-
+            var groupId = this.getView().getControlsByFieldGroupId("listFilterBar");
+            console.log(groupId[7].mProperties);
+            groupId[7].mProperties.visiable("false");
             var sSearchQuery = this._oBasicSearchField.getValue(),
                 aSelectionSet = oEvent.getParameter("selectionSet");
                 console.log("aSelectionSet ::::", aSelectionSet);
@@ -543,7 +549,7 @@ sap.ui.define([
                 _tempFilters.push(new Filter({ path: "tolower(spec_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
             }
 
-            else if (path.indexOf("requestors") > -1) {
+            else if (path.indexOf("Requestors") > -1) {
                 //Requestors
                 //_tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter({ path: "user_id", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
@@ -559,16 +565,15 @@ sap.ui.define([
             this._filterTable(new Filter({
                 filters: aFilters,
                 and: true
-            }));
-        },
-
-        _filterTable: function (oFilter) {
+            // 필터 버튼 visible false 처리
+            var searchFilterBtn = this.getView().getControlsByFieldGroupId("listFilterBar")[7];
+            searchFilterBtn.setVisible(false);        _filterTable: function (oFilter) {
             var oValueHelpDialog = this._oValueHelpDialog;
 
             oValueHelpDialog.getTableAsync().then(function (oTable) {
                 if (oTable.bindRows) {
                     oTable.getBinding("rows").filter(oFilter);
-                    console.log("oTable.bindRows :::", oFilter);
+                                console.log("oTable.bindRows :::", oFilter);
                 }
 
                 if (oTable.bindItems) {
@@ -582,7 +587,9 @@ sap.ui.define([
 
         ///////////////////// ValueHelpDialog section Start //////////////////////////
 
-        ///////////////////// List create button pop up event Start //////////////////////////
+
+().getControlsByFieldGroupId("listFilterBar")[7];
+            searchFilterBtn.setVisible(false);        ///////////////////// List create button pop up event Start //////////////////////////
         /**
          * Binds the view to the object path.
          * @function
