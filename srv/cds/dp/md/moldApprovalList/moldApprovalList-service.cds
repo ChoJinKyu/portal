@@ -5,6 +5,7 @@ using { cm as com } from '../../../../../db/cds/cm/CM_ORG_COMPANY-model';
 using { cm as plt } from '../../../../../db/cds/cm/CM_ORG_PLANT-model';
 using { cm as emp } from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
 using { dp as approvalDtl } from '../../../../../db/cds/dp/md/DP_MD_APPROVAL_DTL-model';
+using { dp as apps } from '../../../../../db/cds/dp/md/DP_MD_APPROVALS_VIEW-model';
 
 
 using { dp as moldMstSpecView } from '../../../../../db/cds/dp/md/DP_MD_MST_SPEC_VIEW-model';
@@ -17,8 +18,9 @@ namespace dp;
 @path : '/dp.MoldApprovalListService'
 service MoldApprovalListService {
 
-   entity ApprovalMasters as projection on approvalMst.Approval_Mst;
+    entity ApprovalMasters as projection on approvalMst.Approval_Mst;
     entity ApprovalDetails as projection on approvalDtl.Md_Approval_Dtl;
+    entity Approvals as projection on apps.Md_Approvals_View;
     
     view Divisions as
     select key a.tenant_id       
