@@ -193,10 +193,10 @@
                             </OverflowToolbar>
                         </headerToolbar>
                         <columns>
-                            <Column id="no" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="3em" >
+                            <Column id="no" minScreenWidth="Tablet" hAlign="Center"  width="3em" >
                                 <Text text="No." />
                             </Column>
-                            <Column id="type" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="10em" >
+                            <Column id="type" minScreenWidth="Tablet" hAlign="Center" width="10em" >
                                 <Text text="Type" />
                             </Column>
                             <Column id="nameDept" minScreenWidth="Tablet" hAlign="Center" width="20em" >
@@ -271,12 +271,12 @@
                                     selectionChange="handleSelectionChangeReferer"
                                     selectionFinish="handleSelectionFinishReferer"
                                     width="100%"
-                                    items="{ path: 'hr>/Employee',
+                                    items="{ path: '/RefererSearch',
                                                 filters: [
                                                     {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                                 ]
                                             }">
-                                    <core:Item key="{hr>employee_number}" text="{hr>user_local_name}" />
+                                    <core:Item key="{employee_number}" text="{s_referer_name}" />
                                 </MultiComboBox>
                             </layout:VerticalLayout>
                             <layoutData>

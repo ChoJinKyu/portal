@@ -272,7 +272,7 @@ sap.ui.define([
 
         _onRoutedThisPage: function (approvalNumber) {
             console.log(" approvalNumber >>> " , approvalNumber);
-
+           
             var filter = [
                 new Filter("tenant_id", FilterOperator.EQ, this.tenant_id),
                 new Filter("approval_number", FilterOperator.EQ, approvalNumber)
@@ -288,8 +288,6 @@ sap.ui.define([
             }.bind(this));
 
             console.log(" Approvers >>> " , approvalNumber);
-
-
 
             this._bindView("/Referers", "referer", filter, function (oData) {
                 if (oData.results.length > 0) {
