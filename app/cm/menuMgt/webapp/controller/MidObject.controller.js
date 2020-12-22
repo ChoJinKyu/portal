@@ -361,12 +361,13 @@ sap.ui.define([
         initialFocus: sap.m.MessageBox.Action.CANCEL,
         onClose: function (sButton) {
           if (sButton === MessageBox.Action.OK) {
-            view.setBusy(true);
+            //view.setBusy(true);
             that[oTransactionManager].submit({
               success: function (ok) {
                 //that.getModel("midObjectView").setProperty("/mode", "R");
-                view.setBusy(false);
-                that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+
+                //view.setBusy(false);
+                //that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                 MessageToast.show("Success to save.");
               }
             });
