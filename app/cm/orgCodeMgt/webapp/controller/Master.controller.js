@@ -35,7 +35,7 @@ sap.ui.define([
             },
 
             onAfterRendering: function () {
-                
+                //
             },
 
 			onSearch: function () {

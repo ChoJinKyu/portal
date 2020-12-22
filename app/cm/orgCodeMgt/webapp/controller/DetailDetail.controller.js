@@ -284,7 +284,8 @@ sap.ui.define([
             oModel.submitChanges({
                 groupId: sGroupId,
                 success: function(data){
-                    this.handleClose();
+                    this._fnSetReadMode();
+                    //this.handleClose();
                     MessageToast.show("Success to save.");
                 }.bind(this),
                 error: function(data){
