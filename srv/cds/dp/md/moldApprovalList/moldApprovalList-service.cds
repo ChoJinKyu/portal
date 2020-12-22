@@ -67,6 +67,40 @@ service MoldApprovalListService {
 
 
     /** approval Object */
+
+   view AppMaster as 
+        select 
+            m.tenant_id             
+            , m.approval_number        
+            , m.legacy_approval_number 
+            , m.company_code           
+            , m.org_type_code          
+            , m.org_code               
+            , m.chain_code             
+            , m.approval_type_code     
+            , m.approval_title         
+            , m.approval_contents      
+            , m.approve_status_code    
+            , m.requestor_empno        
+            , m.request_date           
+            , m.attch_group_number 
+            , emp.email_id            
+            , emp.user_local_name     
+            , emp.user_korean_name    
+            , emp.user_english_name   
+            , emp.mobile_phone_number 
+            , emp.office_phone_number 
+            , emp.office_address      
+            , emp.job_title           
+            , emp.assign_type_code    
+            , emp.assign_company_name 
+            , emp.gender_code         
+            , emp.nation_code         
+            , emp.locale_code         
+            , emp.department_id   
+        from approvalMst.Approval_Mst m 
+        join emp.Hr_Employee emp on m.requestor_empno = emp.employee_number ;
+
     // referer 저장 목록 조회 
     view Referers as 
     select 
