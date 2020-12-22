@@ -1,0 +1,82 @@
+{
+    "resources": [
+        {
+            "name": "index.html"
+        },
+        {
+            "name": "controller/BaseController.js"
+        },
+        {
+            "name": "model/models.js"
+        },
+        {
+            "name": "model/formatter.js"
+        },
+        {
+            "name": "controller/developmentReceipt.controller.js"
+        },
+        {
+            "name": "controller/Formatter.js"
+        },
+        {
+            "name": "controller/DemoPersoService.js"
+        },
+        {
+            "name": "manifest.json"
+        },
+        {
+            "name": "Component.js"
+        },
+        {
+            "name": "manifest-bundle.zip"
+        },
+        {
+            "name": "Component-preload.js",
+            "merged": true
+        },
+        {
+            "name": "Component-dbg.js",
+            "isDebug": true
+        },
+        {
+            "name": "model/formatter-dbg.js",
+            "isDebug": true
+        },
+        {
+            "name": "controller/developmentReceipt-dbg.controller.js",
+            "isDebug": true
+        },
+        {
+            "name": "controller/Formatter-dbg.js",
+            "isDebug": true
+        },
+        {
+            "name": "controller/DemoPersoService-dbg.js",
+            "isDebug": true
+        },
+        {
+            "name": "controller/BaseController-dbg.js",
+            "isDebug": true
+        },
+        {
+            "name": "model/models-dbg.js",
+            "isDebug": true
+        },
+        {
+            "name": "../../sap-ui-version.json"
+        },
+        {
+            "name": "view/developmentReceipt.view.xml"
+        },
+        {
+            "name": "view/ValueHelpDialogAffiliate.fragment.xml"
+        },
+        {
+            "name": "css/style.css"
+        },
+        {
+            "name": "i18n/i18n.properties",
+            "raw": "i18n/i18n.properties"
+        }
+    ]
+}
