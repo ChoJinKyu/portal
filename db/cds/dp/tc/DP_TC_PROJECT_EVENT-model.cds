@@ -28,7 +28,7 @@ namespace dp;
 
 using {User} from '@sap/cds/common';
 using util from '../../cm/util/util-model';
-using {dp as Project_Master_His} from './DP_TC_PROJECT_EVENT-model';
+using {dp as Project_Event} from './DP_TC_PROJECT_EVENT-model';
 using {dp as Project} from './DP_TC_PROJECT-model';
 
 
@@ -36,15 +36,21 @@ entity Tc_Project_Event {
     key tenant_id           : String(5) not null  @title : '테넌트ID';
     key project_code        : String(30) not null @title : '프로젝트코드';
     key model_code          : String(40) not null @title : '모델코드';
+        //key mcst_code           : String(30) not null @title : '재료비코드';
+        //key version_sequence    : Decimal not null    @title : '버전순서';
+        mcst_code           : String(30)          @title : '재료비코드';
+        version_sequence    : Decimal             @title : '버전순서';
     key develope_event_code : String(30) not null @title : '개발이벤트코드';
         start_date          : Date                @title : '시작일자';
         end_date            : Date                @title : '종료일자';
-        sequence            : Decimal             @title : '순서';
+        sequence            : String              @title : '순서';
 
-        event_ref           : Association[1..*] to dp.Tc_Project
-                                  on  event_ref.tenant_id    = tenant_id
-                                  and event_ref.project_code = project_code
-                                  and event_ref.model_code   = model_code;
+        event_ref           : Association[1.. * ] to dp.Tc_Project
+                                  on  event_ref.tenant_id        = tenant_id
+                                  and event_ref.project_code     = project_code
+                                  and event_ref.model_code       = model_code
+                                  and event_ref.mcst_code        = mcst_code
+                                  and event_ref.version_sequence = version_sequence;
 }
 
 extend Tc_Project_Event with util.Managed;
