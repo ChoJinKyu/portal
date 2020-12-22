@@ -173,7 +173,7 @@
                         <cells>
                             <Text text="{viewModel>tenant_id}" />
                             <Text text="{viewModel>chain_code}" />
-                            <Text text="{viewModel>code_conrol_org_type_code}" />
+                            <Text text="{viewModel>code_control_org_type_code}" />
                             <Text text="{viewModel>group_code}" />
                             <Text text="{viewModel>group_name}" />
                             <Text text="{viewModel>group_description}" />
