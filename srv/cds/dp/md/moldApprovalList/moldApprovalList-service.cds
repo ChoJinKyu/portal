@@ -84,7 +84,7 @@ service MoldApprovalListService {
         hr.tenant_id,
         hr.department_id,
         emp.user_local_name ||'/'|| emp.job_title||'/'||hr.department_local_name as s_referer_name : String(300), 
-        emp.employee_number,
+       key emp.employee_number,
         emp.user_local_name ,
         emp.email_id 
     from emp.Hr_Employee  emp 
@@ -94,7 +94,7 @@ service MoldApprovalListService {
     view Approvers as
     select 
         ar.approval_number , 
-        ar.approver_empno , 
+        key ar.approver_empno , 
         ar.approve_sequence , 
         ar.approver_type_code , 
         ar.approve_comment , 
