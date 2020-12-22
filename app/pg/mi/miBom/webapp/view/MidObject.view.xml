@@ -355,19 +355,13 @@
                                                             <ComboBox   placeholder="선택"
                                                                         visible="{=!${oUi>/readMode}}" 
                                                                         required="{=!${oUi>/readMode}}"
-                                                                        items ="{
-                                                                            path : '/UseYNView',
-                                                                            formatter: '.formatter.toYesNo'
-                                                                        }"        
+                                                                        items ="{/UseYNView}"        
                                                                         selectedKey="{midList>use_flag}">  
                                                                 <items> 
                                                                     <core:ListItem key="{code}" text="{code_name}"/>
                                                                 </items>
                                                             </ComboBox>                                                         
-                                                            <Text   text="{
-                                                                            path : 'midList>use_flag',
-                                                                            formatter: '.formatter.toYesNo'
-                                                                            }"
+                                                            <Text   text="{= ${midList>use_flag}?'Yes':'No'}"
                                                                     visible="{oUi>/readMode}"/> 
                                                         </VBox>         
                                                         <Text text="{midList>currency_unit}" width="40px"/>                                          
