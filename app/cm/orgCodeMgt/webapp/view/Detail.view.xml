@@ -164,17 +164,17 @@
                                     <m:VBox>
                                         <m:Label
                                             text="{I18N>/ORG_TYPE_NAME}: "
-                                            labelFor="code_conrol_org_type_code"/>
+                                            labelFor="code_control_org_type_code"/>
                                         <m:Text
                                             text="{
-                                                path:'viewModel>/detail/code_conrol_org_type_code',
+                                                path:'viewModel>/detail/code_control_org_type_code',
                                                 formatter:'.chainFormatter' 
                                             }"
                                             visible="{contModel>/detail/readMode}"/>
                                         <m:ComboBox   
-                                            id="code_conrol_org_type_code"
+                                            id="code_control_org_type_code"
                                             visible="{contModel>/detail/editMode}"
-                                            selectedKey="{viewModel>/detail/code_conrol_org_type_code}"
+                                            selectedKey="{viewModel>/detail/code_control_org_type_code}"
                                             showSecondaryValues="true"/>
                                         <m:layoutData>
                                             <layout:GridData
