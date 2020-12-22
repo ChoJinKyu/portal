@@ -21,10 +21,11 @@ sap.ui.define([
     "sap/ui/richtexteditor/RichTextEditor",
     "dp/md/BudgetExecutionApproval",
     "dp/md/PurchaseOrderItemLocal",
+    "dp/md/ParticipatingSupplierSelection",
     "dp/md/util/controller/MoldItemSelection"
 ], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
-    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, BudgetExecutionApproval, PurchaseOrderItemLocal, MoldItemSelection
+    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, BudgetExecutionApproval, PurchaseOrderItemLocal, ParticipatingSupplierSelection, MoldItemSelection
 ) {
     "use strict";
 
@@ -42,6 +43,8 @@ sap.ui.define([
         budget : new BudgetExecutionApproval(),
 
         orderLocal : new PurchaseOrderItemLocal(),
+    
+        supplier : new ParticipatingSupplierSelection(),
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -261,7 +264,10 @@ sap.ui.define([
                this.budget.openFragmentApproval(this); 
             } else if(this.approval_type_code == "V"){
                 this.orderLocal.openFragmentApproval(this);
-            }else{
+            } else if(this.approval_type_code == "E"){
+                this.supplier.openFragmentApproval(this);
+            }
+            else{
                 /** 추후 공통 개발 가이드가 오면 이 함수로 호출 할 예정 */
                 this._loadFragment(fragmentName, function (oFragment) {
                     oPageSection.addBlock(oFragment);
