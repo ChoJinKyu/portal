@@ -72,7 +72,7 @@
                         </VBox>
                         <VBox>
                             <Label text="{I18N>/ORGANIZATION} {I18N>/TYPE}: " labelFor="search_orgtype"></Label>
-                            <ComboBox id="search_orgtype" showSecondaryValues= "true"/>
+                            <ComboBox id="search_orgtype" showSecondaryValues= "true" selectionChange=".onOrgTypeChange"/>
                             <layoutData><layout:GridData span="XL2 L3 M6 S12" /></layoutData>   
                         </VBox>
                         <VBox>
@@ -173,7 +173,7 @@
                         <cells>
                             <Text text="{viewModel>tenant_id}" />
                             <Text text="{viewModel>chain_code}" />
-                            <Text text="{viewModel>code_conrol_org_type_code}" />
+                            <Text text="{viewModel>code_control_org_type_code}" />
                             <Text text="{viewModel>group_code}" />
                             <Text text="{viewModel>group_name}" />
                             <Text text="{viewModel>group_description}" />
