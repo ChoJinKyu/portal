@@ -19,17 +19,18 @@ namespace pg;
 
 using util from '../../cm/util/util-model';
 using {pg as Categ_Text} from '../mi/PG_MI_CATEGORY_LNG-model';
+using {pg as Categ_Code} from './PG_MI_CATEGORY_HICHY_STRU-model';
 
 entity MI_Category_Lng {
-    key tenant_id     : String(5) not null  @title : '회사코드';
-    key category_code : String(40) not null @title : '카테고리코드';
+  key tenant_id      : String(5) not null  @title : '회사코드';
+  key category_code  : String(40) not null @title : '카테고리코드';
 
-        parent        : Association to pg.MI_Category_Hichy_Stru
-                            on  parent.tenant_id     = tenant_id
-                            and parent.category_code = category_code;
+      category_codes : Association to Categ_Code.MI_Category_Hichy_Stru
+                         on  category_codes.tenant_id     = tenant_id
+                         and category_codes.category_code = category_code;
 
-    key language_code : String(4) not null  @title : '언어코드';
-        category_name : String(240)         @title : '카테고리명';
+  key language_code  : String(4) not null  @title : '언어코드';
+      category_name  : String(240)         @title : '카테고리명';
 }
 
 extend MI_Category_Lng with util.Managed;
