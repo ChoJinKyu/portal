@@ -66,7 +66,7 @@
             </OverflowToolbar>
             </headerToolbar>
 
-            <columns>
+            <columns> 
                 <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="3em" >
                     <Text text="S" />
                 </Column>
