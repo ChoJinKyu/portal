@@ -108,7 +108,6 @@ sap.ui.define([
         .attachPatternMatched(
           function (oEvent) {
             var { menuCode, menuName, parentMenuCode } = oEvent.getParameter("arguments")["?query"];
-            console.log(">>>>>> params", menuCode, menuName, parentMenuCode);
             this.getModel("midObjectView").setProperty("/mode", (!menuCode ? "C" : "R"));
             this.getModel("midObjectView").setProperty("/menuCode", menuCode);
             this.getModel("midObjectView").setProperty("/menuName", menuName);
@@ -361,13 +360,12 @@ sap.ui.define([
         initialFocus: sap.m.MessageBox.Action.CANCEL,
         onClose: function (sButton) {
           if (sButton === MessageBox.Action.OK) {
-            //view.setBusy(true);
+            view.setBusy(true);
             that[oTransactionManager].submit({
               success: function (ok) {
                 //that.getModel("midObjectView").setProperty("/mode", "R");
-
-                //view.setBusy(false);
-                //that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                view.setBusy(false);
+                that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                 MessageToast.show("Success to save.");
               }
             });
