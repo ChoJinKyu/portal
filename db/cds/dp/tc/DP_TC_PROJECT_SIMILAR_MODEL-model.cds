@@ -28,13 +28,18 @@ namespace dp;
 
 using {User} from '@sap/cds/common';
 using util from '../../cm/util/util-model';
-using {dp as Project_Master_His} from './DP_TC_PROJECT_SIMILAR_MODEL-model';
+using {dp as Project_Similar_Model} from './DP_TC_PROJECT_SIMILAR_MODEL-model';
 using {dp as Project} from './DP_TC_PROJECT-model';
 
 entity Tc_Project_Similar_Model {
     key tenant_id          : String(5) not null  @title : '테넌트ID';
     key project_code       : String(30) not null @title : '프로젝트코드';
     key model_code         : String(40) not null @title : '모델코드';
+    //key mcst_code           : String(30) not null @title : '재료비코드';
+    //key version_sequence    : Decimal not null    @title : '버전순서';
+    //key similar_model_code : String(40) not null @title : '유사모델코드';    
+        mcst_code               : String(30)          @title : '재료비코드';
+        version_sequence        : Decimal             @title : '버전순서';     
     key similar_model_code : String(40) not null @title : '유사모델코드';
         code_desc          : String(300)         @title : '코드설명';
 
