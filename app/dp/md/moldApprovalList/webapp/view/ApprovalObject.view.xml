@@ -172,8 +172,6 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			
-
 			<uxap:ObjectPageSection titleUppercase="false" title="Approval Line">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
@@ -193,6 +191,9 @@
                             </OverflowToolbar>
                         </headerToolbar>
                         <columns>
+                            <Column id="approver_empno" minScreenWidth="Tablet" hAlign="Center" visible="false" width="3em" >
+                                <Text text="approver_empno" />
+                            </Column>
                             <Column id="no" minScreenWidth="Tablet" hAlign="Center"  width="3em" >
                                 <Text text="No." />
                             </Column>
@@ -221,7 +222,7 @@
                         <items>
                             <ColumnListItem>
                                 <cells>
-                                    <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
+                                     <Text text="{approver>approver_empno}" />
                                     <Text text="{approver>approve_sequence}" />
                                     <ComboBox  id="approverType" width="100%"
                                         selectedKey="{approver>approver_type_code}" 
@@ -239,7 +240,6 @@
                                     <SearchField id="approverSearch" enabled="{approver>editMode}" 
                                         search=".onApproverSearch" width="100%" placeholder="Search employee" 
                                         value="{approver>approver_name}"/>
-                                    <!--<Input value="{approver>approver_empno}" />-->
                                     <Text text="{approver>approve_status_code}" />
                                     <Text text="{approver>approve_comment}" />
                                     <Button id="btnSortUp" icon="{approver>arrowUp}" press=".onApproverSortUp(${approver>approve_sequence})" tooltip="sort" visible="{= ${approver>arrowUp}===''?false:true }"></Button>

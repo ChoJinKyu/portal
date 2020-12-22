@@ -44,7 +44,7 @@
                             selectionChange="vendorSelect" 
                             mode="SingleSelectMaster"
                             width="auto"
-                            items="{ path : 'hr>/Employee',
+                            items="{ path : '/RefererSearch',
                                     filters : [
                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'}
                                     ]
@@ -56,7 +56,7 @@
                                 <Text text="employee_number" />
                             </Column>
                             <Column id="employ_employee_name" minScreenWidth="Tablet" hAlign="Center"  >
-                                <Text text="user_local_name" />
+                                <Text text="Name" />
                             </Column>
            								
                         </columns>
@@ -65,8 +65,8 @@
                                 <cells>
                                     <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
                                  
-                                    <Text text="{hr>employee_number}" />
-                                    <Text text="{hr>user_local_name}" />
+                                    <Text text="{employee_number}" />
+                                    <Text text="{approver_name}" />
                         
                                 </cells>
                             </ColumnListItem>   
