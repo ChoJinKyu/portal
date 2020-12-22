@@ -1,0 +1,525 @@
+<mvc:View 
+    controllerName="dp.developmentReceipt.controller.developmentReceipt"
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns:core="sap.ui.core" 
+    xmlns="sap.m" 
+    xmlns:f="sap.f" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:table="sap.ui.table" 
+    xmlns:form="sap.ui.layout.form" 
+    xmlns:microchart="sap.suite.ui.microchart" 
+    xmlns:sc="sap.suite.ui.commons" 
+    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+	xmlns:sv="sap.ui.comp.smartvariants"
+    class="sapUiSizeCompact"  
+    displayBlock="true" 
+    height="100%">
+    
+    <App id="app">
+		<f:DynamicPage id="developmentReceiptPage" headerExpanded="true" toggleHeaderOnTitleClick="true">
+			<!-- DynamicPage Title -->
+			<f:title>
+				<f:DynamicPageTitle>
+					<f:heading>
+						<Title text="{i18n>appTitle}"/>
+					</f:heading>
+					<f:expandedContent>
+                    <!--<layout:HorizontalLayout allowWrapping="true">-->
+                        <HBox>
+                            <Text text=""/>
+                        </HBox>
+                        <HBox>
+                            <Title text="Process"/>
+                        </HBox>
+                        <HBox>
+                            <sc:MicroProcessFlow>
+                                <sc:content>
+                                    <sc:MicroProcessFlowItem state="Error" stepWidth="2rem" icon="sap-icon://circle-task" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                </sc:content>
+                            </sc:MicroProcessFlow>
+                        </HBox>
+                        <HBox>
+                            <Text renderWhitespace="true" text=" PR    " />
+                            <Text renderWhitespace="true" text=" Budget    " />
+                            <Text renderWhitespace="true" text=" RFQ      " />
+                            <Text renderWhitespace="true" text="Mold&#10;Spec  "   />
+                            <Text renderWhitespace="true" text="Purchase&#10; Contract" />
+                            <Text renderWhitespace="true" text="   PO     " />
+                            <Text renderWhitespace="true" text="   RCV   " />
+                            <Text renderWhitespace="true" text="  Lease&#10;Contract" />
+                            <Text renderWhitespace="true" text=" Invoice" />
+                        </HBox>
+                        <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                            <form:content>
+                                <VBox>
+                                    <Label text="Affiliate" labelFor="multiInputAffiliateE" required="true"></Label>
+                                    <MultiInput id="multiInputAffiliateE" valueHelpOnly="true" width="90%" valueHelpRequest=".onValueHelpRequested"/>
+                                    <layoutData>
+                                        <layout:GridData span="XL3 L3 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox>
+                                    <Label text="Division" labelFor="multiInputDivisionE" required="true"></Label>
+                                    <MultiInput id="multiInputDivisionE" valueHelpOnly="true" width="90%" valueHelpRequest=".onValueHelpRequested"/>
+                                    <layoutData>
+                                        <layout:GridData span="XL3 L3 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox>
+                                    <Label text="Receipt Date" labelFor="ReceiptDateE" required="true"></Label>
+                                    <DateRangeSelection id="ReceiptDateE" width="90%" change="handleChange"/>
+                                    <layoutData>
+                                        <layout:GridData span="XL3 L3 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox>
+                                    <Label text="Status"></Label>
+                                    <SegmentedButton selectedKey="" class="sapUiSmallMarginBottom" width="100%">
+                                        <items>
+                                            <SegmentedButtonItem text="All" key="" />
+                                            <SegmentedButtonItem text="Received" width="5em" />
+                                            <SegmentedButtonItem text="Unreceived" width="7em" />
+                                        </items>
+                                    </SegmentedButton>
+                                    <layoutData>
+                                        <layout:GridData span="XL3 L3 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                            </form:content>
+                        </form:SimpleForm>
+                        <!--</layout:HorizontalLayout>-->
+					</f:expandedContent>
+					<f:snappedContent>
+                        <HBox>
+                            <Text text=""/>
+                        </HBox>
+                        <HBox>
+                            <Title text="Process"/>
+                        </HBox>
+                        <HBox>
+                            <sc:MicroProcessFlow>
+                                <sc:content>
+                                    <sc:MicroProcessFlowItem state="Error" stepWidth="2rem" icon="sap-icon://circle-task" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="2rem" />
+                                </sc:content>
+                            </sc:MicroProcessFlow>
+                        </HBox>
+                        <HBox>
+                            <Text renderWhitespace="true" text=" PR    " />
+                            <Text renderWhitespace="true" text=" Budget    " />
+                            <Text renderWhitespace="true" text=" RFQ      " />
+                            <Text renderWhitespace="true" text="Mold&#10;Spec  "   />
+                            <Text renderWhitespace="true" text="Purchase&#10; Contract" />
+                            <Text renderWhitespace="true" text="   PO     " />
+                            <Text renderWhitespace="true" text="   RCV   " />
+                            <Text renderWhitespace="true" text="  Lease&#10;Contract" />
+                            <Text renderWhitespace="true" text=" Invoice" />
+                        </HBox>
+                        <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                            <form:content>
+                                <VBox>
+                                    <Label text="Affiliate" labelFor="multiInputAffiliateS" required="true"></Label>
+                                    <MultiInput id="multiInputAffiliateS" valueHelpOnly="true" width="90%" valueHelpRequest=".onValueHelpRequested"/>
+                                    <layoutData>
+                                        <layout:GridData span="XL3 L3 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox>
+                                    <Label text="Division" labelFor="multiInputDivisionS" required="true"></Label>
+                                    <MultiInput id="multiInputDivisionS" valueHelpOnly="true" width="90%" valueHelpRequest=".onValueHelpRequested"/>
+                                    <layoutData>
+                                        <layout:GridData span="XL3 L3 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox>
+                                    <Label text="Receipt Date" labelFor="ReceiptDateS" required="true"></Label>
+                                    <DateRangeSelection id="ReceiptDateS" width="90%" change="handleChange"/>
+                                    <layoutData>
+                                        <layout:GridData span="XL3 L3 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox>
+                                    <Label text="Status"></Label>
+                                    <SegmentedButton selectedKey="" class="sapUiSmallMarginBottom" width="100%">
+                                        <items>
+                                            <SegmentedButtonItem text="All" key="" />
+                                            <SegmentedButtonItem text="Received" width="5em" />
+                                            <SegmentedButtonItem text="Unreceived" width="7em" />
+                                        </items>
+                                    </SegmentedButton>
+                                    <layoutData>
+                                        <layout:GridData span="XL3 L3 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                            </form:content>
+                        </form:SimpleForm>
+					</f:snappedContent>
+                    <f:actions>
+                        <Button text="Search" type="Emphasized" press=".onSearch" />
+                </f:actions>
+                <f:navigationActions>
+                    <Button icon="sap-icon://unfavorite" type="Transparent" />
+                </f:navigationActions>
+				</f:DynamicPageTitle>
+			</f:title>
+			<!-- DynamicPage Header -->
+			<f:header>
+				<f:DynamicPageHeader pinnable="true">
+					<form:SimpleForm maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                        <form:content>
+                            
+                            <!-- examples from here -->
+                            <!--
+                            <VBox>
+                                <Toolbar height="1px" class="sapUiSmallMarginBottom" />
+                                <layoutData>
+                                    <layout:GridData span="XL12 L12 M12 S12" />
+                                </layoutData>
+                            </VBox>
+                            -->
+                            <VBox>
+                                <Label text="Item Type " labelFor="multiInputItemType"></Label>
+                                <MultiInput id="multiInputItemType" valueHelpOnly="true" width="90%" valueHelpRequest=".onValueHelpRequested"/>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" linebreak="true" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="Production Type" labelFor="multiInputProductionType"></Label>
+                                <MultiInput id="multiInputProductionType" valueHelpOnly="true" width="90%" valueHelpRequest=".onValueHelpRequested"/>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="Description"></Label>
+                                <Input id="searchDescription" width="90%"/>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="E/D Type"></Label>
+                                <ComboBox   id="searchEDType" width="80%"
+                                            selectedKey=""
+                                            items="{
+                                                        path : 'util>/CodeDetails',
+                                                        filters : [
+                                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                            {path : 'company_code', operator : 'EQ', value1 : '*'},
+                                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ED_TYPE'}
+                                                        ]
+                                                    }"
+                                >
+                                    <core:Item key="{util>code}" text="{util>code_description}" />
+                                </ComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            
+                            <VBox>
+                                <Label text="Model " labelFor="multiInputModel"></Label>
+                                <MultiInput id="multiInputModel" valueHelpOnly="true" width="90%" valueHelpRequest=".onValueHelpRequested"/>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="Part No " labelFor="multiInputPartNo"></Label>
+                                <MultiInput id="multiInputPartNo" valueHelpOnly="true" width="90%" valueHelpRequest=".onValueHelpRequested"/>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="Family Part No" labelFor="searchFamilyPartNo"></Label>
+                                <Input id="searchFamilyPartNo" width="90%"/>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+
+                        </form:content>
+                    </form:SimpleForm>
+				</f:DynamicPageHeader>
+			</f:header>
+			<f:content>
+                <Page showHeader="false" enableScrolling="false" class="sapUiContentPadding">
+                    
+                    <Table id="moldMstTable" 
+                        items="{    path: '/MoldMasters',
+                                    parameters: {
+                                                $$updateGroupId : 'moldMstUpdateGroup'
+                                                },
+                                    
+                                    sorter: [
+                                        { path: 'tenant_id' }, 
+                                        { path: 'company_code' },
+                                        { path: 'group_code' }
+                                    ]
+                                }" 
+                        mode="MultiSelect" 
+                    >
+                    
+                        <headerToolbar>
+                            <Toolbar>
+                                <ToolbarSpacer/>
+                                <Button text="Bind &amp; Receipt" press=".onBindReceipt" />
+                                <Button text="Cancel Bind" press=".onCancelBind" />
+                                <Button text="Delete" press=".onDelete" />
+                                <Button type="Emphasized" text="Receipt" press=".onReceipt" />
+                                <Button icon="sap-icon://excel-attachment" press="onExport"/>
+                                <Button icon="sap-icon://action-settings" press="onPersoButtonPressed" >
+                                    <layoutData>
+                                        <OverflowToolbarLayoutData priority="NeverOverflow" />
+                                    </layoutData>
+                                </Button>
+                            </Toolbar>
+                        </headerToolbar>
+                        <columns>
+                            <Column id="affiliateCol" width="6em" hAlign="Center" mergeDuplicates="true">
+                                <Text text="Affiliate"/>
+                            </Column>
+                            <Column id="divisionCol" width="6em" minScreenWidth="Tablet" demandPopin="true" hAlign="Center">
+                                <Text text="Division"/>
+                            </Column>
+                            <Column id="modelCol" width="15em" minScreenWidth="Tablet" demandPopin="true" >
+                                <Text text="Model"/>
+                            </Column>
+                            <Column id="partNoCol" width="12em" minScreenWidth="Tablet" demandPopin="true" hAlign="Center">
+                                <Text text="Part No"/>
+                            </Column>
+                            <Column id="seqCol" width="5em" minScreenWidth="Tablet" hAlign="Center">
+                                <Text text="Seq"/>
+                            </Column>
+                            <Column id="descriptionCol" width="12em">
+                                <Text text="Description"/>
+                            </Column>
+                            <Column id="statusCol" width="12em" hAlign="Center">
+                                <Text text="Status"/>
+                            </Column>
+                            <Column id="familyFlagCol" width="8em" hAlign="Center" demandPopin="true" >
+                                <Text text="Family Y/N"/>
+                            </Column>
+                            <Column id="productionTypeCol" width="12em" hAlign="Center" demandPopin="true" >
+                                <Text text="Production&#10;Type"/>
+                            </Column>
+                            <Column id="itemTypeCol" width="10em" hAlign="Center" demandPopin="true" >
+                                <Text text="Item&#10;Type"/>
+                            </Column>
+                            <Column id="moldTypeCol" width="10em" hAlign="Center" demandPopin="true" >
+                                <Text text="Mold&#10;Type"/>
+                            </Column>
+                            <Column id="eDTypeCol" width="10em" hAlign="Center" demandPopin="true" >
+                                <Text text="Export/Domestic&#10;Type"/>
+                            </Column>
+                            <Column id="testUseFlagCol" width="8em" hAlign="Center">
+                                <Text text="T-EST&#10;Use Y/N"/>
+                            </Column>
+                            <Column id="testAttachCol" width="8em" hAlign="Center">
+                                <Text text="T-EST&#10;Attach"/>
+                            </Column>
+                            <Column id="processTypeCol" width="8em" hAlign="Center">
+                                <Text text="Process&#10;Type"/>
+                            </Column>
+                            <Column id="moldStructureCol" width="10em" hAlign="Center">
+                                <Text text="Mold&#10;Structure"/>
+                            </Column>
+                            <Column id="sizeCol" width="10em" hAlign="Center">
+                                <Text text="Size"/>
+                            </Column>
+                            <Column id="receiptDateCol" width="10em" hAlign="Center">
+                                <Text text="Receipt&#10;Date"/>
+                            </Column>
+                            <Column id="requesterCol" width="12em" hAlign="Center">
+                                <Text text="Requester"/>
+                            </Column>
+                            <Column id="moldDeveloperCol" width="12em" hAlign="Center">
+                                <Text text="Mold&#10;Developer"/>
+                            </Column>
+                            <Column id="remarkCol" width="20em" hAlign="Center">
+                                <Text text="Remark"/>
+                            </Column>
+                            <Column id="projectCodeCol" width="15em">
+                                <Text text="Project Code"/>
+                            </Column>
+                            <Column id="projectNameCol" width="20em">
+                                <Text text="Project Name"/>
+                            </Column>
+                            <Column id="familyPartNo1Col" width="12em" hAlign="Center">
+                                <Text text="Family&#10;Part No(1)"/>
+                            </Column>
+                            <Column id="familyPartNo2Col" width="12em" hAlign="Center">
+                                <Text text="Family&#10;Part No(2)"/>
+                            </Column>
+                            <Column id="familyPartNo3Col" width="12em" hAlign="Center">
+                                <Text text="Family&#10;Part No(3)"/>
+                            </Column>
+                            <Column id="familyPartNo4Col" width="12em" hAlign="Center">
+                                <Text text="Family&#10;Part No(4)"/>
+                            </Column>
+                            <Column id="familyPartNo5Col" width="12em" hAlign="Center">
+                                <Text text="Family&#10;Part No(5)"/>
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text id="company_code" text="{company_code}"/>
+                                    <Text id="group_code" text="{group_code}"/>
+                                    <Text id="model" text="{model}"/>
+                                    <Text id="part_number" text="{part_number}"/>
+                                    <Text id="mold_sequence" text="{mold_sequence}"/>
+                                    <Text id="spec_name" text="{spec_name}"/>
+                                    <Text id="mold_receipt_flag" text="{mold_receipt_flag}"/>
+                                    
+                                    <ComboBox   id="family_flag"    
+                                                selectedKey="{family_flag}"
+                                                items="{
+                                                            path : 'util>/CodeDetails',
+                                                            filters : [
+                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                                {path : 'company_code', operator : 'EQ', value1 : '*'},
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'CM_YN'}
+                                                            ]
+                                                        }"
+                                    >
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </ComboBox>
+                                    <ComboBox   id="mold_production_type_code"
+                                                selectedKey="{mold_production_type_code}"
+                                                items="{
+                                                            path : 'util>/CodeDetails',
+                                                            filters : [
+                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                                {path : 'company_code', operator : 'EQ', value1 : '*'},
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
+                                                            ]
+                                                        }"
+                                    >
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </ComboBox>
+                                    <ComboBox   id="mold_item_type_code"
+                                                selectedKey="{mold_item_type_code}"
+                                                items="{
+                                                            path : 'util>/CodeDetails',
+                                                            filters : [
+                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                                {path : 'company_code', operator : 'EQ', value1 : '*'},
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
+                                                            ]
+                                                        }"
+                                    >
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </ComboBox>
+                                    <ComboBox   id="mold_type_code"
+                                                selectedKey="{mold_type_code}"
+                                                items="{
+                                                            path : 'util>/CodeDetails',
+                                                            filters : [
+                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                                {path : 'company_code', operator : 'EQ', value1 : '*'},
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_TYPE'}
+                                                            ]
+                                                        }"
+                                    >
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </ComboBox>
+                                    <ComboBox   id="export_domestic_type_code"
+                                                selectedKey="{export_domestic_type_code}"
+                                                items="{
+                                                            path : 'util>/CodeDetails',
+                                                            filters : [
+                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                                {path : 'company_code', operator : 'EQ', value1 : '*'},
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ED_TYPE'}
+                                                            ]
+                                                        }"
+                                    >
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </ComboBox>
+                                    <ComboBox   id="t_est_use_flag"    
+                                                selectedKey="{t_est_use_flag}"
+                                                items="{
+                                                            path : 'util>/CodeDetails',
+                                                            filters : [
+                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                                {path : 'company_code', operator : 'EQ', value1 : 'G100'},
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'CM_TF_FLAG'}
+                                                            ]
+                                                        }"
+                                    >
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </ComboBox>
+                                    <core:Icon 
+                                        src="sap-icon://attachment"
+                                        press="handleAttachmentPress" >
+                                        <core:layoutData>
+                                            <FlexItemData growFactor="1" />
+                                        </core:layoutData>
+                                    </core:Icon>
+                                    <Text id="import_mold_flag" text="{import_mold_flag}"/>
+                                    <ComboBox   id="die_form"    
+                                                selectedKey="{die_form}"
+                                                items="{
+                                                            path : 'util>/CodeDetails',
+                                                            filters : [
+                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                                {path : 'company_code', operator : 'EQ', value1 : '*'},
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_STRUCTURE'}
+                                                            ]
+                                                        }"
+                                    >
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </ComboBox>
+                                    <ComboBox   id="mold_size"    
+                                                selectedKey="{mold_size}"
+                                                items="{
+                                                            path : 'util>/CodeDetails',
+                                                            filters : [
+                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                                {path : 'company_code', operator : 'EQ', value1 : '*'},
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SIZE'}
+                                                            ]
+                                                        }"
+                                    >
+                                        <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </ComboBox>
+                                    <Text id="receiving_report_date" text="{receiving_report_date}"/>
+                                    <Text id="develope_request_empno" text="{develope_request_empno}"/>
+                                    <Text id="mold_developer_id" text="{mold_developer_id}"/>
+                                    <TextArea id="remark" value="{remark}" rows="2" />
+                                    <Text id="pdm_project_code" text="{pdm_project_code}"/>
+                                    <Text id="pdm_project_name" text="{pdm_project_name}"/>
+                                    <Input id="family_part_number_1" value="{family_part_number_1}" maxLength="11" /><!--enabled="false"-->
+                                    <Input id="family_part_number_2" value="{family_part_number_2}" maxLength="11"/>
+                                    <Input id="family_part_number_3" value="{family_part_number_3}" maxLength="11"/>
+                                    <Input id="family_part_number_4" value="{family_part_number_4}" maxLength="11"/>
+                                    <Input id="family_part_number_5" value="{family_part_number_5}" maxLength="11"/>
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                
+                </Page>
+			</f:content>
+		</f:DynamicPage>
+    </App>
+</mvc:View>

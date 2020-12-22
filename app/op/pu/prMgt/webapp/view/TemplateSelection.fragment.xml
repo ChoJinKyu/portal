@@ -28,7 +28,7 @@
                             <ComboBox
                               id="SelectionPR_TYPE2"
                               width="100%"
-                              selectionChange=".OnPR_TYPEChange2"
+                              selectionChange=".onInitPR_TYPE3"
                               items="{
                                 path: 'util>/CodeDetails',
                                 filters: [
@@ -49,17 +49,7 @@
                              <ComboBox
                               id="SelectionPR_TYPE3"
                               width="100%"
-                              selectionChange=".OnPR_TYPEChange3"
-                              items="{
-                                path: 'util>/CodeDetails',
-                                filters: [
-                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                    {path: 'group_code', operator: 'EQ', value1: 'OP_PR_TYPE_CODE_3'}
-                                ]
-                              }">
-                              <items>
-                                <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
-                              </items>
+                              selectionChange=".onInitPR_TYPE">
                             </ComboBox>
                              <layoutData>
                                 <layout:GridData span="XL12 L12 M12 S12" />
@@ -69,17 +59,7 @@
                             <Label text = "구매요청 유형" labelFor="SelectionPR_TYPE" required="false"/>
                             <ComboBox
                               id="SelectionPR_TYPE"
-                              width="100%"
-                              items="{
-                                path: 'util>/CodeDetails',
-                                filters: [
-                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                    {path: 'group_code', operator: 'EQ', value1: 'OP_PR_TYPE_CODE'}
-                                ]
-                              }">
-                              <items>
-                                <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
-                              </items>
+                              width="100%">
                             </ComboBox>
                              <layoutData>
                                 <layout:GridData span="XL12 L12 M12 S12" />

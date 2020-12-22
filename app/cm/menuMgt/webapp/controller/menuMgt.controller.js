@@ -22,7 +22,7 @@ sap.ui.define([
                 var [flag] = arguments;
                 var oTable = this.getView().byId("menuTreeTable");
                 var row =
-                    (this.getView().getModel("tree").getProperty("/Menu_haa") || {}).length > 0
+                    (this.getView().getModel("tree").getProperty("/Menu_haa").nodes || []).length > 0
                         ? this.getView().getModel("tree").getObject(
                             oTable.getContextByIndex(oTable.getSelectedIndex()).sPath
                         )
@@ -54,6 +54,45 @@ sap.ui.define([
                 });
             },
             onSearch: function (event) {
+                //GET: /OrderWithParameter(foo=5)/Set or GET: /OrderWithParameter(5)/Set
+                //console.log(">>>>>>>>>>>>> Start");
+                //this.getView().getModel("v4").bindContext("https://lgcommondev2-workspaces-ws-dxkhj-app2.jp10.applicationstudio.cloud.sap/cm/menuMgt/webapp/srv-api/odata/v4/cm.MenuMgtV4Service/Menu(tenant_id='L2100',user_id='Admin')/Set/");
+                //this.getView().getModel("v4").bindList("/Menu(tenant_id='L2100',user_id='Admin')/Set/");
+                //this.getView().getModel("v4").bindList("/Menu(tenant_id=@tenant_id,user_id=@user_id)/Set?@tenant_id='L2100'&@user_id='Admin'/");
+                //this.getView().getModel("v4").bindList("/Menu(tenant_id=@tenant_id,user_id=@user_id)/Set");
+                // new sap.ui.model.odata.v4.ODataModel({
+                //     serviceUrl: "srv-api/odata/v4/cm.MenuMgtV4Service/Menu(tenant_id='L2100',user_id='Admin')/Set/",
+                //     synchronizationMode: "None"
+                // })
+                // new sap.ui.model.odata.v4.ODataModel({
+                //     //serviceUrl: "https://lgcommondev2-workspaces-ws-dxkhj-app2.jp10.applicationstudio.cloud.sap/odata/v4/cm.MenuMgtV4Service/",
+                //     //serviceUrl: "https://lgcommondev2-workspaces-ws-dxkhj-app2.jp10.applicationstudio.cloud.sap/cm/menuMgt/webapp/srv-api/odata/v4/cm.MenuMgtV4Service/",
+                //     serviceUrl: "srv-api/odata/v4/cm.MenuMgtV4Service/",
+                //     synchronizationMode: "None"
+                // })
+                //.bindList("/Menu(tenant_id='L2100',user_id='Admin')/Set")
+                // .bindContext("/Menu(tenant_id='L2100',user_id='Admin')/Set")
+                // .create(true, true);
+                // this.getView().getModel("v4").getHttpHeaders()["Request Method"] = "GET";
+                // this.getView().getModel("v4")
+                //     .bindList("/Menu(tenant_id='L2100',user_id='Admin')/Set")
+                //     .create();
+                // "cm/menuMgt/webapp/srv-api/odata/v4/cm.MenuMgtV4Service/Menu(tenant_id='L2100',user_id='Admin')/Set"
+                // $.ajax({
+                //     type: 'GET',
+                //     url: "https://lgcommondev2-workspaces-ws-dxkhj-app2.jp10.applicationstudio.cloud.sap/cm/menuMgt/webapp/srv-api/odata/v4/cm.MenuMgtV4Service/Menu(tenant_id='L2100',user_id='Admin')/Set",
+                //     dataType: 'json'
+                //     data: pack(params.data, boundary),
+                //     contentType: 'multipart/mixed; boundary="' + boundary + '"',
+                //     beforeSend: function (xhr) {
+                //         xhr.setRequestHeader("DataServiceVersion", params.odataVersion || "2.0");
+                //         xhr.setRequestHeader("MaxDataServiceVersion", params.odataVersion || "2.0");
+                //     },
+                //     complete: params.complete ?
+                //         function (xnr, status) { 
+                //             unpack(xnr, status, params.complete); 
+                //         } : null
+                // });
                 var predicates = [];
                 if (!!this.byId("searchChainCombo").getSelectedKey()) {
                     predicates.push(new Filter("chain_code", FilterOperator.Contains, this.byId("searchChainCombo").getSelectedKey()));

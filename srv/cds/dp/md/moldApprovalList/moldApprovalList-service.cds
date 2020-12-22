@@ -67,6 +67,40 @@ service MoldApprovalListService {
 
 
     /** approval Object */
+    // appMaster 
+    view AppMaster as 
+    select 
+        m.tenant_id             
+        , m.approval_number        
+        , m.legacy_approval_number 
+        , m.company_code           
+        , m.org_type_code          
+        , m.org_code               
+        , m.chain_code             
+        , m.approval_type_code     
+        , m.approval_title         
+        , m.approval_contents      
+        , m.approve_status_code    
+        , m.requestor_empno        
+        , m.request_date           
+        , m.attch_group_number 
+        , em.email_id            
+        , em.user_local_name     
+        , em.user_korean_name    
+        , em.user_english_name   
+        , em.mobile_phone_number 
+        , em.office_phone_number 
+        , em.office_address      
+        , em.job_title           
+        , em.assign_type_code    
+        , em.assign_company_name 
+        , em.gender_code         
+        , em.nation_code         
+        , em.locale_code         
+        , em.department_id   
+    from approvalMst.Approval_Mst m 
+    join emp.Hr_Employee em on m.requestor_empno = em.employee_number ;
+
     // referer 저장 목록 조회 
     view Referers as 
     select 
@@ -84,9 +118,11 @@ service MoldApprovalListService {
     select 
        key hr.tenant_id,
         hr.department_id,
+        emp.user_korean_name ||'['|| emp.user_english_name||'] /'||hr.department_local_name as approver_name  : String(240),
         emp.user_local_name ||'/'|| emp.job_title||'/'||hr.department_local_name as s_referer_name : String(300), 
        key emp.employee_number,
         emp.user_local_name ,
+        emp.user_english_name , 
         emp.email_id 
     from emp.Hr_Employee  emp 
     join Dept hr on hr.department_id = emp.department_id and hr.tenant_id = emp.tenant_id ;
@@ -105,6 +141,7 @@ service MoldApprovalListService {
         emp.user_korean_name ||'['|| emp.user_english_name||'] /'||hr.department_local_name as approver_name  : String(240)
     from approver.Approver ar 
     join emp.Hr_Employee  emp on emp.employee_number = ar.approver_empno 
-    join  Dept hr on hr.department_id = emp.department_id 
-    and hr.tenant_id = emp.tenant_id ;  
+    join  Dept hr on hr.department_id = emp.department_id  and hr.tenant_id = emp.tenant_id 
+    order by approve_sequence asc 
+    ;  
 }
