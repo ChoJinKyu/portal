@@ -52,7 +52,7 @@
                             </layoutData>
                         </VBox>
                         <!-- UOM팝업 테스트 -->
-                        <!-- <VBox>
+                        <VBox>
                             <Label text="UOM :"></Label>
                             <lib-m:CodePicker id="searchUom"
                                 placeholder="Enter a UOM name"
@@ -72,7 +72,7 @@
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M5 S10" />
                             </layoutData>
-                        </VBox>                         -->
+                        </VBox>                        
                         <VBox>
                             <Label text="Base Unit :" labelFor="searchBUSegmentButton"></Label>
                             <SegmentedButton id="searchBUSegmentButton" selectedKey="" class="sapUiSmallMarginBottom" width="100%" >
