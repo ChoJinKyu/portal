@@ -1,5 +1,6 @@
-//https://lgcommondev-workspaces-ws-xqwd6-app1.jp10.applicationstudio.cloud.sap/odata/v4/pg.vendorPoolMappingV4Service/VpVendorPoolChangeProcCall
-//https://lgcommondev2-workspaces-ws-7bzzl-app1.jp10.applicationstudio.cloud.sap/odata/v4/pg.vendorPoolMappingV4Service/VpVendorPoolChangeProcCall
+//https://lgcommondev-workspaces-ws-xqwd6-app1.jp10.applicationstudio.cloud.sap/odata/v4/pg.vpMappingV4Service/VpMappingChangeProcCall
+//https://lgcommondev2-workspaces-ws-9qpwg-app1.jp10.applicationstudio.cloud.sap/odata/v4/pg.vpMappingV4Service/VpMappingChangeProcCall
+//https://lgcommondev2-workspaces-ws-9qpwg-app1.jp10.applicationstudio.cloud.sap/odata/v4/pg.vpMappingV4Service/VpMappingChangeTestProc
 
 
 //using { pg as vpMstType } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_MST_TYPE-model';
@@ -10,8 +11,8 @@
 
 namespace pg;
 
-@path : '/pg.vendorPoolMappingV4Service'
-service VpVendorPoolChangeProcCallV4Service {
+@path : '/pg.VpMappingV4Service'
+service VpMappingV4Service {
 
     type VpMstType : {
         tenant_id                        : String(5);
@@ -96,7 +97,7 @@ service VpVendorPoolChangeProcCallV4Service {
         return_msg  : String(5000);
     };
 
-    type procInputType : {
+    type ProcInputType : {
         vpMst      : array of VpMstType;
         vpSupplier : array of VpSuppilerType;
         vpItem     : array of VpItemType;
@@ -105,7 +106,9 @@ service VpVendorPoolChangeProcCallV4Service {
         user_no    : String(255)
     }
 
-    action VpVendorPoolChangeProc(inputData : procInputType) returns array of VpOutType;
+    action VpMappingChangeProc(inputData : ProcInputType) returns array of VpOutType;
+
+    action VpMappingChangeTestProc(inputData : ProcInputType) returns array of VpOutType;
 
 
 }

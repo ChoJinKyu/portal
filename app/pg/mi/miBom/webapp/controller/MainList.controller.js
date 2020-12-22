@@ -444,7 +444,7 @@ sap.ui.define([
 				_nDifferentDeleteHeaderItem = 0;
 				 
 			var oGlobalBusyDialog = new sap.m.BusyDialog();
-			 	oGlobalBusyDialog.open();
+			 	//oGlobalBusyDialog.open();
 
 			if(oAction === sap.m.MessageBox.Action.DELETE) {
 				
@@ -537,6 +537,8 @@ sap.ui.define([
 				var _deleteHeaderOdata = _deleteHeader.getProperty("/delData");
 				var _deleteItemOdata = _deleteItem.getProperty("/delData");
 
+				this._currentDeleitem = 0;
+
 				//배열에 담긴 key과 동일한 아이템 카운트 구함
 				for( var i=0; i < _deleteHeaderOdata.length; i++ ){
 
@@ -584,62 +586,113 @@ sap.ui.define([
 				//아이템 조사와 Header 최종 조사 내용을 실행한다. 
 				function readChecklistItemEntity(oDeleteInfoOdata) {
 					return new Promise(function(resolve, reject) {
-
-						console.log("readChecklistItemEntity Promise filter :", oDeleteInfoOdata.filter);
-						
 						that.getModel().read(that._m.serviceName.mIMaterialCodeBOMManagementItem, {
 							filters: oDeleteInfoOdata.filter,
 							success: function(oData, reponse) {
+								console.log("readChecklistItemEntity");
 								oDeleteInfoOdata.resultCount = reponse.data.results.length;
+								oDeleteInfoOdata.filter = oDeleteInfoOdata.filter;
+							
 								resolve(oDeleteInfoOdata);
 							},
 							error: function(oResult) {
-							reject(oResult);
+								reject(oResult);
 							}
 						});
 					});
 				}
 
+				var promises = [];
+				
 
-				//작업중.
 				for(var i=0; i < oDeleteInfoOdata.length ; i++ ){
 					
 					var deleteOdataPath = oModel.createKey(this._m.serviceName.mIMaterialCodeBOMManagementHeader, oDeleteInfoOdata[i].delete_bom_header_key);
 					oDeleteInfoOdata[i].deleteOdataPath = deleteOdataPath;
 
-					readChecklistItemEntity(oDeleteInfoOdata[i]).then(function(oDeleteInfoOdata) {
-						var that = this;
-						console.log(" >>>>>>>>>>>>>>>>>>> readChecklistItemEntity then <<<<<<<<<<<<<<<<<<<<<<<< ");
-						console.log("oDeleteInfoOdata.delete_bom_item_count : " + oDeleteInfoOdata.delete_bom_item_count);
-						console.log("oDeleteInfoOdata.resultCount : " + oDeleteInfoOdata.resultCount);
-						
-						//남아 있는 아이템과 삭제하는 아이템갯수가 같을때만 헤더정보를 삭제한다.
-						if(oDeleteInfoOdata.resultCount == oDeleteInfoOdata.delete_bom_item_count){
+					promises.push(readChecklistItemEntity(oDeleteInfoOdata[i]));
 
-							console.log(" >>>>>>>>>>>>>>>>>>> oModel.remove Header <<<<<<<<<<<<<<<<<<<<<<<< ");
-							console.log("delete odata path : ", oDeleteInfoOdata.deleteOdataPath);
+					// readChecklistItemEntity(oDeleteInfoOdata[i]).then(function(oDeleteInfoOdata) {
+					// 	var that = this;
+					// 	console.log(" >>>>>>>>>>>>>>>>>>> readChecklistItemEntity then <<<<<<<<<<<<<<<<<<<<<<<< ");
+					// 	console.log("oDeleteInfoOdata.delete_bom_item_count : " + oDeleteInfoOdata.delete_bom_item_count);
+					// 	console.log("oDeleteInfoOdata.resultCount : " + oDeleteInfoOdata.resultCount);
+						
+					// 	//남아 있는 아이템과 삭제하는 아이템갯수가 같을때만 헤더정보를 삭제한다.
+					// 	if(oDeleteInfoOdata.resultCount == oDeleteInfoOdata.delete_bom_item_count){
+
+					// 		console.log(" >>>>>>>>>>>>>>>>>>> oModel.remove Header <<<<<<<<<<<<<<<<<<<<<<<< ");
+					// 		console.log("delete odata path : ", oDeleteInfoOdata.deleteOdataPath);
 							
-							oModel.remove(oDeleteInfoOdata.deleteOdataPath,{ 
-									groupId: "pgGroup" 
-								}
-							);
-						}
-					}); //readChecklistItemEntity end
+					// 		oModel.remove(oDeleteInfoOdata.deleteOdataPath,{ 
+					// 				groupId: "pgGroup" 
+					// 			}
+					// 		);
+					// 	}
+					// }); //readChecklistItemEntity end
 				} //for end
+				
+				Promise.all([promises
+				]).then(setTimeout(that.deleteCheckAction.bind(that),3000),
+						that.deleteChecklistError.bind(that));
 			
-				console.log(" >>>>>>>>>>>>>>>>>>> setUseBatch <<<<<<<<<<<<<<<<<<<<<<<< ");
+				//console.log(" >>>>>>>>>>>>>>>>>>> setUseBatch <<<<<<<<<<<<<<<<<<<<<<<< ");
 				// oModel.setUseBatch(true);
 				// oModel.submitChanges({
 				// 	groupId: that._m.groupID,
 				// 	success: that._handleDeleteSuccess.bind(this),
 				// 	error: that._handleDeleteError.bind(this)
 				// });
-				oGlobalBusyDialog.close();
-				oModel.refresh(true); 
+				//oGlobalBusyDialog.close();
+				//oModel.refresh(true); 
             } 
             console.groupEnd();
 		},
 	
+        deleteCheckAction: function(values) {
+			console.log("deleteCheckAction");
+
+	
+			for(var i=0;i<values.length;i++){
+				var oData  = values[i].results;
+				var oModel = this.getModel();
+				var that = this;
+
+				// deleteOdataPath: "/MIMaterialCodeBOMManagementHeader(tenant_id='L2100',material_code='PRIACT0001',supplier_code='KR01820500',mi_bom_id='1')"
+				// delete_bom_header_key: {tenant_id: "L2100", material_code: "PRIACT0001", supplier_code: "KR01820500", mi_bom_id: "1"}
+				// delete_bom_item_count: 1
+
+				var oDeleteMIMaterialCodeBOMManagementHeaderKey = {
+					tenant_id : oData.delete_bom_header_key.tenant_id,
+					material_code : oData.delete_bom_header_key.material_code,
+					supplier_code : oData.delete_bom_header_key.supplier_code,
+					mi_bom_id : oData.delete_bom_header_key.mi_bom_id
+				};
+				
+				if(oData.length>0){
+	
+					if(oData.delete_bom_header_key.delete_bom_item_count == oData.length){
+						that._fnSetDeleteMode();
+						var deleteOdataPath = oModel.createKey(
+							"/MIMaterialCodeBOMManagementHeader",
+							oDeleteMIMaterialCodeBOMManagementHeaderKey);
+	
+						oModel.remove(deleteOdataPath,{ 
+								groupId: "pgGroup" 
+							}
+						);   
+					}
+				}
+			}
+
+			//that._setUseBatch();
+
+		},
+		
+        deleteChecklistError: function(reason) {
+            console.log(" deleteChecklistError reason : " + reason)		
+        },
+
         readChecklistEntity: function(oDeleteInfoOdata) {
             var that = this;
                       
@@ -648,7 +701,7 @@ sap.ui.define([
 
                 that.getModel().read(that._m.serviceName.mIMaterialCodeBOMManagementItem, {
                     filters: oDeleteInfoOdata.filter,
-                    success: function(oData, reponse) {
+                    success: function(oData, reponse) {						
                         resolve(oData);
                     },
                     error: function(oResult) {

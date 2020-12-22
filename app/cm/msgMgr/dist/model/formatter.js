@@ -1,0 +1,1 @@
+sap.ui.define([],function(){"use strict";return{setEnable:function(e){return false},setStatus:function(e,t,u){switch(t){case"":return true;case"M":switch(e){case"Key":return false;default:return true};default:return false}}}});

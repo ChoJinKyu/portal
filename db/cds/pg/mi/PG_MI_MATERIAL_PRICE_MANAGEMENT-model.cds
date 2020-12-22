@@ -19,12 +19,13 @@ namespace pg;
 
 using util from '../../cm/util/util-model';
 using {pg as MI_Mat_Prc_Mngt} from '../mi/PG_MI_MATERIAL_PRICE_MANAGEMENT-model';
+using {pg as Mi_Mat_Code} from './PG_MI_MATERIAL_CODE-model';
 
 entity MI_Material_Price_Management {
     key tenant_id           : String(5) not null  @title : '회사코드';
     key mi_material_code    : String(40) not null @title : '시황자재코드';
 
-        mi_material_codes   : Association to pg.MI_Material_Code
+        mi_material_codes   : Association to Mi_Mat_Code.MI_Material_Code
                                   on  mi_material_codes.tenant_id        = tenant_id
                                   and mi_material_codes.mi_material_code = mi_material_code;
 

@@ -274,22 +274,9 @@ sap.ui.define([
             that.getRouter().navTo("approvalObject", {
                 company_code: oRecord.company_code
                 , plant_code: oRecord.org_code
-                , approval_type_code: "V"
+                , approval_type_code: oRecord.approval_type_code
                 , approval_number: oRecord.approval_number
             });
-            // if (oRecord.mold_id % 3 == 0) {
-            //     that.getRouter().navTo("pssaCreateObject", {
-            //         company: "[LGEKR] LG Electronics Inc."
-            //         , plant: "[DFZ] Washing Machine"
-            //     });
-            // } else if (oRecord.mold_id % 3 == 2) {
-
-            // } else {
-            //     that.getRouter().navTo("pssaCreateObject", {
-            //         company: "[LGEKR] LG Electronics Inc."
-            //         , plant: "[DFZ] Washing Machine"
-            //     });
-            // }
 
         },
 
@@ -670,6 +657,8 @@ sap.ui.define([
         */
         onDialogCreate: function () {
             var oView = this.getView();
+            
+
 
             if (!this.pDialog) {
                 this.pDialog = Fragment.load({
@@ -684,6 +673,7 @@ sap.ui.define([
             }
             this.pDialog.then(function (oDialog) {
                 oDialog.open();
+                
             });
 
         },

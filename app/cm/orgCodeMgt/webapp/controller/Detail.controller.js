@@ -114,13 +114,7 @@ sap.ui.define([
             oViewModel.setProperty("/OrgCodeDetails", []);
         },
 
-		onHandleItemPress: function (oEvent) {
-			// var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(2),
-			// 	supplierPath = oEvent.getSource().getBindingContext("products").getPath(),
-			// 	supplier = supplierPath.split("/").slice(-1).pop();
-
-			// this.oRouter.navTo("detailDetail", {layout: oNextUIState.layout,
-            //     product: this._product, supplier: supplier});
+		onHandleItemPress: function (oEvent) {			
             this._fnShowFooter(false);
 
             var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(2);
@@ -369,7 +363,7 @@ sap.ui.define([
             var oViewModel = this.getModel("viewModel");
             var sTenant = oViewModel.getProperty("/detail/tenant_id");
             var sChainCode = oViewModel.getProperty("/detail/chain_code");
-            var sOrgTypeCode = oViewModel.getProperty("/detail/code_conrol_org_type_code");
+            var sOrgTypeCode = oViewModel.getProperty("/detail/code_control_org_type_code");
             
             var aFilters = [
                 new Filter("tenant_id", FilterOperator.EQ, sTenant),
@@ -395,7 +389,7 @@ sap.ui.define([
                 text : "{util>code_description}",
                 additionalText : "{util>code}"
             });
-            var oOrgtype = this.byId("code_conrol_org_type_code");
+            var oOrgtype = this.byId("code_control_org_type_code");
             oOrgtype.setSelectedKey(sOrgTypeCode);
             oOrgtype.bindItems("util>/CodeDetails", oOrgtypeItemTemplate, null, aOrgtypeFilters);
         }

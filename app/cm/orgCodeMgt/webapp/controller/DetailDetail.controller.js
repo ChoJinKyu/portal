@@ -121,21 +121,6 @@ sap.ui.define([
                 local_update_dtm: new Date()
             }
             model.addRecord(oData, "/OrgCodeLanguages", 0);
-
-            /*
-            var aInitLangData = [
-                {
-                    code: "",
-                    code_name: "",
-                    group_code: oMasterData.group_code,
-                    language_cd: "EN",
-                    tenant_id: oMasterData.tenant_id,
-                    local_create_dtm: new Date(),
-                    local_update_dtm: new Date()
-                }
-            ]
-            oViewModel.setProperty("/CodeLanguages", aInitLangData);
-            */
         },
 
 		handleFullScreen: function () {
@@ -275,6 +260,7 @@ sap.ui.define([
                 groupId: sGroupId,
                 success: function(data){
                     this._fnReadDetails(oParam.tenant_id, oParam.group_code);
+                    this._fnSetReadMode();
                 }.bind(this),
                 error: function(data){
                     console.log('error',data)
@@ -298,7 +284,8 @@ sap.ui.define([
             oModel.submitChanges({
                 groupId: sGroupId,
                 success: function(data){
-                    this.handleClose();
+                    this._fnSetReadMode();
+                    //this.handleClose();
                     MessageToast.show("Success to save.");
                 }.bind(this),
                 error: function(data){
@@ -389,7 +376,7 @@ sap.ui.define([
                     if (sButton === MessageBox.Action.OK) {
                         this._fnDeleteCodeDetail();
                     } else if (sButton === MessageBox.Action.CANCEL) {
-                        
+                        //
                     };
                 }.bind(this)
             });
