@@ -277,19 +277,6 @@ sap.ui.define([
                 , approval_type_code: "V"
                 , approval_number: oRecord.approval_number
             });
-            // if (oRecord.mold_id % 3 == 0) {
-            //     that.getRouter().navTo("pssaCreateObject", {
-            //         company: "[LGEKR] LG Electronics Inc."
-            //         , plant: "[DFZ] Washing Machine"
-            //     });
-            // } else if (oRecord.mold_id % 3 == 2) {
-
-            // } else {
-            //     that.getRouter().navTo("pssaCreateObject", {
-            //         company: "[LGEKR] LG Electronics Inc."
-            //         , plant: "[DFZ] Washing Machine"
-            //     });
-            // }
 
         },
 

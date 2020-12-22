@@ -27,7 +27,7 @@
                         <!-- 팝업 콤보박스 영역 -->
                         <VBox>
                             <Label text = "Company" design="Bold"/> 
-                            <ComboBox id="searchCompanyF" width="70%" selectedKey="" change="dialogChangeComp" items="{
+                            <ComboBox id="searchCompanyF" width="70%" selectedKey="" required="true" change="dialogChangeComp" items="{
                                 path: 'org>/Company',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
@@ -44,7 +44,7 @@
                         </VBox>
                         <VBox>
                             <Label text = "Plant" design="Bold"/> 
-                            <ComboBox id="searchPlantF" width="70%" selectedKey="" items="{
+                            <ComboBox id="searchPlantF" width="70%" selectedKey="" required="true" items="{
                                 path: 'purOrg>/Pur_Operation_Org',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},
