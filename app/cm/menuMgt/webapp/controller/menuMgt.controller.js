@@ -21,7 +21,6 @@ sap.ui.define([
             onAdd: function () {
                 var [flag] = arguments;
                 var oTable = this.getView().byId("menuTreeTable");
-                debugger;
                 var row =
                     (this.getView().getModel("tree").getProperty("/Menu_haa").nodes || []).length > 0
                         ? this.getView().getModel("tree").getObject(
