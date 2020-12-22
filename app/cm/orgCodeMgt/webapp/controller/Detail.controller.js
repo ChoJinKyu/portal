@@ -114,13 +114,7 @@ sap.ui.define([
             oViewModel.setProperty("/OrgCodeDetails", []);
         },
 
-		onHandleItemPress: function (oEvent) {
-			// var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(2),
-			// 	supplierPath = oEvent.getSource().getBindingContext("products").getPath(),
-			// 	supplier = supplierPath.split("/").slice(-1).pop();
-
-			// this.oRouter.navTo("detailDetail", {layout: oNextUIState.layout,
-            //     product: this._product, supplier: supplier});
+		onHandleItemPress: function (oEvent) {			
             this._fnShowFooter(false);
 
             var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(2);
