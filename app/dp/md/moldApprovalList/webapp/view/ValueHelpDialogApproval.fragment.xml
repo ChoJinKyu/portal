@@ -25,9 +25,9 @@
 		descriptionKey="part_number"
 	>
     <filterBar>
-			<fb:FilterBar advancedMode="true" search=".onFilterBarSearch"  isRunningInValueHelpDialog="true">
+			<fb:FilterBar advancedMode="true" search=".onFilterBarSearch"  isRunningInValueHelpDialog="true" fieldGroupIds="listFilterBar">
 				<fb:filterGroupItems>
-                    <!-- <fb:FilterGroupItem
+                    <fb:FilterGroupItem
                                 groupName="__$INTERNAL$"
                                 name="TenantId"
                                 label="Tenant ID"
@@ -47,7 +47,7 @@
                                 <core:Item key="{tenant_id}" text="{tenant_id}" />
                             </m:Input>
                         </fb:control>
-					</fb:FilterGroupItem> -->
+					</fb:FilterGroupItem>
                 </fb:filterGroupItems>
 			</fb:FilterBar>
 		</filterBar>

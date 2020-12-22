@@ -1,1 +1,0 @@
-sap.ui.define(["ext/lib/UIComponent"],function(e){"use strict";return e.extend("cm.msgMgr.Component",{metadata:{manifest:"json"}})});

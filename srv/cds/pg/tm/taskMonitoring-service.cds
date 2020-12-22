@@ -13,6 +13,8 @@ using {pg as TskMntrPurTpCodeLng} from '../../../../db/cds/pg/tm/PG_TM_PURCHASIN
 using {pg as TskMntrTpCodeLng} from '../../../../db/cds/pg/tm/PG_TM_TYPE_CODE_LNG-model';
 //View
 using {pg as TskMntrMstView} from '../../../../db/cds/pg/tm/PG_TM_MASTER_VIEW-model';
+using {pg as TskMntrIndNumView} from '../../../../db/cds/pg/tm/PG_TM_INDICATOR_NUMBER_VIEW-model';
+using {pg as TskMntrMaxSnrNumView} from '../../../../db/cds/pg/tm/PG_TM_MAX_SCENARIO_NUMBER_VIEW-model';
 //CM ORG
 using {cm.Org_Tenant as CommomOrgTenant} from '../../../../db/cds/cm/CM_ORG_TENANT-model';
 using {cm.Org_Company as CommomOrgCompany} from '../../../../db/cds/cm/CM_ORG_COMPANY-model';
@@ -53,6 +55,8 @@ service taskMonitoringService {
     view TaskMonitoringJobTitleView @(title : '직무 View') as select from JobTView.Tm_Job_Title_View;
     view TaskMonitoringMobilePhoneNumberView @(title : '휴대폰번호 View') as select from MPNumbView.Tm_Mobile_Phone_Number_View;
     view TaskMonitoringDepartmentView @(title : '부서 View') as select from DepartView.Tm_Department_View;
+    view TaskMonitoringIndicatorNumberView @(title : '모니터링 지표번호 정보 View') as select from TskMntrIndNumView.Tm_Indicator_Number_View;
+    view TaskMonitoringMaxScenarioNumberView @(title : '최대 시나리오 Number View')as select from TskMntrMaxSnrNumView.Tm_Max_Scenario_Number_View;
 
     // Test List
     // entity MonitoringFullMaster @(title : '모니터링 전체 마스터')                 as projection on mntrFullMaster.Monitor_Full_Master {
@@ -152,52 +156,6 @@ service taskMonitoringService {
         where
                 group_code  = 'PG_TM_CYCLE_CODE'
             and language_cd = 'KO';
-
-    // Indicator Number Information View
-    view TaskMonitoringIndicatorNumberView @(title : '모니터링 지표번호 정보 View') as
-        select
-            key main.tenant_id							as tenant_id,
-            key main.scenario_number					as scenario_number,
-            key main.monitoring_indicator_id			as monitoring_indicator_id,
-                main.monitoring_indicator_sequence		as monitoring_indicator_sequence,
-                main.monitoring_ind_number_cd			as monitoring_ind_number_cd,
-				ind_number_cd.code_name					as monitoring_ind_number_cd_name,
-                main.monitoring_ind_condition_cd		as monitoring_ind_condition_cd,
-				ind_condition_cd.code_name				as monitoring_ind_condition_cd_name,
-                main.monitoring_indicator_start_value	as monitoring_indicator_start_value,
-                main.monitoring_indicator_last_value	as monitoring_indicator_last_value,
-                main.monitoring_indicator_grade			as monitoring_indicator_grade,
-				indicator_grade.code_name				as monitoring_indicator_grade_name,
-                main.monitoring_ind_compare_base_cd		as monitoring_ind_compare_base_cd,
-				ind_compare_base_cd.code_name			as monitoring_ind_compare_base_cd_name,
-                main.local_create_dtm					as local_create_dtm,
-                main.local_update_dtm					as local_update_dtm,
-                main.create_user_id						as create_user_id,
-                main.update_user_id						as update_user_id,
-                main.system_create_dtm					as system_create_dtm,
-                main.system_update_dtm					as system_update_dtm
-        from TaskMonitoringIndicatorNumberDetail as main
-		left join codeLng as ind_number_cd
-			on	main.tenant_id				= ind_number_cd.tenant_id
-			and	ind_number_cd.group_code 	= 'PG_TM_INDC_NUMBER_CODE'
-			and	ind_number_cd.language_cd	= 'KO'
-		left join codeLng as ind_condition_cd
-			on	main.tenant_id					= ind_condition_cd.tenant_id
-			and	ind_condition_cd.group_code		= 'PG_TM_INDC_CMPR_CONDITION_CODE'
-			and	ind_condition_cd.language_cd	= 'KO'
-		left join codeLng as indicator_grade
-			on	main.tenant_id					= indicator_grade.tenant_id
-			and	indicator_grade.group_code 	= 'PG_TM_INDC_CMPR_GRADE_CODE'
-			and	indicator_grade.language_cd	= 'KO'
-		left join codeLng as ind_compare_base_cd
-			on	main.tenant_id					= ind_compare_base_cd.tenant_id
-			and	ind_compare_base_cd.group_code 	= 'PG_TM_INDC_CMPR_BASIC_CODE'
-			and	ind_compare_base_cd.language_cd	= 'KO'
-        order by
-            main.tenant_id,
-            main.scenario_number,
-            main.monitoring_indicator_id
-    ;
 
     // Indicator Number Code View
     view TaskMonitoringIndicatorNumberCodeView @(title : '모니터링 지표번호코드 View') as

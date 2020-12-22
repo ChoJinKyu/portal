@@ -176,7 +176,8 @@ sap.ui.define([
 				mBindingParams.filters.push(oSupplier_local_nameFilter);
             }            
         },
-        
+		
+			
         /**
          * filter and or not and 
          */
@@ -268,12 +269,17 @@ sap.ui.define([
 			var oNavParam = {
 				layout: sLayout, 
 				tenant_id: this._sso.dept.tenant_id,
-				material_code:"new",	
+				material_code:"new",
 				supplier_code: "　",	
-				mi_material_code: "　"
+				mi_bom_id: "　",	
+				mi_material_code: "　",
+				currency_unit: "　",
+				quantity_unit: "　",
+				exchange: "　",				
+				termsdelv: "　"
 			};
+
 			this.getRouter().navTo("midPage", oNavParam);
-			
 		},
 		
 		/**
@@ -313,23 +319,26 @@ sap.ui.define([
 					aParameters[key] = value;
 				}
 
-				var otermsdelv = this._setReplace(aParameters["termsdelv"]);
-				otermsdelv = otermsdelv.replace(")",'');
+				//var otermsdelv = this._setReplace(aParameters["termsdelv"]);
 
+				//otermsdelv = otermsdelv.replace(")",'');
+	
+	
 				this.getRouter().navTo("midPage", {
 					layout: oNextUIState.layout, 
 					tenant_id: this._setReplace(aParameters["tenant_id"]),
 					material_code: oRecord.material_code,
-					supplier_code: this._setReplace(aParameters["supplier_code"]),
+					supplier_code: oRecord.supplier_code,
 					mi_bom_id: this._setReplace(aParameters["mi_bom_id"]),
-					mi_material_code: this._setReplace(aParameters["mi_material_code"]),
-					currency_unit: this._setReplace(aParameters["currency_unit"]),
-					quantity_unit: this._setReplace(aParameters["quantity_unit"]),
-					exchange: this._setReplace(aParameters["exchange"]),
-					termsdelv: otermsdelv
+					mi_material_code: oRecord.mi_material_code,
+					currency_unit: oRecord.currency_unit,
+					quantity_unit: oRecord.quantity_unit,
+					exchange: oRecord.exchange,
+					termsdelv: oRecord.termsdelv,
 					
 				});
 
+				
 
             if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
                 this.getView().getModel('oUi').setProperty("/headerExpandFlag", false);
@@ -351,6 +360,7 @@ sap.ui.define([
 		_onRoutedThisPage: function(){
 			console.group("_onRoutedThisPage");
 			this.getModel("oUi").setProperty("/headerExpanded", true);
+			this.getModel().refresh(true);
 			console.groupEnd();
 		},
 
@@ -429,8 +439,8 @@ sap.ui.define([
 			var oModel = this.getModel(),
 				oDeleteInfo = this.getModel("oDeleteInfo"),
 				that = this,
-			  	_deleteItem = new JSONModel({oData:[]}),
-				_deleteHeader = new JSONModel({oData:[]}),
+			  	_deleteItem = new JSONModel({delData:[]}),
+				_deleteHeader = new JSONModel({delData:[]}),
 				_nDifferentDeleteHeaderItem = 0;
 				 
 			var oGlobalBusyDialog = new sap.m.BusyDialog();
@@ -476,7 +486,7 @@ sap.ui.define([
 						exchange:  o_exchange,
 						termsdelv:  o_termsdelv
                     };
-					var _deleteItemOdata = _deleteItem.getProperty("/oData");
+					var _deleteItemOdata = _deleteItem.getProperty("/delData");
 
                     var oDeleteMIMaterialCodeBOMManagementItemPath = oModel.createKey(
 							that._m.serviceName.mIMaterialCodeBOMManagementItem,
@@ -497,18 +507,13 @@ sap.ui.define([
 						tenant_id : o_tenant_id,
 						material_code: o_material_code,
 						supplier_code: o_supplier_code,
-						mi_bom_id: o_mi_bom_id,
-						mi_material_code: o_mi_material_code,
-						currency_unit: o_currency_unit,
-						quantity_unit: o_quantity_unit,
-						exchange: o_exchange,
-						termsdelv:  o_termsdelv	
+						mi_bom_id: o_mi_bom_id
 					};
 
 					//header에 등록된 데이타 인지 확인
 					var flag_deleteHeadel_mi_bom_id = true;
-					var _deleteHeaderOdata = _deleteHeader.getProperty("/oData");
-					var _deleteItemOdata = _deleteItem.getProperty("/oData");
+					var _deleteHeaderOdata = _deleteHeader.getProperty("/delData");
+					var _deleteItemOdata = _deleteItem.getProperty("/delData");
 
 					for(var x=0; x<_deleteHeaderOdata.length;x++){
 
@@ -529,8 +534,8 @@ sap.ui.define([
 				});
 
 				//header 작업 ---------------------------------------------------
-				var _deleteHeaderOdata = _deleteHeader.getProperty("/oData");
-				var _deleteItemOdata = _deleteItem.getProperty("/oData");
+				var _deleteHeaderOdata = _deleteHeader.getProperty("/delData");
+				var _deleteItemOdata = _deleteItem.getProperty("/delData");
 
 				//배열에 담긴 key과 동일한 아이템 카운트 구함
 				for( var i=0; i < _deleteHeaderOdata.length; i++ ){
@@ -555,12 +560,7 @@ sap.ui.define([
 									tenant_id : _deleteHeaderOdata[i].tenant_id,
 									material_code: _deleteHeaderOdata[i].material_code,
 									supplier_code: _deleteHeaderOdata[i].supplier_code,
-									mi_bom_id: _deleteHeaderOdata[i].mi_bom_id,
-									mi_material_code: _deleteHeaderOdata[i].mi_material_code,
-									currency_unit: _deleteHeaderOdata[i].currency_unit,
-									quantity_unit: _deleteHeaderOdata[i].quantity_unit,
-									exchange: _deleteHeaderOdata[i].exchange,
-									termsdelv: _deleteHeaderOdata[i].termsdelv
+									mi_bom_id: _deleteHeaderOdata[i].mi_bom_id								
 								};
 								t=1;
 							}
@@ -600,6 +600,8 @@ sap.ui.define([
 					});
 				}
 
+
+				//작업중.
 				for(var i=0; i < oDeleteInfoOdata.length ; i++ ){
 					
 					var deleteOdataPath = oModel.createKey(this._m.serviceName.mIMaterialCodeBOMManagementHeader, oDeleteInfoOdata[i].delete_bom_header_key);
@@ -638,6 +640,25 @@ sap.ui.define([
             console.groupEnd();
 		},
 	
+        readChecklistEntity: function(oDeleteInfoOdata) {
+            var that = this;
+                      
+            return new Promise(
+              function(resolve, reject) {
+
+                that.getModel().read(that._m.serviceName.mIMaterialCodeBOMManagementItem, {
+                    filters: oDeleteInfoOdata.filter,
+                    success: function(oData, reponse) {
+                        resolve(oData);
+                    },
+                    error: function(oResult) {
+                        reject(oResult);
+                    }
+                });
+
+            });
+		},
+				
 		_setUseBatch : function (values) {
 			if( this._m.deleteItemCount > 0 || this._m.deleteHeaderItemCount > 0){
 

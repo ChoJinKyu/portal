@@ -1,4 +1,4 @@
-<mvc:View controllerName="dp.md.orderApprovalLocal.controller.ApprovalObject" 
+<mvc:View controllerName="dp.md.moldApprovalList.controller.ApprovalObject" 
   xmlns:mvc="sap.ui.core.mvc"
     xmlns:uxap="sap.uxap"
     xmlns:form="sap.ui.layout.form" 
@@ -137,7 +137,7 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-            <uxap:ObjectPageSection titleUppercase="false" title="{appType>/AppType/0/title}">
+            <uxap:ObjectPageSection titleUppercase="false" title="{appType>/remark}">
 				<uxap:subSections>
                     <uxap:ObjectPageSubSection id="pageSection">
 					</uxap:ObjectPageSubSection>
