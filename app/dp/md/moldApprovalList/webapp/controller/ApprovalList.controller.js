@@ -274,7 +274,7 @@ sap.ui.define([
             that.getRouter().navTo("approvalObject", {
                 company_code: oRecord.company_code
                 , plant_code: oRecord.org_code
-                , approval_type_code: "V"
+                , approval_type_code: oRecord.approval_type_code
                 , approval_number: oRecord.approval_number
             });
 
@@ -657,6 +657,8 @@ sap.ui.define([
         */
         onDialogCreate: function () {
             var oView = this.getView();
+            
+
 
             if (!this.pDialog) {
                 this.pDialog = Fragment.load({
@@ -671,6 +673,7 @@ sap.ui.define([
             }
             this.pDialog.then(function (oDialog) {
                 oDialog.open();
+                
             });
 
         },
