@@ -88,6 +88,7 @@ service MoldApprovalListService {
         emp.user_local_name ||'/'|| emp.job_title||'/'||hr.department_local_name as s_referer_name : String(300), 
        key emp.employee_number,
         emp.user_local_name ,
+        emp.user_english_name , 
         emp.email_id 
     from emp.Hr_Employee  emp 
     join Dept hr on hr.department_id = emp.department_id and hr.tenant_id = emp.tenant_id ;
