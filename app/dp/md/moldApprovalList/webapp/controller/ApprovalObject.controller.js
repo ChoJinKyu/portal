@@ -79,10 +79,6 @@ sap.ui.define([
             this.getView().setModel(new ManagedListModel(), "approver");
             this.getView().setModel(new ManagedListModel(), "referer");
 
-            // search view 
-            this.getView().setModel(new ManagedListModel(), "approverView");
-            this.getView().setModel(new ManagedListModel(), "refererView");
-
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("appMaster"));
             oTransactionManager.addDataModel(this.getModel("approver"));
@@ -278,7 +274,7 @@ sap.ui.define([
 
         _onRoutedThisPage: function (approvalNumber) {
             console.log(" approvalNumber >>> " , approvalNumber);
-
+           
             var filter = [
                 new Filter("tenant_id", FilterOperator.EQ, this.tenant_id),
                 new Filter("approval_number", FilterOperator.EQ, approvalNumber)
@@ -294,8 +290,6 @@ sap.ui.define([
             }.bind(this));
 
             console.log(" Approvers >>> " , approvalNumber);
-
-
 
             this._bindView("/Referers", "referer", filter, function (oData) {
                 if (oData.results.length > 0) {
@@ -500,8 +494,8 @@ sap.ui.define([
             var oTable = this.byId("ApproverTable");
 
             var aItems = oTable.getItems();
-            if (aItems[aItems.length - 1].mAggregations.cells[1].mProperties.selectedKey == undefined
-                || aItems[aItems.length - 1].mAggregations.cells[1].mProperties.selectedKey == "") {
+            if (aItems[aItems.length - 1].mAggregations.cells[2].mProperties.selectedKey == undefined
+                || aItems[aItems.length - 1].mAggregations.cells[2].mProperties.selectedKey == "") {
                 MessageToast.show("Type 을 먼저 선택해주세요.");
             } else {
                 var oView = this.getView();
@@ -509,7 +503,7 @@ sap.ui.define([
                 if (!this._oDialog) {
                     this._oDialog = Fragment.load({
                         id: oView.getId(),
-                        name: "dp.md.orderApprovalLocal.view.Employee",
+                        name: "dp.md.moldApprovalList.view.Employee",
                         controller: this
                     }).then(function (oDialog) {
                         oView.addDependent(oDialog);
@@ -531,7 +525,8 @@ sap.ui.define([
 
             aItems.forEach(function (oItem) {
                 var obj = new JSONModel({
-                    approver_empno: oItem.getCells()[0].getText()
+                    approver_empno: oItem.getCells()[0].getText() ,
+                    approver_name : oItem.getCells()[1].getText()
                 });
                 this._approverAddRow(obj);
             }.bind(this));
@@ -547,6 +542,7 @@ sap.ui.define([
 
             /** 선택한 데이터를 담음 */
             approverData[approverData.length - 1].approver_empno = obj.oData.approver_empno;
+            approverData[approverData.length - 1].approver_name = obj.oData.approver_name;
 
             this._onLoadApproverRow(approverData);
         },
@@ -565,6 +561,7 @@ sap.ui.define([
                         "approve_sequence": (Number(approverData[i].approve_sequence) - 1) + "",
                         "approver_type_code": approverData[i].approver_type_code,
                         "approver_empno": approverData[i].approver_empno,
+                        "approver_name": approverData[i].approver_name,
                         "arrowUp": approverData[i - 1].arrowUp,
                         "arrowDown": approverData[i - 1].arrowDown,
                         "editMode": approverData[i - 1].editMode,
@@ -575,6 +572,7 @@ sap.ui.define([
                         "approve_sequence": (Number(approverData[i - 1].approve_sequence) + 1) + "",
                         "approver_type_code": approverData[i - 1].approver_type_code,
                         "approver_empno": approverData[i - 1].approver_empno,
+                        "approver_name": approverData[i -1].approver_name,
                         "arrowUp": approverData[i].arrowUp,
                         "arrowDown": approverData[i].arrowDown,
                         "editMode": approverData[i].editMode,
@@ -593,6 +591,7 @@ sap.ui.define([
                     "approve_sequence": nArray[j].approve_sequence,
                     "approver_type_code": nArray[j].approver_type_code,
                     "approver_empno": nArray[j].approver_empno,
+                    "approver_name": nArray[j].approver_name,
                     "arrowUp": nArray[j].arrowUp,
                     "arrowDown": nArray[j].arrowDown,
                     "editMode": nArray[j].editMode,
@@ -615,6 +614,7 @@ sap.ui.define([
                         "approve_sequence": (Number(approverData[i + 1].approve_sequence) - 1) + "",
                         "approver_type_code": approverData[i + 1].approver_type_code,
                         "approver_empno": approverData[i + 1].approver_empno,
+                        "approver_name": approverData[i + 1].approver_name,
                         "arrowUp": approverData[i].arrowUp,
                         "arrowDown": approverData[i].arrowDown,
                         "editMode": approverData[i].editMode,
@@ -625,6 +625,7 @@ sap.ui.define([
                         "approve_sequence": (Number(approverData[i].approve_sequence) + 1) + "",
                         "approver_type_code": approverData[i].approver_type_code,
                         "approver_empno": approverData[i].approver_empno,
+                        "approver_name": approverData[i].approver_name,
                         "arrowUp": approverData[i + 1].arrowUp,
                         "arrowDown": approverData[i + 1].arrowDown,
                         "editMode": approverData[i + 1].editMode,
@@ -643,6 +644,7 @@ sap.ui.define([
                     "approve_sequence": nArray[j].approve_sequence,
                     "approver_type_code": nArray[j].approver_type_code,
                     "approver_empno": nArray[j].approver_empno,
+                    "approver_name": nArray[j].approver_name,
                     "arrowUp": nArray[j].arrowUp,
                     "arrowDown": nArray[j].arrowDown,
                     "editMode": nArray[j].editMode,
@@ -660,9 +662,10 @@ sap.ui.define([
 
             aItems.forEach(function (oItem) {
                 var item = {
-                    "approve_sequence": oItem.mAggregations.cells[0].mProperties.text,
-                    "approver_type_code": oItem.mAggregations.cells[1].mProperties.selectedKey,
-                    "approver_empno": oItem.mAggregations.cells[2].mProperties.value,
+                    "approver_empno": oItem.mAggregations.cells[0].mProperties.text,
+                    "approve_sequence": oItem.mAggregations.cells[1].mProperties.text,
+                    "approver_type_code": oItem.mAggregations.cells[2].mProperties.selectedKey,
+                    "approver_name": oItem.mAggregations.cells[3].mProperties.value,
                 }
                 oldItems.push(item);
             });
@@ -693,6 +696,7 @@ sap.ui.define([
                         "approve_sequence": noCnt + "",
                         "approver_type_code": dataList[i].approver_type_code,
                         "approver_empno": dataList[i].approver_empno,
+                        "approver_name": dataList[i].approver_name,
                         "arrowUp": "",
                         "arrowDown": dataList.length === 1 ? "" : "sap-icon://arrow-bottom",
                         "editMode": false,
@@ -705,6 +709,7 @@ sap.ui.define([
                         "approve_sequence": noCnt + "",
                         "approver_type_code": dataList[i].approver_type_code,
                         "approver_empno": dataList[i].approver_empno,
+                        "approver_name": dataList[i].approver_name,
                         "arrowUp": "sap-icon://arrow-top",
                         "arrowDown": "",
                         "editMode": false,
@@ -718,6 +723,7 @@ sap.ui.define([
                         "approve_sequence": noCnt + "",
                         "approver_type_code": dataList[i].approver_type_code,
                         "approver_empno": dataList[i].approver_empno,
+                        "approver_name": dataList[i].approver_name,
                         "arrowUp": "sap-icon://arrow-top",
                         "arrowDown": "sap-icon://arrow-bottom",
                         "editMode": false,
@@ -734,6 +740,7 @@ sap.ui.define([
                 "approve_sequence": noCnt + "",
                 "approver_type_code": "",
                 "approver_empno": "",
+                "approver_name": "",
                 "arrowUp": "",
                 "arrowDown": "",
                 "editMode": true,
