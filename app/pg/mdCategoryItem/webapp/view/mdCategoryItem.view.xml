@@ -1,4 +1,4 @@
-<mvc:View controllerName="pg.mdCategory.controller.mdCategory"
+<mvc:View controllerName="pg.mdCategoryItem.controller.mdCategoryItem"
     xmlns:mvc="sap.ui.core.mvc" 
     xmlns="sap.m" 
     xmlns:f="sap.f" 
@@ -34,21 +34,28 @@
       <f:content>
         <VBox>
         <Table id="mainTable"
-                mode="SingleSelectLeft" 
+                mode="MultiSelect" 
                 selectionBehavior="Row"
                 noDataText="{I18N>/NCM0001}"
                 items="{
-                    path: 'list>/MdCategory'
+                    path: 'list>/MdCategoryItem'
                 }"
                 columnResize="onColumnResize">
             <headerToolbar>
             <OverflowToolbar class="sapFDynamicPageAlignContent">
-              <Title text="SPMD Category List" level="H2"/>
+               <!-- <VBox>
+                    <Title text="범주코드" level="H2"/> 
+                    <Label text="범주코드" labelFor="searchKeyword"></Label>
+                    <text id="searchKeyword" text="Item Name"></text>
+                    <layoutData>
+                        <layout:GridData span="XL2 L3 M6 S12" />
+                    </layoutData>
+                </VBox> -->
+              <Title text="범주" level="H2"/>
               <ToolbarSpacer/>
-              <Button text="{I18N>/ROW_ADD}" id="buttonMainAddRow" press=".onAdd('mainTable', 'list', 'MdCategory', 'tenant_id')"  type="Transparent"/>
-              <Button text="{I18N>/UPDATE}" id="buttonMainEditRow" press=".onEdit('mainTable', 'list', 'MdCategory', 'tenant_id')"  type="Transparent"/>
+              <Button text="{I18N>/ROW_ADD}" id="buttonMainAddRow" press=".onAdd('mainTable', 'list', 'mdCategoryItem', 'tenant_id')"  type="Transparent"/>
               <Button text="{I18N>/CANCEL}" id="buttonMainCancelRow" press=".onSearch"  type="Transparent" enabled="false"/>
-              <Button text="{I18N>/ROW_DELETE}" id="buttonMainDeleteRow" press=".onDelete('mainTable', 'list')"   type="Transparent" enabled="false" />
+              <Button text="{I18N>/ROW_DELETE}" id="buttonMainDeleteRow" press=".onDelete"   type="Transparent" />
               <Button text="{I18N>/SAVE}" id="buttonMainSaveRow" press=".onSave('mainTable', 'list')"   type="Emphasized"/>
               <ToolbarSeparator/>
               <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
@@ -60,22 +67,22 @@
             </headerToolbar>
 
             <columns>
-                <Column id="mainColumnCode" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="80px" >
-                    <Text text="범주코드" />
+                <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="3em" >
+                    <Text text="S" />
                 </Column>
-                <Column id="mainColumnSort" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="80px" >
-                    <Text text="범주정렬순서" />
+                <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="12em" >
+                    <Text text="특성코드" />
                 </Column>
-                <Column id="mainColumnCodeName" minScreenWidth="Tablet" hAlign="Center" >
-                    <Text text="범주명" />
+                <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="20em" >
+                    <Text text="특성정렬순서" />
                 </Column>
-                <Column id="mainColumnFontCode" minScreenWidth="Tablet" hAlign="Center" width="150px" >
-                    <Text text="RGB글꼴색상코드" />
+                <Column minScreenWidth="Tablet" hAlign="Center" >
+                    <Text text="특성코드명" />
                 </Column>
-                <Column id="mainColumnCellCode" minScreenWidth="Tablet" hAlign="Center" width="150px" >
-                    <Text text="RGB셀색상코드" />
+                <Column minScreenWidth="Tablet" hAlign="Center" width="40em" >
+                    <Text text="특성설명" />
                 </Column>
-                <Column minScreenWidth="Tablet" hAlign="Center" width="150px" >
+                <!-- <Column minScreenWidth="Tablet" hAlign="Center" width="150px" >
                     <Text text="생성자" />
                 </Column>
                 <Column minScreenWidth="Tablet" hAlign="Center" width="150px" >
@@ -92,32 +99,28 @@
                 </Column>
                 <Column minScreenWidth="Tablet" hAlign="Center" width="150px" >
                     <Text text="시스템 수정 시간" />
-                </Column>
+                </Column> -->
             </columns>
 
             <items>
                 <ColumnListItem>
                     <cells>
-                        <HBox alignItems="Center">
-                            <Text text="{list>spmd_category_code}"></Text>
+                        <HBox align="Center">
+                            <Text text="{list>_row_state_}"></Text>
                         </HBox>
                         <HBox alignItems="Center">
-                            <Text text="{list>spmd_category_sort_sequence}" visible="true"></Text>
-                            <Input value="{list>spmd_category_sort_sequence}" visible="false" required="true"></Input>
+                            <Text text="{list>spmd_character_code}"></Text>
+                        </HBox>
+                        <HBox alignItems="Center">
+                            <Input value="{list>spmd_character_sort_seq}" required="true"></Input>
                         </HBox>
                         <HBox>
-                            <Text text="{list>spmd_category_code_name}" visible="true"></Text>
-                            <Input value="{list>spmd_category_code_name}" visible="false" required="true"></Input>
+                            <Input value="{list>spmd_character_code_name}" required="true"></Input>
                         </HBox>
                         <HBox alalignItemsign="Center">
-                            <Text text="{list>rgb_font_color_code}" visible="true"></Text>
-                            <Input value="{list>rgb_font_color_code}" visible="false"></Input>
+                            <Input value="{list>spmd_character_desc}"></Input>
                         </HBox>
-                        <HBox alignItems="Center">
-                            <Text text="{list>rgb_cell_clolor_code}" visible="true"></Text>
-                            <Input value="{list>rgb_cell_clolor_code}" visible="false"></Input>
-                        </HBox>
-                        <HBox alignItems="Center">
+                        <!-- <HBox alignItems="Center">
                             <Text text="{list>create_user_id}"></Text>
                         </HBox>
                         <HBox alignItems="Center">
@@ -134,7 +137,7 @@
                         </HBox>
                         <HBox alignItems="Center">
                             <Text text="{path : 'list>system_update_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}"></Text>
-                        </HBox>
+                        </HBox> -->
                     </cells>
                 </ColumnListItem>
             </items>
