@@ -53,7 +53,7 @@ sap.ui.define([
                     aFilters.push(new Filter("chain_code", FilterOperator.EQ, sSearchChain));
                 }
                 if(!this.isValNull(sOrgtype)){
-                    aFilters.push(new Filter("code_conrol_org_type_code", FilterOperator.EQ, sOrgtype));
+                    aFilters.push(new Filter("code_control_org_type_code", FilterOperator.EQ, sOrgtype));
                 }
                 if(!this.isValNull(sUseFlag)){
                     var bUseFlag = (sUseFlag === "true")?true:false;

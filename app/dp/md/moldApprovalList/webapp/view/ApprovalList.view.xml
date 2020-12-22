@@ -88,7 +88,7 @@
                             <VBox>
                                 <Label text="{path:'I18N>/COMPANY_NAME', formatter:'I18NFormatter'}" labelFor="searchCompanyE" required="true"></Label>     
                                 <MultiComboBox id="searchCompanyE" width="100%" selectedKey="" selectionFinish="handleSelectionFinishComp" items="{
-                                        path: 'org>/Org_Company',
+                                       path: 'org>/Company',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                         ],
@@ -263,16 +263,16 @@
                     updateFinished=".onListMainTableUpdateFinished"
                     cellClick=".onCellClick"
                     width="auto"
-                    items="{list>/ApprovalMasters}">
+                    items="{list>/Approvals}">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="Approval List ({= ${list>/ApprovalMasters}.length || 0})" level="H2"/>
+                            <Title text="Approval List ({= ${list>/Approvals}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <!-- Add the Personalization button -->
                             <Button id="mainTableCreateButton" text="{path:'I18N>/CREATE', formatter:'I18NFormatter'}" type="Emphasized" press=".onDialogCreate" />
                             <Button id="mainTableDeleteButton" text="{path:'I18N>/DELETE', formatter:'I18NFormatter'}"  type="Transparent" press=".onApplovalDeletePress" />
                             <ToolbarSeparator/>
-                            <Button icon="sap-icon://excel-attachment" press=".onDataExport" >
+                            <Button icon="sap-icon://excel-attachment" press=".onExportPress" >
                                 <layoutData>
                                     <OverflowToolbarLayoutData priority="NeverOverflow" />
                                 </layoutData>
@@ -324,9 +324,9 @@
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>
-                                <CheckBox fieldGroupIds="{= ${list>approval_type_code}==='E'? 'checkBoxs':''}"  visible="{= ${list>approval_type_code}==='E'? true:false }" select=".onCheck" />                  
+                                <!-- <CheckBox fieldGroupIds="{= ${list>approval_type_code}==='E'? 'checkBoxs':''}"  visible="{= ${list>approval_type_code}==='E'? true:false }" select=".onCheck" />                   -->
                                 <!-- <CheckBox fieldGroupIds="{= ${list>approve_status_code}==='DR'? 'checkBoxs':''}"  visible="{= ${list>approve_status_code}==='DR'? true:false }" select=".onCheck" />        -->
-                                <ComboBox 
+                                <!-- <ComboBox 
                                         editable="false"   
                                         class="readonlyField"
                                         selectedKey="{list>approval_type_code}"
@@ -371,9 +371,9 @@
                                     <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}] {purOrg>org_name}" />
                                 </ComboBox>
                                 <ObjectIdentifier text="{list>approval_number}" />
-                                <ObjectIdentifier text="{list>approval_title}" />
+                                <ObjectIdentifier text="{list>approval_title}" /> -->
                                 <!-- <ObjectIdentifier text="{list>requestor_empno}" /> -->
-                                <ComboBox
+                                <!-- <ComboBox
                                         editable="false"   
                                         class="readonlyField"
                                         selectedKey="{list>requestor_empno}"
@@ -402,7 +402,23 @@
                                         width='100%'
                                         >
                                     <core:Item key="{util>code}" text="{util>code_description}" />
-                                </ComboBox>
+                                </ComboBox> -->
+
+
+                                <CheckBox fieldGroupIds="{= ${list>approval_type_code}==='E'? 'checkBoxs':''}"  visible="{= ${list>approval_type_code}==='E'? true:false }" select=".onCheck" />                  
+                                <!-- <CheckBox fieldGroupIds="{= ${list>approve_status_code}==='DR'? 'checkBoxs':''}"  visible="{= ${list>approve_status_code}==='DR'? true:false }" select=".onCheck" />        -->
+                                
+                                <ObjectIdentifier text="{list>approval_type}" />
+                                <ObjectIdentifier text="{list>company_name}" />
+                                <ObjectIdentifier text="{list>org_name}" />
+                                <ObjectIdentifier text="{list>approval_number}" />
+                                <ObjectIdentifier text="{list>approval_title}" />
+                                <ObjectIdentifier text="{list>requestor_name}" />
+                                <!-- <ObjectIdentifier text="{list>request_date}" /> -->
+                                <DatePicker value="{list>request_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
+                                <ObjectIdentifier text="{list>approve_status}" />
+                                <!-- <ObjectIdentifier text="{list>requestor_empno}" /> -->
+                                
 
                             </cells>
                         </ColumnListItem>

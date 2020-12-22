@@ -76,6 +76,10 @@ sap.ui.define([
             this.getView().setModel(new ManagedListModel(), "approver");
             this.getView().setModel(new ManagedListModel(), "referer");
 
+            // search view 
+            this.getView().setModel(new ManagedListModel(), "approverView");
+            this.getView().setModel(new ManagedListModel(), "refererView");
+
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("appMaster"));
             oTransactionManager.addDataModel(this.getModel("approver"));
@@ -125,13 +129,13 @@ sap.ui.define([
 		 * @public
 		 */
         onPageNavBackButtonPress: function () {
-            /*	var sPreviousHash = History.getInstance().getPreviousHash();
+            	var sPreviousHash = History.getInstance().getPreviousHash();
                 if (sPreviousHash !== undefined) {
                     // eslint-disable-next-line sap-no-history-manipulation
                     history.go(-1);
                 } else {
                     this.getRouter().navTo("approvalList", {}, true);
-                } */
+                } 
         },
 
 		/**
@@ -253,13 +257,22 @@ sap.ui.define([
             var oPageSection = this.byId("pageSection");
             oPageSection.removeAllBlocks();
 
-            this._loadFragment(fragmentName, function (oFragment) {
-                oPageSection.addBlock(oFragment);
-            }.bind(this))
-
+            if(this.approval_type_code == "B"){
+               this.budget.openFragmentApproval(this); 
+            } else if(this.approval_type_code == "V"){
+                this.orderLocal.openFragmentApproval(this);
+            }else{
+                /** 추후 공통 개발 가이드가 오면 이 함수로 호출 할 예정 */
+                this._loadFragment(fragmentName, function (oFragment) {
+                    oPageSection.addBlock(oFragment);
+                }.bind(this))
+            }
+           
         },
 
         _onRoutedThisPage: function (approvalNumber) {
+            console.log(" approvalNumber >>> " , approvalNumber);
+
             var filter = [
                 new Filter("tenant_id", FilterOperator.EQ, this.tenant_id),
                 new Filter("approval_number", FilterOperator.EQ, approvalNumber)
@@ -269,7 +282,8 @@ sap.ui.define([
                 this.oRichTextEditor.setValue(oData.approval_contents);
             }.bind(this));
 
-            this._bindView("/Approvers", "approver", filter, function (oData) {
+            this._bindView("/Approvers", "approver", filter, function (oData) { 
+                console.log(" Approvers >> " , oData);
                 this._onLoadApproverRow(oData.results);
             }.bind(this));
 

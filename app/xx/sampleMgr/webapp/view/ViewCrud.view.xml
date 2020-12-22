@@ -6,26 +6,27 @@
 >
 	<Table
         id="sampleViewList"
-        growing="true"
-        growingThreshold="30"
-        items="{path : 'viewList>/SampleViewCud'}" 
-        width="auto"
+        items="{path : 'viewList>/SampleViewCud'}"
         mode="MultiSelect"
-        width="auto"
     >
         <headerToolbar>
             <OverflowToolbar>
                 <content>
-                    <Title text="Return" level="H2"/>
-                        <ToolbarSpacer/>
-                        <Button id="btnSearch" text="Search" press="onSearch"></Button>
-                        <Button id="btnAdd" text="Add" press="onCreate" tooltip="추가"></Button>
-                        <Button id="btnDelete" text="Delete" press="onDelete" tooltip="삭제"></Button>
-                        <Button id="btnSave" text="Save" press="onSave" tooltip="저장"></Button>
+                    <Title text="View CRUD" level="H2"/>
+                    <ToolbarSpacer/>
+                    <Button id="btnSearch" text="Search" press="onSearch"></Button>
+                    <Button id="btnAdd" text="Add" press="onCreate" tooltip="추가"></Button>
+                    <Button id="btnDelete" text="Delete" press="onDelete" tooltip="삭제"></Button>
+                    <Button id="btnSave" text="Save" press="onSave" tooltip="저장"></Button>
                 </content>
             </OverflowToolbar>
         </headerToolbar>
         <columns>
+            <Column hAlign="Center">
+                <header>
+                    <Label text="Status"/>
+                </header>
+            </Column>
             <Column hAlign="Center">
                 <header>
                     <Label text="Header ID"/>
@@ -57,14 +58,14 @@
                 </header>
             </Column>
         </columns>
-
         <items>
             <ColumnListItem>
                 <cells>
-                    <Input type="Text" value="{viewList>header_id}"/>
+                    <Text text="{viewList>_row_state_}"/>
+                    <Text text="{viewList>header_id}"/>
                     <Input type="Text" value="{viewList>header_cd}"/>
                     <Input type="Text" value="{viewList>header_name}"/>
-                    <Input type="Text" value="{viewList>detail_id}"/>
+                    <Text text="{viewList>detail_id}"/>
                     <Input type="Text" value="{viewList>detail_cd}"/>
                     <Input type="Text" value="{viewList>detail_name}"/>
                 </cells>

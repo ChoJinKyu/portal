@@ -1,1 +1,0 @@
-sap.ui.define(["ext/lib/controller/BaseController"],function(e){"use strict";return e.extend("cm.timeZoneMgr.controller.App",{onInit:function(){this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass())}})});
