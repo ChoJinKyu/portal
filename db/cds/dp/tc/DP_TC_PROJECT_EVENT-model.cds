@@ -46,9 +46,11 @@ entity Tc_Project_Event {
         sequence            : String              @title : '순서';
 
         event_ref           : Association[1.. * ] to dp.Tc_Project
-                                  on  event_ref.tenant_id    = tenant_id
-                                  and event_ref.project_code = project_code
-                                  and event_ref.model_code   = model_code;
+                                  on  event_ref.tenant_id        = tenant_id
+                                  and event_ref.project_code     = project_code
+                                  and event_ref.model_code       = model_code
+                                  and event_ref.mcst_code        = mcst_code
+                                  and event_ref.version_sequence = version_sequence;
 }
 
 extend Tc_Project_Event with util.Managed;
