@@ -444,7 +444,7 @@ sap.ui.define([
 				_nDifferentDeleteHeaderItem = 0;
 				 
 			var oGlobalBusyDialog = new sap.m.BusyDialog();
-			 	oGlobalBusyDialog.open();
+			 	//oGlobalBusyDialog.open();
 
 			if(oAction === sap.m.MessageBox.Action.DELETE) {
 				
@@ -454,9 +454,10 @@ sap.ui.define([
 				
 				this._getSmartTableById().getTable().getSelectedItems().forEach(function(oItem){
 
+					
                     var sPath = oItem.getBindingContextPath();	
 					var aParameters = sPath.substring( sPath.indexOf('(')+1, sPath.length );		
-					aParameters = aParameters.split(",");
+					aParameters = aParameters.split(","); 
 					var _nDeleteItem = 0;
 					var size = aParameters.length;
 					var key, value;
@@ -466,15 +467,18 @@ sap.ui.define([
 						aParameters[key] = value;
 					}
 
+					var oRecord = that.getModel().getProperty(sPath);
+
 					var o_tenant_id = that._setReplace(aParameters["tenant_id"]),
-						o_material_code = that._setReplace(aParameters["material_code"]),
-						o_mi_material_code = that._setReplace(aParameters["mi_material_code"]),
-						o_supplier_code= that._setReplace(aParameters["supplier_code"]),
+						o_material_code = oRecord.material_code,
+						o_supplier_code= oRecord.supplier_code,
+						o_mi_material_code = oRecord.mi_material_code,
 						o_mi_bom_id =  that._setReplace(aParameters["mi_bom_id"]),
-						o_currency_unit =  that._setReplace(aParameters["currency_unit"]),
-						o_quantity_unit =  that._setReplace(aParameters["quantity_unit"]),
-						o_exchange =  that._setReplace(aParameters["exchange"]),
-						o_termsdelv =  that._setReplace(aParameters["termsdelv"]);
+						mi_material_code =  oRecord.mi_material_code,
+						o_currency_unit =  oRecord.currency_unit,
+						o_quantity_unit =  oRecord.quantity_unit,
+						o_exchange =  oRecord.exchange,
+						o_termsdelv =  oRecord.termsdelv;
 						
 					//item =====================================================================
 					var oDeleteMIMaterialCodeBOMManagementItemKey = {
@@ -537,6 +541,8 @@ sap.ui.define([
 				var _deleteHeaderOdata = _deleteHeader.getProperty("/delData");
 				var _deleteItemOdata = _deleteItem.getProperty("/delData");
 
+				this._currentDeleitem = 0;
+
 				//배열에 담긴 key과 동일한 아이템 카운트 구함
 				for( var i=0; i < _deleteHeaderOdata.length; i++ ){
 
@@ -567,7 +573,7 @@ sap.ui.define([
 							
 							deleteHeaderSameKeyItemCount++;
 						}
-					}
+					}//for end
 
 					var oDeleteInfoOdata = oDeleteInfo.getProperty("/oData");
 
@@ -579,109 +585,139 @@ sap.ui.define([
 					};
 
 					oDeleteInfoOdata.push(deleteItemInfo);
-				}
+				} //for end
 
 				//아이템 조사와 Header 최종 조사 내용을 실행한다. 
 				function readChecklistItemEntity(oDeleteInfoOdata) {
 					return new Promise(function(resolve, reject) {
-
-						console.log("readChecklistItemEntity Promise filter :", oDeleteInfoOdata.filter);
-						
 						that.getModel().read(that._m.serviceName.mIMaterialCodeBOMManagementItem, {
 							filters: oDeleteInfoOdata.filter,
-							success: function(oData, reponse) {
-								oDeleteInfoOdata.resultCount = reponse.data.results.length;
-								resolve(oDeleteInfoOdata);
+							success: function(oData) {		
+								console.log(">>readChecklistItemEntity");
+								resolve(oData);
 							},
 							error: function(oResult) {
-							reject(oResult);
+								reject(oResult);
 							}
 						});
 					});
+				};
+
+				function MakeQuerablePromise(promise) {
+					// Don't modify any promise that has been already modified.
+					if (promise.isResolved) return promise;
+				
+					// Set initial state
+					var isPending = true;
+					var isRejected = false;
+					var isFulfilled = false;
+				
+					// Observe the promise, saving the fulfillment in a closure scope.
+					var result = promise.then(
+						function(v) {
+							isFulfilled = true;
+							isPending = false;
+							return v; 
+						}, 
+						function(e) {
+							isRejected = true;
+							isPending = false;
+							throw e; 
+						}
+					);
+				
+					result.isFulfilled = function() { return isFulfilled; };
+					result.isPending = function() { return isPending; };
+					result.isRejected = function() { return isRejected; };
+					return result;
 				}
-
-
-				//작업중.
+				
+				this._deleteHeader = [];
 				for(var i=0; i < oDeleteInfoOdata.length ; i++ ){
 					
 					var deleteOdataPath = oModel.createKey(this._m.serviceName.mIMaterialCodeBOMManagementHeader, oDeleteInfoOdata[i].delete_bom_header_key);
 					oDeleteInfoOdata[i].deleteOdataPath = deleteOdataPath;
+					this._oDeleteInfoData = oDeleteInfoOdata[i];
+					//promises.push(readChecklistItemEntity(oDeleteInfoOdata[i]));
+					var readChecklistPromise =  MakeQuerablePromise(readChecklistItemEntity(oDeleteInfoOdata[i]));
 
-					readChecklistItemEntity(oDeleteInfoOdata[i]).then(function(oDeleteInfoOdata) {
-						var that = this;
-						console.log(" >>>>>>>>>>>>>>>>>>> readChecklistItemEntity then <<<<<<<<<<<<<<<<<<<<<<<< ");
-						console.log("oDeleteInfoOdata.delete_bom_item_count : " + oDeleteInfoOdata.delete_bom_item_count);
-						console.log("oDeleteInfoOdata.resultCount : " + oDeleteInfoOdata.resultCount);
-						
-						//남아 있는 아이템과 삭제하는 아이템갯수가 같을때만 헤더정보를 삭제한다.
-						if(oDeleteInfoOdata.resultCount == oDeleteInfoOdata.delete_bom_item_count){
+					readChecklistPromise.then(function(data){
+						//console.log("readChecklistPromise");
+						//console.log(data);
+						//console.log("Initial fulfilled:", readChecklistPromise.isFulfilled());
+						if(readChecklistPromise.isFulfilled()){
+							var t = that._oDeleteInfoData;
+							if(data.results.length==t.delete_bom_item_count){
+								console.log(">>>> remove header");
+								console.log("t.deleteOdataPath : ", t.deleteOdataPath);
+								that._deleteHeader.push(t.deleteOdataPath);
 
-							console.log(" >>>>>>>>>>>>>>>>>>> oModel.remove Header <<<<<<<<<<<<<<<<<<<<<<<< ");
-							console.log("delete odata path : ", oDeleteInfoOdata.deleteOdataPath);
-							
-							oModel.remove(oDeleteInfoOdata.deleteOdataPath,{ 
-									groupId: "pgGroup" 
-								}
-							);
+							}
 						}
-					}); //readChecklistItemEntity end
+					});
 				} //for end
+					
+				function _handleDeleteSuccess(oData) {
+
+					MessageToast.show("삭제가 성공 하였습니다.");
+
+					//this.getView().byId("buttonMainTableDelete").setEnabled(false);
+				}
+        
+        		function _handleDeleteError(oError) {
+					MessageToast.show("삭제가 실패 되었습니다.");
+				}				
+	
+				// console.log(that._m.deleteHeaderItemCount);
+
+				function _setUseBatch(oModel) {
+					console.log(" >>>>>>>>>>>>>>>>>>> setUseBatch <<<<<<<<<<<<<<<<<<<<<<<< ");
+					var that = this;
+						 
+					oModel.setUseBatch(true);				
+						oModel.submitChanges({
+						groupId: "pgGroup",
+						success: _handleDeleteSuccess.bind(this),
+						error: _handleDeleteError.bind(this)
+					});
 			
-				console.log(" >>>>>>>>>>>>>>>>>>> setUseBatch <<<<<<<<<<<<<<<<<<<<<<<< ");
-				// oModel.setUseBatch(true);
-				// oModel.submitChanges({
-				// 	groupId: that._m.groupID,
-				// 	success: that._handleDeleteSuccess.bind(this),
-				// 	error: that._handleDeleteError.bind(this)
-				// });
-				oGlobalBusyDialog.close();
-				oModel.refresh(true); 
-            } 
+					//oGlobalBusyDialog.close();
+					// oModel.updateBindings(true);
+					// oModel.refresh(true); 
+					//that._onMidServiceRead();
+				}
+
+				function deleteHeaders(){
+					if(that._deleteHeader.length>0){
+
+						for(var x=0; x<that._deleteHeader.length;x++){
+							oModel.remove(that._deleteHeader[x],{ 
+								groupId: "pgGroup" 
+							}); 
+						}
+						_setUseBatch(oModel);
+					}else{
+						_setUseBatch(oModel);
+					}
+
+					//sap.ui.getCore().byId("mainTable").getBinding("items").refresh();
+				}
+
+				function dataRefresh(){
+					oModel.updateBindings(true);
+					oModel.refresh(true); 
+					that.getView().byId("mainTable").getModel().refresh(true);
+					that.onBeforeRebindTable();
+				}
+				setTimeout(deleteHeaders, 1000);
+				setTimeout(dataRefresh, 1000);
+
+			}
+
             console.groupEnd();
 		},
-	
-        readChecklistEntity: function(oDeleteInfoOdata) {
-            var that = this;
-                      
-            return new Promise(
-              function(resolve, reject) {
 
-                that.getModel().read(that._m.serviceName.mIMaterialCodeBOMManagementItem, {
-                    filters: oDeleteInfoOdata.filter,
-                    success: function(oData, reponse) {
-                        resolve(oData);
-                    },
-                    error: function(oResult) {
-                        reject(oResult);
-                    }
-                });
-
-            });
-		},
 				
-		_setUseBatch : function (values) {
-			if( this._m.deleteItemCount > 0 || this._m.deleteHeaderItemCount > 0){
-
-				console.log("======================= delete setUseBatch =========================");
-				console.log("================================================================");
-				console.log("======================= Action DeleteItem : " + this._m.deleteItemCount);
-				console.log("======================= Action DeleteHeaderItem : " + this._m.deleteHeaderItemCount);
-				//console.log("======================= DifferentDeleteItem : " + _nDifferentDeleteItem);
-				//console.log("======================= DifferentDeleteHeaderItem : " + _nDifferentDeleteHeaderItem);
-				console.log("================================================================");
-				this._m.deleteItemCount = 0;
-				this._m.deleteHeaderItemCount = 0;
-				// oModel.setUseBatch(true);
-				// oModel.submitChanges({
-				// 	groupId: that._m.groupID,
-				// 	success: that._handleDeleteSuccess.bind(this),
-				// 	error: that._handleDeleteError.bind(this)
-				// });
-				//oGlobalBusyDialog.close();
-				//oModel.refresh(true); 
-			} 
-		},
-
 		_handleUpdateSuccess: function(oData) {
 			MessageToast.show(this.getResourceBundle().getText("updateSuccess"));
 		},
@@ -695,24 +731,7 @@ sap.ui.define([
 		_handleCreateError: function(oError) {
 			MessageBox.error(this.getResourceBundle().getText("createError"));
 		},		
-     /**
-         * 삭제 성공
-         * @param {ODATA} oData 
-         * @private
-         */
-		_handleDeleteSuccess: function(oData) {
-			MessageToast.show("삭제가 성공 하였습니다.");
-			this.getView().byId("buttonMainTableDelete").setEnabled(false);
-        },
-        
-        /**
-         * 삭제실패
-         * @param {Event} oError 
-         * @private
-         */
-		_handleDeleteError: function(oError) {
-			MessageToast.show("삭제가 실패 되었습니다.");
-		},
+
 
 		_setBusy : function (bIsBusy) {
 			var oModel = this.getView().getModel("oUi");
