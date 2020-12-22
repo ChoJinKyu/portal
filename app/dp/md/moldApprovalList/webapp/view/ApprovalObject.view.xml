@@ -199,7 +199,7 @@
                             <Column id="type" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="10em" >
                                 <Text text="Type" />
                             </Column>
-                            <Column id="nameDept" minScreenWidth="Tablet" hAlign="Center" width="15em" >
+                            <Column id="nameDept" minScreenWidth="Tablet" hAlign="Center" width="20em" >
                                 <Text text="Name/Dept" />
                             </Column>
                             <Column id="status" minScreenWidth="Tablet" hAlign="Center" width="12em" >
@@ -236,7 +236,9 @@
                                         <core:Item key="{util>code}" text="{util>code_description}" />
 
                                     </ComboBox>
-                                    <SearchField id="approverSearch" enabled="{approver>editMode}" search=".onApproverSearch" width="100%" placeholder="Search employee" value="{approver>approver_empno}"/>
+                                    <SearchField id="approverSearch" enabled="{approver>editMode}" 
+                                        search=".onApproverSearch" width="100%" placeholder="Search employee" 
+                                        value="{approver>approver_name}"/>
                                     <!--<Input value="{approver>approver_empno}" />-->
                                     <Text text="{approver>approve_status_code}" />
                                     <Text text="{approver>approve_comment}" />
