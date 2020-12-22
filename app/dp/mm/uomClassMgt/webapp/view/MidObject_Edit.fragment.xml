@@ -6,7 +6,7 @@
 	<form:SimpleForm id="midObjectForm1Edit" editable="false" >
 		
 		<!-- <core:Title text="Normal" /> -->
-		<Label text="Class" required="true"/>
+		<Label text="{I18N>/UOM_CLASS_CODE}" required="true"/>
         <Input value="{
                 path: 'master>/uom_class_code',
                 type: 'sap.ui.model.type.String',
@@ -14,7 +14,7 @@
                     maxLength: 10
                 }
             }" editable="{midObjectView>/isAddedMode}" required="true"></Input>		
-        <Label text="Class Text"/>
+        <Label text="{I18N>/UOM_CLASS_NAME}"/>
         <Input value="{
                 path: 'master>/uom_class_name',
                 type: 'sap.ui.model.type.String',
@@ -22,11 +22,11 @@
                     maxLength: 20
                 }
             }" required="true"></Input>			
-        <Label text="Base UOM"/>
+        <Label text="{I18N>/BASE_UOM_CODE}"/>
 		<Text text="{master>/base_uom_code}"/>
-        <Label text="Base UOM Text"/>
+        <Label text="{I18N>/BASE_UOM_NAME}"/>
 		<Text text="{master>/base_uom_name}"/>
-        <Label text="Description"/>
+        <Label text="{I18N>/UOM_CLASS_DESC}"/>
         <Input value="{
                 path: 'master>/uom_class_desc',
                 type: 'sap.ui.model.type.String',
@@ -34,7 +34,7 @@
                     maxLength: 50
                 }                
             }" ></Input>		
-        <Label text="Disable Date"/>        
+        <Label text="{I18N>/DISABLE_DATE}"/>        
         <DatePicker placeholder="Disable Date" value="{path: 'master>/disable_date',type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' }}"/>
         <!-- <DatePicker value="{ path: 'master>disable_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' } }" />         -->
 		<!-- <DatePicker placeholder="Disable Date" dateValue="{master>/disable_date}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/> -->

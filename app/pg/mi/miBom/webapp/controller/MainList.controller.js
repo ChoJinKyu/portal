@@ -176,7 +176,8 @@ sap.ui.define([
 				mBindingParams.filters.push(oSupplier_local_nameFilter);
             }            
         },
-        
+		
+			
         /**
          * filter and or not and 
          */
@@ -268,12 +269,17 @@ sap.ui.define([
 			var oNavParam = {
 				layout: sLayout, 
 				tenant_id: this._sso.dept.tenant_id,
-				material_code:"new",	
+				material_code:"new",
 				supplier_code: "　",	
-				mi_material_code: "　"
+				mi_bom_id: "　",	
+				mi_material_code: "　",
+				currency_unit: "　",
+				quantity_unit: "　",
+				exchange: "　",				
+				termsdelv: "　"
 			};
+
 			this.getRouter().navTo("midPage", oNavParam);
-			
 		},
 		
 		/**
@@ -313,23 +319,26 @@ sap.ui.define([
 					aParameters[key] = value;
 				}
 
-				var otermsdelv = this._setReplace(aParameters["termsdelv"]);
-				otermsdelv = otermsdelv.replace(")",'');
+				//var otermsdelv = this._setReplace(aParameters["termsdelv"]);
 
+				//otermsdelv = otermsdelv.replace(")",'');
+	
+	
 				this.getRouter().navTo("midPage", {
 					layout: oNextUIState.layout, 
 					tenant_id: this._setReplace(aParameters["tenant_id"]),
 					material_code: oRecord.material_code,
-					supplier_code: this._setReplace(aParameters["supplier_code"]),
+					supplier_code: oRecord.supplier_code,
 					mi_bom_id: this._setReplace(aParameters["mi_bom_id"]),
-					mi_material_code: this._setReplace(aParameters["mi_material_code"]),
-					currency_unit: this._setReplace(aParameters["currency_unit"]),
-					quantity_unit: this._setReplace(aParameters["quantity_unit"]),
-					exchange: this._setReplace(aParameters["exchange"]),
-					termsdelv: otermsdelv
+					mi_material_code: oRecord.mi_material_code,
+					currency_unit: oRecord.currency_unit,
+					quantity_unit: oRecord.quantity_unit,
+					exchange: oRecord.exchange,
+					termsdelv: oRecord.termsdelv,
 					
 				});
 
+				
 
             if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
                 this.getView().getModel('oUi').setProperty("/headerExpandFlag", false);
@@ -351,6 +360,7 @@ sap.ui.define([
 		_onRoutedThisPage: function(){
 			console.group("_onRoutedThisPage");
 			this.getModel("oUi").setProperty("/headerExpanded", true);
+			this.getModel().refresh(true);
 			console.groupEnd();
 		},
 
@@ -429,12 +439,12 @@ sap.ui.define([
 			var oModel = this.getModel(),
 				oDeleteInfo = this.getModel("oDeleteInfo"),
 				that = this,
-			  	_deleteItem = new JSONModel({oData:[]}),
-				_deleteHeader = new JSONModel({oData:[]}),
+			  	_deleteItem = new JSONModel({delData:[]}),
+				_deleteHeader = new JSONModel({delData:[]}),
 				_nDifferentDeleteHeaderItem = 0;
 				 
 			var oGlobalBusyDialog = new sap.m.BusyDialog();
-			 	oGlobalBusyDialog.open();
+			 	//oGlobalBusyDialog.open();
 
 			if(oAction === sap.m.MessageBox.Action.DELETE) {
 				
@@ -476,7 +486,7 @@ sap.ui.define([
 						exchange:  o_exchange,
 						termsdelv:  o_termsdelv
                     };
-					var _deleteItemOdata = _deleteItem.getProperty("/oData");
+					var _deleteItemOdata = _deleteItem.getProperty("/delData");
 
                     var oDeleteMIMaterialCodeBOMManagementItemPath = oModel.createKey(
 							that._m.serviceName.mIMaterialCodeBOMManagementItem,
@@ -497,18 +507,13 @@ sap.ui.define([
 						tenant_id : o_tenant_id,
 						material_code: o_material_code,
 						supplier_code: o_supplier_code,
-						mi_bom_id: o_mi_bom_id,
-						mi_material_code: o_mi_material_code,
-						currency_unit: o_currency_unit,
-						quantity_unit: o_quantity_unit,
-						exchange: o_exchange,
-						termsdelv:  o_termsdelv	
+						mi_bom_id: o_mi_bom_id
 					};
 
 					//header에 등록된 데이타 인지 확인
 					var flag_deleteHeadel_mi_bom_id = true;
-					var _deleteHeaderOdata = _deleteHeader.getProperty("/oData");
-					var _deleteItemOdata = _deleteItem.getProperty("/oData");
+					var _deleteHeaderOdata = _deleteHeader.getProperty("/delData");
+					var _deleteItemOdata = _deleteItem.getProperty("/delData");
 
 					for(var x=0; x<_deleteHeaderOdata.length;x++){
 
@@ -529,8 +534,10 @@ sap.ui.define([
 				});
 
 				//header 작업 ---------------------------------------------------
-				var _deleteHeaderOdata = _deleteHeader.getProperty("/oData");
-				var _deleteItemOdata = _deleteItem.getProperty("/oData");
+				var _deleteHeaderOdata = _deleteHeader.getProperty("/delData");
+				var _deleteItemOdata = _deleteItem.getProperty("/delData");
+
+				this._currentDeleitem = 0;
 
 				//배열에 담긴 key과 동일한 아이템 카운트 구함
 				for( var i=0; i < _deleteHeaderOdata.length; i++ ){
@@ -555,12 +562,7 @@ sap.ui.define([
 									tenant_id : _deleteHeaderOdata[i].tenant_id,
 									material_code: _deleteHeaderOdata[i].material_code,
 									supplier_code: _deleteHeaderOdata[i].supplier_code,
-									mi_bom_id: _deleteHeaderOdata[i].mi_bom_id,
-									mi_material_code: _deleteHeaderOdata[i].mi_material_code,
-									currency_unit: _deleteHeaderOdata[i].currency_unit,
-									quantity_unit: _deleteHeaderOdata[i].quantity_unit,
-									exchange: _deleteHeaderOdata[i].exchange,
-									termsdelv: _deleteHeaderOdata[i].termsdelv
+									mi_bom_id: _deleteHeaderOdata[i].mi_bom_id								
 								};
 								t=1;
 							}
@@ -584,60 +586,132 @@ sap.ui.define([
 				//아이템 조사와 Header 최종 조사 내용을 실행한다. 
 				function readChecklistItemEntity(oDeleteInfoOdata) {
 					return new Promise(function(resolve, reject) {
-
-						console.log("readChecklistItemEntity Promise filter :", oDeleteInfoOdata.filter);
-						
 						that.getModel().read(that._m.serviceName.mIMaterialCodeBOMManagementItem, {
 							filters: oDeleteInfoOdata.filter,
 							success: function(oData, reponse) {
+								console.log("readChecklistItemEntity");
 								oDeleteInfoOdata.resultCount = reponse.data.results.length;
+								oDeleteInfoOdata.filter = oDeleteInfoOdata.filter;
+							
 								resolve(oDeleteInfoOdata);
 							},
 							error: function(oResult) {
-							reject(oResult);
+								reject(oResult);
 							}
 						});
 					});
 				}
+
+				var promises = [];
+				
 
 				for(var i=0; i < oDeleteInfoOdata.length ; i++ ){
 					
 					var deleteOdataPath = oModel.createKey(this._m.serviceName.mIMaterialCodeBOMManagementHeader, oDeleteInfoOdata[i].delete_bom_header_key);
 					oDeleteInfoOdata[i].deleteOdataPath = deleteOdataPath;
 
-					readChecklistItemEntity(oDeleteInfoOdata[i]).then(function(oDeleteInfoOdata) {
-						var that = this;
-						console.log(" >>>>>>>>>>>>>>>>>>> readChecklistItemEntity then <<<<<<<<<<<<<<<<<<<<<<<< ");
-						console.log("oDeleteInfoOdata.delete_bom_item_count : " + oDeleteInfoOdata.delete_bom_item_count);
-						console.log("oDeleteInfoOdata.resultCount : " + oDeleteInfoOdata.resultCount);
-						
-						//남아 있는 아이템과 삭제하는 아이템갯수가 같을때만 헤더정보를 삭제한다.
-						if(oDeleteInfoOdata.resultCount == oDeleteInfoOdata.delete_bom_item_count){
+					promises.push(readChecklistItemEntity(oDeleteInfoOdata[i]));
 
-							console.log(" >>>>>>>>>>>>>>>>>>> oModel.remove Header <<<<<<<<<<<<<<<<<<<<<<<< ");
-							console.log("delete odata path : ", oDeleteInfoOdata.deleteOdataPath);
+					// readChecklistItemEntity(oDeleteInfoOdata[i]).then(function(oDeleteInfoOdata) {
+					// 	var that = this;
+					// 	console.log(" >>>>>>>>>>>>>>>>>>> readChecklistItemEntity then <<<<<<<<<<<<<<<<<<<<<<<< ");
+					// 	console.log("oDeleteInfoOdata.delete_bom_item_count : " + oDeleteInfoOdata.delete_bom_item_count);
+					// 	console.log("oDeleteInfoOdata.resultCount : " + oDeleteInfoOdata.resultCount);
+						
+					// 	//남아 있는 아이템과 삭제하는 아이템갯수가 같을때만 헤더정보를 삭제한다.
+					// 	if(oDeleteInfoOdata.resultCount == oDeleteInfoOdata.delete_bom_item_count){
+
+					// 		console.log(" >>>>>>>>>>>>>>>>>>> oModel.remove Header <<<<<<<<<<<<<<<<<<<<<<<< ");
+					// 		console.log("delete odata path : ", oDeleteInfoOdata.deleteOdataPath);
 							
-							oModel.remove(oDeleteInfoOdata.deleteOdataPath,{ 
-									groupId: "pgGroup" 
-								}
-							);
-						}
-					}); //readChecklistItemEntity end
+					// 		oModel.remove(oDeleteInfoOdata.deleteOdataPath,{ 
+					// 				groupId: "pgGroup" 
+					// 			}
+					// 		);
+					// 	}
+					// }); //readChecklistItemEntity end
 				} //for end
+				
+				Promise.all([promises
+				]).then(setTimeout(that.deleteCheckAction.bind(that),3000),
+						that.deleteChecklistError.bind(that));
 			
-				console.log(" >>>>>>>>>>>>>>>>>>> setUseBatch <<<<<<<<<<<<<<<<<<<<<<<< ");
+				//console.log(" >>>>>>>>>>>>>>>>>>> setUseBatch <<<<<<<<<<<<<<<<<<<<<<<< ");
 				// oModel.setUseBatch(true);
 				// oModel.submitChanges({
 				// 	groupId: that._m.groupID,
 				// 	success: that._handleDeleteSuccess.bind(this),
 				// 	error: that._handleDeleteError.bind(this)
 				// });
-				oGlobalBusyDialog.close();
-				oModel.refresh(true); 
+				//oGlobalBusyDialog.close();
+				//oModel.refresh(true); 
             } 
             console.groupEnd();
 		},
 	
+        deleteCheckAction: function(values) {
+			console.log("deleteCheckAction");
+
+	
+			for(var i=0;i<values.length;i++){
+				var oData  = values[i].results;
+				var oModel = this.getModel();
+				var that = this;
+
+				// deleteOdataPath: "/MIMaterialCodeBOMManagementHeader(tenant_id='L2100',material_code='PRIACT0001',supplier_code='KR01820500',mi_bom_id='1')"
+				// delete_bom_header_key: {tenant_id: "L2100", material_code: "PRIACT0001", supplier_code: "KR01820500", mi_bom_id: "1"}
+				// delete_bom_item_count: 1
+
+				var oDeleteMIMaterialCodeBOMManagementHeaderKey = {
+					tenant_id : oData.delete_bom_header_key.tenant_id,
+					material_code : oData.delete_bom_header_key.material_code,
+					supplier_code : oData.delete_bom_header_key.supplier_code,
+					mi_bom_id : oData.delete_bom_header_key.mi_bom_id
+				};
+				
+				if(oData.length>0){
+	
+					if(oData.delete_bom_header_key.delete_bom_item_count == oData.length){
+						that._fnSetDeleteMode();
+						var deleteOdataPath = oModel.createKey(
+							"/MIMaterialCodeBOMManagementHeader",
+							oDeleteMIMaterialCodeBOMManagementHeaderKey);
+	
+						oModel.remove(deleteOdataPath,{ 
+								groupId: "pgGroup" 
+							}
+						);   
+					}
+				}
+			}
+
+			//that._setUseBatch();
+
+		},
+		
+        deleteChecklistError: function(reason) {
+            console.log(" deleteChecklistError reason : " + reason)		
+        },
+
+        readChecklistEntity: function(oDeleteInfoOdata) {
+            var that = this;
+                      
+            return new Promise(
+              function(resolve, reject) {
+
+                that.getModel().read(that._m.serviceName.mIMaterialCodeBOMManagementItem, {
+                    filters: oDeleteInfoOdata.filter,
+                    success: function(oData, reponse) {						
+                        resolve(oData);
+                    },
+                    error: function(oResult) {
+                        reject(oResult);
+                    }
+                });
+
+            });
+		},
+				
 		_setUseBatch : function (values) {
 			if( this._m.deleteItemCount > 0 || this._m.deleteHeaderItemCount > 0){
 

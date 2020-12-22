@@ -42,7 +42,7 @@
 				             persistencyKey="PageVariantPKey" />                     
                     <!-- Smart Filter -->
                     <smartFilterBar:SmartFilterBar id="smartFilterBar" 
-                    entitySet="MIMatListView " 
+                    entitySet="/MIMatListView " 
                     smartVariant="pageVariantId"
                     persistencyKey="SmartFilterPKey"
                     considerSelectionVariants="true" 

@@ -13,9 +13,9 @@
         columnsXL="3" >
 		
         <form:content>            
-			<Label text="UOM" required="true"/>
+			<Label text="{I18N>/UOM_CODE}" required="true"/>
 			<Input value="{master>/uom_code}" editable="false" class="readonlyField"/>
-			<Label text="Class" required="true"/>
+			<Label text="{I18N>/UOM_CLASS_CODE}" required="true"/>
 			<ComboBox id="showClassCode" width="100%" selectedKey="{master>/uom_class_code}" items="{
                     path: 'uomClass>/UomClass',
                     filters: [
@@ -26,7 +26,7 @@
                     <core:Item key="{uomClass>uom_class_code}" text="{uomClass>uom_class_name}" />
                 </items>
             </ComboBox>
-			<Label text="Base Unit"/>
+			<Label text="{I18N>/BASE_UNIT_FLAG}"/>
 			<!-- <Text text="{
 					path: 'master>/base_unit_flag',
 					formatter: '.formatter.toYesNo'
@@ -36,11 +36,11 @@
 					<FlexItemData growFactor="1" />
 				</layoutData>
 			</Switch>
-            <Label text="UOM Name"/>
+            <Label text="{I18N>/UOM_NAME}" required="true"/>
 			<Input value="{master>/uom_name}" editable="false" class="readonlyField"/>
-			<Label text="Description"/>
+			<Label text="{I18N>/UOM_DESC}"/>
 			<Input value="{master>/uom_desc}" editable="false" class="readonlyField"/>
-			<Label text="Disable Date"/>
+			<Label text="{I18N>/DISABLE_DATE}"/>
 			<Input value="{path: 'master>/disable_date',formatter: '.dateFormatter.toDateString'}" editable="false" class="readonlyField"/>
 	    </form:content>
     </form:SimpleForm>
@@ -57,13 +57,13 @@
 			<Input value="{master>/commercial_uom_code}" editable="false" class="readonlyField"/>			
 			<Label text="Technical" required="true"/>
 			<Input value="{master>/technical_uom_code}" editable="false" class="readonlyField"/> -->
-            <Label text="Decimal Places"/>
+            <Label text="{I18N>/DECIMAL_PLACES}"/>
 			<Input value="{master>/decimal_places}" editable="false" class="readonlyField"/>			
             <!-- <Label text="Commercial Text" required="true"/>
 			<Input value="{master>/commercial_uom_name}" editable="false" class="readonlyField"/>
             <Label text="Technical Text" required="true"/>
 			<Input value="{master>/technical_uom_name}" editable="false" class="readonlyField"/>			 -->
-			<Label text="Float. Point Idex"/>
+			<Label text="{I18N>/FLOATING_DECPOINT_INDEX}"/>
 			<Input value="{master>/floating_decpoint_index}" editable="false" class="readonlyField"/>
 	    </form:content>
     </form:SimpleForm>
@@ -76,13 +76,13 @@
         columnsXL="3" >
         <form:content>
             <core:Title text="Conversion" />
-			<Label text="Numerator" required="true"/>
+			<Label text="{I18N>/CONVERSION_NUMERATOR}" required="true"/>
 			<Input value="{master>/conversion_numerator}" editable="false" class="readonlyField"/>
-            <Label text="Index"/>
+            <Label text="{I18N>/CONVERSION_INDEX}"/>
 			<Input value="{master>/conversion_index}" editable="false" class="readonlyField"/>
-			<Label text="Denominator" required="true"/>
+			<Label text="{I18N>/CONVERSION_DENOMINATOR}" required="true"/>
 			<Input value="{master>/conversion_denominator}" editable="false" class="readonlyField"/>			
-			<Label text="Rate"/>
+			<Label text="{I18N>/CONVERSION_RATE}"/>
 			<Text text="{master>/conversion_rate}" />      
 	    </form:content>
 	</form:SimpleForm>

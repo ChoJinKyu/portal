@@ -1,0 +1,38 @@
+---
+cds:
+  odata-v2.endpoint.path: "/srv-api/odata/v2"
+  odata-v4.endpoint.path: "/srv-api/odata/v4"
+  security:
+    mock:
+      users:
+        - name: admin
+          id: admin@lgchem.com
+          password: 2222
+          roles:
+          - Admin
+          attributes:
+            { user_id : test@lgchem.com,
+              user_name : 테스트사용자,
+              tenant_id : L2100,
+              company_code : LGCKR,
+              employee_number : 1111,
+              employee_name : 테스트사용자,
+              english_employee_name : Test User,
+              employee_status_code : C,
+              language_code : KO,
+              timezone_code : AS054,
+              date_format_type_code : D01,
+              digits_format_type_code : N02,
+              currency_code : KRW,
+              email : test@lgchem.com,
+              header_cd : CCCC}
+        - name: user
+          password: 1111
+          roles:
+          - View
+          attributes:
+            { country : KR, language : KO, type : Employee, mail : user@test.com, display_name : user }
+
+---
+spring:
+  profiles: cloud

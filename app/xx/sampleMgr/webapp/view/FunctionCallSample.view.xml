@@ -14,9 +14,9 @@
         <headerToolbar>
             <OverflowToolbar>
                 <content>
-                    <Title text="Return" level="H2"/>
-                        <ToolbarSpacer/>
-                        <Button id="btnSearch" text="Search" press="onSearch"></Button>
+                    <Title text="Function 조회" level="H2"/>
+                    <ToolbarSpacer/>
+                    <Button id="btnSearch" text="Search" press="onSearch"></Button>
                 </content>
             </OverflowToolbar>
         </headerToolbar>

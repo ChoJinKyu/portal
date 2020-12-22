@@ -41,15 +41,8 @@
                     "odataVersion": "2.0"
                 }
             },
-            "orgMgrService": {
-                "uri": "srv-api/odata/v2/cm.OrgMgrService/",
-                "type": "OData",
-                "settings": {
-                    "odataVersion": "2.0"
-                }
-            },
-            "purOrgMgrService": {
-                "uri": "srv-api/odata/v2/cm.PurOrgMgrService/",
+            "orgMgtService": {
+                "uri": "srv-api/odata/v2/cm.util.OrgService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
@@ -124,22 +117,12 @@
                 }
             },
             "org": {
-                "dataSource": "orgMgrService",
+                "dataSource": "orgMgtService",
                 "preload": true,
                 "settings": {
                     "defaultBindingMode": "TwoWay",
                     "defaultCountMode": "Inline",
                     "refreshAfterChange": true,
-                    "useBatch": true
-                }
-            },
-            "purOrg": {
-                "dataSource": "purOrgMgrService",
-                "preload": true,
-                "settings": {
-                    "defaultBindingMode": "TwoWay",
-                    "defaultCountMode": "Inline",
-                    "refreshAfterChange": false,
                     "useBatch": true
                 }
             },
@@ -173,7 +156,7 @@
         },
         "resourceRoots": {
             "ext.lib": "../../../../lib",
-            "dp.md.util": "../../util"
+            "dp.util": "../../util"
         },
         "routing": {
             "config": {
@@ -198,10 +181,10 @@
                     ]
                 },
                 {
-                    "pattern": "poaEditObject/{company_code}/{plant_code}/{approval_number}",
-                    "name": "poaEditObject",
+                    "pattern": "approvalObject/{company_code}/{plant_code}/{approval_type_code}/{approval_number}",
+                    "name": "approvalObject",
                     "target": [
-                        "poaEditObject"
+                        "approvalObject"
                     ]
                 },
                 {
@@ -219,11 +202,11 @@
                     "viewLevel": 1,
                     "title": "{i18n>poaCreateObjectTitle}"
                 },
-                "poaEditObject": {
-                    "viewName": "PoaCreateObject",
-                    "viewId": "poaCreateObject",
+                "approvalObject": {
+                    "viewName": "ApprovalObject",
+                    "viewId": "approvalObject",
                     "viewLevel": 1,
-                    "title": "{i18n>poaCreateObjectTitle}"
+                    "title": "{i18n>approvalObjectTitle}"
                 },
                 "poaObject": {
                     "viewName": "PoaObject",

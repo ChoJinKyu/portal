@@ -9,6 +9,7 @@
     xmlns:sc="sap.suite.ui.commons" 
     xmlns:microchart="sap.suite.ui.microchart" 
     xmlns:lib-m="ext.lib.m"
+    core:require="{ I18NFormatter: 'dp/md/util/controller/I18NFormatter' }"
     height="100%">
 
     <f:DynamicPage id="page"
@@ -95,14 +96,14 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="{= ${I18N>/CONFIRM_DATE}? ${I18N>/CONFIRM_DATE}:'[CONFIRM_DATE]'}" labelFor="searchCreationDateS"></Label>
+                                <Label text="{path:'I18N>/CONFIRM_DATE', formatter:'I18NFormatter'}" labelFor="searchCreationDateS"></Label>
                                 <DateRangeSelection id="searchCreationDateS" width="100%" change="creationDateChange"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="{= ${I18N>/STATUS}? ${I18N>/STATUS}:'[STATUS]'}"></Label>
+                                <Label text="{path:'I18N>/STATUS', formatter:'I18NFormatter'}" ></Label>
                                 <SegmentedButton id="searchStatusS" selectedKey="" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
                                     <items>
                                         <SegmentedButtonItem text="No Confirmed" key="ORD_CRT" width="7em" />
@@ -190,14 +191,14 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="{= ${I18N>/CONFIRM_DATE}? ${I18N>/CONFIRM_DATE}:'[CONFIRM_DATE]'}" labelFor="searchCreationDateE"></Label>
+                                <Label text="{path:'I18N>/CONFIRM_DATE', formatter:'I18NFormatter'}" labelFor="searchCreationDateE"></Label>
                                     <DateRangeSelection id="searchCreationDateE" width="100%" change="creationDateChange"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="{= ${I18N>/STATUS}? ${I18N>/STATUS}:'[STATUS]'}"></Label>
+                                <Label text="{path:'I18N>/STATUS', formatter:'I18NFormatter'}" ></Label>
                                 <SegmentedButton id="searchStatusE" selectedKey="" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
                                     <items>
                                         <SegmentedButtonItem text="No Confirmed" key="ORD_CRT" width="7em" />
@@ -225,7 +226,7 @@
                 <form:SimpleForm maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="{= ${I18N>/ITEM_TYPE}? ${I18N>/ITEM_TYPE}:'[ITEM_TYPE]'}" labelFor="searchItemType"></Label>
+                            <Label text="{path:'I18N>/ITEM_TYPE', formatter:'I18NFormatter'}" labelFor="searchItemType"></Label>
                             <ComboBox   id="searchItemType" width="100%"
                                         selectedKey=""
                                         items="{
@@ -243,7 +244,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="{= ${I18N>/PRODUCTION_TYPE}? ${I18N>/PRODUCTION_TYPE}:'[PRODUCTION_TYPE]'}" labelFor="searchProductionType"></Label>
+                            <Label text="{path:'I18N>/PRODUCTION_TYPE', formatter:'I18NFormatter'}" labelFor="searchProductionType"></Label>
                             <ComboBox   id="searchProductionType" width="100%"
                                         selectedKey=""
                                         items="{
@@ -268,7 +269,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="{= ${I18N>/ORDER_SUPPLIER}? ${I18N>/ORDER_SUPPLIER}:'[ORDER_SUPPLIER]'}"></Label>
+                            <Label text="{path:'I18N>/ORDER_SUPPLIER', formatter:'I18NFormatter'}"></Label>
                             <ComboBox   id="searchEDType" width="100%"
                                         selectedKey=""
                                         items="{
@@ -305,7 +306,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="{= ${I18N>/MOLD_NUMBER}? ${I18N>/MOLD_NUMBER}:'[MOLD_NUMBER]'}" labelFor="searchMoldNo"></Label>
+                            <Label text="{path:'I18N>/MOLD_NUMBER', formatter:'I18NFormatter'}" labelFor="searchMoldNo"></Label>
                             <Input id="searchMoldNo" 
                                     showValueHelp="true"  
                                     valueHelpRequest=".onValueHelpRequested"
@@ -323,7 +324,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="{= ${I18N>/FAMILY_PART_NUMBER}? ${I18N>/FAMILY_PART_NUMBER}:'[FAMILY_PART_NUMBER]'}" labelFor="searchFamilyPartNo"></Label>
+                            <Label text="{path:'I18N>/FAMILY_PART_NUMBER', formatter:'I18NFormatter'}" labelFor="searchFamilyPartNo"></Label>
                             <Input id="searchFamilyPartNo" width="100%"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
@@ -338,12 +339,12 @@
                     selectionMode="MultiToggle"
                     fixedColumnCount="7"
                     visibleRowCountMode="Auto"
-                    rows="{list>/MoldMasters}"
+                    rows="{list>/MoldMasterSpec}"
                     cellClick=".onCellClick"
                     rowSelectionChange=".onCheck">
                 <table:extension>
                     <OverflowToolbar>
-                        <Title text="List ({= ${list>/MoldMasters}.length || 0})" level="H2"/>
+                        <Title text="List ({= ${list>/MoldMasterSpec}.length || 0})" level="H2"/>
                         <ToolbarSpacer/>
                         <Button id="moldMstTableDeleteButton"   type="Emphasized" text="Confirm"             press=".onMoldMstTableConfirmButtonPress"   enabled="{mode>/viewFlag}" />
                         <Button id="moldMstTableReceiptButton"  type="Transparent"  text="Excel"            press=".onMoldMstTableExcelButtonPress"  enabled="{mode>/viewFlag}" />
@@ -412,49 +413,50 @@
 
 
                     <table:Column width="8em" hAlign="Center">
-                        <Label text="{= ${I18N>/INSPECTION_YN}? ${I18N>/INSPECTION_YN}:'[INSPECTION_YN]'}"/>
+                        <Label text="{path:'I18N>/INSPECTION_YN', formatter:'I18NFormatter'}" />
                         <table:template>
-                            <Text text="무슨값?"/>
+                            <Switch state="{list>/inspection_flag}" customTextOn="Yes" customTextOff="No" enabled="false" />
+                            <!-- <Text text="{list>inspection_flag}"/> -->
                         </table:template>
                     </table:Column>
 
                     <table:Column width="8em" hAlign="Center">
-                        <Label text="{= ${I18N>/INSPECTION_DATE}? ${I18N>/INSPECTION_DATE}:'[INSPECTION_DATE]'}"/>
+                        <Label text="{path:'I18N>/INSPECTION_DATE', formatter:'I18NFormatter'}" />
                         <table:template>
                             <Text text="{list>inspection_date}"/>
                         </table:template>
                     </table:Column>
 
                     <table:Column width="8em" hAlign="Center">
-                        <Label text="{= ${I18N>/COMPLETE_DATE}? ${I18N>/COMPLETE_DATE}:'[COMPLETE_DATE]'}"/>
+                        <Label text="{path:'I18N>/COMPLETE_DATE', formatter:'I18NFormatter'}" />
                         <table:template>
-                            <Text text="{list>receiving_complete_date}"/>
+                            <Text text="{list>production_complete_date}"/>
                         </table:template>
                     </table:Column>
 
                     <table:Column width="8em" hAlign="Center">
-                        <Label text="{= ${I18N>/RCV_DOCUMENT}? ${I18N>/RCV_DOCUMENT}:'[RCV_DOCUMENT]'}"/>
+                        <Label text="{path:'I18N>/RCV_DOCUMENT', formatter:'I18NFormatter'}" />
                         <table:template>
                             <Text text="temp"/>
                         </table:template>
                     </table:Column>
 
                     <table:Column width="8em" hAlign="Center">
-                        <Label text="{= ${I18N>/PROD_SUPPLIER}? ${I18N>/PROD_SUPPLIER}:'[PROD_SUPPLIER]'}"/>
+                        <Label text="{path:'I18N>/PROD_SUPPLIER', formatter:'I18NFormatter'}" />
                         <table:template>
                             <Text text="{list>production_supplier_code}"/>
                         </table:template>
                     </table:Column>
 
                     <table:Column width="8em" hAlign="Center">
-                        <Label text="{= ${I18N>/ORDER_SUPPLIER}? ${I18N>/ORDER_SUPPLIER}:'[ORDER_SUPPLIER]'}"/>
+                        <Label text="{path:'I18N>/ORDER_SUPPLIER', formatter:'I18NFormatter'}" />
                         <table:template>
-                            <Text text="supplier_code?"/>
+                            <Text text="{list>supplier_code}"/>
                         </table:template>
                     </table:Column>
 
                     <table:Column width="8em" hAlign="Center">
-                        <Label text="{= ${I18N>/PROD_TYPE}? ${I18N>/PROD_TYPE}:'[PROD_TYPE]'}"/>
+                        <Label text="{path:'I18N>/PRODUCTION_TYPE', formatter:'I18NFormatter'}" />
                         <table:template>
                             <Text text="{list>mold_production_type_code}"/>
                         </table:template>
@@ -462,7 +464,7 @@
 
                     <table:Column id="moldItemTypeColumn" width="10em" hAlign="Center">
                         <VBox>
-                        <Label text="{= ${I18N>/ITEM_TYPE}? ${I18N>/ITEM_TYPE}:'[ITEM_TYPE]'}"/>
+                        <Label text="{path:'I18N>/ITEM_TYPE', formatter:'I18NFormatter'}" />
                         </VBox>
                         <table:template>
                             <ComboBox   id="mold_item_type_code"
@@ -481,60 +483,56 @@
                     </table:Column>
 
                     <table:Column width="8em" hAlign="Center">
-                        <Label text="{= ${I18N>/CURRENCY}? ${I18N>/CURRENCY}:'[CURRENCY]'}"/>
+                        <Label text="{path:'I18N>/CURRENCY', formatter:'I18NFormatter'}" />
                         <table:template>
                             <Text text="{list>currency_code}"/>
                         </table:template>
                     </table:Column>
 
                     <table:Column width="8em" hAlign="Center">
-                        <Label text="{= ${I18N>/ESTIMATE_AMOUNT}? ${I18N>/ESTIMATE_AMOUNT}:'[ESTIMATE_AMOUNT]'}"/>
+                        <Label text="{path:'I18N>/ESTIMATE_AMOUNT', formatter:'I18NFormatter'}" />
                         <table:template>
-                            <Text text="어떤 컬럼?"/>
+                            <Text text="{list>order_confirmed_amount}"/>
                         </table:template>
                     </table:Column>
 
                     <table:Column width="8em" hAlign="Center">
-                        <Label text="{= ${I18N>/ORDER_AMOUNT}? ${I18N>/ORDER_AMOUNT}:'[ORDER_AMOUNT]'}"/>
+                        <Label text="{path:'I18N>/ORDER_AMOUNT', formatter:'I18NFormatter'}" />
                         <table:template>
-                            <Text text="order_confirmed_amount?"/>
+                            <Text text="{list>purchasing_amount}"/>
                         </table:template>
                     </table:Column>
 
                     <table:Column width="8em" hAlign="Center">
-                        <Label text="{= ${I18N>/RECEIPT_AMOUNT}? ${I18N>/RECEIPT_AMOUNT}:'[RECEIPT_AMOUNT]'}"/>
+                        <Label text="{path:'I18N>/RECEIPT_AMOUNT', formatter:'I18NFormatter'}" />
                         <table:template>
-                            <Text text="receiving_amount?"/>
+                            <Text text="{list>receiving_amount}"/>
                         </table:template>
                     </table:Column>
 
                     <table:Column width="8em" hAlign="Center">
-                        <Label text="{= ${I18N>/CONFIRM_USER}? ${I18N>/CONFIRM_USER}:'[CONFIRM_USER]'}"/>
+                        <Label text="{path:'I18N>/CONFIRM_USER', formatter:'I18NFormatter'}" />
                         <table:template>
-                            <Text text="어떤 컬럼?"/>
+                            <Text text="{list>receipt_confirmed_user_name}"/>
                         </table:template>
                     </table:Column>
 
                     <table:Column width="8em" hAlign="Center">
-                        <Label text="{= ${I18N>/CONFIRM_DATE}? ${I18N>/CONFIRM_DATE}:'[CONFIRM_DATE]'}"/>
+                        <Label text="{path:'I18N>/CONFIRM_DATE', formatter:'I18NFormatter'}" />
                         <table:template>
-                            <Text text="어떤 컬럼?"/>
+                            <Text text="{list>receipt_confirmed_date}"/>
                         </table:template>
                     </table:Column>
 
                     <table:Column id="moldFamilyPartNo1Column" width="12em" hAlign="Center">
                         <VBox>
-                        <Label text="{= ${I18N>/FAMILY_PART_NUMBER}? ${I18N>/FAMILY_PART_NUMBER}:'[FAMILY_PART_NUMBER]'}"/>
+                        <Label text="{path:'I18N>/FAMILY_PART_NUMBER', formatter:'I18NFormatter'}" />
                         </VBox>
                         <table:template>
                             <Text text="{list>family_part_number_1} {list>family_part_number_2} {list>family_part_number_3} {list>family_part_number_4} {list>family_part_number_5}"/>
                         </table:template>
                     </table:Column>
 
-                    
-
-
-                    
                 </table:columns>
             </table:Table>
         </f:content>
@@ -542,8 +540,8 @@
         <f:footer>
             <OverflowToolbar>
                 <ToolbarSpacer />
-				<Button text="{I18N>/SAVE}" type="Emphasized" press=".onPageSaveButtonPress" />
-				<Button text="{I18N>/CANCEL}" type="Transparent" press=".onPageCancelEditButtonPress"/>
+        <Button text="{I18N>/SAVE}" type="Emphasized" press=".onPageSaveButtonPress" />
+        <Button text="{I18N>/CANCEL}" type="Transparent" press=".onPageCancelEditButtonPress"/>
             </OverflowToolbar>
         </f:footer>
     </f:DynamicPage>

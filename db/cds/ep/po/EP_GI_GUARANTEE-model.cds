@@ -7,7 +7,7 @@ entity Gi_Guarantee {
     key company_code              : String(10) not null;
     key contract_number           : String(50) not null;
     key contract_degree           : Integer64 not null;
-    key gurantee_separated_code   : String(30) not null;
+    key gurantee_type_code        : String(30) not null;
     key gurantee_sequence         : Decimal not null;
         gurantee_status_code      : String(30);
         gurantee_agency_code      : String(30);

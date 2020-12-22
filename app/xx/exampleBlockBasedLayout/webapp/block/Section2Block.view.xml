@@ -1,0 +1,6 @@
+<mvc:View controllerName="xx.exampleBlockBasedLayout.block.Section2Block"
+		xmlns:mvc="sap.ui.core.mvc"
+		width="100%" >
+		
+	
+</mvc:View>
