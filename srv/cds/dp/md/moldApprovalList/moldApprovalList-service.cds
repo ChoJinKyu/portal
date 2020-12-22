@@ -70,7 +70,8 @@ service MoldApprovalListService {
     // referer 저장 목록 조회 
     view Referers as 
     select 
-	    rf.approval_number , 
+	   key rf.approval_number , 
+       key hr.tenant_id , 
 	   key rf.referer_empno ,
         emp.user_local_name ||'/'|| emp.job_title||'/'||hr.department_local_name as referer_name : String(240)
     from referer.Referer rf 
@@ -81,7 +82,7 @@ service MoldApprovalListService {
     // 레퍼러 조회 팝업 
     view RefererSearch as 
     select 
-        hr.tenant_id,
+       key hr.tenant_id,
         hr.department_id,
         emp.user_local_name ||'/'|| emp.job_title||'/'||hr.department_local_name as s_referer_name : String(300), 
        key emp.employee_number,
@@ -93,8 +94,9 @@ service MoldApprovalListService {
     // approvalline 저장목록 조회 
     view Approvers as
     select 
-        ar.approval_number , 
+        key ar.approval_number , 
         key ar.approver_empno , 
+        key hr.tenant_id , 
         ar.approve_sequence , 
         ar.approver_type_code , 
         ar.approve_comment , 
