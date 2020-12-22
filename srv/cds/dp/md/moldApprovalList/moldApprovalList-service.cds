@@ -7,13 +7,15 @@ using { cm as emp } from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
 using { dp as approvalDtl } from '../../../../../db/cds/dp/md/DP_MD_APPROVAL_DTL-model';
 using { dp as apps } from '../../../../../db/cds/dp/md/DP_MD_APPROVALS_VIEW-model';
 
-
-
 using { dp as moldMstSpecView } from '../../../../../db/cds/dp/md/DP_MD_MST_SPEC_VIEW-model';
 using { dp as moldMst } from '../../../../../db/cds/dp/md/DP_MD_MST-model';
 
 using {cm as orgMapping} from '../../../../../db/cds/cm/CM_PUR_ORG_TYPE_MAPPING-model';
 using {cm as Org} from '../../../../../db/cds/cm/CM_PUR_OPERATION_ORG-model';
+
+using { cm as referer} from '../../../../../db/cds/cm/CM_REFERER-model'; 
+using { cm as approver} from '../../../../../db/cds/cm/CM_APPROVER-model';
+using {cm.Hr_Department as Dept} from '../../../../../db/cds/cm/CM_HR_DEPARTMENT-model';
 
 namespace dp;
 @path : '/dp.MoldApprovalListService'
@@ -64,4 +66,43 @@ service MoldApprovalListService {
     where  a.use_flag = true;
 
 
+    /** approval Object */
+    // referer 저장 목록 조회 
+    view Referers as 
+    select 
+	    rf.approval_number , 
+	   key rf.referer_empno ,
+        emp.user_local_name ||'/'|| emp.job_title||'/'||hr.department_local_name as referer_name : String(240)
+    from referer.Referer rf 
+    join emp.Hr_Employee emp on emp.employee_number = rf.referer_empno 
+    join Dept hr on hr.department_id = emp.department_id 
+    and hr.tenant_id = emp.tenant_id ;
+
+    // 레퍼러 조회 팝업 
+    view RefererSearch as 
+    select 
+        hr.tenant_id,
+        hr.department_id,
+        emp.user_local_name ||'/'|| emp.job_title||'/'||hr.department_local_name as s_referer_name : String(300), 
+        emp.employee_number,
+        emp.user_local_name ,
+        emp.email_id 
+    from emp.Hr_Employee  emp 
+    join Dept hr on hr.department_id = emp.department_id and hr.tenant_id = emp.tenant_id ;
+
+    // approvalline 저장목록 조회 
+    view Approvers as
+    select 
+        ar.approval_number , 
+        ar.approver_empno , 
+        ar.approve_sequence , 
+        ar.approver_type_code , 
+        ar.approve_comment , 
+        ar.approve_status_code , 
+        ar.approve_date_time , 
+        emp.user_korean_name ||'['|| emp.user_english_name||'] /'||hr.department_local_name as approver_name  : String(240)
+    from approver.Approver ar 
+    join emp.Hr_Employee  emp on emp.employee_number = ar.approver_empno 
+    join  Dept hr on hr.department_id = emp.department_id 
+    and hr.tenant_id = emp.tenant_id ;  
 }
