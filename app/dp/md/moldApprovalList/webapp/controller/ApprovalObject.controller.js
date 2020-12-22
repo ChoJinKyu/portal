@@ -501,7 +501,7 @@ sap.ui.define([
                 if (!this._oDialog) {
                     this._oDialog = Fragment.load({
                         id: oView.getId(),
-                        name: "dp.md.orderApprovalLocal.view.Employee",
+                        name: "dp.md.moldApprovalList.view.Employee",
                         controller: this
                     }).then(function (oDialog) {
                         oView.addDependent(oDialog);
