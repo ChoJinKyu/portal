@@ -106,5 +106,7 @@ service MoldApprovalListService {
     from approver.Approver ar 
     join emp.Hr_Employee  emp on emp.employee_number = ar.approver_empno 
     join  Dept hr on hr.department_id = emp.department_id 
-    and hr.tenant_id = emp.tenant_id ;  
+    and hr.tenant_id = emp.tenant_id 
+    order by ar.approve_sequence asc 
+    ;  
 }
