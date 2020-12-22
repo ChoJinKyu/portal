@@ -76,10 +76,6 @@ sap.ui.define([
             this.getView().setModel(new ManagedListModel(), "approver");
             this.getView().setModel(new ManagedListModel(), "referer");
 
-            // search view 
-            this.getView().setModel(new ManagedListModel(), "approverView");
-            this.getView().setModel(new ManagedListModel(), "refererView");
-
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("appMaster"));
             oTransactionManager.addDataModel(this.getModel("approver"));
