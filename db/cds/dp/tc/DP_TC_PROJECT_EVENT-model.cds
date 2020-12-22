@@ -41,10 +41,19 @@ entity Tc_Project_Event {
         end_date            : Date                @title : '종료일자';
         sequence            : Decimal             @title : '순서';
 
+<<<<<<< HEAD
         event_ref           : Association[1..*] to dp.Tc_Project
                                   on  event_ref.tenant_id    = tenant_id
                                   and event_ref.project_code = project_code
                                   and event_ref.model_code   = model_code;
+=======
+        event_ref           : Association[1.. * ] to dp.Tc_Project
+                                  on  event_ref.tenant_id        = tenant_id
+                                  and event_ref.project_code     = project_code
+                                  and event_ref.model_code       = model_code
+                                  and event_ref.mcst_code        = mcst_code
+                                  and event_ref.version_sequence = version_sequence;
+>>>>>>> c876215ea0c0500e8c2aef87b70aba53231d7783
 }
 
 extend Tc_Project_Event with util.Managed;

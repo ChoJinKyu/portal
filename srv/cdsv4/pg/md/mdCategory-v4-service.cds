@@ -59,7 +59,7 @@ service MdCategoryV4Service {
     // Fiori Json Array 데이터 Ajax로 V4호출
     // URL : /pg.MdCategoryV4Service/MdVpMappingStatusProc
     /*********************************
-    {"tenant_id":"L2100", "company_code":"*", "org_type_code":"BU", "org_code":"BIZ00200", "spmd_category_code":"C001", "spmd_character_code":"T001", "spmd_character_serial_no":1, "vendor_pool_code":"VP201610260092"}
+    {"tenant_id":"L2100", "company_code":"*", "org_type_code":"BU", "org_code":"BIZ00200", "vendor_pool_code":"VP201610260092"}
     *********************************/
     action MdVpMappingStatusProc(
         tenant_id : String(5), 
