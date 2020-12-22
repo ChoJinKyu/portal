@@ -3,6 +3,7 @@
 // using { cm as roleMenu } from '../../../../db/cds/cm/CM_ROLE_MENU-model';
 
 using { cm.User_Role_Group as cm_user_role_group } from '../../../../db/cds/cm/CM_USER_ROLE_GROUP-model';
+using { cm.Role_Group_Map as cm_role_group_map } from '../../../../db/cds/cm/CM_ROLE_GROUP_MAP-model';
 using { cm.Role as cm_role } from '../../../../db/cds/cm/CM_ROLE-model';
 using { cm.Role_Menu as cm_role_menu } from '../../../../db/cds/cm/CM_ROLE_MENU-model';
 
