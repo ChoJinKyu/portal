@@ -105,8 +105,7 @@ service MoldApprovalListService {
         emp.user_korean_name ||'['|| emp.user_english_name||'] /'||hr.department_local_name as approver_name  : String(240)
     from approver.Approver ar 
     join emp.Hr_Employee  emp on emp.employee_number = ar.approver_empno 
-    join  Dept hr on hr.department_id = emp.department_id 
-    and hr.tenant_id = emp.tenant_id 
+    join  Dept hr on hr.department_id = emp.department_id  and hr.tenant_id = emp.tenant_id 
     order by ar.approve_sequence asc 
     ;  
 }
