@@ -18,7 +18,7 @@ readChecklistItemEntity(oDeleteInfoOdata[i]).then(function(oDeleteInfoOdata) {
 }); //readChecklistItemEntity end
 
 
-
+_fnSetDeleteMode
 
 that.getOwnerComponent().setModel(oMidList, "_midList");
 

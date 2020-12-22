@@ -27,14 +27,14 @@
         }
       },
       "purOrgMgrService": {
-            "uri": "srv-api/odata/v2/cm.PurOrgMgrService/",
+            "uri": "srv-api/odata/v2/cm.PurOrgMgtService/",
             "type": "OData",
             "settings": {
                 "odataVersion": "2.0"
             }
        },
       "userService": {
-                "uri": "srv-api/odata/v2/cm.UserMgrService/",
+                "uri": "srv-api/odata/v2/cm.UserMgtService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
