@@ -1,6 +1,18 @@
 {
-    "sqltools.connections": [],
+    "sqltools.connections": [
+        {
+            "dialect": "SAPHana",
+            "port": 443,
+            "server": "528d4fec-ca15-4ad2-9a28-f22e9ffbcc43.hana.prod-jp10.hanacloud.ondemand.com",
+            "name": "sppDb_hdi_dev",
+            "database": "997F8D5A04E2433AA7341CADC74AF683",
+            "username": "997F8D5A04E2433AA7341CADC74AF683_AWX430GNEBLXD7TDI8FA9J58I_DT",
+            "password": "Mc5_ZSN-y5y.JlzK-4dAfkbHrmKIdz3ZhWx9ySA0Y-G-yK3D8-bYWfIFibNn0ZXT4eqibFAER2L9W1guxoRrAh4TIWP-CodunHSKOFJYxGP5wrr4w9Dv93noECCaz2-U"
+        }
+    ],
     "actions": [],
     "java.configuration.updateBuildConfiguration": "automatic",
-    "CDS graphical modeler.Default CDS Editor": false
+    "CDS graphical modeler.Default CDS Editor": false,
+    "CDS graphical modeler.Automatic Key Generation": "on",
+    "CDS graphical modeler.Automatic Sorting": true
 }
