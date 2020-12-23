@@ -109,7 +109,7 @@
 						<Table id="midTable" 
 								sticky="HeaderToolbar,ColumnHeaders" 
 								inset="false" 
-								items="{details>/UserRoleGroupMgr}"
+								items="{details>/UserRoleGroupMgt}"
 								class="sapFDynamicPageAlignContent" 
 								updateFinished=".onMidTableUpdateFinished"
 								mode="MultiSelect" 
@@ -119,7 +119,7 @@
 									<Title text="역할목록" level="H2"/>
 									<ToolbarSpacer/>
 									<Button id="midTableAddButton" text="Add" type="Transparent" press=".onMidTableAddButtonPress" />
-									<Button id="midTableDeleteButton" text="Delete" type="Transparent" press=".onMidTableDeleteButtonPress('midTable', 'details', 'UserRoleGroupMgr')" />
+									<Button id="midTableDeleteButton" text="Delete" type="Transparent" press=".onMidTableDeleteButtonPress('midTable', 'details', 'UserRoleGroupMgt')" />
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
