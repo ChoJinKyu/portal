@@ -180,10 +180,17 @@ sap.ui.define([
         onSuppValueHelpRequested: function(oEvent){
 
             console.log("this.getModel('oThis') :::", this.oThis)
-            var sCompanyCode  = this.getModel('supplier').getProperty('/company_code')
-            var sPlantCode = this.getModel('supplier').getProperty('/org_code')
+            console.log(this.oThis.company_code)
+            console.log(this.oThis.plant_code)
+            var sCompanyCode  = this.oThis.company_code
+            var sPlantCode = this.oThis.plant_code
+
+            // var oView = this.getView();
+            // var foo = this.getOwnerComponent().getView();
+            // console.log('oView',oView);
+            // console.log('foo',foo);
             
-            this.supplierSelectionPop.showSupplierSelection(this, oEvent, sCompanyCode, sPlantCode);
+            this.supplierSelectionPop.showSupplierSelection(this.oThis, oEvent, sCompanyCode, sPlantCode);
         },
 
         /**
