@@ -6,7 +6,7 @@
   xmlns:form="sap.ui.layout.form"
   xmlns:t="sap.ui.table"
   xmlns:layout="sap.ui.layout"
-  class="sapUiSizeCompact"
+  xmlns:lib-m="ext.lib.control.m"
   displayBlock="true"
   height="100%">
     <f:DynamicPage
@@ -19,7 +19,7 @@
             <Title text="{i18n>appTitle}" />
           </f:heading>
           <f:actions>
-            <Button text="Search" type="Emphasized" press=".onSearch"/>
+            <Button text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch"/>
             <!-- <Button text="Search2" type="Emphasized" press=".onSearch2"/> -->
           </f:actions>
         </f:DynamicPageTitle>
@@ -33,7 +33,7 @@
             adjustLabelSpan="false">
                 <form:content>
                     <VBox>
-                        <Label text="Type"></Label>
+                        <Label text="{I18N>/TYPE}"></Label>
                         <ComboBox
                             width="100%"
                             selectedKey="{filterModel>/type}"
@@ -51,7 +51,7 @@
                         </layoutData>
                     </VBox>
                     <VBox>
-                        <Label text="Divistion"></Label>
+                        <Label text="{I18N>/BUSINESS_DIVISION}"></Label>
                         <ComboBox
                             width="100%"
                             selectedKey="{filterModel>/divistion}"
@@ -69,13 +69,13 @@
                         </layoutData>
                     </VBox>
                     <VBox>
-                        <Label text="Material Code"></Label>
+                        <Label text="{I18N>/MATERIAL_CODE}"></Label>
                         <SearchField value="{filterModel>/materialCode}" />
                         <layoutData>
                             <layout:GridData span="XL2 L4 M6 S12" />
                         </layoutData>
                     </VBox>
-                    <VBox height="52px">
+                    <VBox height="54px">
                         <Label text="{I18N>/STATUS}"></Label>
                         <SegmentedButton id="searchStatusS" selectedKey="{filterModel>/status}" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
                             <items>
@@ -91,14 +91,14 @@
                         </layoutData>
                     </VBox>
                     <VBox>
-                        <Label text="Approval Number"></Label>
+                        <Label text="{I18N>/APPROVAL_NUMBER}"></Label>
                         <Input value="{filterModel>/approvalNumber}" />
                         <layoutData>
                             <layout:GridData span="XL2 L4 M6 S12" />
                         </layoutData>
                         </VBox>
                         <VBox>
-                        <Label text="Request Data"></Label>
+                        <Label text="{I18N>/REQUEST_DATE}"></Label>
                         <DateRangeSelection
                             dateValue="{filterModel>/dateValue}"
                             secondDateValue="{filterModel>/secondDateValue}" />
@@ -107,14 +107,16 @@
                         </layoutData>
                     </VBox>
                     <VBox>
-                        <Label text="Request By"></Label>
+                        <!-- <Label text="{I18N>/REQUEST_BY}"></Label> -->
+                        <Label text="REQUEST BY"></Label>
                         <SearchField value="{filterModel>/requestBy}" />
                         <layoutData>
                             <layout:GridData span="XL2 L4 M6 S12" />
                         </layoutData>
                         </VBox>
                         <VBox>
-                        <Label text="Agreed By"></Label>
+                        <!-- <Label text="{I18N>/AGREED_BY}"></Label> -->
+                        <Label text="AGREED BY"></Label>
                         <SearchField value="{filterModel>/agreedBy}" />
                         <layoutData>
                             <layout:GridData span="XL2 L4 M6 S12" />
@@ -134,6 +136,25 @@
                             <layout:GridData span="XL2 L4 M6 S12" />
                         </layoutData>
                     </VBox>
+                    <!-- <VBox>
+                        <Label text="임시 check"></Label>
+                         <lib-m:CodePicker id="searchCodePicker"
+                                placeholder="Enter a code name"
+                                suggestionItems="{
+                                    path: '/',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
+                                    ],
+                                    serviceName: 'cm.util.CommonService',
+                                    entityName: 'Code'
+                                }">
+                                <lib-m:CodePickerValueHelp contentWidth="500px" />
+                            </lib-m:CodePicker>
+                        <layoutData>
+                            <layout:GridData span="XL2 L4 M6 S12" />
+                        </layoutData>
+                    </VBox> -->
                 </form:content>
             </form:SimpleForm>
             <!--Filterbar 끝-->
@@ -144,72 +165,63 @@
         <t:Table id="mainTable"
             selectionMode="None"
             rows="{listModel>/results}"
-
+            fixedColumnCount="4"
             visibleRowCountMode="Auto">
             <t:extension>
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
-                    <!-- <Title text="{I18N>/PART_NO_LIST}" level="H2"/> -->
-                    <Title text="Base Price List ({= ${listModel>/results}.length})" level="H2"/>
+                    <!-- <Title text="{I18N>/BASE_PRICE_LIST} ({= ${listModel>/results}.length})" level="H2"/> -->
+                    <Title text="BASE PRICE LIST ({= ${listModel>/results}.length})" level="H2"/>
                 </OverflowToolbar>
             </t:extension>
             <t:columns>
                 <t:Column hAlign="Center" width="8rem">
-                    <!-- <Label text="{I18N>/DIV}" textAlign="Center" /> -->
-                    <Label text="Approval Number" />
+                    <Label text="{I18N>/APPROVAL_NUMBER}" textAlign="Center" />
                     <t:template>
                         <!-- <Link text="{listModel>approval_number}" press=".onGoDetail" /> -->
                         <Text text="{listModel>approval_number}" />
                     </t:template>
                 </t:Column>
                 <t:Column hAlign="Center" width="6rem">
-                    <!-- <Label text="{I18N>/DIV}" textAlign="Center" /> -->
-                    <Label text="Company" />
+                    <Label text="{I18N>/COMPANY}" textAlign="Center" />
                     <t:template>
                         <Text text="{listModel>company_code}" />
                     </t:template>
                 </t:Column>
-                <t:Column hAlign="Center" width="4rem">
-                    <!-- <Label text="{I18N>/DIV}" textAlign="Center" /> -->
-                    <Label text="Div" />
+                <t:Column hAlign="Center" width="6rem">
+                    <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" />
                     <t:template>
                         <Text text="{listModel>org_code}" />
                     </t:template>
                 </t:Column>
                 <t:Column hAlign="Center" width="8rem">
-                    <!-- <Label text="{I18N>/PART_NO}" /> -->
-                    <Label text="Material Code" />
+                    <Label text="{I18N>/MATERIAL_CODE}" />
                     <t:template>
                         <Text text="{listModel>material_code}" />
                     </t:template>
                 </t:Column>
                 <t:Column hAlign="Center" width="16rem">
-                    <!-- <Label text="{I18N>/DESCRIPTION}" textAlign="Center" /> -->
-                    <Label text="Description" />
+                    <Label text="{I18N>/DESCRIPTION}" textAlign="Center" />
                     <t:template>
                         <Link text=">" press=".onGoDetail" />
                         <!-- <Text text="{listModel>timezone_code}" /> -->
                     </t:template>
                 </t:Column>
                 <t:Column hAlign="Center" width="12rem">
-                    <!-- <Label text="{I18N>/SPECIFICATION}" /> -->
-                    <Label text="Spec" />
+                    <Label text="{I18N>/SPEC_DESC}" />
                     <t:template>
                         <Text text="{listModel>timezone_name}" />
                     </t:template>
                 </t:Column>
                 <t:Column hAlign="Center"  width="12rem">
-                    <!-- <Label text="{I18N>/BASIS}" textAlign="Center" width="100%"/> -->
-                    <Label text="Status" />
+                    <Label text="{I18N>/STATUS}" textAlign="Center" width="100%"/>
                     <t:template>
                         <Text text="{listModel>approval_number_fk/approval_status_code}" />
                     </t:template>
                 </t:Column>
                 <t:Column headerSpan="3" hAlign="Center" width="7rem">
                     <t:multiLabels>
-                        <!-- <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%"/>
-                        <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%"/> -->
-                        <Label text="Domestic" />
-                        <Label text="Base Date" />
+                        <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%"/>
+                        <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%"/>
                     </t:multiLabels>
                     <t:template>
                         <Text text="{
@@ -219,21 +231,17 @@
                     </t:Column>
                 <t:Column width="10rem" hAlign="Center">
                     <t:multiLabels>
-                        <!-- <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%"/>
-                        <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%"/> -->
-                        <Label text="Domestic"/>
-                        <Label text="New Base Price" />
+                        <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%"/>
+                        <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%"/>
                     </t:multiLabels>
                     <t:template>
                         <Text text="{listModel>prices/results/0/new_base_price}" />
                     </t:template>
                     </t:Column>
-                <t:Column width="4rem" hAlign="Center">
+                <t:Column width="6rem" hAlign="Center">
                     <t:multiLabels>
-                        <!-- <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%"/>
-                        <Label text="{I18N>/CURRENCY}" textAlign="Center" width="100%"/> -->
-                        <Label text="Domestic"/>
-                        <Label text="Curr." />
+                        <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%"/>
+                        <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" width="100%"/>
                     </t:multiLabels>
                     <t:template>
                         <Text text="{listModel>prices/results/0/new_base_price_currency_code}" />
@@ -241,10 +249,8 @@
                 </t:Column>
                 <t:Column headerSpan="3" hAlign="Center" width="7rem">
                     <t:multiLabels>
-                        <!-- <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%"/>
-                        <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%"/> -->
-                        <Label text="Export" />
-                        <Label text="Base Date" />
+                        <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%"/>
+                        <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%"/>
                     </t:multiLabels>
                     <t:template>
                         <Text text="{
@@ -254,21 +260,17 @@
                     </t:Column>
                 <t:Column width="10rem" hAlign="Center">
                     <t:multiLabels>
-                            <!-- <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%"/>
-                        <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%"/> -->
-                        <Label text="Export"/>
-                        <Label text="New Base Price" />
+                            <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%"/>
+                        <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%"/>
                     </t:multiLabels>
                     <t:template>
                         <Text text="{listModel>prices/results/1/new_base_price}" />
                     </t:template>
                     </t:Column>
-                <t:Column width="4rem" hAlign="Center">
+                <t:Column width="6rem" hAlign="Center">
                     <t:multiLabels>
-                        <!-- <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%"/>
-                        <Label text="{I18N>/CURRENCY}" textAlign="Center" width="100%"/> -->
-                        <Label text="Export"/>
-                        <Label text="Curr." />
+                        <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%"/>
+                        <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" width="100%"/>
                     </t:multiLabels>
                     <t:template>
                         <Text text="{listModel>prices/results/1/new_base_price_currency_code}" />
@@ -276,9 +278,7 @@
                 </t:Column>
                 <t:Column hAlign="Center" width="12rem">
                     <t:multiLabels>
-                        <!-- <Label text="{I18N>/FAMILY_PART_NO}"/>
-                        <Label text="{I18N>/SUPPLIER_NAME}" textAlign="Center" width="100%"/> -->
-                        <Label text="Base Price Type" />
+                        <Label text="{I18N>/BASE_PRICE_TYPE}" textAlign="Center" width="100%"/>
                     </t:multiLabels>
                     <t:template>
                         <Text text="{listModel>supplier_name}" />
@@ -286,10 +286,8 @@
                 </t:Column>
                 <t:Column headerSpan="4" hAlign="Center" width="6rem">
                     <t:multiLabels>
-                        <!-- <Label text="{I18N>/FAMILY_PART_NO}" textAlign="Center" width="100%"/>
-                        <Label text="{I18N>/DIV}" textAlign="Center" width="100%"/> -->
-                        <Label text="Family Material Code" />
-                        <Label text="Div" />
+                        <Label text="{I18N>/FAMILY_MATERIAL_CODE}" textAlign="Center" width="100%"/>
+                        <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" width="100%"/>
                     </t:multiLabels>
                     <t:template>
                         <Text text="{listModel>div}" />
@@ -297,10 +295,8 @@
                     </t:Column>
                 <t:Column hAlign="Center" width="12rem">
                     <t:multiLabels>
-                        <!-- <Label text="{I18N>/FAMILY_PART_NO}"/>
-                        <Label text="{I18N>/PART_NO}" textAlign="Center" width="100%"/> -->
-                        <Label text="Family Material Code"/>
-                        <Label text="Material Code" />
+                        <Label text="{I18N>/FAMILY_MATERIAL_CODE}"/>
+                        <Label text="{I18N>/MATERIAL_CODE}" textAlign="Center" width="100%"/>
                     </t:multiLabels>
                     <t:template>
                         <Text text="{listModel>part_no}" />
@@ -308,10 +304,8 @@
                     </t:Column>
                 <t:Column hAlign="Center" width="8rem">
                     <t:multiLabels>
-                        <!-- <Label text="{I18N>/FAMILY_PART_NO}"/>
-                        <Label text="{I18N>/SUPPLIER_CODE}" textAlign="Center" width="100%"/> -->
-                        <Label text="Family Material Code"/>
-                        <Label text="Supplier Code" />
+                        <Label text="{I18N>/FAMILY_MATERIAL_CODE}"/>
+                        <Label text="{I18N>/SUPPLIER_CODE}" textAlign="Center" width="100%"/>
                     </t:multiLabels>
                     <t:template>
                         <Text text="{listModel>supplier_code}" />
@@ -319,18 +313,15 @@
                 </t:Column>
                 <t:Column hAlign="Center" width="12rem">
                     <t:multiLabels>
-                        <!-- <Label text="{I18N>/FAMILY_PART_NO}"/>
-                        <Label text="{I18N>/SUPPLIER_NAME}" textAlign="Center" width="100%"/> -->
-                        <Label text="Family Material Code"/>
-                        <Label text="Supplier Name" />
+                        <Label text="{I18N>/FAMILY_MATERIAL_CODE}"/>
+                        <Label text="{I18N>/SUPPLIER_NAME}" textAlign="Center" width="100%"/>
                     </t:multiLabels>
                     <t:template>
                         <Text text="{listModel>supplier_name}" />
                     </t:template>
                 </t:Column>
                 <t:Column hAlign="Center"  width="7rem">
-                    <!-- <Label text="{I18N>/HQ_NPD_BASE_PRICE}" /> -->
-                    <Label text="Request Date" />
+                    <Label text="{I18N>/REQUEST_DATE}" />
                     <t:template>
                         <Text text="{
                                 path: 'listModel>local_create_dtm',
@@ -338,8 +329,7 @@
                     </t:template>
                 </t:Column>
                 <t:Column hAlign="Center"  width="8rem">
-                    <!-- <Label text="{I18N>/HQ_NPD_BASE_PRICE}" /> -->
-                    <Label text="Requested By" />
+                    <Label text="{I18N>/REQUESTED_BY}" />
                     <t:template>
                         <Text text="{listModel>create_user_id}" />
                     </t:template>
