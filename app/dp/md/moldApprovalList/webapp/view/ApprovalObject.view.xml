@@ -172,8 +172,6 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			
-
 			<uxap:ObjectPageSection titleUppercase="false" title="Approval Line">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
@@ -193,13 +191,16 @@
                             </OverflowToolbar>
                         </headerToolbar>
                         <columns>
-                            <Column id="no" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="3em" >
+                            <Column id="approver_empno" minScreenWidth="Tablet" hAlign="Center" visible="false" width="3em" >
+                                <Text text="approver_empno" />
+                            </Column>
+                            <Column id="no" minScreenWidth="Tablet" hAlign="Center"  width="3em" >
                                 <Text text="No." />
                             </Column>
-                            <Column id="type" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="10em" >
+                            <Column id="type" minScreenWidth="Tablet" hAlign="Center" width="10em" >
                                 <Text text="Type" />
                             </Column>
-                            <Column id="nameDept" minScreenWidth="Tablet" hAlign="Center" width="15em" >
+                            <Column id="nameDept" minScreenWidth="Tablet" hAlign="Center" width="20em" >
                                 <Text text="Name/Dept" />
                             </Column>
                             <Column id="status" minScreenWidth="Tablet" hAlign="Center" width="12em" >
@@ -221,7 +222,7 @@
                         <items>
                             <ColumnListItem>
                                 <cells>
-                                    <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
+                                     <Text text="{approver>approver_empno}" />
                                     <Text text="{approver>approve_sequence}" />
                                     <ComboBox  id="approverType" width="100%"
                                         selectedKey="{approver>approver_type_code}" 
@@ -236,8 +237,9 @@
                                         <core:Item key="{util>code}" text="{util>code_description}" />
 
                                     </ComboBox>
-                                    <SearchField id="approverSearch" enabled="{approver>editMode}" search=".onApproverSearch" width="100%" placeholder="Search employee" value="{approver>approver_empno}"/>
-                                    <!--<Input value="{approver>approver_empno}" />-->
+                                    <SearchField id="approverSearch" enabled="{approver>editMode}" 
+                                        search=".onApproverSearch" width="100%" placeholder="Search employee" 
+                                        value="{approver>approver_name}"/>
                                     <Text text="{approver>approve_status_code}" />
                                     <Text text="{approver>approve_comment}" />
                                     <Button id="btnSortUp" icon="{approver>arrowUp}" press=".onApproverSortUp(${approver>approve_sequence})" tooltip="sort" visible="{= ${approver>arrowUp}===''?false:true }"></Button>
@@ -269,12 +271,12 @@
                                     selectionChange="handleSelectionChangeReferer"
                                     selectionFinish="handleSelectionFinishReferer"
                                     width="100%"
-                                    items="{ path: 'hr>/Employee',
+                                    items="{ path: '/RefererSearch',
                                                 filters: [
                                                     {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                                 ]
                                             }">
-                                    <core:Item key="{hr>employee_number}" text="{hr>user_local_name}" />
+                                    <core:Item key="{employee_number}" text="{s_referer_name}" />
                                 </MultiComboBox>
                             </layout:VerticalLayout>
                             <layoutData>
