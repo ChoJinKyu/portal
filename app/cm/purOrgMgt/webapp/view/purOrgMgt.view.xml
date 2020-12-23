@@ -26,118 +26,70 @@
                             <form:formContainers>
                                 <form:FormContainer>
                                     <form:formElements>
-                                        <form:FormElement label="Tenant">
+                                        <form:FormElement>
                                             <form:fields>
-                                                <ComboBox   id="search_tenant_id"
-                                                            items="{
-                                                                        path : 'commonCode>/CodeCombo',
-                                                                        filters : [
-                                                                            {path : 'tenant_id', operator : 'EQ', value1 : '1000'},
-                                                                            {path : 'company_code', operator : 'EQ', value1 : 'G100'},
-                                                                            {path : 'group_code', operator : 'EQ', value1 : 'CM_TENANT_CD'},
-                                                                            {path : 'language_cd', operator : 'EQ', value1 : 'KO'}                                                                        
-                                                                        ]
-                                                                    }"
-                                                >
-                                                    <core:Item key="{code}" text="{code_name}" />
-                                                </ComboBox>
-                                            </form:fields>
-                                        </form:FormElement>
-                                        <form:FormElement label="운영조직">
-                                            <form:fields>
-                                                <ComboBox   id="operation_org_code"    
-                                                            items="{
-                                                                        path : 'commonCode>/CodeCombo',
-                                                                        filters : [
-                                                                            {path : 'tenant_id', operator : 'EQ', value1 : '1000'},
-                                                                            {path : 'company_code', operator : 'EQ', value1 : 'G100'},
-                                                                            {path : 'group_code', operator : 'EQ', value1 : 'CM_YN'},
-                                                                            {path : 'language_cd', operator : 'EQ', value1 : 'KO'}                                                                        
-                                                                        ]
-                                                                    }"
-                                                >
-                                                    <core:Item key="{code}" text="{code_name}" />
-                                                </ComboBox>
-                                            </form:fields>
-                                        </form:FormElement>
-                                    </form:formElements>
-                                </form:FormContainer>
-                                <form:FormContainer>
-                                    <form:formElements>
-                                        <form:FormElement label="Company">
-                                            <form:fields>
-                                                <ComboBox   id="search_company_code"
-                                                            items="{
-                                                                        path : 'commonCode>/CodeCombo',
-                                                                        filters : [
-                                                                            {path : 'tenant_id', operator : 'EQ', value1 : '1000'},
-                                                                            {path : 'company_code', operator : 'EQ', value1 : 'G100'},
-                                                                            {path : 'group_code', operator : 'EQ', value1 : 'CM_COMPANY_CD'},
-                                                                            {path : 'language_cd', operator : 'EQ', value1 : 'KO'}                                                                        
-                                                                        ]
-                                                                    }"
-                                                >
-                                                    <core:Item key="{code}" text="{code_name}" />
-                                                </ComboBox>
-                                            </form:fields>
-                                        </form:FormElement>
-                                        <form:FormElement label="사용여부">
-                                            <form:fields>
-                                                <ComboBox   id="use_flag"    
-                                                            items="{
-                                                                        path : 'commonCode>/CodeCombo',
-                                                                        filters : [
-                                                                            {path : 'tenant_id', operator : 'EQ', value1 : '1000'},
-                                                                            {path : 'company_code', operator : 'EQ', value1 : 'G100'},
-                                                                            {path : 'group_code', operator : 'EQ', value1 : 'CM_YN'},
-                                                                            {path : 'language_cd', operator : 'EQ', value1 : 'KO'}                                                                        
-                                                                        ]
-                                                                    }"
-                                                >
-                                                    <core:Item key="{code}" text="{code_name}" />
-                                                </ComboBox>
-                                            </form:fields>
-                                        </form:FormElement>
-                                    </form:formElements>
-                                </form:FormContainer>
-                                <form:FormContainer>
-                                    <form:formElements>
-                                        <form:FormElement label="프로세스유형">
-                                            <form:fields>
-                                                <ComboBox   id="process_type_code"
-                                                            items="{
-                                                                        path : 'commonCode>/CodeCombo',
-                                                                        filters : [
-                                                                            {path : 'tenant_id', operator : 'EQ', value1 : '1000'},
-                                                                            {path : 'company_code', operator : 'EQ', value1 : 'G100'},
-                                                                            {path : 'group_code', operator : 'EQ', value1 : 'CM_CHAIN_CD'},
-                                                                            {path : 'language_cd', operator : 'EQ', value1 : 'KO'}                                                                        
-                                                                        ]
-                                                                    }"
-                                                >
-                                                    <core:Item key="{code}" text="{code_name}" />
-                                                </ComboBox>
-                                            </form:fields>
-                                        </form:FormElement>
-                                    </form:formElements>
-                                </form:FormContainer>
-                                <form:FormContainer>
-                                    <form:formElements>
-                                        <form:FormElement label="조직유형">
-                                            <form:fields>
-                                                <ComboBox   id="org_type_code"    
-                                                            items="{
-                                                                        path : 'commonCode>/CodeCombo',
-                                                                        filters : [
-                                                                            {path : 'tenant_id', operator : 'EQ', value1 : '1000'},
-                                                                            {path : 'company_code', operator : 'EQ', value1 : 'G100'},
-                                                                            {path : 'group_code', operator : 'EQ', value1 : 'CM_YN'},
-                                                                            {path : 'language_cd', operator : 'EQ', value1 : 'KO'}                                                                        
-                                                                        ]
-                                                                    }"
-                                                >
-                                                    <core:Item key="{code}" text="{code_name}" />
-                                                </ComboBox>
+                                                <VBox>
+                                                    <Label text="테넌트" labelFor="searchTenantCombo" required="true"></Label>
+                                                    <ComboBox
+                                                        id="searchTenantCombo"
+                                                        width="100%"
+                                                        items="{
+                                                            path: 'org>/Org_Tenant',
+                                                            filters: [
+                                                            ]
+                                                        }"
+                                                    >
+                                                    <items>
+                                                        <core:Item key="{org>tenant_id}" text="{org>tenant_id} : {org>tenant_name}" />
+                                                    </items>
+                                                    </ComboBox>
+                                                </VBox>
+                                                <VBox>
+                                                    <Label text = "회사" labelFor="searchCompanyCode"/> 
+                                                    <ComboBox 
+                                                        id="searchCompanyCode"  
+                                                        items="{
+                                                            path: 'org>/Org_Company',
+                                                            filters: [
+                                                            ]
+                                                        }"
+                                                    >
+                                                        <items>
+                                                            <core:Item key="{org>company_code}"  text="{org>company_code} : {org>company_name}"/>
+                                                        </items>
+                                                    </ComboBox>
+
+                                                </VBox>
+                                                <VBox>
+                                                    <Label text="조직유형" labelFor="searchOrgTypeCombo" required="false"></Label>
+                                                    <ComboBox
+                                                    id="searchOrgTypeCombo"
+                                                    width="100%"
+                                                    items="{
+                                                        path: 'util>/CodeDetails',
+                                                        filters: [
+                                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                            {path: 'group_code', operator: 'EQ', value1: 'CM_ORG_TYPE_CODE'}
+                                                        ]
+                                                    }">
+                                                    <items>
+                                                        <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+                                                    </items>
+                                                    </ComboBox>
+                                                </VBox>
+                                                <VBox>
+                                                    <Label text="사용여부" labelFor="searchUseFlag"></Label>
+                                                    <SegmentedButton 
+                                                        id="searchUseFlag"
+                                                        selectedKey="" 
+                                                        width="100%">
+                                                        <items>
+                                                            <SegmentedButtonItem text="All" width="3em"/>
+                                                            <SegmentedButtonItem text="Yes" width="3em" key="true"/>
+                                                            <SegmentedButtonItem text="No" width="3em" key="false"/>
+                                                        </items>
+                                                    </SegmentedButton>
+                                                </VBox>
                                             </form:fields>
                                         </form:FormElement>
                                     </form:formElements>
@@ -156,110 +108,106 @@
                 </f:DynamicPageHeader>
             </f:header>
             <f:content>
-                <TabContainer   id="myTabContainer"
-                                showAddNewButton="true"
-                                class="sapUiResponsiveContentPadding sapUiResponsivePadding--header"
-                                addNewButtonPress="addNewButtonPressHandler" itemClose="itemCloseHandler">
-                    <items>
-                        <TabContainerItem name="유형" modified="false">
-                            <content>
-                              <Table id="orgTypeMappingTable"
-                                  items="{ path : '/Pur_Org_Type_Mapping' }"
-                                  mode="MultiSelect"
-                                  updateFinished="onMstUpdateFinished"
-                              >
-                                  <headerToolbar>
-                                      <OverflowToolbar>
-                                          <content>
-                                              <Title text="코드 마스터" level="H2"/>
-                                              <ToolbarSpacer/>
-                                              <Button text="행추가" icon="sap-icon://add"  type="Accept" press="onMstAddRow"/>
-                                              <Button text="행복사" icon="sap-icon://copy" type="Accept" press="onMstCopyRow"/>
-                                              <Button text="행삭제" icon="sap-icon://delete" type="Reject" press="onMstDeleteRow"/>
-                                              <Button text="저장"   icon="sap-icon://save" type="Attention" press="onMstSave"/>
-                                          </content>
-                                      </OverflowToolbar>
-                                  </headerToolbar>
-                                  <columns>
-                                      <Column hAlign="Center" width="100px">
-                                          <header>
-                                              <Label text="테넌트"/>
-                                          </header>
-                                      </Column>
-                                      <Column hAlign="Center" width="100px">
-                                          <header>
-                                              <Label text="회사"/>
-                                          </header>
-                                      </Column>
-                                      <Column hAlign="Center" width="100px">
-                                          <header>
-                                              <Label text="프로세스유형"/>
-                                          </header>
-                                      </Column>
-                                      <Column hAlign="Center" width="100px">
-                                          <header>
-                                              <Label text="조직유형"/>
-                                          </header>
-                                      </Column>
-                                      <Column hAlign="Center" width="100px">
-                                          <header>
-                                              <Label text="사용여부"/>
-                                          </header>
-                                      </Column>
-                                      <Column hAlign="Center" width="100px">
-                                          <header>
-                                              <Label text="생성자"/>
-                                          </header>
-                                      </Column>
-                                      <Column hAlign="Center" width="100px">
-                                          <header>
-                                              <Label text="수정자"/>
-                                          </header>
-                                      </Column>
-                                      <Column hAlign="Center" width="200px">
-                                          <header>
-                                              <Label text="생성 시간"/>
-                                          </header>
-                                      </Column>
-                                      <Column hAlign="Center" width="200px">
-                                          <header>
-                                              <Label text="수정 시간"/>
-                                          </header>
-                                      </Column>
-                                      <Column hAlign="Center" width="200px">
-                                          <header>
-                                              <Label text="시스템 생성 시간"/>
-                                          </header>
-                                      </Column>
-                                      <Column hAlign="Center" width="200px">
-                                          <header>
-                                              <Label text="시스템 수정 시간"/>
-                                          </header>
-                                      </Column>
-                                  </columns>
-                                  <items>
-                                      <ColumnListItem type="Active" id="codeMstColumnListItem" press="onMstTableItemPress">
-                                          <cells>
-                                              <Text text="{tenant_id}"/>
-                                              <Text text="{company_code}"/>
-                                              <Text text="{process_type_code}"/>
-                                              <Text text="{org_type_code}"/>
-                                              <Text text="{use_flag}"/>
-                                              <Text id="mst_create_user_id" text="{create_user_id}"/>
-                                              <Text id="mst_update_user_id" text="{update_user_id}"/>
-                                              <Text id="mst_local_create_dtm" text="{local_create_dtm}"/>
-                                              <Text id="mst_local_update_dtm" text="{local_update_dtm}"/>
-                                              <Text id="mst_system_create_dtm" text="{system_create_dtm}"/>
-                                              <Text id="mst_system_update_dtm" text="{system_update_dtm}"/>
-                                          </cells>
-                                      </ColumnListItem>
-                                  </items>
-                              </Table>
-                            </content>
-                        </TabContainerItem>
+                <VBox>        
+                    <Table 
+                        id="orgTypeMappingTable"
+                        items="{
+                            path: '/Pur_Org_Type_Mapping' 
+                        }"
+                        mode="MultiSelect"
+                        updateFinished="onMstUpdateFinished"
+                    >
+                        <headerToolbar>
+                            <OverflowToolbar>
+                                <Title text="구매 관리 ({= ${list>/}.length || 0})" level="H2"/>
+                                <ToolbarSpacer/>
+                                <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
+                                <ToolbarSeparator/>
+                                <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+                                    <layoutData>
+                                        <OverflowToolbarLayoutData priority="NeverOverflow" />
+                                    </layoutData>
+                                </Button>
+                            </OverflowToolbar>
+                        </headerToolbar>
+                        <columns>
+                            <Column hAlign="Center" width="100px">
+                                <header>
+                                    <Label text="테넌트"/>
+                                </header>
+                            </Column>
+                            <Column hAlign="Center" width="100px">
+                                <header>
+                                    <Label text="회사"/>
+                                </header>
+                            </Column>
+                            <Column hAlign="Center" width="100px">
+                                <header>
+                                    <Label text="조직유형"/>
+                                </header>
+                            </Column>
 
-                    </items>
-                </TabContainer>    
+                            <Column hAlign="Center" width="100px">
+                                <header>
+                                    <Label text="조직코드"/>
+                                </header>
+                            </Column>
+                            <Column hAlign="Center" width="100px">
+                                <header>
+                                    <Label text="조직명"/>
+                                </header>
+                            </Column>
+                            <Column hAlign="Center" width="100px">
+                                <header>
+                                    <Label text="구매조직코드"/>
+                                </header>
+                            </Column>
+                            <Column hAlign="Center" width="100px">
+                                <header>
+                                    <Label text="플랜트코드"/>
+                                </header>
+                            </Column>
+                            <Column hAlign="Center" width="100px">
+                                <header>
+                                    <Label text="관계사코드"/>
+                                </header>
+                            </Column>
+                            <Column hAlign="Center" width="100px">
+                                <header>
+                                    <Label text="사업본부코드"/>
+                                </header>
+                            </Column>
+                            <Column hAlign="Center" width="100px">
+                                <header>
+                                    <Label text="사업부코드"/>
+                                </header>
+                            </Column>
+                            <Column hAlign="Center" width="100px">
+                                <header>
+                                    <Label text="HQ/AU"/>
+                                </header>
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem type="Active" id="codeMstColumnListItem" press="onMstTableItemPress">
+                                <cells>
+                                    <Text text="{tenant_id}"/>
+                                    <Text text="{company_code}"/>
+                                    <Text text="{org_type_code}"/>
+
+                                    <Text text="{org_type_code}"/>
+                                    <Text text="{org_type_code}"/>
+                                    <Text text="{org_type_code}"/>
+                                    <Text text="{org_type_code}"/>
+                                    <Text text="{org_type_code}"/>
+                                    <Text text="{org_type_code}"/>
+                                    <Text text="{org_type_code}"/>
+                                    <Text text="{org_type_code}"/>
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </VBox>
             </f:content>
         </f:DynamicPage>
     </App>

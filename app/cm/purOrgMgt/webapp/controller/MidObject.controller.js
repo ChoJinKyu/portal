@@ -25,7 +25,7 @@ sap.ui.define([
 
   var oTransactionManager = Symbol();
 
-  return BaseController.extend("cm.menuMgt.controller.MidObject", {
+  return BaseController.extend("cm.purOrgMgt.controller.MidObject", {
 
     dateFormatter: DateFormatter,
 
@@ -108,7 +108,6 @@ sap.ui.define([
         .attachPatternMatched(
           function (oEvent) {
             var { menuCode, menuName, parentMenuCode } = oEvent.getParameter("arguments")["?query"];
-            console.log(">>>>>> params", menuCode, menuName, parentMenuCode);
             this.getModel("midObjectView").setProperty("/mode", (!menuCode ? "C" : "R"));
             this.getModel("midObjectView").setProperty("/menuCode", menuCode);
             this.getModel("midObjectView").setProperty("/menuName", menuName);
@@ -220,7 +219,7 @@ sap.ui.define([
      */
     onNavBack: function () {
       var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
-      this.getRouter().navTo("menuMgt", { layout: sNextLayout });
+      this.getRouter().navTo("purOrgMgt", { layout: sNextLayout });
     },
     /**
      * Event handler for page edit button press
@@ -335,26 +334,26 @@ sap.ui.define([
         that = this;
 
       // Validation
-      if (!master.getData()["chain_code"]) {
-        MessageBox.alert("Chain을 입력하세요");
-        return;
-      }
-    //   if (!master.getData()["menu_code"]) {
-    //     MessageBox.alert("테넌트를 입력하세요");
-    //     return;
-    //   }
-    //   if (master.getData()["_state_"] != "C" && detail.getChanges() <= 0) {
-    //     MessageBox.alert("변경사항이 없습니다.");
-    //     return;
-    //   }
+      // if (!master.getData()["chain_code"]) {
+      //   MessageBox.alert("Chain을 입력하세요");
+      //   return;
+      // }
+      // if (!master.getData()["menu_code"]) {
+      //   MessageBox.alert("테넌트를 입력하세요");
+      //   return;
+      // }
+      // if (master.getData()["_state_"] != "C" && detail.getChanges() <= 0) {
+      //   MessageBox.alert("변경사항이 없습니다.");
+      //   return;
+      // }
       // Set Details (New)
-      detail.getData()["MenuLng"].map(r => {
-        if (r["_row_state_"] == "C") {
+      if (master.getData()["_state_"] == "C") {
+        detail.getData()["MenuLng"].map(r => {
           r["tenant_id"] = master.getData()["tenant_id"];
           r["menu_code"] = master.getData()["menu_code"];
-        }
-        return r;
-      });
+          return r;
+        });
+      }
 
       MessageBox.confirm("Are you sure ?", {
         title: "Comfirmation",
@@ -364,6 +363,7 @@ sap.ui.define([
             view.setBusy(true);
             that[oTransactionManager].submit({
               success: function (ok) {
+                //that.getModel("midObjectView").setProperty("/mode", "R");
                 view.setBusy(false);
                 that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                 MessageToast.show("Success to save.");
