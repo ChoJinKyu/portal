@@ -72,7 +72,7 @@ xmlns:table="sap.ui.table">
 								</customData>
 							</Button>
 							<Button id="btnBeaDelete" type="Transparent" text="{I18N>/ROW_DELETE}" press=".onBudgetExecutionDelRow"/>
-                            <Button id="btnSupplier" type="Emphasized" text="Supplier Selection" press=".onBudgetExecutionDelRow"/>
+                            <Button id="btnSupplier" type="Emphasized" text="Supplier Selection" press=".onSuppValueHelpRequested"/>
 						</OverflowToolbar>
 					</table:extension>
 					<table:columns>

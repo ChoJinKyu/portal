@@ -62,7 +62,11 @@ sap.ui.define([
             }else{
                  schFilter = [new Filter("approval_number", FilterOperator.EQ, this.oThis.approval_number)
                 , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
-            ]; 
+                ]; 
+
+                // this._bindView2("/ItemBudgetExecution", "mdItemMaster", schFilter, function (oData) {
+                //     console.log("ItemBudgetExecution >>>>>>", oData);
+                // });
             }
 
             this.oThis.getView().setModel(new ManagedListModel(), "appDetail");
@@ -76,6 +80,21 @@ sap.ui.define([
                  oPageSubSection2.addBlock(oFragment);   
               }) 
         },
+
+        // _bindView2 : function (sObjectPath, sModel, aFilter, callback) { 
+        //     console.log(" 호출 됐나??? ");
+        //     var oView = this.oThis.getView(),
+        //         oModel = this.oThis.getModel(sModel);
+        //     oView.setBusy(true);
+        //     oModel.setTransactionModel(this.oThis.getModel("supplier"));
+        //     oModel.read(sObjectPath, {
+        //         filters: aFilter,
+        //         success: function (oData) {
+        //             oView.setBusy(false);
+        //             callback(oData);
+        //         }
+        //     });
+        // },
 
         _loadFragmentPOILocal : function (sFragmentName, oHandler){       
             if(!this.oThis._oFragments[sFragmentName]){
@@ -160,8 +179,9 @@ sap.ui.define([
 
         onSuppValueHelpRequested: function(oEvent){
 
-            var sCompanyCode  = this.getModel('master').getProperty('/company_code')
-            var sPlantCode = this.getModel('master').getProperty('/org_code')
+            console.log("this.getModel('oThis') :::", this.oThis)
+            var sCompanyCode  = this.getModel('supplier').getProperty('/company_code')
+            var sPlantCode = this.getModel('supplier').getProperty('/org_code')
             
             this.supplierSelectionPop.showSupplierSelection(this, oEvent, sCompanyCode, sPlantCode);
         },
