@@ -161,7 +161,7 @@
                                 </table:Column>
                                 <table:Column label="권한여부" hAlign="Center">
                                     <table:template>
-                                        <Switch id="stateId" type="AcceptReject" state="false" change=".onSwitchChange" />
+                                        <Switch type="AcceptReject" state="{menu>state}" change=".onSwitchChange" />
                                     </table:template>
                                 </table:Column>
                             </table:columns>
