@@ -363,7 +363,7 @@
                     <table:Column width="3.3em" hAlign="Center">
                         <CheckBox select="onCheckAll" />         
                         <table:template>
-                            <CheckBox id="chk" />
+                            <CheckBox id="chk" selected="{list>chk}" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldCompanyColumn" width="5em" hAlign="Center">
