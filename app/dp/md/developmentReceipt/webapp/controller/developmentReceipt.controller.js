@@ -252,7 +252,7 @@ sap.ui.define([
         _approvalRowAdd: function (obj) {
             var oTable = this.byId("moldMstTable"),
                 oModel = this.getModel("list");
-            var aItems = oTable.getItems();
+            var aItems = oTable.getRows();
             var oldItems = [];
             var that = this;
             aItems.forEach(function (oItem) {
@@ -409,40 +409,42 @@ sap.ui.define([
 		 */
         /** Unreceipt 가능. Receipt 상태의 금형 중, 예산 집행품의 또는 입찰대상 협력사 선정 품의 결재 요청 이전 금형에 대해서만 Delete 가능 */
         onMoldMstTableDeleteButtonPress: function () {
-
-            var oTable = this.byId("moldMstTable"),
-                oModel = this.getModel(),
-                lModel = this.getModel("list"),
+            var oModel = this.getModel("list"),
                 oView = this.getView(),
-                oSelected = oTable.getSelectedIndices().reverse(),
-                statusChk = false;
+                statusChk = false,
+                viewData = oModel.getData().MoldMstView,
+                checkCnt = 0;
 
-            if (oSelected.length > 0) {
-                oSelected.forEach(function (idx) {
-                    var statusCode = lModel.getData().MoldMstView[idx].mold_progress_status_code;
-                    if (!(statusCode === "DEV_REQ" || statusCode === "DEV_RCV")) {
+            for (var idx = 0; idx < viewData.length; idx++) {
+                if(viewData[idx].chk){
+                    checkCnt++;
+
+                    var statusCode = viewData[idx].mold_progress_status_code;
+                    if(!(statusCode === "DEV_REQ" || statusCode === "DEV_RCV")){
                         statusChk = true;
+                        //viewData[idx].chk = false;
                     }
-                });
+                }
+            }
 
+            if (checkCnt > 0) {
                 if (statusChk) {
                     MessageToast.show("Development Request, Receive 상태일 때만 삭제 가능합니다.");
                     return;
                 }
 
-                MessageBox.confirm(this.getModel("I18N").getText("/NCM0104", oSelected.length, "삭제"), {//this.getModel("I18N").getText("/NCM0104", oSelected.length, "${I18N>/DELETE}")
+                MessageBox.confirm(this.getModel("I18N").getText("/NCM0104", checkCnt, "삭제"), {//this.getModel("I18N").getText("/NCM0104", oSelected.length, "${I18N>/DELETE}")
                     title: "Comfirmation",
                     initialFocus: sap.m.MessageBox.Action.CANCEL,
                     onClose: function (sButton) {
                         if (sButton === MessageBox.Action.OK) {
-                            oSelected.forEach(function (idx) {
-                                oModel.remove(lModel.getData().MoldMstView[idx].__entity, {
-                                    groupId: "delete"
-                                });
-                            });
+                            for (var jdx = 0; jdx < viewData.length; jdx++) {
+                                if(viewData[jdx].chk){
+                                    oModel.removeRecord(jdx);
+                                }
+                            }
 
                             oModel.submitChanges({
-                                groupId: "delete",
                                 success: function () {
                                     oView.setBusy(false);
                                     MessageToast.show("Success to Delete.");
@@ -456,8 +458,6 @@ sap.ui.define([
                     }.bind(this)
                 });
 
-                oTable.clearSelection();
-
             } else {
                 MessageBox.error("선택된 행이 없습니다.");
             }
@@ -465,73 +465,83 @@ sap.ui.define([
         },
 
         onMoldMstTableReceiptButtonPress: function () {
-            var oTable = this.byId("moldMstTable"),
-                //oModel = this.getModel(),
-                lModel = this.getModel("list"),
+            var oModel = this.getModel("list"),
                 oView = this.getView(),
-                oSelected = oTable.getSelectedIndices(),
-                statusChk = false;
-            /*
-                        if (oSelected.length > 0) {
-                            oSelected.forEach(function (idx) {
-                                if(lModel.getData().MoldMstView[idx].mold_progress_status_code !== "DEV_REQ"){
-                                    statusChk = true;
+                statusChk = false,
+                viewData = oModel.getData().MoldMstView;
+
+            var checkCnt = 0;
+
+            for (var idx = 0; idx < viewData.length; idx++) {
+                if(viewData[idx].chk){
+                    viewData[idx].update_type = "receipt";
+                    checkCnt++;
+
+                    var statusCode = viewData[idx].mold_progress_status_code;
+                    if(!(statusCode === "DEV_REQ" || statusCode === "DEV_RCV")){
+                        statusChk = true;
+                        //viewData[idx].chk = false;
+                    }
+                }
+            }
+
+            if (checkCnt > 0) {
+                if(statusChk){
+                    MessageToast.show( "Development Request, Receipt 상태일 때만 Receipt 가능합니다." );
+                    return;
+                }
+                            
+                MessageBox.confirm("Receipt 후엔 미접수 상태로 변경은 불가능합니다. Receipt 하시겠습니까?", {
+                    title: "Comfirmation",
+                    initialFocus: sap.m.MessageBox.Action.CANCEL,
+                    onClose: function (sButton) {
+                        if (sButton === MessageBox.Action.OK) {
+                            oView.setBusy(true);
+                            oModel.submitChanges({
+                                success: function (oEvent) {
+                                    oView.setBusy(false);
+                                    MessageToast.show("Success to Receipt.");
+                                    this.onPageSearchButtonPress();
+                                }.bind(this), error: function (oError) {
+                                    MessageToast.show("oError");
+                                    oView.setBusy(false);
+                                    MessageBox.error(oError.message);
                                 }
                             });
+                        };
+                    }.bind(this)
+                });
+
+                //oTable.clearSelection();
             
-                            if(statusChk){
-                                MessageToast.show( "Development Request 상태일 때만 Receipt 가능합니다." );
-                                return;
-                            }
-                            */
-            MessageBox.confirm("Receipt 하시겠습니까?", {
-                title: "Comfirmation",
-                initialFocus: sap.m.MessageBox.Action.CANCEL,
-                onClose: function (sButton) {
-                    if (sButton === MessageBox.Action.OK) {
-                        oView.setBusy(true);
-
-                        /*
-                                                    oSelected.forEach(function (idx) {
-                                                        var sEntity = lModel.getData().MoldMstView[idx].__entity;
-                                                        lModel.getData().MoldMstView[idx].update_type = "receipt";
-                                                        
-                                                        delete lModel.getData().MoldMstView[idx].__entity;
-                                                        oModel.update(sEntity, lModel.getData().MoldMstView[idx], {
-                                                            groupId: "receipt"
-                                                        });
-                                                    }.bind(this));
-                                                    */
-                        lModel.submitChanges({
-                            //groupId: "receipt",
-                            success: function (oEvent) {console.log(oEvent);
-                                oView.setBusy(false);
-                                MessageToast.show("Success to Receipt.");
-                                //this.onPageSearchButtonPress();
-                            }.bind(this), error: function (oError) {
-                                MessageToast.show("oError");
-                                oView.setBusy(false);
-                                MessageBox.error(oError.message);
-                            }
-                        });
-
-
-
-                    };
-                }.bind(this)
-            });
-
-            oTable.clearSelection();
-            /*
-                        }else{
-                            MessageBox.error("선택된 행이 없습니다.");
-                        }*/
+            }else{
+                MessageBox.error("선택된 행이 없습니다.");
+            }
         },
-        /*
-                inputFieldChange : function (oEvent) {
-                    this.byId("moldMstTable").setSelectedIndex([oEvent.getSource().getParent().getIndex()]);
-                },
-        */
+        
+        setIdSelect : function (oEvent) {
+            var oTable = this.byId("moldMstTable"),
+                oModel = this.getModel("list"),
+                viewData = oModel.getData().MoldMstView,
+                setId = viewData[oEvent.getSource().getParent().getIndex()].set_id;
+
+            for (var idx = 0; idx < oTable.getRows().length; idx++) {
+                if(!(setId === null || setId === "")){
+                    if(setId === oTable.getRows()[idx].getCells()[8].getText()){
+                        oTable.getRows()[idx].getCells()[0].setSelected(true);
+                    }
+                }
+            }
+            
+        },
+        
+        inputFieldChange : function (oEvent) {
+            console.log(oEvent);
+        console.log(oEvent.getSource().getParent().getCells()[0]);
+            //this.byId("moldMstTable").setSelectedIndex([oEvent.getSource().getParent().getIndex()]);
+            oEvent.getSource().getParent().getCells()[0].setSelected(true);
+        },
+        
         onRefresh: function () {
             var oBinding = this.byId("moldMstTable").getBinding("rows");
             this.getView().setBusy(true);

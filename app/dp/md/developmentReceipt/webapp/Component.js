@@ -32,15 +32,6 @@ sap.ui.define([
 			// create the views based on the url/hash
             this.getRouter().initialize();
             
-            var oMode;
-            
-            oMode = new JSONModel({
-                editFlag : false,
-                viewFlag : true,
-                class : "readonlyField"
-            });
-
-            this.setModel(oMode, "mode");
 		},
 
 		/**
