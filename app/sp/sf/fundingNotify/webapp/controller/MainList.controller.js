@@ -52,8 +52,8 @@ sap.ui.define([
             
             this.setModel(new ManagedListModel(), "list");
 
-            //this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
-
+            this.getRouter().getRoute("mainList").attachPatternMatched(this._onRoutedThisPage, this);
+            
             this._doInitTablePerso();
         },
 
@@ -191,6 +191,7 @@ sap.ui.define([
 		 */
         _onRoutedThisPage: function () {
             this.getModel("mainListView").setProperty("/headerExpanded", true);
+             this.byId("pageSearchButton").firePress();
         },
 
 		/**
@@ -213,7 +214,12 @@ sap.ui.define([
         },
 
         _getSearchStates: function () {
-            var sTitle, searchDateS, aSearchFilters = [];
+            var sTitle, searchDateS, aSearchFilters = [],
+                sFromDate = this.byId("searchDateS").getFrom(),
+                sToDate = this.byId("searchDateS").getTo(),
+                sStartDate = this.byId("searchDateS").getValue().substring(0, 10),
+                sEndDate = this.byId("searchDateS").getValue().substring(13);
+            
             if (!!(sTitle = this.byId("searchTitle").getValue())) {
                 aSearchFilters.push(new Filter({
                     filters: [
@@ -222,7 +228,20 @@ sap.ui.define([
                 }));
 
                 //aSearchFilters.push(new Filter())
+            };
+
+
+            if(!!sFromDate || !!sToDate){
+                aSearchFilters.push(new Filter({
+                    filters: [
+                        //new Filter("funding_notify_title", FilterOperator.Contains, sTitle)
+                        new Filter("funding_notify_start_date", FilterOperator.BT, sStartDate, sEndDate),
+                        new Filter("funding_notify_end_date", FilterOperator.BT, sStartDate, sEndDate)
+                    ],
+                    and : false
+                }));
             }
+            
             return aSearchFilters;
         },
 

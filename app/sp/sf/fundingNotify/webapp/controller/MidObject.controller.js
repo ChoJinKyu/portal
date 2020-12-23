@@ -47,17 +47,16 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
-            // Model used to manipulate controlstates. The chosen values make sure,
-            // detail page shows busy indication immediately so there is no break in
-            // between the busy indication for loading the view's meta data
             var oViewModel = new JSONModel({
                 busy: true,
                 delay: 0,
                 screen: "",
-                editMode: true
+                editMode: true,
+                showMode: true
             });
 
             this.getRouter().getRoute("mainObject").attachPatternMatched(this._onRoutedThisPage, this);
+            
             this.setModel(oViewModel, "midObjectView");
 
             this.setModel(new ManagedModel(), "master");
@@ -131,12 +130,14 @@ sap.ui.define([
 		 */
         onPageNavBackButtonPress: function () {
             var sPreviousHash = History.getInstance().getPreviousHash();
-			if (sPreviousHash !== undefined) {
-				// eslint-disable-next-line sap-no-history-manipulation
-				history.go(-1);
-			} else {
-				this.getRouter().navTo("mainList", {}, true);
-			}
+            this.getRouter().navTo("mainList", {}, true);
+			// if (sPreviousHash !== undefined) {
+            //     // eslint-disable-next-line sap-no-history-manipulation
+            //     // this.getRoute().navTo("mainList");
+			// 	history.go(-1);
+			// } else {
+			// 	this.getRouter().navTo("mainList", {}, true);
+			// }
             // var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
             // this.getRouter().navTo("mainObject");
         },
@@ -205,7 +206,7 @@ sap.ui.define([
             var view = this.getView(),
                 master = view.getModel("master"),
                 that = this;
-            console.log(master.getData()["funding_notify_contents"]);
+            // console.log(master.getData()["funding_notify_contents"]);
             
             // Validation
             // if (!master.getData()["chain_code"]) {
@@ -235,9 +236,8 @@ sap.ui.define([
                             success: function (ok) {
                                 that._toShowMode();
                                 view.setBusy(false);
-                                //that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                                 MessageToast.show("Success to save.");
-                            }
+                            }.bind(this)
                         });
                     };
                 }
@@ -292,12 +292,13 @@ sap.ui.define([
                     "tenant_id": "L2100",
                     "funding_notify_number": "",
                     "funding_notify_title": "",
+                    "funding_notify_contents": "",
                     "local_create_dtm": utcDate,
                     "local_update_dtm": utcDate,
                     "create_user_id": "Admin",
                     "update_user_id": "Admin"
                 }, "/SfFundingNotify", 0);
-                
+                this.getView().getModel("midObjectView").setProperty("/showMode", false);
                 this._toEditMode();
             } else {
                 //this.getModel("midObjectView").setProperty("/isAddedMode", false);
@@ -354,7 +355,6 @@ sap.ui.define([
             this.byId("pageCancelButton").setEnabled(true);
             this.byId("pageSaveButton").setEnabled(true);
             oMidObjectView.setProperty("/editMode", true);
-            
         },
 
         _toShowMode: function () {
