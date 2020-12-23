@@ -1,5 +1,5 @@
  view DP_MD_APPROVALS_VIEW as
- select 
+    select 
         a.approval_number
         ,a.tenant_id
         ,a.approval_type_code
