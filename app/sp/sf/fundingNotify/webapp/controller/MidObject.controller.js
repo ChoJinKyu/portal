@@ -292,7 +292,7 @@ sap.ui.define([
                     "tenant_id": "L2100",
                     "funding_notify_number": "",
                     "funding_notify_title": "",
-                    "funding_notify_contents": "",
+                    "funding_notify_contents": "&nbsp;",
                     "local_create_dtm": utcDate,
                     "local_update_dtm": utcDate,
                     "create_user_id": "Admin",
@@ -318,6 +318,7 @@ sap.ui.define([
                         oView.setBusy(false);
                     }.bind(this)
                 });
+                this.getView().getModel("midObjectView").setProperty("/showMode", true);
                 this._toShowMode();
             }
 
