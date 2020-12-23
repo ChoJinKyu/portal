@@ -24,11 +24,18 @@
           "localUri": "localService/metadata.xml"
         }
       },
-      "codeMgrService": {
-        "uri": "srv-api/odata/v4/cm.CodeMgrService/",
+      "commonUtilService": {
+        "uri": "srv-api/odata/v2/cm.util.CommonService/",
         "type": "OData",
         "settings": {
-          "odataVersion": "4.0",
+          "odataVersion": "2.0"
+        }
+      },
+      "orgMgtService": {
+        "uri": "srv-api/odata/v2/cm.OrgMgtService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0",
           "localUri": "localService/metadata.xml"
         }
       }
@@ -57,7 +64,7 @@
   "sap.ui5": {
     "flexEnabled": false,
     "rootView": {
-      "viewName": "cm.purOrgMgt.view.purOrgMgt",
+      "viewName": "cm.purOrgMgt.view.App",
       "type": "XML",
       "async": true,
       "id": "purOrgMgt"
@@ -91,8 +98,18 @@
           "autoExpandSelect": true
         }
       },
-      "commonCode": {
-        "dataSource": "codeMgrService",
+      "util": {
+        "dataSource": "commonUtilService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "useBatch": true
+        }
+      },
+      "org": {
+        "dataSource": "orgMgtService",
         "preload": true,
         "settings": {
           "operationMode": "Server",
@@ -115,26 +132,44 @@
         "viewType": "XML",
         "async": true,
         "viewPath": "cm.purOrgMgt.view",
-        "controlAggregation": "pages",
-        "controlId": "app",
-        "clearControlAggregation": false
+        "controlId": "fcl",
+        "transition": "slide",
+        "bypassed": {
+          "target": [
+            "notFound"
+          ]
+        }
       },
       "routes": [
         {
           "name": "RoutepurOrgMgt",
-          "pattern": "RoutepurOrgMgt",
+          "pattern": ":layout:",
           "target": [
-            "TargetpurOrgMgt"
+            "purOrgMgt"
+          ]
+        },
+        {
+          "name": "midPage",
+          "pattern": "midObject/{layout}/{?query}",
+          "target": [
+            "purOrgMgt",
+            "midObject"
           ]
         }
       ],
       "targets": {
-        "TargetpurOrgMgt": {
-          "viewType": "XML",
-          "transition": "slide",
-          "clearControlAggregation": false,
-          "viewId": "purOrgMgt",
-          "viewName": "purOrgMgt"
+        "purOrgMgt": {
+          "viewName": "purOrgMgt",
+          "controlAggregation": "beginColumnPages"
+        },
+        "midObject": {
+          "viewName": "MidObject",
+          "controlAggregation": "midColumnPages"
+        },
+        "notFound": {
+          "viewName": "NotFound",
+          "viewPath": "ext.lib.view",
+          "viewId": "notFound"
         }
       }
     }
