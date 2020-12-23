@@ -17,8 +17,8 @@ select pjt.tenant_id                  /*테넌트ID*/
      , pjt.project_leader_empno       /*프로젝트리더사번*/
      , pjt.buyer_empno                /*구매담당자사번*/
      , pjt.customer_local_name        /*고객로컬명*/
-     , pjt.oem_customer_name          /*OEM고객명*/
-     , pjt.car_type_name              /*차종명*/
+     , pjt.last_customer_name         /*최종고객명*/
+     , pjt.customer_model_desc        /*고객모델설명*/
      , pjt.mcst_yield_rate            /*재료비수율*/
      , pjt.bom_type_code              /*자재명세서유형코드*/
      , pjt.sales_currency_code        /*매출통화코드*/

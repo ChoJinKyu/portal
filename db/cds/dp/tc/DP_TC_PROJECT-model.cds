@@ -19,7 +19,7 @@
  *    @cds.persistence.exists 명시
  * 5. namespace : dp
  * 6. entity : Tc_Project
- * 7. entity description : 목표재료비 프로젝트 정보
+ * 7. entity description : 최신 프로젝트 정보
  * 8. history -. 2020.12.08 : 정정호 최초작성
  *
  * * * *
@@ -28,18 +28,15 @@ namespace dp;
 
 using {User} from '@sap/cds/common';
 using util from '../../cm/util/util-model';
-using {dp as Project} from './DP_TC_PROJECT-model';
 using {dp as Project_Event} from './DP_TC_PROJECT_EVENT-model';
 using {dp as Project_Similar_Model} from './DP_TC_PROJECT_SIMILAR_MODEL-model';
+using {dp as Project_Base_Exrate} from './DP_TC_PROJECT_BASE_EXRATE-model';
 using {dp as Project_Addition_Info} from './DP_TC_PROJECT_ADDITION_INFO-model';
 
 entity Tc_Project {
     key tenant_id               : String(5) not null  @title : '테넌트ID';
     key project_code            : String(30) not null @title : '프로젝트코드';
     key model_code              : String(40) not null @title : '모델코드';
-        //key mcst_code               : String(30) not null @title : '재료비코드';
-        //key version_sequence        : Decimal not null    @title : '버전순서';
-        mcst_code               : String(30)          @title : '재료비코드';
         version_sequence        : Decimal             @title : '버전순서';
         project_name            : String(100)         @title : '프로젝트명';
         model_name              : String(100)         @title : '모델명';
@@ -69,55 +66,45 @@ entity Tc_Project {
         massprod_end_date       : Date                @title : '양산종료일자';
         mcst_excl_flag          : Boolean             @title : '재료비제외여부';
         mcst_excl_reason        : String(3000)        @title : '재료비제외사유';
-        mcst_status_code        : String(30)          @title : '재료비상태코드';
-        full_sequence           : Decimal             @title : '전체순서';
-        mcst_sum_value          : Decimal             @title : '재료비합계값';
 
-        events                  : Composition of many dp.Tc_Project_Event
-                                      on  events.tenant_id        = tenant_id
-                                      and events.project_code     = project_code
-                                      and events.model_code       = model_code
-                                      and events.mcst_code        = mcst_code
-                                      and events.version_sequence = version_sequence;
+        events                  : Composition of many Project_Event.Tc_Project_Event
+                                      on  events.tenant_id    = tenant_id
+                                      and events.project_code = project_code
+                                      and events.model_code   = model_code;
 
-        silimar_model           : Composition of many dp.Tc_Project_Similar_Model
-                                      on  silimar_model.tenant_id        = tenant_id
-                                      and silimar_model.project_code     = project_code
-                                      and silimar_model.model_code       = model_code
-                                      and silimar_model.mcst_code        = mcst_code
-                                      and silimar_model.version_sequence = version_sequence;
+        silimar_model           : Composition of many Project_Similar_Model.Tc_Project_Similar_Model
+                                      on  silimar_model.tenant_id    = tenant_id
+                                      and silimar_model.project_code = project_code
+                                      and silimar_model.model_code   = model_code;
+
+        base_extra              : Composition of many Project_Base_Exrate.Tc_Project_Base_Exrate
+                                      on  base_extra.tenant_id    = tenant_id
+                                      and base_extra.project_code = project_code
+                                      and base_extra.model_code   = model_code;
 
 
-        mtlmob                  : Composition of many dp.Tc_Project_Addition_Info
+        mtlmob                  : Composition of many Project_Addition_Info.Tc_Project_Addition_Info
                                       on  mtlmob.tenant_id          = tenant_id
                                       and mtlmob.project_code       = project_code
                                       and mtlmob.model_code         = model_code
-                                      and mtlmob.mcst_code          = mcst_code
-                                      and mtlmob.version_sequence   = version_sequence
                                       and mtlmob.addition_type_code = 'MTLLMOB'; //물동
 
-        sales_price             : Composition of many dp.Tc_Project_Addition_Info
+        sales_price             : Composition of many Project_Addition_Info.Tc_Project_Addition_Info
                                       on  sales_price.tenant_id          = tenant_id
                                       and sales_price.project_code       = project_code
                                       and sales_price.model_code         = model_code
-                                      and sales_price.mcst_code          = mcst_code
-                                      and sales_price.version_sequence   = version_sequence
                                       and sales_price.addition_type_code = 'SALES_PRICE'; //판가
 
-        prcs_cost               : Composition of many dp.Tc_Project_Addition_Info
+        prcs_cost               : Composition of many Project_Addition_Info.Tc_Project_Addition_Info
                                       on  prcs_cost.tenant_id          = tenant_id
                                       and prcs_cost.project_code       = project_code
                                       and prcs_cost.model_code         = model_code
-                                      and prcs_cost.mcst_code          = mcst_code
-                                      and prcs_cost.version_sequence   = version_sequence
                                       and prcs_cost.addition_type_code = 'PROCESSING_COST'; //가공비
 
-        sgna                    : Composition of many dp.Tc_Project_Addition_Info
+        sgna                    : Composition of many Project_Addition_Info.Tc_Project_Addition_Info
                                       on  sgna.tenant_id          = tenant_id
                                       and sgna.project_code       = project_code
                                       and sgna.model_code         = model_code
-                                      and sgna.mcst_code          = mcst_code
-                                      and sgna.version_sequence   = version_sequence
                                       and sgna.addition_type_code = 'SGNA'; //판관비
 
 }
