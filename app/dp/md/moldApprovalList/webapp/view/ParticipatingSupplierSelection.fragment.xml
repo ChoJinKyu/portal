@@ -60,7 +60,7 @@ xmlns:table="sap.ui.table">
                              selectionMode="MultiToggle" 
                              fixedColumnCount="6" 
                              visibleRowCountMode="Auto" 
-                             rows="{path:'mdItemMaster>/ItemBudgetExecution'}">
+                             rows="{path:'psItemMaster>/ParticipatingSupplier'}">
 					<table:extension>
 						<OverflowToolbar>
 							<ToolbarSpacer/>
@@ -79,37 +79,37 @@ xmlns:table="sap.ui.table">
 						<table:Column id="c_mold_id" visible="false">
 							<Label text="mold_id"/>
 							<table:template>
-								<Text id="t_mold_id" text="{mdItemMaster>mold_id}"/>
+								<Text id="t_mold_id" text="{psItemMaster>mold_id}"/>
 							</table:template>
 						</table:Column>
 						<table:Column id="c_approval_number" visible="false">
 							<Label text="approval_number"/>
 							<table:template>
-								<Text id="t_approval_number" text="{mdItemMaster>approval_number}"/>
+								<Text id="t_approval_number" text="{psItemMaster>approval_number}"/>
 							</table:template>
 						</table:Column>
 						<table:Column id="c_model" width="20em" hAlign="Center">
 							<Label text="{I18N>/MODEL}"/>
 							<table:template>
-								<Text id="t_model" text="{mdItemMaster>model}"/>
+								<Text id="t_model" text="{psItemMaster>model}"/>
 							</table:template>
 						</table:Column>
 						<table:Column id="c_moldPartNo" width="10em" hAlign="Center">
 							<Label text="Mold No"/>
 							<table:template>
-								<Text id="t_mold_part_no" text="{mdItemMaster>mold_number}"/>
+								<Text id="t_mold_part_no" text="{psItemMaster>mold_number}"/>
 							</table:template>
 						</table:Column>
 						<table:Column id="c_seq" width="5em" hAlign="Center">
 							<Label text="Seq"/>
 							<table:template>
-								<Text id="t_seq" text="{mdItemMaster>mold_sequence}"/>
+								<Text id="t_seq" text="{psItemMaster>mold_sequence}"/>
 							</table:template>
 						</table:Column>
 						<table:Column id="c_description" width="15em" hAlign="Center">
 							<Label text="{I18N>/DESCRIPTION}"/>
 							<table:template>
-								<Text id="description" text="{mdItemMaster>spec_name}"/>
+								<Text id="description" text="{psItemMaster>spec_name}"/>
 							</table:template>
 						</table:Column>
 						<table:Column id="c_itemType" width="10em" hAlign="Center">
@@ -118,7 +118,7 @@ xmlns:table="sap.ui.table">
                                 <Label text="Type"/>
                             </VBox>
 							<table:template>
-								<ComboBox selectedKey="{mdItemMaster>mold_item_type_code}" items="{ path : 'util>/CodeDetails',
+								<ComboBox selectedKey="{psItemMaster>mold_item_type_code}" items="{ path : 'util>/CodeDetails',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
@@ -134,7 +134,7 @@ xmlns:table="sap.ui.table">
                                 <Label text="Currency"/>
                             </VBox>
 							<table:template>
-								<Text text="{mdItemMaster>book_currency_code}"/>
+								<Text text="{psItemMaster>book_currency_code}"/>
 							</table:template>
 						</table:Column>
 						<table:Column id="c_budget_amount" width="10em" hAlign="Center">
@@ -143,7 +143,7 @@ xmlns:table="sap.ui.table">
                                 <Label text="Amount"/>
                             </VBox>
 							<table:template>
-								<Input value="{mdItemMaster>provisional_budget_amount}"/>
+								<Input value="{psItemMaster>provisional_budget_amount}"/>
 							</table:template>
 						</table:Column>
 						<table:Column id="c_currency" width="10em" hAlign="Center">
@@ -151,7 +151,7 @@ xmlns:table="sap.ui.table">
                                 <Label text="Currency"/>
                             </VBox>
 							<table:template>
-								<Input value="{mdItemMaster>provisional_budget_amount}"/>
+								<Input value="{psItemMaster>provisional_budget_amount}"/>
 							</table:template>
 						</table:Column>
                         <table:Column id="c_target_amount" width="10em" hAlign="Center">
@@ -161,7 +161,7 @@ xmlns:table="sap.ui.table">
                             </VBox>
 							<!-- <Label text="Budget Amount"/> -->
 							<table:template>
-								<Input value="{mdItemMaster>provisional_budget_amount}"/>
+								<Input value="{psItemMaster>provisional_budget_amount}"/>
 							</table:template>
 						</table:Column>
                         <table:Column id="c_mold_supplier1" width="10em" hAlign="Center">
@@ -171,7 +171,7 @@ xmlns:table="sap.ui.table">
                             </VBox>
 							<!-- <Label text="Budget Amount"/> -->
 							<table:template>
-								<Input value="{mdItemMaster>provisional_budget_amount}"/>
+								<Input value="{psItemMaster>provisional_budget_amount}"/>
 							</table:template>
 						</table:Column>
                         <table:Column id="c_mold_supplier2" width="10em" hAlign="Center">
@@ -181,7 +181,7 @@ xmlns:table="sap.ui.table">
                             </VBox>
 							<!-- <Label text="Budget Amount"/> -->
 							<table:template>
-								<Input value="{mdItemMaster>provisional_budget_amount}"/>
+								<Input value="{psItemMaster>provisional_budget_amount}"/>
 							</table:template>
 						</table:Column>
                         <table:Column id="c_mold_supplier3" width="10em" hAlign="Center">
@@ -191,7 +191,7 @@ xmlns:table="sap.ui.table">
                             </VBox>
 							<!-- <Label text="Budget Amount"/> -->
 							<table:template>
-								<Input value="{mdItemMaster>provisional_budget_amount}"/>
+								<Input value="{psItemMaster>provisional_budget_amount}"/>
 							</table:template>
 						</table:Column>
                         <table:Column id="c_mold_supplier4" width="10em" hAlign="Center">
@@ -201,7 +201,7 @@ xmlns:table="sap.ui.table">
                             </VBox>
 							<!-- <Label text="Budget Amount"/> -->
 							<table:template>
-								<Input value="{mdItemMaster>provisional_budget_amount}"/>
+								<Input value="{psItemMaster>provisional_budget_amount}"/>
 							</table:template>
 						</table:Column>
                         <table:Column id="c_mold_supplier5" width="10em" hAlign="Center">
@@ -211,7 +211,7 @@ xmlns:table="sap.ui.table">
                             </VBox>
 							<!-- <Label text="Budget Amount"/> -->
 							<table:template>
-								<Input value="{mdItemMaster>provisional_budget_amount}"/>
+								<Input value="{psItemMaster>provisional_budget_amount}"/>
 							</table:template>
 						</table:Column>
                         <table:Column id="c_mold_supplier6" width="10em" hAlign="Center">
@@ -221,7 +221,7 @@ xmlns:table="sap.ui.table">
                             </VBox>
 							<!-- <Label text="Budget Amount"/> -->
 							<table:template>
-								<Input value="{mdItemMaster>provisional_budget_amount}"/>
+								<Input value="{psItemMaster>provisional_budget_amount}"/>
 							</table:template>
 						</table:Column>
                         <table:Column id="c_mold_supplier7" width="10em" hAlign="Center">
@@ -231,7 +231,7 @@ xmlns:table="sap.ui.table">
                             </VBox>
 							<!-- <Label text="Budget Amount"/> -->
 							<table:template>
-								<Input value="{mdItemMaster>provisional_budget_amount}"/>
+								<Input value="{psItemMaster>provisional_budget_amount}"/>
 							</table:template>
 						</table:Column>
                         <table:Column id="c_mold_supplier8" width="10em" hAlign="Center">
@@ -241,7 +241,7 @@ xmlns:table="sap.ui.table">
                             </VBox>
 							<!-- <Label text="Budget Amount"/> -->
 							<table:template>
-								<Input value="{mdItemMaster>provisional_budget_amount}"/>
+								<Input value="{psItemMaster>provisional_budget_amount}"/>
 							</table:template>
 						</table:Column>
                         <table:Column id="c_mold_supplier9" width="10em" hAlign="Center">
@@ -251,7 +251,7 @@ xmlns:table="sap.ui.table">
                             </VBox>
 							<!-- <Label text="Budget Amount"/> -->
 							<table:template>
-								<Input value="{mdItemMaster>provisional_budget_amount}"/>
+								<Input value="{psItemMaster>provisional_budget_amount}"/>
 							</table:template>
 						</table:Column>
                         <table:Column id="c_mold_supplier10" width="10em" hAlign="Center">
@@ -261,7 +261,7 @@ xmlns:table="sap.ui.table">
                             </VBox>
 							<!-- <Label text="Budget Amount"/> -->
 							<table:template>
-								<Input value="{mdItemMaster>provisional_budget_amount}"/>
+								<Input value="{psItemMaster>provisional_budget_amount}"/>
 							</table:template>
 						</table:Column>
                         <table:Column id="c_mold_supplier11" width="10em" hAlign="Center">
@@ -271,7 +271,7 @@ xmlns:table="sap.ui.table">
                             </VBox>
 							<!-- <Label text="Budget Amount"/> -->
 							<table:template>
-								<Input value="{mdItemMaster>provisional_budget_amount}"/>
+								<Input value="{psItemMaster>provisional_budget_amount}"/>
 							</table:template>
 						</table:Column>
                         <table:Column id="c_mold_supplier12" width="10em" hAlign="Center">
@@ -281,7 +281,7 @@ xmlns:table="sap.ui.table">
                             </VBox>
 							<!-- <Label text="Budget Amount"/> -->
 							<table:template>
-								<Input value="{mdItemMaster>provisional_budget_amount}"/>
+								<Input value="{psItemMaster>provisional_budget_amount}"/>
 							</table:template>
 						</table:Column>
 					</table:columns>
