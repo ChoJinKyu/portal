@@ -830,7 +830,6 @@ sap.ui.define([
                         tenant_id : that.tenant_id 
                         , approval_number : that.approval_number 
                         , approve_comment : item.approve_comment 
-                        , approve_date_time : item.approve_date_time 
                         , approve_status_code : item.approve_status_code 
                         , approver_type_code : item.approver_type_code 
                         , approver_empno : item.approver_empno
