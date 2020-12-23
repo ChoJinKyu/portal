@@ -10,7 +10,6 @@ SELECT
     ,(select code_description from CM_CODE_DTL where GROUP_CODE ='DP_MD_MOLD_SPEC_STATUS' and code=b.mold_spec_status_code) mold_spec_status_name
     ,trim(ifnull(a.family_part_number_1,'')||' '||ifnull(a.family_part_number_2,'')||' '||ifnull(a.family_part_number_3,'')||' '||ifnull(a.family_part_number_4,'')||' '||ifnull(a.family_part_number_5,'')) family_part_numbers
     ,ifnull((select USER_LOCAL_NAME from CM_HR_EMPLOYEE where EMPLOYEE_NUMBER=a.receipt_confirmed_user_empno),'-')||'['||b.CREATE_USER_ID||']' receipt_confirmed_user_name
-    ,ifnull(a.production_complete_date, TO_VARCHAR(curdate(), 'YYYYMMDD')) production_complete_date_today
 
     ,a.tenant_id                       
     ,a.company_code                    

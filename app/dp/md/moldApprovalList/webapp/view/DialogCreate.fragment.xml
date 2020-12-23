@@ -26,7 +26,7 @@
                     <form:content>
                         <!-- 팝업 콤보박스 영역 -->
                         <VBox>
-                            <Label text = "Company" design="Bold" required="true"/> 
+                            <Label text = "Company" design="Bold"/> 
                             <ComboBox id="searchCompanyF" width="70%" selectedKey="" change="dialogChangeComp" items="{
                                 path: 'org>/Company',
                                 filters: [
@@ -43,8 +43,8 @@
                             </layoutData> 
                         </VBox>
                         <VBox>
-                            <Label text = "Plant" design="Bold" required="true"/> 
-                            <ComboBox id="searchPlantF" width="70%" selectedKey=""  items="{
+                            <Label text = "Plant" design="Bold"/> 
+                            <ComboBox id="searchPlantF" width="70%" selectedKey="" items="{
                                 path: 'purOrg>/Pur_Operation_Org',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L1100'},

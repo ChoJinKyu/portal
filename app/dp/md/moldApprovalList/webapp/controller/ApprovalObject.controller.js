@@ -76,10 +76,6 @@ sap.ui.define([
             this.getView().setModel(new ManagedListModel(), "approver");
             this.getView().setModel(new ManagedListModel(), "referer");
 
-            // search view 
-            this.getView().setModel(new ManagedListModel(), "approverView");
-            this.getView().setModel(new ManagedListModel(), "refererView");
-
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("appMaster"));
             oTransactionManager.addDataModel(this.getModel("approver"));
@@ -129,13 +125,13 @@ sap.ui.define([
 		 * @public
 		 */
         onPageNavBackButtonPress: function () {
-            	var sPreviousHash = History.getInstance().getPreviousHash();
+            /*	var sPreviousHash = History.getInstance().getPreviousHash();
                 if (sPreviousHash !== undefined) {
                     // eslint-disable-next-line sap-no-history-manipulation
                     history.go(-1);
                 } else {
                     this.getRouter().navTo("approvalList", {}, true);
-                } 
+                } */
         },
 
 		/**
@@ -271,8 +267,6 @@ sap.ui.define([
         },
 
         _onRoutedThisPage: function (approvalNumber) {
-            console.log(" approvalNumber >>> " , approvalNumber);
-           
             var filter = [
                 new Filter("tenant_id", FilterOperator.EQ, this.tenant_id),
                 new Filter("approval_number", FilterOperator.EQ, approvalNumber)
@@ -282,12 +276,9 @@ sap.ui.define([
                 this.oRichTextEditor.setValue(oData.approval_contents);
             }.bind(this));
 
-            this._bindView("/Approvers", "approver", filter, function (oData) { 
-                console.log(" Approvers >> " , oData);
+            this._bindView("/Approvers", "approver", filter, function (oData) {
                 this._onLoadApproverRow(oData.results);
             }.bind(this));
-
-            console.log(" Approvers >>> " , approvalNumber);
 
             this._bindView("/Referers", "referer", filter, function (oData) {
                 if (oData.results.length > 0) {
@@ -501,7 +492,7 @@ sap.ui.define([
                 if (!this._oDialog) {
                     this._oDialog = Fragment.load({
                         id: oView.getId(),
-                        name: "dp.md.moldApprovalList.view.Employee",
+                        name: "dp.md.orderApprovalLocal.view.Employee",
                         controller: this
                     }).then(function (oDialog) {
                         oView.addDependent(oDialog);

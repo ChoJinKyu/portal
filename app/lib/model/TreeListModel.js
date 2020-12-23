@@ -118,25 +118,6 @@ sap.ui.define([
             return tree;
         },
 
-        // Hierachy 관련 node_id 만을 필터링한다. (SQL의 In절을 만든다.)
-        predicates: function(oData) {
-            return oData.results
-                // PATH를 분리한다.
-                .reduce(function (acc, e) {
-                    return [...acc, ...((e["path"]).split("/"))];
-                }, [])
-                // 중복을 제거한다.
-                .reduce(function (acc, e) {
-                    return acc.includes(e) ? acc : [...acc, e];
-                }, [])
-                // IN 절에 해당하는 필터를 만든다.
-                .reduce(function (acc, e) {
-                    return [...acc, new Filter({
-                        path: 'node_id', operator: FilterOperator.EQ, value1: e
-                    })];
-                }, []) || [];
-        },
-
         read: function (path, parameters) {
             var that = this;
             return new Promise(function (resolve, reject) {
@@ -151,11 +132,25 @@ sap.ui.define([
                 if (!filters || filters.length <= 0 || !oData || !(oData.results) || oData.results.length <= 0) {
                     return that.convToJsonTree(oData);
                 }
-                
+                // Hierachy 관련 node_id만을 필터링한다.
+                var predicates = oData.results
+                    // PATH를 분리한다.
+                    .reduce(function (acc, e) {
+                        return [...acc, ...((e["path"]).split("/"))];
+                    }, [])
+                    // 중복을 제거한다.
+                    .reduce(function (acc, e) {
+                        return acc.includes(e) ? acc : [...acc, e];
+                    }, [])
+                    .reduce(function (acc, e) {
+                        return [...acc, new Filter({
+                            path: 'node_id', operator: FilterOperator.EQ, value1: e
+                        })];
+                    }, []);
                 // 필터링된 Node 만을 호출한다.
                 return new Promise(function (resolve, reject) {
                     that.model.read(path, jQuery.extend(parameters, {
-                        filters: [...(that.predicates(oData))],
+                        filters: [...predicates],
                         success: resolve,
                         error: reject
                     }))

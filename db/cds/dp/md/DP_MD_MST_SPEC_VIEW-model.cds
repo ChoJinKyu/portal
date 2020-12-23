@@ -15,7 +15,6 @@ entity Md_Mst_Spec_View {
         mold_spec_status_name           : String;
         family_part_numbers             : String;
         receipt_confirmed_user_name     : String;
-        production_complete_date_today  : String;
 
         tenant_id                       : String(5)   not null  @title:'테넌트ID';
         company_code                    : String(10)  not null  @title:'회사코드';

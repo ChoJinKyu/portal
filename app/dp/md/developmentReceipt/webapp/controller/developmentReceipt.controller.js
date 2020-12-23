@@ -100,8 +100,8 @@ sap.ui.define([
             //접속자 법인 사업부로 바꿔줘야함
             this.getView().byId("searchCompanyS").setSelectedKeys(['LGEKR']);
             this.getView().byId("searchCompanyE").setSelectedKeys(['LGEKR']);
-            this.getView().byId("searchDivisionS").setSelectedKeys(['CCZ','DHZ','PGZ']);
-            this.getView().byId("searchDivisionE").setSelectedKeys(['CCZ','DHZ','PGZ']);
+            this.getView().byId("searchDivisionS").setSelectedKeys(['DFZ']);
+            this.getView().byId("searchDivisionE").setSelectedKeys(['DFZ']);
 
             /** Create Date */
             var today = new Date();

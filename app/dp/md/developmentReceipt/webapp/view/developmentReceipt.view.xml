@@ -60,7 +60,7 @@
                                 <!--<MultiInput id="searchCompanyS" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>-->
                                 <MultiComboBox id="searchCompanyS" width="100%" selectedKey=""
                                                 items="{
-                                                    path: 'org>/Company',
+                                                    path: 'org>/Org_Company',
                                                     filters: [
                                                         {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                                     ],
@@ -156,7 +156,7 @@
                                 <Label text="{I18N>/COMPANY}" labelFor="searchCompanyE" required="true"></Label>
                                 <MultiComboBox id="searchCompanyE" width="100%" selectedKey=""
                                                 items="{
-                                                    path: 'org>/Company',
+                                                    path: 'org>/Org_Company',
                                                     filters: [
                                                         {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                                     ],

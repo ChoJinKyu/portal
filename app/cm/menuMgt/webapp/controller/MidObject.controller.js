@@ -108,6 +108,7 @@ sap.ui.define([
         .attachPatternMatched(
           function (oEvent) {
             var { menuCode, menuName, parentMenuCode } = oEvent.getParameter("arguments")["?query"];
+            console.log(">>>>>> params", menuCode, menuName, parentMenuCode);
             this.getModel("midObjectView").setProperty("/mode", (!menuCode ? "C" : "R"));
             this.getModel("midObjectView").setProperty("/menuCode", menuCode);
             this.getModel("midObjectView").setProperty("/menuName", menuName);

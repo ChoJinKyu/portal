@@ -193,13 +193,13 @@
                             </OverflowToolbar>
                         </headerToolbar>
                         <columns>
-                            <Column id="no" minScreenWidth="Tablet" hAlign="Center"  width="3em" >
+                            <Column id="no" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="3em" >
                                 <Text text="No." />
                             </Column>
-                            <Column id="type" minScreenWidth="Tablet" hAlign="Center" width="10em" >
+                            <Column id="type" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="10em" >
                                 <Text text="Type" />
                             </Column>
-                            <Column id="nameDept" minScreenWidth="Tablet" hAlign="Center" width="20em" >
+                            <Column id="nameDept" minScreenWidth="Tablet" hAlign="Center" width="15em" >
                                 <Text text="Name/Dept" />
                             </Column>
                             <Column id="status" minScreenWidth="Tablet" hAlign="Center" width="12em" >
@@ -236,9 +236,7 @@
                                         <core:Item key="{util>code}" text="{util>code_description}" />
 
                                     </ComboBox>
-                                    <SearchField id="approverSearch" enabled="{approver>editMode}" 
-                                        search=".onApproverSearch" width="100%" placeholder="Search employee" 
-                                        value="{approver>approver_name}"/>
+                                    <SearchField id="approverSearch" enabled="{approver>editMode}" search=".onApproverSearch" width="100%" placeholder="Search employee" value="{approver>approver_empno}"/>
                                     <!--<Input value="{approver>approver_empno}" />-->
                                     <Text text="{approver>approve_status_code}" />
                                     <Text text="{approver>approve_comment}" />
@@ -271,12 +269,12 @@
                                     selectionChange="handleSelectionChangeReferer"
                                     selectionFinish="handleSelectionFinishReferer"
                                     width="100%"
-                                    items="{ path: '/RefererSearch',
+                                    items="{ path: 'hr>/Employee',
                                                 filters: [
                                                     {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                                 ]
                                             }">
-                                    <core:Item key="{employee_number}" text="{s_referer_name}" />
+                                    <core:Item key="{hr>employee_number}" text="{hr>user_local_name}" />
                                 </MultiComboBox>
                             </layout:VerticalLayout>
                             <layoutData>

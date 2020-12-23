@@ -260,7 +260,6 @@ sap.ui.define([
                 groupId: sGroupId,
                 success: function(data){
                     this._fnReadDetails(oParam.tenant_id, oParam.group_code);
-                    this._fnSetReadMode();
                 }.bind(this),
                 error: function(data){
                     console.log('error',data)
@@ -376,7 +375,7 @@ sap.ui.define([
                     if (sButton === MessageBox.Action.OK) {
                         this._fnDeleteCodeDetail();
                     } else if (sButton === MessageBox.Action.CANCEL) {
-                        //
+                        
                     };
                 }.bind(this)
             });

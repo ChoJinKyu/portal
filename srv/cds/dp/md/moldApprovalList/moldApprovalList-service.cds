@@ -67,11 +67,44 @@ service MoldApprovalListService {
 
 
     /** approval Object */
+
+   view AppMaster as 
+        select 
+            m.tenant_id             
+            , m.approval_number        
+            , m.legacy_approval_number 
+            , m.company_code           
+            , m.org_type_code          
+            , m.org_code               
+            , m.chain_code             
+            , m.approval_type_code     
+            , m.approval_title         
+            , m.approval_contents      
+            , m.approve_status_code    
+            , m.requestor_empno        
+            , m.request_date           
+            , m.attch_group_number 
+            , emp.email_id            
+            , emp.user_local_name     
+            , emp.user_korean_name    
+            , emp.user_english_name   
+            , emp.mobile_phone_number 
+            , emp.office_phone_number 
+            , emp.office_address      
+            , emp.job_title           
+            , emp.assign_type_code    
+            , emp.assign_company_name 
+            , emp.gender_code         
+            , emp.nation_code         
+            , emp.locale_code         
+            , emp.department_id   
+        from approvalMst.Approval_Mst m 
+        join emp.Hr_Employee emp on m.requestor_empno = emp.employee_number ;
+
     // referer 저장 목록 조회 
     view Referers as 
     select 
-	   key rf.approval_number , 
-       key hr.tenant_id , 
+	    rf.approval_number , 
 	   key rf.referer_empno ,
         emp.user_local_name ||'/'|| emp.job_title||'/'||hr.department_local_name as referer_name : String(240)
     from referer.Referer rf 
@@ -82,11 +115,10 @@ service MoldApprovalListService {
     // 레퍼러 조회 팝업 
     view RefererSearch as 
     select 
-       key hr.tenant_id,
+        hr.tenant_id,
         hr.department_id,
-        emp.user_korean_name ||'['|| emp.user_english_name||'] /'||hr.department_local_name as approver_name  : String(240),
         emp.user_local_name ||'/'|| emp.job_title||'/'||hr.department_local_name as s_referer_name : String(300), 
-       key emp.employee_number,
+        emp.employee_number,
         emp.user_local_name ,
         emp.email_id 
     from emp.Hr_Employee  emp 
@@ -95,9 +127,8 @@ service MoldApprovalListService {
     // approvalline 저장목록 조회 
     view Approvers as
     select 
-        key ar.approval_number , 
-        key ar.approver_empno , 
-        key hr.tenant_id , 
+        ar.approval_number , 
+        ar.approver_empno , 
         ar.approve_sequence , 
         ar.approver_type_code , 
         ar.approve_comment , 
@@ -106,7 +137,6 @@ service MoldApprovalListService {
         emp.user_korean_name ||'['|| emp.user_english_name||'] /'||hr.department_local_name as approver_name  : String(240)
     from approver.Approver ar 
     join emp.Hr_Employee  emp on emp.employee_number = ar.approver_empno 
-    join  Dept hr on hr.department_id = emp.department_id  and hr.tenant_id = emp.tenant_id 
-    order by approve_sequence asc 
-    ;  
+    join  Dept hr on hr.department_id = emp.department_id 
+    and hr.tenant_id = emp.tenant_id ;  
 }

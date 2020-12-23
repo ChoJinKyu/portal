@@ -1,15 +1,15 @@
  view DP_MD_APPROVALS_VIEW as
- select 
+   select 
         a.approval_number
         ,a.tenant_id
         ,a.approval_type_code
         ,d.code_name as approval_type
         ,a.approval_title
-        ,'['||a.company_code||'] '||e.company_name as company_name
-        ,'['||a.org_code||'] '||f.plant_name as org_name
-        ,a.company_code
-        ,a.org_type_code
-        ,a.org_code
+        ,'['||c.company_code||'] '||e.company_name as company_name
+        ,'['||c.org_code||'] '||f.plant_name as org_name
+        ,c.company_code
+        ,c.org_type_code
+        ,c.org_code
         ,c.model
         ,c.mold_id
         ,c.mold_number
@@ -29,8 +29,8 @@
             from CM_CODE_LNG 
             where group_code='DP_MD_APPROVAL_TYPE' and LANGUAGE_CD='KO') d 
     on d.code = a.approval_type_code and d.tenant_id = a.tenant_id
-    left join cm_org_company e on e.company_code = a.company_code
-    left join cm_org_plant f on f.plant_code = a.org_code and f.company_code=a.company_code
+    left join cm_org_company e on e.company_code = c.company_code
+    left join cm_org_plant f on f.au_code = c.org_code and f.company_code=c.company_code
     left join cm_hr_employee g on g.employee_number = a.requestor_empno and g.tenant_id = a.tenant_id
     left join (select 
             code, code_name, tenant_id

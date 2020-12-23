@@ -35,7 +35,7 @@ sap.ui.define([
             },
 
             onAfterRendering: function () {
-                //
+                
             },
 
 			onSearch: function () {
@@ -113,6 +113,15 @@ sap.ui.define([
                 // var sLayout = "MidColumnFullScreen";
                 
 			    this.getRouter().navTo("detail", {layout: sLayout});
+            },
+
+            onOrgTypeChange : function(oEvent){
+                var sOrgType = oEvent.getSource().getSelectedKey();
+                console.log("sOrgType : " + sOrgType);
+
+                var oModel = this.getModel();
+                
+
             },
 
             onTenantChange : function(oEvent){

@@ -10,7 +10,7 @@ using { pg as vpSupplierMst } from '../../../../../db/cds/pg/vp/PG_VP_SUPPLIER_M
 
 
 //https://lgcommondev-workspaces-ws-xqwd6-app1.jp10.applicationstudio.cloud.sap/odata/v2/pg.vendorPoolMappingService/
-//https://lgcommondev2-workspaces-ws-9qpwg-app1.jp10.applicationstudio.cloud.sap/odata/v2/pg.vendorPoolMappingService/vpManagerDtlView(tenant_id='L2100',company_code='%2A',org_type_code='BU',org_code='BIZ00200',vendor_pool_code='VP201610280406',vendor_pool_person_empno='100')
+//https://lgcommondev2-workspaces-ws-7bzzl-app1.jp10.applicationstudio.cloud.sap/odata/v2/pg.vendorPoolMappingService/vpManagerDtlView(tenant_id='L2100',company_code='%2A',org_type_code='BU',org_code='BIZ00200',vendor_pool_code='VP201610280406',vendor_pool_person_empno='100')
 
 namespace pg; 
 @path : '/pg.vendorPoolMappingService'
