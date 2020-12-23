@@ -118,7 +118,7 @@ sap.ui.define([
             return tree;
         },
 
-        read: function (path, parameters) {
+        read: function (path, parameters, languageCode) {
             var that = this;
             return new Promise(function (resolve, reject) {
                 that.model.read(path, jQuery.extend(parameters, {
@@ -147,6 +147,7 @@ sap.ui.define([
                             path: 'node_id', operator: FilterOperator.EQ, value1: e
                         })];
                     }, []);
+
                 // 필터링된 Node 만을 호출한다.
                 return new Promise(function (resolve, reject) {
                     that.model.read(path, jQuery.extend(parameters, {

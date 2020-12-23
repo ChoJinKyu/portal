@@ -38,7 +38,10 @@ import com.sap.cds.ql.Update;
 import com.sap.cds.ql.Insert;
 import com.sap.cds.ql.Delete;
 import com.sap.cds.Result;
-
+import com.sap.cds.ql.cqn.CqnStatement;
+import com.sap.cds.ql.cqn.AnalysisResult;
+import com.sap.cds.ql.cqn.CqnAnalyzer;
+import com.sap.cds.ql.cqn.CqnDelete;
 
 import com.sap.cds.feature.xsuaa.XsuaaUserInfo;
 import cds.gen.xx.samplemgrservice.*;
@@ -58,6 +61,30 @@ public class SampleMgr implements EventHandler {
     public void onSampleViewDelete(CdsDeleteEventContext context) { 
         List<SampleViewCud> v_results = new ArrayList<SampleViewCud>();
 
+        CdsModel cdsModel = context.getModel();
+        CqnAnalyzer cqnAnalyzer = CqnAnalyzer.create(cdsModel);
+        CqnStatement cqn = context.getCqn();
+        AnalysisResult result = cqnAnalyzer.analyze(cqn.ref());
+        Map<String, Object> filterValues = result.targetValues();
+
+        SampleHeaders header = SampleHeaders.create();
+        header.setHeaderId((Long) filterValues.get("header_id"));
+        CqnDelete headerDelete = Delete.from(SampleHeaders_.CDS_NAME).matching(header);
+        Result resultHeader = sampleMgrService.run(headerDelete);
+
+        SampleDetails detail = SampleDetails.create();
+        detail.setDetailId((Long) filterValues.get("detail_id"));
+        CqnDelete detailDelete = Delete.from(SampleDetails_.CDS_NAME).matching(detail);
+        //long detailDeleteCount = sampleMgrService.run(detailDelete).rowCount();
+        Result resultDetail = sampleMgrService.run(detailDelete);
+
+        SampleViewCud v_result = SampleViewCud.create();
+        v_result.setHeaderId((Long) filterValues.get("header_id"));
+        v_result.setDetailId((Long) filterValues.get("detail_id"));
+        v_results.add(v_result);
+
+        
+        /*
         Iterable<Map<String, Object>> values = context.getCqnValueSets();
 
         while(values.iterator().hasNext()){
@@ -86,7 +113,7 @@ public class SampleMgr implements EventHandler {
 
             v_results.add(v_result);
         }
-
+        */
 
         context.setResult(v_results);
         context.setCompleted();
