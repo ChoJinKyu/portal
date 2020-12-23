@@ -1,6 +1,6 @@
 using { pg as cateId } from '../../../../db/cds/pg/md/PG_MD_CATEGORY_ID-model';
 using { pg as cateItem } from '../../../../db/cds/pg/md/PG_MD_CATEGORY_ITEM-model';
-using { pg as partNoItemValue } from '../../../../db/cds/pg/md/PG_MD_PART_NO_ITEM_VALUE-model';
+using { pg as partNoItemValue } from '../../../../db/cds/pg/md/PG_MD_MATERIAL_ITEM_VALUE-model.cds';
 using { pg as vpItemMapping } from '../../../../db/cds/pg/md/PG_MD_VP_ITEM_MAPPING-model';
 using { pg as vpItemMappingAttr } from '../../../../db/cds/pg/md/PG_MD_VP_ITEM_MAPPING_ATTR-model';
 using { pg as vpItemMappingView } from '../../../../db/cds/pg/md/PG_MD_VP_MAPPING_ITEM_VIEW-model';
@@ -16,7 +16,7 @@ service MdCategoryService {
 
     entity MdCategoryItem as projection on cateItem.Md_Category_Item;
     
-    entity PartNoItemValue as projection on partNoItemValue.Md_Part_No_Item_Value;
+    entity PartNoItemValue as projection on partNoItemValue.Md_Material_Item_Value;
     
     entity VpItemMapping as projection on vpItemMapping.Md_Vp_Item_Mapping;
 

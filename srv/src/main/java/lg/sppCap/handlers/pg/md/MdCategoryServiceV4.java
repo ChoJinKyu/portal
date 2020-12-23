@@ -56,7 +56,7 @@ public class MdCategoryServiceV4 implements EventHandler {
 
 		// local Temp table은 테이블명이 #(샵) 으로 시작해야 함
 		StringBuffer v_sql_createTable = new StringBuffer();
-		v_sql_createTable.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_PG_SPMD_VP_MAPPING_ITEM ( ")
+		v_sql_createTable.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_PG_MD_VP_MAPPING_ITEM ( ")
 									.append("TENANT_ID NVARCHAR(5), ")
 									.append("COMPANY_CODE NVARCHAR(10), ")
 									.append("ORG_TYPE_CODE NVARCHAR(30), ")
@@ -68,8 +68,8 @@ public class MdCategoryServiceV4 implements EventHandler {
 									.append("UPDATE_USER_ID NVARCHAR(500) ")
 								.append(")");
 
-		String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP_PG_SPMD_VP_MAPPING_ITEM VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		String v_sql_callProc = "CALL PG_SPMD_VENDOR_POOL_MAPPING_ITEM_MULTI_PROC( I_TABLE => #LOCAL_TEMP_PG_SPMD_VP_MAPPING_ITEM, O_RTN_MESG => ? )";
+		String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP_PG_MD_VP_MAPPING_ITEM VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String v_sql_callProc = "CALL PG_MD_VENDOR_POOL_MAPPING_ITEM_MULTI_PROC( I_TABLE => #LOCAL_TEMP_PG_MD_VP_MAPPING_ITEM, O_RTN_MESG => ? )";
 
 		String v_result = "";
 		Collection<MdVpMappingItemProcType> v_inRows = context.getItems();
@@ -141,7 +141,7 @@ public class MdCategoryServiceV4 implements EventHandler {
 
 		// local Temp table은 테이블명이 #(샵) 으로 시작해야 함
 		StringBuffer v_sql_createTable = new StringBuffer();
-		v_sql_createTable.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_PG_SPMD_VP_MAPPING_STATUS ( ")
+		v_sql_createTable.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_PG_MD_VP_MAPPING_STATUS ( ")
 									.append("TENANT_ID NVARCHAR(5), ")
 									.append("COMPANY_CODE NVARCHAR(10), ")
 									.append("ORG_TYPE_CODE NVARCHAR(30), ")
@@ -151,8 +151,8 @@ public class MdCategoryServiceV4 implements EventHandler {
 									.append("UPDATE_USER_ID NVARCHAR(500) ")
 								.append(")");
 
-		String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP_PG_SPMD_VP_MAPPING_STATUS VALUES (?, ?, ?, ?, ?, ?, ?)";
-		String v_sql_callProc = "CALL PG_SPMD_VENDOR_POOL_MAPPING_STATUS_MULTI_PROC( I_TABLE => #LOCAL_TEMP_PG_SPMD_VP_MAPPING_STATUS, O_RTN_MESG => ? )";
+		String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP_PG_MD_VP_MAPPING_STATUS VALUES (?, ?, ?, ?, ?, ?, ?)";
+		String v_sql_callProc = "CALL PG_MD_VENDOR_POOL_MAPPING_STATUS_MULTI_PROC( I_TABLE => #LOCAL_TEMP_PG_MD_VP_MAPPING_STATUS, O_RTN_MESG => ? )";
 
 		Collection<MdVpMappingStatusProcType> v_inRows = context.getItems();
 		StringBuffer strRsltBuf = new StringBuffer();
