@@ -10,7 +10,7 @@
   4. .hdbview, .hdbfunction 등으로 이미 생성된 DB Object 사용시 entity 위에 @cds.persistence.exists 명시    
   5. namespace : pg
   6. entity : It_Mst_Item_Category
-  7. entity description : 구매오더품목범주 마스터 업무용 (SAC)
+  7. entity description : PO품목범주 마스터 업무용 (SAC)
   8. history
   -. 2020.12.23 : 이기현
 *************************************************/
@@ -25,8 +25,8 @@ entity It_Mst_Item_Category {
     key company_code          : String(10) not null @title : '회사코드';
     key org_type_code         : String(30) not null @title : '조직유형코드';
     key org_code              : String(10) not null @title : '조직코드';
-    key po_item_category_code : String(2) not null  @title : '품목범주코드';
-        po_item_category_name : String(30)          @title : '품목범주명';
+    key po_item_category_code : String(2) not null  @title : 'PO품목범주코드';
+        po_item_category_name : String(30)          @title : 'PO품목범주명';
 }
 
 extend It_Mst_Item_Category with util.Managed;

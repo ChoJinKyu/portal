@@ -10,7 +10,7 @@
   4. .hdbview, .hdbfunction 등으로 이미 생성된 DB Object 사용시 entity 위에 @cds.persistence.exists 명시    
   5. namespace : pg
   6. entity : It_Mst_Cost_Center
-  7. entity description : 코스트센터 마스터 업무용 (SAC)
+  7. entity description : 비용부서 마스터 업무용 (SAC)
   8. history
   -. 2020.12.23 : 이기현
 *************************************************/
@@ -25,10 +25,10 @@ entity It_Mst_Cost_Center {
     key company_code              : String(10) not null @title : '회사코드';
     key org_type_code             : String(30) not null @title : '조직유형코드';
     key org_code                  : String(10) not null @title : '조직코드';
-    key mngt_accounting_area_code : String(6) not null  @title : '관리회계영역';
-    key cctr_code                 : String(15) not null @title : '코스트센터';
-    key effective_period_end_date : Date not null       @title : '효력종료일';
-        cctr_code_name            : String(30)          @title : '코스트센터명';
+    key mngt_accounting_area_code : String(6) not null  @title : '관리회계영역코드';
+    key cctr_code                 : String(15) not null @title : '비용부서코드';
+    key effective_period_end_date : Date not null       @title : '효력종료일자';
+        cctr_code_name            : String(30)          @title : '비용부서코드명';
 }
 
 extend It_Mst_Cost_Center with util.Managed;

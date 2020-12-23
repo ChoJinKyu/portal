@@ -26,8 +26,8 @@ entity It_Mst_Gl_Account {
     key org_type_code         : String(30) not null @title : '조직유형코드';
     key org_code              : String(10) not null @title : '조직코드';
     key chart_of_account_code : String(6) not null  @title : '계정과목표코드';
-    key gl_account_number     : String(15) not null @title : 'GL계정번호코드';
-        gl_account_desc       : String(30)          @title : 'GL계정내역';
+    key gl_account_number     : String(15) not null @title : 'GL계정번호';
+        gl_account_desc       : String(30)          @title : 'GL계정내역';  
 }
 
 extend It_Mst_Gl_Account with util.Managed;

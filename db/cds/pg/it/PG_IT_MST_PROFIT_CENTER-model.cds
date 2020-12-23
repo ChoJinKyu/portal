@@ -26,7 +26,7 @@ entity It_Mst_Profit_Center {
     key org_type_code             : String(30) not null @title : '조직유형코드';
     key org_code                  : String(10) not null @title : '조직코드';
     key prctr_code                : String(15) not null @title : '손익센터코드';
-    key effective_period_end_date : Date not null       @title : '효력종료일';
+    key effective_period_end_date : Date not null       @title : '효력종료일자';
     key mngt_accounting_area_code : String(6) not null  @title : '관리회계영역코드';
         prctr_name                : String(30)          @title : '손익센터명';
 }
