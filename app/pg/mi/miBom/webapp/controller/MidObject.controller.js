@@ -239,6 +239,11 @@ sap.ui.define([
             //개발일때. 
             //수정대상
             this._controlMode(this._m.controlMode.Qa);
+
+            this._Page = this.getView().byId("page");
+            this._Page.setFloatingFooter(true);
+
+
             console.groupEnd();
         },
 
@@ -816,7 +821,7 @@ sap.ui.define([
          * @private
          */
         _initialModel : function() {
-              
+          
                 var arrayModel = [
                     "oUiData",
                     "_oUi",
@@ -826,21 +831,46 @@ sap.ui.define([
                     "midList",
                     "oUi",
                     "materialTable",
+                    "oMaterialTableList",
                     "mIMaterialCostInformationView",
                     "mIMatListView",
+                    "oMidList",
                     "unitOfMeasureView" 
                 ];
+
               
                 this.setArrayModelNullAndUpdateBindings(arrayModel);
+        },
 
-                this.getView().byId("input_processing_cost").setValue("");
-                this.getView().byId("input_hidden_material_code").setValue("");
-                this.getView().byId("input_hidden_material_desc").setValue("");
-                this.getView().byId("input_hidden_supplier_code").setValue("");
-                this.getView().byId("input_hidden_supplier_local_name").setValue("");
-                this.getView().byId("input_hidden_supplier_english_name").setValue("");
-                this.getView().byId("input_material_code").setValue("");
-                
+
+        _initialControlValue : function(){
+            this.getView().byId("input_base_quantity").setValue("");
+            this.getView().byId("input_processing_cost").setValue("");
+            this.getView().byId("input_hidden_material_code").setValue("");
+            this.getView().byId("input_hidden_material_desc").setValue("");
+            this.getView().byId("input_hidden_supplier_code").setValue("");
+            this.getView().byId("input_hidden_supplier_local_name").setValue("");
+            this.getView().byId("input_hidden_supplier_english_name").setValue("");
+            this.getView().byId("input_material_code").setValue("");
+        },
+
+        
+        _initialFilter : function(){
+            this._m.filter.tenant_id = "";
+            this._m.filter.material_code = "";
+            this._m.filter.supplier_code = "";
+            this._m.filter.mi_bom_id = "";
+            this._m.filter.mi_material_code = "";
+            this._m.filter.currency_uni = "";
+            this._m.filter.quantity_unit = "";
+            this._m.filter.exchange = "";
+            this._m.filter.termsdelv = "";
+        },
+
+        _setInit : function(){
+            this._initialModel();
+            this._initialControlValue();
+            this._initialFilter();
         },
 		/**
 		 * When it routed to this page from the other page.
@@ -850,7 +880,7 @@ sap.ui.define([
         _onRoutedThisPage: function (oEvent) {
             console.log("_onRoutedThisPage");
 
-            this._initialModel();
+            this._setInit();
             this._onPageClearValidate();
 
             var _oUiData = this.getModel("_oUiData"),
@@ -877,6 +907,12 @@ sap.ui.define([
     
             if (this._m.filter.material_code == "new") {
                 console.log("=============== new item ===============");
+                var oModel = this.getModel("midList");   
+                if(oModel){
+                    oModel.setData(null);     
+                    oModel.updateBindings(true);
+                }
+                
                 this._fnSetCreateMode();
                 
             }else{
@@ -1011,6 +1047,8 @@ sap.ui.define([
                 if (!this._formFragments.hasOwnProperty(sPropertyName) || this._formFragments[sPropertyName] == null) {
                     return;
                 }
+
+                this._setInit();
                
                 this._formFragments[sPropertyName].destroy();
                 this._formFragments[sPropertyName] = null;
@@ -1804,8 +1842,8 @@ sap.ui.define([
 
                 oModel.refresh(true); 
                 // this._onMidServiceRead();
-                // this._fnSetReadMode();
-                that._initialModel();  
+                 this._fnSetReadMode();
+                that._onExit();  
                 that._setBusy(false);   
         },
         /*

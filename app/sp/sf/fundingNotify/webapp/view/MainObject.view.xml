@@ -39,8 +39,27 @@
 
 		<uxap:headerContent>
 			<!-- 헤더 영역 -->
-			<FlexBox wrap="Wrap" visible="false">
-				
+			<FlexBox wrap="Wrap" visible="{midObjectView>/showMode}">
+				<VBox>
+                    <ObjectStatus
+                        title="공고번호"
+                        text="{master>/funding_notify_number}"/>
+                    <ObjectStatus
+                        title="작성자"
+                        text="{master>/create_user_id}"/>
+                    <ObjectStatus
+                        title="작성일"
+                        text="{
+                            path:'master>/system_create_dtm',
+                            type:'sap.ui.model.odata.type.DateTime',
+                            formatOptions: {
+                                pattern: 'yyyy-MM-dd'
+                            }
+                        }"/>
+                    <layoutData>
+                        <layout:GridData span="XL4 L4 M6 S12" />
+                    </layoutData>
+                </VBox>
 			</FlexBox>
 		</uxap:headerContent>
 
@@ -63,7 +82,7 @@
                             <form:content>
                                 <VBox>
                                     <Label text="공고번호 :" required="true"/>
-                                    <Input editable="{midObjectView>/editMode}"
+                                    <Input editable="false"
                                         value="{
                                             path: 'master>/funding_notify_number',
                                             type: 'sap.ui.model.type.String'

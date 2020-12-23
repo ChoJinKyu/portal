@@ -17,10 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import cds.gen.pg.vpsearchservice.VpMst_;
-import cds.gen.pg.vpsearchservice.VpMst;
-
-
+//import cds.gen.pg.vpsearchservice.VpMst_;
+//import cds.gen.pg.vpsearchservice.VpMst;
+import cds.gen.pg.vpsearchservice.*;
 
 @Component
 @ServiceName("pg.VpSearchService")
@@ -31,7 +30,7 @@ public class VendorPool implements EventHandler {
     JdbcTemplate jdbc;
     
     @Before(event = CdsService.EVENT_CREATE, entity=VpMst_.CDS_NAME)
-    public void beforeCreateVpVendorPoolMst(List<VpMst> vpMgr) {
+    public void beforeCreateVpVendorPoolMst(List< VpMst> vpMgt) {
         
         Instant current = Instant.now();
 
@@ -45,20 +44,21 @@ public class VendorPool implements EventHandler {
 
             String project_number = "";
 
-            Connection conn = jdbc.getDataSource().getConnection();
+            //Connection conn = jdbc.getDataSource().getConnection();
 
             // Local Temp Table 생성
-            PreparedStatement v_statement = conn.prepareStatement(v_sql);
-            v_rs = v_statement.executeQuery();
+            //PreparedStatement v_statement = conn.prepareStatement(v_sql);
+            //v_rs = v_statement.executeQuery();
 
-            if(v_rs.next()) vendor_pool_code = String.valueOf(v_rs.getString("VENDOR_POOL_CODE"));
+            //if(v_rs.next()) vendor_pool_code = String.valueOf(v_rs.getString("VENDOR_POOL_CODE"));
+            vendor_pool_code = jdbc.queryForObject(v_sql, String.class);
 
-            for(VpMst vendorPool : vpMgr) {
+            for(VpMst vendorPool : vpMgt) {
 
-            vendorPool.setVendorPoolCode(vendor_pool_code);
-            vendorPool.setLocalCreateDtm(current);
-            vendorPool.setLocalUpdateDtm(current);
-        }
+                vendorPool.setVendorPoolCode(vendor_pool_code);
+                vendorPool.setLocalCreateDtm(current);
+                vendorPool.setLocalUpdateDtm(current);
+            }
 
 		} catch (Exception e) { 
 			e.printStackTrace();

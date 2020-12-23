@@ -49,7 +49,6 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
-            
             this.oThis;
         },
 
@@ -57,6 +56,7 @@ sap.ui.define([
             console.log("participating 호출");
             this.oThis = oThis; 
             var schFilter = [];
+            this.oThis.getView().setModel(new ManagedListModel(), "psItemMaster");
             if(this.oThis.approval_number == "New"){
 
             }else{
@@ -64,9 +64,9 @@ sap.ui.define([
                 , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
                 ]; 
 
-                // this._bindView2("/ItemBudgetExecution", "mdItemMaster", schFilter, function (oData) {
-                //     console.log("ItemBudgetExecution >>>>>>", oData);
-                // });
+                this._bindView2("/ParticipatingSupplier", "psItemMaster", schFilter, function (oData) {
+                    console.log("ParticipatingSupplier >>>>>>", oData);
+                });
             }
 
             this.oThis.getView().setModel(new ManagedListModel(), "appDetail");
@@ -81,20 +81,21 @@ sap.ui.define([
               }) 
         },
 
-        // _bindView2 : function (sObjectPath, sModel, aFilter, callback) { 
-        //     console.log(" 호출 됐나??? ");
-        //     var oView = this.oThis.getView(),
-        //         oModel = this.oThis.getModel(sModel);
-        //     oView.setBusy(true);
-        //     oModel.setTransactionModel(this.oThis.getModel("supplier"));
-        //     oModel.read(sObjectPath, {
-        //         filters: aFilter,
-        //         success: function (oData) {
-        //             oView.setBusy(false);
-        //             callback(oData);
-        //         }
-        //     });
-        // },
+        _bindView2 : function (sObjectPath, sModel, aFilter, callback) { 
+            console.log(" 호출 됐나??? ");
+            console.log("this.oThis.getModel(supplier) ::", this.oThis.getModel("participatingSupplierSelection"))
+            var oView = this.oThis.getView(),
+                oModel = this.oThis.getModel(sModel);
+            oView.setBusy(true);
+            oModel.setTransactionModel(this.oThis.getModel("participatingSupplierSelection"));
+            oModel.read(sObjectPath, {
+                filters: aFilter,
+                success: function (oData) {
+                    oView.setBusy(false);
+                    callback(oData);
+                }
+            });
+        },
 
         _loadFragmentPOILocal : function (sFragmentName, oHandler){       
             if(!this.oThis._oFragments[sFragmentName]){
@@ -180,10 +181,17 @@ sap.ui.define([
         onSuppValueHelpRequested: function(oEvent){
 
             console.log("this.getModel('oThis') :::", this.oThis)
-            var sCompanyCode  = this.getModel('supplier').getProperty('/company_code')
-            var sPlantCode = this.getModel('supplier').getProperty('/org_code')
+            console.log(this.oThis.company_code)
+            console.log(this.oThis.plant_code)
+            var sCompanyCode  = this.oThis.company_code
+            var sPlantCode = this.oThis.plant_code
+
+            // var oView = this.getView();
+            // var foo = this.getOwnerComponent().getView();
+            // console.log('oView',oView);
+            // console.log('foo',foo);
             
-            this.supplierSelectionPop.showSupplierSelection(this, oEvent, sCompanyCode, sPlantCode);
+            this.supplierSelectionPop.showSupplierSelection(this.oThis, oEvent, sCompanyCode, sPlantCode);
         },
 
         /**

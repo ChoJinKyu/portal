@@ -335,26 +335,26 @@ sap.ui.define([
         that = this;
 
       // Validation
-      // if (!master.getData()["chain_code"]) {
-      //   MessageBox.alert("Chain을 입력하세요");
-      //   return;
-      // }
-      // if (!master.getData()["menu_code"]) {
-      //   MessageBox.alert("테넌트를 입력하세요");
-      //   return;
-      // }
-      // if (master.getData()["_state_"] != "C" && detail.getChanges() <= 0) {
-      //   MessageBox.alert("변경사항이 없습니다.");
-      //   return;
-      // }
+      if (!master.getData()["chain_code"]) {
+        MessageBox.alert("Chain을 입력하세요");
+        return;
+      }
+    //   if (!master.getData()["menu_code"]) {
+    //     MessageBox.alert("테넌트를 입력하세요");
+    //     return;
+    //   }
+    //   if (master.getData()["_state_"] != "C" && detail.getChanges() <= 0) {
+    //     MessageBox.alert("변경사항이 없습니다.");
+    //     return;
+    //   }
       // Set Details (New)
-      if (master.getData()["_state_"] == "C") {
-        detail.getData()["MenuLng"].map(r => {
+      detail.getData()["MenuLng"].map(r => {
+        if (r["_row_state_"] == "C") {
           r["tenant_id"] = master.getData()["tenant_id"];
           r["menu_code"] = master.getData()["menu_code"];
-          return r;
-        });
-      }
+        }
+        return r;
+      });
 
       MessageBox.confirm("Are you sure ?", {
         title: "Comfirmation",
@@ -364,7 +364,6 @@ sap.ui.define([
             view.setBusy(true);
             that[oTransactionManager].submit({
               success: function (ok) {
-                //that.getModel("midObjectView").setProperty("/mode", "R");
                 view.setBusy(false);
                 that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                 MessageToast.show("Success to save.");

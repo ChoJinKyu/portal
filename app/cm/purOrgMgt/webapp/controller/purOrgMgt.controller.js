@@ -12,6 +12,7 @@ sap.ui.define([
 
     return Controller.extend("cm.purOrgMgt.controller.purOrgMgt", {
       onInit: function () {
+          console.log(">>>>>>>>>>>>>>>>>>");
       },
       onSearch: function () {
         var bindings = this.byId("orgTypeMappingTable").getBinding("items");
