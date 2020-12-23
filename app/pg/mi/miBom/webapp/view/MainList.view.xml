@@ -295,7 +295,7 @@
                                             <Text text="{currency_unit}"></Text>       
                                             <Text text="{exchange}"></Text>         
                                             <Text text="{termsdelv}"></Text>         
-                                            <Text text="{= ${use_flag}?'Yes':'No'}"></Text>  
+                                            <Text text="{= ${use_flag}===true?'Yes':'No'}"></Text>  
                                         </ColumnListItem>
                                     </items>
                                 </Table>
