@@ -19,6 +19,14 @@
             <Title text="{i18n>appTitle}" />
           </f:heading>
           <!-- 조회 -->
+          <f:snappedContent>
+            <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                <form:content>
+                    
+	
+                </form:content>
+            </form:SimpleForm>
+        </f:snappedContent>
           <f:actions>
             <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch"/>
           </f:actions>
@@ -32,6 +40,12 @@
       <f:header>
       </f:header>
       <f:content>
+      <!-- <FlexBox wrap="Wrap">
+                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                    <ObjectStatus title="Requester" text="김갑수[ks.kim]"/>
+                    <ObjectStatus title="Request Date" text="2020-07-02"/>
+                </layout:VerticalLayout>
+			</FlexBox> -->
         <VBox>
         <Table id="mainTable"
                 mode="MultiSelect" 
@@ -43,15 +57,11 @@
                 columnResize="onColumnResize">
             <headerToolbar>
             <OverflowToolbar class="sapFDynamicPageAlignContent">
-               <!-- <VBox>
-                    <Title text="범주코드" level="H2"/> 
-                    <Label text="범주코드" labelFor="searchKeyword"></Label>
-                    <text id="searchKeyword" text="Item Name"></text>
-                    <layoutData>
-                        <layout:GridData span="XL2 L3 M6 S12" />
-                    </layoutData>
-                </VBox> -->
-              <Title text="범주" level="H2"/>
+              <VBox>
+                <Title text="SPMD Character List" level="H2"/>
+                <ObjectStatus title="범주코드" id="textCategoryCode" text=""/>
+                <!-- <ObjectStatus title="범주명" id="textCategoryName" text="{list>spmd_category_code}"/> -->
+              </VBox>
               <ToolbarSpacer/>
               <Button text="{I18N>/ROW_ADD}" id="buttonMainAddRow" press=".onAdd('mainTable', 'list', 'mdCategoryItem', 'tenant_id')"  type="Transparent"/>
               <Button text="{I18N>/CANCEL}" id="buttonMainCancelRow" press=".onSearch"  type="Transparent" enabled="false"/>
@@ -69,6 +79,9 @@
             <columns> 
                 <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="3em" >
                     <Text text="S" />
+                </Column>
+                <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="12em" >
+                    <Text text="범주코드(임시:확인용)" />
                 </Column>
                 <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="12em" >
                     <Text text="특성코드" />
@@ -107,6 +120,9 @@
                     <cells>
                         <HBox align="Center">
                             <Text text="{list>_row_state_}"></Text>
+                        </HBox>
+                        <HBox alignItems="Center">
+                            <Text text="{list>spmd_category_code}"></Text>
                         </HBox>
                         <HBox alignItems="Center">
                             <Text text="{list>spmd_character_code}"></Text>

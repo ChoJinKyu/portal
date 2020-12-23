@@ -83,7 +83,7 @@ sap.ui.define([
         },
         
         onAfterRendering : function () {
-            this.getModel().setDeferredGroups(["bindReceipt", "cancelBind", "delete", "receipt"]);
+            //this.getModel().setDeferredGroups(["bindReceipt", "cancelBind", "delete", "receipt"]);
 			this.byId("pageSearchButton").firePress();
 			return;
         },
@@ -299,7 +299,7 @@ sap.ui.define([
 
             if (oSelected.length > 0) {
                 oSelected.forEach(function (idx) {
-                    if(lModel.getData().MoldMasters[idx].mold_progress_status_code !== "DEV_REQ"){
+                    if(lModel.getData().MoldMstView[idx].mold_progress_status_code !== "DEV_REQ"){
                         statusChk = true;
                     }
                 });
@@ -315,12 +315,12 @@ sap.ui.define([
                     onClose : function(sButton) {
                         if (sButton === MessageBox.Action.OK) {
                             oSelected.forEach(function (idx) {
-                                var sEntity = lModel.getData().MoldMasters[idx].__entity;
-                                lModel.getData().MoldMasters[idx].mold_progress_status_code = "DEV_RCV";
-                                lModel.getData().MoldMasters[idx].set_id = lModel.getData().MoldMasters[idx].org_code+today.getFullYear()+randomNo;
+                                var sEntity = lModel.getData().MoldMstView[idx].__entity;
+                                lModel.getData().MoldMstView[idx].mold_progress_status_code = "DEV_RCV";
+                                lModel.getData().MoldMstView[idx].set_id = lModel.getData().MoldMstView[idx].org_code+today.getFullYear()+randomNo;
                                 
-                                delete lModel.getData().MoldMasters[idx].__entity;
-                                oModel.update(sEntity, lModel.getData().MoldMasters[idx], {
+                                delete lModel.getData().MoldMstView[idx].__entity;
+                                oModel.update(sEntity, lModel.getData().MoldMstView[idx], {
                                     groupId: "bindReceipt"
                                 });
                             }.bind(this));
@@ -357,7 +357,7 @@ sap.ui.define([
 
             if (oSelected.length > 0) {
                 oSelected.forEach(function (idx) {
-                    if(lModel.getData().MoldMasters[idx].mold_progress_status_code !== "DEV_RCV"){
+                    if(lModel.getData().MoldMstView[idx].mold_progress_status_code !== "DEV_RCV"){
                         statusChk = true;
                     }
                 });
@@ -373,11 +373,11 @@ sap.ui.define([
                     onClose : function(sButton) {
                         if (sButton === MessageBox.Action.OK) {
                             oSelected.forEach(function (idx) {
-                                var sEntity = lModel.getData().MoldMasters[idx].__entity;
-                                lModel.getData().MoldMasters[idx].set_id = null;
+                                var sEntity = lModel.getData().MoldMstView[idx].__entity;
+                                lModel.getData().MoldMstView[idx].set_id = null;
                                 
-                                delete lModel.getData().MoldMasters[idx].__entity;
-                                oModel.update(sEntity, lModel.getData().MoldMasters[idx], {
+                                delete lModel.getData().MoldMstView[idx].__entity;
+                                oModel.update(sEntity, lModel.getData().MoldMstView[idx], {
                                     groupId: "cancelBind"
                                 });
                             }.bind(this));
@@ -419,7 +419,7 @@ sap.ui.define([
                 
             if (oSelected.length > 0) {
                 oSelected.forEach(function (idx) {
-                    var statusCode = lModel.getData().MoldMasters[idx].mold_progress_status_code;
+                    var statusCode = lModel.getData().MoldMstView[idx].mold_progress_status_code;
                     if(!(statusCode === "DEV_REQ" || statusCode === "DEV_RCV")){
                         statusChk = true;
                     }
@@ -436,7 +436,7 @@ sap.ui.define([
                     onClose : function(sButton) {
                         if (sButton === MessageBox.Action.OK) {
                             oSelected.forEach(function (idx) {
-                                oModel.remove(lModel.getData().MoldMasters[idx].__entity, {
+                                oModel.remove(lModel.getData().MoldMstView[idx].__entity, {
                                     groupId: "delete"
                                 });
                             });
@@ -466,15 +466,15 @@ sap.ui.define([
         
         onMoldMstTableReceiptButtonPress: function(){
             var oTable = this.byId("moldMstTable"),
-                oModel = this.getModel(),
+                //oModel = this.getModel(),
                 lModel = this.getModel("list"),
                 oView = this.getView(),
                 oSelected  = oTable.getSelectedIndices(),
                 statusChk = false;
-
+/*
             if (oSelected.length > 0) {
                 oSelected.forEach(function (idx) {
-                    if(lModel.getData().MoldMasters[idx].mold_progress_status_code !== "DEV_REQ"){
+                    if(lModel.getData().MoldMstView[idx].mold_progress_status_code !== "DEV_REQ"){
                         statusChk = true;
                     }
                 });
@@ -483,24 +483,27 @@ sap.ui.define([
                     MessageToast.show( "Development Request 상태일 때만 Receipt 가능합니다." );
                     return;
                 }
-                
+                */
                 MessageBox.confirm("Receipt 하시겠습니까?", {
                     title : "Comfirmation",
                     initialFocus : sap.m.MessageBox.Action.CANCEL,
                     onClose : function(sButton) {
                         if (sButton === MessageBox.Action.OK) {
+                            oView.setBusy(true);
+
+/*
                             oSelected.forEach(function (idx) {
-                                var sEntity = lModel.getData().MoldMasters[idx].__entity;
-                                lModel.getData().MoldMasters[idx].mold_progress_status_code = "DEV_RCV";
+                                var sEntity = lModel.getData().MoldMstView[idx].__entity;
+                                lModel.getData().MoldMstView[idx].update_type = "receipt";
                                 
-                                delete lModel.getData().MoldMasters[idx].__entity;
-                                oModel.update(sEntity, lModel.getData().MoldMasters[idx], {
+                                delete lModel.getData().MoldMstView[idx].__entity;
+                                oModel.update(sEntity, lModel.getData().MoldMstView[idx], {
                                     groupId: "receipt"
                                 });
                             }.bind(this));
-                            
-                            oModel.submitChanges({
-                                groupId: "receipt",
+                            */
+                            lModel.submitChanges({
+                                //groupId: "receipt",
                                 success: function(){
                                     oView.setBusy(false);
                                     MessageToast.show("Success to Receipt.");
@@ -510,15 +513,18 @@ sap.ui.define([
                                     MessageBox.error(oError.message);
                                 }
                             });
+
+
+                            
                         };
                     }.bind(this)
                 });
 
                 oTable.clearSelection();
-
+/*
             }else{
                 MessageBox.error("선택된 행이 없습니다.");
-            }
+            }*/
         },
 /*
         inputFieldChange : function (oEvent) {
@@ -663,7 +669,7 @@ sap.ui.define([
 				oModel = this.getModel("list");
 			oView.setBusy(true);
 			oModel.setTransactionModel(this.getModel());
-			oModel.read("/MoldMasters", {
+			oModel.read("/MoldMstView", {
 				filters: aTableSearchState,
 				success: function(oData){
                     this.validator.clearValueState(this.byId("moldMstTable"));
@@ -796,7 +802,7 @@ sap.ui.define([
             
             var FALSE = false;
             this.byId("page").setProperty("showFooter", !FALSE);
-            this.byId("moldMstTable").setSelectionMode(sap.ui.table.SelectionMode.None);
+            //this.byId("moldMstTable").setSelectionMode(sap.ui.table.SelectionMode.None);
 		},
 
 		_toShowMode: function(){
@@ -817,7 +823,7 @@ sap.ui.define([
             
             var TRUE = true;
             this.byId("page").setProperty("showFooter", !TRUE);
-			this.byId("moldMstTable").setSelectionMode(sap.ui.table.SelectionMode.MultiToggle);
+			//this.byId("moldMstTable").setSelectionMode(sap.ui.table.SelectionMode.MultiToggle);
 		},
 
         handleSelectionFinishComp: function(oEvent){

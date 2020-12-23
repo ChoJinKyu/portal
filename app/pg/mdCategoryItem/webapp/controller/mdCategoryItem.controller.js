@@ -36,6 +36,10 @@ sap.ui.define([
         this._oTPC = new TablePersoController({
           customDataKey: "mdCategoryItem"
         }).setTable(this.byId("mainTable"));
+        
+        this.aSearchCategoryCd = "C001";
+        this.byId("textCategoryCode").setText(this.aSearchCategoryCd);
+        // this.byId("textCategoryName").setText();
       },
 
 
@@ -49,11 +53,15 @@ sap.ui.define([
 
 
       onSearch: function () {
+            var aFilters = [];
+            aFilters.push(new Filter("spmd_category_code", FilterOperator.EQ, this.aSearchCategoryCd));
+
             this.getView()
                 .setBusy(true)
                 .getModel("list")
                 .setTransactionModel(this.getView().getModel())
                 .read("/MdCategoryItem", {
+				    filters: aFilters,
                     success: (function (oData) {
                     this.getView().setBusy(false);
                     }).bind(this)
@@ -82,7 +90,7 @@ sap.ui.define([
 				"company_code": "*",
 				"org_type_code": "BU",
                 "org_code": "BIZ00200",
-                "spmd_category_code":"C001",
+                "spmd_category_code":"C001", //*************파라미터값으로 변경 필요************ */
 				"spmd_character_code": "",
 				"spmd_character_sort_seq": ctgrSeq,
                 "spmd_character_code_name": "",
@@ -92,7 +100,7 @@ sap.ui.define([
                 // "local_update_dtm": new Date()
             }, "/MdCategoryItem" , 0);  
 
-		    // this.byId("buttonMainAddRow").setEnabled(false);
+		    this.byId("buttonMainAddRow").setEnabled(false);
             this.byId("buttonMainCancelRow").setEnabled(true);    
         },
         

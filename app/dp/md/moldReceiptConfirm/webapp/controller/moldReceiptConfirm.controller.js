@@ -25,10 +25,11 @@ sap.ui.define([
     "sap/m/ObjectIdentifier",
     'sap/m/SearchField',
 	"sap/m/Text",
-    "sap/m/Token"
+    "sap/m/Token",
+    "dp/md/util/controller/SupplierSelection"
 ], function (BaseController, DateFormatter, ManagedListModel, Multilingual, Validator, moldReceiptConfirmPersoService, 
     ManagedObject, History, Element, Fragment, JSONModel, Filter, FilterOperator, Sorter, Column, Row, TablePersoController, Item, 
-    ComboBox, ColumnListItem, Input, MessageBox, MessageToast, ObjectIdentifier, SearchField, Text, Token) {
+    ComboBox, ColumnListItem, Input, MessageBox, MessageToast, ObjectIdentifier, SearchField, Text, Token, SupplierSelection) {
 	"use strict";
 
 	return BaseController.extend("dp.md.moldReceiptConfirm.controller.moldReceiptConfirm", {
@@ -36,6 +37,8 @@ sap.ui.define([
         dateFormatter: DateFormatter,
         
         validator: new Validator(),
+
+        supplierSelection: new SupplierSelection(),
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -574,7 +577,69 @@ sap.ui.define([
                 oSearchStatus = this.getView().byId("searchStatus"+seSurffix);
 
             oSearchStatus.setSelectedKey(oEvent.getParameter("item").getKey());
-		},
+        },
+        
+        onSuppValueHelpRequested: function(oEvent){
+            // var sCompanyCode  = this.getModel('master').getProperty('/company_code');
+            // var sPlantCode = this.getModel('master').getProperty('/org_code');
+
+            var sCompanyCode  = 'LGEKR';
+            var sPlantCode = 'DVZ';
+
+            this.supplierSelection.showSupplierSelection(this, oEvent, sCompanyCode, sPlantCode);
+        },
+
+        onMoldMstTableConfirmButtonPress: function(oEvent){
+            var oTable = this.byId("moldMstTable"),
+                oModel = this.getModel(),
+                lModel = this.getModel("list"),
+                oView = this.getView(),
+                oSelected  = oTable.getSelectedIndices();
+
+            console.log(oSelected);
+
+            if (oSelected.length == 0) {
+                MessageToast.show( "아이템을 선택하세요." );
+                return;
+            }
+
+            //index 의 mold id 를 가져와 mst 랑 spec 에 값을 박아서 submit 한다?
+            
+            //일단 mst 에 저장 해보자..
+
+            MessageBox.confirm("Confirm 하시겠습니까?", {
+                title : "Comfirmation",
+                initialFocus : sap.m.MessageBox.Action.CANCEL,
+                onClose : function(sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        oSelected.forEach(function (idx) {
+                            var selectItem = lModel.getData().MoldMasterSpec[idx];
+                            var sEntity = selectItem.__entity;
+
+                            selectItem.mold_progress_status_code = "RCV_CNF";
+                            selectItem.receipt_confirmed_user_name = 'ssh';
+                            
+                            delete selectItem.__entity;
+                            oModel.update(sEntity, selectItem);
+                        }.bind(this));
+
+                        console.log('oModel',oModel);
+                        
+                        oModel.submitChanges({
+                            success: function(){
+                                oView.setBusy(false);
+                                MessageToast.show("Success to Receipt Confirm.");
+                                this.onPageSearchButtonPress();
+                            }.bind(this), error: function(oError){MessageToast.show("oError");
+                                oView.setBusy(false);
+                                MessageBox.error(oError.message);
+                            }
+                        });
+                    };
+                }.bind(this)
+            });
+
+        },
 
         familyFlagChange : function (oEvent) {
             var sSelectedKey = oEvent.getSource().getSelectedKey();
@@ -658,12 +723,13 @@ sap.ui.define([
                 receiptToDate = this.getView().byId("searchCreationDate"+sSurffix).getSecondDateValue(),
                 itemType = this.getView().byId("searchItemType").getSelectedKey(),
                 productionType = this.getView().byId("searchProductionType").getSelectedKey(),
-                eDType = this.getView().byId("searchEDType").getSelectedKey(),
+                // suppliers = this.getView().byId("searchSupplier").getTokens(),
+                supplier = this.getView().byId("searchSupplier").getValue(),
                 description = this.getView().byId("searchDescription").getValue(),
                 model = this.getView().byId("searchModel").getValue(),
                 moldNo = this.getView().byId("searchMoldNo").getValue(),
                 familyPartNo = this.getView().byId("searchFamilyPartNo").getValue();
-				
+            
             var aTableSearchState = [];
             var companyFilters = [];
             var divisionFilters = [];
@@ -710,8 +776,20 @@ sap.ui.define([
 			if (productionType && productionType.length > 0) {
 				aTableSearchState.push(new Filter("mold_production_type_code", FilterOperator.EQ, productionType));
 			}
-			if (eDType && eDType.length > 0) {
-				aTableSearchState.push(new Filter("mold_location_type_code", FilterOperator.EQ, eDType));
+			// if (suppliers && suppliers.length > 0) {
+
+            //     var _tmpFilter = [];
+            //     suppliers.forEach(function(item, idx, arr){
+            //         _tmpFilter.push(new Filter("supplier_code", FilterOperator.EQ, item.getKey()));
+            //     });
+
+            //     aTableSearchState.push(new Filter({
+			// 		filters: _tmpFilter,
+			// 		and: false
+			// 	}));
+            // }
+            if (supplier && supplier.length > 0) {
+				aTableSearchState.push(new Filter("supplier_code", FilterOperator.Contains, supplier));
 			}
 			if (model && model.length > 0) {
                 aTableSearchState.push(new Filter("tolower(model)", FilterOperator.Contains, "'" + model.toLowerCase() + "'"));
@@ -733,7 +811,8 @@ sap.ui.define([
 					],
 					and: false
 				}));
-			}
+            }
+            
 			return aTableSearchState;
         },
         
