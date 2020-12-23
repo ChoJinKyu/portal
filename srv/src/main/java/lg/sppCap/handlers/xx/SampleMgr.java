@@ -38,7 +38,10 @@ import com.sap.cds.ql.Update;
 import com.sap.cds.ql.Insert;
 import com.sap.cds.ql.Delete;
 import com.sap.cds.Result;
-
+import com.sap.cds.ql.cqn.CqnStatement;
+import com.sap.cds.ql.cqn.AnalysisResult;
+import com.sap.cds.ql.cqn.CqnAnalyzer;
+import com.sap.cds.ql.cqn.CqnDelete;
 
 import com.sap.cds.feature.xsuaa.XsuaaUserInfo;
 import cds.gen.xx.samplemgrservice.*;
@@ -110,7 +113,7 @@ public class SampleMgr implements EventHandler {
 
             v_results.add(v_result);
         }
-
+        */
 
         context.setResult(v_results);
         context.setCompleted();
