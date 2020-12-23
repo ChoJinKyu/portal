@@ -36,6 +36,22 @@
                     "component": "pg.purchaseMgr"
                 }
             ]
+        },
+        {
+            "name": "Spend기준정보",
+            "icon": "sap-icon://source-code",
+            "subMenus": [
+                {
+                    "name": "VP별 관리항목 (범주설정)",
+                    "url": "../pg/mdCategory/webapp",
+                    "component": "pg.mdCategory"
+                },                
+                {
+                    "name": "App #2",
+                    "url": "../pg/purchaseMgr/webap",
+                    "component": "pg.purchaseMgr"
+                }
+            ]
         }
     ]
     

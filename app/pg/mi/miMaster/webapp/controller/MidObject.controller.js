@@ -10,29 +10,23 @@
  */
 sap.ui.define([
     "./BaseController",
-    "sap/ui/core/routing/History",
+    "ext/lib/util/Multilingual",
     "sap/ui/model/json/JSONModel",
     "ext/lib/util/ValidatorUtil",
-    "ext/lib/model/ManagedModel",
-    "ext/lib/model/ManagedListModel",
     "ext/lib/formatter/DateFormatter",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
-    "sap/ui/core/Fragment",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "sap/ui/core/ValueState",
-    "ext/lib/util/Validator",
-    "sap/base/Log"
-], function (BaseController, History, JSONModel, ValidatorUtil, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, ValueState, Validator, Log) {
+    "ext/lib/util/Validator"
+], function (BaseController, Multilingual, JSONModel, ValidatorUtil, DateFormatter, Filter, FilterOperator,  MessageBox, MessageToast, ValueState, Validator) {
     "use strict";
 
     return BaseController.extend("pg.mi.miMaster.controller.MidObject", {
 
         dateFormatter: DateFormatter,
-
         validator: new Validator(),
-
 		formatter: (function(){
 			return {
 				toYesNo: function(oData){
@@ -40,10 +34,9 @@ sap.ui.define([
 				},
 			}
         })(),
-        // company_code : "",
-        // org_type_code : "",
-        // org_code : "",
+
         dataPath : "resources",
+
         _m : { 
             page : "page",
             groupID : "pgGroup",
@@ -51,6 +44,14 @@ sap.ui.define([
                 items : "items" //or rows
             },
             tableName : "midTable",
+            fragementPath : {
+                reqmQuantityUnit : "pg.mi.miMaster.view.ReqmQuantityUnit",
+                categoryValueHelp : "pg.mi.miMaster.view.CategoryValueHelp"
+            },            
+            fragementId : {
+                reqmQuantityUnit : "ReqmQuantityUnit_ID",
+                categoryValueHelp : "CategoryValueHelp_ID"
+            },            
             filter : {  
                 tenant_id : "",
                 material_code : "",
@@ -59,6 +60,7 @@ sap.ui.define([
             serviceName : {
                 marketIntelligenceService : "pg.marketIntelligenceService", //main Service
                 orgCodeView : "/orgCodeView", //관리조직 View
+                mICategoryView : "/MICategoryView",
                 mIMaterialCodeList : "/MIMaterialCodeList",
                 mIMatListView : "/MIMatListView",
                 mIMaterialCode : "/MIMaterialCode",
@@ -102,10 +104,7 @@ sap.ui.define([
                 name : "Hong Gil-dong"
             },
             dept : {
-                tenant_id : "L2100",
-                company_code : "*",
-                org_type_code : "BU",
-                org_code : "BIZ00100"
+                tenant_id : "L2100"
             }          
         },
 
@@ -148,6 +147,9 @@ sap.ui.define([
             this.setModel(oUi, "oUi");
 
             this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
+
+            this._Page = this.getView().byId("page");
+            this._Page.setFloatingFooter(true);
 
             console.groupEnd();
         },
@@ -269,10 +271,6 @@ sap.ui.define([
                 return;
             }
             else {
-                // new Filter("company_code", FilterOperator.EQ, this._m.filter.company_code),
-                // new Filter("org_type_code", FilterOperator.EQ, this._m.filter.org_type_code),
-                // new Filter("org_code", FilterOperator.EQ, this._m.filter.org_code),
-
                 var omIMatListViewFilters = [
                     new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id),
                     new Filter("mi_material_code", FilterOperator.EQ, input_mi_material_code.getValue())
@@ -285,7 +283,7 @@ sap.ui.define([
                     filters: omIMatListViewFilters,
                     success: function (rData, reponse) {
 
-                        console.log(sServiceUrl + " - 자재건수 :" + reponse.data.results.length);
+                        //console.log(sServiceUrl + " - 자재건수 :" + reponse.data.results.length);
 
                         itemLength = reponse.data.results.length;
 
@@ -390,24 +388,20 @@ sap.ui.define([
         /* internal methods                                            */
         /* =========================================================== */
         /**
-         * control object filter 
+         * control object filter   사용하지 않음.
          * @private
          */
         _fnControlSetting : function() {
             console.log("_fnControlSetting");
-            var comboBox_pcst_currency_unit = this.getView().byId("comboBoxCategory_code");            
-            var oBindingComboBox = comboBox_pcst_currency_unit.getBinding("items");
+            // var input_category_code = this.getView().byId("input_category_code"),            
+            //     input_category_text = this.getView().byId("input_category_text"),            
 
-            // new Filter("company_code", "EQ", this._m.filter.company_code),
-            // new Filter("org_type_code", "EQ", this._m.filter.org_type_code),
-            // new Filter("org_code", "EQ", this._m.filter.org_code)
+            // var aFiltersComboBox = [
+            //     new Filter("tenant_id", "EQ", this._m.filter.tenant_id),
+            //     new Filter("use_flag", "EQ", true)
+            // ];
 
-            var aFiltersComboBox = [
-                new Filter("tenant_id", "EQ", this._m.filter.tenant_id),
-                new Filter("use_flag", "EQ", true)
-            ];
-
-            oBindingComboBox.filter(aFiltersComboBox);  
+            //oBindingComboBox.filter(aFiltersComboBox);  
         },
         
         /**
@@ -442,7 +436,7 @@ sap.ui.define([
             this._onPageClearValidate();
 
             this.getView().byId("input_mi_material_code").setValue("");
-            this.getView().byId("comboBoxCategory_code").setSelectedKey("");
+            //this.getView().byId("comboBoxCategory_code").setSelectedKey("");
 
             var oArgs = oEvent.getParameter("arguments"),
                 oUiData = this.getModel("oUiData"),
@@ -453,10 +447,6 @@ sap.ui.define([
                 sServiceUrl;
 
             var oModel = this.getOwnerComponent().getModel();
-            // new Filter("company_code", FilterOperator.EQ, oArgs.company_code),
-            // new Filter("org_type_code", FilterOperator.EQ, oArgs.org_type_code),
-            // new Filter("org_code", FilterOperator.EQ, oArgs.org_code),
-
             var aFilters = [
                 new Filter("tenant_id", FilterOperator.EQ, oArgs.tenant_id),
                 new Filter("mi_material_code", FilterOperator.EQ, oArgs.mi_material_code)
@@ -466,9 +456,6 @@ sap.ui.define([
 
             //필터 사용을 위한 등록 
             this._m.filter.tenant_id = oArgs.tenant_id;
-            this._m.filter.company_code = oArgs.company_code;
-            this._m.filter.org_type_code = oArgs.org_type_code;
-            this._m.filter.org_code = oArgs.org_code;
             this._m.filter.mi_material_code = oArgs.mi_material_code;
             
  
@@ -478,9 +465,6 @@ sap.ui.define([
                 //수정대상 상위 정보가 없으므로 임시 데이타 등록 
  
                 this._m.filter.tenant_id = this._sso.dept.tenant_id;
-                // this._m.filter.company_code = this._sso.dept.company_code;
-                // this._m.filter.org_type_code = this._sso.dept.org_type_code;
-                // this._m.filter.org_code = this._sso.dept.org_code;
                 
                 this._fnSetCreateMode();
 
@@ -503,7 +487,7 @@ sap.ui.define([
             });
 
             //Control Setting
-            this._fnControlSetting();
+            //this._fnControlSetting();
             
             var mIMaterialCodeText = new JSONModel();
 
@@ -540,10 +524,6 @@ sap.ui.define([
             });
 
             var mICategoryHierarchyStructure = new JSONModel();
-
-            // new Filter("company_code", FilterOperator.EQ, oArgs.company_code),
-            // new Filter("org_type_code", FilterOperator.EQ, oArgs.org_type_code),
-            // new Filter("org_code", FilterOperator.EQ, oArgs.org_code)            
             var miFilters = [
                 new Filter("tenant_id", FilterOperator.EQ, oArgs.tenant_id),
                 new Filter("use_flag", true)
@@ -683,51 +663,103 @@ sap.ui.define([
             controlId.setValueStateText(message);
             controlId.openValueStateMessage();   
         },
+
         /**
-         * Bom 에서 사용하는 자재를 확인 
+         * category value help
          */
-        _checkBomMatialCode : function (oData) {
-            //(tenant_id='L2100',
-            // company_code='%2A',
-            // org_type_code='BU',
-            // org_code='BIZ00100',
-            // material_code='ERCA00006AA',
-            // supplier_code='KR00008',
-            // mi_material_code='COP-001-01')
+        onValueHelpCategorySearchDialog : function () {
+            console.log("_valueHelpCategorySearchDialog");
+			// create value help dialog
+			if (!this._vHelpCategorySearchDialog) {
 
-            // var oMIMatListViewFilters = [
-            //     new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id),
-            //     new Filter("company_code", FilterOperator.EQ, this._m.filter.company_code),
-            //     new Filter("org_type_code", FilterOperator.EQ, this._m.filter.org_type_code),
-            //     new Filter("org_code", FilterOperator.EQ, this._m.filter.org_code),
-            //     new Filter("mi_material_code", FilterOperator.EQ, input_mi_material_code.getValue())
-            // ];
+                this._vHelpCategorySearchDialog = sap.ui.xmlfragment(
+                    this._m.fragementId.categoryValueHelp, 
+                    this._m.fragementPath.categoryValueHelp,this
+                );
 
-            // var sServiceUrl = this._m.serviceName.mIMatListView;
-            // var itemLength = 0;
-            // oModel.read(sServiceUrl, {
-            //     async: false,
-            //     filters: oMIMatListViewFilters,
-            //     success: function (rData, reponse) {
+                this.getView().addDependent(this._vHelpCategorySearchDialog);
+            }  
 
-            //         console.log(sServiceUrl + " - 자재건수 :" + reponse.data.results.length);
-
-            //         itemLength = reponse.data.results.length;
-
-            //         if (itemLength < 1) {
-            //             oUi.setProperty("/materialCheck", true);
-            //             input_mi_material_code.setValueState("Success");
-            //             input_mi_material_code.setValueStateText("사용할수 있는 자재 코드 입니다.");
-            //             MessageToast.show("사용할수 있는 자재 코드 입니다.");
-            //             input_mi_material_code.openValueStateMessage();
-            //         } else {
-            //             input_mi_material_code.setValueState("Error");
-            //             input_mi_material_code.setValueStateText("중복된 자재코드 입니다.");
-            //             input_mi_material_code.openValueStateMessage();
-            //         }
-            //     }
-            // });
+            this._openValueHelpCategoryCodeDialog();
         },
+
+        _openValueHelpCategoryCodeDialog : function () {
+            var mICategoryView = this.getModel("mICategoryView")
+            this.setModelNullAndUpdateBindings(mICategoryView);
+			this._vHelpCategorySearchDialog.open();
+        },
+
+        /**
+         * Category Code Dialog Close
+         */
+        closeCategoryValueHelp : function (){
+            this._vHelpCategorySearchDialog.close();
+        },
+
+        onCategoryValueHelp : function () {
+            console.log("onReqmQuantityUnitApply");
+            var categoryTable =  this._findFragmentControlId(this._m.fragementId.categoryValueHelp, "categoryTable"), 
+            midList = this.getModel("midList"),
+                that = this;            
+
+            if(categoryTable.getSelectedItems().length<1){
+                this._showMessageBox(
+                    "선택 확인",
+                    "항목을 선택 하여 주십시요.",
+                    this._m.messageType.Warning,
+                    function(){return;}
+                );
+                return;
+            }
+
+            var category_code = categoryTable.getSelectedItems()[0].getCells()[0].mProperties.text;
+            var category_text = categoryTable.getSelectedItems()[0].getCells()[1].mProperties.text;
+
+            this.byId("input_category_text").setValue(category_text);
+            this.byId("input_category_code").setValue(category_code);
+
+            this.closeCategoryValueHelp();
+        },
+
+        onCategorySearch : function() {
+            var oModel = this.getModel(),
+                sServiceUrl = this._m.serviceName.mICategoryView,
+                that = this,
+                searchField_category_name = this._findFragmentControlId(this._m.fragementId.categoryValueHelp, "searchField_category_name").getValue();
+                
+            var andFilter = [
+                new Filter("tenant_id", FilterOperator.EQ, this._sso.dept.tenant_id)
+            ];
+
+            var orFilter = [                
+                new Filter("category_text", FilterOperator.Contains, searchField_category_name),
+                new Filter("category_code", FilterOperator.Contains, searchField_category_name)
+            ];
+
+            if(orFilter.length>0){
+                andFilter.push(new sap.ui.model.Filter(orFilter, false));
+            }
+
+            var mICategoryView = new JSONModel();
+            
+            oModel.read(sServiceUrl, {
+                async: false,
+                filters: andFilter,
+                success: function (rData, reponse) {
+
+                    //console.log(sServiceUrl + " - Category 건수 :" + reponse.data.results.length);
+                    if (reponse.data.results.length > 0) {
+                        mICategoryView.setData(reponse.data.results);
+                        that.getOwnerComponent().setModel(mICategoryView, "mICategoryView");                                         
+                    }
+                }
+            });
+        },
+
+        _findFragmentControlId : function (fragmentID, controlID) {
+            return sap.ui.core.Fragment.byId(fragmentID, controlID);
+        },
+
 
         /**
          * 시황자제 삭제
@@ -745,11 +777,6 @@ sap.ui.define([
                     title: "삭제 확인",                                    
                     onClose: function (sButton) {
                         if (sButton === MessageBox.Action.DELETE) {
-
-                            // company_code : oUiData.getProperty("/company_code"),
-                            // org_type_code : oUiData.getProperty("/org_type_code"),
-                            // org_code: oUiData.getProperty("/org_code"),
-
                             oDeleteMIMaterialCodeKey = {
                                 tenant_id : oUiData.getProperty("/tenant_id"),
                                 mi_material_code: oUiData.getProperty("/mi_material_code"),
@@ -808,12 +835,9 @@ sap.ui.define([
                 if(nCound>1)
                 {
                     // this._showMessageToast("고유한 언어를 선택하여 주십시요.");
-
                     // items.getCells()[1].mAggregations.items[0].setSelectedKey("");
-
                     // //console.log error message
                     // items.getCells()[1].mAggregations.items[0].getSelectedItem().setText("");
-
                     // return;
                 }  
         },
@@ -842,10 +866,6 @@ sap.ui.define([
             }
             //입력값을 사용한다. 
             var input_mi_material_code = this.getView().byId("input_mi_material_code").getValue();
-            //comboBox_language = 
-            // "company_code": oUiData.getProperty("/company_code"),
-            // "org_type_code": oUiData.getProperty("/org_type_code"),
-            // "org_code": oUiData.getProperty("/org_code"),
             var items = {
                 "tenant_id": oUiData.getProperty("/tenant_id"),
                 "mi_material_code": input_mi_material_code,
@@ -980,23 +1000,21 @@ sap.ui.define([
             } else {
 
                 var input_mi_material_code,
-                    comboBoxCategory_code="",
-                    comboBoxCategory_name="",
+                    input_category_code="",
+                    input_category_text="",
                     switchUse_flag = this.getView().byId("switchUse_flag").getState(),
                     msg = "";
 
                 if(oUi.getProperty("/createMode")){
 
-                    input_mi_material_code = this.getView().byId("input_mi_material_code").getValue();
-                    if(!this._isNull(this.getView().byId("comboBoxCategory_code").getSelectedItem())){
-                        comboBoxCategory_code = this.getView().byId("comboBoxCategory_code").getSelectedItem().mProperties.key;
-                        comboBoxCategory_name = this.getView().byId("comboBoxCategory_code").getSelectedItem().mProperties.text;
-                    } else {
+                    var input_mi_material_code = this.getView().byId("input_mi_material_code").getValue();
 
-                    }
+                    input_category_code = this.getView().byId("input_category_code").getValue(),            
+                    input_category_text = this.getView().byId("input_category_text").getValue();  
+
                     
 
-                    if (this._isNull(comboBoxCategory_code)) {
+                    if (this._isNull(input_category_code)) {
                         this._showMessageToast("카테고리를 선택 해야 합니다.");
                         return false;
                     }
@@ -1078,9 +1096,6 @@ sap.ui.define([
         _inputMartetial : function(input_mi_material_code){
             var oUi = this.getModel("oUi");
             var oModel = this.getModel();
-            // new Filter("company_code", FilterOperator.EQ, this._m.filter.company_code),
-            // new Filter("org_type_code", FilterOperator.EQ, this._m.filter.org_type_code),
-            // new Filter("org_code", FilterOperator.EQ, this._m.filter.org_code),
 
             var oMIMatListViewFilters = [
                 new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id),
@@ -1094,7 +1109,7 @@ sap.ui.define([
                 filters: oMIMatListViewFilters,
                 success: function (rData, reponse) {
 
-                    console.log(sServiceUrl + " - 자재건수 :" + reponse.data.results.length);
+                    //console.log(sServiceUrl + " - 자재건수 :" + reponse.data.results.length);
 
                     itemLength = reponse.data.results.length;
 
@@ -1178,22 +1193,22 @@ sap.ui.define([
             } else {
 
                 var input_mi_material_code,
-                    comboBoxCategory_code,
-                    comboBoxCategory_name,
+                    input_category_code,
+                    input_category_text,
                     switchUse_flag = this.getView().byId("switchUse_flag").getState(),
                     msg = "";
 
                 if(oUi.getProperty("/createMode")){
 
                     input_mi_material_code = this.getView().byId("input_mi_material_code").getValue();
-                    comboBoxCategory_code = this.getView().byId("comboBoxCategory_code").getSelectedItem().mProperties.key;
-                    comboBoxCategory_name = this.getView().byId("comboBoxCategory_code").getSelectedItem().mProperties.text;
-                  
+                    input_category_code = this.getView().byId("input_category_code").getValue(),            
+                    input_category_text = this.getView().byId("input_category_text").getValue();  
+                    
                 } else if (oUi.getProperty("/editMode")){
 
                     input_mi_material_code = oUiData.getProperty("/mi_material_code");
-                    comboBoxCategory_code = oUiData.getProperty("/category_code");
-                    comboBoxCategory_name = oUiData.getProperty("/category_name");                    
+                    input_category_code = oUiData.getProperty("/category_code");
+                    input_category_text = oUiData.getProperty("/category_name");                    
                 }
                 if(oUi.getProperty("/createMode")){
                     o_mi_material_code =   input_mi_material_code; 
@@ -1238,9 +1253,6 @@ sap.ui.define([
                     var o_mi_material_code;
                     
                     // MIMaterialCodeText table key : update delete 
-                    // company_code : oUiData.getProperty("/company_code"),
-                    // org_type_code : oUiData.getProperty("/org_type_code"),
-                    // org_code: oUiData.getProperty("/org_code"),                    
                     var oMIMaterialCodeTextKey = {
                         tenant_id : oUiData.getProperty("/tenant_id"),
                         mi_material_code: oUiData.getProperty("/mi_material_code"),
@@ -1254,10 +1266,6 @@ sap.ui.define([
 
                     //MIMaterialCodeText  table item
                     if(itemMode==this._m.itemMode.create){
-                        // "company_code": this._sso.dept.company_code,
-                        // "org_type_code": this._sso.dept.org_type_code,
-                        // "org_code": this._sso.dept.org_code,
-
                         var oMIMaterialCodeTextParameters = {
                             "groupId": this._m.groupID,
                             "properties": {
@@ -1321,10 +1329,6 @@ sap.ui.define([
                     
                     //적재 할때 신규는 담지 않는다. (수정이나 신규시 아이템 추가는 바로 삭제)
                     for(var i=0;i<_deleteItemOdata.length;i++){
-                        // company_code : _deleteItemOdata[i].company_code,
-                        // org_type_code : _deleteItemOdata[i].org_type_code,
-                        // org_code: _deleteItemOdata[i].org_code,
-
                         oDeleteMIMaterialCodeTextKey = {
                             tenant_id : _deleteItemOdata[i].tenant_id,
                             mi_material_code: _deleteItemOdata[i].mi_material_code,
@@ -1354,9 +1358,6 @@ sap.ui.define([
                 var oMIMaterialCodeParameters;
 
                 //MIMaterialCode db key : update delete 
-                // company_code : oUiData.getProperty("/company_code"),
-                // org_type_code : oUiData.getProperty("/org_type_code"),
-                // org_code: oUiData.getProperty("/org_code"),
                 var oMIMaterialCodeKey = {
                     tenant_id : oUiData.getProperty("/tenant_id"),
                     category_code: oUiData.getProperty("/category_code"),                    
@@ -1397,15 +1398,12 @@ sap.ui.define([
                     if(vMi_material_name==""){
                         vMi_material_name = mi_material_name;
                     }
-                    // "company_code": this._sso.dept.company_code,
-                    // "org_type_code": this._sso.dept.org_type_code,
-                    // "org_code": this._sso.dept.org_code,
                     oMIMaterialCodeParameters = {
                         "groupId": this._m.groupID ,
                         "properties": {
                             "tenant_id": this._sso.dept.tenant_id,
                             "mi_material_code": input_mi_material_code,
-                            "category_code": comboBoxCategory_code,
+                            "category_code": input_category_code,
                             "use_flag": switchUse_flag,
                             "local_create_dtm": new Date(),
                             "local_update_dtm": new Date(),
@@ -1435,7 +1433,7 @@ sap.ui.define([
                     error: this._handleCreateError.bind(this)
                 });
 
-                oModel.refresh();
+                oModel.refresh(true);
                 
             }
         },
@@ -1473,10 +1471,6 @@ sap.ui.define([
                 oMIMaterialCodeText = this.getOwnerComponent().getModel("mIMaterialCodeText"),
                 oUiData = this.getModel("oUiData");
 
-            // company_code : oUiData.getProperty("/company_code"),
-            // org_type_code : oUiData.getProperty("/org_type_code"),
-            // org_code: oUiData.getProperty("/org_code"),
-
             var oDeleteActionMIMaterialCodeKey = {
                 tenant_id : oUiData.getProperty("/tenant_id"),
                 mi_material_code: oUiData.getProperty("/mi_material_code"),
@@ -1495,10 +1489,7 @@ sap.ui.define([
 
             oModel.remove(oDeleteActionMIMaterialCodePath);
 
-            //MIMaterialCodeText(tenant_id='L2100',company_code='%2A',org_type_code='BU',org_code='BIZ00100',mi_material_code='ALU-001-01',language_code='EN')"
-            // company_code : oMIMaterialCodeText.oData[i].company_code,
-            // org_type_code : oMIMaterialCodeText.oData[i].org_type_code,
-            // org_code: oMIMaterialCodeText.oData[i].org_code,
+            //MIMaterialCodeText(tenant_id='L2100',mi_material_code='ALU-001-01',language_code='EN')"
 
             for(var i=0;i<oMIMaterialCodeText.oData.length;i++){
  

@@ -40,22 +40,22 @@
                     "odataVersion": "2.0"
                 }
             },
-            "orgMgrService": {
-                "uri": "srv-api/odata/v2/cm.OrgMgrService/",
+            "orgMgtService": {
+                "uri": "srv-api/odata/v2/cm.OrgMgtService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
                 }
             },
-            "purOrgMgrService": {
-                "uri": "srv-api/odata/v2/cm.PurOrgMgrService/",
+            "purOrgMgtService": {
+                "uri": "srv-api/odata/v2/cm.PurOrgMgtService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
                 }
             },
-            "userMgrService": {
-                "uri": "srv-api/odata/v2/cm.UserMgrService/",
+            "userMgtService": {
+                "uri": "srv-api/odata/v2/cm.UserMgtService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
@@ -137,7 +137,7 @@
                 }
             },
             "org": {
-                "dataSource": "orgMgrService",
+                "dataSource": "orgMgtService",
                 "preload": true,
                 "settings": {
                     "defaultBindingMode": "TwoWay",
@@ -147,7 +147,7 @@
                 }
             },
             "purOrg": {
-                "dataSource": "purOrgMgrService",
+                "dataSource": "purOrgMgtService",
                 "preload": true,
                 "settings": {
                     "defaultBindingMode": "TwoWay",
@@ -156,8 +156,8 @@
                     "useBatch": true
                 }
             },
-            "userMgr": {
-                "dataSource": "userMgrService",
+            "userMgt": {
+                "dataSource": "userMgtService",
                 "preload": true,
                 "settings": {
                     "defaultBindingMode": "TwoWay",
@@ -206,7 +206,8 @@
         },
         "resourceRoots": {
             "ext.lib": "../../../../lib" ,
-            "dp.md.util": "../../util"
+            "dp.md.util": "../../util",
+            "dp.md" : "controller"
         },
         "routing": {
             "config": {
@@ -249,20 +250,17 @@
                 "beaCreateObject": {
                     "viewName": "BeaCreateObject",
                     "viewId": "beaCreateObject",
-                    "viewLevel": 1,
-                    "title": "{i18n>beaCreateObjectTitle}"
+                    "viewLevel": 1
                 },
                 "beaEditObject": {
                     "viewName": "BeaCreateObject",
                     "viewId": "beaCreateObject",
-                    "viewLevel": 1,
-                    "title": "{i18n>beaCreateObjectTitle}"
+                    "viewLevel": 1
                 },
                 "beaObject": {
                     "viewName": "BeaObject",
                     "viewId": "beaObject",
-                    "viewLevel": 1,
-                    "title": "{i18n>beaObjectTitle}"
+                    "viewLevel": 1
                 },
                 "notFound": {
                     "viewName": "NotFound",

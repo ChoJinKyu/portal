@@ -26,7 +26,9 @@ sap.ui.define([
 				oResourceBundle = this.getResourceBundle();
 
 			this.setModel(new JSONModel({
-				currency: 102485361.56,
+                currency: 102485361.56,
+                number1: 10,
+                number2: 155,
 				list: [{
 					value1: null,
 					value2: null,

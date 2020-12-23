@@ -1,5 +1,5 @@
 <mvc:View
-    controllerName="pg.mi.controller.MainList"
+    controllerName="pg.mi.miMaster.controller.MainList"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
     xmlns:f="sap.f"
@@ -42,7 +42,7 @@
 				             persistencyKey="PageVariantPKey" />                     
                     <!-- Smart Filter -->
                     <smartFilterBar:SmartFilterBar id="smartFilterBar" 
-                    entitySet="MIMatListView " 
+                    entitySet="/MIMatListView " 
                     smartVariant="pageVariantId"
                     persistencyKey="SmartFilterPKey"
                     considerSelectionVariants="true" 

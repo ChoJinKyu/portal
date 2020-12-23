@@ -6,6 +6,7 @@
     xmlns:layout="sap.ui.layout" 
     xmlns:core="sap.ui.core" 
     xmlns:lib-m="ext.lib.m"
+    core:require="{ I18NFormatter: 'dp/md/util/controller/I18NFormatter' }"
     height="100%">
 
     <f:DynamicPage id="page"
@@ -21,9 +22,9 @@
                     <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
-                                <Label text="Company" labelFor="searchCompanyS" required="true"></Label>     
+                                <Label text="{path:'I18N>/COMPANY_NAME', formatter:'I18NFormatter'}" labelFor="searchCompanyS" required="true"></Label>     
                                 <MultiComboBox id="searchCompanyS" width="100%" selectedKey="" required="true" selectionFinish="handleSelectionFinishComp" items="{
-                                        path: 'org>/Org_Company',
+                                        path: 'org>/Company',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                         ],
@@ -38,7 +39,7 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Plant" labelFor="searchPlantS" required="true"></Label>
+                                <Label text="{path:'I18N>/PLANT', formatter:'I18NFormatter'}" labelFor="searchPlantS" required="true"></Label>
                                 <MultiComboBox id="searchPlantS" width="100%" selectedKey="" items="{
                                         path: 'purOrg>/Pur_Operation_Org',
                                         filters: [
@@ -56,14 +57,14 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Request Date" labelFor="searchRequestDateS" required="true"></Label>
+                                <Label text="{path:'I18N>/REQUEST_DATE', formatter:'I18NFormatter'}" labelFor="searchRequestDateS" required="true"></Label>
                                 <DateRangeSelection id="searchRequestDateS" width="100%" change="handleChange"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                              <VBox>
-                                <Label text="Approval Category" labelFor="searchApprovalCategoryS" required="true"></Label>
+                                <Label text="{path:'I18N>/APPROVAL_TYPE_CODE', formatter:'I18NFormatter'}" labelFor="searchApprovalCategoryS" required="true"></Label>
                                 <MultiComboBox id="searchApprovalCategoryS" width="100%" selectedKey="" items="{
                                             path : 'util>/CodeDetails',
                                             filters : [
@@ -85,9 +86,9 @@
                     <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
-                                <Label text="Company" labelFor="searchCompanyE" required="true"></Label>     
+                                <Label text="{path:'I18N>/COMPANY_NAME', formatter:'I18NFormatter'}" labelFor="searchCompanyE" required="true"></Label>     
                                 <MultiComboBox id="searchCompanyE" width="100%" selectedKey="" selectionFinish="handleSelectionFinishComp" items="{
-                                        path: 'org>/Org_Company',
+                                       path: 'org>/Company',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                         ],
@@ -102,7 +103,7 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Plant" labelFor="searchPlantE" required="true"></Label>
+                                <Label text="{path:'I18N>/PLANT', formatter:'I18NFormatter'}" labelFor="searchPlantE" required="true"></Label>
                                 <MultiComboBox id="searchPlantE" width="100%" selectedKey="" items="{
                                         path: 'purOrg>/Pur_Operation_Org',
                                         filters: [
@@ -120,14 +121,14 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Request Date" labelFor="searchRequestDateE" required="true"></Label>
+                                <Label text="{path:'I18N>/REQUEST_DATE', formatter:'I18NFormatter'}" labelFor="searchRequestDateE" required="true"></Label>
                                 <DateRangeSelection id="searchRequestDateE" width="100%" change="handleChange"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                              <VBox>
-                                <Label text="Approval Category" labelFor="searchApprovalCategoryE" required="true"></Label>
+                                <Label text="{path:'I18N>/APPROVAL_TYPE_CODE', formatter:'I18NFormatter'}" labelFor="searchApprovalCategoryE" required="true"></Label>
                                 <MultiComboBox id="searchApprovalCategoryE" width="100%" selectedKey="" items="{
                                             path : 'util>/CodeDetails',
                                             filters : [
@@ -147,7 +148,7 @@
                     </form:SimpleForm>
                 </f:expandedContent>
                 <f:actions>
-                    <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onPageSearchButtonPress" />
+                    <Button id="pageSearchButton" text="{path:'I18N>/SEARCH', formatter:'I18NFormatter'}" type="Emphasized" press=".onPageSearchButtonPress" />
                 </f:actions>
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -160,7 +161,7 @@
                 <form:SimpleForm maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="Model " labelFor="searchModel"></Label>
+                            <Label text="{path:'I18N>/MODEL', formatter:'I18NFormatter'}" labelFor="searchModel"></Label>
                             <Input id="searchModel" 
                                     showValueHelp="true"  
                                     valueHelpRequest=".onValueHelpRequested"
@@ -178,7 +179,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Mold No " labelFor="searchPart"></Label>
+                            <Label text="Mold No" labelFor="searchPart"></Label>
                             <Input id="searchPart" 
                                     showValueHelp="true"  
                                     valueHelpRequest=".onValueHelpRequested"
@@ -196,14 +197,14 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Subject" labelFor="searchSubject"></Label>
+                            <Label text="{path:'I18N>/APPROVAL_TITLE', formatter:'I18NFormatter'}" labelFor="searchSubject"></Label>
                             <Input id="searchSubject" placeholder="Input data"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Requestor" labelFor="searchRequestor"></Label>
+                            <Label text="{path:'I18N>/REQUESTOR', formatter:'I18NFormatter'}" labelFor="searchRequestor"></Label>
                             <Input id="searchRequestor" 
                                     showValueHelp="true"  
                                     valueHelpRequest=".onValueHelpRequested"
@@ -223,7 +224,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Status" class="sapUiSmallMarginTop"></Label>
+                            <Label text="{path:'I18N>/STATUS', formatter:'I18NFormatter'}" class="sapUiSmallMarginTop"></Label>
                             <SegmentedButton id="searchStatus" selectedKey="" width="100%">
                                 <items>
                                     <SegmentedButtonItem text="All" key="" />
@@ -262,16 +263,16 @@
                     updateFinished=".onListMainTableUpdateFinished"
                     cellClick=".onCellClick"
                     width="auto"
-                    items="{list>/ApprovalMasters}">
+                    items="{list>/Approvals}">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="Approval List ({= ${list>/ApprovalMasters}.length || 0})" level="H2"/>
+                            <Title text="Approval List ({= ${list>/Approvals}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <!-- Add the Personalization button -->
-                            <Button id="mainTableCreateButton" text="Create" type="Emphasized" press=".onDialogCreate" />
-                            <Button id="mainTableDeleteButton" text="Delete" type="Transparent" press=".onApplovalDeletePress" />
+                            <Button id="mainTableCreateButton" text="{path:'I18N>/CREATE', formatter:'I18NFormatter'}" type="Emphasized" press=".onDialogCreate" />
+                            <Button id="mainTableDeleteButton" text="{path:'I18N>/DELETE', formatter:'I18NFormatter'}"  type="Transparent" press=".onApplovalDeletePress" />
                             <ToolbarSeparator/>
-                            <Button icon="sap-icon://excel-attachment" press=".onDataExport" >
+                            <Button icon="sap-icon://excel-attachment" press=".onExportPress" >
                                 <layoutData>
                                     <OverflowToolbarLayoutData priority="NeverOverflow" />
                                 </layoutData>
@@ -288,36 +289,44 @@
                             <CheckBox selected="false" select=".onColumnChecBox"/>
                         </Column>
                         <Column id="mainColumnApprovalCategory" >
-                            <Text text="Approval&#10;Category" />
+                            <!-- <Text text="Approval&#10;Category" /> -->
+                            <Text text="{path:'I18N>/APPROVAL_TYPE_CODE', formatter:'I18NFormatter'}" />
                         </Column>
                         <Column id="mainColumnCompany" >
-                            <Text text="Company" />
+                            <!-- <Text text="Company" /> -->
+                            <Text text="{path:'I18N>/COMPANY_NAME', formatter:'I18NFormatter'}" />
                         </Column>
                         <Column id="mainColumnPlant" >
-                            <Text text="Plant" />
+                            <!-- <Text text="Plant" /> -->
+                            <Text text="{path:'I18N>/PLANT', formatter:'I18NFormatter'}" />
                         </Column>
                         <Column id="mainColumnApprovalNo">
-                            <Text text="Approval No" />
+                            <!-- <Text text="Approval No" /> -->
+                            <Text text="{path:'I18N>/APPROVAL_NUMBER', formatter:'I18NFormatter'}" />
                         </Column>
                         <Column id="mainColumnSubject"  >
-                            <Text text="Subject" />
+                            <!-- <Text text="Subject" /> -->
+                            <Text text="{path:'I18N>/APPROVAL_TITLE', formatter:'I18NFormatter'}" />
                         </Column>
                         <Column id="mainColumnRequestor"  >
-                            <Text text="Requestor" />
+                            <!-- <Text text="Requestor" /> -->
+                            <Text text="{path:'I18N>/REQUESTOR', formatter:'I18NFormatter'}" />
                         </Column>
                         <Column id="mainColumnRequestDate"  >
-                            <Text text="Request Date" />
+                            <!-- <Text text="Request Date" /> -->
+                            <Text text="{path:'I18N>/REQUEST_DATE', formatter:'I18NFormatter'}" />
                         </Column>
                         <Column id="mainColumnStatus"  >
-                            <Text text="Status" />
+                            <!-- <Text text="Status" /> -->
+                            <Text text="{path:'I18N>/APPROVE_STATUS_CODE', formatter:'I18NFormatter'}" />
                         </Column>
                     </columns>
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>
-                                <CheckBox fieldGroupIds="{= ${list>approval_type_code}==='E'? 'checkBoxs':''}"  visible="{= ${list>approval_type_code}==='E'? true:false }" select=".onCheck" />                  
+                                <!-- <CheckBox fieldGroupIds="{= ${list>approval_type_code}==='E'? 'checkBoxs':''}"  visible="{= ${list>approval_type_code}==='E'? true:false }" select=".onCheck" />                   -->
                                 <!-- <CheckBox fieldGroupIds="{= ${list>approve_status_code}==='DR'? 'checkBoxs':''}"  visible="{= ${list>approve_status_code}==='DR'? true:false }" select=".onCheck" />        -->
-                                <ComboBox 
+                                <!-- <ComboBox 
                                         editable="false"   
                                         class="readonlyField"
                                         selectedKey="{list>approval_type_code}"
@@ -337,7 +346,7 @@
                                         class="readonlyField"
                                         selectedKey="{list>company_code}" 
                                         items="{
-                                                    path: 'org>/Org_Company',
+                                                    path: 'org>/Company',
                                                     filters: [
                                                         {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                                     ],
@@ -362,14 +371,14 @@
                                     <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}] {purOrg>org_name}" />
                                 </ComboBox>
                                 <ObjectIdentifier text="{list>approval_number}" />
-                                <ObjectIdentifier text="{list>approval_title}" />
+                                <ObjectIdentifier text="{list>approval_title}" /> -->
                                 <!-- <ObjectIdentifier text="{list>requestor_empno}" /> -->
-                                <ComboBox
+                                <!-- <ComboBox
                                         editable="false"   
                                         class="readonlyField"
                                         selectedKey="{list>requestor_empno}"
                                         items="{
-                                                    path : 'user>/UserMgr',
+                                                    path : 'user>/UserMgt',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'}
                                                     ]
@@ -393,7 +402,23 @@
                                         width='100%'
                                         >
                                     <core:Item key="{util>code}" text="{util>code_description}" />
-                                </ComboBox>
+                                </ComboBox> -->
+
+
+                                <CheckBox fieldGroupIds="{= ${list>approval_type_code}==='E'? 'checkBoxs':''}"  visible="{= ${list>approval_type_code}==='E'? true:false }" select=".onCheck" />                  
+                                <!-- <CheckBox fieldGroupIds="{= ${list>approve_status_code}==='DR'? 'checkBoxs':''}"  visible="{= ${list>approve_status_code}==='DR'? true:false }" select=".onCheck" />        -->
+                                
+                                <ObjectIdentifier text="{list>approval_type}" />
+                                <ObjectIdentifier text="{list>company_name}" />
+                                <ObjectIdentifier text="{list>org_name}" />
+                                <ObjectIdentifier text="{list>approval_number}" />
+                                <ObjectIdentifier text="{list>approval_title}" />
+                                <ObjectIdentifier text="{list>requestor_name}" />
+                                <!-- <ObjectIdentifier text="{list>request_date}" /> -->
+                                <DatePicker value="{list>request_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
+                                <ObjectIdentifier text="{list>approve_status}" />
+                                <!-- <ObjectIdentifier text="{list>requestor_empno}" /> -->
+                                
 
                             </cells>
                         </ColumnListItem>

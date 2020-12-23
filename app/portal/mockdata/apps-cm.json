@@ -11,8 +11,8 @@
         },
         {
           "name": "조직별코드관리",
-          "url": "../cm/orgCodeMgr/webapp",
-          "component": "cm.orgCodeMgr"
+          "url": "../cm/orgCodeMgt/webapp",
+          "component": "cm.orgCodeMgt"
         },
         {
           "name": "제어옵션관리",
@@ -37,18 +37,18 @@
         },
         {
           "name": "메시지 관리",
-          "url": "../cm/msgMgr/webapp",
-          "component": "cm.msgMgr"
+          "url": "../cm/msgMgt/webapp",
+          "component": "cm.msgMgt"
         },
         {
           "name": "통화 관리",
-          "url": "../cm/curMgr/webapp",
-          "component": "cm.currencyMgr"
+          "url": "../cm/curMgt/webapp",
+          "component": "cm.currencyMgt"
         },
         {
           "name": "조직 관리",
-          "url": "../cm/organizationMgr/webapp",
-          "component": "cm.organizationMgr"
+          "url": "../cm/organizationMgt/webapp",
+          "component": "cm.organizationMgt"
         },
         {
           "name": "구매 관리 (TBD)",
@@ -79,8 +79,8 @@
       "subMenus": [
         {
           "name": "사용자 관리",
-          "url": "../cm/userMgr/webapp",
-          "component": "cm.userMgr"
+          "url": "../cm/userMgt/webapp",
+          "component": "cm.userMgt"
         },
         {
           "name": "권한관리",

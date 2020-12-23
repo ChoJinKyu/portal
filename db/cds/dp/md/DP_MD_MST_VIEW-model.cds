@@ -2,6 +2,7 @@ namespace dp;
 
 @cds.persistence.exists
 entity Md_Mst_View {
+        chk                             : Boolean               @title:'Checkbox';
         tenant_id                       : String(5)   not null  @title:'테넌트ID';
         company_code                    : String(10)  not null  @title:'회사코드';
         org_type_code                   : String(10)  not null  @title:'조직유형코드';
@@ -78,4 +79,5 @@ entity Md_Mst_View {
         die_form                        : String(10)	        @title:'다이형상';
         mold_size                       : String(10)	        @title:'금형크기';
         local_create_dtm                : DateTime    not null  @title: '로컬등록시간';
+        update_type                     : String(10)            @title: '화면에서 click한 Button';
 }

@@ -23,6 +23,7 @@ import com.sap.cds.services.EventContext;
 import com.sap.cds.services.cds.CdsCreateEventContext;
 import com.sap.cds.services.cds.CdsReadEventContext;
 import com.sap.cds.services.cds.CdsUpdateEventContext;
+import com.sap.cds.services.cds.CdsDeleteEventContext;
 import com.sap.cds.services.cds.CdsService;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.On;
@@ -32,8 +33,10 @@ import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.request.ParameterInfo;
 import com.sap.cds.ql.cqn.CqnUpdate;
 import com.sap.cds.ql.cqn.CqnInsert;
+import com.sap.cds.ql.cqn.CqnDelete;
 import com.sap.cds.ql.Update;
 import com.sap.cds.ql.Insert;
+import com.sap.cds.ql.Delete;
 import com.sap.cds.Result;
 
 
@@ -51,13 +54,48 @@ public class SampleMgr implements EventHandler {
     @Qualifier(SampleMgrService_.CDS_NAME)
     private CdsService sampleMgrService;
 
+    @On(event = CdsService.EVENT_DELETE, entity=SampleViewCud_.CDS_NAME)
+    public void onSampleViewDelete(CdsDeleteEventContext context) { 
+        List<SampleViewCud> v_results = new ArrayList<SampleViewCud>();
+
+        Iterable<Map<String, Object>> values = context.getCqnValueSets();
+
+        while(values.iterator().hasNext()){
+            Map<String, Object> value = values.iterator().next();
+
+            SampleViewCud v_result = SampleViewCud.create();
+            v_result.setHeaderId((Long) value.get("header_id"));
+            v_result.setHeaderCd((String) value.get("header_cd"));
+            v_result.setHeaderName((String) value.get("header_name"));
+            v_result.setDetailId((Long) value.get("detail_id"));
+            v_result.setDetailCd((String) value.get("detail_cd"));
+            v_result.setDetailName((String) value.get("detail_name"));
+
+            SampleHeaders header = SampleHeaders.create();
+            header.setHeaderId((Long) value.get("header_id"));
+            CqnDelete headerDelete = Delete.from(SampleHeaders_.CDS_NAME).matching(header);
+            //long headerDeleteCount = sampleMgrService.run(headerDelete).rowCount();
+            Result resultHeader = sampleMgrService.run(headerDelete);
+            
+
+            SampleDetails detail = SampleDetails.create();
+            detail.setDetailId((Long) value.get("detail_id"));
+            CqnDelete detailDelete = Delete.from(SampleHeaders_.CDS_NAME).matching(detail);
+            //long detailDeleteCount = sampleMgrService.run(detailDelete).rowCount();
+            Result resultDetail = sampleMgrService.run(detailDelete);
+
+            v_results.add(v_result);
+        }
+
+
+        context.setResult(v_results);
+        context.setCompleted();
+    }
 
     @On(event = CdsService.EVENT_UPDATE, entity=SampleViewCud_.CDS_NAME)
     public void onSampleViewUpdate(CdsUpdateEventContext context) { 
 
         List<SampleViewCud> v_results = new ArrayList<SampleViewCud>();
-        
-
 
         List<Map<String, Object>> entries = context.getCqn().entries();
         

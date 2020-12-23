@@ -34,14 +34,14 @@
         }
       },
       "orgMgrService": {
-        "uri": "srv-api/odata/v2/cm.OrgMgrService/",
+        "uri": "srv-api/odata/v2/cm.OrgMgtService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
         }
       },
       "purOrgMgrService": {
-        "uri": "srv-api/odata/v2/cm.PurOrgMgrService/",
+        "uri": "srv-api/odata/v2/cm.PurOrgMgtService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -155,7 +155,8 @@
         ]
     },
     "resourceRoots": {
-        "ext.lib": "../../../../lib"
+        "ext.lib": "../../../../lib",
+        "dp.md.util": "../../util"
     },
     "routing": {
       "config": {

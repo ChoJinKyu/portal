@@ -1,5 +1,5 @@
 <mvc:View
-	controllerName="pg.mi.controller.App"
+	controllerName="pg.mi.miMaster.controller.App"
 	displayBlock="true"
 	xmlns="sap.m"
 	xmlns:f="sap.f"

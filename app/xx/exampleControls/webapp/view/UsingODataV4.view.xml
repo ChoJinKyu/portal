@@ -7,7 +7,7 @@
     height="100%">
 
     <Page id="page" 
-        title="Inline Edit in Table with OData V4" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
+        title="Table Multi Edit with OData V4" titleLevel="H2" class="sapUiContentPadding" showNavButton="true" navButtonPress=".onNavigationBackPress">
 
         <content>
 <!-- 

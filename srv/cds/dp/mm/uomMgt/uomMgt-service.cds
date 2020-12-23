@@ -50,9 +50,10 @@ service UomMgtService {
            u.disable_date,
            l.language_code
     from  uom.Mm_Unit_Of_Measure  u
-    left join uomLng.Mm_Unit_Of_Measure_Lng l
+    left outer join uomLng.Mm_Unit_Of_Measure_Lng l
     on l.tenant_id = u.tenant_id
       and l.uom_code = u.uom_code
+      and l.language_code = 'EN'
     ;
 
 }

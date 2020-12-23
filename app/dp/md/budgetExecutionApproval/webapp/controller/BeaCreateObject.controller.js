@@ -17,14 +17,21 @@ sap.ui.define([
     "sap/m/Label",
     "ext/lib/model/TransactionManager",
     "ext/lib/util/Multilingual",
-    "ext/lib/util/Validator", 
+    "ext/lib/util/Validator",
     "ext/lib/formatter/Formatter", 
     "dp/md/util/controller/MoldItemSelection",
-    "sap/ui/richtexteditor/RichTextEditor",
+    "sap/ui/richtexteditor/RichTextEditor", 
+    "dp/md/BudgetExecutionApproval"
   //  "sap/ui/richtexteditor/EditorType"
 ], function (BaseController, JSONModel, History, ManagedListModel, ManagedModel,  DateFormatter, Filter, FilterOperator, Fragment
-    , MessageBox, MessageToast, UploadCollectionParameter, Device, syncStyleClass, ColumnListItem, Label, TransactionManager, Multilingual
-    , Validator, Formatter, MoldItemSelection,RichTextEditor
+    , MessageBox, MessageToast, UploadCollectionParameter, Device, syncStyleClass, ColumnListItem, Label
+    , TransactionManager
+    , Multilingual
+    , Validator
+    , Formatter
+    , MoldItemSelection
+    , RichTextEditor 
+    , BudgetExecutionApproval 
     // ,EditorType
     ) {
     "use strict";
@@ -39,8 +46,9 @@ sap.ui.define([
     return BaseController.extend("dp.md.budgetExecutionApproval.controller.BeaCreateObject", {
         formatter: Formatter,
         dateFormatter: DateFormatter,
-        validator: new Validator(), 
-        moldItemPop: new MoldItemSelection(),
+      //  validator: new Validator(), 
+        moldItemPop: new MoldItemSelection(), 
+        budget : new BudgetExecutionApproval(),
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -51,9 +59,6 @@ sap.ui.define([
 		 */
         onInit: function () {
 
-            /* 다국어 처리*/
-            var oMultilingual = new Multilingual();
-            this.setModel(oMultilingual.getModel(), "I18N");
             // Model used to manipulate control states. The chosen values make sure,
             // detail page shows busy indication immediately so there is no break in
             // between the busy indication for loading the view's meta data
@@ -62,9 +67,12 @@ sap.ui.define([
                 delay: 0
             });
 
+           /* 다국어 처리*/
+            var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
+
             this.tenant_id = 'L1100';
             this.approval_number = '';
-
 
             this.setModel(oViewModel, mainViewName);
 
@@ -74,12 +82,11 @@ sap.ui.define([
             this.getView().setModel(new ManagedModel(), "company");
             this.getView().setModel(new ManagedModel(), "plant");
 
-            this.getView().setModel(new ManagedListModel(), "MoldItemSelect"); // MoldItemSelect 
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
 
             this.getView().setModel(new ManagedModel(), "appMaster");
             this.getView().setModel(new ManagedListModel(), "appDetail");
-            this.getView().setModel(new ManagedListModel(), "mdItemMaster");
+          //  this.getView().setModel(new ManagedListModel(), "mdItemMaster");
             this.getView().setModel(new ManagedListModel(), "Approvers"); // 승인자 
             this.getView().setModel(new ManagedListModel(), "Referer"); // 참조자 
 
@@ -88,7 +95,7 @@ sap.ui.define([
             oTransactionManager.addDataModel(this.getModel("appMaster"));
             oTransactionManager.addDataModel(this.getModel("appDetail"));
             oTransactionManager.addDataModel(this.getModel("Referer"));
-             oTransactionManager.addDataModel(this.getModel("mdItemMaster"));
+         //   oTransactionManager.addDataModel(this.getModel("mdItemMaster"));
             oTransactionManager.addDataModel(this.getModel("Approvers"));
 
             this.setRichEditor(); // 한번만 로드 
@@ -217,11 +224,13 @@ sap.ui.define([
             var mModel = this.getModel(mainViewName);
             console.log("[ step ] _onObjectMatched args ", oArgs);
             if (oArgs.approval_number) {
-              //  this._onRoutedThisPage(oArgs);
-                var oPageSubSection2 = this.byId("pageChange");
-            this._loadFragment("BudgetExecution", function(oFragment){
-                 oPageSubSection2.addBlock(oFragment);   
-            }) 
+                this._onRoutedThisPage(oArgs);
+                 var oPageSubSection2 = this.byId("pageChange");
+                 this.budget.openFragmentApproval(this, oArgs);
+
+            //  this._loadFragment("BudgetExecutionApproval", function(oFragment){
+            //      oPageSubSection2.addBlock(oFragment);   
+            //   }) 
             } else {
                
                 this._onCreatePagetData(oArgs);
@@ -319,22 +328,6 @@ sap.ui.define([
 
         },
 
-        _loadFragment : function (sFragmentName, oHandler){
-                
-            if(!this._oFragments[sFragmentName]){
-				Fragment.load({
-					id: this.getView().getId(),
-					name: "dp.md.budgetExecutionApproval.view." + sFragmentName,
-					controller: this
-				}).then(function(oFragment){
-					this._oFragments[sFragmentName] = oFragment;
-                    if(oHandler) oHandler(oFragment);
-				}.bind(this));
-			}else{
-				if(oHandler) oHandler(this._oFragments[sFragmentName]);
-			}
-
-        },
 
         _onRoutedThisPage: function (args) {
             console.log("[step] _onRoutedThisPage args>>>> ", args); 
@@ -376,11 +369,7 @@ sap.ui.define([
                 }
             });
    
-            console.log("ItemBudgetExecution >>>>>> 1 ");
-            this._bindView("/ItemBudgetExecution", "mdItemMaster", schFilter, function (oData) {
-                console.log("ItemBudgetExecution >>>>>>", oData);
-        
-            });
+          
             console.log("ItemBudgetExecution >>>>>> 2 ");
             oTransactionManager.setServiceModel(this.getModel());
         },
@@ -416,27 +405,7 @@ sap.ui.define([
             }
             oViewModel.setProperty("/busy", false);
         },
-        /**
-         * @description Participating Supplier 의 delete 버튼 누를시 
-         */
-        onPsDelRow: function () {
-            var psTable = this.byId("psTable")
-                , psModel = this.getModel("appDetail")
-                , oSelected = psTable.getSelectedIndices();
-               
-                ;
-            if (oSelected.length > 0) {
-                oSelected.forEach(function (idx) {
-                    psModel.removeRecord(idx)
-                  //  psModel.markRemoved(idx)
-                });
-                psTable.clearSelection();
-
-                 console.log("psModel" ,  psModel);
-            } else {
-                MessageBox.error("삭제할 목록을 선택해주세요.");
-            }
-        },
+     
         _oFragments: {},
         onCheck: function () { console.log("onCheck") },
 
@@ -527,75 +496,6 @@ sap.ui.define([
             oUploadCollection.setShowSeparators(oEvent.getParameters().selectedItem.getProperty("key"));
         },
 
-        /**
-         * @description moldItemSelect 공통팝업   
-         * @param vThis : view page의 this 
-         *       , oEvent : 이벤트 
-         * ,     , oArges : company_code , org_code (필수)
-		 */ 
-        onMoldItemPopPress : function (oEvent){ 
-
-             var oModel = this.getModel("appDetail");
-             
-            console.log(" appDetail >>>> " , oModel);
-
-			 var mIdArr = [];
-			 if(oModel.oData.ApprovalDetails != undefined && oModel.oData.ApprovalDetails.length >0){
-				 oModel.oData.ApprovalDetails.forEach(function(item){
-					 mIdArr.push(item.mold_id);
-				 });
-			 }
-
-             var oArgs = {
-                company_code : this.getModel('appMaster').oData.company_code , 
-                org_code : this.getModel('appMaster').oData.org_code,
-                mold_progress_status_code : 'DEV_RCV' ,
-                mold_id_arr : mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
-            }
-			
-            var that = this;
-    
-            this.moldItemPop.openMoldItemSelectionPop(this, oEvent, oArgs , function (oDataMold) {
-                console.log("selected data list >>>> ", oDataMold); 
-                if(oDataMold.length > 0){
-                    oDataMold.forEach(function(item){
-                        that._addPsTable(item); 
-                    })
-                }
-            });
-        },
-
-        /**
-         * @description participating row 추가 
-         * @param {*} data 
-         */
-        _addPsTable: function (data) {
-            var oTable = this.byId("psTable"),
-                oModel = this.getModel("appDetail"),
-                mstModel = this.getModel("appMaster");
-            ;
-            /** add record 시 저장할 model 과 다른 컬럼이 있을 경우 submit 안됨 */
-            var approval_number = mstModel.oData.approval_number;
-            oModel.addRecord({
-                "tenant_id": "L1100",
-                "mold_id": String(data.oData.mold_id),
-                "approval_number": approval_number,
-                /*  "model": data.oData.model,
-                  "mold_number": data.oData.mold_number,
-                  "mold_sequence": data.oData.mold_sequence,
-                  "spec_name": data.oData.spec_name,
-                  "mold_item_type_code": data.oData.mold_item_type_code,
-                  "book_currency_code": data.oData.book_currency_code,
-                  "budget_amount": data.oData.budget_amount,
-                  "mold_production_type_code": "",
-                  "asset_type_code": "",
-                  "family_part_number_1": "",
-                  "budget_exrate_date": "",
-                  "inspection_date": "",  */
-                "local_create_dtm": new Date(),
-                "local_update_dtm": new Date()
-            }, "/ApprovalDetails", 0);
-        },
 
         /**
          * @description  // 파일 찾는 row 추가 (employee)

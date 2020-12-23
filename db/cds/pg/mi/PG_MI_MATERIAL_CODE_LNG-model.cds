@@ -19,17 +19,18 @@ namespace pg;
 
 using util from '../../cm/util/util-model';
 using {pg as MI_Code_Text} from '../mi/PG_MI_MATERIAL_CODE_LNG-model';
+using {pg as Mi_Mat_Code} from './PG_MI_MATERIAL_CODE-model';
 
 entity MI_Material_Code_Lng {
-    key tenant_id        : String(5) not null  @title : '회사코드';
-    key mi_material_code : String(40) not null @title : '시황자재코드';
+  key tenant_id         : String(5) not null  @title : '회사코드';
+  key mi_material_code  : String(40) not null @title : '시황자재코드';
 
-        parent           : Association to pg.MI_Material_Code
-                               on  parent.tenant_id        = tenant_id
-                               and parent.mi_material_code = mi_material_code;
+      MI_Material_Codes : Association to Mi_Mat_Code.MI_Material_Code
+                            on  MI_Material_Codes.tenant_id        = tenant_id
+                            and MI_Material_Codes.mi_material_code = mi_material_code;
 
-    key language_code    : String(4) not null  @title : '언어코드';
-        mi_material_name : String(240)         @title : '시황자재명';
+  key language_code     : String(4) not null  @title : '언어코드';
+      mi_material_name  : String(240)         @title : '시황자재명';
 }
 
 

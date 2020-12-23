@@ -29,9 +29,11 @@ sap.ui.define([
     'sap/ui/core/util/ExportTypeCSV',
     "sap/ui/model/odata/v2/ODataModel",
     "ext/lib/util/ExcelUtil",
+    "ext/lib/util/Validator"
 ], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter
     , FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text
-    , Token, Input, ComboBox, Item, Element, syncStyleClass, Label, SearchField, Multilingual, Export, ExportTypeCSV, ODataModel, ExcelUtil) {
+    , Token, Input, ComboBox, Item, Element, syncStyleClass, Label, SearchField, Multilingual, Export, ExportTypeCSV, ODataModel, ExcelUtil
+    , Validator) {
     "use strict";
     /**
      * @description 품의 목록 (총 품의 공통)
@@ -44,15 +46,9 @@ sap.ui.define([
     var path = '';
 
     return BaseController.extend("dp.md.moldApprovalList.controller.ApprovalList", {
-        oRequestorModel: new ODataModel({
-            serviceUrl: "srv-api/odata/v2/dp.MoldApprovalListService/",
-            defaultBindingMode: "OneWay",
-            defaultCountMode: "Inline",
-            refreshAfterChange: false,
-            useBatch: true
-        }),
-
+        
         dateFormatter: DateFormatter,
+        validator: new Validator(),
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -82,7 +78,6 @@ sap.ui.define([
                 intent: "#Template-display"
             }, true);
 
-            
             this._doInitSearch();
 
             var oMultilingual = new Multilingual();
@@ -120,6 +115,7 @@ sap.ui.define([
          * @see init 이후 바로 실행됨
          */
         onAfterRendering: function () {
+            
             this.getModel().setDeferredGroups(["delete"]);
             this.byId("pageSearchButton").firePress();
             return;
@@ -129,10 +125,13 @@ sap.ui.define([
          * @private
          * @see 검색을 위한 컨트롤에 대하여 필요 초기화를 진행 합니다. 
          */
-        _doInitSearch: function () {
+        _doInitSearch: function (oEvent) {
+        
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S";
 
             this.getView().setModel(this.getOwnerComponent().getModel());
+
+            this.setPlant('LGEKR');
 
             /** Date */
             var today = new Date();
@@ -142,6 +141,8 @@ sap.ui.define([
             this.getView().byId("searchCompanyE").setSelectedKeys(['LGEKR']);
             this.getView().byId("searchPlantS").setSelectedKeys(['DFZ']);
             this.getView().byId("searchPlantE").setSelectedKeys(['DFZ']);
+            this.getView().byId("searchApprovalCategoryS").setSelectedKeys(['I']);
+            this.getView().byId("searchApprovalCategoryE").setSelectedKeys(['I']);
 
             this.getView().byId("searchRequestDateS").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
             this.getView().byId("searchRequestDateS").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
@@ -149,6 +150,28 @@ sap.ui.define([
             this.getView().byId("searchRequestDateE").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
         },
 
+
+        setPlant: function(companyCode){
+            
+            var filter = new Filter({
+                            filters: [
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                    new Filter("company_code", FilterOperator.EQ, companyCode)
+                                ],
+                                and: true
+                        });
+
+            var bindItemInfo = {
+                    path: '/Divisions',
+                    filters: filter,
+                    template: new Item({
+                        key: "{org_code}", text: "[{org_code}] {org_name}"
+                    })
+                };
+
+            this.getView().byId("searchPlantS").bindItems(bindItemInfo);
+            this.getView().byId("searchPlantE").bindItems(bindItemInfo);
+        },
 
 
         /* =========================================================== */
@@ -218,10 +241,21 @@ sap.ui.define([
 		 * @public
 		 */
         onPageSearchButtonPress: function (oEvent) {
-            //console.log(oEvent.getParameters());
-            var aSearchFilters = this._getSearchStates();
-            console.log(aSearchFilters);
-            this._applySearch(aSearchFilters);
+           if (oEvent.getParameters().refreshButtonPressed) {
+				// Search field's 'refresh' button has been pressed.
+				// This is visible if you select any master list item.
+				// In this case no new search is triggered, we only
+				// refresh the list binding.
+				this.onRefresh();
+			} else {
+
+                this.validator.validate( this.byId('pageSearchFormE'));
+                if(this.validator.validate( this.byId('pageSearchFormS') ) !== true) return;
+
+                var aSearchFilters = this._getSearchStates();
+                console.log(aSearchFilters);
+				this._applySearch(aSearchFilters);
+			}
         },
 
 		/**
@@ -235,23 +269,14 @@ sap.ui.define([
             var sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
             console.log("oRecord >>>  ", oRecord);
+           
             var that = this;
-            that.getRouter().navTo("pssaObject", {
-
+            that.getRouter().navTo("approvalObject", {
+                company_code: oRecord.company_code
+                , plant_code: oRecord.org_code
+                , approval_type_code: oRecord.approval_type_code
+                , approval_number: oRecord.approval_number
             });
-            // if (oRecord.mold_id % 3 == 0) {
-            //     that.getRouter().navTo("pssaCreateObject", {
-            //         company: "[LGEKR] LG Electronics Inc."
-            //         , plant: "[DFZ] Washing Machine"
-            //     });
-            // } else if (oRecord.mold_id % 3 == 2) {
-
-            // } else {
-            //     that.getRouter().navTo("pssaCreateObject", {
-            //         company: "[LGEKR] LG Electronics Inc."
-            //         , plant: "[DFZ] Washing Machine"
-            //     });
-            // }
 
         },
 
@@ -327,10 +352,10 @@ sap.ui.define([
 
             //var path = '';
 
-            var schFilter = [new Filter("tenant_id", FilterOperator.EQ, 'L1100')];
-                this._bindView("/Requestors", "requestors", schFilter, function(oData){
+            // var schFilter = [new Filter("tenant_id", FilterOperator.EQ, 'L1100')];
+            //     this._bindView("/Requestors", "requestors", schFilter, function(oData){
                     
-                });
+            //     });
             
             this._oValueHelpDialog = sap.ui.xmlfragment("dp.md.moldApprovalList.view.ValueHelpDialogApproval", this);
 
@@ -401,19 +426,22 @@ sap.ui.define([
                     "cols": [
                         {
                             "label": "Name",
-                            "template": "requestors>english_employee_name"
+                            //"template": "requestors>english_employee_name"
+                            "template": "english_employee_name"
                         },
                         {
                             "label": "ID",
-                            "template": "requestors>user_id"
+                            //"template": "requestors>user_id"
+                            "template": "user_id"
                         }
                     ]
                 });
 
-                path = 'requestors>/Requestors';
+                //path = 'requestors>/Requestors';
+                path = '/Requestors';
                 this._oValueHelpDialog.setTitle('Requestor');
-                this._oValueHelpDialog.setKey('requestors>user_id');
-                this._oValueHelpDialog.setDescriptionKey('requestors>english_employee_name');
+                this._oValueHelpDialog.setKey('user_id');
+                this._oValueHelpDialog.setDescriptionKey('english_employee_name');
                
             }
 
@@ -458,7 +486,7 @@ sap.ui.define([
             oToken.setText(this._oInputModel.getValue());
             this._oValueHelpDialog.setTokens([oToken]);
             this._oValueHelpDialog.open();
-            //oFilterBar.search();
+            oFilterBar.search();
             //this.onFilterBarSearch(oFilterBar.search());
             
 
@@ -479,7 +507,7 @@ sap.ui.define([
         },
 
         onFilterBarSearch: function (oEvent) {
-
+            
             var sSearchQuery = this._oBasicSearchField.getValue(),
                 aSelectionSet = oEvent.getParameter("selectionSet");
                 console.log("aSelectionSet ::::", aSelectionSet);
@@ -511,22 +539,22 @@ sap.ui.define([
 
             if (path.indexOf("Models") > -1) {
                 // /Models
-                //_tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+                _tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter("tolower(model)", FilterOperator.Contains, "'" + sSearchQuery.toLowerCase().replace("'", "''") + "'"));
 
             } else if (path.indexOf("PartNumbers") > -1) {
                 //PartNumbers
-                //_tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+                _tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter({ path: "tolower(mold_number)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter({ path: "tolower(mold_item_type_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
                 _tempFilters.push(new Filter({ path: "tolower(spec_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
             }
 
-            else if (path.indexOf("requestors") > -1) {
+            else if (path.indexOf("Requestors") > -1) {
                 //Requestors
-                //_tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
-                _tempFilters.push(new Filter({ path: "user_id", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
-                _tempFilters.push(new Filter({ path: "english_employee_name", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+                _tempFilters.push(new Filter({ path: "tolower(tenant_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+                _tempFilters.push(new Filter({ path: "tolower(user_id)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
+                _tempFilters.push(new Filter({ path: "tolower(english_employee_name)", operator: FilterOperator.Contains, value1: "'" + sSearchQuery.toLowerCase() + "'" }));
             }
 
 
@@ -539,11 +567,16 @@ sap.ui.define([
                 filters: aFilters,
                 and: true
             }));
+
+            // 필터 버튼 visible false 처리..
+            var searchFilterBtn = this.getView().getControlsByFieldGroupId("listFilterBar")[7];
+            searchFilterBtn.setVisible(false);
+
         },
 
         _filterTable: function (oFilter) {
             var oValueHelpDialog = this._oValueHelpDialog;
-
+            
             oValueHelpDialog.getTableAsync().then(function (oTable) {
                 if (oTable.bindRows) {
                     oTable.getBinding("rows").filter(oFilter);
@@ -557,6 +590,7 @@ sap.ui.define([
 
                 oValueHelpDialog.update();
             });
+            
         },
 
         ///////////////////// ValueHelpDialog section Start //////////////////////////
@@ -623,6 +657,8 @@ sap.ui.define([
         */
         onDialogCreate: function () {
             var oView = this.getView();
+            
+
 
             if (!this.pDialog) {
                 this.pDialog = Fragment.load({
@@ -637,6 +673,7 @@ sap.ui.define([
             }
             this.pDialog.then(function (oDialog) {
                 oDialog.open();
+                
             });
 
         },
@@ -667,26 +704,52 @@ sap.ui.define([
 
             var id = toggleButtonId.split('--')[2];
             var page = ""
+            var appTypeCode = "";
             console.log(id);
-            if (id != "") {
-                if (id == "localBudget") {
-                    page = "beaCreateObject"
-                } else if (id == "supplierSelection") {
-                    page = "pssaCreateObject"
-                }
+
+            if(id.indexOf("localBudget") > -1){
+                appTypeCode ="B"
+            }else if(id.indexOf("supplierSelection") > -1){
+                appTypeCode ="E"
+            }else if(id.indexOf("localOrder") > -1){
+               appTypeCode ="V" 
+            }else if(id.indexOf("receipt") > -1){
+                appTypeCode ="I"
+            }else if(id.indexOf("export") > -1){
+                appTypeCode ="X"
             }
-            console.log("page >>>", page);
+            // else if(id.indexOf("importBudget") > -1){
+            //     appTypeCode ="E"
+            // }else if(id.indexOf("importOrder") > -1){
+            //     appTypeCode ="E"
+            // }else if(id.indexOf("importCompletion") > -1){
+            //     appTypeCode ="E"
+            // }else if(id.indexOf("repModCompletion") > -1){
+            //     appTypeCode ="E"
+            // }else if(id.indexOf("otherIn") > -1){
+            //     appTypeCode ="E"
+            // }else if(id.indexOf("otherOut") > -1){
+            //     appTypeCode ="E"
+            // }else if(id.indexOf("prodSupplierAmend") > -1){
+            //     appTypeCode ="E"
+            // }else if(id.indexOf("itemCancel") > -1){
+            //     appTypeCode ="E"
+            // }
+           
+
 
             var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
             for (var i = 0; i < groupId.length; i++) {
                 if (groupId[i].getPressed() == true) {
                     console.log(groupId[i].mProperties.text);
+                    console.log(appTypeCode);
                     console.log(this.byId("searchCompanyF").getValue());
                     console.log(this.byId("searchPlantF").getValue());
-                    this.getRouter().navTo(page, {
-                        company: this.byId("searchCompanyF").getValue()
-                        , plant: this.byId("searchPlantF").getValue()
-                        ,
+                    this.getRouter().navTo("approvalObject", {
+                        company_code: this.byId("searchCompanyF").getSelectedKey()
+                        , plant_code: this.byId("searchPlantF").getSelectedKey()
+                        , approval_type_code: appTypeCode
+                        , approval_number: "New"
                     });
                 }
             }
@@ -739,9 +802,9 @@ sap.ui.define([
                     onClose: function (sButton) {
                         if (sButton === MessageBox.Action.OK) {
                             oSelected.forEach(function (idx) {
-                                console.log(lModel.getData().ApprovalMasters[idx]);
-                                console.log(lModel.getData().ApprovalMasters[idx].__entity);
-                                oModel.remove(lModel.getData().ApprovalMasters[idx].__entity, {
+                                console.log(lModel.getData().Approvals[idx]);
+                                console.log(lModel.getData().Approvals[idx].__entity);
+                                oModel.remove(lModel.getData().Approvals[idx].__entity, {
                                     groupId: "delete"
                                 });
                             });
@@ -795,12 +858,12 @@ sap.ui.define([
 		 * @private
 		 */
         _applySearch: function (aSearchFilters) {
-            console.log(aSearchFilters);
+            
             var oView = this.getView(),
                 oModel = this.getModel("list");
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
-            oModel.read("/ApprovalMasters", {
+            oModel.read("/Approvals", {
                 filters: aSearchFilters,
                 success: function (oData) {
                     oView.setBusy(false);
@@ -811,17 +874,16 @@ sap.ui.define([
         _getSearchStates: function () {
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S"
 
-            var aCompany = this.getView().byId("searchCompany" + sSurffix).getSelectedItems();
-            var aPlant = this.getView().byId("searchPlant" + sSurffix).getSelectedItems();
+            var aCompany = this.getView().byId("searchCompany" + sSurffix).getSelectedKeys();
+            var aPlant = this.getView().byId("searchPlant" + sSurffix).getSelectedKeys();
             var sDateFrom = this.getView().byId("searchRequestDate" + sSurffix).getDateValue();
             var sDateTo = this.getView().byId("searchRequestDate" + sSurffix).getSecondDateValue();
-            var sCategory = this.getView().byId("searchApprovalCategory" + sSurffix).getSelectedItems();
+            var sCategory = this.getView().byId("searchApprovalCategory" + sSurffix).getSelectedKeys();
             var sSubject = this.getView().byId("searchSubject").getValue().trim();
             var sModel = this.getView().byId("searchModel").getValue().trim();
             var sPart = this.getView().byId("searchPart").getValue().trim();
             var sRequestor = this.getView().byId("searchRequestor").getValue().trim();
             var sStatus = this.getView().byId("searchStatus").getSelectedKey();
-
 
             var aSearchFilters = [];
 
@@ -829,8 +891,7 @@ sap.ui.define([
                 var _tempFilters = [];
 
                 sCategory.forEach(function (item, idx, arr) {
-                    console.log(item.mProperties.key)
-                    _tempFilters.push(new Filter("approval_type_code", FilterOperator.EQ, item.mProperties.key));
+                    _tempFilters.push(new Filter("approval_type_code", FilterOperator.EQ, item));
                 });
 
                 aSearchFilters.push(
@@ -846,7 +907,7 @@ sap.ui.define([
                 var _tempFilters = [];
 
                 aCompany.forEach(function (item, idx, arr) {
-                    _tempFilters.push(new Filter("company_code", FilterOperator.EQ, item.mProperties.key));
+                    _tempFilters.push(new Filter("company_code", FilterOperator.EQ, item));
                 });
 
                 aSearchFilters.push(
@@ -861,7 +922,7 @@ sap.ui.define([
                 var _tempFilters = [];
 
                 aPlant.forEach(function (item, idx, arr) {
-                    _tempFilters.push(new Filter("org_code", FilterOperator.EQ, item.mProperties.key));
+                    _tempFilters.push(new Filter("org_code", FilterOperator.EQ, item));
                 });
 
                 aSearchFilters.push(
@@ -901,11 +962,11 @@ sap.ui.define([
             }
 
             if (sPart) {
-                aSearchFilters.push(new Filter("tolower(part_number)", FilterOperator.Contains, "'" + sPart.toLowerCase() + "'"));
+                aSearchFilters.push(new Filter("tolower(mold_number)", FilterOperator.Contains, "'" + sPart.toLowerCase() + "'"));
             }
 
             if (sRequestor) {
-                aSearchFilters.push(new Filter("tolower(user_id)", FilterOperator.Contains, "'" + sRequestor.toLowerCase() + "'"));
+                aSearchFilters.push(new Filter("tolower(email_id)", FilterOperator.Contains, "'" + sRequestor.toLowerCase() + "'"));
             }
 
             if (sSubject) {
@@ -992,7 +1053,7 @@ sap.ui.define([
 
 				// binding information for the rows aggregation
 				rows : {
-					path : "/ApprovalMasters"
+					path : "/Approvals"
 				},
 
 				// column definitions with column name and binding info for the content
@@ -1049,19 +1110,19 @@ sap.ui.define([
         },
         onExportPress: function (_oEvent) {
             var sTableId = _oEvent.getSource().getParent().getParent().getId();
-            console.log(sTableId);
             if (!sTableId) { return; }
 
             var oTable = this.byId(sTableId);
-            var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
-            //var oData = this.getModel("list").getProperty("/Message"); //binded Data
-            console.log(sFileName);
-            var oData = oTable.getModel().getProperty("/ApprovalMasters");
+                        //var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
+            var sFileName = "MOLD APPROVAL LIST"; //file name to exporting
+            var oData = oTable.getModel("list").getProperty("/Approvals");
+            console.log(oData);
             ExcelUtil.fnExportExcel({
                 fileName: sFileName || "SpreadSheet",
                 table: oTable,
                 data: oData
             });
+
         },
         onImportChange: function (_oEvent) {
             var oTable = _oEvent.getSource().getParent().getParent();
@@ -1074,7 +1135,7 @@ sap.ui.define([
                 file: _oEvent.getParameter("files") && _oEvent.getParameter("files")[0],
                 model: oExcelModel,
                 success: function () {
-                    var aTableData = oModel.getProperty("/ApprovalMasters") || [],
+                    var aTableData = oModel.getProperty("/Approvals") || [],
                         aCols = oTable.getColumns(),
                         oExcelData = this.model.getData();
 
@@ -1099,7 +1160,7 @@ sap.ui.define([
                             });
                             aTableData.push(newObj);
                         });
-                        oModel.setProperty("/ApprovalMasters", aTableData);
+                        oModel.setProperty("/Approvals", aTableData);
                     }
                 }
             });

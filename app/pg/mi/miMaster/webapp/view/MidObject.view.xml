@@ -1,5 +1,5 @@
 <mvc:View
-    controllerName="pg.mi.controller.MidObject"
+    controllerName="pg.mi.miMaster.controller.MidObject"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
     xmlns:uxap="sap.uxap"
@@ -136,7 +136,15 @@
                                                 class="sapMLabelNoText"
                                                 visible="{=!${oUi>/createMode}}"
                                         /> 
-                                        <ComboBox
+                                        <Input id="input_category_text" visible="false"/>
+                                        <Input id="input_category_code"
+                                            visible="{oUi>/createMode}"
+                                            required="{oUi>/createMode}"
+                                            submit=".onValueHelpCategorySearchDialog" 
+                                            placeholder="선택하세요"
+                                            valueHelpRequest=".onValueHelpCategorySearchDialog" 
+                                            showValueHelp="true"/>                                  
+                                        <!-- <ComboBox
                                             id="comboBoxCategory_code"
                                             items="{
                                                 path: '/MICategoryHierarchyStructure', 
@@ -146,7 +154,7 @@
                                             required="{oUi>/createMode}"
                                             placeholder="선택하세요">
                                             <core:Item key="{category_code}" text="{category_code}" />
-                                        </ComboBox>
+                                        </ComboBox> -->
                                         <Label  text="사용여부" 
                                                 design="Bold" 
                                                 class="sapMLabelNoText"/>

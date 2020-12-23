@@ -13,7 +13,7 @@
         "resources": "resources.json",
         "dataSources": {
             "mainService": {
-                "uri": "srv-api/odata/v2/cm.userMgtService/",
+                "uri": "srv-api/odata/v2/cm.UserMgtService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
@@ -144,7 +144,7 @@
                 }
             },
             "roleGroup": {
-                "dataSource": "roleGroupMgtservice",
+                "dataSource": "roleGroupMgtService",
                 "preload": true,
                 "settings": {
                     "operationMode": "Server",
