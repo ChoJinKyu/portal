@@ -70,8 +70,8 @@ service MoldApprovalListService {
 
    view AppMaster as 
         select 
-            m.tenant_id             
-            , m.approval_number        
+          key  m.tenant_id             
+            , key m.approval_number        
             , m.legacy_approval_number 
             , m.company_code           
             , m.org_type_code          
@@ -143,5 +143,5 @@ service MoldApprovalListService {
     join emp.Hr_Employee  emp on emp.employee_number = ar.approver_empno 
     join  Dept hr on hr.department_id = emp.department_id  and hr.tenant_id = emp.tenant_id 
     order by approve_sequence asc 
-    ;  
+    ;
 }
