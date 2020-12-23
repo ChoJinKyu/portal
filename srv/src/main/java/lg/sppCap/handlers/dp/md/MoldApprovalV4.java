@@ -40,10 +40,13 @@ public class MoldApprovalV4 implements EventHandler {
     @On(event = SaveMoldApprovalContext.CDS_NAME)
     public void onSave(SaveMoldApprovalContext context){
         System.out.println(" >>>>>>> "+ context);
-        SaveReturnType data = context.getInputData();
+        Data data = context.getInputData();
         try {
+            Connection conn = jdbc.getDataSource().getConnection();
+
+
             System.out.println(" >>>>>>> "+ data); 
-            context.setResult(data);
+          //  context.setResult(data);
             context.setCompleted();
         } catch (Exception e) {
            e.printStackTrace();
