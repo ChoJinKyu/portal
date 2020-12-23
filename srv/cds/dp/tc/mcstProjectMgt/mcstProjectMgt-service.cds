@@ -7,7 +7,7 @@ using {dp as mcstPjtAddInfo} from '../../../../../db/cds/dp/tc/DP_TC_MCST_PROJEC
 namespace dp;
 
 @path : '/dp.McstProjectMgtService'
-service ProjectMgtService {
+service McstProjectMgtService {
     entity McstProject as projection on mcstPjt.Tc_Mcst_Project;
     entity McstProjectEvent as projection on mcstPjtEvt.Tc_Mcst_Project_Event;
     entity McstProjectSimilarModel as projection on mcstPjtSimilarModel.Tc_Mcst_Project_Similar_Model;
