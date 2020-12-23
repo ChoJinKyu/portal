@@ -132,7 +132,7 @@
                             sticky="HeaderToolbar,ColumnHeaders"
                             >
                                  <columns>  
-                                       <Column minScreenWidth ="" demandPopin="false" mergeDuplicates="true" mergeFunctionName="data#material_code">
+                                       <Column minScreenWidth ="" demandPopin="false" importance="High"  popinDisplay="WithoutHeader">
                                         <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "material_code",  "leadingProperty": "material_code", "sortProperty": "material_code", "filterProperty": "material_code", "columnIndex": 1}'/>
