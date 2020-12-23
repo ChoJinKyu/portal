@@ -56,7 +56,7 @@ xmlns:table="sap.ui.table">
                          singleContainerFullSize="true">
 			<form:content>
 				<!-- Participating Supplier Table -->
-				<table:Table id="budgetExecutionTable" 
+				<table:Table id="psTable" 
                              selectionMode="MultiToggle" 
                              fixedColumnCount="6" 
                              visibleRowCountMode="Auto" 
@@ -65,13 +65,13 @@ xmlns:table="sap.ui.table">
 						<OverflowToolbar>
 							<ToolbarSpacer/>
 							<!-- Add the Personalization button -->
-							    <Button id="btnBeaAdd" type="Transparent" text="{I18N>/ROW_ADD}" press=".onBudgetExecutionAddPress">
+							    <Button id="btnBeaAdd" type="Transparent" text="{I18N>/ROW_ADD}" press=".onPSSelectionAddPress">
 								<!-- Add -->
 								<customData>
 									<core:CustomData key="multi" value="true"/>
 								</customData>
 							</Button>
-							<Button id="btnBeaDelete" type="Transparent" text="{I18N>/ROW_DELETE}" press=".onBudgetExecutionDelRow"/>
+							<Button id="btnBeaDelete" type="Transparent" text="{I18N>/ROW_DELETE}" press=".onPSSelectionDelRow"/>
                             <Button id="btnSupplier" type="Emphasized" text="Supplier Selection" press=".onSuppValueHelpRequested"/>
 						</OverflowToolbar>
 					</table:extension>

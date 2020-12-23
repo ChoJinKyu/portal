@@ -152,7 +152,7 @@ sap.ui.define([
         /**
          * @description : Popup 창 : 품의서 Participating Supplier 항목의 Add 버튼 클릭
          */
-        onPartcipatingAddRow: function (oEvent) {
+        onPSSelectionAddPress: function (oEvent) {
             var oModel = this.getModel("appDetail");
 
             var mIdArr = [];
@@ -203,7 +203,7 @@ sap.ui.define([
                 "mold_production_type_code": data.oData.mold_production_type_code,
                 "family_part_number_1": data.oData.family_part_number_1
             }, "/ApprovalDetails", 0);
-            //this.validator.clearValueState(this.byId("poItemTable"));
+            //this.validator.clearValueState(this.byId("psTable"));
         },
 
         onSuppValueHelpRequested: function(oEvent){
@@ -233,8 +233,8 @@ sap.ui.define([
         /**
          * @description Purchase Order Item 의 delete 버튼 누를시 
          */
-        onPoItemDelRow: function () {
-            var oTable = this.byId("poItemTable"),
+        onPSSelectionDelRow: function () {
+            var oTable = this.byId("psTable"),
                 oModel = this.getModel("appDetail"),
                 oSelected = oTable.getSelectedIndices().reverse();
 
