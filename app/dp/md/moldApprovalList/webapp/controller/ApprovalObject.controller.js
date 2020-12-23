@@ -777,6 +777,114 @@ sap.ui.define([
             oEvent.getParameter("selectedItems");
         },
 
+        /**
+         * today
+         * @private
+         * @return yyyy-mm-dd
+         */
+        _getToday: function () {
+            var date_ob = new Date();
+            var date = ("0" + date_ob.getDate()).slice(-2);
+            var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+            var year = date_ob.getFullYear();
+
+            console.log(year + "-" + month + "-" + date);
+            return year + "" + month + "" + date;
+        },
+
+
+        onPageDraftButtonPress: function (){
+            var mst = this.getModel("appMaster").getData() ,
+                apr = this.getModel("approver").getData() ,
+                ref = this.getModel("referer").getData(); 
+            console.log(" this.getModel appMaster " , mst);
+            console.log(" this.getModel approver " , apr);
+            console.log(" this.getModel referer" , ref);
+            var data = {};
+            var that = this;
+            var approvalMaster = {
+                    tenant_id : this.tenant_id 
+                //,  approval_number : this.approval_number 
+               // ,  company_code : this.company_code 
+               // ,  org_code : this.plant_code 
+               // ,  chain_code : 'DP'
+               // ,  approval_type_code : this.approval_type_code 
+               // ,  approval_title : mst.approval_title 
+               // ,  approval_contents : mst.approval_contents 
+              //  ,  approve_status_code : mst.approve_status_code 
+               // ,  requestor_empno : mst.requestor_empno 
+               // ,  request_date : this._getToday() 
+               // ,  local_create_dtm : new Date() 
+               // ,  local_update_dtm : new Date()
+            };
+
+            var aprArr = [];
+            if(apr.Approvers.length > 0){
+                apr.Approvers.forEach(function(item){ 
+                    aprArr.push({
+                        tenant_id : that.tenant_id 
+                        , approval_number : that.approval_number 
+                        , approve_comment : item.approve_comment 
+                        , approve_date_time : item.approve_date_time 
+                        , approve_status_code : item.approve_status_code 
+                        , approver_type_code : item.approver_type_code 
+                        , approver_empno : item.approver_empno
+                    });
+                    
+                });
+            }
+
+            var appDtl = this.getModel("mdItemMaster");
+            console.log(" appDtl >>>>  ItemBudgetExecution"  , appDtl);
+
+            data = {
+              inputData : { 
+                  approvalMaster : approvalMaster 
+                , approvalDetails : [] 
+                , approver : aprArr 
+                , moldMaster : [] 
+                , referer : [] 
+                } 
+            }
+
+
+
+            /**
+             * 
+            this.getView().setModel(new ManagedModel(), "appMaster");
+            this.getView().setModel(new ManagedListModel(), "approver");
+            this.getView().setModel(new ManagedListModel(), "referer");
+             */
+             this.callAjax(data,"saveMoldApproval")
+
+
+        } , 
+
+
+        callAjax : function (data,fn) {  
+            console.log("data >>>> " , data);
+
+            //  /dp/md/moldApprovalList/webapp/srv-api/odata/v2/dp.MoldApprovalListService/RefererSearch
+            //  "xx/sampleMgr/webapp/srv-api/odata/v4/xx.SampleMgrV4Service/SaveSampleHeaderMultiProc"
+           var url = "/dp/md/moldApprovalList/webapp/srv-api/odata/v4/dp.MoldApprovalV4Service/"+fn;
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                //datatype: "json",
+                data : JSON.stringify(data),
+                contentType: "application/json",
+                success: function(data){
+
+                },
+                error: function(e){
+                    
+                }
+            });
+        }
+
+        /*
+
         onPageDraftButtonPress: function () {
             var oView = this.getView(),
                 verModel = this.getModel("approver");
@@ -807,8 +915,9 @@ sap.ui.define([
                     };
                 }
             });
+            
 
         }
-
+        */
     });
 });
