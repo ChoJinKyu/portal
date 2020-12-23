@@ -47,8 +47,18 @@ public class MoldApprovalV4 implements EventHandler {
         ]
     }
     *********************************/
-   
-    
+    @On(event = SaveMoldApprovalContext.CDS_NAME)
+    public void onSave(SaveMoldApprovalContext context){
+
+        SaveReturnType data = context.getInputData();
+        try {
+            System.out.println(" >>>>>>> "+ data);
+        } catch (Exception e) {
+            //TODO: handle exception
+        }
+
+
+    }    
 
 
 }
