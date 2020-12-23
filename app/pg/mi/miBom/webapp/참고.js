@@ -1,3 +1,18 @@
+MIMaterialCodeBOMManagementHeader(tenant_id='L2100',material_code='1000149',supplier_code='KR01818401',mi_bom_id='70410dec-e97d-c004-2630-c5b274ce3777')
+
+MIMaterialCodeBOMManagementHeader(tenant_id='L2100',material_code='1000149',supplier_code='KR01818401',mi_bom_id='70410dec-e97d-c004-2630-c5b274ce3777')        
+
+
+_oUiData
+_deleteItem
+materialTable
+oMaterialTableList
+unitOfMeasureView
+oMidList
+oUiData
+mIMatListView
+mIMaterialCostInformationView
+omidList
 readChecklistItemEntity(oDeleteInfoOdata[i]).then(function(oDeleteInfoOdata) {
     var that = this;
     console.log(" >>>>>>>>>>>>>>>>>>> readChecklistItemEntity then <<<<<<<<<<<<<<<<<<<<<<<< ");
