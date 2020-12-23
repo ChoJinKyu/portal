@@ -10,6 +10,7 @@ namespace dp;
 service McstProjectMgtService {
     entity McstProject as projection on mcstPjt.Tc_Mcst_Project;
     entity McstProjectEvent as projection on mcstPjtEvt.Tc_Mcst_Project_Event;
+    entity McstProjectExrate as projection on mcstPjtExrate.Tc_Mcst_Project_Base_Exrate;
     entity McstProjectSimilarModel as projection on mcstPjtSimilarModel.Tc_Mcst_Project_Similar_Model;
     entity McstProjectAddInfo as projection on mcstPjtAddInfo.Tc_Mcst_Project_Addition_Info;
 }

@@ -42,7 +42,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="공고기간" labelFor="searchDateS"></Label>
+                            <Label text="공고기간:" labelFor="searchDateS"></Label>
                             <DateRangeSelection id="searchDateS" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD"/>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />

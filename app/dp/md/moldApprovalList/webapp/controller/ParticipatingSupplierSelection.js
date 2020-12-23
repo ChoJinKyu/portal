@@ -20,10 +20,12 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "sap/ui/richtexteditor/RichTextEditor",
     "dp/md/util/controller/MoldItemSelection",
-    "dp/md/util/controller/SupplierSelection"
+    "dp/md/util/controller/SupplierSelection",
+    "sap/ui/core/Item",
 ], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
     Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, MoldItemSelection, SupplierSelection
+    ,Item
 ) {
     "use strict";
 
@@ -56,7 +58,9 @@ sap.ui.define([
             console.log("participating 호출");
             this.oThis = oThis; 
             var schFilter = [];
-            this.oThis.getView().setModel(new ManagedListModel(), "psItemMaster");
+            var schFilter2 = [];
+            this.oThis.getView().setModel(new ManagedListModel(), "psItemMaster"); //그리드 전체
+            this.oThis.getView().setModel(new ManagedListModel(), "psOrgCode"); //currency 콤보박스
             if(this.oThis.approval_number == "New"){
 
             }else{
@@ -64,11 +68,22 @@ sap.ui.define([
                 , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
                 ]; 
 
+                schFilter2 = [
+                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                    new Filter("group_code", FilterOperator.EQ, 'DP_MD_LOCAL_CURRENCY' ),
+                    new Filter("language_cd", FilterOperator.EQ, 'KO' ),
+                    new Filter("org_code", FilterOperator.EQ, this.oThis.company_code)
+                ]; 
+
                 this._bindView2("/ParticipatingSupplier", "psItemMaster", schFilter, function (oData) {
                     console.log("ParticipatingSupplier >>>>>>", oData);
                 });
-            }
 
+                 this._bindView3("/OrgCodeLanguages", "psOrgCode", schFilter2, function (oData) {
+                    console.log("OrgCodeLanguages >>>>>>", oData);
+                });
+            }
+            
             this.oThis.getView().setModel(new ManagedListModel(), "appDetail");
             this.oThis.getView().setModel(new ManagedListModel(), "moldMaster");
 /*
@@ -77,17 +92,30 @@ sap.ui.define([
 */
             var oPageSubSection2 = this.oThis.byId("pageSection");
             this._loadFragmentPOILocal("ParticipatingSupplierSelection", function(oFragment){
-                 oPageSubSection2.addBlock(oFragment);   
-              }) 
+                oPageSubSection2.addBlock(oFragment);   
+            })
         },
 
         _bindView2 : function (sObjectPath, sModel, aFilter, callback) { 
-            console.log(" 호출 됐나??? ");
-            console.log("this.oThis.getModel(supplier) ::", this.oThis.getModel("participatingSupplierSelection"))
             var oView = this.oThis.getView(),
                 oModel = this.oThis.getModel(sModel);
             oView.setBusy(true);
             oModel.setTransactionModel(this.oThis.getModel("participatingSupplierSelection"));
+            oModel.read(sObjectPath, {
+                filters: aFilter,
+                success: function (oData) {
+                    oView.setBusy(false);
+                    callback(oData);
+                }
+            });
+        },
+
+        _bindView3 : function (sObjectPath, sModel, aFilter, callback) { 
+            console.log("this.oThis.getModel(orgCode) ::", this.oThis.getModel("orgCode"))
+            var oView = this.oThis.getView(),
+                oModel = this.oThis.getModel(sModel);
+            oView.setBusy(true);
+            oModel.setTransactionModel(this.oThis.getModel("orgCode"));
             oModel.read(sObjectPath, {
                 filters: aFilter,
                 success: function (oData) {
@@ -124,7 +152,7 @@ sap.ui.define([
         /**
          * @description : Popup 창 : 품의서 Participating Supplier 항목의 Add 버튼 클릭
          */
-        onPartcipatingAddRow: function (oEvent) {
+        onPSSelectionAddPress: function (oEvent) {
             var oModel = this.getModel("appDetail");
 
             var mIdArr = [];
@@ -175,7 +203,7 @@ sap.ui.define([
                 "mold_production_type_code": data.oData.mold_production_type_code,
                 "family_part_number_1": data.oData.family_part_number_1
             }, "/ApprovalDetails", 0);
-            //this.validator.clearValueState(this.byId("poItemTable"));
+            //this.validator.clearValueState(this.byId("psTable"));
         },
 
         onSuppValueHelpRequested: function(oEvent){
@@ -205,8 +233,8 @@ sap.ui.define([
         /**
          * @description Purchase Order Item 의 delete 버튼 누를시 
          */
-        onPoItemDelRow: function () {
-            var oTable = this.byId("poItemTable"),
+        onPSSelectionDelRow: function () {
+            var oTable = this.byId("psTable"),
                 oModel = this.getModel("appDetail"),
                 oSelected = oTable.getSelectedIndices().reverse();
 
@@ -229,6 +257,5 @@ sap.ui.define([
             console.log();
         },
         /** PO Item End */
-
     });
 });
