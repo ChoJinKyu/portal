@@ -37,7 +37,6 @@ entity Tc_Project {
     key tenant_id               : String(5) not null  @title : '테넌트ID';
     key project_code            : String(30) not null @title : '프로젝트코드';
     key model_code              : String(40) not null @title : '모델코드';
-        version_sequence        : Decimal             @title : '버전순서';
         project_name            : String(100)         @title : '프로젝트명';
         model_name              : String(100)         @title : '모델명';
         company_code            : String(10)          @title : '회사코드';
