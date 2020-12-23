@@ -21,8 +21,8 @@ entity TC_Project_View {
         project_leader_empno        : String(30)          @title : '프로젝트리더사번';
         buyer_empno                 : String(30)          @title : '구매담당자사번';
         customer_local_name         : String(50)          @title : '고객로컬명';
-        oem_customer_name           : String(100)         @title : 'OEM고객명';
-        car_type_name               : String(50)          @title : '차종명';
+        last_customer_name          : String(240)         @title : '최종고객명';
+        customer_model_desc         : String(50)          @title : '고객모델설명';
         mcst_yield_rate             : Decimal             @title : '재료비수율';
         bom_type_code               : String(30)          @title : '자재명세서유형코드';
         sales_currency_code         : String(3)           @title : '매출통화코드';

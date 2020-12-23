@@ -109,7 +109,7 @@
                     id="smartTable_MainTable_ResponsiveTable"
                     entitySet="MIMatListView"
                     tableBindingPath="{MIMatListView}"
-                    initiallyVisibleFields="mi_material_code,mi_material_name,category_code,category_name,use_flag"
+                    initiallyVisibleFields="mi_material_code,mi_material_name,category_name,use_flag,category_code"
                     smartFilterId="smartFilterBar"
                     tableType="ResponsiveTable"
                     useExportToExcel="true"
@@ -153,47 +153,56 @@
                                     mode="MultiSelect"
                                     sticky="HeaderToolbar,ColumnHeaders">
                                  <columns>  
-                                 
-                                       <Column hAlign="Center"  demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                                       <Column minScreenWidth ="" demandPopin="false" importance="High"  popinDisplay="WithoutHeader">
                                         <customData>
                                         <core:CustomData key="p13nData"
-                                        value='\{"columnKey": "mi_material_code", "leadingProperty": "mi_material_code", "sortProperty": "mi_material_code", "filterProperty": "mi_material_code", "columnIndex": 4}'/>
+                                        value='\{"columnKey": "mi_material_code", "leadingProperty": "mi_material_code", "sortProperty": "mi_material_code", "filterProperty": "mi_material_code", "columnIndex": 1}'/>
                                         </customData>
                                             <Text text="시황자재코드"></Text>
                                         </Column>
 
-                                        <Column hAlign="Center" demandPopin="true" importance="High" popinDisplay="Inline">
+                                        <Column minScreenWidth ="" demandPopin="false" importance="High">
                                           <customData>
                                         <core:CustomData key="p13nData"
-                                        value='\{"columnKey": "mi_material_name", "leadingProperty": "mi_material_name", "sortProperty": "mi_material_name", "filterProperty": "mi_material_name", "columnIndex": 5}'/>
+                                        value='\{"columnKey": "mi_material_name", "leadingProperty": "mi_material_name", "sortProperty": "mi_material_name", "filterProperty": "mi_material_name", "columnIndex": 2}'/>
                                         </customData>
                                              <Text text="시황자재명"></Text>
                                         </Column>
-                                        <Column hAlign="Center" demandPopin="true" popinDisplay="Inline">
+                                        <Column minScreenWidth ="" demandPopin="false" importance="High">
                                           <customData>
                                         <core:CustomData key="p13nData"
-                                        value='\{"columnKey": "category_name", "leadingProperty": "category_name", "sortProperty": "category_name", "filterProperty": "category_name", "columnIndex": 7}'/>
+                                        value='\{"columnKey": "category_name", "leadingProperty": "category_name", "sortProperty": "category_name", "filterProperty": "category_name", "columnIndex": 3}'/>
                                         </customData>
                                              <Text text="Category명"></Text>
                                         </Column>
 
-                                        <Column hAlign="Center" demandPopin="true" popinDisplay="Inline">
+                                        <Column minScreenWidth ="" demandPopin="true">
                                           <customData>
                                         <core:CustomData key="p13nData"
-                                        value='\{"columnKey": "use_flag", "leadingProperty": "use_flag", "sortProperty": "use_flag", "filterProperty": "use_flag", "columnIndex": 8}'/>
+                                        value='\{"columnKey": "use_flag", "leadingProperty": "use_flag", "sortProperty": "use_flag", "filterProperty": "use_flag", "columnIndex": 4}'/>
                                         </customData>
                                              <Text text="사용여부"></Text>                                                                             
                                         </Column>
 
+                                        <Column visible="false" minScreenWidth ="" demandPopin="true">
+                                          <customData>
+                                        <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "category_code", "leadingProperty": "category_code", "sortProperty": "category_code", "filterProperty": "category_code", "columnIndex": 5}'/>
+                                        </customData>
+                                             <Text text="사용여부"></Text>                                                                             
+                                        </Column>
+                                        
+
                                     </columns>
                                     <items>
                                         <ColumnListItem type="Navigation" hAlign="Middle" press=".onMainTableItemPress">
-                                             <Text text="{mi_material_code}"></Text>
-                                             <Text text="{mi_material_name}"></Text>
-                                             <Text text="{category_name}"></Text>
-                                             <Text text="{= ${use_flag} ? 'Yes':'No'}"></Text>  
+                                             <Text textAlign="Center" text="{mi_material_code}"></Text>
+                                             <Text textAlign="Center" text="{mi_material_name}"></Text>
+                                             <Text textAlign="Center" text="{category_name}"></Text>
+                                             <Text textAlign="Center" text="{= ${use_flag} ? 'Yes':'No'}"></Text>  
+                                             <Text textAlign="Center" text="{category_code}"></Text>
                                         </ColumnListItem>
-                                    </items>
+                                    </items> 
                                 </Table>
                 </smartTable:SmartTable>
         

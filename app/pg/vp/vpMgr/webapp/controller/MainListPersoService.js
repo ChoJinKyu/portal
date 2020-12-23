@@ -4,49 +4,49 @@ sap.ui.define(["jquery.sap.global"],
 
         var _columns = [
             {
-                id: "vpMgr-mainList-mainColumnCode",
+                id: "vpMgt-mainList-mainColumnCode",
                 order: 0,
                 text: "Code",
                 visible: true
             },
             {
-                id: "vpMgr-mainList-mainColumnName",
+                id: "vpMgt-mainList-mainColumnName",
                 order: 1,
                 text: "Name",
                 visible: false
             },
             {
-                id: "vpMgr-mainList-mainColumnStartDate",
+                id: "vpMgt-mainList-mainColumnStartDate",
                 order: 2,
                 text: "Start Date",
                 visible: false
             },
             {
-                id: "vpMgr-mainList-mainColumnEndDate",
+                id: "vpMgt-mainList-mainColumnEndDate",
                 order: 3,
                 text: "End Date",
                 visible: true
             },
             {
-                id: "vpMgr-mainList-mainColumnSiteFlag",
+                id: "vpMgt-mainList-mainColumnSiteFlag",
                 order: 4,
                 text: "Site",
                 visible: true
             },
             {
-                id: "vpMgr-mainList-mainColumnCompanyFlag",
+                id: "vpMgt-mainList-mainColumnCompanyFlag",
                 order: 5,
                 text: "Company",
                 visible: true
             },
             {
-                id: "vpMgr-mainList-mainColumnOrganizationFlag",
+                id: "vpMgt-mainList-mainColumnOrganizationFlag",
                 order: 6,
                 text: "Organization",
                 visible: true
             },
             {
-                id: "vpMgr-mainList-mainColumnUserFlag",
+                id: "vpMgt-mainList-mainColumnUserFlag",
                 order: 7,
                 text: "User",
                 visible: true

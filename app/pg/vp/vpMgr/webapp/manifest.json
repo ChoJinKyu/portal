@@ -1,7 +1,7 @@
 {
   "_version": "1.12.0",
   "sap.app": {
-    "id": "vp.vpMgr",
+    "id": "vp.vpMgt",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "title": "{{appTitle}}",
@@ -50,7 +50,7 @@
   },
   "sap.ui5": {
     "rootView": {
-      "viewName": "vp.vpMgr.view.App",
+      "viewName": "vp.vpMgt.view.App",
       "type": "XML",
       "async": true,
       "id": "app"
@@ -72,7 +72,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "vp.vpMgr.i18n.i18n"
+          "bundleName": "vp.vpMgt.i18n.i18n"
         }
       },
       "util": {
@@ -111,7 +111,7 @@
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
-        "viewPath": "vp.vpMgr.view",
+        "viewPath": "vp.vpMgt.view",
         "controlId": "fcl",
 		"transition": "slide",
         "bypassed": {
@@ -130,23 +130,38 @@
               ]
           },
           {
-              "pattern": "midObject/{layout}/{tenantId}/{moldId}",
+              "pattern": "midObject/{layout}/{tenantId}/{vendorPool}",
               "name": "midPage",
-              "target": [
-                  "mainObject",
-                  "midObject"
+              "target":[ 
+                  "midTreeObject"
               ]
+                  
+          },
+          {
+              "pattern": "midObjectDetail/{layout}/{tenantId}/{vendorPool}",
+              "name": "midPageDetail",
+              "target":[ 
+                  "midTreeObject",
+                  "midDetailObject"
+              ]
+                  
           }
       ],
       "targets": {
           "mainObject": {
-              "viewName": "MainList",
-              "controlAggregation": "beginColumnPages"
+              "viewName": "MainList"
+             ,"controlAggregation": "beginColumnPages"        
+
           },
-          "midObject": {
-              "viewName": "MidObject",
-              "controlAggregation": "midColumnPages"
+          "midTreeObject": {
+              "viewName": "MidObjectTree"
+             ,"controlAggregation": "beginColumnPages"        
+
           },
+          "midDetailObject": {
+              "viewName": "MidObjectDetail"
+             ,"controlAggregation": "midColumnPages"        
+          },          
           "notFound": {
             "viewName": "MidObjectNotFound",
             "viewId": "notFound"

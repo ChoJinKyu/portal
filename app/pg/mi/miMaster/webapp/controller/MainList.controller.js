@@ -1,12 +1,3 @@
-/**
- * Note : 데이타가 한건도 없을때 시작점 다음 값들을 셋팅해야한다.
- * tenant_id, company_code, org_type_code, org_code 
- * 1. 초기 신규 작성시 선택해야할 값들이 정해져 있지 않음.
- * 
- * 2. 수정사항 상세페이지에서의 삭제
- * 3. 상세 페이지에서 다른테이블 batch 작없이 트랜젝션 보장확인 재확인 필요 
- * 
- */
 sap.ui.define([
 	"./BaseController",
 	"ext/lib/util/Multilingual",
@@ -30,7 +21,10 @@ sap.ui.define([
                 marketIntelligenceService : "pg.marketIntelligenceService", //main Service
                 orgCodeView : "/OrgCodeView", //관리조직 View
 				mIMatListView : "/MIMatListView",//자재별 시황자재,
-				mIMaterialCode : "/MIMaterialCode"
+				mIMaterialCode : "/MIMaterialCode",
+				mIMaterialCodeText : "/MIMaterialCodeText",
+				mIMaterialCodeBOMManagementItem : "/MIMaterialCodeBOMManagementItem",
+				mIMaterialPriceManagement : "/MIMaterialPriceManagement"
             },			
             tableName : "maindTable", 
             filter : {  
@@ -142,7 +136,6 @@ sap.ui.define([
 			this.getView().getModel().update(sPath, oData, mParameters);
 			console.groupEnd();
 		},
-				
 		
 		/**
 		 * SmartTableById
@@ -210,7 +203,6 @@ sap.ui.define([
 			
 			console.groupEnd();              
 		},
-
 
         /** 
 		 * table sort dialog 
@@ -292,7 +284,6 @@ sap.ui.define([
         },
 
         /**
-         * dev12121937 mainTable Delete Action
          * @param {sap.m.MessageBox.Action} oAction 
          */
 		_deleteAction: function(oAction) {
@@ -301,10 +292,12 @@ sap.ui.define([
 				that = this;
             
 			if(oAction === sap.m.MessageBox.Action.DELETE) {
+
 				this._getSmartTableById().getTable().getSelectedItems().forEach(function(oItem){
                     var sPath = oItem.getBindingContextPath();	
 					var mParameters = {"groupId":that._m.groupID};
 					var oRecord = that.getModel().getProperty(sPath);
+					var groupID = that._m.groupID;
 					var oDeleteMIMaterialCodeKey = {
 						tenant_id : oRecord.tenant_id,
 						mi_material_code: oRecord.mi_material_code,
@@ -314,20 +307,171 @@ sap.ui.define([
 							that._m.serviceName.mIMaterialCode,
 							oDeleteMIMaterialCodeKey
 					);
-					oItem.getBindingContext().getModel().remove(oDeleteMaterialCodePath, mParameters);
+
+					function MakeQuerablePromise(promise) {
+						if (promise.isResolved) return promise;
+					
+						var isPending = true;
+						var isRejected = false;
+						var isFulfilled = false;
+					
+						var result = promise.then(
+							function(v) {
+								isFulfilled = true;
+								isPending = false;
+								return v; 
+							}, 
+							function(e) {
+								isRejected = true;
+								isPending = false;
+								throw e; 
+							}
+						);
+					
+						result.isFulfilled = function() { return isFulfilled; };
+						result.isPending = function() { return isPending; };
+						result.isRejected = function() { return isRejected; };
+						return result;
+					};
+					
+					function _readCheckBOMEntity(oFilter) {
+						console.log("_readCheckBOMEntity");						
+						return new Promise(function(resolve, reject) {
+								oModel.read("/MIMaterialCodeBOMManagementItem", {
+								filters: oFilter,
+								success: function(oData) {		
+									console.log(">>_readCheckBOMEntity success");
+									resolve(oData);
+								},
+								error: function(oResult) {
+									reject(oResult);
+								}
+							});
+						});
+					};
+			
+					function _readCheckPriceEntity(oFilter) {
+						console.log("_readCheckPriceEntity");
+						return new Promise(function(resolve, reject) {
+							oModel.read("/MIMaterialPriceManagement", {
+								filters: oFilter,
+								success: function(oData) {		
+									console.log(">>_readCheckPriceEntity success");
+									resolve(oData);
+								},
+								error: function(oResult) {
+									reject(oResult);
+								}
+							});
+						});
+					};
+
+					function _readCheckLngEntity(oFilter) {
+						return new Promise(function(resolve, reject) {
+								oModel.read("/MIMaterialCodeText", {
+								filters: oFilter,
+								success: function(oData) {		
+									console.log(">>_readCheckLngEntity");
+									resolve(oData);
+								},
+								error: function(oResult) {
+									reject(oResult);
+								}
+							});
+						});
+					};
+
+					function _deleteMIMaterialCodeText(oMIMaterialCodeTextPath) {
+						console.log("_deleteActionLng --delete");
+						oModel.remove(oMIMaterialCodeTextPath, { groupId: groupID}); 			
+					};
+
+					function _deleteMiMaterialCode(oMIMaterialCodePath) {
+						console.log("_deleteMiMaterialCode --delete");
+						oModel.remove(oMIMaterialCodePath, { groupId: groupID }); 			
+					};
+
+					function _deleteEntityCheck(values){
+						console.log("==deleteEntityCheck==");
+						
+						var oBomCount  = values[0].results.length;
+						var oPriceCount = values[1].results.length;
+						var oLngEntity  = values[2].results.length;
+
+						if(oBomCount>0 || oPriceCount>0){
+							MessageToast.show("삭제 할수 없는 항목 입니다.");
+							return;
+						}else{
+							if(oLngEntity>0){
+								var LanDataSource = values[2].results;
+								console.log(LanDataSource);
+
+								for(var i=0;i<oLngEntity;i++){
+
+									var oMIMaterialCodeTextKey = {
+										tenant_id : LanDataSource[i].tenant_id,
+										mi_material_code: LanDataSource[i].mi_material_code,
+										language_code: LanDataSource[i].language_code,
+									};
+									var oMIMaterialCodeTextPath = oModel.createKey(
+										this._m.serviceName.mIMaterialCodeText,
+										oMIMaterialCodeTextKey
+									);
+
+									setTimeout(_deleteMIMaterialCodeText(oMIMaterialCodeTextPath), 500);
+								}
+
+								function dataRefresh(){
+									oModel.updateBindings(true);
+									oModel.refresh(true); 
+									that.getView().byId("mainTable").getModel().refresh(true);
+								}
+
+								setTimeout(_deleteMiMaterialCode(oDeleteMaterialCodePath), 500);
+								setTimeout(that._setUseBatch(oModel), 500);
+								setTimeout(dataRefresh, 500);
+							}
+						}
+					}
+
+					function _deleteChecklistError(response){
+						console.log("==deleteChecklistError==");
+						console.log(response);
+					}
+					
+					function resut_bFlag(){
+						console.log("bFlag" , bFlag);
+					}
+					var oFilter = [
+						new Filter("tenant_id", FilterOperator.EQ, oRecord.tenant_id),
+						new Filter("mi_material_code", FilterOperator.EQ, oRecord.mi_material_code)
+					];
+
+					var bFlag = Promise.all([  
+									_readCheckBOMEntity(oFilter),
+									_readCheckPriceEntity(oFilter),
+									_readCheckLngEntity(oFilter)
+					]).then(_deleteEntityCheck.bind(that),
+							_deleteChecklistError.bind(that));
+
+					setTimeout(resut_bFlag, 1000);
 				});
 				
-				var oModel = this.getView().getModel();
-				oModel.submitChanges({
-		      		groupId: this._m.groupID, 
-		        	success: this._handleDeleteSuccess.bind(this),
-		        	error: this._handleDeleteError.bind(this)
-				});
-				oModel.refresh(true); 
             } 
             console.groupEnd();
 		},
 
+		_setUseBatch : function(oModel) {
+            var that = this;
+            
+            oModel.setUseBatch(true);
+            oModel.submitChanges({
+                groupId: this._m.groupID,
+                success: that._handleDeleteSuccess.bind(this),
+                error: that._handleDeleteError.bind(this)
+            });
+		},
+		
 		/**
 		 * 자재별 시황자재 BOM 등록 내역 확인
 		 * @private
@@ -379,37 +523,6 @@ sap.ui.define([
 	
 		},
 
-   		/**
-		 * 시황자재 가격관리 등록이 되어 있거나 자재별 시황자재 BOM 에 등록되어 있는 데이타 존재유무 확인
-		 */
-		_deleteCheck : function (oItemData) {
-			 var oModel = this.getModel(),
-			 	checkFilters = [],
-			 	bDeleteCheck = false;
-
-			// 	function checkPriceManage() {
-
-
-			// 	var oPromise = new Promise(
-			// 		function(resolve, reject) {
-			// 			console.log("_deleteCheck Promise Start------");
-			// 			function() {
-			// 				console.log("_deleteCheck Promise resolve------");
-			// 				resolve(checkMIMatListView(oItemData));
-			// 			}
-			// 		}
-			// 	);
-
-			// 	oPromise.then(
-			// 		function(val) {
-			// 			bDeleteCheck = val;
-			// 		})
-			// 	.catch(
-			// 		function(reason) {
-			// 			console.log("Error (' + reason + ')");
-			// 	});
-
-		},
 		/**
 		 * Event handler when a table add button pressed
 		 * @param {sap.ui.base.Event} oEvent

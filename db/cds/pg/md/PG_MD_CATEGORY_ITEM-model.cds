@@ -1,5 +1,6 @@
 namespace pg;
 
+using {pg.Md_Category_Item_Lng as itemLngs} from './PG_MD_CATEGORY_ITEM_LNG-model';
 using util from '../../cm/util/util-model';
 
 
@@ -14,6 +15,14 @@ entity Md_Category_Item {
         spmd_character_desc      : String(500)          @title : 'SPMD특성설명';
         spmd_character_sort_seq  : Integer64 not null   @title : 'SPMD특성정렬순서';
         spmd_character_serial_no : Integer64 not null   @title : 'SPMD특성일련번호';
+                                          
+        lngs                     : Association to many itemLngs
+                                    on  lngs.tenant_id          = tenant_id
+                                    and lngs.company_code       = company_code
+                                    and lngs.org_type_code      = org_type_code
+                                    and lngs.org_code           = org_code
+                                    and lngs.spmd_category_code = spmd_category_code
+                                    and lngs.spmd_character_code = spmd_character_code;
 }
 
 extend Md_Category_Item with util.Managed;

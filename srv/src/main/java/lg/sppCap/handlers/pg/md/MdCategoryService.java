@@ -69,7 +69,7 @@ public class MdCategoryService implements EventHandler {
 				try {
 					Connection conn = jdbc.getDataSource().getConnection();
 					// Item SPMD범주코드 생성 Function
-					PreparedStatement v_statement_select = conn.prepareStatement("SELECT PG_SPMD_CATEGORY_CODE_FUNC(?) AS CATE_CODE FROM DUMMY");
+					PreparedStatement v_statement_select = conn.prepareStatement("SELECT PG_MD_CATEGORY_CODE_FUNC(?) AS CATE_CODE FROM DUMMY");
 					v_statement_select.setObject(1, "");    // Category 채번 구분값 없음.
 					ResultSet rslt = v_statement_select.executeQuery();
 					if(rslt.next()) cateCode = rslt.getString("CATE_CODE");
@@ -176,7 +176,7 @@ public class MdCategoryService implements EventHandler {
 						// Item SPMD특성코드 생성 Function
 						StringBuffer v_sql_get_code_fun = new StringBuffer();
 						v_sql_get_code_fun.append("SELECT ")
-							.append("   PG_SPMD_CHARACTER_CODE_FUNC(?) AS CHAR_CODE")
+							.append("   PG_MD_CHARACTER_CODE_FUNC(?) AS CHAR_CODE")
 							.append("   , (SELECT IFNULL(MAX(SPMD_CHARACTER_SERIAL_NO), 0)+1 FROM PG_MD_CATEGORY_ITEM) AS CHAR_SERIAL_NO")
 							.append(" FROM DUMMY");
 

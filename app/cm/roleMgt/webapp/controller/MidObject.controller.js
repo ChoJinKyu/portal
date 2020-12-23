@@ -87,14 +87,26 @@ sap.ui.define([
                             "nodes": jNodes
                         }
                     }), "menu");
-
                 }).bind(this))
                 // 실패시
                 .catch(function (oError) {
                 })
                 // 모래시계해제
                 .finally((function () {
-                    this.getView().setBusy(false);
+                    var treeTable = this.byId("midTable");
+                    var tableData = treeTable.mAggregations.rows;
+                    var detailData = this.getModel("details").getData().Role_Menu;
+
+                    for(var j=0; j<tableData.length; j++) {
+                        var Jmenu_code = tableData[j].mAggregations.cells[1].mProperties.text;
+                        for(var i=0; i<detailData.length; i++) {
+                            var Imenu_code = detailData[i].menu_code;
+                            
+                            if(Jmenu_code==Imenu_code) {
+                                tableData[j].mAggregations.cells[2].setState(true);
+                            }
+                        }
+                    }
                 }).bind(this));        
 
         },
@@ -106,31 +118,31 @@ sap.ui.define([
              * @public
              */
         onPageEnterFullScreenButtonPress: function () {
-        var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
-        this.getRouter().navTo("midPage", {
-            layout: sNextLayout,
-            tenantId: this._sTenantId,
-            roleCode: this._sRoleCode
-        });
+            var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
+            this.getRouter().navTo("midPage", {
+                layout: sNextLayout,
+                tenantId: this._sTenantId,
+                roleCode: this._sRoleCode
+            });
         },
             /**
              * Event handler for Exit Full Screen Button pressed
              * @public
              */
         onPageExitFullScreenButtonPress: function () {
-        var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
-        this.getRouter().navTo("midPage", {
-            tenantId: this._sTenantId,
-            roleCode: this._sRoleCode
-        });
+            var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
+            this.getRouter().navTo("midPage", {
+                tenantId: this._sTenantId,
+                roleCode: this._sRoleCode
+            });
         },
             /**
              * Event handler for Nav Back Button pressed
              * @public
              */
         onPageNavBackButtonPress: function () {
-        var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
-        this.getRouter().navTo("mainPage", { layout: sNextLayout });
+            var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+            this.getRouter().navTo("mainPage", { layout: sNextLayout });
         },
 
             /**
@@ -138,7 +150,7 @@ sap.ui.define([
              * @public
              */
         onPageEditButtonPress: function () {
-        this._toEditMode();
+            this._toEditMode();
         },
 
             /**
@@ -146,28 +158,28 @@ sap.ui.define([
              * @public
              */
         onPageDeleteButtonPress: function () {
-        var oView = this.getView(),
+            var oView = this.getView(),
             oMasterModel = this.getModel("master"),
             that = this;
             
-        MessageBox.confirm("Are you sure to delete this control option and details?", {
-            title: "Comfirmation",
-            initialFocus: sap.m.MessageBox.Action.CANCEL,
-            onClose: function (sButton) {
-            if (sButton === MessageBox.Action.OK) {
-                oView.setBusy(true);
-                oMasterModel.removeData();
-                oMasterModel.setTransactionModel(that.getModel());
-                oMasterModel.submitChanges({
-                success: function (ok) {
-                    oView.setBusy(false);
-                    that.onPageNavBackButtonPress.call(that);
-                    MessageToast.show("Success to delete.");
+            MessageBox.confirm("Are you sure to delete this control option and details?", {
+                title: "Comfirmation",
+                initialFocus: sap.m.MessageBox.Action.CANCEL,
+                onClose: function (sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        oView.setBusy(true);
+                        oMasterModel.removeData();
+                        oMasterModel.setTransactionModel(that.getModel());
+                        oMasterModel.submitChanges({
+                            success: function (ok) {
+                                oView.setBusy(false);
+                                that.onPageNavBackButtonPress.call(that);
+                                MessageToast.show("Success to delete.");
+                            }
+                        });
+                    };
                 }
-                });
-            };
-            }
-        });
+            });
         },
 
         /**
@@ -227,12 +239,12 @@ sap.ui.define([
          */
         onPageCancelEditButtonPress: function () {
             var oMasterModel = this.getModel("master");
-        if (this.getModel("midObjectView").getProperty("/isAddedMode") == true) {
-            this.onPageNavBackButtonPress.call(this);
-        } else {
-            this._toShowMode();
-            this.byId("searchChain").fireChange();
-        }
+            if (this.getModel("midObjectView").getProperty("/isAddedMode") == true) {
+                this.onPageNavBackButtonPress.call(this);
+            } else {
+                this._toShowMode();
+                this.byId("searchChain").fireChange();
+            }
         },
 
         /* =========================================================== */
@@ -292,6 +304,7 @@ sap.ui.define([
                 ],
                 success: function (oData) {
                     console.log("_else_", oData, oDetailsModel);
+                    console.log(oData.results);
                 }
             });
 
@@ -312,13 +325,14 @@ sap.ui.define([
                     new Filter("role_code", FilterOperator.EQ, this._sRoleCode)
                 ],
                 success: function (oData) {
-                    console.log("_onRoutedThisPage new ##### ", oData, oDetailsModel);
-                }      
+                    console.log("_onRoutedThisPage new ##### ", oData, oDetailsModel);                
+                }.bind(this)
             });
 
             this._toShowMode();
         }
         oTransactionManager.setServiceModel(this.getModel());
+
         },
 
         /**
@@ -390,10 +404,10 @@ sap.ui.define([
             var tenantId = this._sTenantId;
             var roleCode = this._sRoleCode;
             var menuCode = oEvent.oSource.oParent.mAggregations.cells[1].mProperties.text;
-            //var state = oEvent.mParameters.state;
-            var state = this.byId("stateId").getState();
+            var state = oEvent.mParameters.state;
            
             if(state){
+               
                 oRoleModel.addRecord({
                     "tenant_id": tenantId,
                     "role_code": roleCode,
@@ -401,24 +415,17 @@ sap.ui.define([
                     "local_create_dtm": new Date(),
                     "local_update_dtm": new Date()
                 }, "/Role_Menu", 0);
-            } else {
-                var reciveData = {};
+
+            } else if(!state){
 
                 for (var i = 0; i < oRoleModelData.length; i++) {
-                    reciveData = {
-                        "tenant_id": tenantId,
-                        "role_code": roleCode,
-                        "menu_code": menuCode
-                    };
                     oRoleModel.removeRecord(i);
-
                 }
-                //oRoleModel.removeRecord();
+
             }
-           
         },
 
-        onPageSaveButtonPress2: function () {		
+        onPageSaveButtonPress2: function () {
             var oView = this.getView(),
             oRoleModel = this.getModel("details"),
             that = this;
@@ -429,7 +436,6 @@ sap.ui.define([
                 onClose: function(sButton) {
                     if (sButton === MessageBox.Action.OK) {
                         oView.setBusy(true);
-                        //oRoleModel.setTransactionModel(that.getModel());
                         oRoleModel.submitChanges({
                             success: function(oEvent){
                                 that._toShowMode();

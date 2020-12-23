@@ -22,7 +22,7 @@ sap.ui.define([
                 var [flag] = arguments;
                 var oTable = this.getView().byId("menuTreeTable");
                 var row =
-                    (this.getView().getModel("tree").getProperty("/Menu_haa") || {}).length > 0
+                    (this.getView().getModel("tree").getProperty("/Menu_haa").nodes || []).length > 0
                         ? this.getView().getModel("tree").getObject(
                             oTable.getContextByIndex(oTable.getSelectedIndex()).sPath
                         )

@@ -27,8 +27,8 @@
                 },
                 {
                     "name": "Vendor Pool Management",
-                    "url": "../pg/vp/vpMgr/webapp",
-                    "component": "vp.vpMgr"
+                    "url": "../pg/vp/vpMgt/webapp",
+                    "component": "vp.vpMgt"
                 },                
                 {
                     "name": "App #4",

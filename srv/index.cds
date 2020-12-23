@@ -7,3 +7,6 @@ using from './cds/sp/sp_index';
 using from './cds/xx/xx_index';
 using from './cdsv4/pg/pg_v4_index';
 using from './cdsv4/xx/xx_v4_index';
+using from './cdsv4/dp/dp_v4_index';
+using from './cdsv4/cm/cm_v4_index';
+using from './cdsv4/ep/ep_v4_index';
