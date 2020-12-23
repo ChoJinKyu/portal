@@ -32,13 +32,7 @@ sap.ui.define([
         },
 
         getServiceByUrl: function(serviceUrl, isNew){
-            var oUrl, sServiceName;
-            for(oUrl in serviceUrls){
-                if(serviceUrl == serviceUrls[oUrl]){
-                    sServiceName = oUrl;
-                    break;
-                }
-            }
+            var sServiceName = ServiceUrlProvider.getName(serviceUrl);
             if(sServiceName){
                 return this.getService(sServiceName, isNew);
             }else{
@@ -47,10 +41,6 @@ sap.ui.define([
                     useBatch: true
                 });
             }
-        },
-
-        _createService: function(sParams){
-            return new ODataXhrService(sParams || {});
         }
     }
 

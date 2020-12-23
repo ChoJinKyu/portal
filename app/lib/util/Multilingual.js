@@ -1,9 +1,9 @@
 sap.ui.define([
     "sap/ui/base/EventProvider",
 	"ext/lib/model/I18nModel",
-	"ext/lib/core/service/ServiceProvider",
+	"ext/lib/core/service/ODataXhrService",
 	"ext/lib/core/UserChoices"
-], function (EventProvider, I18nModel, ServiceProvider, UserChoices) {
+], function (EventProvider, I18nModel, ODataXhrService, UserChoices) {
     "use strict";
 
     var I18N_MODEL_NAME = "MultilingualModel";
@@ -60,7 +60,10 @@ sap.ui.define([
                 this.oModel = new I18nModel();
                 sap.ui.getCore().setModel(this.oModel, I18N_MODEL_NAME);
 
-                var oXhr = ServiceProvider.getService("cm.util.CommonService");
+                var oXhr = new ODataXhrService({
+                    serviceUrl: "srv-api/odata/v2/cm.util.CommonService/",
+                    useBatch: true
+                });
                 var oQuery = oXhr.createQueryBuilder()
                     .select("message_code,message_contents")
                     .filter(f => f
