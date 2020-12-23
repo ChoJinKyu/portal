@@ -1,12 +1,12 @@
-<mvc:View controllerName="vp.vpMgr.controller.MainList"
+<mvc:View controllerName="vp.vpMgt.controller.MainList"
     xmlns:mvc="sap.ui.core.mvc" 
     xmlns="sap.m" 
     xmlns:f="sap.f" 
     xmlns:form="sap.ui.layout.form" 
     xmlns:layout="sap.ui.layout" 
     xmlns:core="sap.ui.core" 
-    xmlns:lib-m="ext.lib.m"
     xmlns:table="sap.ui.table"
+    xmlns:lib-m="ext.lib.control.m"
     height="100%">
 	<App id="app">
         <f:DynamicPage id="page"
@@ -21,10 +21,10 @@
                     <f:snappedContent>
                         <form:SimpleForm id="pageSearchFormS" maxContainerCols="3" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                             <form:content>
-                            <HBox>
+
                                 <VBox>
                                     <Label text="Operation ORG" labelFor="search_Operation_ORG_S" required="true"></Label>
-                                    <ComboBox id="search_Operation_ORG_S" width="100%" selectedKey="BIZ00200" items="{
+                                    <ComboBox id="search_Operation_ORG_S" width="10rem" selectedKey="BIZ00200" items="{
                                         path: '/VpOperationOrg',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
@@ -32,38 +32,41 @@
                                         sorter: { path: 'operation_org_code'}
                                     }">
                                         <items>
-                                            <core:Item key="{operation_org_code}" text="[{operation_org_code}] {operation_org_name}" />
+                                            <core:Item key="{operation_org_code}" text="{operation_org_name}" />
                                         </items>
                                     </ComboBox>
                                     <layoutData>
-                                        <layout:GridData span="XL2 L3 M6 S12" />
+                                        <layout:GridData span="XL2 L2 M2 S12"/>                                        
                                     </layoutData>
                                 </VBox>
                                 <VBox>
                                     <Label text="Operation UINT" labelFor="search_Operation_UNIT_S" required="true"></Label>
-                                    <ComboBox id="search_Operation_UNIT_S" width="100%" selectedKey="" items="{
-                                        path: '/util>/CodeDetails',
-                                        filters: [
-                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
-                                                    {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_OPERATION_UNIT'}      
-                                        ]
-                                    }">
-                                        <items>
-                                            <core:Item key="{util>code}" text="{util>code_description}" />
-                                        </items>
-                                    </ComboBox>
+                                    <ComboBox   id="search_Operation_UNIT_S" width="10rem"
+                                            items="{
+                                                        path : 'util>/CodeDetails',
+                                                        filters : [
+                                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                            {path : 'group_code', operator : 'EQ', value1 : 'SP_SM_SUPPLIER_TYPE'}                               
+                                                        ]
+                                                    }"
+                                    >
+                                    <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </ComboBox> 
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L2 M2 S12"/>                                        
+                                    </layoutData>                                     
                                 </VBox>                                
-                            </HBox>    
+  
                             </form:content>
                         </form:SimpleForm>
                     </f:snappedContent>
                     <f:expandedContent>
                         <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                             <form:content>
-                            <HBox>
+
                                 <VBox>
                                     <Label text="Operation ORG" labelFor="search_Operation_ORG_E" required="true"></Label>
-                                    <ComboBox id="search_Operation_ORG_E" width="100%" selectedKey="BIZ00200"  items="{
+                                    <ComboBox id="search_Operation_ORG_E" width="10rem" selectedKey="BIZ00200"  items="{
                                         path: '/VpOperationOrg',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
@@ -71,28 +74,31 @@
                                         sorter: { path: 'operation_org_code'}
                                     }">
                                         <items>
-                                            <core:Item key="{operation_org_code}" text="[{operation_org_code}] {operation_org_name}" />
+                                            <core:Item key="{operation_org_code}" text="{operation_org_name}" />
                                         </items>
                                     </ComboBox>
                                     <layoutData>
-                                        <layout:GridData span="XL2 L3 M6 S12" />
+                                        <layout:GridData span="XL2 L2 M2 S12" />
                                     </layoutData>
                                 </VBox>
                                 <VBox>
                                     <Label text="Operation UINT" labelFor="search_Operation_UNIT_E" required="true"></Label>
-                                    <ComboBox id="search_Operation_UNIT_E" width="100%" selectedKey="" items="{
-                                        path: '/util>/CodeDetails',
-                                        filters: [
-                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
-                                                    {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_OPERATION_UNIT'}      
-                                        ]
-                                    }">
-                                        <items>
-                                            <core:Item key="{util>code}" text="{util>code_description}" />
-                                        </items>
-                                    </ComboBox>
+                                    <ComboBox   id="search_Operation_UNIT_E" width="10rem"
+                                            items="{
+                                                        path : 'util>/CodeDetails',
+                                                        filters : [
+                                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                            {path : 'group_code', operator : 'EQ', value1 : 'SP_SM_SUPPLIER_TYPE'}                               
+                                                        ]
+                                                    }"
+                                    >
+                                    <core:Item key="{util>code}" text="{util>code_description}" />
+                                    </ComboBox>  
+                                   <layoutData>
+                                        <layout:GridData span="XL2 L2 M2 S12" />
+                                    </layoutData>                                    
                                 </VBox>
-                            </HBox>                             
+                        
                             </form:content>
                         </form:SimpleForm>
                     </f:expandedContent>
@@ -111,18 +117,46 @@
                     <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
-                                <Label text="Department" labelFor="search_Dept"></Label>
-                                <Input id="search_Dept" showValueHelp="true"  valueHelpRequest=".onValueHelpRequested"></Input>
-                                <layoutData>
-                                    <layout:GridData span="XL2 L3 M6 S12" />
-                                </layoutData>
+                            <Label text="Department"></Label>
+                            <lib-m:CodePicker id="search_Dept"
+                                placeholder="Enter a department name"
+                                keyField="department_id"
+                                textField="department_local_name"
+                                suggestionItems="{
+                                    path: '/',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                    ],
+                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                    entityName: 'Department'
+                                }">
+                                <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Department"
+                                    keyFieldHeaderText="Department ID" textFieldHeaderText="Department" />
+                            </lib-m:CodePicker>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M5 S10" />
+                            </layoutData>                                
                             </VBox>
                             <VBox>
-                                <Label text="Manager" labelFor="search_Man"></Label>
-                                <Input id="search_Man" showValueHelp="true"  valueHelpRequest=".onValueHelpRequested"></Input>
+                                <Label text="Manager"></Label>
+                                <lib-m:CodePicker id="search_Man"
+                                    placeholder="Enter a Employee name"
+                                    keyField="employee_number"
+                                    textField="user_local_name"
+                                    suggestionItems="{
+                                        path: '/',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                        ],
+                                        serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                        entityName: 'Employee'
+                                    }">
+                                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
+                                        keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
+                                </lib-m:CodePicker>
                                 <layoutData>
-                                    <layout:GridData span="XL2 L3 M6 S12" />
-                                </layoutData>
+                                    <layout:GridData span="XL2 L3 M5 S10" />
+                                </layoutData>                                
                             </VBox>
                             <VBox>
                                 <Label text="Vendor Pool" labelFor="search_Vp_Code"></Label>

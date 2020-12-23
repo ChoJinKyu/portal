@@ -23,10 +23,42 @@ sap.ui.define([
     "sap/ui/core/Item",
     'sap/ui/core/Element',
     "sap/ui/core/syncStyleClass",    
-    "sap/ui/core/Item",
     'sap/m/Label',    
-    'sap/m/SearchField',    
-], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, Fragment, Sorter, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+    'sap/m/SearchField',
+    "ext/lib/util/ValidatorUtil",
+    "sap/f/library",
+    "ext/lib/util/ControlUtil"        
+], function (BaseController,
+	History,
+    JSONModel,
+    TransactionManager,
+    ManagedModel,    
+	ManagedListModel,
+	DateFormatter,
+	TablePersoController,
+	MainListPersoService,
+	Filter,
+    FilterOperator,
+    Fragment,    
+    Sorter,
+    MessageBox,
+    MessageToast,
+	ColumnListItem,
+	ObjectIdentifier,
+    Text,
+    Token,    
+	Input,
+    ComboBox,
+    Item,
+    Element,
+    syncStyleClass,    
+    Label,    
+    SearchField,
+    ValidatorUtil,
+    library,
+    ControlUtil   
+
+) {
     "use strict";
     
     var dialogId = "";
@@ -41,11 +73,15 @@ sap.ui.define([
     // var pop_vp_cd = "";
     var pop_p_vp_cd = "";
 
+    var pVendorPool = "";
+    var pTenantId  = "";
+
+
 
     var oTransactionManager;
     
     
-	return BaseController.extend("vp.vpMgr.controller.MainList", {
+	return BaseController.extend("vp.vpMgt.controller.MainList", {
 
 		dateFormatter: DateFormatter,
 
@@ -61,6 +97,8 @@ sap.ui.define([
 
 			var oViewModel,
 				oResourceBundle = this.getResourceBundle();
+
+            this.oRouter = this.getOwnerComponent().getRouter();
 
 			// Model used to manipulate control states
 			oViewModel = new JSONModel({
@@ -123,7 +161,7 @@ sap.ui.define([
 			if (!this.pDialog) {
 				this.pDialog = Fragment.load({
 					id: oView.getId(),
-					name: "vp.vpMgr.view.DialogCreate",
+					name: "vp.vpMgt.view.DialogCreate",
 					controller: this
 				}).then(function (oDialog) {
 					// connect dialog to the root view of this component (models, lifecycle)
@@ -461,7 +499,42 @@ sap.ui.define([
 			// 	sTitle = this.getResourceBundle().getText("mainListTableTitle");
 			// }
 			// this.getModel("mainListView").setProperty("/mainListTableTitle", sTitle);
-		},
+        },
+        onCellClick : function (oEvent) {
+
+            var rowData = oEvent.getParameter('rowBindingContext').getObject();
+            var LayoutType = library.LayoutType;
+
+            pVendorPool =  rowData.vendor_pool_code;
+            pTenantId = rowData.tenant_id;
+
+            alert( "pVendorPool   : " + pVendorPool + 
+                   "pTenantId     : " + pTenantId);
+
+            // var oNavParam = {
+            //     layout: oNextUIState.layout,
+            //     tenantId : rowData.tenant_id,
+            //     vendorPool : rowData.vendor_pool_code
+            // };
+            // this.getRouter().navTo("midPage", oNavParam); 
+			// if (this.currentRouteName === "MainList") { // last viewed route was master
+			// 	var oMasterView = this.oRouter.getView("vp.vpMgt.view.MainList");
+			// 	this.getView().byId("fcl").removeBeginColumnPage(oMasterView);
+			// }
+
+
+			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
+			this.getRouter().navTo("midPage", {
+                // layout: sap.f.LayoutType.TwoColumnsMidExpanded, 
+                layout: sap.f.LayoutType.OneColumn, 
+				tenantId: pTenantId,
+				vendorPool: pVendorPool
+            });   
+            // this.oRouter.navTo("midPage", {layout: LayoutType.OneColumn, tenantId: pTenantId, vendorPool: pVendorPool});         
+
+
+
+        },
 
 		/**
 		 * Event handler when a table item gets pressed
@@ -601,14 +674,14 @@ sap.ui.define([
 		
 		_getSearchStates: function(){
 
-            // var sVpLv = this.getView().byId("search_Vp_lv").getSelectedKey(),
-            // sVpCode = this.getView().byId("search_Vp_Code").getValue();
+            var s_Operation_ORG_S = this.getView().byId("search_Operation_ORG_S").getSelectedKey()
+            var s_Operation_UNIT_S = this.getView().byId("search_Operation_UNIT_S").getSelectedKey()
 
             var aSearchFilters = [];
-			// if (sVpLv && sVpLv.length > 0) {
+			// if (s_Operation_ORG_S && s_Operation_ORG_S.length > 0) {
 			// 	aSearchFilters.push(new Filter("hierarchy_level", FilterOperator.EQ, sVpLv));
 			// }
-			// if (sVpCode && sVpCode.length > 0) {
+			// if (s_Operation_UNIT_S && s_Operation_UNIT_S.length > 0) {
 			// 	aSearchFilters.push(new Filter({
 			// 		filters: [
 			// 			new Filter("vendor_pool_code", FilterOperator.Contains, sVpCode)
@@ -718,7 +791,7 @@ sap.ui.define([
 			// // init and activate controller
 			// this._oTPC = new TablePersoController({
 			// 	table: this.byId("mainTable"),
-			// 	componentName: "vpMgr",
+			// 	componentName: "vpMgt",
 			// 	persoService: MainListPersoService,
 			// 	hasGrouping: true
 			// }).activate();
@@ -771,7 +844,7 @@ sap.ui.define([
 
             // // var aCols = this.oColModel.getData().cols;
 
-            // this._oValueHelpDialog = sap.ui.xmlfragment("vp.vpMgr.view.ValueHelpDialogAffiliate", this);
+            // this._oValueHelpDialog = sap.ui.xmlfragment("vp.vpMgt.view.ValueHelpDialogAffiliate", this);
             // this.getView().addDependent(this._oValueHelpDialog);
 
             // this._oValueHelpDialog.getTableAsync().then(function (oTable) {
