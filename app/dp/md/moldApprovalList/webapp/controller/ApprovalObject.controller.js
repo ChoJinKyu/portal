@@ -23,9 +23,12 @@ sap.ui.define([
     "dp/md/PurchaseOrderItemLocal",
     "dp/md/ParticipatingSupplierSelection",
     "dp/md/util/controller/MoldItemSelection"
-], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
+], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager
+    , Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
-    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, BudgetExecutionApproval, PurchaseOrderItemLocal, ParticipatingSupplierSelection, MoldItemSelection
+    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator
+    , RichTextEditor, BudgetExecutionApproval
+    , PurchaseOrderItemLocal, ParticipatingSupplierSelection, MoldItemSelection
 ) {
     "use strict";
 
@@ -55,6 +58,11 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
+
+            // 각자 fragment 에서 세팅할 테이터 
+            this.approvalDetails_data = [] ;
+            this.moldMaster_data = [] ;
+
             // Model used to manipulate control states. The chosen values make sure,
             // detail page shows busy indication immediately so there is no break in
             // between the busy indication for loading the view's meta data
@@ -797,29 +805,26 @@ sap.ui.define([
             var mst = this.getModel("appMaster").getData() ,
                 apr = this.getModel("approver").getData() ,
                 ref = this.getModel("referer").getData(); 
-            console.log(" this.getModel appMaster " , mst);
-            console.log(" this.getModel approver " , apr);
-            console.log(" this.getModel referer" , ref);
             var data = {};
             var that = this;
             var approvalMaster = {
                     tenant_id : this.tenant_id 
-                //,  approval_number : this.approval_number 
-               // ,  company_code : this.company_code 
-               // ,  org_code : this.plant_code 
-               // ,  chain_code : 'DP'
-               // ,  approval_type_code : this.approval_type_code 
-               // ,  approval_title : mst.approval_title 
-               // ,  approval_contents : mst.approval_contents 
-              //  ,  approve_status_code : mst.approve_status_code 
-               // ,  requestor_empno : mst.requestor_empno 
-               // ,  request_date : this._getToday() 
-               // ,  local_create_dtm : new Date() 
-               // ,  local_update_dtm : new Date()
+                 ,  approval_number : this.approval_number 
+                 ,  company_code : this.company_code 
+                 ,  org_code : this.plant_code 
+                 ,  chain_code : 'DP'
+                 ,  approval_type_code : this.approval_type_code 
+                 ,  approval_title : mst.approval_title 
+                 ,  approval_contents : mst.approval_contents 
+                 ,  approve_status_code : mst.approve_status_code 
+                 ,  requestor_empno : mst.requestor_empno 
+                 ,  request_date : this._getToday() 
+                 ,  local_create_dtm : new Date() 
+                 ,  local_update_dtm : new Date()
             };
 
             var aprArr = [];
-            if(apr.Approvers.length > 0){
+            if(apr.Approvers != undefined && apr.Approvers.length > 0){
                 apr.Approvers.forEach(function(item){ 
                     aprArr.push({
                         tenant_id : that.tenant_id 
@@ -830,31 +835,31 @@ sap.ui.define([
                         , approver_type_code : item.approver_type_code 
                         , approver_empno : item.approver_empno
                     });
-                    
                 });
             }
 
-            var appDtl = this.getModel("mdItemMaster");
-            console.log(" appDtl >>>>  ItemBudgetExecution"  , appDtl);
+            var refArr = [];
+            if(ref.Referers != undefined && ref.Referers.length  > 0){
+                ref.Referers.forEach(function(item){ 
+                    refArr.push({
+                        tenant_id : that.tenant_id 
+                        , approval_number : that.approval_number 
+                        , referer_empno : item.referer_empno 
+                    });
+                });
+            }
+
 
             data = {
               inputData : { 
                   approvalMaster : approvalMaster 
-                , approvalDetails : [] 
+                , approvalDetails : this.approvalDetails_data 
                 , approver : aprArr 
-                , moldMaster : [] 
-                , referer : [] 
+                , moldMaster : this.moldMaster_data  
+                , referer : refArr 
                 } 
             }
 
-
-
-            /**
-             * 
-            this.getView().setModel(new ManagedModel(), "appMaster");
-            this.getView().setModel(new ManagedListModel(), "approver");
-            this.getView().setModel(new ManagedListModel(), "referer");
-             */
              this.callAjax(data,"saveMoldApproval")
 
 
