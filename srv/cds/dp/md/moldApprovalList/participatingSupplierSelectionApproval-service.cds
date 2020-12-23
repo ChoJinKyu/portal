@@ -20,7 +20,7 @@ service ParticipatingSupplierSelectionApprovalService {
 
     view ParticipatingSupplier as
     select
-    	dtl.approval_number,
+    	key dtl.approval_number,
         mst.tenant_id,
         mst.company_code,
         mst.org_type_code,

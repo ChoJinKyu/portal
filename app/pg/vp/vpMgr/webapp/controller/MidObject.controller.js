@@ -16,7 +16,7 @@ sap.ui.define([
     
     var oTransactionManager;
 
-	return BaseController.extend("vp.vpMgr.controller.MidObject", {
+	return BaseController.extend("vp.vpMgt.controller.MidObject", {
 
 		dateFormatter: DateFormatter,
 
@@ -39,15 +39,16 @@ sap.ui.define([
 			this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
 			this.setModel(oViewModel, "midObjectView");
 			
-            this.setModel(new ManagedModel(), "master");
-            this.setModel(new ManagedModel(), "mstSpecView");
-			this.setModel(new ManagedListModel(), "schedule");
-            this.setModel(new ManagedModel(), "spec");
+            this.setModel(new ManagedModel(), "vpDetailView");
+            this.setModel(new ManagedListModel(), "VpSupplierDtlView");
+			this.setModel(new ManagedListModel(), "vpMaterialDtlView");
+            this.setModel(new ManagedListModel(), "vpManagerDtlView");
 
             oTransactionManager = new TransactionManager();
-			oTransactionManager.addDataModel(this.getModel("master"));
-            oTransactionManager.addDataModel(this.getModel("schedule"));
-            oTransactionManager.addDataModel(this.getModel("spec"));
+			oTransactionManager.addDataModel(this.getModel("vpDetailView"));
+            oTransactionManager.addDataModel(this.getModel("VpSupplierDtlView"));
+            oTransactionManager.addDataModel(this.getModel("vpMaterialDtlView"));
+            oTransactionManager.addDataModel(this.getModel("vpManagerDtlView"));
 		}, 
 
 		/* =========================================================== */
@@ -85,6 +86,12 @@ sap.ui.define([
 		onPageNavBackButtonPress: function () {
 			var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
             this.getRouter().navTo("mainPage", {layout: sNextLayout});
+            
+            // this.getRouter().navTo("mainPage", {
+            //     // layout: sap.f.LayoutType.TwoColumnsMidExpanded, 
+            //     layout: sap.f.LayoutType.OneColumn
+            // });             
+
 		},
 
 		/**
@@ -166,37 +173,47 @@ sap.ui.define([
 			var oArgs = oEvent.getParameter("arguments"),
 				oView = this.getView();
 			this._sTenantId = oArgs.tenantId;
-			this._sMoldId = oArgs.moldId;
+			this._sVendorPool = oArgs.vendorPool;
 
-			if(oArgs.tenantId == "new" && oArgs.moldId == "code"){
-				//It comes Add button pressed from the before page.
-				var oMasterModel = this.getModel("master");
-				oMasterModel.setData({
-					tenant_id: "L2100"
-				});
-				this._toEditMode();
-			}else{
+            alert("_sTenantId : " + this._sTenantId + 
+                  "_sVendorPool : " + this._sVendorPool);
 
-                var self = this;
-				this._bindView("/MoldMasters(" + this._sMoldId + ")", "master", [], function(oData){
-                    self._toShowMode();
-                });
 
-                this._bindView("/MoldMasterSpec(" + this._sMoldId + ")", "mstSpecView", [], function(oData){
+			this.getRouter().navTo("midPageDetail", {
+                layout: sap.f.LayoutType.TwoColumnsMidExpanded, 
+                // layout: sap.f.LayoutType.OneColumn, 
+				tenantId: this._sTenantId,
+				vendorPool: this._sVendorPool
+            });                  
+			// if(oArgs.tenantId == "new" && oArgs.moldId == "code"){
+			// 	//It comes Add button pressed from the before page.
+			// 	var oMasterModel = this.getModel("master");
+			// 	oMasterModel.setData({
+			// 		tenant_id: "L2100"
+			// 	});
+			// 	this._toEditMode();
+			// }else{
+
+            //     var self = this;
+			// 	this._bindView("/MoldMasters(" + this._sMoldId + ")", "master", [], function(oData){
+            //         self._toShowMode();
+            //     });
+
+            //     this._bindView("/MoldMasterSpec(" + this._sMoldId + ")", "mstSpecView", [], function(oData){
                     
-                });
+            //     });
 
-                var schFilter = [new Filter("mold_id", FilterOperator.EQ, this._sMoldId)];
-                this._bindView("/MoldSchedule", "schedule", schFilter, function(oData){
+            //     var schFilter = [new Filter("mold_id", FilterOperator.EQ, this._sMoldId)];
+            //     this._bindView("/MoldSchedule", "schedule", schFilter, function(oData){
                     
-                });
+            //     });
 
-                this._bindView("/MoldSpec("+this._sMoldId+")", "spec", [], function(oData){
+            //     this._bindView("/MoldSpec("+this._sMoldId+")", "spec", [], function(oData){
                     
-                });
-            }
+            //     });
+            // }
             
-            oTransactionManager.setServiceModel(this.getModel());
+            // oTransactionManager.setServiceModel(this.getModel());
 		},
 
 		/**
@@ -276,7 +293,7 @@ sap.ui.define([
 			if(!this._oFragments[sFragmentName]){
 				Fragment.load({
 					id: this.getView().getId(),
-					name: "vp.vpMgr.view." + sFragmentName,
+					name: "vp.vpMgt.view." + sFragmentName,
 					controller: this
 				}).then(function(oFragment){
 					this._oFragments[sFragmentName] = oFragment;
