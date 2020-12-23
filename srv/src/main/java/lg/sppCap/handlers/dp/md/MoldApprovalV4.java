@@ -37,18 +37,20 @@ public class MoldApprovalV4 implements EventHandler {
     @Autowired
     private JdbcTemplate jdbc;
 
-    // Procedure 호출해서 header 저장
-    // Header Multi Row
-    /*********************************
-    {
-        "sampleHeaders" : [
-            {"header_id" : 106, "cd": "eeee11", "name": "eeee11"},
-            {"header_id" : 107, "cd": "eeee12", "name": "eeee12"}
-        ]
-    }
-    *********************************/
-   
-    
+    @On(event = SaveMoldApprovalContext.CDS_NAME)
+    public void onSave(SaveMoldApprovalContext context){
+        System.out.println(" >>>>>>> "+ context);
+        SaveReturnType data = context.getInputData();
+        try {
+            System.out.println(" >>>>>>> "+ data); 
+            context.setResult(data);
+            context.setCompleted();
+        } catch (Exception e) {
+           e.printStackTrace();
+        }
+        
+
+    }    
 
 
 }

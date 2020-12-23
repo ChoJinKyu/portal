@@ -444,7 +444,7 @@ sap.ui.define([
 				_nDifferentDeleteHeaderItem = 0;
 				 
 			var oGlobalBusyDialog = new sap.m.BusyDialog();
-			 	oGlobalBusyDialog.open();
+			 	//oGlobalBusyDialog.open();
 
 			if(oAction === sap.m.MessageBox.Action.DELETE) {
 				
@@ -541,6 +541,8 @@ sap.ui.define([
 				var _deleteHeaderOdata = _deleteHeader.getProperty("/delData");
 				var _deleteItemOdata = _deleteItem.getProperty("/delData");
 
+				this._currentDeleitem = 0;
+
 				//배열에 담긴 key과 동일한 아이템 카운트 구함
 				for( var i=0; i < _deleteHeaderOdata.length; i++ ){
 
@@ -588,9 +590,6 @@ sap.ui.define([
 				//아이템 조사와 Header 최종 조사 내용을 실행한다. 
 				function readChecklistItemEntity(oDeleteInfoOdata) {
 					return new Promise(function(resolve, reject) {
-
-						console.log("readChecklistItemEntity Promise filter :", oDeleteInfoOdata.filter);
-						
 						that.getModel().read(that._m.serviceName.mIMaterialCodeBOMManagementItem, {
 							filters: oDeleteInfoOdata.filter,
 							success: function(oData) {		
@@ -598,22 +597,19 @@ sap.ui.define([
 								resolve(oData);
 							},
 							error: function(oResult) {
-							reject(oResult);
+								reject(oResult);
 							}
 						});
 					});
 				};
 
 				function MakeQuerablePromise(promise) {
-					// Don't modify any promise that has been already modified.
 					if (promise.isResolved) return promise;
 				
-					// Set initial state
 					var isPending = true;
 					var isRejected = false;
 					var isFulfilled = false;
 				
-					// Observe the promise, saving the fulfillment in a closure scope.
 					var result = promise.then(
 						function(v) {
 							isFulfilled = true;

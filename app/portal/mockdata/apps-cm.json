@@ -78,14 +78,19 @@
       "icon": "sap-icon://action-settings",
       "subMenus": [
         {
-          "name": "사용자 관리",
+          "name": "사용자관리",
           "url": "../cm/userMgt/webapp",
           "component": "cm.userMgt"
         },
         {
-          "name": "권한관리",
-          "url": "../cm/controlOptionMgr/webapp",
-          "component": "cm.controlOptionMgr"
+          "name": "역할그룹관리",
+          "url": "../cm/msgMgt/webapp",
+          "component": "cm.msgMgt"
+        },
+        {
+          "name": "역할관리",
+          "url": "../cm/roleMgt/webapp",
+          "component": "cm.roleMgt"
         },
         {
           "name": "메뉴관리",

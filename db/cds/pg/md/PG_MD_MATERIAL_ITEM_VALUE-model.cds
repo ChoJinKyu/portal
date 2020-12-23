@@ -3,7 +3,7 @@ namespace pg;
 using util from '../../cm/util/util-model';
 
 
-entity Md_Part_No_Item_Value {
+entity Md_Material_Item_Value {
     key tenant_id        : String(5) not null  @title : '테넌트ID';
     key company_code     : String(10) not null @title : '회사코드';
     key org_type_code    : String(30) not null @title : '조직유형코드';
@@ -316,4 +316,4 @@ entity Md_Part_No_Item_Value {
 }
 
 
-extend Md_Part_No_Item_Value with util.Managed;
+extend Md_Material_Item_Value with util.Managed;

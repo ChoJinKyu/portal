@@ -67,7 +67,9 @@ sap.ui.define([
                 mIMaterialCodeText : "/MIMaterialCodeText", 
                 languageView : "/LanguageView",
                 mICategoryHierarchyStructure : "/MICategoryHierarchyStructure",
-                MIMaterialCodeBOMManagementView : "/MIMaterialCodeBOMManagementView"
+                mIMaterialCodeBOMManagementView : "/MIMaterialCodeBOMManagementView",
+                mIMaterialCodeBOMManagementItem : "/MIMaterialCodeBOMManagementItem",
+                mIMaterialPriceManagement : "/MIMaterialPriceManagement"
             },
             processMode : {
                 create : "C", //신규, 
@@ -759,58 +761,6 @@ sap.ui.define([
         _findFragmentControlId : function (fragmentID, controlID) {
             return sap.ui.core.Fragment.byId(fragmentID, controlID);
         },
-
-
-        /**
-         * 시황자제 삭제
-         */
-        onMidDelete : function () {
-            console.group("onMidDelete");
-            //호출만 예제)
-            //sap.ui.controller("pg.mi.miMaster.controller.MainList").onMainTableDelete();
-            var that = this, 
-                oUiData = this.getOwnerComponent().getModel("oUiData"),
-                oDeleteMIMaterialCodeKey,
-                oDeleteMIMaterialCodePath;
-            
-                MessageBox.confirm("선택한 항목을 삭제 하시겠습니까?", {
-                    title: "삭제 확인",                                    
-                    onClose: function (sButton) {
-                        if (sButton === MessageBox.Action.DELETE) {
-                            oDeleteMIMaterialCodeKey = {
-                                tenant_id : oUiData.getProperty("/tenant_id"),
-                                mi_material_code: oUiData.getProperty("/mi_material_code"),
-                                language_code:  oUiData.getProperty("/language_code")
-                            }
-                         
-                            oDeleteMIMaterialCodePath = oModel.createKey(
-                                    this._m.serviceName.mIMaterialCodeText,
-                                    oDeleteMIMaterialCodeKey
-                            ); 
-
-                            console.log("oDeleteMIMaterialCodePath : ", oDeleteMIMaterialCodePath);
-
-                            oModel.remove(oDeleteMIMaterialCodePath, { groupId: this._m.groupID });
-
-                            var oModel = that.getOwnerComponent().getView().getModel();
-                            oModel.submitChanges({
-                                groupId: this._m.groupID, 
-                                success: that._handleDeleteSuccess.bind(this),
-                                error: this._handleDeleteError.bind(this)
-                            });                            
-
-                            that._onExit();
-                            var sNextLayout = this.getOwnerComponent().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
-                            that.getRouter().navTo("mainPage", { layout: sNextLayout });
-                        }
-                    },                                    
-                    actions: [sap.m.MessageBox.Action.DELETE, sap.m.MessageBox.Action.CANCEL],
-                    textDirection: sap.ui.core.TextDirection.Inherit    
-                });
-
-            console.groupEnd();
-        },
-
         
         //수정사항 대기 
         onComboBoxLanguageChange : function (oEvent){
@@ -1469,30 +1419,16 @@ sap.ui.define([
             console.log("_deleteAction");
             var oModel = this.getOwnerComponent().getModel(),            
                 oMIMaterialCodeText = this.getOwnerComponent().getModel("mIMaterialCodeText"),
-                oUiData = this.getModel("oUiData");
-
-            var oDeleteActionMIMaterialCodeKey = {
-                tenant_id : oUiData.getProperty("/tenant_id"),
-                mi_material_code: oUiData.getProperty("/mi_material_code"),
-                category_code: oUiData.getProperty("/category_code")
-            }
-
-            console.log("oDeleteActionMIMaterialCodePath : "+oDeleteActionMIMaterialCodePath);
-
-            var oDeleteActionMIMaterialCodePath = oModel.createKey(
-                this._m.serviceName.mIMaterialCode, 
-                oDeleteActionMIMaterialCodeKey
-            );
-                    
+                that = this,
+                oUi = this.getModel("oUi"),
+                oUiData = this.getModel("oUiData"),
+                bEditFlag = oUi.getProperty("/editMode");
+  
             
-            console.log("oDeleteActionMIMaterialCodeKey : "+oDeleteActionMIMaterialCodeKey+" --delete");
-
-            oModel.remove(oDeleteActionMIMaterialCodePath);
-
-            //MIMaterialCodeText(tenant_id='L2100',mi_material_code='ALU-001-01',language_code='EN')"
-
+            //삭제전 BOM에서 사용되거나 가격관리 테이블에서 사용되는 시황자재 인지 확인한다. 
+            /* tenant_id, mi_material_code 의 존재 유무로 확인(김종현 2020-12-23) */
+     
             for(var i=0;i<oMIMaterialCodeText.oData.length;i++){
- 
                 var oMIMaterialCodeTextKey = {
                     tenant_id : oMIMaterialCodeText.oData[i].tenant_id,
                     mi_material_code: oMIMaterialCodeText.oData[i].mi_material_code,
@@ -1505,23 +1441,129 @@ sap.ui.define([
                 );
     
                 console.log(oMIMaterialCodeTextPath+"--delete");
-                oModel.remove(oMIMaterialCodeTextPath);                    
+                oModel.remove(oMIMaterialCodeTextPath, { groupId: this._m.groupID });                    
             }
             
-        
-            oModel.setUseBatch(true);
-            oModel.submitChanges({
-                groupId: this._m.groupID,
-                success: this._handleDeleteSuccess.bind(this),
-                error: this._handleDeleteError.bind(this)
-            });
+            var oFilter = [
+                new Filter("tenant_id", FilterOperator.EQ, oUiData.getProperty("/tenant_id")),
+                new Filter("mi_material_code", FilterOperator.EQ, oUiData.getProperty("/mi_material_code"))
+            ];
+         
+            if(bEditFlag){
+                Promise.all([   that._readCheckBOMEntity(oFilter),
+                                that._readCheckPriceEntity(oFilter)
+                ]).then(that.deleteCheckAction.bind(that),
+                        that.deleteChecklistError.bind(that));
+            }
+            
+            //console.log("oDeleteActionMIMaterialCodeKey : "+oDeleteActionMIMaterialCodeKey+" --delete");
+            // oModel.remove(oDeleteActionMIMaterialCodePath);
+            //MIMaterialCodeText(tenant_id='L2100',mi_material_code='ALU-001-01',language_code='EN')"
+
+            // oModel.setUseBatch(true);
+            // oModel.submitChanges({
+            //     groupId: this._m.groupID,
+            //     success: this._handleDeleteSuccess.bind(this),
+            //     error: this._handleDeleteError.bind(this)
+            // });
 
             //this.onRefresh();
 
-            oModel.refresh();  
+            //oModel.refresh();  
         },
         
        
+        _readCheckBOMEntity : function(oFilter) {
+            console.log("_readCheckBOMEntity");
+            var that = this;
+            return new Promise(function(resolve, reject) {
+                that.getModel().read(that._m.serviceName.mIMaterialCodeBOMManagementItem, {
+                    filters: oFilter,
+                    success: function(oData) {		
+                        console.log(">>_readCheckBOMEntity success");
+                        resolve(oData);
+                    },
+                    error: function(oResult) {
+                        reject(oResult);
+                    }
+                });
+            });
+        },
+
+        _readCheckPriceEntity : function(oFilter) {
+            console.log("_readCheckPriceEntity");
+            
+            var that = this;
+            return new Promise(function(resolve, reject) {
+                that.getModel().read(that._m.serviceName.mIMaterialPriceManagement, {
+                    filters: oFilter,
+                    success: function(oData) {		
+                        console.log(">>_readCheckPriceEntity success");
+                        resolve(oData);
+                    },
+                    error: function(oResult) {
+                        reject(oResult);
+                    }
+                });
+            });
+        },
+
+        deleteCheckAction: function(values) {
+            var oBomCount  = values[0].results.length;
+            var oPriceCount = values[1].results.length;
+            var that = this;
+            var oUiData = that.getModel("oUiData");
+            var oModel = that.getModel();
+            
+
+            if(oBomCount>0 || oPriceCount>0){
+                MessageToast.show("삭제 할수 없는 항목 입니다.");
+            }else{
+
+                var oDeleteMIMaterialCodeKey = {
+                    tenant_id : oUiData.getProperty("/tenant_id"),
+                    mi_material_code: oUiData.getProperty("/mi_material_code"),
+                    category_code:  oUiData.getProperty("/category_code")
+                }                
+
+                var deleteOdataPath = oModel.createKey(
+                    this._m.serviceName.mIMaterialCode,
+                    oDeleteMIMaterialCodeKey);
+
+                oModel.remove(deleteOdataPath,{ 
+                        groupId: this._m.groupID
+                    }
+                );   
+
+                that._setUseBatch(); 
+
+                this._fnSetReadMode();   
+                var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+                that._onExit();
+                that.getRouter().navTo("mainPage", { layout: sNextLayout });
+             
+            }
+        },
+
+        _setUseBatch : function() {
+            console.log("_setUseBatch");
+            return;
+            var oModel = this.getModel();
+            var that = this;
+            
+            oModel.setUseBatch(true);
+           
+            oModel.submitChanges({
+                groupId: this._m.groupID,
+                success: that._handleDeleteSuccess.bind(this),
+                error: that._handleDeleteError.bind(this)
+            });
+        },
+
+        deleteChecklistError: function(reason) {
+            console.log(" deleteChecklistError reason : " + reason)		
+        },
+
         /**
          * Exit
          * @private
