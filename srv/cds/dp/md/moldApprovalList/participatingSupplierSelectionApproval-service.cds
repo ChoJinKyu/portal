@@ -40,6 +40,7 @@ service ParticipatingSupplierSelectionApprovalService {
                 and l.tenant_id   = mst.tenant_id
         ) as mold_item_type_code_nm : String(240),
         mst.book_currency_code,
+        mst.provisional_budget_amount,
         mst.budget_amount,
         mst.currency_code,
         mst.target_amount

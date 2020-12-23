@@ -118,15 +118,15 @@ xmlns:table="sap.ui.table">
                                 <Label text="Type"/>
                             </VBox>
 							<table:template>
-								<!-- <ComboBox selectedKey="{psItemMaster>mold_item_type_code}" items="{ path : 'util>/CodeDetails',
+								<ComboBox selectedKey="{psItemMaster>mold_item_type_code}" items="{ path : 'util>/CodeDetails',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
                                         ]
                                     }">
 									<core:Item key="{util>code}" text="{util>code_description}"/> 
-								</ComboBox>-->
-                                <Text id="moldItemTypeCodeNm" text="{psItemMaster>mold_item_type_code_nm}"/>
+								</ComboBox>
+                                <!-- <Text id="moldItemTypeCodeNm" text="{psItemMaster>mold_item_type_code_nm}"/> -->
 							</table:template>
 						</table:Column>
 						<table:Column id="c_bookCurrency" width="10em" hAlign="Center">
