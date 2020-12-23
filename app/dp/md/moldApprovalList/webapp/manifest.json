@@ -61,8 +61,15 @@
                     "odataVersion": "2.0"
                 }
             },
-             "budgetExecutionApprovalService": {
+            "budgetExecutionApprovalService": {
                 "uri": "srv-api/odata/v2/dp.BudgetExecutionApprovalService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            },
+            "participatingSupplierSelectionApprovalService": {
+                "uri": "srv-api/odata/v2/dp.ParticipatingSupplierSelectionApprovalService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
@@ -178,6 +185,16 @@
             },
             "budget": {
                 "dataSource": "budgetExecutionApprovalService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false,
+                    "useBatch": true
+                }
+            },
+            "participatingSupplierSelection": {
+                "dataSource": "participatingSupplierSelectionApprovalService",
                 "preload": true,
                 "settings": {
                     "defaultBindingMode": "TwoWay",
