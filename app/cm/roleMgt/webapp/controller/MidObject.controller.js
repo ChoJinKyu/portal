@@ -416,7 +416,7 @@ sap.ui.define([
                     "local_update_dtm": new Date()
                 }, "/Role_Menu", 0);
 
-            } else {
+            } else if(!state){
 
                 for (var i = 0; i < oRoleModelData.length; i++) {
                     oRoleModel.removeRecord(i);
