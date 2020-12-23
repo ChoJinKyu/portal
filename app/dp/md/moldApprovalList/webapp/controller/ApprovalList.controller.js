@@ -169,6 +169,7 @@ sap.ui.define([
                     })
                 };
 
+                
             this.getView().byId("searchPlantS").bindItems(bindItemInfo);
             this.getView().byId("searchPlantE").bindItems(bindItemInfo);
         },
