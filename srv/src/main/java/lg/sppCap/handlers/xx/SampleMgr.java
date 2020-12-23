@@ -87,6 +87,7 @@ public class SampleMgr implements EventHandler {
         v_result.setDetailId((Long) filterValues.get("detail_id"));
         v_results.add(v_result);
 
+        
         /*
         Iterable<Map<String, Object>> values = context.getCqnValueSets();
 
