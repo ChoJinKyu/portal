@@ -23,5 +23,4 @@ service MoldApprovalV4Service {
 
     action saveMoldApproval ( inputData : saveReturnType ) returns saveReturnType;
 
-
 }
