@@ -25,7 +25,7 @@
                 <!-- Material Code List 시작 -->
                 <Table 
                     items="{materialCodeModel>/materialCode}"
-                    mode="MultiSelect"
+                    mode="SingleSelectMaster"
                     selectionChange=".onSelectMaterialCode" >
                     <headerToolbar>
                         <OverflowToolbar>

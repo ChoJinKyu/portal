@@ -260,14 +260,14 @@ sap.ui.define([
             var that = this;
             var target = "";
             if(oRecord.approval_type_code == "B"){
-                target = ""
+                target = "budgetExecutionApproval"
             }else if(oRecord.approval_type_code == "V"){
-                target = ""
+                target = "purOrderItemLocalApproval"
             }else if(oRecord.approval_type_code == "E"){
-                target = ""
+                target = "participatingSupplierSelectionApproval"
             }
-        
-            that.getRouter().navTo("approvalObject", {
+            console.log(target);
+            that.getRouter().navTo(target , {
                 company_code: oRecord.company_code
                 , plant_code: oRecord.org_code
                 , approval_type_code: oRecord.approval_type_code

@@ -40,6 +40,7 @@ sap.ui.define([
     /* =========================================================== */
     /* lifecycle methods                                           */
     /* =========================================================== */
+
     selectionChange: function (event) {
       var combo = event.getSource().getParent().getCells()[3].getItems()[0];
       combo.clearSelection();
@@ -52,12 +53,17 @@ sap.ui.define([
           key: "{org>code}", text: "{org>code}"
         })
       });
+      // 테넌트 : 회사코드, 구매조직코드, 사업본부
+      // 테넌트 & 회사(*아님) : 플랜트
+      // 테넌트 & 회사(*) : 테넌트 하위 전체 플랜트
+      // 테넌트 & 사업본부 : 사업부
+      // 사업부 : HQ/AU
     },
 
-		/**
-		 * Called when the midObject controller is instantiated.
-		 * @public
-		 */
+    /**
+     * Called when the midObject controller is instantiated.
+     * @public
+     */
     onInit: function () {
 
       // MidObject
@@ -66,39 +72,22 @@ sap.ui.define([
         delay: 0,
         screen: "",
         editMode: "",
-        menuCode: "",
-        menuName: "",
-        mode: "R" // C, R, U, D
+        // ?query
+        tenantId: "",
+        companyCode: "",
+        orgTypeCode: "",
+        orgCode: "",
+        orgName: "",
+        // C, R, U, D
+        mode: "R"
       }), "midObjectView");
-
-      // 메뉴레벨
-      this.getView().setModel(new JSONModel({
-        items: [
-          {
-            level: 1
-          },
-          {
-            level: 2
-          },
-          {
-            level: 3
-          },
-          {
-            level: 4
-          },
-        ]
-      }), "menu_level");
 
       // Master
       this.setModel(new ManagedModel(), "master");
 
-      // Languages
-      this.setModel(new ManagedListModel(), "details");
-
       // TransactionManager - 일괄처리
       this[oTransactionManager] = new TransactionManager();
       this[oTransactionManager].addDataModel(this.getModel("master"));
-      this[oTransactionManager].addDataModel(this.getModel("details"));
       this[oTransactionManager].setServiceModel(this.getOwnerComponent().getModel());
 
       // Router 에서 "pattern": "midObject/{layout}/{?query}" 인 경우마다 System Callback
@@ -107,42 +96,41 @@ sap.ui.define([
         .getRoute("midPage")
         .attachPatternMatched(
           function (oEvent) {
-            var { menuCode, menuName, parentMenuCode } = oEvent.getParameter("arguments")["?query"];
-            this.getModel("midObjectView").setProperty("/mode", (!menuCode ? "C" : "R"));
-            this.getModel("midObjectView").setProperty("/menuCode", menuCode);
-            this.getModel("midObjectView").setProperty("/menuName", menuName);
-            this.getModel("midObjectView").setProperty("/parentMenuCode", parentMenuCode);
-            //this.getModel("midObjectView").setProperty("/mode", "R");
+            var { tenantId, companyCode, orgTypeCode, orgCode, orgName } = oEvent.getParameter("arguments")["?query"];
+            this.getModel("midObjectView").setProperty("/mode", (!tenantId ? "C" : "R"));
+            this.getModel("midObjectView").setProperty("/tenantId", tenantId);
+            this.getModel("midObjectView").setProperty("/companyCode", companyCode);
+            this.getModel("midObjectView").setProperty("/orgTypeCode", orgTypeCode);
+            this.getModel("midObjectView").setProperty("/orgCode", orgCode);
+            this.getModel("midObjectView").setProperty("/orgName", orgName);
             // 신규(C)
-            if (!menuCode) {
+            if (!tenantId) {
               this
                 .getModel("master")
-                .setData($.extend({
-                  "tenant_id": "L2100",
-                  "menu_code": "",
-                  "chain_code": "CM",
-                  "menu_display_flag": true,
+                .setData({
                   "use_flag": true,
-                  "local_create_dtm": new Date(),
-                  "local_update_dtm": new Date()
-                }, !!parentMenuCode ? { "parent_menu_code": parentMenuCode } : {}), "/Menu", false);
+                }, "/Pur_Operation_Org", false);
             }
             // 수정(U) 및 삭제(D)
-            else /*if (!!menuCode)*/ {
+            else /*if (!!tenantId)*/ {
               // menu
               this
                 .getView()
                 .setBusy(true)
                 .getModel("master")
                 .setTransactionModel(this.getOwnerComponent().getModel())
-                .readP("/Menu", {
+                .readP("/Pur_Operation_Org", {
                   filters: [
                     // 조회조건
-                    new Filter("menu_code", FilterOperator.EQ, menuCode)
+                    new Filter("tenant_id", FilterOperator.EQ, tenantId),
+                    new Filter("company_code", FilterOperator.EQ, companyCode),
+                    new Filter("org_type_code", FilterOperator.EQ, orgTypeCode),
+                    new Filter("org_code", FilterOperator.EQ, orgCode)
                   ]
                 })
                 // 성공시
                 .then((function (oData) {
+                  this.getModel("master").setData({});
                   this.getModel("master").setData(oData.results[0]);
                 }).bind(this))
                 // 실패시
@@ -153,35 +141,11 @@ sap.ui.define([
                   this.getView().setBusy(false);
                 }).bind(this));
             }
-
-            // languages
-            this
-              .getView()
-              .setBusy(true)
-              .getModel("details")
-              .setTransactionModel(this.getOwnerComponent().getModel())
-              .readP("/MenuLng", {
-                filters: [
-                  // 조회조건 - 일단 신규인 경우도 "99999" 를 던짐
-                  new Filter("menu_code", FilterOperator.EQ, menuCode || "99999")
-                ]
-              })
-              // 성공시
-              .then((function (oData) {
-              }).bind(this))
-              // 실패시
-              .catch(function (oError) {
-              })
-              // 모래시계해제
-              .finally((function () {
-                this.getView().setBusy(false);
-              }).bind(this));
           }, this);
 
       // 하단의 Message 처리를 위함
       this.enableMessagePopover();
     },
-
     /* =========================================================== */
     /* event handlers                                              */
     /* =========================================================== */
@@ -194,8 +158,11 @@ sap.ui.define([
       this.getRouter().navTo("midPage", {
         layout: sNextLayout,
         "?query": {
-          menuCode: "",
-          menuName: ""
+            tenantId: "",
+            companyCode: "",
+            orgTypeCode: "",
+            orgCode: "",
+            orgName: "",
         }
       });
     },
@@ -208,8 +175,11 @@ sap.ui.define([
       this.getRouter().navTo("midPage", {
         layout: sNextLayout,
         "?query": {
-          menuCode: "",
-          menuName: ""
+            tenantId: "",
+            companyCode: "",
+            orgTypeCode: "",
+            orgCode: "",
+            orgName: "",
         }
       });
     },
@@ -236,7 +206,7 @@ sap.ui.define([
       var oView = this.getView(),
         oMasterModel = this.getModel("master"),
         that = this;
-      MessageBox.confirm("메뉴정보를 삭제하시겠습니까?", {
+      MessageBox.confirm("구매운영조직정보를 삭제하시겠습니까?", {
         title: "Comfirmation",
         initialFocus: sap.m.MessageBox.Action.CANCEL,
         onClose: function (sButton) {
@@ -255,73 +225,7 @@ sap.ui.define([
         }
       });
     },
-    /**
-     * 리스트 레코드 추가
-     * @public
-     */
-    onAdd: function () {
-      var oTable = this.byId("midTable"),
-        oDetailsModel = this.getModel("details");
-
-      var transition = function (f) {
-        return function (v) {
-          return f(v);
-        };
-      };
-
-      var utc = transition(function (lDate) {
-        var yyyy = lDate.getFullYear() + "";
-        var mm = lDate.getMonth() + 1 + "";
-        var dd = lDate.getDate() + "";
-        var hh = lDate.getHours() + "";
-        var mi = lDate.getHours() + "";
-        var ss = lDate.getSeconds() + "";
-        // YYYY-MM-DDTHH:mm:ss.sssZ
-        return new Date([
-          yyyy,
-          mm.length == 1 ? "0" + mm : mm,
-          dd.length == 1 ? "0" + dd : dd
-        ].join("-") + (function () {
-          if (!hh && !mi && !ss) {
-            return "";
-          }
-          return "T" + [
-            hh.length == 1 ? "0" + hh : hh,
-            mi.length == 1 ? "0" + mi : mi,
-            ss.length == 1 ? "0" + ss : ss,
-          ].join(":");
-        })());
-      });
-
-      oDetailsModel.addRecord({
-        "tenant_id": "L2100",
-        "language_code": "KO",
-        "menu_name": "",
-        "local_create_dtm": utc(new Date()),
-        "local_update_dtm": utc(new Date())
-      }, 0);
-
-    },
-
-    onDelete: function () {
-      var [tId, mName, sEntity] = arguments;
-      var table = this.byId(tId);
-      var model = this.getView().getModel(mName);
-
-      table
-        .getSelectedItems()
-        .map(item => model.getData()[sEntity].indexOf(item.getBindingContext("details").getObject()))
-        //.getSelectedIndices()
-        .reverse()
-        // 삭제
-        .forEach(function (idx) {
-          model.markRemoved(idx);
-        });
-      table
-        //.clearSelection()
-        .removeSelections(true);
-    },
-
+    
     /**
      * Event handler for saving page changes
      * @public
@@ -330,7 +234,6 @@ sap.ui.define([
 
       var view = this.getView(),
         master = view.getModel("master"),
-        detail = view.getModel("details"),
         that = this;
 
       // Validation
@@ -346,14 +249,6 @@ sap.ui.define([
       //   MessageBox.alert("변경사항이 없습니다.");
       //   return;
       // }
-      // Set Details (New)
-      if (master.getData()["_state_"] == "C") {
-        detail.getData()["MenuLng"].map(r => {
-          r["tenant_id"] = master.getData()["tenant_id"];
-          r["menu_code"] = master.getData()["menu_code"];
-          return r;
-        });
-      }
 
       MessageBox.confirm("Are you sure ?", {
         title: "Comfirmation",
@@ -363,7 +258,6 @@ sap.ui.define([
             view.setBusy(true);
             that[oTransactionManager].submit({
               success: function (ok) {
-                //that.getModel("midObjectView").setProperty("/mode", "R");
                 view.setBusy(false);
                 that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                 MessageToast.show("Success to save.");
@@ -381,14 +275,16 @@ sap.ui.define([
     onCancel: function () {
       // 신규("C"), 조회("R") 취소의 경우는 mainPage 로 복귀
       this.onNavBack.call(this);
-
       // 변경("U") 취소의 경우 초기화 : onInit 에서 등록된 Callback 이벤트를 타게됨.
       if (this.getModel("midObjectView").getProperty("/mode") == "U") {
         this.getRouter().navTo("midPage", {
           layout: this.getOwnerComponent().getHelper().getNextUIState(1).layout,
           "?query": {
-            menuCode: this.getModel("midObjectView").getProperty("/menuCode") || "",
-            menuName: this.getModel("midObjectView").getProperty("/menuName") || ""
+            tenantId: this.getModel("midObjectView").getProperty("/tenantId") || "",
+            companyCode: this.getModel("midObjectView").getProperty("/companyCode") || "",
+            orgTypeCode: this.getModel("midObjectView").getProperty("/orgTypeCode") || "",
+            orgCode: this.getModel("midObjectView").getProperty("/orgCode") || "",
+            orgName: this.getModel("midObjectView").getProperty("/orgName") || "",
           }
         });
       }

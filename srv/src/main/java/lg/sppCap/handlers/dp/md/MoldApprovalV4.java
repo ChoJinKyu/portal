@@ -37,7 +37,7 @@ import com.sap.cds.ql.Delete;
 import com.sap.cds.Result;
 
 import cds.gen.dp.moldapprovalv4service.*;
-import cds.gen.dp.orderapprovalservice.*;
+import cds.gen.dp.moldapprovalservice.*;
 
 @Component
 @ServiceName(MoldApprovalV4Service_.CDS_NAME)
@@ -46,9 +46,9 @@ public class MoldApprovalV4 implements EventHandler {
     @Autowired
     private JdbcTemplate jdbc;
 
-     @Autowired
-    @Qualifier(OrderApprovalService_.CDS_NAME)
-     private CdsService orderApprovalService;
+    @Autowired
+    @Qualifier(MoldApprovalService_.CDS_NAME)
+    private CdsService moldApprovalService;
 
     @On(event = SaveMoldApprovalContext.CDS_NAME)
     public void onSave(SaveMoldApprovalContext context){
@@ -87,7 +87,7 @@ public class MoldApprovalV4 implements EventHandler {
             mEtity.setLocalCreateDtm(aMaster.getLocalCreateDtm());
             mEtity.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
            // Connection conn = jdbc.getDataSource().getConnection(); 
-            CqnUpdate masterUpdate = Update.entity(ApprovalMasters_.CDS_NAME).data(mEtity);
+          //  CqnUpdate masterUpdate = Update.entity(ApprovalMasters_.CDS_NAME).data(mEtity);
             
 
 
@@ -99,6 +99,6 @@ public class MoldApprovalV4 implements EventHandler {
     
     }    
 
-    
+
     
 }
