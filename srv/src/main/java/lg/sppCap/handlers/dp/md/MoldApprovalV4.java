@@ -27,8 +27,17 @@ import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.After;
 import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.request.ParameterInfo;
+import org.springframework.beans.factory.annotation.Qualifier;
+import com.sap.cds.ql.cqn.CqnUpdate;
+import com.sap.cds.ql.cqn.CqnInsert;
+import com.sap.cds.ql.cqn.CqnDelete;
+import com.sap.cds.ql.Update;
+import com.sap.cds.ql.Insert;
+import com.sap.cds.ql.Delete;
+import com.sap.cds.Result;
 
 import cds.gen.dp.moldapprovalv4service.*;
+import cds.gen.dp.orderapprovalservice.*;
 
 @Component
 @ServiceName(MoldApprovalV4Service_.CDS_NAME)
@@ -37,31 +46,49 @@ public class MoldApprovalV4 implements EventHandler {
     @Autowired
     private JdbcTemplate jdbc;
 
+     @Autowired
+    @Qualifier(OrderApprovalService_.CDS_NAME)
+     private CdsService orderApprovalService;
+
     @On(event = SaveMoldApprovalContext.CDS_NAME)
     public void onSave(SaveMoldApprovalContext context){
         System.out.println(" >>>>>>> "+ context);
 
         Data data = context.getInputData();
         ApprovalMaster aMaster = data.getApprovalMaster();
-        Collection<ApprovalDetails> aDtlList = data.getApprovalDetails();
-        Collection<Approver> approverList = data.getApprover();
-        Collection<MoldMaster> mMasterList = data.getMoldMaster();
-        Collection<Referer> refList = data.getReferer();
+        // Collection<ApprovalDetails> aDtlList = data.getApprovalDetails();
+        // Collection<Approver> approverList = data.getApprover();
+        // Collection<MoldMaster> mMasterList = data.getMoldMaster();
+        // Collection<Referer> refList = data.getReferer();
 
         ResultMsg msg = ResultMsg.create();
         msg.setMessageCode("001");
         msg.setResultCode(0);
 
         try {
-            Connection conn = jdbc.getDataSource().getConnection();
-
-
             System.out.println(" aMaster "+ aMaster); 
-            System.out.println(" aDtlList "+ aDtlList); 
-            System.out.println(" approverList "+ approverList); 
-            System.out.println(" moldMasterList "+ mMasterList); 
-            System.out.println(" refList "+ refList); 
-            getApprovalMstInsert();           
+            // System.out.println(" aDtlList "+ aDtlList); 
+            // System.out.println(" approverList "+ approverList); 
+            // System.out.println(" moldMasterList "+ mMasterList); 
+            // System.out.println(" refList "+ refList); 
+            ApprovalMasters mEtity =  ApprovalMasters.create();  
+            mEtity.setTenantId(aMaster.getTenantId());
+            mEtity.setApprovalNumber(aMaster.getApprovalNumber());
+            mEtity.setCompanyCode(aMaster.getCompanyCode());
+            mEtity.setOrgCode(aMaster.getOrgCode());
+            mEtity.setChainCode(aMaster.getChainCode());
+            mEtity.setApprovalTypeCode(aMaster.getApprovalTypeCode());
+            mEtity.setApprovalTitle(aMaster.getApprovalTitle());
+            mEtity.setApprovalContents(aMaster.getApprovalContents());
+            mEtity.setApproveStatusCode(aMaster.getApproveStatusCode());
+            mEtity.setRequestorEmpno(aMaster.getRequestorEmpno());
+            mEtity.setRequestDate(aMaster.getRequestDate());
+            mEtity.setAttchGroupNumber(aMaster.getAttchGroupNumber());
+            mEtity.setLocalCreateDtm(aMaster.getLocalCreateDtm());
+            mEtity.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
+           // Connection conn = jdbc.getDataSource().getConnection(); 
+            CqnUpdate masterUpdate = Update.entity(ApprovalMasters_.CDS_NAME).data(mEtity);
+            
 
 
             context.setResult(msg);
@@ -72,76 +99,6 @@ public class MoldApprovalV4 implements EventHandler {
     
     }    
 
-    // Approval_Mst Insert 문 
-    private String getApprovalMstInsert(){
-         StringBuffer sb = new StringBuffer(); 
-         sb.append("INSERT INTO CM_APPROVAL_MST ");
-         sb.append("( ");
-         sb.append(",TENANT_ID ");
-         sb.append(",APPROVAL_NUMBER ");
-         sb.append(",LEGACY_APPROVAL_NUMBER ");
-         sb.append(",COMPANY_CODE ");
-         sb.append(",ORG_TYPE_CODE ");
-         sb.append(",ORG_CODE ");
-         sb.append(",CHAIN_CODE ");
-         sb.append(",APPROVAL_TYPE_CODE ");
-         sb.append(",APPROVAL_TITLE ");
-         sb.append(",APPROVAL_CONTENTS ");
-         sb.append(",APPROVE_STATUS_CODE ");
-         sb.append(",REQUESTOR_EMPNO ");
-         sb.append(",REQUEST_DATE ");
-         sb.append(",ATTCH_GROUP_NUMBER ");
-         sb.append(",LOCAL_CREATE_DTM ");
-         sb.append(",LOCAL_UPDATE_DTM ");
-         sb.append(",CREATE_USER_ID ");
-         sb.append(",UPDATE_USER_ID ");
-         sb.append(",SYSTEM_CREATE_DTM ");
-         sb.append(",SYSTEM_UPDATE_DTM ");
-         sb.append(") VALUES (");
-         sb.append(",? "); // TENANT_ID 
-         sb.append(",? "); // APPROVAL_NUMBER 
-         sb.append(",? "); // LEGACY_APPROVAL_NUMBER
-         sb.append(",? "); // COMPANY_CODE
-         sb.append(",? "); // ORG_TYPE_CODE
-         sb.append(",? "); // ORG_CODE
-         sb.append(",? "); // CHAIN_CODE
-         sb.append(",? "); // APPROVAL_TYPE_CODE
-         sb.append(",? "); // APPROVAL_TITLE
-         sb.append(",? "); // APPROVAL_CONTENTS
-         sb.append(",? "); // APPROVE_STATUS_CODE
-         sb.append(",? "); // REQUESTOR_EMPNO
-         sb.append(",? "); // REQUEST_DATE 
-         sb.append(",? "); // ATTCH_GROUP_NUMBER
-         sb.append(",? "); // LOCAL_CREATE_DTM
-         sb.append(",? "); // LOCAL_UPDATE_DTM
-         sb.append(",? "); // CREATE_USER_ID
-         sb.append(",? "); // UPDATE_USER_ID
-         sb.append(",? "); // SYSTEM_CREATE_DTM
-         sb.append(",? "); // SYSTEM_UPDATE_DTM 
-         sb.append(")");
-         System.out.println(" sb.toString() "+ sb.toString()); 
-         return  sb.toString();
-    }
-    // Approval_Mst Update 문 
-    private String getApprovalMstUpdate(){
-         StringBuffer sb = new StringBuffer(); 
-         sb.append("UPDATE CM_APPROVAL_MST SET ");
-         sb.append(" APPROVAL_TITLE = ?");
-         sb.append(",APPROVAL_CONTENTS = ? ");
-         sb.append(",APPROVE_STATUS_CODE = ? ");
-         sb.append(",REQUESTOR_EMPNO = ?");
-         sb.append(",REQUEST_DATE = ?");
-         sb.append(",ATTCH_GROUP_NUMBER = ? ");
-         sb.append(",LOCAL_UPDATE_DTM = ? ");
-         sb.append(",UPDATE_USER_ID = ? ");
-         sb.append(",SYSTEM_UPDATE_DTM = ? ");
-         sb.append(" WHERE APPROVAL_NUMBER = ?"); 
-         System.out.println(" sb.toString() "+ sb.toString()); 
-         return  sb.toString();
-    }
-
-
-
-
-
+    
+    
 }

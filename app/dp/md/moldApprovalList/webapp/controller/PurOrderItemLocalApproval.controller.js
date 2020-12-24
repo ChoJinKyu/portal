@@ -1,5 +1,4 @@
 sap.ui.define([
-    "ext/lib/controller/BaseController",
     "ext/lib/formatter/DateFormatter",
     "ext/lib/model/ManagedModel",
     "ext/lib/model/ManagedListModel",
@@ -19,17 +18,18 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/richtexteditor/RichTextEditor",
+    "./ApprovalBaseController",
     "dp/md/util/controller/MoldItemSelection"
-], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
+], function (DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
-    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, MoldItemSelection
+    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalBaseController, MoldItemSelection
 ) {
     "use strict";
 
     var oTransactionManager;
     var oRichTextEditor;
 
-    return BaseController.extend("dp.md.moldApprovalList.controller.PurchaseOrderItemLocal", {
+    return ApprovalBaseController.extend("dp.md.moldApprovalList.controller.PurchaseOrderItemLocal", {
 
         dateFormatter: DateFormatter,
 
@@ -46,73 +46,20 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
-            this.oThis;
-        },
+            ApprovalBaseController.prototype.onInit.call(this);
 
-        openFragmentApproval : function (oThis){ 
-            this.oThis = oThis; 
-            var schFilter = [];
-            if(this.oThis.approval_number !== "New"){
-                //this._onReadOrderLocal(this.oThis.approval_number);
-            }
-/*
-            this.oThis.getView().setModel(new ManagedListModel(), "appDetail");
-            this.oThis.getView().setModel(new ManagedListModel(), "moldMaster");
+            // Model used to manipulate control states. The chosen values make sure,
+            // detail page shows busy indication immediately so there is no break in
+            // between the busy indication for loading the view's meta data
+            var oViewModel = new JSONModel({
+                busy: true,
+                delay: 0
+            });
 
-            oTransactionManager.addDataModel(this.getModel("appDetail"));
-            oTransactionManager.addDataModel(this.getModel("moldMaster"));
-*/
-            var oPageSubSection2 = this.oThis.byId("pageSection");
-            this._loadFragmentPOILocal("PurchaseOrderItemLocal", function(oFragment){
-                 oPageSubSection2.addBlock(oFragment);   
-              }) 
-        },
-
-        _onReadOrderLocal: function (approvalNumber) {
-            var filter = [
-                new Filter("tenant_id", FilterOperator.EQ, this.oThis.tenant_id),
-                new Filter("approval_number", FilterOperator.EQ, approvalNumber)
-            ];
-
-            this.oThis._bindView("/ApprovalDetails", "appDetail", filter, function (oData) {
-                var moldIdFilter = [];
-                var moldMstFilter = [];
-
-                if (oData.results.length > 0) {
-                    oData.results.forEach(function (item) {
-                        moldIdFilter.push(new Filter("mold_id", FilterOperator.EQ, item.mold_id));
-                    });
-
-                    moldMstFilter.push(
-                        new Filter({
-                            filters: moldIdFilter,
-                            and: false
-                        })
-                    );
-
-                    this.oThis._bindView("/MoldMasters", "moldMaster", moldMstFilter, function (oData) {
-
-                    }.bind(this));
-                }
-            }.bind(this));
-
-            //oTransactionManager.setServiceModel(this.getModel());
-        },
-
-        _loadFragmentPOILocal : function (sFragmentName, oHandler){       
-            if(!this.oThis._oFragments[sFragmentName]){
-				Fragment.load({
-					id: this.oThis.getView().getId(),
-					name: "dp.md.moldApprovalList.view." + sFragmentName,
-					controller: this
-				}).then(function(oFragment){
-					this.oThis._oFragments[sFragmentName] = oFragment;
-                    if(oHandler) oHandler(oFragment);
-				}.bind(this));
-			}else{
-				if(oHandler) oHandler(this.oThis._oFragments[sFragmentName]);
-			}
-
+            this.setModel(oViewModel, "purOrderItemLocalApprovalView");//change
+            this.getRouter().getRoute("purOrderItemLocalApproval").attachPatternMatched(this._onObjectMatched, this);//change
+            
+            this.getView().setModel(new ManagedListModel(), "moldMaster");
         },
 
         /* =========================================================== */

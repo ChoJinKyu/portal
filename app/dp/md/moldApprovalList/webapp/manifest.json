@@ -266,24 +266,24 @@
                     ]
                 },
                 {
-                    "pattern": "approvalObject/{company_code}/{plant_code}/{approval_type_code}/{approval_number}",
-                    "name": "approvalObject",
+                    "pattern": "budgetExecutionApproval/{company_code}/{plant_code}/{approval_number}",
+                    "name": "budgetExecutionApproval",
                     "target": [
-                        "approvalObject"
+                        "budgetExecutionApproval"
                     ]
                 },
                 {
-                    "pattern": "PssaCreateObject/{company}/{plant}",
-                    "name": "pssaCreateObject",
+                    "pattern": "participatingSupplierSelection/{company_code}/{plant_code}/{approval_number}",
+                    "name": "participatingSupplierSelection",
                     "target": [
-                        "pssaCreateObject"
+                        "participatingSupplierSelection"
                     ]
                 },
                 {
-                    "pattern": "BeaCreateObject/{company}/{plant}",
-                    "name": "beaCreateObject",
+                    "pattern": "purOrderItemLocalApproval/{company_code}/{plant_code}/{approval_number}",
+                    "name": "purOrderItemLocalApproval",
                     "target": [
-                        "beaCreateObject"
+                        "purOrderItemLocalApproval"
                     ]
                 },
                 {
@@ -308,35 +308,35 @@
                     "viewLevel": 1,
                     "title": "{i18n>approvalListViewTitle}"
                 },
-                "approvalObject": {
-                    "viewName": "ApprovalObject",
-                    "viewId": "approvalObject",
-                    "viewLevel": 2,
-                    "title": "{i18n>approvalObjectTitle}"
-                },
                 "mainObject": {
                     "viewName": "MainObject",
                     "viewId": "mainObject",
                     "viewLevel": 2,
                     "title": "{i18n>mainObjectViewTitle}"
                 },
-                "beaCreateObject": {
-                    "viewName": "BeaCreateObject",
-                    "viewId": "beaCreateObject",
+                "budgetExecutionApproval": {
+                    "viewName": "BudgetExecutionApproval",
+                    "viewId": "budgetExecutionApproval",
                     "viewLevel": 2,
-                    "title": "{i18n>beaCreateObjectTitle}"
+                    "title": "{i18n>budgetExecutionApprovalTitle}"
+                },
+                "participatingSupplierSelection": {
+                    "viewName": "ParticipatingSupplierSelection",
+                    "viewId": "participatingSupplierSelection",
+                    "viewLevel": 2,
+                    "title": "{i18n>participatingSupplierSelectionTitle}"
+                },
+                "purOrderItemLocalApproval": {
+                    "viewName": "PurOrderItemLocalApproval",
+                    "viewId": "purOrderItemLocalApproval",
+                    "viewLevel": 2,
+                    "title": "{i18n>purOrderItemLocalApprovalTitle}"
                 },
                 "beaObject": {
                     "viewName": "BeaObject",
                     "viewId": "beaObject",
                     "viewLevel": 2,
                     "title": "{i18n>beaObjectTitle}"
-                },
-                "pssaCreateObject": {
-                    "viewName": "PssaCreateObject",
-                    "viewId": "pssaCreateObject",
-                    "viewLevel": 2,
-                    "title": "{i18n>viewObjectTitle3}"
                 },
                 "pssaObject": {
                     "viewName": "PssaObject",
