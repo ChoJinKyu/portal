@@ -70,15 +70,15 @@ sap.ui.define([
         /* =========================================================== */
         /* internal methods                                            */
         /* =========================================================== */
-        _onApprovalPage : function (approval_number) {
+        _onApprovalPage : function () {
   
-            console.log(" this.approval_number "  ,  approval_number);
+            console.log(" this.approval_number "  ,  this.approval_number);
             var schFilter = [];
    
             if (this.approval_number == "New") {
 
             } else {
-                schFilter = [new Filter("approval_number", FilterOperator.EQ, approval_number)
+                schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
                     , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
                 ];
 
