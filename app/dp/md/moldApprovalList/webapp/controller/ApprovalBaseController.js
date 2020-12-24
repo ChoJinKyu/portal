@@ -195,7 +195,7 @@ sap.ui.define([
             this.company_code = args.company_code;
             this.plant_code = (args.org_code == undefined ? args.plant_code : args.org_code);
 
-            this.getModel("purOrderItemLocalApprovalView").setProperty('/editMode', this.plant_code != undefined ? true : false);
+           // this.getModel("purOrderItemLocalApprovalView").setProperty('/editMode', this.plant_code != undefined ? true : false);
 
             var oModel = this.getModel("company");
 
