@@ -123,11 +123,20 @@
       },
       "routes": [
         {
-          "pattern": "",
-          "name": "mdCategoryItem",
-          "target": [
-            "mdCategoryItem"
-          ]
+            "pattern": "",
+            "name": "mdCategoryItem",
+            "target": [
+                "mdCategoryItem",
+                "detail"
+            ]
+        },
+        {
+            "pattern": "detail/{spmd_character_code}/{layout}",
+            "name": "detail",
+            "target": [
+                "mdCategoryItem",
+                "detail"
+            ]
         }
       ],
       "targets": {
@@ -135,7 +144,12 @@
           "viewId": "mdCategoryItem",
           "viewName": "mdCategoryItem",
           "viewLevel": 1,
+		  "controlAggregation": "beginColumnPages",
           "title": "{i18n>mainListViewTitle}"
+        },
+        "detail": {
+            "viewName": "Detail",
+            "controlAggregation": "midColumnPages"
         }
       }
     }

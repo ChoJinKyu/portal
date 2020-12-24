@@ -29,7 +29,7 @@ sap.ui.define([
     var oTransactionManager;
     var oRichTextEditor;
 
-    return ApprovalBaseController.extend("dp.md.moldApprovalList.controller.PurchaseOrderItemLocal", {
+    return ApprovalBaseController.extend("dp.md.moldApprovalList.controller.ParticipatingSupplierSelection", {
 
         dateFormatter: DateFormatter,
 
@@ -47,7 +47,7 @@ sap.ui.define([
 		 */
         onInit: function () {
             ApprovalBaseController.prototype.onInit.call(this);
-
+            console.log("호출하니?");
             // Model used to manipulate control states. The chosen values make sure,
             // detail page shows busy indication immediately so there is no break in
             // between the busy indication for loading the view's meta data
@@ -56,8 +56,8 @@ sap.ui.define([
                 delay: 0
             });
 
-            this.setModel(oViewModel, "purOrderItemLocalApprovalView");//change
-            this.getRouter().getRoute("purOrderItemLocalApproval").attachPatternMatched(this._onObjectMatched, this);//change
+            this.setModel(oViewModel, "participatingSupplierSelectionView");//change
+            this.getRouter().getRoute("participatingSupplierSelection").attachPatternMatched(this._onObjectMatched, this);//change
             
             this.getView().setModel(new ManagedListModel(), "moldMaster");
         },

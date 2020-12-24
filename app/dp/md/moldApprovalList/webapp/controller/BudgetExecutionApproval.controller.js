@@ -1,49 +1,42 @@
 sap.ui.define([
-    "ext/lib/controller/BaseController",
-    "sap/ui/model/json/JSONModel",
-    "ext/lib/model/ManagedListModel",
-    "ext/lib/model/ManagedModel",
     "ext/lib/formatter/DateFormatter",
-    "sap/ui/model/Filter",
-    "sap/ui/model/FilterOperator",
-    "sap/ui/core/Fragment",
-    "sap/m/MessageBox",
-    "sap/m/MessageToast",
-    "sap/ui/Device", // fileupload 
-    "sap/ui/core/syncStyleClass",
-    "sap/m/ColumnListItem",
+    "ext/lib/model/ManagedModel",
+    "ext/lib/model/ManagedListModel",
     "ext/lib/model/TransactionManager",
     "ext/lib/util/Multilingual",
     "ext/lib/util/Validator",
-    "ext/lib/formatter/Formatter",
-    "dp/md/util/controller/MoldItemSelection",
+    "sap/m/ColumnListItem",
+    "sap/m/Label",
+    "sap/m/MessageBox",
+    "sap/m/MessageToast",
+    "sap/m/UploadCollectionParameter",
+    "sap/ui/core/Fragment",
+    "sap/ui/core/syncStyleClass",
+    "sap/ui/core/routing/History",
+    "sap/ui/Device", // fileupload 
+    "sap/ui/model/json/JSONModel",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator",
     "sap/ui/richtexteditor/RichTextEditor",
-    //  "sap/ui/richtexteditor/EditorType"
-], function (BaseController, JSONModel
-    , ManagedListModel, ManagedModel, DateFormatter, Filter, FilterOperator, Fragment
-    , MessageBox, MessageToast, Device, syncStyleClass, ColumnListItem
-    , TransactionManager
-    , Multilingual
-    , Validator
-    , Formatter
-    , MoldItemSelection
-    , RichTextEditor
-    // ,EditorType
+    "./ApprovalBaseController",
+    "dp/md/util/controller/MoldItemSelection"
+], function (DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
+    ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
+    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalBaseController, MoldItemSelection
 ) {
     "use strict";
-    /**
-     * @description 예산집행품의 Create, update 화면 
-     * @author jinseon.lee
-     * @date 2020.12.01
-     */
-    var mainViewName = "beaCreateObjectView";
 
     var oTransactionManager;
-    return BaseController.extend("dp.md.budgetExecutionApproval.controller.BudgetExecutionApproval", {
-        //  formatter: Formatter,
-        //  dateFormatter: DateFormatter,
-        //  validator: new Validator(), 
+    var oRichTextEditor;
+
+    return ApprovalBaseController.extend("dp.md.moldApprovalList.controller.BudgetExecutionApproval", {
+
+        dateFormatter: DateFormatter,
+
+        validator: new Validator(),
+
         moldItemPop: new MoldItemSelection(),
+
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -53,66 +46,32 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
-            this.oThis;
-        },
+            ApprovalBaseController.prototype.onInit.call(this);
 
-        openFragmentApproval: function (oThis) {
-            this.oThis = oThis;
-
-            console.log("oThis >>> " , this.oThis);
-
-            var schFilter = [];
-            this.oThis.getView().setModel(new ManagedListModel(), "mdItemMaster");
-            if (this.oThis.approval_number == "New") {
-
-            } else {
-                schFilter = [new Filter("approval_number", FilterOperator.EQ, this.oThis.approval_number)
-                    , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
-                ];
-
-                this._bindView2("/ItemBudgetExecution", "mdItemMaster", schFilter, function (oData) {
-                    console.log("ItemBudgetExecution >>>>>>", oData);
-                });
-            }
-
-            var oPageSubSection = this.oThis.byId("pageSection");
-            this._loadFragmentBudget("BudgetExecutionApproval", function (oFragment) {
-                oPageSubSection.addBlock(oFragment);
-            })
-        },
-
-        _bindView2 : function (sObjectPath, sModel, aFilter, callback) { 
-            console.log(" 호출 됐나??? ");
-            var oView = this.oThis.getView(),
-                oModel = this.oThis.getModel(sModel);
-            oView.setBusy(true);
-            oModel.setTransactionModel(this.oThis.getModel("budget"));
-            oModel.read(sObjectPath, {
-                filters: aFilter,
-                success: function (oData) {
-                    oView.setBusy(false);
-                    callback(oData);
-                }
+            // Model used to manipulate control states. The chosen values make sure,
+            // detail page shows busy indication immediately so there is no break in
+            // between the busy indication for loading the view's meta data
+            var oViewModel = new JSONModel({
+                busy: true,
+                delay: 0
             });
+
+            this.setModel(oViewModel, "budgetExecutionApprovalView");//change
+            this.getRouter().getRoute("budgetExecutionApproval").attachPatternMatched(this._onObjectMatched, this);//change
+            
+            this.getView().setModel(new ManagedListModel(), "moldMaster");
         },
 
-        _loadFragmentBudget: function (sFragmentName, oHandler) {
-            if (!this.oThis._oFragments[sFragmentName]) {
-                Fragment.load({
-                    id: this.oThis.getView().getId(),
-                    name: "dp.md.moldApprovalList.view." + sFragmentName,
-                    controller: this
-                }).then(function (oFragment) {
-                    this.oThis._oFragments[sFragmentName] = oFragment;
-                    if (oHandler) oHandler(oFragment);
-                }.bind(this));
-            } else {
-                if (oHandler) oHandler(this.oThis._oFragments[sFragmentName]);
-            }
+        /* =========================================================== */
+        /* event handlers                                              */
+        /* =========================================================== */
+		
+        /* =========================================================== */
+        /* internal methods                                            */
+        /* =========================================================== */
 
-        },
-
-        /**
+        /** PO Item Start */
+       /**
          * @description moldItemSelect 공통팝업   
          * @param vThis : view page의 this 
          *       , oEvent : 이벤트 
@@ -149,6 +108,7 @@ sap.ui.define([
                 }
             });
         },
+
         /**
         * @description participating row 추가 
         * @param {*} data 
@@ -199,6 +159,17 @@ sap.ui.define([
             } else {
                 MessageBox.error("삭제할 목록을 선택해주세요.");
             }
-        }
+        } ,
+   
+        
+        onChangePayment: function (oEvent) {
+            var oModel = this.getModel("moldMaster");
+            /*
+            approverData = verModel.getData().Approvers;*/
+            console.log();
+            console.log();
+        },
+        /** PO Item End */
+
     });
 });
