@@ -20,14 +20,6 @@
             <Title text="{i18n>appTitle}" />
           </f:heading>
           <!-- 조회 -->
-          <f:snappedContent>
-            <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
-                <form:content>
-                    
-	
-                </form:content>
-            </form:SimpleForm>
-        </f:snappedContent>
           <f:actions>
             <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch"/>
           </f:actions>
@@ -39,6 +31,29 @@
       </f:title>
       <!--DynamicPage Header -->
       <f:header>
+        <f:DynamicPageHeader pinnable="false">
+            <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                <form:content>
+                    <VBox>
+                        <Label text="사업본부: " labelFor="searchDeptS"></Label>
+                        <ComboBox id="searchDeptS" width="100%" items="{
+                                path: 'util>/CodeDetails',
+                                filters: [
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                    {path: 'group_code', operator: 'EQ', value1: 'CM_ORG_TYPE_CODE'}
+                                ]
+                            }">
+                            <items>
+                                <core:Item key="{util>code}" text="{util>code_description} : {util>code}" />
+                            </items>
+                        </ComboBox>
+                        <layoutData>
+                            <layout:GridData span="XL2 L3 M6 S12" />
+                        </layoutData>
+                    </VBox>
+                </form:content>
+            </form:SimpleForm>
+        </f:DynamicPageHeader>
       </f:header>
       <f:content>
         <VBox>
@@ -85,6 +100,12 @@
                 <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="12em" >
                     <Text text="범주코드(임시:확인용)" />
                 </Column>
+                <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="12em" >
+                    <Text text="사업본부코드" />
+                </Column>
+                <!-- <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="12em" >
+                    <Text text="사업본부명" />
+                </Column> -->
                 <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="12em" >
                     <Text text="특성코드" />
                 </Column>
@@ -134,7 +155,7 @@
             </dragDropConfig>
 
             <items>
-                <ColumnListItem>
+				<ColumnListItem type="Navigation" press="onListItemPress">
                     <cells>
                         <HBox align="Center">
                             <Text text="{list>_row_state_}"></Text>
@@ -143,11 +164,16 @@
                             <Text text="{list>spmd_category_code}"></Text>
                         </HBox>
                         <HBox alignItems="Center">
+                            <Text text="{list>org_code}"></Text>
+                        </HBox>
+                        <!-- <HBox alignItems="Center">
+                            <Text text="{list>spmd_character_code}"></Text>
+                        </HBox> -->
+                        <HBox alignItems="Center">
                             <Text text="{list>spmd_character_code}"></Text>
                         </HBox>
                         <HBox alignItems="Center">
-                            <Text text="{list>spmd_character_sort_seq}" visible="true"></Text>
-                            <Input value="{list>spmd_character_sort_seq}" required="true" visible="false"></Input>
+                            <Text text="{list>spmd_character_sort_seq}" ></Text>
                         </HBox>
                         <HBox>
                             <Text text="{list>spmd_character_code_name}" visible="true"></Text>
