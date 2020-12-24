@@ -17,10 +17,21 @@ sap.ui.define([
         JSONModel, ODataModel, RichTextEditor, MessageBox, Fragment, Filter, FilterOperator, MessageToast) {
     "use strict";
 
+    var sSelectedPath;
+
     return BaseController.extend("dp.vi.basePriceArl.controller.BasePriceDetail", {
         dateFormatter: DateFormatter,
 
         onInit: function () {
+            var oBasePriceListRootModel = this.getOwnerComponent().getModel("basePriceArlRootModel");
+            var sTenantId = oBasePriceListRootModel.getProperty("/tenantId");
+
+            switch (sTenantId) {
+                case "L2100" :
+                default :
+            }       
+
+            sTenantId
             // 하드코딩 시작
             var oCodeData = {
                 basis: [{code: "1", text: "Cost Analysis (Cost Table)"},
@@ -77,10 +88,10 @@ sap.ui.define([
          * Base Price Detail 데이터 조회
         */
         _getBasePriceDetail: function () {
-            var oView = this.getView(),
-                oCodeModel = this.getModel("codeModel"),
-                oBasePriceListRootModel = this.getModel("basePriceArlRootModel"),
-                oSelectedData = oBasePriceListRootModel.getProperty("/selectedData");
+            var oView = this.getView();
+            var oCodeModel = this.getModel("codeModel");
+            var oBasePriceListRootModel = this.getModel("basePriceArlRootModel");
+            var oSelectedData = oBasePriceListRootModel.getProperty("/selectedData");
 
             // 리스트에서 선택해서 넘어오는 경우
             if( oSelectedData && oSelectedData.tenant_id ) {
@@ -179,6 +190,27 @@ sap.ui.define([
             oMaster.details = aDetails;
 
             return oMaster;
+        },
+
+        /**
+         * Base Price 라인 추가
+         */
+        onAddBasePrice: function () {
+            var oDetailModel = this.getModel("detailModel"),
+                aDetails = oDetailModel.getProperty("/details"),
+                oToday = new Date();
+
+            aDetails.push({base_date:oToday, 
+                        company_code: "LGEKR", 
+                        org_type_code: "PU",
+                        au_code: "10",
+                        base_price_ground_code: "10", 
+                        local_create_dtm: oToday, 
+                        local_update_dtm: oToday, 
+                        prices: [{market_code: "1", local_create_dtm: oToday, local_update_dtm: oToday}, 
+                                {market_code: "2", local_create_dtm: oToday, local_update_dtm: oToday}]
+                        });
+            oDetailModel.refresh();
         },
 
         /**
@@ -357,7 +389,7 @@ sap.ui.define([
          * 자재정보 검색 MaterialDialog.fragment open
          */
 		onOpenMaterialDialog: function (oEvent) {
-            // oEvent.getSource().data("selectMode");
+            sSelectedPath = oEvent.getSource().getBindingContext("detailModel").getPath();
             var oView = this.getView();
             var sPath = jQuery.sap.getModulePath("dp.vi.basePriceArl", "/json/materialCode.json");
             var oMarterialCodeModel = new JSONModel(sPath);
@@ -386,72 +418,37 @@ sap.ui.define([
          */
         onSelectMaterialCode: function (oEvent) {
             var oMaterialCodeModel = this.getModel("materialCodeModel");
-            var aMaterialCode = oMaterialCodeModel.getProperty("/materialCode");
             var oParameters = oEvent.getParameters();
 
-            // 전체 선택
-            if( oParameters.selectAll ) {
-                aMaterialCode.forEach(function (oMaterialCode) {
-                    oMaterialCode.checked = oParameters.selected;
-                });
-            }else
-            // 개별 선택
-            {
-                oMaterialCodeModel.setProperty(oParameters.listItems[0].getBindingContext("materialCodeModel").getPath()+"/checked", oParameters.selected);
-            }
+            oMaterialCodeModel.setProperty(oParameters.listItems[0].getBindingContext("materialCodeModel").getPath()+"/checked", oParameters.selected);
         },
 
         /**
          * Material Code 선택 후 apply
          */
         onMaterialDetailApply: function (oEvent) {
-            var aMaterialCode = this.getModel("materialCodeModel").getProperty("/materialCode"),
-                oDetailModel = this.getModel("detailModel"),
-                oCodeModel = this.getModel("codeModel"),
-                aDetails = oDetailModel.getProperty("/details"),
-                aUsedMaterialCode = [],
-                aDuplicatedMaterialCode = [],
-                bChecked = false;
+            var aMaterialCode = this.getModel("materialCodeModel").getProperty("/materialCode");
+            var oDetailModel = this.getModel("detailModel");
+            var oSelectedDetail = oDetailModel.getProperty(sSelectedPath);
+            var bChecked = false;
 
-            // 이미 추가되어있는 Material Code 추출
-            aDetails.forEach(function (oDetail) {
-                aUsedMaterialCode.push(oDetail.material_code);
-            });
+            for( var i=0; i<aMaterialCode.length; i++ ) {
+                var oMaterialCode = aMaterialCode[i];
 
-            // Dialog에서 선택한 Material Code 데이터 추가(이미 추가되어있는 건 제외)
-            aMaterialCode.forEach(function (oMaterialCode) {
                 if( oMaterialCode.checked ) {
+                    oSelectedDetail.material_code = oMaterialCode.material_code;
+                    //oSelectedDetail.description = oMaterialCode.description;
+                    //oSelectedDetail.spec = oMaterialCode.spec;
+
                     delete oMaterialCode.checked;
                     bChecked = true;
-                    
-                    var oToday = new Date();
 
-                    if( -1 === aUsedMaterialCode.indexOf(oMaterialCode.material_code) ) {
-                        aDetails.push($.extend(true, {base_date:oToday, 
-                                                    company_code: "LGEKR", 
-                                                    org_type_code: "PU",
-                                                    au_code: "10",
-                                                    base_price_ground_code: "10", 
-                                                    local_create_dtm: oToday, 
-                                                    local_update_dtm: oToday, 
-                                                    prices: [{market_code: "1", local_create_dtm: oToday, local_update_dtm: oToday}, {market_code: "2", local_create_dtm: oToday, local_update_dtm: oToday}]}, oMaterialCode));
-                    }else {
-                        aDuplicatedMaterialCode.push(oMaterialCode.material_code);
-                    }
-
-                    oMaterialCode.checked = false;
+                    break;
                 }
-            });
+            }
 
             // 선택된 Material Code가 있는지 경우
             if( bChecked ) {
-                // 이미 추가되어 있는 데이터를 선택했을 경우 경고창
-                if( 0<aDuplicatedMaterialCode.length ) {
-                    MessageBox.error(aDuplicatedMaterialCode.join()+"은 이미 추가되어 있습니다.");
-                    return;
-                }
-                
-                oCodeModel.setProperty("/detailsLength", aDetails.length);
                 oDetailModel.refresh();
                 this.onClose(oEvent);
             }
