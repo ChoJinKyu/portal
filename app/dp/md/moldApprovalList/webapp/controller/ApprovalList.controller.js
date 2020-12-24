@@ -222,19 +222,6 @@ sap.ui.define([
             this._oTPC.refresh();
         },
 
-		/**
-		 * Event handler when a table add button pressed
-		 * @param {sap.ui.base.Event} oEvent
-		 * @public
-		 */
-        onMainTableAddButtonPress: function () {
-            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-            this.getRouter().navTo("midPage", {
-                layout: oNextUIState.layout,
-                tenantId: "new",
-                controlOptionCode: "code"
-            });
-        },
 
 		/**
 		 * Event handler when a search button pressed
@@ -270,8 +257,16 @@ sap.ui.define([
             var sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
             console.log("oRecord >>>  ", oRecord);
-           
             var that = this;
+            var target = "";
+            if(oRecord.approval_type_code == "B"){
+                target = ""
+            }else if(oRecord.approval_type_code == "V"){
+                target = ""
+            }else if(oRecord.approval_type_code == "E"){
+                target = ""
+            }
+        
             that.getRouter().navTo("approvalObject", {
                 company_code: oRecord.company_code
                 , plant_code: oRecord.org_code

@@ -20,7 +20,7 @@
         }
       },
       "orgMgrService": {
-        "uri": "../../../cm/codeMgr/srv-api/odata/v2/cm.OrgMgrService/",
+        "uri": "../../../cm/codeMgt/srv-api/odata/v2/cm.OrgMgtService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0",

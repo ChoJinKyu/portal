@@ -52,17 +52,13 @@ sap.ui.define([
         openFragmentApproval : function (oThis){ 
             this.oThis = oThis; 
             var schFilter = [];
-            if(this.oThis.approval_number == "New"){
-
-            }else{
-                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.oThis.approval_number)
-                , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
-            ]; 
+            if(this.oThis.approval_number !== "New"){
+                //this._onReadOrderLocal(this.oThis.approval_number);
             }
-
+/*
             this.oThis.getView().setModel(new ManagedListModel(), "appDetail");
             this.oThis.getView().setModel(new ManagedListModel(), "moldMaster");
-/*
+
             oTransactionManager.addDataModel(this.getModel("appDetail"));
             oTransactionManager.addDataModel(this.getModel("moldMaster"));
 */
@@ -70,6 +66,37 @@ sap.ui.define([
             this._loadFragmentPOILocal("PurchaseOrderItemLocal", function(oFragment){
                  oPageSubSection2.addBlock(oFragment);   
               }) 
+        },
+
+        _onReadOrderLocal: function (approvalNumber) {
+            var filter = [
+                new Filter("tenant_id", FilterOperator.EQ, this.oThis.tenant_id),
+                new Filter("approval_number", FilterOperator.EQ, approvalNumber)
+            ];
+
+            this.oThis._bindView("/ApprovalDetails", "appDetail", filter, function (oData) {
+                var moldIdFilter = [];
+                var moldMstFilter = [];
+
+                if (oData.results.length > 0) {
+                    oData.results.forEach(function (item) {
+                        moldIdFilter.push(new Filter("mold_id", FilterOperator.EQ, item.mold_id));
+                    });
+
+                    moldMstFilter.push(
+                        new Filter({
+                            filters: moldIdFilter,
+                            and: false
+                        })
+                    );
+
+                    this.oThis._bindView("/MoldMasters", "moldMaster", moldMstFilter, function (oData) {
+
+                    }.bind(this));
+                }
+            }.bind(this));
+
+            //oTransactionManager.setServiceModel(this.getModel());
         },
 
         _loadFragmentPOILocal : function (sFragmentName, oHandler){       

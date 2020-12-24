@@ -1,10 +1,11 @@
 sap.ui.define([
     "sap/m/ComboBox",
     'sap/m/ComboBoxRenderer',
+    "sap/base/util/deepClone",
     "ext/lib/core/service/ODataV2ServiceProvider",
     "sap/ui/core/ListItem",
     "sap/ui/model/json/JSONModel"
-], function (Parent, Renderer, ODataV2ServiceProvider, ListItem, JSONModel) {
+], function (Parent, Renderer, deepClone, ODataV2ServiceProvider, ListItem, JSONModel) {
     "use strict";
     
     var CodeComboBox = Parent.extend("ext.lib.control.m.CodeComboBox", {
@@ -50,7 +51,7 @@ sap.ui.define([
 
                 this.oServiceModel.read("/" + oBindingInfo.entityName, jQuery.extend(oBindingInfo, {
                     success: function(oData){
-                        var aRecords = oData.results;
+                        var aRecords = deepClone(oData.results);
                         if(this.getProperty("useEmpty") == true) {
                             if(aRecords && aRecords.splice){
                                 var oEmpty = {};
@@ -85,7 +86,7 @@ sap.ui.define([
                 this.oServiceModel = ODataV2ServiceProvider.getCommonService();
             this.oServiceModel.read(sPath, jQuery.extend(oParameters, {
                 success: function(oData){
-                    var aRecords = oData.results;
+                    var aRecords = deepClone(oData.results);
                     if(this.getProperty("useEmpty") == true) {
                         if(aRecords && aRecords.splice){
                             var oEmpty = {};
