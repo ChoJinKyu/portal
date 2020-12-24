@@ -43,7 +43,9 @@ service ParticipatingSupplierSelectionApprovalService {
         mst.provisional_budget_amount,
         mst.budget_amount,
         mst.currency_code,
-        mst.target_amount
+        mst.target_amount,
+        qtn.supplier_code,
+        qtn.sequence
 	from approvalDtl.Md_Approval_Dtl dtl
 	join moldMst.Md_Mst mst
 	    on dtl.mold_id = mst.mold_id
