@@ -313,11 +313,10 @@ sap.ui.define([
         },
         
         onSuppValueHelpRequested: function(oEvent){
-            // var sCompanyCode  = this.getModel('master').getProperty('/company_code');
-            // var sPlantCode = this.getModel('master').getProperty('/org_code');
 
-            var sCompanyCode  = 'LGEKR';
-            var sPlantCode = 'DVZ';
+            var row = oEvent.getSource().getParent();
+            var sCompanyCode  = row.getCells()[0].getText();
+            var sPlantCode = row.getCells()[1].getText();
 
             this.supplierSelection.showSupplierSelection(this, oEvent, sCompanyCode, sPlantCode);
         },
@@ -332,6 +331,11 @@ sap.ui.define([
 
             if (oSelected.length == 0) {
                 MessageToast.show( "아이템을 선택하세요." );
+                return;
+            }
+
+            if(this.validator.validate( this.byId('moldMstTable') ) !== true){
+                MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
                 return;
             }
 
@@ -354,6 +358,7 @@ sap.ui.define([
                             selectItem.receipt_confirmed_user_empno = 'temp_empno';
                             
                             delete selectItem.__entity;
+                            delete selectItem._row_state_;
 
                             oModel.update(sEntity, selectItem, {
                                 success: function(result){
