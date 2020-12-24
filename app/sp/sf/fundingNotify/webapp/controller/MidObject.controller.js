@@ -1,5 +1,6 @@
 sap.ui.define([
     "ext/lib/controller/BaseController",
+	"ext/lib/util/Multilingual",
     "sap/ui/model/json/JSONModel",
 	"sap/ui/core/routing/History",
     "ext/lib/model/TransactionManager",
@@ -18,7 +19,7 @@ sap.ui.define([
     "sap/m/ComboBox",
     "sap/ui/core/Item",
     "sap/ui/richtexteditor/RichTextEditor"
-], function (BaseController, JSONModel, History, TransactionManager, ManagedModel, ManagedListModel, DateFormatter,
+], function (BaseController, Multilingual, JSONModel, History, TransactionManager, ManagedModel, ManagedListModel, DateFormatter,
     Filter, FilterOperator, Fragment, MessageBox, MessageToast,
     ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, RichTextEditor) {
 
@@ -55,10 +56,11 @@ sap.ui.define([
                 showMode: true
             });
 
-            this.getRouter().getRoute("mainObject").attachPatternMatched(this._onRoutedThisPage, this);
+            var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
             
+            this.getRouter().getRoute("mainObject").attachPatternMatched(this._onRoutedThisPage, this);
             this.setModel(oViewModel, "midObjectView");
-
             this.setModel(new ManagedModel(), "master");
 
             oTransactionManager = new TransactionManager();
@@ -140,6 +142,10 @@ sap.ui.define([
 			// }
             // var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
             // this.getRouter().navTo("mainObject");
+        },
+
+        onApplicationPeriodChange: function(oEvent) {
+            this.byId("closingDate").setDateValue(oEvent.getParameters().to);
         },
 
 		/**
