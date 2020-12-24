@@ -18,17 +18,10 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
-    "sap/ui/richtexteditor/RichTextEditor",
-    "dp/md/BudgetExecutionApproval",
-    "dp/md/PurchaseOrderItemLocal",
-    "dp/md/ParticipatingSupplierSelection",
-    "dp/md/util/controller/MoldItemSelection"
-], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager
-    , Multilingual, Validator,
+    "sap/ui/richtexteditor/RichTextEditor"
+], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
-    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator
-    , RichTextEditor, BudgetExecutionApproval
-    , PurchaseOrderItemLocal, ParticipatingSupplierSelection, MoldItemSelection
+    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor
 ) {
     "use strict";
 
@@ -40,14 +33,6 @@ sap.ui.define([
         dateFormatter: DateFormatter,
 
         validator: new Validator(),
-
-        moldItemPop: new MoldItemSelection(),
-
-        budget : new BudgetExecutionApproval(),
-
-        orderLocal : new PurchaseOrderItemLocal(),
-    
-        supplier : new ParticipatingSupplierSelection(),
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -74,8 +59,8 @@ sap.ui.define([
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
 
-            this.setModel(oViewModel, "approvalObjectView");
-            this.getRouter().getRoute("approvalObject").attachPatternMatched(this._onObjectMatched, this);
+            this.setModel(oViewModel, "purOrderItemLocalApprovalView");//change
+            this.getRouter().getRoute("purOrderItemLocalApproval").attachPatternMatched(this._onObjectMatched, this);//change
 
             this.getView().setModel(new ManagedModel(), "company");
             this.getView().setModel(new ManagedModel(), "plant");
@@ -92,7 +77,7 @@ sap.ui.define([
             oTransactionManager.addDataModel(this.getModel("approver"));
             oTransactionManager.addDataModel(this.getModel("referer"));
 
-            this.setRichEditor();
+            this._showFormFragment();
         },
 
         onAfterRendering: function () {
@@ -216,11 +201,11 @@ sap.ui.define([
         _createViewBindData: function (args) {
             this.tenant_id = "L1100";
             this.approval_number = args.approval_number;
-            this.approval_type_code = args.approval_type_code;
+            //this.approval_type_code = args.approval_type_code;
             this.company_code = args.company_code;
             this.plant_code = (args.org_code == undefined ? args.plant_code : args.org_code);
 
-            this.getModel("approvalObjectView").setProperty('/editMode', this.plant_code != undefined ? true : false);
+            this.getModel("purOrderItemLocalApprovalView").setProperty('/editMode', this.plant_code != undefined ? true : false);
 
             var oModel = this.getModel("company");
 
@@ -243,15 +228,6 @@ sap.ui.define([
                 }
             });
 
-            var appModel = this.getModel("appType");
-            appModel.setTransactionModel(this.getModel("util"));
-            appModel.read("/CodeDetails(tenant_id='" + this.tenant_id + "',group_code='DP_MD_APPROVAL_TYPE',code='" + this.approval_type_code + "')", {
-                filters: [],
-                success: function (oData) {
-                    this._showFormFragment(oData.parent_code);
-                }.bind(this)
-            });
-
             if (this.approval_number === "New") {
                 this._onApproverAddRow(0);
             } else {
@@ -260,24 +236,28 @@ sap.ui.define([
         },
 
         _oFragments: {},
-        _showFormFragment: function (fragmentName) {
-            var oPageSection = this.byId("pageSection");
-            oPageSection.removeAllBlocks();
-
-            if(this.approval_type_code == "B"){
-               this.budget.openFragmentApproval(this); 
-            } else if(this.approval_type_code == "V"){
-                this.orderLocal.openFragmentApproval(this);
-            } else if(this.approval_type_code == "E"){
-                this.supplier.openFragmentApproval(this);
-            }
-            else{
-                /** 추후 공통 개발 가이드가 오면 이 함수로 호출 할 예정 */
-                this._loadFragment(fragmentName, function (oFragment) {
-                    oPageSection.addBlock(oFragment);
-                }.bind(this))
-            }
-           
+        _showFormFragment: function () {
+            var oPageGeneralInfoSection = this.byId("pageGeneralInfoSection");
+            oPageGeneralInfoSection.removeAllBlocks();
+                
+            this._loadFragment("GeneralInfo", function (oFragment) {
+                oPageGeneralInfoSection.addBlock(oFragment);
+                this.setRichEditor();
+            }.bind(this))
+            
+            var oPageAttachmentsSection = this.byId("pageAttachmentsSection");
+            oPageAttachmentsSection.removeAllBlocks();
+                
+            this._loadFragment("Attachments", function (oFragment) {
+                oPageAttachmentsSection.addBlock(oFragment);
+            }.bind(this))
+            
+            var oPageApprovalLineSection = this.byId("pageApprovalLineSection");
+            oPageApprovalLineSection.removeAllBlocks();
+                
+            this._loadFragment("ApprovalLine", function (oFragment) {
+                oPageApprovalLineSection.addBlock(oFragment);
+            }.bind(this))
         },
 
         _onRoutedThisPage: function (approvalNumber) {
@@ -813,7 +793,7 @@ sap.ui.define([
                  ,  company_code : this.company_code 
                  ,  org_code : this.plant_code 
                  ,  chain_code : 'DP'
-                 ,  approval_type_code : this.approval_type_code 
+                 //,  approval_type_code : this.approval_type_code 
                  ,  approval_title : mst.approval_title 
                  ,  approval_contents : mst.approval_contents 
                  ,  approve_status_code : mst.approve_status_code 

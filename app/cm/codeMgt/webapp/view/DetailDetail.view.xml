@@ -39,7 +39,7 @@
         </headerTitle>
 
 		<sections>
-			<ObjectPageSection titleUppercase="false" id="genral_info_section" title="General Information">
+			<ObjectPageSection titleUppercase="false" id="genral_info_section" title="{I18N>/BASIC_INFO}">
 				<subSections>
 					<ObjectPageSubSection>
 						<blocks>
@@ -57,7 +57,7 @@
                                 <form:content>
                                     <m:VBox>
                                         <m:Label
-                                            text="Code: "
+                                            text="{I18N>/CODE}: "
                                             labelFor="code"/>
                                         <m:Text
                                             text="{viewModel>/detailDetail/code}"
@@ -79,7 +79,7 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="Code Description: "
+                                            text="{I18N>/DESCRIPTION}: "
                                             labelFor="code_description"/>
                                         <m:Text
                                             text="{viewModel>/detailDetail/code_description}"
@@ -205,7 +205,7 @@
                                     </m:VBox>
                                     <m:VBox>
                                         <m:Label
-                                            text="비고: "
+                                            text="{I18N>/REMARK}: "
                                             labelFor="remark"/>
                                         <m:Text
                                             text="{viewModel>/detailDetail/remark}"
@@ -231,7 +231,7 @@
 
 			<ObjectPageSection 
                 titleUppercase="false" 
-                title="다국어 ({= (${languages>/CodeLanguages})?${languages>/CodeLanguages}.length:0})">
+                title="{I18N>/MULTILINGUAL} ({= (${languages>/CodeLanguages})?${languages>/CodeLanguages}.length:0})">
 				<subSections>
 					<ObjectPageSubSection>
 						<blocks>
@@ -250,11 +250,11 @@
                                         <m:HBox >
                                             <m:Button 
                                                 type="Transparent" 
-                                                text="Add"
+                                                text="{I18N>/ROW_ADD}"
                                                 press=".onAddLangPress"/>
                                             <m:Button 
                                                 type="Transparent" 
-                                                text="Delete"
+                                                text="{I18N>/ROW_DELETE}"
                                                 press=".onDelLangPress"/>
                                         </m:HBox>
                                     </m:Toolbar>
@@ -262,14 +262,14 @@
                                 <m:columns>
                                     <m:Column 
                                         visible="{contModel>/detailDetail/editMode}"
-                                        width="3em">
-                                        <m:Text text="S"/>
+                                        width="4em">
+                                        <m:Text text="{I18N>/STATUS}"/>
                                     </m:Column>
                                     <m:Column>
-                                        <m:Text text="언어" />
+                                        <m:Text text="{I18N>/LANGUAGE}" />
                                     </m:Column>
                                     <m:Column>
-                                        <m:Text text="코드명" />
+                                        <m:Text text="{I18N>/LANGUAGE_CODE}" />
                                     </m:Column>
                                 </m:columns>
                                 <m:items>
@@ -396,19 +396,19 @@
 			<m:OverflowToolbar>
                 <m:ToolbarSpacer />
                 <m:HBox visible="{contModel>/detailDetail/createMode}">
-                    <m:Button type="Emphasized" text="Save"  press=".onSavePress"/>
+                    <m:Button type="Emphasized" text="{I18N>/SAVE}"  press=".onSavePress"/>
                 </m:HBox>
                 <m:HBox visible="{contModel>/detailDetail/readMode}">
-                    <m:Button type="Transparent" text="Edit" press=".onEditPress"/>
-                    <m:Button type="Transparent" text="Cancel" press=".onCancelPress" enabled="false"/>
-                    <m:Button type="Transparent" text="Delete"  press=".onDeletePress"/>
-                    <m:Button type="Emphasized" text="Save"  press=".onSavePress" enabled="false"/>
+                    <m:Button type="Transparent" text="{I18N>/UPDATE}" press=".onEditPress"/>
+                    <m:Button type="Transparent" text="{I18N>/CANCEL}" press=".onCancelPress" enabled="false"/>
+                    <m:Button type="Transparent" text="{I18N>/DELETE}"  press=".onDeletePress"/>
+                    <m:Button type="Emphasized" text="{I18N>/SAVE}"  press=".onSavePress" enabled="false"/>
                 </m:HBox>
                 <m:HBox visible="{= !${contModel>/detailDetail/createMode} &amp;&amp; ${contModel>/detailDetail/editMode}}">
-                    <m:Button type="Transparent" text="Edit" press=".onEditPress" enabled="false"/>
-                    <m:Button type="Transparent" text="Cancel" press=".onCancelPress"/>
-                    <m:Button type="Transparent" text="Delete"  press=".onDeletePress"/>
-                    <m:Button type="Emphasized" text="Save"  press=".onSavePress"/>
+                    <m:Button type="Transparent" text="{I18N>/UPDATE}" press=".onEditPress" enabled="false"/>
+                    <m:Button type="Transparent" text="{I18N>/CANCEL}" press=".onCancelPress"/>
+                    <m:Button type="Transparent" text="{I18N>/DELETE}"  press=".onDeletePress"/>
+                    <m:Button type="Emphasized" text="{I18N>/SAVE}"  press=".onSavePress"/>
                 </m:HBox>
 			</m:OverflowToolbar>
 		</footer>

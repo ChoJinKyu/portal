@@ -7,6 +7,7 @@ sap.ui.define([
 	"sap/ui/model/json/JSONModel",
 	"ext/lib/model/ManagedListModel",
 	"sap/m/TablePersoController",
+	"sap/ui/model/Sorter",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
@@ -18,7 +19,7 @@ sap.ui.define([
 	"sap/ui/core/Item",
 	"./Utils"
 ],
-  function (BaseController, Multilingual, Validator, DateFormatter, History, JSONModel, ManagedListModel, TablePersoController, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, Item, Utils) {
+  function (BaseController, Multilingual, Validator, DateFormatter, History, JSONModel, ManagedListModel, TablePersoController, Sorter, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, Item, Utils) {
     "use strict";
 
     return BaseController.extend("pg.mdCategoryItem.controller.mdCategoryItem", {
@@ -59,8 +60,7 @@ sap.ui.define([
             
             oItem = oTable.getSelectedItem(); //*********************전역변수로 갖고 처리해보기 */
             this._setEditChange(this.rowIndex,"R");
-            // oTable.getAggregation('items')[2].setSelected(false);
-            // debugger;
+            
             var idx = oTable.indexOfItem(oItem);//oItem.getBindingContextPath().split("/")[2];
             this.rowIndex = idx;
 
@@ -73,21 +73,38 @@ sap.ui.define([
     //     }
       },
 
+    onListItemPress: function (oEvent) {
+        // var oItem = oEvent.getSource();
+        // var mdCategoryItemstPath = oEvent.getSource().getBindingContext("list").getPath(),
+        //     //mdCategoryItems = mdCategoryItemstPath.split("/").slice(-1).pop();
+        //     mdCategoryItems = oItem.getBindingContext("list").getObject().spmd_character_code;
+        // this.oRouter.navTo("detail", {layout: "TwoColumnsMidExpanded", spmd_character_code: mdCategoryItems});
+
+        // debugger;
+        // oItem.setNavigated(true);
+        // var oParent = this.byId("mainTable");
+        // // store index of the item clicked, which can be used later in the columnResize event
+        // this.iIndex = oParent.indexOfItem(oItem);
+    },
 
       onSearch: function () {
             var aFilters = [];
+            var aSorter = [];
             aFilters.push(new Filter("spmd_category_code", FilterOperator.EQ, this.aSearchCategoryCd));
+            aSorter.push(new Sorter("spmd_character_sort_seq", false));
 
             this.getView()
                 .setBusy(true)
                 .getModel("list")
                 .setTransactionModel(this.getView().getModel())
-                .read("/MdCategoryItem?$orderby=spmd_character_sort_seq", {
-				    filters: aFilters,
+                .read("/MdCategoryItem", {
+                    filters: aFilters,                
+                    sorters : aSorter,
                     success: (function (oData) {
                     this.getView().setBusy(false);
                     }).bind(this)
                 });
+
             var oTable = this.byId("mainTable");
             this.byId("buttonMainAddRow").setEnabled(true);     
             this.byId("buttonMainCancelRow").setEnabled(false);  
@@ -102,12 +119,10 @@ sap.ui.define([
             var oDataArr, oDataLength, lastCtgrSeq, ctgrSeq;
             this._setEditChange(this.rowIndex,"R");
 
-            //데이터 불러올때 spmd_character_sort_seq으로 가져와야함 orderby
             if(oModel.oData){
                 oDataArr = oModel.getProperty("/MdCategoryItem"); 
                 oDataLength = oDataArr.length;
                 lastCtgrSeq = oDataArr[oDataLength-1].spmd_character_sort_seq;
-                debugger;
                 console.log(lastCtgrSeq);
                 ctgrSeq = String(parseInt(lastCtgrSeq)+1);
             }
@@ -182,23 +197,6 @@ sap.ui.define([
             }
           }).bind(this)
         })
-      },
-
-
-    _setEditChange: function(index,mode){
-        var oTable = this.byId("mainTable");
-        var flag = true;
-        if(mode=="E"){
-            flag = false;
-        }
-        console.log(index);
-        oTable.getAggregation('items')[index].getCells()[3].getItems()[0].setVisible(flag);
-        oTable.getAggregation('items')[index].getCells()[3].getItems()[1].setVisible(!flag);
-        oTable.getAggregation('items')[index].getCells()[4].getItems()[0].setVisible(flag);
-        oTable.getAggregation('items')[index].getCells()[4].getItems()[1].setVisible(!flag);
-        oTable.getAggregation('items')[index].getCells()[5].getItems()[0].setVisible(flag);
-        oTable.getAggregation('items')[index].getCells()[5].getItems()[1].setVisible(!flag); 
-            
     },
 
     onDropSelectedProductsTable: function(oEvent) {
@@ -245,10 +243,11 @@ sap.ui.define([
         Utils.getSelectedItemContext(oSelectedProductsTable, function(oSelectedItemContext, iSelectedItemIndex) {
             var oSelectedItem = oSelectedProductsTable.getItems()[iSelectedItemIndex];
             var iSiblingItemIndex = iSelectedItemIndex + (sDirection === "Up" ? -1 : 1);
+            debugger;
+            this._setEditChange(iSelectedItemIndex,"R");  
             
             var oSiblingItem = oSelectedProductsTable.getItems()[iSiblingItemIndex];
             var oSiblingItemContext = oSiblingItem.getBindingContext("list");
-            console.log(oSiblingItemContext);
             
             if (!oSiblingItemContext) {
                 return;
@@ -256,24 +255,22 @@ sap.ui.define([
 
             // swap the selected and the siblings rank
             var oProductsModel = oSelectedProductsTable.getModel("list");
-            console.log(oProductsModel);
             var iSiblingItemRank = oSiblingItemContext.getProperty(); //바뀔
             var iSelectedItemRank = oSelectedItemContext.getProperty(); //선택셀
-            console.log(iSiblingItemRank);
-            console.log(iSelectedItemRank);
 
             var iSeq = oProductsModel.getProperty(oSiblingItem.getBindingContextPath()).spmd_character_sort_seq
             var oSeq = oProductsModel.getProperty(oSelectedItem.getBindingContextPath()).spmd_character_sort_seq //클릭셀
             var iSeqIdx = "/MdCategoryItem/"+iSiblingItemIndex+"/spmd_character_sort_seq"
             var oSeqIdx = "/MdCategoryItem/"+iSelectedItemIndex+"/spmd_character_sort_seq"
             
-            oProductsModel.setProperty("", iSiblingItemRank, oSelectedItemContext);
-            oProductsModel.setProperty("", iSelectedItemRank, oSiblingItemContext);
-            oProductsModel.setProperty(iSeqIdx,iSeq);
-            oProductsModel.setProperty(oSeqIdx,oSeq);
+            oProductsModel.setProperty("", iSiblingItemRank, oSelectedItemContext);//oSelectedItemContext
+            oProductsModel.setProperty("", iSelectedItemRank, oSiblingItemContext);//oSiblingItemContext
+            oProductsModel.setProperty(iSeqIdx,oSeq);//iSeq
+            oProductsModel.setProperty(oSeqIdx,iSeq);//oSeq
 
             // after move select the sibling
             oSelectedProductsTable.getItems()[iSiblingItemIndex].setSelected(true);
+            this._setEditChange(iSiblingItemIndex,"E");  
         });
     },
 
@@ -283,6 +280,21 @@ sap.ui.define([
 
     moveDown: function() {
         this.moveSelectedItem("Down");
+    },
+
+
+    _setEditChange: function(index,mode){
+        var oTable = this.byId("mainTable");
+        var flag = true;
+        if(mode=="E"){
+            flag = false;
+        }
+        
+        oTable.getAggregation('items')[index].getCells()[6].getItems()[0].setVisible(flag);
+        oTable.getAggregation('items')[index].getCells()[6].getItems()[1].setVisible(!flag);
+        oTable.getAggregation('items')[index].getCells()[5].getItems()[0].setVisible(flag);
+        oTable.getAggregation('items')[index].getCells()[5].getItems()[1].setVisible(!flag); 
+            
     }
 
     });
