@@ -1,7 +1,8 @@
 <mvc:View controllerName="pg.mdCategoryItem.controller.mdCategoryItem"
     xmlns:mvc="sap.ui.core.mvc" 
     xmlns="sap.m" 
-    xmlns:f="sap.f" 
+    xmlns:f="sap.f"  
+	xmlns:dnd="sap.ui.core.dnd"
     xmlns:form="sap.ui.layout.form" 
     xmlns:layout="sap.ui.layout" 
     xmlns:core="sap.ui.core" 
@@ -40,29 +41,30 @@
       <f:header>
       </f:header>
       <f:content>
-      <!-- <FlexBox wrap="Wrap">
-                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                    <ObjectStatus title="Requester" text="김갑수[ks.kim]"/>
-                    <ObjectStatus title="Request Date" text="2020-07-02"/>
-                </layout:VerticalLayout>
-			</FlexBox> -->
         <VBox>
         <Table id="mainTable"
-                mode="MultiSelect" 
-                selectionBehavior="Row"
+                mode="SingleSelectLeft" 
+                selectionChange=".onSeletionChange"
                 noDataText="{I18N>/NCM0001}"
                 items="{
-                    path: 'list>/MdCategoryItem'
+                    path: 'list>/MdCategoryItem',
+                    sorter: { path: 'spmd_character_sort_seq'}
                 }"
-                columnResize="onColumnResize">
+				class="sapFDynamicPageAlignContent"
+                columnResize="onColumnResize"
+		        beforeOpenContextMenu="onBeforeOpenContextMenu"
+                width="auto">
             <headerToolbar>
             <OverflowToolbar class="sapFDynamicPageAlignContent">
-              <VBox>
-                <Title text="SPMD Character List" level="H2"/>
+            <Title id="title2" text="SPMD Character List"/>
+            <VBox>
                 <ObjectStatus title="범주코드" id="textCategoryCode" text=""/>
-                <!-- <ObjectStatus title="범주명" id="textCategoryName" text="{list>spmd_category_code}"/> -->
-              </VBox>
+                <ObjectStatus title="범주명" id="textCategoryName" text="{list>spmd_category_code}"/>
+            </VBox>
               <ToolbarSpacer/>
+              <Button icon="sap-icon://navigation-up-arrow" tooltip="Move up" press="moveUp"/>
+              <Button icon="sap-icon://navigation-down-arrow" tooltip="Move down" press="moveDown"/>
+
               <Button text="{I18N>/ROW_ADD}" id="buttonMainAddRow" press=".onAdd('mainTable', 'list', 'mdCategoryItem', 'tenant_id')"  type="Transparent"/>
               <Button text="{I18N>/CANCEL}" id="buttonMainCancelRow" press=".onSearch"  type="Transparent" enabled="false"/>
               <Button text="{I18N>/ROW_DELETE}" id="buttonMainDeleteRow" press=".onDelete"   type="Transparent" />
@@ -114,6 +116,22 @@
                     <Text text="시스템 수정 시간" />
                 </Column> -->
             </columns>
+            
+            <dragDropConfig>
+                <dnd:DragInfo
+                    groupName="selected2available"
+                    sourceAggregation="items" />
+                <dnd:DropInfo
+                    groupName="available2selected"
+                    targetAggregation="items"
+                    dropPosition="Between"
+                    drop="onDropSelectedProductsTable" />
+                <dnd:DragDropInfo
+                    sourceAggregation="items"
+                    targetAggregation="items"
+                    dropPosition="Between"
+                    drop="onDropSelectedProductsTable"/>
+            </dragDropConfig>
 
             <items>
                 <ColumnListItem>
@@ -128,13 +146,16 @@
                             <Text text="{list>spmd_character_code}"></Text>
                         </HBox>
                         <HBox alignItems="Center">
-                            <Input value="{list>spmd_character_sort_seq}" required="true"></Input>
+                            <Text text="{list>spmd_character_sort_seq}" visible="true"></Text>
+                            <Input value="{list>spmd_character_sort_seq}" required="true" visible="false"></Input>
                         </HBox>
                         <HBox>
-                            <Input value="{list>spmd_character_code_name}" required="true"></Input>
+                            <Text text="{list>spmd_character_code_name}" visible="true"></Text>
+                            <Input value="{list>spmd_character_code_name}" required="true" visible="false"></Input>
                         </HBox>
                         <HBox alalignItemsign="Center">
-                            <Input value="{list>spmd_character_desc}"></Input>
+                            <Text text="{list>spmd_character_desc}" visible="true"></Text>
+                            <Input value="{list>spmd_character_desc}" visible="false"></Input>
                         </HBox>
                         <!-- <HBox alignItems="Center">
                             <Text text="{list>create_user_id}"></Text>
@@ -157,7 +178,6 @@
                     </cells>
                 </ColumnListItem>
             </items>
-            
         </Table>
         </VBox>
       </f:content>
