@@ -64,8 +64,8 @@ sap.ui.define([
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
 
-            this.setModel(oViewModel, "approvalObjectView");
-            this.getRouter().getRoute("approvalObject").attachPatternMatched(this._onObjectMatched, this);
+            this.setModel(oViewModel, "purOrderItemLocalApprovalView");//change
+            this.getRouter().getRoute("purOrderItemLocalApproval").attachPatternMatched(this._onObjectMatched, this);//change
 
             this.getView().setModel(new ManagedModel(), "company");
             this.getView().setModel(new ManagedModel(), "plant");
@@ -82,6 +82,7 @@ sap.ui.define([
             oTransactionManager.addDataModel(this.getModel("approver"));
             oTransactionManager.addDataModel(this.getModel("referer"));
 
+            this._showFormFragment();
             this.setRichEditor();
         },
 
@@ -210,7 +211,7 @@ sap.ui.define([
             this.company_code = args.company_code;
             this.plant_code = (args.org_code == undefined ? args.plant_code : args.org_code);
 
-            this.getModel("approvalObjectView").setProperty('/editMode', this.plant_code != undefined ? true : false);
+            this.getModel("purOrderItemLocalApprovalView").setProperty('/editMode', this.plant_code != undefined ? true : false);
 
             var oModel = this.getModel("company");
 
@@ -239,28 +240,17 @@ sap.ui.define([
                 this._onRoutedThisPage(this.approval_number);
             }
         },
-/*
-        _oFragments: {},
-        _showFormFragment: function (fragmentName) {
-            var oPageSection = this.byId("pageSection");
-            oPageSection.removeAllBlocks();
 
-            if(this.approval_type_code == "B"){
-               this.budget.openFragmentApproval(this); 
-            } else if(this.approval_type_code == "V"){
-                this.orderLocal.openFragmentApproval(this);
-            } else if(this.approval_type_code == "E"){
-                this.supplier.openFragmentApproval(this);
-            }
-            else{
+        _oFragments: {},
+        _showFormFragment: function () {
+            var oPageGeneralInfoSection = this.byId("pageGeneralInfoSection");
+            oPageGeneralInfoSection.removeAllBlocks();
                 
-                this._loadFragment(fragmentName, function (oFragment) {
-                    oPageSection.addBlock(oFragment);
-                }.bind(this))
-            }
-           
+            this._loadFragment("GeneralInfo", function (oFragment) {
+                oPageGeneralInfoSection.addBlock(oFragment);
+            }.bind(this))
         },
-*/
+
         _onRoutedThisPage: function (approvalNumber) {
             console.log(" approvalNumber >>> " , approvalNumber);
            

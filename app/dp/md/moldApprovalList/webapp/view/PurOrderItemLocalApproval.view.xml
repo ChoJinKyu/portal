@@ -110,29 +110,7 @@
 
 			<uxap:ObjectPageSection  id="pageSectionMain" titleUppercase="true" title="General Info">
 				<uxap:subSections>
-					<uxap:ObjectPageSubSection>
-                        <layout:VerticalLayout class="sapUiSmallMarginBeginEnd"> 
-                            <HBox alignItems="Center">
-                                <Label
-                                    text="Subject"
-                                    class="sapUiTinyMarginEnd"
-                                    textAlign="Left"
-                                    labelFor="input"
-                                    required="true"/>
-                                <Input
-                                    value="{appMaster>/approval_title}"
-                                    visible="true"
-                                    width="40em" 
-                                    placeholder="Input data"
-                                    >
-                                </Input>
-                            </HBox>
-                            <VBox>
-                                <Label text="Description" labelFor="input" required="true"></Label> 
-                                <layout:VerticalLayout id="approvalContents" class="sapUiContentPadding" width="100%">
-                                </layout:VerticalLayout>
-                            </VBox>
-                        </layout:VerticalLayout> 						
+					<uxap:ObjectPageSubSection id="pageGeneralInfoSection">
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
