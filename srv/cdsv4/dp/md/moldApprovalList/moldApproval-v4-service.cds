@@ -8,6 +8,13 @@ namespace dp;
 @path : '/dp.MoldApprovalV4Service'
 service MoldApprovalV4Service { 
 
+    entity ApprovalMasterEntity as projection on approvalMst.Approval_Mst;
+    entity ApprovalDetailEntity as projection on approvalDtl.Md_Approval_Dtl;
+    entity ApproverEntity as projection on approver.Approver;
+    entity RefererEntity as projection on referer.Referer;
+    entity MoldMasterEntity as projection on moldMst.Md_Mst;
+
+
    type ApprovalMaster : {
         tenant_id               : String;
         approval_number         : String;

@@ -29,6 +29,7 @@ import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.request.ParameterInfo;
 
 import cds.gen.dp.moldapprovalv4service.*;
+import cds.gen.dp.orderapprovalservice.*;
 
 @Component
 @ServiceName(MoldApprovalV4Service_.CDS_NAME)
@@ -37,31 +38,49 @@ public class MoldApprovalV4 implements EventHandler {
     @Autowired
     private JdbcTemplate jdbc;
 
+    // @Autowired
+    // @Qualifier(OrderApprovalService_.CDS_NAME)
+    // private CdsService orderApprovalService;
+
     @On(event = SaveMoldApprovalContext.CDS_NAME)
     public void onSave(SaveMoldApprovalContext context){
         System.out.println(" >>>>>>> "+ context);
 
         Data data = context.getInputData();
         ApprovalMaster aMaster = data.getApprovalMaster();
-        Collection<ApprovalDetails> aDtlList = data.getApprovalDetails();
-        Collection<Approver> approverList = data.getApprover();
-        Collection<MoldMaster> mMasterList = data.getMoldMaster();
-        Collection<Referer> refList = data.getReferer();
+        // Collection<ApprovalDetails> aDtlList = data.getApprovalDetails();
+        // Collection<Approver> approverList = data.getApprover();
+        // Collection<MoldMaster> mMasterList = data.getMoldMaster();
+        // Collection<Referer> refList = data.getReferer();
 
         ResultMsg msg = ResultMsg.create();
         msg.setMessageCode("001");
         msg.setResultCode(0);
 
         try {
-            Connection conn = jdbc.getDataSource().getConnection();
-
-
             System.out.println(" aMaster "+ aMaster); 
-            System.out.println(" aDtlList "+ aDtlList); 
-            System.out.println(" approverList "+ approverList); 
-            System.out.println(" moldMasterList "+ mMasterList); 
-            System.out.println(" refList "+ refList); 
-            getApprovalMstInsert();           
+            // System.out.println(" aDtlList "+ aDtlList); 
+            // System.out.println(" approverList "+ approverList); 
+            // System.out.println(" moldMasterList "+ mMasterList); 
+            // System.out.println(" refList "+ refList); 
+            // ApprovalMasters mEtity =  ApprovalMasters.create();  
+            // mEtity.setTenantId(aMaster.getTenantId());
+            // mEtity.setApprovalNumber(aMaster.getApprovalNumber());
+            // mEtity.setCompanyCode(aMaster.getCompanyCode());
+            // mEtity.setOrgCode(aMaster.getOrgCode());
+            // mEtity.setChainCode(aMaster.getChainCode());
+            // mEtity.setApprovalTypeCode(aMaster.getApprovalTypeCode());
+            // mEtity.setApprovalTitle(aMaster.getApprovalTitle());
+            // mEtity.setApprovalContents(aMaster.getApprovalContents());
+            // mEtity.setApproveStatusCode(aMaster.getApproveStatusCode());
+            // mEtity.setRequestorEmpno(aMaster.getRequestorEmpno());
+            // mEtity.setRequestDate(aMaster.getRequestDate());
+            // mEtity.setAttchGroupNumber(aMaster.getAttchGroupNumber());
+            // mEtity.setLocalCreateDtm(aMaster.getLocalCreateDtm());
+            // mEtity.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
+            // Connection conn = jdbc.getDataSource().getConnection(); 
+            // CdsService masterUpdate = Update.entity(ApprovalMasters_.CDS_NAME).data(mEtity);
+            
 
 
             context.setResult(msg);

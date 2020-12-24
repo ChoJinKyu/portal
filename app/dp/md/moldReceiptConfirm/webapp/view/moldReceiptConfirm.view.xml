@@ -31,12 +31,12 @@
                     <HBox>
                         <sc:MicroProcessFlow>
                             <sc:content>
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem"/>
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="Success" stepWidth="3rem"/>
+                                <sc:MicroProcessFlowItem state="Success" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="Success" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="Success" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="Success" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="Success" stepWidth="3rem" />
                                 <sc:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
                                 <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
                                 <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
@@ -108,6 +108,7 @@
                                     <items>
                                         <SegmentedButtonItem text="No Confirmed" key="ORD_CRT" width="7em" />
                                         <SegmentedButtonItem text="Confirmed" key="RCV_CNF" width="6em" />
+                                        <SegmentedButtonItem text="All(temp)" key="ALL" width="6em" />
                                     </items>
                                 </SegmentedButton>
                                 <layoutData>
@@ -410,7 +411,7 @@
                     <table:Column width="8em" hAlign="Center">
                         <Label text="{path:'I18N>/INSPECTION_YN', formatter:'I18NFormatter'}" />
                         <table:template>
-                            <Switch name="{list>/mold_id}" state="{list>/inspection_flag}" customTextOn="Yes" customTextOff="No" >
+                            <Switch name="{list>/mold_id}" state="{list>inspection_flag}" customTextOn="Yes" customTextOff="No" enabled="false" >
                                 <layoutData>
                                     <FlexItemData growFactor="1" />
                                 </layoutData>
