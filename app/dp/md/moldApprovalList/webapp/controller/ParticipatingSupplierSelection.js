@@ -209,6 +209,7 @@ sap.ui.define([
                 "spec_name": data.oData.spec_name,
                 "mold_item_type_code": data.oData.mold_item_type_code,
                 "book_currency_code": data.oData.book_currency_code,
+                "provisional_budget_amount": data.oData.provisional_budget_amount,
                 "budget_amount": data.oData.budget_amount,
                 "currency_code": data.oData.currency_code,
                 "target_amount": data.oData.target_amount,
