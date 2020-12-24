@@ -266,10 +266,10 @@
                     ]
                 },
                 {
-                    "pattern": "approvalObject/{company_code}/{plant_code}/{approval_type_code}/{approval_number}",
-                    "name": "approvalObject",
+                    "pattern": "purOrderItemLocalApproval/{company_code}/{plant_code}/{approval_number}",
+                    "name": "purOrderItemLocalApproval",
                     "target": [
-                        "approvalObject"
+                        "purOrderItemLocalApproval"
                     ]
                 },
                 {
@@ -308,9 +308,9 @@
                     "viewLevel": 1,
                     "title": "{i18n>approvalListViewTitle}"
                 },
-                "approvalObject": {
-                    "viewName": "ApprovalObject",
-                    "viewId": "approvalObject",
+                "purOrderItemLocalApproval": {
+                    "viewName": "PurOrderItemLocalApproval",
+                    "viewId": "purOrderItemLocalApproval",
                     "viewLevel": 2,
                     "title": "{i18n>approvalObjectTitle}"
                 },
