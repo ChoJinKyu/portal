@@ -27,7 +27,7 @@
         }
       },
       "orgMgrService": {
-        "uri": "../../../cm/codeMgr/srv-api/odata/v2/cm.OrgMgrService/",
+        "uri": "../../../cm/codeMgt/srv-api/odata/v2/cm.OrgMgtService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0",
@@ -35,7 +35,7 @@
         }
       },
       "countryMgrService": {
-        "uri": "../../../cm/countryMgr/srv-api/odata/v2/cm.CountryMgrService/",
+        "uri": "../../../cm/countryMgt/srv-api/odata/v2/cm.CountryMgtService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0",
