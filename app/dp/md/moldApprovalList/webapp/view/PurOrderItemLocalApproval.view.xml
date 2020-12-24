@@ -335,143 +335,14 @@
 
 			<uxap:ObjectPageSection titleUppercase="false" title="Attachments">
 				<uxap:subSections>
-					<uxap:ObjectPageSubSection >
-                        <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" width="100%">
-                    
-                            <UploadCollection
-                                id="UploadCollection"
-                                maximumFilenameLength="55"
-                                maximumFileSize="10"
-                                multiple="true"
-                                sameFilenameAllowed="true"
-                                instantUpload="false"
-                                noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
-                                change="onChange"
-                                fileDeleted="onFileDeleted"
-                                filenameLengthExceed="onFilenameLengthExceed"
-                                fileSizeExceed="onFileSizeExceed"
-                                typeMissmatch="onTypeMissmatch"
-                                uploadComplete="onUploadComplete"
-                                beforeUploadStarts="onBeforeUploadStarts" />
-                                
-                            <Button id="Button" text="Upload Now" press="onStartUpload" />
-                        </layout:VerticalLayout> 
-
+					<uxap:ObjectPageSubSection id="pageAttachmentsSection" >
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
 			<uxap:ObjectPageSection titleUppercase="false" title="Approval Line">
 				<uxap:subSections>
-					<uxap:ObjectPageSubSection>
-                        <Table id="ApproverTable"       
-                            growing="true"
-                            growingThreshold="20"
-                            class="sapFDynamicPageAlignContent" 
-                            updateFinished=".onListMainTableUpdateFinished"
-                            rowSelectionChange=".onCheck"
-                            mode="None"
-                            width="auto"
-                            items="{approver>/Approvers}"
-                            >
-                        <headerToolbar>
-                            <OverflowToolbar>
-                            <Label text="Approval Line"/>
-                            </OverflowToolbar>
-                        </headerToolbar>
-                        <columns>
-                            <Column id="approver_empno" minScreenWidth="Tablet" hAlign="Center" visible="false" width="3em" >
-                                <Text text="approver_empno" />
-                            </Column>
-                            <Column id="no" minScreenWidth="Tablet" hAlign="Center"  width="3em" >
-                                <Text text="No." />
-                            </Column>
-                            <Column id="type" minScreenWidth="Tablet" hAlign="Center" width="10em" >
-                                <Text text="Type" />
-                            </Column>
-                            <Column id="nameDept" minScreenWidth="Tablet" hAlign="Center" width="20em" >
-                                <Text text="Name/Dept" />
-                            </Column>
-                            <Column id="status" minScreenWidth="Tablet" hAlign="Center" width="12em" >
-                                <Text text="Status" />
-                            </Column> 
-                            <Column id="comment" minScreenWidth="Tablet" hAlign="Center" >
-                                <Text text="Comment" />
-                            </Column>
-                            <Column id="up" minScreenWidth="Tablet" hAlign="Center" width="3em" >
-                                  <Text text="" />
-                            </Column>					
-                            <Column id="down" minScreenWidth="Tablet" hAlign="Center" width="3em" >
-                                  <Text text="" />
-                            </Column>					
-                            <Column id="action" minScreenWidth="Tablet" hAlign="Center" width="3em" >
-                                  <Text text="" />
-                            </Column>					
-                        </columns>
-                        <items>
-                            <ColumnListItem>
-                                <cells>
-                                     <Text text="{approver>approver_empno}" />
-                                    <Text text="{approver>approve_sequence}" />
-                                    <ComboBox  id="approverType" width="100%"
-                                        selectedKey="{approver>approver_type_code}" 
-                                        enabled="{approver>editMode}" 
-                                        items="{ path : 'util>/CodeDetails',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'CM_APPROVER_TYPE'}
-                                                    ]
-                                                }"
-                                        >  
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
-
-                                    </ComboBox>
-                                    <SearchField id="approverSearch" enabled="{approver>editMode}" 
-                                        search=".onApproverSearch" width="100%" placeholder="Search employee" 
-                                        value="{approver>approver_name}"/>
-                                    <Text text="{approver>approve_status_code}" />
-                                    <Text text="{approver>approve_comment}" />
-                                    <Button id="btnSortUp" icon="{approver>arrowUp}" press=".onApproverSortUp(${approver>approve_sequence})" tooltip="sort" visible="{= ${approver>arrowUp}===''?false:true }"></Button>
-                                    <Button id="btnSortDown" icon="{approver>arrowDown}" press=".onApproverSortDown(${approver>approve_sequence})"  visible="{= ${approver>arrowDown}===''?false:true }" tooltip="sort"></Button>
-                                    <Button id="btnDelete" icon="sap-icon://delete" press=".setApproverRemoveRow(${approver>approve_sequence})" tooltip="삭제" visible="{approver>trashShow}"></Button>
-                                </cells>
-                            </ColumnListItem>
-                        </items>
-                        </Table>                           
-					</uxap:ObjectPageSubSection> 
-                    <uxap:ObjectPageSubSection>
-                        <VBox class="sapUiSmallMarginBegin">
-                         <Toolbar>
-                          <Label text="Referer" />
-                          <ToolbarSpacer/>
-                        <HBox alignItems="End" justifyContent="End" >
-                            <Label text="Adress Book" class=""/>
-                            <core:Icon 
-                                src="sap-icon://contacts"
-                                class="size2 sapUiSmallMarginBeginEnd" 
-                                >
-                            </core:Icon>
-                           
-                        </HBox>
-                        </Toolbar>
-                            <layout:VerticalLayout class="sapUiContentPadding" width="100%">
-                                <MultiComboBox
-                                    id="refererMultiCB"
-                                    selectionChange="handleSelectionChangeReferer"
-                                    selectionFinish="handleSelectionFinishReferer"
-                                    width="100%"
-                                    items="{ path: '/RefererSearch',
-                                                filters: [
-                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                                ]
-                                            }">
-                                    <core:Item key="{employee_number}" text="{s_referer_name}" />
-                                </MultiComboBox>
-                            </layout:VerticalLayout>
-                            <layoutData>
-                                <layout:GridData span="XL12 L12 M12 S12" />
-                            </layoutData> 
-                         </VBox>
+					<uxap:ObjectPageSubSection id="pageApprovalLineSection" >
                     </uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
