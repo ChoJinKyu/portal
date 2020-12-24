@@ -57,17 +57,17 @@ service ParticipatingSupplierSelectionApprovalService {
         qtn_11.supplier_code as supplier_code_11,
         qtn_12.supplier_code as supplier_code_12,
         qtn_1.sequence as sequence_1,
-        qtn_2.sequence as supplier_code_2,
-        qtn_3.sequence as supplier_code_3,
-        qtn_4.sequence as supplier_code_4,
-        qtn_5.sequence as supplier_code_5,
-        qtn_6.sequence as supplier_code_6,
-        qtn_7.sequence as supplier_code_7,
-        qtn_8.sequence as supplier_code_8,
-        qtn_9.sequence as supplier_code_9,
-        qtn_10.sequence as supplier_code_10,
-        qtn_11.sequence as supplier_code_11,
-        qtn_12.sequence as supplier_code_12,
+        qtn_2.sequence as sequence_2,
+        qtn_3.sequence as sequence_3,
+        qtn_4.sequence as sequence_4,
+        qtn_5.sequence as sequence_5,
+        qtn_6.sequence as sequence_6,
+        qtn_7.sequence as sequence_7,
+        qtn_8.sequence as sequence_8,
+        qtn_9.sequence as sequence_9,
+        qtn_10.sequence as sequence_10,
+        qtn_11.sequence as sequence_11,
+        qtn_12.sequence as sequence_12
 	from approvalDtl.Md_Approval_Dtl dtl
 	join moldMst.Md_Mst mst
 	    on dtl.mold_id = mst.mold_id
