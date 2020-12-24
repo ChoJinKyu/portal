@@ -177,8 +177,8 @@
                 <t:Column hAlign="Center" width="8rem">
                     <Label text="{I18N>/APPROVAL_NUMBER}" textAlign="Center" />
                     <t:template>
-                        <!-- <Link text="{listModel>approval_number}" press=".onGoDetail" /> -->
-                        <Text text="{listModel>approval_number}" />
+                        <Link text="{listModel>approval_number}" press=".onGoDetail" />
+                        <!-- <Text text="{listModel>approval_number}" /> -->
                     </t:template>
                 </t:Column>
                 <t:Column hAlign="Center" width="6rem">
@@ -202,8 +202,8 @@
                 <t:Column hAlign="Center" width="16rem">
                     <Label text="{I18N>/DESCRIPTION}" textAlign="Center" />
                     <t:template>
-                        <Link text=">" press=".onGoDetail" />
-                        <!-- <Text text="{listModel>timezone_code}" /> -->
+                        <!-- <Link text=">" press=".onGoDetail" /> -->
+                        <Text text="{listModel>timezone_code}" />
                     </t:template>
                 </t:Column>
                 <t:Column hAlign="Center" width="12rem">
@@ -213,15 +213,15 @@
                     </t:template>
                 </t:Column>
                 <t:Column hAlign="Center"  width="12rem">
-                    <Label text="{I18N>/STATUS}" textAlign="Center" width="100%"/>
+                    <Label text="{I18N>/STATUS}" textAlign="Center" />
                     <t:template>
                         <Text text="{listModel>approval_number_fk/approval_status_code}" />
                     </t:template>
                 </t:Column>
                 <t:Column headerSpan="3" hAlign="Center" width="7rem">
                     <t:multiLabels>
-                        <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%"/>
-                        <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%"/>
+                        <Label text="{I18N>/DOMESTIC}" textAlign="Center" />
+                        <Label text="{I18N>/BASE_DATE}" textAlign="Center" />
                     </t:multiLabels>
                     <t:template>
                         <Text text="{
@@ -231,8 +231,8 @@
                     </t:Column>
                 <t:Column width="10rem" hAlign="Center">
                     <t:multiLabels>
-                        <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%"/>
-                        <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%"/>
+                        <Label text="{I18N>/DOMESTIC}" textAlign="Center" />
+                        <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" />
                     </t:multiLabels>
                     <t:template>
                         <Text text="{listModel>prices/results/0/new_base_price}" />
@@ -240,8 +240,8 @@
                     </t:Column>
                 <t:Column width="6rem" hAlign="Center">
                     <t:multiLabels>
-                        <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%"/>
-                        <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" width="100%"/>
+                        <Label text="{I18N>/DOMESTIC}" textAlign="Center" />
+                        <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" />
                     </t:multiLabels>
                     <t:template>
                         <Text text="{listModel>prices/results/0/new_base_price_currency_code}" />
@@ -249,8 +249,8 @@
                 </t:Column>
                 <t:Column headerSpan="3" hAlign="Center" width="7rem">
                     <t:multiLabels>
-                        <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%"/>
-                        <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%"/>
+                        <Label text="{I18N>/EXPORT}" textAlign="Center" />
+                        <Label text="{I18N>/BASE_DATE}" textAlign="Center" />
                     </t:multiLabels>
                     <t:template>
                         <Text text="{
@@ -260,8 +260,8 @@
                     </t:Column>
                 <t:Column width="10rem" hAlign="Center">
                     <t:multiLabels>
-                            <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%"/>
-                        <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%"/>
+                            <Label text="{I18N>/EXPORT}" textAlign="Center" />
+                        <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" />
                     </t:multiLabels>
                     <t:template>
                         <Text text="{listModel>prices/results/1/new_base_price}" />
@@ -269,8 +269,8 @@
                     </t:Column>
                 <t:Column width="6rem" hAlign="Center">
                     <t:multiLabels>
-                        <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%"/>
-                        <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" width="100%"/>
+                        <Label text="{I18N>/EXPORT}" textAlign="Center" />
+                        <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" />
                     </t:multiLabels>
                     <t:template>
                         <Text text="{listModel>prices/results/1/new_base_price_currency_code}" />
@@ -278,7 +278,7 @@
                 </t:Column>
                 <t:Column hAlign="Center" width="12rem">
                     <t:multiLabels>
-                        <Label text="{I18N>/BASE_PRICE_TYPE}" textAlign="Center" width="100%"/>
+                        <Label text="{I18N>/BASE_PRICE_TYPE}" textAlign="Center" />
                     </t:multiLabels>
                     <t:template>
                         <Text text="{listModel>supplier_name}" />
@@ -286,8 +286,8 @@
                 </t:Column>
                 <t:Column headerSpan="4" hAlign="Center" width="6rem">
                     <t:multiLabels>
-                        <Label text="{I18N>/FAMILY_MATERIAL_CODE}" textAlign="Center" width="100%"/>
-                        <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" width="100%"/>
+                        <Label text="{I18N>/FAMILY_MATERIAL_CODE}" textAlign="Center" />
+                        <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" />
                     </t:multiLabels>
                     <t:template>
                         <Text text="{listModel>div}" />
@@ -296,7 +296,7 @@
                 <t:Column hAlign="Center" width="12rem">
                     <t:multiLabels>
                         <Label text="{I18N>/FAMILY_MATERIAL_CODE}"/>
-                        <Label text="{I18N>/MATERIAL_CODE}" textAlign="Center" width="100%"/>
+                        <Label text="{I18N>/MATERIAL_CODE}" textAlign="Center" />
                     </t:multiLabels>
                     <t:template>
                         <Text text="{listModel>part_no}" />
@@ -305,7 +305,7 @@
                 <t:Column hAlign="Center" width="8rem">
                     <t:multiLabels>
                         <Label text="{I18N>/FAMILY_MATERIAL_CODE}"/>
-                        <Label text="{I18N>/SUPPLIER_CODE}" textAlign="Center" width="100%"/>
+                        <Label text="{I18N>/SUPPLIER_CODE}" textAlign="Center" />
                     </t:multiLabels>
                     <t:template>
                         <Text text="{listModel>supplier_code}" />
@@ -314,7 +314,7 @@
                 <t:Column hAlign="Center" width="12rem">
                     <t:multiLabels>
                         <Label text="{I18N>/FAMILY_MATERIAL_CODE}"/>
-                        <Label text="{I18N>/SUPPLIER_NAME}" textAlign="Center" width="100%"/>
+                        <Label text="{I18N>/SUPPLIER_NAME}" textAlign="Center" />
                     </t:multiLabels>
                     <t:template>
                         <Text text="{listModel>supplier_name}" />

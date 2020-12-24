@@ -1,5 +1,11 @@
 {
-  "i18n" : {"languages" : ["", "ko", "en"]},
+  "i18n": {
+    "languages": [
+      "",
+      "ko",
+      "en"
+    ]
+  },
   "build": {
     "target": ".",
     "tasks": [
