@@ -41,7 +41,9 @@ sap.ui.define([
                 });
             },
             onRowSelectionChange: function (event) {
-                // event 객체를 통해 레코드(ROW)를 가져온다.        
+                // Tree 부분 클릭시에는 return 처리한다.
+                if (!event.getParameters().rowContext) return ;
+                // event 객체를 통해 레코드(ROW)를 가져온다. ()
                 var row = this.getView().getModel("tree").getObject(event.getParameters().rowContext.sPath);
                 // 라우팅 한다.
                 this.getRouter().navTo("midPage", {
