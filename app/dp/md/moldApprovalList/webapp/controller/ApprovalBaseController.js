@@ -58,11 +58,13 @@ sap.ui.define([
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
 
             this.getView().setModel(new ManagedModel(), "appMaster");
+            this.getView().setModel(new ManagedModel(), "moldMaster");
             this.getView().setModel(new ManagedListModel(), "appDetail");
             this.getView().setModel(new ManagedListModel(), "approver");
             this.getView().setModel(new ManagedListModel(), "referer");
 
             oTransactionManager = new TransactionManager();
+            oTransactionManager.addDataModel(this.getModel("moldMaster"));
             oTransactionManager.addDataModel(this.getModel("appMaster"));
             oTransactionManager.addDataModel(this.getModel("approver"));
             oTransactionManager.addDataModel(this.getModel("referer"));
@@ -223,7 +225,9 @@ sap.ui.define([
             if (this.approval_number === "New") {
                 this._onApproverAddRow(0);
             } else {
-                this._onRoutedThisPage(this.approval_number);
+                this._onRoutedThisPage(this.approval_number); 
+                this._onApprovalPage(this.approval_number); // 이거 공통으로 각자 페이지에 하나 만듭시다 - this.approval_number 가 로드 된 후에 처리 해야 하는데 
+                                                            // 그 시점을 ApprovalBaseController. 에서 해줘야 겠네요 
             }
         },
 
