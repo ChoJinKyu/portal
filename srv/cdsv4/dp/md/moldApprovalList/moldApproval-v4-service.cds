@@ -118,7 +118,7 @@ service MoldApprovalV4Service {
         use_department_code : String ;
     };
 
-    type saveReturnType {
+    type data {
         approvalMaster :  ApprovalMaster ;
         approvalDetails : array of ApprovalDetails;
         approver : array of Approver;
@@ -126,6 +126,11 @@ service MoldApprovalV4Service {
         referer : array of Referer;
     }
 
-    action saveMoldApproval ( inputData : saveReturnType ) returns saveReturnType;
+    type resultMsg {
+        messageCode : String;
+        resultCode : Integer;
+    }
+
+    action saveMoldApproval ( inputData : data ) returns resultMsg;
 
 }

@@ -167,7 +167,7 @@ sap.ui.define([
                 success: (function (oEvent) {
                   view.setBusy(false);
                   MessageToast.show(this.getModel("I18N").getText("/NCM0005"));
-                  this.refresh();//this.onSearch();
+                  this.onSearch();//this.refresh();
                 }).bind(this)
               });
             }
