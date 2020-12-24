@@ -69,8 +69,12 @@ public class MdCategoryService implements EventHandler {
 				try {
 					Connection conn = jdbc.getDataSource().getConnection();
 					// Item SPMD범주코드 생성 Function
-					PreparedStatement v_statement_select = conn.prepareStatement("SELECT PG_MD_CATEGORY_CODE_FUNC(?) AS CATE_CODE FROM DUMMY");
-					v_statement_select.setObject(1, "");    // Category 채번 구분값 없음.
+					PreparedStatement v_statement_select = conn.prepareStatement("SELECT PG_MD_CATEGORY_CODE_FUNC(?, ?, ?, ?) AS CATE_CODE FROM DUMMY");
+                    v_statement_select.setObject(1, cateId.getTenantId());
+                    v_statement_select.setObject(2, cateId.getCompanyCode());
+                    v_statement_select.setObject(3, cateId.getOrgTypeCode());
+                    v_statement_select.setObject(4, cateId.getOrgCode());
+            
 					ResultSet rslt = v_statement_select.executeQuery();
 					if(rslt.next()) cateCode = rslt.getString("CATE_CODE");
 
@@ -165,7 +169,6 @@ public class MdCategoryService implements EventHandler {
 				cateCode = item.getSpmdCategoryCode();
 				charCode = item.getSpmdCharacterCode();
 
-				//if ("".equals(charCode) || charCode == null) {
 				if (StringUtils.isEmpty(charCode)) {
 
 					// DB처리
@@ -176,12 +179,21 @@ public class MdCategoryService implements EventHandler {
 						// Item SPMD특성코드 생성 Function
 						StringBuffer v_sql_get_code_fun = new StringBuffer();
 						v_sql_get_code_fun.append("SELECT ")
-							.append("   PG_MD_CHARACTER_CODE_FUNC(?) AS CHAR_CODE")
-							.append("   , (SELECT IFNULL(MAX(SPMD_CHARACTER_SERIAL_NO), 0)+1 FROM PG_MD_CATEGORY_ITEM) AS CHAR_SERIAL_NO")
+							.append("   PG_MD_CHARACTER_CODE_FUNC(?, ?, ?, ?, ?) AS CHAR_CODE")
+                            .append("   , (SELECT IFNULL(MAX(SPMD_CHARACTER_SERIAL_NO), 0)+1 FROM PG_MD_CATEGORY_ITEM WHERE TENANT_ID=? AND COMPANY_CODE=? AND ORG_TYPE_CODE=? AND ORG_CODE=?) AS CHAR_SERIAL_NO")
 							.append(" FROM DUMMY");
 
 						PreparedStatement v_statement_select = conn.prepareStatement(v_sql_get_code_fun.toString());
-						v_statement_select.setObject(1, cateCode);
+                        v_statement_select.setObject(1, item.getTenantId());
+                        v_statement_select.setObject(2, item.getCompanyCode());
+                        v_statement_select.setObject(3, item.getOrgTypeCode());
+                        v_statement_select.setObject(4, item.getOrgCode());
+                        v_statement_select.setObject(5, item.getSpmdCategoryCode());
+                        
+                        v_statement_select.setObject(6, item.getTenantId());
+                        v_statement_select.setObject(7, item.getCompanyCode());
+                        v_statement_select.setObject(8, item.getOrgTypeCode());
+                        v_statement_select.setObject(9, item.getOrgCode());
 
 						ResultSet rslt = v_statement_select.executeQuery();
 
