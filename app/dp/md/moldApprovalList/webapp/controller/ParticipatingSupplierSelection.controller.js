@@ -47,7 +47,6 @@ sap.ui.define([
 		 */
         onInit: function () {
             ApprovalBaseController.prototype.onInit.call(this);
-            console.log("호출하니?");
             // Model used to manipulate control states. The chosen values make sure,
             // detail page shows busy indication immediately so there is no break in
             // between the busy indication for loading the view's meta data

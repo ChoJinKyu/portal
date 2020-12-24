@@ -81,10 +81,10 @@
                             <sc:content>
                                 <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
                                 <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
                                 <sc:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem"/>
                                 <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
                                 <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
                                 <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
@@ -155,143 +155,225 @@
                                 </OverflowToolbar>
                             </table:extension>                             
                             <table:columns>
-                                <table:Column id="moldIdColumn" width="10em" >
-                                    <Label text="Mold ID"/>
+                                <table:Column id="c_mold_id" visible="false">
+                                    <Label text="mold_id"/>
                                     <table:template>
-                                        <Text id="moldId" text="{appDetail>mold_id}"/>
+                                        <Text id="t_mold_id" text="{psItemMaster>mold_id}"/>
                                     </table:template>
                                 </table:Column>
-                                <table:Column id="moldModelColumn" width="15em" >
-                                    <Label text="Model"/>
+                                <table:Column id="c_approval_number" visible="false">
+                                    <Label text="approval_number"/>
                                     <table:template>
-                                        <Text id="model" text="{appDetail>model}"/>
+                                        <Text id="t_approval_number" text="{psItemMaster>approval_number}"/>
                                     </table:template>
                                 </table:Column>
-                                <table:Column id="moldPartNoColumn" width="8em" hAlign="Center">
+                                <table:Column id="c_model" width="20em" hAlign="Center">
+                                    <Label text="{I18N>/MODEL}"/>
+                                    <table:template>
+                                        <Text id="t_model" text="{psItemMaster>model}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column id="c_moldPartNo" width="10em" hAlign="Center">
                                     <Label text="Mold No"/>
                                     <table:template>
-                                        <Text id="mold_number" text="{appDetail>mold_number}"/>
+                                        <Text id="t_mold_part_no" text="{psItemMaster>mold_number}"/>
                                     </table:template>
                                 </table:Column>
-                                <table:Column id="moldSeqColumn" width="3em" hAlign="Center">
+                                <table:Column id="c_seq" width="5em" hAlign="Center">
                                     <Label text="Seq"/>
                                     <table:template>
-                                        <Text id="mold_sequence" text="{appDetail>mold_sequence}"/>
+                                        <Text id="t_seq" text="{psItemMaster>mold_sequence}"/>
                                     </table:template>
                                 </table:Column>
-                                <table:Column id="moldDescriptionColumn" width="12em">
-                                    <Label text="Description"/>
+                                <table:Column id="c_description" width="15em" hAlign="Center">
+                                    <Label text="{I18N>/DESCRIPTION}"/>
                                     <table:template>
-                                        <Text id="spec_name" text="{appDetail>spec_name}"/>
+                                        <Text id="description" text="{psItemMaster>spec_name}"/>
                                     </table:template>
                                 </table:Column>
-                                <table:Column id="moldItemTypeColumn" width="8em" hAlign="Center">
+                                <table:Column id="c_itemType" width="10em" hAlign="Center">
                                     <VBox>
-                                    <Label text="Mold Item"/>
-                                    <Label text="Type"/>
+                                        <Label text="Item"/>
+                                        <Label text="Type"/>
                                     </VBox>
                                     <table:template>
-                                        <ComboBox   id="mold_item_type_code"
-                                                    selectedKey="{appDetail>mold_item_type_code}"
-                                                    items="{
-                                                                path : 'util>/CodeDetails',
-                                                                filters : [
-                                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                                    {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
-                                                                ]
-                                                            }"
-                                        editable="false" class="readonlyField" >
-                                            <core:Item key="{util>code}" text="{util>code_description}" />
+                                        <ComboBox selectedKey="{psItemMaster>mold_item_type_code}" items="{ path : 'util>/CodeDetails',
+                                                filters : [
+                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                    {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
+                                                ]
+                                            }">
+                                            <core:Item key="{util>code}" text="{util>code_description}"/> 
                                         </ComboBox>
+                                        <!-- <Text id="moldItemTypeCodeNm" text="{psItemMaster>mold_item_type_code_nm}"/> -->
                                     </table:template>
                                 </table:Column>
-                                <table:Column id="bookCrrencyColumn" width="6em" hAlign="Center">
+                                <table:Column id="c_bookCurrency" width="10em" hAlign="Center">
                                     <VBox>
-                                    <Label text="Book"/>
-                                    <Label text="Currency"/>
+                                        <Label text="Book"/>
+                                        <Label text="Currency"/>
                                     </VBox>
                                     <table:template>
-                                        <Text id="bookCurrency" text="{appDetail>book_currency_code}"/>
+                                        <Text text="{psItemMaster>book_currency_code}"/>
                                     </table:template>
                                 </table:Column>
-                                <table:Column id="budetAmountColumn" width="7em" hAlign="End">
+                                <table:Column id="c_budget_amount" width="10em" hAlign="Center">
                                     <VBox>
-                                    <Label text="Budget"/>
-                                    <Label text="Amount"/>
+                                        <Label text="Budget"/>
+                                        <Label text="Amount"/>
                                     </VBox>
                                     <table:template>
-                                        <ObjectNumber id="budetAmount" emphasized="false"
-                                        number="{parts:[{path:'appDetail>provisional_budget_amount'},{path:'appDetail>book_currency_code'}],
-                                                type: 'sap.ui.model.type.Currency',
-                                                formatOptions: {showMeasure: false}}" />
+                                        <Text text="{psItemMaster>provisional_budget_amount}"/>
                                     </table:template>
                                 </table:Column>
-                                <table:Column id="crrencyColumn" width="6em" hAlign="Center">
-                                    <Label text="Currency"/>           
-                                    <table:template>
-                                        <Text id="currency" text="{appDetail>currency_code}"/>
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="poAmountColumn" width="7em" hAlign="End">
+                                <table:Column id="c_currency" width="10em" hAlign="Center">
                                     <VBox>
-                                    <Label text="PO"/>
-                                    <Label text="Amount"/>
+                                        <Label text="Currency"/>
                                     </VBox>
                                     <table:template>
-                                        <ObjectNumber id="poAmount" emphasized="false"
-                                        number="{parts:[{path:'appDetail>purchasing_amount'},{path:'appDetail>currency_code'}],
-                                                type: 'sap.ui.model.type.Currency',
-                                                formatOptions: {showMeasure: false}}" />
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="orderSupplierColumn" width="10em" hAlign="Center">
-                                    <VBox>
-                                    <Label text="Order"/>
-                                    <Label text="Supplier"/>
-                                    </VBox>
-                                    <table:template>
-                                        <Text id="orderSupplier" text="{appDetail>supplier_code}"/>
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="targetAmountColumn" width="7em" hAlign="Center">
-                                    <VBox>
-                                    <Label text="Target"/>
-                                    <Label text="Amount"/>
-                                    </VBox>
-                                    <table:template>
-                                        <ObjectNumber id="targetAmount" emphasized="false"
-                                        number="{parts:[{path:'appDetail>target_amount'},{path:'appDetail>currency_code'}],
-                                                type: 'sap.ui.model.type.Currency',
-                                                formatOptions: {showMeasure: false}}" />
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="moldProductionTypeColumn" width="12em" hAlign="Center">
-                                    <VBox>
-                                    <Label text="Production"/>
-                                    <Label text="Type"/>
-                                    </VBox>
-                                    <table:template>
-                                        <ComboBox   id="mold_production_type_code"
-                                                    selectedKey="{appDetail>mold_production_type_code}"
-                                                    items="{
-                                                                path : 'util>/CodeDetails',
-                                                                filters : [
-                                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                                    {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
-                                                                ]
-                                                            }"
-                                        editable="false" class="readonlyField" >
-                                            <core:Item key="{util>code}" text="{util>code_description}" />
+                                    <!-- <Text text="{psItemMaster>company_code}"/> -->
+                                        <ComboBox selectedKey="{psItemMaster>currency_code}" 
+                                        items="{ 
+                                            path : 'psOrgCode>/OrgCodeLanguages',
+                                            filters : [
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_LOCAL_CURRENCY'}
+                                            ]
+                                        }">
+                                            <core:Item key="{psOrgCode>code}" text="{psOrgCode>code_name}"/> 
                                         </ComboBox>
+                                        <!-- <Input value="{psItemMaster>currency_code}"/> -->
                                     </table:template>
                                 </table:Column>
-                                <table:Column id="moldFamilyPartNoColumn" width="12em" hAlign="Center">
+                                <table:Column id="c_target_amount" width="10em" hAlign="Center">
                                     <VBox>
-                                    <Label text="Family"/>
-                                    <Label text="Part No"/>
+                                        <Label text="Target"/>
+                                        <Label text="Amount"/>
                                     </VBox>
+                                    <!-- <Label text="Budget Amount"/> -->
                                     <table:template>
-                                        <Text id="family_part_number_1" text="{appDetail>family_part_number_1}" />
+                                        <Input value="{psItemMaster>target_amount}"/>
+                                        <!-- <Input value="{psItemMaster>provisional_budget_amount}"/> -->
+                                    </table:template>
+                                </table:Column>
+                                <table:Column id="c_mold_supplier1" width="10em" hAlign="Center">
+                                    <VBox>
+                                        <Label text="Mold"/>
+                                        <Label text="Supplier1"/>
+                                    </VBox>
+                                    <!-- <Label text="Budget Amount"/> -->
+                                    <table:template>
+                                        <Text text="{psItemMaster>supplier_code_1}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column id="c_mold_supplier2" width="10em" hAlign="Center">
+                                    <VBox>
+                                        <Label text="Mold"/>
+                                        <Label text="Supplier2"/>
+                                    </VBox>
+                                    <!-- <Label text="Budget Amount"/> -->
+                                    <table:template>
+                                        <Text text="{psItemMaster>supplier_code_2}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column id="c_mold_supplier3" width="10em" hAlign="Center">
+                                    <VBox>
+                                        <Label text="Mold"/>
+                                        <Label text="Supplier3"/>
+                                    </VBox>
+                                    <!-- <Label text="Budget Amount"/> -->
+                                    <table:template>
+                                        <Text text="{psItemMaster>supplier_code_3}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column id="c_mold_supplier4" width="10em" hAlign="Center">
+                                    <VBox>
+                                        <Label text="Mold"/>
+                                        <Label text="Supplier4"/>
+                                    </VBox>
+                                    <!-- <Label text="Budget Amount"/> -->
+                                    <table:template>
+                                        <Text text="{psItemMaster>supplier_code_4}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column id="c_mold_supplier5" width="10em" hAlign="Center">
+                                    <VBox>
+                                        <Label text="Mold"/>
+                                        <Label text="Supplier5"/>
+                                    </VBox>
+                                    <!-- <Label text="Budget Amount"/> -->
+                                    <table:template>
+                                        <Text text="{psItemMaster>supplier_code_5}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column id="c_mold_supplier6" width="10em" hAlign="Center">
+                                    <VBox>
+                                        <Label text="Mold"/>
+                                        <Label text="Supplier6"/>
+                                    </VBox>
+                                    <!-- <Label text="Budget Amount"/> -->
+                                    <table:template>
+                                        <Text text="{psItemMaster>supplier_code_6}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column id="c_mold_supplier7" width="10em" hAlign="Center">
+                                    <VBox>
+                                        <Label text="Mold"/>
+                                        <Label text="Supplier7"/>
+                                    </VBox>
+                                    <!-- <Label text="Budget Amount"/> -->
+                                    <table:template>
+                                        <Text text="{psItemMaster>supplier_code_7}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column id="c_mold_supplier8" width="10em" hAlign="Center">
+                                    <VBox>
+                                        <Label text="Mold"/>
+                                        <Label text="Supplier8"/>
+                                    </VBox>
+                                    <!-- <Label text="Budget Amount"/> -->
+                                    <table:template>
+                                        <Text text="{psItemMaster>supplier_code_8}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column id="c_mold_supplier9" width="10em" hAlign="Center">
+                                    <VBox>
+                                        <Label text="Mold"/>
+                                        <Label text="Supplier9"/>
+                                    </VBox>
+                                    <!-- <Label text="Budget Amount"/> -->
+                                    <table:template>
+                                        <Text text="{psItemMaster>supplier_code_9}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column id="c_mold_supplier10" width="10em" hAlign="Center">
+                                    <VBox>
+                                        <Label text="Mold"/>
+                                        <Label text="Supplier10"/>
+                                    </VBox>
+                                    <!-- <Label text="Budget Amount"/> -->
+                                    <table:template>
+                                        <Text text="{psItemMaster>supplier_code_10}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column id="c_mold_supplier11" width="10em" hAlign="Center">
+                                    <VBox>
+                                        <Label text="Mold"/>
+                                        <Label text="Supplier11"/>
+                                    </VBox>
+                                    <!-- <Label text="Budget Amount"/> -->
+                                    <table:template>
+                                        <Text text="{psItemMaster>supplier_code_11}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column id="c_mold_supplier12" width="10em" hAlign="Center">
+                                    <VBox>
+                                        <Label text="Mold"/>
+                                        <Label text="Supplier12"/>
+                                    </VBox>
+                                    <!-- <Label text="Budget Amount"/> -->
+                                    <table:template>
+                                        <Text text="{psItemMaster>supplier_code_12}"/>
                                     </table:template>
                                 </table:Column>
                             </table:columns>
