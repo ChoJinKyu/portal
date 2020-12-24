@@ -48,19 +48,8 @@ sap.ui.define([
             this.approvalDetails_data = [] ;
             this.moldMaster_data = [] ;
 
-            // Model used to manipulate control states. The chosen values make sure,
-            // detail page shows busy indication immediately so there is no break in
-            // between the busy indication for loading the view's meta data
-            var oViewModel = new JSONModel({
-                busy: true,
-                delay: 0
-            });
-
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
-
-            this.setModel(oViewModel, "purOrderItemLocalApprovalView");//change
-            this.getRouter().getRoute("purOrderItemLocalApproval").attachPatternMatched(this._onObjectMatched, this);//change
 
             this.getView().setModel(new ManagedModel(), "company");
             this.getView().setModel(new ManagedModel(), "plant");
@@ -69,6 +58,7 @@ sap.ui.define([
             this.getView().setModel(new JSONModel(Device), "device"); // file upload 
 
             this.getView().setModel(new ManagedModel(), "appMaster");
+            this.getView().setModel(new ManagedListModel(), "appDetail");
             this.getView().setModel(new ManagedListModel(), "approver");
             this.getView().setModel(new ManagedListModel(), "referer");
 
@@ -270,6 +260,28 @@ sap.ui.define([
 
             this._bindView("/ApprovalMasters(tenant_id='" + this.tenant_id + "',approval_number='" + approvalNumber + "')", "appMaster", [], function (oData) {
                 this.oRichTextEditor.setValue(oData.approval_contents);
+            }.bind(this));
+
+            this._bindView("/ApprovalDetails", "appDetail", filter, function (oData) {
+                var moldIdFilter = [];
+                var moldMstFilter = [];
+
+                if (oData.results.length > 0) {
+                    oData.results.forEach(function (item) {
+                        moldIdFilter.push(new Filter("mold_id", FilterOperator.EQ, item.mold_id));
+                    });
+
+                    moldMstFilter.push(
+                        new Filter({
+                            filters: moldIdFilter,
+                            and: false
+                        })
+                    );
+
+                    this._bindView("/MoldMasters", "moldMaster", moldMstFilter, function (oData) {
+
+                    }.bind(this));
+                }
             }.bind(this));
 
             this._bindView("/Approvers", "approver", filter, function (oData) { 
