@@ -28,16 +28,21 @@
                             <ComboBox
                               id="SelectionPR_TYPE2"
                               width="100%"
+<<<<<<< Updated upstream
                               selectionChange=".OnPR_TYPEChange2"
+=======
+                              showSecondaryValues= "true"
+                              selectionChange=".onInitPR_TYPE3"
+>>>>>>> Stashed changes
                               items="{
-                                path: 'util>/CodeDetails',
+                                path: 'util>/Code',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                     {path: 'group_code', operator: 'EQ', value1: 'OP_PR_TYPE_CODE_2'}
                                 ]
                               }">
                               <items>
-                                <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+                                <core:ListItem key="{util>code}" text="{util>code_name}" additionalText="{util>code}" />
                               </items>
                             </ComboBox>
                             <layoutData>
@@ -48,6 +53,7 @@
                             <Label text = "Category" labelFor="SelectionPR_TYPE3" required="false"/> 
                              <ComboBox
                               id="SelectionPR_TYPE3"
+                              showSecondaryValues= "true"
                               width="100%"
                               selectionChange=".OnPR_TYPEChange3"
                               items="{
@@ -69,6 +75,7 @@
                             <Label text = "구매요청 유형" labelFor="SelectionPR_TYPE" required="false"/>
                             <ComboBox
                               id="SelectionPR_TYPE"
+<<<<<<< Updated upstream
                               width="100%"
                               items="{
                                 path: 'util>/CodeDetails',
@@ -80,6 +87,11 @@
                               <items>
                                 <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
                               </items>
+=======
+                              showSecondaryValues= "true"
+                              width="100%"
+                              selectionChange=".onInitTemplate">
+>>>>>>> Stashed changes
                             </ComboBox>
                              <layoutData>
                                 <layout:GridData span="XL12 L12 M12 S12" />
@@ -101,34 +113,11 @@
                     emptySpanM="0"
                     emptySpanS="0"     
                     singleContainerFullSize="false" >                    
-                    <form:content >  
-
-                        <VBox alignItems="Center" justifyContent="Center">
-                            <ToggleButton id="localBudget" fieldGroupIds="toggleButtons" text="LGC 석유화학 공사/용역 구매" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
-                            <layoutData>
-                                <layout:GridData span="XL6 L3 M6 S12" />
-                            </layoutData> 
-                        </VBox>
-                        <VBox alignItems="Center" justifyContent="Center">
-                            <ToggleButton id="supplierSelection" fieldGroupIds="toggleButtons" text="LGC 첨단소재 공사/용역 구매" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
-                            <layoutData>
-                                <layout:GridData span="XL6 L3 M6 S12" />
-                            </layoutData> 
-                        </VBox>
-                        <VBox alignItems="Center" justifyContent="Center">
-                            <ToggleButton id="localOrder" fieldGroupIds="toggleButtons" text="LGC 생명과학 공사/용역 구매" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
-                            <layoutData>
-                                <layout:GridData span="XL6 L3 M6 S12" />
-                            </layoutData> 
-                        </VBox>
-
+                    <form:content > 
                         <VBox>
-                            <SegmentedButton id="searchUsageSegmentButton" selectedKey="all" class="sapUiSmallMarginBottom" width="100%" >
-                                <items>
-                                    <SegmentedButtonItem text="LGC 석유화학 공사/용역 구매" key="all"  />
-                                    <SegmentedButtonItem text="LGC 첨단소재 공사/용역 구매" key="site"  />
-                                    <SegmentedButtonItem text="LGC 생명과학 공사/용역 구매" key="company"  />                                   
-                                </items>
+                            <SegmentedButton id="searchUsageSegmentButton" class="sapUiSmallMarginBottom" width="100%" >
+                                <items>                            
+                                </items>                                
                             </SegmentedButton>
                             <layoutData>
                                 <layout:GridData span="XL6 L6 M12 S12" />

@@ -129,12 +129,24 @@
                 "useBatch": true
             }
         },
-            "contModel": {
-                "type": "sap.ui.model.json.JSONModel",
-                "settings": {
-                    "defaultBindingMode": "TwoWay"
-                }
+        "contModel": {
+            "type": "sap.ui.model.json.JSONModel",
+            "settings": {
+                "defaultBindingMode": "TwoWay"
             }
+        },
+        "prtypeModel": {
+            "type": "sap.ui.model.json.JSONModel",
+            "settings": {
+                "defaultBindingMode": "TwoWay"
+            }
+        },
+        "prtypeModel3": {
+            "type": "sap.ui.model.json.JSONModel",
+            "settings": {
+                "defaultBindingMode": "TwoWay"
+            }
+        }
     },
     "resources": {
         "css": [
