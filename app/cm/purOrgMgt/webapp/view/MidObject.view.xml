@@ -3,7 +3,7 @@
 	xmlns="sap.m" 
 	xmlns:uxap="sap.uxap" 
 	xmlns:layout="sap.ui.layout" 
-  xmlns:form="sap.ui.layout.form"
+    xmlns:form="sap.ui.layout.form"
 	xmlns:core="sap.ui.core"
 	height="100%">
 	<uxap:ObjectPageLayout id="page"
@@ -20,30 +20,30 @@
 			<!-- 타이틀 영역 -->
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="Menu Details" wrapping="true" />
+					<Title text="구매 관리 상세" wrapping="true" />
 				</uxap:expandedHeading>
 				<uxap:snappedHeading>
-					<Title text="Menu Details" wrapping="true" />
+					<Title text="구매 관리 상세" wrapping="true" />
 				</uxap:snappedHeading>
 				<uxap:expandedContent>
-					<Text text="Details for Menu" />
+					<!-- <Text text="Details for Menu" /> -->
 				</uxap:expandedContent>
 				<uxap:snappedContent>
-					<Text text="Details for Menu" />
+					<!-- <Text text="Details for Menu" /> -->
 				</uxap:snappedContent>
 				<uxap:snappedTitleOnMobile>
-					<Title text="Menu Details" />
+					<!-- <Title text="Menu Details" /> -->
 				</uxap:snappedTitleOnMobile>
 				<uxap:actions>
 					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEdit" enabled="{= ${midObjectView>/mode} === 'R'}"/>
 					<Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDelete" enabled="{= ${midObjectView>/mode} !== 'C'}"/>
 				</uxap:actions>
-        <uxap:navigationActions>
+                <uxap:navigationActions>
 					<OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press=".onFull" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
 					<OverflowToolbarButton id="pageExitFullScreenButton" type="Transparent" icon="sap-icon://exit-full-screen" press=".onExit" tooltip="Exit Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
 					<OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onNavBack" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
-        </uxap:navigationActions>
-			</uxap:ObjectPageDynamicHeaderTitle>
+                </uxap:navigationActions>
+            </uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
 
 		<uxap:headerContent>
@@ -71,194 +71,270 @@
 
 		<uxap:sections>
 			<!-- Master 에 관한 정보 -->
-			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="Control Option Details">
+			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="기본정보">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
-              <form:SimpleForm editable="false">
-                <VBox>
-                  <HBox alignItems="Start" justifyContent="Start" visible="{= ${midObjectView>/mode} !== 'C'}">
-                    <VBox class="sapUiContentPadding">
-                      <Label text="메뉴명"/>
-                      <Input placeholder="Input Data" editable="false"></Input>
-                    </VBox>
-                  </HBox>
-                  <HBox alignItems="Start" justifyContent="Start">
-                    <HBox class="sapUiContentPadding">
-                      <VBox>
-                        <Label text="Chain / 메뉴 유형" labelFor="searchChainCombo" required="true"></Label>
-                        <HBox>
-                          <ComboBox id="searchChainCombo" 
-                              editable="{= ${midObjectView>/mode} === 'C'}"
-                              width="100%" 
-                              selectedKey="{master>/chain_code}"
-                              items="{
-                                  path: 'util>/CodeDetails',
-                                  filters: [
-                                      {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                      {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
-                                  ]
-                              }">
-                              <items>
-                                  <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
-                              </items>
-                          </ComboBox>
-                          <ComboBox width="100%" 
-                              selectedKey="{master>/menu_type_code}" 
-                              editable="{= ${midObjectView>/mode} === 'C'}"
-                              items="{
-                                  path: 'util>/CodeDetails',
-                                  filters: [
-                                      {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                      {path: 'group_code', operator: 'EQ', value1: 'CM_MENU_TYPE_CODE'}
-                                  ]
-                              }">
-                              <items>
-                                  <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
-                              </items>
-                          </ComboBox>
-                        </HBox>
-                      </VBox>
-                    </HBox>
-                    <HBox class="sapUiContentPadding">
-                      <VBox>
-                        <Label text="메뉴코드" labelFor="menuCodeInput" required="true"/>
-                        <Input id="menuCodeInput" placeholder="Input Data" width="100%"
-                          value="{master>/menu_code}"
-                          editable="{= ${midObjectView>/mode} === 'C'}"
-                        />
-                      </VBox>
-                    </HBox>
-                  </HBox>
+                        <form:SimpleForm 
+                        maxContainerCols="2"
+                        editable="true"
+                        layout="ResponsiveGridLayout"
+                        adjustLabelSpan="false"
+                        labelSpanL="4"
+                        labelSpanM="4"
+                        emptySpanL="0"
+                        emptySpanM="0"
+                        columnsL="2"
+                        columnsM="2"
+                    >
+                    <form:content>
 
-                  <HBox alignItems="Start" justifyContent="Start">
-                    <HBox class="sapUiContentPadding">
-                      <VBox>
-                        <Label text="메뉴레벨 / 정렬순서" labelFor="menuLevelCombo" required="true"></Label>
-                        <HBox>
-                          <!-- selectedKey="{master>/menu_level_number}" -->
-                          <ComboBox id="menuLevelCombo" width="100%" 
-                            editable="{= ${midObjectView>/mode} !== 'R'}"
-                            selectedKey="{path: 'master>/menu_level_number', type: 'sap.ui.model.type.Decimal'}"
-                            items="{
-                                path: 'menu_level>/items',
-                                filters: [
-                                ]
-                            }">
-                            <items>
-                                <core:Item key="{menu_level>level}" text="{menu_level>level}" />
-                            </items>
-                          </ComboBox>
-                          <!-- value="{master>/sort_number}" -->
-                          <Input id="sortNumberInput" width="100%" 
-                            value="{path: 'master>/sort_number', type: 'sap.ui.model.type.Decimal'}"
-                            editable="{= ${midObjectView>/mode} !== 'R'}"
-                          />
-                        </HBox>
-                      </VBox>
-                    </HBox>
-                    <HBox>
-                      <VBox class="sapUiContentPadding">
-                        <Label text="화면표시" labelFor="menuDisplayFlagButton" required="true"/>
-                        <SegmentedButton id="menuDisplayFlagButton" class="sapUiSmallMarginBottom" width="100%"
-                          enabled="{= ${midObjectView>/mode} !== 'R'}"
-                          selectedKey="{path: 'master>/menu_display_flag', type: 'sap.ui.model.type.Boolean'}"
-                        >
-                            <items>
-                                <SegmentedButtonItem text="Yes" key="true" width="4.1rem" />
-                                <SegmentedButtonItem text="No" key="false" width="4.1rem" />
-                            </items>
-                        </SegmentedButton>
-                        <layoutData>
-                            <layout:GridData span="XL6 L6 M12 S12" />
-                        </layoutData>
-                      </VBox>
-                      <VBox class="sapUiContentPadding">
-                        <Label text="사용여부" labelFor="useFlagButton" required="true"/>
-                        <SegmentedButton id="useFlagButton" class="sapUiSmallMarginBottom" width="100%"
-                          enabled="{= ${midObjectView>/mode} !== 'R'}"
-                          selectedKey="{path: 'master>/use_flag', type: 'sap.ui.model.type.Boolean'}"
-                        >
-                            <items>
-                                <SegmentedButtonItem text="Yes" key="true" width="4.1rem" />
-                                <SegmentedButtonItem text="No" key="false" width="4.1rem" />
-                            </items>
-                        </SegmentedButton>
-                        <layoutData>
-                            <layout:GridData span="XL6 L6 M12 S12" />
-                        </layoutData>
-                      </VBox>
-                    </HBox>
-                  </HBox>
+                            <VBox>
+                                <Label text="테넌트" labelFor="searchTenantCombo" required="true"/>
+                                <ComboBox
+                                    width="100%"
+                                    id="searchTenantCombo"
+                                    enabled="{= ${midObjectView>/mode} === 'C'}"
+                                    selectedKey="{master>/tenant_id}"
+                                    items="{
+                                        path: 'org>/Org_Tenant',
+                                        filters: [
+                                        ]
+                                    }"
+                                >
+                                <items>
+                                    <core:Item key="{org>tenant_id}" text="{org>tenant_id} : {org>tenant_name}" />
+                                </items>
+                                </ComboBox>
+                                <layoutData>
+                                    <layout:GridData
+                                        span="XL2 L3 M4 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text = "회사" labelFor="searchCompanyCode" required="true"/> 
+                                <ComboBox 
+                                    width="100%"
+                                    id="searchCompanyCode"  
+                                    enabled="{= ${midObjectView>/mode} === 'C'}"
+                                    selectedKey="{master>/company_code}"
+                                    items="{
+                                        path: 'org>/Org_Company',
+                                        filters: []
+                                    }"
+                                >
+                                    <items>
+                                        <core:Item key="{org>company_code}"  text="{org>company_code} : {org>company_name}"/>
+                                    </items>
+                                </ComboBox>
+                                <layoutData>
+                                    <layout:GridData
+                                        span="XL2 L3 M4 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="조직유형" labelFor="searchOrgTypeCombo" required="true"/>
+                                <ComboBox
+                                    width="100%"
+                                    id="searchOrgTypeCombo"
+                                    enabled="{= ${midObjectView>/mode} === 'C'}"
+                                    selectedKey="{master>/org_type_code}"
+                                    items="{
+                                        path: 'util>/CodeDetails',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                            {path: 'group_code', operator: 'EQ', value1: 'CM_ORG_TYPE_CODE'}
+                                        ]
+                                    }"
+                                >
+                                    <items>
+                                        <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+                                    </items>
+                                </ComboBox>
+                                <layoutData>
+                                    <layout:GridData
+                                        span="XL2 L3 M4 S12" />
+                                </layoutData>
+                            </VBox>
 
-                  <!-- <HBox alignItems="Start" justifyContent="Start">
-                    <HBox class="sapUiContentPadding">
-                      <VBox>
-                        <Label text="결재유형" labelFor="" required="true"></Label>
-                        <HBox width="100%">
-                          <ComboBox width="100%" 
-                              selectedKey="CM" 
-                              items="{
-                                  path: 'util>/CodeDetails',
-                                  filters: [
-                                  ]
-                              }">
-                              <items>
-                                  <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
-                              </items>
-                          </ComboBox>
-                        </HBox>
-                      </VBox>
-                    </HBox>
-                    <HBox>
-                      <VBox class="sapUiContentPadding">
-                        <Label text="팝업여부" labelFor="popupFlagButton" required="true"/>
-                        <SegmentedButton id="popupFlagButton" selectedKey="true" class="sapUiSmallMarginBottom" width="100%">
-                            <items>
-                                <SegmentedButtonItem text="Yes" key="true" width="4.1rem" />
-                                <SegmentedButtonItem text="No" key="false" width="4.1rem" />
-                            </items>
-                        </SegmentedButton>
-                        <layoutData>
-                            <layout:GridData span="XL6 L6 M12 S12" />
-                        </layoutData>
-                      </VBox>
-                      <VBox class="sapUiContentPadding">
-                        <Label text="개인정보 포함여부" labelFor="privateInfoFlagButton" required="true"/>
-                        <SegmentedButton id="privateInfoFlagButton" selectedKey="true" class="sapUiSmallMarginBottom" width="100%">
-                            <items>
-                                <SegmentedButtonItem text="Yes" key="true" width="4.1rem" />
-                                <SegmentedButtonItem text="No" key="false" width="4.1rem" />
-                            </items>
-                        </SegmentedButton>
-                        <layoutData>
-                            <layout:GridData span="XL6 L6 M12 S12" />
-                        </layoutData>
-                      </VBox>
-                    </HBox>
-                  </HBox> -->
+                            <VBox>
+                                <Label text="조직코드" labelFor="orgCodeInput" required="true"/>
+                                <Input id="orgCodeInput" placeholder="Input Data" width="100%"
+                                    value="{master>/org_code}"
+                                    editable="{= ${midObjectView>/mode} === 'C'}"
+                                />
+                                <layoutData>
+                                    <layout:GridData
+                                        span="XL2 L3 M4 S12" />
+                                </layoutData>
+                            </VBox>
 
-                  <HBox class="sapUiContentPadding">
-                    <VBox width="100%">
-                      <Label text="메뉴설명" labelFor="" required="true"></Label>
-                      <Input placeholder="Input Data" width="100%"
-                        editable="{= ${midObjectView>/mode} !== 'R'}"
-                        value="{master>/menu_desc}"
-                      />
-                    </VBox>
-                  </HBox>
+                            <VBox>
+                                <Label text="조직명" labelFor="orgNameInput" required="true"/>
+                                <Input id="orgNameInput" placeholder="Input Data" width="100%"
+                                    value="{master>/org_name}"
+                                    editable="{= ${midObjectView>/mode} !== 'R'}"
+                                />
+                                <layoutData>
+                                    <layout:GridData
+                                        span="XL2 L3 M4 S12" />
+                                </layoutData>
+                            </VBox>
 
-                  <HBox class="sapUiContentPadding">
-                    <VBox width="100%">
-                      <Label text="메뉴 경로" labelFor="" required="true"></Label>
-                      <Input placeholder="Input Data" width="100%"
-                        editable="{= ${midObjectView>/mode} !== 'R'}"
-                        value="{master>/menu_path_info}"
-                      />
-                    </VBox>
-                  </HBox>
+                            <VBox>
+                                <Label text="구매조직코드" labelFor="purchaseOrgCombo"/>
+                                <ComboBox
+                                    width="100%"
+                                    id="purchaseOrgCombo"
+                                    selectedKey="{master>/purchase_org_code}"
+                                    enabled="{= ${midObjectView>/mode} !== 'R'}"
+                                    items="{
+                                        path: 'org>/Org_Purchasing',
+                                        filters: []
+                                    }"
+                                >
+                                    <items>
+                                        <core:Item key="{org>purchase_org_code}" text="{org>purchase_org_code}: {org>purchase_org_name}"/>
+                                    </items>
+                                </ComboBox>
+                                <layoutData>
+                                    <layout:GridData
+                                        span="XL2 L3 M4 S12" />
+                                </layoutData>
+                            </VBox>
 
-                </VBox>
-              </form:SimpleForm>
+                            <VBox>
+                                <Label text="플랜트코드" labelFor="plantCodeCombo"/>
+                                <ComboBox
+                                    width="100%"
+                                    id="plantCodeCombo"
+                                    selectedKey="{master>/plant_code}"
+                                    enabled="{= ${midObjectView>/mode} !== 'R'}"
+                                    items="{
+                                        path: 'org>/Org_Plant',
+                                        filters: []
+                                    }"
+                                >
+                                    <items>
+                                        <core:Item key="{org>plant_code}" text="{org>plant_code}: {org>plant_name}"/>
+                                    </items>
+                                </ComboBox>
+                                <layoutData>
+                                    <layout:GridData
+                                        span="XL2 L3 M4 S12" />
+                                </layoutData>
+                            </VBox>
+                            <!-- <VBox>
+                                <Label text="관계사코드" labelFor="affiliateCodeCombo"/>
+                                <ComboBox
+                                    width="100%"
+                                    id="affiliateCodeCombo"
+                                    enabled="{= ${midObjectView>/mode} === 'C'}"
+                                    items="{
+                                        path: 'util>/CodeDetails',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                            {path: 'group_code', operator: 'EQ', value1: 'CM_ORG_TYPE_CODE'}
+                                        ]
+                                    }"
+                                >
+                                    <items>
+                                        <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+                                    </items>
+                                </ComboBox>
+                                <layoutData>
+                                    <layout:GridData
+                                        span="XL2 L3 M4 S12" />
+                                </layoutData>
+                            </VBox> -->
+                        
+                            <VBox>
+                                <Label text="사업본부" labelFor="bizunitCodeCombo"/>
+                                <ComboBox
+                                    width="100%"
+                                    id="bizunitCodeCombo"
+                                    selectedKey="{master>/bizunit_code}"
+                                    enabled="{= ${midObjectView>/mode} !== 'R'}"
+                                    items="{
+                                        path: 'org>/Org_Unit',
+                                        filters: []
+                                    }"
+                                >
+                                    <items>
+                                        <core:Item key="{org>bizunit_code}" text="{org>bizunit_code}: {org>bizunit_name}"/>
+                                    </items>
+                                </ComboBox>
+                                <layoutData>
+                                    <layout:GridData
+                                        span="XL2 L3 M4 S12" />
+                                </layoutData>
+                            </VBox>
+
+                            <VBox>
+                                <Label text="사업부" labelFor="bizdivisionCodeCombo"/>
+                                <ComboBox
+                                    width="100%"
+                                    id="bizdivisionCodeCombo"
+                                    selectedKey="{master>/bizdivision_code}"
+                                    enabled="{= ${midObjectView>/mode} !== 'R'}"
+                                    items="{
+                                        path: 'org>/Org_Division',
+                                        filters: []
+                                    }"
+                                >
+                                    <items>
+                                        <core:Item key="{org>bizdivision_code}" text="{org>bizdivision_code}: {org>bizdivision_name}"/>
+                                    </items>
+                                </ComboBox>
+                                <layoutData>
+                                    <layout:GridData
+                                        span="XL2 L3 M4 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="HQ/AU" labelFor="hqAuCodeCombo"/>
+                                <ComboBox
+                                    width="100%"
+                                    id="hqAuCodeCombo"
+                                    selectedKey="{master>/hq_au_code}"
+                                    enabled="{= ${midObjectView>/mode} !== 'R'}"
+                                    items="{
+                                        path: 'util>/CodeDetails',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                            {path: 'group_code', operator: 'EQ', value1: 'CM_ORG_TYPE_CODE'}
+                                        ]
+                                    }"
+                                >
+                                    <items>
+                                        <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+                                    </items>
+                                </ComboBox>
+                                <layoutData>
+                                    <layout:GridData
+                                        span="XL2 L3 M4 S12" />
+                                </layoutData>
+                            </VBox>
+
+                            <VBox>
+                                <Label text="사용여부" labelFor="searchUseFlag"></Label>
+                                <SegmentedButton 
+                                    id="searchUseFlag"
+                                    enabled="{= ${midObjectView>/mode} !== 'R'}"
+                                    selectedKey="{master>/use_flag}"
+                                >
+                                    <items>
+                                        <SegmentedButtonItem text="Yes" width="3em" key="true"/>
+                                        <SegmentedButtonItem text="No" width="3em" key="false"/>
+                                    </items>
+                                </SegmentedButton>
+                                <layoutData>
+                                    <layout:GridData
+                                        span="XL2 L3 M4 S12" />
+                                </layoutData>
+                            </VBox>
+
+                            </form:content>
+                        </form:SimpleForm>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
@@ -283,74 +359,6 @@
 									formatter: '.dateFormatter.toUTCDateTimeString'
 								}"/>
 						</form:SimpleForm>
-					</uxap:ObjectPageSubSection>
-				</uxap:subSections>
-			</uxap:ObjectPageSection>
-
-			<!-- Detail 에 관한 정보 -->
-			<uxap:ObjectPageSection titleUppercase="false" title="Multilingual">
-				<uxap:subSections>
-					<uxap:ObjectPageSubSection>
-						<Table id="midTable" 
-								sticky="HeaderToolbar,ColumnHeaders" 
-								inset="false" 
-								items="{details>/MenuLng}"
-								class="sapFDynamicPageAlignContent" 
-								updateFinished=".onMidTableUpdateFinished"
-								mode="MultiSelect" 
-								width="auto">
-							<headerToolbar>
-								<OverflowToolbar>
-									<Title text="Level and Values" level="H2"/>
-									<ToolbarSpacer/>
-									<!-- Add the Personalization button -->
-                  <Button id="midTableAddButton" text="Add" type="Emphasized" press=".onAdd" 
-                    enabled="{= ${midObjectView>/mode} !== 'R'}"/>
-									<Button id="midTableDeleteButton" text="Delete" type="Transparent" press=".onDelete('midTable', 'details', 'MenuLng')"
-                    enabled="{= ${midObjectView>/mode} !== 'R'}"/>
-								</OverflowToolbar>
-							</headerToolbar>
-							<columns>
-								<Column id="midStateColumn" minScreenWidth="Tablet" hAlign="Center" width="40px" >
-									<Text text="S" />
-								</Column>
-								<Column id="midLanguageCodeColumn" minScreenWidth="Tablet" hAlign="Center">
-									<Text text="언어" />
-								</Column>
-                <Column id="midMenuNameColumn" minScreenWidth="Tablet" hAlign="Center">
-									<Text text="메뉴명" />
-								</Column>
-							</columns>
-							<items>
-								<ColumnListItem press=".onMidTableItemPress">
-									<cells>
-                    <!-- 상태 -->
-										<Text text="{details>_row_state_}"/>
-                    <!-- 언어코드 -->
-                    <ComboBox
-                      id="midLevelCombo"
-                      enabled="{=${midObjectView>/mode} !== 'R'}"
-                      selectedKey="{details>language_code}"
-                      width="100%"
-                      items="{
-                        path: 'util>/CodeDetails',
-                        filters: [
-                          {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                          {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
-                        ]
-                      }">
-                      <items>
-                        <core:Item key="{util>code}" text="{util>code} : {util>code_description}"/>
-                      </items>
-                    </ComboBox>
-                    <!-- 메뉴명 -->
-										<Input value="{details>menu_name}"
-                      enabled="{=${midObjectView>/mode} !== 'R'}"
-                    />
-									</cells>
-								</ColumnListItem>
-							</items>
-						</Table>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
