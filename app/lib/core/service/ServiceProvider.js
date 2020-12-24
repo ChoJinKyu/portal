@@ -1,29 +1,26 @@
 sap.ui.define([
     "sap/ui/base/Object",
+	"./ServiceUrlProvider",
 	"./ODataXhrService"
-], function (Object, ODataXhrService) {
+], function (Object, ServiceUrlProvider, ODataXhrService) {
     "use strict";
 
-    var serviceUrls = {
-            "cm.util.CommonService": "srv-api/odata/v2/cm.util.CommonService/",
-            "cm.util.OrgService": "srv-api/odata/v2/cm.util.OrgService/"
-        },
-        services = {};
+    var services = {};
     
     return {
 
         getService: function(serviceName, isNew){
-            if(!serviceUrls[serviceName])
-                throw new Exception("No service registered : " + serviceName);
             if(isNew === true){
                 return this._createService({
-                    serviceUrl: serviceUrls[serviceName]
+                    serviceUrl: ServiceUrlProvider.getUrl(serviceName),
+                    useBatch: true
                 });
             }else{
                 var oService = services[serviceName];
                 if(!oService){
                     oService = this._createService({
-                        serviceUrl: serviceUrls[serviceName]
+                        serviceUrl: ServiceUrlProvider.getUrl(serviceName),
+                        useBatch: true
                     });
                     services[serviceName] = oService;
                 }
@@ -41,7 +38,12 @@ sap.ui.define([
                     useBatch: true
                 });
             }
+        },
+        
+        _createService: function(sParams){
+            return new ODataXhrService(sParams || {});
         }
+        
     }
 
 });

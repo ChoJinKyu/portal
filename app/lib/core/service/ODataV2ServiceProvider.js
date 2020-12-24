@@ -10,8 +10,6 @@ sap.ui.define([
     return {
 
         getService: function(serviceName, isNew){
-            if(!ServiceUrlProvider.getUrl(serviceName))
-                throw new Exception("No service registered : " + serviceName);
             if(isNew === true){
                 return this._createService({
                     serviceUrl: ServiceUrlProvider.getUrl(serviceName)
