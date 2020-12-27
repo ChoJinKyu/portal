@@ -520,26 +520,65 @@ sap.ui.define([
         },
         
         setIdSelect : function (oEvent) {
-            var oTable = this.byId("moldMstTable"),
-                oModel = this.getModel("list"),
-                viewData = oModel.getData().MoldMstView,
-                setId = viewData[oEvent.getSource().getParent().getIndex()].set_id;
+            if(!oEvent.getSource().getParent().getCells()[0].getSelected()){
+                var oTable = this.byId("moldMstTable"),
+                    oModel = this.getModel("list"),
+                    viewData = oModel.getData().MoldMstView,
+                    setId = viewData[oEvent.getSource().getParent().getIndex()].set_id;
 
-            for (var idx = 0; idx < oTable.getRows().length; idx++) {
-                if(!(setId === null || setId === "")){
-                    if(setId === oTable.getRows()[idx].getCells()[8].getText()){
-                        oTable.getRows()[idx].getCells()[0].setSelected(true);
+                for (var idx = 0; idx < oTable.getRows().length; idx++) {
+                    if(!(setId === null || setId === "")){
+                        if(setId === oTable.getRows()[idx].getCells()[8].getText()){
+                            oTable.getRows()[idx].getCells()[0].setSelected(true);
+                        }
                     }
                 }
             }
-            
         },
         
         inputFieldChange : function (oEvent) {
-            console.log(oEvent);
-        console.log(oEvent.getSource().getParent().getCells()[0]);
-            //this.byId("moldMstTable").setSelectedIndex([oEvent.getSource().getParent().getIndex()]);
             oEvent.getSource().getParent().getCells()[0].setSelected(true);
+            var colName = oEvent.getSource().sId.split('--')[2].split('-')[0],
+                familyPartNumber1 = oEvent.getSource().getParent().getCells()[25].mProperties.value,
+                familyPartNumber2 = oEvent.getSource().getParent().getCells()[26].mProperties.value,
+                familyPartNumber3 = oEvent.getSource().getParent().getCells()[27].mProperties.value,
+                familyPartNumber4 = oEvent.getSource().getParent().getCells()[28].mProperties.value;
+
+            if(colName === "family_part_number_2"){
+                if(familyPartNumber1 === null || familyPartNumber1 === ""){
+                    MessageToast.show("family part number 1부터 입력하세요");
+                }
+            }else if(colName === "family_part_number_3"){
+                if(familyPartNumber1 === null || familyPartNumber1 === ""){
+                    MessageToast.show("family part number 1부터 입력하세요");
+                }
+                if(familyPartNumber2 === null || familyPartNumber2 === ""){
+                    MessageToast.show("family part number 2부터 입력하세요");
+                }
+            }else if(colName === "family_part_number_4"){
+                if(familyPartNumber1 === null || familyPartNumber1 === ""){
+                    MessageToast.show("family part number 1부터 입력하세요");
+                }
+                if(familyPartNumber2 === null || familyPartNumber2 === ""){
+                    MessageToast.show("family part number 2부터 입력하세요");
+                }
+                if(familyPartNumber3 === null || familyPartNumber3 === ""){
+                    MessageToast.show("family part number 3부터 입력하세요");
+                }
+            }else if(colName === "family_part_number_5"){
+                if(familyPartNumber1 === null || familyPartNumber1 === ""){
+                    MessageToast.show("family part number 1부터 입력하세요");
+                }
+                if(familyPartNumber2 === null || familyPartNumber2 === ""){
+                    MessageToast.show("family part number 2부터 입력하세요");
+                }
+                if(familyPartNumber3 === null || familyPartNumber3 === ""){
+                    MessageToast.show("family part number 3부터 입력하세요");
+                }
+                if(familyPartNumber4 === null || familyPartNumber4 === ""){
+                    MessageToast.show("family part number 4부터 입력하세요");
+                }
+            }
         },
         
         onRefresh: function () {
@@ -618,17 +657,17 @@ sap.ui.define([
             var sSelectedKey = oEvent.getSource().getSelectedKey();
 
             if (sSelectedKey === 'Y') {
-                oEvent.getSource().getParent().getCells()[23].setEditable(true);
-                oEvent.getSource().getParent().getCells()[24].setEditable(true);
                 oEvent.getSource().getParent().getCells()[25].setEditable(true);
                 oEvent.getSource().getParent().getCells()[26].setEditable(true);
                 oEvent.getSource().getParent().getCells()[27].setEditable(true);
+                oEvent.getSource().getParent().getCells()[28].setEditable(true);
+                oEvent.getSource().getParent().getCells()[29].setEditable(true);
             } else {
-                oEvent.getSource().getParent().getCells()[23].setEditable(false);
-                oEvent.getSource().getParent().getCells()[24].setEditable(false);
                 oEvent.getSource().getParent().getCells()[25].setEditable(false);
                 oEvent.getSource().getParent().getCells()[26].setEditable(false);
                 oEvent.getSource().getParent().getCells()[27].setEditable(false);
+                oEvent.getSource().getParent().getCells()[28].setEditable(false);
+                oEvent.getSource().getParent().getCells()[29].setEditable(false);
             }
         },
 

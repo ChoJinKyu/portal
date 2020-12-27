@@ -406,7 +406,7 @@ sap.ui.define([
                 oModel = this.getModel("list");
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
-            oModel.read("/Pr_Mst", {
+            oModel.read("/Pr_MstView", {
                 filters: aSearchFilters,
                 success: function (oData) {
                     oView.setBusy(false);
