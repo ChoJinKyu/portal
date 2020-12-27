@@ -166,32 +166,32 @@
                                     <Label text="조직명"/>
                                 </header>
                             </Column>
-                            <Column hAlign="Center">
+                            <Column hAlign="Center" width="auto" minScreenWidth="Desktop" demandPopin="false">
                                 <header>
                                     <Label text="구매조직코드"/>
                                 </header>
                             </Column>
-                            <Column hAlign="Center">
+                            <Column hAlign="Center" width="auto" minScreenWidth="Desktop" demandPopin="false">
                                 <header>
                                     <Label text="플랜트코드"/>
                                 </header>
                             </Column>
-                            <Column hAlign="Center">
+                            <Column hAlign="Center" width="auto" minScreenWidth="Desktop" demandPopin="false">
                                 <header>
                                     <Label text="관계사코드"/>
                                 </header>
                             </Column>
-                            <Column hAlign="Center">
+                            <Column hAlign="Center" width="auto" minScreenWidth="Desktop" demandPopin="false">
                                 <header>
                                     <Label text="사업본부코드"/>
                                 </header>
                             </Column>
-                            <Column hAlign="Center">
+                            <Column hAlign="Center" width="auto" minScreenWidth="Desktop" demandPopin="false">
                                 <header>
                                     <Label text="사업부코드"/>
                                 </header>
                             </Column>
-                            <Column hAlign="Center">
+                            <Column hAlign="Center" width="auto" minScreenWidth="Desktop" demandPopin="false">
                                 <header>
                                     <Label text="HQAU코드"/>
                                 </header>
