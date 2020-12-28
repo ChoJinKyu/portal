@@ -93,6 +93,7 @@ sap.ui.define([
                 });
             }  
         },
+        
         _bindViewParticipating : function (sObjectPath, sModel, aFilter, callback) { 
             var oView = this.getView(),
                 oModel = this.getModel(sModel);
