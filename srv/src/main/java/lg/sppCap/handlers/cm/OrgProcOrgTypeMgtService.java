@@ -15,7 +15,6 @@ import cds.gen.cm.orgprocorgtypemgtservice.PurOrgTypeMap_;
 import cds.gen.cm.orgprocorgtypemgtservice.PurOrgTypeMap;
 import cds.gen.cm.orgprocorgtypemgtservice.PurOrgTypeView_;
 import cds.gen.cm.orgprocorgtypemgtservice.PurOrgTypeView;
-import lg.sppCap.handlers.base.BaseEventHandler;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
