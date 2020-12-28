@@ -314,11 +314,29 @@ sap.ui.define([
         
         onSuppValueHelpRequested: function(oEvent){
 
+            var sCompanyCode, sPlantCode;
             var row = oEvent.getSource().getParent();
-            var sCompanyCode  = row.getCells()[0].getText();
-            var sPlantCode = row.getCells()[1].getText();
+            if(row && row.sParentAggregationName == 'rows'){
+                sCompanyCode = row.getCells()[0].getText();
+                sPlantCode = row.getCells()[1].getText();
+            }else{
+                sCompanyCode = 'LGEKR';
+                sPlantCode = 'DFZ';
+            }
 
             this.supplierSelection.showSupplierSelection(this, oEvent, sCompanyCode, sPlantCode);
+        },
+
+        onTestSuppBtnPress: function(oEvent){
+            var sCompanyCode, sPlantCode;
+            sCompanyCode = 'LGEKR';
+            sPlantCode = 'DFZ';
+            this.supplierSelection.showSupplierSelection(this, oEvent, sCompanyCode, sPlantCode, function(data){
+                console.log('supplierSelection',data);
+
+                console.log(data[0].text);
+                console.log(data[1].text);
+            });
         },
 
         onMoldMstTableConfirmButtonPress: function(oEvent){

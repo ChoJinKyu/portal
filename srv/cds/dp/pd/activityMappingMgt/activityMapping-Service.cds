@@ -6,7 +6,7 @@ using { dp as partActivityTemplate } from '../../../../../db/cds/dp/pd/DP_PD_PAR
 namespace dp;
 @path : '/dp.activityMappingService'
 
-service ProductActivityService {
+service ActivityMappingService {
     entity ActivityMapping as projection on activityMapping.Pd_Activity_Mapping;
     entity PdOperationOrg as projection on pdOperationOrg.Pd_Operation_Org_View;
     entity PdProdActivityTemplate as projection on prodActivityTemplate.Pd_Product_Activity_Template;

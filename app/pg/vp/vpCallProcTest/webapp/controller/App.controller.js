@@ -13,7 +13,7 @@ sap.ui.define([
             });
             this.getView().setModel(this.returnModel, "returnModel");
         },
-        onCallProc1st: function () {
+        onCallVendorPoolMng: function () {
             MessageToast.show("Do 1st Proc!");
 
 

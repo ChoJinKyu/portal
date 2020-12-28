@@ -27,7 +27,7 @@ entity It_Mst_Cost_Center {
     key org_code                  : String(10) not null @title : '조직코드';
     key mngt_accounting_area_code : String(6) not null  @title : '관리회계영역코드';
     key cctr_code                 : String(15) not null @title : '비용부서코드';
-    key effective_period_end_date : Date not null       @title : '효력종료일자';
+    key effective_end_date        : Date not null       @title : '유효종료일자';
         cctr_code_name            : String(30)          @title : '비용부서코드명';
 }
 
