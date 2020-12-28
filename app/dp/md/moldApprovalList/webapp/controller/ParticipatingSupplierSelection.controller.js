@@ -166,10 +166,13 @@ sap.ui.define([
                 oModel = this.getModel("mdItemMaster"),
                 mstModel = this.getModel("appMaster");
             ;
+            /** add record 시 저장할 model 과 다른 컬럼이 있을 경우 submit 안됨 */
+            var approval_number = mstModel.oData.approval_number;
+            console.log("data.oData :::", data.oData);
             oModel.addRecord({
-                "tenant_id": this.tenant_id,
-                "approval_number": this.approval_number,
-                "mold_id": data.oData.mold_id + "",
+                "approval_number": approval_number,
+                "tenant_id": "L1100",
+                "mold_id": String(data.oData.mold_id),
                 "model": data.oData.model,
                 "mold_number": data.oData.mold_number,
                 "mold_sequence": data.oData.mold_sequence,
@@ -177,14 +180,12 @@ sap.ui.define([
                 "mold_item_type_code": data.oData.mold_item_type_code,
                 "book_currency_code": data.oData.book_currency_code,
                 "provisional_budget_amount": data.oData.provisional_budget_amount,
+                "budget_amount": data.oData.budget_amount,
                 "currency_code": data.oData.currency_code,
-                "purchasing_amount": data.oData.purchasing_amount,
-                "supplier_code": data.oData.supplier_code,
                 "target_amount": data.oData.target_amount,
-                "mold_production_type_code": data.oData.mold_production_type_code,
-                "family_part_number_1": data.oData.family_part_number_1
-            }, "/ApprovalDetails", 0);
-            //this.validator.clearValueState(this.byId("poItemTable"));
+                "local_create_dtm": new Date(),
+                "local_update_dtm": new Date()
+            }, "/ParticipatingSupplier", 0);
         },
 
     
