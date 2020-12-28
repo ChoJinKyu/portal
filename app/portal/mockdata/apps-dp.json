@@ -57,14 +57,9 @@
             "icon": "sap-icon://locate-me",
             "subMenus": [
                 {
-                    "name": "(NPD) New Base Price",
-                    "url": "../dp/basePriceArl/webapp",
-                    "component": "dp.basePriceArl"
-                },
-                {
                     "name": "Base Price Progress Status",
-                    "url": "../dp/basePriceList/webapp",
-                    "component": "dp.basePriceList"
+                    "url": "../dp/vi/basePriceArlMgt/webapp",
+                    "component": "dp.vi.basePriceArl"
                 }
             ]
         }

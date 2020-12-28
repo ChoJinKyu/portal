@@ -4,7 +4,8 @@ using from './moldApprovalList/orderApproval-service';
 using from './moldApprovalList/budgetExecutionApproval-service';
 using from './detailSpecConfirm/detailSpecConfirm-service'; 
 using from './moldApprovalList/moldApprovalList-service';
-using from './participatingSupplierSelectionApproval/participatingSupplierSelectionApproval-service';
+using from './moldApprovalList/moldApproval-service';
+using from './moldApprovalList/participatingSupplierSelectionApproval-service';
 //Util
 using from './util/moldItemSelection-service';
 using from './util/supplierSelection-service';

@@ -1,5 +1,5 @@
 <mvc:View
-	controllerName="pg.mdCategory.controller.App"
+	controllerName="pg.mdCategoryItem.controller.App"
 	displayBlock="true"
 	xmlns="sap.m"
 	xmlns:mvc="sap.ui.core.mvc">

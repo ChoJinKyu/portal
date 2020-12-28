@@ -19,7 +19,7 @@
  *    @cds.persistence.exists 명시
  * 5. namespace : dp
  * 6. entity : Tc_Project_Similar_Model
- * 7. entity description : 프로젝트 유사 모델
+ * 7. entity description : 최신 프로젝트 유사 모델
  * 8. history -. 2020.12.08 : 정정호 최초작성
  *
  * * * *
@@ -28,7 +28,6 @@ namespace dp;
 
 using {User} from '@sap/cds/common';
 using util from '../../cm/util/util-model';
-using {dp as Project_Master_His} from './DP_TC_PROJECT_SIMILAR_MODEL-model';
 using {dp as Project} from './DP_TC_PROJECT-model';
 
 entity Tc_Project_Similar_Model {
@@ -37,12 +36,13 @@ entity Tc_Project_Similar_Model {
     key model_code         : String(40) not null @title : '모델코드';
     key similar_model_code : String(40) not null @title : '유사모델코드';
         code_desc          : String(300)         @title : '코드설명';
+/*
+        similar_ref        : Association[0.. * ] to Project.Tc_Project
+                                 on  similar_ref.tenant_id    = tenant_id
+                                 and similar_ref.project_code = project_code
+                                 and similar_ref.model_code   = model_code;
 
-        similar_model_ref  : Association[0..*] to dp.Tc_Project
-                                 on  similar_model_ref.tenant_id    = tenant_id
-                                 and similar_model_ref.project_code = project_code
-                                 and similar_model_ref.model_code   = model_code;
-
+*/
 }
 
 extend Tc_Project_Similar_Model with util.Managed;

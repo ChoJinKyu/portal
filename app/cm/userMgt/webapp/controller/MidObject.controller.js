@@ -150,9 +150,7 @@ sap.ui.define([
             "role_group_code": "",
             "start_date": new Date(),
             "end_date": new Date(),
-            "local_create_dtm": new Date(),
-            "local_update_dtm": new Date()
-        }, "/UserRoleGroupMgr", 0);
+        }, "/UserRoleGroupMgt", 0);
     },
 
     onMidTableDeleteButtonPress: function () {
@@ -161,11 +159,10 @@ sap.ui.define([
             aItems = oTable.getSelectedItems(),
             aIndices = [];
         aItems.forEach(function(oItem){
-            aIndices.push(oModel.getProperty("/UserRoleGroupMgr").indexOf(oItem.getBindingContext("details").getObject()));
+            aIndices.push(oModel.getProperty("/UserRoleGroupMgt").indexOf(oItem.getBindingContext("details").getObject()));
         });
         aIndices = aIndices.sort(function(a, b){return b-a;});
         aIndices.forEach(function(nIndex){
-            //oModel.removeRecord(nIndex);
             oModel.markRemoved(nIndex);
         });
         oTable.removeSelections(true);
@@ -181,8 +178,6 @@ sap.ui.define([
         master = view.getModel("master"),
         detail = view.getModel("details"),
         that = this;
-
-        console.log("onPageSaveButtonPress>>> detail", detail.getData());
 
         master.getData()["user_name"] = master.getData()["employee_name"];
       // Validation
@@ -219,7 +214,6 @@ sap.ui.define([
         return;
       }
 
-      
       if (master.getData()["_state_"] != "U") {
         if (master.getData()["_state_"] != "C" && detail.getChanges() <= 0) {
             MessageBox.alert("변경사항이 없습니다.");
@@ -229,17 +223,13 @@ sap.ui.define([
       
       //Set Details (New)
       if (master.getData()["_state_"] == "C") {
-        detail.getData()["UserRoleGroupMgr"].map(r => {
+        detail.getData()["UserRoleGroupMgt"].map(r => {
             r["user_id"] = master.getData()["user_id"];
             return r;
         });
       }
 
       this._onMasterDataChanged();
-
-    //   var detailData = detail.
-    //   for (var i=0; i > )
-    //   debugger;
 
       MessageBox.confirm("Are you sure ?", {
         title: "Comfirmation",
@@ -273,7 +263,7 @@ sap.ui.define([
         // ljh - 재조회
         this.getModel("details")
           .setTransactionModel(this.getModel())
-          .read("/UserRoleGroupMgr", {
+          .read("/UserRoleGroupMgt", {
             filters: [
               new Filter("user_id", FilterOperator.EQ, this._sUserId)
             ],
@@ -292,7 +282,7 @@ sap.ui.define([
         var oMasterModel = this.getModel("master");
         var oDetailsModel = this.getModel("details");
         var sUserId = oMasterModel.getProperty("/user_id");
-        var oDetailsData = oDetailsModel.getData().UserRoleGroupMgr;
+        var oDetailsData = oDetailsModel.getData().UserRoleGroupMgt;
  
         oDetailsData.forEach(function (oItem, nIndex) {
             oDetailsModel.setProperty("/" + nIndex + "/user_id", sUserId);
@@ -334,15 +324,13 @@ sap.ui.define([
             "employee_status_code": "C",
             "use_flag": true,
             "password": "",
-            "local_create_dtm": new Date(),
-            "local_update_dtm": new Date()
-        }, "/userMgt", 0);
+        }, "/UserMgt", 0);
 
 
         var oDetailsModel = this.getModel("details");
         oDetailsModel.setTransactionModel(this.getModel());
 
-        oDetailsModel.read("/UserRoleGroupMgr", {
+        oDetailsModel.read("/UserRoleGroupMgt", {
           filters: [
             new Filter("user_id", FilterOperator.EQ, this._sUserId)
           ],
@@ -357,12 +345,12 @@ sap.ui.define([
   
         this.getModel("midObjectView").setProperty("/isAddedMode", false);
 
-        this._bindView("/userMgt('" + this._sUserId + "')");
+        this._bindView("/UserMgt('" + this._sUserId + "')");
         oView.setBusy(true);
 
         var oDetailsModel = this.getModel("details");
         oDetailsModel.setTransactionModel(this.getModel());
-        oDetailsModel.read("/UserRoleGroupMgr", {   
+        oDetailsModel.read("/UserRoleGroupMgt", {   
           filters: [
             new Filter("user_id", FilterOperator.EQ, this._sUserId)
           ],
@@ -460,7 +448,7 @@ sap.ui.define([
 
         _bindMidTable: function (oTemplate, sKeyboardMode) {
             this.byId("midTable").bindItems({
-                path: "details>/UserRoleGroupMgr",
+                path: "details>/UserRoleGroupMgt",
                 template: oTemplate
             }).setKeyboardMode(sKeyboardMode);
         },

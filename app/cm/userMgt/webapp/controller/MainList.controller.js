@@ -166,7 +166,7 @@ sap.ui.define([
             oModel = this.getModel("list");
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
-            oModel.read("/userMgt", {
+            oModel.read("/UserMgt", {
                 filters: aSearchFilters,
                 success: function (oData) {
                     console.log(">>>> success", oData);
@@ -212,7 +212,7 @@ sap.ui.define([
             // init and activate controller
             this._oTPC = new TablePersoController({
                 table: this.byId("mainTable"),
-                componentName: "userMgt",
+                componentName: "UserMgt",
                 persoService: MainListPersoService,
                 hasGrouping: true
             }).activate();

@@ -5,7 +5,7 @@
     xmlns:form="sap.ui.layout.form" 
     xmlns:layout="sap.ui.layout" 
     xmlns:core="sap.ui.core" 
-    xmlns:lib-m="ext.lib.m"
+    xmlns:lib-m="ext.lib.control.m"
     height="100%">
 
     <f:DynamicPage id="page"
@@ -23,35 +23,38 @@
                         <form:content>
                             <VBox>
                                 <Label text="{I18N>/CHAIN}: " labelFor="searchChainS"></Label>
-                                <ComboBox id="searchChainS" width="100%" items="{
-                                        path: 'util>/CodeDetails',
+                                <lib-m:CodeComboBox id="searchChainS" width="100%" showSecondaryValues="true" 
+                                    useEmpty="true" emptyText="ALL"
+                                    items="{
+                                        path: '/',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
-                                        ]
-                                    }">
-                                    <items>
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
-                                    </items>
-                                </ComboBox>
+                                        ],
+                                        serviceName: 'cm.util.CommonService',
+                                        entityName: 'Code'
+                                    }"
+                                    selectedKey="{list>code}" required="true">
+                                </lib-m:CodeComboBox>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                             <VBox>
                                 <Label text="{I18N>/LANGUAGE}: " labelFor="searchLanguageS"></Label>
-                                <ComboBox id="searchLanguageS" width="100%" items="{
-                                        path: 'util>/CodeDetails',
+                                <lib-m:CodeComboBox id="searchLanguageS" width="100%" showSecondaryValues="true"
+                                useEmpty="true" emptyText="ALL"
+                                    items="{
+                                        path: '/',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
-                                        ]
-                                    }">
-                                    <items>
-                                        <core:Item key="" text="Choose a Language" />
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
-                                    </items>
-                                </ComboBox>
+                                        ],
+                                        serviceName: 'cm.util.CommonService',
+                                        entityName: 'Code'
+                                    }"
+                                    selectedKey="{list>code}" required="true">
+                                </lib-m:CodeComboBox>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
@@ -71,35 +74,38 @@
                         <form:content>
                             <VBox>
                                 <Label text="{I18N>/CHAIN}: " labelFor="searchChainE" required="true"></Label>
-                                <ComboBox id="searchChainE" width="100%" selectedKey="CM" items="{
-                                        path: 'util>/CodeDetails',
+                                <lib-m:CodeComboBox id="searchChainE" width="100%" showSecondaryValues="true" 
+                                    useEmpty="true"
+                                    items="{
+                                        path: '/',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
-                                        ]
-                                    }">
-                                    <items>
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
-                                    </items>
-                                </ComboBox>
+                                        ],
+                                        serviceName: 'cm.util.CommonService',
+                                        entityName: 'Code'
+                                    }"
+                                    selectedKey="{list>code}" required="true">
+                                </lib-m:CodeComboBox>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
                             <VBox>
                                 <Label text="{I18N>/LANGUAGE}: " labelFor="searchLanguageE"></Label>
-                                <ComboBox id="searchLanguageE" width="100%" items="{
-                                        path: 'util>/CodeDetails',
+                                <lib-m:CodeComboBox id="searchLanguageE" width="100%" showSecondaryValues="true"
+                                useEmpty="true"
+                                    items="{
+                                        path: '/',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
-                                        ]
-                                    }">
-                                    <items>
-                                        <core:Item key="" text="Choose a Language" />
-                                        <core:Item key="{util>code}" text="{util>code_description}" />
-                                    </items>
-                                </ComboBox>
+                                        ],
+                                        serviceName: 'cm.util.CommonService',
+                                        entityName: 'Code'
+                                    }"
+                                    selectedKey="{list>code}" required="true">
+                                </lib-m:CodeComboBox>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>

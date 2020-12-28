@@ -373,7 +373,9 @@ sap.ui.define([
             });
 
             var oChain = this.byId("chain_code");
-            oChain.setSelectedKey(null);
+            if(oEvent){
+                oChain.setSelectedKey(null);
+            }
             oChain.bindItems("util>/CodeDetails", oItemTemplate, null, aFilters);
         }
 	});

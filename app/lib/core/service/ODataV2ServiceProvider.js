@@ -1,26 +1,61 @@
 sap.ui.define([
-    "./ServiceProvider",
+    "sap/ui/base/Object",
+	"./ServiceUrlProvider",
 	"sap/ui/model/odata/v2/ODataModel"
-], function (Parent, ODataModel) {
+], function (Object, ServiceUrlProvider, ODataModel) {
     "use strict";
 
-    Parent._createService = function(sParams){
-        return new ODataModel(jQuery.extend({
-                defaultBindingMode: "OneTime",
-                defaultCountMode: "Inline",
-                refreshAfterChange: false,
-                useBatch: true
-            }, sParams || {}));
-    };
-
-    Parent.getCommonService = function(){
-        return this.getService("cm.util.CommonService");
-    };
+    var services = {};
     
-    Parent.getOrgService = function(){
-        return this.getService("cm.util.OrgService");
-    };
+    return {
 
-    return Parent;
+        getService: function(serviceName, isNew){
+            if(isNew === true){
+                return this._createService({
+                    serviceUrl: ServiceUrlProvider.getUrl(serviceName)
+                });
+            }else{
+                var oService = services[serviceName];
+                if(!oService){
+                    oService = this._createService({
+                        serviceUrl: ServiceUrlProvider.getUrl(serviceName)
+                    });
+                    services[serviceName] = oService;
+                }
+                return oService;
+            }
+        },
+
+        getServiceByUrl: function(serviceUrl, isNew){
+            var sServiceName = ServiceUrlProvider.getName(serviceUrl);
+            if(sServiceName){
+                return this.getService(sServiceName, isNew);
+            }else{
+                return this._createService({
+                    serviceUrl: serviceUrl,
+                    useBatch: true
+                });
+            }
+        },
+
+        _createService: function(sParams){
+            return new ODataModel(jQuery.extend({
+                    defaultBindingMode: "OneTime",
+                    defaultCountMode: "Inline",
+                    refreshAfterChange: false,
+                    useBatch: true
+                }, sParams || {}));
+        },
+
+            
+        getCommonService: function(){
+            return this.getService("cm.util.CommonService");
+        },
+        
+        getOrgService: function(){
+            return this.getService("cm.util.OrgService");
+        }
+
+    }
 
 });

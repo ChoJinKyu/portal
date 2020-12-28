@@ -20,7 +20,7 @@
           </f:heading>
           <!-- 조회 -->
           <f:actions>
-            <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onSearch"/>
+            <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch"/>
           </f:actions>
           <!-- 즐겨찾기 -->
           <f:navigationActions>
@@ -45,11 +45,11 @@
             <OverflowToolbar class="sapFDynamicPageAlignContent">
               <Title text="SPMD Category List" level="H2"/>
               <ToolbarSpacer/>
-              <Button text="Add" id="buttonMainAddRow" press=".onAdd('mainTable', 'list', 'MdCategory', 'tenant_id')"  type="Transparent"/>
-              <Button text="Edit" id="buttonMainEditRow" press=".onEdit('mainTable', 'list', 'MdCategory', 'tenant_id')"  type="Transparent"/>
-              <Button text="Cancel" id="buttonMainCancelRow" press=".onSearch"  type="Transparent" enabled="false"/>
-              <Button text="Delete" id="buttonMainDeleteRow" press=".onDelete('mainTable', 'list')"   type="Transparent" enabled="false" />
-              <Button text="Save" id="buttonMainSaveRow" press=".onSave('mainTable', 'list')"   type="Emphasized"/>
+              <Button text="{I18N>/ROW_ADD}" id="buttonMainAddRow" press=".onAdd('mainTable', 'list', 'MdCategory', 'tenant_id')"  type="Transparent"/>
+              <Button text="{I18N>/UPDATE}" id="buttonMainEditRow" press=".onEdit('mainTable', 'list', 'MdCategory', 'tenant_id')"  type="Transparent"/>
+              <Button text="{I18N>/CANCEL}" id="buttonMainCancelRow" press=".onSearch"  type="Transparent" enabled="false"/>
+              <Button text="{I18N>/ROW_DELETE}" id="buttonMainDeleteRow" press=".onDelete('mainTable', 'list')"   type="Transparent" enabled="false" />
+              <Button text="{I18N>/SAVE}" id="buttonMainSaveRow" press=".onSave('mainTable', 'list')"   type="Emphasized"/>
               <ToolbarSeparator/>
               <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                 <layoutData>

@@ -24,6 +24,7 @@ sap.ui.define([
         },
 
         onCheckButtonPress: function(){
+            debugger;
             var sPickerCode = this.byId("searchCodePicker").getSelectedKey();
             var sPickerCodeText = this.byId("searchCodePicker").getValue();
             var sPickerTimezone = this.byId("searchTimezonePicker").getSelectedKey();

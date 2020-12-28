@@ -172,6 +172,95 @@ sap.ui.define([
 
         table.removeSelections(true);
         },
+        //VendorPool 다건 Item Mapping V4호출 처리
+        onMainTableMappMultiProcButtonPress: function(oEvent){
+            // 프로시져 호출 테스트
+            var oModel = this.getModel("v4Proc");
+            var oView = this.getView();
+            var v_this = this;
+
+            //input = headers;
+            //var url = oModel.sServiceUrl + "MdVpMappingItemMultiProc";
+            //var url = "srv-api/odata/v4/xx.SampleMgrV4Service/MdVpMappingItemMultiProc";
+            var url = "pg/mdCategoryItem2/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemMultiProc"
+							
+			// VendorPool Category Item Mapping array multi건 Procedure 호출
+			// Fiori Json Array 데이터 Ajax로 V4호출
+			// URL : /pg.MdCategoryV4Service/MdVpMappingItemMultiProc
+			//{
+			//	"items" : [
+			//		{"tenant_id":"L2100", "company_code":"*", "org_type_code":"BU", "org_code":"BIZ00200", "spmd_category_code":"C001", "spmd_character_code":"T001", "spmd_character_serial_no":1, "vendor_pool_code":"VP201610260092"},
+			//		{"tenant_id":"L2100", "company_code":"*", "org_type_code":"BU", "org_code":"BIZ00200", "spmd_category_code":"C002", "spmd_character_code":"T013", "spmd_character_serial_no":13, "vendor_pool_code":"VP201610260092"}
+			//	]
+			//}
+			var param = {};
+			var items = [];
+
+			items.push({tenant_id:"L2100", company_code:"TEST*", org_type_code:"BU", org_code:"BIZ00200", spmd_category_code:"C002", spmd_character_code:"T025", spmd_character_serial_no:25, vendor_pool_code:"VP201610260087"});
+			items.push({tenant_id:"L2100", company_code:"TEST*", org_type_code:"BU", org_code:"BIZ00200", spmd_category_code:"C001", spmd_character_code:"T001", spmd_character_serial_no:1, vendor_pool_code:"VP201610260087"});
+			items.push({tenant_id:"L2100", company_code:"TEST*", org_type_code:"BU", org_code:"BIZ00200", spmd_category_code:"C001", spmd_character_code:"T003", spmd_character_serial_no:3, vendor_pool_code:"VP201610260087"});
+
+			param.items = items; // param.items array변수명은 변경불가함 handler에서 사용하기 때문
+			$.ajax({
+				url: url,
+				type: "POST",
+				//datatype: "json",
+				data : JSON.stringify(param),
+				contentType: "application/json",
+				success: function(data){
+					alert("Success => "+data.value+"###");
+				},
+				error: function(e){
+					alert("Fail => ");
+				}
+			});
+
+        },
+        //VendorPool 다건 상태값 변경 V4호출 처리
+        onMainTableMultiProcButtonPress: function(oEvent){
+            var oModel = this.getModel("v4Proc");
+            var oView = this.getView();
+            var v_this = this;
+
+            //input = headers;
+            //var url = oModel.sServiceUrl + "SaveSampleHeaderMultiProc";
+            //var url = "srv-api/odata/v4/xx.SampleMgrV4Service/SaveSampleHeaderMultiProc";
+            var url = "pg/mdCategoryItem2/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingStatusMultiProc"
+                    
+            // VendorPool Mapping 상태(신규/저장/확정)처리 array multi건 Procedure 호출
+            // Fiori Json Array 데이터 Ajax로 V4호출
+            // URL : /pg.MdCategoryV4Service/MdVpMappingStatusMultiProc
+            // {
+            //     "items" : [
+            //         {"tenant_id":"L2100", "company_code":"*", "org_type_code":"BU", "org_code":"BIZ00200", "vendor_pool_code":"VP201610260092"},
+            //         {"tenant_id":"L2100", "company_code":"*", "org_type_code":"BU", "org_code":"BIZ00200", "vendor_pool_code":"VP201610260092"}
+            //     ]
+            // }
+
+			var param = {};
+			var items = [];
+			items.push({tenant_id:"L2100", company_code:"TEST*", org_type_code:"BU", org_code:"BIZ00200", vendor_pool_code:"VP201610260087"});
+			items.push({tenant_id:"L2100", company_code:"TEST*", org_type_code:"BU", org_code:"BIZ00200", vendor_pool_code:"VP201610260089"});
+			items.push({tenant_id:"L2100", company_code:"TEST*", org_type_code:"BU", org_code:"BIZ00200", vendor_pool_code:"VP201610260090"});
+			items.push({tenant_id:"L2100", company_code:"TEST*", org_type_code:"BU", org_code:"BIZ00200", vendor_pool_code:"VP201610260091"});
+			items.push({tenant_id:"L2100", company_code:"TEST*", org_type_code:"BU", org_code:"BIZ00200", vendor_pool_code:"VP201610260092"});
+
+			param.items = items; // param.items array변수명은 변경불가함 handler에서 사용하기 때문
+			$.ajax({
+				url: url,
+				type: "POST",
+				//datatype: "json",
+				data : JSON.stringify(param),
+				contentType: "application/json",
+				success: function(data){
+					alert("Success => "+data.value+"###");
+				},
+				error: function(e){
+					alert("Fail => ");
+				}
+			});
+
+        },
 
         onMainTableSaveButtonPress: function(){
 			var oModel = this.getModel("list"),

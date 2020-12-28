@@ -169,6 +169,7 @@ sap.ui.define([
                     })
                 };
 
+                
             this.getView().byId("searchPlantS").bindItems(bindItemInfo);
             this.getView().byId("searchPlantE").bindItems(bindItemInfo);
         },
@@ -221,19 +222,6 @@ sap.ui.define([
             this._oTPC.refresh();
         },
 
-		/**
-		 * Event handler when a table add button pressed
-		 * @param {sap.ui.base.Event} oEvent
-		 * @public
-		 */
-        onMainTableAddButtonPress: function () {
-            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-            this.getRouter().navTo("midPage", {
-                layout: oNextUIState.layout,
-                tenantId: "new",
-                controlOptionCode: "code"
-            });
-        },
 
 		/**
 		 * Event handler when a search button pressed
@@ -269,27 +257,22 @@ sap.ui.define([
             var sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
             console.log("oRecord >>>  ", oRecord);
-           
             var that = this;
-            that.getRouter().navTo("approvalObject", {
+            var target = "";
+            if(oRecord.approval_type_code == "B"){
+                target = "budgetExecutionApproval"
+            }if(oRecord.approval_type_code == "V"){
+                target = "purOrderItemLocalApproval"
+            }if(oRecord.approval_type_code == "E"){
+                target = "participatingSupplierSelection"
+            }
+
+            console.log(target);
+            that.getRouter().navTo(target , {
                 company_code: oRecord.company_code
                 , plant_code: oRecord.org_code
-                , approval_type_code: "V"
                 , approval_number: oRecord.approval_number
             });
-            // if (oRecord.mold_id % 3 == 0) {
-            //     that.getRouter().navTo("pssaCreateObject", {
-            //         company: "[LGEKR] LG Electronics Inc."
-            //         , plant: "[DFZ] Washing Machine"
-            //     });
-            // } else if (oRecord.mold_id % 3 == 2) {
-
-            // } else {
-            //     that.getRouter().navTo("pssaCreateObject", {
-            //         company: "[LGEKR] LG Electronics Inc."
-            //         , plant: "[DFZ] Washing Machine"
-            //     });
-            // }
 
         },
 
@@ -670,6 +653,8 @@ sap.ui.define([
         */
         onDialogCreate: function () {
             var oView = this.getView();
+            
+
 
             if (!this.pDialog) {
                 this.pDialog = Fragment.load({
@@ -684,6 +669,7 @@ sap.ui.define([
             }
             this.pDialog.then(function (oDialog) {
                 oDialog.open();
+                
             });
 
         },

@@ -1,4 +1,4 @@
-<mvc:View controllerName="vp.vpMgr.controller.MidObject" 
+<mvc:View controllerName="vp.vpMgt.controller.MidObject" 
 	xmlns:mvc="sap.ui.core.mvc" 
 	xmlns="sap.m" 
 	xmlns:uxap="sap.uxap" 

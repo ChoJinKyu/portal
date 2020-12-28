@@ -129,13 +129,13 @@
                         growingThreshold="10"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
-                        items="{list>/userMgt}"
+                        items="{list>/UserMgt}"
                         mode="None" 
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
                             <!-- <Title text="{I18N>/USER_MANAGEMENT} ({=${list>/userMgt}.length || 0})" level="H2"/> -->
-                            <Title text="사용자 관리 ({=(${list>/userMgt})?${list>/userMgt}.length:0})" level="H2"/>
+                            <Title text="사용자 관리 ({=(${list>/UserMgt})?${list>/UserMgt}.length:0})" level="H2"/>
                             <ToolbarSpacer/>
                             <Button id="mainTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onMainTableAddButtonPress" />
                             <ToolbarSeparator/>

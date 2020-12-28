@@ -58,3 +58,4 @@ curl -X POST http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_Ar
 
 # 삭제
 curl -X DELETE http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_Arl_Master\(tenant_id=\'L2100\',approval_number=\'202012180003\'\)
+

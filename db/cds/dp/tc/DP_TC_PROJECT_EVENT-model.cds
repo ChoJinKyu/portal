@@ -19,7 +19,7 @@
  *    @cds.persistence.exists 명시
  * 5. namespace : dp
  * 6. entity : Tc_Project_Event
- * 7. entity description : 목표재료비 프로젝트 개발 Event 단계
+ * 7. entity description : 최신 프로젝트 개발 Event 단계
  * 8. history -. 2020.12.08 : 정정호 최초작성
  *
  * * * *
@@ -28,7 +28,6 @@ namespace dp;
 
 using {User} from '@sap/cds/common';
 using util from '../../cm/util/util-model';
-using {dp as Project_Master_His} from './DP_TC_PROJECT_EVENT-model';
 using {dp as Project} from './DP_TC_PROJECT-model';
 
 
@@ -39,12 +38,13 @@ entity Tc_Project_Event {
     key develope_event_code : String(30) not null @title : '개발이벤트코드';
         start_date          : Date                @title : '시작일자';
         end_date            : Date                @title : '종료일자';
-        sequence            : Decimal             @title : '순서';
-
-        event_ref           : Association[1..*] to dp.Tc_Project
+        sequence            : String              @title : '순서';
+/*
+        event_ref           : Association[1.. * ] to Project.Tc_Project
                                   on  event_ref.tenant_id    = tenant_id
                                   and event_ref.project_code = project_code
                                   and event_ref.model_code   = model_code;
+*/
 }
 
 extend Tc_Project_Event with util.Managed;

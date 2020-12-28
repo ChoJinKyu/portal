@@ -32,7 +32,7 @@ sap.ui.define([
 
             // Status가 있는 경우
             if( sStatus ) {
-                aFilters.push(new Filter("approval_status_code", FilterOperator.EQ, sStatus));
+                aFilters.push(new Filter("approval_number_fk/approval_status_code", FilterOperator.EQ, sStatus));
             }
 
             // RFA No가 있는 경우

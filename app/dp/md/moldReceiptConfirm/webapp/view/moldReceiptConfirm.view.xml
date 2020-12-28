@@ -31,12 +31,12 @@
                     <HBox>
                         <sc:MicroProcessFlow>
                             <sc:content>
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem"/>
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="Success" stepWidth="3rem"/>
+                                <sc:MicroProcessFlowItem state="Success" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="Success" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="Success" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="Success" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="Success" stepWidth="3rem" />
                                 <sc:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
                                 <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
                                 <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
@@ -108,6 +108,7 @@
                                     <items>
                                         <SegmentedButtonItem text="No Confirmed" key="ORD_CRT" width="7em" />
                                         <SegmentedButtonItem text="Confirmed" key="RCV_CNF" width="6em" />
+                                        <SegmentedButtonItem text="All(temp)" key="ALL" width="6em" />
                                     </items>
                                 </SegmentedButton>
                                 <layoutData>
@@ -270,18 +271,13 @@
                         </VBox>
                         <VBox>
                             <Label text="{path:'I18N>/ORDER_SUPPLIER', formatter:'I18NFormatter'}"></Label>
-                            <ComboBox   id="searchEDType" width="100%"
-                                        selectedKey=""
-                                        items="{
-                                                    path : 'util>/CodeDetails',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ED_TYPE'}
-                                                    ]
-                                                }"
-                            >
-                                <core:Item key="{util>code}" text="{util>code_description}" />
-                            </ComboBox>
+
+                            <Input id="searchSupplier"
+                                    value="" 
+                                    showValueHelp="true"
+                                    valueHelpOnly="false"
+                                    valueHelpRequest=".onSuppValueHelpRequested"
+                            />
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -415,36 +411,47 @@
                     <table:Column width="8em" hAlign="Center">
                         <Label text="{path:'I18N>/INSPECTION_YN', formatter:'I18NFormatter'}" />
                         <table:template>
-                            <Switch state="{list>/inspection_flag}" customTextOn="Yes" customTextOff="No" enabled="false" />
+                            <Switch name="{list>/mold_id}" state="{list>inspection_flag}" customTextOn="Yes" customTextOff="No" enabled="false" >
+                                <layoutData>
+                                    <FlexItemData growFactor="1" />
+                                </layoutData>
+                            </Switch>
                             <!-- <Text text="{list>inspection_flag}"/> -->
                         </table:template>
                     </table:Column>
 
-                    <table:Column width="8em" hAlign="Center">
-                        <Label text="{path:'I18N>/INSPECTION_DATE', formatter:'I18NFormatter'}" />
+                    <table:Column width="9em" hAlign="Center">
+                        <Label text="{path:'I18N>/INSPECTION_DATE', formatter:'I18NFormatter'}"  required="true"/>
                         <table:template>
-                            <Text text="{list>inspection_date}"/>
+                            <DatePicker value="{list>inspection_date_plan}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" required="true" />
+                        </table:template>
+                    </table:Column>
+
+                    <table:Column width="9em" hAlign="Center">
+                        <Label text="{path:'I18N>/COMPLETE_DATE', formatter:'I18NFormatter'}"  required="true"/>
+                        <table:template>
+                            <DatePicker value="{list>production_complete_date_today}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"  required="true"/>
                         </table:template>
                     </table:Column>
 
                     <table:Column width="8em" hAlign="Center">
-                        <Label text="{path:'I18N>/COMPLETE_DATE', formatter:'I18NFormatter'}" />
+                        <Label text="{path:'I18N>/RCV_DOCUMENT', formatter:'I18NFormatter'}"  required="true"/>
                         <table:template>
-                            <Text text="{list>production_complete_date}"/>
+                            <Text text="attach"/>
                         </table:template>
                     </table:Column>
 
-                    <table:Column width="8em" hAlign="Center">
-                        <Label text="{path:'I18N>/RCV_DOCUMENT', formatter:'I18NFormatter'}" />
+                    <table:Column width="9em" hAlign="Center">
+                        <Label text="{path:'I18N>/PROD_SUPPLIER', formatter:'I18NFormatter'}"  required="true"/>
                         <table:template>
-                            <Text text="temp"/>
-                        </table:template>
-                    </table:Column>
-
-                    <table:Column width="8em" hAlign="Center">
-                        <Label text="{path:'I18N>/PROD_SUPPLIER', formatter:'I18NFormatter'}" />
-                        <table:template>
-                            <Text text="{list>production_supplier_code}"/>
+                            <!-- <Text text="{list>production_supplier_code}"/> -->
+                            <Input id=""
+                                    value="{list>production_supplier_code}" 
+                                    showValueHelp="true"
+                                    valueHelpOnly="true"
+                                    valueHelpRequest=".onSuppValueHelpRequested"
+                                     required="true"
+                            />
                         </table:template>
                     </table:Column>
 
@@ -458,7 +465,23 @@
                     <table:Column width="8em" hAlign="Center">
                         <Label text="{path:'I18N>/PRODUCTION_TYPE', formatter:'I18NFormatter'}" />
                         <table:template>
-                            <Text text="{list>mold_production_type_code}"/>
+                            <!-- <Text text="{list>mold_production_type_code}"/> -->
+
+                            <Select   width="100%"
+                                        selectedKey="{list>mold_production_type_code}"
+                                        items="{
+                                                    path : 'util>/Code',
+                                                    filters : [
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
+                                                    ]
+                                                }"
+                                        editable="false"
+                                        class="readonlyField"
+                            >
+                                <core:Item key="{util>code}" text="{util>code_name}" />
+                            </Select>
+                            
                         </table:template>
                     </table:Column>
 
@@ -520,7 +543,7 @@
                     <table:Column width="8em" hAlign="Center">
                         <Label text="{path:'I18N>/CONFIRM_DATE', formatter:'I18NFormatter'}" />
                         <table:template>
-                            <Text text="{list>receipt_confirmed_date}"/>
+                            <DatePicker value="{list>receipt_confirmed_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false"/>
                         </table:template>
                     </table:Column>
 

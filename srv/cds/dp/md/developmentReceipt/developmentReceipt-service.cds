@@ -1,4 +1,5 @@
 using { dp as moldMst } from '../../../../../db/cds/dp/md/DP_MD_MST-model';
+using { dp as moldSpec } from '../../../../../db/cds/dp/md/DP_MD_SPEC-model';
 using { dp as moldMstView } from '../../../../../db/cds/dp/md/DP_MD_MST_VIEW-model';
 
 using {cm as orgMapping} from '../../../../../db/cds/cm/CM_PUR_ORG_TYPE_MAPPING-model';
@@ -8,7 +9,10 @@ namespace dp;
 @path : '/dp.DevelopmentReceiptService'
 service DevelopmentReceiptService {
 
-    entity MoldMasters as projection on moldMstView.Md_Mst_View;
+    entity MoldMasters as projection on moldMst.Md_Mst;
+    entity MoldSpecs as projection on moldSpec.Md_Spec;
+
+    entity MoldMstView as projection on moldMstView.Md_Mst_View;
     
     view Divisions as
     select key a.tenant_id       

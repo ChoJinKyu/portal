@@ -1,7 +1,6 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
 	"ext/lib/util/Multilingual",
-	"ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedListModel",
     "ext/lib/util/Validator",
 	"ext/lib/formatter/Formatter",
@@ -11,20 +10,12 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "sap/ui/model/Sorter",
     "sap/m/MessageBox",
-    "sap/m/MessageToast",
-	"sap/m/ColumnListItem",
-	"sap/m/ObjectIdentifier",
-	"sap/m/Text",
-	"sap/m/Input",
-	"sap/m/ComboBox",
-	"sap/ui/core/Item",
-], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Validator, Formatter, 
+    "sap/m/MessageToast"
+], function (BaseController, Multilingual, ManagedListModel, Validator, Formatter, 
         TablePersoController, MainListPersoService,
 		Filter, FilterOperator, Sorter,
-		MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+		MessageBox, MessageToast) {
 	"use strict";
-
-	// var oTransactionManager;
 
 	return BaseController.extend("xx.templateListInlineEdit.controller.TemplateMainList", {
 
@@ -171,7 +162,6 @@ sap.ui.define([
             }
 
             if(this.validator.validate(this.byId("mainTable")) !== true) return;
-            // if(ValidatorUtil.isValid(this.byId("mainTable")) !== true) return;
             
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
 				title : this.getModel("I18N").getText("/SAVE"),
@@ -185,12 +175,6 @@ sap.ui.define([
 								MessageToast.show(this.getModel("I18N").getText("/NCM0005"));
 							}.bind(this)
 						});
-						//oTransactionManager.submit({
-						// 	success: function(oEvent){
-						// 		oView.setBusy(false);
-						// 		MessageToast.show("Success to save.");
-						// 	}
-						// });
 					};
 				}.bind(this)
 			});
@@ -221,17 +205,9 @@ sap.ui.define([
 				success: function(oData){
                     this.validator.clearValueState(this.byId("mainTable"));
                     oView.setBusy(false);
-                    // var oMessage = new sap.ui.core.message.Message({
-                    //     message: "We have received the following response: " + oData,
-                    //     persistent: true, // make message transient
-                    //     type: sap.ui.core.MessageType.Success
-                    // });
-                    // var oMessageManager = sap.ui.getCore().getMessageManager();
-                    // oMessageManager.addMessages(oMessage);
 				}.bind(this)
 			});
 
-			// oTransactionManager.setServiceModel(this.getModel());
 		},
 		
 		_getSearchStates: function(){

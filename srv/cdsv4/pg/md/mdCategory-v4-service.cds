@@ -1,6 +1,6 @@
 using { pg as cateId } from '../../../../db/cds/pg/md/PG_MD_CATEGORY_ID-model';
 using { pg as cateItem } from '../../../../db/cds/pg/md/PG_MD_CATEGORY_ITEM-model';
-using { pg as partNoItemValue } from '../../../../db/cds/pg/md/PG_MD_PART_NO_ITEM_VALUE-model';
+using { pg as partNoItemValue } from '../../../../db/cds/pg/md/PG_MD_MATERIAL_ITEM_VALUE-model.cds';
 using { pg as vpItemMapping } from '../../../../db/cds/pg/md/PG_MD_VP_ITEM_MAPPING-model';
 using { pg as vpItemMappingAttr } from '../../../../db/cds/pg/md/PG_MD_VP_ITEM_MAPPING_ATTR-model';
 using { pg as vpItemMappingView } from '../../../../db/cds/pg/md/PG_MD_VP_MAPPING_ITEM_VIEW-model';
@@ -59,7 +59,7 @@ service MdCategoryV4Service {
     // Fiori Json Array 데이터 Ajax로 V4호출
     // URL : /pg.MdCategoryV4Service/MdVpMappingStatusProc
     /*********************************
-    {"tenant_id":"L2100", "company_code":"*", "org_type_code":"BU", "org_code":"BIZ00200", "spmd_category_code":"C001", "spmd_character_code":"T001", "spmd_character_serial_no":1, "vendor_pool_code":"VP201610260092"}
+    {"tenant_id":"L2100", "company_code":"*", "org_type_code":"BU", "org_code":"BIZ00200", "vendor_pool_code":"VP201610260092"}
     *********************************/
     action MdVpMappingStatusProc(
         tenant_id : String(5), 
