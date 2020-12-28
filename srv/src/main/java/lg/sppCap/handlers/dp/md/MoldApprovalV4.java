@@ -185,12 +185,14 @@ public class MoldApprovalV4 implements EventHandler {
                 }// if   
             
             }else{ // create 
-                String approvalNumer = this.getApprovalNumber(data);
-                msg.setApprovalNumber(approvalNumer);
-                this.APPROVAL_NUMBER = approvalNumer; 
+
+                String approvalNumer_create = this.getApprovalNumber(data);
+                msg.setApprovalNumber(approvalNumer_create);
+                this.APPROVAL_NUMBER = approvalNumer_create; 
                 ApprovalMasters master =  ApprovalMasters.create();  
                 master.setTenantId(aMaster.getTenantId());
-                master.setApprovalNumber(approvalNumer);
+                master.setApprovalNumber(approvalNumer_create);
+                master.setOrgTypeCode("AU");
                 master.setCompanyCode(aMaster.getCompanyCode());
                 master.setOrgCode(aMaster.getOrgCode());
                 master.setChainCode(aMaster.getChainCode());
@@ -214,7 +216,7 @@ public class MoldApprovalV4 implements EventHandler {
                         ApprovalDetails detail = ApprovalDetails.create();
 
                         detail.setTenantId(row.getTenantId());
-                        detail.setApprovalNumber(approvalNumber);
+                        detail.setApprovalNumber(approvalNumer_create);
                         detail.setMoldId(row.getMoldId());
                         detail.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
                         detail.setUpdateUserId(aMaster.getUpdateUserId()); 
@@ -227,7 +229,7 @@ public class MoldApprovalV4 implements EventHandler {
                         }else if(row.getRowState().equals("D")){
                             ApprovalDetails del =  ApprovalDetails.create(); // 삭제는 삭제에 필요한 키만 세팅 해 주어야 하네..
                             del.setTenantId(row.getTenantId());
-                            del.setApprovalNumber(approvalNumber);
+                            del.setApprovalNumber(approvalNumer_create);
                             del.setMoldId(row.getMoldId());
                             Delete d = Delete.from(ApprovalDetails_.CDS_NAME).matching(del); 
                             Result rst = moldApprovalService.run(d);
@@ -252,7 +254,7 @@ public class MoldApprovalV4 implements EventHandler {
                     for(ApproverV4 row : approverList){
                            Approvers approver = Approvers.create();
                             approver.setTenantId(row.getTenantId());
-                            approver.setApprovalNumber(approvalNumber);
+                            approver.setApprovalNumber(approvalNumer_create);
                             approver.setApproveSequence(row.getApproveSequence());
                             approver.setApproverTypeCode(row.getApproverTypeCode());
                             approver.setApproverEmpno(row.getApproverEmpno());
@@ -270,7 +272,7 @@ public class MoldApprovalV4 implements EventHandler {
                     for(RefererV4 row : refList){
                         Referers referer = Referers.create();
                         referer.setTenantId(row.getTenantId());
-                        referer.setApprovalNumber(approvalNumber);
+                        referer.setApprovalNumber(approvalNumer_create);
                         referer.setRefererEmpno(row.getRefererEmpno());
                         referer.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
                         referer.setUpdateUserId(aMaster.getUpdateUserId()); 
@@ -281,13 +283,8 @@ public class MoldApprovalV4 implements EventHandler {
                     } // for 
                 }// if 
 
-
-
-
             }
-           
 
-           
         } catch (Exception e) {
             msg.setMessageCode("FAILURE");
             msg.setResultCode(-1);
@@ -350,7 +347,6 @@ public class MoldApprovalV4 implements EventHandler {
                     CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(m); 
                     Result rst = moldApprovalService.run(u);
                 }else{ 
-
                     m.setAccountCode(row.getAccountCode());
                     m.setInvestmentEcstTypeCode(row.getInvestmentEcstTypeCode());
                     m.setAccountingDepartmentCode(row.getAccountingDepartmentCode());
@@ -359,7 +355,7 @@ public class MoldApprovalV4 implements EventHandler {
                     m.setImportCompanyOrgCode(row.getImportCompanyOrgCode());
                     m.setMoldProductionTypeCode(row.getMoldProductionTypeCode());
                     m.setMoldItemTypeCode(row.getMoldItemTypeCode());
-                    m.setProvisionalBudgetAmount(new BigDecimal((String)row.getProvisionalBudgetAmount()));
+                    m.setProvisionalBudgetAmount(new BigDecimal((String)(row.getProvisionalBudgetAmount()==null?"0":row.getProvisionalBudgetAmount())));
                     m.setAssetTypeCode(row.getAssetTypeCode());
                     CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(m); 
                     Result rst = moldApprovalService.run(u);

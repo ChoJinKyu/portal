@@ -1,0 +1,138 @@
+{
+    "_version": "1.21.0",
+    "sap.app": {
+        "id": "pg.tm.tmMonitoring",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "1.0.0"
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "dataSources": {
+            "mainService": {
+                "uri": "srv-api/odata/v2/pg.taskMonitoringService/",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            },
+            "up": {
+                "uri": "../uploadCollection.json",
+                "type": "JSON"
+            }
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "rootView": {
+            "viewName": "pg.tm.tmMonitoring.view.App",
+            "type": "XML",
+            "async": true
+        },
+        "dependencies": {
+            "minUI5Version": "1.60.0",
+            "libs": {
+                "sap.ui.core": {},
+                "sap.m": {},
+                "sap.ui.layout": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "pg.tm.tmMonitoring.i18n.i18n"
+                }
+            },
+            "": {
+                "type": "sap.ui.model.odata.v2.ODataModel",
+                "settings": {
+                    "odataVersion": "2.0"
+                },
+                "dataSource": "mainService"
+            },
+            "up": {
+                "type": "sap.ui.model.json.JSONModel",
+                "dataSource": "up"
+            }
+        },
+        "resources": {
+            "css": [
+                {
+                    "uri": "css/style.css"
+                }
+            ]
+        },
+        "resourceRoots": {
+            "ext.lib": "../../../../lib"
+        },
+        "routing": {
+            "config": {
+                "routerClass": "sap.m.routing.Router",
+                "viewType": "XML",
+                "controlId": "app",
+                "viewPath": "pg.tm.tmMonitoring.view",
+                "controlAggregation": "pages",
+                "async": true,
+                "transition": "slide",
+                "bypassed": {
+                    "target": "notFound"
+                }
+            },
+            "routes": [
+                {
+                    "name": "main",
+                    "pattern": "main",
+                    "target": [
+                        "main"
+                    ]
+                },
+                {
+                    "name": "detail",
+                    "pattern": "detail/{scenario_number},{tenant_id},{company_code},{bizunit_code}",
+                    "target": [
+                        "detail"
+                    ]
+                }
+            ],
+            "targets": {
+                "main": {
+                    "viewName": "Main",
+                    "viewType": "XML",
+                    "viewLevel": 1,
+                    "viewId": "main"
+                },
+                "detail": {
+                    "viewName": "Detail",
+                    "viewType": "XML",
+                    "viewLevel": 2,
+                    "viewId": "detail"
+                },
+                "notFound": {
+                    "viewName": "NotFound",
+                    "viewPath": "ext.lib.view",
+                    "viewId": "notFound"
+                }
+            }
+        }
+    }
+}

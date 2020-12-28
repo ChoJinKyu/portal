@@ -163,6 +163,18 @@ sap.ui.define([
                             psModel.getData().ParticipatingSupplier[idx].supplier_code_10 = (supplierData[9] == undefined ?"":supplierData[9].key);
                             psModel.getData().ParticipatingSupplier[idx].supplier_code_11 = (supplierData[10] == undefined ?"":supplierData[10].key);
                             psModel.getData().ParticipatingSupplier[idx].supplier_code_12 = (supplierData[11] == undefined ?"":supplierData[11].key);
+                            psModel.getData().ParticipatingSupplier[idx].sequence_1 = (supplierData[0] == undefined ?"":"1");
+                            psModel.getData().ParticipatingSupplier[idx].sequence_2 = (supplierData[1] == undefined ?"":"2");
+                            psModel.getData().ParticipatingSupplier[idx].sequence_3 = (supplierData[2] == undefined ?"":"3");
+                            psModel.getData().ParticipatingSupplier[idx].sequence_4 = (supplierData[3] == undefined ?"":"4");
+                            psModel.getData().ParticipatingSupplier[idx].sequence_5 = (supplierData[4] == undefined ?"":"5");
+                            psModel.getData().ParticipatingSupplier[idx].sequence_6 = (supplierData[5] == undefined ?"":"6");
+                            psModel.getData().ParticipatingSupplier[idx].sequence_7 = (supplierData[6] == undefined ?"":"7");
+                            psModel.getData().ParticipatingSupplier[idx].sequence_8 = (supplierData[7] == undefined ?"":"8");
+                            psModel.getData().ParticipatingSupplier[idx].sequence_9 = (supplierData[8] == undefined ?"":"9");
+                            psModel.getData().ParticipatingSupplier[idx].sequence_10 = (supplierData[9] == undefined ?"":"10");
+                            psModel.getData().ParticipatingSupplier[idx].sequence_11 = (supplierData[10] == undefined ?"":"11");
+                            psModel.getData().ParticipatingSupplier[idx].sequence_12 = (supplierData[11] == undefined ?"":"12");
                             psModel.refresh(true); 
                         });
                     }
@@ -284,9 +296,12 @@ sap.ui.define([
         },
 
         onPageDraftButtonPress : function () { 
+            this.approval_type_code = "E";
             var bModel = this.getModel("mdItemMaster");
             this.approvalDetails_data = [] ;
             this.moldMaster_data = [] ;
+            this.quotation_data = [] ;
+            this.quotation_data2 = [] ;
             var that = this;
             console.log("bModel " , bModel.getData());
             console.log("bModel.getData().length " , bModel.getData().ParticipatingSupplier.length);
@@ -300,6 +315,15 @@ sap.ui.define([
                // var provisional_budget_amount =  bModel.getData().ParticipatingSupplier[0].provisional_budget_amount;
 
                 bModel.getData().ParticipatingSupplier.forEach(function(item){
+                    for(var i=0; i<12; i++){
+                        that.quotation_data.push({
+                            mold_id : item.mold_id
+                            ,approval_number : that.approval_number 
+                            ,supplier_code : item.supplier_code_
+                            ,sequence : item.sequence
+                        });
+                    }
+                    console.log(that.quotation_data)
                     that.approvalDetails_data.push({
                         tenant_id : that.tenant_id 
                         , approval_number : that.approval_number 
@@ -308,7 +332,7 @@ sap.ui.define([
                         , _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
                     });
                     that.moldMaster_data.push({
-                         tenant_id : that.tenant_id 
+                        tenant_id : that.tenant_id 
                         , mold_id : item.mold_id 
                         , account_code : account_code 
                         , investment_ecst_type_code : investment_ecst_type_code 
@@ -322,6 +346,7 @@ sap.ui.define([
                         , asset_type_code : item.asset_type_code 
                         , _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
                     });
+                   
                 });
 
             }

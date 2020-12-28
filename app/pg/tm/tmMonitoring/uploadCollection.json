@@ -1,0 +1,76 @@
+{
+	"items" : [
+		{
+			"documentId" : "64469d2f-b3c4-a517-20d6-f91ebf85b9da",
+			"visibleEdit" : true,
+			"visibleDelete" : true,
+			"fileName" : "Screenshot.jpg",
+			"mimeType" : "image/jpg",
+			"thumbnailUrl" : "",
+			"url" : "https://sapui5.netweaver.ondemand.com/test-resources/sap/m/demokit/sample/UploadCollection/LinkedDocuments/Screenshot.jpg",
+			"attributes":[
+				{
+					"title":"File Size",
+					"type" :"size",
+					"text":"50"
+				}
+			],
+			"selected": false
+		}, {
+			"documentId" : "5082cc4d-da9f-2835-2c0a-8100ed47bcde",
+			"visibleEdit" : true,
+			"visibleDelete" : true,
+			"fileName" : "Notes.txt",
+			"mimeType" : "text/plain",
+			"thumbnailUrl" : "",
+			"url" : "https://sapui5.netweaver.ondemand.com/test-resources/sap/m/demokit/sample/UploadCollection/LinkedDocuments/Notes.txt",
+			"attributes":[				
+				{
+					"title":"File Size",
+					"type" :"size",
+					"text":"2266000"
+				}
+			],
+			"selected": false
+		}, {
+			"documentId" : "5082cc4d-da9f-2835-2c0a-8100ed47bcdf",
+			"visibleEdit" : true,
+			"visibleDelete" : true,
+			"fileName" : "Document.txt",
+			"mimeType" : "text/plain",
+			"thumbnailUrl" : "",
+			"url" : "",
+			"attributes":[
+				{
+					"title":"File Size",
+					"type" :"size",
+					"text":"15000"
+				}
+			],
+			"selected": false
+		}, {
+			"documentId" : "1700ead2-3dfb-5a94-6f5c-cf1da409e028",
+			"visibleEdit" : true,
+			"visibleDelete" : true,
+			"fileName" : "Third Quarter Results.ppt",
+			"mimeType" : "application/vnd.ms-powerpoint",
+			"thumbnailUrl" : "",
+			"url" : "https://sapui5.netweaver.ondemand.com/test-resources/sap/m/demokit/sample/UploadCollection/LinkedDocuments/Third Quarter Results.ppt",
+			"attributes":[
+				{
+					"title":"File Size",
+					"type" :"size",
+					"text":"2000"
+				}
+			],
+			"statuses":[
+				{
+					"title":"Status",
+					"text":"Warning",
+					"state":"Warning"
+				}
+			],
+			"selected": false
+		}
+	]
+}

@@ -1,0 +1,256 @@
+<!-- <mvc:View controllerName="pg.mi.miCategory.controller.App" xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m">
+	<Shell id="shell">
+		<App id="app">
+			<pages>
+				<Page id="page" title="{i18n>title}">
+					<content></content>
+				</Page>
+			</pages>
+		</App>
+	</Shell>
+</mvc:View> -->
+
+<mvc:View controllerName="pg.mi.miCategory.controller.Master"
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m" 
+    xmlns:f="sap.f" 
+    xmlns:form="sap.ui.layout.form" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:core="sap.ui.core" 
+    xmlns:t="sap.ui.table"
+    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+    xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+    height="100%">
+    
+    <f:DynamicPage id="page"
+        headerExpanded="true" 
+        toggleHeaderOnTitleClick="true">
+        
+        <f:title>
+            <f:DynamicPageTitle stateChange="stateChange">
+                <f:heading>
+                    <!-- <Title text="{i18n>appTitle}" /> -->
+                    <Title text="{I18N>/MICATEGORY_TITLE}" />
+                </f:heading>
+                <f:snappedContent>
+                </f:snappedContent>
+                <f:expandedContent>
+                </f:expandedContent>
+                <!-- <f:actions>
+                    <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onPageSearchButtonPress" />
+                </f:actions>
+                <f:navigationActions>
+                    <Button icon="sap-icon://unfavorite" type="Transparent" />
+                </f:navigationActions> -->
+            </f:DynamicPageTitle>
+        </f:title>
+
+        <f:header> 
+            <f:DynamicPageHeader pinnable="true">
+                <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                    <form:content>
+                        <VBox>
+                            <smartFilterBar:SmartFilterBar id="smartFilterBar" 
+                                considerSelectionVariants="true" entitySet="MICategoryHierarchyStructureView" search="filterSearch" 
+                                 >
+                                
+                                <smartFilterBar:controlConfiguration>
+                                    <smartFilterBar:ControlConfiguration key="path_code" index="1" label="{I18N>/CATEGORY_CODE}"
+                                        groupId="_BASIC" visibleInAdvancedArea="true">
+                                        <smartFilterBar:customControl>
+                                            <Input id="filterCategoryCode" placeholder="Category Code" />
+                                        </smartFilterBar:customControl>
+                                    </smartFilterBar:ControlConfiguration>
+
+                                    <smartFilterBar:ControlConfiguration key="category_name" index="2" label="{I18N>/CATEGORY_NAME}"
+                                        groupId="_BASIC" visibleInAdvancedArea="true">
+                                        <smartFilterBar:customControl>
+                                            <Input id="filterCategoryName" placeholder="Category Name" />
+                                        </smartFilterBar:customControl>
+                                    </smartFilterBar:ControlConfiguration>
+
+                                    <smartFilterBar:ControlConfiguration key="system_create_dtm" index="3" label="{I18N>/WRITE_DATE}"
+                                        groupId="_BASIC" visibleInAdvancedArea="true">
+                                        <smartFilterBar:customControl>
+                                        <DateRangeSelection
+                                            id="filterCreateDate" 
+                                            showFooter="true" placeholder="YYYY/MM/DD - YYYY/MM/DD" displayFormat="yyyy/MM/dd"
+                                            change="filterCreateDateChange"/>	
+                                        </smartFilterBar:customControl>
+                                    </smartFilterBar:ControlConfiguration>
+
+                                    <!-- <smartFilterBar:ControlConfiguration key="aaa" index="3" label="TEST"
+                                        groupId="_BASIC" visibleInAdvancedArea="true">
+                                        <smartFilterBar:customControl>
+                                            <ComboBox
+                                                items="{
+                                                    path: '/MICategoryHierarchyStructureView',
+                                                    sorter: {
+                                                        path: 'parent_node_id',
+                                                        descending: false,
+                                                        group: true
+                                                    }
+                                                }">
+                                                <core:Item key="{category_code}" text="{category_code}" />
+                                            </ComboBox>
+                                        </smartFilterBar:customControl>
+                                    </smartFilterBar:ControlConfiguration> -->
+
+                                </smartFilterBar:controlConfiguration>
+                                <smartFilterBar:layoutData>
+                                    <FlexItemData shrinkFactor="0"/>
+                                </smartFilterBar:layoutData>
+                            </smartFilterBar:SmartFilterBar>
+                           
+                        </VBox>
+                           
+                    </form:content>
+                </form:SimpleForm>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            
+
+            <VBox>
+             <!-- <ScrollContainer id="scrollContainer" vertical="true" height="500px" width="100%" class="sapUiContentPadding" > -->
+                <!-- <Panel height="50%">  visibleRowCount="30"  minAutoRowCount  firstVisibleRowChanged="firstVisibleRowChanged"
+                        visibleRowCountMode="Auto"-->
+                
+                    <t:TreeTable 
+                        id="treeTable"
+                        filter="treetablefilter"
+                        sort="sort"
+                        toggleOpenState="toggleOpenState"
+                        visibleRowCountMode="Auto"
+                        enableSelectAll="false"
+                        minAutoRowCount="16"
+                        onAfterRendering="onAfterRendering"
+                        enableColumnReordering="false"
+                        
+                        class="sapFDynamicPageAlignContent" 
+                        rowSelectionChange="treeTableSelection"
+                        cellClick="treeTableCellClick"
+                        selectionMode="{= ${sm>/screen} === 'M' ? 'MultiToggle' : 'None'}"
+                        rows="{
+                            path : '/MICategoryHierarchyStructureView',
+                            parameters : {
+                                countMode: 'Inline',
+                                treeAnnotationProperties : {
+                                    hierarchyLevelFor : 'hierarchy_level',
+                                    hierarchyNodeFor : 'node_id',
+                                    hierarchyParentNodeFor : 'parent_node_id',
+                                    hierarchyDrillStateFor : 'drillstate'
+                                }
+                            }
+                        }">
+                        <t:extension>
+                            <OverflowToolbar>
+                                <Title id="title" text="Category" level="H2"/> 
+                                <ToolbarSpacer/>
+                                <Button id="mainTableButtonAllOpen" text="{I18N>/EXPAND}" type="Transparent" press=".onMainTableexpandAll" enabled="{=${sm>/screen} === 'M' ? true : false}"  />
+                                <Button id="mainTableButtonAllClose" text="{I18N>/COLLAPSE}" type="Transparent" press=".onMainTablecollapseAll" enabled="{=${sm>/screen} === 'M' ? true : false}"  />
+                                <Button id="mainTableCreate0Button" text="{I18N>/CREATE_SAME_LEVEL}" type="Transparent" press=".onMainTableCreate0ButtonPress" enabled="{= ${master>/indices} === 0 ? ${sm>/screen} === 'M' ? true : false : false}"  />
+                                <Button id="mainTableCreate1Button" text="{I18N>/CREATE_LOWER_LEVEL}" type="Transparent" press=".onMainTableCreate1ButtonPress" enabled="{= ${master>/indices} === 1 ? ${master>/level} === 0 ? ${sm>/screen} === 'M' ? true : false : false : false}" />
+                                <Button id="mainTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMainTableDeleteButtonPress" enabled="{= ${master>/indices} > 0 ? ${sm>/screen} === 'M' ? true : false : false}"/>
+                                <ToolbarSeparator/>
+                                <!-- <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+                                    <layoutData>
+                                        <OverflowToolbarLayoutData priority="NeverOverflow" />
+                                    </layoutData>
+                                </Button> -->
+                            </OverflowToolbar>
+                        </t:extension>
+                        
+                        <t:columns>
+                            <t:Column label="{I18N>/CATEGORY_CODE}">    
+                                <t:template>
+                                    <Text text="{category_code}" wrapping="false" />
+                                </t:template>
+                            </t:Column>
+                            <t:Column label="{I18N>/CATEGORY_NAME}">    
+                                <t:template>
+                                    <Text text="{category_name}" wrapping="false" />
+                                </t:template>
+                            </t:Column>
+                            <t:Column label="{I18N>/USE_FLAG}">    
+                                <t:template>
+                                    <!-- <Text text="{use_flag}" wrapping="false" /> -->
+                                    <!-- <ObjectStatus
+                                        icon="{= ${use_flag} === true ? 'sap-icon://accept' : ''}"/> -->
+                                    <Text text="{= ${use_flag} === true ? 'Yes' : 'No'}"/>
+                                    <!-- <Text text="Yes"/> -->
+                                </t:template>
+                            </t:Column>
+                            <t:Column label="{I18N>/WRITER}">    
+                                <t:template>
+                                    <Text text="{create_user_id}" wrapping="false" />
+                                </t:template>
+                            </t:Column>
+                            <t:Column label="{I18N>/WRITE_DATE}">    
+                                <t:template>
+                                    <Text text="{path: 'system_create_dtm',
+                                    type: 'sap.ui.model.type.Date'}" wrapping="false" />
+                                </t:template>
+                            </t:Column>
+                            
+
+                            <!-- <t:Column label="hierarchy_level">
+                                <t:template>
+                                    <Text text="{hierarchy_level}" wrapping="false" />
+                                </t:template>
+                            </t:Column>
+
+                            <t:Column label="node_id">
+                                <t:template>
+                                    <Text text="{node_id}" wrapping="false" />  
+                                </t:template>
+                            </t:Column>
+
+                            <t:Column label="parent_node_id">
+                                <t:template>
+                                    <Text text="{parent_node_id}" wrapping="false" />
+                                </t:template>
+                            </t:Column> -->
+                            
+
+                            <t:Column label="" width="2rem" >
+                                <t:template>
+                                    <ObjectStatus
+                                        icon="sap-icon://feeder-arrow"   />
+                                    <!-- <ObjectStatus
+                                        icon="sap-icon://feeder-arrow" active="true"  press="mainTableItemPress" /> -->
+                                </t:template>
+                            </t:Column>
+
+                            <!-- <t:Column label="parent_category_code">
+                                <t:template>
+                                    <Text text="{parent_category_code}" wrapping="false" />
+                                </t:template>
+                            </t:Column> -->
+
+                            <!-- <t:Column label="" width="3rem" >
+                                <t:rowActionTemplate>
+                                    <t:RowAction>
+                                            <t:RowActionItem press="mainTableItemPress"				type="Navigation" icon="sap-icon://feeder-arrow" />
+                                    </t:RowAction>
+                                </t:rowActionTemplate>
+                            </t:Column> -->
+                        </t:columns>
+                    </t:TreeTable>
+                <!-- </ScrollContainer> -->
+            </VBox>
+            
+            
+        </f:content>
+        
+        
+        <!-- <f:footer>
+            <OverflowToolbar>
+                <ToolbarSpacer />
+				<Button text="Save" type="Emphasized" press=".onPageSaveButtonPress" />
+				<Button text="Cancel" type="Transparent" press=".onPageCancelEditButtonPress"/>
+            </OverflowToolbar>
+        </f:footer> -->
+    </f:DynamicPage>
+    
+</mvc:View>

@@ -66,7 +66,7 @@
                                                     ],
                                                     sorter: { path: 'company_code'}
                                                 }"
-                                selectionFinish="handleSelectionFinishComp">
+                                selectionFinish="handleSelectionFinishComp" required="true">
                                     <items>
                                         <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                     </items>
@@ -85,7 +85,7 @@
                                                     ],
                                                     sorter: { path: 'org_code'}
                                                 }"
-                                selectionFinish="handleSelectionFinishDiv" >
+                                selectionFinish="handleSelectionFinishDiv" required="true">
                                     <items>
                                         <core:Item key="{org_code}" text="[{org_code}] {org_name}" />
                                     </items>
@@ -96,7 +96,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="Creation {I18N>/DATE}" labelFor="searchCreationDateS" required="true"></Label>
-                                <DateRangeSelection id="searchCreationDateS" width="100%" change="creationDateChange"/>
+                                <DateRangeSelection id="searchCreationDateS" width="100%" change="creationDateChange" required="true"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
@@ -162,7 +162,7 @@
                                                     ],
                                                     sorter: { path: 'company_code'}
                                                 }"
-                                selectionFinish="handleSelectionFinishComp">
+                                selectionFinish="handleSelectionFinishComp" required="true">
                                     <items>
                                         <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                     </items>
@@ -181,7 +181,7 @@
                                                     ],
                                                     sorter: { path: 'org_code'}
                                                 }"
-                                selectionFinish="handleSelectionFinishDiv" >
+                                selectionFinish="handleSelectionFinishDiv" required="true">
                                     <items>
                                         <core:Item key="{org_code}" text="[{org_code}] {org_name}" />
                                     </items>
@@ -192,7 +192,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="Creation {I18N>/DATE}" labelFor="searchCreationDateE" required="true"></Label>
-                                    <DateRangeSelection id="searchCreationDateE" width="100%" change="creationDateChange"/>
+                                    <DateRangeSelection id="searchCreationDateE" width="100%" change="creationDateChange" required="true"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
@@ -362,7 +362,7 @@
                 </table:extension>                             
                 <table:columns>
                     <table:Column width="3.3em" hAlign="Center">
-                        <CheckBox select="onCheckAll" />         
+                        <!--<CheckBox select="onCheckAll" />-->
                         <table:template>
                             <CheckBox id="chk" selected="{list>chk}" select=".setIdSelect"
                             visible="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" />
@@ -726,13 +726,5 @@
                 </table:columns>
             </table:Table>
         </f:content>
-        <!-- DynamicPage Footer -->
-        <f:footer>
-            <OverflowToolbar>
-                <ToolbarSpacer />
-				<Button text="{I18N>/SAVE}" type="Emphasized" press=".onPageSaveButtonPress" />
-				<Button text="{I18N>/CANCEL}" type="Transparent" press=".onPageCancelEditButtonPress"/>
-            </OverflowToolbar>
-        </f:footer>
     </f:DynamicPage>
 </mvc:View>

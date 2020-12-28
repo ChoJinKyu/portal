@@ -251,6 +251,8 @@ sap.ui.define([
                                 oView.setBusy(false);
                                 // that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                                 MessageToast.show(that.getModel("I18N").getText("/NCM0005"));
+                                    that.byId("dialogAddSupplier").close();
+                                    that.byId("pageSearchButton").firePress();
                                     // var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
                                     // that.getRouter().navTo("addSupplierPage", {                                        
                                     //     tenantId: tenantId,

@@ -52,9 +52,5 @@ service GsSupplierMgtService {
     on emp.tenant_id = gen.tenant_id
     and emp.employee_number = gen.developer_empno
     ;
-
-    
-
-
     
 }
