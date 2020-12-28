@@ -201,7 +201,7 @@ sap.ui.define([
         },
 
         onPageDraftButtonPress : function () { 
-
+            this.approval_type_code = "B";
             var bModel = this.getModel("mdItemMaster");
             this.approvalDetails_data = [] ;
             this.moldMaster_data = [] ;
@@ -222,7 +222,6 @@ sap.ui.define([
                         tenant_id : that.tenant_id 
                         , approval_number : that.approval_number 
                         , mold_id : item.mold_id 
-                        , create_user_id : 'Y36793'
                         , _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
                     });
                     that.moldMaster_data.push({
@@ -243,6 +242,33 @@ sap.ui.define([
                 });
 
             }
+
+            if(bModel._aRemovedRows.length > 0){
+                bModel._aRemovedRows.forEach(function(item){
+                    that.approvalDetails_data.push({
+                        tenant_id : that.tenant_id 
+                        , approval_number : that.approval_number 
+                        , mold_id : item.mold_id 
+                        , _row_state_ : "D"
+                    });
+                    that.moldMaster_data.push({
+                         tenant_id : that.tenant_id 
+                        , mold_id : item.mold_id 
+                        , account_code : account_code 
+                        , investment_ecst_type_code : investment_ecst_type_code 
+                        , accounting_department_code : accounting_department_code 
+                        , import_company_code : import_company_code 
+                        , project_code : project_code 
+                        , import_company_org_code : import_company_org_code 
+                        , mold_production_type_code : item.mold_production_type_code 
+                        , mold_item_type_code :  item.mold_item_type_code 
+                        , provisional_budget_amount : item.provisional_budget_amount 
+                        , asset_type_code : item.asset_type_code 
+                        , _row_state_ : "D"
+                    });
+                });
+            }
+
 
             this._commonDataSettingAndSubmit();
 
