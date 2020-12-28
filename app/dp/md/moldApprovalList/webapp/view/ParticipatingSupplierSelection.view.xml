@@ -265,6 +265,16 @@
                                     <!-- <Label text="Budget Amount"/> -->
                                     <table:template>
                                         <Text text="{mdItemMaster>supplier_code_1}"/>
+                                        <!-- <ComboBox selectedKey="{mdItemMaster>supplier_code_1}" 
+                                            editable="false" 
+                                            items="{ 
+                                                path : 'org>/Company',
+                                                filters : [
+                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'}
+                                                ]
+                                            }">
+                                            <core:Item key="{org>company_code}" text="{org>company_name}"/> 
+                                        </ComboBox> -->
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_mold_supplier2" width="10em" hAlign="Center">
