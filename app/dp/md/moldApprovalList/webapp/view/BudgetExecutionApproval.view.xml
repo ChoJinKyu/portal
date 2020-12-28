@@ -68,7 +68,7 @@
 					<Label text="Status :"/>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
-                        text="{= ${appMaster>/approval_number} !== null ? 'Update' : 'New' }"
+                        text="{= ${appMaster>/approval_number} !== undefined ? 'Update' : 'New' }"
                         state="Error" />
 				</layout:VerticalLayout>
 

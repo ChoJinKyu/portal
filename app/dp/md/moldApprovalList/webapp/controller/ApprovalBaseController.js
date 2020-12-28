@@ -226,6 +226,10 @@ sap.ui.define([
 
             if (this.approval_number === "New") {
                 this._onApproverAddRow(0);
+                this.getModel("appMaster").setProperty("/requestor_empno", "140790"); // 나중에 세션 값 세팅 할 것 
+                this.getModel("appMaster").setProperty("/request_date", this._getToday());
+
+
             } else {
                 this._onRoutedThisPage(this.approval_number); 
                 this._onApprovalPage(); // 이거 공통으로 각자 페이지에 하나 만듭시다 - this.approval_number 가 로드 된 후에 처리 해야 하는데 
@@ -822,8 +826,8 @@ sap.ui.define([
                  ,  approve_status_code : mst.approve_status_code 
                  ,  requestor_empno : mst.requestor_empno 
                  ,  request_date : this._getToday() 
-                 ,  create_user_id : '212430'
-                 ,  update_user_id : '212430'
+                 ,  create_user_id : mst.requestor_empno 
+                 ,  update_user_id : mst.requestor_empno 
                  ,  local_create_dtm : new Date() 
                  ,  local_update_dtm : new Date()
             };
