@@ -147,23 +147,25 @@ sap.ui.define([
                         var aTokens = oEvent.getParameter("tokens");
                     }
                     console.log("supplierData :::", supplierData);
-                    console.log("aTokens ::::", aTokens);
-                    oSelected.forEach(function(idx){
-                        psModel.getData().ParticipatingSupplier[idx].supplier_code_1 = (supplierData[0] == undefined ?"":supplierData[0].key);
-                        psModel.getData().ParticipatingSupplier[idx].supplier_code_2 = (supplierData[1] == undefined ?"":supplierData[1].key);
-                        psModel.getData().ParticipatingSupplier[idx].supplier_code_3 = (supplierData[2] == undefined ?"":supplierData[2].key);
-                        psModel.getData().ParticipatingSupplier[idx].supplier_code_4 = (supplierData[3] == undefined ?"":supplierData[3].key);
-                        psModel.getData().ParticipatingSupplier[idx].supplier_code_5 = (supplierData[4] == undefined ?"":supplierData[4].key);
-                        psModel.getData().ParticipatingSupplier[idx].supplier_code_6 = (supplierData[5] == undefined ?"":supplierData[5].key);
-                        psModel.getData().ParticipatingSupplier[idx].supplier_code_7 = (supplierData[6] == undefined ?"":supplierData[6].key);
-                        psModel.getData().ParticipatingSupplier[idx].supplier_code_8 = (supplierData[7] == undefined ?"":supplierData[7].key);
-                        psModel.getData().ParticipatingSupplier[idx].supplier_code_9 = (supplierData[8] == undefined ?"":supplierData[8].key);
-                        psModel.getData().ParticipatingSupplier[idx].supplier_code_10 = (supplierData[9] == undefined ?"":supplierData[9].key);
-                        psModel.getData().ParticipatingSupplier[idx].supplier_code_11 = (supplierData[10] == undefined ?"":supplierData[10].key);
-                        psModel.getData().ParticipatingSupplier[idx].supplier_code_12 = (supplierData[11] == undefined ?"":supplierData[11].key);
-                        psModel.refresh(true); 
-                    });
-                    
+                    if(supplierData.length == 0){
+                        MessageBox.error("Supplier를 하나이상 선택해주세요.");
+                    }else{               
+                        oSelected.forEach(function(idx){
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_1 = (supplierData[0] == undefined ?"":supplierData[0].key);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_2 = (supplierData[1] == undefined ?"":supplierData[1].key);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_3 = (supplierData[2] == undefined ?"":supplierData[2].key);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_4 = (supplierData[3] == undefined ?"":supplierData[3].key);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_5 = (supplierData[4] == undefined ?"":supplierData[4].key);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_6 = (supplierData[5] == undefined ?"":supplierData[5].key);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_7 = (supplierData[6] == undefined ?"":supplierData[6].key);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_8 = (supplierData[7] == undefined ?"":supplierData[7].key);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_9 = (supplierData[8] == undefined ?"":supplierData[8].key);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_10 = (supplierData[9] == undefined ?"":supplierData[9].key);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_11 = (supplierData[10] == undefined ?"":supplierData[10].key);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_12 = (supplierData[11] == undefined ?"":supplierData[11].key);
+                            psModel.refresh(true); 
+                        });
+                    }
                 });
                 
             } else {
