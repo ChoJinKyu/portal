@@ -222,6 +222,7 @@ sap.ui.define([
                         tenant_id : that.tenant_id 
                         , approval_number : that.approval_number 
                         , mold_id : item.mold_id 
+                        , create_user_id : 'Y36793'
                         , _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
                     });
                     that.moldMaster_data.push({

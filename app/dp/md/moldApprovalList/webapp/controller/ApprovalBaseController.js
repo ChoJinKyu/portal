@@ -812,12 +812,14 @@ sap.ui.define([
                  ,  company_code : this.company_code 
                  ,  org_code : this.plant_code 
                  ,  chain_code : 'DP'
-                 //,  approval_type_code : this.approval_type_code 
+                 ,  approval_type_code : this.approval_type_code 
                  ,  approval_title : mst.approval_title 
                  ,  approval_contents : mst.approval_contents 
                  ,  approve_status_code : mst.approve_status_code 
                  ,  requestor_empno : mst.requestor_empno 
                  ,  request_date : this._getToday() 
+                 ,  create_user_id : '212430'
+                 ,  update_user_id : '212430'
                  ,  local_create_dtm : new Date() 
                  ,  local_update_dtm : new Date()
             };
