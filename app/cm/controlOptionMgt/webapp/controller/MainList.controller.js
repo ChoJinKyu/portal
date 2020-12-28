@@ -154,7 +154,6 @@ sap.ui.define([
       var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
         sPath = oEvent.getSource().getBindingContext("list").getPath(),
         oRecord = this.getModel("list").getProperty(sPath);
-
       this.getRouter().navTo("midPage", {
         layout: oNextUIState.layout,
         tenantId: oRecord.tenant_id,
@@ -201,35 +200,6 @@ sap.ui.define([
           oView.setBusy(false);
         }
       });
-      /////////////////////////////////////////////////////////////////////////////////
-      // TAG : Hierachy/Tree
-      // 검색 : name like '%e%'
-      // 결과 : NODE_ID 2, 3을 제외한 결과가 Hirachecy 를 유지한 Object Array 형태로 반환
-      //        되며, 이는 sap.ui.table.TreeTable 태그의 model 에 바로 적용되는 형식
-      //
-      // * 검색버튼 클릭후 F12 를 통해 개발자도구에서 로그 확인하세요.
-      //
-      /////////////////////////////////////////////////////////////////////////////////
-      oView.setBusy(true);
-      (new ManagedListModel())
-        .setTransactionModel(this.getModel("tree"))
-        .tree("/Categories_haa", [
-          // 조회조건
-          new Filter("name", FilterOperator.Contains, "e")
-        ])
-        // 성공시
-        .then(function (oData) {
-          console.log(">>>> success", oData);
-        })
-        // 실패시
-        .catch(function (oError) {
-          console.log(">>>> fail", oError);
-        })
-        // 모래시계해제
-        .finally(function () {
-          console.log(">>>> finally");
-          oView.setBusy(false);
-        });
     },
 
     _getSearchStates: function () {

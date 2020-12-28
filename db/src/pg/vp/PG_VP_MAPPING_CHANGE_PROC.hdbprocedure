@@ -20,33 +20,96 @@ BEGIN
     DECLARE V_VENDOR_POOL_CODE NVARCHAR(20);
     DECLARE V_LOOP_INDEX INT := 1;
     DECLARE V_LOOP_TEST INT := 1;
+    DECLARE V_TEST_MSG NVARCHAR(500) := '';
+    DECLARE V_MASTER_COUNT INT := 0;
+	DECLARE V_MASTER_EXIST_CNT INT := 0;
+    DECLARE V_CUD_COUNT INT := 0;
     DECLARE CURSOR l_mst_cursor FOR
         SELECT TENANT_ID, COMPANY_CODE,  ORG_TYPE_CODE, ORG_CODE, VENDOR_POOL_CODE, REPR_DEPARTMENT_CODE
         FROM :I_MST
         ORDER BY TENANT_ID, COMPANY_CODE,  ORG_TYPE_CODE, ORG_CODE, VENDOR_POOL_CODE;
     
-    DECLARE  var_commit  NVARCHAR(100) := 'COMMIT';
-	DECLARE var_rollback NVARCHAR(100) := 'ROLLBACK';
+    DECLARE invalid_input_param CONDITION FOR SQL_ERROR_CODE 10000;
+    DECLARE invalid_where_info  CONDITION FOR SQL_ERROR_CODE 10001;
+    DECLARE invalid_crud_info   CONDITION FOR SQL_ERROR_CODE 10002;
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
-		EXEC (:var_rollback);
-		O_MSG = SELECT  'NG' RETURN_CODE, ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;
+		--O_MSG = SELECT  'NG' RETURN_CODE, ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;
+		O_MSG = SELECT  'NG' RETURN_CODE, ::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;
 	END;
 	
+	SELECT COUNT(*)
+	INTO   V_MASTER_COUNT 
+    FROM   :I_MST;
+	
+	IF  V_MASTER_COUNT  != 1 THEN
+		SIGNAL invalid_input_param SET MESSAGE_TEXT = 'Not found Master Data!';
+	END IF;
+	
+	IF TRIM( ' ' FROM :I_USER_ID )  = '' THEN
+	    SIGNAL invalid_input_param SET MESSAGE_TEXT = 'EPG00001';
+	END IF;
+	
+	IF TRIM( ' ' FROM :I_USER_NO )  = '' THEN
+	    SIGNAL invalid_input_param SET MESSAGE_TEXT = 'EPG00002';
+	END IF;
+	
 	FOR loop_mst AS l_mst_cursor DO
-		UPDATE  PG_VP_VENDOR_POOL_MST MST
-	    SET     REPR_DEPARTMENT_CODE    = loop_mst.REPR_DEPARTMENT_CODE
-	            ,LOCAL_UPDATE_DTM       = NOW()
-	            ,UPDATE_USER_ID         = I_USER_ID
-	            ,SYSTEM_UPDATE_DTM      = NOW()
-	    WHERE   TENANT_ID           = loop_mst.TENANT_ID
-	    AND     COMPANY_CODE        = loop_mst.COMPANY_CODE
-	    AND     ORG_TYPE_CODE       = loop_mst.ORG_TYPE_CODE
-	    AND     ORG_CODE            = loop_mst.ORG_CODE
-	    AND     VENDOR_POOL_CODE    = loop_mst.VENDOR_POOL_CODE
-	    ;
+	    V_TEST_MSG := loop_mst.VENDOR_POOL_CODE;
+	    
+	    IF TRIM( ' ' FROM loop_mst.TENANT_ID )  = '' THEN
+	        SIGNAL invalid_input_param SET MESSAGE_TEXT = 'EPG00003';
+	    END IF;
+	    
+	    IF TRIM( ' ' FROM loop_mst.COMPANY_CODE )  = '' THEN
+	        SIGNAL invalid_input_param SET MESSAGE_TEXT = 'EPG00004';
+	    END IF;
+	    
+	    IF TRIM( ' ' FROM loop_mst.ORG_TYPE_CODE )  = '' THEN
+	        SIGNAL invalid_input_param SET MESSAGE_TEXT = 'EPG00005';
+	    END IF;
+	    
+	    IF TRIM( ' ' FROM loop_mst.ORG_CODE )  = '' THEN
+	        SIGNAL invalid_input_param SET MESSAGE_TEXT = 'EPG00006';
+	    END IF;
+	    
+	    IF TRIM( ' ' FROM loop_mst.VENDOR_POOL_CODE )  = '' THEN
+	        SIGNAL invalid_input_param SET MESSAGE_TEXT = 'EPG00007';
+	    END IF;
+	    
+	    SELECT  COUNT(*)
+		INTO    V_MASTER_EXIST_CNT
+		FROM    PG_VP_VENDOR_POOL_MST A
+		WHERE   A.TENANT_ID           = loop_mst.TENANT_ID
+	    AND     A.COMPANY_CODE        = loop_mst.COMPANY_CODE
+	    AND     A.ORG_TYPE_CODE       = loop_mst.ORG_TYPE_CODE
+	    AND     A.ORG_CODE            = loop_mst.ORG_CODE
+	    AND     A.VENDOR_POOL_CODE    = loop_mst.VENDOR_POOL_CODE;
+		
+		IF V_MASTER_EXIST_CNT != 1 THEN
+		    SIGNAL invalid_input_param SET MESSAGE_TEXT = 'Not found Master Data!(For Update)';
+		ELSE
+	    
+			UPDATE  PG_VP_VENDOR_POOL_MST MST
+		    SET     REPR_DEPARTMENT_CODE    = loop_mst.REPR_DEPARTMENT_CODE
+		            ,LOCAL_UPDATE_DTM       = NOW()
+		            ,UPDATE_USER_ID         = I_USER_ID
+		            ,SYSTEM_UPDATE_DTM      = NOW()
+		    WHERE   TENANT_ID           = loop_mst.TENANT_ID
+		    AND     COMPANY_CODE        = loop_mst.COMPANY_CODE
+		    AND     ORG_TYPE_CODE       = loop_mst.ORG_TYPE_CODE
+		    AND     ORG_CODE            = loop_mst.ORG_CODE
+		    AND     VENDOR_POOL_CODE    = loop_mst.VENDOR_POOL_CODE
+		    ;
+	    END IF;
+	    
+	    SELECT ::ROWCOUNT into V_CUD_COUNT FROM DUMMY;
+	    
+	    IF V_CUD_COUNT != 1 THEN
+	        SIGNAL invalid_input_param SET MESSAGE_TEXT = 'EPG00008';
+	    	--raise_application_error(-20001, 'PG_VP_VENDOR_POOL_MST UPDATE ERROR '|| loop_mst.VENDOR_POOL_CODE||' ['||::ROWCOUNT||']');
+	    END IF;
 	END FOR;
     
-    EXEC (:var_commit);
     O_MSG = SELECT 'OK' RETURN_CODE, 'Successfully Saved.' RETURN_MSG FROM DUMMY;
 END;

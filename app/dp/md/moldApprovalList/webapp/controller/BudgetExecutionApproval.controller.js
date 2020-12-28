@@ -119,11 +119,9 @@ sap.ui.define([
                 });
             }
 
-            console.log(" this.getModel " , this.getModel('appMaster'));
-
             var oArgs = {
-                company_code: this.getModel('appMaster').oData.company_code,
-                org_code: this.getModel('appMaster').oData.org_code,
+                company_code: this.company_code ,
+                org_code: this.plant_code,
                // mold_progress_status_code : 'DEV_RCV' ,
                 mold_id_arr: mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
             }
@@ -201,13 +199,19 @@ sap.ui.define([
         },
 
         onPageDraftButtonPress : function () { 
-            
+            /**
+             * 'DR'
+            'AR'
+            'IA'
+            'AP'
+            'RJ' */ 
+            this.getModel("appMaster").setProperty("/approve_status_code", "DR");
+
             this.approval_type_code = "B";
             var bModel = this.getModel("mdItemMaster");
             this.approvalDetails_data = [] ;
             this.moldMaster_data = [] ;
             var that = this;
-            console.log("bModel " , bModel);
            // console.log("bModel.getData().length " , bModel.getData().ItemBudgetExecution.length);
             if(bModel.getData().ItemBudgetExecution != undefined && bModel.getData().ItemBudgetExecution.length > 0){
                 var account_code = bModel.getData().ItemBudgetExecution[0].account_code;

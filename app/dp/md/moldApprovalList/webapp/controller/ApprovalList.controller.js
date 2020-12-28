@@ -44,6 +44,7 @@ sap.ui.define([
     var toggleButtonId = "";
     var dialogId = "";
     var path = '';
+    var approvalTarget ='';
 
     return BaseController.extend("dp.md.moldApprovalList.controller.ApprovalList", {
         
@@ -258,17 +259,17 @@ sap.ui.define([
                 oRecord = this.getModel("list").getProperty(sPath);
             console.log("oRecord >>>  ", oRecord);
             var that = this;
-            var target = "";
+            var approvalTarget = "";
             if(oRecord.approval_type_code == "B"){
-                target = "budgetExecutionApproval"
+                approvalTarget = "budgetExecutionApproval"
             }if(oRecord.approval_type_code == "V"){
-                target = "purOrderItemLocalApproval"
+                approvalTarget = "purOrderItemLocalApproval"
             }if(oRecord.approval_type_code == "E"){
-                target = "participatingSupplierSelection"
+                approvalTarget = "participatingSupplierSelection"
             }
 
-            console.log(target);
-            that.getRouter().navTo(target , {
+            console.log(approvalTarget);
+            that.getRouter().navTo(approvalTarget , {
                 company_code: oRecord.company_code
                 , plant_code: oRecord.org_code
                 , approval_number: oRecord.approval_number
@@ -704,16 +705,19 @@ sap.ui.define([
             console.log(id);
 
             if(id.indexOf("localBudget") > -1){
-                appTypeCode ="B"
+                approvalTarget = "budgetExecutionApproval"
             }else if(id.indexOf("supplierSelection") > -1){
-                appTypeCode ="E"
+                approvalTarget = "participatingSupplierSelection"
             }else if(id.indexOf("localOrder") > -1){
-               appTypeCode ="V" 
+               approvalTarget = "purOrderItemLocalApproval"
             }else if(id.indexOf("receipt") > -1){
                 appTypeCode ="I"
             }else if(id.indexOf("export") > -1){
                 appTypeCode ="X"
             }
+
+            
+
             // else if(id.indexOf("importBudget") > -1){
             //     appTypeCode ="E"
             // }else if(id.indexOf("importOrder") > -1){
@@ -741,10 +745,9 @@ sap.ui.define([
                     console.log(appTypeCode);
                     console.log(this.byId("searchCompanyF").getValue());
                     console.log(this.byId("searchPlantF").getValue());
-                    this.getRouter().navTo("approvalObject", {
+                    this.getRouter().navTo(approvalTarget, {
                         company_code: this.byId("searchCompanyF").getSelectedKey()
                         , plant_code: this.byId("searchPlantF").getSelectedKey()
-                        , approval_type_code: appTypeCode
                         , approval_number: "New"
                     });
                 }

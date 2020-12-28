@@ -878,7 +878,7 @@ sap.ui.define([
 
         callAjax : function (data,fn) {  
             console.log("data >>>> " , data);
-
+            var that = this;
             //  /dp/md/moldApprovalList/webapp/srv-api/odata/v2/dp.MoldApprovalListService/RefererSearch
             //  "xx/sampleMgr/webapp/srv-api/odata/v4/xx.SampleMgrV4Service/SaveSampleHeaderMultiProc"
            var url = "/dp/md/moldApprovalList/webapp/srv-api/odata/v4/dp.MoldApprovalV4Service/"+fn;
@@ -889,13 +889,36 @@ sap.ui.define([
                 //datatype: "json",
                 data : JSON.stringify(data),
                 contentType: "application/json",
-                success: function(data){
-
+                success: function(result){
+                    console.log("result>>>> " , result);
+                    MessageToast.show(that.getModel("I18N").getText("/"+result.messageCode));
+                    if(result.resultCode > -1){
+                        that.onLoadThisPage(result);
+                    }
                 },
                 error: function(e){
                     
                 }
             });
+        }, 
+        onLoadThisPage : function (param) {
+
+            var that = this;
+            var target = "";
+            if(this.approval_type_code  == "B"){
+                target = "budgetExecutionApproval"
+            }if(this.approval_type_code  == "V"){
+                target = "purOrderItemLocalApproval"
+            }if(this.approval_type_code  == "E"){
+                target = "participatingSupplierSelection"
+            }
+
+            that.getRouter().navTo(target , {
+                company_code: param.company_code
+                , plant_code: param.plant_code
+                , approval_number: param.approval_number
+            });
+
         }
 
         /*

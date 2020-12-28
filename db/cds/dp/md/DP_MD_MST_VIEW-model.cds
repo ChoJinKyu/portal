@@ -79,5 +79,5 @@ entity Md_Mst_View {
         die_form                        : String(10)	        @title:'다이형상';
         mold_size                       : String(10)	        @title:'금형크기';
         local_create_dtm                : DateTime    not null  @title: '로컬등록시간';
-        update_type                     : String(10)            @title: '화면에서 click한 Button';
+        update_type                     : String(15)            @title: '화면에서 click한 Button';
 }
