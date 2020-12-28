@@ -261,16 +261,16 @@ sap.ui.define([
             var target = "";
             if(oRecord.approval_type_code == "B"){
                 target = "budgetExecutionApproval"
-            }else if(oRecord.approval_type_code == "V"){
+            }if(oRecord.approval_type_code == "V"){
                 target = "purOrderItemLocalApproval"
-            }else if(oRecord.approval_type_code == "E"){
-                target = "participatingSupplierSelectionApproval"
+            }if(oRecord.approval_type_code == "E"){
+                target = "participatingSupplierSelection"
             }
+
             console.log(target);
             that.getRouter().navTo(target , {
                 company_code: oRecord.company_code
                 , plant_code: oRecord.org_code
-                , approval_type_code: oRecord.approval_type_code
                 , approval_number: oRecord.approval_number
             });
 

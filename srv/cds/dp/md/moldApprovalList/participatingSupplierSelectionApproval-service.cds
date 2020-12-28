@@ -71,28 +71,16 @@ service ParticipatingSupplierSelectionApprovalService {
 	from approvalDtl.Md_Approval_Dtl dtl
 	join moldMst.Md_Mst mst
 	    on dtl.mold_id = mst.mold_id
-	left join qtn.Md_Quotation qtn_1
-		on dtl.mold_id = qtn_1.mold_id
-    left join qtn.Md_Quotation qtn_2
-		on dtl.mold_id = qtn_2.mold_id
-    left join qtn.Md_Quotation qtn_3
-		on dtl.mold_id = qtn_3.mold_id
-    left join qtn.Md_Quotation qtn_4
-		on dtl.mold_id = qtn_4.mold_id
-    left join qtn.Md_Quotation qtn_5
-		on dtl.mold_id = qtn_5.mold_id
-    left join qtn.Md_Quotation qtn_6
-		on dtl.mold_id = qtn_6.mold_id
-    left join qtn.Md_Quotation qtn_7
-		on dtl.mold_id = qtn_7.mold_id
-    left join qtn.Md_Quotation qtn_8
-		on dtl.mold_id = qtn_8.mold_id
-    left join qtn.Md_Quotation qtn_9
-		on dtl.mold_id = qtn_9.mold_id
-    left join qtn.Md_Quotation qtn_10
-		on dtl.mold_id = qtn_10.mold_id
-    left join qtn.Md_Quotation qtn_11
-		on dtl.mold_id = qtn_11.mold_id
-    left join qtn.Md_Quotation qtn_12
-		on dtl.mold_id = qtn_12.mold_id
+    left JOIN qtn.Md_Quotation AS qtn_1 ON dtl.mold_id = qtn_1.mold_id and qtn_1.sequence = 1 
+	left JOIN qtn.Md_Quotation AS qtn_2 ON dtl.mold_id = qtn_2.mold_id and qtn_2.sequence = 2
+	left JOIN qtn.Md_Quotation AS qtn_3 ON dtl.mold_id = qtn_3.mold_id and qtn_3.sequence = 3
+	left JOIN qtn.Md_Quotation AS qtn_4 ON dtl.mold_id = qtn_4.mold_id and qtn_4.sequence = 4
+	left JOIN qtn.Md_Quotation AS qtn_5 ON dtl.mold_id = qtn_5.mold_id and qtn_5.sequence = 5
+	left JOIN qtn.Md_Quotation AS qtn_6 ON dtl.mold_id = qtn_6.mold_id and qtn_6.sequence = 6
+	left JOIN qtn.Md_Quotation AS qtn_7 ON dtl.mold_id = qtn_7.mold_id and qtn_7.sequence = 7
+	left JOIN qtn.Md_Quotation AS qtn_8 ON dtl.mold_id = qtn_8.mold_id and qtn_8.sequence = 8
+	left JOIN qtn.Md_Quotation AS qtn_9 ON dtl.mold_id = qtn_9.mold_id and qtn_9.sequence = 9
+	left JOIN qtn.Md_Quotation AS qtn_10 ON dtl.mold_id = qtn_10.mold_id and qtn_10.sequence = 10
+	left JOIN qtn.Md_Quotation AS qtn_11 ON dtl.mold_id = qtn_11.mold_id and qtn_11.sequence = 11
+	left JOIN qtn.Md_Quotation AS qtn_12 ON dtl.mold_id = qtn_12.mold_id and qtn_12.sequence = 12;
 }

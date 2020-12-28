@@ -62,25 +62,33 @@ public class DetailSpecEntry implements EventHandler {
         List<MoldMasterSpec> v_results = new ArrayList<MoldMasterSpec>();
 
         List<Map<String, Object>> entries = context.getCqn().entries();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Date today = new Date();
+        String strToday = sdf.format(today);
 
         for (Map<String, Object> row : entries) {
+
+            //response 의 result 부분, 이걸 꼭 해야하나? 어차피 재조회 하는데?
             MoldMasterSpec v_result = MoldMasterSpec.create();
             v_result.setMoldId((String) row.get("mold_id"));
             v_result.setMoldProgressStatusCode((String)row.get("mold_progress_status_code"));
             v_result.setReceiptConfirmedUserEmpno((String)row.get("receipt_confirmed_user_empno"));
+            v_result.setReceiptConfirmedDate(strToday);
 
-            // v_result.setInspectionDate((String)row.get("inspection_date"));
-            // v_result.setProductionCompleteDate((String)row.get("production_complete_date"));
-            // v_result.setProductionSupplierCode((String)row.get("production_supplier_code"));
+            v_result.setInspectionDatePlan((String)row.get("inspection_date_plan"));
+            v_result.setProductionCompleteDateToday((String)row.get("production_complete_date_today"));
+            v_result.setProductionSupplierCode((String)row.get("production_supplier_code"));
 
+            //실제 master table update 부분
             MoldMasters master = MoldMasters.create();
             master.setMoldId((String) row.get("mold_id"));  //반드시 key 를 넣어야한다, 그렇지 않으면 전부 update 쳐버림
             master.setMoldProgressStatusCode((String) row.get("mold_progress_status_code"));
             master.setReceiptConfirmedUserEmpno((String)row.get("receipt_confirmed_user_empno"));
+            master.setReceiptConfirmedDate(strToday);
 
-            // master.setInspectionDate((String)row.get("inspection_date"));
-            // master.setProductionCompleteDate((String)row.get("production_complete_date"));
-            // master.setProductionSupplierCode((String)row.get("production_supplier_code"));
+            master.setInspectionDate((String)row.get("inspection_date_plan"));
+            master.setProductionCompleteDate((String)row.get("production_complete_date_today"));
+            master.setProductionSupplierCode((String)row.get("production_supplier_code"));
 
             CqnUpdate masterUpdate = Update.entity(MoldMasters_.CDS_NAME).data(master);
             //long headerUpdateCount = developmentReceiptService.run(masterUpdate).rowCount();

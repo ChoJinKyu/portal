@@ -108,7 +108,7 @@
                                     <items>
                                         <SegmentedButtonItem text="No Confirmed" key="ORD_CRT" width="7em" />
                                         <SegmentedButtonItem text="Confirmed" key="RCV_CNF" width="6em" />
-                                        <SegmentedButtonItem text="All(temp)" key="ALL" width="6em" />
+                                        <!-- <SegmentedButtonItem text="All(temp)" key="ALL" width="6em" /> -->
                                     </items>
                                 </SegmentedButton>
                                 <layoutData>
@@ -342,8 +342,8 @@
                     <OverflowToolbar>
                         <Title text="List ({= ${list>/MoldMasterSpec}.length || 0})" level="H2"/>
                         <ToolbarSpacer/>
-                        <Button id="moldMstTableDeleteButton"   type="Emphasized" text="Confirm"             press=".onMoldMstTableConfirmButtonPress"   enabled="{mode>/viewFlag}" />
-                        <Button id="moldMstTableReceiptButton"  type="Transparent"  text="Excel"            press=".onMoldMstTableExcelButtonPress"  enabled="{mode>/viewFlag}" />
+                        <Button id="moldMstTableConfirmButton"   type="Emphasized" text="Confirm"             press=".onMoldMstTableConfirmButtonPress"    />
+                        <Button id="moldMstTableExcelButton"  type="Transparent"  text="Excel"            press=".onMoldMstTableExcelButtonPress"   />
                         <ToolbarSeparator/>
                         <Button icon="sap-icon://action-settings" press=".onMoldMstTablePersoButtonPressed" >
                             <layoutData>
@@ -421,30 +421,37 @@
                     </table:Column>
 
                     <table:Column width="9em" hAlign="Center">
-                        <Label text="{path:'I18N>/INSPECTION_DATE', formatter:'I18NFormatter'}" />
+                        <Label text="{path:'I18N>/INSPECTION_DATE', formatter:'I18NFormatter'}"  required="true"/>
                         <table:template>
-                            <DatePicker value="{list>inspection_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" />
+                            <DatePicker value="{list>inspection_date_plan}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" required="true" />
                         </table:template>
                     </table:Column>
 
                     <table:Column width="9em" hAlign="Center">
-                        <Label text="{path:'I18N>/COMPLETE_DATE', formatter:'I18NFormatter'}" />
+                        <Label text="{path:'I18N>/COMPLETE_DATE', formatter:'I18NFormatter'}"  required="true"/>
                         <table:template>
-                            <DatePicker value="{list>production_complete_date_today}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
+                            <DatePicker value="{list>production_complete_date_today}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"  required="true"/>
                         </table:template>
                     </table:Column>
 
                     <table:Column width="8em" hAlign="Center">
-                        <Label text="{path:'I18N>/RCV_DOCUMENT', formatter:'I18NFormatter'}" />
+                        <Label text="{path:'I18N>/RCV_DOCUMENT', formatter:'I18NFormatter'}"  required="true"/>
                         <table:template>
-                            <Text text="temp"/>
+                            <Text text="attach"/>
                         </table:template>
                     </table:Column>
 
-                    <table:Column width="8em" hAlign="Center">
-                        <Label text="{path:'I18N>/PROD_SUPPLIER', formatter:'I18NFormatter'}" />
+                    <table:Column width="9em" hAlign="Center">
+                        <Label text="{path:'I18N>/PROD_SUPPLIER', formatter:'I18NFormatter'}"  required="true"/>
                         <table:template>
-                            <Text text="{list>production_supplier_code}"/>
+                            <!-- <Text text="{list>production_supplier_code}"/> -->
+                            <Input id=""
+                                    value="{list>production_supplier_code}" 
+                                    showValueHelp="true"
+                                    valueHelpOnly="true"
+                                    valueHelpRequest=".onSuppValueHelpRequested"
+                                     required="true"
+                            />
                         </table:template>
                     </table:Column>
 

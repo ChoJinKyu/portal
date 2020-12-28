@@ -22,7 +22,8 @@ sap.ui.define([
     "dp/md/util/controller/MoldItemSelection"
 ], function (DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
-    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalBaseController, MoldItemSelection
+    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor
+    , ApprovalBaseController, MoldItemSelection
 ) {
     "use strict";
 
@@ -56,12 +57,12 @@ sap.ui.define([
                 delay: 0
             });
 
-            this.setModel(oViewModel, "budgetExecutionApprovalView");//change
+            this.setModel(oViewModel, "budgetExecutionApprovalView"); //change
             this.getRouter().getRoute("budgetExecutionApproval").attachPatternMatched(this._onObjectMatched, this);//change
             
-            this.getView().setModel(new ManagedListModel(), "moldMaster");
+            this.getView().setModel(new ManagedListModel(), "mdItemMaster"); 
         },
-
+   
         /* =========================================================== */
         /* event handlers                                              */
         /* =========================================================== */
@@ -69,8 +70,36 @@ sap.ui.define([
         /* =========================================================== */
         /* internal methods                                            */
         /* =========================================================== */
+        _onApprovalPage : function () {
+  
+            console.log(" this.approval_number "  ,  this.approval_number);
+            var schFilter = [];
+   
+            if (this.approval_number == "New") {
 
-        /** PO Item Start */
+            } else {
+                schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
+                    , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
+                ];
+
+                this._bindViewBudget("/ItemBudgetExecution", "mdItemMaster", schFilter, function (oData) {
+                    console.log("ItemBudgetExecution >>>>>>", oData);
+                });
+            }  
+        },
+        _bindViewBudget : function (sObjectPath, sModel, aFilter, callback) { 
+                var oView = this.getView(),
+                    oModel = this.getModel(sModel);
+                oView.setBusy(true);
+                oModel.setTransactionModel(this.getModel("budget"));
+                oModel.read(sObjectPath, {
+                    filters: aFilter,
+                    success: function (oData) {
+                        oView.setBusy(false);
+                        callback(oData);
+                    }
+                });
+            },
        /**
          * @description moldItemSelect 공통팝업   
          * @param vThis : view page의 this 
@@ -79,7 +108,7 @@ sap.ui.define([
 		 */
         onBudgetExecutionAddPress: function (oEvent) {
             console.log("oEvent>>>>");
-            var oModel = this.oThis.getModel("mdItemMaster");
+            var oModel = this.getModel("mdItemMaster");
 
             console.log(" mdItemMaster >>>> ", oModel);
 
@@ -90,16 +119,18 @@ sap.ui.define([
                 });
             }
 
+            console.log(" this.getModel " , this.getModel('appMaster'));
+
             var oArgs = {
-                company_code: this.oThis.getModel('appMaster').oData.company_code,
-                org_code: this.oThis.getModel('appMaster').oData.org_code,
+                company_code: this.getModel('appMaster').oData.company_code,
+                org_code: this.getModel('appMaster').oData.org_code,
                // mold_progress_status_code : 'DEV_RCV' ,
                 mold_id_arr: mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
             }
 
             var that = this;
 
-            this.moldItemPop.openMoldItemSelectionPop(this.oThis, oEvent, oArgs, function (oDataMold) {
+            this.moldItemPop.openMoldItemSelectionPop(this, oEvent, oArgs, function (oDataMold) {
                 console.log("selected data list >>>> ", oDataMold);
                 if (oDataMold.length > 0) {
                     oDataMold.forEach(function (item) {
@@ -114,9 +145,9 @@ sap.ui.define([
         * @param {*} data 
         */
         _addbudgetExecutionTable: function (data) {
-            var oTable = this.oThis.byId("budgetExecutionTable"),
-                oModel = this.oThis.getModel("mdItemMaster"),
-                mstModel = this.oThis.getModel("appMaster");
+            var oTable = this.byId("budgetExecutionTable"),
+                oModel = this.getModel("mdItemMaster"),
+                mstModel = this.getModel("appMaster");
             ;
             /** add record 시 저장할 model 과 다른 컬럼이 있을 경우 submit 안됨 */
             var approval_number = mstModel.oData.approval_number;
@@ -144,8 +175,8 @@ sap.ui.define([
         * @description Participating Supplier 의 delete 버튼 누를시 
         */
         onBudgetExecutionDelRow: function () {
-            var budgetExecutionTable = this.oThis.byId("budgetExecutionTable")
-                , detailModel = this.oThis.getModel("mdItemMaster")
+            var budgetExecutionTable = this.byId("budgetExecutionTable")
+                , detailModel = this.getModel("mdItemMaster")
                 , oSelected = budgetExecutionTable.getSelectedIndices();
             ;
             if (oSelected.length > 0) {
