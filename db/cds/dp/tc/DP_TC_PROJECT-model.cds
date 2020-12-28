@@ -60,11 +60,14 @@ entity Tc_Project {
         mcst_yield_rate         : Decimal             @title : '재료비수율';
         bom_type_code           : String(30)          @title : '자재명세서유형코드';
         sales_currency_code     : String(3)           @title : '매출통화코드';
+        project_creator_empno   : String(30)          @title : '프로젝트생성자사번';
         project_create_date     : Date                @title : '프로젝트생성일자';
         massprod_start_date     : Date                @title : '양산시작일자';
         massprod_end_date       : Date                @title : '양산종료일자';
         mcst_excl_flag          : Boolean             @title : '재료비제외여부';
         mcst_excl_reason        : String(3000)        @title : '재료비제외사유';
+        direct_register_flag    : Boolean             @title : '직접등록여부';
+
 
         events                  : Composition of many Project_Event.Tc_Project_Event
                                       on  events.tenant_id    = tenant_id
