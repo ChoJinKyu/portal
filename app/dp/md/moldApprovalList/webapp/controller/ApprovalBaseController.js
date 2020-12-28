@@ -893,13 +893,32 @@ sap.ui.define([
                     console.log("result>>>> " , result);
                     MessageToast.show(that.getModel("I18N").getText("/"+result.messageCode));
                     if(result.resultCode > -1){
-                        that._createViewBindData(result);
+                        that.onLoadThisPage(result);
                     }
                 },
                 error: function(e){
                     
                 }
             });
+        }, 
+        onLoadThisPage : function (param) {
+
+            var that = this;
+            var target = "";
+            if(this.approval_type_code  == "B"){
+                target = "budgetExecutionApproval"
+            }if(this.approval_type_code  == "V"){
+                target = "purOrderItemLocalApproval"
+            }if(this.approval_type_code  == "E"){
+                target = "participatingSupplierSelection"
+            }
+
+            that.getRouter().navTo(target , {
+                company_code: param.company_code
+                , plant_code: param.plant_code
+                , approval_number: param.approval_number
+            });
+
         }
 
         /*
