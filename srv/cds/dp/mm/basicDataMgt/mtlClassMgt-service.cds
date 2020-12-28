@@ -26,4 +26,18 @@ service MtlClassMgtService {
     entity MtlClass as projection on Class.Mm_Material_Class;
     entity MtlClassLng as projection on ClassLng.Mm_Material_Class_Lng;
 
+    view MtlClassView as
+    select key m.tenant_id,
+           key m.material_class_code,
+           ifnull(l.material_class_name, m.material_class_name) as material_class_name : String(100),
+           ifnull(l.material_class_desc, m.material_class_desc) as material_class_desc : String(1000),
+           m.use_flag,
+           l.language_code
+    from  Class.Mm_Material_Class m
+    left outer join ClassLng.Mm_Material_Class_Lng l
+    on l.tenant_id = m.tenant_id
+      and l.material_class_code = m.material_class_code
+      and l.language_code = 'EN'
+    ;
+
 }
