@@ -24,9 +24,9 @@ service PrMgtService {
                 pr_type_code_2 ,         //: String(30)    not null    @title: '구매요청품목그룹코드 ' ;	
                 pr_type_code_3  ,        //: String(30)    not null    @title: '구매요청품목코드 ' ;	
                 pr_template_number ,     //: String(10)    not null    @title: '구매요청템플릿번호' ;	
-                requestor_empno         //: String(30)                @title: '요청자사번' ;	
-                requestor_name  ,        //: String(50)                @title: '요청자명' ;	
-                requestor_department_code   //: String(50)              @title: '요청자부서코드' ;	
+                requestor_empno,         //: String(30)                @title: '요청자사번' ;	
+                requestor_name ,        //: String(50)                @title: '요청자명' ;	
+                requestor_department_code,   //: String(50)              @title: '요청자부서코드' ;	
                 requestor_department_name, //: String(240)             @title: '요청자부서명' ;	
                 request_date    ,        //: Date                      @title: '요청일자' ;	
                 pr_create_status_code,  //: String(30)                @title: '구매요청생성상태코드' ;	

@@ -45,7 +45,8 @@ service GsSupplierMgtService {
            gen.an_profile,
            gen.product_desc,
            gen.remark,
-           gen.attch_group_number
+           gen.attch_group_number,
+           gen.local_update_dtm
     from General.Gs_Supplier_Gen gen
     left join Employee.Hr_Employee  emp
     on emp.tenant_id = gen.tenant_id

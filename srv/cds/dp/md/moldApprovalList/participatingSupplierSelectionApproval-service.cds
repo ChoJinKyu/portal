@@ -17,7 +17,7 @@ service ParticipatingSupplierSelectionApprovalService {
     entity MoldMasters     as projection on moldMst.Md_Mst;
     entity Referers        as projection on referer.Referer; 
     entity quotation as projection on qtn.Md_Quotation;
-
+    
     view ParticipatingSupplier as
     select
     	key dtl.approval_number,
@@ -44,30 +44,30 @@ service ParticipatingSupplierSelectionApprovalService {
         mst.budget_amount,
         mst.currency_code,
         mst.target_amount,
-        qtn_1.supplier_code as supplier_code_1,
-        qtn_2.supplier_code as supplier_code_2,
-        qtn_3.supplier_code as supplier_code_3,
-        qtn_4.supplier_code as supplier_code_4,
-        qtn_5.supplier_code as supplier_code_5,
-        qtn_6.supplier_code as supplier_code_6,
-        qtn_7.supplier_code as supplier_code_7,
-        qtn_8.supplier_code as supplier_code_8,
-        qtn_9.supplier_code as supplier_code_9,
-        qtn_10.supplier_code as supplier_code_10,
-        qtn_11.supplier_code as supplier_code_11,
-        qtn_12.supplier_code as supplier_code_12,
-        qtn_1.sequence as sequence_1,
-        qtn_2.sequence as sequence_2,
-        qtn_3.sequence as sequence_3,
-        qtn_4.sequence as sequence_4,
-        qtn_5.sequence as sequence_5,
-        qtn_6.sequence as sequence_6,
-        qtn_7.sequence as sequence_7,
-        qtn_8.sequence as sequence_8,
-        qtn_9.sequence as sequence_9,
-        qtn_10.sequence as sequence_10,
-        qtn_11.sequence as sequence_11,
-        qtn_12.sequence as sequence_12
+        qtn_1.supplier_code as supplier_code_1 : String(20),
+        qtn_2.supplier_code as supplier_code_2 : String(20),
+        qtn_3.supplier_code as supplier_code_3 : String(20),
+        qtn_4.supplier_code as supplier_code_4 : String(20),
+        qtn_5.supplier_code as supplier_code_5 : String(20),
+        qtn_6.supplier_code as supplier_code_6 : String(20),
+        qtn_7.supplier_code as supplier_code_7 : String(20),
+        qtn_8.supplier_code as supplier_code_8 : String(20),
+        qtn_9.supplier_code as supplier_code_9 : String(20),
+        qtn_10.supplier_code as supplier_code_10 : String(20),
+        qtn_11.supplier_code as supplier_code_11 : String(20),
+        qtn_12.supplier_code as supplier_code_12 : String(20),
+        qtn_1.sequence as sequence_1 : String(5),
+        qtn_2.sequence as sequence_2 : String(5),
+        qtn_3.sequence as sequence_3 : String(5),
+        qtn_4.sequence as sequence_4 : String(5),
+        qtn_5.sequence as sequence_5 : String(5),
+        qtn_6.sequence as sequence_6 : String(5),
+        qtn_7.sequence as sequence_7 : String(5),
+        qtn_8.sequence as sequence_8 : String(5),
+        qtn_9.sequence as sequence_9 : String(5),
+        qtn_10.sequence as sequence_10 : String(5),
+        qtn_11.sequence as sequence_11 : String(5),
+        qtn_12.sequence as sequence_12 : String(5)
 	from approvalDtl.Md_Approval_Dtl dtl
 	join moldMst.Md_Mst mst on dtl.mold_id = mst.mold_id
     left JOIN qtn.Md_Quotation AS qtn_1 ON dtl.mold_id = qtn_1.mold_id and qtn_1.sequence = 1 

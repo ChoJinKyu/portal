@@ -26,4 +26,18 @@ service MtlGroupMgtService {
     entity MtlGroup as projection on mtlGroup.Mm_Material_Group;
     entity MtlGroupLng as projection on mtlGroupLng.Mm_Material_Group_Lng;
 
+    view MtlGroupView as
+    select key m.tenant_id,
+           key m.material_group_code,
+           ifnull(l.material_group_name, m.material_group_name) as material_group_name : String(100),
+           ifnull(l.material_group_desc, m.material_group_desc) as  material_group_desc : String(1000),
+           m.use_flag,
+           l.language_code
+    from  mtlGroup.Mm_Material_Group m
+    left outer join mtlGroupLng.Mm_Material_Group_Lng l
+    on l.tenant_id = m.tenant_id
+      and l.material_group_code = m.material_group_code 
+      and l.language_code = 'EN'
+    ;
+
 }

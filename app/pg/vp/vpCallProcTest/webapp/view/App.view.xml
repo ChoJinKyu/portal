@@ -8,16 +8,16 @@
                 <Page title="Proc Call Test">
                 <content>
                     <Panel
-                        headerText="Call Test 1st"
+                        headerText="Call Proc Test"
                         class="sapUiResponsiveMargin"
 						width="auto">
                         <content>
                             <Button
-                                text="Call Proc 1st"
-                                press=".onCallProc1st"
+                                text="Call VendorPool Mng"
+                                press=".onCallVendorPoolMng"
                                 class="sapUiSmallMarginEnd"/>  
                             <Text
-								text="Proc 1st 실행합니다."
+								text="Vendor Pool 관리 수정 Proc 실행합니다."
 								class="sapUiSmallMargin"/>                      
                         </content>
                     </Panel>

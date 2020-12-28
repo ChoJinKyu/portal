@@ -19,7 +19,7 @@ sap.ui.define([
     //     useBatch: true
     // });
 
-    var oInput, oSuppValueHelpDialog, gIsMulti;
+    var oInput, oSuppValueHelpDialog, gIsMulti, gCallback;
     
     var SupplierSelection = EventProvider.extend("dp.util.SupplierSelection", {
 
@@ -49,16 +49,17 @@ sap.ui.define([
             useBatch: true
         }),
 
-        showSupplierSelection: function(oThis, oEvent, sCompanyCode, sPlantCode){
+        showSupplierSelection: function(oThis, oEvent, sCompanyCode, sPlantCode, callback){
 
-            self = this;
             oThis.getView().setModel(this.oServiceModel, 'supplierModel');
             oThis.getView().setModel(this.oDSEServiceModel, 'dseModel');
             oThis.getView().setModel(this.oCmOrgServiceModel, 'cmOrgModel');
             
+            self = this;
             oInput = oEvent.getSource();
+            gCallback = callback;
 
-            if(oInput.getMetadata().getName().indexOf('MultiInput') > -1){
+            if(oInput.getMetadata().getName().indexOf('MultiInput') > -1 || callback){
                 gIsMulti = true;
             }else{
                 gIsMulti = false;
@@ -82,7 +83,7 @@ sap.ui.define([
             oFilterBar.setBasicSearch(this._oBasicSearchField);
             oFilterBar.attachSearch(this.onFilterBarSuppSearch);
 
-            if (!oInput.getSuggestionItems().length) {
+            if (oInput.getMetadata().getName().indexOf('Input') > -1) {
                 oInput.bindAggregation("suggestionItems", {
                     path: "supplierModel>/Suppliers",
                     template: new sap.ui.core.Item({
@@ -136,23 +137,28 @@ sap.ui.define([
 
             }.bind(this));
 
-            var tokens = [];
+            this.setChosenSupplier(oSuppValueHelpDialog, oInput);
 
-            if(gIsMulti){
-                tokens = oInput.getTokens()
-            }else{
-                var oToken = new Token();
-                oToken.setKey(oInput.getSelectedKey());
-                oToken.setText(oInput.getValue());
-                tokens = [oToken];
-            }
-
-            
-            oSuppValueHelpDialog.setTokens(tokens);
             oSuppValueHelpDialog.open();
             
             //company, plant 값을 세팅해야한다..
             this.setCompPlantVal(oThis, sCompanyCode, sPlantCode);
+        },
+
+        setChosenSupplier: function(oSuppValueHelpDialog, oInput){
+            var tokens = [];
+
+            if(oInput.getMetadata().getName().indexOf('MultiInput') > -1){
+                tokens = oInput.getTokens()
+                oSuppValueHelpDialog.setTokens(tokens);
+            }else if(oInput.getMetadata().getName().indexOf('Input') > -1){
+                var oToken = new Token();
+                oToken.setKey(oInput.getSelectedKey());
+                oToken.setText(oInput.getValue());
+                tokens = [oToken];
+                oSuppValueHelpDialog.setTokens(tokens);
+            }
+
         },
 
         setCompPlantVal: function(oThis, sCompany, sPlant){
@@ -188,10 +194,16 @@ sap.ui.define([
 
             var aTokens = oEvent.getParameter("tokens");
 
-            if(gIsMulti){
-                oInput.setTokens(aTokens);
+            if(gCallback && typeof gCallback == 'function'){
+                gCallback(aTokens.map(function(item){
+                    return item.mProperties;
+                }));
             }else{
-                oInput.setSelectedKey(aTokens[0].getKey());
+                if(gIsMulti){
+                    oInput.setTokens(aTokens);
+                }else{
+                    oInput.setSelectedKey(aTokens[0].getKey());
+                }
             }
 
             oSuppValueHelpDialog.close();
