@@ -537,6 +537,15 @@ sap.ui.define([
             if (status && status != 'ALL') {
                 aTableSearchState.push(new Filter("mold_progress_status_code", FilterOperator.EQ, status));
             }
+
+            //checkbox
+            this.byId('moldMstTable').setSelectionMode('MultiToggle');
+            this.byId('moldMstTableConfirmButton').setEnabled(true);
+            if(status == 'RCV_CNF'){
+                this.byId('moldMstTable').setSelectionMode('None');
+                this.byId('moldMstTableConfirmButton').setEnabled(false);
+                
+            }
             
             if (itemType && itemType.length > 0) {
                 aTableSearchState.push(new Filter("mold_item_type_code", FilterOperator.EQ, itemType));

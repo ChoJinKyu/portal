@@ -79,7 +79,7 @@ sap.ui.define([
                     console.log("ParticipatingSupplier >>>>>>", oData);
                 });
 
-                 this._bindView3("/OrgCodeLanguages", "psOrgCode", schFilter2, function (oData) {
+                this._bindView3("/OrgCodeLanguages", "psOrgCode", schFilter2, function (oData) {
                     console.log("OrgCodeLanguages >>>>>>", oData);
                 });
             }

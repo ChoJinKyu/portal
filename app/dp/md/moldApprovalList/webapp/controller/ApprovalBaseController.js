@@ -181,9 +181,11 @@ sap.ui.define([
 		 * @private
 		 */
         _onObjectMatched: function (oEvent) {
+            
             var oArgs = oEvent.getParameter("arguments");
+            console.log(oArgs);
             this._createViewBindData(oArgs);
-
+            
             this.oSF = this.getView().byId("approverSearch");
         },
         /**
