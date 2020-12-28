@@ -134,7 +134,8 @@ sap.ui.define([
             var oContModel = this.getModel("contModel");
             oContModel.setProperty("/detailDetail/visibleFullScreenBtn", false);
 
-            var sLayout = LayoutType.EndColumnFullScreen;
+            // var sLayout = LayoutType.EndColumnFullScreen;
+            var sLayout = LayoutType.MidColumnFullScreen;
 			this._changeFlexibleColumnLayout(sLayout);
         },
         
@@ -142,7 +143,8 @@ sap.ui.define([
 			var oContModel = this.getModel("contModel");
             oContModel.setProperty("/detailDetail/visibleFullScreenBtn", true);
 
-            var sLayout = LayoutType.ThreeColumnsEndExpanded;
+            // var sLayout = LayoutType.ThreeColumnsEndExpanded;
+            var sLayout = LayoutType.TwoColumnsMidExpanded;
             this._changeFlexibleColumnLayout(sLayout);
         },
         
@@ -150,7 +152,8 @@ sap.ui.define([
             var oContModel = this.getModel("contModel");
             oContModel.setProperty("/detail/footer", true);
 
-            var sLayout = LayoutType.TwoColumnsMidExpanded;
+            // var sLayout = LayoutType.TwoColumnsMidExpanded;
+            var sLayout = LayoutType.OneColumn;
             this._changeFlexibleColumnLayout(sLayout);
         },
 
@@ -161,9 +164,9 @@ sap.ui.define([
 
 		_onCodeDetailMatched: function (oEvent) {
             var sLayout = oEvent.getParameter("arguments").layout;
-            if(sLayout === "TwoColumnsMidExpanded"){
-                return false;
-            }
+            // if(sLayout === "TwoColumnsMidExpanded"){
+            //     return false;
+            // }
             this._fnInitControlModel();
             
             var sTenantId = oEvent.getParameter("arguments").tenantId;
