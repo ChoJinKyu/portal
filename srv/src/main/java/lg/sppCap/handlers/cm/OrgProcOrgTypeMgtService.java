@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
 import cds.gen.cm.orgprocorgtypemgtservice.OrgProcOrgTypeMgtService_;
 import cds.gen.cm.orgprocorgtypemgtservice.PurOrgTypeMap_;
 import cds.gen.cm.orgprocorgtypemgtservice.PurOrgTypeMap;
-import cds.gen.cm.orgprocorgtypemgtservice.PurOrgTypeMapView_;
-import cds.gen.cm.orgprocorgtypemgtservice.PurOrgTypeMapView;
+import cds.gen.cm.orgprocorgtypemgtservice.PurOrgTypeView_;
+import cds.gen.cm.orgprocorgtypemgtservice.PurOrgTypeView;
 import lg.sppCap.handlers.base.BaseEventHandler;
 
 import java.sql.CallableStatement;
@@ -70,10 +70,10 @@ public class OrgProcOrgTypeMgtService implements EventHandler {
     @Qualifier(OrgProcOrgTypeMgtService_.CDS_NAME)
     private CdsService orgProcOrgTypeMgtService;
 
-    @On(event = CdsService.EVENT_CREATE, entity=PurOrgTypeMapView_.CDS_NAME)
+    @On(event = CdsService.EVENT_CREATE, entity=PurOrgTypeView_.CDS_NAME)
     public void onSampleViewCreate(CdsCreateEventContext context) { 
         System.out.println("------------------View----------ON_START------------------");
-        List<PurOrgTypeMapView> v_results = new ArrayList<PurOrgTypeMapView>();
+        List<PurOrgTypeView> v_results = new ArrayList<PurOrgTypeView>();
         List<Map<String, Object>> entries = context.getCqn().entries();
 
         
@@ -90,19 +90,17 @@ public class OrgProcOrgTypeMgtService implements EventHandler {
             System.out.println(row.get("tenant_id"));
             System.out.println(row.get("company_code"));
             System.out.println(row.get("process_type_name"));
-            System.out.println(row.get("process_type_code"));
             System.out.println(row.get("org_type_name"));
-            System.out.println(row.get("org_type_code"));
             System.out.println(row.get("use_flag"));
             System.out.println(row);
-            
-            PurOrgTypeMapView v_result = PurOrgTypeMapView.create();
+
+            PurOrgTypeView v_result = PurOrgTypeView.create();
             v_result.setTenantId((String) row.get("tenant_id"));
             v_result.setCompanyCode((String) row.get("company_code"));
             v_result.setProcessTypeName((String) row.get("process_type_name"));
             v_result.setOrgTypeName((String) row.get("org_type_name"));
             v_result.setUseFlag((Boolean) row.get("use_flag"));
-
+            System.out.println(v_result);
             System.out.println("------------------View----------FORMID------------------");
 
             PurOrgTypeMap purorg = PurOrgTypeMap.create();
@@ -117,14 +115,15 @@ public class OrgProcOrgTypeMgtService implements EventHandler {
             System.out.println(row.get("tenant_id"));
             System.out.println(row.get("company_code"));
             System.out.println(row.get("process_type_name"));
-            System.out.println(row.get("process_type_code"));
             System.out.println(row.get("org_type_name"));
-            System.out.println(row.get("org_type_code"));
             System.out.println(row.get("use_flag"));
             System.out.println("------------------View----------FOREND------------------");
             
             v_results.add(v_result);
         }
+        context.setResult(v_results);
+        context.setCompleted();
+    }
 
     
 
@@ -165,7 +164,7 @@ public class OrgProcOrgTypeMgtService implements EventHandler {
 
         // context.setResult(v_results);
         // context.setCompleted();
-    }
+    // }
     // @On(event = CdsService.EVENT_DELETE, entity=PurOrgTypeMapView_.CDS_NAME)
     // public void onSampleViewDelete(CdsDeleteEventContext context) { 
     //     System.out.println("------------------View----------ON_START------------DELETE-----");
