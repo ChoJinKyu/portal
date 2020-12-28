@@ -50,8 +50,8 @@ public class VpMappingServiceV4 implements EventHandler {
     {
         "inputData" : {
             "savedHeaders" : [
-                {"header_id" : 108, "cd": "eeee1122222", "name": "eeee11"},
-                {"header_id" : 109, "cd": "eeee1222222", "name": "eeee12"}
+                {"header_id" : 108, "cd": "eeee1122222", "name": "eeee11"} ,
+                {"header_id" : 109, "cd": "eeee1222222", "name": "eeee12"} 
             ],
             "savedDetails" : [
                 {"detail_id": 1008, "header_id" : 108, "cd": "eeee122221", "name": "eeee11"},
