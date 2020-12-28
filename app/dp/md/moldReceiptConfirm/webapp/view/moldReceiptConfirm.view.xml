@@ -108,7 +108,7 @@
                                     <items>
                                         <SegmentedButtonItem text="No Confirmed" key="ORD_CRT" width="7em" />
                                         <SegmentedButtonItem text="Confirmed" key="RCV_CNF" width="6em" />
-                                        <SegmentedButtonItem text="All(temp)" key="ALL" width="6em" />
+                                        <!-- <SegmentedButtonItem text="All(temp)" key="ALL" width="6em" /> -->
                                     </items>
                                 </SegmentedButton>
                                 <layoutData>
@@ -342,8 +342,9 @@
                     <OverflowToolbar>
                         <Title text="List ({= ${list>/MoldMasterSpec}.length || 0})" level="H2"/>
                         <ToolbarSpacer/>
-                        <Button id="moldMstTableDeleteButton"   type="Emphasized" text="Confirm"             press=".onMoldMstTableConfirmButtonPress"   enabled="{mode>/viewFlag}" />
-                        <Button id="moldMstTableReceiptButton"  type="Transparent"  text="Excel"            press=".onMoldMstTableExcelButtonPress"  enabled="{mode>/viewFlag}" />
+                        <!-- <Button id="testSuppBtn"   type="Emphasized" text="Supp Test"             press=".onTestSuppBtnPress"    /> -->
+                        <Button id="moldMstTableConfirmButton"   type="Emphasized" text="Confirm"             press=".onMoldMstTableConfirmButtonPress"    />
+                        <Button id="moldMstTableExcelButton"  type="Transparent"  text="Excel"            press=".onMoldMstTableExcelButtonPress"   />
                         <ToolbarSeparator/>
                         <Button icon="sap-icon://action-settings" press=".onMoldMstTablePersoButtonPressed" >
                             <layoutData>

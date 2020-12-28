@@ -332,6 +332,7 @@ sap.ui.define([
       var view = this.getView(),
         master = view.getModel("master"),
         detail = view.getModel("details"),
+        length = 0,
         that = this;
 
       // Validation
@@ -348,6 +349,8 @@ sap.ui.define([
     //     return;
     //   }
       // Set Details (New)
+      (length = detail.getData()["MenuLng"].length) 
+      && 
       detail.getData()["MenuLng"].map(r => {
         if (r["_row_state_"] == "C") {
           r["tenant_id"] = master.getData()["tenant_id"];
@@ -355,6 +358,11 @@ sap.ui.define([
         }
         return r;
       });
+
+      if (length <= 0) {
+          MessageBox.alert("다국어 메뉴명을 등록하세요.");
+          return;
+      }
 
       MessageBox.confirm("Are you sure ?", {
         title: "Comfirmation",

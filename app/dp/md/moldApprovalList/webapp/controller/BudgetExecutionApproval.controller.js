@@ -192,7 +192,6 @@ sap.ui.define([
             }
         } ,
    
-        
         onChangePayment: function (oEvent) {
             var oModel = this.getModel("moldMaster");
             /*
@@ -200,6 +199,84 @@ sap.ui.define([
             console.log();
             console.log();
         },
+
+        onPageDraftButtonPress : function () { 
+            this.approval_type_code = "B";
+            var bModel = this.getModel("mdItemMaster");
+            this.approvalDetails_data = [] ;
+            this.moldMaster_data = [] ;
+            var that = this;
+            console.log("bModel " , bModel);
+            console.log("bModel.getData().length " , bModel.getData().ItemBudgetExecution.length);
+            if(bModel.getData().ItemBudgetExecution.length > 0){
+                var account_code = bModel.getData().ItemBudgetExecution[0].account_code;
+                var investment_ecst_type_code =  bModel.getData().ItemBudgetExecution[0].investment_ecst_type_code;
+                var accounting_department_code =  bModel.getData().ItemBudgetExecution[0].accounting_department_code;
+                var import_company_code =  bModel.getData().ItemBudgetExecution[0].import_company_code;
+                var project_code =  bModel.getData().ItemBudgetExecution[0].project_code;
+                var import_company_org_code =  bModel.getData().ItemBudgetExecution[0].import_company_org_code;
+               // var provisional_budget_amount =  bModel.getData().ItemBudgetExecution[0].provisional_budget_amount;
+
+                bModel.getData().ItemBudgetExecution.forEach(function(item){
+                    that.approvalDetails_data.push({
+                        tenant_id : that.tenant_id 
+                        , approval_number : that.approval_number 
+                        , mold_id : item.mold_id 
+                        , _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
+                    });
+                    that.moldMaster_data.push({
+                         tenant_id : that.tenant_id 
+                        , mold_id : item.mold_id 
+                        , account_code : account_code 
+                        , investment_ecst_type_code : investment_ecst_type_code 
+                        , accounting_department_code : accounting_department_code 
+                        , import_company_code : import_company_code 
+                        , project_code : project_code 
+                        , import_company_org_code : import_company_org_code 
+                        , mold_production_type_code : item.mold_production_type_code 
+                        , mold_item_type_code :  item.mold_item_type_code 
+                        , provisional_budget_amount : item.provisional_budget_amount 
+                        , asset_type_code : item.asset_type_code 
+                        , _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
+                    });
+                });
+
+            }
+
+            if(bModel._aRemovedRows.length > 0){
+                bModel._aRemovedRows.forEach(function(item){
+                    that.approvalDetails_data.push({
+                        tenant_id : that.tenant_id 
+                        , approval_number : that.approval_number 
+                        , mold_id : item.mold_id 
+                        , _row_state_ : "D"
+                    });
+                    that.moldMaster_data.push({
+                         tenant_id : that.tenant_id 
+                        , mold_id : item.mold_id 
+                        , account_code : account_code 
+                        , investment_ecst_type_code : investment_ecst_type_code 
+                        , accounting_department_code : accounting_department_code 
+                        , import_company_code : import_company_code 
+                        , project_code : project_code 
+                        , import_company_org_code : import_company_org_code 
+                        , mold_production_type_code : item.mold_production_type_code 
+                        , mold_item_type_code :  item.mold_item_type_code 
+                        , provisional_budget_amount : item.provisional_budget_amount 
+                        , asset_type_code : item.asset_type_code 
+                        , _row_state_ : "D"
+                    });
+                });
+            }
+
+
+            this._commonDataSettingAndSubmit();
+
+        }
+
+
+
+
         /** PO Item End */
 
     });

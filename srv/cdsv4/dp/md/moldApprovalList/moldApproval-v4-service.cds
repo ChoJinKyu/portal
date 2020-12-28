@@ -8,7 +8,7 @@ namespace dp;
 @path : '/dp.MoldApprovalV4Service'
 service MoldApprovalV4Service { 
 
-   type ApprovalMaster : {
+   type ApprovalMaster_v4 : {
         tenant_id               : String;
         approval_number         : String;
         legacy_approval_number  : String;
@@ -25,15 +25,18 @@ service MoldApprovalV4Service {
         attch_group_number      : String;
         local_create_dtm        : DateTime;
         local_update_dtm        : DateTime;
+        create_user_id          : String;
+        update_user_id          : String;
    };
 
-    type ApprovalDetails : {
+    type ApprovalDetails_v4 : {
         tenant_id           : String;
         approval_number     : String;
         mold_id             : String;
+        _row_state_         : String;
     };
 
-    type Approver : {
+    type Approver_v4 : {
         tenant_id           : String;
         approval_number     : String;
         approve_sequence    : String;
@@ -41,15 +44,17 @@ service MoldApprovalV4Service {
         approver_empno      : String;
         approve_status_code : String;
         approve_comment     : String;
+        _row_state_         : String;
     };
 
-    type Referer : {
+    type Referer_v4 : {
         tenant_id       : String;
         approval_number : String;
-        referer_empno   : String;
+        referer_empno   : String; 
+        _row_state_     : String;
     };
 
-    type MoldMaster : {
+    type MoldMaster_v4 : {
         tenant_id: String ;
         company_code: String ;
         org_type_code: String ;
@@ -116,14 +121,15 @@ service MoldApprovalV4Service {
         acq_date: String ;
         acq_amount: String ;
         use_department_code : String ;
+        _row_state_ : String;
     };
 
     type data {
-        approvalMaster :  ApprovalMaster ;
-        approvalDetails : array of ApprovalDetails;
-        approver : array of Approver;
-        moldMaster : array of MoldMaster;
-        referer : array of Referer;
+        approvalMaster :  ApprovalMaster_v4 ;
+        approvalDetails : array of ApprovalDetails_v4;
+        approver : array of Approver_v4;
+        moldMaster : array of MoldMaster_v4;
+        referer : array of Referer_v4;
     }
 
     type resultMsg {

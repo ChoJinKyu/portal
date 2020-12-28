@@ -47,6 +47,7 @@
             "db/cds/op",
             "db/cds/pg",
             "db/cds/pg/if",
+            "db/cds/pg/it",
             "db/cds/pg/ri",
             "db/cds/pg/mi",
             "db/cds/pg/tm",

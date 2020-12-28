@@ -848,7 +848,6 @@ sap.ui.define([
                 });
             }
 
-
             data = {
               inputData : { 
                   approvalMaster : approvalMaster 
@@ -860,16 +859,11 @@ sap.ui.define([
             }
 
              this.callAjax(data,"saveMoldApproval")
-
-
         } , 
 
 
         callAjax : function (data,fn) {  
-            console.log("data >>>> " , data);
-
-            //  /dp/md/moldApprovalList/webapp/srv-api/odata/v2/dp.MoldApprovalListService/RefererSearch
-            //  "xx/sampleMgr/webapp/srv-api/odata/v4/xx.SampleMgrV4Service/SaveSampleHeaderMultiProc"
+           console.log("data >>>> " , data);
            var url = "/dp/md/moldApprovalList/webapp/srv-api/odata/v4/dp.MoldApprovalV4Service/"+fn;
 
             $.ajax({
@@ -877,12 +871,12 @@ sap.ui.define([
                 type: "POST",
                 //datatype: "json",
                 data : JSON.stringify(data),
-                contentType: "application/json",
+                contentType: "application/json", 
                 success: function(data){
-
+                    console.log("data>>>> " , data);
                 },
                 error: function(e){
-                    
+                    console.log("error >>>> " , e);
                 }
             });
         }

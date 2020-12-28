@@ -25,7 +25,7 @@ entity It_Mst_Hs_Code {
     key company_code  : String(10) not null @title : '회사코드';
     key org_type_code : String(30) not null @title : '조직유형코드';
     key org_code      : String(10) not null @title : '조직코드';
-    key country_code  : String(2) not null  @title : '국가키';
+    key country_code  : String(2) not null  @title : '국가코드';
     key hs_code       : String(2) not null  @title : 'HS_CODE';
         hs_code_desc  : String(30)          @title : 'HS_CODE명';
 }

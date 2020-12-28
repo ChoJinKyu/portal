@@ -139,25 +139,25 @@ sap.ui.define([
             this.validator.clearValueState(this.byId("search_tenantE"));
         },
 
-        _valueCheck : function (sSurffix,selectedKey) {
+        _valueCheck : function (selectedKey) {
 
              if ( selectedKey === "Unit" || selectedKey === "Division" || selectedKey === "Purchasing" || selectedKey === "Division") {
-                if (this.getView().byId("search_tenant"+sSurffix)) {
-                if (this.validator.validate(this.byId("search_tenant"+sSurffix)) !== true) {
+                if (this.getView().byId("search_tenant")) {
+                if (this.validator.validate(this.byId("search_tenant")) !== true) {
                     return "return";
                     } 
                 }  
             } else if (selectedKey === "Plant" || selectedKey === "Company" ) {
-                if (this.getView().byId("search_tenant"+sSurffix)) {
-                if (this.validator.validate(this.byId("search_tenant"+sSurffix)) !== true) {
-                    if (this.getView().byId("search_company"+sSurffix)) {
-                        if (this.validator.validate(this.byId("search_company"+sSurffix)) !== true) {
+                if (this.getView().byId("search_tenant")) {
+                if (this.validator.validate(this.byId("search_tenant")) !== true) {
+                    if (this.getView().byId("search_company")) {
+                        if (this.validator.validate(this.byId("search_company")) !== true) {
                             return "return";
                         }
                     }
                     return "return";
-                } else if (this.getView().byId("search_company"+sSurffix)) {
-                    if (this.validator.validate(this.byId("search_company"+sSurffix)) !== true) {
+                } else if (this.getView().byId("search_company")) {
+                    if (this.validator.validate(this.byId("search_company")) !== true) {
                         return "return";
                         }
                     }
@@ -218,12 +218,15 @@ sap.ui.define([
 		 * @public
 		 */
         onPageSearchButtonPress: function (oEvent) {
-            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S";
+            //var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S";
             var selectedKey = this.getView().getModel("view").getProperty("/selectedTabKey"),
-                vSelectKey = selectedKey + "Table";
+                vSelectKey = selectedKey + "Table",
+                vReturn;
 
-            this._valueCheck(sSurffix,selectedKey);
-
+            vReturn = this._valueCheck(selectedKey);
+            if(vReturn === "return"){
+                return;
+            }
             var forceSearch = function () {
                 var aTableSearchState = this._getSearchStates();
                 this._applySearch(aTableSearchState, selectedKey);
@@ -418,20 +421,20 @@ sap.ui.define([
 
         _getSearchStates: function () {
             var oModel = this.getModel("list");
-            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S";
+            //var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S";
             var tenant,
                 company,
                 //keyword = this.getView().byId("midTableSearchField").getValue(),
                 selectedKey = this.getModel("view").getProperty("/selectedTabKey"),
                 nameFilter;
 
-            if (this.getView().byId("search_tenant"+sSurffix)) {
-                tenant = this.getView().byId("search_tenant"+sSurffix).getSelectedKey();
-                this.getView().getModel("view").setProperty("/tenant_id", this.byId("search_tenant"+sSurffix).getSelectedKey());
+            if (this.getView().byId("search_tenant")) {
+                tenant = this.getView().byId("search_tenant").getSelectedKey();
+                this.getView().getModel("view").setProperty("/tenant_id", this.byId("search_tenant").getSelectedKey());
             }
-            if (this.getView().byId("search_company"+sSurffix)) {
-                company = this.getView().byId("search_company"+sSurffix).getSelectedKey();
-                this.getView().getModel("view").setProperty("/company_code", this.byId("search_company"+sSurffix).getSelectedKey());
+            if (this.getView().byId("search_company")) {
+                company = this.getView().byId("search_company").getSelectedKey();
+                this.getView().getModel("view").setProperty("/company_code", this.byId("search_company").getSelectedKey());
             }
             // "Tenant", "Company", "Plant", "Purchasing",  "Unit", "Division"
             if (selectedKey == "Tenant" || selectedKey == "Company" || selectedKey == "Plant" || selectedKey == "Purchasing") {
@@ -464,7 +467,7 @@ sap.ui.define([
         },
         onTenantChange: function (oEvent) {
             // var sTenant = oEvent.getSource().getSelectedKey();
-            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S";
+            //var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S";
             var oContModel = this.getModel("view");
             var sTenant = oContModel.getProperty("/tenant_id");
             var aFilters = [
@@ -475,7 +478,7 @@ sap.ui.define([
                 text: "{company_name}",
                 additionalText: "{company_code}"
             });
-            var oChain = this.byId("search_company"+sSurffix);
+            var oChain = this.byId("search_company");
             oChain.setSelectedKey(null);
             oChain.bindItems("/Org_Company", oItemTemplate, null, aFilters);
         }
