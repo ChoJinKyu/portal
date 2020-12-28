@@ -1,12 +1,16 @@
 sap.ui.define([
-	"ext/lib/controller/BaseController"
-], function (BaseController) {
+	"ext/lib/controller/BaseController",
+	"ext/lib/util/Multilingual"
+], function (BaseController, Multilingual) {
 	"use strict";
 
 	return BaseController.extend("pg.mi.miBom.controller.App", {
 
 		onInit: function () {
 			// apply content density mode to root view
+			var oMultilingual = new Multilingual();
+			this.setModel(oMultilingual.getModel(), "I18N");
+						
 			this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
 			this.oRouter = this.getOwnerComponent().getRouter();
 			this.oRouter.attachRouteMatched(this.onRouteMatched, this);
