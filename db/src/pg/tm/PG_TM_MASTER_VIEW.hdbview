@@ -127,31 +127,31 @@ from
     union
 /** Manager **/
 	select	distinct
-			main.monitoring_type_code														as monitoring_type_code,
-			main.scenario_number														    as scenario_number,
-			main.tenant_id																    as tenant_id,
-			'' 																			    as company_code,
-			'' 																			    as company_name,
-			'' 																			    as bizunit_code,
-			'' 																			    as bizunit_name,
-			string_agg(manager.monitoring_manager,';' order by manager.monitoring_manager)	as manager,
-			string_agg(employee.user_local_name,';' order by manager.monitoring_manager)	as manager_local_name,
-			''																			    as enrollment_date,
-			''																			    as operation_mode_display_flag,
-			''																			    as operation_mode_calling_flag,
-			''																			    as operation_mode_alram_flag,
-			''																			    as activate_flag,
-			''																			    as monitoring_purchasing_type_code,
-			''																			    as monitoring_purchasing_type_name,
-			''																			    as monitoring_cycle_code,
-			''																			    as monitoring_cycle_name
+			main.monitoring_type_code														            as monitoring_type_code,
+			main.scenario_number														                as scenario_number,
+			main.tenant_id																                as tenant_id,
+			'' 																			                as company_code,
+			'' 																			                as company_name,
+			'' 																			                as bizunit_code,
+			'' 																			                as bizunit_name,
+			string_agg(manager.monitoring_manager_empno,';' order by manager.monitoring_manager_empno)  as manager,
+			string_agg(employee.user_local_name,';' order by manager.monitoring_manager_empno)          as manager_local_name,
+			''																			                as enrollment_date,
+			''																			                as operation_mode_display_flag,
+			''																			                as operation_mode_calling_flag,
+			''																			                as operation_mode_alram_flag,
+			''																			                as activate_flag,
+			''																			                as monitoring_purchasing_type_code,
+			''																			                as monitoring_purchasing_type_name,
+			''																			                as monitoring_cycle_code,
+			''																			                as monitoring_cycle_name
 	from pg_tm_master as main
 	left join pg_tm_manager_dtl as manager
-		on  main.tenant_id				= manager.tenant_id
-		and main.scenario_number		= manager.scenario_number
+		on  main.tenant_id				        = manager.tenant_id
+		and main.scenario_number		        = manager.scenario_number
 	left join cm_hr_employee as employee
-		on	manager.tenant_id			= employee.tenant_id
-		and	manager.monitoring_manager	= employee.employee_number
+		on	manager.tenant_id			        = employee.tenant_id
+		and	manager.monitoring_manager_empno	= employee.employee_number
 	group by
 		main.monitoring_type_code,
 		main.scenario_number,

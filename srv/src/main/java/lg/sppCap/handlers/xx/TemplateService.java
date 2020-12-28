@@ -18,7 +18,7 @@ import cds.gen.xx.templateservice.ControlOptionMasters_;
 import cds.gen.xx.templateservice.Message;
 import cds.gen.xx.templateservice.Message_;
 import cds.gen.xx.templateservice.TemplateService_;
-import lg.sppCap.handlers.base.BaseEventHandler;
+import lg.sppCap.frame.handler.BaseEventHandler;
 
 @Component
 @ServiceName(TemplateService_.CDS_NAME)
