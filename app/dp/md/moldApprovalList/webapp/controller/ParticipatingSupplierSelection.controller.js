@@ -60,9 +60,6 @@ sap.ui.define([
             this.getView().setModel(new ManagedListModel(), "mdItemMaster");
             this.getView().setModel(new ManagedListModel(), "psOrgCode"); //currency 콤보박스
             
-            this.getView().setModel(new ManagedListModel(), "appDetail");
-            this.getView().setModel(new ManagedListModel(), "moldMaster");
-            
         },
 
         /* =========================================================== */
@@ -93,7 +90,7 @@ sap.ui.define([
                 });
             }  
         },
-        
+
         _bindViewParticipating : function (sObjectPath, sModel, aFilter, callback) { 
             var oView = this.getView(),
                 oModel = this.getModel(sModel);

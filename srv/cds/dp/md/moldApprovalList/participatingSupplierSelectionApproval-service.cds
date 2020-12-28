@@ -44,42 +44,31 @@ service ParticipatingSupplierSelectionApprovalService {
         mst.budget_amount,
         mst.currency_code,
         mst.target_amount,
-        qtn_1.supplier_code as supplier_code_1,
-        qtn_2.supplier_code as supplier_code_2,
-        qtn_3.supplier_code as supplier_code_3,
-        qtn_4.supplier_code as supplier_code_4,
-        qtn_5.supplier_code as supplier_code_5,
-        qtn_6.supplier_code as supplier_code_6,
-        qtn_7.supplier_code as supplier_code_7,
-        qtn_8.supplier_code as supplier_code_8,
-        qtn_9.supplier_code as supplier_code_9,
-        qtn_10.supplier_code as supplier_code_10,
-        qtn_11.supplier_code as supplier_code_11,
-        qtn_12.supplier_code as supplier_code_12,
-        qtn_1.sequence as sequence_1,
-        qtn_2.sequence as sequence_2,
-        qtn_3.sequence as sequence_3,
-        qtn_4.sequence as sequence_4,
-        qtn_5.sequence as sequence_5,
-        qtn_6.sequence as sequence_6,
-        qtn_7.sequence as sequence_7,
-        qtn_8.sequence as sequence_8,
-        qtn_9.sequence as sequence_9,
-        qtn_10.sequence as sequence_10,
-        qtn_11.sequence as sequence_11,
-        qtn_12.sequence as sequence_12
+        (select a.supplier_code from qtn.Md_Quotation a where a.mold_id = mst.mold_id and a.sequence=1) as supplier_code_1,
+        (select a.supplier_code from qtn.Md_Quotation a where a.mold_id = mst.mold_id and a.sequence=2) as supplier_code_2,
+        (select a.supplier_code from qtn.Md_Quotation a where a.mold_id = mst.mold_id and a.sequence=3) as supplier_code_3,
+        (select a.supplier_code from qtn.Md_Quotation a where a.mold_id = mst.mold_id and a.sequence=4) as supplier_code_4,
+        (select a.supplier_code from qtn.Md_Quotation a where a.mold_id = mst.mold_id and a.sequence=5) as supplier_code_5,
+        (select a.supplier_code from qtn.Md_Quotation a where a.mold_id = mst.mold_id and a.sequence=6) as supplier_code_6,
+        (select a.supplier_code from qtn.Md_Quotation a where a.mold_id = mst.mold_id and a.sequence=7) as supplier_code_7,
+        (select a.supplier_code from qtn.Md_Quotation a where a.mold_id = mst.mold_id and a.sequence=8) as supplier_code_8,
+        (select a.supplier_code from qtn.Md_Quotation a where a.mold_id = mst.mold_id and a.sequence=9) as supplier_code_9,
+        (select a.supplier_code from qtn.Md_Quotation a where a.mold_id = mst.mold_id and a.sequence=10) as supplier_code_10,
+        (select a.supplier_code from qtn.Md_Quotation a where a.mold_id = mst.mold_id and a.sequence=11) as supplier_code_11,
+        (select a.supplier_code from qtn.Md_Quotation a where a.mold_id = mst.mold_id and a.sequence=12) as supplier_code_12,
+        (select a.sequence from qtn.Md_Quotation a where a.mold_id = mst.mold_id and a.sequence=1) as sequence_1,
+        (select a.sequence from qtn.Md_Quotation a where a.mold_id = mst.mold_id and a.sequence=2) as sequence_2,
+        (select a.sequence from qtn.Md_Quotation a where a.mold_id = mst.mold_id and a.sequence=3) as sequence_3,
+        (select a.sequence from qtn.Md_Quotation a where a.mold_id = mst.mold_id and a.sequence=4) as sequence_4,
+        (select a.sequence from qtn.Md_Quotation a where a.mold_id = mst.mold_id and a.sequence=5) as sequence_5,
+        (select a.sequence from qtn.Md_Quotation a where a.mold_id = mst.mold_id and a.sequence=6) as sequence_6,
+        (select a.sequence from qtn.Md_Quotation a where a.mold_id = mst.mold_id and a.sequence=7) as sequence_7,
+        (select a.sequence from qtn.Md_Quotation a where a.mold_id = mst.mold_id and a.sequence=8) as sequence_8,
+        (select a.sequence from qtn.Md_Quotation a where a.mold_id = mst.mold_id and a.sequence=9) as sequence_9,
+        (select a.sequence from qtn.Md_Quotation a where a.mold_id = mst.mold_id and a.sequence=10) as sequence_10,
+        (select a.sequence from qtn.Md_Quotation a where a.mold_id = mst.mold_id and a.sequence=11) as sequence_11,
+        (select a.sequence from qtn.Md_Quotation a where a.mold_id = mst.mold_id and a.sequence=12) as sequence_12
 	from approvalDtl.Md_Approval_Dtl dtl
 	join moldMst.Md_Mst mst on dtl.mold_id = mst.mold_id
-    left JOIN qtn.Md_Quotation AS qtn_1 ON dtl.mold_id = qtn_1.mold_id and qtn_1.sequence = 1 
-	left JOIN qtn.Md_Quotation AS qtn_2 ON dtl.mold_id = qtn_2.mold_id and qtn_2.sequence = 2
-	left JOIN qtn.Md_Quotation AS qtn_3 ON dtl.mold_id = qtn_3.mold_id and qtn_3.sequence = 3
-	left JOIN qtn.Md_Quotation AS qtn_4 ON dtl.mold_id = qtn_4.mold_id and qtn_4.sequence = 4
-	left JOIN qtn.Md_Quotation AS qtn_5 ON dtl.mold_id = qtn_5.mold_id and qtn_5.sequence = 5
-	left JOIN qtn.Md_Quotation AS qtn_6 ON dtl.mold_id = qtn_6.mold_id and qtn_6.sequence = 6
-	left JOIN qtn.Md_Quotation AS qtn_7 ON dtl.mold_id = qtn_7.mold_id and qtn_7.sequence = 7
-	left JOIN qtn.Md_Quotation AS qtn_8 ON dtl.mold_id = qtn_8.mold_id and qtn_8.sequence = 8
-	left JOIN qtn.Md_Quotation AS qtn_9 ON dtl.mold_id = qtn_9.mold_id and qtn_9.sequence = 9
-	left JOIN qtn.Md_Quotation AS qtn_10 ON dtl.mold_id = qtn_10.mold_id and qtn_10.sequence = 10
-	left JOIN qtn.Md_Quotation AS qtn_11 ON dtl.mold_id = qtn_11.mold_id and qtn_11.sequence = 11
-	left JOIN qtn.Md_Quotation AS qtn_12 ON dtl.mold_id = qtn_12.mold_id and qtn_12.sequence = 12;
+   
 }
