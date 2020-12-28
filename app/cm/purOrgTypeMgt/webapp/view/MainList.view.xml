@@ -113,7 +113,7 @@
         <f:content>
         <!-- noDataText="{I18N>/NCM0001}" -->
             <t:Table id="mainTable" 
-                    rows="{list>/PurOrgTypeMapView}"
+                    rows="{list>/PurOrgTypeView}"
                     selectionMode="MultiToggle"
                     visibleRowCountMode="Auto"
                     columnResize="onColumnResize"

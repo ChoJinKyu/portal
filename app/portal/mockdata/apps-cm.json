@@ -84,8 +84,8 @@
         },
         {
           "name": "역할그룹관리",
-          "url": "../cm/msgMgt/webapp",
-          "component": "cm.msgMgt"
+          "url": ".",
+          "component": ""
         },
         {
           "name": "역할관리",
