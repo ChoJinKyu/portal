@@ -69,8 +69,7 @@ service ParticipatingSupplierSelectionApprovalService {
         qtn_11.sequence as sequence_11,
         qtn_12.sequence as sequence_12
 	from approvalDtl.Md_Approval_Dtl dtl
-	join moldMst.Md_Mst mst
-	    on dtl.mold_id = mst.mold_id
+	join moldMst.Md_Mst mst on dtl.mold_id = mst.mold_id
     left JOIN qtn.Md_Quotation AS qtn_1 ON dtl.mold_id = qtn_1.mold_id and qtn_1.sequence = 1 
 	left JOIN qtn.Md_Quotation AS qtn_2 ON dtl.mold_id = qtn_2.mold_id and qtn_2.sequence = 2
 	left JOIN qtn.Md_Quotation AS qtn_3 ON dtl.mold_id = qtn_3.mold_id and qtn_3.sequence = 3

@@ -59,6 +59,10 @@ sap.ui.define([
             this.getRouter().getRoute("participatingSupplierSelection").attachPatternMatched(this._onObjectMatched, this);//change
             this.getView().setModel(new ManagedListModel(), "mdItemMaster");
             this.getView().setModel(new ManagedListModel(), "psOrgCode"); //currency 콤보박스
+            
+            this.getView().setModel(new ManagedListModel(), "appDetail");
+            this.getView().setModel(new ManagedListModel(), "moldMaster");
+            
         },
 
         /* =========================================================== */
