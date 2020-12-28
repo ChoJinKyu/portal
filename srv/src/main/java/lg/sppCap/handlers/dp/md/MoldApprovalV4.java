@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 import java.math.BigDecimal;
+import java.util.Calendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -57,6 +58,9 @@ public class MoldApprovalV4 implements EventHandler {
         Data data = context.getInputData();
 
         ApprovalMasterV4 aMaster = data.getApprovalMaster();
+
+        System.out.println("aMaster>>> " + aMaster);
+
         Collection<ApprovalDetailsV4> approvalDetail = data.getApprovalDetails();
         Collection<ApproverV4> approverList = data.getApprover();
         Collection<RefererV4> refList = data.getReferer();
@@ -67,10 +71,9 @@ public class MoldApprovalV4 implements EventHandler {
 
        String approvalNumber = aMaster.getApprovalNumber();
 
-
         try {
 
-            if(approvalNumber != "" && approvalNumber != null){ // update 
+            if(!approvalNumber.equals("New") && !approvalNumber.equals("") && approvalNumber != null){ // update 
                 ApprovalMasters master =  ApprovalMasters.create();  
                 master.setTenantId(aMaster.getTenantId());
                 master.setApprovalNumber(aMaster.getApprovalNumber());
@@ -130,18 +133,16 @@ public class MoldApprovalV4 implements EventHandler {
 
                 }
   
-                if(!approverList.isEmpty() && approverList.size() > 0){ 
-                   // 다 삭제 하고 다시 insert 한다.
-                    Approvers del = Approvers.create();
-                    del.setTenantId(aMaster.getTenantId());
-                    del.setApprovalNumber(approvalNumber); 
-                    Delete d = Delete.from(Approvers_.CDS_NAME).matching(del); 
-                    Result rst = moldApprovalService.run(d);
+                 // 다 삭제 하고 다시 insert 한다.
+                Approvers del = Approvers.create();
+                del.setTenantId(aMaster.getTenantId());
+                del.setApprovalNumber(approvalNumber); 
+                Delete d = Delete.from(Approvers_.CDS_NAME).matching(del); 
+                Result rst = moldApprovalService.run(d);
 
+                if(!approverList.isEmpty() && approverList.size() > 0){ 
                     for(ApproverV4 row : approverList){
                            Approvers approver = Approvers.create();
-
-                      //  if(!row.getRowState().equals("D")){
                             approver.setTenantId(row.getTenantId());
                             approver.setApprovalNumber(approvalNumber);
                             approver.setApproveSequence(row.getApproveSequence());
@@ -154,54 +155,68 @@ public class MoldApprovalV4 implements EventHandler {
                             approver.setCreateUserId(aMaster.getCreateUserId());
                             CqnInsert i = Insert.into(Approvers_.CDS_NAME).entry(approver); 
                             Result rst2 = moldApprovalService.run(i); 
-                     //  }
- 
                     } // for 
                 }// if  
 
+                // 다 삭제 하고 다시 insert 한다.
+                Referers del2 = Referers.create();
+                del2.setTenantId(aMaster.getTenantId());
+                del2.setApprovalNumber(approvalNumber); 
+                Delete d2 = Delete.from(Referers_.CDS_NAME).matching(del2); 
+                Result rst2 = moldApprovalService.run(d2);               
                 if(!refList.isEmpty() && refList.size() > 0){ 
-                   // 다 삭제 하고 다시 insert 한다.
-                    Referers del = Referers.create();
-                    del.setTenantId(aMaster.getTenantId());
-                    del.setApprovalNumber(approvalNumber); 
-                    Delete d = Delete.from(Referers_.CDS_NAME).matching(del); 
-                    Result rst = moldApprovalService.run(d);
-
                     for(RefererV4 row : refList){
                         Referers referer = Referers.create();
-
-                       // if(!row.getRowState().equals("D")){
-                            referer.setTenantId(row.getTenantId());
-                            referer.setApprovalNumber(approvalNumber);
-                            referer.setRefererEmpno(row.getRefererEmpno());
-                            referer.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
-                            referer.setUpdateUserId(aMaster.getUpdateUserId()); 
-                            referer.setLocalCreateDtm(aMaster.getLocalCreateDtm());
-                            referer.setCreateUserId(aMaster.getCreateUserId());
-                            CqnInsert i = Insert.into(Referers_.CDS_NAME).entry(referer); 
-                            Result rst2 = moldApprovalService.run(i); 
-                      //  }
- 
+                        referer.setTenantId(row.getTenantId());
+                        referer.setApprovalNumber(approvalNumber);
+                        referer.setRefererEmpno(row.getRefererEmpno());
+                        referer.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
+                        referer.setUpdateUserId(aMaster.getUpdateUserId()); 
+                        referer.setLocalCreateDtm(aMaster.getLocalCreateDtm());
+                        referer.setCreateUserId(aMaster.getCreateUserId());
+                        CqnInsert i = Insert.into(Referers_.CDS_NAME).entry(referer); 
+                        Result rst3 = moldApprovalService.run(i); 
                     } // for 
                 }// if   
             
-
-
-
-
-
             }else{ // create 
+
+               System.out.println(" getApprovalNumber " + this.getApprovalNumber(data));
+
+
+
 
             }
            
 
-            context.setResult(msg);
-            context.setCompleted();
+           
         } catch (Exception e) {
            e.printStackTrace();
         }
+
+        context.setResult(msg);
+        context.setCompleted();
     
     }    
+
+    private String getApprovalNumber(Data data){ 
+         /**
+         * 품의서 번호 B20-00000001
+         * : B20-0000001 (품의서 Type + 연도(YY) + 일련번호 8자리) → 검토 후 확정 예정
+         */
+        Calendar cal = Calendar.getInstance();
+        String year = (cal.get(Calendar.YEAR)+"").substring(3,4) ;
+
+
+        String approvalNumer = "";
+        ApprovalMasterV4 aMaster = data.getApprovalMaster(); 
+        String sql="SELECT DP_MD_APPROVAL_SEQ.NEXTVAL FROM DUMMY";
+        int seq=jdbc.queryForObject(sql,Integer.class);
+        approvalNumer = aMaster.getApprovalTypeCode() + year + String.format("%08d", seq);
+
+
+        return approvalNumer;
+    }
 
 
     // budgetExecution 

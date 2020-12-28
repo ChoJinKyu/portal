@@ -62,50 +62,52 @@ entity Tc_Mcst_Project {
         mcst_yield_rate         : Decimal             @title : '재료비수율';
         bom_type_code           : String(30)          @title : '자재명세서유형코드';
         sales_currency_code     : String(3)           @title : '매출통화코드';
+        project_creator_empno   : String(30)          @title : '프로젝트생성자사번';
         project_create_date     : Date                @title : '프로젝트생성일자';
         massprod_start_date     : Date                @title : '양산시작일자';
         massprod_end_date       : Date                @title : '양산종료일자';
         mcst_excl_flag          : Boolean             @title : '재료비제외여부';
         mcst_excl_reason        : String(3000)        @title : '재료비제외사유';
+        direct_register_flag    : Boolean             @title : '직접등록여부';
         mcst_status_code        : String(30)          @title : '재료비상태코드';
         full_sequence           : Decimal             @title : '전체순서';
         mcst_sum_value          : Decimal             @title : '재료비합계값';
 
-        mcst_events                  : Composition of many Mcst_Project_Event.Tc_Mcst_Project_Event
+        mcst_events             : Composition of many Mcst_Project_Event.Tc_Mcst_Project_Event
                                       on  mcst_events.tenant_id    = tenant_id
                                       and mcst_events.project_code = project_code
                                       and mcst_events.model_code   = model_code;
 
-        mcst_silimar_model           : Composition of many Mcst_Project_Similar_Model.Tc_Mcst_Project_Similar_Model
+        mcst_silimar_model      : Composition of many Mcst_Project_Similar_Model.Tc_Mcst_Project_Similar_Model
                                       on  mcst_silimar_model.tenant_id    = tenant_id
                                       and mcst_silimar_model.project_code = project_code
                                       and mcst_silimar_model.model_code   = model_code;
 
-        mcst_base_extra              : Composition of many Mcst_Project_Base_Exrate.Tc_Mcst_Project_Base_Exrate
+        mcst_base_extra         : Composition of many Mcst_Project_Base_Exrate.Tc_Mcst_Project_Base_Exrate
                                       on  mcst_base_extra.tenant_id    = tenant_id
                                       and mcst_base_extra.project_code = project_code
                                       and mcst_base_extra.model_code   = model_code;
 
 
-        mcst_mtlmob                  : Composition of many Mcst_Project_Addition_Info.Tc_Mcst_Project_Addition_Info
+        mcst_mtlmob             : Composition of many Mcst_Project_Addition_Info.Tc_Mcst_Project_Addition_Info
                                       on  mcst_mtlmob.tenant_id          = tenant_id
                                       and mcst_mtlmob.project_code       = project_code
                                       and mcst_mtlmob.model_code         = model_code
                                       and mcst_mtlmob.addition_type_code = 'MTLLMOB'; //물동
 
-        mcst_sales_price             : Composition of many Mcst_Project_Addition_Info.Tc_Mcst_Project_Addition_Info
+        mcst_sales_price        : Composition of many Mcst_Project_Addition_Info.Tc_Mcst_Project_Addition_Info
                                       on  mcst_sales_price.tenant_id          = tenant_id
                                       and mcst_sales_price.project_code       = project_code
                                       and mcst_sales_price.model_code         = model_code
                                       and mcst_sales_price.addition_type_code = 'SALES_PRICE'; //판가
 
-        mcst_prcs_cost               : Composition of many Mcst_Project_Addition_Info.Tc_Mcst_Project_Addition_Info
+        mcst_prcs_cost          : Composition of many Mcst_Project_Addition_Info.Tc_Mcst_Project_Addition_Info
                                       on  mcst_prcs_cost.tenant_id          = tenant_id
                                       and mcst_prcs_cost.project_code       = project_code
                                       and mcst_prcs_cost.model_code         = model_code
                                       and mcst_prcs_cost.addition_type_code = 'PROCESSING_COST'; //가공비
 
-        mcst_sgna                    : Composition of many Mcst_Project_Addition_Info.Tc_Mcst_Project_Addition_Info
+        mcst_sgna               : Composition of many Mcst_Project_Addition_Info.Tc_Mcst_Project_Addition_Info
                                       on  mcst_sgna.tenant_id          = tenant_id
                                       and mcst_sgna.project_code       = project_code
                                       and mcst_sgna.model_code         = model_code

@@ -201,14 +201,15 @@ sap.ui.define([
         },
 
         onPageDraftButtonPress : function () { 
+            
             this.approval_type_code = "B";
             var bModel = this.getModel("mdItemMaster");
             this.approvalDetails_data = [] ;
             this.moldMaster_data = [] ;
             var that = this;
             console.log("bModel " , bModel);
-            console.log("bModel.getData().length " , bModel.getData().ItemBudgetExecution.length);
-            if(bModel.getData().ItemBudgetExecution.length > 0){
+           // console.log("bModel.getData().length " , bModel.getData().ItemBudgetExecution.length);
+            if(bModel.getData().ItemBudgetExecution != undefined && bModel.getData().ItemBudgetExecution.length > 0){
                 var account_code = bModel.getData().ItemBudgetExecution[0].account_code;
                 var investment_ecst_type_code =  bModel.getData().ItemBudgetExecution[0].investment_ecst_type_code;
                 var accounting_department_code =  bModel.getData().ItemBudgetExecution[0].accounting_department_code;

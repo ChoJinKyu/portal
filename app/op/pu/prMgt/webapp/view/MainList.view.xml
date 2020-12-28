@@ -183,7 +183,7 @@
                                 <ObjectIdentifier text="{list>pr_type_name_3}"/>
                                 <ObjectIdentifier text="{list>pr_template_name}"/>
                                 <ObjectIdentifier text="{list>requestor_name}"/>
-                                <ObjectIdentifier text="{list>pr_create_system_code}"/> 
+                                <ObjectIdentifier text="{list>requestor_department_name}"/> 
                                 <ObjectIdentifier text="{
                                         path: 'list>request_date',
                                         formatter: '.dateFormatter.toDateString'

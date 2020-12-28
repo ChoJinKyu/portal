@@ -124,12 +124,29 @@ service MoldApprovalV4Service {
         _row_state_ : String;
     };
 
+    type Quotation_v4 {
+        mold_id               : String;
+        supplier_code         : String;
+        approval_number       : String;
+        sequence              : Integer;
+        quotation_status_code : String;
+        quotation_amount      : Decimal;
+        mcst                  : Decimal;
+        pcst                  : Decimal;
+        profit                : Decimal;
+        packing_cost          : Decimal;
+        biz_trip_cost         : Decimal;
+        spare_part_cost       : Decimal;
+        remark                : String;
+    };
+
     type data {
         approvalMaster :  ApprovalMaster_v4 ;
         approvalDetails : array of ApprovalDetails_v4;
         approver : array of Approver_v4;
         moldMaster : array of MoldMaster_v4;
-        referer : array of Referer_v4;
+        referer : array of Referer_v4; 
+        quotation : array of Quotation_v4;
     }
 
     type resultMsg {

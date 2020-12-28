@@ -47,6 +47,8 @@ sap.ui.define([
             // 각자 fragment 에서 세팅할 테이터 
             this.approvalDetails_data = [] ;
             this.moldMaster_data = [] ;
+            this.quotation_data = [];  // supplier 전용 
+
 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
@@ -864,6 +866,7 @@ sap.ui.define([
                 , approver : aprArr 
                 , moldMaster : this.moldMaster_data  
                 , referer : refArr 
+                , quotation : this.quotation_data 
                 } 
             }
 
