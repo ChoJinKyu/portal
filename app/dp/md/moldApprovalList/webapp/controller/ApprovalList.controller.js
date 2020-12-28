@@ -40,7 +40,7 @@ sap.ui.define([
      * @date 2020.11.19 
      * @author daun.lee 
      */
-    
+     
     var toggleButtonId = "";
     var dialogId = "";
     var path = '';
