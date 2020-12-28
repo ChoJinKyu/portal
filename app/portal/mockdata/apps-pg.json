@@ -11,12 +11,12 @@
                 },
                 {
                     "name": "시황자재 Category 관리",
-                    "url": "../pg/mi/miCategory/webap",
+                    "url": "../pg/mi/miCategory/webapp",
                     "component": "pg.mi.miCategory"
                 },
                 {
                     "name": "시황자재 가격관리",
-                    "url": "../pg/mi/miPrice/webap",
+                    "url": "../pg/mi/miPrice/webapp",
                     "component": "pg.mi.miPrice"
                 },
                 {

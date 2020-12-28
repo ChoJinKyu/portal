@@ -1,8 +1,11 @@
 sap.ui.define([
     "ext/lib/controller/BaseController",
     "ext/lib/util/Multilingual",
+    "ext/lib/util/Validator",
 	"sap/ui/core/routing/History",
-	"sap/ui/model/json/JSONModel",
+    "sap/ui/model/json/JSONModel",
+    "ext/lib/model/TransactionManager",
+    "ext/lib/model/ManagedModel",
 	"ext/lib/model/ManagedListModel",
 	"ext/lib/formatter/DateFormatter",
 	"sap/m/TablePersoController",
@@ -19,12 +22,18 @@ sap.ui.define([
     "sap/ui/core/Item",
     "ext/lib/util/ExcelUtil",
     "sap/ui/core/Fragment"
-], function (BaseController, Multilingual, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ExcelUtil, Fragment) {
-	"use strict";
+], function (BaseController, Multilingual, Validator, History, JSONModel, TransactionManager, ManagedModel,
+    ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, 
+    MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ExcelUtil, Fragment) {
+    "use strict";
+    
+    var oTransactionManager;
 
 	return BaseController.extend("dp.gs.gsSupplierMgt.controller.MainList", {
 
-		dateFormatter: DateFormatter,
+        dateFormatter: DateFormatter,
+        
+        validator: new Validator(),
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -37,7 +46,8 @@ sap.ui.define([
 		onInit : function () {            
 
             var oMultilingual = new Multilingual();
-			this.setModel(oMultilingual.getModel(), "I18N");
+            this.setModel(oMultilingual.getModel(), "I18N");
+
 			var oViewModel,
 				oResourceBundle = this.getResourceBundle();
 
@@ -56,7 +66,11 @@ sap.ui.define([
 				intent: "#Template-display"
 			}, true);
 			
-			this.setModel(new ManagedListModel(), "list");
+            this.setModel(new ManagedListModel(), "list");
+            this.setModel(new ManagedModel(), "master");
+            
+            oTransactionManager = new TransactionManager();
+			oTransactionManager.addDataModel(this.getModel("master"));
 			
 			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
@@ -112,21 +126,7 @@ sap.ui.define([
 		onMainTablePersoRefresh : function() {
 			MainListPersoService.resetPersData();
 			this._oTPC.refresh();
-		},
-
-		/**
-		 * Event handler when a table add button pressed
-		 * @param {sap.ui.base.Event} oEvent
-		 * @public
-		 */
-		onMainTableAddButtonPress: function(){
-			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-			this.getRouter().navTo("midPage", {
-				layout: oNextUIState.layout, 
-				tenantId: "new",
-				uomCode: "code"
-			});
-		},
+		},		
 
 		/**
 		 * Event handler when a search button pressed
@@ -196,6 +196,13 @@ sap.ui.define([
         onAddSupplierPress: function () {
             var oView = this.getView();
 
+            var oMasterModel = this.getModel("master");
+				oMasterModel.setData({
+                    "tenant_id": "L2100",
+                    "sourcing_supplier_nickname": ""                    
+                }, "/SupplierGen");
+            oTransactionManager.setServiceModel(this.getModel());
+
             if (!this.pDialog) {
                 this.pDialog = Fragment.load({
                     id: oView.getId(),
@@ -213,6 +220,50 @@ sap.ui.define([
             });
 
         },
+
+        createPopupClose: function (oEvent) {            
+            this.byId("dialogAddSupplier").close();
+        },
+
+        /**
+        * @public
+        * @see 사용처 create 팝업에서 Next 버튼 press시 저장 후 Object로 이동
+        */
+        createPopupSave: function () {           
+                
+            var oView = this.getView(),                               
+                that = this;
+            var tenantId = "L2100";           
+            
+            var ssn = this.getView().byId("ssn").getValue();         
+                
+            if(this.validator.validate(this.byId("dialogAddSupplier")) !== true) return;            
+
+			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
+				title : this.getModel("I18N").getText("/SAVE"),
+				initialFocus : sap.m.MessageBox.Action.CANCEL,
+				onClose : function(sButton) {
+					if (sButton === MessageBox.Action.OK) {
+						oView.setBusy(true);
+						oTransactionManager.submit({						
+							success: function(ok){
+								// that._toShowMode();
+                                oView.setBusy(false);
+                                // that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                MessageToast.show(that.getModel("I18N").getText("/NCM0005"));
+                                    // var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
+                                    // that.getRouter().navTo("addSupplierPage", {                                        
+                                    //     tenantId: tenantId,
+                                    //     ssn: ssn
+                                    // });
+							}
+						});
+					};
+				}
+            });
+            this.validator.clearValueState(this.byId("dialogAddSupplier"));            
+            
+        },        
 
 		/* =========================================================== */
 		/* internal methods                                            */
@@ -237,7 +288,7 @@ sap.ui.define([
 				oModel = this.getModel("list");
 			oView.setBusy(true);
 			oModel.setTransactionModel(this.getModel());
-			oModel.read("/Uom", {
+			oModel.read("/SupplierGen", {
 				filters: aSearchFilters,
 				success: function(oData){
 					oView.setBusy(false);
@@ -246,44 +297,12 @@ sap.ui.define([
 		},
 		
 		_getSearchStates: function(){
-            var sTenantId = "L2600",
-                sUomClass = this.getView().byId("searchUomClass").getSelectedKey(),			
-                // sUom = this.getView().byId("searchUom").getSelectedKey(),
-			 	sBU = this.getView().byId("searchBUSegmentButton").getSelectedKey();
+            var sTenantId = "L2100"               
 			
             var aSearchFilters = [];
             
             aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenantId));
-
-			if (sUomClass && sUomClass.length > 0) {
-				aSearchFilters.push(new Filter("uom_class_code", FilterOperator.EQ, sUomClass));
-            }
-            // if (sUom && sUom.length > 0) {
-			// 	aSearchFilters.push(new Filter("uom_code", FilterOperator.EQ, sUom));
-            // }
-            // if (sBU && sBU.length > 0) {
-			// 	aSearchFilters.push(new Filter("base_unit_flag", FilterOperator.EQ, sBU));
-			// }
-			// if (sKeyword && sKeyword.length > 0) {
-			// 	aSearchFilters.push(new Filter({
-			// 		filters: [
-			// 			new Filter("control_option_code", FilterOperator.Contains, sKeyword),
-			// 			new Filter("control_option_name", FilterOperator.Contains, sKeyword)
-			// 		],
-			// 		and: false
-			// 	}));
-			// }
-			if(sBU != "all"){
-				switch (sBU) {					
-					case "true":
-					aSearchFilters.push(new Filter("base_unit_flag", FilterOperator.EQ, sBU));
-					break;
-					case "false":
-					aSearchFilters.push(new Filter("base_unit_flag", FilterOperator.EQ, sBU));
-					break;					
-				}
-            }
-            
+			
 			return aSearchFilters;
 		},
 		

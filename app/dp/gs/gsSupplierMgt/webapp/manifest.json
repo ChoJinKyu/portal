@@ -106,7 +106,7 @@
         "viewType": "XML",
         "viewPath": "dp.gs.gsSupplierMgt.view",
         "controlId": "fcl",
-				"transition": "slide",
+		"transition": "slide",
         "bypassed": {
           "target": [
             "notFound"

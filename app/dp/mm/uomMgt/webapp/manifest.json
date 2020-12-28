@@ -123,7 +123,7 @@
         "viewType": "XML",
         "viewPath": "dp.mm.uomMgt.view",
         "controlId": "fcl",
-				"transition": "slide",
+		"transition": "slide",
         "bypassed": {
           "target": [
             "notFound"
