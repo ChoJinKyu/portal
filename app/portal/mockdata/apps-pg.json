@@ -34,6 +34,11 @@
                     "name": "App #4",
                     "url": "../pg/purchaseMgr/webap",
                     "component": "pg.purchaseMgr"
+                },
+                {
+                    "name": "Vendor Pool TEST",
+                    "url": "../pg/vp/vpCallProcTest/webapp",
+                    "component": "pg.vp.vpCallProcTest"
                 }
             ]
         },
