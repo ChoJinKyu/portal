@@ -2,14 +2,15 @@ view Pg_Tm_Manager_View as
 	select
 		manager.tenant_id										as tenant_id,
 		manager.scenario_number									as scenario_number,
-		manager.monitoring_manager								as employee_number,
+		manager.monitoring_manager_empno						as employee_number,
 		emp.user_local_name||'('||emp.user_english_name||')'	as employee_name,
 		emp.job_title											as job_title,
 		emp.mobile_phone_number									as mobile_phone_number,
-		emp.department_id										as department_id
+        emp.department_id										as department_id,
+        manager.monitoring_super_authority_flag                 as monitoring_super_authority_flag
 	from pg_tm_manager_dtl as manager
 	left join cm_hr_employee as emp
-		on	manager.tenant_id			= emp.tenant_id
-		and	manager.monitoring_manager	= emp.employee_number
+		on	manager.tenant_id			        = emp.tenant_id
+		and	manager.monitoring_manager_empno    = emp.employee_number
 	order by 
-		manager.monitoring_manager;
+		manager.monitoring_manager_empno;
