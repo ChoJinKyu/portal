@@ -151,6 +151,9 @@ service MoldApprovalV4Service {
 
     type resultMsg {
         messageCode : String;
+        approval_number : String; 
+        company_code : String;
+        plant_code : String;
         resultCode : Integer;
     }
 

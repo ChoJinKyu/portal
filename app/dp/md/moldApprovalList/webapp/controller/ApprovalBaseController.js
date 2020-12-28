@@ -878,7 +878,7 @@ sap.ui.define([
 
         callAjax : function (data,fn) {  
             console.log("data >>>> " , data);
-
+            var that = this;
             //  /dp/md/moldApprovalList/webapp/srv-api/odata/v2/dp.MoldApprovalListService/RefererSearch
             //  "xx/sampleMgr/webapp/srv-api/odata/v4/xx.SampleMgrV4Service/SaveSampleHeaderMultiProc"
            var url = "/dp/md/moldApprovalList/webapp/srv-api/odata/v4/dp.MoldApprovalV4Service/"+fn;
@@ -889,8 +889,12 @@ sap.ui.define([
                 //datatype: "json",
                 data : JSON.stringify(data),
                 contentType: "application/json",
-                success: function(data){
-
+                success: function(result){
+                    console.log("result>>>> " , result);
+                    MessageToast.show(that.getModel("I18N").getText("/"+result.messageCode));
+                    if(result.resultCode > -1){
+                        that._createViewBindData(result);
+                    }
                 },
                 error: function(e){
                     
