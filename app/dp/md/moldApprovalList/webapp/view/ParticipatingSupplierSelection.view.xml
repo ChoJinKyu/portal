@@ -139,9 +139,9 @@
                         <!-- Purchase Order Item Table -->
                         <table:Table id="psTable"
                             selectionMode="MultiToggle"
+                            fixedColumnCount="6" 
                             visibleRowCountMode="Auto"
                             rows="{path:'mdItemMaster>/ParticipatingSupplier'}"
-                            cellClick=".onCellClick"
                             >
                             <table:extension>
                                 <OverflowToolbar>
@@ -152,6 +152,7 @@
                                         </customData>
                                     </Button>
                                     <Button id="btnPoItemDelete" type="Transparent" text="{I18N>/ROW_DELETE}"  press=".onPsDelRow" />
+                                    <Button id="btnSupplier" type="Emphasized" text="Supplier Selection" press=".onSupplierSelection"/>
                                 </OverflowToolbar>
                             </table:extension>                             
                             <table:columns>
