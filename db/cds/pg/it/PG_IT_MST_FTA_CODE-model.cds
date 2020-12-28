@@ -26,7 +26,7 @@ entity It_Mst_Fta_Code {
     key org_type_code : String(30) not null @title : '조직유형코드';
     key org_code      : String(10) not null @title : '조직코드';
     key fta_code      : String(6) not null  @title : 'FTA코드';
-        fta_code_desc : String(383)         @title : 'FTA코드 내역';
+        fta_code_desc : String(383)         @title : 'FTA코드내역';
 }
 
 extend It_Mst_Fta_Code with util.Managed;

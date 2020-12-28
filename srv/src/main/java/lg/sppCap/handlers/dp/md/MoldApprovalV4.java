@@ -52,44 +52,86 @@ public class MoldApprovalV4 implements EventHandler {
 
     @On(event = SaveMoldApprovalContext.CDS_NAME)
     public void onSave(SaveMoldApprovalContext context){
-        System.out.println(" >>>>>>> "+ context);
+        //System.out.println(" >>>>>>> "+ context);
 
         Data data = context.getInputData();
-        ApprovalMaster aMaster = data.getApprovalMaster();
-        // Collection<ApprovalDetails> aDtlList = data.getApprovalDetails();
-        // Collection<Approver> approverList = data.getApprover();
-        // Collection<MoldMaster> mMasterList = data.getMoldMaster();
-        // Collection<Referer> refList = data.getReferer();
+
+        ApprovalMasterV4 aMaster = data.getApprovalMaster();
+        Collection<ApprovalDetailsV4> approvalDetail = data.getApprovalDetails();
+        Collection<ApproverV4> approverList = data.getApprover();
+        Collection<MoldMasterV4> mMasterList = data.getMoldMaster();
+        Collection<RefererV4> refList = data.getReferer();
 
         ResultMsg msg = ResultMsg.create();
         msg.setMessageCode("001");
         msg.setResultCode(0);
 
+       String approvalNumber = aMaster.getApprovalNumber();
+
+
         try {
-            System.out.println(" aMaster "+ aMaster); 
-            // System.out.println(" aDtlList "+ aDtlList); 
-            // System.out.println(" approverList "+ approverList); 
-            // System.out.println(" moldMasterList "+ mMasterList); 
-            // System.out.println(" refList "+ refList); 
-            ApprovalMasters mEtity =  ApprovalMasters.create();  
-            mEtity.setTenantId(aMaster.getTenantId());
-            mEtity.setApprovalNumber(aMaster.getApprovalNumber());
-            mEtity.setCompanyCode(aMaster.getCompanyCode());
-            mEtity.setOrgCode(aMaster.getOrgCode());
-            mEtity.setChainCode(aMaster.getChainCode());
-            mEtity.setApprovalTypeCode(aMaster.getApprovalTypeCode());
-            mEtity.setApprovalTitle(aMaster.getApprovalTitle());
-            mEtity.setApprovalContents(aMaster.getApprovalContents());
-            mEtity.setApproveStatusCode(aMaster.getApproveStatusCode());
-            mEtity.setRequestorEmpno(aMaster.getRequestorEmpno());
-            mEtity.setRequestDate(aMaster.getRequestDate());
-            mEtity.setAttchGroupNumber(aMaster.getAttchGroupNumber());
-            mEtity.setLocalCreateDtm(aMaster.getLocalCreateDtm());
-            mEtity.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
+            if(approvalNumber != "" && approvalNumber != null){ // update 
+                ApprovalMasters master =  ApprovalMasters.create();  
+                master.setTenantId(aMaster.getTenantId());
+                master.setApprovalNumber(aMaster.getApprovalNumber());
+                master.setCompanyCode(aMaster.getCompanyCode());
+                master.setOrgCode(aMaster.getOrgCode());
+                master.setChainCode(aMaster.getChainCode());
+                master.setApprovalTypeCode(aMaster.getApprovalTypeCode());
+                master.setApprovalTitle(aMaster.getApprovalTitle());
+                master.setApprovalContents(aMaster.getApprovalContents());
+                master.setApproveStatusCode(aMaster.getApproveStatusCode());
+                master.setRequestorEmpno(aMaster.getRequestorEmpno());
+                master.setRequestDate(aMaster.getRequestDate());
+                master.setAttchGroupNumber(aMaster.getAttchGroupNumber());
+               // master.setLocalCreateDtm(aMaster.getLocalCreateDtm());
+                master.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
+                CqnUpdate masterUpdate = Update.entity(ApprovalMasters_.CDS_NAME).data(master);
+                Result resultDetail = moldApprovalService.run(masterUpdate);
+
+                System.out.println(" approvalDetail "+ approvalDetail);
+                System.out.println(" approvalDetail "+ approvalDetail.size());
+                if(!approvalDetail.isEmpty() && approvalDetail.size() > 0){ 
+                   
+                    for(ApprovalDetailsV4 row : approvalDetail){
+                        ApprovalDetails detail = ApprovalDetails.create();
+                        detail.setTenantId(row.getTenantId());
+                        detail.setApprovalNumber(approvalNumber);
+                        detail.setMoldId(row.getMoldId());
+                      //   detail.setLocalCreateDtm(aMaster.getLocalCreateDtm());
+                        detail.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
+                        detail.setUpdateUserId(aMaster.getRequestorEmpno()); 
+
+                        CqnUpdate detailUpdate = Update.entity(ApprovalDetails_.CDS_NAME).data(detail); 
+                        Result rst = moldApprovalService.run(detailUpdate);
+                    }  
+                }
+
+                if(aMaster.getApprovalTypeCode() == "B"){ // 각각 타입마다 mold Master에 update 할 내용이 다르므로 분기 처리 
+
+
+
+
+                    
+                }else if(aMaster.getApprovalTypeCode() == "V"){
+
+                }else if(aMaster.getApprovalTypeCode() == "E"){
+
+                }
+
+
+            }else{ // create 
+
+            }
+
            // Connection conn = jdbc.getDataSource().getConnection(); 
-          //  CqnUpdate masterUpdate = Update.entity(ApprovalMasters_.CDS_NAME).data(mEtity);
             
 
+
+
+
+
+           
 
             context.setResult(msg);
             context.setCompleted();
@@ -98,6 +140,10 @@ public class MoldApprovalV4 implements EventHandler {
         }
     
     }    
+
+
+    // budgetExecution 
+     
 
 
     
