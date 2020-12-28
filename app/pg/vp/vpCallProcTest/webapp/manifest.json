@@ -4,23 +4,19 @@
         "id": "pg.vp.vpCallProcTest",
         "type": "application",
         "i18n": "i18n/i18n.properties",
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
         "applicationVersion": {
             "version": "1.0.0"
         },
-        "title": "{{appTitle}}",
-        "description": "{{appDescription}}",
+        "ach": "set-ach",
         "resources": "resources.json",
-        "ach": "ach",
-        "sourceTemplate": {
-            "id": "html5moduletemplates.basicSAPUI5ApplicationProjectModule",
-            "version": "1.40.12"
-        },
         "dataSources": {
             "mainService": {
-                "uri": "srv-api/odata/v2/pg.VpMappingService/",
+                "uri": "srv-api/odata/v4/pg.VpMappingV4Service/",
                 "type": "OData",
                 "settings": {
-                    "odataVersion": "2.0"
+                    "odataVersion": "4.0"
                 }
             },
             "vpMappingProc": {
@@ -30,16 +26,23 @@
                     "odataVersion": "4.0"
                 }
             }
+        },
+        "commonUtilService": {
+            "uri": "srv-api/odata/v2/cm.util.CommonService/",
+            "type": "OData",
+            "settings": {
+                "odataVersion": "2.0"
+            }
         }
     },
-    "sap.cloud": {
-        "public": true,
-        "service": "sppCap_ui_dev"
+    "sap.fiori": {
+        "registrationIds": [],
+        "archeType": "transactional"
     },
     "sap.ui": {
         "technology": "UI5",
         "icons": {
-            "icon": "",
+            "icon": "sap-icon://task",
             "favIcon": "",
             "phone": "",
             "phone@2": "",
@@ -53,7 +56,6 @@
         }
     },
     "sap.ui5": {
-        "flexEnabled": false,
         "rootView": {
             "viewName": "pg.vp.vpCallProcTest.view.App",
             "type": "XML",
@@ -72,6 +74,7 @@
             "compact": true,
             "cozy": true
         },
+        "handleValidation": true,
         "models": {
             "i18n": {
                 "type": "sap.ui.model.resource.ResourceModel",
@@ -79,14 +82,24 @@
                     "bundleName": "pg.vp.vpCallProcTest.i18n.i18n"
                 }
             },
-            "": {
-                "dataSource": "mainService",
+            "util": {
+                "dataSource": "commonUtilService",
                 "preload": true,
                 "settings": {
                     "defaultBindingMode": "TwoWay",
                     "defaultCountMode": "Inline",
-                    "refreshAfterChange": true,
+                    "refreshAfterChange": false,
                     "useBatch": true
+                }
+            },
+            "": {
+                "dataSource": "mainService",
+                "preload": true,
+                "settings": {
+                    "operationMode": "Server",
+                    "groupId": "$direct",
+                    "synchronizationMode": "None",
+                    "autoExpandSelect": true
                 }
             },
             "vpMappingProc": {
