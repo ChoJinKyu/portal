@@ -147,9 +147,9 @@ sap.ui.define([
                             path: 'node_id', operator: FilterOperator.EQ, value1: e
                         })];
                     }, [
-                        new Filter({
-                            path: 'language_code', operator: FilterOperator.EQ, value1: 'KO'
-                        })
+                        // new Filter({
+                        //     path: 'language_code', operator: FilterOperator.EQ, value1: 'KO'
+                        // })
                     ]);
 
                 // 필터링된 Node 만을 호출한다.
