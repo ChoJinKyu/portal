@@ -52,7 +52,7 @@
                         growingThreshold="15"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
-                        items="{list>/Uom}"
+                        items="{list>/SupplierGen}"
                         mode="None" 
                         width="auto">
                     <headerToolbar>
@@ -61,8 +61,7 @@
                             <Title text="Global Sourcing Pool" level="H2"/>
                             <ToolbarSpacer/>
                             <!-- <SearchField id="mainTableSearchField" placeholder="Uom" width="10rem" search=".onMainTableFilterPress" /> -->
-                            <Button id="addSupplier" text="공급업체 추가" type="Transparent" press=".onAddSupplierPress" />
-                            <!-- <Button id="mainTableAddButton" text="{I18N>/NEW}" type="Transparent" press=".onMainTableAddButtonPress" /> -->
+                            <Button id="addSupplier" text="공급업체 추가" type="Transparent" press=".onAddSupplierPress" />                            
                             <Button id="rTableExportButton" text="{I18N>/EXCEL}" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >

@@ -102,6 +102,7 @@ sap.ui.define([
         tenantId: this._sTenantId,
         controlOptionCode: this._sControlOptionCode
       });
+      this.getModel("midObjectView").setProperty("/screen", "Full");
     },
 		/**
 		 * Event handler for Exit Full Screen Button pressed
@@ -114,6 +115,7 @@ sap.ui.define([
         tenantId: this._sTenantId,
         controlOptionCode: this._sControlOptionCode
       });
+      this.getModel("midObjectView").setProperty("/screen", "");
     },
 		/**
 		 * Event handler for Nav Back Button pressed
@@ -446,7 +448,7 @@ sap.ui.define([
       var FALSE = false;
       this._showFormFragment('MidObject_Edit');
       this.byId("page").setSelectedSection("pageSectionMain");
-      this.byId("page").setProperty("showFooter", !FALSE);
+      //this.byId("page").setProperty("showFooter", !FALSE);
       this.byId("pageEditButton").setEnabled(FALSE);
       this.byId("pageDeleteButton").setEnabled(FALSE);
       this.byId("pageNavBackButton").setEnabled(FALSE);
@@ -461,7 +463,7 @@ sap.ui.define([
       var TRUE = true;
       this._showFormFragment('MidObject_Show');
       this.byId("page").setSelectedSection("pageSectionMain");
-      this.byId("page").setProperty("showFooter", !TRUE);
+      //this.byId("page").setProperty("showFooter", !TRUE);
       this.byId("pageEditButton").setEnabled(TRUE);
       this.byId("pageDeleteButton").setEnabled(TRUE);
       this.byId("pageNavBackButton").setEnabled(TRUE);
