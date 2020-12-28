@@ -28,7 +28,7 @@ service ParticipatingSupplierSelectionApprovalService {
         mst.mold_number,
         mst.mold_sequence,
         mst.model,
-        mst.mold_id,
+        key mst.mold_id,
         mst.spec_name,
         mst.mold_item_type_code,
         (
