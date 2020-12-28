@@ -201,7 +201,14 @@ sap.ui.define([
         },
 
         onPageDraftButtonPress : function () { 
-            
+            /**
+             * 'DR'
+'AR'
+'IA'
+'AP'
+'RJ' */ 
+            this.getModel("appMaster").setProperty("/approve_status_code", "DR");
+
             this.approval_type_code = "B";
             var bModel = this.getModel("mdItemMaster");
             this.approvalDetails_data = [] ;
