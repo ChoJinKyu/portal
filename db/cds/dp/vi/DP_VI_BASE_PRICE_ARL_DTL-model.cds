@@ -6,6 +6,7 @@ using {dp.VI_Base_Price_Arl_Price as price} from './DP_VI_BASE_PRICE_ARL_PRICE-m
 using {cm.Code_Dtl as code} from '../../cm/CM_CODE_DTL-model';
 using {cm.Org_Tenant as tenant} from '../../cm/CM_ORG_TENANT-model';
 using {cm.Org_Company as comp} from '../../cm/CM_ORG_COMPANY-model';
+using {dp.Mm_Material_Mst as masterial} from '../mm/DP_MM_MATERIAL_MST-model';
 using {sp.Sm_Supplier_Mst as supplier} from '../../sp/sm/SP_SM_SUPPLIER_MST-model';
 
 entity VI_Base_Price_Arl_Dtl {
@@ -34,6 +35,9 @@ entity VI_Base_Price_Arl_Dtl {
         company_code_fk           : Association to comp
                                         on  company_code_fk.tenant_id    = tenant_id
                                         and company_code_fk.company_code = company_code;
+        material_code_fk          : Association to masterial
+                                        on material_code_fk.tenant_id = tenant_id
+                                        and material_code_fk.material_code = material_code;
         supplier_code_fk          : Association to supplier
                                         on  supplier_code_fk.tenant_id     = tenant_id
                                         and supplier_code_fk.supplier_code = supplier_code;

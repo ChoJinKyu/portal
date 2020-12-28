@@ -8,8 +8,8 @@
     "deploy": "cds deploy --to hana:sppDb_hdi_dev --no-save"
   },
   "dependencies": {
-    "@sap/cds": "^4.4.7",
-    "@sap/hana-client": "^2.7.16",
+    "@sap/cds": "^4.4.6",
+    "@sap/hana-client": "^2.6.64",
     "@sap/hdi-deploy": "^3.11.11"
   },
   "cds": {

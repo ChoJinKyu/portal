@@ -29,6 +29,11 @@
                     "name": "UI5 Example #1",
                     "url": "../xx/exampleControls/webapp",
                     "component": "xx.exampleControls"
+                },
+                {
+                    "name": "UI5 Block Base Layout",
+                    "url": "../xx/exampleBlockBasedLayout/webapp",
+                    "component": "xx.exampleBlockBasedLayout"
                 }
             ]
         },

@@ -161,9 +161,7 @@
                                 </table:Column>
                                 <table:Column label="권한여부" hAlign="Center">
                                     <table:template>
-                                        <Switch state="Yes"
-                                            customTextOn="Yes" 
-                                            customTextOff="No"/>
+                                        <Switch type="AcceptReject" state="{menu>state}" change=".onSwitchChange" />
                                     </table:template>
                                 </table:Column>
                             </table:columns>
@@ -173,21 +171,6 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-            
-            <uxap:ObjectPageSection titleUppercase="false" title="역할별 메뉴관리">
-				<uxap:subSections>
-					<uxap:ObjectPageSubSection>
-                        <FlexBox wrap="Wrap" visible="false">
-                            <form:SimpleForm editable="false">
-                                <Text text="{details>/tenant_id}"/>
-                                <Text text="{details>/role_code'}"/>
-                                <Text text="{details>/menu_code}"/>
-                            </form:SimpleForm>
-                        </FlexBox>
-                    </uxap:ObjectPageSubSection>
-				</uxap:subSections>
-			</uxap:ObjectPageSection>
-            
 		</uxap:sections>        
 	</uxap:ObjectPageLayout>
 </mvc:View>

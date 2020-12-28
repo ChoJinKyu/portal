@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import cds.gen.cm.msgmgtservice.Message;
 import cds.gen.cm.msgmgtservice.Message_;
 import cds.gen.cm.msgmgtservice.MsgMgtService_;
-import lg.sppCap.handlers.base.BaseEventHandler;
+import lg.sppCap.frame.handler.BaseEventHandler;
 
 @Component
 @ServiceName(MsgMgtService_.CDS_NAME)

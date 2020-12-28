@@ -15,11 +15,11 @@ entity Pu_Pr_Service {
             and dtl.company_code  =  company_code
             and dtl.pr_number  =  pr_number
             and dtl.pr_item_number  =  pr_item_number;  
-        service_desc			: String(100)   not null	 @title: '서비스내역';
-        pr_quantity				: Decimal		not null	 @title: '구매요청수량';
-        unit					: String(3)     not null	 @title: '단위';
-        net_price				: Decimal		not null	 @title: '단가';
-        gross_amount			: Decimal		not null	 @title: '총금액';
-        currency_code			: String(3)     not null	 @title: '통화코드';
+            service_desc : String(100)   @title: '서비스내역' ;	
+        pr_quantity     : Decimal   @title: '구매요청수량' ;	
+        unit            : String(3) @title: '단위' ;	
+        net_price       : Decimal   @title: '단가' ;	
+        gross_amount    : Decimal   @title: '총금액' ;	
+        currency_code   : String(3) @title: '통화코드' ;	
     }	
 extend Pu_Pr_Service with util.Managed;

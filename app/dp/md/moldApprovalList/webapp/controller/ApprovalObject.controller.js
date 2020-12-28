@@ -21,10 +21,14 @@ sap.ui.define([
     "sap/ui/richtexteditor/RichTextEditor",
     "dp/md/BudgetExecutionApproval",
     "dp/md/PurchaseOrderItemLocal",
+    "dp/md/ParticipatingSupplierSelection",
     "dp/md/util/controller/MoldItemSelection"
-], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
+], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager
+    , Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
-    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, BudgetExecutionApproval, PurchaseOrderItemLocal, MoldItemSelection
+    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator
+    , RichTextEditor, BudgetExecutionApproval
+    , PurchaseOrderItemLocal, ParticipatingSupplierSelection, MoldItemSelection
 ) {
     "use strict";
 
@@ -42,6 +46,8 @@ sap.ui.define([
         budget : new BudgetExecutionApproval(),
 
         orderLocal : new PurchaseOrderItemLocal(),
+    
+        supplier : new ParticipatingSupplierSelection(),
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -52,6 +58,11 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
+
+            // 각자 fragment 에서 세팅할 테이터 
+            this.approvalDetails_data = [] ;
+            this.moldMaster_data = [] ;
+
             // Model used to manipulate control states. The chosen values make sure,
             // detail page shows busy indication immediately so there is no break in
             // between the busy indication for loading the view's meta data
@@ -125,13 +136,13 @@ sap.ui.define([
 		 * @public
 		 */
         onPageNavBackButtonPress: function () {
-            /*	var sPreviousHash = History.getInstance().getPreviousHash();
+            	var sPreviousHash = History.getInstance().getPreviousHash();
                 if (sPreviousHash !== undefined) {
                     // eslint-disable-next-line sap-no-history-manipulation
                     history.go(-1);
                 } else {
                     this.getRouter().navTo("approvalList", {}, true);
-                } */
+                } 
         },
 
 		/**
@@ -257,7 +268,10 @@ sap.ui.define([
                this.budget.openFragmentApproval(this); 
             } else if(this.approval_type_code == "V"){
                 this.orderLocal.openFragmentApproval(this);
-            }else{
+            } else if(this.approval_type_code == "E"){
+                this.supplier.openFragmentApproval(this);
+            }
+            else{
                 /** 추후 공통 개발 가이드가 오면 이 함수로 호출 할 예정 */
                 this._loadFragment(fragmentName, function (oFragment) {
                     oPageSection.addBlock(oFragment);
@@ -267,6 +281,8 @@ sap.ui.define([
         },
 
         _onRoutedThisPage: function (approvalNumber) {
+            console.log(" approvalNumber >>> " , approvalNumber);
+           
             var filter = [
                 new Filter("tenant_id", FilterOperator.EQ, this.tenant_id),
                 new Filter("approval_number", FilterOperator.EQ, approvalNumber)
@@ -276,9 +292,12 @@ sap.ui.define([
                 this.oRichTextEditor.setValue(oData.approval_contents);
             }.bind(this));
 
-            this._bindView("/Approvers", "approver", filter, function (oData) {
+            this._bindView("/Approvers", "approver", filter, function (oData) { 
+                console.log(" Approvers >> " , oData);
                 this._onLoadApproverRow(oData.results);
             }.bind(this));
+
+            console.log(" Approvers >>> " , approvalNumber);
 
             this._bindView("/Referers", "referer", filter, function (oData) {
                 if (oData.results.length > 0) {
@@ -483,8 +502,8 @@ sap.ui.define([
             var oTable = this.byId("ApproverTable");
 
             var aItems = oTable.getItems();
-            if (aItems[aItems.length - 1].mAggregations.cells[1].mProperties.selectedKey == undefined
-                || aItems[aItems.length - 1].mAggregations.cells[1].mProperties.selectedKey == "") {
+            if (aItems[aItems.length - 1].mAggregations.cells[2].mProperties.selectedKey == undefined
+                || aItems[aItems.length - 1].mAggregations.cells[2].mProperties.selectedKey == "") {
                 MessageToast.show("Type 을 먼저 선택해주세요.");
             } else {
                 var oView = this.getView();
@@ -492,7 +511,7 @@ sap.ui.define([
                 if (!this._oDialog) {
                     this._oDialog = Fragment.load({
                         id: oView.getId(),
-                        name: "dp.md.orderApprovalLocal.view.Employee",
+                        name: "dp.md.moldApprovalList.view.Employee",
                         controller: this
                     }).then(function (oDialog) {
                         oView.addDependent(oDialog);
@@ -514,7 +533,8 @@ sap.ui.define([
 
             aItems.forEach(function (oItem) {
                 var obj = new JSONModel({
-                    approver_empno: oItem.getCells()[0].getText()
+                    approver_empno: oItem.getCells()[0].getText() ,
+                    approver_name : oItem.getCells()[1].getText()
                 });
                 this._approverAddRow(obj);
             }.bind(this));
@@ -530,6 +550,7 @@ sap.ui.define([
 
             /** 선택한 데이터를 담음 */
             approverData[approverData.length - 1].approver_empno = obj.oData.approver_empno;
+            approverData[approverData.length - 1].approver_name = obj.oData.approver_name;
 
             this._onLoadApproverRow(approverData);
         },
@@ -548,6 +569,7 @@ sap.ui.define([
                         "approve_sequence": (Number(approverData[i].approve_sequence) - 1) + "",
                         "approver_type_code": approverData[i].approver_type_code,
                         "approver_empno": approverData[i].approver_empno,
+                        "approver_name": approverData[i].approver_name,
                         "arrowUp": approverData[i - 1].arrowUp,
                         "arrowDown": approverData[i - 1].arrowDown,
                         "editMode": approverData[i - 1].editMode,
@@ -558,6 +580,7 @@ sap.ui.define([
                         "approve_sequence": (Number(approverData[i - 1].approve_sequence) + 1) + "",
                         "approver_type_code": approverData[i - 1].approver_type_code,
                         "approver_empno": approverData[i - 1].approver_empno,
+                        "approver_name": approverData[i -1].approver_name,
                         "arrowUp": approverData[i].arrowUp,
                         "arrowDown": approverData[i].arrowDown,
                         "editMode": approverData[i].editMode,
@@ -576,6 +599,7 @@ sap.ui.define([
                     "approve_sequence": nArray[j].approve_sequence,
                     "approver_type_code": nArray[j].approver_type_code,
                     "approver_empno": nArray[j].approver_empno,
+                    "approver_name": nArray[j].approver_name,
                     "arrowUp": nArray[j].arrowUp,
                     "arrowDown": nArray[j].arrowDown,
                     "editMode": nArray[j].editMode,
@@ -598,6 +622,7 @@ sap.ui.define([
                         "approve_sequence": (Number(approverData[i + 1].approve_sequence) - 1) + "",
                         "approver_type_code": approverData[i + 1].approver_type_code,
                         "approver_empno": approverData[i + 1].approver_empno,
+                        "approver_name": approverData[i + 1].approver_name,
                         "arrowUp": approverData[i].arrowUp,
                         "arrowDown": approverData[i].arrowDown,
                         "editMode": approverData[i].editMode,
@@ -608,6 +633,7 @@ sap.ui.define([
                         "approve_sequence": (Number(approverData[i].approve_sequence) + 1) + "",
                         "approver_type_code": approverData[i].approver_type_code,
                         "approver_empno": approverData[i].approver_empno,
+                        "approver_name": approverData[i].approver_name,
                         "arrowUp": approverData[i + 1].arrowUp,
                         "arrowDown": approverData[i + 1].arrowDown,
                         "editMode": approverData[i + 1].editMode,
@@ -626,6 +652,7 @@ sap.ui.define([
                     "approve_sequence": nArray[j].approve_sequence,
                     "approver_type_code": nArray[j].approver_type_code,
                     "approver_empno": nArray[j].approver_empno,
+                    "approver_name": nArray[j].approver_name,
                     "arrowUp": nArray[j].arrowUp,
                     "arrowDown": nArray[j].arrowDown,
                     "editMode": nArray[j].editMode,
@@ -643,9 +670,10 @@ sap.ui.define([
 
             aItems.forEach(function (oItem) {
                 var item = {
-                    "approve_sequence": oItem.mAggregations.cells[0].mProperties.text,
-                    "approver_type_code": oItem.mAggregations.cells[1].mProperties.selectedKey,
-                    "approver_empno": oItem.mAggregations.cells[2].mProperties.value,
+                    "approver_empno": oItem.mAggregations.cells[0].mProperties.text,
+                    "approve_sequence": oItem.mAggregations.cells[1].mProperties.text,
+                    "approver_type_code": oItem.mAggregations.cells[2].mProperties.selectedKey,
+                    "approver_name": oItem.mAggregations.cells[3].mProperties.value,
                 }
                 oldItems.push(item);
             });
@@ -676,6 +704,7 @@ sap.ui.define([
                         "approve_sequence": noCnt + "",
                         "approver_type_code": dataList[i].approver_type_code,
                         "approver_empno": dataList[i].approver_empno,
+                        "approver_name": dataList[i].approver_name,
                         "arrowUp": "",
                         "arrowDown": dataList.length === 1 ? "" : "sap-icon://arrow-bottom",
                         "editMode": false,
@@ -688,6 +717,7 @@ sap.ui.define([
                         "approve_sequence": noCnt + "",
                         "approver_type_code": dataList[i].approver_type_code,
                         "approver_empno": dataList[i].approver_empno,
+                        "approver_name": dataList[i].approver_name,
                         "arrowUp": "sap-icon://arrow-top",
                         "arrowDown": "",
                         "editMode": false,
@@ -701,6 +731,7 @@ sap.ui.define([
                         "approve_sequence": noCnt + "",
                         "approver_type_code": dataList[i].approver_type_code,
                         "approver_empno": dataList[i].approver_empno,
+                        "approver_name": dataList[i].approver_name,
                         "arrowUp": "sap-icon://arrow-top",
                         "arrowDown": "sap-icon://arrow-bottom",
                         "editMode": false,
@@ -717,6 +748,7 @@ sap.ui.define([
                 "approve_sequence": noCnt + "",
                 "approver_type_code": "",
                 "approver_empno": "",
+                "approver_name": "",
                 "arrowUp": "",
                 "arrowDown": "",
                 "editMode": true,
@@ -753,6 +785,104 @@ sap.ui.define([
             oEvent.getParameter("selectedItems");
         },
 
+        /**
+         * today
+         * @private
+         * @return yyyy-mm-dd
+         */
+        _getToday: function () {
+            var date_ob = new Date();
+            var date = ("0" + date_ob.getDate()).slice(-2);
+            var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+            var year = date_ob.getFullYear();
+
+            console.log(year + "-" + month + "-" + date);
+            return year + "" + month + "" + date;
+        },
+
+
+        onPageDraftButtonPress: function (){
+            var mst = this.getModel("appMaster").getData() ,
+                apr = this.getModel("approver").getData() ,
+                ref = this.getModel("referer").getData(); 
+            var data = {};
+            var that = this;
+            var approvalMaster = {
+                    tenant_id : this.tenant_id 
+                 ,  approval_number : this.approval_number 
+                 ,  company_code : this.company_code 
+                 ,  org_code : this.plant_code 
+                 ,  chain_code : 'DP'
+                 ,  approval_type_code : this.approval_type_code 
+                 ,  approval_title : mst.approval_title 
+                 ,  approval_contents : mst.approval_contents 
+                 ,  approve_status_code : mst.approve_status_code 
+                 ,  requestor_empno : mst.requestor_empno 
+                 ,  request_date : this._getToday() 
+                 ,  local_create_dtm : new Date() 
+                 ,  local_update_dtm : new Date()
+            };
+
+            var aprArr = [];
+            if(apr.Approvers != undefined && apr.Approvers.length > 0){
+                apr.Approvers.forEach(function(item){ 
+                    aprArr.push({
+                        tenant_id : that.tenant_id 
+                        , approval_number : that.approval_number 
+                        , approve_comment : item.approve_comment 
+                        , approve_status_code : item.approve_status_code 
+                        , approver_type_code : item.approver_type_code 
+                        , approver_empno : item.approver_empno
+                    });
+                });
+            }
+
+            var refArr = [];
+            if(ref.Referers != undefined && ref.Referers.length  > 0){
+                ref.Referers.forEach(function(item){ 
+                    refArr.push({
+                        tenant_id : that.tenant_id 
+                        , approval_number : that.approval_number 
+                        , referer_empno : item.referer_empno 
+                    });
+                });
+            }
+
+            data = {
+              inputData : { 
+                  approvalMaster : approvalMaster 
+                , approvalDetails : this.approvalDetails_data 
+                , approver : aprArr 
+                , moldMaster : this.moldMaster_data  
+                , referer : refArr 
+                } 
+            }
+
+             this.callAjax(data,"saveMoldApproval")
+        } , 
+
+
+        callAjax : function (data,fn) {  
+           console.log("data >>>> " , data);
+           var url = "/dp/md/moldApprovalList/webapp/srv-api/odata/v4/dp.MoldApprovalV4Service/"+fn;
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                //datatype: "json",
+                data : JSON.stringify(data),
+                contentType: "application/json", 
+                success: function(data){
+                    console.log("data>>>> " , data);
+                },
+                error: function(e){
+                    console.log("error >>>> " , e);
+                }
+            });
+        }
+
+        /*
+
         onPageDraftButtonPress: function () {
             var oView = this.getView(),
                 verModel = this.getModel("approver");
@@ -783,8 +913,9 @@ sap.ui.define([
                     };
                 }
             });
+            
 
         }
-
+        */
     });
 });

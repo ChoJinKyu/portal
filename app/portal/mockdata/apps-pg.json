@@ -1,6 +1,32 @@
 {
     "menus": [
         {
+            "name": "시황자재 기준정보",
+            "icon": "sap-icon://source-code",
+            "subMenus": [
+                {
+                    "name": "시황자재 Master 관리",
+                    "url": "../pg/mi/miMaster/webapp",
+                    "component": "pg.mi.miMaster"
+                },
+                {
+                    "name": "시황자재 Category 관리",
+                    "url": "../pg/mi/miCategory/webapp",
+                    "component": "pg.mi.miCategory"
+                },
+                {
+                    "name": "시황자재 가격관리",
+                    "url": "../pg/mi/miPrice/webapp",
+                    "component": "pg.mi.miPrice"
+                },
+                {
+                    "name": "자재별 시황자재 BOM",
+                    "url": "../pg/mi/miBom/webapp",
+                    "component": "pg.mi.miBom"
+                }
+            ]
+        },
+        {
             "name": "모니터링 항목 관리",
             "icon": "sap-icon://source-code",
             "subMenus": [
@@ -27,8 +53,8 @@
                 },
                 {
                     "name": "Vendor Pool Management",
-                    "url": "../pg/vp/vpMgr/webapp",
-                    "component": "vp.vpMgr"
+                    "url": "../pg/vp/vpMgt/webapp",
+                    "component": "vp.vpMgt"
                 },                
                 {
                     "name": "App #4",

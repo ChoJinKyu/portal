@@ -1,5 +1,7 @@
 package lg.sppCap.handlers.pg.vp;
 
+import com.sap.cds.services.ErrorStatuses;
+import com.sap.cds.services.ServiceException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -48,8 +50,8 @@ public class VpMappingServiceV4 implements EventHandler {
     {
         "inputData" : {
             "savedHeaders" : [
-                {"header_id" : 108, "cd": "eeee1122222", "name": "eeee11"},
-                {"header_id" : 109, "cd": "eeee1222222", "name": "eeee12"}
+                {"header_id" : 108, "cd": "eeee1122222", "name": "eeee11"} ,
+                {"header_id" : 109, "cd": "eeee1222222", "name": "eeee12"} 
             ],
             "savedDetails" : [
                 {"detail_id": 1008, "header_id" : 108, "cd": "eeee122221", "name": "eeee11"},
@@ -359,7 +361,9 @@ public class VpMappingServiceV4 implements EventHandler {
         v_sql_createTableMst.append("LEVEL_NUMBER DECIMAL,");
         v_sql_createTableMst.append("DISPLAY_SEQUENCE BIGINT,");
         v_sql_createTableMst.append("REGISTER_REASON NVARCHAR(50),");
-        v_sql_createTableMst.append("APPROVAL_NUMBER NVARCHAR(50))");
+        v_sql_createTableMst.append("APPROVAL_NUMBER NVARCHAR(50))"); 
+        
+        String v_sql_dropTableMst = "DROP TABLE #LOCAL_TEMP_MST;";                
 
         StringBuffer v_sql_createTableSupplier = new StringBuffer();
         v_sql_createTableSupplier.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_SUPPLIER (");        
@@ -383,6 +387,8 @@ public class VpMappingServiceV4 implements EventHandler {
         v_sql_createTableSupplier.append("REGISTER_REASON NVARCHAR(50),");
         v_sql_createTableSupplier.append("APPROVAL_NUMBER NVARCHAR(50))");
 
+        String v_sql_dropTableSupplier = "DROP TABLE #LOCAL_TEMP_SUPPLIER;";                      
+
         StringBuffer v_sql_createTableItem = new StringBuffer();
         v_sql_createTableItem.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_ITEM (");        
         v_sql_createTableItem.append("TENANT_ID NVARCHAR(5),");
@@ -394,6 +400,8 @@ public class VpMappingServiceV4 implements EventHandler {
         v_sql_createTableItem.append("VENDOR_POOL_MAPPING_USE_FLAG BOOLEAN,");
         v_sql_createTableItem.append("REGISTER_REASON NVARCHAR(50),");
         v_sql_createTableItem.append("APPROVAL_NUMBER NVARCHAR(50))");
+        
+        String v_sql_dropTableItem = "DROP TABLE #LOCAL_TEMP_ITEM;";                
 
         StringBuffer v_sql_createTableManager = new StringBuffer();
         v_sql_createTableManager.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_MANAGER (");        
@@ -408,20 +416,26 @@ public class VpMappingServiceV4 implements EventHandler {
         v_sql_createTableManager.append("REGISTER_REASON NVARCHAR(50),");
         v_sql_createTableManager.append("APPROVAL_NUMBER NVARCHAR(50))");
 
+        String v_sql_dropTableManager = "DROP TABLE #LOCAL_TEMP_MANAGER;";        
+
         String v_sql_insertTableMst = "INSERT INTO #LOCAL_TEMP_MST VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String v_sql_insertTableSupplier = "INSERT INTO #LOCAL_TEMP_SUPPLIER VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String v_sql_insertTableItem = "INSERT INTO #LOCAL_TEMP_ITEM VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String v_sql_insertTableManager = "INSERT INTO #LOCAL_TEMP_MANAGER VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
+        log.info("### LOCAL_TEMP Success ###");
+
         StringBuffer v_sql_callProc = new StringBuffer();
-        v_sql_callProc.append("CALL PG_VP_VENDOR_POOL_CHANGE_PROC(");        
+        v_sql_callProc.append("CALL PG_VP_MAPPING_CHANGE_PROC(");        
             v_sql_callProc.append("I_MST => #LOCAL_TEMP_MST,");        
             v_sql_callProc.append("I_SUP => #LOCAL_TEMP_SUPPLIER,");        
             v_sql_callProc.append("I_ITM => #LOCAL_TEMP_ITEM, ");        
             v_sql_callProc.append("I_MAN => #LOCAL_TEMP_MANAGER,");        
             v_sql_callProc.append("I_USER_ID => ?,");        
             v_sql_callProc.append("I_USER_NO => ?,");        
-            v_sql_callProc.append("O_MSG => ?)");                    
+            v_sql_callProc.append("O_MSG => ?)");   
+
+        log.info("### DB Connect Start ###");
 
         Collection<VpMstType> v_inMst = context.getInputData().getVpMst();
         Collection<VpSuppilerType> v_inSupplier = context.getInputData().getVpSupplier();
@@ -431,18 +445,26 @@ public class VpMappingServiceV4 implements EventHandler {
 
         ResultSet v_rs = null;
 
+        Connection conn = null;
+        PreparedStatement v_statement_tableMst = null;
+        PreparedStatement v_statement_tableSupplier = null;
+        PreparedStatement v_statement_tableItem = null;
+        PreparedStatement v_statement_tableManager = null;
+        
 		try {
             
-            Connection conn = jdbc.getDataSource().getConnection();
+            log.info("### try Start ###");
+            conn = jdbc.getDataSource().getConnection();
 
             // Vendor Pool Mst Local Temp Table 생성
-            PreparedStatement v_statement_tableMst = conn.prepareStatement(v_sql_createTableMst.toString());
+            v_statement_tableMst = conn.prepareStatement(v_sql_createTableMst.toString());
             v_statement_tableMst.execute();
 
             // Vendor Pool Mst Local Temp Table에 insert
             PreparedStatement v_statement_insertMst = conn.prepareStatement(v_sql_insertTableMst);
+            
 
-            /*if(!v_inMst.isEmpty() && v_inMst.size() > 0){
+            if(!v_inMst.isEmpty() && v_inMst.size() > 0){
                 for(VpMstType v_inRow : v_inMst){
                     v_statement_insertMst.setObject(1, v_inRow.get("tenant_id"));
                     v_statement_insertMst.setObject(2, v_inRow.get("company_code"));
@@ -476,9 +498,9 @@ public class VpMappingServiceV4 implements EventHandler {
                 }
 
                 v_statement_insertMst.executeBatch();
-            }*/
+            }
 
-            v_statement_insertMst.setObject(1, "L2100");
+            /*v_statement_insertMst.setObject(1, "L2100");
             v_statement_insertMst.setObject(2, "*");
             v_statement_insertMst.setObject(3, "BU");
             v_statement_insertMst.setObject(4, "BIZ00200");
@@ -490,12 +512,14 @@ public class VpMappingServiceV4 implements EventHandler {
             v_statement_insertMst.setObject(3, "BU");
             v_statement_insertMst.setObject(4, "BIZ00200");
             v_statement_insertMst.setObject(5, "VP201610260095");            
-            v_statement_insertMst.addBatch();
+            v_statement_insertMst.addBatch();*/
 
             v_statement_insertMst.executeBatch();
 
+            log.info("### insertMst Success ###");
+
             // Vendor Pool Supplier Local Temp Table 생성
-            PreparedStatement v_statement_tableSupplier = conn.prepareStatement(v_sql_createTableSupplier.toString());
+            v_statement_tableSupplier = conn.prepareStatement(v_sql_createTableSupplier.toString());
             v_statement_tableSupplier.execute();
 
             // Vendor Pool Supplier Local Temp Table에 insert
@@ -528,8 +552,10 @@ public class VpMappingServiceV4 implements EventHandler {
                 v_statement_insertSupplier.executeBatch();
             }
 
+            log.info("### insertSupplier Success ###");
+
             // Vendor Pool Item Local Temp Table 생성
-            PreparedStatement v_statement_tableItem = conn.prepareStatement(v_sql_createTableItem.toString());
+            v_statement_tableItem = conn.prepareStatement(v_sql_createTableItem.toString());
             v_statement_tableItem.execute();
 
             // Vendor Pool Mst Local Temp Table에 insert
@@ -552,8 +578,10 @@ public class VpMappingServiceV4 implements EventHandler {
                 v_statement_insertItem.executeBatch();
             }
 
+            log.info("### insertItem Success ###");
+
             // Vendor Pool Manager Local Temp Table 생성
-            PreparedStatement v_statement_tableManager = conn.prepareStatement(v_sql_createTableManager.toString());
+            v_statement_tableManager = conn.prepareStatement(v_sql_createTableManager.toString());
             v_statement_tableManager.execute();
 
             // Vendor Pool Manager Local Temp Table에 insert
@@ -577,6 +605,8 @@ public class VpMappingServiceV4 implements EventHandler {
                 v_statement_insertManager.executeBatch();
             }
 
+            log.info("### insertManager Success ###");
+
             // Procedure Call
             CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc.toString());
 
@@ -584,7 +614,7 @@ public class VpMappingServiceV4 implements EventHandler {
             v_statement_proc.setString(2, context.getInputData().getUserNo());
             v_rs = v_statement_proc.executeQuery();
             
-
+            log.info("### callProc Success ###");
             //VpOutType
 
             // Procedure Out put 담기
@@ -592,14 +622,65 @@ public class VpMappingServiceV4 implements EventHandler {
                 VpOutType v_row = VpOutType.create();
                 v_row.setReturnCode(v_rs.getString("return_code"));
                 v_row.setReturnMsg(v_rs.getString("return_msg"));                
-                v_result.add(v_row);
+
+                log.info(v_rs.getString("return_code"));
+                log.info(v_rs.getString("return_msg"));
+
+                if( "NG".equals(v_rs.getString("return_code"))){
+                    log.info("### Call Proc Error!!  ###");
+                    throw new ServiceException(ErrorStatuses.BAD_REQUEST, v_rs.getString("return_msg"));
+                }
+                v_result.add(v_row);              
             }
+
+
+            // Vendor Pool Master Local Temp Table 삭제
+            v_statement_tableMst = conn.prepareStatement(v_sql_dropTableMst);
+            v_statement_tableMst.execute();
+
+            // Vendor Pool Supplier Local Temp Table 삭제
+            v_statement_tableSupplier = conn.prepareStatement(v_sql_dropTableSupplier);
+            v_statement_tableSupplier.execute();
+
+            // Vendor Pool Item Local Temp Table 삭제
+            v_statement_tableItem = conn.prepareStatement(v_sql_dropTableItem);
+            v_statement_tableItem.execute();
+
+            // Vendor Pool Manager Local Temp Table 삭제
+            v_statement_tableManager = conn.prepareStatement(v_sql_dropTableManager);
+            v_statement_tableManager.execute();
+
+
+            v_statement_tableMst.close();
+            v_statement_tableSupplier.close();
+            v_statement_tableItem.close();
+            v_statement_tableManager.close();
 
             context.setResult(v_result);
             context.setCompleted();
 
 		} catch (SQLException e) { 
 			e.printStackTrace();
+        } finally {
+            try{ 
+                if(conn != null){
+                    conn.close();              
+                } 
+                if(v_statement_tableMst != null){
+                    v_statement_tableMst.close();             
+                } 
+                if(v_statement_tableSupplier != null){
+                    v_statement_tableSupplier.close();              
+                } 
+                if(v_statement_tableItem != null){
+                    v_statement_tableItem.close();
+                } 
+                if(v_statement_tableManager != null){
+                    v_statement_tableManager.close();
+                } 
+            } catch(Exception e){
+
+            }
         }
     }
 }

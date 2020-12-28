@@ -17,14 +17,14 @@ entity Pu_Pr_Account {
             and dtl.pr_number  =  pr_number
             and dtl.pr_item_number  =  pr_item_number;       
 
-        service_sequence		: Decimal		not null	 @title: '서비스순번';
-        account_code			: String(30)    not null	 @title: '계정코드';
-        cctr_code				: String(50)    not null	 @title: '비용부서코드';
-        wbs_code				: String(30)    not null	 @title: 'wbs코드';
-        asset_number			: String(30)    not null	 @title: '자산번호';
-        order_number			: String(30)    not null	 @title: '오더번호';
-        pr_quantity				: Decimal		not null	 @title: '구매요청수량';
-        distrb_rate		        : Decimal		not null	 @title: '배분율';
+            service_sequence : String(10) not null  @title: '서비스순번' ;	
+            account_code    : String(40)  not null  @title: '계정코드' ;	
+            cctr_code       : String(10)            @title: '비용부서코드' ;	
+            wbs_code        : String(30)            @title: 'WBS코드' ;	
+            asset_number    : String(30)            @title: '자산번호' ;	
+            order_number    : String(3)             @title: '오더번호' ;	
+            pr_quantity     : Decimal               @title: '구매요청수량' ;	
+            distrb_rate     : Decimal               @title: '배분율' ;	
     }	
 
 extend Pu_Pr_Account with util.Managed;

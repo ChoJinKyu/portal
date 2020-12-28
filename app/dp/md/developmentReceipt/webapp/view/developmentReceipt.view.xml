@@ -60,13 +60,13 @@
                                 <!--<MultiInput id="searchCompanyS" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>-->
                                 <MultiComboBox id="searchCompanyS" width="100%" selectedKey=""
                                                 items="{
-                                                    path: 'org>/Org_Company',
+                                                    path: 'org>/Company',
                                                     filters: [
                                                         {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                                     ],
                                                     sorter: { path: 'company_code'}
                                                 }"
-                                selectionFinish="handleSelectionFinishComp">
+                                selectionFinish="handleSelectionFinishComp" required="true">
                                     <items>
                                         <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                     </items>
@@ -85,7 +85,7 @@
                                                     ],
                                                     sorter: { path: 'org_code'}
                                                 }"
-                                selectionFinish="handleSelectionFinishDiv" >
+                                selectionFinish="handleSelectionFinishDiv" required="true">
                                     <items>
                                         <core:Item key="{org_code}" text="[{org_code}] {org_name}" />
                                     </items>
@@ -96,7 +96,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="Creation {I18N>/DATE}" labelFor="searchCreationDateS" required="true"></Label>
-                                <DateRangeSelection id="searchCreationDateS" width="100%" change="creationDateChange"/>
+                                <DateRangeSelection id="searchCreationDateS" width="100%" change="creationDateChange" required="true"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
@@ -156,13 +156,13 @@
                                 <Label text="{I18N>/COMPANY}" labelFor="searchCompanyE" required="true"></Label>
                                 <MultiComboBox id="searchCompanyE" width="100%" selectedKey=""
                                                 items="{
-                                                    path: 'org>/Org_Company',
+                                                    path: 'org>/Company',
                                                     filters: [
                                                         {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                                     ],
                                                     sorter: { path: 'company_code'}
                                                 }"
-                                selectionFinish="handleSelectionFinishComp">
+                                selectionFinish="handleSelectionFinishComp" required="true">
                                     <items>
                                         <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                     </items>
@@ -181,7 +181,7 @@
                                                     ],
                                                     sorter: { path: 'org_code'}
                                                 }"
-                                selectionFinish="handleSelectionFinishDiv" >
+                                selectionFinish="handleSelectionFinishDiv" required="true">
                                     <items>
                                         <core:Item key="{org_code}" text="[{org_code}] {org_name}" />
                                     </items>
@@ -192,7 +192,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="Creation {I18N>/DATE}" labelFor="searchCreationDateE" required="true"></Label>
-                                    <DateRangeSelection id="searchCreationDateE" width="100%" change="creationDateChange"/>
+                                    <DateRangeSelection id="searchCreationDateE" width="100%" change="creationDateChange" required="true"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
@@ -337,23 +337,21 @@
         </f:header>
         <f:content>
             <table:Table id="moldMstTable"
-                    selectionMode="MultiToggle"
+                    selectionMode="None"
                     fixedColumnCount="7"
                     visibleRowCountMode="Auto"
-                    rows="{list>/MoldMasters}"
+                    rows="{list>/MoldMstView}"
                     cellClick=".onCellClick"
                     rowSelectionChange=".onCheck">
                 <table:extension>
                     <OverflowToolbar>
-                        <Title text="List ({= ${list>/MoldMasters}.length || 0})" level="H2"/>
+                        <Title text="List ({= ${list>/MoldMstView}.length || 0})" level="H2"/>
                         <ToolbarSpacer/>
-                        <Button id="moldMstTableEditButton"     type="Transparent" text="Edit"               press=".onMoldMstTableEditButtonPress"     enabled="{mode>/viewFlag}" />
-                        <ToolbarSeparator/>
                         <!-- Add the Personalization button -->
-                        <Button id="moldMstTableBindButton"     type="Transparent" text="Bind &amp; Receipt" press=".onMoldMstTableBindButtonPress"     enabled="{mode>/viewFlag}" />
-                        <Button id="moldMstTableCancelButton"   type="Transparent" text="Cancel Bind"        press=".onMoldMstTableCancelButtonPress"   enabled="{mode>/viewFlag}" />
-                        <Button id="moldMstTableDeleteButton"   type="Transparent" text="Delete"             press=".onMoldMstTableDeleteButtonPress"   enabled="{mode>/viewFlag}" />
-                        <Button id="moldMstTableReceiptButton"  type="Emphasized"  text="Receipt"            press=".onMoldMstTableReceiptButtonPress"  enabled="{mode>/viewFlag}" />
+                        <Button id="moldMstTableBindButton"     type="Transparent" text="Bind &amp; Receipt" press=".onMoldMstTableBindButtonPress"    />
+                        <Button id="moldMstTableCancelButton"   type="Transparent" text="Cancel Bind"        press=".onMoldMstTableCancelButtonPress"  />
+                        <Button id="moldMstTableDeleteButton"   type="Transparent" text="Delete"             press=".onMoldMstTableDeleteButtonPress"  />
+                        <Button id="moldMstTableReceiptButton"  type="Emphasized"  text="Receipt"            press=".onMoldMstTableReceiptButtonPress" />
                         <ToolbarSeparator/>
                         <Button icon="sap-icon://action-settings" press=".onMoldMstTablePersoButtonPressed" >
                             <layoutData>
@@ -363,6 +361,13 @@
                     </OverflowToolbar>
                 </table:extension>                             
                 <table:columns>
+                    <table:Column width="3.3em" hAlign="Center">
+                        <!--<CheckBox select="onCheckAll" />-->
+                        <table:template>
+                            <CheckBox id="chk" selected="{list>chk}" select=".setIdSelect"
+                            visible="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" />
+                        </table:template>
+                    </table:Column>
                     <table:Column id="moldCompanyColumn" width="5em" hAlign="Center">
                         <Label text="{I18N>/COMPANY}"/>           
                         <table:template>
@@ -425,12 +430,13 @@
                     <table:Column id="moldFamilyFlagColumn" width="5.5em" hAlign="Center">
                         <Label text="Family Y/N"/>
                         <table:template>
-                            <ComboBox id="family_flag" selectedKey="{= ${list>family_part_number_1} !== null ? 'Y' : 'N' }" change="familyFlagChange" editable="{mode>/editFlag}" class="readonlyField" >
+                            <ComboBox id="family_flag" selectedKey="{= ${list>family_part_number_1} !== null ? 'Y' : 'N' }" change="familyFlagChange"
+                            editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="Y" text="Yes"/>
                                 <core:Item key="N" text="No"/>
                             </ComboBox>
                             <!--<ComboBox   id="family_flag"    
-                                        selectedKey="{= ${list>family_part_number_1}.length > 0 ? 'Y' : 'N' }"
+                                        selectedKey="{= ${list>family_part_number_1} !== null ? 'Y' : 'N' }"
                                         items="{
                                                     path : 'util>/CodeDetails',
                                                     filters : [
@@ -438,7 +444,7 @@
                                                         {path : 'group_code', operator : 'EQ', value1 : 'CM_YN'}
                                                     ]
                                                 }"
-                            change="familyFlagChange" editable="{mode>/editFlag}" class="readonlyField">
+                            selectionChange="familyFlagChange">
                                 <core:Item key="{util>code}" text="{util>code_description}" />
                             </ComboBox>-->
                         </table:template>
@@ -458,7 +464,8 @@
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
                                                     ]
                                                 }"
-                            editable="{mode>/editFlag}" class="readonlyField" required="true" >
+                            required="true" selectionChange="inputFieldChange"
+                            editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="{util>code}" text="{util>code_description}" />
                             </ComboBox>
                         </table:template>
@@ -478,7 +485,8 @@
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
                                                     ]
                                                 }"
-                            editable="{mode>/editFlag}" class="readonlyField" required="true" >
+                            required="true" selectionChange="inputFieldChange"
+                            editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="{util>code}" text="{util>code_description}" />
                             </ComboBox>
                         </table:template>
@@ -498,7 +506,9 @@
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_TYPE'}
                                                     ]
                                                 }"
-                            editable="{mode>/editFlag}" class="readonlyField" required="true" >
+                            required="true" selectionChange="inputFieldChange"
+                            editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }"
+                            class="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? '' : 'readonlyField' }" >
                                 <core:Item key="{util>code}" text="{util>code_description}" />
                             </ComboBox>
                         </table:template>
@@ -518,23 +528,18 @@
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ED_TYPE'}
                                                     ]
                                                 }"
-                            editable="{mode>/editFlag}" class="readonlyField" required="true" >
+                            required="true" selectionChange="inputFieldChange"
+                            editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="{util>code}" text="{util>code_description}" />
                             </ComboBox>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldTestUseFlagColumn" width="7em" hAlign="Center">
                         <VBox>
-                        <Label text="T-EST"/>
-                        <Label text="Use Y/N"/>
+                        <Label text="Mold Cost"/>
+                        <Label text="Analysis Type"/>
                         </VBox>
                         <table:template>
-                            <!--<Switch state="{list>mold_cost_analysis_type_code}" customTextOn="Yes" customTextOff="No" enabled="{mode>/editFlag}">
-                                <layoutData>
-                                    <FlexItemData growFactor="1" />
-                                </layoutData>
-                            </Switch>-->
-                            <!--<CheckBox selected="{list>mold_cost_analysis_type_code}" editable="{mode>/editFlag}" />-->
                             <ComboBox   id="mold_cost_analysis_type_code"    
                                         selectedKey="{list>mold_cost_analysis_type_code}"
                                         items="{
@@ -544,7 +549,8 @@
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_COST_ANALYSIS_TYPE'}
                                                     ]
                                                 }"
-                            editable="{mode>/editFlag}" class="readonlyField">
+                            selectionChange="inputFieldChange"
+                            editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="{util>code}" text="{util>code_description}" />
                             </ComboBox>
                         </table:template>
@@ -581,7 +587,8 @@
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PURCHASE_TYPE'}
                                                     ]
                                                 }"
-                            editable="{mode>/editFlag}" class="readonlyField">
+                            selectionChange="inputFieldChange"
+                            editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="{util>code}" text="{util>code_description}" />
                             </ComboBox>
                         </table:template>
@@ -601,7 +608,8 @@
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_STRUCTURE'}
                                                     ]
                                                 }"
-                            editable="{mode>/editFlag}" class="readonlyField" >
+                            selectionChange="inputFieldChange"
+                            editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="{util>code}" text="{util>code_description}" />
                             </ComboBox>
                         </table:template>
@@ -618,7 +626,8 @@
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SIZE'}
                                                     ]
                                                 }"
-                            editable="{mode>/editFlag}" class="readonlyField" >
+                            selectionChange="inputFieldChange"
+                            editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="{util>code}" text="{util>code_description}" />
                             </ComboBox>
                         </table:template>
@@ -646,14 +655,15 @@
                         <table:template>
                             <VBox>
                             <Text id="mold_developer_empno" text="{list>mold_developer_empno}" visible="{mode>/viewFlag}" />
-                            <SearchField id="searchField" value="{list>mold_developer_empno}" width="100%" placeholder="Search employee" visible="{mode>/editFlag}" search=".onMoldMstTableUserSearch" required="true" />
+                            <!--<SearchField id="searchField" value="{list>mold_developer_empno}" width="100%" placeholder="Search employee" visible="{mode>/editFlag}" search=".onMoldMstTableUserSearch" required="true" />-->
                             </VBox>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldRemarkColumn" width="20em" hAlign="Center">
                         <Label text="Remark"/>
                         <table:template>
-                            <TextArea id="remark" value="{list>remark}" rows="2" width="100%" editable="{mode>/editFlag}" class="readonlyField" />
+                            <TextArea id="remark" value="{list>remark}" rows="2" width="100%" change="inputFieldChange"
+                            editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldProjectCodeColumn" width="15em">
@@ -674,7 +684,7 @@
                         <Label text="Part No(1)"/>
                         </VBox>
                         <table:template>
-                            <Input id="family_part_number_1" value="{list>family_part_number_1}" maxLength="11" editable="{= ${list>family_part_number_1} !== null ? ${mode>/editFlag} : false }" class="readonlyField" />
+                            <Input id="family_part_number_1" value="{list>family_part_number_1}" maxLength="11" change="inputFieldChange" editable="{= ${list>family_part_number_1} !== null ? ((${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false) : false }" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldFamilyPartNo2Column" width="12em" hAlign="Center">
@@ -683,7 +693,7 @@
                         <Label text="Part No(2)"/>
                         </VBox>
                         <table:template>
-                            <Input id="family_part_number_2" value="{list>family_part_number_2}" maxLength="11" editable="{= ${list>family_part_number_1} !== null ? ${mode>/editFlag} : false }" class="readonlyField" />
+                            <Input id="family_part_number_2" value="{list>family_part_number_2}" maxLength="11" change="inputFieldChange" editable="{= ${list>family_part_number_1} !== null ? true : false }" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldFamilyPartNo3Column" width="12em" hAlign="Center">
@@ -692,7 +702,7 @@
                         <Label text="Part No(3)"/>
                         </VBox>
                         <table:template>
-                            <Input id="family_part_number_3" value="{list>family_part_number_3}" maxLength="11" editable="{= ${list>family_part_number_1} !== null ? ${mode>/editFlag} : false }" class="readonlyField" />
+                            <Input id="family_part_number_3" value="{list>family_part_number_3}" maxLength="11" change="inputFieldChange" editable="{= ${list>family_part_number_1} !== null ? true : false }" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldFamilyPartNo4Column" width="12em" hAlign="Center">
@@ -701,7 +711,7 @@
                         <Label text="Part No(4)"/>
                         </VBox>
                         <table:template>
-                            <Input id="family_part_number_4" value="{list>family_part_number_4}" maxLength="11" editable="{= ${list>family_part_number_1} !== null ? ${mode>/editFlag} : false }" class="readonlyField" />
+                            <Input id="family_part_number_4" value="{list>family_part_number_4}" maxLength="11" change="inputFieldChange" editable="{= ${list>family_part_number_1} !== null ? true : false }" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldFamilyPartNo5Column" width="12em" hAlign="Center">
@@ -710,19 +720,11 @@
                         <Label text="Part No(5)"/>
                         </VBox>
                         <table:template>
-                            <Input id="family_part_number_5" value="{list>family_part_number_5}" maxLength="11" editable="{= ${list>family_part_number_1} !== null ? ${mode>/editFlag} : false }" class="readonlyField" />
+                            <Input id="family_part_number_5" value="{list>family_part_number_5}" maxLength="11" change="inputFieldChange" editable="{= ${list>family_part_number_1} !== null ? true : false }" />
                         </table:template>
                     </table:Column>
                 </table:columns>
             </table:Table>
         </f:content>
-        <!-- DynamicPage Footer -->
-        <f:footer>
-            <OverflowToolbar>
-                <ToolbarSpacer />
-				<Button text="{I18N>/SAVE}" type="Emphasized" press=".onPageSaveButtonPress" />
-				<Button text="{I18N>/CANCEL}" type="Transparent" press=".onPageCancelEditButtonPress"/>
-            </OverflowToolbar>
-        </f:footer>
     </f:DynamicPage>
 </mvc:View>

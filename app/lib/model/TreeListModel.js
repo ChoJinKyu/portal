@@ -146,7 +146,12 @@ sap.ui.define([
                         return [...acc, new Filter({
                             path: 'node_id', operator: FilterOperator.EQ, value1: e
                         })];
-                    }, []);
+                    }, [
+                        // new Filter({
+                        //     path: 'language_code', operator: FilterOperator.EQ, value1: 'KO'
+                        // })
+                    ]);
+
                 // 필터링된 Node 만을 호출한다.
                 return new Promise(function (resolve, reject) {
                     that.model.read(path, jQuery.extend(parameters, {

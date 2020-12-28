@@ -139,8 +139,8 @@ modules:
       name: menuMgr
       target-path: resources/
     - artifacts:
-      - vpCallProcTest-content.zip
-      name: vpCallProcTest
+      - miCategory-content.zip
+      name: miCategory
       target-path: resources/
 - name: sampleMstMgr
   type: html5
@@ -281,9 +281,9 @@ modules:
     commands:
     - npm run build
     supported-platforms: []
-- name: vpCallProcTest
+- name: miCategory
   type: html5
-  path: app/pg/vp/vpCallProcTest
+  path: app/pg/mi/miCategory
   build-parameters:
     builder: custom
     commands:

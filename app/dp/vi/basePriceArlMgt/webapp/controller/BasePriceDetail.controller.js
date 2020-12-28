@@ -10,16 +10,28 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/ui/core/Fragment",
     "sap/ui/model/Filter",
-    "sap/ui/model/FilterOperator"
+    "sap/ui/model/FilterOperator",
+    "sap/m/MessageToast"
 ],
   function (BaseController, TransactionManager, Validator, Formatter, DateFormatter,
-        JSONModel, ODataModel, RichTextEditor, MessageBox, Fragment, Filter, FilterOperator) {
+        JSONModel, ODataModel, RichTextEditor, MessageBox, Fragment, Filter, FilterOperator, MessageToast) {
     "use strict";
+
+    var sSelectedPath;
 
     return BaseController.extend("dp.vi.basePriceArl.controller.BasePriceDetail", {
         dateFormatter: DateFormatter,
 
         onInit: function () {
+            var oBasePriceListRootModel = this.getOwnerComponent().getModel("basePriceArlRootModel");
+            var sTenantId = oBasePriceListRootModel.getProperty("/tenantId");
+
+            switch (sTenantId) {
+                case "L2100" :
+                default :
+            }       
+
+            sTenantId
             // 하드코딩 시작
             var oCodeData = {
                 basis: [{code: "1", text: "Cost Analysis (Cost Table)"},
@@ -77,11 +89,13 @@ sap.ui.define([
         */
         _getBasePriceDetail: function () {
             var oView = this.getView();
+            var oCodeModel = this.getModel("codeModel");
             var oBasePriceListRootModel = this.getModel("basePriceArlRootModel");
             var oSelectedData = oBasePriceListRootModel.getProperty("/selectedData");
 
             // 리스트에서 선택해서 넘어오는 경우
             if( oSelectedData && oSelectedData.tenant_id ) {
+                var that = this;
                 var oModel = this.getModel();
                 var aFilters = [];
                 aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oSelectedData.tenant_id));
@@ -96,21 +110,12 @@ sap.ui.define([
                     },
                     success : function(data){
                         oView.setBusy(false);
-                        console.log("success", data);
 
                         if( data && data.results && 0<data.results.length ) {
-                            var oMaster = data.results[0],
-                                aDetails = oMaster.details.results,
-                                iDetailsLen = aDetails.length;
-
-                            for( var i=0; i<iDetailsLen; i++ ) {
-                                var oDetail = aDetails[i];
-                                oDetail.prices = oDetail.prices.results;
-                            }
-
-                            oMaster.details = aDetails;
+                            var oMaster = that._returnDataRearrange(data.results[0]);
 
                             oView.getModel("detailModel").setData(oMaster);
+                            oCodeModel.setProperty("/detailsLength", oMaster.details.length);
                             //oView.getModel("detailModel").refresh();
                         }
                     },
@@ -137,6 +142,7 @@ sap.ui.define([
                                     "local_update_dtm": oToday,
                                     "details": []};
                 this.setModel(new JSONModel(oNewBasePriceData), "detailModel");
+                oCodeModel.setProperty("/detailsLength", 0);
             }
 
             //this.setRichEditor();
@@ -169,29 +175,148 @@ sap.ui.define([
         },
 
         /**
+         * 리턴 데이터 화면에 맞게 변경
+         */
+        _returnDataRearrange: function (oDataParam) {
+            var oMaster = oDataParam,
+                aDetails = oMaster.details.results,
+                iDetailsLen = aDetails.length;
+
+            for( var i=0; i<iDetailsLen; i++ ) {
+                var oDetail = aDetails[i];
+                oDetail.prices = oDetail.prices.results;
+            }
+
+            oMaster.details = aDetails;
+
+            return oMaster;
+        },
+
+        /**
+         * Base Price 라인 추가
+         */
+        onAddBasePrice: function () {
+            var oDetailModel = this.getModel("detailModel"),
+                aDetails = oDetailModel.getProperty("/details"),
+                oToday = new Date();
+
+            aDetails.push({base_date:oToday, 
+                        company_code: "LGEKR", 
+                        org_type_code: "PU",
+                        au_code: "10",
+                        base_price_ground_code: "10", 
+                        local_create_dtm: oToday, 
+                        local_update_dtm: oToday, 
+                        prices: [{market_code: "1", local_create_dtm: oToday, local_update_dtm: oToday}, 
+                                {market_code: "2", local_create_dtm: oToday, local_update_dtm: oToday}]
+                        });
+            oDetailModel.refresh();
+        },
+
+        /**
+         * detail 선택 데이터 체크
+         */
+        onRowSelectionChange: function (oEvent) {
+            var oDetailModel = this.getModel("detailModel"),
+                oParameters = oEvent.getParameters(),
+                bSelectAll = !!oParameters.selectAll;
+
+            // 전체 선택일 경우
+            if( bSelectAll || oParameters.rowIndex === -1 ) {
+                var aDetails = oDetailModel.getProperty("/details");
+                aDetails.forEach(function(oDetail) {
+                    oDetail.checked = bSelectAll;
+                });
+            }
+            // 단독 선택일 경우
+            else {
+                var oDetail = oDetailModel.getProperty(oParameters.rowContext.getPath());
+                oDetail.checked = !oDetail.checked;
+            }
+        },
+
+        /**
+         * 체크된 detail 데이터 삭제
+         */
+        onDeleteDetailRow: function (oEvent) {
+            var oDetailModel = this.getModel("detailModel"),
+                aDetails = oDetailModel.getProperty("/details"),
+                oDetailTable = oEvent.getSource().getParent().getParent();
+
+            for( var i=aDetails.length-1; 0<=i; i-- ) {
+                if( aDetails[i].checked ) {
+                    aDetails.splice(i, 1);
+                }
+            }
+
+            oDetailModel.refresh();
+            oDetailTable.clearSelection();
+        },
+
+        /**
+         * key값 추출
+         */
+        _getMasterKey: function (oDataParam, sTableNameParam) {
+            var oKey = {};
+
+            if( sTableNameParam === "Master" ) {
+                oKey.tenant_id = oDataParam.tenant_id;
+                oKey.approval_number = oDataParam.approval_number;
+            }
+
+            return oKey;
+        },
+
+        /**
          * 저장
          */
         onDraft: function () {
+            var that = this;
             var oDetailModel = this.getModel("detailModel");
             var oModel = this.getModel();
             var oData = $.extend(true, {}, oDetailModel.getData());
-            //oData.details = [] ;
+            var aDetails = oData.details;
 
-            console.log(oData);
+            // detail 데이터가 있을 경우 checked property 삭제(OData에 없는 property 전송 시 에러)
+            if( aDetails ) {
+                aDetails.forEach(function (oDetails) {
+                    delete oDetails.checked;
+                });
+            }
 
-            oModel.create("/Base_Price_Arl_Master", oData, {
-                //groupId: "saveBasePriceArl",
-                success: function(data){
-                    // return 값이 있고 approval_number가 있는 경우에만 저장 완료
-                    if( data && data.approval_number ) {
-                        MessageBox.success("저장되었습니다.");
-                        oDetailModel.setProperty("/approval_number", data.approval_number);
+            if( !oData.approval_number ) {
+                oModel.create("/Base_Price_Arl_Master", oData, {
+                    //groupId: "saveBasePriceArl",
+                    success: function(data){
+                        // return 값이 있고 approval_number가 있는 경우에만 저장 완료
+                        if( data && data.approval_number ) {
+                            MessageBox.success("저장되었습니다.");
+                            var oMaster = that._returnDataRearrange(data);
+                            oDetailModel.setData(oMaster);
+                        }
+                    },
+                    error: function(data){
+                        console.log('error', data);
+                        MessageBox.error(data.message);
                     }
-                }.bind(this),
-                error: function(data){
-                    console.log('error', data);
-                }
-            });
+                });
+            }else {
+                var sUpdatePath = oModel.createKey("/Base_Price_Arl_Master", this._getMasterKey(oData, "Master"));
+                oModel.update(sUpdatePath, oData, {
+                    success: function(data){
+                        // return 값이 있고 approval_number가 있는 경우에만 저장 완료
+                        if( data && data.approval_number ) {
+                            MessageBox.success("수정되었습니다.");
+                            var oMaster = that._returnDataRearrange(data);
+                            oDetailModel.setData(oMaster);
+                        }
+                    },
+                    error: function(data){
+                        console.log('error', data);
+                        MessageBox.error(data.message);
+                    }
+                });
+            }
 
             // oModel.submitChanges({
             //     groupId: "saveBasePriceArl",
@@ -202,6 +327,32 @@ sap.ui.define([
             //         console.log('Create error', data);
             //     }
             // })
+        },
+
+        /**
+         * 삭제
+         */
+        onDelete: function () {
+            MessageBox.confirm("삭제 하시겠습니까?", {
+                title : "Delete",
+                initialFocus : sap.m.MessageBox.Action.CANCEL,
+                onClose : function(sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        var oModel = this.getModel();
+                        var sDeletePath = oModel.createKey("/Base_Price_Arl_Master", this._getMasterKey(this.getModel("detailModel").getData(), "Master"));
+                        
+                        oModel.remove(sDeletePath, {
+                            success: function(data){
+                                MessageToast.show("삭제되었습니다.");
+                                this.onBack();
+                            }.bind(this),
+                            error: function(data){
+                                console.log('remove error', data.message);
+                            }
+                        });
+                    }
+                }.bind(this)
+            });
         },
 
         /**
@@ -238,7 +389,7 @@ sap.ui.define([
          * 자재정보 검색 MaterialDialog.fragment open
          */
 		onOpenMaterialDialog: function (oEvent) {
-            // oEvent.getSource().data("selectMode");
+            sSelectedPath = oEvent.getSource().getBindingContext("detailModel").getPath();
             var oView = this.getView();
             var sPath = jQuery.sap.getModulePath("dp.vi.basePriceArl", "/json/materialCode.json");
             var oMarterialCodeModel = new JSONModel(sPath);
@@ -267,72 +418,39 @@ sap.ui.define([
          */
         onSelectMaterialCode: function (oEvent) {
             var oMaterialCodeModel = this.getModel("materialCodeModel");
-            var aMaterialCode = oMaterialCodeModel.getProperty("/materialCode");
             var oParameters = oEvent.getParameters();
 
-            // 전체 선택
-            if( oParameters.selectAll ) {
-                aMaterialCode.forEach(function (oMaterialCode) {
-                    oMaterialCode.checked = oParameters.selected;
-                });
-            }else
-            // 개별 선택
-            {
-                oMaterialCodeModel.setProperty(oParameters.listItems[0].getBindingContext("materialCodeModel").getPath()+"/checked", oParameters.selected);
-            }
+            oMaterialCodeModel.setProperty(oParameters.listItems[0].getBindingContext("materialCodeModel").getPath()+"/checked", oParameters.selected);
         },
 
         /**
          * Material Code 선택 후 apply
          */
         onMaterialDetailApply: function (oEvent) {
-            var aMaterialCode = this.getModel("materialCodeModel").getProperty("/materialCode"),
-                oDetailModel = this.getModel("detailModel"),
-                aDetails = oDetailModel.getProperty("/details"),
-                aUsedMaterialCode = [],
-                aDuplicatedMaterialCode = [],
-                bChecked = false;
+            var aMaterialCode = this.getModel("materialCodeModel").getProperty("/materialCode");
+            var oDetailModel = this.getModel("detailModel");
+            var oSelectedDetail = oDetailModel.getProperty(sSelectedPath);
+            var bChecked = false;
 
-            // 이미 추가되어있는 Material Code 추출
-            aDetails.forEach(function (oDetail) {
-                aUsedMaterialCode.push(oDetail.material_code);
-            });
+            for( var i=0; i<aMaterialCode.length; i++ ) {
+                var oMaterialCode = aMaterialCode[i];
 
-            // Dialog에서 선택한 Material Code 데이터 추가(이미 추가되어있는 건 제외)
-            aMaterialCode.forEach(function (oMaterialCode) {
                 if( oMaterialCode.checked ) {
+                    oSelectedDetail.material_code = oMaterialCode.material_code;
+                    //oSelectedDetail.description = oMaterialCode.description;
+                    //oSelectedDetail.spec = oMaterialCode.spec;
+
                     delete oMaterialCode.checked;
                     bChecked = true;
-                    
-                    var oToday = new Date();
 
-                    if( -1 === aUsedMaterialCode.indexOf(oMaterialCode.material_code) ) {
-                        aDetails.push($.extend(true, {base_date:oToday, 
-                                                    company_code: "LGEKR", 
-                                                    org_type_code: "PU",
-                                                    au_code: "10",
-                                                    base_price_ground_code: "10", 
-                                                    local_create_dtm: oToday, 
-                                                    local_update_dtm: oToday, 
-                                                    prices: [{market_code: "1", local_create_dtm: oToday, local_update_dtm: oToday}, {market_code: "2", local_create_dtm: oToday, local_update_dtm: oToday}]}, oMaterialCode));
-                    }else {
-                        aDuplicatedMaterialCode.push(oMaterialCode.material_code);
-                    }
-
-                    oMaterialCode.checked = false;
+                    break;
                 }
-            });
+            }
 
             // 선택된 Material Code가 있는지 경우
             if( bChecked ) {
-                // 이미 추가되어 있는 데이터를 선택했을 경우 경고창
-                if( 0<aDuplicatedMaterialCode.length ) {
-                    MessageBox.error(aDuplicatedMaterialCode.join()+"은 이미 추가되어 있습니다.");
-                    return;
-                }
-                
-                this.onClose(oEvent);
                 oDetailModel.refresh();
+                this.onClose(oEvent);
             }
             // 선택된 Material Code가 없는 경우
             else {

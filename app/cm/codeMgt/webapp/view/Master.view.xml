@@ -179,7 +179,7 @@
                         <Text text="{I18N>/GROUP_DESC}" />
                     </Column>
                     <Column
-                        width="5em"
+                        width="6em"
                         minScreenWidth="Tablet"
                         demandPopin="true">
                         <Text text="{I18N>/USE_FLAG}" />

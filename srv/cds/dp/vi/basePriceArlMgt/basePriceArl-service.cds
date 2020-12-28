@@ -5,6 +5,7 @@ using {dp as arlPrice} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_PR
 using {cm.Org_Tenant as tenant} from '../../../../../db/cds/cm/CM_ORG_TENANT-model';
 using {cm.Org_Company as comp} from '../../../../../db/cds/cm/CM_ORG_COMPANY-model';
 using {cm.Hr_Employee as employee} from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
+using {dp.Mm_Material_Mst as masterial} from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_MST-model';
 using {sp.Sm_Supplier_Mst as supplier} from '../../../../../db/cds/sp/sm/SP_SM_SUPPLIER_MST-model';
 
 namespace dp;
@@ -21,6 +22,8 @@ service BasePriceArlService {
     entity Org_Company as projection on comp;
     @readonly
     entity Hr_Employee as projection on employee;
+    @readonly
+    entity Material_Mst as projection on masterial;
     @readonly
     entity Supplier_Mst as projection on supplier;
 }

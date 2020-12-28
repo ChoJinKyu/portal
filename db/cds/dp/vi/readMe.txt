@@ -14,11 +14,13 @@ mvn clean spring-boot:run
 https://lgcommondev-workspaces-ws-tkg9d-app1.jp10.applicationstudio.cloud.sap/odata/v2/dp.BasePriceArlService/$metadata
 https://lgcommondev-workspaces-ws-tkg9d-app1.jp10.applicationstudio.cloud.sap/odata/v2/dp.BasePriceArlService/Base_Price_Arl_Master?$format=json&$expand=details	
 https://lgcommondev-workspaces-ws-tkg9d-app1.jp10.applicationstudio.cloud.sap/odata/v2/dp.BasePriceArlService/Base_Price_Arl_Master?$format=json&$expand=details/prices
+https://lgcommondev-workspaces-ws-tkg9d-app1.jp10.applicationstudio.cloud.sap/odata/v2/dp.BasePriceArlService/Base_Price_Arl_Master?$format=json&$expand=details,details/material_code_fk
 https://lgcommondev-workspaces-ws-tkg9d-app1.jp10.applicationstudio.cloud.sap/odata/v2/dp.BasePriceArlService/Base_Price_Arl_Detail?$format=json
 https://lgcommondev-workspaces-ws-tkg9d-app1.jp10.applicationstudio.cloud.sap/odata/v2/dp.BasePriceArlService/Base_Price_Arl_Price?$format=json
 
 ## 스키마 및 데이터 확인 주소 - v4
 https://lgcommondev-workspaces-ws-tkg9d-app1.jp10.applicationstudio.cloud.sap/odata/v4/dp.BasePriceArlService/Base_Price_Arl_Master?$expand=details($expand=prices)
+https://lgcommondev-workspaces-ws-tkg9d-app1.jp10.applicationstudio.cloud.sap/odata/v4/dp.BasePriceArlService/Base_Price_Arl_Master?$expand=details($expand=material_code_fk)
 
 ## 데이터 CRUD
 # 등록 : master
@@ -58,3 +60,4 @@ curl -X POST http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_Ar
 
 # 삭제
 curl -X DELETE http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_Arl_Master\(tenant_id=\'L2100\',approval_number=\'202012180003\'\)
+

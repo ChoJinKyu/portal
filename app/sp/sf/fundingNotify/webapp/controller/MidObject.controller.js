@@ -1,5 +1,6 @@
 sap.ui.define([
     "ext/lib/controller/BaseController",
+	"ext/lib/util/Multilingual",
     "sap/ui/model/json/JSONModel",
 	"sap/ui/core/routing/History",
     "ext/lib/model/TransactionManager",
@@ -18,7 +19,7 @@ sap.ui.define([
     "sap/m/ComboBox",
     "sap/ui/core/Item",
     "sap/ui/richtexteditor/RichTextEditor"
-], function (BaseController, JSONModel, History, TransactionManager, ManagedModel, ManagedListModel, DateFormatter,
+], function (BaseController, Multilingual, JSONModel, History, TransactionManager, ManagedModel, ManagedListModel, DateFormatter,
     Filter, FilterOperator, Fragment, MessageBox, MessageToast,
     ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, RichTextEditor) {
 
@@ -47,19 +48,19 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
-            // Model used to manipulate controlstates. The chosen values make sure,
-            // detail page shows busy indication immediately so there is no break in
-            // between the busy indication for loading the view's meta data
             var oViewModel = new JSONModel({
                 busy: true,
                 delay: 0,
                 screen: "",
-                editMode: true
+                editMode: true,
+                showMode: true
             });
 
+            var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
+            
             this.getRouter().getRoute("mainObject").attachPatternMatched(this._onRoutedThisPage, this);
             this.setModel(oViewModel, "midObjectView");
-
             this.setModel(new ManagedModel(), "master");
 
             oTransactionManager = new TransactionManager();
@@ -131,14 +132,20 @@ sap.ui.define([
 		 */
         onPageNavBackButtonPress: function () {
             var sPreviousHash = History.getInstance().getPreviousHash();
-			if (sPreviousHash !== undefined) {
-				// eslint-disable-next-line sap-no-history-manipulation
-				history.go(-1);
-			} else {
-				this.getRouter().navTo("mainList", {}, true);
-			}
+            this.getRouter().navTo("mainList", {}, true);
+			// if (sPreviousHash !== undefined) {
+            //     // eslint-disable-next-line sap-no-history-manipulation
+            //     // this.getRoute().navTo("mainList");
+			// 	history.go(-1);
+			// } else {
+			// 	this.getRouter().navTo("mainList", {}, true);
+			// }
             // var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
             // this.getRouter().navTo("mainObject");
+        },
+
+        onApplicationPeriodChange: function(oEvent) {
+            this.byId("closingDate").setDateValue(oEvent.getParameters().to);
         },
 
 		/**
@@ -205,7 +212,7 @@ sap.ui.define([
             var view = this.getView(),
                 master = view.getModel("master"),
                 that = this;
-            console.log(master.getData()["funding_notify_contents"]);
+            // console.log(master.getData()["funding_notify_contents"]);
             
             // Validation
             // if (!master.getData()["chain_code"]) {
@@ -235,9 +242,8 @@ sap.ui.define([
                             success: function (ok) {
                                 that._toShowMode();
                                 view.setBusy(false);
-                                //that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                                 MessageToast.show("Success to save.");
-                            }
+                            }.bind(this)
                         });
                     };
                 }
@@ -292,12 +298,13 @@ sap.ui.define([
                     "tenant_id": "L2100",
                     "funding_notify_number": "",
                     "funding_notify_title": "",
+                    "funding_notify_contents": "&nbsp;",
                     "local_create_dtm": utcDate,
                     "local_update_dtm": utcDate,
                     "create_user_id": "Admin",
                     "update_user_id": "Admin"
                 }, "/SfFundingNotify", 0);
-                
+                this.getView().getModel("midObjectView").setProperty("/showMode", false);
                 this._toEditMode();
             } else {
                 //this.getModel("midObjectView").setProperty("/isAddedMode", false);
@@ -317,6 +324,7 @@ sap.ui.define([
                         oView.setBusy(false);
                     }.bind(this)
                 });
+                this.getView().getModel("midObjectView").setProperty("/showMode", true);
                 this._toShowMode();
             }
 
@@ -354,7 +362,6 @@ sap.ui.define([
             this.byId("pageCancelButton").setEnabled(true);
             this.byId("pageSaveButton").setEnabled(true);
             oMidObjectView.setProperty("/editMode", true);
-            
         },
 
         _toShowMode: function () {

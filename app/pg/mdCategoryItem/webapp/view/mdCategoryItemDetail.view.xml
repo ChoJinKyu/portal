@@ -1,0 +1,183 @@
+<mvc:View
+    class="sapUiSizeCompact"
+    controllerName="pg.mdCategoryItem.controller.mdCategoryItemDetail"
+	xmlns:uxap="sap.uxap"
+	xmlns="sap.m"
+	xmlns:f="sap.f"
+	xmlns:form="sap.ui.layout.form"
+	xmlns:mvc="sap.ui.core.mvc">
+	<uxap:ObjectPageLayout
+		id="ObjectPageLayout"
+		showTitleInHeaderContent="true"
+		alwaysShowContentHeader="false"
+		preserveHeaderStateOnScroll="false"
+		headerContentPinnable="true"
+		isChildPage="true"
+		upperCaseAnchorBar="false">
+        <uxap:headerTitle>
+
+			<uxap:ObjectPageDynamicHeaderTitle>
+
+                <uxap:navigationActions>
+					<OverflowToolbarButton
+						type="Transparent"
+						icon="sap-icon://full-screen"
+						press=".handleFullScreen"
+						tooltip="Enter Full Screen Mode"
+						visible="{Currency>/true1}"/>
+					<!-- <OverflowToolbarButton
+						type="Transparent"
+						icon="sap-icon://exit-full-screen"
+						press=".handleExitFullScreen"
+						tooltip="Exit Full Screen Mode"
+						visible="{Currency>/true2}"/> -->
+				</uxap:navigationActions>
+
+				<uxap:actions>
+					<ToggleButton
+						text="Edit"
+						type="Emphasized"
+                        press=".onEditToggleButtonPress"
+                        enabled="{Currency>/true6}"/>
+					<!-- <Button
+						text="Delete"
+						type="Transparent"/>
+					<Button
+						text="Copy"
+						type="Transparent"/>
+					<Button
+						icon="sap-icon://action"
+						type="Transparent"/> -->
+				</uxap:actions>
+			</uxap:ObjectPageDynamicHeaderTitle>
+		</uxap:headerTitle>
+
+        <uxap:headerContent>
+			<FlexBox wrap="Wrap" fitContainer="true" alignItems="Stretch">
+				<VBox justifyContent="Center" class="sapUiSmallMarginEnd">
+					<Label text="tenant_id"/>
+                    <Text text="{tenant_id}"/>
+				</VBox>
+				<!-- <VBox justifyContent="Center" class="sapUiSmallMarginEnd">
+					<Label text="Subcategory"/>
+				</VBox>
+				<VBox justifyContent="Center" class="sapUiSmallMarginEnd">
+					<Label text="Price"/>
+				</VBox> -->
+			</FlexBox>
+		</uxap:headerContent>
+
+        <uxap:sections>
+			<uxap:ObjectPageSection id="CurrencyViewObjectPageSection" title="통화코드 상세">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<uxap:blocks>
+							<form:SimpleForm
+								maxContainerCols="2"
+								editable="false"
+								layout="ResponsiveGridLayout"
+								labelSpanL="12"
+								labelSpanM="12"
+								emptySpanL="0"
+								emptySpanM="0"
+								columnsL="2"
+								columnsM="2">
+								<form:content>
+                                    <form:Form editable="true" id="currencyDetail">
+                                    <form:toolbar>
+                                        <Toolbar width="100%" id="toolbar3">
+                                            <content>
+                                                <Title text="통화코드 상세" id="title18" />
+                                            </content>
+                                        </Toolbar>
+                                    </form:toolbar>
+                                    <form:formContainers>
+                                        <form:FormContainer id="container2" >
+                                            <form:formElements>
+                                                    <form:FormElement label="* 통화코드" >
+                                                        <form:fields>
+                                                            <Input width="auto" id="ipCurCode" value="{currency_code}" liveChange=".onLiveChange" editable="{Currency>/true5}"/>                                                        
+                                                        </form:fields>
+                                                    </form:FormElement>
+                                            </form:formElements>
+                                        </form:FormContainer>
+                                        <form:FormContainer id="container3">
+                                            <form:formElements>
+                                                <!-- <form:FormElement label="Symbol">
+                                                    <form:fields>
+                                                        <Input width="180px" id="input5" value="{extension_scale}"/>
+                                                    </form:fields>
+                                                </form:FormElement> -->
+                                            </form:formElements>
+                                        </form:FormContainer>
+                                    </form:formContainers>
+                                    </form:Form>
+								</form:content>
+							</form:SimpleForm>
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+			<uxap:ObjectPageSection title="다국어">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<uxap:blocks>
+							<Table 
+                                id="CurrencyLngTable"
+                                inset="false"
+                                items="{list>/}"
+                                class="sapFDynamicPageAlignContent"
+                                width="auto"
+                                mode="MultiSelect"
+                                updateFinished=".onMainTableUpdateFinished"
+								>
+                                <headerToolbar>
+                                    <OverflowToolbar>
+                                        <content>
+                                            <ToolbarSpacer/>
+                                            <Button text="Create" type="Transparent" press="onLngAddRow" enabled="{Currency>/true4}"/>                                            
+                                            <Button text="Delete" type="Transparent" press="onLngDeleteRow" enabled="{Currency>/true4}"/>
+                                            <!-- <Button text="Save" type="Emphasized" press="onLngSave"/> -->
+                                        </content>
+                                    </OverflowToolbar>
+                                </headerToolbar>
+								<columns>
+                                    <Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="40px" >
+                                        <Text text="S" />
+                                    </Column>
+									<Column width="auto">
+							            <Text text="언어"/>
+                                    </Column>
+                                    <Column	hAlign="End" >
+                                        <Text text="통화코드명"/>
+                                    </Column>
+								</columns>
+								<items>
+									<ColumnListItem >
+										<cells>
+                                            <Text text="{list>_row_state_}"></Text>
+											<Input id="language_code" value="{list>language_code}" editable="{Currency>/true4}"/>
+                                            <Input id="currency_code_name" value="{list>currency_code_name}" editable="{Currency>/true4}"/>
+                                            
+										</cells>
+									</ColumnListItem>
+								</items>
+							</Table>
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+		</uxap:sections>
+
+        <uxap:footer>
+			<OverflowToolbar>
+				<ToolbarSpacer/>
+				<Button type="Transparent" text="Draft"/>
+				<Button type="Transparent" text="Cancel" press=".onFooterCancelButton"/>
+                <Button type="Emphasized" text="Confirm"/>
+			</OverflowToolbar>
+		</uxap:footer>
+
+	</uxap:ObjectPageLayout>
+</mvc:View>

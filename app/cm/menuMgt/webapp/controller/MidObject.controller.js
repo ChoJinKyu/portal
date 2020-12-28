@@ -59,8 +59,6 @@ sap.ui.define([
 		 * @public
 		 */
     onInit: function () {
-
-      // MidObject
       this.getView().setModel(new JSONModel({
         busy: true,
         delay: 0,
@@ -199,6 +197,7 @@ sap.ui.define([
           menuName: ""
         }
       });
+      this.getModel("midObjectView").setProperty("/screen", "Full");
     },
     /**
      * Event handler for Exit Full Screen Button pressed
@@ -213,6 +212,7 @@ sap.ui.define([
           menuName: ""
         }
       });
+      this.getModel("midObjectView").setProperty("/screen", "");
     },
     /**
      * Event handler for Nav Back Button pressed
@@ -332,28 +332,36 @@ sap.ui.define([
       var view = this.getView(),
         master = view.getModel("master"),
         detail = view.getModel("details"),
+        length = 0,
         that = this;
 
       // Validation
-      // if (!master.getData()["chain_code"]) {
-      //   MessageBox.alert("Chain을 입력하세요");
-      //   return;
-      // }
-      // if (!master.getData()["menu_code"]) {
-      //   MessageBox.alert("테넌트를 입력하세요");
-      //   return;
-      // }
-      // if (master.getData()["_state_"] != "C" && detail.getChanges() <= 0) {
-      //   MessageBox.alert("변경사항이 없습니다.");
-      //   return;
-      // }
+      if (!master.getData()["chain_code"]) {
+        MessageBox.alert("Chain을 입력하세요");
+        return;
+      }
+    //   if (!master.getData()["menu_code"]) {
+    //     MessageBox.alert("테넌트를 입력하세요");
+    //     return;
+    //   }
+    //   if (master.getData()["_state_"] != "C" && detail.getChanges() <= 0) {
+    //     MessageBox.alert("변경사항이 없습니다.");
+    //     return;
+    //   }
       // Set Details (New)
-      if (master.getData()["_state_"] == "C") {
-        detail.getData()["MenuLng"].map(r => {
+      (length = detail.getData()["MenuLng"].length) 
+      && 
+      detail.getData()["MenuLng"].map(r => {
+        if (r["_row_state_"] == "C") {
           r["tenant_id"] = master.getData()["tenant_id"];
           r["menu_code"] = master.getData()["menu_code"];
-          return r;
-        });
+        }
+        return r;
+      });
+
+      if (length <= 0) {
+          MessageBox.alert("다국어 메뉴명을 등록하세요.");
+          return;
       }
 
       MessageBox.confirm("Are you sure ?", {
@@ -364,7 +372,6 @@ sap.ui.define([
             view.setBusy(true);
             that[oTransactionManager].submit({
               success: function (ok) {
-                //that.getModel("midObjectView").setProperty("/mode", "R");
                 view.setBusy(false);
                 that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                 MessageToast.show("Success to save.");

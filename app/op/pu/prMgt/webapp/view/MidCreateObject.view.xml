@@ -22,12 +22,12 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="Budget Execution Approval" wrapping="true" />
+					<Title text="구매 요청 생성" wrapping="true" />
 				</uxap:expandedHeading>
 
 				<uxap:snappedHeading>
                     <FlexBox fitContainer="true" alignItems="Center">
-						<Title text="Budget Execution Approval" wrapping="true"/>
+						<Title text="구매 요청 생성" wrapping="true"/>
 					</FlexBox>
 				</uxap:snappedHeading>
 
@@ -54,18 +54,24 @@
 			<FlexBox wrap="Wrap" >
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <ObjectStatus
-                        title="Report No"
-                        text="332424-20B-00144"/>
+                        title="구매요청 번호"
+                        text="New"/>
                     <ObjectStatus
-                        title="Requester"
-                        text="김갑수[ks.kim]"/>
-                    <ObjectStatus
-                        title="Request Date"
+                        title="구매요청 생성일자"
                         text="2020-11-20"/>
 				</layout:VerticalLayout>
 
+				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                    <ObjectStatus
+                        title="구매요청 템플릿"
+                        text="석유화학 공사/용역구매"/>
+                    <ObjectStatus
+                        title="구매요청 생성자"
+                        text="김구매"/>
+				</layout:VerticalLayout>
+
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-					<Label text="Status :"/>
+					<Label text="구매요청 진행상태 :"/>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
                         text="New"
@@ -79,28 +85,18 @@
                     <HBox>
                         <co:MicroProcessFlow>
                             <co:content>
-                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <co:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
-                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <co:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <co:MicroProcessFlowItem state="Error" width="2em" stepWidth="5em" icon="sap-icon://circle-task" />
+                                <co:MicroProcessFlowItem state="None" width="2em" stepWidth="5em" />
+                                <co:MicroProcessFlowItem state="None" width="2em" stepWidth="5em" />
+                                <co:MicroProcessFlowItem state="None" width="2em" stepWidth="5em" />
                             </co:content>
                         </co:MicroProcessFlow>
                     </HBox>
-                      <HBox>
-                        <Text text=" PR" renderWhitespace="true" />
-                        <Text text="Budget" width="6em" textAlign="Right" />
-                        <Text text="RFQ" width="6em" textAlign="Center" />
-                        <Text text="   Mold&#10;   Spec" renderWhitespace="true" />
-                        <Text text="Purchase&#10; Contract" width="8em" textAlign="Center" />
-                        <Text text="PO" renderWhitespace="true" />
-                        <Text text="RCV" width="5em" textAlign="Right" />
-                        <Text text="Lease&#10;Contract" width="7.5em" textAlign="Center" />
-                        <Text text="Invoice" />
+                    <HBox>
+                        <Text text="구매요청" width="5em" textAlign="Left" renderWhitespace="true" />
+                        <Text text="견적" width="7em" textAlign="Center" />
+                        <Text text="입찰" width="7em" textAlign="Center" />
+                        <Text text="구매오더" width="5em" textAlign="Center" />
                     </HBox>
                 </layout:VerticalLayout>
 			</FlexBox>

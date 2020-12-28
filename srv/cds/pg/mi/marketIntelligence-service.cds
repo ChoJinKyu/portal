@@ -12,6 +12,7 @@ using {pg as MICategDetlView} from '../../../../db/cds/pg/mi/PG_MI_CATEGORY_DETA
 using {pg as MIMatCostInfoView} from '../../../../db/cds/pg/mi/PG_MI_MATERIAL_COST_INFO_VIEW-model';
 using {pg as MICategHierStrView} from '../../../../db/cds/pg/mi/PG_MI_CATEGORY_HICHY_STRU_VIEW-model';
 using {pg as MIMatCdBOMMngeView} from '../../../../db/cds/pg/mi/PG_MI_MAT_CODE_BOM_MANAGEMENT_VIEW-model';
+using {pg as MIMatCdBOMMngeHeaderView} from '../../../../db/cds/pg/mi/PG_MI_MAT_CODE_BOM_MANAGEMENT_HEADER_VIEW-model';
 using {pg as MIMaxNIDView} from '../../../../db/cds/pg/mi/PG_MI_MAX_NODE_ID_VIEW-model';
 //Material
 using {dp.Mm_Material_Desc_Lng as MaterialDesc} from '../../../../db/cds/dp/mm/DP_MM_MATERIAL_DESC_LNG-model';
@@ -48,6 +49,7 @@ service marketIntelligenceService {
     view MIMaterialCostInformationView @(title : '시황자재 가격정보 View') as select from MIMatCostInfoView.MI_Material_Cost_Info_View;
     view MICategoryHierarchyStructureView @(title : '시황자재 카테고리 계층구조 View') as select from MICategHierStrView.MI_Cateogry_Hichy_Stru_View;
     view MIMaterialCodeBOMManagementView @(title : '자재별 시황자재 BOM 관리 View') as select from MIMatCdBOMMngeView.MI_Mat_Code_BOM_Management_View;
+    view MIMaterialCodeBOMManagementHeaderView @(title : '자재별 시황자재 BOM 관리 Header View') as select from MIMatCdBOMMngeHeaderView.MI_Mat_Code_BOM_Management_Header_View;
     view MIMaxNodeIDView @(title : '최대노드ID View')  as select from MIMaxNIDView.MI_Max_Node_ID_View;
 
     // Tenant View

@@ -46,8 +46,9 @@ sap.ui.define([
 			this.setModel(new ManagedListModel(), "details");
 
             oTransactionManager = new TransactionManager();
+            //oTransactionManager.addDataModel(this.getModel("list"));
+            //oTransactionManager.addDataModel(this.getModel("details"));
             oTransactionManager.addDataModel(this.getModel("list"));
-			oTransactionManager.addDataModel(this.getModel("details"));
 
 
 			oMultilingual.attachEvent("ready", function(oEvent){
@@ -137,22 +138,33 @@ sap.ui.define([
 
 		onMainTableAddButtonPress: function(){
 			var oTable = this.byId("mainTable"),
-				oModel = this.getModel("list");
+                oModel = this.getModel("list");
+                // oModel_details = this.getModel("details");
 			oModel.addRecord({
 				"tenant_id": "L2100",
 				"company_code": "",
-				"process_type_code": "",
-				"org_type_code": "",
+				"process_type_name": "",
+				"org_type_name": "",
 				"use_flag": false,
-            }, "/PurOrgTypeMap", 0);
+            }, "/PurOrgTypeView", 0);
+            // oModel_details.addRecord({
+			// 	"tenant_id": "L2100",
+			// 	"company_code": "",
+			// 	"process_type_code": "",
+			// 	"org_type_code": "",
+			// 	"use_flag": false,
+            // }, "/PurOrgTypeMap", 0);
             this.validator.clearValueState(this.byId("mainTable"));
+            oTransactionManager.setServiceModel(this.getModel());
 		},
 
 		onMainTableDeleteButtonPress: function(){
 			var table = this.byId("mainTable"),
-				model = this.getModel("list");
+                model = this.getModel("list");
+                //modelDetails = this.getModel("details");
             table.getSelectedIndices().reverse().forEach(function (idx) {
                 model.markRemoved(idx);
+                //modelDetails.markRemoved(idx);
             });
         },
        
@@ -160,6 +172,34 @@ sap.ui.define([
 			var oModel = this.getModel("list"),
                 oView = this.getView(),
                 table = this.byId("mainTable");
+                // "tenant_id": "L2100",
+				// "company_code": "",
+				// "process_type_name": "",
+				// "org_type_name": "",
+				// "use_flag": false,
+                // var oMasterModel = this.getModel("list");
+                // var oDetailsModel = this.getModel("details");
+                // var oMasterData = oMasterModel.getData();
+				
+                // //var oDetailsData = oMasterModel.getData();
+				// oMasterData.PurOrgTypeView.forEach(function(oItem,nIndex){
+                //     var row_state = oMasterModel.getProperty("/PurOrgTypeView/"+nIndex+"/_row_state_");
+                //     var sTenantId = oMasterModel.getProperty("/PurOrgTypeView/"+nIndex+"/tenant_id");
+                //     var sCompany_code = oMasterModel.getProperty("/PurOrgTypeView/"+nIndex+"/company_code");
+                //     var sProcess_type_name = oMasterModel.getProperty("/PurOrgTypeView/"+nIndex+"/process_type_name");
+                //     var sOrg_type_name = oMasterModel.getProperty("/PurOrgTypeView/"+nIndex+"/org_type_name");
+                //     var sUse_flag = oMasterModel.getProperty("/PurOrgTypeView/"+nIndex+"/use_flag");
+                //     if(row_state !== undefined ){
+                //         oDetailsModel.setProperty("/PurOrgTypeMap/"+nIndex+"/tenant_id", sTenantId);
+                //         oDetailsModel.setProperty("/PurOrgTypeMap/"+nIndex+"/company_code", sCompany_code);
+                //         oDetailsModel.setProperty("/PurOrgTypeMap/"+nIndex+"/process_type_code", sProcess_type_name);
+                //         oDetailsModel.setProperty("/PurOrgTypeMap/"+nIndex+"/org_type_code", sOrg_type_name);
+                //         oDetailsModel.setProperty("/PurOrgTypeMap/"+nIndex+"/use_flag", sUse_flag);
+                //     }
+                // });
+                // oDetailsModel.setTransactionModel(this.getModel());
+                
+				//oDetailsModel.setData(oDetailsData.PurOrgTypeMap, "/PurOrgTypeMap");
 			
 			// if(!oModel.isChanged()) {
 			// 	MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
@@ -199,10 +239,11 @@ sap.ui.define([
 		 */
 		_applySearch: function(aTableSearchState) {
 			var oView = this.getView(),
-				oModel = this.getModel("list");
+                oModel = this.getModel("list"),
+                oDetailsModel = this.getModel("details");
 			oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
-			oModel.read("/PurOrgTypeMapView", {
+			oModel.read("/PurOrgTypeView", {
                 filters: aTableSearchState,
                 sorters: [
 				],
@@ -210,7 +251,16 @@ sap.ui.define([
                     this.validator.clearValueState(this.byId("mainTable"));
 					oView.setBusy(false);
 				}.bind(this)
-			});
+            });
+            // oDetailsModel.setTransactionModel(this.getModel());
+            // oDetailsModel.read("/PurOrgTypeMap", {
+			// 		filters: [
+			// 			aTableSearchState
+			// 		],
+			// 		success: function(oData){
+			// 			oView.setBusy(false);
+			// 		}
+			// 	});
             // ,
 			// 	sorters: [
 			// 		new Sorter("chain_code"),

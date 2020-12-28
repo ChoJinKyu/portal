@@ -53,7 +53,7 @@ sap.ui.define([
                     aFilters.push(new Filter("chain_code", FilterOperator.EQ, sSearchChain));
                 }
                 if(!this.isValNull(sOrgtype)){
-                    aFilters.push(new Filter("code_conrol_org_type_code", FilterOperator.EQ, sOrgtype));
+                    aFilters.push(new Filter("code_control_org_type_code", FilterOperator.EQ, sOrgtype));
                 }
                 if(!this.isValNull(sUseFlag)){
                     var bUseFlag = (sUseFlag === "true")?true:false;
@@ -113,6 +113,15 @@ sap.ui.define([
                 // var sLayout = "MidColumnFullScreen";
                 
 			    this.getRouter().navTo("detail", {layout: sLayout});
+            },
+
+            onOrgTypeChange : function(oEvent){
+                var sOrgType = oEvent.getSource().getSelectedKey();
+                console.log("sOrgType : " + sOrgType);
+
+                var oModel = this.getModel();
+                
+
             },
 
             onTenantChange : function(oEvent){

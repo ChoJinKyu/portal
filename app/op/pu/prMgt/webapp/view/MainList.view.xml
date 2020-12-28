@@ -122,12 +122,12 @@
                         growingThreshold="10"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
-                        items="{list>/Pr_Mst}"
+                        items="{list>/Pr_MstView}"
                         mode="None" 
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="{i18n>appTitle} ({= ${list>/Pr_Mst}.length || 0})" level="H2"/>
+                            <Title text="{i18n>appTitle} ({= ${list>/Pr_MstView}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddDialogPress" />
                             <ToolbarSeparator/>
@@ -140,64 +140,56 @@
                     </headerToolbar>
                     <columns>
                         <Column id="mainColumnCode" minScreenWidth="Tablet" hAlign="Center">
-                            <Text text="구매요청 진행상태" />
-                        </Column>
-                        <Column id="mainColumnName" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="구매요청 유형" />
-                        </Column>                       
-                        <Column id="mainColumnSiteFlag" minScreenWidth="Tablet" hAlign="Center">
                             <Text text="구매요청 번호" />
                         </Column>
-                        <Column id="mainColumnCompanyFlag" minScreenWidth="Tablet" hAlign="Center">
+                        <Column id="mainColumnName1" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                            <Text text="구매요청 대표품명" />
+                        </Column>                       
+                        <Column id="mainColumnSiteFlag2" minScreenWidth="Tablet" hAlign="Center">
+                            <Text text="구매요청 유형" />
+                        </Column>
+                        <Column id="mainColumnSiteFlag4" minScreenWidth="Tablet" hAlign="Center">
+                            <Text text="구매요청 품목그룹" />
+                        </Column>
+                        <Column id="mainColumnSiteFlag5" minScreenWidth="Tablet" hAlign="Center">
+                            <Text text="구매요청 Category" />
+                        </Column>
+                        <Column id="mainColumnSiteFlag6" minScreenWidth="Tablet" hAlign="Center">
+                            <Text text="구매요청 Template" />
+                        </Column>
+                        <Column id="mainColumnCompanyFlag7" minScreenWidth="Tablet" hAlign="Center">
                             <Text text="구매요청 생성자" />
                         </Column>
-                         <Column id="mainColumnStartDate" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
+                         <Column id="mainColumnStartDate111" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
+                            <Text text="구매요청자 부서명" />
+                        </Column>
+                        <Column id="mainColumnStartDate11" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
                             <Text text="구매요청 생성일자" />
                         </Column>
-                         <Column id="mainColumnpr_create_system_code" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
-                            <Text text="구매요청 생성 시스템" />
+                        <Column id="mainColumnStartDate12" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
+                            <Text text="구매진행건수" />
+                        </Column>
+                         <Column id="mainColumnpr_create_system_code11" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
+                            <Text text="구매요청 상태" />
                         </Column>
                     </columns>
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>                                
-                                <ComboBox                                   
-                                    width="100%"
-                                    selectedKey="{list>pr_create_status_code}"
-                                    editable="false"
-                                    items="{
-                                        path: 'util>/CodeDetails',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                            {path: 'group_code', operator: 'EQ', value1: 'OP_PR_CREATE_STATUS'}
-                                        ]
-                                    }">
-                                    <items>
-                                        <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
-                                    </items>
-                                </ComboBox>                                
-                                <ComboBox                                   
-                                    width="100%"
-                                    selectedKey="{list>pr_type_code}"
-                                    editable="false"
-                                    items="{
-                                        path: 'util>/CodeDetails',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                            {path: 'group_code', operator: 'EQ', value1: 'OP_PR_TYPE_CODE'}
-                                        ]
-                                    }">
-                                    <items>
-                                        <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
-                                    </items>
-                                    </ComboBox>
                                 <ObjectIdentifier text="{list>pr_number}"/>
+                                <ObjectIdentifier text="{list>pr_header_text}"/>
+                                <ObjectIdentifier text="{list>pr_type_name}"/>
+                                <ObjectIdentifier text="{list>pr_type_name_2}"/>
+                                <ObjectIdentifier text="{list>pr_type_name_3}"/>
+                                <ObjectIdentifier text="{list>pr_template_name}"/>
                                 <ObjectIdentifier text="{list>requestor_name}"/>
+                                <ObjectIdentifier text="{list>requestor_department_name}"/> 
                                 <ObjectIdentifier text="{
-                                        path: 'list>local_create_dtm',
+                                        path: 'list>request_date',
                                         formatter: '.dateFormatter.toDateString'
-                                    }"/>   
-                                <ObjectIdentifier text="{list>pr_create_system_code}"/>                             
+                                    }"/>                                                                  
+                                <ObjectIdentifier text="{list>pr_dtl_cnt} / {list>pr_progress_status_cnt}"/>
+                                <ObjectIdentifier text="{list>pr_create_status_name}"/>
                             </cells>
                         </ColumnListItem>
                     </items>

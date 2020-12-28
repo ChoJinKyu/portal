@@ -221,10 +221,28 @@ sap.ui.define([
             oContModel.setProperty("/detailDetail", oData);
         },
 
+        isValidMinLangCnt : function(){
+            var bReturn = false;
+            var oLangModel = this.getModel('languages');
+            var aLangData = oLangModel.getProperty("/CodeLanguages");
+            aLangData.some(function(item){
+                if(item._row_state_ !== "D"){
+                    bReturn = true;
+                    return true;
+                }
+            })
+
+            return bReturn;
+        },
+
         onSavePress : function(){
+            if(!this.isValidMinLangCnt()){
+                MessageBox.warning("언어코드는 1개 이상 필수 등록하여야 합니다.");
+                return;
+            }
+
             var oContModel = this.getModel("contModel");
             var bCreateFlag = oContModel.getProperty("/detailDetail/createMode");
-
             if(bCreateFlag){
                 if(ValidatorUtil.isValid(this,"requiredField")){
                     MessageBox.confirm("추가 하시 겠습니까?", {
