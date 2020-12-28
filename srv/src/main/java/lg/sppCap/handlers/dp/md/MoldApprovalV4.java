@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -52,14 +53,12 @@ public class MoldApprovalV4 implements EventHandler {
 
     @On(event = SaveMoldApprovalContext.CDS_NAME)
     public void onSave(SaveMoldApprovalContext context){
-        //System.out.println(" >>>>>>> "+ context);
 
         Data data = context.getInputData();
 
         ApprovalMasterV4 aMaster = data.getApprovalMaster();
         Collection<ApprovalDetailsV4> approvalDetail = data.getApprovalDetails();
         Collection<ApproverV4> approverList = data.getApprover();
-        Collection<MoldMasterV4> mMasterList = data.getMoldMaster();
         Collection<RefererV4> refList = data.getReferer();
 
         ResultMsg msg = ResultMsg.create();
@@ -70,6 +69,7 @@ public class MoldApprovalV4 implements EventHandler {
 
 
         try {
+
             if(approvalNumber != "" && approvalNumber != null){ // update 
                 ApprovalMasters master =  ApprovalMasters.create();  
                 master.setTenantId(aMaster.getTenantId());
@@ -86,51 +86,113 @@ public class MoldApprovalV4 implements EventHandler {
                 master.setAttchGroupNumber(aMaster.getAttchGroupNumber());
                // master.setLocalCreateDtm(aMaster.getLocalCreateDtm());
                 master.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
+                master.setUpdateUserId(aMaster.getUpdateUserId());
                 CqnUpdate masterUpdate = Update.entity(ApprovalMasters_.CDS_NAME).data(master);
                 Result resultDetail = moldApprovalService.run(masterUpdate);
 
-                System.out.println(" approvalDetail "+ approvalDetail);
-                System.out.println(" approvalDetail "+ approvalDetail.size());
                 if(!approvalDetail.isEmpty() && approvalDetail.size() > 0){ 
                    
                     for(ApprovalDetailsV4 row : approvalDetail){
                         ApprovalDetails detail = ApprovalDetails.create();
+
                         detail.setTenantId(row.getTenantId());
                         detail.setApprovalNumber(approvalNumber);
                         detail.setMoldId(row.getMoldId());
-                      //   detail.setLocalCreateDtm(aMaster.getLocalCreateDtm());
                         detail.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
-                        detail.setUpdateUserId(aMaster.getRequestorEmpno()); 
+                        detail.setUpdateUserId(aMaster.getUpdateUserId()); 
 
-                        CqnUpdate detailUpdate = Update.entity(ApprovalDetails_.CDS_NAME).data(detail); 
-                        Result rst = moldApprovalService.run(detailUpdate);
+                        if(row.getRowState().equals("C")){
+                            detail.setLocalCreateDtm(aMaster.getLocalCreateDtm());
+                            detail.setCreateUserId(aMaster.getCreateUserId());
+                            CqnInsert i = Insert.into(ApprovalDetails_.CDS_NAME).entry(detail); 
+                            Result rst = moldApprovalService.run(i);
+                        }else if(row.getRowState().equals("D")){
+                            ApprovalDetails del =  ApprovalDetails.create(); // 삭제는 삭제에 필요한 키만 세팅 해 주어야 하네..
+                            del.setTenantId(row.getTenantId());
+                            del.setApprovalNumber(approvalNumber);
+                            del.setMoldId(row.getMoldId());
+                            Delete d = Delete.from(ApprovalDetails_.CDS_NAME).matching(del); 
+                            Result rst = moldApprovalService.run(d);
+                        }else{
+                            CqnUpdate u = Update.entity(ApprovalDetails_.CDS_NAME).data(detail); 
+                            Result rst = moldApprovalService.run(u);
+                        }
+ 
                     }  
-                }
+                } // approvalDetail 저장 
 
-                if(aMaster.getApprovalTypeCode() == "B"){ // 각각 타입마다 mold Master에 update 할 내용이 다르므로 분기 처리 
+                // 각각 타입마다 mold Master에 update 할 내용이 다르므로 분기 처리
+                if(aMaster.getApprovalTypeCode().equals("B")){  
+                    this.saveBudgetExecution(data);
+                }else if(aMaster.getApprovalTypeCode().equals("V")){
 
-
-
-
-                    
-                }else if(aMaster.getApprovalTypeCode() == "V"){
-
-                }else if(aMaster.getApprovalTypeCode() == "E"){
+                }else if(aMaster.getApprovalTypeCode().equals("E")){
 
                 }
+  
+                if(!approverList.isEmpty() && approverList.size() > 0){ 
+                   // 다 삭제 하고 다시 insert 한다.
+                    Approvers del = Approvers.create();
+                    del.setTenantId(aMaster.getTenantId());
+                    del.setApprovalNumber(approvalNumber); 
+                    Delete d = Delete.from(Approvers_.CDS_NAME).matching(del); 
+                    Result rst = moldApprovalService.run(d);
 
+                    for(ApproverV4 row : approverList){
+                           Approvers approver = Approvers.create();
 
-            }else{ // create 
+                      //  if(!row.getRowState().equals("D")){
+                            approver.setTenantId(row.getTenantId());
+                            approver.setApprovalNumber(approvalNumber);
+                            approver.setApproveSequence(row.getApproveSequence());
+                            approver.setApproverTypeCode(row.getApproverTypeCode());
+                            approver.setApproverEmpno(row.getApproverEmpno());
+                            approver.setApproveStatusCode(row.getApproveStatusCode());
+                            approver.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
+                            approver.setUpdateUserId(aMaster.getUpdateUserId()); 
+                            approver.setLocalCreateDtm(aMaster.getLocalCreateDtm());
+                            approver.setCreateUserId(aMaster.getCreateUserId());
+                            CqnInsert i = Insert.into(Approvers_.CDS_NAME).entry(approver); 
+                            Result rst2 = moldApprovalService.run(i); 
+                     //  }
+ 
+                    } // for 
+                }// if  
 
-            }
+                if(!refList.isEmpty() && refList.size() > 0){ 
+                   // 다 삭제 하고 다시 insert 한다.
+                    Referers del = Referers.create();
+                    del.setTenantId(aMaster.getTenantId());
+                    del.setApprovalNumber(approvalNumber); 
+                    Delete d = Delete.from(Referers_.CDS_NAME).matching(del); 
+                    Result rst = moldApprovalService.run(d);
 
-           // Connection conn = jdbc.getDataSource().getConnection(); 
+                    for(RefererV4 row : refList){
+                        Referers referer = Referers.create();
+
+                       // if(!row.getRowState().equals("D")){
+                            referer.setTenantId(row.getTenantId());
+                            referer.setApprovalNumber(approvalNumber);
+                            referer.setRefererEmpno(row.getRefererEmpno());
+                            referer.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
+                            referer.setUpdateUserId(aMaster.getUpdateUserId()); 
+                            referer.setLocalCreateDtm(aMaster.getLocalCreateDtm());
+                            referer.setCreateUserId(aMaster.getCreateUserId());
+                            CqnInsert i = Insert.into(Referers_.CDS_NAME).entry(referer); 
+                            Result rst2 = moldApprovalService.run(i); 
+                      //  }
+ 
+                    } // for 
+                }// if   
             
 
 
 
 
 
+            }else{ // create 
+
+            }
            
 
             context.setResult(msg);
@@ -143,7 +205,54 @@ public class MoldApprovalV4 implements EventHandler {
 
 
     // budgetExecution 
-     
+    private void saveBudgetExecution( Data data){
+
+        ApprovalMasterV4 aMaster = data.getApprovalMaster();
+        Collection<MoldMasterV4> mMasterList = data.getMoldMaster();
+    
+        if(!mMasterList.isEmpty() && mMasterList.size() > 0){
+            for(MoldMasterV4 row : mMasterList ){
+
+                System.out.println(" ApprovalMasterV4 " + row);
+
+                MoldMasters m = MoldMasters.create();
+                m.setTenantId(row.getTenantId());
+                m.setMoldId(row.getMoldId());
+                m.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
+                m.setUpdateUserId(aMaster.getUpdateUserId()); 
+
+                if(row.getRowState().equals("D")){ // 삭제일 경우 수정되는 항목에 대한 리셋 
+                    m.setAccountCode("");
+                    m.setInvestmentEcstTypeCode("");
+                    m.setAccountingDepartmentCode("");
+                    m.setImportCompanyCode("");
+                    m.setProjectCode("");
+                    m.setImportCompanyOrgCode("");
+                    m.setMoldProductionTypeCode("");
+                    m.setMoldItemTypeCode("");
+                    m.setProvisionalBudgetAmount(null);
+                    m.setAssetTypeCode("");
+                    CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(m); 
+                    Result rst = moldApprovalService.run(u);
+                }else{ 
+
+                    m.setAccountCode(row.getAccountCode());
+                    m.setInvestmentEcstTypeCode(row.getInvestmentEcstTypeCode());
+                    m.setAccountingDepartmentCode(row.getAccountingDepartmentCode());
+                    m.setImportCompanyCode(row.getImportCompanyCode());
+                    m.setProjectCode(row.getProjectCode());
+                    m.setImportCompanyOrgCode(row.getImportCompanyOrgCode());
+                    m.setMoldProductionTypeCode(row.getMoldProductionTypeCode());
+                    m.setMoldItemTypeCode(row.getMoldItemTypeCode());
+                    m.setProvisionalBudgetAmount(new BigDecimal((String)row.getProvisionalBudgetAmount()));
+                    m.setAssetTypeCode(row.getAssetTypeCode());
+                    CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(m); 
+                    Result rst = moldApprovalService.run(u);
+                }
+
+            }  
+        }
+    } 
 
 
     

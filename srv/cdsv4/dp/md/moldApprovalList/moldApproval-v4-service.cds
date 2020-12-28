@@ -25,6 +25,8 @@ service MoldApprovalV4Service {
         attch_group_number      : String;
         local_create_dtm        : DateTime;
         local_update_dtm        : DateTime;
+        create_user_id          : String;
+        update_user_id          : String;
    };
 
     type ApprovalDetails_v4 : {

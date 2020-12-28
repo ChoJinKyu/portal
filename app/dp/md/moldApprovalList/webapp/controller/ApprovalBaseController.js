@@ -285,9 +285,11 @@ sap.ui.define([
                         })
                     );
 
+                   /* 
+                    dp.MoldApprovalListService 에 해당 엔터티 없음 
                     this._bindView("/MoldMasters", "moldMaster", moldMstFilter, function (oData) {
 
-                    }.bind(this));
+                    }.bind(this)); */ 
                 }
             }.bind(this));
 
@@ -812,12 +814,14 @@ sap.ui.define([
                  ,  company_code : this.company_code 
                  ,  org_code : this.plant_code 
                  ,  chain_code : 'DP'
-                 //,  approval_type_code : this.approval_type_code 
+                 ,  approval_type_code : this.approval_type_code 
                  ,  approval_title : mst.approval_title 
                  ,  approval_contents : mst.approval_contents 
                  ,  approve_status_code : mst.approve_status_code 
                  ,  requestor_empno : mst.requestor_empno 
                  ,  request_date : this._getToday() 
+                 ,  create_user_id : '212430'
+                 ,  update_user_id : '212430'
                  ,  local_create_dtm : new Date() 
                  ,  local_update_dtm : new Date()
             };
@@ -829,6 +833,7 @@ sap.ui.define([
                         tenant_id : that.tenant_id 
                         , approval_number : that.approval_number 
                         , approve_comment : item.approve_comment 
+                        , approve_sequence : item.approve_sequence 
                         , approve_status_code : item.approve_status_code 
                         , approver_type_code : item.approver_type_code 
                         , approver_empno : item.approver_empno
@@ -839,11 +844,15 @@ sap.ui.define([
             var refArr = [];
             if(ref.Referers != undefined && ref.Referers.length  > 0){
                 ref.Referers.forEach(function(item){ 
-                    refArr.push({
-                        tenant_id : that.tenant_id 
-                        , approval_number : that.approval_number 
-                        , referer_empno : item.referer_empno 
-                    });
+                    console.log("item", item);
+                    if(item._row_state_ != "D"){
+                        refArr.push({
+                            tenant_id : that.tenant_id 
+                            , approval_number : that.approval_number 
+                            , referer_empno : item.referer_empno 
+                        });
+                    }
+                   
                 });
             }
 
