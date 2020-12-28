@@ -1,0 +1,51 @@
+VIEW DP_PD_PART_ACTIVITY_TEMPLATE_VIEW AS
+SELECT pat.hierarchy_rank,              /*현재node의 순번(sibling order by에 의한)*/				
+      pat.hierarchy_level,              /*현재node의 Level*/
+      pat.tenant_id,
+      pat.company_code,
+      pat.org_type_code,
+      pat.org_code,
+      pat.part_project_type_code,
+      pat.activity_code,				
+      pat.parent_activity_code,				
+      pat.develope_event_code,          /* develope_event 명 Function 변경 */
+      pat.sequence,
+      pat.actual_role_code,             /* actual_role 명 Function 변경 */
+      pat.activity_complete_type_code,  /* activity_complete_type 명 Function 변경 */
+      pat.job_type_code,                /* job_type 명 Function 변경 */
+      pat.attachment_mandatory_flag,
+      pat.approve_mandatory_flag,
+      pat.activity_name,
+      pat.activity_english_name,
+      pat.active_flag,
+      pat.update_user_id,
+      pat.system_update_dtm
+       FROM HIERARCHY (				
+				    SOURCE (
+				        SELECT  tenant_id,
+				                company_code,
+                                org_type_code,				
+                                org_code,
+                                part_project_type_code,
+                                activity_code,				
+                                parent_activity_code,				
+						        develope_event_code,
+						        sequence,
+						        actual_role_code,
+						        activity_complete_type_code,
+						        job_type_code,
+						        attachment_mandatory_flag,
+						        approve_mandatory_flag,
+						        activity_name,
+						        activity_english_name,
+						        active_flag,
+						        update_user_id,
+						        system_update_dtm,
+                                HIERARCHY_COMPOSITE_ID(tenant_id,org_type_code,org_code,parent_activity_code) as parent_id, 				
+                                HIERARCHY_COMPOSITE_ID(tenant_id,org_type_code,org_code,activity_code) as node_id				
+				        FROM dp_pd_part_activity_template
+				    )
+				    START WHERE parent_activity_code = 'T'
+            ) pat				
+ORDER BY pat.HIERARCHY_RANK
+;
