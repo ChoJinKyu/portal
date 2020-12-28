@@ -349,9 +349,10 @@ sap.ui.define([
             }*/
 
             var oModel = this.getModel("list"),
-                oView = this.getView(),
-                statusChk = false,
                 viewData = oModel.getData().MoldMstView,
+                statusChk = false,
+                orgChk = false,
+                orgCode = "",
                 v_this = this;
 
             var checkCnt = 0,
@@ -366,9 +367,16 @@ sap.ui.define([
                     checkCnt++;
 
                     var statusCode = viewData[idx].mold_progress_status_code;
+                    
                     if(!(statusCode === "DEV_REQ" || statusCode === "DEV_RCV")){
                         statusChk = true;
-                        //viewData[idx].chk = false;
+                    }
+                    if(checkCnt === 1){
+                        orgCode = viewData[idx].org_code;
+                    }else{
+                        if(!(orgCode === viewData[idx].org_code)){
+                            orgChk = true;
+                        }
                     }
 
                     moldViews.push({
@@ -400,9 +408,13 @@ sap.ui.define([
                 }
             }
 
-            if (checkCnt > 0) {
+            if (checkCnt > 1) {
                 if(statusChk){
                     MessageToast.show( "Development Request, Receipt 상태일 때만 Bind & Receipt 가능합니다." );
+                    return;
+                }
+                if(orgChk){
+                    MessageToast.show( "같은 플랜트일 때 Bind & Receipt 가능합니다." );
                     return;
                 }
                             
@@ -419,9 +431,6 @@ sap.ui.define([
                                 data : JSON.stringify(input),
                                 contentType: "application/json",
                                 success: function(data){
-                                    //var v_returnModel = oView.getModel("returnModel").getData();
-                                    //v_returnModel.headerList = data.value;
-                                    //oView.getModel("returnModel").updateBindings(true);
                                     v_this.onPageSearchButtonPress();
                                 },
                                 error: function(e){
@@ -434,13 +443,13 @@ sap.ui.define([
                 //oTable.clearSelection();
             
             }else{
-                MessageBox.error("선택된 행이 없습니다.");
+                MessageBox.error("2개 이상 선택해 주세요.");
             }
 
         },
 
         onMoldMstTableCancelButtonPress: function () {
-            var oTable = this.byId("moldMstTable"),
+            /*var oTable = this.byId("moldMstTable"),
                 oModel = this.getModel(),
                 lModel = this.getModel("list"),
                 oView = this.getView(),
@@ -493,6 +502,103 @@ sap.ui.define([
                 oTable.clearSelection();
             } else {
                 MessageBox.error("선택된 행이 없습니다.");
+            }*/
+            
+            var oModel = this.getModel("list"),
+                statusChk = false,
+                orgChk = false,
+                viewData = oModel.getData().MoldMstView,
+                v_this = this;
+
+            var checkCnt = 0,
+                input = {},
+                moldViews = [];
+
+            var url = "dp/md/developmentReceipt/webapp/srv-api/odata/v4/dp.DevelopmentReceiptV4Service/BindDevelopmentReceipt";
+
+            for (var idx = 0; idx < viewData.length; idx++) {
+                if(viewData[idx].chk){
+                    //viewData[idx].update_type = "cancelBind";
+                    checkCnt++;
+
+                    var statusCode = viewData[idx].mold_progress_status_code,
+                        orgCode = "";
+                    if(!(statusCode === "DEV_REQ" || statusCode === "DEV_RCV")){
+                        statusChk = true;
+                    }
+                    if(checkCnt === 1){
+                        orgCode = viewData[idx].org_code;
+                    }else{
+                        if(!(orgCode === viewData[idx].org_code)){
+                            orgChk = true;
+                        }
+                    }
+
+                    moldViews.push({
+                        chk                         : viewData[idx].chk,
+                        tenant_id                   : viewData[idx].tenant_id,
+                        company_code                : viewData[idx].company_code,
+                        org_code                    : viewData[idx].org_code,
+                        mold_number                 : viewData[idx].mold_number,
+                        mold_sequence               : viewData[idx].mold_sequence,
+                        mold_id                     : viewData[idx].mold_id,
+                        mold_progress_status_code   : viewData[idx].mold_progress_status_code,
+                        mold_production_type_code   : viewData[idx].mold_production_type_code,
+                        mold_item_type_code         : viewData[idx].mold_item_type_code,
+                        mold_type_code              : viewData[idx].mold_type_code,
+                        mold_location_type_code     : viewData[idx].mold_location_type_code,
+                        mold_cost_analysis_type_code: viewData[idx].mold_cost_analysis_type_code,
+                        mold_purchasing_type_code   : viewData[idx].mold_purchasing_type_code,
+                        die_form                    : viewData[idx].die_form,
+                        mold_size                   : viewData[idx].mold_size,
+                        mold_developer_empno        : viewData[idx].mold_developer_empno,
+                        remark                      : viewData[idx].remark,
+                        family_part_number_1        : viewData[idx].family_part_number_1,
+                        family_part_number_2        : viewData[idx].family_part_number_2,
+                        family_part_number_3        : viewData[idx].family_part_number_3,
+                        family_part_number_4        : viewData[idx].family_part_number_4,
+                        family_part_number_5        : viewData[idx].family_part_number_5,
+                        set_id                      : viewData[idx].set_id
+                    });
+                }
+            }
+
+            if (checkCnt > 1) {
+                if(statusChk){
+                    MessageToast.show( "Development Request, Receipt 상태일 때만 Bind & Receipt 가능합니다." );
+                    return;
+                }
+                if(orgChk){
+                    MessageToast.show( "같은 플랜트일 때 Bind & Receipt 가능합니다." );
+                    return;
+                }
+                            
+                MessageBox.confirm("Bind & Receipt 후엔 미접수 상태로 변경은 불가능합니다. Bind & Receipt 하시겠습니까?", {
+                    title: "Comfirmation",
+                    initialFocus: sap.m.MessageBox.Action.CANCEL,
+                    onClose: function (sButton) {
+                        if (sButton === MessageBox.Action.OK) {
+                            input.moldDatas = moldViews;
+                            
+                            $.ajax({
+                                url: url,
+                                type: "POST",
+                                data : JSON.stringify(input),
+                                contentType: "application/json",
+                                success: function(data){
+                                    v_this.onPageSearchButtonPress();
+                                },
+                                error: function(e){
+                                }
+                            });
+                        };
+                    }.bind(this)
+                });
+
+                //oTable.clearSelection();
+            
+            }else{
+                MessageBox.error("2개 이상 선택해 주세요.");
             }
         },
 
