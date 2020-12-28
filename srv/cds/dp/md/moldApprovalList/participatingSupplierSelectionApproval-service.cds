@@ -69,6 +69,6 @@ service ParticipatingSupplierSelectionApprovalService {
         (select a.sequence from qtn.Md_Quotation a where a.mold_id = mst.mold_id and a.sequence=11) as sequence_11,
         (select a.sequence from qtn.Md_Quotation a where a.mold_id = mst.mold_id and a.sequence=12) as sequence_12
 	from approvalDtl.Md_Approval_Dtl dtl
-	join moldMst.Md_Mst mst on dtl.mold_id = mst.mold_id
+	join moldMst.Md_Mst mst on dtl.mold_id = mst.mold_id;
    
 }
