@@ -270,7 +270,9 @@ sap.ui.define([
                 new Filter("approval_number", FilterOperator.EQ, approvalNumber)
             ];
 
-            this._bindView("/ApprovalMasters(tenant_id='" + this.tenant_id + "',approval_number='" + approvalNumber + "')", "appMaster", [], function (oData) {
+            this._bindView("/AppMaster(tenant_id='" + this.tenant_id + "',approval_number='" + approvalNumber + "')", "appMaster", [], function (oData) {
+               
+                console.log(" oData >>> " , oData);
                 this.oRichTextEditor.setValue(oData.approval_contents);
             }.bind(this));
 
