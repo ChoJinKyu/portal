@@ -19,15 +19,17 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "sap/ui/richtexteditor/RichTextEditor",
     "./ApprovalBaseController",
-    "dp/md/util/controller/MoldItemSelection"
+    "dp/md/util/controller/MoldItemSelection",
+    "dp/md/util/controller/SupplierSelection"
 ], function (DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
-    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalBaseController, MoldItemSelection
+    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalBaseController, MoldItemSelection, SupplierSelection
 ) {
     "use strict";
 
     var oTransactionManager;
     var oRichTextEditor;
+    var supplierData =[];
 
     return ApprovalBaseController.extend("dp.md.moldApprovalList.controller.ParticipatingSupplierSelection", {
 
@@ -36,6 +38,9 @@ sap.ui.define([
         validator: new Validator(),
 
         moldItemPop: new MoldItemSelection(),
+
+        supplierSelection: new SupplierSelection(),
+        
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -82,6 +87,13 @@ sap.ui.define([
                     , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
                 ];
 
+                schFilter2 = [
+                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                    new Filter("group_code", FilterOperator.EQ, 'DP_MD_LOCAL_CURRENCY' ),
+                    new Filter("language_cd", FilterOperator.EQ, 'KO' ),
+                    new Filter("org_code", FilterOperator.EQ, this.company_code)
+                ]; 
+
                 this._bindViewParticipating("/ParticipatingSupplier", "mdItemMaster", schFilter, function (oData) {
                     console.log("ParticipatingSupplier >>>>>>", oData);
                 });
@@ -117,6 +129,48 @@ sap.ui.define([
                 }
             });
         },
+
+        onSupplierSelection: function (oEvent){
+                var oTable = this.byId("psTable")
+                , psModel = this.getModel("mdItemMaster"); 
+                var oSelected = oTable.getSelectedIndices(); 
+                
+                console.log(oSelected);
+                
+            if (oSelected.length > 0) {
+                this.supplierSelection.showSupplierSelection(this, oEvent, this.company_code, this.org_code, function(data){
+                    if(data.length > 0) {
+                        supplierData=[];
+                        for(var i=0; i<data.length; i++){
+                            supplierData.push(data[i]);             
+                        }
+                        var aTokens = oEvent.getParameter("tokens");
+                    }
+                    console.log("supplierData :::", supplierData);
+                    console.log("aTokens ::::", aTokens);
+                    oSelected.forEach(function(idx){
+                        psModel.getData().ParticipatingSupplier[idx].supplier_code_1 = (supplierData[0] == undefined ?"":supplierData[0].key);
+                        psModel.getData().ParticipatingSupplier[idx].supplier_code_2 = (supplierData[1] == undefined ?"":supplierData[1].key);
+                        psModel.getData().ParticipatingSupplier[idx].supplier_code_3 = (supplierData[2] == undefined ?"":supplierData[2].key);
+                        psModel.getData().ParticipatingSupplier[idx].supplier_code_4 = (supplierData[3] == undefined ?"":supplierData[3].key);
+                        psModel.getData().ParticipatingSupplier[idx].supplier_code_5 = (supplierData[4] == undefined ?"":supplierData[4].key);
+                        psModel.getData().ParticipatingSupplier[idx].supplier_code_6 = (supplierData[5] == undefined ?"":supplierData[5].key);
+                        psModel.getData().ParticipatingSupplier[idx].supplier_code_7 = (supplierData[6] == undefined ?"":supplierData[6].key);
+                        psModel.getData().ParticipatingSupplier[idx].supplier_code_8 = (supplierData[7] == undefined ?"":supplierData[7].key);
+                        psModel.getData().ParticipatingSupplier[idx].supplier_code_9 = (supplierData[8] == undefined ?"":supplierData[8].key);
+                        psModel.getData().ParticipatingSupplier[idx].supplier_code_10 = (supplierData[9] == undefined ?"":supplierData[9].key);
+                        psModel.getData().ParticipatingSupplier[idx].supplier_code_11 = (supplierData[10] == undefined ?"":supplierData[10].key);
+                        psModel.getData().ParticipatingSupplier[idx].supplier_code_12 = (supplierData[11] == undefined ?"":supplierData[11].key);
+                        psModel.refresh(true); 
+                    });
+                    
+                });
+                
+            } else {
+                MessageBox.error("선택된 행이 없습니다.");
+            }
+            
+        },
         /**
          * @description moldItemSelect 공통팝업   
          * @param vThis : view page의 this 
@@ -130,8 +184,8 @@ sap.ui.define([
             console.log(" mdItemMaster >>>> ", oModel);
 
             var mIdArr = [];
-            if (oModel.oData.ItemBudgetExecution != undefined && oModel.oData.ItemBudgetExecution.length > 0) {
-                oModel.oData.ItemBudgetExecution.forEach(function (item) {
+            if (oModel.oData.ParticipatingSupplier != undefined && oModel.oData.ParticipatingSupplier.length > 0) {
+                oModel.oData.ParticipatingSupplier.forEach(function (item) {
                     mIdArr.push(item.mold_id);
                 });
             }
@@ -226,7 +280,52 @@ sap.ui.define([
             console.log();
             console.log();
         },
-        /** PO Item End */
 
+        onPageDraftButtonPress : function () { 
+            var bModel = this.getModel("mdItemMaster");
+            this.approvalDetails_data = [] ;
+            this.moldMaster_data = [] ;
+            var that = this;
+            console.log("bModel " , bModel.getData());
+            console.log("bModel.getData().length " , bModel.getData().ParticipatingSupplier.length);
+            if(bModel.getData().ParticipatingSupplier.length > 0){
+                var account_code = bModel.getData().ParticipatingSupplier[0].account_code;
+                var investment_ecst_type_code =  bModel.getData().ParticipatingSupplier[0].investment_ecst_type_code;
+                var accounting_department_code =  bModel.getData().ParticipatingSupplier[0].accounting_department_code;
+                var import_company_code =  bModel.getData().ParticipatingSupplier[0].import_company_code;
+                var project_code =  bModel.getData().ParticipatingSupplier[0].project_code;
+                var import_company_org_code =  bModel.getData().ParticipatingSupplier[0].import_company_org_code;
+               // var provisional_budget_amount =  bModel.getData().ParticipatingSupplier[0].provisional_budget_amount;
+
+                bModel.getData().ParticipatingSupplier.forEach(function(item){
+                    that.approvalDetails_data.push({
+                        tenant_id : that.tenant_id 
+                        , approval_number : that.approval_number 
+                        , mold_id : item.mold_id 
+                        , create_user_id : 'Y36793'
+                        , _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
+                    });
+                    that.moldMaster_data.push({
+                         tenant_id : that.tenant_id 
+                        , mold_id : item.mold_id 
+                        , account_code : account_code 
+                        , investment_ecst_type_code : investment_ecst_type_code 
+                        , accounting_department_code : accounting_department_code 
+                        , import_company_code : import_company_code 
+                        , project_code : project_code 
+                        , import_company_org_code : import_company_org_code 
+                        , mold_production_type_code : item.mold_production_type_code 
+                        , mold_item_type_code :  item.mold_item_type_code 
+                        , provisional_budget_amount : item.provisional_budget_amount 
+                        , asset_type_code : item.asset_type_code 
+                        , _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
+                    });
+                });
+
+            }
+
+            this._commonDataSettingAndSubmit();
+
+        }
     });
 });

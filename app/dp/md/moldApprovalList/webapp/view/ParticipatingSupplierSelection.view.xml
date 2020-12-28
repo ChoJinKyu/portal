@@ -152,7 +152,7 @@
                                         </customData>
                                     </Button>
                                     <Button id="btnPoItemDelete" type="Transparent" text="{I18N>/ROW_DELETE}"  press=".onPsDelRow" />
-                                    <Button id="btnSupplier" type="Emphasized" text="Supplier Selection" press=".onSuppValueHelpRequested"/>
+                                    <Button id="btnSupplier" type="Emphasized" text="Supplier Selection" press=".onSupplierSelection"/>
                                 </OverflowToolbar>
                             </table:extension>                             
                             <table:columns>
