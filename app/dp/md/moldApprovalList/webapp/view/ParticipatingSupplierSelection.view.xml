@@ -140,7 +140,7 @@
                         <table:Table id="poItemTable"
                             selectionMode="MultiToggle"
                             visibleRowCountMode="Auto"
-                            rows="{appDetail>/ApprovalDetails}"
+                            rows="{path:'mdItemMaster>/ParticipatingSupplier'}"
                             cellClick=".onCellClick"
                             >
                             <table:extension>
@@ -158,37 +158,37 @@
                                 <table:Column id="c_mold_id" visible="false">
                                     <Label text="mold_id"/>
                                     <table:template>
-                                        <Text id="t_mold_id" text="{psItemMaster>mold_id}"/>
+                                        <Text id="t_mold_id" text="{mdItemMaster>mold_id}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_approval_number" visible="false">
                                     <Label text="approval_number"/>
                                     <table:template>
-                                        <Text id="t_approval_number" text="{psItemMaster>approval_number}"/>
+                                        <Text id="t_approval_number" text="{mdItemMaster>approval_number}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_model" width="20em" hAlign="Center">
                                     <Label text="{I18N>/MODEL}"/>
                                     <table:template>
-                                        <Text id="t_model" text="{psItemMaster>model}"/>
+                                        <Text id="t_model" text="{mdItemMaster>model}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_moldPartNo" width="10em" hAlign="Center">
                                     <Label text="Mold No"/>
                                     <table:template>
-                                        <Text id="t_mold_part_no" text="{psItemMaster>mold_number}"/>
+                                        <Text id="t_mold_part_no" text="{mdItemMaster>mold_number}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_seq" width="5em" hAlign="Center">
                                     <Label text="Seq"/>
                                     <table:template>
-                                        <Text id="t_seq" text="{psItemMaster>mold_sequence}"/>
+                                        <Text id="t_seq" text="{mdItemMaster>mold_sequence}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_description" width="15em" hAlign="Center">
                                     <Label text="{I18N>/DESCRIPTION}"/>
                                     <table:template>
-                                        <Text id="description" text="{psItemMaster>spec_name}"/>
+                                        <Text id="description" text="{mdItemMaster>spec_name}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_itemType" width="10em" hAlign="Center">
@@ -197,7 +197,7 @@
                                         <Label text="Type"/>
                                     </VBox>
                                     <table:template>
-                                        <ComboBox selectedKey="{psItemMaster>mold_item_type_code}" items="{ path : 'util>/CodeDetails',
+                                        <ComboBox selectedKey="{mdItemMaster>mold_item_type_code}" items="{ path : 'util>/CodeDetails',
                                                 filters : [
                                                     {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                                     {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
@@ -205,7 +205,7 @@
                                             }">
                                             <core:Item key="{util>code}" text="{util>code_description}"/> 
                                         </ComboBox>
-                                        <!-- <Text id="moldItemTypeCodeNm" text="{psItemMaster>mold_item_type_code_nm}"/> -->
+                                        <!-- <Text id="moldItemTypeCodeNm" text="{mdItemMaster>mold_item_type_code_nm}"/> -->
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_bookCurrency" width="10em" hAlign="Center">
@@ -214,7 +214,7 @@
                                         <Label text="Currency"/>
                                     </VBox>
                                     <table:template>
-                                        <Text text="{psItemMaster>book_currency_code}"/>
+                                        <Text text="{mdItemMaster>book_currency_code}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_budget_amount" width="10em" hAlign="Center">
@@ -223,7 +223,7 @@
                                         <Label text="Amount"/>
                                     </VBox>
                                     <table:template>
-                                        <Text text="{psItemMaster>provisional_budget_amount}"/>
+                                        <Text text="{mdItemMaster>provisional_budget_amount}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_currency" width="10em" hAlign="Center">
@@ -231,8 +231,8 @@
                                         <Label text="Currency"/>
                                     </VBox>
                                     <table:template>
-                                    <!-- <Text text="{psItemMaster>company_code}"/> -->
-                                        <ComboBox selectedKey="{psItemMaster>currency_code}" 
+                                    <!-- <Text text="{mdItemMaster>company_code}"/> -->
+                                        <ComboBox selectedKey="{mdItemMaster>currency_code}" 
                                         items="{ 
                                             path : 'psOrgCode>/OrgCodeLanguages',
                                             filters : [
@@ -242,7 +242,7 @@
                                         }">
                                             <core:Item key="{psOrgCode>code}" text="{psOrgCode>code_name}"/> 
                                         </ComboBox>
-                                        <!-- <Input value="{psItemMaster>currency_code}"/> -->
+                                        <!-- <Input value="{mdItemMaster>currency_code}"/> -->
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_target_amount" width="10em" hAlign="Center">
@@ -252,8 +252,8 @@
                                     </VBox>
                                     <!-- <Label text="Budget Amount"/> -->
                                     <table:template>
-                                        <Input value="{psItemMaster>target_amount}"/>
-                                        <!-- <Input value="{psItemMaster>provisional_budget_amount}"/> -->
+                                        <Input value="{mdItemMaster>target_amount}"/>
+                                        <!-- <Input value="{mdItemMaster>provisional_budget_amount}"/> -->
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_mold_supplier1" width="10em" hAlign="Center">
@@ -263,7 +263,7 @@
                                     </VBox>
                                     <!-- <Label text="Budget Amount"/> -->
                                     <table:template>
-                                        <Text text="{psItemMaster>supplier_code_1}"/>
+                                        <Text text="{mdItemMaster>supplier_code_1}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_mold_supplier2" width="10em" hAlign="Center">
@@ -273,7 +273,7 @@
                                     </VBox>
                                     <!-- <Label text="Budget Amount"/> -->
                                     <table:template>
-                                        <Text text="{psItemMaster>supplier_code_2}"/>
+                                        <Text text="{mdItemMaster>supplier_code_2}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_mold_supplier3" width="10em" hAlign="Center">
@@ -283,7 +283,7 @@
                                     </VBox>
                                     <!-- <Label text="Budget Amount"/> -->
                                     <table:template>
-                                        <Text text="{psItemMaster>supplier_code_3}"/>
+                                        <Text text="{mdItemMaster>supplier_code_3}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_mold_supplier4" width="10em" hAlign="Center">
@@ -293,7 +293,7 @@
                                     </VBox>
                                     <!-- <Label text="Budget Amount"/> -->
                                     <table:template>
-                                        <Text text="{psItemMaster>supplier_code_4}"/>
+                                        <Text text="{mdItemMaster>supplier_code_4}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_mold_supplier5" width="10em" hAlign="Center">
@@ -303,7 +303,7 @@
                                     </VBox>
                                     <!-- <Label text="Budget Amount"/> -->
                                     <table:template>
-                                        <Text text="{psItemMaster>supplier_code_5}"/>
+                                        <Text text="{mdItemMaster>supplier_code_5}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_mold_supplier6" width="10em" hAlign="Center">
@@ -313,7 +313,7 @@
                                     </VBox>
                                     <!-- <Label text="Budget Amount"/> -->
                                     <table:template>
-                                        <Text text="{psItemMaster>supplier_code_6}"/>
+                                        <Text text="{mdItemMaster>supplier_code_6}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_mold_supplier7" width="10em" hAlign="Center">
@@ -323,7 +323,7 @@
                                     </VBox>
                                     <!-- <Label text="Budget Amount"/> -->
                                     <table:template>
-                                        <Text text="{psItemMaster>supplier_code_7}"/>
+                                        <Text text="{mdItemMaster>supplier_code_7}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_mold_supplier8" width="10em" hAlign="Center">
@@ -333,7 +333,7 @@
                                     </VBox>
                                     <!-- <Label text="Budget Amount"/> -->
                                     <table:template>
-                                        <Text text="{psItemMaster>supplier_code_8}"/>
+                                        <Text text="{mdItemMaster>supplier_code_8}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_mold_supplier9" width="10em" hAlign="Center">
@@ -343,7 +343,7 @@
                                     </VBox>
                                     <!-- <Label text="Budget Amount"/> -->
                                     <table:template>
-                                        <Text text="{psItemMaster>supplier_code_9}"/>
+                                        <Text text="{mdItemMaster>supplier_code_9}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_mold_supplier10" width="10em" hAlign="Center">
@@ -353,7 +353,7 @@
                                     </VBox>
                                     <!-- <Label text="Budget Amount"/> -->
                                     <table:template>
-                                        <Text text="{psItemMaster>supplier_code_10}"/>
+                                        <Text text="{mdItemMaster>supplier_code_10}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_mold_supplier11" width="10em" hAlign="Center">
@@ -363,7 +363,7 @@
                                     </VBox>
                                     <!-- <Label text="Budget Amount"/> -->
                                     <table:template>
-                                        <Text text="{psItemMaster>supplier_code_11}"/>
+                                        <Text text="{mdItemMaster>supplier_code_11}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column id="c_mold_supplier12" width="10em" hAlign="Center">
@@ -373,7 +373,7 @@
                                     </VBox>
                                     <!-- <Label text="Budget Amount"/> -->
                                     <table:template>
-                                        <Text text="{psItemMaster>supplier_code_12}"/>
+                                        <Text text="{mdItemMaster>supplier_code_12}"/>
                                     </table:template>
                                 </table:Column>
                             </table:columns>

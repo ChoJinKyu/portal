@@ -57,8 +57,8 @@ sap.ui.define([
 
             this.setModel(oViewModel, "participatingSupplierSelectionView");//change
             this.getRouter().getRoute("participatingSupplierSelection").attachPatternMatched(this._onObjectMatched, this);//change
-            
-            this.getView().setModel(new ManagedListModel(), "moldMaster");
+            this.getView().setModel(new ManagedListModel(), "mdItemMaster");
+            this.getView().setModel(new ManagedListModel(), "psOrgCode"); //currency 콤보박스
         },
 
         /* =========================================================== */
@@ -68,7 +68,53 @@ sap.ui.define([
         /* =========================================================== */
         /* internal methods                                            */
         /* =========================================================== */
+        _onApprovalPage : function () {
+  
+            console.log(" this.approval_number "  ,  this.approval_number);
+            var schFilter = [];
+            var schFilter2 = [];
+   
+            if (this.approval_number == "New") {
 
+            } else {
+                schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
+                    , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
+                ];
+
+                this._bindViewParticipating("/ParticipatingSupplier", "mdItemMaster", schFilter, function (oData) {
+                    console.log("ParticipatingSupplier >>>>>>", oData);
+                });
+                this._bindViewCurrency("/OrgCodeLanguages", "psOrgCode", schFilter2, function (oData) {
+                    console.log("OrgCodeLanguages >>>>>>", oData);
+                });
+            }  
+        },
+        _bindViewParticipating : function (sObjectPath, sModel, aFilter, callback) { 
+            var oView = this.getView(),
+                oModel = this.getModel(sModel);
+            oView.setBusy(true);
+            oModel.setTransactionModel(this.getModel("participatingSupplierSelection"));
+            oModel.read(sObjectPath, {
+                filters: aFilter,
+                success: function (oData) {
+                    oView.setBusy(false);
+                    callback(oData);
+                }
+            });
+        },
+        _bindViewCurrency : function (sObjectPath, sModel, aFilter, callback) { 
+            var oView = this.getView(),
+                oModel = this.getModel(sModel);
+            oView.setBusy(true);
+            oModel.setTransactionModel(this.getModel("orgCode"));
+            oModel.read(sObjectPath, {
+                filters: aFilter,
+                success: function (oData) {
+                    oView.setBusy(false);
+                    callback(oData);
+                }
+            });
+        },
         /** PO Item Start */
         /**
          * @description : Popup 창 : 품의서 PO Item 항목의 Add 버튼 클릭
