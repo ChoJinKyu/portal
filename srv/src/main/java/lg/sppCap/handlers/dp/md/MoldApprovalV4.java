@@ -347,7 +347,6 @@ public class MoldApprovalV4 implements EventHandler {
                     CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(m); 
                     Result rst = moldApprovalService.run(u);
                 }else{ 
-
                     m.setAccountCode(row.getAccountCode());
                     m.setInvestmentEcstTypeCode(row.getInvestmentEcstTypeCode());
                     m.setAccountingDepartmentCode(row.getAccountingDepartmentCode());
@@ -356,7 +355,7 @@ public class MoldApprovalV4 implements EventHandler {
                     m.setImportCompanyOrgCode(row.getImportCompanyOrgCode());
                     m.setMoldProductionTypeCode(row.getMoldProductionTypeCode());
                     m.setMoldItemTypeCode(row.getMoldItemTypeCode());
-                  //  m.setProvisionalBudgetAmount(new BigDecimal((String)(row.getProvisionalBudgetAmount()==null?"0")));
+                    m.setProvisionalBudgetAmount(new BigDecimal((String)(row.getProvisionalBudgetAmount()==null?"0":row.getProvisionalBudgetAmount())));
                     m.setAssetTypeCode(row.getAssetTypeCode());
                     CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(m); 
                     Result rst = moldApprovalService.run(u);

@@ -201,10 +201,10 @@ sap.ui.define([
         onPageDraftButtonPress : function () { 
             /**
              * 'DR'
-'AR'
-'IA'
-'AP'
-'RJ' */ 
+            'AR'
+            'IA'
+            'AP'
+            'RJ' */ 
             this.getModel("appMaster").setProperty("/approve_status_code", "DR");
 
             this.approval_type_code = "B";
@@ -212,7 +212,6 @@ sap.ui.define([
             this.approvalDetails_data = [] ;
             this.moldMaster_data = [] ;
             var that = this;
-            console.log("bModel " , bModel);
            // console.log("bModel.getData().length " , bModel.getData().ItemBudgetExecution.length);
             if(bModel.getData().ItemBudgetExecution != undefined && bModel.getData().ItemBudgetExecution.length > 0){
                 var account_code = bModel.getData().ItemBudgetExecution[0].account_code;
