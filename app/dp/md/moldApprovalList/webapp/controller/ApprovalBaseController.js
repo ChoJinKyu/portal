@@ -269,6 +269,7 @@ sap.ui.define([
             }.bind(this));
 
             this._bindView("/ApprovalDetails", "appDetail", filter, function (oData) {
+                
                 var moldIdFilter = [];
                 var moldMstFilter = [];
 
@@ -798,8 +799,8 @@ sap.ui.define([
             return year + "" + month + "" + date;
         },
 
+        _commonDataSettingAndSubmit : function (){ 
 
-        onPageDraftButtonPress: function (){
             var mst = this.getModel("appMaster").getData() ,
                 apr = this.getModel("approver").getData() ,
                 ref = this.getModel("referer").getData(); 
