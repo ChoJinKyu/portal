@@ -31,11 +31,15 @@ import com.sap.cds.services.EventContext;
 import com.sap.cds.services.cds.CdsCreateEventContext;
 import com.sap.cds.services.cds.CdsReadEventContext;
 import com.sap.cds.services.cds.CdsService;
+import com.sap.cds.services.changeset.ChangeSetContext;
+import com.sap.cds.services.changeset.ChangeSetListener;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.After;
 import com.sap.cds.services.handler.annotations.ServiceName;
+
+import lg.sppCap.util.StringUtil;
 
 import cds.gen.pg.mdcategoryservice.*;
 
@@ -46,7 +50,10 @@ public class MdCategoryService implements EventHandler {
 	private static final Logger log = LogManager.getLogger();
 
 	@Autowired
-	private JdbcTemplate jdbc;
+    private JdbcTemplate jdbc;
+    
+    // Multi Key값 Count
+    private int iMultiArrayCnt = 0;
 
 	// 카테고리 Id 저장 전
 	@Before(event=CdsService.EVENT_CREATE, entity=MdCategory_.CDS_NAME)
@@ -65,26 +72,54 @@ public class MdCategoryService implements EventHandler {
 				cateId.setLocalCreateDtm(current);
 				cateId.setLocalUpdateDtm(current);
 
-				// DB처리
+                // DB처리
 				try {
 					Connection conn = jdbc.getDataSource().getConnection();
-					// Item SPMD범주코드 생성 Function
-					PreparedStatement v_statement_select = conn.prepareStatement("SELECT PG_MD_CATEGORY_CODE_FUNC(?, ?, ?, ?) AS CATE_CODE FROM DUMMY");
+                    // Item SPMD범주코드 생성 Function
+					StringBuffer v_sql_get_code_fun = new StringBuffer();
+                    v_sql_get_code_fun.append("SELECT ")
+                        .append("   PG_MD_CATEGORY_CODE_FUNC(?, ?, ?, ?) AS CATE_CODE ")
+                        .append("   , ( SELECT ")
+                        .append("           IFNULL(MAX(SUBSTRING(SPMD_CATEGORY_CODE,2)), 0)+1 ")
+                        .append("       FROM PG_MD_CATEGORY_ID ")
+                        .append("       WHERE TENANT_ID=? AND COMPANY_CODE=? AND ORG_TYPE_CODE=? AND ORG_CODE=? ")
+                        .append("     ) AS MAX_COUNT ")
+                        .append(" FROM DUMMY ");                        
+                    PreparedStatement v_statement_select = conn.prepareStatement(v_sql_get_code_fun.toString());
+
                     v_statement_select.setObject(1, cateId.getTenantId());
                     v_statement_select.setObject(2, cateId.getCompanyCode());
                     v_statement_select.setObject(3, cateId.getOrgTypeCode());
                     v_statement_select.setObject(4, cateId.getOrgCode());
+
+                    v_statement_select.setObject(5, cateId.getTenantId());
+                    v_statement_select.setObject(6, cateId.getCompanyCode());
+                    v_statement_select.setObject(7, cateId.getOrgTypeCode());
+                    v_statement_select.setObject(8, cateId.getOrgCode());
             
 					ResultSet rslt = v_statement_select.executeQuery();
-					if(rslt.next()) cateCode = rslt.getString("CATE_CODE");
+					if(rslt.next()) {
+                        if (iMultiArrayCnt > 0) {
+                            iMultiArrayCnt = iMultiArrayCnt+1;
+                        } else {
+                            //cateCode = rslt.getString("CATE_CODE");
+                            iMultiArrayCnt = rslt.getInt("MAX_COUNT");
+                        }
+                        cateCode = "C"+StringUtil.getFillZero(String.valueOf(iMultiArrayCnt), 3);
+                    }
+                    
 
-					//log.info("###[LOG-10]=> ["+cateCode+"]");
+                    log.info("###[LOG-10]=> ["+cateCode+"]");
 
+                    v_statement_select.close();
+                    conn.close();
 				} catch (SQLException sqlE) {
 					sqlE.printStackTrace();
 					log.error("### ErrCode : "+sqlE.getErrorCode()+"###");
 					log.error("### ErrMesg : "+sqlE.getMessage()+"###");
-				}
+				} finally {
+
+                }
 
 				//log.info("###[LOG-11]=> ["+cateCode+"]");
 
@@ -94,11 +129,13 @@ public class MdCategoryService implements EventHandler {
 
 	}
 
-	// 카테고리 Id 저장
+    // 카테고리 Id 저장
+    /*
 	@On(event={CdsService.EVENT_CREATE}, entity=MdCategory_.CDS_NAME)
 	public void createOnMdCategoryIdProc(List<MdCategory> cateId) {
 		log.info("### Id Insert [On] ###");
-	}
+    }
+    */
 
 	// 카테고리 Id 저장 후
 	@After(event={CdsService.EVENT_CREATE}, entity=MdCategory_.CDS_NAME)
@@ -110,41 +147,67 @@ public class MdCategoryService implements EventHandler {
 	// 카테고리 Id 수정 전
 	@Before(event=CdsService.EVENT_UPDATE, entity=MdCategory_.CDS_NAME)
 	public void updateBeforeMdCategoryIdProc(List<MdCategory> cateIds) {
-
+        log.info("### ID Update... [Before] ###");
+/*
 		Instant current = Instant.now();
-
-		log.info("### ID Update... [Before] ###");
-
 		for(MdCategory cateId : cateIds) {
 			cateId.setLocalUpdateDtm(current);
 		}
-
+*/
 	}
 
 
 	// 카테고리 Id 수정 후
 	@After(event=CdsService.EVENT_UPDATE, entity=MdCategory_.CDS_NAME)
 	public void updateAfterMdCategoryIdProc(List<MdCategory> cateIds) {
-
-		Instant current = Instant.now();
-
 		log.info("### ID Update... [After] ###");
-
+/*
+		Instant current = Instant.now();
 		for(MdCategory cateId : cateIds) {
 			cateId.setLocalUpdateDtm(current);
 		}
+*/
+    }
+    
+	// 카테고리 Id / Item 읽기 전
+	@Before(event=CdsService.EVENT_READ, entity={MdCategory_.CDS_NAME, MdCategoryItem_.CDS_NAME})
+	public void readBeforeMdCategoryAndItemProc(EventContext context) {
+        iMultiArrayCnt=0; // 초기화
+		log.info("### ID/ITEM Read... [Before] ###"+context.getEvent()+"###"+context.getModel().toString()+"###"+context.getUserInfo()+"###");
+    }
+    
+    // 카테고리 Id / Item 저장   
+    @On(event={CdsService.EVENT_CREATE}, entity={MdCategory_.CDS_NAME, MdCategoryItem_.CDS_NAME})
+    public void createOnMdCategoryAndItemProc(CdsCreateEventContext context) { 
+        log.info("### ID/ITEM Insert [On] ###");
+    
+        ChangeSetContext changeSet = context.getChangeSetContext();
+        changeSet.register(new ChangeSetListener() {
 
-	}
+            @Override
+            public void beforeClose() {
+                // do something before changeset is closed
+                log.info("### Item Insert [On] - beforeClose() ###");
+            }
+
+            @Override
+            public void afterClose(boolean completed) {
+                // do something after changeset is closed
+                log.info("### Item Insert [On] - afterClose()-1 ###["+completed+"]###["+iMultiArrayCnt+"]###");
+            }
+
+        });
+    }
+    
 
 	/*
 	**********************************
 	*** 카테고리 Item Event 처리
 	**********************************
     */
-    
 	// 카테고리 Item 저장 전
 	@Before(event=CdsService.EVENT_CREATE, entity=MdCategoryItem_.CDS_NAME)
-	public void createBeforeMdCategoryItemProc(List<MdCategoryItem> items) {
+	public void createBeforeMdCategoryItemProc(EventContext context, List<MdCategoryItem> items) {
 
 		log.info("### Item Insert [Before] ###");
 		//log.info("###"+items.toString()+"###");
@@ -179,9 +242,13 @@ public class MdCategoryService implements EventHandler {
 						// Item SPMD특성코드 생성 Function
 						StringBuffer v_sql_get_code_fun = new StringBuffer();
 						v_sql_get_code_fun.append("SELECT ")
-							.append("   PG_MD_CHARACTER_CODE_FUNC(?, ?, ?, ?, ?) AS CHAR_CODE")
-                            .append("   , (SELECT IFNULL(MAX(SPMD_CHARACTER_SERIAL_NO), 0)+1 FROM PG_MD_CATEGORY_ITEM WHERE TENANT_ID=? AND COMPANY_CODE=? AND ORG_TYPE_CODE=? AND ORG_CODE=?) AS CHAR_SERIAL_NO")
-							.append(" FROM DUMMY");
+							.append("   PG_MD_CHARACTER_CODE_FUNC(?, ?, ?, ?, ?) AS CHAR_CODE ")
+                            .append("   , ( SELECT ")
+                            .append("           IFNULL(MAX(SPMD_CHARACTER_SERIAL_NO), 0)+1 ")
+                            .append("       FROM PG_MD_CATEGORY_ITEM ")
+                            .append("       WHERE TENANT_ID=? AND COMPANY_CODE=? AND ORG_TYPE_CODE=? AND ORG_CODE=? ")
+                            .append("     ) AS CHAR_SERIAL_NO ")
+							.append(" FROM DUMMY ");
 
 						PreparedStatement v_statement_select = conn.prepareStatement(v_sql_get_code_fun.toString());
                         v_statement_select.setObject(1, item.getTenantId());
@@ -198,12 +265,21 @@ public class MdCategoryService implements EventHandler {
 						ResultSet rslt = v_statement_select.executeQuery();
 
 						if(rslt.next()) {
-							charCode = rslt.getString("CHAR_CODE");
-							charSerialNo = rslt.getInt("CHAR_SERIAL_NO");
+                            if (iMultiArrayCnt > 0) {
+                                charSerialNo = iMultiArrayCnt+1;
+                            } else {
+                                //charCode = rslt.getString("CHAR_CODE");
+                                charSerialNo = rslt.getInt("CHAR_SERIAL_NO");
+                            }
+                            charCode = "T"+StringUtil.getFillZero(String.valueOf(charSerialNo), 3);
+                            iMultiArrayCnt = charSerialNo;
 						}
 
 						log.info("###[LOG-10]=> ["+charCode+"] ["+charSerialNo+"] ["+new Long(charSerialNo)+"]");
 
+
+                        v_statement_select.close();
+                        conn.close();
 					} catch (SQLException sqlE) {
 						sqlE.printStackTrace();
 						log.error("### ErrCode : "+sqlE.getErrorCode()+"###");
@@ -223,11 +299,13 @@ public class MdCategoryService implements EventHandler {
 	}
 
 
-	// 카테고리 Item 저장
+    // 카테고리 Item 저장
+    /*
 	@On(event={CdsService.EVENT_CREATE}, entity=MdCategoryItem_.CDS_NAME)
 	public void createOnMdCategoryItemItemProc(List<MdCategoryItem> items) {
 		log.info("### Item Insert [On] ###");
-	}
+    }
+    */
 
 	// 카테고리 Item 저장 후
 	@After(event={CdsService.EVENT_CREATE}, entity=MdCategoryItem_.CDS_NAME)
@@ -240,30 +318,22 @@ public class MdCategoryService implements EventHandler {
 	@Before(event=CdsService.EVENT_UPDATE, entity=MdCategoryItem_.CDS_NAME)
 	public void updateBeforeMdCategoryItemProc(List<MdCategoryItem> items) {
 
+        log.info("### Item Update... [Before] ###");
+        /*
 		Instant current = Instant.now();
-
-		log.info("### Item Update... [Before] ###");
-
 		for(MdCategoryItem item : items) {
 			item.setLocalUpdateDtm(current);
-		}
-
+        }
+        */
 	}
 
 
 	// 카테고리 Item 수정 후
 	@After(event=CdsService.EVENT_UPDATE, entity=MdCategoryItem_.CDS_NAME)
 	public void updateAfterMdCategoryItemIdProc(List<MdCategoryItem> items) {
-
-		Instant current = Instant.now();
-
 		log.info("### Item Update... [After] ###");
-
-		for(MdCategoryItem item : items) {
-			item.setLocalUpdateDtm(current);
-		}
-
-	}
+    }
+    
 	// 카테고리 Item 삭제 전
 	@Before(event={CdsService.EVENT_DELETE}, entity=MdCategoryItem_.CDS_NAME)
 	public void deleteBeforeMdCategoryItemItemProc(List<MdCategoryItem> items) {
@@ -367,7 +437,7 @@ public class MdCategoryService implements EventHandler {
 		String[] arrStr = new String[300];
 		int iColCnt = 0;
 		for (int i=1; i<=300; i++) {
-			String sFillZeroNo = getFillZero(String.valueOf(i), 3);
+			String sFillZeroNo = StringUtil.getFillZero(String.valueOf(i), 3);
 			if("Y".equals(hMap.get("spmdAttr"+sFillZeroNo))) {
 				 arrStr[iColCnt++] = StringUtils.defaultString((String) hMap.get("spmdAttrInfo"+sFillZeroNo), "");
 			}
@@ -378,7 +448,7 @@ public class MdCategoryService implements EventHandler {
 
 		// reSet Value
 		for (int i=1; i<=iColCnt; i++) {
-			String sFillZeroNo = getFillZero(String.valueOf(i), 3);
+			String sFillZeroNo = StringUtil.getFillZero(String.valueOf(i), 3);
 			hMap.put("spmdAttr"+sFillZeroNo, "Y");
 			hMap.put("spmdAttrInfo"+sFillZeroNo, arrStr[i-1]);
 		}
@@ -386,38 +456,5 @@ public class MdCategoryService implements EventHandler {
 		return (MdVpMappingItemView) mapToObject(hMap, list);
 
     }
-    
-	/**
-	 *
-	 * 전달받은 문자열에 지정된 길이에 맞게 0을 채운다
-	 *
-	 * @param des
-	 * @param size
-	 * @return
-	 */
-	private String getFillZero(String des, int size) {
-		StringBuffer str = new StringBuffer();
-
-		if (des == null) {
-			for (int i = 0; i < size; i++)
-				str.append("0");
-			return str.toString();
-		}
-
-		if (des.trim().length() > size)
-			return des.substring(0, size);
-		else
-			des = des.trim();
-
-		int diffsize = size - des.length();
-
-		for (int i = 0; i < diffsize; i++) {
-			str = str.append("0");
-		}
-
-		str.append(des);
-
-		return str.toString();
-	}
 
 }
