@@ -26,5 +26,20 @@ service MtlCommodityMgtService {
     entity MtlCommodity as projection on Commodity.Mm_Material_Commodity;
     entity MtlCommodityLng as projection on CommodityLng.Mm_Material_Commodity_Lng;
 
+    view MtlCommodityView as
+    select key m.tenant_id,
+           key m.commodity_code,
+           ifnull(l.commodity_name, m.commodity_name) as commodity_name : String(100),
+           ifnull(l.commodity_desc, m.commodity_desc) as commodity_desc : String(1000),
+           m.use_flag,
+           l.language_code
+    from  Commodity.Mm_Material_Commodity m
+    left outer join CommodityLng.Mm_Material_Commodity_Lng l
+    on l.tenant_id = m.tenant_id
+      and l.commodity_code = m.commodity_code
+      and l.language_code = 'EN'
+    ;
+
+
 
 }
