@@ -137,7 +137,7 @@
 					</uxap:ObjectPageSubSection>
                     <uxap:ObjectPageSubSection>
                         <!-- Purchase Order Item Table -->
-                        <table:Table id="poItemTable"
+                        <table:Table id="psTable"
                             selectionMode="MultiToggle"
                             visibleRowCountMode="Auto"
                             rows="{path:'mdItemMaster>/ParticipatingSupplier'}"
@@ -146,12 +146,12 @@
                             <table:extension>
                                 <OverflowToolbar>
                                     <ToolbarSpacer/>
-                                    <Button id="btnPoItemAdd"    type="Transparent" text="{I18N>/ROW_ADD}" press=".onPoItemAddRow" >
+                                    <Button id="btnPoItemAdd"    type="Transparent" text="{I18N>/ROW_ADD}" press=".onPsAddPress" >
                                         <customData>
                                             <core:CustomData key="multi" value="true" />
                                         </customData>
                                     </Button>
-                                    <Button id="btnPoItemDelete" type="Transparent" text="{I18N>/ROW_DELETE}"  press=".onPoItemDelRow" />
+                                    <Button id="btnPoItemDelete" type="Transparent" text="{I18N>/ROW_DELETE}"  press=".onPsDelRow" />
                                 </OverflowToolbar>
                             </table:extension>                             
                             <table:columns>
@@ -378,39 +378,6 @@
                                 </table:Column>
                             </table:columns>
                         </table:Table>
-                    </uxap:ObjectPageSubSection>
-                    <uxap:ObjectPageSubSection>
-                        <form:SimpleForm editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
-                            <form:content>
-                                <VBox>
-                                    <CheckBox id="partialPayment" text="Partial Payment" selected="{moldMaster>/MoldMasters/0/split_pay_flag}" select=".onChangePayment" />
-                                    <layoutData>
-                                        <layout:GridData span="XL12 L12 M12 S12" />
-                                    </layoutData>
-                                </VBox>
-                                <VBox>
-                                    <Label text="Advanced"/>
-                                    <Input id="advanced" value="{moldMaster>/MoldMasters/0/prepay_rate}" textAlign="End" liveChange=".onChangePayment" />
-                                    <layoutData>
-                                        <layout:GridData span="XL2 L3 M6 S12" />
-                                    </layoutData>
-                                </VBox>
-                                <VBox>
-                                    <Label text="Part"/>
-                                    <Input id="part" value="{moldMaster>/MoldMasters/0/progresspay_rate}" textAlign="End" liveChange=".onChangePayment" />
-                                    <layoutData>
-                                        <layout:GridData span="XL2 L3 M6 S12" />
-                                    </layoutData>
-                                </VBox>
-                                <VBox>
-                                    <Label text="Residual"/>
-                                    <Input id="residual" value="{moldMaster>/MoldMasters/0/rpay_rate}" textAlign="End" liveChange=".onChangePayment" />
-                                    <layoutData>
-                                        <layout:GridData span="XL2 L3 M6 S12" />
-                                    </layoutData>
-                                </VBox>
-                            </form:content>
-                        </form:SimpleForm>
                     </uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
