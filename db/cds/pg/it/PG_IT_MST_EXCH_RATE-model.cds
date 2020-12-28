@@ -21,15 +21,15 @@ using util from '../../cm/util/util-model';
 
 
 entity It_Mst_Exch_Rate {
-    key tenant_id           : String(5) not null  @title : '테넌트ID';
-    key company_code        : String(10) not null @title : '회사코드';
-    key org_type_code       : String(30) not null @title : '조직유형코드';
-    key org_code            : String(10) not null @title : '조직코드';
-    key exrate_type_code    : String(6) not null  @title : '환율유형';
-    key source_currency_key : String(8) not null  @title : '소스통화키';
-    key target_currency_key : String(8) not null  @title : '대상통화키';
-    key exrate_start_date   : Date not null       @title : '환율시작일자';
-        exchange_rate       : Decimal(9, 5)       @title : '환율';
+    key tenant_id            : String(5) not null  @title : '테넌트ID';
+    key company_code         : String(10) not null @title : '회사코드';
+    key org_type_code        : String(30) not null @title : '조직유형코드';
+    key org_code             : String(10) not null @title : '조직코드';
+    key exrate_type_code     : String(6) not null  @title : '환율유형';
+    key source_currency_code : String(8) not null  @title : '소스통화코드';
+    key target_currency_code : String(8) not null  @title : '대상통화코드';
+    key exrate_start_date    : Date not null       @title : '환율시작일자';
+        exchange_rate        : Decimal(9, 5)       @title : '환율';
 }
 
 extend It_Mst_Exch_Rate with util.Managed;
