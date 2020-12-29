@@ -105,7 +105,7 @@ sap.ui.define([
         .getRoute("midPage")
         .attachPatternMatched(
           function (oEvent) {
-            var { menuCode, menuName, parentMenuCode } = oEvent.getParameter("arguments")["?query"];
+            var { menuCode, menuName, parentMenuCode, chainCode } = oEvent.getParameter("arguments")["?query"];
             //console.log(">>>>>> params", menuCode, menuName, parentMenuCode);
             this.getModel("midObjectView").setProperty("/mode", (!menuCode ? "C" : "R"));
             this.getModel("midObjectView").setProperty("/menuCode", menuCode);
@@ -119,7 +119,7 @@ sap.ui.define([
                 .setData($.extend({
                   "tenant_id": "L2100",
                   "menu_code": "",
-                  "chain_code": "CM",
+                  "chain_code": chainCode || "CM",
                   "menu_display_flag": true,
                   "use_flag": true,
                   "local_create_dtm": new Date(),
@@ -249,6 +249,7 @@ sap.ui.define([
               success: function (ok) {
                 oView.setBusy(false);
                 that.onNavBack.call(that);
+                that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                 MessageToast.show("Success to delete.");
               }
             });

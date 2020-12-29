@@ -49,6 +49,12 @@ sap.ui.define([
             this.moldMaster_data = [] ;
             this.quotation_data = [];  // supplier 전용 
 
+            var oViewModel = new JSONModel({
+                busy: true,
+                delay: 0,
+                editMode : false 
+            });
+            this.setModel(oViewModel, "contModel");
 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
@@ -134,37 +140,6 @@ sap.ui.define([
 
 
 		/**
-		 * Event handler for saving page changes
-		 * @public
-		 *//*
-       onPageSaveButtonPress: function () {
-           var oView = this.getView(),
-               me = this,
-               oMessageContents = this.byId("inputMessageContents");
-
-           if (!oMessageContents.getValue()) {
-               oMessageContents.setValueState(sap.ui.core.ValueState.Error);
-               return;
-           }
-           MessageBox.confirm("Are you sure ?", {
-               title: "Comfirmation",
-               initialFocus: sap.m.MessageBox.Action.CANCEL,
-               onClose: function (sButton) {
-                   if (sButton === MessageBox.Action.OK) {
-                       oView.setBusy(true);
-                       oView.getModel().submitBatch("odataGroupIdForUpdate").then(function (ok) {
-                           me._toShowMode();
-                           oView.setBusy(false);
-                           MessageToast.show("Success to save.");
-                       }).catch(function (err) {
-                           MessageBox.error("Error while saving.");
-                       });
-                   };
-               }
-           });
-       },
-*/
-		/**
 		 * Event handler for cancel page editing
 		 * @public
 		 */
@@ -201,6 +176,8 @@ sap.ui.define([
             this.company_code = args.company_code;
             this.plant_code = (args.org_code == undefined ? args.plant_code : args.org_code);
 
+            console.log(" contrl " , this.getModel("contModel"));
+
            // this.getModel("purOrderItemLocalApprovalView").setProperty('/editMode', this.plant_code != undefined ? true : false);
 
             var oModel = this.getModel("company");
@@ -228,12 +205,11 @@ sap.ui.define([
                 this._onApproverAddRow(0);
                 this.getModel("appMaster").setProperty("/requestor_empno", "140790"); // 나중에 세션 값 세팅 할 것 
                 this.getModel("appMaster").setProperty("/request_date", this._getToday());
-
-
+                this.getModel("contModel").setProperty("/editMode", true)
             } else {
                 this._onRoutedThisPage(this.approval_number); 
                 this._onApprovalPage(); // 이거 공통으로 각자 페이지에 하나 만듭시다 - this.approval_number 가 로드 된 후에 처리 해야 하는데 
-                                                            // 그 시점을 ApprovalBaseController. 에서 해줘야 겠네요 
+                                                // 그 시점을 ApprovalBaseController. 에서 해줘야 겠네요 
             }
         },
 
