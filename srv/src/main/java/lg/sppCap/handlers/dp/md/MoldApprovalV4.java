@@ -68,7 +68,7 @@ public class MoldApprovalV4 implements EventHandler {
         Collection<RefererV4> refList = data.getReferer();
 
         ResultMsg msg = ResultMsg.create();
-        msg.setMessageCode("NCM0005");
+        msg.setMessageCode("NCM01001");
         msg.setResultCode(0);
         msg.setCompanyCode(aMaster.getCompanyCode());
         msg.setPlantCode(aMaster.getOrgCode());
