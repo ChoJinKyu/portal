@@ -261,6 +261,28 @@ sap.ui.define([
             }.bind(this));
         },
 
+        onPagePreviewButtonPress : function(){
+
+            var oView = this.getView();
+// BudgetExecutionApprovalPreView.fragment
+            if (!this._oDialog) {
+                this._oDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "dp.md.moldApprovalList.view.BudgetExecutionApprovalPreView",
+                    controller: this
+                }).then(function (oDialog) {
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                }.bind(this));
+            }
+
+            this._oDialog.then(function (oDialog) {
+                oDialog.open();
+            });
+
+        },
+
+
         onPageDraftButtonPress : function () { 
             /**
              * 'DR'
