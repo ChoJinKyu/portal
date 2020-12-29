@@ -29,9 +29,11 @@ sap.ui.define([
                 var oTable = this.getView().byId("menuTreeTable");
                 var row =
                     (this.getView().getModel("tree").getProperty("/Menu_haa").nodes || []).length > 0
-                        ? this.getView().getModel("tree").getObject(
+                        ? oTable.getSelectedIndex() >= 0 
+                          &&
+                          this.getView().getModel("tree").getObject(
                             oTable.getContextByIndex(oTable.getSelectedIndex()).sPath
-                        )
+                          )
                         : {};
                 this.getRouter().navTo("midPage", {
                     layout: this.getOwnerComponent().getHelper().getNextUIState(1).layout,
