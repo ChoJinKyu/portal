@@ -162,7 +162,7 @@
 					<!-- Budget Type -->
 					<Label text="Budget Type" required="true"/>
                      <!-- view Mode -->
-                    <Text text="{mdItemMaster>/ItemBudgetExecution/0/investment_ecst_type_code_nm}" />
+                    <Text text="{mdCommon>/investment_ecst_type_code_nm}" />
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -178,7 +178,7 @@
 				<VBox>
 					<Label text="Account Department" required="true"/>
                     <!-- view Mode -->
-                    <Text text="{mdItemMaster>/ItemBudgetExecution/0/accounting_department_code}" />
+                    <Text text="{mdCommon>/accounting_department_code}" />
 
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
@@ -187,7 +187,7 @@
 				<VBox>
 					<Label text="Import Company"/>
                     <!-- view Mode -->
-                    <Text text="{mdItemMaster>/ItemBudgetExecution/0/import_company_code}" />
+                    <Text text="[{mdCommon>/import_company_code}] {mdCommon>/import_company_code_nm}" />
 
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
@@ -197,7 +197,7 @@
 					<!-- projectcode  {I18N>/PROJECT_CODE}-->
 					<Label text="Project Code" required="true"/> 
                     <!-- view Mode -->
-                    <Text text="{mdItemMaster>/ItemBudgetExecution/0/project_code}" />
+                    <Text text="{mdCommon>/project_code}" />
 
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
@@ -206,7 +206,7 @@
 				<VBox>
 					<Label text="Import Plant"/>
                      <!-- view Mode -->
-                    <Text text="{mdItemMaster>/ItemBudgetExecution/0/import_company_org_code}" /> 
+                    <Text text="[{mdCommon>/import_company_org_code}] {mdCommon>/import_company_org_code_nm}" /> 
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -215,7 +215,7 @@
 					<Label text="{I18N>/ACCOUNT}" required="true"/>
 
                     <!-- view Mode -->
-                    <Text text="{mdItemMaster>/ItemBudgetExecution/0/account_code_nm}" /> 
+                    <Text text="{mdCommon>/account_code_nm}" /> 
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -230,7 +230,7 @@
 				<VBox>
 					<Label text="Balanced Budget"/>
 					<HBox alignItems="End" justifyContent="End">
-						<ObjectStatus text="{mdItemMaster>/ItemBudgetExecution/0/provisional_budget_amount}"/>
+						<ObjectStatus text="{mdCommon>/provisional_budget_amount}"/>
 						<ObjectStatus text="  KRW" state="Error"/>
 					</HBox>
 					<layoutData>

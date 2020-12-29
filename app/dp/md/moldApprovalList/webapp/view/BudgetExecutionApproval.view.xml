@@ -203,7 +203,7 @@
 						<core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
 					</ComboBox>
                     <!-- view Mode -->
-                    <Text text="{mdCommon>/import_company_code_nm}" visible="{contModel>/viewMode}"/>
+                    <Text text="[{mdCommon>/import_company_code}] {mdCommon>/import_company_code_nm}" visible="{contModel>/viewMode}"/>
 
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
@@ -235,12 +235,12 @@
                               selectedKey="{mdCommon>/import_company_org_code}" 
                               enabled="{=${mdCommon>/investment_ecst_type_code}!=='S'?false:true}"
                               items="{
-                                  path: 'importPlant>/Pur_Operation_Org'
+                                  path: 'importPlant>/Plant'
                               }">
-						<core:Item key="{importPlant>org_code}" text="[{importPlant>org_code}]{importPlant>org_name}" />
+						<core:Item key="{importPlant>plant_code}" text="[{importPlant>plant_code}]{importPlant>plant_name}" />
 					</ComboBox>
                      <!-- view Mode -->
-                    <Text text="{mdCommon>/import_company_org_code_nm}" visible="{contModel>/viewMode}"/> 
+                    <Text text="[{mdCommon>/import_company_org_code}] {mdCommon>/import_company_org_code_nm}" visible="{contModel>/viewMode}"/> 
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>

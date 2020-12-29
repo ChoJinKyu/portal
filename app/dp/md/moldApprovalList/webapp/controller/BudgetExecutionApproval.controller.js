@@ -94,10 +94,10 @@ sap.ui.define([
                     md.setProperty("/investment_ecst_type_code_nm", oData.results[0].investment_ecst_type_code_nm);
                     md.setProperty("/accounting_department_code", oData.results[0].accounting_department_code);
                     md.setProperty("/import_company_code", oData.results[0].import_company_code);
-                    md.setProperty("/import_company_code_nm", oData.results[0].import_company_code);
+                    md.setProperty("/import_company_code_nm", oData.results[0].import_company_code_nm);
                     md.setProperty("/project_code", oData.results[0].project_code);
                     md.setProperty("/import_company_org_code", oData.results[0].import_company_org_code);
-                    md.setProperty("/import_company_org_code_nm", oData.results[0].import_company_org_code);
+                    md.setProperty("/import_company_org_code_nm", oData.results[0].import_company_org_code_nm);
                     md.setProperty("/account_code", oData.results[0].account_code);
                     md.setProperty("/account_code_nm", oData.results[0].account_code_nm);
                     md.setProperty("/provisional_budget_amount", oData.results[0].provisional_budget_amount);
@@ -135,16 +135,16 @@ sap.ui.define([
             this._bindComboPlant(company_code);
         },
         _bindComboPlant : function (company_code) {
-            var aFilter = [new Filter("org_type_code", FilterOperator.EQ, 'AU')
-                        , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
+            var aFilter = [
+                         new Filter("tenant_id", FilterOperator.EQ, 'L1100')
                         , new Filter("company_code", FilterOperator.EQ, company_code)
                 ];
 
               var oView = this.getView(),
                     oModel = this.getModel("importPlant");
                 oView.setBusy(true);
-                oModel.setTransactionModel(this.getModel("purOrg"));
-                oModel.read("/Pur_Operation_Org", {
+                oModel.setTransactionModel(this.getModel("org"));
+                oModel.read("/Plant", {
                     filters: aFilter,
                     success: function (oData) {
                         oView.setBusy(false);
@@ -174,7 +174,7 @@ sap.ui.define([
             var oArgs = {
                 company_code: this.company_code ,
                 org_code: this.plant_code,
-               // mold_progress_status_code : 'DEV_RCV' ,
+                mold_progress_status_code : 'DEV_RCV' ,
                 mold_id_arr: mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
             }
 
@@ -309,6 +309,7 @@ sap.ui.define([
         },
         onPrvClosePress : function(){
              this.byId("budgetExecutionPreview").close();
+             this.byId("budgetExecutionPreview").destroy();
         },
 
         onPageDraftButtonPress : function () { 
