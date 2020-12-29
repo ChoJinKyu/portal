@@ -46,7 +46,7 @@ INNER JOIN (
 	, TO_DATE('20200101') AS PO_DATE /* PO일자 */	
 	, TO_DATE('20200110') AS PREPAY_DATE /* 선급금지급일자 */			
 	, TO_DATE('20211031') AS RECEIPT_SCHEDULED_DATE /* 입고예정일자 */	
-	, TO_DATE(NULL) AS RECEIPT_DATE /* 입고일자 */	
+	, TO_DATE('') AS RECEIPT_DATE /* 입고일자 */	
 	, '' AS PURCHASING_DEPARTMENT_CODE /* 구매담당부서코드 */	
 	, '' AS PURCHASING_DEPARTMENT_NAME /* 구매담당부서 */	    
 	, '' AS BUYER_EMPNO /* 구매담당자사번 */
