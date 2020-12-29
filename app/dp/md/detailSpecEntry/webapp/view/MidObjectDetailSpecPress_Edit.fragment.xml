@@ -24,7 +24,7 @@
                 <Select   width="100%"
                             selectedKey="{spec>/mold_size}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SIZE'}
@@ -43,7 +43,7 @@
                 <Select   width="100%"
                             selectedKey="{spec>/die_form}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_STRUCTURE'}

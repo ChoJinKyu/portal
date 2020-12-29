@@ -231,7 +231,7 @@
                             <ComboBox   id="searchItemType" width="100%"
                                         selectedKey=""
                                         items="{
-                                                    path : 'util>/CodeDetails',
+                                                    path : 'util>/Code',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
@@ -249,7 +249,7 @@
                             <ComboBox   id="searchProductionType" width="100%"
                                         selectedKey=""
                                         items="{
-                                                    path : 'util>/CodeDetails',
+                                                    path : 'util>/Code',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
@@ -396,7 +396,7 @@
                              <ComboBox   id="mold_progress_status_code"
                                         selectedKey="{list>mold_progress_status_code}"
                                         items="{
-                                                    path : 'util>/CodeDetails',
+                                                    path : 'util>/Code',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROGRESS_STATUS_LOCAL'}
@@ -498,7 +498,7 @@
                             <ComboBox   id="mold_item_type_code"
                                         selectedKey="{list>mold_item_type_code}"
                                         items="{
-                                                    path : 'util>/CodeDetails',
+                                                    path : 'util>/Code',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}

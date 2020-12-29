@@ -24,7 +24,7 @@
                 <Select   width="100%"
                             selectedKey="{spec>/mold_size}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SIZE'}
@@ -39,7 +39,7 @@
                 <Select   width="100%"
                             selectedKey="{spec>/mold_hot_runner_spec_name}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_RUNNER'}
@@ -54,7 +54,7 @@
                 <Select   width="100%"
                             selectedKey="{spec>/mold_return_type_name}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_RETURN_TYPE'}
@@ -69,7 +69,7 @@
                 <Select   width="100%"
                             selectedKey="{spec>/mold_runnerout_spec_name}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_RUNNER_OUT'}
@@ -93,7 +93,7 @@
                 <Select   width="100%"
                             selectedKey="{spec>/hot_runner_maker_name}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_HR_MAKER'}
@@ -110,7 +110,7 @@
                 <Select   width="100%"
                             selectedKey="{spec>/mold_gate_spec_name}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_GATE'}
@@ -125,7 +125,7 @@
                 <Select   width="100%"
                             selectedKey="{spec>/mold_formout_method}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_FORM_OUT'}
@@ -149,7 +149,7 @@
                 <Select   width="100%"
                             selectedKey="{master>/mold_type_code}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_TYPE'}
@@ -164,7 +164,7 @@
                 <Select   width="100%"
                             selectedKey="{spec>/die_form}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_STRUCTURE'}
@@ -181,7 +181,7 @@
                 <Select   width="100%"
                             selectedKey="{spec>/mold_undercut_spec_name}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_UNDER_CUT'}
@@ -197,7 +197,7 @@
                 <Select   width="100%"
                             selectedKey="{spec>/mold_outform_spec_name}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_FORM_OUT'}
@@ -256,7 +256,7 @@
                 <Select   width="100%"
                             selectedKey="{spec>/mold_cavity_material_name}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_CAVITY'}
@@ -271,7 +271,7 @@
                 <Select   width="100%"
                             selectedKey="{spec>/mold_slope_material_name}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_TAPER_PIN'}
@@ -290,7 +290,7 @@
                 <Select   width="100%"
                             selectedKey="{spec>/mold_core_material_name}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_CORE'}
@@ -305,7 +305,7 @@
                 <Select   width="100%"
                             selectedKey="{spec>/top_circle_material_name}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_CORE'}
@@ -323,7 +323,7 @@
                 <Select   width="100%"
                             selectedKey="{spec>/slide_core_material_name}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SCORE'}
@@ -338,7 +338,7 @@
                 <Select   width="100%"
                             selectedKey="{spec>/bottom_circle_material_name}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_CORE'}
