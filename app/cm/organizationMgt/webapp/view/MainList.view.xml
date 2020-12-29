@@ -32,7 +32,7 @@
                                 <ComboBox   
                                     selectionChange=".onTenantChange"
                                     required="true"
-                                    id="search_tenantS"
+                                    id="search_tenant"
                                     showSecondaryValues= "true"
                                     selectedKey="{view>/tenant_id}"
                                     width="100%"

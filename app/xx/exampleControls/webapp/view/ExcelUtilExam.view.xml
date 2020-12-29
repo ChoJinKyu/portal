@@ -149,7 +149,7 @@
                 </items>
             </Table>
             <OverflowToolbar />
-            <table:Table id="gTable" title="GridTable" sticky="HeaderToolbar,ColumnHeaders" inset="false" noDataText="{I18N>/NCM0001}" class="sapFDynamicPageAlignContent" updateFinished=".onMainTableUpdateFinished" rows="{gModelList>/Message}" width="auto">
+            <table:Table id="gTable" title="GridTable" sticky="HeaderToolbar,ColumnHeaders" inset="false" noDataText="{I18N>/NCM01004}" class="sapFDynamicPageAlignContent" updateFinished=".onMainTableUpdateFinished" rows="{gModelList>/Message}" width="auto">
                 <table:extension>
                     <OverflowToolbar>
                         <Title text="Grid Table / Total : {= ${gModelList>/Message}.length > 0 ? '(' + ${gModelList>/Message}.length + ')' : '0'}" level="H2" />

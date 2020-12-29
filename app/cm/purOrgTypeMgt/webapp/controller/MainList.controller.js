@@ -122,7 +122,7 @@ sap.ui.define([
 			}.bind(this);
 			
 			if(this.getModel("list").isChanged() === true){
-				MessageBox.confirm(this.getModel("I18N").getText("/NCM0003"), {
+				MessageBox.confirm(this.getModel("I18N").getText("/NCM00005"), {
 					title : this.getModel("I18N").getText("/SEARCH"),
 					initialFocus : sap.m.MessageBox.Action.CANCEL,
 					onClose : function(sButton) {
@@ -202,22 +202,22 @@ sap.ui.define([
 				//oDetailsModel.setData(oDetailsData.PurOrgTypeMap, "/PurOrgTypeMap");
 			
 			// if(!oModel.isChanged()) {
-			// 	MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
+			// 	MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
 			// 	return;
             // }
             
             if(this.validator.validate(this.byId("mainTable")) !== true) return;
 
-			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
+			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
 						oView.setBusy(true);
-						oTransactionManager.submit({
+						oModel.submitChanges({
 							success: function(oEvent){
 								oView.setBusy(false);
-                                MessageToast.show(this.getModel("I18N").getText("/NCM0005"));
+                                MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
                                 this.byId("pageSearchButton").firePress();
                                 //table.clearSelection().removeSelections(true);
 							}.bind(this)
