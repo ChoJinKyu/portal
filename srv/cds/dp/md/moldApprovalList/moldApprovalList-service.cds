@@ -141,8 +141,24 @@ service MoldApprovalListService {
         key ar.approver_empno , 
         key hr.tenant_id , 
         ar.approve_sequence , 
+        (
+            select l.code_name from codeLng.Code_Lng l
+            where
+                    l.group_code  = 'CM_APPROVER_TYPE'
+                and l.code        = ar.approver_type_code
+                and l.language_cd = 'KO'
+                and l.tenant_id   = ar.tenant_id
+        ) as approver_type_code_nm : String(240),
         ar.approver_type_code , 
         ar.approve_comment , 
+        (
+            select l.code_name from codeLng.Code_Lng l
+            where
+                    l.group_code  = 'CM_APPROVE_STATUS'
+                and l.code        = ar.approve_status_code
+                and l.language_cd = 'KO'
+                and l.tenant_id   = ar.tenant_id
+        ) as approve_status_code_nm : String(240),
         ar.approve_status_code , 
         ar.approve_date_time , 
         emp.user_korean_name ||'['|| emp.user_english_name||'] /'||hr.department_local_name as approver_name  : String(240)
