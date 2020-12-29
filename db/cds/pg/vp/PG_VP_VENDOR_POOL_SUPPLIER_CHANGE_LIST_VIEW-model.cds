@@ -16,9 +16,11 @@ entity Vp_Vendor_Pool_supplier_Change_List_View {
     asis_supplier_code : String(15) @title: 'As-Is 공급업체 코드';
     asis_supplier_local_name : String(240) @title: 'As-Is 공급업체 명'; 
     asis_supplier_english_name : String(240) @title: 'As-Is 공급업체 영문명';
+    asis_supplier_register_status_name : String(240) @title: 'As-Is 공급업체 상태명';
     tobe_supplier_code : String(15) @title: 'To-Be 공급업체 코드';
     tobe_supplier_local_name : String(240) @title: 'To-Be 공급업체 명'; 
-    tobe_supplier_english_name : String(240) @title: 'To-Be 공급업체 영문명'; 
+    tobe_supplier_english_name : String(240) @title: 'To-Be 공급업체 영문명';
+    tobe_supplier_register_status_name : String(240) @title: 'To-Be 공급업체 상태명';
     approval_number : String(50)   @title: '품의번호';
     approval_title : String  @title: '품의제목';
     approval_status : String  @title: '품의상태';
