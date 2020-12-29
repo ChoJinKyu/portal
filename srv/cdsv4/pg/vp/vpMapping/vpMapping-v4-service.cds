@@ -30,6 +30,7 @@ service VpMappingV4Service {
         industry_class_code              : String(30);
         sd_exception_flag                : Boolean;
         vendor_pool_apply_exception_flag : Boolean;
+        maker_material_code_mngt_flag    : Boolean;
         domestic_net_price_diff_rate     : Decimal;
         dom_oversea_netprice_diff_rate   : Decimal;
         equipment_grade_code             : String(30);
@@ -43,6 +44,7 @@ service VpMappingV4Service {
         display_sequence                 : Integer64;
         register_reason                  : String(50);
         approval_number                  : String(50);
+        crud_type_code                   : String(2);
     };
 
     type VpSuppilerType : {
@@ -65,6 +67,7 @@ service VpMappingV4Service {
         vendor_pool_mapping_use_flag : Boolean;
         register_reason              : String(50);
         approval_number              : String(50);
+        crud_type_code               : String(2);
     };
 
     type VpItemType : {
@@ -77,6 +80,7 @@ service VpMappingV4Service {
         vendor_pool_mapping_use_flag : Boolean;
         register_reason              : String(50);
         approval_number              : String(50);
+        crud_type_code               : String(2);
     };
 
     type VpManagerType : {
@@ -90,6 +94,7 @@ service VpMappingV4Service {
         vendor_pool_mapping_use_flag : Boolean;
         register_reason              : String(50);
         approval_number              : String(50);
+        crud_type_code               : String(2);
     };
 
     type VpOutType : {
