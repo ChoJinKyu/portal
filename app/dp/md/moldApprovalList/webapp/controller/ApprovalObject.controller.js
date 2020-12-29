@@ -293,11 +293,9 @@ sap.ui.define([
             }.bind(this));
 
             this._bindView("/Approvers", "approver", filter, function (oData) { 
-                console.log(" Approvers >> " , oData);
+                console.log(" Approvers 333333333333 >> " , oData);
                 this._onLoadApproverRow(oData.results);
             }.bind(this));
-
-            console.log(" Approvers >>> " , approvalNumber);
 
             this._bindView("/Referers", "referer", filter, function (oData) {
                 if (oData.results.length > 0) {
