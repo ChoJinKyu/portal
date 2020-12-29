@@ -10,9 +10,22 @@ SQL SECURITY INVOKER
 AS
 BEGIN
 
+    DECLARE v_cntH BIGINT;
+    DECLARE v_cntD BIGINT;
+
+    SELECT COUNT(*)
+    INTO   v_cntH
+    FROM   :I_H_TABLE
+    ;
+
+    SELECT COUNT(*)
+    INTO   v_cntD
+    FROM   :I_D_TABLE
+    ;
+
     O_H_TABLE = SELECT  IFNULL(A.HEADER_ID, XX_SAMPLE_HEADER_ID_SEQ.NEXTVAL) AS HEADER_ID
                        ,A.CD
-                       ,A.NAME
+                       ,(A.NAME || v_cntH) AS NAME
                 FROM    :I_H_TABLE A;
 
 
@@ -35,7 +48,7 @@ BEGIN
     O_D_TABLE = SELECT  IFNULL(A.DETAIL_ID, XX_SAMPLE_DETAIL_ID_SEQ.NEXTVAL) AS DETAIL_ID
                        ,A.HEADER_ID
                        ,A.CD
-                       ,A.NAME
+                       ,(A.NAME || v_cntD) AS NAME
                 FROM    :I_D_TABLE A;
 
 
