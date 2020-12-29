@@ -29,11 +29,12 @@ sap.ui.define([
     'sap/ui/core/util/ExportTypeCSV',
     "sap/ui/model/odata/v2/ODataModel",
     "ext/lib/util/ExcelUtil",
-    "ext/lib/util/Validator"
+    "ext/lib/util/Validator",
+    "./ApprovalBaseController"
 ], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter
     , FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text
     , Token, Input, ComboBox, Item, Element, syncStyleClass, Label, SearchField, Multilingual, Export, ExportTypeCSV, ODataModel, ExcelUtil
-    , Validator) {
+    , Validator, ApprovalBaseController) {
     "use strict";
     /**
      * @description 품의 목록 (총 품의 공통)
@@ -45,11 +46,12 @@ sap.ui.define([
     var dialogId = "";
     var path = '';
     var approvalTarget ='';
-
+        
     return BaseController.extend("dp.md.moldApprovalList.controller.ApprovalList", {
         
         dateFormatter: DateFormatter,
         validator: new Validator(),
+        approvalBaseController : new ApprovalBaseController(),
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -786,41 +788,32 @@ sap.ui.define([
                 oView = this.getView(),
                 //oSelected  = oTable.getSelectedItems(),
                 oSelected = [],
+                delApprData = [],
                 checkBoxs = this.getView().getControlsByFieldGroupId("checkBoxs");
+            var that = this;
             
             for (var i = 0; i < checkBoxs.length; i++) {
                 if (checkBoxs[i].mProperties.selected == true) {
+                    console.log(lModel.getData().Approvals[i]);
+                    delApprData.push({
+                        approval_number : lModel.getData().Approvals[i].approval_number
+                        ,tenant_id : lModel.getData().Approvals[i].tenant_id
+                    })
                     oSelected.push(i);
                 }
             }
+            console.log("delApprData >>>>", delApprData);
 
             if (oSelected.length > 0) {
                 MessageBox.confirm(("삭제하시겠습니까?"), {//this.getModel("I18N").getText("/NCM0104", oSelected.length, "${I18N>/DELETE}")
                     title: "Comfirmation",
                     initialFocus: sap.m.MessageBox.Action.CANCEL,
                     onClose: function (sButton) {
-                        if (sButton === MessageBox.Action.OK) {
-                            oSelected.forEach(function (idx) {
-                                console.log(lModel.getData().Approvals[idx]);
-                                console.log(lModel.getData().Approvals[idx].__entity);
-                                oModel.remove(lModel.getData().Approvals[idx].__entity, {
-                                    groupId: "delete"
-                                });
-                            });
-
-                            oModel.submitChanges({
-                                groupId: "delete",
-                                success: function () {
-                                    oView.setBusy(false);
-                                    MessageToast.show("Success to Delete.");
-                                    this.onPageSearchButtonPress();
-                                }.bind(this), error: function (oError) {
-                                    oView.setBusy(false);
-                                    MessageBox.error(oError.message);
-                                }
-                            });
+                        if(delApprData.length > 0){
+                            console.log(delApprData);
+                            that.approvalBaseController._approvalDelete(delApprData);
                         }
-                    }.bind(this)
+                    }
                 });
 
                 //oTable.clearSelection();
