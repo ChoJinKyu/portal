@@ -73,13 +73,14 @@
 							<Label text="Production Type"/>
 							<table:template>
 								<ComboBox visible="{contModel>/editMode}"
-                                        selectedKey="{mdItemMaster>mold_production_type_code}" items="{ path : 'util>/CodeDetails',
+                                        selectedKey="{mdItemMaster>mold_production_type_code}" 
+                                        items="{ path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
                                         ]
                                     }">
-									<core:Item key="{util>code}" text="{util>code_description}"/>
+									<core:Item key="{util>code}" text="{util>code_name}"/>
 								</ComboBox>
                                
 							</table:template>
@@ -88,13 +89,14 @@
 							<Label text="Item Type"/>
 							<table:template>
 								<ComboBox  visible="{contModel>/editMode}" 
-                                        selectedKey="{mdItemMaster>mold_item_type_code}" items="{ path : 'util>/CodeDetails',
+                                        selectedKey="{mdItemMaster>mold_item_type_code}" 
+                                        items="{ path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
                                         ]
                                     }">
-									<core:Item key="{util>code}" text="{util>code_description}"/>
+									<core:Item key="{util>code}" text="{util>code_name}"/>
 								</ComboBox>
                                
 							</table:template>
@@ -116,13 +118,14 @@
 							<Label text="Asset Type"/>
 							<table:template>
 								<ComboBox visible="{contModel>/editMode}" 
-                                        selectedKey="{mdItemMaster>asset_type_code}" items="{ path : 'util>/CodeDetails',
+                                        selectedKey="{mdItemMaster>asset_type_code}" 
+                                        items="{ path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ASSET_TYPE'}
                                         ]
                                     }">
-									<core:Item key="{util>code}" text="{util>code_description}"/>
+									<core:Item key="{util>code}" text="{util>code_name}"/>
 								</ComboBox>
                                
 							</table:template>

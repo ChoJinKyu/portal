@@ -141,14 +141,14 @@
                                      id="segInspection" 
                                      selectedKey="{mdCommon>/investment_ecst_type_code}" 
                                      width="100%" 
-                                     items="{ path : 'util>/CodeDetails',
+                                     items="{ path : 'util>/Code',
                                               filters : [
                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_BUDGET_TYPE'}
                                               ]
                                             }">
 						<items>
-							<SegmentedButtonItem width="6em" text="{util>code_description}" key="{util>code}"/>
+							<SegmentedButtonItem width="6em" text="{util>code_name}" key="{util>code}"/>
 						</items>
 					</SegmentedButton>
                      <!-- view Mode -->
@@ -251,13 +251,13 @@
                               width="100%" 
                               id="account" 
                               selectedKey="{mdCommon>/account_code}" 
-                              items="{ path : 'util>/CodeDetails',
+                              items="{ path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ACCOUNT_NEW'}
                                         ]
                                     }">
-						<core:Item key="{util>code}" text="{util>code_description}"/>
+						<core:Item key="{util>code}" text="{util>code_name}"/>
 					</ComboBox>
                     <!-- view Mode -->
                     <Text text="{mdCommon>/account_code_nm}" visible="{contModel>/viewMode}"/> 
