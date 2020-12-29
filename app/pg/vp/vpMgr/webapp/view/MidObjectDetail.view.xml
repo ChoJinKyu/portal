@@ -1,4 +1,4 @@
-<mvc:View controllerName="vp.vpMgt.controller.MidObject" 
+<mvc:View controllerName="vp.vpMgt.controller.MidObjectDetail" 
 	xmlns:mvc="sap.ui.core.mvc" 
 	xmlns="sap.m" 
 	xmlns:uxap="sap.uxap" 
@@ -6,7 +6,9 @@
     xmlns:table="sap.ui.table"    
     xmlns:form="sap.ui.layout.form"
 	xmlns:core="sap.ui.core"
-	height="100%">
+    xmlns:lib-m="ext.lib.control.m"
+	height="100%"
+    id="midDtlView">
 
 	<uxap:ObjectPageLayout id="page"
 		toggleHeaderOnTitleClick="true"
@@ -27,12 +29,9 @@
 					<Title text="" wrapping="true" />
 				</uxap:snappedHeading>
 				<uxap:actions>
-					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" />
-					<Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" />
+
 				</uxap:actions>
                 <uxap:navigationActions>
-					<OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press="onPageEnterFullScreenButtonPress" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
-					<OverflowToolbarButton id="pageExitFullScreenButton" type="Transparent" icon="sap-icon://exit-full-screen" press="onPageExitFullScreenButtonPress" tooltip="Exit Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
 					<OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
@@ -41,7 +40,7 @@
 		<uxap:sections id="testFrag">
 			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="General Info">
 				<uxap:subSections>
-					<uxap:ObjectPageSubSection id="pageSubSection1" >
+					<uxap:ObjectPageSubSection id="generalInfo">
                         <form:SimpleForm
                             editable="true"
                             layout="ResponsiveGridLayout"
@@ -62,51 +61,58 @@
                                 <!-- 팝업 영역 -->
                                 <core:Title text="Category Info" />                        
                                 <VBox>
-                                    <Label text = "Higher Level" design="Bold"/> 
-                                        <Text id="pop_higher_level_path" text=""/>
+                                    <Label text="Higher Level" design="Bold"/> 
+                                    <Text id="general_higher_level_path" text="" />
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M6 S12" />
                                     </layoutData> 
                                 </VBox>
                                 <VBox>
-                                    <Label text = "Operation Unit" design="Bold" required="true"/> 
-                                        <Text id="pop_operation_unit_name" text=""/> 
+                                    <Label text="Operation Unit" design="Bold" required="true"/> 
+                                    <Text id="general_operation_unit_name" text="" /> 
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M6 S12" />
                                     </layoutData> 
                                 </VBox>
                                 <VBox>
-                                    <Label text = "Level Name(Local)" design="Bold" required="true"/> 
-                                        <Input id="pop_vendor_pool_local_name" placeholder="Input data"></Input> 
+                                    <Label text="Level Name(Local)" design="Bold" required="true"/> 
+                                        <Input id="general_vendor_pool_local_name" placeholder="Input data"></Input> 
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M6 S12" />
                                     </layoutData> 
                                 </VBox>
                                 <VBox>
-                                    <Label text = "Level Name(Eng)*" design="Bold" required="true"/> 
-                                        <Input id="pop_vendor_pool_english_name" placeholder="Input data"></Input> 
+                                    <Label text="Level Name(Eng)*" design="Bold" required="true"/> 
+                                    <Input id="general_vendor_pool_english_name" placeholder="Input data"></Input> 
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M6 S12" />
                                     </layoutData> 
-                                </VBox>    
-                                <VBox>
-                                    <Label text = "Description" design="Bold" /> 
-                                        <Input id="pop_vendor_pool_desc" placeholder="Input data"></Input> 
-                                    <layoutData>
-                                        <layout:GridData span="XL12 L12 M12 S12" />
-                                    </layoutData> 
-                                </VBox> 
+                                </VBox>
                                 <core:Title text="Detail Info" />                        
                                 <VBox>
-                                    <Label text = "Department" design="Bold"/> 
-                                        <Input id="pop_repr_department_code"></Input> 
+                                    <Label text="Department" design="Bold"/>
+                                        <lib-m:CodePicker id="general_repr_department_code"
+                                            placeholder="Enter a department name"
+                                            keyField="department_id"
+                                            textField="department_local_name"
+                                            suggestionItems="{
+                                                path: '/',
+                                                filters: [
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                ],
+                                                serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                                entityName: 'Department'
+                                            }">
+                                            <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Department"
+                                                keyFieldHeaderText="Department ID" textFieldHeaderText="Department" />
+                                        </lib-m:CodePicker>
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M6 S12" />
                                     </layoutData> 
                                 </VBox>
                                 <VBox>
-                                    <Label text = "Industrial Classification" design="Bold"/> 
-                                        <ComboBox   id="pop_industry_class_code"
+                                    <Label text="Industrial Classification" design="Bold"/> 
+                                        <ComboBox   id="general_industry_class_code"
                                                     items="{
                                                                 path : 'util>/CodeDetails',
                                                                 filters : [
@@ -122,9 +128,9 @@
                                     </layoutData> 
                                 </VBox> 
                                 <VBox>
-                                    <Label text = "Mtl. Attribute/Planning Base" design="Bold"/> 
+                                    <Label text="Mtl. Attribute/Planning Base" class="sapUiTinyMarginEnd" design="Bold"/> 
                                         <HBox>
-                                            <ComboBox   id="pop_inp_type_code"
+                                            <ComboBox   id="general_inp_type_code" class="sapUiTinyMarginEnd"
                                                         items="{
                                                                     path : 'util>/CodeDetails',
                                                                     filters : [
@@ -135,7 +141,7 @@
                                             >
                                                 <core:Item key="{util>code}" text="{util>code_description}" />
                                             </ComboBox>                                       
-                                            <ComboBox   id="pop_plan_base"
+                                            <ComboBox   id="general_plan_base"
                                                         items="{
                                                                     path : 'util>/CodeDetails',
                                                                     filters : [
@@ -152,8 +158,8 @@
                                     </layoutData> 
                                 </VBox>
                                 <VBox>
-                                    <Label text = "Evaluation" design="Bold"/> 
-                                        <Switch id="pop_regular_evaluation_flag" state="false" customTextOn="Yes" customTextOff="No">
+                                    <Label text="Evaluation" design="Bold"/> 
+                                        <Switch id="general_regular_evaluation_flag" state="false" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
                                                 <FlexItemData growFactor="1" />
                                             </layoutData>
@@ -163,8 +169,8 @@
                                     </layoutData> 
                                 </VBox> 
                                 <VBox>
-                                    <Label text = "SD Flag" design="Bold"/> 
-                                        <Switch id="pop_sd_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
+                                    <Label text="SD Flag" design="Bold"/> 
+                                        <Switch id="general_sd_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
                                                 <FlexItemData growFactor="1" />
                                             </layoutData>
@@ -174,8 +180,8 @@
                                     </layoutData> 
                                 </VBox> 
                                 <VBox>
-                                    <Label text = "V/P Exception" design="Bold"/> 
-                                        <Switch id="pop_vendor_pool_apply_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
+                                    <Label text="V/P Exception" design="Bold"/> 
+                                        <Switch id="general_vendor_pool_apply_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
                                                 <FlexItemData growFactor="1" />
                                             </layoutData>
@@ -185,9 +191,9 @@
                                     </layoutData> 
                                 </VBox>                                                                       
                                 <VBox>
-                                    <Label text = "Review Grade" design="Bold"/> 
+                                    <Label text="Review Grade" design="Bold"/> 
                                         <HBox>
-                                            <ComboBox   id="pop_equipment_grade_code"
+                                            <ComboBox id="general_equipment_grade_code"
                                                         items="{
                                                                     path : 'util>/CodeDetails',
                                                                     filters : [
@@ -205,9 +211,9 @@
                                     </layoutData> 
                                 </VBox>
                                 <VBox>
-                                    <Label text = "Equipment Type" design="Bold"/> 
+                                    <Label text="Equipment Type" design="Bold"/> 
                                         <HBox>
-                                            <ComboBox   id="pop_equipment_type_code"
+                                            <ComboBox id="general_equipment_type_code"
                                                         items="{
                                                                     path : 'util>/CodeDetails',
                                                                     filters : [
@@ -222,21 +228,37 @@
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M6 S12" />
                                     </layoutData> 
-                                </VBox>  
+                                </VBox>
+
                                 <VBox>
-                                    <Label text = "Site Internal Rate(%)" design="Bold"/> 
-                                        <Input id="pop_dom_oversea_netprice_diff_rate" type="type: 'sap.ui.model.type.Decimal'" ></Input> 
+                                    <Label text = "Site Internal Rate" design="Bold"/> 
+                                    <HBox>
+                                        <Input id="general_dom_oversea_netprice_diff_rate"></Input>
+                                        <Label class ="sapUiTinyMarginTop" text=" % " design="Bold" />
+                                    </HBox>
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M3 S12" />
+                                    </layoutData> 
+                                </VBox>
+
+
+                                <VBox>
+                                    <Label text="Site External Rate" design="Bold"/> 
+                                    <HBox>
+                                        <Input id="general_domestic_net_price_diff_rate"></Input>
+                                        <Label class ="sapUiTinyMarginTop" text="%" design="Bold"/>
+                                    </HBox>    
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M6 S12" />
                                     </layoutData> 
+                                </VBox>   
+                                <VBox>      
+                                    <Label text="Description" design="Bold"/>
+                                    <TextArea id="general_vendor_pool_desc" row="5" width="100%" />
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M6 S12" />
+                                    </layoutData>                                                                                                                              
                                 </VBox> 
-                                <VBox>
-                                    <Label text = "Site External Rate(%)" design="Bold"/> 
-                                        <Input id="pop_domestic_net_price_diff_rate" type="type: 'sap.ui.model.type.Decimal'"  ></Input> 
-                                    <layoutData>
-                                        <layout:GridData span="XL6 L6 M6 S12" />
-                                    </layoutData> 
-                                </VBox>                                                                                                                                         
                             </form:content>
                         </form:SimpleForm>                    
                     </uxap:ObjectPageSubSection>
@@ -246,28 +268,232 @@
 			<uxap:ObjectPageSection titleUppercase="false" title="Supplier List">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection2">
-
-                        
-
+                    <!--20201223 : table start -->
+                    <VBox>
+                        <table:Table id="sppListTbl" selectionMode="MultiToggle"
+                            cellClick=".onCellClick" rowSelectionChange=".onCheck" enableColumnReordering="false"
+                            filter="filterPrice"
+                            rows="{suplist>/VpSupplierDtlView}"
+                            >
+                            <table:extension>
+                                <OverflowToolbar>
+                                    <Title text="List ({= ${suplist>/VpSupplierDtlView}.length || 0})" level="H2"/>
+                                    <ToolbarSpacer/>
+                                    <Button id="sppListAdd"     type="Emphasized" text="Add"        press=".onSppListAddButtonPress"   enabled="{mode>/viewFlag}" />
+                                    <Button id="sppListDel"     type="Emphasized" text="Delete"     press=".onSppListDelButtonPress"   enabled="{mode>/viewFlag}" />
+                                    <ToolbarSeparator/>
+                                </OverflowToolbar>
+                            </table:extension>
+                            <table:columns>
+                                <table:Column label="Supplier Code" width="8em" filterProperty="supplier_code">
+                                    <table:template>
+                                        <Text text="{suplist>supplier_code}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="Supplier Name" width="8em" filterProperty="supplier_local_name">
+                                    <table:template>
+                                        <Text text="{suplist>supplier_local_name}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="Supplier Name(Eng)" width="10em" filterProperty="supplier_english_name">
+                                    <table:template>
+                                        <Text text="{suplist>supplier_english_name}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="Supplier Name(Eng)" width="0em" filterProperty="supplier_company_code">
+                                    <table:template>
+                                        <Text text="{suplist>supplier_company_code}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="Supplier Operation ORG" width="8em" filterProperty="supplier_company_name">
+                                    <table:template>
+                                        <Text text="{suplist>supplier_company_name}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="거래상태" width="8em" filterProperty="supplier_status_code">
+                                    <table:template>
+                                        <Text text="{suplist>supplier_status_code}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="평가통제여부" width="8em" filterProperty="supeval_control_flag">
+                                    <table:template>
+                                        <Text text="{suplist>supeval_control_flag}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="통제시작일" width="8em" filterProperty="supeval_control_start_date">
+                                    <table:template>
+                                        <Text text="{suplist>supeval_control_start_date}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="통제종료일" width="8em" filterProperty="supeval_control_end_date">
+                                    <table:template>
+                                        <Text text="{suplist>supeval_control_end_date}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="RM 통제여부" width="8em" filterProperty="supplier_rm_control_flag">
+                                    <table:template>
+                                        <Text text="{suplist>supplier_rm_control_flag}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="Basic Portion(%)" width="8em" filterProperty="supplier_base_portion_rate">
+                                    <table:template>
+                                        <Text text="{suplist>supplier_base_portion_rate}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="Use Flag" width="8em" filterProperty="vendor_pool_mapping_use_flag">
+                                    <table:template>
+                                        <Text text="{suplist>vendor_pool_mapping_use_flag}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="등록근거" width="8em" filterProperty="register_reason">
+                                    <table:template>
+                                        <Text text="{sppList>register_reason}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="등록일자" width="8em" filterProperty="local_update_dtm">
+                                    <table:template>
+                                        <Text text="{suplist>local_update_dtm}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="" width="0em" filterProperty="approval_number">
+                                    <table:template>
+                                        <Text text="{suplist>approval_number}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                            </table:columns>
+                        </table:Table>                     
+                    </VBox>
+                    <!--20201223 : table end -->
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
 			<uxap:ObjectPageSection titleUppercase="false" title="Material list">
 				<uxap:subSections>
-					<uxap:ObjectPageSubSection id="pageSubSection3" >
+					<uxap:ObjectPageSubSection id="pageSubSection3">
+                        <!--20201223 : table start -->
+                        <table:Table id="metListTbl" selectionMode="MultiToggle"
+                            cellClick=".onCellClick" rowSelectionChange=".onCheck" enableColumnReordering="false"
+                            filter="filterPrice"
+                            rows="{path: 'matlist>/vpMaterialDtlView'}">
+                            <table:extension>
+                                <OverflowToolbar>
+                                    <Title text="List ({= ${metList>/vPSearchMetListView}.length || 0})" level="H2"/>
+                                    <ToolbarSpacer/>
+                                    <Button id="metListtAdd"    type="Emphasized" text="Add"        press=".onMetListAddButtonPress"   enabled="{mode>/viewFlag}" />
+                                    <Button id="metListDel"     type="Emphasized" text="Delete"     press=".onMetListDelButtonPress"   enabled="{mode>/viewFlag}" />
+                                    <ToolbarSeparator/>
+                                </OverflowToolbar>
+                            </table:extension>
+                            <table:columns>
+                                <table:Column label="Material Code" width="20%" filterProperty="material_code">
+                                    <table:template>
+                                        <Text text="{matlist>material_code}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="Spec." width="50%" filterProperty="material_desc">
+                                    <table:template>
+                                        <Text text="{matlist>material_desc}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="Spec." width="0em" filterProperty="vendor_pool_mapping_use_flag">
+                                    <table:template>
+                                        <Text text="{matlist>vendor_pool_mapping_use_flag}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="등록근거" width="15%" filterProperty="register_reason">
+                                    <table:template>
+                                        <Text text="{matlist>register_reason}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="등록일자" width="15%" filterProperty="local_update_dtm">
+                                    <table:template>
+                                        <Text text="{matlist>local_update_dtm}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="" width="0em" filterProperty="approval_number">
+                                    <table:template>
+                                        <Text text="{matlist>approval_number}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                            </table:columns>
+                        </table:Table>
+                        <!--20201223 : table end -->
 					</uxap:ObjectPageSubSection>
-
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
 			<uxap:ObjectPageSection titleUppercase="false"  title="Manager list">
 				<uxap:subSections>
                     <uxap:ObjectPageSubSection id="pageSubSection4">
+                        <!--20201223 : table start -->
+                        <table:Table id="mngListTbl" selectionMode="MultiToggle"
+                            cellClick=".onCellClick" rowSelectionChange=".onCheck" enableColumnReordering="false"
+                            filter="filterPrice"
+                            rows="{path: 'manlist>/vpManagerDtlView'}">
+
+                            <table:extension>
+                                <OverflowToolbar>
+                                    <Title text="List ({= ${manlist>/vPSearchMngListView}.length || 0})" level="H2"/>
+                                    <ToolbarSpacer/>
+                                    <Button id="mngListtAdd"    type="Emphasized" text="Add"        press=".onMngListAddButtonPress"   enabled="{mode>/viewFlag}" />
+                                    <Button id="mngListDel"     type="Emphasized" text="Delete"     press=".onMngListDelButtonPress"   enabled="{mode>/viewFlag}" />
+                                    <ToolbarSeparator/>
+                                </OverflowToolbar>
+                            </table:extension>
+                            <table:columns>
+                                <table:Column label="이름" width="20%" filterProperty="user_korean_name">
+                                    <table:template>
+                                        <Text text="{manlist>user_korean_name}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="이름(EN)" width="0em" filterProperty="user_english_name">
+                                    <table:template>
+                                        <Text text="{manlist>user_english_name}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="직위" width="20%" filterProperty="job_title">
+                                    <table:template>
+                                        <Text text="{manlist>job_title}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>    
+                                <table:Column label="담당자역할" width="20%" filterProperty="vendor_pool_person_role_text">
+                                    <table:template>
+                                        <Text text="{manlist>vendor_pool_person_role_text}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>                                                            
+                                <table:Column label="부서" width="20%" filterProperty="department_korean_name">
+                                    <table:template>
+                                        <Text text="{manlist>department_korean_name}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="" width="0em" filterProperty="department_english_name">
+                                    <table:template>
+                                        <Text text="{manlist>department_english_name}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="" width="0em" filterProperty="user_status_code">
+                                    <table:template>
+                                        <Text text="{manlist>user_status_code}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+
+                                <table:Column label="" width="0em" filterProperty="vendor_pool_mapping_use_flag">
+                                    <table:template>
+                                        <Text text="{manlist>vendor_pool_mapping_use_flag}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="등록일자" width="20%" filterProperty="local_update_dtm">
+                                    <table:template>
+                                        <Text text="{manlist>local_update_dtm}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                            </table:columns>
+                        </table:Table>
+                        <!--20201223 : table end -->
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
-			</uxap:ObjectPageSection>            
-
+			</uxap:ObjectPageSection>   
 		</uxap:sections>
 		
 		<uxap:footer>

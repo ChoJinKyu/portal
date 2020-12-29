@@ -2,6 +2,7 @@ sap.ui.define([
     "ext/lib/controller/BaseController",
 	"sap/ui/core/routing/History",
     "sap/ui/model/json/JSONModel",
+    "ext/lib/model/TreeListModel",
     "ext/lib/model/TransactionManager",
     "ext/lib/model/ManagedModel",    
 	"ext/lib/model/ManagedListModel",
@@ -27,10 +28,12 @@ sap.ui.define([
     'sap/m/SearchField',
     "ext/lib/util/ValidatorUtil",
     "sap/f/library",
-    "ext/lib/util/ControlUtil"        
+    "ext/lib/util/ControlUtil"
+    
 ], function (BaseController,
 	History,
     JSONModel,
+    TreeListModel,
     TransactionManager,
     ManagedModel,    
 	ManagedListModel,
@@ -60,7 +63,7 @@ sap.ui.define([
 
 ) {
     "use strict";
-    
+    //Popup Param
     var dialogId = "";
     var pop_h_path = "";
     var pop_lv = "";
@@ -73,13 +76,17 @@ sap.ui.define([
     // var pop_vp_cd = "";
     var pop_p_vp_cd = "";
 
+    //routing param
     var pVendorPool = "";
     var pTenantId  = "";
+    var pOrg_code  = "";
+    var pOperation_unit_code = "";
 
 
 
     var oTransactionManager;
     
+    var that;
     
 	return BaseController.extend("vp.vpMgt.controller.MainList", {
 
@@ -127,7 +134,7 @@ sap.ui.define([
 
 
 			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
-
+            that = this;
 
 			// this._doInitTablePerso();
         },
@@ -466,7 +473,50 @@ sap.ui.define([
 
             // console.log(oEvent);
             // this.byId("ceateVpCategory").close();
-        }, 
+        },
+
+        onDialogSearch : function (event) {
+            
+            var predicates = [];
+
+            if (!!this.byId("tpop_Operation_ORG").getSelectedKey()) {
+                    predicates.push(new Filter("org_code", FilterOperator.Contains, this.byId("tpop_Operation_ORG").getSelectedKey()));
+                }
+            if (!!this.byId("tpop_operation_unit_code").getSelectedKey()) {
+                    predicates.push(new Filter("operation_unit_code", FilterOperator.Contains, this.byId("tpop_operation_unit_code").getSelectedKey()));
+                }                
+            if (!!this.byId("tpop_vendor_pool_local_name").getValue()) {
+                predicates.push(new Filter({
+                    filters: [
+                        new Filter("vendor_pool_local_name", FilterOperator.Contains, this.byId("tpop_vendor_pool_local_name").getValue())
+                    ],
+                    and: false
+                }));
+            }
+
+            this.treeListModel = this.treeListModel || new TreeListModel(this.getView().getModel());
+                this.getView().setBusy(true);
+                this.treeListModel
+                    .read("/VpPopupView", {
+                        filters: predicates
+                    })
+                    // 성공시
+                    .then((function (jNodes) {
+                        this.getView().setModel(new JSONModel({
+                            "VpPopupView": {
+                                "nodes": jNodes
+                            }
+                        }), "tree");
+                    }).bind(this))
+                    // 실패시
+                    .catch(function (oError) {
+                    })
+                    // 모래시계해제
+                    .finally((function () {
+                        this.getView().setBusy(false);
+                    }).bind(this));
+            
+        },
 
         onAfterRendering : function () {
 			// this.byId("pageSearchButton").firePress();
@@ -507,6 +557,8 @@ sap.ui.define([
 
             pVendorPool =  rowData.vendor_pool_code;
             pTenantId = rowData.tenant_id;
+            pOrg_code  = rowData.org_code;
+            pOperation_unit_code = rowData.operation_unit_code;
 
             alert( "pVendorPool   : " + pVendorPool + 
                    "pTenantId     : " + pTenantId);
@@ -528,7 +580,9 @@ sap.ui.define([
                 // layout: sap.f.LayoutType.TwoColumnsMidExpanded, 
                 layout: sap.f.LayoutType.OneColumn, 
 				tenantId: pTenantId,
-				vendorPool: pVendorPool
+                vendorPool: pVendorPool,
+                orgCode : pOrg_code,
+                operationUnitCode : pOperation_unit_code
             });   
             // this.oRouter.navTo("midPage", {layout: LayoutType.OneColumn, tenantId: pTenantId, vendorPool: pVendorPool});         
 
@@ -660,6 +714,8 @@ sap.ui.define([
 		 * @private
 		 */
 		_applySearch: function(aSearchFilters) {
+            that.mainTable = this.byId("mainTable");
+            var oDataLen = 0;
 			var oView = this.getView(),
 				oModel = this.getModel("list");
 			oView.setBusy(true);
@@ -667,124 +723,96 @@ sap.ui.define([
 			oModel.read("/vPSearchView", {
 				filters: aSearchFilters,
 				success: function(oData){
-					oView.setBusy(false);
+                    oDataLen = oData.results.length;
+
+                    that.mainTable.setVisibleRowCount(0);
+                    var oColumn = that.mainTable.getColumns()[0];
+                    that.mainTable.sort(oColumn);
+                    console.log(oDataLen);
+        
+                    that.mainTable.onAfterRendering = function() {
+                        sap.ui.table.Table.prototype.onAfterRendering.apply(this, arguments);
+                        var aRows = that.mainTable.getRows();
+                        if (aRows && aRows.length > 0) {
+                            var pRow = {};
+                            for (var i = 0; i <  aRows.length; i++) {
+                                if (i > 0) {
+                                    var pCell = pRow.getCells()[0],
+                                        cCell = aRows[i].getCells()[0];
+                                        console.log(cCell.getText(), pCell.getText());
+                                    if (cCell.getText() === pCell.getText()) {
+                                        $("#" + cCell.getId()).css("visibility", "hidden");
+                                        $("#" + pRow.getId() + "-col0").css("border-bottom-style", "hidden");
+                                    }
+
+                                    var pCell1 = pRow.getCells()[1],
+                                        cCell1 = aRows[i].getCells()[1];
+                                        console.log(cCell.getText(), pCell.getText());
+                                    if (cCell1.getText() === pCell1.getText()) {
+                                        $("#" + cCell1.getId()).css("visibility", "hidden");
+                                        $("#" + pRow.getId() + "-col1").css("border-bottom-style", "hidden");
+                                    }
+
+                                  
+                                }
+                                pRow = aRows[i];
+                            }
+                        }
+                        console.log(oDataLen);
+                        that.mainTable.setVisibleRowCount(oDataLen);
+                        oView.setBusy(false);                        
+                    };
 				}
-			});
+            });
 		},
 		
 		_getSearchStates: function(){
 
-            var s_Operation_ORG_S = this.getView().byId("search_Operation_ORG_S").getSelectedKey()
-            var s_Operation_UNIT_S = this.getView().byId("search_Operation_UNIT_S").getSelectedKey()
+
+
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S"
 
             var aSearchFilters = [];
-			// if (s_Operation_ORG_S && s_Operation_ORG_S.length > 0) {
-			// 	aSearchFilters.push(new Filter("hierarchy_level", FilterOperator.EQ, sVpLv));
-			// }
-			// if (s_Operation_UNIT_S && s_Operation_UNIT_S.length > 0) {
-			// 	aSearchFilters.push(new Filter({
-			// 		filters: [
-			// 			new Filter("vendor_pool_code", FilterOperator.Contains, sVpCode)
-			// 		],
-			// 		and: false
-			// 	}));
-			// }
+
+            if(sSurffix ==="S")
+            {
+                var s_Operation_ORG_S = this.getView().byId("search_Operation_ORG_S").getSelectedKey();
+                var s_Operation_UNIT_S = this.getView().byId("search_Operation_UNIT_S").getSelectedKey();
+
+                
+                if (s_Operation_ORG_S && s_Operation_ORG_S.length > 0) {
+                    aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, s_Operation_ORG_S));
+                }
+                if (s_Operation_UNIT_S && s_Operation_UNIT_S.length > 0) {
+                    aSearchFilters.push(new Filter("operation_unit_code", FilterOperator.EQ, s_Operation_UNIT_S));
+                }
+            }   
+            else if(sSurffix ==="E")
+            {
+
+                var s_Operation_ORG_E = this.getView().byId("search_Operation_ORG_E").getSelectedKey();
+                var s_Operation_UNIT_E = this.getView().byId("search_Operation_UNIT_E").getSelectedKey();
+                var s_Dept = this.getView().byId("search_Dept").getSelectedKey();
+                var s_Man = this.getView().byId("search_Man").getSelectedKey();
+
+                // var s_Operation_UNIT_E = this.getView().byId("search_Operation_UNIT_E").getSelectedKey();
+                // var s_Operation_UNIT_E = this.getView().byId("search_Operation_UNIT_E").getSelectedKey();
+                // var s_Operation_UNIT_E = this.getView().byId("search_Operation_UNIT_E").getSelectedKey();
+
+                if (s_Operation_ORG_E && s_Operation_ORG_E.length > 0) {
+                    aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, s_Operation_ORG_E));
+                }
+                if (s_Operation_UNIT_E && s_Operation_UNIT_E.length > 0) {
+                    aSearchFilters.push(new Filter("operation_unit_code", FilterOperator.EQ, s_Operation_UNIT_E));
+                }
+                if (s_Dept && s_Dept.length > 0) {
+                    aSearchFilters.push(new Filter("repr_department_code", FilterOperator.EQ, s_Dept));
+                }
+                if (s_Man && s_Man.length > 0) {
+                    aSearchFilters.push(new Filter("managers_name", FilterOperator.EQ, s_Man));
+                }                
+            }
 			return aSearchFilters;
-
-            // alert("aSearchFilters : " + aSearchFilters);
-
-            // var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S"
-            
-            // var aCompany = this.getView().byId("searchCompany"+sSurffix).getSelectedItems();
-
-            // var sDateFrom = this.getView().byId("searchDate"+sSurffix).getDateValue();
-            // var sDateTo = this.getView().byId("searchDate"+sSurffix).getSecondDateValue();
-
-			// var sModel = this.getView().byId("searchModel").getValue().trim();
-            // var	sPart = this.getView().byId("searchPart").getValue().trim();
-            // var	sFamilyPart = this.getView().byId("searchFamilyPart").getValue().trim();
-            // var	sStatus = this.getView().byId("searchStatus").getSelectedKey();
-            
-            // var aSearchFilters = [];
-            // var companyFilters = [];
-            
-            // if(aCompany.length > 0){
-
-            //     aCompany.forEach(function(item, idx, arr){
-            //         companyFilters.push(new Filter("company_code", FilterOperator.EQ, item.mProperties.key ));
-            //     });
-
-            //     aSearchFilters.push(
-            //         new Filter({
-            //             filters: companyFilters,
-            //             and: false
-            //         })
-            //     );
-            // }
-
-            // var dateFilters = [];
-
-            // if (sDateFrom) {
-			// 	dateFilters.push(new Filter("local_update_dtm", FilterOperator.GE, sDateFrom));
-            // }
-
-            // if (sDateTo) {
-			// 	dateFilters.push(new Filter("local_update_dtm", FilterOperator.LE, sDateTo));
-            // }
-
-            // if(dateFilters.length > 0){
-            //     aSearchFilters.push(
-            //         new Filter({
-            //             filters: dateFilters,
-            //             and: true
-            //         })
-            //     );
-            // }
-
-			// if (sModel) {
-			// 	aSearchFilters.push(new Filter("model", FilterOperator.StartsWith, sModel));
-            // }
-            
-            // if (sPart) {
-			// 	aSearchFilters.push(new Filter("part_number", FilterOperator.StartsWith, sPart));
-            // }
-            
-            // if (sFamilyPart) {
-			// 	aSearchFilters.push(new Filter("family_part_numbers", FilterOperator.Contains, sFamilyPart));
-            // }
-            
-            // if (sStatus) {
-			// 	aSearchFilters.push(new Filter("mold_spec_status_code", FilterOperator.EQ, sStatus));
-			// }
-			// if (sKeyword && sKeyword.length > 0) {
-			// 	aSearchFilters.push(new Filter({
-			// 		filters: [
-			// 			new Filter("control_option_code", FilterOperator.Contains, sKeyword),
-			// 			new Filter("control_option_name", FilterOperator.Contains, sKeyword)
-			// 		],
-			// 		and: false
-			// 	}));
-			// }
-			// if(sUsage != "all"){
-			// 	switch (sUsage) {
-			// 		case "site":
-			// 		aSearchFilters.push(new Filter("site_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 		case "company":
-			// 		aSearchFilters.push(new Filter("company_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 		case "org":
-			// 		aSearchFilters.push(new Filter("organization_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 		case "user":
-			// 		aSearchFilters.push(new Filter("user_flag", FilterOperator.EQ, "true"));
-			// 		break;
-			// 	}
-            // }
-            
-            // console.log('aSearchFilters',aSearchFilters);
-
-			// return aSearchFilters;
 		},
 		
 		_doInitTablePerso: function(){

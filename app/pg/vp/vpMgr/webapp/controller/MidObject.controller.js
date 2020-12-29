@@ -2,6 +2,7 @@ sap.ui.define([
 	"ext/lib/controller/BaseController",
 	"sap/ui/core/routing/History",
     "sap/ui/model/json/JSONModel",
+    "ext/lib/model/TreeListModel",
     "ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedModel",
 	"ext/lib/model/ManagedListModel",
@@ -11,14 +12,43 @@ sap.ui.define([
 	"sap/ui/core/Fragment",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
+    "sap/m/Text",
+	"sap/m/Input",
+    "sap/m/ComboBox",
+    "sap/f/library",    
+], function (
+    BaseController, 
+    History, 
+    JSONModel,
+    TreeListModel, 
+    TransactionManager, 
+    ManagedModel, 
+    ManagedListModel, 
+    DateFormatter, 
+    Filter, 
+    FilterOperator, 
+    Fragment, 
+    MessageBox, 
+    MessageToast, 
+    Text, 
+    Input, 
+    ComboBox,
+    library
+    ) {
     "use strict";
+    //routing param
+    var pVendorPool = "";
+    var pTenantId  = "";
+    var pOrg_code  = "";
+    var pOperation_unit_code = "";
     
     var oTransactionManager;
-
+    var that;
 	return BaseController.extend("vp.vpMgt.controller.MidObject", {
 
-		dateFormatter: DateFormatter,
+        dateFormatter: DateFormatter,
+        
+        
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -36,19 +66,21 @@ sap.ui.define([
 					busy : true,
 					delay : 0
 				});
-			this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
+            this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
+            // this.getRouter().getRoute("midPageDetail").attachPatternMatched(this._onRoutedThisPageDtl, this);
 			this.setModel(oViewModel, "midObjectView");
-			
-            this.setModel(new ManagedModel(), "vpDetailView");
-            this.setModel(new ManagedListModel(), "VpSupplierDtlView");
-			this.setModel(new ManagedListModel(), "vpMaterialDtlView");
-            this.setModel(new ManagedListModel(), "vpManagerDtlView");
+            
+            that = this;
+            // this.setModel(new ManagedModel(), "vpDetailView");
+            // this.setModel(new ManagedListModel(), "VpSupplierDtlView");
+			// this.setModel(new ManagedListModel(), "vpMaterialDtlView");
+            // this.setModel(new ManagedListModel(), "vpManagerDtlView");
 
-            oTransactionManager = new TransactionManager();
-			oTransactionManager.addDataModel(this.getModel("vpDetailView"));
-            oTransactionManager.addDataModel(this.getModel("VpSupplierDtlView"));
-            oTransactionManager.addDataModel(this.getModel("vpMaterialDtlView"));
-            oTransactionManager.addDataModel(this.getModel("vpManagerDtlView"));
+            // oTransactionManager = new TransactionManager();
+			// oTransactionManager.addDataModel(this.getModel("vpDetailView"));
+            // oTransactionManager.addDataModel(this.getModel("VpSupplierDtlView"));
+            // oTransactionManager.addDataModel(this.getModel("vpMaterialDtlView"));
+            // oTransactionManager.addDataModel(this.getModel("vpManagerDtlView"));
 		}, 
 
 		/* =========================================================== */
@@ -123,7 +155,96 @@ sap.ui.define([
 				}
 			});
 		},
-		
+        onMidTreeSearchButtonPress : function(){
+            
+            var predicates = [];
+
+            if (!!this.byId("mid_Tree_Operation_ORG_E").getSelectedKey()) {
+                    predicates.push(new Filter("org_code", FilterOperator.Contains, this.byId("mid_Tree_Operation_ORG_E").getSelectedKey()));
+                }
+            if (!!this.byId("mid_Tree_Operation_UNIT_E").getSelectedKey()) {
+                    predicates.push(new Filter("operation_unit_code", FilterOperator.Contains, this.byId("mid_Tree_Operation_UNIT_E").getSelectedKey()));
+                }                
+            if (!!this.byId("mid_Tree_Vp_Name").getValue()) {
+                predicates.push(new Filter({
+                    filters: [
+                        new Filter("vendor_pool_local_name", FilterOperator.Contains, this.byId("mid_Tree_Vp_Name").getValue())
+                    ],
+                    and: false
+                }));
+            }
+            // predicates.push(new Filter("language_cd", FilterOperator.EQ, "KO"));
+
+            this._treeView(predicates);
+
+            // this.treeListModel = this.treeListModel || new TreeListModel(this.getView().getModel("mapping"));
+            //     this.getView().setBusy(true);
+            //     this.treeListModel
+            //         .read("/VpTreeView", {
+            //             filters: predicates
+            //         })
+            //         // 성공시
+            //         .then((function (jNodes) {
+            //             this.getView().setModel(new JSONModel({
+            //                 "VpTreeView": {
+            //                     "nodes": jNodes
+            //                 }
+            //             }), "tree");
+            //         }).bind(this))
+            //         // 실패시
+            //         .catch(function (oError) {
+            //             alert("Erroe : " + oError);
+            //         })
+            //         // 모래시계해제
+            //         .finally((function () {
+            //             this.getView().setBusy(false);
+            //         }).bind(this));            
+        },
+        
+        onCellClick : function (oEvent) {
+
+            var oTable = this.byId("midTreeTable");
+            var aIndices = oTable.getSelectedIndices();
+            //선택된 Tree Table Value 
+            var p_vendor_pool_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[1].mProperties.text
+            var p_org_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[2].mProperties.text            
+            var p_operation_unit_code = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[3].mProperties.text
+            var p_tenat_id = oEvent.getSource()._aRowClones[aIndices].mAggregations.cells[4].mProperties.text
+
+            // var rowData = oEvent.getParameter('rowBindingContext').getObject();
+            var LayoutType = library.LayoutType;
+
+            pVendorPool =  p_vendor_pool_code;
+            pTenantId = p_tenat_id;
+            pOrg_code  = p_org_code;
+            pOperation_unit_code = p_operation_unit_code;
+
+            // alert( "pVendorPool   : " + pVendorPool + 
+            //        "pTenantId     : " + pTenantId);
+
+            // var oNavParam = {
+            //     layout: oNextUIState.layout,
+            //     tenantId : rowData.tenant_id,
+            //     vendorPool : rowData.vendor_pool_code
+            // };
+            // this.getRouter().navTo("midPage", oNavParam); 
+			// if (this.currentRouteName === "MainList") { // last viewed route was master
+			// 	var oMasterView = this.oRouter.getView("vp.vpMgt.view.MainList");
+			// 	this.getView().byId("fcl").removeBeginColumnPage(oMasterView);
+			// }
+
+
+			this.getRouter().navTo("midPageDetail", {
+                layout: sap.f.LayoutType.TwoColumnsMidExpanded, 
+                // layout: sap.f.LayoutType.OneColumn, 
+				tenantId: pTenantId,
+                vendorPool: pVendorPool,
+                orgCode: pOrg_code,
+                operationUnitCode: pOperation_unit_code
+            });    
+
+       
+        },
 		/**
 		 * Event handler for saving page changes
 		 * @public
@@ -174,16 +295,45 @@ sap.ui.define([
 				oView = this.getView();
 			this._sTenantId = oArgs.tenantId;
 			this._sVendorPool = oArgs.vendorPool;
+            this._sOrgCode = oArgs.orgCode;
+            this._sOperationUnitCode = oArgs.operationUnitCode;
+            
 
             alert("_sTenantId : " + this._sTenantId + 
-                  "_sVendorPool : " + this._sVendorPool);
+                  "_sVendorPool : " + this._sVendorPool + 
+                  "_sOrgCode : " + this._sOrgCode + 
+                  "_sOperationUnitCode : " + this._sOperationUnitCode );
+
+
+            var predicates = [];
+
+            if (!!this._sTenantId) {
+                    predicates.push(new Filter("tenant_id", FilterOperator.EQ, this._sTenantId));
+                }
+            if (!!this._sOrgCode) {
+                    predicates.push(new Filter("org_code", FilterOperator.EQ, this._sOrgCode));
+                }
+            if (!!this._sOperationUnitCode) {
+                    predicates.push(new Filter("operation_unit_code", FilterOperator.EQ, this._sOperationUnitCode));
+                }         
+            if (!!this._sVendorPool) {
+                    predicates.push(new Filter("vendor_pool_code", FilterOperator.EQ, this._sVendorPool));
+                }                        
+
+                // predicates.push(new Filter("language_cd", FilterOperator.EQ, "EN"));
+
+            this._treeView(predicates);
+
+            this._settreeInputValue(this._sOrgCode, this._sOperationUnitCode);
 
 
 			this.getRouter().navTo("midPageDetail", {
                 layout: sap.f.LayoutType.TwoColumnsMidExpanded, 
                 // layout: sap.f.LayoutType.OneColumn, 
 				tenantId: this._sTenantId,
-				vendorPool: this._sVendorPool
+                vendorPool: this._sVendorPool,
+                orgCode: this._sOrgCode,
+                operationUnitCode: this._sOperationUnitCode
             });                  
 			// if(oArgs.tenantId == "new" && oArgs.moldId == "code"){
 			// 	//It comes Add button pressed from the before page.
@@ -214,7 +364,42 @@ sap.ui.define([
             // }
             
             // oTransactionManager.setServiceModel(this.getModel());
-		},
+        },
+
+        _treeView : function (aFilter) {
+
+            this.treeListModel = this.treeListModel || new TreeListModel(this.getView().getModel("mapping"));
+                this.getView().setBusy(true);
+                this.treeListModel
+                    .read("/VpTreeView", {
+                        filters: aFilter
+                    })
+                    // 성공시
+                    .then((function (jNodes) { console.log("jNodes : " + jNodes);
+                        this.getView().setModel(new JSONModel({
+                            "VpTreeView": {
+                                "nodes": jNodes
+                            }
+                        }), "tree");
+                    }).bind(this))
+                    // 실패시
+                    .catch(function (oError) {
+                        alert("Erroe : " + oError);
+                    })
+                    // 모래시계해제
+                    .finally((function () {
+                        this.getView().setBusy(false);
+                    }).bind(this));  
+
+        },
+        _settreeInputValue : function(sOrg, sOper) {
+
+            alert("sOrg : " +sOrg  + "    sOper : " +sOper);
+            this.getView().byId("mid_Tree_Operation_ORG_S").setSelectedKey(sOrg);
+            this.getView().byId("mid_Tree_Operation_UNIT_S").setSelectedKey(sOper);
+            this.getView().byId("mid_Tree_Operation_ORG_E").setSelectedKey(sOrg);
+            this.getView().byId("mid_Tree_Operation_UNIT_E").setSelectedKey(sOper);            
+        },
 
 		/**
 		 * Binds the view to the object path.
@@ -236,24 +421,7 @@ sap.ui.define([
 			});
 		},
 
-		_toEditMode: function(){
-            this._showFormFragment('MidObject_Edit');
-			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("page").setProperty("showFooter", true);
-			this.byId("pageEditButton").setEnabled(false);
-			this.byId("pageDeleteButton").setEnabled(false);
-			this.byId("pageNavBackButton").setEnabled(false);
-		},
-
-		_toShowMode: function(){
-			this._showFormFragment('MidObject_Show');
-			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("page").setProperty("showFooter", false);
-			this.byId("pageEditButton").setEnabled(true);
-			this.byId("pageDeleteButton").setEnabled(true);
-			this.byId("pageNavBackButton").setEnabled(true);
-		},
-
+		
 		_oFragments: {},
 		_showFormFragment : function (sFragmentName) {
             var oPageSubSection = this.byId("pageSubSection1");

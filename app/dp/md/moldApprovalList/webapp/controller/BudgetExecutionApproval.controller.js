@@ -59,9 +59,7 @@ sap.ui.define([
 
             this.setModel(oViewModel, "budgetExecutionApprovalView"); //change
             this.getRouter().getRoute("budgetExecutionApproval").attachPatternMatched(this._onObjectMatched, this);//change
-            
-            this.getView().setModel(new ManagedListModel(), "mdItemMaster"); 
-            this.getView().setModel(new ManagedListModel(), "importPlant"); 
+           
         },
    
         /* =========================================================== */
@@ -73,19 +71,36 @@ sap.ui.define([
         /* =========================================================== */
         _onApprovalPage : function () {
   
+            this.getView().setModel(new ManagedListModel(), "mdItemMaster"); 
+            this.getView().setModel(new ManagedModel(), "mdCommon"); 
+            this.getView().setModel(new ManagedListModel(), "importPlant"); 
+
             console.log(" this.approval_number "  ,  this.approval_number);
             var schFilter = [];
             var that = this;
             if (this.approval_number == "New") {
+                // ApprovalBaseController.prototype.onInit.call(this);
+
                 this._budgetEditFragment();
             } else {
                 this._budgetViewFragment();
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
                     , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
                 ];
+                // this.getView().setModel(new ManagedModel(), "mdCommon");
+                var md = this.getModel('mdCommon');
+                this._bindViewBudget("/ItemBudgetExecution", "mdItemMaster", schFilter, function (oData) { 
 
-                this._bindViewBudget("/ItemBudgetExecution", "mdItemMaster", schFilter, function (oData) {
-                    console.log("ItemBudgetExecution >>>>>>", oData); 
+                    md.setProperty("/investment_ecst_type_code", oData.results[0].investment_ecst_type_code);
+                    md.setProperty("/investment_ecst_type_code_nm", oData.results[0].investment_ecst_type_code_nm);
+                    md.setProperty("/accounting_department_code", oData.results[0].accounting_department_code);
+                    md.setProperty("/import_company_code", oData.results[0].import_company_code);
+                    md.setProperty("/project_code", oData.results[0].project_code);
+                    md.setProperty("/import_company_org_code", oData.results[0].import_company_org_code);
+                    md.setProperty("/account_code", oData.results[0].account_code);
+                    md.setProperty("/account_code_nm", oData.results[0].account_code_nm);
+                    md.setProperty("/provisional_budget_amount", oData.results[0].provisional_budget_amount);
+                    console.log("md >>>>>>", md); 
                     that._bindComboPlant(oData.results[0].import_company_code);
                 });
             }  
@@ -109,13 +124,13 @@ sap.ui.define([
          * @param {*} company_code 
          */
         onBCompanyChange : function (oEvent){
-            // console.log("oEvent >>> " , oEvent);
+            // console.log("oEvent >>> " , oEvent); var md = this.getModel('mdCommon');
             // console.log("1 >>> " ,this.getView().byId('importCompany').getSelectedKey());
             // console.log("2 >>> " ,this.getView().byId('importCompany').mProperties.selectedKey);
             // console.log("3 >>> " ,this.getModel("mdItemMaster").getData().ItemBudgetExecution[0].import_company_code);
 
-            var company_code = this.getModel("mdItemMaster").getData().ItemBudgetExecution[0].import_company_code;
-            this.getModel("mdItemMaster").getData().ItemBudgetExecution[0].import_company_org_code = "";
+            var company_code = this.getModel("mdCommon").getData().import_company_code;
+            this.getModel("mdCommon").getData().import_company_org_code = "";
             this._bindComboPlant(company_code);
         },
         _bindComboPlant : function (company_code) {
@@ -296,6 +311,7 @@ sap.ui.define([
         },
 
         onPageDraftButtonPress : function () { 
+ 
             /**
              * 'DR'
             'AR'
@@ -307,17 +323,38 @@ sap.ui.define([
             this.approval_type_code = "B";
 
             var bModel = this.getModel("mdItemMaster");
+            var mModel = this.getModel("mdCommon");
             this.approvalDetails_data = [] ;
             this.moldMaster_data = [] ;
-            var that = this;
             console.log("bModel.getData().length " , bModel);
+            if(bModel.getData().ItemBudgetExecution == undefined || bModel.getData().ItemBudgetExecution.length == 0){
+                MessageToast.show("item 을 하나 이상 추가하세요.");
+                return;
+            }
+
+
+            var that = this;
+            
             if(bModel.getData().ItemBudgetExecution != undefined && bModel.getData().ItemBudgetExecution.length > 0){
-                var account_code = bModel.getData().ItemBudgetExecution[0].account_code;
-                var investment_ecst_type_code =  bModel.getData().ItemBudgetExecution[0].investment_ecst_type_code;
-                var accounting_department_code =  bModel.getData().ItemBudgetExecution[0].accounting_department_code;
-                var project_code =  bModel.getData().ItemBudgetExecution[0].project_code;
-                var import_company_code = investment_ecst_type_code != "S" ? "" : bModel.getData().ItemBudgetExecution[0].import_company_code;
-                var import_company_org_code = investment_ecst_type_code != "S" ? "" : bModel.getData().ItemBudgetExecution[0].import_company_org_code;
+                /**
+                 *   md.setProperty("/investment_ecst_type_code", oData.results[0].investment_ecst_type_code);
+                    md.setProperty("/investment_ecst_type_code_nm", oData.results[0].investment_ecst_type_code_nm);
+                    md.setProperty("/accounting_department_code", oData.results[0].accounting_department_code);
+                    md.setProperty("/import_company_code", oData.results[0].import_company_code);
+                    md.setProperty("/project_code", oData.results[0].project_code);
+                    md.setProperty("/import_company_org_code", oData.results[0].import_company_org_code);
+                    md.setProperty("/account_code", oData.results[0].account_code);
+                    md.setProperty("/account_code_nm", oData.results[0].account_code_nm);
+                    md.setProperty("/provisional_budget_amount", oData.results[0].provisional_budget_amount);
+                 */
+
+
+                var account_code = mModel.getData().account_code;
+                var investment_ecst_type_code =  mModel.getData().investment_ecst_type_code;
+                var accounting_department_code =  mModel.getData().accounting_department_code;
+                var project_code =  mModel.getData().project_code;
+                var import_company_code = investment_ecst_type_code != "S" ? "" : mModel.getData().import_company_code;
+                var import_company_org_code = investment_ecst_type_code != "S" ? "" : mModel.getData().import_company_org_code;
 
                 bModel.getData().ItemBudgetExecution.forEach(function(item){
                     that.approvalDetails_data.push({

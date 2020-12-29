@@ -201,6 +201,7 @@
                         id="mainTable"
                         selectionMode="MultiToggle"
                         fixedColumnCount="4"
+
                         rows="{
                             path: 'list>/vPSearchView',
                             filters: [
@@ -233,79 +234,79 @@
                     </table:extension> 
 
                     <table:columns>
-                            <table:Column label="Higher Lvl" width="8em" filterProperty="higher_level_path" >
+                            <table:Column label="Higher Lvl" width="8rem" filterProperty="higher_level_path" >
                                 <table:template>
                                     <Text text="{list>higher_level_path}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Vendor Pool" width="8em" filterProperty="vendor_pool_local_name"  >
+                            <table:Column label="Vendor Pool" width="8rem" filterProperty="vendor_pool_local_name"  >
                                 <table:template>
                                     <Text text="{list>vendor_pool_local_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Info. Change Status" width="10em">
+                            <table:Column label="Info. Change Status" width="10rem">
                                 <table:template>
                                     <Text text="{list>info_change_status}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Mtl. Attribute" width="8em" filterProperty="vendor_pool_local_name" >
+                            <table:Column label="Mtl. Attribute" width="8rem" filterProperty="vendor_pool_local_name" >
                                 <table:template>
                                     <Text text="{list>inp_type_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Review Grade" width="8em">
+                            <table:Column label="Review Grade" width="8rem">
                                 <table:template>
                                     <Text text="{list>equipment_grade_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Equipment Type" width="8em">
+                            <table:Column label="Equipment Type" width="8rem">
                                 <table:template>
                                     <Text text="{list>equipment_type_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Supplier Quantity" width="8em">
+                            <table:Column label="Supplier Quantity" width="8rem">
                                 <table:template>
                                     <Text text="{list>supplier_quantity}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                             
-                            <table:Column label="Supplier Code" width="8em" filterProperty="supplier_code" >
+                            <table:Column label="Supplier Code" width="8rem" filterProperty="supplier_code" >
                                 <table:template>
                                     <Text text="{list>supplier_code}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Supplier Name" width="8em" filterProperty="supplier_local_name" >
+                            <table:Column label="Supplier Name" width="8rem" filterProperty="supplier_local_name" >
                                 <table:template>
                                     <Text text="{list>supplier_local_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Supplier Name(En)" width="8em" filterProperty="supplier_english_name" >
+                            <table:Column label="Supplier Name(En)" width="8rem" filterProperty="supplier_english_name" >
                                 <table:template>
                                     <Text text="{list>supplier_english_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Company" width="8em" filterProperty="company_name" >
+                            <table:Column label="Company" width="8rem" filterProperty="company_name" >
                                 <table:template>
                                     <Text text="{list>company_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                             
-                            <table:Column label="Supplier Type" width="8em">
+                            <table:Column label="Supplier Type" width="8rem">
                                 <table:template>
                                     <Text text="{list>supplier_type_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Maker Flag" width="8em">
+                            <table:Column label="Maker Flag" width="8rem">
                                 <table:template>
                                     <Switch state="{list>maker_flag}" customTextOn="Yes" customTextOff="No">
                                         <layoutData>
@@ -315,7 +316,7 @@
                                 </table:template>
                             </table:Column>
                                         
-                            <table:Column label="Supplier Flag" width="8em">
+                            <table:Column label="Supplier Flag" width="8rem">
                                 <table:template>
                                     <Switch state="{list>supplier_flag}" customTextOn="Yes" customTextOff="No">
                                         <layoutData>
@@ -325,13 +326,13 @@
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Status" width="8em">
+                            <table:Column label="Status" width="8rem">
                                 <table:template>
                                     <Text text="{list>supplier_status_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="V/P 제외여부" width="8em">
+                            <table:Column label="V/P 제외여부" width="8rem">
                                 <table:template>
                                     <Switch state="{list>vendor_pool_apply_exception_flag}" customTextOn="Yes" customTextOff="No">
                                         <layoutData>
@@ -341,7 +342,7 @@
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="SD 제외여부" width="8em">
+                            <table:Column label="SD 제외여부" width="8rem">
                                 <table:template>
                                     <Switch state="{list>sd_exception_flag}" customTextOn="Yes" customTextOff="No">
                                         <layoutData>
@@ -351,19 +352,19 @@
                                 </table:template>
                             </table:Column>
                                         
-                            <table:Column label="Department" width="8em" filterProperty="repr_department_name">
+                            <table:Column label="Department" width="8rem" filterProperty="repr_department_name">
                                 <table:template>
                                     <Text text="{list>repr_department_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Manager" width="8em" filterProperty="managers_name">
+                            <table:Column label="Manager" width="8rem" filterProperty="managers_name">
                                 <table:template>
                                     <Text text="{list>managers_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="평가통제여부" width="8em">
+                            <table:Column label="평가통제여부" width="8rem">
                                 <table:template>
                                     <Switch state="{list>supeval_control_flag}" customTextOn="Yes" customTextOff="No">
                                         <layoutData>

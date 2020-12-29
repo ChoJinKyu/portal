@@ -4,14 +4,15 @@ sap.ui.define([
     "ext/lib/model/ManagedListModel",
     "sap/ui/model/json/JSONModel",
     "ext/lib/formatter/DateFormatter",
+    "ext/lib/util/Validator",
     "sap/m/TablePersoController",
     "./MainListPersoService",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-    "sap/ui/core/Fragment"
-], function (BaseController, Multilingual, ManagedListModel, JSONModel, DateFormatter,
+    "sap/ui/core/Fragment",
+], function (BaseController, Multilingual, ManagedListModel, JSONModel, DateFormatter, Validator,
     TablePersoController, MainListPersoService,
     Filter, FilterOperator, MessageBox, MessageToast, Fragment) {
     "use strict";
@@ -21,6 +22,7 @@ sap.ui.define([
     return BaseController.extend("op.pu.PrMgt.controller.MainList", {
 
         dateFormatter: DateFormatter,
+        validator: new Validator(),
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -327,12 +329,21 @@ sap.ui.define([
 
 
         onMainTableAddButtonPress: function () {
-            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
+            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1); 
+            
+            if(this.validator.validate(this.byId("SelectionPR_TYPE2")) !== true) return;
+            if(this.validator.validate(this.byId("SelectionPR_TYPE3")) !== true) return;
+            if(this.validator.validate(this.byId("SelectionPR_TYPE")) !== true) return;
+            if(this.validator.validate(this.byId("searchUsageSegmentButton")) !== true) return;
+            
             oNextUIState.layout = "MidColumnFullScreen";
             this.getRouter().navTo("midCreate", {
                 layout: oNextUIState.layout,
                 tenantId: "new",
-                controlOptionCode: "code"
+                pr_type_code: this.byId("SelectionPR_TYPE").getSelectedKey(),
+                pr_type_code_2: this.byId("SelectionPR_TYPE2").getSelectedKey(),
+                pr_type_code_3: this.byId("SelectionPR_TYPE3").getSelectedKey(),
+                pr_template_number: this.byId("searchUsageSegmentButton").getSelectedKey(),
             });
 
             this.byId("dialogTemplateSelection").close();
