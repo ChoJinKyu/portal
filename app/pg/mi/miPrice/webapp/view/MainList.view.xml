@@ -37,18 +37,19 @@
         <f:header>
             <f:DynamicPageHeader pinnable="true">
                 <f:content>
-                    <smartVariantManagement:SmartVariantManagement        
+                    <!-- <smartVariantManagement:SmartVariantManagement        
                         id="pageVariantId"
                         standardItemText="{I18N>/STANDARD}"
-                        persistencyKey="PageVariantPKey" /> 
+                        persistencyKey="PageVariantPKey" />  -->
 
+                        <!-- smartVariant="pageVariantId"
+                        persistencyKey="SmartFilterPKey"
+                        considerSelectionVariants="false"  -->
                     <!-- Smart Filter -->
                     <smartFilterBar:SmartFilterBar id="smartFilterBar" 
                         entitySet="MIMaterialPriceManagementView " 
-                        smartVariant="pageVariantId"
-                        persistencyKey="SmartFilterPKey"
-                        considerSelectionVariants="true" 
-                        enableBasicSearch="false" >
+                        enableBasicSearch="false" 
+                        >
                         <smartFilterBar:controlConfiguration>
                             <!-- 시황자재코드 -->
                             <smartFilterBar:ControlConfiguration  key="mi_material_code" groupId="_BASIC" index="1" label="{I18N>/MI_MATERIAL_CODE}"
@@ -306,7 +307,8 @@
                                 <!-- <Text text="{termsdelv}"></Text>   -->
                                 <Input value="{list>sourcing_group_code}" editable="{= ${list>_row_state_} === 'C' }"></Input>  
                                 <Input value="{list>delivery_mm}" editable="{= ${list>_row_state_} === 'C' }"></Input>  
-                                <DatePicker  valueFormat="yyyy/MM/dd" displayFormat="yyyy/MM/dd'" value="{list>mi_date}" editable="{= ${list>_row_state_} === 'C' }" required="true"/>
+                                <DatePicker  valueFormat="yyyy/MM/dd" displayFormat="yyyy/MM/dd'" value="{path: 'list>mi_date', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy/MM/dd'} }" 
+                                    editable="{= ${list>_row_state_} === 'C' }" required="true"/>
                                 <!-- <Input value="{mi_date}"></Input>   -->
                                 <Input value="{list>amount}" editable="{= ${list>_row_state_} === 'C' }" type="Number" textAlign="Right"></Input>  
                             </ColumnListItem>

@@ -59,7 +59,7 @@ sap.ui.define([
                     layout: this.getOwnerComponent().getHelper().getNextUIState(1).layout,
                     "?query": {
                         menuCode: row.menu_code,
-                        menuName: row.menu_name,
+                        menuName: row.menu_name.replaceAll("#", "^"),
                         parentMenuCode: row.parent_menu_code,
                         chainCode: this.byId("searchChainCombo").getSelectedKey()
                     }

@@ -27,7 +27,7 @@
 
 				<uxap:snappedHeading>
                     <FlexBox fitContainer="true" alignItems="Center">
-						<Title text="{i18n>appTitle}" wrapping="true"/>
+						<Title text="Budget Execution Approval" wrapping="true"/>
 					</FlexBox>
 				</uxap:snappedHeading>
 
@@ -115,7 +115,7 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-            <uxap:ObjectPageSection titleUppercase="false" title="Purchase Order Item">
+            <uxap:ObjectPageSection titleUppercase="false" title="Item for Budget Execution">
 				<uxap:subSections>
                     <uxap:ObjectPageSubSection> 
                         <form:SimpleForm editable="true" 

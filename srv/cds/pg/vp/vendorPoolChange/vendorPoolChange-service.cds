@@ -14,7 +14,7 @@
    
   --------- 현 Service 설명 -------------------
   1. service       : VpChangeService
-  2. description   : Vendor Pool 변경 List(Supplier변경)
+  2. description   : Vendor Pool 변경 List(Supplier변경) 
   3. history
     -. 2020.12.28 : 구본흥 최초작성
 *************************************************/
@@ -28,6 +28,6 @@ service VpChangeService {
 
     view VpEmpView as
     select distinct key changer_empno,  
-                        write_by
+                        write_by    changer_name 
     from vpChangeList; 
 }

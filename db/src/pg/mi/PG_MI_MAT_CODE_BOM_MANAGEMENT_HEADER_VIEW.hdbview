@@ -27,4 +27,22 @@ view pg_MI_Mat_Code_Bom_Management_Header_View as
 		and	header.supplier_code	= supplier.supplier_code
 	left join cm_org_tenant as tenant
 		on	header.tenant_id		= tenant.tenant_id
+	group by
+		header.tenant_id,
+		tenant.tenant_name,
+        header.material_code,
+        mattext.material_desc,
+        header.supplier_code,
+        supplier.supplier_local_name,
+        supplier.supplier_english_name,
+        header.base_quantity,
+        header.processing_cost,
+        header.pcst_currency_unit,
+        header.mi_bom_id,
+        header.local_create_dtm,
+        header.local_update_dtm,
+        header.create_user_id,
+        header.update_user_id,
+        header.system_create_dtm,
+        header.system_update_dtm
 	;
