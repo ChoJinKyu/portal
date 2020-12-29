@@ -49,6 +49,10 @@ sap.ui.define([
             this.moldMaster_data = [] ;
             this.quotation_data = [];  // supplier 전용 
 
+            var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
+
+            
             var oViewModel = new JSONModel({
                 busy: true,
                 delay: 0,
@@ -57,8 +61,6 @@ sap.ui.define([
             });
             this.setModel(oViewModel, "contModel");
 
-            var oMultilingual = new Multilingual();
-            this.setModel(oMultilingual.getModel(), "I18N");
 
             this.getView().setModel(new ManagedModel(), "company");
             this.getView().setModel(new ManagedModel(), "plant");
@@ -891,8 +893,13 @@ sap.ui.define([
                 }
             });
         }, 
-        onLoadThisPage : function (param) {
-            console.log("param >>>> " , param);
+        onLoadThisPage : function (param) { 
+           
+            this._viewMode();
+            this._onRoutedThisPage(param.approval_number); 
+            this._onApprovalPage();
+
+           /* console.log("param >>>> " , param);
             var that = this;
             var target = "";
             if(this.approval_type_code  == "B"){
@@ -902,12 +909,12 @@ sap.ui.define([
             }if(this.approval_type_code  == "E"){
                 target = "participatingSupplierSelection"
             }
- console.log("target >>>> " , target);
+   
             that.getRouter().navTo(target , {
                 company_code: param.company_code
                 , plant_code: param.plant_code
                 , approval_number: param.approval_number
-            });
+            },true); */ 
 
         }
 

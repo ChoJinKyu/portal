@@ -77,8 +77,9 @@ sap.ui.define([
             var schFilter = [];
             var that = this;
             if (this.approval_number == "New") {
-
+                this._budgetEditFragment();
             } else {
+                this._budgetViewFragment();
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
                     , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
                 ];
@@ -202,7 +203,7 @@ sap.ui.define([
                 "inspection_date": "",
                 "local_create_dtm": new Date(),
                 "local_update_dtm": new Date()
-            }, "/ItemBudgetExecution", 0);
+            }, "/ItemBudgetExecution");
         },
         /**
         * @description Participating Supplier 의 delete 버튼 누를시 
@@ -231,6 +232,33 @@ sap.ui.define([
             approverData = verModel.getData().Approvers;*/
             console.log();
             console.log();
+        },
+
+        onPageEditButtonPress: function () {
+            this._budgetEditFragment();
+            this._editMode();
+        },
+
+        onPageCancelButtonPress: function () {
+            this._budgetViewFragment();
+            this._viewMode();
+        },
+
+        _budgetEditFragment : function(){
+            console.log("_budgetEditFragment");
+            var oPageSection = this.byId("budgetExecutionTableFragment");
+            oPageSection.removeAllBlocks();
+            this._loadFragment("BudgetExecutionTableEdit", function (oFragment) {
+                oPageSection.addBlock(oFragment);
+            }.bind(this));
+        },
+        _budgetViewFragment : function(){
+             console.log("_budgetViewFragment");
+             var oPageSection = this.byId("budgetExecutionTableFragment");
+            oPageSection.removeAllBlocks();
+            this._loadFragment("BudgetExecutionTableView", function (oFragment) {
+                oPageSection.addBlock(oFragment);
+            }.bind(this));
         },
 
         onPageDraftButtonPress : function () { 
