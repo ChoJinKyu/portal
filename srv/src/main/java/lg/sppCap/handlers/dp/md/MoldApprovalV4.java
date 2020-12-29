@@ -423,8 +423,8 @@ public class MoldApprovalV4 implements EventHandler {
                 // //q.setSequence(row.getSequence());
                 // q.setSupplierCode(row.getSupplierCode());
     
-                CqnUpdate u = Update.entity(Quotation_.CDS_NAME).data(q); 
-                Result rst = moldApprovalService.run(u);
+                // CqnUpdate u = Update.entity(Quotation_.CDS_NAME).data(q); 
+                // Result rst = moldApprovalService.run(u);
 
             }  
         }
