@@ -262,9 +262,19 @@ sap.ui.define([
         },
 
         onPagePreviewButtonPress : function(){
+            this.getView().setModel(new ManagedListModel(), "approverPreview"); 
 
+        //    this.getModel("approverPreview").setData(this.getModel("approver").getData());
+            if(this.getModel("approver").getData().Approvers != undefined){ 
+                var ap = this.getModel("approver").getData().Approvers;
+                for(var i = 0 ; i < ap.length -1 ; i++){
+                    this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
+                }
+            }
+            
+            console.log("approverPreview " , this.getModel("approverPreview").getData());
             var oView = this.getView();
-// BudgetExecutionApprovalPreView.fragment
+
             if (!this._oDialog) {
                 this._oDialog = Fragment.load({
                     id: oView.getId(),
@@ -281,7 +291,9 @@ sap.ui.define([
             });
 
         },
-
+        onPrvClosePress : function(){
+             this.byId("budgetExecutionPreview").close();
+        },
 
         onPageDraftButtonPress : function () { 
             /**
