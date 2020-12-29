@@ -7,10 +7,10 @@ entity Pd_Part_Class {
   key company_code : String(10) default '*' not null @title: '회사코드' ;	
   key org_type_code : String(2)  not null @title: '구매운영조직유형' ;	
   key org_code : String(10)  not null @title: '구매운영조직코드' ;	
-  key class_code : String(50)  not null @title: '분류코드' ;	
-    parent_class_code : String(50)   @title: '상위분류코드' ;	
+  key part_class_code : String(40)  not null @title: '분류코드' ;	
+    parent_part_class_code : String(40)   @title: '상위분류코드' ;	
     seq : Decimal default 1  @title: '순번' ;	
-    class_name : String(2000)   @title: '분류명' ;	
+    part_class_name : String(240)   @title: '분류명' ;	
     active_flag : Boolean   @title: '활성여부' ;	
 }	
 extend Pd_Part_Class with util.Managed;	
