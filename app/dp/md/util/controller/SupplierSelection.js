@@ -161,20 +161,34 @@ sap.ui.define([
 
         },
 
-        setCompPlantVal: function(oThis, sCompany, sPlant){
+        setCompPlantVal: function(oThis, companyCodes, plantCodes){
 
-            sap.ui.getCore().byId("supplierCompany").setSelectedKey(sCompany);
-            this.setPlant(sCompany, sPlant);
+            if(typeof companyCodes == 'string'){
+                companyCodes = [].concat([companyCodes]);
+            }
+
+            sap.ui.getCore().byId("supplierCompany").setSelectedKeys(companyCodes);
+            this.setPlant(companyCodes, plantCodes);
         },
 
-        setPlant: function(sCompany, sPlant){
-            
+        setPlant: function(companyCodes, plantCodes){
+
+            var companyFilters = [];
+            companyCodes.forEach(function(item){
+                companyFilters.push(new Filter("company_code", FilterOperator.EQ, item ));
+            });
+
+            var tmpFilter = new Filter({
+                            filters: companyFilters,
+                            and: false
+                        });
+                        
             var filter = new Filter({
                             filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
-                                    new Filter("company_code", FilterOperator.EQ, sCompany)
-                                ],
-                                and: true
+                                new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
+                                tmpFilter
+                            ],
+                            and: true
                         });
 
             sap.ui.getCore().byId("supplierPlant").bindItems(
@@ -187,7 +201,11 @@ sap.ui.define([
                 }
             )
 
-            sap.ui.getCore().byId("supplierPlant").setSelectedKey(sPlant);
+            if(typeof plantCodes == 'string'){
+                plantCodes = [].concat([plantCodes]);
+            }
+
+            sap.ui.getCore().byId("supplierPlant").setSelectedKeys(plantCodes);
         },
 
         onValueHelpSuppOkPress: function (oEvent) {
