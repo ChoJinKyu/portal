@@ -20,19 +20,19 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="Control Option Details" wrapping="true" />
+					<Title text="국가 관리 상세" wrapping="true" />
 				</uxap:expandedHeading>
 				<uxap:snappedHeading>
-					<Title text="Control Option Details" wrapping="true" />
+					<Title text="국가 관리 상세" wrapping="true" />
 				</uxap:snappedHeading>
 				<uxap:expandedContent>
-					<Text text="Details for control option {control_option_code}" />
+					<Text text="" />
 				</uxap:expandedContent>
 				<uxap:snappedContent>
-					<Text text="Details for control option {control_option_code}" />
+					<Text text="" />
 				</uxap:snappedContent>
 				<uxap:snappedTitleOnMobile>
-					<Title text="Control Option Details" />
+					<Title text="국가 관리 상세" />
 				</uxap:snappedTitleOnMobile>
 				<uxap:actions>
 					<!-- <Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" />
