@@ -406,30 +406,34 @@ public class MoldApprovalV4 implements EventHandler {
                     CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(m); 
                     Result rst = moldApprovalService.run(u);
                 }
-
+                
             }  
         }
 
         if(!qtnList.isEmpty() && qtnList.size() > 0){
             for(QuotationV4 row : qtnList ){
-
-                System.out.println(" QuotationV4 " + row);
-                
-                // Quotation q = Quotation.create();
-                // q.setMoldId(row.getMoldId());
-                // q.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
-                // q.setUpdateUserId(aMaster.getUpdateUserId()); 
-
-                // //q.setSequence(row.getSequence());
-                // q.setSupplierCode(row.getSupplierCode());
-    
-                // CqnUpdate u = Update.entity(Quotation_.CDS_NAME).data(q); 
-                // Result rst = moldApprovalService.run(u);
-
+                Quotation del = Quotation.create();
+                del.setMoldId(row.getMoldId());
+                del.setApprovalNumber(row.getApprovalNumber()); 
+                del.setSupplierCode(row.getSupplierCode()); 
+                Delete d2 = Delete.from(Quotation_.CDS_NAME).matching(del); 
+                Result rst2 = moldApprovalService.run(d2);
             }  
+            for(QuotationV4 row : qtnList ){
+                if(row.getSupplierCode()!=null && row.getSequence()!=null){   
+                    Quotation q = Quotation.create();
+                    q.setMoldId(row.getMoldId());
+                    q.setApprovalNumber(row.getApprovalNumber()); 
+                    q.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
+                    q.setUpdateUserId(aMaster.getUpdateUserId()); 
+                    
+                    q.setSequence(new Integer(row.getSequence()==null?0:row.getSequence()));
+                    q.setSupplierCode(row.getSupplierCode()==null?"":row.getSupplierCode());
+                    
+                    CqnInsert i = Insert.into(Quotation_.CDS_NAME).entry(q); 
+                    Result rst = moldApprovalService.run(i);
+                }
+            }         
         }
     } 
-
-
-    
 }
