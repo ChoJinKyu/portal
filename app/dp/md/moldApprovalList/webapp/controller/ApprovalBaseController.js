@@ -873,10 +873,6 @@ sap.ui.define([
 
         } , 
 
-        _approvalDelete : function(data){
-            console.log("data >>>", data);
-        },
-
         callAjax : function (data,fn) {  
             console.log("data >>>> " , data);
             var that = this;

@@ -29,12 +29,11 @@ sap.ui.define([
     'sap/ui/core/util/ExportTypeCSV',
     "sap/ui/model/odata/v2/ODataModel",
     "ext/lib/util/ExcelUtil",
-    "ext/lib/util/Validator",
-    "./ApprovalBaseController"
+    "ext/lib/util/Validator"
 ], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter
     , FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text
     , Token, Input, ComboBox, Item, Element, syncStyleClass, Label, SearchField, Multilingual, Export, ExportTypeCSV, ODataModel, ExcelUtil
-    , Validator, ApprovalBaseController) {
+    , Validator ) {
     "use strict";
     /**
      * @description 품의 목록 (총 품의 공통)
@@ -51,7 +50,6 @@ sap.ui.define([
         
         dateFormatter: DateFormatter,
         validator: new Validator(),
-        approvalBaseController : new ApprovalBaseController(),
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -811,7 +809,6 @@ sap.ui.define([
                     onClose: function (sButton) {
                         if(delApprData.length > 0){
                             console.log(delApprData);
-                            that.approvalBaseController._approvalDelete(delApprData);
                         }
                     }
                 });
