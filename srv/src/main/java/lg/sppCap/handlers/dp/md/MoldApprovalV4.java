@@ -135,7 +135,7 @@ public class MoldApprovalV4 implements EventHandler {
                 }else if(aMaster.getApprovalTypeCode().equals("V")){
 
                 }else if(aMaster.getApprovalTypeCode().equals("E")){
-
+                    this.saveBudgetExecution(data);
                 }
   
                  // 다 삭제 하고 다시 insert 한다.
@@ -247,7 +247,7 @@ public class MoldApprovalV4 implements EventHandler {
                 }else if(aMaster.getApprovalTypeCode().equals("V")){
 
                 }else if(aMaster.getApprovalTypeCode().equals("E")){
-
+                    this.saveBudgetExecution(data);
                 }
 
                 if(!approverList.isEmpty() && approverList.size() > 0){ 
