@@ -7,4 +7,5 @@ namespace ep;
 service PoApprMgtService {
     entity ForexDeclaration as projection on forexDeclaration.Po_Forex_Declaration;
     entity ForexDeclarationView as projection on forexDeclarationView.Po_Forex_Declaration_View; 
+    
 }

@@ -22,13 +22,14 @@ entity Po_Forex_Declaration_View {
         currency_name               : String(15)            @title : '통화코드';
         po_amount                   : Decimal               @title : 'PO금액';
         prepay_amount               : Decimal               @title : '선급금액';
-        supplier_code               : String(15)            @title : '협력사코드';
-        supplier_name               : String(240)           @title : '협력사';	
+        supplier_code               : String(15)            @title : '공급업체코드';
+        supplier_name               : String(240)           @title : '공급업체로컬명';	
         po_date                     : Date                  @title : 'PO일자';	
         prepay_date                 : Date                  @title : '선급금지급일자';			
         receipt_scheduled_date      : Date                  @title : '입고예정일자';	
         receipt_date                : Date                  @title : '입고일자';	
-        purchasing_department_code  : String(30)            @title : '구매담당부서';	
+        purchasing_department_code  : String(30)            @title : '구매담당부서코드';	
+        purchasing_department_name  : String(240)           @title : '구매담당부서로컬명';        
         buyer_empno                 : String(50)            @title : '구매담당자사번';	
-        buyer_name                  : String(240)           @title : '구매담당자';	        
+        buyer_name                  : String(240)           @title : '구매담당자로컬명';	        
 }
