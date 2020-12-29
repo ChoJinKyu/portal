@@ -52,7 +52,8 @@ sap.ui.define([
             var oViewModel = new JSONModel({
                 busy: true,
                 delay: 0,
-                editMode : false 
+                editMode : false ,
+                viewMode : true
             });
             this.setModel(oViewModel, "contModel");
 
@@ -134,10 +135,14 @@ sap.ui.define([
 		 * Event handler for page edit button press
 		 * @public
 		 */
-        /*onPageEditButtonPress: function () {
-            this._toEditMode();
-        },*/
-
+        onPageEditButtonPress: function () {
+           this.getModel("contModel").setProperty("/editMode", true)
+           this.getModel("contModel").setProperty("/viewMode", false)
+        },
+        onPageCancelButtonPress : function(){
+           this.getModel("contModel").setProperty("/editMode", false)
+           this.getModel("contModel").setProperty("/viewMode", true)
+        },
 
 		/**
 		 * Event handler for cancel page editing
@@ -206,7 +211,10 @@ sap.ui.define([
                 this.getModel("appMaster").setProperty("/requestor_empno", "140790"); // 나중에 세션 값 세팅 할 것 
                 this.getModel("appMaster").setProperty("/request_date", this._getToday());
                 this.getModel("contModel").setProperty("/editMode", true)
+                this.getModel("contModel").setProperty("/viewMode", false)
             } else {
+                this.getModel("contModel").setProperty("/editMode", false)
+                this.getModel("contModel").setProperty("/viewMode", true)
                 this._onRoutedThisPage(this.approval_number); 
                 this._onApprovalPage(); // 이거 공통으로 각자 페이지에 하나 만듭시다 - this.approval_number 가 로드 된 후에 처리 해야 하는데 
                                                 // 그 시점을 ApprovalBaseController. 에서 해줘야 겠네요 
@@ -884,7 +892,7 @@ sap.ui.define([
             });
         }, 
         onLoadThisPage : function (param) {
-
+            console.log("param >>>> " , param);
             var that = this;
             var target = "";
             if(this.approval_type_code  == "B"){
@@ -894,7 +902,7 @@ sap.ui.define([
             }if(this.approval_type_code  == "E"){
                 target = "participatingSupplierSelection"
             }
-
+ console.log("target >>>> " , target);
             that.getRouter().navTo(target , {
                 company_code: param.company_code
                 , plant_code: param.plant_code
