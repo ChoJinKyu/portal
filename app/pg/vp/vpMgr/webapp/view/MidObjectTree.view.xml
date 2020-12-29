@@ -22,7 +22,7 @@
                         <form:SimpleForm id="pageSearchFormS" maxContainerCols="3" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                             <form:content>
                             <HBox>
-                                <VBox>
+                                <VBox class="sapUiLargeMarginEnd">
                                     <Label text="Operation ORG" labelFor="mid_Tree_Operation_ORG_S" required="true"></Label>
                                     <ComboBox id="mid_Tree_Operation_ORG_S" width="100%" selectedKey="BIZ00200" items="{
                                         path: '/VpOperationOrg',
@@ -32,7 +32,7 @@
                                         sorter: { path: 'operation_org_code'}
                                     }">
                                         <items>
-                                            <core:Item key="{operation_org_code}" text="[{operation_org_code}] {operation_org_name}" />
+                                            <core:Item key="{operation_org_code}" text="{operation_org_name}" />
                                         </items>
                                     </ComboBox>
                                     <layoutData>
@@ -41,13 +41,16 @@
                                 </VBox>
                                 <VBox>
                                     <Label text="Operation UINT" labelFor="mid_Tree_Operation_UNIT_S" required="true"></Label>
-                                    <ComboBox id="mid_Tree_Operation_UNIT_S" width="100%" selectedKey="" items="{
-                                        path: '/util>/CodeDetails',
-                                        filters: [
-                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
-                                                    {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_OPERATION_UNIT'}      
-                                        ]
-                                    }">
+                                    <ComboBox id="mid_Tree_Operation_UNIT_S" width="100%" selectedKey="" 
+                                    items="{
+                                                        path : 'util>/CodeDetails',
+                                                        filters : [
+                                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                            {path : 'group_code', operator : 'EQ', value1 : 'SP_SM_SUPPLIER_TYPE'}                               
+                                                        ]
+                                                    }"
+                                    >
+                                                                    
                                         <items>
                                             <core:Item key="{util>code}" text="{util>code_description}" />
                                         </items>
@@ -61,7 +64,7 @@
                         <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                             <form:content>
                             <HBox>
-                                <VBox>
+                                <VBox class="sapUiLargeMarginEnd" >
                                     <Label text="Operation ORG" labelFor="mid_Tree_Operation_ORG_E" required="true"></Label>
                                     <ComboBox id="mid_Tree_Operation_ORG_E" width="100%" selectedKey="BIZ00200"  items="{
                                         path: '/VpOperationOrg',
@@ -71,7 +74,7 @@
                                         sorter: { path: 'operation_org_code'}
                                     }">
                                         <items>
-                                            <core:Item key="{operation_org_code}" text="[{operation_org_code}] {operation_org_name}" />
+                                            <core:Item key="{operation_org_code}" text="{operation_org_name}" />
                                         </items>
                                     </ComboBox>
                                     <layoutData>
@@ -80,13 +83,15 @@
                                 </VBox>
                                 <VBox>
                                     <Label text="Operation UINT" labelFor="mid_Tree_Operation_UNIT_E" required="true"></Label>
-                                    <ComboBox id="mid_Tree_Operation_UNIT_E" width="100%" selectedKey="" items="{
-                                        path: '/util>/CodeDetails',
-                                        filters: [
-                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
-                                                    {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_OPERATION_UNIT'}      
-                                        ]
-                                    }">
+                                    <ComboBox id="mid_Tree_Operation_UNIT_E" width="100%" selectedKey="" 
+                                    items="{
+                                                        path : 'util>/CodeDetails',
+                                                        filters : [
+                                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                            {path : 'group_code', operator : 'EQ', value1 : 'SP_SM_SUPPLIER_TYPE'}                               
+                                                        ]
+                                                    }"
+                                    >
                                         <items>
                                             <core:Item key="{util>code}" text="{util>code_description}" />
                                         </items>
@@ -97,7 +102,7 @@
                         </form:SimpleForm>
                     </f:expandedContent>
                     <f:actions>
-                        <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onPageSearchButtonPress" />
+                        <Button id="midTreeSearchButton" text="Search" type="Emphasized" press=".onMidTreeSearchButtonPress" />
                     </f:actions>
                     <f:navigationActions>
                         <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -111,9 +116,9 @@
                     <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
-                                <Label text="Vendor Pool" labelFor="mid_Tree_Vp_Code"></Label>
+                                <Label text="Vendor Pool" labelFor="mid_Tree_Vp_Name"></Label>
                                 <HBox>
-                                    <Input id="mid_Tree_Vp_Code" placeholder="Input data"></Input>
+                                    <Input id="mid_Tree_Vp_Name" placeholder="Input data"></Input>
                                 </HBox>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
@@ -127,21 +132,17 @@
                 <VBox>
                     <table:TreeTable
                                 id="midTreeTable"
-                                selectionMode="Single"
-                                rowSelectionChange=".onCheck"                    
+                               selectionMode="Single"
+                                rowSelectionChange=".onCellClick"  
+	                            selectionBehavior="Row"                  
                                 enableColumnReordering="false"
-                                expandFirstLevel="false"
+                                expandFirstLevel="true"
                                 rows="{
-                                    path : '/VpPopupView',
+                                    path : 'tree>/VpTreeView',
                                     parameters : {
-                                        countMode: 'Inline',
-                                        treeAnnotationProperties : {
-                                            hierarchyLevelFor : 'hierarchy_level',
-                                            hierarchyNodeFor : 'node_id',
-                                            hierarchyParentNodeFor : 'parent_id',
-                                            hierarchyDrillStateFor : 'drill_state'
-                                        }
-                                    }
+                        	        arrayNames: ['nodes'],
+                        	        numberOfExpandedLevels: 3
+                       		        }
                                 }"
                                 >
                     <table:extension>
@@ -155,42 +156,71 @@
                     <table:columns>
                             <table:Column label="Vendor Pool" >
                                 <table:template>
-                                    <Text id="mt_vpNm" text="{vendor_pool_local_name}" wrapping="false" />
+                                    <Text id="mt_vpNm" text="{tree>vendor_pool_local_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                     </table:columns>
                     <table:columns>
-                            <table:Column label="Department" >
+                            <table:Column label="Vendor Pool Code"  width="0em" >
                                 <table:template>
-                                    <Text id="mt_deptKo" text="{department_korean_name}" wrapping="false" />
+                                    <Text id="mt_vpCd" text="{tree>vendor_pool_code}" wrapping="false" />
+                                </table:template>
+                            </table:Column>
+                    </table:columns>
+                    <table:columns>
+                            <table:Column label="Org Code"  width="0em" >
+                                <table:template>
+                                    <Text id="mt_orgCd" text="{tree>org_code}" wrapping="false" />
+                                </table:template>
+                            </table:Column>
+                    </table:columns>
+                    <table:columns>
+                            <table:Column label="Operation Code"  width="0em" >
+                                <table:template>
+                                    <Text id="mt_operCd" text="{tree>operation_unit_code}" wrapping="false" />
+                                </table:template>
+                            </table:Column>
+                    </table:columns>
+                    <table:columns>
+                            <table:Column label="Tenant Id"  width="0em" >
+                                <table:template>
+                                    <Text id="mt_tenId" text="{tree>tenant_id}" wrapping="false" />
+                                </table:template>
+                            </table:Column>
+                    </table:columns>
+                                                                            
+                    <table:columns>
+                            <table:Column label="Department"  width="0em" >
+                                <table:template>
+                                    <Text id="mt_deptKo" text="{tree>department_korean_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                     </table:columns>
                                         <table:columns>
-                            <table:Column label="Mtl. Attribute" >
+                            <table:Column label="Mtl. Attribute" width="0em"  >
                                 <table:template>
-                                    <Text id="mt_inpType" text="{inp_type_name}" wrapping="false" />
+                                    <Text id="mt_inpType" text="{tree>inp_type_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                     </table:columns>
                                         <table:columns>
-                            <table:Column label="Planning Base" >
+                            <table:Column label="Planning Base" width="0em"  >
                                 <table:template>
-                                    <Text id="mt_mtlBase" text="{mtlmob_base_name}" wrapping="false" />
+                                    <Text id="mt_mtlBase" text="{tree>mtlmob_base_name}"  width="0em"  wrapping="false" />
                                 </table:template>
                             </table:Column>
                     </table:columns>
                                         <table:columns>
-                            <table:Column label="Industrial Classification" >
+                            <table:Column label="Industrial Classification" width="0em"  >
                                 <table:template>
-                                    <Text id="mt_industryNm" text="{industry_class_name}" wrapping="false" />
+                                    <Text id="mt_industryNm" text="{tree>industry_class_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                     </table:columns>
                                         <table:columns>
-                            <table:Column label="SD Flag" >
+                            <table:Column label="SD Flag" width="0em"  >
                                 <table:template>
-                                    <Text id="mt_sdFlag" text="{sd_exception_flag}" wrapping="false" />
+                                    <Text id="mt_sdFlag" text="{tree>sd_exception_flag}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                     </table:columns>

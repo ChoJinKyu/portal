@@ -122,13 +122,13 @@ sap.ui.define([
                 this.getView().byId("fcl").removeBeginColumnPage(oMainListView);
                 
             }
-            if (this.currentRouteName === "midPageDetail") { // last viewed route was master
-                var oMainListView = this.oRouter.getView("vp.vpMgt.view.MainList");
-                var oMidObjectTreeView = this.oRouter.getView("vp.vpMgt.view.MidObjectTree");
-                this.getView().byId("fcl").removeBeginColumnPage(oMidObjectTreeView);
-                this.getView().byId("fcl").addBeginColumnPage(oMainListView);
-                alert("begin info : " + this.getView().byId("fcl").getCurrentBeginColumnPage());
-			}
+            // if (this.currentRouteName === "midPageDetail") { // last viewed route was master
+            //     var oMainListView = this.oRouter.getView("vp.vpMgt.view.MainList");
+            //     var oMidObjectTreeView = this.oRouter.getView("vp.vpMgt.view.MidObjectTree");
+            //     this.getView().byId("fcl").removeBeginColumnPage(oMidObjectTreeView);
+            //     this.getView().byId("fcl").addBeginColumnPage(oMainListView);
+            //     alert("begin info : " + this.getView().byId("fcl").getCurrentBeginColumnPage());
+			// }
 
 			// Update the layout of the FlexibleColumnLayout
 			if (sLayout) {
