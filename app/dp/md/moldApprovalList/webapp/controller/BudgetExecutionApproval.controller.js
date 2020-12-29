@@ -309,7 +309,7 @@ sap.ui.define([
         },
         onPrvClosePress : function(){
              this.byId("budgetExecutionPreview").close();
-             this.byId("budgetExecutionPreview").destroy();
+            // this.byId("budgetExecutionPreview").destroy();
         },
 
         onPageDraftButtonPress : function () { 

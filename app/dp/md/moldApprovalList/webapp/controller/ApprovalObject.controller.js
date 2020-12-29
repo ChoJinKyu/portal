@@ -492,7 +492,8 @@ sap.ui.define([
          */
         onExitEmployee: function () {
             this.byId("dialogEmployeeSelection").close();
-            // this.byId("dialogEmployeeSelection").destroy();
+           
+          //  this.byId("dialogEmployeeSelection").destroy();
         },
 
         /**
