@@ -428,11 +428,12 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
-				<Button type="Transparent" text="Draft"         press=".onPageDraftButtonPress" />
-				<Button type="Transparent" text="Preview"       press=".onPagePreviewButtonPress" />
-				<Button type="Transparent" text="PO Sheet"      press=".onPagePOSheetButtonPress" />
+				<Button type="Transparent" text="Edit"           press=".onPageEditButtonPress" visible="{=${contModel>/editMode}?false:true}" />
+				<Button type="Transparent" text="Draft"          press=".onPageDraftButtonPress"   visible="{contModel>/editMode}"/>
+				<Button type="Transparent" text="Preview"        press=".onPagePreviewButtonPress"  visible="{contModel>/editMode}" />
+				<Button type="Transparent" text="PO Sheet"       press=".onPagePOSheetButtonPress" />
 				<Button type="Transparent" text="Request Cancel" press=".onPageRequestCancelButtonPress" />
-				<Button type="Emphasized"  text="Request"       press=".onPageRequestButtonPress"/>
+				<Button type="Emphasized"  text="Request"        press=".onPageRequestButtonPress"/>
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>
