@@ -34,7 +34,7 @@
                                     maxLength: 30
                                 }
                             }" required="true"></Input>
-                            <Button id="11" text="중복체크" type="Emphasized" press=".onPageSearchButtonPress" />                            
+                            <Button id="dup" text="중복체크" type="Emphasized" press=".onDupChk" />                            
                             <Label text="이메일" required="true"/> 
                             <Input id="email" value="{
                                 path: 'master>/email_address',

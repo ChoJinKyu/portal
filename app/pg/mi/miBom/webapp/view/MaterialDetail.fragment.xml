@@ -82,7 +82,7 @@
                         </Column>
                         <Column hAlign="Center" >
                             <header>
-                                <Label text="인도조건"/>                            
+                                <Label text="{I18N>/TERMS_OF_DELIVERY}"/>                            
                             </header>
                         </Column>
                         <Column hAlign="Center" >
@@ -92,7 +92,7 @@
                         </Column>    
                         <Column hAlign="Center" >
                             <header>
-                                <Label text="금액"/>                            
+                                <Label text="{I18N>/AMOUNT}"/>                            
                             </header>
                         </Column>                                                                                                 
                     </columns>
@@ -121,11 +121,11 @@
         </HBox>
 		</content>
 			<beginButton>
-				<Button type="Transparent"  text="Cancel" press=".onMaterialDetailClose" />
+				<Button type="Transparent"  text="{I18N>/CANCEL}" press=".onMaterialDetailClose" />
                
 			</beginButton>
             <endButton>
-             <Button  text="Apply" 
+             <Button  text="{I18N>/APPLY}"  
              type="Emphasized"
              visible="{=!${oUi>/changeItem}}" 
              press=".onMaterialDetailApply" />

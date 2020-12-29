@@ -316,7 +316,11 @@
 				</subSections>
 			</ObjectPageSection>
 
-            <ObjectPageSection titleUppercase="false" id="managed_values_section" title="Managed Values">
+            <ObjectPageSection 
+                visible="{= !${contModel>/detailDetail/createMode}}"
+                titleUppercase="false" 
+                id="managed_values_section" 
+                title="Managed Values">
 				<subSections>
 					<ObjectPageSubSection>
 						<blocks>

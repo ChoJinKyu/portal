@@ -64,12 +64,12 @@
                             <smartFilterBar:ControlConfiguration key="mi_material_name" groupId="_BASIC" index="2" label="시황자재명"  
                             visibleInAdvancedArea="true" >
                                 <smartFilterBar:customControl>
-                                        <Input id="input_mi_material_name" placeholder="입력 해주세요."/>
+                                        <Input id="input_mi_material_name" placeholder="{I18N>/ECM00003}"/>
                                 </smartFilterBar:customControl>
                             </smartFilterBar:ControlConfiguration>
 
                             <!-- Category명 -->
-                            <smartFilterBar:ControlConfiguration key="category_code" groupId="_BASIC" index="3" label="Category명" 
+                            <smartFilterBar:ControlConfiguration key="category_code" groupId="_BASIC" index="3" label="{I18N>/CATEGORY}" 
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
                                         <ComboBox id="combobox_category_code" items="{path: '/MICategoryView', templateShareable:true}" placeholder="선택하세요.">
@@ -79,7 +79,7 @@
                             </smartFilterBar:ControlConfiguration>
 
                              <!-- 사용여부 -->    
-                          <smartFilterBar:ControlConfiguration key="use_flag" groupId="_BASIC" index="4" label="사용여부" 
+                          <smartFilterBar:ControlConfiguration key="use_flag" groupId="_BASIC" index="4" label="{I18N>/USE_FLAG}" 
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
                                         <ComboBox id="combobox_use_flag" items="{path: '/UseYNView', templateShareable:true}" placeholder="선택하세요.">
@@ -129,9 +129,9 @@
                     <smartTable:customToolbar>
                         <OverflowToolbar design="Transparent">
                             <ToolbarSpacer/>
-                            <Button text="Create" id="buttonMainTableCreate" type="Transparent" press=".onMainTableCreate"/>                            
+                            <Button text="{I18N>/NEW}" id="buttonMainTableCreate" type="Transparent" press=".onMainTableCreate"/>                            
                             <!-- <Button text="Copy" id="buttonMainTableCopy"  type="Transparent" enabled="false" press=".onMainTableCopy"/> -->
-                            <Button text="Delete" id="buttonMainTableDelete" type="Transparent" enabled="false" press=".onMainTableDelete"/>
+                            <Button text="{I18N>/ROW_DELETE}" id="buttonMainTableDelete" type="Transparent" enabled="false" press=".onMainTableDelete"/>
                             <OverflowToolbarButton
                                 icon="sap-icon://sort"
                                 tooltip="Sort"
@@ -173,7 +173,7 @@
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "category_name", "leadingProperty": "category_name", "sortProperty": "category_name", "filterProperty": "category_name", "columnIndex": 3}'/>
                                         </customData>
-                                             <Text text="Category명"></Text>
+                                             <Text text="{I18N>/CATEGORY}"></Text>
                                         </Column>
 
                                         <Column minScreenWidth ="" demandPopin="true">
@@ -181,18 +181,23 @@
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "use_flag", "leadingProperty": "use_flag", "sortProperty": "use_flag", "filterProperty": "use_flag", "columnIndex": 4}'/>
                                         </customData>
-                                             <Text text="사용여부"></Text>                                                                             
+                                             <Text text="{I18N>/USE_FLAG}"></Text>                                                                             
                                         </Column>
 
-                                        <Column visible="false" minScreenWidth ="" demandPopin="true">
+                                        <Column visible="false" minScreenWidth ="" demandPopin="false">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "category_code", "leadingProperty": "category_code", "sortProperty": "category_code", "filterProperty": "category_code", "columnIndex": 5}'/>
                                         </customData>
-                                             <Text text="사용여부"></Text>                                                                             
+                                             <Text text="CATEGORY CODE"></Text>                                                                             
                                         </Column>
-                                        
-
+                                           <Column visible="false" minScreenWidth ="" demandPopin="false">
+                                          <customData>
+                                        <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "system_update_dtm", "leadingProperty": "system_update_dtm", "sortProperty": "system_update_dtm", "filterProperty": "system_update_dtm", "columnIndex": 6}'/>
+                                        </customData>
+                                             <Text text="system_update_dtm"></Text>                                                                             
+                                        </Column>
                                     </columns>
                                     <items>
                                         <ColumnListItem type="Navigation" hAlign="Middle" press=".onMainTableItemPress">
@@ -201,6 +206,7 @@
                                              <Text textAlign="Center" text="{category_name}"></Text>
                                              <Text textAlign="Center" text="{= ${use_flag} ? 'Yes':'No'}"></Text>  
                                              <Text textAlign="Center" text="{category_code}"></Text>
+                                             <Text textAlign="Center" text="{system_update_dtm}"></Text>
                                         </ColumnListItem>
                                     </items> 
                                 </Table>

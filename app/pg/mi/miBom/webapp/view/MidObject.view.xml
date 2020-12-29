@@ -101,7 +101,7 @@
                                                     class="sapUiSmallMarginBottom"                                                    
                                                     showValueHelp="true" 
                                                     enabled = "true"
-                                                    placeholder="자재를 선택해주세요"
+                                                    placeholder="{I18N>/OPTION}"
                                                     valueHelpRequest=".handleValueHelpMaterial"
                                                     value="{
                                                             path : '{_oUiData>/string}',
@@ -150,7 +150,7 @@
                                                         />       
                                             </layout:VerticalLayout>  
                                             <layout:VerticalLayout class="sapUiTinyMarginBottom sapUiLargeMarginBegin sapUiLargeMarginEnd">
-                                                <Label  text="가공비:" 
+                                                <Label  text="{I18N>/PROCESSING_COST}:" 
                                                 required="{oUi>/createMode}" 
                                                 class="sapUiTinyMarginBottom"/>
                                                 <Label  text="{oUiData>/processing_cost}" design="Bold"
@@ -202,7 +202,7 @@
                                                     }"
                                                     width="120px"
                                                     selectedKey="{oUiData>/pcst_currency_unit}"                                       
-                                                    placeholder="선택"
+                                                    placeholder="{I18N>/OPTION}"
                                                     visible="{= !${oUi>/readMode}}" 
                                                 >
                                                 <core:Item key="{currency_code}" text="{currency_code} : {currency_code_name}" />
@@ -230,12 +230,12 @@
                                                     <content>
                                                         <ToolbarSpacer />
                                                             <Button id="buttonMidTableCreate" 
-                                                                    text="Add" 
+                                                                    text="{I18N>/ROW_ADD}" 
                                                                     type="Transparent" 
                                                                     visible="{=!${oUi>/readMode}}" 
                                                                     press=".onMaterialDetail(false)"/>
                                                             <Button id="buttonMidTableDelete" 
-                                                                    text="Delete" 
+                                                                    text="{I18N>/ROW_DELETE}" 
                                                                     type="Transparent" 
                                                                     visible="{=!${oUi>/readMode}}" 
                                                                     press=".onMidListItemDelete"/>
@@ -248,7 +248,7 @@
                                                     visible="false" 
                                                 >
                                                     <header>
-                                                        <Label text="상태"/>
+                                                        <Label text="{I18N>/STATUS}"/>
                                                     </header>
                                                 </Column>    
                                                 <Column hAlign="Center" 
@@ -286,7 +286,7 @@
                                                 </Column>
                                                 <Column hAlign="Center">
                                                     <header>
-                                                        <Label text="Use Flag"/>
+                                                        <Label text="{I18N>/USE_FLAG}"/>
                                                     </header>
                                                 </Column>
                                                 <Column hAlign="Center">
@@ -306,7 +306,7 @@
                                                 </Column>
                                                 <Column hAlign="Center">
                                                     <header>
-                                                        <Label text="인도조건"/>
+                                                        <Label text="{I18N>/TERMS_OF_DELIVERY}"/>
                                                     </header>
                                                 </Column>
                                             </columns>
@@ -352,7 +352,7 @@
                                                              />                                      
                                                         </VBox>
                                                         <VBox  alignItems="Center">  
-                                                            <ComboBox   placeholder="선택"
+                                                            <ComboBox   placeholder="{I18N>/OPTION}"
                                                                         visible="{=!${oUi>/readMode}}" 
                                                                         required="{=!${oUi>/readMode}}"
                                                                         items ="{/UseYNView}"        
@@ -383,23 +383,23 @@
                 <OverflowToolbar id="overflowToolbar">
                     <ToolbarSpacer/>
                         <HBox visible="{oUi>/readMode}">
-                            <Button type="Transparent" text="Cancel" enabled="false" />                        
-                            <Button type="Transparent" text="Edit" enabled="true" press=".onEdit"/>
-                            <Button type="Transparent" text="Delete" enabled="false" />
-                            <Button type="Emphasized" text="Save"  enabled="false"  />
+                            <Button type="Transparent" text="{I18N>/CANCEL}" enabled="false" />                        
+                            <Button type="Transparent" text="{I18N>/UPDATE}" enabled="true" press=".onEdit"/>
+                            <Button type="Transparent" text="{I18N>/DELETE}" enabled="false" />
+                            <Button type="Emphasized" text="{I18N>/SAVE}"  enabled="false"  />
                         </HBox>
                         <HBox visible="{oUi>/editMode}">
                             <!-- <Button type="Transparent" text="Show" enabled="true" press=".onRead"/> -->
-                            <Button type="Transparent" text="Cancel" enabled="true" press=".onCancel"/>
-                            <Button type="Transparent" text="Edit" enabled="false"/>
-                            <Button type="Transparent" text="Delete" enabled="true" press=".onDeleteAction"/>                    
-                            <Button type="Emphasized" text="Save"  enabled="true" press=".onSaveAction"/>
+                            <Button type="Transparent" text="{I18N>/CANCEL}" enabled="true" press=".onCancel"/>
+                            <Button type="Transparent" text="{I18N>/UPDATE}" enabled="false"/>
+                            <Button type="Transparent" text="{I18N>/DELETE}" enabled="true" press=".onDeleteAction"/>                    
+                            <Button type="Emphasized" text="{I18N>/SAVE}"  enabled="true" press=".onSaveAction"/>
                         </HBox>
                         <HBox visible="{oUi>/createMode}">
-                            <Button type="Transparent" text="Cancel" enabled="true" press=".onCancel"/>                        
-                            <Button type="Transparent" text="Edit" enabled="false"/>
-                            <Button type="Transparent" text="Delete" enabled="false"/>
-                            <Button type="Emphasized" text="Save" press=".onSaveAction"/>
+                            <Button type="Transparent" text="{I18N>/CANCEL}" enabled="true" press=".onCancel"/>                        
+                            <Button type="Transparent" text="{I18N>/UPDATE}" enabled="false"/>
+                            <Button type="Transparent" text="{I18N>/DELETE}" enabled="false"/>
+                            <Button type="Emphasized" text="{I18N>/SAVE}" press=".onSaveAction"/>
                         </HBox>
                 </OverflowToolbar>
             </footer>

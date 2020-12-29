@@ -77,6 +77,11 @@ sap.ui.define([
             oContModel.setProperty("/detail/readMode", bRead);
             oContModel.setProperty("/detail/createMode", bCreate);
             oContModel.setProperty("/detail/editMode", bEdit);
+
+            console.log('bRead',bRead)
+            console.log('bCreate',bCreate)
+            console.log('bEdit',bEdit)
+            console.log('oContModel',oContModel.getData())
         },
 
         onEditPress : function(){
@@ -128,7 +133,8 @@ sap.ui.define([
             oViewModel.setProperty("/detailDetailClone", $.extend(true, {}, oTargetData));
 
             var oNavParam = {
-                layout: oNextUIState.layout,
+                // layout: oNextUIState.layout,
+                layout: LayoutType.TwoColumnsMidExpanded,
                 tenantId : oTargetData.tenant_id,
                 companyCode : oTargetData.company_code,
                 groupCode : oTargetData.group_code,
@@ -139,15 +145,17 @@ sap.ui.define([
         
 		handleClose: function () {
             var sLayout = LayoutType.OneColumn;
-            var oFclModel = this.getModel("fcl");
-            oFclModel.setProperty("/layout", sLayout);
+            // var oFclModel = this.getModel("fcl");
+            // oFclModel.setProperty("/layout", sLayout);
+            this.getRouter().navTo("master", {layout: sLayout});
         },
         
         onAddDetailDetailPress : function(){
             this._fnShowFooter(false);
-            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(2);
+            // var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(2);
+            var oNextUIState = LayoutType.TwoColumnsMidExpanded;
             
-            this.getRouter().navTo("detailDetail", {layout: oNextUIState.layout});
+            this.getRouter().navTo("detailDetail", {layout: oNextUIState});
         },
 
         _fnMasterSearch : function(){
@@ -284,6 +292,10 @@ sap.ui.define([
                 this._fnSetReadMode();
                 this._fnReadDetails(sTenantId, sGroupCode);
             }
+
+            var sThisViewId = this.getView().getId();
+            var oFcl = this.getOwnerComponent().getRootControl().byId("fcl");
+            oFcl.to(sThisViewId);
 
             //ScrollTop
             var oObjectPageLayout = this.getView().byId("objectPageLayout");

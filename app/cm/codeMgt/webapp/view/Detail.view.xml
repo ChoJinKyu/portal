@@ -112,7 +112,7 @@
                                         </m:Input>
                                         <m:layoutData>
                                             <layout:GridData
-                                                span="XL4 L6 M12 S12" />
+                                                span="XL2 L3 M6 S12" />
                                         </m:layoutData>
                                     </m:VBox>
                                     <m:VBox>
@@ -260,7 +260,11 @@
 				</subSections>
 			</ObjectPageSection>
 
-            <ObjectPageSection titleUppercase="false" id="managed_values_section" title="Managed Values">
+            <ObjectPageSection 
+                visible="{= !${contModel>/detail/createMode}}"
+                titleUppercase="false" 
+                id="managed_values_section" 
+                title="Managed Values">
 				<subSections>
 					<ObjectPageSubSection>
 						<blocks>

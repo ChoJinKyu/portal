@@ -26,22 +26,22 @@ service BasePriceArlService {
     entity Hr_Employee           as projection on employee;
 
     @readonly
-    // entity Material_Mst           as projection on masterial_mst;
-    entity Material_Mst          as
-        select from masterial_mst m
-        left outer join masterial_org o
-            on  m.tenant_id     = o.tenant_id
-            and m.material_code = o.material_code
-        {
-            m.material_code,
-            m.material_type_code,
-            m.material_desc,
-            m.material_spec,
-            m.base_uom_code,
-            m.purchasing_uom_code,
-            m.commodity_code,
-            o.material_status_code
-        };
+    entity Material_Mst           as projection on masterial_mst;
+    // entity Material_Mst          as
+    //     select from masterial_mst m
+    //     left outer join masterial_org o
+    //         on  m.tenant_id     = o.tenant_id
+    //         and m.material_code = o.material_code
+    //     {
+    //         m.material_code,
+    //         m.material_type_code,
+    //         m.material_desc,
+    //         m.material_spec,
+    //         m.base_uom_code,
+    //         m.purchasing_uom_code,
+    //         m.commodity_code,
+    //         o.material_status_code
+    //     };
 
     @readonly
     entity Supplier_Mst          as projection on supplier;

@@ -58,7 +58,7 @@
                         text="{appMaster>/approval_number}"/>
                     <ObjectStatus
                         title="Requester"
-                        text="{appMaster>/requestor_empno}"/>
+                        text="[{appMaster>/requestor_empno}]{appMaster>/user_local_name}"/>
                     <ObjectStatus
                         title="Request Date"
                         text="{appMaster>/request_date}"/>
@@ -68,7 +68,7 @@
 					<Label text="Status :"/>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
-                        text="{= ${appMaster>/approval_number} !== null ? 'Update' : 'New' }"
+                        text="{= ${appMaster>/approval_number} === undefined ?'New':''}{appMaster>/approve_status_code_nm}"
                         state="Error" />
 				</layout:VerticalLayout>
 
@@ -177,9 +177,17 @@
 					<Label text="Import Company"/>
 					<ComboBox width="100%" 
                               id="importCompany" 
+                              selectionChange=".onBCompanyChange"
                               selectedKey="{mdItemMaster>/ItemBudgetExecution/0/import_company_code}" 
-                              items="{}">
-						<core:Item key="{util>code}" text="{util>code_description}"/>
+                              enabled="{=${mdItemMaster>/ItemBudgetExecution/0/investment_ecst_type_code}!=='S'?false:true}"
+                              items="{
+                                   path: 'org>/Company',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                        ],
+                                        sorter: { path: 'company_code'}
+                              }">
+						<core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
 					</ComboBox>
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
@@ -202,9 +210,12 @@
 					<Label text="Import Plant"/>
 					<ComboBox width="100%" 
                               id="importPlant" 
-                              selectedKey="mdItemMaster>/ItemBudgetExecution/0/import_company_org_code}" 
-                              items="{}">
-						<core:Item key="{util>code}" text="{util>code_description}"/>
+                              selectedKey="{mdItemMaster>/ItemBudgetExecution/0/import_company_org_code}" 
+                              enabled="{=${mdItemMaster>/ItemBudgetExecution/0/investment_ecst_type_code}!=='S'?false:true}"
+                              items="{
+                                  path: 'importPlant>/Pur_Operation_Org'
+                              }">
+						<core:Item key="{importPlant>org_code}" text="[{importPlant>org_code}]{importPlant>org_name}" />
 					</ComboBox>
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>

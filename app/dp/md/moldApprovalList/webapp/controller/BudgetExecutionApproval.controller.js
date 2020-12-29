@@ -61,6 +61,7 @@ sap.ui.define([
             this.getRouter().getRoute("budgetExecutionApproval").attachPatternMatched(this._onObjectMatched, this);//change
             
             this.getView().setModel(new ManagedListModel(), "mdItemMaster"); 
+            this.getView().setModel(new ManagedListModel(), "importPlant"); 
         },
    
         /* =========================================================== */
@@ -74,7 +75,7 @@ sap.ui.define([
   
             console.log(" this.approval_number "  ,  this.approval_number);
             var schFilter = [];
-   
+            var that = this;
             if (this.approval_number == "New") {
 
             } else {
@@ -83,7 +84,8 @@ sap.ui.define([
                 ];
 
                 this._bindViewBudget("/ItemBudgetExecution", "mdItemMaster", schFilter, function (oData) {
-                    console.log("ItemBudgetExecution >>>>>>", oData);
+                    console.log("ItemBudgetExecution >>>>>>", oData); 
+                    that._bindComboPlant(oData.results[0].import_company_code);
                 });
             }  
         },
@@ -100,6 +102,39 @@ sap.ui.define([
                     }
                 });
             },
+
+        /**
+         * Import Company 파라미터 받고 조회 
+         * @param {*} company_code 
+         */
+        onBCompanyChange : function (oEvent){
+            // console.log("oEvent >>> " , oEvent);
+            // console.log("1 >>> " ,this.getView().byId('importCompany').getSelectedKey());
+            // console.log("2 >>> " ,this.getView().byId('importCompany').mProperties.selectedKey);
+            // console.log("3 >>> " ,this.getModel("mdItemMaster").getData().ItemBudgetExecution[0].import_company_code);
+
+            var company_code = this.getModel("mdItemMaster").getData().ItemBudgetExecution[0].import_company_code;
+            this.getModel("mdItemMaster").getData().ItemBudgetExecution[0].import_company_org_code = "";
+            this._bindComboPlant(company_code);
+        },
+        _bindComboPlant : function (company_code) {
+            var aFilter = [new Filter("org_type_code", FilterOperator.EQ, 'AU')
+                        , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
+                        , new Filter("company_code", FilterOperator.EQ, company_code)
+                ];
+
+              var oView = this.getView(),
+                    oModel = this.getModel("importPlant");
+                oView.setBusy(true);
+                oModel.setTransactionModel(this.getModel("purOrg"));
+                oModel.read("/Pur_Operation_Org", {
+                    filters: aFilter,
+                    success: function (oData) {
+                        oView.setBusy(false);
+                    }
+                });
+        } ,
+
        /**
          * @description moldItemSelect 공통팝업   
          * @param vThis : view page의 this 
@@ -208,19 +243,19 @@ sap.ui.define([
             this.getModel("appMaster").setProperty("/approve_status_code", "DR");
 
             this.approval_type_code = "B";
+
             var bModel = this.getModel("mdItemMaster");
             this.approvalDetails_data = [] ;
             this.moldMaster_data = [] ;
             var that = this;
-           // console.log("bModel.getData().length " , bModel.getData().ItemBudgetExecution.length);
+            console.log("bModel.getData().length " , bModel);
             if(bModel.getData().ItemBudgetExecution != undefined && bModel.getData().ItemBudgetExecution.length > 0){
                 var account_code = bModel.getData().ItemBudgetExecution[0].account_code;
                 var investment_ecst_type_code =  bModel.getData().ItemBudgetExecution[0].investment_ecst_type_code;
                 var accounting_department_code =  bModel.getData().ItemBudgetExecution[0].accounting_department_code;
-                var import_company_code =  bModel.getData().ItemBudgetExecution[0].import_company_code;
                 var project_code =  bModel.getData().ItemBudgetExecution[0].project_code;
-                var import_company_org_code =  bModel.getData().ItemBudgetExecution[0].import_company_org_code;
-               // var provisional_budget_amount =  bModel.getData().ItemBudgetExecution[0].provisional_budget_amount;
+                var import_company_code = investment_ecst_type_code != "S" ? "" : bModel.getData().ItemBudgetExecution[0].import_company_code;
+                var import_company_org_code = investment_ecst_type_code != "S" ? "" : bModel.getData().ItemBudgetExecution[0].import_company_org_code;
 
                 bModel.getData().ItemBudgetExecution.forEach(function(item){
                     that.approvalDetails_data.push({
