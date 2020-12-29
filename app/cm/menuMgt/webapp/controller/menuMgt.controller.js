@@ -18,6 +18,12 @@ sap.ui.define([
         return Controller.extend("cm.menuMgt.controller.menuMgt", {
             onInit: function () {
             },
+            onAfterRendering: function() {
+                this.onSearch();
+            },
+            onSelectionChange: function(event) {
+                this.onSearch();
+            },
             onAdd: function () {
                 var [flag] = arguments;
                 var oTable = this.getView().byId("menuTreeTable");
@@ -36,7 +42,8 @@ sap.ui.define([
                             flag == 'S'
                                 ? row.parent_menu_code
                                 : row.menu_code
-                        ) || ""
+                        ) || "",
+                        chainCode: this.byId("searchChainCombo").getSelectedKey()
                     }
                 });
             },
@@ -51,7 +58,8 @@ sap.ui.define([
                     "?query": {
                         menuCode: row.menu_code,
                         menuName: row.menu_name,
-                        parentMenuCode: row.parent_menu_code
+                        parentMenuCode: row.parent_menu_code,
+                        chainCode: this.byId("searchChainCombo").getSelectedKey()
                     }
                 });
             },
