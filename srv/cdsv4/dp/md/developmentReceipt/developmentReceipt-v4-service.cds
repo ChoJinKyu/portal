@@ -38,5 +38,7 @@ service DevelopmentReceiptV4Service {
     }
 
     action BindDevelopmentReceipt (moldDatas : array of SavedMolds) returns resultMsg;
+    
+    action CancelBindDevelopmentReceipt (moldDatas : array of SavedMolds) returns resultMsg;
 
 }
