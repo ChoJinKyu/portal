@@ -59,23 +59,23 @@ sap.ui.define([
 			var oMultilingual = new Multilingual();
 			this.setModel(oMultilingual.getModel(), "I18N");
 
-			// oMultilingual.attachEvent("ready", function(oEvent){
-			// 	var oi18nModel = oEvent.getParameter("model");
-			// 	this.addHistoryEntry({
-			// 		title: oi18nModel.getText("/MESSAGE_MANAGEMENT"),
-			// 		icon: "sap-icon://table-view",
-			// 		intent: "#Template-display"
-			// 	}, true);
+			oMultilingual.attachEvent("ready", function(oEvent){
+				var oi18nModel = oEvent.getParameter("model");
+				this.addHistoryEntry({
+					title: oi18nModel.getText("/MESSAGE_MANAGEMENT"),
+					icon: "sap-icon://table-view",
+					intent: "#Template-display"
+				}, true);
 
-			// 	// Smart Filter Button 명 처리 START
-			// 	var b = this.getView().byId("smartFilterBar").getContent()[0].getContent();
-			// 	$.each(b, function(index, item) {
-			// 		if (item.sId.search("btnGo") !== -1) {
-			// 			item.setText(this.getModel("I18N").getText("/EXECUTE"));
-			// 		}
-			// 	}.bind(this));
-			// 	// Smart Filter Button 명 처리 END
-			// }.bind(this));
+				// Smart Filter Button 명 처리 START
+				var b = this.getView().byId("smartFilterBar").getContent()[0].getContent();
+				$.each(b, function(index, item) {
+					if (item.sId.search("btnGo") !== -1) {
+						item.setText(this.getModel("I18N").getText("/EXECUTE"));
+					}
+				}.bind(this));
+				// Smart Filter Button 명 처리 END
+			}.bind(this));
 
 			var oUi,
 				oResourceBundle = this.getResourceBundle();
@@ -187,6 +187,9 @@ sap.ui.define([
 			console.group("onBeforeRebindTable");
 			
 			this._getSmartTableById().getTable().removeSelections(true);
+			//ui.table
+			//this._getSmartTableById().getTable().clearSelection();
+
 			var mBindingParams = oEvent.getParameter("bindingParams");
 			var oSmtFilter = this.getView().byId("smartFilterBar");             //smart filter
 			
@@ -217,7 +220,7 @@ sap.ui.define([
 				var oCodeFilter = new Filter("use_flag", FilterOperator.EQ, fOcode);
 				mBindingParams.filters.push(oCodeFilter);
 			}  
-			
+			this._getSmartTableById().getTable().removeSelections(true);
 			//this.setInitialSortOrder();
 			console.groupEnd();              
 		},
@@ -602,6 +605,11 @@ sap.ui.define([
 		 */
 		onMainTableItemPress: function(oEvent) {
 			console.group("onMainTableItemPress");
+
+			this._getSmartTableById().getTable().removeSelections(true);
+   
+			
+			
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
 				sPath = oEvent.getSource().getBindingContext().getPath(),
 				oRecord = this.getModel().getProperty(sPath);
@@ -627,10 +635,13 @@ sap.ui.define([
             }
 
 			var oItem = oEvent.getSource();
-			oItem.setNavigated(true);
-			var oParent = oItem.getParent();
-			// store index of the item clicked, which can be used later in the columnResize event
-			this.iIndex = oParent.indexOfItem(oItem);
+			//oItem.setNavigated(true);
+
+			this._getSmartTableById().getTable().setSelectedItem(oItem);
+
+			// var oParent = oItem.getParent();
+			// // store index of the item clicked, which can be used later in the columnResize event
+			// this.iIndex = oParent.indexOfItem(oItem);
 			console.groupEnd();
 		},
 
