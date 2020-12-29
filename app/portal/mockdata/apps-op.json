@@ -7,7 +7,7 @@
                 {
                     "name": "PR",
                     "url": "../op/pu/prMgt/webapp",
-                    "component": "op.pu.prMgt"
+                    "component": "op.pu.PrMgt"
                 },
                 {
                     "name": "App #2",
@@ -27,8 +27,8 @@
                 },
                 {
                     "name": "App #4",
-                    "url": "../cm/controlOptionMgr/webapp",
-                    "component": "cm.controlOptionMgr"
+                    "url": "../op/pu/prMgt/webapp",
+                    "component": "op.pu.PrMgt"
                 }
             ]
         }
