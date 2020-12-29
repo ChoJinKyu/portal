@@ -70,7 +70,7 @@ public class DevelopmentReceiptV4 implements EventHandler {
         msg.setResultCode(0);
 
         String v_sql_createSetId = "SELECT DP_MD_MST_SET_ID_SEQ.NEXTVAL FROM DUMMY";
-        String v_sql_callScheduleProc = "CALL DP_MD_SCHEDULE_SAVE_PROC(MOLD_ID => ?)";
+        String v_sql_callProc = "CALL DP_MD_SCHEDULE_SAVE_PROC(MOLD_ID => ?)";
         
         try {
             Connection conn = jdbc.getDataSource().getConnection();
@@ -109,7 +109,7 @@ public class DevelopmentReceiptV4 implements EventHandler {
                     Result resultSpec = developmentReceiptService.run(specUpdate);
                     
                     // Procedure Call
-                    CallableStatement v_statement_proc = conn.prepareCall(v_sql_callScheduleProc);
+                    CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc);
                     v_statement_proc.setObject(1, row.get("mold_id"));
                     boolean v_isMore = v_statement_proc.execute();
                 }
@@ -134,18 +134,19 @@ public class DevelopmentReceiptV4 implements EventHandler {
 
         String v_sql_createTable = "CREATE local TEMPORARY column TABLE #LOCAL_TEMP (SET_ID NVARCHAR(100))";
         String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP VALUES (?)";
-        String v_sql_callSetIdProc = "CALL DP_MD_MST_SET_ID_UPDATE_PROC(I_TABLE => #LOCAL_TEMP)";
+        String v_sql_callProc = "CALL DP_MD_MST_SET_ID_UPDATE_PROC(I_TABLE => #LOCAL_TEMP)";
         String v_sql_truncateTableD = "TRUNCATE TABLE #LOCAL_TEMP";
-        
+
         try {
             Connection conn = jdbc.getDataSource().getConnection();
+
             // Local Temp Table 생성
             PreparedStatement v_statement_table = conn.prepareStatement(v_sql_createTable);
             v_statement_table.execute();
 
             // Local Temp Table에 insert
             PreparedStatement v_statement_insert = conn.prepareStatement(v_sql_insertTable);
-
+            
             for (SavedMolds row :  v_inMultiData) {
                 if((Boolean) row.get("chk")){
                     MoldMasters master = MoldMasters.create();
@@ -184,11 +185,22 @@ public class DevelopmentReceiptV4 implements EventHandler {
             v_statement_insert.executeBatch();
 
             // Procedure Call
-            CallableStatement v_statement_proc = conn.prepareCall(v_sql_callSetIdProc);
+            CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc);
             //boolean v_isMore = v_statement_proc.execute();
-            int iCnt = v_statement_proc.executeUpdate();
-            // v_isMore = v_statement_proc.executeQuery();
-System.out.println("========================================"+iCnt);
+            //int iCnt = v_statement_proc.executeUpdate();
+            ResultSet v_rs = v_statement_proc.executeQuery();
+
+            // Procedure Out put 담기
+            while (v_rs.next()){
+                SavedMolds v_row = SavedMolds.create();
+                //v_row.setSetId(v_rs.getString("set_id"));
+                //v_result.add(v_row);
+            }
+
+            // Local Temp Table trunc
+            PreparedStatement v_statement_trunc_table = conn.prepareStatement(v_sql_truncateTableD);
+            v_statement_trunc_table.execute();
+
             context.setResult(msg);
             context.setCompleted();
 
