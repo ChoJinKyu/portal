@@ -74,7 +74,8 @@ sap.ui.define([
                 this.getView().setBusy(true);
                 this.treeListModel
                     .read("/Menu_haa", {
-                        filters: predicates
+                        filters: predicates,
+                        sorters: [new Sorter("hierarchy_rank")]
                     })
                     // 성공시
                     .then((function (jNodes) {

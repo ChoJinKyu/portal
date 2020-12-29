@@ -29,7 +29,7 @@ sap.ui.define([
             //     });
             },
             onSelect: function (event) {
-                // event 객체를 통해 레코드(ROW)를 가져온다.        
+                // event 객체를 통해 레코드(ROW)를 가져온다.
                 var row = this.getView().getModel("list").getProperty(event.getSource().getBindingContext("list").getPath());
                 // 라우팅 한다.
                 this.getRouter().navTo("midPage", {

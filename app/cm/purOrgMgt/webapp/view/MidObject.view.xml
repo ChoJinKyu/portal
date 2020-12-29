@@ -35,12 +35,12 @@
 					<!-- <Title text="Menu Details" /> -->
 				</uxap:snappedTitleOnMobile>
 				<uxap:actions>
-					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEdit" enabled="{= ${midObjectView>/mode} === 'R'}"/>
-					<Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDelete" enabled="{= ${midObjectView>/mode} !== 'C'}"/>
+					<!-- <Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEdit" enabled="{= ${midObjectView>/mode} === 'R'}"/>
+					<Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDelete" enabled="{= ${midObjectView>/mode} !== 'C'}"/> -->
 				</uxap:actions>
                 <uxap:navigationActions>
-					<OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press=".onFull" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
-					<OverflowToolbarButton id="pageExitFullScreenButton" type="Transparent" icon="sap-icon://exit-full-screen" press=".onExit" tooltip="Exit Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
+                    <OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press=".onFull" tooltip="Enter Full Screen Mode" visible="{= ${midObjectView>/screen} !== 'Full' }"/>
+					<OverflowToolbarButton id="pageExitFullScreenButton" type="Transparent" icon="sap-icon://exit-full-screen" press=".onExit" tooltip="Exit Full Screen Mode" visible="{= ${midObjectView>/screen} === 'Full' }"/>
 					<OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onNavBack" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
                 </uxap:navigationActions>
             </uxap:ObjectPageDynamicHeaderTitle>
@@ -367,17 +367,19 @@
 		<!-- 하단 버튼 처리 툴바 -->
 		<uxap:footer>
 			<OverflowToolbar>
-        <Button
-          icon="sap-icon://alert"
-          type="Emphasized"
-          text="{= ${message>/}.length }"
-          visible="{= ${message>/}.length > 0 }"
-          ariaHasPopup="Dialog"
-          press=".onMessagePopoverPress"
-        />
+                <Button
+                    icon="sap-icon://alert"
+                    type="Emphasized"
+                    text="{= ${message>/}.length }"
+                    visible="{= ${message>/}.length > 0 }"
+                    ariaHasPopup="Dialog"
+                    press=".onMessagePopoverPress"
+                />
 				<ToolbarSpacer />
-				<Button type="Emphasized" text="Save" press=".onSave" visible="{= ${midObjectView>/mode} !== 'R'}"/>
-				<Button type="Transparent" text="Cancel" press=".onCancel"/>
+                <Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEdit" enabled="{= ${midObjectView>/mode} === 'R'}"/>
+                <Button type="Transparent" text="Cancel" press=".onCancel"/>
+				<Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDelete" enabled="{= ${midObjectView>/mode} !== 'C'}"/>
+				<Button type="Emphasized" text="Save" press=".onSave" enabled="{= ${midObjectView>/mode} !== 'R'}"/>
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

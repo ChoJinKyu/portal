@@ -106,7 +106,7 @@ sap.ui.define([
         .attachPatternMatched(
           function (oEvent) {
             var { menuCode, menuName, parentMenuCode } = oEvent.getParameter("arguments")["?query"];
-            console.log(">>>>>> params", menuCode, menuName, parentMenuCode);
+            //console.log(">>>>>> params", menuCode, menuName, parentMenuCode);
             this.getModel("midObjectView").setProperty("/mode", (!menuCode ? "C" : "R"));
             this.getModel("midObjectView").setProperty("/menuCode", menuCode);
             this.getModel("midObjectView").setProperty("/menuName", menuName);
@@ -340,10 +340,10 @@ sap.ui.define([
         MessageBox.alert("Chain을 입력하세요");
         return;
       }
-    //   if (!master.getData()["menu_code"]) {
-    //     MessageBox.alert("테넌트를 입력하세요");
-    //     return;
-    //   }
+      if (!master.getData()["menu_code"]) {
+        MessageBox.alert("메뉴코드를 입력하세요");
+        return;
+      }
     //   if (master.getData()["_state_"] != "C" && detail.getChanges() <= 0) {
     //     MessageBox.alert("변경사항이 없습니다.");
     //     return;
