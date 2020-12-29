@@ -1,0 +1,125 @@
+<!-- 
+   description : 집행품의 view 화면  
+-->
+<core:FragmentDefinition
+	xmlns="sap.m" 
+                         xmlns:uxap="sap.uxap" 
+                         xmlns:form="sap.ui.layout.form" 
+                         xmlns:core="sap.ui.core" 
+                         xmlns:layout="sap.ui.layout" 
+                         xmlns:tnt="sap.tnt" 
+                         xmlns:co="sap.suite.ui.commons" 
+                         xmlns:si="sap.suite.ui.commons.statusindicator" 
+                         xmlns:u="sap.ui.unified" 
+                         xmlns:table="sap.ui.table" >
+
+      		<!-- budgetExecutionTable Table -->
+				    <table:Table 
+                             selectionMode="{=${contModel>/editMode}?'MultiToggle':'None'}" 
+                             fixedColumnCount="6" 
+                             visibleRowCountMode="Auto" 
+                             rows="{path:'mdItemMaster>/ItemBudgetExecution'}">
+					<table:extension>
+						<OverflowToolbar>
+							<ToolbarSpacer/>
+							<!-- Add the Personalization button -->
+							    <Button visible="{contModel>/editMode}" type="Transparent" text="{I18N>/ROW_ADD}" press=".onBudgetExecutionAddPress">
+								<!-- Add -->
+								<customData>
+									<core:CustomData key="multi" value="true"/>
+								</customData>
+							</Button>
+							<Button visible="{contModel>/editMode}" type="Transparent" text="{I18N>/ROW_DELETE}" press=".onBudgetExecutionDelRow"/>
+						</OverflowToolbar>
+					</table:extension>
+					<table:columns>
+						<table:Column  visible="false">
+							<Label text="mold_id"/>
+							<table:template>
+								<Text text="{mdItemMaster>mold_id}"/>
+							</table:template>
+						</table:Column>
+						<table:Column visible="false">
+							<Label text="approval_number"/>
+							<table:template>
+								<Text text="{mdItemMaster>approval_number}"/>
+							</table:template>
+						</table:Column>
+						<table:Column width="20em" hAlign="Center">
+							<Label text="{I18N>/MODEL}"/>
+							<table:template>
+								<Text text="{mdItemMaster>model}"/>
+							</table:template>
+						</table:Column>
+						<table:Column  width="10em" hAlign="Center">
+							<Label text="Mold No"/>
+							<table:template>
+								<Text  text="{mdItemMaster>mold_number}"/>
+							</table:template>
+						</table:Column>
+						<table:Column  width="5em" hAlign="Center">
+							<Label text="Seq"/>
+							<table:template>
+								<Text  text="{mdItemMaster>mold_sequence}"/>
+							</table:template>
+						</table:Column>
+						<table:Column  width="15em" hAlign="Center">
+							<Label text="{I18N>/DESCRIPTION}"/>
+							<table:template>
+								<Text  text="{mdItemMaster>spec_name}"/>
+							</table:template>
+						</table:Column>
+						<table:Column  width="10em" hAlign="Center">
+							<Label text="Production Type"/>
+							<table:template>
+                                <Text visible="{contModel>/viewMode}" text="{mdItemMaster>mold_production_type_code_nm}"/>
+							</table:template>
+						</table:Column>
+						<table:Column  width="10em" hAlign="Center">
+							<Label text="Item Type"/>
+							<table:template>
+                                 <Text visible="{contModel>/viewMode}" text="{mdItemMaster>mold_item_type_code_nm}"/>
+							</table:template>
+						</table:Column>
+						<table:Column width="10em" hAlign="Center">
+							<Label text="Book Currency"/>
+							<table:template>
+								<Text text="{mdItemMaster>book_currency_code}"/>
+							</table:template>
+						</table:Column>
+						<table:Column  width="10em" hAlign="Center">
+							<Label text="Budget Amount"/>
+							<table:template>
+                                <Text visible="{contModel>/viewMode}" text="{mdItemMaster>provisional_budget_amount}"/>
+							</table:template>
+						</table:Column>
+						<table:Column  width="10em" hAlign="Center">
+							<Label text="Asset Type"/>
+							<table:template>
+                                 <Text visible="{contModel>/viewMode}" text="{mdItemMaster>asset_type_code_nm}"/>
+							</table:template>
+						</table:Column>
+						<table:Column  width="15em" hAlign="Center">
+							<Label text="Family Part No"/>
+							<table:template>
+								<Text  text="{mdItemMaster>family_part_number_1}"/>
+							</table:template>
+						</table:Column>
+						<table:Column  width="10em" hAlign="Center">
+							<Label text="Expected Sales Date"/>
+							<table:template>
+								<!-- 임시 컬럼명 -->
+								<DatePicker value="{mdItemMaster>budget_exrate_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
+							</table:template>
+						</table:Column>
+						<table:Column  width="10em" hAlign="Center">
+							<Label text="Expected Disposal Date"/>
+							<table:template>
+								<!-- 임시 컬럼명 -->
+								<DatePicker value="{mdItemMaster>inspection_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
+							</table:template>
+						</table:Column>
+					</table:columns>
+				</table:Table>
+	
+</core:FragmentDefinition>
