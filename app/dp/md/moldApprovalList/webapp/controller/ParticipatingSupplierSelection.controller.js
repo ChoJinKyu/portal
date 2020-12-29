@@ -151,30 +151,30 @@ sap.ui.define([
                         MessageBox.error("Supplier를 하나이상 선택해주세요.");
                     }else{               
                         oSelected.forEach(function(idx){
-                            psModel.getData().ParticipatingSupplier[idx].supplier_code_1 = (supplierData[0] == undefined ?"":supplierData[0].key);
-                            psModel.getData().ParticipatingSupplier[idx].supplier_code_2 = (supplierData[1] == undefined ?"":supplierData[1].key);
-                            psModel.getData().ParticipatingSupplier[idx].supplier_code_3 = (supplierData[2] == undefined ?"":supplierData[2].key);
-                            psModel.getData().ParticipatingSupplier[idx].supplier_code_4 = (supplierData[3] == undefined ?"":supplierData[3].key);
-                            psModel.getData().ParticipatingSupplier[idx].supplier_code_5 = (supplierData[4] == undefined ?"":supplierData[4].key);
-                            psModel.getData().ParticipatingSupplier[idx].supplier_code_6 = (supplierData[5] == undefined ?"":supplierData[5].key);
-                            psModel.getData().ParticipatingSupplier[idx].supplier_code_7 = (supplierData[6] == undefined ?"":supplierData[6].key);
-                            psModel.getData().ParticipatingSupplier[idx].supplier_code_8 = (supplierData[7] == undefined ?"":supplierData[7].key);
-                            psModel.getData().ParticipatingSupplier[idx].supplier_code_9 = (supplierData[8] == undefined ?"":supplierData[8].key);
-                            psModel.getData().ParticipatingSupplier[idx].supplier_code_10 = (supplierData[9] == undefined ?"":supplierData[9].key);
-                            psModel.getData().ParticipatingSupplier[idx].supplier_code_11 = (supplierData[10] == undefined ?"":supplierData[10].key);
-                            psModel.getData().ParticipatingSupplier[idx].supplier_code_12 = (supplierData[11] == undefined ?"":supplierData[11].key);
-                            psModel.getData().ParticipatingSupplier[idx].sequence_1 = (supplierData[0] == undefined ?"":"1");
-                            psModel.getData().ParticipatingSupplier[idx].sequence_2 = (supplierData[1] == undefined ?"":"2");
-                            psModel.getData().ParticipatingSupplier[idx].sequence_3 = (supplierData[2] == undefined ?"":"3");
-                            psModel.getData().ParticipatingSupplier[idx].sequence_4 = (supplierData[3] == undefined ?"":"4");
-                            psModel.getData().ParticipatingSupplier[idx].sequence_5 = (supplierData[4] == undefined ?"":"5");
-                            psModel.getData().ParticipatingSupplier[idx].sequence_6 = (supplierData[5] == undefined ?"":"6");
-                            psModel.getData().ParticipatingSupplier[idx].sequence_7 = (supplierData[6] == undefined ?"":"7");
-                            psModel.getData().ParticipatingSupplier[idx].sequence_8 = (supplierData[7] == undefined ?"":"8");
-                            psModel.getData().ParticipatingSupplier[idx].sequence_9 = (supplierData[8] == undefined ?"":"9");
-                            psModel.getData().ParticipatingSupplier[idx].sequence_10 = (supplierData[9] == undefined ?"":"10");
-                            psModel.getData().ParticipatingSupplier[idx].sequence_11 = (supplierData[10] == undefined ?"":"11");
-                            psModel.getData().ParticipatingSupplier[idx].sequence_12 = (supplierData[11] == undefined ?"":"12");
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_1 = (supplierData[0] == undefined ?null:supplierData[0].key);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_2 = (supplierData[1] == undefined ?null:supplierData[1].key);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_3 = (supplierData[2] == undefined ?null:supplierData[2].key);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_4 = (supplierData[3] == undefined ?null:supplierData[3].key);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_5 = (supplierData[4] == undefined ?null:supplierData[4].key);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_6 = (supplierData[5] == undefined ?null:supplierData[5].key);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_7 = (supplierData[6] == undefined ?null:supplierData[6].key);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_8 = (supplierData[7] == undefined ?null:supplierData[7].key);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_9 = (supplierData[8] == undefined ?null:supplierData[8].key);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_10 = (supplierData[9] == undefined ?null:supplierData[9].key);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_11 = (supplierData[10] == undefined ?null:supplierData[10].key);
+                            psModel.getData().ParticipatingSupplier[idx].supplier_code_12 = (supplierData[11] == undefined ?null:supplierData[11].key);
+                            psModel.getData().ParticipatingSupplier[idx].sequence_1 = (supplierData[0] == undefined ?null:"1");
+                            psModel.getData().ParticipatingSupplier[idx].sequence_2 = (supplierData[1] == undefined ?null:"2");
+                            psModel.getData().ParticipatingSupplier[idx].sequence_3 = (supplierData[2] == undefined ?null:"3");
+                            psModel.getData().ParticipatingSupplier[idx].sequence_4 = (supplierData[3] == undefined ?null:"4");
+                            psModel.getData().ParticipatingSupplier[idx].sequence_5 = (supplierData[4] == undefined ?null:"5");
+                            psModel.getData().ParticipatingSupplier[idx].sequence_6 = (supplierData[5] == undefined ?null:"6");
+                            psModel.getData().ParticipatingSupplier[idx].sequence_7 = (supplierData[6] == undefined ?null:"7");
+                            psModel.getData().ParticipatingSupplier[idx].sequence_8 = (supplierData[7] == undefined ?null:"8");
+                            psModel.getData().ParticipatingSupplier[idx].sequence_9 = (supplierData[8] == undefined ?null:"9");
+                            psModel.getData().ParticipatingSupplier[idx].sequence_10 = (supplierData[9] == undefined ?null:"10");
+                            psModel.getData().ParticipatingSupplier[idx].sequence_11 = (supplierData[10] == undefined ?null:"11");
+                            psModel.getData().ParticipatingSupplier[idx].sequence_12 = (supplierData[11] == undefined ?null:"12");
                             psModel.refresh(true); 
                         });
                     }
@@ -296,16 +296,23 @@ sap.ui.define([
         },
 
         onPageDraftButtonPress : function () { 
+            /**
+             * 'DR'
+            'AR'
+            'IA'
+            'AP'
+            'RJ' */ 
+            this.getModel("appMaster").setProperty("/approve_status_code", "DR");
+
             this.approval_type_code = "E";
             var bModel = this.getModel("mdItemMaster");
             this.approvalDetails_data = [] ;
             this.moldMaster_data = [] ;
-            this.quotation_data = [] ;
-            this.quotation_data2 = [] ;
+            this.quotation_data = [];
+            var qtnArr = [];
             var that = this;
-            console.log("bModel " , bModel.getData());
-            console.log("bModel.getData().length " , bModel.getData().ParticipatingSupplier.length);
-            if(bModel.getData().ParticipatingSupplier.length > 0){
+           // console.log("bModel.getData().length " , bModel.getData().ItemBudgetExecution.length);
+            if(bModel.getData().ParticipatingSupplier != undefined && bModel.getData().ParticipatingSupplier.length > 0){
                 var account_code = bModel.getData().ParticipatingSupplier[0].account_code;
                 var investment_ecst_type_code =  bModel.getData().ParticipatingSupplier[0].investment_ecst_type_code;
                 var accounting_department_code =  bModel.getData().ParticipatingSupplier[0].accounting_department_code;
@@ -315,24 +322,109 @@ sap.ui.define([
                // var provisional_budget_amount =  bModel.getData().ParticipatingSupplier[0].provisional_budget_amount;
 
                 bModel.getData().ParticipatingSupplier.forEach(function(item){
-                    for(var i=0; i<12; i++){
-                        that.quotation_data.push({
-                            mold_id : item.mold_id
-                            ,approval_number : that.approval_number 
-                            ,supplier_code : item.supplier_code_
-                            ,sequence : item.sequence
-                        });
-                    }
-                    console.log(that.quotation_data)
+                    console.log(item);
+                    that.quotation_data.push({
+                        mold_id : item.mold_id
+                        ,approval_number : that.approval_number 
+                        ,supplier_code : item.supplier_code_1
+                        ,sequence : parseInt(item.sequence_1)
+                    })
+                    that.quotation_data.push({
+                        mold_id : item.mold_id
+                        ,approval_number : that.approval_number 
+                        ,supplier_code : item.supplier_code_2
+                        ,sequence : parseInt(item.sequence_2)
+                    })
+                    that.quotation_data.push({
+                        mold_id : item.mold_id
+                        ,approval_number : that.approval_number 
+                        ,supplier_code : item.supplier_code_3
+                        ,sequence : parseInt(item.sequence_3)
+                    })
+                    that.quotation_data.push({
+                        mold_id : item.mold_id
+                        ,approval_number : that.approval_number 
+                        ,supplier_code : item.supplier_code_4
+                        ,sequence : parseInt(item.sequence_4)
+                    })
+                    that.quotation_data.push({
+                        mold_id : item.mold_id
+                        ,approval_number : that.approval_number 
+                        ,supplier_code : item.supplier_code_5
+                        ,sequence : parseInt(item.sequence_5)
+                    })
+                    that.quotation_data.push({
+                        mold_id : item.mold_id
+                        ,approval_number : that.approval_number 
+                        ,supplier_code : item.supplier_code_6
+                        ,sequence : parseInt(item.sequence_6)
+                    })
+                    that.quotation_data.push({
+                        mold_id : item.mold_id
+                        ,approval_number : that.approval_number 
+                        ,supplier_code : item.supplier_code_7
+                        ,sequence : parseInt(item.sequence_7)
+                    })
+                    that.quotation_data.push({
+                        mold_id : item.mold_id
+                        ,approval_number : that.approval_number 
+                        ,supplier_code : item.supplier_code_8
+                        ,sequence : parseInt(item.sequence_8)
+                    })
+                    that.quotation_data.push({
+                        mold_id : item.mold_id
+                        ,approval_number : that.approval_number 
+                        ,supplier_code : item.supplier_code_9
+                        ,sequence : parseInt(item.sequence_9)
+                    })
+                    that.quotation_data.push({
+                        mold_id : item.mold_id
+                        ,approval_number : that.approval_number 
+                        ,supplier_code : item.supplier_code_10
+                        ,sequence : parseInt(item.sequence_10)
+                    })
+                    that.quotation_data.push({
+                        mold_id : item.mold_id
+                        ,approval_number : that.approval_number 
+                        ,supplier_code : item.supplier_code_11
+                        ,sequence : parseInt(item.sequence_11)
+                    })
+                    that.quotation_data.push({
+                        mold_id : item.mold_id
+                        ,approval_number : that.approval_number 
+                        ,supplier_code : item.supplier_code_12
+                        ,sequence : parseInt(item.sequence_12)
+                    })
+                    
                     that.approvalDetails_data.push({
                         tenant_id : that.tenant_id 
                         , approval_number : that.approval_number 
                         , mold_id : item.mold_id 
-                        , create_user_id : 'Y36793'
                         , _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
                     });
                     that.moldMaster_data.push({
+                         tenant_id : that.tenant_id 
+                        , mold_id : item.mold_id 
+                        , mold_item_type_code : item.mold_item_type_code
+                        , book_currency_code : item.book_currency_code
+                        , provisional_budget_amount : item.provisional_budget_amount
+                        , currency_code : item.currency_code
+                        , target_amount : item.target_amount
+                        , _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
+                    });
+                });
+            }
+
+            if(bModel._aRemovedRows.length > 0){
+                bModel._aRemovedRows.forEach(function(item){
+                    that.approvalDetails_data.push({
                         tenant_id : that.tenant_id 
+                        , approval_number : that.approval_number 
+                        , mold_id : item.mold_id 
+                        , _row_state_ : "D"
+                    });
+                    that.moldMaster_data.push({
+                         tenant_id : that.tenant_id 
                         , mold_id : item.mold_id 
                         , account_code : account_code 
                         , investment_ecst_type_code : investment_ecst_type_code 
@@ -344,12 +436,11 @@ sap.ui.define([
                         , mold_item_type_code :  item.mold_item_type_code 
                         , provisional_budget_amount : item.provisional_budget_amount 
                         , asset_type_code : item.asset_type_code 
-                        , _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
+                        , _row_state_ : "D"
                     });
-                   
                 });
-
             }
+
 
             this._commonDataSettingAndSubmit();
 

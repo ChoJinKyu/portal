@@ -105,8 +105,8 @@ sap.ui.define([
         .getRoute("midPage")
         .attachPatternMatched(
           function (oEvent) {
-            var { menuCode, menuName, parentMenuCode } = oEvent.getParameter("arguments")["?query"];
-            console.log(">>>>>> params", menuCode, menuName, parentMenuCode);
+            var { menuCode, menuName, parentMenuCode, chainCode } = oEvent.getParameter("arguments")["?query"];
+            //console.log(">>>>>> params", menuCode, menuName, parentMenuCode);
             this.getModel("midObjectView").setProperty("/mode", (!menuCode ? "C" : "R"));
             this.getModel("midObjectView").setProperty("/menuCode", menuCode);
             this.getModel("midObjectView").setProperty("/menuName", menuName);
@@ -119,7 +119,7 @@ sap.ui.define([
                 .setData($.extend({
                   "tenant_id": "L2100",
                   "menu_code": "",
-                  "chain_code": "CM",
+                  "chain_code": chainCode || "CM",
                   "menu_display_flag": true,
                   "use_flag": true,
                   "local_create_dtm": new Date(),
@@ -249,6 +249,7 @@ sap.ui.define([
               success: function (ok) {
                 oView.setBusy(false);
                 that.onNavBack.call(that);
+                that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                 MessageToast.show("Success to delete.");
               }
             });
@@ -340,10 +341,10 @@ sap.ui.define([
         MessageBox.alert("Chain을 입력하세요");
         return;
       }
-    //   if (!master.getData()["menu_code"]) {
-    //     MessageBox.alert("테넌트를 입력하세요");
-    //     return;
-    //   }
+      if (!master.getData()["menu_code"]) {
+        MessageBox.alert("메뉴코드를 입력하세요");
+        return;
+      }
     //   if (master.getData()["_state_"] != "C" && detail.getChanges() <= 0) {
     //     MessageBox.alert("변경사항이 없습니다.");
     //     return;

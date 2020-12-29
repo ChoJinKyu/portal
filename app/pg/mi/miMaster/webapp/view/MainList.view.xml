@@ -103,29 +103,29 @@
 
                 <!-- Smart Table -->
                 <smartTable:SmartTable
-                width="100%"
+                    width="100%"
                     height="100%"
-                    smartVariant="pageVariantId"
                     id="smartTable_MainTable_ResponsiveTable"
+                    smartVariant="pageVariantId"                    
                     entitySet="MIMatListView"
                     tableBindingPath="{MIMatListView}"
-                    initiallyVisibleFields="mi_material_code,mi_material_name,category_name,use_flag,category_code"
                     smartFilterId="smartFilterBar"
                     tableType="ResponsiveTable"
                     useExportToExcel="true"
                     beforeRebindTable=".onBeforeRebindTable"
                     beforeExport=".onBeforeExport"
-                    useVariantManagement="true"
-                    useTablePersonalisation="true"
+                    useVariantManagement="false"
+                    useTablePersonalisation="false"
                     showTablePersonalisation="false"
                     header="시황자재 Master List"
                     showRowCount="true"
-                    editTogglable="false"
-                    persistencyKey="SmartTablePKey"                    
+                    editable="true"                    
+                    persistencyKey="SmartTableAnalytical_Explored"
+                    enableAutoBinding="false"                     
                     class="sapUiResponsiveContentPadding"
                     demandPopin="true"
-                    customData:useSmartField="true"
-                    showFullScreenButton="false">
+                    initiallyVisibleFields="mi_material_code,mi_material_name,category_name,use_flag,category_code"
+                    >
                     <smartTable:customToolbar>
                         <OverflowToolbar design="Transparent">
                             <ToolbarSpacer/>

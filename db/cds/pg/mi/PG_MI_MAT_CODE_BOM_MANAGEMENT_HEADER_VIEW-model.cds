@@ -13,6 +13,7 @@ entity MI_Mat_Code_BOM_Management_Header_View {
         base_quantity         : Decimal(17, 3)@title : '기준수량';
         processing_cost       : Decimal(17, 3)@title : '가공비';
         pcst_currency_unit    : String(30)    @title : '가공비통화단위';
+    key mi_bom_id             : String(100)   @title : '시황자재명세서ID';
         local_create_dtm      : DateTime      @title : '로컬등록시간';
         local_update_dtm      : DateTime      @title : '로컬수정시간';
         create_user_id        : String(255)   @title : '등록사용자ID';

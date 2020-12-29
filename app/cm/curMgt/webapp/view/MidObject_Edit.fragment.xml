@@ -4,23 +4,22 @@
     xmlns:form="sap.ui.layout.form"
 	xmlns:core="sap.ui.core">
 	<form:SimpleForm id="midObjectForm1Edit" editable="false" >
-		
-		<core:Title text="기본정보" />
-		<Label text="통화코드" required="true"/>
+		<core:Title text="{I18N>/BASIC_INFO}" />
+		<Label text="{I18N>/CURRENCY_CODE}" required="true"/>
         <Input id="midObjectForm1EditCurrencyCode" value="{master>/currency_code}" liveChange=".onLiveChange" enabled="{= ${editMode>/newcheck} === 'new' ? true : false}" required="true"/>
-		<Label text="소수점자리" />
+		<Label text="{I18N>/DECIMAL_PLACES}" />
 		<Input value="{master>/scale}" type="Number" />
-		<Label text="확장소수점자리" />
+		<Label text="{I18N>/EXTENSION_SCALE}" />
 		<Input value="{master>/extension_scale}"/>
 
-		<core:Title text="유효여부" />
-		<Label text="유효시작일자"/>
+		<core:Title text="{I18N>/EFFECTIVE_FLAG}" />
+		<Label text="{I18N>/EFFECTIVE_START_DATE}"/>
 		<DatePicker  placeholder="Date" value="{path: 'master>/effective_start_date',type: 'sap.ui.model.odata.type.DateTime'}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
         <!-- placeholder="Starts From" -->
-		<Label text="유효종료일자"/>
+		<Label text="{I18N>/EFFECTIVE_END_DATE}"/>
 		<DatePicker placeholder="Date" value="{path: 'master>/effective_end_date',type: 'sap.ui.model.odata.type.DateTime'}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
         <!-- placeholder="Ends To"  -->
-        <Label text="사용여부"/>
+        <Label text="{I18N>/USE_FLAG}"/>
 		<Switch state="{master>/use_flag}" customTextOn="Yes" customTextOff="No">
 			<layoutData>
 				<FlexItemData growFactor="1" />

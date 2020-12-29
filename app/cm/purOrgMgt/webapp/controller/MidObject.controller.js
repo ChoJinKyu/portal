@@ -165,6 +165,7 @@ sap.ui.define([
             orgName: "",
         }
       });
+      this.getModel("midObjectView").setProperty("/screen", "Full");
     },
     /**
      * Event handler for Exit Full Screen Button pressed
@@ -182,6 +183,7 @@ sap.ui.define([
             orgName: "",
         }
       });
+      this.getModel("midObjectView").setProperty("/screen", "");
     },
     /**
      * Event handler for Nav Back Button pressed

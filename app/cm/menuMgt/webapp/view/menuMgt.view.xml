@@ -39,7 +39,8 @@
                         <VBox>
                             <Label text="Chain:" labelFor="searchChainCombo" required="true"></Label>
                             <ComboBox id="searchChainCombo" width="100%" 
-                                selectedKey="CM" 
+                                selectedKey="CM"
+                                selectionChange=".onSelectionChange"
                                 items="{
                                     path: 'util>/CodeDetails',
                                     filters: [
@@ -73,6 +74,7 @@
                 <table:TreeTable
                     id="menuTreeTable"
                     rowSelectionChange=".onRowSelectionChange"
+                    visibleRowCountMode="Interactive"
                     selectionMode="Single"
                     selectionBehavior="Row"
                     enableColumnReordering="false"

@@ -61,7 +61,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="{I18N>/KEYWORD}: " labelFor="searchKeywordS"></Label>
-                                <Input id="searchKeywordS" placeholder="{I18N>/NCM6001}" change=".onPageSearchButtonPress"></Input>
+                                <Input id="searchKeywordS" placeholder="{I18N>/NCM02001}" change=".onPageSearchButtonPress"></Input>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
@@ -112,7 +112,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="{I18N>/KEYWORD}: " labelFor="searchKeywordE"></Label>
-                                <Input id="searchKeywordE" placeholder="{I18N>/NCM6001}"></Input>
+                                <Input id="searchKeywordE" placeholder="{I18N>/NCM02001}"></Input>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
@@ -137,7 +137,7 @@
             <Table id="mainTable" 
                     sticky="HeaderToolbar,ColumnHeaders" 
                     inset="false"
-                    noDataText="{I18N>/NCM0001}"
+                    noDataText="{I18N>/NCM01004}"
                     class="sapFDynamicPageAlignContent" 
                     updateFinished=".onMainTableUpdateFinished"
                     items="{list>/Message}"

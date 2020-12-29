@@ -111,7 +111,7 @@
             </f:DynamicPageHeader>
         </f:header>
         <f:content>
-        <!-- noDataText="{I18N>/NCM0001}" -->
+        <!-- noDataText="{I18N>/NCM01004}" -->
             <t:Table id="mainTable" 
                     rows="{list>/PurOrgTypeView}"
                     selectionMode="MultiToggle"

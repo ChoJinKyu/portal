@@ -113,4 +113,79 @@ service VpMappingService {
 
         entity VpSupplierMstView @(title : '공급업체마스터 View') as projection on vpSupplierMst.Vp_Supplier_Mst_View;
 
+        view VpDetailLngView @(title : 'Vendor Pool Detail Language View') as
+        select  key mst.tenant_id,
+                key mst.company_code,
+                key mst.org_type_code,
+                key mst.org_code,
+                key mst.operation_unit_code,                
+                key mst.vendor_pool_code,
+                mst.operation_unit_name,
+                mst.language_cd,
+                mst.vendor_pool_local_name,
+                mst.vendor_pool_english_name,
+                mst.repr_department_code,
+                mst.department_local_name,
+                mst.parent_vendor_pool_code,
+                mst.higher_level_path_name,
+                mst.inp_type_code,
+                mst.inp_type_name,
+                mst.mtlmob_base_code,
+                mst.mtlmob_base_name,
+                mst.regular_evaluation_flag,
+                mst.industry_class_code, 
+                mst.industry_class_name,
+                mst.sd_exception_flag,
+                mst.vendor_pool_apply_exception_flag,
+                mst.domestic_net_price_diff_rate,
+                mst.dom_oversea_netprice_diff_rate,
+                mst.equipment_grade_code,
+                mst.equipment_grade_name,
+                mst.equipment_type_code,
+                mst.equipment_type_name,
+                mst.vendor_pool_use_flag,
+                mst.vendor_pool_desc,
+                mst.vendor_pool_history_desc,
+                mst.info_change_status
+        from   vpDetailView.Vp_Vendor_Pool_Detail_View mst
+        where  mst.language_cd = 'EN'
+        ;  
+
+    view vpTreeLngView @(title : 'Vendor Pool Tree Language View') as
+        select  key mst.language_cd,
+                key mst.tenant_id,
+                key mst.company_code,
+                key mst.org_type_code,
+                key mst.org_code,
+                key mst.operation_unit_code,
+                key mst.vendor_pool_code,
+                mst.vendor_pool_local_name,
+                mst.vendor_pool_english_name,
+                mst.parent_vendor_pool_code,
+                mst.higher_level_path,
+                mst.level_path,
+                mst.repr_department_code,
+                mst.department_local_name,
+                mst.inp_type_code,
+                mst.inp_type_name,
+                mst.mtlmob_base_code,
+                mst.mtlmob_base_name,
+                mst.regular_evaluation_flag,
+                mst.industry_class_code,
+                mst.industry_class_name,
+                mst.sd_exception_flag,
+                mst.temp_type,
+                mst.node_id,
+                mst.parent_id,
+                mst.path,
+                mst.hierarchy_rank,
+                mst.hierarchy_tree_size,
+                mst.hierarchy_parent_rank,
+                mst.hierarchy_level,
+                mst.hierarchy_root_rank,
+                mst.drill_state
+        from   vpTreeView.Vp_Vendor_Pool_Tree_View mst
+        where  mst.language_cd = 'EN'
+        ;  
+
 }

@@ -30,4 +30,5 @@ entity Vp_Vendor_Pool_Mst_Type {
     display_sequence : Integer64   @title: '조회순번';
     register_reason : String(50)   @title: '등록사유';
     approval_number : String(50)   @title: '품의번호';
+    crud_type_code : String(2)     @title: 'CRUD유형';
 }

@@ -59,7 +59,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="{I18N>/KEYWORD}: " labelFor="searchKeywordS"></Label>
-                                <Input id="searchKeywordS" placeholder="{I18N>/NCM6001}" change=".onPageSearchButtonPress"></Input>
+                                <Input id="searchKeywordS" placeholder="{I18N>/NCM02001}" change=".onPageSearchButtonPress"></Input>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
@@ -107,7 +107,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="{I18N>/KEYWORD}: " labelFor="searchKeywordE"></Label>
-                                <Input id="searchKeywordE" placeholder="{I18N>/NCM6001}"></Input>
+                                <Input id="searchKeywordE" placeholder="{I18N>/NCM02001}"></Input>
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
@@ -130,7 +130,7 @@
         </f:header>
         <f:content>
             <t:Table id="mainTable" 
-                    noDataText="{I18N>/NCM0001}"
+                    noDataText="{I18N>/NCM01004}"
                     rows="{list>/Message}"
                     selectionMode="MultiToggle"
                     visibleRowCountMode="Auto"
@@ -147,11 +147,11 @@
                         <Button id="mainTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMainTableDeleteButtonPress" />
                         <Button id="mainTableSaveButton" text="{I18N>/SAVE}" type="Emphasized" press=".onMainTableSaveButtonPress" />
                         <ToolbarSeparator/>
-                        <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+                        <!-- <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                             <layoutData>
                                 <OverflowToolbarLayoutData priority="NeverOverflow" />
                             </layoutData>
-                        </Button>
+                        </Button> -->
                     </OverflowToolbar>
                 <!-- </headerToolbar> -->
                 </t:extension>
