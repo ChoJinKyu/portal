@@ -233,7 +233,7 @@
                                     </VBox>
                                     <table:template>
                                     <!-- <Text text="{mdItemMaster>company_code}"/> -->
-                                        <ComboBox selectedKey="{mdItemMaster>currency_code}" 
+                                        <ComboBox id="g_currency" selectedKey="{mdItemMaster>currency_code}" 
                                         items="{ 
                                             path : 'psOrgCode>/OrgCodeLanguages',
                                             filters : [
