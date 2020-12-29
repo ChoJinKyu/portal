@@ -137,10 +137,10 @@ service MoldApprovalListService {
     // approvalline 저장목록 조회 
     view Approvers as
     select 
+        ar.approve_sequence , 
         key ar.approval_number , 
         key ar.approver_empno , 
         key hr.tenant_id , 
-        ar.approve_sequence , 
         (
             select l.code_name from codeLng.Code_Lng l
             where
