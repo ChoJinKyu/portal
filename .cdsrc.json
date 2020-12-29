@@ -59,6 +59,7 @@
             "db/cds/sp",
             "db/cds/sp/fundingMgr",
             "db/cds/sp/sf",
+            "db/cds/sp/se",
             "db/cds/mc",
             "db/cds/tmp",
             "db/cds/tmp/tmp1Mgr",

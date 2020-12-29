@@ -81,8 +81,9 @@ sap.ui.define([
             var schFilter2 = [];
    
             if (this.approval_number == "New") {
-
+                this._participatingEditFragment();
             } else {
+                this._participatingViewFragment();
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
                     , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
                 ];
@@ -286,6 +287,67 @@ sap.ui.define([
                 MessageBox.error("삭제할 목록을 선택해주세요.");
             }
         } ,
+
+        onPageEditButtonPress: function () {
+            this._participatingEditFragment();
+            this._editMode();
+        },
+
+        onPageCancelButtonPress: function () {
+            this._participatingViewFragment();
+            this._viewMode();
+        },
+
+        _participatingEditFragment : function(){
+            console.log("_participatingEditFragment");
+            var oPageSection = this.byId("participatingSupplierSelectionTableFragment");
+            oPageSection.removeAllBlocks();
+            this._loadFragment("ParticipatingSupplierSelectionTableEdit", function (oFragment) {
+                oPageSection.addBlock(oFragment);
+            }.bind(this));
+        },
+        _participatingViewFragment : function(){
+             console.log("_participatingEditFragment");
+             var oPageSection = this.byId("participatingSupplierSelectionTableFragment");
+            oPageSection.removeAllBlocks();
+            this._loadFragment("ParticipatingSupplierSelectionTableView", function (oFragment) {
+                oPageSection.addBlock(oFragment);
+            }.bind(this));
+        },
+
+        onPagePreviewButtonPress : function(){
+            this.getView().setModel(new ManagedListModel(), "approverPreview"); 
+
+        //    this.getModel("approverPreview").setData(this.getModel("approver").getData());
+            if(this.getModel("approver").getData().Approvers != undefined){ 
+                var ap = this.getModel("approver").getData().Approvers;
+                for(var i = 0 ; i < ap.length -1 ; i++){
+                    this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
+                }
+            }
+            
+            console.log("approverPreview " , this.getModel("approverPreview").getData());
+            var oView = this.getView();
+
+            if (!this._oDialog) {
+                this._oDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "dp.md.moldApprovalList.view.ParticipatingSupplierSelectionPreView",
+                    controller: this
+                }).then(function (oDialog) {
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                }.bind(this));
+            }
+
+            this._oDialog.then(function (oDialog) {
+                oDialog.open();
+            });
+
+        },
+        onPrvClosePress : function(){
+            this.byId("participatingSupplierSelectionPreview").close();
+        },
         
         onChangePayment: function (oEvent) {
             var oModel = this.getModel("moldMaster");

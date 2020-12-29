@@ -49,7 +49,7 @@
                 {
                     "name": "Vendor Pool Management",
                     "url": "../pg/vp/vpMgt/webapp",
-                    "component": "vp.vpMgt"
+                    "component": "vp.vpMgr"
                 },                
                 {
                     "name": "App #4",

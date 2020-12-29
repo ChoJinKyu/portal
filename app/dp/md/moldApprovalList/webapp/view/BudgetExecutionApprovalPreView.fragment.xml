@@ -12,9 +12,9 @@
     xmlns:u="sap.ui.unified" 
     xmlns:table="sap.ui.table" 
     xmlns="sap.m" >
-<Dialog id="" class="sapUiSmallMargin" title="" contentWidth="100%" >
+<Dialog id="budgetExecutionPreview" class="sapUiSmallMargin" title="" contentWidth="100%" contentHeight="900px" >
 	<uxap:ObjectPageLayout 
-       
+        id="page_bp_preview"
 		showTitleInHeaderContent="true"
 		showEditHeaderButton="true" 
         upperCaseAnchorBar="false"
@@ -28,7 +28,7 @@
 
 				<uxap:snappedHeading>
                     <FlexBox fitContainer="true" alignItems="Center">
-						<Title text="{i18n>appTitle}" wrapping="true"/>
+						<Title text="Budget Execution Approval" wrapping="true"/>
 					</FlexBox>
 				</uxap:snappedHeading>
 
@@ -46,7 +46,7 @@
 				</uxap:actions>
 
                 <uxap:navigationActions>
-					<OverflowToolbarButton  icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPrvButtonPress" />
+					<OverflowToolbarButton  icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPrvClosePress" />
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
@@ -107,9 +107,8 @@
 			</FlexBox>
 		</uxap:headerContent>
 
-		<uxap:sections >
-
-			<uxap:ObjectPageSection titleUppercase="true" title="General Info">
+		<uxap:sections id="sections_bp">
+			<uxap:ObjectPageSection id="pageSectionMain_bp" titleUppercase="true" title="General Info">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection >
                             <layout:VerticalLayout class="sapUiSmallMarginBeginEnd"> 
@@ -140,7 +139,7 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-            <uxap:ObjectPageSection titleUppercase="false" title="Purchase Order Item">
+            <uxap:ObjectPageSection titleUppercase="false" title="Item for Budget Execution">
 				<uxap:subSections>
                     <uxap:ObjectPageSubSection> 
                         <form:SimpleForm editable="true" 
@@ -163,7 +162,7 @@
 					<!-- Budget Type -->
 					<Label text="Budget Type" required="true"/>
                      <!-- view Mode -->
-                    <Text text="{mdItemMaster>/ItemBudgetExecution/0/investment_ecst_type_code_nm}" visible="{contModel>/viewMode}"/>
+                    <Text text="{mdCommon>/investment_ecst_type_code_nm}" />
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -171,7 +170,7 @@
 				<VBox>
 					<Label text="Acquisition Department" required="true"/>
                     <!-- view Mode -->
-                    <Text text="" visible="{contModel>/viewMode}"/>
+                    <Text text="" />
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -179,7 +178,7 @@
 				<VBox>
 					<Label text="Account Department" required="true"/>
                     <!-- view Mode -->
-                    <Text text="{mdItemMaster>/ItemBudgetExecution/0/accounting_department_code}" visible="{contModel>/viewMode}"/>
+                    <Text text="{mdCommon>/accounting_department_code}" />
 
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
@@ -188,7 +187,7 @@
 				<VBox>
 					<Label text="Import Company"/>
                     <!-- view Mode -->
-                    <Text text="{mdItemMaster>/ItemBudgetExecution/0/import_company_code}" visible="{contModel>/viewMode}"/>
+                    <Text text="[{mdCommon>/import_company_code}] {mdCommon>/import_company_code_nm}" />
 
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
@@ -198,7 +197,7 @@
 					<!-- projectcode  {I18N>/PROJECT_CODE}-->
 					<Label text="Project Code" required="true"/> 
                     <!-- view Mode -->
-                    <Text text="{mdItemMaster>/ItemBudgetExecution/0/project_code}" visible="{contModel>/viewMode}"/>
+                    <Text text="{mdCommon>/project_code}" />
 
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
@@ -207,7 +206,7 @@
 				<VBox>
 					<Label text="Import Plant"/>
                      <!-- view Mode -->
-                    <Text text="{mdItemMaster>/ItemBudgetExecution/0/import_company_org_code}" visible="{contModel>/viewMode}"/> 
+                    <Text text="[{mdCommon>/import_company_org_code}] {mdCommon>/import_company_org_code_nm}" /> 
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -216,14 +215,14 @@
 					<Label text="{I18N>/ACCOUNT}" required="true"/>
 
                     <!-- view Mode -->
-                    <Text text="{mdItemMaster>/ItemBudgetExecution/0/account_code_nm}" visible="{contModel>/viewMode}"/> 
+                    <Text text="{mdCommon>/account_code_nm}" /> 
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
 				</VBox>
 				<VBox>
 					<Label text="{I18N>/CUSTOMER}"/>
-                    <Text text="" visible="{contModel>/viewMode}"/>
+                    <Text text="" />
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -231,7 +230,7 @@
 				<VBox>
 					<Label text="Balanced Budget"/>
 					<HBox alignItems="End" justifyContent="End">
-						<ObjectStatus text="{mdItemMaster>/ItemBudgetExecution/0/provisional_budget_amount}"/>
+						<ObjectStatus text="{mdCommon>/provisional_budget_amount}"/>
 						<ObjectStatus text="  KRW" state="Error"/>
 					</HBox>
 					<layoutData>
@@ -240,7 +239,7 @@
 				</VBox>
 				<VBox>
 					<Label text="Customer PO No"/>
-                    <Text text="" visible="{contModel>/viewMode}"/>
+                    <Text text="" />
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -257,24 +256,17 @@
 				</HBox>
                 </form:content>
 		        </form:SimpleForm>
-					</uxap:ObjectPageSubSection>
-                    <uxap:ObjectPageSubSection>
-                  	    <table:Table 
-                             selectionMode="{=${contModel>/editMode}?'MultiToggle':'None'}" 
+				</uxap:ObjectPageSubSection>
+                 <uxap:ObjectPageSubSection>
+                  	<table:Table 
+                             selectionMode="None" 
                              fixedColumnCount="6" 
                              visibleRowCountMode="Auto" 
                              rows="{path:'mdItemMaster>/ItemBudgetExecution'}">
 					<table:extension>
 						<OverflowToolbar>
 							<ToolbarSpacer/>
-							<!-- Add the Personalization button -->
-							    <Button visible="{contModel>/editMode}" type="Transparent" text="{I18N>/ROW_ADD}" press=".onBudgetExecutionAddPress">
-								<!-- Add -->
-								<customData>
-									<core:CustomData key="multi" value="true"/>
-								</customData>
-							</Button>
-							<Button visible="{contModel>/editMode}" type="Transparent" text="{I18N>/ROW_DELETE}" press=".onBudgetExecutionDelRow"/>
+						
 						</OverflowToolbar>
 					</table:extension>
 					<table:columns>
@@ -317,13 +309,13 @@
 						<table:Column  width="10em" hAlign="Center">
 							<Label text="Production Type"/>
 							<table:template>
-                                <Text visible="{contModel>/viewMode}" text="{mdItemMaster>mold_production_type_code_nm}"/>
+                                <Text text="{mdItemMaster>mold_production_type_code_nm}"/>
 							</table:template>
 						</table:Column>
 						<table:Column  width="10em" hAlign="Center">
 							<Label text="Item Type"/>
 							<table:template>
-                                 <Text visible="{contModel>/viewMode}" text="{mdItemMaster>mold_item_type_code_nm}"/>
+                                 <Text text="{mdItemMaster>mold_item_type_code_nm}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
@@ -335,13 +327,13 @@
 						<table:Column  width="10em" hAlign="Center">
 							<Label text="Budget Amount"/>
 							<table:template>
-                                <Text visible="{contModel>/viewMode}" text="{mdItemMaster>provisional_budget_amount}"/>
+                                <Text  text="{mdItemMaster>provisional_budget_amount}"/>
 							</table:template>
 						</table:Column>
 						<table:Column  width="10em" hAlign="Center">
 							<Label text="Asset Type"/>
 							<table:template>
-                                 <Text visible="{contModel>/viewMode}" text="{mdItemMaster>asset_type_code_nm}"/>
+                                 <Text  text="{mdItemMaster>asset_type_code_nm}"/>
 							</table:template>
 						</table:Column>
 						<table:Column  width="15em" hAlign="Center">
@@ -373,82 +365,91 @@
 
 			<uxap:ObjectPageSection titleUppercase="false" title="Attachments">
 				<uxap:subSections>
-					<uxap:ObjectPageSubSection>
-
-	<!-- Approval Line -->
-				<Table       
-                        growing="true"
-                        growingThreshold="20"
-                        class="sapFDynamicPageAlignContent" 
-                        updateFinished=".onListMainTableUpdateFinished"
-                        rowSelectionChange=".onCheck"
-                        mode="None"
-                        width="auto"
-                        items="{approver>/Approvers}"
-                        >
-                    <headerToolbar>
-                        <OverflowToolbar>
-                        <Label text="Approval Line"/>
-                        </OverflowToolbar>
-                    </headerToolbar>
-                    <columns>
-                        <Column  minScreenWidth="Tablet" hAlign="Center" visible="false" width="3em" >
-                            <Text text="approver_empno" />
-                        </Column>
-                        <Column  minScreenWidth="Tablet" hAlign="Center"  width="3em" >
-                            <Text text="No." />
-                        </Column>
-                        <Column  minScreenWidth="Tablet" hAlign="Center" width="10em" >
-                            <Text text="Type" />
-                        </Column>
-                        <Column  minScreenWidth="Tablet" hAlign="Center" width="20em" >
-                            <Text text="Name/Dept" />
-                        </Column>
-                        <Column  minScreenWidth="Tablet" hAlign="Center" width="12em" >
-                            <Text text="Status" />
-                        </Column> 
-                        <Column  minScreenWidth="Tablet" hAlign="Center" >
-                            <Text text="Comment" />
-                        </Column>
- 				
-                    </columns>
-                    <items>
-                        <ColumnListItem>
-                            <cells>
-                                <Text text="{approver>approver_empno}" />
-                                <Text text="{approver>approve_sequence}" />
-                                <ComboBox   width="100%"
-                                    selectedKey="{approver>approver_type_code}" 
-                                    enabled="{approver>editMode}" 
-                                    items="{ path : 'util>/CodeDetails',
-                                                filters : [
-                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                    {path : 'group_code', operator : 'EQ', value1 : 'CM_APPROVER_TYPE'}
-                                                ]
-                                            }"
-                                    >  
-                                    <core:Item key="{util>code}" text="{util>code_description}" />
-
-                                </ComboBox>
-                                <SearchField id="approverSearch" enabled="{approver>editMode}" 
-                                    search=".onApproverSearch" width="100%" placeholder="Search employee" 
-                                    value="{approver>approver_name}"/>
-                                <Text text="{approver>approve_status_code}" />
-                                <Text text="{approver>approve_comment}" />
-                            </cells>
-                        </ColumnListItem>
-                    </items>
-                </Table>
-
-
-
+				    <uxap:ObjectPageSubSection id="pageAttachmentsSection_bp" >
+                            <Label text=""/>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
 			<uxap:ObjectPageSection titleUppercase="false" title="Approval Line">
 				<uxap:subSections>
-					<uxap:ObjectPageSubSection  >
+                	<uxap:ObjectPageSubSection id="pageApprovalLineSection_bp">
+                    <!-- Approval Line -->
+                    <Table       
+                            growing="true"
+                            growingThreshold="20"
+                            class="sapFDynamicPageAlignContent" 
+                            updateFinished=".onListMainTableUpdateFinished"
+                            rowSelectionChange=".onCheck"
+                            mode="None"
+                            width="auto"
+                            items="{approverPreview>/Approvers}"
+                            >
+                        <headerToolbar>
+                            <OverflowToolbar>
+                            <Label text="Approval Line"/>
+                            </OverflowToolbar>
+                        </headerToolbar>
+                        <columns>
+                            <Column  minScreenWidth="Tablet" hAlign="Center"  width="3em" >
+                                <Text text="No." />
+                            </Column>
+                            <Column  minScreenWidth="Tablet" hAlign="Center" width="10em" >
+                                <Text text="Type" />
+                            </Column>
+                            <Column  minScreenWidth="Tablet" hAlign="Center" width="20em" >
+                                <Text text="Name/Dept" />
+                            </Column>
+                            <Column  minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                                <Text text="Status" />
+                            </Column> 
+                            <Column  minScreenWidth="Tablet" hAlign="Center" >
+                                <Text text="Comment" />
+                            </Column>
+                    
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="{approverPreview>approve_sequence}" />
+                                    <Text text="{approverPreview>approver_type_code_nm}" />
+                                    <Text text="{approverPreview>approver_name}" />
+                                    <Text text="{approverPreview>approve_status_code}" />
+                                    <Text text="{approverPreview>approve_comment}" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+
+					</uxap:ObjectPageSubSection>
+					<uxap:ObjectPageSubSection >
+                    <!-- Referer -->
+                    <Table       
+                            growing="true"
+                            growingThreshold="20"
+                            class="sapFDynamicPageAlignContent" 
+                            mode="None"
+                            width="auto"
+                            items="{referer>/Referers}"
+                            >
+                        <headerToolbar>
+                            <OverflowToolbar>
+                            <Label text="Referer"/>
+                            </OverflowToolbar>
+                        </headerToolbar>
+                        <columns>
+                            <Column  minScreenWidth="Tablet" hAlign="Center"  >
+                                <Text text="Name/Dept" />
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="{referer>referer_name}" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                        </Table>
                     </uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>

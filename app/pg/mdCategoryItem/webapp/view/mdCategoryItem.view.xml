@@ -1,4 +1,5 @@
 <mvc:View controllerName="pg.mdCategoryItem.controller.mdCategoryItem"
+    class="sapUiSizeCompact"
     xmlns:mvc="sap.ui.core.mvc" 
     xmlns="sap.m" 
     xmlns:f="sap.f"  

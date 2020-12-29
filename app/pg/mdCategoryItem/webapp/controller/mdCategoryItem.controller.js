@@ -34,6 +34,9 @@ sap.ui.define([
         this.setModel(oMultilingual.getModel(), "I18N");
         this.getView().setModel(new ManagedListModel(), "list");
         
+        this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
+
+
         // 개인화 - UI 테이블의 경우만 해당
         this._oTPC = new TablePersoController({
           customDataKey: "mdCategoryItem"
@@ -85,6 +88,20 @@ sap.ui.define([
         // var oParent = this.byId("mainTable");
         // // store index of the item clicked, which can be used later in the columnResize event
         // this.iIndex = oParent.indexOfItem(oItem);
+        
+        var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
+				sPath = oEvent.getSource().getBindingContext("list").getPath(),
+                oRecord = this.getModel("list").getProperty(sPath);
+        
+        this.getRouter().navTo("midPage", {
+            layout: oNextUIState.layout, 
+            company_code: oRecord.company_code,
+            org_type_code: oRecord.org_type_code,
+            org_code: oRecord.org_code,
+            spmd_category_code: oRecord.spmd_category_code,
+            spmd_character_code: oRecord.spmd_character_code
+        });
+            
     },
 
       onSearch: function () {
@@ -290,12 +307,24 @@ sap.ui.define([
             flag = false;
         }
         
-        oTable.getAggregation('items')[index].getCells()[6].getItems()[0].setVisible(flag);
-        oTable.getAggregation('items')[index].getCells()[6].getItems()[1].setVisible(!flag);
-        oTable.getAggregation('items')[index].getCells()[5].getItems()[0].setVisible(flag);
-        oTable.getAggregation('items')[index].getCells()[5].getItems()[1].setVisible(!flag); 
-            
-    }
+        if(oTable.getAggregation('items').length > 0){
+
+            oTable.getAggregation('items')[index].getCells()[6].getItems()[0].setVisible(flag);
+            oTable.getAggregation('items')[index].getCells()[6].getItems()[1].setVisible(!flag);
+            oTable.getAggregation('items')[index].getCells()[5].getItems()[0].setVisible(flag);
+            oTable.getAggregation('items')[index].getCells()[5].getItems()[1].setVisible(!flag); 
+        
+        }    
+    },
+    
+    /**
+     * When it routed to this page from the other page.
+     * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
+     * @private
+     */
+    _onRoutedThisPage: function(){            
+        // this.getModel("list").setProperty("/headerExpanded", true);            
+    },
 
     });
   }

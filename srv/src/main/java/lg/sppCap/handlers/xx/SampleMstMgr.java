@@ -33,7 +33,7 @@ import com.sap.cds.services.persistence.PersistenceService;
 @Component
 @ServiceName("xx.SampleMstMgrService")
 public class SampleMstMgr implements EventHandler {
-
+/*
 	@Autowired
     private PersistenceService db;
     
@@ -95,16 +95,16 @@ public class SampleMstMgr implements EventHandler {
 
             String result = "SUCCESS";
 
-            /*
-            if (context instanceof CdsCreateEventContext){
-                context.setResult(result);
-            }else if (context instanceof CdsUpdateEventContext){
-                context.setResult(result);
-            }else{
-                context.put("result", result);
-                context.setCompleted();
-            }
-            */
+            
+            // if (context instanceof CdsCreateEventContext){
+            //     context.setResult(result);
+            // }else if (context instanceof CdsUpdateEventContext){
+            //     context.setResult(result);
+            // }else{
+            //     context.put("result", result);
+            //     context.setCompleted();
+            // }
+            
 
             context.setResult(result);
             context.setCompleted();
@@ -178,5 +178,5 @@ public class SampleMstMgr implements EventHandler {
 			e.printStackTrace();
 		}
     }
-
+*/
 }

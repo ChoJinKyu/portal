@@ -67,7 +67,6 @@ public class DevelopmentReceipt implements EventHandler {
         List<Map<String, Object>> entries = context.getCqn().entries();
 
         String v_sql_callProc = "CALL DP_MD_SCHEDULE_SAVE_PROC(MOLD_ID => ?)";
-        ResultSet v_rs = null;
         
         try {
             for (Map<String, Object> row : entries) {
@@ -111,7 +110,7 @@ public class DevelopmentReceipt implements EventHandler {
 
                     CqnUpdate masterUpdate = Update.entity(MoldMasters_.CDS_NAME).data(master);
                     //long headerUpdateCount = developmentReceiptService.run(masterUpdate).rowCount();
-                    Result resultHeader = developmentReceiptService.run(masterUpdate);
+                    Result resultMaster = developmentReceiptService.run(masterUpdate);
 
                     MoldSpecs spec = MoldSpecs.create();
                     spec.setMoldId((String) row.get("mold_id"));
@@ -119,7 +118,7 @@ public class DevelopmentReceipt implements EventHandler {
                     spec.setMoldSize((String) row.get("mold_size"));
                     CqnUpdate specUpdate = Update.entity(MoldSpecs_.CDS_NAME).data(spec);
                     //long detailUpdateCount = developmentReceiptService.run(specUpdate).rowCount();
-                    Result resultDetail = developmentReceiptService.run(specUpdate);
+                    Result resultSpec = developmentReceiptService.run(specUpdate);
 
                     // Procedure Call
                     Connection conn = jdbc.getDataSource().getConnection();
@@ -152,12 +151,17 @@ public class DevelopmentReceipt implements EventHandler {
         MoldMasters master = MoldMasters.create();
         master.setMoldId((String) filterValues.get("mold_id"));
         CqnDelete masterDelete = Delete.from(MoldMasters_.CDS_NAME).matching(master);
-        Result resultHeader = developmentReceiptService.run(masterDelete);
+        Result resultMaster = developmentReceiptService.run(masterDelete);
 
         MoldSpecs spec = MoldSpecs.create();
         spec.setMoldId((String) filterValues.get("mold_id"));
         CqnDelete specDelete = Delete.from(MoldSpecs_.CDS_NAME).matching(spec);
-        Result resultDetail = developmentReceiptService.run(specDelete);
+        Result resultSpec = developmentReceiptService.run(specDelete);
+
+        MoldSchedules schedule = MoldSchedules.create();
+        schedule.setMoldId((String) filterValues.get("mold_id"));
+        CqnDelete scheduleDelete = Delete.from(MoldSchedules_.CDS_NAME).matching(schedule);
+        Result resultSchedule = developmentReceiptService.run(scheduleDelete);
 
         MoldMstView v_result = MoldMstView.create();
         v_result.setMoldId((String) filterValues.get("mold_id"));

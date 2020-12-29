@@ -349,6 +349,7 @@ public class VpMappingServiceV4 implements EventHandler {
         v_sql_createTableMst.append("INDUSTRY_CLASS_CODE NVARCHAR(30),");
         v_sql_createTableMst.append("SD_EXCEPTION_FLAG BOOLEAN,");
         v_sql_createTableMst.append("VENDOR_POOL_APPLY_EXCEPTION_FLAG BOOLEAN,");
+        v_sql_createTableMst.append("MAKER_MATERIAL_CODE_MNGT_FLAG BOOLEAN,");
         v_sql_createTableMst.append("DOMESTIC_NET_PRICE_DIFF_RATE DECIMAL,");
         v_sql_createTableMst.append("DOM_OVERSEA_NETPRICE_DIFF_RATE DECIMAL,");
         v_sql_createTableMst.append("EQUIPMENT_GRADE_CODE NVARCHAR(30),");
@@ -361,7 +362,11 @@ public class VpMappingServiceV4 implements EventHandler {
         v_sql_createTableMst.append("LEVEL_NUMBER DECIMAL,");
         v_sql_createTableMst.append("DISPLAY_SEQUENCE BIGINT,");
         v_sql_createTableMst.append("REGISTER_REASON NVARCHAR(50),");
-        v_sql_createTableMst.append("APPROVAL_NUMBER NVARCHAR(50))"); 
+        v_sql_createTableMst.append("APPROVAL_NUMBER NVARCHAR(50),"); 
+        v_sql_createTableMst.append("CRUD_TYPE_CODE NVARCHAR(2))"); 
+
+
+        
         
         String v_sql_dropTableMst = "DROP TABLE #LOCAL_TEMP_MST;";                
 
@@ -385,7 +390,8 @@ public class VpMappingServiceV4 implements EventHandler {
         v_sql_createTableSupplier.append("SUPPLIER_BASE_PORTION_RATE DECIMAL,");
         v_sql_createTableSupplier.append("VENDOR_POOL_MAPPING_USE_FLAG BOOLEAN,");
         v_sql_createTableSupplier.append("REGISTER_REASON NVARCHAR(50),");
-        v_sql_createTableSupplier.append("APPROVAL_NUMBER NVARCHAR(50))");
+        v_sql_createTableSupplier.append("APPROVAL_NUMBER NVARCHAR(50),");
+        v_sql_createTableSupplier.append("CRUD_TYPE_CODE NVARCHAR(2))"); 
 
         String v_sql_dropTableSupplier = "DROP TABLE #LOCAL_TEMP_SUPPLIER;";                      
 
@@ -399,7 +405,8 @@ public class VpMappingServiceV4 implements EventHandler {
         v_sql_createTableItem.append("MATERIAL_CODE NVARCHAR(40),");
         v_sql_createTableItem.append("VENDOR_POOL_MAPPING_USE_FLAG BOOLEAN,");
         v_sql_createTableItem.append("REGISTER_REASON NVARCHAR(50),");
-        v_sql_createTableItem.append("APPROVAL_NUMBER NVARCHAR(50))");
+        v_sql_createTableItem.append("APPROVAL_NUMBER NVARCHAR(50),");
+        v_sql_createTableItem.append("CRUD_TYPE_CODE NVARCHAR(2))"); 
         
         String v_sql_dropTableItem = "DROP TABLE #LOCAL_TEMP_ITEM;";                
 
@@ -414,14 +421,15 @@ public class VpMappingServiceV4 implements EventHandler {
         v_sql_createTableManager.append("VENDOR_POOL_PERSON_ROLE_TEXT NVARCHAR(50),");
         v_sql_createTableManager.append("VENDOR_POOL_MAPPING_USE_FLAG BOOLEAN,");
         v_sql_createTableManager.append("REGISTER_REASON NVARCHAR(50),");
-        v_sql_createTableManager.append("APPROVAL_NUMBER NVARCHAR(50))");
+        v_sql_createTableManager.append("APPROVAL_NUMBER NVARCHAR(50),");
+        v_sql_createTableManager.append("CRUD_TYPE_CODE NVARCHAR(2))"); 
 
         String v_sql_dropTableManager = "DROP TABLE #LOCAL_TEMP_MANAGER;";        
 
-        String v_sql_insertTableMst = "INSERT INTO #LOCAL_TEMP_MST VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        String v_sql_insertTableSupplier = "INSERT INTO #LOCAL_TEMP_SUPPLIER VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        String v_sql_insertTableItem = "INSERT INTO #LOCAL_TEMP_ITEM VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        String v_sql_insertTableManager = "INSERT INTO #LOCAL_TEMP_MANAGER VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String v_sql_insertTableMst = "INSERT INTO #LOCAL_TEMP_MST VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String v_sql_insertTableSupplier = "INSERT INTO #LOCAL_TEMP_SUPPLIER VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String v_sql_insertTableItem = "INSERT INTO #LOCAL_TEMP_ITEM VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String v_sql_insertTableManager = "INSERT INTO #LOCAL_TEMP_MANAGER VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         log.info("### LOCAL_TEMP Success ###");
 
@@ -456,6 +464,11 @@ public class VpMappingServiceV4 implements EventHandler {
             log.info("### try Start ###");
             conn = jdbc.getDataSource().getConnection();
 
+            // Vendor Pool Master Local Temp Table 삭제
+            //v_statement_tableMst = conn.prepareStatement(v_sql_dropTableMst);
+            //v_statement_tableMst.execute();
+
+
             // Vendor Pool Mst Local Temp Table 생성
             v_statement_tableMst = conn.prepareStatement(v_sql_createTableMst.toString());
             v_statement_tableMst.execute();
@@ -481,19 +494,21 @@ public class VpMappingServiceV4 implements EventHandler {
                     v_statement_insertMst.setObject(13, v_inRow.get("industry_class_code"));
                     v_statement_insertMst.setObject(14, v_inRow.get("sd_exception_flag"));
                     v_statement_insertMst.setObject(15, v_inRow.get("vendor_pool_apply_exception_flag"));
-                    v_statement_insertMst.setObject(16, v_inRow.get("domestic_net_price_diff_rate"));
-                    v_statement_insertMst.setObject(17, v_inRow.get("dom_oversea_netprice_diff_rate"));
-                    v_statement_insertMst.setObject(18, v_inRow.get("equipment_grade_code"));
-                    v_statement_insertMst.setObject(19, v_inRow.get("equipment_type_code"));
-                    v_statement_insertMst.setObject(20, v_inRow.get("vendor_pool_use_flag"));
-                    v_statement_insertMst.setObject(21, v_inRow.get("vendor_pool_desc"));
-                    v_statement_insertMst.setObject(22, v_inRow.get("vendor_pool_history_desc"));
-                    v_statement_insertMst.setObject(23, v_inRow.get("parent_vendor_pool_code"));
-                    v_statement_insertMst.setObject(24, v_inRow.get("leaf_flag"));
-                    v_statement_insertMst.setObject(25, v_inRow.get("level_number"));
-                    v_statement_insertMst.setObject(26, v_inRow.get("display_sequence"));
-                    v_statement_insertMst.setObject(27, v_inRow.get("register_reason"));
-                    v_statement_insertMst.setObject(28, v_inRow.get("approval_number"));
+                    v_statement_insertMst.setObject(16, v_inRow.get("maker_material_code_mngt_flag"));
+                    v_statement_insertMst.setObject(17, v_inRow.get("domestic_net_price_diff_rate"));
+                    v_statement_insertMst.setObject(18, v_inRow.get("dom_oversea_netprice_diff_rate"));
+                    v_statement_insertMst.setObject(19, v_inRow.get("equipment_grade_code"));
+                    v_statement_insertMst.setObject(20, v_inRow.get("equipment_type_code"));
+                    v_statement_insertMst.setObject(21, v_inRow.get("vendor_pool_use_flag"));
+                    v_statement_insertMst.setObject(22, v_inRow.get("vendor_pool_desc"));
+                    v_statement_insertMst.setObject(23, v_inRow.get("vendor_pool_history_desc"));
+                    v_statement_insertMst.setObject(24, v_inRow.get("parent_vendor_pool_code"));
+                    v_statement_insertMst.setObject(25, v_inRow.get("leaf_flag"));
+                    v_statement_insertMst.setObject(26, v_inRow.get("level_number"));
+                    v_statement_insertMst.setObject(27, v_inRow.get("display_sequence"));
+                    v_statement_insertMst.setObject(28, v_inRow.get("register_reason"));
+                    v_statement_insertMst.setObject(29, v_inRow.get("approval_number"));
+                    v_statement_insertMst.setObject(30, v_inRow.get("crud_type_code"));
                     v_statement_insertMst.addBatch();
                 }
 
@@ -546,6 +561,7 @@ public class VpMappingServiceV4 implements EventHandler {
                     v_statement_insertSupplier.setObject(17, v_inRow.get("vendor_pool_mapping_use_flag"));
                     v_statement_insertSupplier.setObject(18, v_inRow.get("register_reason"));
                     v_statement_insertSupplier.setObject(19, v_inRow.get("approval_number"));
+                    v_statement_insertSupplier.setObject(20, v_inRow.get("crud_type_code"));                    
                     v_statement_insertSupplier.addBatch();
                 }
 
@@ -571,7 +587,8 @@ public class VpMappingServiceV4 implements EventHandler {
                     v_statement_insertItem.setObject(6, v_inRow.get("material_code"));
                     v_statement_insertItem.setObject(7, v_inRow.get("vendor_pool_mapping_use_flag"));
                     v_statement_insertItem.setObject(8, v_inRow.get("register_reason"));
-                    v_statement_insertItem.setObject(9, v_inRow.get("approval_number"));                    
+                    v_statement_insertItem.setObject(9, v_inRow.get("approval_number"));    
+                    v_statement_insertItem.setObject(10, v_inRow.get("crud_type_code"));                                        
                     v_statement_insertItem.addBatch();
                 }
 
@@ -599,6 +616,7 @@ public class VpMappingServiceV4 implements EventHandler {
                     v_statement_insertManager.setObject(8, v_inRow.get("vendor_pool_mapping_use_flag"));
                     v_statement_insertManager.setObject(9, v_inRow.get("register_reason"));
                     v_statement_insertManager.setObject(10, v_inRow.get("approval_number"));
+                    v_statement_insertManager.setObject(11, v_inRow.get("crud_type_code"));                    
                     v_statement_insertManager.addBatch();
                 }
 

@@ -52,13 +52,13 @@
 
 		<uxap:headerContent>
 			<FlexBox wrap="Wrap" >
-				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+								<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <ObjectStatus
                         title="Report No"
                         text="{appMaster>/approval_number}"/>
                     <ObjectStatus
                         title="Requester"
-                        text="{appMaster>/requestor_empno}"/>
+                        text="[{appMaster>/requestor_empno}]{appMaster>/user_local_name}"/>
                     <ObjectStatus
                         title="Request Date"
                         text="{appMaster>/request_date}"/>
@@ -68,7 +68,7 @@
 					<Label text="Status :"/>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
-                        text="{= ${appMaster>/approval_number} !== null ? 'Update' : 'New' }"
+                        text="{= ${appMaster>/approval_number} === undefined ?'New':''}{appMaster>/approve_status_code_nm}"
                         state="Error" />
 				</layout:VerticalLayout>
 
@@ -115,7 +115,7 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-            <uxap:ObjectPageSection titleUppercase="false" title="Purchase Order Item">
+            <uxap:ObjectPageSection titleUppercase="false" title="Participating Supplier">
 				<uxap:subSections>
                     <uxap:ObjectPageSubSection>
                         <HBox>
@@ -135,260 +135,8 @@
                             </VBox>
                         </HBox>
 					</uxap:ObjectPageSubSection>
-                    <uxap:ObjectPageSubSection>
-                        <!-- Purchase Order Item Table -->
-                        <table:Table id="psTable"
-                            selectionMode="MultiToggle"
-                            fixedColumnCount="6" 
-                            visibleRowCountMode="Auto"
-                            rows="{path:'mdItemMaster>/ParticipatingSupplier'}"
-                            >
-                            <table:extension>
-                                <OverflowToolbar>
-                                    <ToolbarSpacer/>
-                                    <Button id="btnPoItemAdd"    type="Transparent" text="{I18N>/ROW_ADD}" press=".onPsAddPress" >
-                                        <customData>
-                                            <core:CustomData key="multi" value="true" />
-                                        </customData>
-                                    </Button>
-                                    <Button id="btnPoItemDelete" type="Transparent" text="{I18N>/ROW_DELETE}"  press=".onPsDelRow" />
-                                    <Button id="btnSupplier" type="Emphasized" text="Supplier Selection" press=".onSupplierSelection"/>
-                                </OverflowToolbar>
-                            </table:extension>                             
-                            <table:columns>
-                                <table:Column id="c_mold_id" visible="false">
-                                    <Label text="mold_id"/>
-                                    <table:template>
-                                        <Text id="t_mold_id" text="{mdItemMaster>mold_id}"/>
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="c_approval_number" visible="false">
-                                    <Label text="approval_number"/>
-                                    <table:template>
-                                        <Text id="t_approval_number" text="{mdItemMaster>approval_number}"/>
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="c_model" width="20em" hAlign="Center">
-                                    <Label text="{I18N>/MODEL}"/>
-                                    <table:template>
-                                        <Text id="t_model" text="{mdItemMaster>model}"/>
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="c_moldPartNo" width="10em" hAlign="Center">
-                                    <Label text="Mold No"/>
-                                    <table:template>
-                                        <Text id="t_mold_part_no" text="{mdItemMaster>mold_number}"/>
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="c_seq" width="5em" hAlign="Center">
-                                    <Label text="Seq"/>
-                                    <table:template>
-                                        <Text id="t_seq" text="{mdItemMaster>mold_sequence}"/>
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="c_description" width="15em" hAlign="Center">
-                                    <Label text="{I18N>/DESCRIPTION}"/>
-                                    <table:template>
-                                        <Text id="description" text="{mdItemMaster>spec_name}"/>
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="c_itemType" width="10em" hAlign="Center">
-                                    <VBox>
-                                        <Label text="Item"/>
-                                        <Label text="Type"/>
-                                    </VBox>
-                                    <table:template>
-                                        <ComboBox selectedKey="{mdItemMaster>mold_item_type_code}" items="{ path : 'util>/CodeDetails',
-                                                filters : [
-                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                    {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
-                                                ]
-                                            }">
-                                            <core:Item key="{util>code}" text="{util>code_description}"/> 
-                                        </ComboBox>
-                                        <!-- <Text id="moldItemTypeCodeNm" text="{mdItemMaster>mold_item_type_code_nm}"/> -->
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="c_bookCurrency" width="10em" hAlign="Center">
-                                    <VBox>
-                                        <Label text="Book"/>
-                                        <Label text="Currency"/>
-                                    </VBox>
-                                    <table:template>
-                                        <Text text="{mdItemMaster>book_currency_code}"/>
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="c_budget_amount" width="10em" hAlign="Center">
-                                    <VBox>
-                                        <Label text="Budget"/>
-                                        <Label text="Amount"/>
-                                    </VBox>
-                                    <table:template>
-                                        <Text text="{mdItemMaster>provisional_budget_amount}"/>
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="c_currency" width="10em" hAlign="Center">
-                                    <VBox>
-                                        <Label text="Currency"/>
-                                    </VBox>
-                                    <table:template>
-                                    <!-- <Text text="{mdItemMaster>company_code}"/> -->
-                                        <ComboBox selectedKey="{mdItemMaster>currency_code}" 
-                                        items="{ 
-                                            path : 'psOrgCode>/OrgCodeLanguages',
-                                            filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_LOCAL_CURRENCY'}
-                                            ]
-                                        }">
-                                            <core:Item key="{psOrgCode>code}" text="{psOrgCode>code_name}"/> 
-                                        </ComboBox>
-                                        <!-- <Input value="{mdItemMaster>currency_code}"/> -->
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="c_target_amount" width="10em" hAlign="Center">
-                                    <VBox>
-                                        <Label text="Target"/>
-                                        <Label text="Amount"/>
-                                    </VBox>
-                                    <!-- <Label text="Budget Amount"/> -->
-                                    <table:template>
-                                        <Input value="{mdItemMaster>target_amount}"/>
-                                        <!-- <Input value="{mdItemMaster>provisional_budget_amount}"/> -->
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="c_mold_supplier1" width="10em" hAlign="Center">
-                                    <VBox>
-                                        <Label text="Mold"/>
-                                        <Label text="Supplier1"/>
-                                    </VBox>
-                                    <!-- <Label text="Budget Amount"/> -->
-                                    <table:template>
-                                        <Text text="{mdItemMaster>supplier_code_1}"/>
-                                        <!-- <ComboBox selectedKey="{mdItemMaster>supplier_code_1}" 
-                                            editable="false" 
-                                            items="{ 
-                                                path : 'org>/Company',
-                                                filters : [
-                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'}
-                                                ]
-                                            }">
-                                            <core:Item key="{org>company_code}" text="{org>company_name}"/> 
-                                        </ComboBox> -->
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="c_mold_supplier2" width="10em" hAlign="Center">
-                                    <VBox>
-                                        <Label text="Mold"/>
-                                        <Label text="Supplier2"/>
-                                    </VBox>
-                                    <!-- <Label text="Budget Amount"/> -->
-                                    <table:template>
-                                        <Text text="{mdItemMaster>supplier_code_2}"/>
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="c_mold_supplier3" width="10em" hAlign="Center">
-                                    <VBox>
-                                        <Label text="Mold"/>
-                                        <Label text="Supplier3"/>
-                                    </VBox>
-                                    <!-- <Label text="Budget Amount"/> -->
-                                    <table:template>
-                                        <Text text="{mdItemMaster>supplier_code_3}"/>
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="c_mold_supplier4" width="10em" hAlign="Center">
-                                    <VBox>
-                                        <Label text="Mold"/>
-                                        <Label text="Supplier4"/>
-                                    </VBox>
-                                    <!-- <Label text="Budget Amount"/> -->
-                                    <table:template>
-                                        <Text text="{mdItemMaster>supplier_code_4}"/>
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="c_mold_supplier5" width="10em" hAlign="Center">
-                                    <VBox>
-                                        <Label text="Mold"/>
-                                        <Label text="Supplier5"/>
-                                    </VBox>
-                                    <!-- <Label text="Budget Amount"/> -->
-                                    <table:template>
-                                        <Text text="{mdItemMaster>supplier_code_5}"/>
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="c_mold_supplier6" width="10em" hAlign="Center">
-                                    <VBox>
-                                        <Label text="Mold"/>
-                                        <Label text="Supplier6"/>
-                                    </VBox>
-                                    <!-- <Label text="Budget Amount"/> -->
-                                    <table:template>
-                                        <Text text="{mdItemMaster>supplier_code_6}"/>
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="c_mold_supplier7" width="10em" hAlign="Center">
-                                    <VBox>
-                                        <Label text="Mold"/>
-                                        <Label text="Supplier7"/>
-                                    </VBox>
-                                    <!-- <Label text="Budget Amount"/> -->
-                                    <table:template>
-                                        <Text text="{mdItemMaster>supplier_code_7}"/>
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="c_mold_supplier8" width="10em" hAlign="Center">
-                                    <VBox>
-                                        <Label text="Mold"/>
-                                        <Label text="Supplier8"/>
-                                    </VBox>
-                                    <!-- <Label text="Budget Amount"/> -->
-                                    <table:template>
-                                        <Text text="{mdItemMaster>supplier_code_8}"/>
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="c_mold_supplier9" width="10em" hAlign="Center">
-                                    <VBox>
-                                        <Label text="Mold"/>
-                                        <Label text="Supplier9"/>
-                                    </VBox>
-                                    <!-- <Label text="Budget Amount"/> -->
-                                    <table:template>
-                                        <Text text="{mdItemMaster>supplier_code_9}"/>
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="c_mold_supplier10" width="10em" hAlign="Center">
-                                    <VBox>
-                                        <Label text="Mold"/>
-                                        <Label text="Supplier10"/>
-                                    </VBox>
-                                    <!-- <Label text="Budget Amount"/> -->
-                                    <table:template>
-                                        <Text text="{mdItemMaster>supplier_code_10}"/>
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="c_mold_supplier11" width="10em" hAlign="Center">
-                                    <VBox>
-                                        <Label text="Mold"/>
-                                        <Label text="Supplier11"/>
-                                    </VBox>
-                                    <!-- <Label text="Budget Amount"/> -->
-                                    <table:template>
-                                        <Text text="{mdItemMaster>supplier_code_11}"/>
-                                    </table:template>
-                                </table:Column>
-                                <table:Column id="c_mold_supplier12" width="10em" hAlign="Center">
-                                    <VBox>
-                                        <Label text="Mold"/>
-                                        <Label text="Supplier12"/>
-                                    </VBox>
-                                    <!-- <Label text="Budget Amount"/> -->
-                                    <table:template>
-                                        <Text text="{mdItemMaster>supplier_code_12}"/>
-                                    </table:template>
-                                </table:Column>
-                            </table:columns>
-                        </table:Table>
+                    <uxap:ObjectPageSubSection id="participatingSupplierSelectionTableFragment">
+                        
                     </uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
@@ -411,11 +159,11 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
-				<Button type="Transparent" text="Draft"         press=".onPageDraftButtonPress" />
-				<Button type="Transparent" text="Preview"       press=".onPagePreviewButtonPress" />
-				<Button type="Transparent" text="PO Sheet"      press=".onPagePOSheetButtonPress" />
-				<Button type="Transparent" text="Request Cancel" press=".onPageRequestCancelButtonPress" />
-				<Button type="Emphasized"  text="Request"       press=".onPageRequestButtonPress"/>
+				<Button type="Transparent" text="Edit"      press=".onPageEditButtonPress" visible="{contModel>/viewMode}" />
+				<Button type="Transparent" text="CancelEdit"    press=".onPageCancelButtonPress" visible="{contModel>/editMode}" />
+				<Button type="Transparent" text="Draft"     press=".onPageDraftButtonPress"   visible="{contModel>/editMode}"/>
+				<Button type="Transparent" text="Preview"   press=".onPagePreviewButtonPress"  visible="{contModel>/editMode}" />
+				<Button type="Emphasized"  text="Request"   press=".onPageRequestButtonPress"/>
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

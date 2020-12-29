@@ -27,7 +27,7 @@
 
 				<uxap:snappedHeading>
                     <FlexBox fitContainer="true" alignItems="Center">
-						<Title text="{i18n>appTitle}" wrapping="true"/>
+						<Title text="Budget Execution Approval" wrapping="true"/>
 					</FlexBox>
 				</uxap:snappedHeading>
 
@@ -115,7 +115,7 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-            <uxap:ObjectPageSection titleUppercase="false" title="Purchase Order Item">
+            <uxap:ObjectPageSection titleUppercase="false" title="Item for Budget Execution">
 				<uxap:subSections>
                     <uxap:ObjectPageSubSection> 
                         <form:SimpleForm editable="true" 
@@ -139,7 +139,7 @@
 					<Label text="Budget Type" required="true"/>
 					<SegmentedButton visible="{contModel>/editMode}"
                                      id="segInspection" 
-                                     selectedKey="{mdItemMaster>/ItemBudgetExecution/0/investment_ecst_type_code}" 
+                                     selectedKey="{mdCommon>/investment_ecst_type_code}" 
                                      width="100%" 
                                      items="{ path : 'util>/CodeDetails',
                                               filters : [
@@ -152,7 +152,7 @@
 						</items>
 					</SegmentedButton>
                      <!-- view Mode -->
-                    <Text text="{mdItemMaster>/ItemBudgetExecution/0/investment_ecst_type_code_nm}" visible="{contModel>/viewMode}"/>
+                    <Text text="{mdCommon>/investment_ecst_type_code_nm}" visible="{contModel>/viewMode}"/>
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -173,12 +173,12 @@
 					<ComboBox visible="{contModel>/editMode}"
                               width="100%" 
                               id="acquisitionDepartment" 
-                              selectedKey="{mdItemMaster>/ItemBudgetExecution/0/accounting_department_code}" 
+                              selectedKey="{mdCommon>/accounting_department_code}" 
                               items="{}">
 						<core:Item key="{util>code}" text="{util>code_description}"/>
 					</ComboBox>
                     <!-- view Mode -->
-                    <Text text="{mdItemMaster>/ItemBudgetExecution/0/accounting_department_code}" visible="{contModel>/viewMode}"/>
+                    <Text text="{mdCommon>/accounting_department_code}" visible="{contModel>/viewMode}"/>
 
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
@@ -191,8 +191,8 @@
                               width="100%" 
                               id="importCompany" 
                               selectionChange=".onBCompanyChange"
-                              selectedKey="{mdItemMaster>/ItemBudgetExecution/0/import_company_code}" 
-                              enabled="{=${mdItemMaster>/ItemBudgetExecution/0/investment_ecst_type_code}!=='S'?false:true}"
+                              selectedKey="{mdCommon>/import_company_code}" 
+                              enabled="{=${mdCommon>/investment_ecst_type_code}!=='S'?false:true}"
                               items="{
                                    path: 'org>/Company',
                                         filters: [
@@ -203,7 +203,7 @@
 						<core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
 					</ComboBox>
                     <!-- view Mode -->
-                    <Text text="{mdItemMaster>/ItemBudgetExecution/0/import_company_code}" visible="{contModel>/viewMode}"/>
+                    <Text text="[{mdCommon>/import_company_code}] {mdCommon>/import_company_code_nm}" visible="{contModel>/viewMode}"/>
 
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
@@ -216,12 +216,12 @@
 					<ComboBox visible="{contModel>/editMode}" 
                               width="100%" 
                               id="projectCode" 
-                              selectedKey="{mdItemMaster>/ItemBudgetExecution/0/project_code}" 
+                              selectedKey="{mdCommon>/project_code}" 
                               items="{}">
 						<core:Item key="{util>code}" text="{util>code_description}"/>
 					</ComboBox>
                     <!-- view Mode -->
-                    <Text text="{mdItemMaster>/ItemBudgetExecution/0/project_code}" visible="{contModel>/viewMode}"/>
+                    <Text text="{mdCommon>/project_code}" visible="{contModel>/viewMode}"/>
 
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
@@ -232,15 +232,15 @@
 					<ComboBox width="100%" 
                               visible="{contModel>/editMode}" 
                               id="importPlant" 
-                              selectedKey="{mdItemMaster>/ItemBudgetExecution/0/import_company_org_code}" 
-                              enabled="{=${mdItemMaster>/ItemBudgetExecution/0/investment_ecst_type_code}!=='S'?false:true}"
+                              selectedKey="{mdCommon>/import_company_org_code}" 
+                              enabled="{=${mdCommon>/investment_ecst_type_code}!=='S'?false:true}"
                               items="{
-                                  path: 'importPlant>/Pur_Operation_Org'
+                                  path: 'importPlant>/Plant'
                               }">
-						<core:Item key="{importPlant>org_code}" text="[{importPlant>org_code}]{importPlant>org_name}" />
+						<core:Item key="{importPlant>plant_code}" text="[{importPlant>plant_code}]{importPlant>plant_name}" />
 					</ComboBox>
                      <!-- view Mode -->
-                    <Text text="{mdItemMaster>/ItemBudgetExecution/0/import_company_org_code}" visible="{contModel>/viewMode}"/> 
+                    <Text text="[{mdCommon>/import_company_org_code}] {mdCommon>/import_company_org_code_nm}" visible="{contModel>/viewMode}"/> 
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -250,7 +250,7 @@
 					<ComboBox visible="{contModel>/editMode}"  
                               width="100%" 
                               id="account" 
-                              selectedKey="{mdItemMaster>/ItemBudgetExecution/0/account_code}" 
+                              selectedKey="{mdCommon>/account_code}" 
                               items="{ path : 'util>/CodeDetails',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
@@ -260,7 +260,7 @@
 						<core:Item key="{util>code}" text="{util>code_description}"/>
 					</ComboBox>
                     <!-- view Mode -->
-                    <Text text="{mdItemMaster>/ItemBudgetExecution/0/account_code_nm}" visible="{contModel>/viewMode}"/> 
+                    <Text text="{mdCommon>/account_code_nm}" visible="{contModel>/viewMode}"/> 
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -276,7 +276,7 @@
 				<VBox>
 					<Label text="Balanced Budget"/>
 					<HBox alignItems="End" justifyContent="End">
-						<ObjectStatus text="{mdItemMaster>/ItemBudgetExecution/0/provisional_budget_amount}"/>
+						<ObjectStatus text="{mdCommon>/provisional_budget_amount}"/>
 						<ObjectStatus text="  KRW" state="Error"/>
 					</HBox>
 					<layoutData>

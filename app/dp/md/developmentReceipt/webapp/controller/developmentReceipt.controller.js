@@ -363,7 +363,6 @@ sap.ui.define([
 
             for (var idx = 0; idx < viewData.length; idx++) {
                 if(viewData[idx].chk){
-                    //viewData[idx].update_type = "bindReceipt";
                     checkCnt++;
 
                     var statusCode = viewData[idx].mold_progress_status_code;
@@ -431,6 +430,7 @@ sap.ui.define([
                                 data : JSON.stringify(input),
                                 contentType: "application/json",
                                 success: function(data){
+                                    MessageToast.show("Success to Bind & Receipt.");
                                     v_this.onPageSearchButtonPress();
                                 },
                                 error: function(e){
@@ -506,7 +506,6 @@ sap.ui.define([
             
             var oModel = this.getModel("list"),
                 statusChk = false,
-                orgChk = false,
                 viewData = oModel.getData().MoldMstView,
                 v_this = this;
 
@@ -514,26 +513,18 @@ sap.ui.define([
                 input = {},
                 moldViews = [];
 
-            var url = "dp/md/developmentReceipt/webapp/srv-api/odata/v4/dp.DevelopmentReceiptV4Service/BindDevelopmentReceipt";
+            var url = "dp/md/developmentReceipt/webapp/srv-api/odata/v4/dp.DevelopmentReceiptV4Service/CancelBindDevelopmentReceipt";
 
             for (var idx = 0; idx < viewData.length; idx++) {
                 if(viewData[idx].chk){
-                    //viewData[idx].update_type = "cancelBind";
                     checkCnt++;
 
-                    var statusCode = viewData[idx].mold_progress_status_code,
-                        orgCode = "";
-                    if(!(statusCode === "DEV_REQ" || statusCode === "DEV_RCV")){
-                        statusChk = true;
-                    }
-                    if(checkCnt === 1){
-                        orgCode = viewData[idx].org_code;
-                    }else{
-                        if(!(orgCode === viewData[idx].org_code)){
-                            orgChk = true;
-                        }
-                    }
+                    var statusCode = viewData[idx].mold_progress_status_code;
 
+                    if(!(statusCode === "DEV_REQ" || statusCode === "DEV_RCV")){
+                        //statusChk = true;
+                    }
+                    
                     moldViews.push({
                         chk                         : viewData[idx].chk,
                         tenant_id                   : viewData[idx].tenant_id,
@@ -565,15 +556,11 @@ sap.ui.define([
 
             if (checkCnt > 1) {
                 if(statusChk){
-                    MessageToast.show( "Development Request, Receipt 상태일 때만 Bind & Receipt 가능합니다." );
-                    return;
-                }
-                if(orgChk){
-                    MessageToast.show( "같은 플랜트일 때 Bind & Receipt 가능합니다." );
+                    MessageToast.show( "Development Request, Receipt 상태일 때만 Cancel Bind 가능합니다." );
                     return;
                 }
                             
-                MessageBox.confirm("Bind & Receipt 후엔 미접수 상태로 변경은 불가능합니다. Bind & Receipt 하시겠습니까?", {
+                MessageBox.confirm("Cancel Bind 하시겠습니까?", {
                     title: "Comfirmation",
                     initialFocus: sap.m.MessageBox.Action.CANCEL,
                     onClose: function (sButton) {
@@ -586,6 +573,7 @@ sap.ui.define([
                                 data : JSON.stringify(input),
                                 contentType: "application/json",
                                 success: function(data){
+                                    MessageToast.show("Success to Cancel Bind.");
                                     v_this.onPageSearchButtonPress();
                                 },
                                 error: function(e){

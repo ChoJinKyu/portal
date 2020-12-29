@@ -52,33 +52,7 @@ sap.ui.define([
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
 
-            
-            var oViewModel = new JSONModel({
-                busy: true,
-                delay: 0,
-                editMode : false ,
-                viewMode : true
-            });
-            this.setModel(oViewModel, "contModel");
-
-
-            this.getView().setModel(new ManagedModel(), "company");
-            this.getView().setModel(new ManagedModel(), "plant");
-            this.getView().setModel(new ManagedModel(), "appType");
-
-            this.getView().setModel(new JSONModel(Device), "device"); // file upload 
-
-            this.getView().setModel(new ManagedModel(), "appMaster");
-            this.getView().setModel(new ManagedModel(), "moldMaster");
-            this.getView().setModel(new ManagedListModel(), "appDetail");
-            this.getView().setModel(new ManagedListModel(), "approver");
-            this.getView().setModel(new ManagedListModel(), "referer");
-
-            oTransactionManager = new TransactionManager();
-            oTransactionManager.addDataModel(this.getModel("moldMaster"));
-            oTransactionManager.addDataModel(this.getModel("appMaster"));
-            oTransactionManager.addDataModel(this.getModel("approver"));
-            oTransactionManager.addDataModel(this.getModel("referer"));
+        
 
             this._showFormFragment();
         },
@@ -167,7 +141,39 @@ sap.ui.define([
 		 * @private
 		 */
         _onObjectMatched: function (oEvent) {
-            
+            /**
+             * init 에서 해당 모델을 선언하면 create 계속 연속 했을때 기존 데이터가 남아있어서
+             * 비정상적으로 나옴 
+             */        
+    
+            var oViewModel = new JSONModel({
+                busy: true,
+                delay: 0,
+                editMode : false ,
+                viewMode : true
+            });
+            this.setModel(oViewModel, "contModel");
+
+
+            this.getView().setModel(new ManagedModel(), "company");
+            this.getView().setModel(new ManagedModel(), "plant");
+            this.getView().setModel(new ManagedModel(), "appType");
+
+            this.getView().setModel(new JSONModel(Device), "device"); // file upload 
+
+            this.getView().setModel(new ManagedModel(), "appMaster");
+            this.getView().setModel(new ManagedModel(), "moldMaster");
+            this.getView().setModel(new ManagedListModel(), "appDetail");
+            this.getView().setModel(new ManagedListModel(), "approver");
+            this.getView().setModel(new ManagedListModel(), "referer");
+
+            oTransactionManager = new TransactionManager();
+            oTransactionManager.addDataModel(this.getModel("moldMaster"));
+            oTransactionManager.addDataModel(this.getModel("appMaster"));
+            oTransactionManager.addDataModel(this.getModel("approver"));
+            oTransactionManager.addDataModel(this.getModel("referer"));
+
+
             var oArgs = oEvent.getParameter("arguments");
             console.log(oArgs);
             this._createViewBindData(oArgs);
