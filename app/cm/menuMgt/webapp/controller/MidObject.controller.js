@@ -109,7 +109,7 @@ sap.ui.define([
             //console.log(">>>>>> params", menuCode, menuName, parentMenuCode);
             this.getModel("midObjectView").setProperty("/mode", (!menuCode ? "C" : "R"));
             this.getModel("midObjectView").setProperty("/menuCode", menuCode);
-            this.getModel("midObjectView").setProperty("/menuName", menuName);
+            this.getModel("midObjectView").setProperty("/menuName", menuName.replaceAll("^", "#"));
             this.getModel("midObjectView").setProperty("/parentMenuCode", parentMenuCode);
             //this.getModel("midObjectView").setProperty("/mode", "R");
             // 신규(C)
