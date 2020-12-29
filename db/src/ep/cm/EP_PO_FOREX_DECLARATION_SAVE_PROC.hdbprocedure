@@ -20,13 +20,15 @@ SQL SECURITY INVOKER
 
 AS
 BEGIN
-			
+
+	DECLARE checkError NVARCHAR(240) := '';
+
 	/* 신고진행상태
 	920010	작성대기
 	920020	신고진행중
 	920030	신고완료
 	*/			
-   DECLARE CURSOR curPoList FOR
+    DECLARE CURSOR curPoList FOR
         SELECT PO.TENANT_ID
                  , PO.COMPANY_CODE
                  , PO.PO_NUMBER
@@ -37,13 +39,14 @@ BEGIN
 				 , PO.ATTCH_GROUP_NUMBER
 				 , PO.REMARK
 				 , PO.UPDATE_USER_ID
-				 , 'S' AS RESULT_CODE
         FROM :I_TABLE PO
         ;
 
 	FOR curPo AS curPoList DO
 
-
+        IF (curPo.TENANT_ID IS NULL OR curPo.TENANT_ID = '') THEN
+            checkError := 'E';
+        ELSE
 
 			UPDATE EP_PO_FOREX_DECLARATION
 			      SET FOREX_DECLARE_STATUS_CODE = curPo.FOREX_DECLARE_STATUS_CODE
@@ -60,12 +63,25 @@ BEGIN
 			   AND PO_NUMBER = curPo.PO_NUMBER
 			;
 			
-
+        END IF;
 		
     END FOR;
 
-    O_TABLE = SELECT TENANT_ID, COMPANY_CODE, PO_NUMBER, 'S' AS RESULT_CODE
-                FROM :I_TABLE;
+    IF(checkError = 'E') THEN
+        ROLLBACK;
+        O_TABLE = SELECT A.TENANT_ID
+                    , A.COMPANY_CODE
+                    , A.PO_NUMBER               
+                    , 'E' AS RESULT_CODE
+                    FROM :I_TABLE A
+                    ; 
+    ELSE
+        O_TABLE = SELECT A.TENANT_ID
+                    , A.COMPANY_CODE
+                    , A.PO_NUMBER               
+                    , 'S' AS RESULT_CODE
+                    FROM :I_TABLE A
+                    ;     
+    END IF;
 
-END
-;
+END;
