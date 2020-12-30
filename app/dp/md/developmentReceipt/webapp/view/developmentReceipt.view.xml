@@ -231,14 +231,14 @@
                             <ComboBox   id="searchItemType" width="100%"
                                         selectedKey=""
                                         items="{
-                                                    path : 'util>/CodeDetails',
+                                                    path : 'util>/Code',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
                                                     ]
                                                 }"
                             >
-                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" linebreak="true" />
@@ -249,14 +249,14 @@
                             <ComboBox   id="searchProductionType" width="100%"
                                         selectedKey=""
                                         items="{
-                                                    path : 'util>/CodeDetails',
+                                                    path : 'util>/Code',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
                                                     ]
                                                 }"
                             >
-                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
@@ -274,14 +274,14 @@
                             <ComboBox   id="searchEDType" width="100%"
                                         selectedKey=""
                                         items="{
-                                                    path : 'util>/CodeDetails',
+                                                    path : 'util>/Code',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ED_TYPE'}
                                                     ]
                                                 }"
                             >
-                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
@@ -410,14 +410,14 @@
                              <ComboBox   id="mold_progress_status_code"
                                         selectedKey="{list>mold_progress_status_code}"
                                         items="{
-                                                    path : 'util>/CodeDetails',
+                                                    path : 'util>/Code',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROGRESS_STATUS_LOCAL'}
                                                     ]
                                                 }"
                             editable="false" class="readonlyField" width="100%" >
-                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
                     </table:Column>
@@ -438,14 +438,14 @@
                             <!--<ComboBox   id="family_flag"    
                                         selectedKey="{= ${list>family_part_number_1} !== null ? 'Y' : 'N' }"
                                         items="{
-                                                    path : 'util>/CodeDetails',
+                                                    path : 'util>/Code',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'CM_YN'}
                                                     ]
                                                 }"
                             selectionChange="familyFlagChange">
-                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>-->
                         </table:template>
                     </table:Column>
@@ -458,7 +458,7 @@
                             <ComboBox   id="mold_production_type_code"
                                         selectedKey="{list>mold_production_type_code}"
                                         items="{
-                                                    path : 'util>/CodeDetails',
+                                                    path : 'util>/Code',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
@@ -466,7 +466,7 @@
                                                 }"
                             required="true" selectionChange="inputFieldChange"
                             editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" >
-                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
                     </table:Column>
@@ -479,7 +479,7 @@
                             <ComboBox   id="mold_item_type_code"
                                         selectedKey="{list>mold_item_type_code}"
                                         items="{
-                                                    path : 'util>/CodeDetails',
+                                                    path : 'util>/Code',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
@@ -487,7 +487,7 @@
                                                 }"
                             required="true" selectionChange="inputFieldChange"
                             editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" >
-                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
                     </table:Column>
@@ -500,7 +500,7 @@
                             <ComboBox   id="mold_type_code"
                                         selectedKey="{list>mold_type_code}"
                                         items="{
-                                                    path : 'util>/CodeDetails',
+                                                    path : 'util>/Code',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_TYPE'}
@@ -509,7 +509,7 @@
                             required="true" selectionChange="inputFieldChange"
                             editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }"
                             class="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? '' : 'readonlyField' }" >
-                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
                     </table:Column>
@@ -522,7 +522,7 @@
                             <ComboBox   id="mold_location_type_code"
                                         selectedKey="{list>mold_location_type_code}"
                                         items="{
-                                                    path : 'util>/CodeDetails',
+                                                    path : 'util>/Code',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ED_TYPE'}
@@ -530,7 +530,7 @@
                                                 }"
                             required="true" selectionChange="inputFieldChange"
                             editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" >
-                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
                     </table:Column>
@@ -543,7 +543,7 @@
                             <ComboBox   id="mold_cost_analysis_type_code"    
                                         selectedKey="{list>mold_cost_analysis_type_code}"
                                         items="{
-                                                    path : 'util>/CodeDetails',
+                                                    path : 'util>/Code',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_COST_ANALYSIS_TYPE'}
@@ -551,7 +551,7 @@
                                                 }"
                             selectionChange="inputFieldChange"
                             editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" >
-                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
                     </table:Column>
@@ -581,7 +581,7 @@
                             <ComboBox   id="mold_purchasing_type_code"    
                                         selectedKey="{list>mold_purchasing_type_code}"
                                         items="{
-                                                    path : 'util>/CodeDetails',
+                                                    path : 'util>/Code',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PURCHASE_TYPE'}
@@ -589,7 +589,7 @@
                                                 }"
                             selectionChange="inputFieldChange"
                             editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" >
-                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
                     </table:Column>
@@ -602,7 +602,7 @@
                             <ComboBox   id="die_form"    
                                         selectedKey="{list>die_form}"
                                         items="{
-                                                    path : 'util>/CodeDetails',
+                                                    path : 'util>/Code',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_STRUCTURE'}
@@ -610,7 +610,7 @@
                                                 }"
                             selectionChange="inputFieldChange"
                             editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" >
-                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
                     </table:Column>
@@ -620,7 +620,7 @@
                             <ComboBox   id="mold_size"    
                                         selectedKey="{list>mold_size}"
                                         items="{
-                                                    path : 'util>/CodeDetails',
+                                                    path : 'util>/Code',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SIZE'}
@@ -628,7 +628,7 @@
                                                 }"
                             selectionChange="inputFieldChange"
                             editable="{= (${list>mold_progress_status_code} === 'DEV_REQ' || ${list>mold_progress_status_code} === 'DEV_RCV') ? true : false }" >
-                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
                     </table:Column>
