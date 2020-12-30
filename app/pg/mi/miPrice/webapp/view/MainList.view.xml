@@ -49,6 +49,7 @@
                     <smartFilterBar:SmartFilterBar id="smartFilterBar" 
                         entitySet="MIMaterialPriceManagementView " 
                         enableBasicSearch="false" 
+                        search=".onPageSearchButtonPress"
                         >
                         <smartFilterBar:controlConfiguration>
                             <!-- 시황자재코드 -->
@@ -56,7 +57,7 @@
                                 visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
                                     <MultiComboBox id="combobox_mi_material_code" items="{path: '/MIMatCodeView', templateShareable:true}" placeholder="선택하세요.">
-                                        <core:Item key="{mi_material_code}" text="{mi_material_name}"/>
+                                        <core:Item key="{mi_material_code}" text="{mi_material_code}"/>
                                     </MultiComboBox>
                                 </smartFilterBar:customControl>
                                 
@@ -90,9 +91,11 @@
                             <smartFilterBar:ControlConfiguration key="mi_date" groupId="_BASIC" index="3" label="{I18N>/MI_DATE}" 
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
-                                     <DatePicker id="datepicker_mi_date" placeholder="Date" displayFormat="yyyy/MM/dd'"/>
+                                     <DatePicker id="datepicker_mi_date" placeholder="Date" valueFormat="yyyy-MM-dd" displayFormat="yyyy/MM/dd'"/>
                                 </smartFilterBar:customControl>
                             </smartFilterBar:ControlConfiguration>
+
+                          
 
                             <smartFilterBar:ControlConfiguration key="Validated" filterType="single"/>   
                         </smartFilterBar:controlConfiguration>
@@ -113,24 +116,27 @@
                 
                 id="smartTable_MainTable_ResponsiveTable"
                 header="{I18N>/MIPRICE_TITLE} List"
-                entitySet="MIMaterialPriceManagementView" 
+                entitySet="list>/MIMaterialPriceManagementView" 
                 tableBindingPath="list>/MIMaterialPriceManagementView"
-                smartFilterId="smartFilterBar" 
-                tableType="ResponsiveTable" 
+                
+                tableType="Table" 
                 useExportToExcel="true"
-                beforeRebindTable=".onBeforeRebindTable"
+              
                 beforeExport=".onBeforeExport" 
                 useVariantManagement="false" 
                 useTablePersonalisation="false" 
                 showRowCount="true" 
-                editable="true" 
+               
                 persistencyKey="SmartTableAnalytical_Explored" 
                 enableAutoBinding="false" 
-                demandPopin="true" 
+               
                 class="sapUiResponsiveContentPadding"
                 initiallyVisibleFields="mi_material_code,mi_material_name,category_code,category_name,currency_unit,quantity_unit,exchange_unit,exchange,termsdelv,sourcing_group_code,delivery_mm,mi_date,amount"
                 >
-
+                 <!-- editable="true"  -->
+                <!-- smartFilterId="smartFilterBar"  -->
+                <!--  -->
+  <!-- beforeRebindTable=".onBeforeRebindTable" -->
 
                 <smartTable:customToolbar>
                     <OverflowToolbar design="Transparent">
@@ -158,164 +164,138 @@
                     </OverflowToolbar>
                 </smartTable:customToolbar>
 
-                <Table id="mainTable" 
-                        mode="MultiSelect"
-                        fixedLayout="false"
-                        popinLayout="GridLarge"
-                        sticky="HeaderToolbar,ColumnHeaders">
-                    <columns>  
-                        <Column hAlign="Center" demandPopin="true" popinDisplay="Inline" width="30px">
-                            <Text text=""></Text>                                                                             
-                        </Column>
-                        <Column hAlign="Center"  demandPopin="true"  popinDisplay="Inline" width="8%" >
-                            <customData>
-                                <core:CustomData key="p13nData"
-                                    value='\{"columnKey": "mi_material_code", "leadingProperty": "mi_material_code", "sortProperty": "mi_material_code", "filterProperty": "mi_material_code", "columnIndex": 1}'/>
-                            </customData>
-                            <Text text="{I18N>/MI_MATERIAL_CODE}"></Text>
-                        </Column>
-                        <Column hAlign="Center" demandPopin="true" popinDisplay="Inline" width="10%" >
-                            <customData>
-                                <core:CustomData key="p13nData"
-                                    value='\{"columnKey": "mi_material_name", "leadingProperty": "mi_material_name", "sortProperty": "mi_material_name", "filterProperty": "mi_material_name", "columnIndex": 2}'/>
-                            </customData>
-                            <Text text="{I18N>/MI_MATERIAL_NAME}"></Text>
-                        </Column>
-                        <Column hAlign="Center" demandPopin="true" popinDisplay="Inline" width="8%" >
-                            <customData>
-                                <core:CustomData key="p13nData"
-                                    value='\{"columnKey": "category_code", "leadingProperty": "category_code", "sortProperty": "category_code", "filterProperty": "category_code", "columnIndex": 3}'/>
-                            </customData>
-                            <Text text="{I18N>/CATEGORY_CODE}"></Text>
-                        </Column>
-                       
-                        <Column hAlign="Center" demandPopin="true" popinDisplay="Inline" width="10%" >
-                            <customData>
-                                <core:CustomData key="p13nData"
-                                    value='\{"columnKey": "category_name", "leadingProperty": "category_name", "sortProperty": "category_name", "filterProperty": "category_name", "columnIndex": 4}'/>
-                            </customData>
-                            <Text text="{I18N>/CATEGORY_NAME}"></Text>
-                        </Column>
-                        <Column hAlign="Center" demandPopin="true" popinDisplay="Inline" width="6%" >
-                            <customData>
-                                <core:CustomData key="p13nData"
-                                    value='\{"columnKey": "currency_unit", "leadingProperty": "currency_unit", "sortProperty": "currency_unit", "columnIndex": 5}'/>
-                            </customData>
-                            <Text text="화폐단위"></Text>                                                                             
-                        </Column>
-                        <Column hAlign="Center" demandPopin="true" popinDisplay="Inline" width="6%">
-                            <customData>
-                                <core:CustomData key="p13nData"
-                                    value='\{"columnKey": "quantity_unit", "leadingProperty": "quantity_unit", "sortProperty": "quantity_unit", "filterProperty": "quantity_unit", "columnIndex": 6}'/>
-                            </customData>
-                            <Text text="수량단위"></Text>                                                                             
-                        </Column>
-                        <Column hAlign="Center" demandPopin="true" popinDisplay="Inline" width="8%">
-                            <customData>
-                                <core:CustomData key="p13nData"
-                                    value='\{"columnKey": "exchange_unit", "leadingProperty": "exchange_unit", "sortProperty": "exchange_unit", "columnIndex": 7}'/>
-                            </customData>
-                            <Text text="거래소단위"></Text>                                                                             
-                        </Column>
-                        <Column hAlign="Center" demandPopin="true" popinDisplay="Inline" width="7%">
-                            <customData>
-                                <core:CustomData key="p13nData"
-                                    value='\{"columnKey": "exchange", "leadingProperty": "exchange", "sortProperty": "exchange", "filterProperty": "exchange", "columnIndex": 8}'/>
-                            </customData>
-                            <Text text="거래소"></Text>                                                                             
-                        </Column>
-                        <Column hAlign="Center" demandPopin="true" popinDisplay="Inline" width="10%">
-                            <customData>
-                                <core:CustomData key="p13nData"
-                                    value='\{"columnKey": "termsdelv", "leadingProperty": "termsdelv", "sortProperty": "termsdelv", "filterProperty": "termsdelv", "columnIndex": 9}'/>
-                            </customData>
-                            <Text text="{I18N>/TERMS_OF_DELIVERY}"></Text>                                                                             
-                        </Column>
-                        <Column hAlign="Center" demandPopin="true" popinDisplay="Inline" width="7%">
-                            <customData>
-                                <core:CustomData key="p13nData"
-                                    value='\{"columnKey": "sourcing_group_code", "leadingProperty": "sourcing_group_code", "sortProperty": "sourcing_group_code", "filterProperty": "sourcing_group_code", "columnIndex": 10}'/>
-                            </customData>
-                            <Text text="{I18N>/SOURCING_GROUP_CODE}"></Text>                                                                             
-                        </Column>
-                        <Column hAlign="Center" demandPopin="true" popinDisplay="Inline" width="7%">
-                            <customData>
-                                <core:CustomData key="p13nData"
-                                    value='\{"columnKey": "delivery_mm", "leadingProperty": "delivery_mm", "sortProperty": "delivery_mm", "filterProperty": "delivery_mm", "columnIndex": 11}'/>
-                            </customData>
-                            <Text text="인도월"></Text>                                                                             
-                        </Column>
-                        <Column hAlign="Center" demandPopin="true" popinDisplay="Inline" width="8%">
-                            <customData>
-                                <core:CustomData key="p13nData"
-                                    value='\{"columnKey": "mi_date", "leadingProperty": "mi_date", "sortProperty": "mi_date", "filterProperty": "mi_date", "columnIndex": 12}'/>
-                            </customData>
-                            <Text text="{I18N>/MI_DATE}"></Text>                                                                             
-                        </Column>
-
-                        <Column hAlign="Center" demandPopin="true" popinDisplay="Inline" width="6%">
-                            <customData>
-                                <core:CustomData key="p13nData"
-                                    value='\{"columnKey": "amount", "leadingProperty": "amount", "sortProperty": "amount", "filterProperty": "amount", "columnIndex": 13}'/>
-                            </customData>
-                            <Text text="{I18N>/AMOUNT}"></Text>                                                                             
-                        </Column>
-
-                    </columns>
-                        <items >
-                            <ColumnListItem hAlign="Middle" press=".onMainTableItemPress">
+                <t:Table id="mainTable" 
+                    noDataText="{I18N>/NCM01004}"
+                    rows="{list>/MIMaterialPriceManagementView}"
+                    selectionMode="MultiToggle"
+                    visibleRowCountMode="Auto"
+                    columnResize="onColumnResize"
+                    cellClick=".onCellClick"
+                    rowSelectionChange=".onCheck"
+                    fixedColumnCount="5"
+                    width="auto">
+ 
+                    <t:columns>
+                        <t:Column minScreenWidth="Tablet" hAlign="Center" width="40px" >
+                            <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
+                            <t:template>
                                 <ObjectStatus icon="{
                                     path: 'list>_row_state_',
                                     formatter: '.formatter.toModelStateColumnIcon'
                                 }" />
-                                <Input value="{list>mi_material_code}" editable="{= ${list>_row_state_} === 'C' }"  required="true"
-                                    showSuggestion="true" suggestionItems="{/MIMatCodeView}" 
+                            </t:template>
+                        </t:Column>
+                        <t:Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="10%" >
+                            <Text text="{I18N>/MI_MATERIAL_CODE}" />
+                            <t:template>
+                                <Input value="{list>mi_material_code}"  required="true"
+                                    showSuggestion="true" suggestionItems="{path: '/MIMatCodeView', templateShareable:true}" 
                                     suggestionItemSelected="onSuggestionItemSelected" submit="onSubmit" >
                                     <suggestionItems>
                                         <core:Item text="{mi_material_code}" />
                                     </suggestionItems>
                                 </Input>
+                            </t:template>
+                        </t:Column>
+                        <t:Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="15em" >
+                            <Text text="{I18N>/MI_MATERIAL_NAME}" />
+                            <t:template>
                                 <Text text="{list>mi_material_name}" ></Text>
+                            </t:template>
+                        </t:Column>
+                        <t:Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
+                            <Text text="{I18N>/CATEGORY_CODE}" />
+                            <t:template>
                                 <Text text="{list>category_code}"></Text>
+                            </t:template>
+                        </t:Column>
+                        <t:Column minScreenWidth="Tablet" hAlign="Center" width="10em">
+                            <Text text="{I18N>/CATEGORY_NAME}" />
+                            <t:template>
                                 <Text text="{list>category_name}"></Text>
-
+                            </t:template>
+                        </t:Column>
+                        <t:Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
+                            <Text text="화폐단위" />
+                            <t:template>
                                 <ComboBox items="{path: '/CurrencyUnitView', templateShareable:true, filters: [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'}]}" 
                                     placeholder="선택하세요."  selectedKey="{list>currency_unit}"
-                                    width="100%" editable="{= ${list>_row_state_} === 'C' }" required="true">
+                                    width="100%" required="true">
                                     <items>
                                         <core:Item key="{currency_code}" text="{currency_code}" />
                                     </items>
                                 </ComboBox>
+                            </t:template>
+                        </t:Column>
+                        <t:Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
+                            <Text text="수량단위" />
+                            <t:template>
                                 <ComboBox items="{path: '/UnitOfMeasureView', templateShareable:true, filters: [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'}]}" 
                                     placeholder="선택하세요." selectedKey="{list>quantity_unit}"
-                                    width="100%" editable="{= ${list>_row_state_} === 'C' }" required="true">
+                                    width="100%" required="true">
                                     <core:Item key="{uom_code}" text="{uom_code}"/>
                                 </ComboBox>
-                                <!-- <Text text="{quantity_unit}"></Text>   -->
-                                <Input value="{list>exchange_unit}" editable="{= ${list>_row_state_} === 'C' }" ></Input>  
+                            </t:template>
+                        </t:Column>
+                        <t:Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
+                            <Text text="거래소단위" />
+                            <t:template>
+                                <Input value="{list>exchange_unit}" editable="{= ${list>_row_state_} === 'C' }" ></Input>
+                            </t:template>
+                        </t:Column>
+                        <t:Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
+                            <Text text="거래소" />
+                            <t:template>
                                 <ComboBox items="{path: '/MIExchangeView', templateShareable:true, filters: [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'}]}" 
                                     placeholder="선택하세요." selectedKey="{list>exchange}"
-                                    width="100%" editable="{= ${list>_row_state_} === 'C' }" required="true">
+                                    width="100%" required="true">
                                     <core:Item key="{exchage}" text="{exchage}"/>
                                 </ComboBox>
-                                <!-- <Text text="{exchange}"></Text>   -->
+                            </t:template>
+                        </t:Column>                
+                        <t:Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
+                            <Text text="{I18N>/TERMS_OF_DELIVERY}" />
+                            <t:template>
                                 <ComboBox items="{path: '/MITermsdelvView', templateShareable:true, filters: [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'}]}" 
                                     placeholder="선택하세요." selectedKey="{list>termsdelv}" 
-                                    width="100%" editable="{= ${list>_row_state_} === 'C' }" required="true">
+                                    width="100%" required="true">
                                     <core:Item key="{termsdelv}" text="{termsdelv}"/>
-                                </ComboBox>
-                                <!-- <Text text="{termsdelv}"></Text>   -->
-                                <Input value="{list>sourcing_group_code}" editable="{= ${list>_row_state_} === 'C' }"></Input>  
-                                <Input value="{list>delivery_mm}" editable="{= ${list>_row_state_} === 'C' }"></Input>  
-                                <DatePicker  valueFormat="yyyy/MM/dd" displayFormat="yyyy/MM/dd'" value="{path: 'list>mi_date', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy/MM/dd'} }" 
-                                    editable="{= ${list>_row_state_} === 'C' }" required="true"/>
-                                <!-- <Input value="{mi_date}"></Input>   -->
-                                <Input value="{list>amount}" editable="{= ${list>_row_state_} === 'C' }" type="Number" textAlign="Right"></Input>  
-                            </ColumnListItem>
-                        </items>
-                    </Table>
+                                </ComboBox> 
+                            </t:template>
+                        </t:Column>
+                        <t:Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
+                            <Text text="{I18N>/SOURCING_GROUP_CODE}" />
+                            <t:template>
+                                <Input value="{list>sourcing_group_code}" ></Input>  
+                            </t:template>
+                        </t:Column>
 
-            
+                        <t:Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
+                            <Text text="인도월" />
+                            <t:template>
+                                <Input value="{list>delivery_mm}" ></Input>  
+                            </t:template>
+                        </t:Column>
+
+                    
+                        <t:Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
+                            <Text text="{I18N>/MI_DATE}" />
+                            <t:template>
+                                <DatePicker  valueFormat="yyyy/MM/dd" displayFormat="yyyy/MM/dd'" required="true"
+                                    value="{path: 'list>mi_date', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy/MM/dd'} }" />
+                            </t:template>
+                        </t:Column>
+                    
+                        <t:Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
+                            <Text text="{I18N>/AMOUNT}" />
+                            <t:template>
+                                <Input value="{list>amount}" type="Number" textAlign="Right"></Input>
+                            </t:template>
+                        </t:Column>
+                    </t:columns>  
+                </t:Table>
+
+             
 
             </smartTable:SmartTable>
         </f:content>

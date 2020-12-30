@@ -118,7 +118,7 @@
         "viewType": "XML",
         "async": true,
         "viewPath": "pg.mdVpItemMapping.view",
-        "transition": "slide",
+        "controlAggregation": "pages",
         "controlId": "app",
         "clearControlAggregation": false
       },
@@ -133,8 +133,9 @@
       ],
       "targets": {
         "mdVpItemMapping": {
+          "viewId": "mdVpItemMapping",
           "viewName": "mdVpItemMapping",
-		  "controlAggregation": "beginColumnPages",
+          "viewLevel": 1,
           "title": "{i18n>mainListViewTitle}"
         }
       }

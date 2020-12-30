@@ -58,24 +58,28 @@ sap.ui.define([
 
 			var oMultilingual = new Multilingual();
 			this.setModel(oMultilingual.getModel(), "I18N");
-
-			oMultilingual.attachEvent("ready", function(oEvent){
+			var smartFilterBar = this.getView().byId("smartFilterBar");
+			
+            oMultilingual.attachEvent("ready", function(oEvent){
 				var oi18nModel = oEvent.getParameter("model");
 				this.addHistoryEntry({
-					title: oi18nModel.getText("/MESSAGE_MANAGEMENT"),
+					title: oi18nModel.getText("/USER_MANAGEMENT"),
 					icon: "sap-icon://table-view",
 					intent: "#Template-display"
 				}, true);
 
-				// Smart Filter Button 명 처리 START
-				var b = this.getView().byId("smartFilterBar").getContent()[0].getContent();
-				$.each(b, function(index, item) {
-					if (item.sId.search("btnGo") !== -1) {
-						item.setText(this.getModel("I18N").getText("/EXECUTE"));
-					}
-				}.bind(this));
-				// Smart Filter Button 명 처리 END
+			// Smart Filter Button 명 처리 START
+			var b = this.getView().byId("smartFilterBar").getContent()[0].getContent();
+			$.each(b, function (index, item) {
+				if (item.sId.search("btnGo") !== -1) {
+				//	item.setText(oi18nModel.getText("/EXECUTE"));
+				}
 			}.bind(this));
+				
+			
+			}.bind(this));
+			
+
 
 			var oUi,
 				oResourceBundle = this.getResourceBundle();
@@ -102,6 +106,9 @@ sap.ui.define([
             this._getSmartTableById().getTable().attachSelectionChange(this._selectionChanged.bind(this));
 
 			this.getModel("oUi").setProperty("/headerExpanded", true);
+
+
+
 			console.groupEnd();
 		},
 		
@@ -193,13 +200,16 @@ sap.ui.define([
 			var mBindingParams = oEvent.getParameter("bindingParams");
 			var oSmtFilter = this.getView().byId("smartFilterBar");             //smart filter
 			
-            //combobox value
+	
 			var oMi_material_code = oSmtFilter.getControlByKey("mi_material_code").getSelectedKey();   
 			var oMi_material_name = oSmtFilter.getControlByKey("mi_material_name").getValue();            
-			var oCategory_code = oSmtFilter.getControlByKey("category_code").getSelectedKey();    
+			//var oCategory_code = oSmtFilter.getControlByKey("category_code").getSelectedKey();    
             var oUse_flag = oSmtFilter.getControlByKey("use_flag").getSelectedKey();   
-            var fOcode = oUse_flag =="FALSE" ? false : true;
-	
+			var fOcode = oUse_flag =="false" ? false : true;
+			
+			var oCategory_code_items = oSmtFilter.getControlByKey("category_code").getSelectedItems();
+			var oCategory_code_item="";
+
             
 			if (oMi_material_code.length > 0) {
 				var oMi_material_codeFilter = new Filter("mi_material_code", FilterOperator.EQ, oMi_material_code);
@@ -211,9 +221,13 @@ sap.ui.define([
 				mBindingParams.filters.push(oMi_material_nameFilter);
 			}
 
-			if (oCategory_code.length > 0) {
-				var oCategory_codeFilter = new Filter("category_code", FilterOperator.EQ, oCategory_code);
-				mBindingParams.filters.push(oCategory_codeFilter);
+			if (oCategory_code_items.length > 0) {
+
+				for(var i=0;i<oCategory_code_items.length;i++){
+					oCategory_code_item = oCategory_code_items[i].getKey();
+					var oCategory_codeFilter = new Filter("category_code", FilterOperator.EQ, oCategory_code_item);
+					mBindingParams.filters.push(oCategory_codeFilter);					
+				}
 			}
 			
 			if (oUse_flag.length > 0) {

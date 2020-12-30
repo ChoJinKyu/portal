@@ -64,17 +64,13 @@ sap.ui.define([
                 tenant_id : "L2100",
                 material_code : "",
                 supplier_code : "",
-                mi_bom_id : "",
-                mi_material_code : "",
-                currency_unit : "",
-                quantity_unit : "",
-                exchange : "",
-                termsdelv : "",
+                mi_bom_id : "",               
                 language_code : "KO"
             },
             serviceName : {
                 marketIntelligenceService : "pg.marketIntelligenceService", //main Service
                 mIMaterialCodeBOMManagementView: "/MIMaterialCodeBOMManagementView",  //자재별 시황자재 BOM 조회 View
+                mIMaterialCodeBOMManagementHeaderView: "/MIMaterialCodeBOMManagementHeaderView",  //자재별 시황자재 BOM 조회 View(2020/12/29 변경)
                 mIMaterialCodeBOMManagementItem:"/MIMaterialCodeBOMManagementItem",//자재별 시황자재 BOM 관리 Item
                 mIMaterialCodeBOMManagementHeader:"/MIMaterialCodeBOMManagementHeader",//자재별 시황자재 BOM 관리 Header
                 mIMaterialCostInformationView: "/MIMaterialCostInformationView",  //시황자재 가격관리
@@ -221,6 +217,9 @@ sap.ui.define([
                 oEvent.getParameter("element").setValueState(ValueState.None);
             });
 
+            //header title hide
+            $("#__xmlview1--page-intHeader-BarPH").hide();
+            
             //pageMode C Create, V View, E Edit
             var oUi = new JSONModel({
                 busy: false,
@@ -440,7 +439,6 @@ sap.ui.define([
          * @param {*} oEvent 
          */
 		onValueHelpMaterialDialogSearch: function (oEvent) {
-
             console.log("_onValueHelpMaterialDialogSearch");
 
             //기존 검색된 모델 값이 존재할경우 삭제 
@@ -449,11 +447,12 @@ sap.ui.define([
             var oModel = this.getModel(),
                 _oUiData = this.getModel("_oUiData"),
                 materialTable = new JSONModel(),
-                that = this,
-
-                //onValueHelpMaterialDialogApply
-                comboBox_materialView=this._findFragmentControlId(this._m.fragementId.materialDialog, "comboBox_materialView").getSelectedKey(),
-                comboBox_supplierView=this._findFragmentControlId(this._m.fragementId.materialDialog, "comboBox_supplierView").getSelectedKey(),
+                that = this;
+                
+            var oComboBox_materIalView = this._findFragmentControlId(this._m.fragementId.materialDialog, "comboBox_materialView"),
+                oCcomboBox_supplierView= this._findFragmentControlId(this._m.fragementId.materialDialog, "comboBox_supplierView"),
+                comboBox_materialView=oComboBox_materIalView.getSelectedKey(),
+                comboBox_supplierView=oCcomboBox_supplierView.getSelectedKey(),
                 input_material_desc=this._findFragmentControlId(this._m.fragementId.materialDialog, "input_material_desc").getValue(),
                 input_supplier_local_name=this._findFragmentControlId(this._m.fragementId.materialDialog, "input_supplier_local_name").getValue();
                 //input_hidden_supplier_english_name=this._findFragmentControlId(this._m.fragementId.materialDialog, "input_supplier_local_name").getValue();
@@ -462,10 +461,8 @@ sap.ui.define([
                 new Filter("tenant_id", FilterOperator.EQ,  this._m.filter.tenant_id)
             ];
 
-            comboBox_materialView = "";
             if(_oUiData.getProperty("/radioButtonGroup")==0){
 
-                sFilters.push(new Filter("tenant_id", FilterOperator.Contains, this._m.filter.tenant_id));
                 if(comboBox_materialView.length>0){
                     sFilters.push(new Filter("material_code", FilterOperator.Contains, comboBox_materialView));
                 }
@@ -739,20 +736,22 @@ sap.ui.define([
             });
         },
         /**
-         * 아이템 추가나 삭제시 사용할 자재 정보 (실시간 체크로 변경)
+         * 자재가 mIMaterialCodeBOMManagementHeaderView 속해 있는지 확인
+         * call function onValueHelpMaterialDialogApply
          */
-        _onHiddenMidServiceRead : function(){
+        _checkMIMaterialCodeBOMManagementHeaderViewService : function(tenant_id, material_code, supplier_code){
             console.log("_onMidServiceRead");
             
             var that = this,
                 oModel = this.getOwnerComponent().getModel(),
                 oMidList = new JSONModel(),
                 oUiData = new JSONModel(),
-                sServiceUrl = this._m.serviceName.mIMaterialCodeBOMManagementView, //read는 master 페이지와 동일하게 사용한다. 
+                sServiceUrl = this._m.serviceName.mIMaterialCodeBOMManagementHeaderView, //read는 master 페이지와 동일하게 사용한다. 
                 aFilters = [
-                new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id),
-                new Filter("mi_bom_id", FilterOperator.EQ, this._m.filter.mi_bom_id)
-            ];
+                    new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id),
+                    new Filter("material_code", FilterOperator.EQ, this._m.filter.material_code),
+                    new Filter("supplier_code", FilterOperator.EQ, this._m.filter.supplier_code)
+                ];
 
             oModel.read(sServiceUrl, {
                 async: false,
@@ -760,66 +759,90 @@ sap.ui.define([
                 success: function (rData, reponse) {
                   
                     if(reponse.data.results.length>0){
-                        oMidList.setData(reponse.data.results);
-                        that.getOwnerComponent().setModel(oMidList, "_midList");
+                        return reponse.data.results.length;
+                    }else{
+                        return 0;
                     }
                 }
             });
         },
+
         /**
-         * 자재정보 MIMaterialCodeBOMManagement Read dev121212
-         * mIMaterialCodeBOMManagementView 동일하게 리스트에서 사용 mIMaterialCodeBOMManagement cud에서 사용
-         * @private
+         * MIMaterialCodeBOMManagementHeader Service Load
          */
-        _onMidServiceRead : function(){
-            console.log("_onMidServiceRead");
-            
+        _mIMaterialCodeBOMManagementHeaderServiceLoad : function() {
+           console.log("_mIMaterialCodeBOMManagementHeaderServiceLoad");
+            var that = this,
+                oModel = this.getOwnerComponent().getModel(),
+                oUiData = new JSONModel(),
+                sServiceUrl = this._m.serviceName.mIMaterialCodeBOMManagementHeader, 
+                aFilters = [
+                new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id),
+                new Filter("material_code", FilterOperator.EQ, this._m.filter.material_code),
+                new Filter("supplier_code", FilterOperator.EQ, this._m.filter.supplier_code),
+                new Filter("mi_bom_id", FilterOperator.EQ, this._m.filter.mi_bom_id)          
+            ];
+
+            oModel.read(sServiceUrl, {
+                async: false,
+                filters: aFilters,
+                success: function (rData, reponse) {
+                    if(reponse.data.results.length>0){
+                        var oData = reponse.data.results;
+                        oUiData.setData(oData[0]);
+                        that._m.mi_bom_id = oData[0].mi_bom_id;
+                        that.getOwnerComponent().setModel(oUiData, "oUiData");
+                    }
+                }
+            });
+        },
+
+        /**
+         * MIMaterialCodeBOMManagementView Service Load
+         */
+        _mIMaterialCodeBOMManagementViewServiceLoad : function() {
+        console.log("_mIMaterialCodeBOMManagementViewServiceLoad");
             var that = this,
                 oModel = this.getOwnerComponent().getModel(),
                 oMidList = new JSONModel(),
-                oUiData = new JSONModel(),
                 sServiceUrl = this._m.serviceName.mIMaterialCodeBOMManagementView, //read는 master 페이지와 동일하게 사용한다. 
                 aFilters = [
                 new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id),
                 new Filter("material_code", FilterOperator.EQ, this._m.filter.material_code),
                 new Filter("supplier_code", FilterOperator.EQ, this._m.filter.supplier_code),
-                new Filter("mi_bom_id", FilterOperator.EQ, this._m.filter.mi_bom_id),
-                new Filter("mi_material_code", FilterOperator.EQ, this._m.filter.mi_material_code),
-                new Filter("currency_unit", FilterOperator.EQ, this._m.filter.currency_unit),
-                new Filter("quantity_unit", FilterOperator.EQ, this._m.filter.quantity_unit),
-                new Filter("exchange", FilterOperator.EQ, this._m.filter.exchange),
-                new Filter("termsdelv", FilterOperator.EQ, this._m.filter.termsdelv)                 
+                new Filter("mi_bom_id", FilterOperator.EQ, this._m.filter.mi_bom_id)          
             ];
-            console.log(sServiceUrl);
-            console.log(aFilters);
-            this._setBusy(true);
+            
             oModel.read(sServiceUrl, {
                 async: false,
                 filters: aFilters,
                 success: function (rData, reponse) {
-                    for(var i=0;i< reponse.data.results.length;i++){
 
-                        var oData = reponse.data.results[i];
+                    if(reponse.data.results.length>0){
 
-                        if(i==0){
-                            oUiData.setData(oData);
-                            oUiData.tenant_name =  "";
-                            //create new mi_bom_id,  update load mi_bom_id
-                            that._m.mi_bom_id = oData.mi_bom_id;
-                            that.getOwnerComponent().setModel(oUiData, "oUiData");
+                        oMidList.setData(reponse.data.results);
+
+                        for(var i=0;i<reponse.data.results.length;i++){
+                            oMidList.oData[i].itemMode = that._m.itemMode.read;
+                            oMidList.oData[i].odataMode = that._m.odataMode.yes;
                         }
+                        that.getOwnerComponent().setModel(oMidList, "midList");
                     }
-
-                    oMidList.setData(reponse.data.results);
-
-                    for(var i=0;i<reponse.data.results.length;i++){
-                       oMidList.oData[i].itemMode = that._m.itemMode.read;
-                       oMidList.oData[i].odataMode = that._m.odataMode.yes;
-                    }
-                    that.getOwnerComponent().setModel(oMidList, "midList");
-                    that._setBusy(false);
                 }
             });
+        },
+
+        /**
+         * 자재정보 MIMaterialCodeBOMManagement Read dev121212
+         * mIMaterialCodeBOMManagementHeaderView 동일하게 리스트에서 사용 mIMaterialCodeBOMManagement cud에서 사용
+         * @private
+         */
+        _onMidServiceRead : function(){
+            console.log("_onMidServiceRead");
+            //header
+            this._mIMaterialCodeBOMManagementHeaderServiceLoad();
+            //item //item 서비스를 사용하지 않고 MIMaterialCodeBOMManagementView 를 용한다. 12/29
+            this._mIMaterialCodeBOMManagementViewServiceLoad();
         },     
 
         /**
@@ -858,6 +881,15 @@ sap.ui.define([
             this.getView().byId("input_hidden_supplier_local_name").setValue("");
             this.getView().byId("input_hidden_supplier_english_name").setValue("");
             this.getView().byId("input_material_code").setValue("");
+
+            // var oComboBox_materIalView = this._findFragmentControlId(this._m.fragementId.materialDialog, "comboBox_materialView"),
+            //     oComboBox_supplierView = this._findFragmentControlId(this._m.fragementId.materialDialog, "comboBox_supplierView");
+
+            //  oComboBox_materIalView.setSelectedItems([]);
+            //  oComboBox_supplierView.setSelectedItems([]);
+            // this._findFragmentControlId(this._m.fragementId.materialDialog, "input_material_desc").setValue("")
+            // this._findFragmentControlId(this._m.fragementId.materialDialog, "input_supplier_local_name").setValue("");
+          
         },
 
         
@@ -904,12 +936,7 @@ sap.ui.define([
             this._m.filter.tenant_id = oArgs.tenant_id;
             this._m.filter.material_code = oArgs.material_code;
             this._m.filter.supplier_code = oArgs.supplier_code;
-            this._m.filter.mi_bom_id = oArgs.mi_bom_id;
-            this._m.filter.mi_material_code = oArgs.mi_material_code;
-            this._m.filter.currency_unit = oArgs.currency_unit;
-            this._m.filter.quantity_unit = oArgs.quantity_unit;
-            this._m.filter.exchange = oArgs.exchange;
-            this._m.filter.termsdelv = oArgs.termsdelv;
+            this._m.filter.mi_bom_id = oArgs.mi_bom_id
     
             if (this._m.filter.material_code == "new") {
                 console.log("=============== new item ===============");
@@ -920,7 +947,10 @@ sap.ui.define([
                 }
                 
                 this._fnSetCreateMode();
-                
+
+                var oUiData = new JSONModel({pcst_currency_unit:"KRW"});
+                this.getOwnerComponent().setModel(oUiData, "oUiData");
+
             }else{
 
                 
@@ -1063,9 +1093,9 @@ sap.ui.define([
 
         _handleCreateSuccess: function (oData) {
             var that = this;
-            MessageBox.show(this.getModel("I18N").getText("/NCM0005"), {
+            MessageBox.show(this.getModel("I18N").getText("/NCM01001"), {
                 icon: MessageBox.Icon.SUCCESS,
-                title: this.getModel("I18N").getText("/SAVE + CONFIRM"),
+                title: this.getModel("I18N").getText("/SAVE"),
                 actions: [MessageBox.Action.OK],
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
@@ -1156,7 +1186,8 @@ sap.ui.define([
         _setSelectedRightTableItem : function (){
             console.log("_setSelectedRightTableItem");
             var rightTable = this._findFragmentControlId(this._m.fragementId.materialDetail, "rightTable"),
-            midList =this.getModel("midList");
+                midList =this.getModel("midList"),
+                oUi = this.getModel("oUi");
             
             for (var idx = 0; idx < rightTable.getItems().length; idx++) {
                 var items = rightTable.getItems()[idx];
@@ -1165,13 +1196,15 @@ sap.ui.define([
                 var exchange = items.getCells()[2].mProperties.text;
                 var termsdelv = items.getCells()[3].mProperties.text;
 
-                if(midList.oData[this._selectedIndex]){
-                    if(currency_unit==midList.oData[this._selectedIndex].currency_unit &&
-                        quantity_unit==midList.oData[this._selectedIndex].quantity_unit &&
-                        exchange==midList.oData[this._selectedIndex].exchange &&
-                        termsdelv==midList.oData[this._selectedIndex].termsdelv
-                    ){
-                        items.setSelected(true);
+                if(oUi.getProperty("changeItem")){
+                    if(midList.oData[this._selectedIndex]){
+                        if(currency_unit==midList.oData[this._selectedIndex].currency_unit &&
+                            quantity_unit==midList.oData[this._selectedIndex].quantity_unit &&
+                            exchange==midList.oData[this._selectedIndex].exchange &&
+                            termsdelv==midList.oData[this._selectedIndex].termsdelv
+                        ){
+                            items.setSelected(true);
+                        }
                     }
                 }
     
@@ -1255,10 +1288,7 @@ sap.ui.define([
             var supplier_local_name = this.getView().byId("input_hidden_supplier_local_name").getValue();
             var supplier_english_name = this.getView().byId("input_hidden_supplier_english_name").getValue();
 
-      
-            //구성 MIMaterialCodeBOMManagementView
-            //this._m.filter 및 -1 값은 아직 준비되지 않음 추가 변경. 12/17
-            //tenant_name 제외
+ 
             var items = {
                 "tenant_id": tenant_id,
                 "material_code": material_code,
@@ -1266,22 +1296,19 @@ sap.ui.define([
                 "supplier_code": supplier_code,
                 "supplier_local_name": supplier_local_name,
                 "supplier_english_name": supplier_english_name,
-                "base_quantity": "-1",  
-                "processing_cost": "-1", 
-                "pcst_currency_unit": currency_unit,
-                "mi_bom_id": this._m.mi_bom_id,
                 "mi_material_code": mi_material_code,
                 "mi_material_name": mi_material_name,
                 "category_code": category_code,
                 "category_name": category_name,
-                "reqm_quantity_unit": quantity_unit, //소요수량단위 //기본값 으로 수량단위와 동일하게 셋팅
-                "reqm_quantity": "", //사용자 입력
+                "base_quantity": "-1",  
+                "processing_cost": "-1", 
+                "pcst_currency_unit": "-1", 
                 "currency_unit": currency_unit,
-                "mi_base_reqm_quantity": "",//시황기준소요수량
                 "quantity_unit": quantity_unit,
                 "exchange": exchange,
                 "termsdelv": termsdelv,
-                "use_flag": true, 
+                "mi_bom_id": this._m.mi_bom_id,
+                "use_flag": true,
                 "local_create_dtm": new Date(),
                 "local_update_dtm": new Date(),
                 "create_user_id": this._sso.user.id,
@@ -1293,33 +1320,23 @@ sap.ui.define([
             };
             // 
             //등록되어 있는 자재인지 확인한다. 
-
-
+            
             var andFilter = [];
             andFilter.push(new Filter("tenant_id", FilterOperator.EQ, items.tenant_id));
-            andFilter.push(new Filter("mi_bom_id", FilterOperator.EQ, items.mi_bom_id));
             andFilter.push(new Filter("mi_material_code", FilterOperator.EQ, items.mi_material_code));
-            andFilter.push(new Filter("currency_unit", FilterOperator.EQ, currency_unit));
-            andFilter.push(new Filter("quantity_unit", FilterOperator.EQ, quantity_unit));
-            andFilter.push(new Filter("exchange", FilterOperator.EQ, exchange));
-            andFilter.push(new Filter("termsdelv", FilterOperator.EQ, termsdelv));
-          
-            // Promise.all([ this.itemChecklistEntity(andFilter)
-            // ]).then(that.createItemCheckAction.bind(that),
-            //         that.createCheckError.bind(that));
+            andFilter.push(new Filter("mi_bom_id", FilterOperator.EQ, items.mi_bom_id));
 
             that.getModel().read(that._m.serviceName.mIMaterialCodeBOMManagementItem, {
                 async: false,
                 filters: andFilter,                
                 success: function(oData, reponse) {
                 
-                    if(reponse.data.results.length>0){
-                            that._showMessageToast(this.getModel("I18N").getText("/NPG00022"));
-                    }else{
+                    //if(reponse.data.results.length>0){
+ 
                         that.onMidListItemAdd(items);
-                        that.onMaterialDetailClose();
-                    }         
-                             
+                        //that.onMaterialDetailClose();
+                       
+                   //}         
                 },
                 error: function(data){
                     console.log('error',data)
@@ -1370,56 +1387,122 @@ sap.ui.define([
         onValueHelpMaterialDialogApply : function () {
             console.log("onValueHelpMaterialDialogApply");
             var oTable = this._findFragmentControlId(this._m.fragementId.materialDialog, "materialTable"),            
-                oSelected = oTable.getSelectedContexts(),
-                _oUiData = this.getModel("_oUiData"),                
-                midTable = this.getModel("midTable");
+                oSelected = oTable.getSelectedContexts();
 
-                //테이블에 충분한 데이타가 있다면 Record로 찻는다. 
-                //oRecord
-            
             if(oSelected.length<1){
                 this._showMessageBox(
-                    "선택 확인",
-                    "항목을 선택 하여 주십시요.",
+                    this.getModel("I18N").getText("/OPTION + CONFIRM"),
+                    this.getModel("I18N").getText("/NPG00016"),
                     this._m.messageType.Warning,
                     function(){return;}
                 );
                 return;
             }
 
-            var aSelectedItems = oTable.getSelectedItems(),
-                vendor = aSelectedItems[0].getCells()[0].getText(),
+            var aSelectedItems = oTable.getSelectedItems();
+            this._MaterialApply(aSelectedItems);
+            
+        },
+
+        _MaterialApply : function(aSelectedItems){
+
+            var vendor = aSelectedItems[0].getCells()[0].getText(),
                 vendor_name= aSelectedItems[0].getCells()[1].getText(),
                 material_code= aSelectedItems[0].getCells()[2].getText(),
                 material_desc= aSelectedItems[0].getCells()[3].getText(),
                 supplier_code= aSelectedItems[0].getCells()[4].getText(),
                 supplier_local_name= aSelectedItems[0].getCells()[5].getText();
+            
+            var that = this;
+             
 
-            var sourceName = "[" + material_code + "] ";
-            sourceName = sourceName.concat(material_desc);
-            sourceName = sourceName.concat(" / ");
-            sourceName = sourceName.concat(" [");
-            sourceName = sourceName.concat(supplier_code);
-            sourceName = sourceName.concat("] ");
-            sourceName = sourceName.concat(supplier_local_name);
+            function MakeQuerablePromise(promise) {
+                if (promise.isResolved) return promise;
 
-            var input_material_code = this.byId("input_material_code");
-            input_material_code.setValue(sourceName);
+                var isPending = true;
+                var isRejected = false;
+                var isFulfilled = false;
+            
+                var result = promise.then(
+                    function(v) {
+                        isFulfilled = true;
+                        isPending = false;
+                        return v; 
+                    }, 
+                    function(e) {
+                        isRejected = true;
+                        isPending = false;
+                        throw e; 
+                    }
+                );
+            
+                result.isFulfilled = function() { return isFulfilled; };
+                result.isPending = function() { return isPending; };
+                result.isRejected = function() { return isRejected; };
+                return result;
+            }
 
-            var input_hidden_material_code = this.byId("input_hidden_material_code");
-            var input_hidden_material_desc = this.byId("input_hidden_material_desc");
-            var input_hidden_supplier_code = this.byId("input_hidden_supplier_code");
-            var input_hidden_supplier_local_name = this.byId("input_hidden_supplier_local_name");
-            //var input_hidden_supplier_english_name = this.byId("input_hidden_supplier_english_name");                                                
+            //아이템 조사와 Header 최종 조사 내용을 실행한다. 
+            function readChecklistItemEntity(ofilter) {
+                return new Promise(function(resolve, reject) {
+                    that.getModel().read(that._m.serviceName.mIMaterialCodeBOMManagementHeader, {
+                        filters: ofilter,
+                        success: function(oData) {		
+                            resolve(oData);
+                        },
+                        error: function(oResult) {
+                            reject(oResult);
+                        }
+                    });
+                });
+            };
 
-            input_hidden_material_code.setValue(material_code);
-            input_hidden_material_desc.setValue(material_desc);
-            input_hidden_supplier_code.setValue(supplier_code);
-            input_hidden_supplier_local_name.setValue(supplier_local_name);
-            //input_hidden_supplier_english_name.setValue(material_code);
 
-            this.onMaterialDialog_close();
+            var filters = [
+                new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id),
+                new Filter("material_code", FilterOperator.EQ, material_code),
+                new Filter("supplier_code", FilterOperator.EQ, supplier_code)
+            ];
+
+            var readChecklistPromise =  MakeQuerablePromise(readChecklistItemEntity(filters));
+
+            readChecklistPromise.then(function(data){
+
+                if(readChecklistPromise.isFulfilled()){
+                           
+                    if(data.results.length>0){
+                    //생성할 데이타가 이미 존재 합니다.
+                        that._showMessageToast(that.getModel("I18N").getText("/NCM01011"));
+                    }else{
+                        var sourceName = "[" + material_code + "] ";
+                        sourceName = sourceName.concat(material_desc);
+                        sourceName = sourceName.concat(" / ");
+                        sourceName = sourceName.concat(" [");
+                        sourceName = sourceName.concat(supplier_code);
+                        sourceName = sourceName.concat("] ");
+                        sourceName = sourceName.concat(supplier_local_name);
+            
+                        var input_material_code = that.getView().byId("input_material_code");
+                        input_material_code.setValue(sourceName);
+            
+                        var input_hidden_material_code = that.getView().byId("input_hidden_material_code");
+                        var input_hidden_material_desc = that.getView().byId("input_hidden_material_desc");
+                        var input_hidden_supplier_code = that.getView().byId("input_hidden_supplier_code");
+                        var input_hidden_supplier_local_name = that.getView().byId("input_hidden_supplier_local_name");
+                        //var input_hidden_supplier_english_name = this.byId("input_hidden_supplier_english_name");                                                
+            
+                        input_hidden_material_code.setValue(material_code);
+                        input_hidden_material_desc.setValue(material_desc);
+                        input_hidden_supplier_code.setValue(supplier_code);
+                        input_hidden_supplier_local_name.setValue(supplier_local_name);
+
+                        that.onMaterialDialog_close();
+                    }
+                }
+            });
+
         },
+
 
         /**
          * 자재 및 서플라이어 검색창 Close
@@ -1452,29 +1535,33 @@ sap.ui.define([
             if(midList==null){
                 var omidList = new JSONModel();
                 omidList.setData([items]);
-                this.setModel(omidList,"midList");
+                this.setModel(omidList,"midList");                
+                 that.onMaterialDetailClose();
                 return;
             }
 
             if(midList.oData!=null){
                 for(var i=0;i<midList.oData.length;i++){
-                    if(midList.oData[i].mi_material_code == items.mi_material_code  &&
-                        midList.oData[i].category_code == items.category_code  &&
-                        midList.oData[i].currency_unit == items.currency_unit &&
-                        midList.oData[i].quantity_unit == items.quantity_unit &&
-                        midList.oData[i].exchange == items.exchange &&
-                        midList.oData[i].termsdelv == items.termsdelv
+                    if(midList.oData[i].tenant_id == items.tenant_id  &&
+                        midList.oData[i].mi_material_code == items.mi_material_code  &&
+                        midList.oData[i].mi_bom_id == items.mi_bom_id 
                         ){
-                        bCheck = false;
-                        this._showMessageToast(this.getModel("I18N").getText("/NPG00022"));
-                        return;
-                    }
+                            //추가일경우
+                            if(!oUi.getProperty("/changeItem")){
+                               bCheck = false; 
+                            }
+                        }
                 }
-
+                //oUi.getProperty("/changeItem") == true && bCheck == true && oUi.getProperty("/editMode") == true
                 //item Update 시황자재에서 아이템 업데이트를 사용할때 사용
-                if(oUi.getProperty("/changeItem") == true && bCheck == true && oUi.getProperty("/editMode") == true){
-                    this.onMidListItemUpdate(items);
+                if(oUi.getProperty("/changeItem") == true){
+                    that.onMidListItemUpdate(items);
+                    that.onMaterialDetailClose();
                     return;
+                }else{
+                    if(!bCheck){
+                        this._showMessageToast(this.getModel("I18N").getText("/NPG00022"));
+                    }
                 }
 
             }else{
@@ -1482,24 +1569,25 @@ sap.ui.define([
                 var omidList = new JSONModel();
                 omidList.setData([items]);
                 this.setModel(omidList,"midList");
+                that.onMaterialDetailClose();
                 return;
+                
             }
 
             if(bCheck){
                 midList.oData.push(items);
                 midList.refresh(true);
+                that.onMaterialDetailClose();
+                
             }
+            that.onMaterialDetailClose();
         },
 
         onMidListItemUpdate : function (items) {
-            return;
+            
             var midList = this.getModel("midList");
            
             if( midList.oData[this._selectedIndex] ){
-                midList.oData[this._selectedIndex].mi_material_code = items.mi_material_code;
-                midList.oData[this._selectedIndex].mi_material_name = items.mi_material_name;
-                midList.oData[this._selectedIndex].category_code = items.category_code;
-                midList.oData[this._selectedIndex].category_name = items.category_name;
                 midList.oData[this._selectedIndex].currency_unit = items.currency_unit;
                 midList.oData[this._selectedIndex].quantity_unit = items.quantity_unit;
                 midList.oData[this._selectedIndex].exchange = items.exchange;
@@ -1517,7 +1605,7 @@ sap.ui.define([
          */
         onMidListItemDelete : function () {
             console.log("onMidListItemDelete");
-            var oModel = this.getOwnerComponent().getModel("midList"),
+            var oModel = this.getModel("midList"),
                 _deleteItem = this.getModel("_deleteItem"),
                 that = this,
                 oTable = this.getView().byId("midTable"),
@@ -1538,6 +1626,7 @@ sap.ui.define([
 
                 var idx = parseInt(oSelected[i].sPath.substring(oSelected[i].sPath.lastIndexOf('/') + 1));
                 
+                //수정
                 if(oModel.oData[idx].itemMode == this._m.itemMode.read){
                     _deleteItemOdata.push(oModel.oData[idx]);
                 }
@@ -1743,6 +1832,13 @@ sap.ui.define([
 
 
             for(var i=0;i<midList.oData.length;i++){
+
+                
+                if((typeof midList.oData[i].use_flag)=='string'){
+                    midList.oData[i].use_flag = midList.oData[i].use_flag ==="true" ?  true: false;
+                }
+                
+
                 //Crate
                 if(bCreateFlag){
                     //material_code, supplier_code, 기준수량, 가공비, 가공비 통화
@@ -1751,7 +1847,7 @@ sap.ui.define([
                     midList.oData[i].base_quantity = that.byId("input_base_quantity").getValue(),
                     midList.oData[i].processing_cost = that.byId("input_processing_cost").getValue(),
                     midList.oData[i].pcst_currency_unit = that.byId("comboBox_pcst_currency_unit").getSelectedKey();
-                   
+                  
                     if(i==0){
                         if(that._fnCreateEntryHeader(oModel, midList.oData[i])){
                             createHeader++;
@@ -1763,8 +1859,12 @@ sap.ui.define([
                     }
                 }
                 else {  //Update
-                    midList.oData[i].pcst_currency_unit = that.byId("comboBox_pcst_currency_unit").getSelectedKey();                    
+                    midList.oData[i].pcst_currency_unit = that.byId("comboBox_pcst_currency_unit").getSelectedKey();   
+                                  
+
+
                     if(i==0){
+
 
                         if(that._fnUpdateHeader(oModel, midList.oData[i])){
                             updateHeader++;    
@@ -1836,7 +1936,7 @@ sap.ui.define([
             return new Promise(
               function(resolve, reject) {
 
-                that.getModel().read(that._m.serviceName.mIMaterialCodeBOMManagementItem, {
+                that.getModel().read("/MIMaterialCodeBOMManagementItem", {
                     filters: oDeleteInfoOdata.filter,
                     success: function(oData, reponse) {
                         resolve(oData);
@@ -1944,7 +2044,7 @@ sap.ui.define([
                     "quantity_unit": oData.quantity_unit,
                     "exchange": oData.exchange,
                     "termsdelv": oData.termsdelv,
-                    "use_flag": oData.use_flag == "true" ?  true : false,
+                    "use_flag": oData.use_flag,
                     "local_create_dtm": new Date(),
                     "local_update_dtm": new Date(),
                     "create_user_id": this._sso.user.id,
@@ -1967,7 +2067,6 @@ sap.ui.define([
          */
         _fnCreateEntryHeader : function(oModel, oData){
             console.log("_fnCreateHeader");
-    
             var headerParameters = {
                 "groupId": this._m.groupID,
                 "properties": {
@@ -1979,11 +2078,7 @@ sap.ui.define([
                     "pcst_currency_unit": oData.pcst_currency_unit,
                     "mi_bom_id": oData.mi_bom_id,
                     "local_create_dtm": new Date(),
-                    "local_update_dtm": new Date(),
-                    "create_user_id": this._sso.user.id,
-                    "update_user_id": this._sso.user.id,
-                    "system_create_dtm": new Date(),
-                    "system_update_dtm": new Date()  
+                    "create_user_id": this._sso.user.id
                 }
             };
             try{
@@ -1999,7 +2094,6 @@ sap.ui.define([
          * @private
          */
         _fnCreateEntryItem : function(oModel, oData) {
-  
             var createEntryItemParameters = {
                 "groupId": this._m.groupID,
                 "properties": {
@@ -2012,13 +2106,9 @@ sap.ui.define([
                     "quantity_unit": oData.quantity_unit,
                     "exchange": oData.exchange,
                     "termsdelv": oData.termsdelv,
-                    "use_flag": oData.use_flag == "true" ?  true : false,
+                    "use_flag": oData.use_flag,
                     "local_create_dtm": new Date(),
-                    "local_update_dtm": new Date(),
-                    "create_user_id": this._sso.user.id,
-                    "update_user_id": this._sso.user.id,
-                    "system_create_dtm": new Date(),
-                    "system_update_dtm": new Date()  
+                    "create_user_id": this._sso.user.id
                 }
             };
             try{
@@ -2036,11 +2126,9 @@ sap.ui.define([
          * @param {*} oData 
          */        
         _fnUpdateHeader : function( oModel, oData) {
+
             var oKey = {
                 tenant_id : oData.tenant_id,
-                company_code : oData.company_code,
-                org_type_code : oData.org_type_code,
-                org_code: oData.org_code,
                 material_code : oData.material_code,
                 supplier_code : oData.supplier_code,
                 mi_bom_id : oData.mi_bom_id
@@ -2048,12 +2136,8 @@ sap.ui.define([
 
             var updateHeaderParameters = {
                 "pcst_currency_unit": oData.pcst_currency_unit,
-                "local_create_dtm": new Date(),
                 "local_update_dtm": new Date(),
-                "create_user_id": this._sso.user.id,
-                "update_user_id": this._sso.user.id,
-                "system_create_dtm": new Date(),
-                "system_update_dtm": new Date()
+                "update_user_id": this._sso.user.id
             }            
 
             try{
@@ -2068,25 +2152,24 @@ sap.ui.define([
         },
 
         /**
-         * Update
+         * MIMaterialCodeBOMManagementItem Update
          * @private
          */
         _fnUpdateItem : function( oModel, oData) {
             var oKey = {
                 tenant_id : oData.tenant_id,
                 mi_bom_id : oData.mi_bom_id,
-                mi_material_code : oData.mi_material_code,
-                currency_unit : oData.currency_unit,
-                quantity_unit : oData.quantity_unit,
-                exchange : oData.exchange,
-                termsdelv : oData.termsdelv
+                mi_material_code : oData.mi_material_code
             }
 
             var updateItemParameters = {  
-                "reqm_quantity_unit" : oData.reqm_quantity_unit,
-                "reqm_quantity" : oData.reqm_quantity,
-                "use_flag" : oData.use_flag == "true" ?  true : false,
-                "local_create_dtm" : new Date(),
+                "reqm_quantity_unit": oData.reqm_quantity_unit,
+                "reqm_quantity": oData.reqm_quantity,
+                "currency_unit": oData.currency_unit,
+                "quantity_unit": oData.quantity_unit,
+                "exchange": oData.exchange,
+                "termsdelv": oData.termsdelv,
+                "use_flag" : oData.use_flag,
                 "local_update_dtm" : new Date()
             }
 
@@ -2127,12 +2210,7 @@ sap.ui.define([
             var oKey = {
                 tenant_id : oData.tenant_id,
                 mi_bom_id : oData.mi_bom_id,
-                mi_material_code : oData.mi_material_code,
-                currency_unit : oData.currency_unit,
-                quantity_unit : oData.quantity_unit,
-                exchange : oData.exchange,
-                termsdelv : oData.termsdelv
-
+                mi_material_code : oData.mi_material_code 
             }
 
             try{

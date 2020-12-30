@@ -512,7 +512,7 @@ sap.ui.define([
             onPageDeleteButtonPress: function() {
                 var that = this;
                 var dFlag ;
-                alert(textModel.getText("CONFIRM"));
+                // alert(textModel.getText("CONFIRM"));
 
                 MessageBox.confirm(textModel.getText("/NCM00003"), {
                     // @ts-ignore

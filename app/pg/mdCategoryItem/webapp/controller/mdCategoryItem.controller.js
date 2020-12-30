@@ -63,34 +63,19 @@ sap.ui.define([
             oModel = this.getView().getModel("list"),
             
             oItem = oTable.getSelectedItem(); //*********************전역변수로 갖고 처리해보기 */
-            this._setEditChange(this.rowIndex,"R");
+            // this._setEditChange(this.rowIndex,"R");
             
             var idx = oTable.indexOfItem(oItem);//oItem.getBindingContextPath().split("/")[2];
             this.rowIndex = idx;
-
-            this.byId("buttonMainCancelRow").setEnabled(true);  
-            this._setEditChange(this.rowIndex,"E");
+ 
+            // this._setEditChange(this.rowIndex,"E");
             
-    //     var aItems = oTable.getSelectedItems();
-    //     if(aItems.length>0){
-    //         aItems[1].setSelected(false);
-    //     }
       },
 
     onListItemPress: function (oEvent) {
-        // var oItem = oEvent.getSource();
-        // var mdCategoryItemstPath = oEvent.getSource().getBindingContext("list").getPath(),
-        //     //mdCategoryItems = mdCategoryItemstPath.split("/").slice(-1).pop();
-        //     mdCategoryItems = oItem.getBindingContext("list").getObject().spmd_character_code;
-        // this.oRouter.navTo("detail", {layout: "TwoColumnsMidExpanded", spmd_character_code: mdCategoryItems});
-
-        // oItem.setNavigated(true);
-        // var oParent = this.byId("mainTable");
-        // // store index of the item clicked, which can be used later in the columnResize event
-        // this.iIndex = oParent.indexOfItem(oItem);
         
         var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
-				sPath = oEvent.getSource().getBindingContext("list").getPath(),
+                sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
         
         this.getRouter().navTo("midPage", {
@@ -99,7 +84,8 @@ sap.ui.define([
             org_type_code: oRecord.org_type_code,
             org_code: oRecord.org_code,
             spmd_category_code: oRecord.spmd_category_code,
-            spmd_character_code: oRecord.spmd_character_code
+            spmd_character_code: oRecord.spmd_character_code,
+            spmd_character_sort_seq: oRecord.spmd_character_sort_seq
         });
             
     },
@@ -123,19 +109,16 @@ sap.ui.define([
                 });
 
             var oTable = this.byId("mainTable");
-            this.byId("buttonMainAddRow").setEnabled(true);     
-            this.byId("buttonMainCancelRow").setEnabled(false); 
-            console.log(this.rowIndex); 
-            this._setEditChange(this.rowIndex,"R"); 
+            this.byId("buttonMainAddRow").setEnabled(true);  
+            // this._setEditChange(this.rowIndex,"R"); 
         },
       
-      onAdd: function () {
-            var [tId, mName, sEntity, aCol] = arguments;
-            //tableId modelName EntityName tenant_id
-            var oTable = this.byId(tId), //mainTable
-                oModel = this.getView().getModel(mName); //list
-            var oDataArr, oDataLength, lastCtgrSeq, ctgrSeq;
-            this._setEditChange(this.rowIndex,"R");
+      onAdd: function () {          
+            var oTable = this.byId("mainTable"), 
+                oModel = this.getView().getModel("list");
+            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
+            var  oDataArr, oDataLength, lastCtgrSeq;
+            var ctgrSeq="";
 
             if(oModel.oData){
                 oDataArr = oModel.getProperty("/MdCategoryItem"); 
@@ -144,26 +127,48 @@ sap.ui.define([
                 console.log(lastCtgrSeq);
                 ctgrSeq = String(parseInt(lastCtgrSeq)+1);
             }
+            this.getRouter().navTo("midPage", {
+                layout: oNextUIState.layout, 
+                company_code: "*",
+                org_type_code: "BU",
+                org_code: "BIZ00200",
+                spmd_category_code: "C001",
+                spmd_character_code: "new",
+                spmd_character_sort_seq: ctgrSeq
+            });
 
-            oModel.addRecord({
-				"tenant_id": "L2100",
-				"company_code": "*",
-				"org_type_code": "BU",
-                "org_code": "BIZ00200",
-                "spmd_category_code":"C001", //*************파라미터값으로 변경 필요************ */
-				"spmd_character_code": "",
-				"spmd_character_sort_seq": ctgrSeq,
-                "spmd_character_code_name": "",
-                "spmd_character_desc": ""
-                // "system_update_dtm": new Date(),
-                // "local_create_dtm": new Date(),
-                // "local_update_dtm": new Date()
-            }, "/MdCategoryItem" , oDataLength);  
+            // var [tId, mName, sEntity, aCol] = arguments;
+            // //tableId modelName EntityName tenant_id
+            // var oTable = this.byId(tId), //mainTable
+            //     oModel = this.getView().getModel(mName); //list
+            // var oDataArr, oDataLength, lastCtgrSeq, ctgrSeq;
+            // // this._setEditChange(this.rowIndex,"R");
 
-            this.rowIndex = oDataLength;
-		    this.byId("buttonMainAddRow").setEnabled(false);
-            this.byId("buttonMainCancelRow").setEnabled(true); 
-            this._setEditChange(this.rowIndex,"E");  
+            // if(oModel.oData){
+            //     oDataArr = oModel.getProperty("/MdCategoryItem"); 
+            //     oDataLength = oDataArr.length;
+            //     lastCtgrSeq = oDataArr[oDataLength-1].spmd_character_sort_seq;
+            //     console.log(lastCtgrSeq);
+            //     ctgrSeq = String(parseInt(lastCtgrSeq)+1);
+            // }
+
+            // oModel.addRecord({
+			// 	"tenant_id": "L2100",
+			// 	"company_code": "*",
+			// 	"org_type_code": "BU",
+            //     "org_code": "BIZ00200",
+            //     "spmd_category_code":"C001", //*************파라미터값으로 변경 필요************ */
+			// 	"spmd_character_code": "",
+			// 	"spmd_character_sort_seq": ctgrSeq,
+            //     "spmd_character_code_name": "",
+            //     "spmd_character_desc": ""
+            //     // "local_create_dtm": new Date(),
+            //     // "local_update_dtm": new Date()
+            // }, "/MdCategoryItem" , oDataLength);  
+
+            // this.rowIndex = oDataLength;
+		    // this.byId("buttonMainAddRow").setEnabled(false);
+            // // this._setEditChange(this.rowIndex,"E");  
         },
         
         onDelete: function(oEvent){
@@ -180,7 +185,7 @@ sap.ui.define([
              });
 
             table.removeSelections(true);
-            this._setEditChange(this.rowIndex,"R");  
+            // this._setEditChange(this.rowIndex,"R");  
         },
 
       onSave: function () {
@@ -209,7 +214,7 @@ sap.ui.define([
                   view.setBusy(false);
                   MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
                   this.byId("mainTable").getBinding("items").refresh();
-                  this._setEditChange(this.rowIndex,"R");  
+                //   this._setEditChange(this.rowIndex,"R");  
                 //   this.refresh();
                 //   setTimeout(this.onSearch(), 3000);
                   //위로 이동 클릭시 refresh 정상
@@ -269,7 +274,7 @@ sap.ui.define([
             
             console.log(iSelectedItemIndex + " / "+iSiblingItemIndex);
 
-            that._setEditChange(iSelectedItemIndex,"R");  
+            // that._setEditChange(iSelectedItemIndex,"R");  
             var oSiblingItem = oSelectedProductsTable.getItems()[iSiblingItemIndex];
             var oSiblingItemContext = oSiblingItem.getBindingContext("list");
             
@@ -295,7 +300,7 @@ sap.ui.define([
             // after move select the sibling
             oSelectedProductsTable.getItems()[iSiblingItemIndex].setSelected(true);
             that.rowIndex = iSiblingItemIndex;
-            that._setEditChange(iSiblingItemIndex,"E");  
+            // that._setEditChange(iSiblingItemIndex,"E");  
         }); //}.bind(this)); 도 가능
     },
 
@@ -308,25 +313,25 @@ sap.ui.define([
     },
 
 
-    /**
-     * @public
-     */
-    _setEditChange: function(index,mode){
-        var oTable = this.byId("mainTable");
-        var flag = true;
-        if(mode=="E"){
-            flag = false;
-        }
+    // /**
+    //  * @public
+    //  */
+    // _setEditChange: function(index,mode){
+    //     var oTable = this.byId("mainTable");
+    //     var flag = true;
+    //     if(mode=="E"){
+    //         flag = false;
+    //     }
         
-        if(oTable.getAggregation('items').length > 0){
+    //     if(oTable.getAggregation('items').length > 0){
 
-            oTable.getAggregation('items')[index].getCells()[6].getItems()[0].setVisible(flag);
-            oTable.getAggregation('items')[index].getCells()[6].getItems()[1].setVisible(!flag);
-            oTable.getAggregation('items')[index].getCells()[5].getItems()[0].setVisible(flag);
-            oTable.getAggregation('items')[index].getCells()[5].getItems()[1].setVisible(!flag); 
+    //         oTable.getAggregation('items')[index].getCells()[6].getItems()[0].setVisible(flag);
+    //         oTable.getAggregation('items')[index].getCells()[6].getItems()[1].setVisible(!flag);
+    //         oTable.getAggregation('items')[index].getCells()[5].getItems()[0].setVisible(flag);
+    //         oTable.getAggregation('items')[index].getCells()[5].getItems()[1].setVisible(!flag); 
         
-        }    
-    },
+    //     }    
+    // },
     
     /**
      * When it routed to this page from the other page.

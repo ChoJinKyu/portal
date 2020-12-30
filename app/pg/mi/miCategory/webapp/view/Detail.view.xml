@@ -103,13 +103,13 @@
                                         columnsL="3"
                                         columnsXL="4">
                             <!-- <core:Title text="Category 정보" level="H3" /> -->
-                            <Label  text="{I18N>/PARENT_CATEGORY_CODE}" 
+                            <Label  text="{I18N>/PARENT_CATEGORY_CODE} : " 
                                                 design="Bold" 
                                                 class="sapMLabelNoText"/>
                                         <Text   id="edit_ParentCategoryCode" 
                                                 visible="{= ${master>/level} >= 1 ?  true : false }"
                                                 class="sapMLabelNoText"/>
-                            <Label  text="{I18N>/CATEGORY_CODE}" 
+                            <Label  text="{I18N>/CATEGORY_CODE} : " 
                                                 design="Bold" 
                                                 class="sapMLabelNoText"/>
                                         <Text   id="textCode" 
@@ -123,7 +123,7 @@
                                                 visible="{= ${util>/flag} === 'S' ?  false : true}"
                                                 required="true"
                                         />
-                            <Label  text="{I18N>/USE_FLAG}" 
+                            <Label  text="{I18N>/USE_FLAG} : " 
                                                 design="Bold" 
                                                 class="sapMLabelNoText"/>
                                         <Text   id="textUsed" 
@@ -189,10 +189,10 @@
 									<Text text="category_code" />
 								</Column> -->
 								<Column id="category_name" minScreenWidth="Tablet" hAlign="Center"  visible="{= ${util>/flag} === 'S' ?  true : false}" demandPopin="true">
-									<Text text="{I18N>/CATEGORY}" />
+									<Text text="{I18N>/CATEGORY_NAME}" />
 								</Column>
                                 <Column id="category_name_U" minScreenWidth="Tablet" hAlign="Center" visible="{= ${util>/flag} === 'S' ?  false : true}" demandPopin="true">
-									<Text text="{I18N>/CATEGORY}" />
+									<Text text="{I18N>/CATEGORY_NAME}" />
 								</Column>
 								
 							</columns>

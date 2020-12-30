@@ -1,0 +1,16 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<form:SimpleForm id="midObjectForm1Show" editable="false">		
+        
+        <Label text="특성코드" />
+        <Text text="{master>/spmd_character_code}"/>
+        <Label text="특성코드명" required="true"/>
+        <Text text="{master>/spmd_character_code_name}"/>
+        <Label text="특성설명"/>
+        <Text text="{master>/spmd_character_desc}"/>
+
+	</form:SimpleForm>
+</core:FragmentDefinition>

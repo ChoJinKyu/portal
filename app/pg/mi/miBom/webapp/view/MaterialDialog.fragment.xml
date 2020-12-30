@@ -36,13 +36,14 @@
                         <!--수정사항 자재명 확인 -->
                         <ComboBox  
                             id="comboBox_materialView"
+                            selectedIndex="0"
                             items="{path: '/MaterialView', 
                                     filters : [
                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'}
                                     ],                            
                                     templateShareable:true}"                     
                             placeholder="{I18N>/OPTION}">
-                            <core:Item key="{material_code}" text="{material_desc}"/>
+                            <core:Item key="{material_code}" text="{material_code}"/>
                         </ComboBox>
                     </VBox>
                     <VBox visible="{= ${_oUiData>/radioButtonGroup} === 1 }">

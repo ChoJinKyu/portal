@@ -179,11 +179,14 @@ sap.ui.define([
                 oDetailsModel = this.getModel("details"),
                 that = this;
 
-            if (!oDetailsModel.isChanged()) {
-                MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
-                return;                
+            if (this._sSpmd_character_code !== "new"){
+                if (!oMasterModel.isChanged() && !oDetailsModel.isChanged() ) {
+                    MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
+                    return;                
+                }
             }
-                
+
+            if(this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
             if(this.validator.validate(this.byId("midTable")) !== true) return;
 
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
@@ -203,6 +206,7 @@ sap.ui.define([
 					};
 				}
             });
+            this.validator.clearValueState(this.byId("midObjectForm1Edit"));
             this.validator.clearValueState(this.byId("midTable"));
 		},
 		
@@ -212,26 +216,54 @@ sap.ui.define([
 		 * @public
 		 */
         onPageCancelEditButtonPress: function(){
-                this.validator.clearValueState(this.byId("page"));
-				this._toShowMode();
+                // this.validator.clearValueState(this.byId("page"));
+				// this._toShowMode();
                              
-            //     this._bindView("/UomClass(tenant_id='" + this._sTenantId + "',uom_class_code='" + this._sUomClassCode + "')");
-			// 	oView.setBusy(true);
-			// 	var oDetailsModel = this.getModel("details");
-			// 	oDetailsModel.setTransactionModel(this.getModel());				
-            //     oDetailsModel.read("/MdCategoryItemLng", {
-			// 		filters: [
-			// 			new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-			// 			new Filter("uom_class_code", FilterOperator.EQ, this._sUomClassCode),
-			// 		],
-			// 		success: function(oData){
-			// 			oView.setBusy(false);
-			// 		}
-			// 	});
-            //     this._toShowMode();
-            // }
-            // this.validator.clearValueState(this.byId("midObjectForm1Edit"));
-            // this.validator.clearValueState(this.byId("midTable"));
+            var oView = this.getView();
+            var sSpmd_character_code = this._sSpmd_character_code;
+            if (sSpmd_character_code === "new"){
+                this.onPageNavBackButtonPress();
+            }else if (sSpmd_character_code !== "new"){               
+            
+                var sObjectPath = "/MdCategoryItem(tenant_id='"      + "L2100" 
+                                        + "',company_code='"      + this._sCompany_code  
+                                        + "',org_type_code='"      + this._sOrg_type_code 
+                                        + "',org_code='"           + this._sOrg_code 
+                                        + "',spmd_category_code='" + this._sSpmd_category_code
+                                        + "',spmd_character_code='" + ""
+                                        + "',spmd_character_sort_seq='" + this._sSpmd_character_sort_seq 
+                                        + "')";
+                var oMasterModel = this.getModel("master");
+                oView.setBusy(true);
+                oMasterModel.setTransactionModel(this.getModel());
+                oMasterModel.read(sObjectPath, {
+                    success: function(oData){
+                        oView.setBusy(false);
+                    }
+                });	
+                
+                oView.setBusy(true);
+                var oDetailsModel = this.getModel("details");
+                oDetailsModel.setTransactionModel(this.getModel());
+
+                oDetailsModel.read("/MdCategoryItemLng", {
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
+                        new Filter("company_code", FilterOperator.EQ, this._sCompany_code),
+                        new Filter("org_type_code", FilterOperator.EQ, this._sOrg_type_code),
+                        new Filter("org_code", FilterOperator.EQ, this._sOrg_code),
+                        new Filter("spmd_category_code", FilterOperator.EQ, this._sSpmd_category_code),
+                        new Filter("spmd_character_code", FilterOperator.EQ, this._sSpmd_character_code)
+                        // new Filter("language_code", FilterOperator.EQ, 'EN')
+                    ],
+                    success: function(oData){
+                        oView.setBusy(false);
+                    }
+                });
+                this._toShowMode();                
+            }
+            this.validator.clearValueState(this.byId("midObjectForm1Edit"));
+            this.validator.clearValueState(this.byId("midTable"));
         },
 
 
@@ -248,45 +280,76 @@ sap.ui.define([
             this._sOrg_code = oArgs.org_code;
             this._sSpmd_category_code = oArgs.spmd_category_code;
             this._sSpmd_character_code = oArgs.spmd_character_code;
+            this._sSpmd_character_sort_seq = oArgs.spmd_character_sort_seq;
             
 			// this.getModel("midObjectView").setProperty("/isAddedMode", false);
+            if(oArgs.spmd_character_code == "new" ){
+				var oMasterModel = this.getModel("master");
+				oMasterModel.setData({
+                    "tenant_id": "L2100",
+                    "company_code": this._sCompany_code,
+                    "org_type_code": this._sOrg_type_code,
+                    "org_code": this._sOrg_code,
+                    "spmd_category_code": this._sSpmd_category_code ,
+                    "spmd_character_code": "",
+                    "spmd_character_sort_seq": this._sSpmd_character_sort_seq 
+                }, "/MdCategoryItem");
+                
+				var oDetailsModel = this.getModel("details");
+				oDetailsModel.setTransactionModel(this.getModel());
+				oDetailsModel.setData([], "/MdCategoryItemLng");
+				oDetailsModel.addRecord({
+                    "tenant_id": "L2100",
+                    "company_code": this._sCompany_code,
+                    "org_type_code": this._sOrg_type_code,
+                    "org_code": this._sOrg_code,
+                    "spmd_category_code": this._sSpmd_category_code ,
+                    "spmd_character_code": "",
+					"language_code": "",
+					"spmd_character_code_name": "",
+					"spmd_character_desc": ""
+				}, "/MdCategoryItemLng");
+                this._toEditMode();
+                
+			}else{                
+                var sObjectPath = "/MdCategoryItem(tenant_id='"      + "L2100" 
+                                        + "',company_code='"      + this._sCompany_code  
+                                        + "',org_type_code='"      + this._sOrg_type_code 
+                                        + "',org_code='"           + this._sOrg_code 
+                                        + "',spmd_category_code='" + this._sSpmd_category_code 
+                                        + "',spmd_character_code='" + this._sSpmd_character_code 
+                                        // + "',spmd_character_sort_seq='" + this._sSpmd_character_sort_seq  //error
+                                        + "')";
+                var oMasterModel = this.getModel("master");
+                oView.setBusy(true);
+                oMasterModel.setTransactionModel(this.getModel());
+                oMasterModel.read(sObjectPath, {
+                    success: function(oData){
+                        oView.setBusy(false);
+                    }
+                });
 
-            var sObjectPath = "/MdCategoryItem(tenant_id='"      + "L2100" 
-                                      + "',company_code='"      + this._sCompany_code  
-                                      + "',org_type_code='"      + this._sOrg_type_code 
-                                      + "',org_code='"           + this._sOrg_code 
-                                      + "',spmd_category_code='" + this._sSpmd_category_code 
-                                      + "',spmd_character_code='" + this._sSpmd_character_code 
-                                      + "')";
-            var oMasterModel = this.getModel("master");
-            oView.setBusy(true);
-            oMasterModel.setTransactionModel(this.getModel());
-            oMasterModel.read(sObjectPath, {
-                success: function(oData){
-                    oView.setBusy(false);
-                }
-            });
+                oView.setBusy(true);
+                var oDetailsModel = this.getModel("details");
+                oDetailsModel.setTransactionModel(this.getModel());
 
-            oView.setBusy(true);
-            var oDetailsModel = this.getModel("details");
-            oDetailsModel.setTransactionModel(this.getModel());
-
-            oDetailsModel.read("/MdCategoryItemLng", {
-                filters: [
-                    new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
-                    new Filter("company_code", FilterOperator.EQ, this._sCompany_code),
-                    new Filter("org_type_code", FilterOperator.EQ, this._sOrg_type_code),
-                    new Filter("org_code", FilterOperator.EQ, this._sOrg_code),
-                    new Filter("spmd_category_code", FilterOperator.EQ, this._sSpmd_category_code),
-                    new Filter("spmd_character_code", FilterOperator.EQ, this._sSpmd_character_code)
-                    // new Filter("language_code", FilterOperator.EQ, 'EN')
-                ],
-                success: function(oData){
-                    oView.setBusy(false);
-                }
-            });
-            this._toShowMode();
-            // this.validator.clearValueState(this.byId("midObjectForm1Edit"));
+                oDetailsModel.read("/MdCategoryItemLng", {
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
+                        new Filter("company_code", FilterOperator.EQ, this._sCompany_code),
+                        new Filter("org_type_code", FilterOperator.EQ, this._sOrg_type_code),
+                        new Filter("org_code", FilterOperator.EQ, this._sOrg_code),
+                        new Filter("spmd_category_code", FilterOperator.EQ, this._sSpmd_category_code),
+                        new Filter("spmd_character_code", FilterOperator.EQ, this._sSpmd_character_code)
+                        // new Filter("language_code", FilterOperator.EQ, 'EN')
+                    ],
+                    success: function(oData){
+                        oView.setBusy(false);
+                    }
+                });
+                this._toShowMode();
+            }
+            this.validator.clearValueState(this.byId("midObjectForm1Edit"));
             this.validator.clearValueState(this.byId("midTable"));
 			oTransactionManager.setServiceModel(this.getModel());
 		},
@@ -297,19 +360,32 @@ sap.ui.define([
 		/* =========================================================== */
 
 		_onMasterDataChanged: function(oEvent){
-            // var oMasterModel = this.getModel("master");
-            // var oDetailsModel = this.getModel("details");
-            // var sTenantId = oMasterModel.getProperty("/tenant_id");
-            // var oDetailsData = oDetailsModel.getData();
-            // oDetailsData.MdCategoryItemLng.forEach(function(oItem, nIndex){
-            //     oDetailsModel.setProperty("/MdCategoryItemLng/"+nIndex+"/tenant_id", sTenantId);
-            // });
-            // console.log(oDetailsData);
+            var oMasterModel = this.getModel("master");
+            var oDetailsModel = this.getModel("details");
+
+            var company_code = oMasterModel.getProperty("/company_code");
+            var org_type_code = oMasterModel.getProperty("/org_type_code");
+            var org_code = oMasterModel.getProperty("/org_code");
+            var spmd_category_code = oMasterModel.getProperty("/spmd_category_code");
+            var spmd_character_code = oMasterModel.getProperty("/spmd_character_code");
+            var tenant_id = "L2100";
+            
+            var oDetailsData = oDetailsModel.getData();
+            oDetailsData.MdCategoryItemLng.forEach(function(oItem, nIndex){
+                oDetailsModel.setProperty("/MdCategoryItemLng/"+nIndex+"/company_code", company_code);
+                oDetailsModel.setProperty("/MdCategoryItemLng/"+nIndex+"/org_type_code", org_type_code);
+                oDetailsModel.setProperty("/MdCategoryItemLng/"+nIndex+"/org_code", org_code);
+                oDetailsModel.setProperty("/MdCategoryItemLng/"+nIndex+"/spmd_category_code", spmd_category_code);
+                oDetailsModel.setProperty("/MdCategoryItemLng/"+nIndex+"/spmd_character_code", spmd_character_code);
+                oDetailsModel.setProperty("/MdCategoryItemLng/"+nIndex+"/tenant_id", tenant_id);
+            });
 			
 		},
 
 		_toEditMode: function(){
 			var FALSE = false;
+            this._showFormFragment('detailEditMode');
+			this.byId("page").setSelectedSection("pageSectionMain");
 			this.byId("page").setProperty("showFooter", !FALSE);
 			this.byId("pageEditButton").setEnabled(FALSE);
 			this.byId("pageNavBackButton").setEnabled(FALSE);
@@ -324,6 +400,8 @@ sap.ui.define([
 
 		_toShowMode: function(){
 			var TRUE = true;
+            this._showFormFragment('detailShowMode');
+			this.byId("page").setSelectedSection("pageSectionMain");
 			this.byId("page").setProperty("showFooter", !TRUE);
 			this.byId("pageEditButton").setEnabled(TRUE);
 			this.byId("pageNavBackButton").setEnabled(TRUE);
@@ -413,6 +491,30 @@ sap.ui.define([
 				// key: ""
 			}).setKeyboardMode(sKeyboardMode);
 		},
+
+		_oFragments: {},
+		_showFormFragment : function (sFragmentName) {
+            var oPageSubSection = this.byId("pageSubSection1");
+            this._loadFragment(sFragmentName, function(oFragment){
+				oPageSubSection.removeAllBlocks();
+				oPageSubSection.addBlock(oFragment);
+			})
+        },
+        _loadFragment: function (sFragmentName, oHandler) {
+			if(!this._oFragments[sFragmentName]){
+				Fragment.load({
+					id: this.getView().getId(),
+					name: "pg.mdCategoryItem.view." + sFragmentName,
+					controller: this
+				}).then(function(oFragment){
+					this._oFragments[sFragmentName] = oFragment;
+					if(oHandler) oHandler(oFragment);
+				}.bind(this));
+			}else{
+				if(oHandler) oHandler(this._oFragments[sFragmentName]);
+			}
+        },
+        
 
         _MidTableApplyFilter: function() {
 
