@@ -16,22 +16,22 @@
                     >
                 <columns>
                     <Column>
-                        <Text text="Type" />
+                        <Label text="Type" wrapping="true" />
                     </Column>
                     <Column>
-                        <Text text="PV (1st Mold)" />
+                        <Label text="PV (1st Mold)" wrapping="true" />
                     </Column>
                     <Column>
-                        <Text text="MP (1st Mold)" />
+                        <Label text="MP (1st Mold)" wrapping="true" />
                     </Column>
                     <Column>
-                        <Text text="PV" />
+                        <Label text="PV" wrapping="true" />
                     </Column>
                     <Column>
-                        <Text text="Tool Off" />
+                        <Label text="Tool Off" wrapping="true" />
                     </Column>
                     <Column>
-                        <Text text="Packing-In (Export)" />
+                        <Label text="Packing-In (Export)" wrapping="true" />
                     </Column>
                 </columns>
                 <items>
@@ -72,22 +72,22 @@
                     >
                 <columns>
                     <Column>
-                        <Text text="Type" />
+                        <Label text="Type" wrapping="true" />
                     </Column>
                     <Column>
-                        <Text text="Packing-Out (Export)" />
+                        <Label text="Packing-Out (Export)" wrapping="true" />
                     </Column>
                     <Column>
-                        <Text text="ETD (Port)" />
+                        <Label text="ETD (Port)" wrapping="true" />
                     </Column>
                     <Column>
-                        <Text text="ETA (Port)" />
+                        <Label text="ETA (Port)" wrapping="true" />
                     </Column>
                     <Column>
-                        <Text text="Receiving" />
+                        <Label text="Receiving" wrapping="true" />
                     </Column>
                     <Column>
-                        <Text text="Complete (Set Up)" />
+                        <Label text="Complete (Set Up)" wrapping="true" />
                     </Column>
                 </columns>
                 <items>

@@ -373,7 +373,7 @@
                         </table:template>
                     </table:Column>
                     <table:Column id="moldMoldNoColumn" width="8em" hAlign="Center">
-                        <Label text="Mold No"/>
+                        <Label text="Mold No" wrapping="true"/>
                         <table:template>
                             <Text id="mold_number" text="{list>mold_number}"/>
                         </table:template>
@@ -431,7 +431,7 @@
                     <table:Column width="9em" hAlign="Center">
                         <Label text="{path:'I18N>/COMPLETE_DATE', formatter:'I18NFormatter'}"  required="true"/>
                         <table:template>
-                            <DatePicker value="{list>production_complete_date_plan}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"  required="true"/>
+                            <DatePicker value="{list>production_complete_date_plan}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" required="true"/>
                         </table:template>
                     </table:Column>
 
