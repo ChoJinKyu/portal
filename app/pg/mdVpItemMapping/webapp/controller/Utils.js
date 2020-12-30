@@ -20,8 +20,12 @@ sap.ui.define([
 			}
 		},
 
+		getAvailableProductsTable: function(oController) {
+			return oController.getOwnerComponent().getRootControl().byId("availableItems").byId("table");
+		},
+
 		getSelectedProductsTable: function(oController) {
-            return oController.getOwnerComponent().byId("mainTable");
+            return oController.getOwnerComponent().byId("selectedItems").byId("table");
 			//return oController.getOwnerComponent().getRootControl().byId("mdCategoryItem").byId("mainTable");
 		},
 
@@ -35,7 +39,7 @@ sap.ui.define([
 				return;
 			}
 
-			var oSelectedContext = oSelectedItem.getBindingContext("list");
+			var oSelectedContext = oSelectedItem.getBindingContext();
 			if (oSelectedContext && fnCallback) {
 				var iSelectedIndex = oTable.indexOfItem(oSelectedItem);
 				fnCallback(oSelectedContext, iSelectedIndex, oTable);
