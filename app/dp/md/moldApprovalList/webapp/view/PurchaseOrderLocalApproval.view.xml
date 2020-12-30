@@ -1,4 +1,4 @@
-<mvc:View controllerName="dp.md.moldApprovalList.controller.PurOrderItemLocalApproval" 
+<mvc:View controllerName="dp.md.moldApprovalList.controller.PurchaseOrderLocalApproval" 
   xmlns:mvc="sap.ui.core.mvc"
     xmlns:uxap="sap.uxap"
     xmlns:form="sap.ui.layout.form" 
