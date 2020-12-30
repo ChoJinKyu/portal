@@ -276,23 +276,24 @@ sap.ui.define([
                 oPageSection.addBlock(oFragment);
             }.bind(this));
         },
-
+        /**
+         * @description 미리보기 버튼눌렀을 경우 
+         */
         onPagePreviewButtonPress : function(){
             this.getView().setModel(new ManagedListModel(), "approverPreview"); 
 
-        //    this.getModel("approverPreview").setData(this.getModel("approver").getData());
-            if(this.getModel("approver").getData().Approvers != undefined){ 
+            if(this.getModel("approver").getData().Approvers != undefined){  // approver 는 맨 마지막 줄이 있어서 걔는 안보여주기 위해 새로 담음 
                 var ap = this.getModel("approver").getData().Approvers;
                 for(var i = 0 ; i < ap.length -1 ; i++){
                     this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
                 }
             }
             
-            console.log("approverPreview " , this.getModel("approverPreview").getData());
+            console.log("onPagePreviewButtonPress >>> this._oDialog " , this._oDialogPrev);
             var oView = this.getView();
 
-            if (!this._oDialog) {
-                this._oDialog = Fragment.load({
+            if (!this._oDialogPrev) {
+                this._oDialogPrev = Fragment.load({
                     id: oView.getId(),
                     name: "dp.md.moldApprovalList.view.BudgetExecutionApprovalPreView",
                     controller: this
@@ -302,7 +303,7 @@ sap.ui.define([
                 }.bind(this));
             }
 
-            this._oDialog.then(function (oDialog) {
+            this._oDialogPrev.then(function (oDialog) {
                 oDialog.open();
             });
 

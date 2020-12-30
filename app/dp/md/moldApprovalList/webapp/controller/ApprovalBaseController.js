@@ -508,7 +508,7 @@ sap.ui.define([
                 MessageToast.show("Type 을 먼저 선택해주세요.");
             } else {
                 var oView = this.getView();
-
+                 console.log("handleEmployeeSelectDialogPress >>> this._oDialog " , this._oDialog);
                 if (!this._oDialog) {
                     this._oDialog = Fragment.load({
                         id: oView.getId(),
