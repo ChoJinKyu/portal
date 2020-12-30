@@ -72,8 +72,8 @@ sap.ui.define([
         /* internal methods                                            */
         /* =========================================================== */
         _onApprovalPage : function () {
-  
-            this.getView().setModel(new ManagedListModel(), "mdItemMaster");
+  // MoldRecepit
+            this.getView().setModel(new ManagedListModel(), "mdRecepit");
 
             console.log(" this.approval_number "  ,  this.approval_number);
             var schFilter = [];
@@ -81,24 +81,23 @@ sap.ui.define([
             if (this.approval_number == "New") {
                 // ApprovalBaseController.prototype.onInit.call(this);
 
-                this._budgetEditFragment();
+                this._mdraEditFragment();
             } else {
-                this._budgetViewFragment();
+                this._mdraViewFragment();
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
                     , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
                 ];
-                // this.getView().setModel(new ManagedModel(), "mdCommon");
-                var md = this.getModel('mdCommon');
-                this._bindViewBudget("/ItemBudgetExecution", "mdItemMaster", schFilter, function (oData) { 
+
+                this._bindViewRecepit("/MoldRecepit", "mdRecepit", schFilter, function (oData) { 
                  
                 });
             }  
         },
-        _bindViewBudget : function (sObjectPath, sModel, aFilter, callback) { 
+        _bindViewRecepit : function (sObjectPath, sModel, aFilter, callback) { 
                 var oView = this.getView(),
                     oModel = this.getModel(sModel);
                 oView.setBusy(true);
-                oModel.setTransactionModel(this.getModel("budget"));
+                oModel.setTransactionModel(this.getModel("recepit"));
                 oModel.read(sObjectPath, {
                     filters: aFilter,
                     success: function (oData) {
@@ -117,9 +116,9 @@ sap.ui.define([
 		 */
         onMoldRecepitAddPress: function (oEvent) {
             console.log("oEvent>>>>");
-            var oModel = this.getModel("mdItemMaster");
+            var oModel = this.getModel("mdRecepit");
 
-            console.log(" mdItemMaster >>>> ", oModel);
+            console.log(" mdRecepit >>>> ", oModel);
 
             var mIdArr = [];
             if (oModel.oData.ItemBudgetExecution != undefined && oModel.oData.ItemBudgetExecution.length > 0) {
@@ -127,11 +126,13 @@ sap.ui.define([
                     mIdArr.push(item.mold_id);
                 });
             }
-
+            // MOLD_PROGRESS_STATUS_CODE = 'RCV_CNF' 
+            // MOLD_PURCHASING_TYPE_CODE = 'L'  
             var oArgs = {
                 company_code: this.company_code ,
                 org_code: this.plant_code,
-                mold_progress_status_code : 'DEV_RCV' ,
+                mold_progress_status_code : 'RCV_CNF' , 
+                mold_purchasing_type_code : 'L' ,
                 mold_id_arr: mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
             }
 
@@ -152,8 +153,8 @@ sap.ui.define([
         * @param {*} data 
         */
         _addbudgetExecutionTable: function (data) {
-            var oTable = this.byId("budgetExecutionTable"),
-                oModel = this.getModel("mdItemMaster"),
+            var oTable = this.byId("moldRecepitTable"),
+                oModel = this.getModel("mdRecepit"),
                 mstModel = this.getModel("appMaster");
             ;
             /** add record 시 저장할 model 과 다른 컬럼이 있을 경우 submit 안됨 */
@@ -183,7 +184,7 @@ sap.ui.define([
         */
         onMoldRecepitDelRow: function () {
             var budgetExecutionTable = this.byId("moldRecepitTable")
-                , detailModel = this.getModel("mdItemMaster")
+                , detailModel = this.getModel("mdRecepit")
                 , oSelected = budgetExecutionTable.getSelectedIndices();
             ;
             if (oSelected.length > 0) {
@@ -200,25 +201,25 @@ sap.ui.define([
         } ,
 
         onPageEditButtonPress: function () {
-            this._budgetEditFragment();
+            this._mdraEditFragment();
             this._editMode();
         },
 
         onPageCancelButtonPress: function () {
-            this._budgetViewFragment();
+            this._mdraViewFragment();
             this._viewMode();
         },
 
-        _budgetEditFragment : function(){
-            console.log("MoldRecepitTableEdit.fragment");
+        _mdraEditFragment : function(){
+            console.log(" _mdraEditFragment ");
             var oPageSection = this.byId("moldRecepitTableFragment");
             oPageSection.removeAllBlocks();
             this._loadFragment("MoldRecepitTableEdit", function (oFragment) {
                 oPageSection.addBlock(oFragment);
             }.bind(this));
         },
-        _budgetViewFragment : function(){
-             console.log("_budgetViewFragment");
+        _mdraViewFragment : function(){
+             console.log(" _mdraViewFragment ");
              var oPageSection = this.byId("moldRecepitTableFragment");
             oPageSection.removeAllBlocks();
             this._loadFragment("MoldRecepitTableView", function (oFragment) {
@@ -288,18 +289,6 @@ sap.ui.define([
             var that = this;
             
             if(bModel.getData().ItemBudgetExecution != undefined && bModel.getData().ItemBudgetExecution.length > 0){
-                /**
-                 *   md.setProperty("/investment_ecst_type_code", oData.results[0].investment_ecst_type_code);
-                    md.setProperty("/investment_ecst_type_code_nm", oData.results[0].investment_ecst_type_code_nm);
-                    md.setProperty("/accounting_department_code", oData.results[0].accounting_department_code);
-                    md.setProperty("/import_company_code", oData.results[0].import_company_code);
-                    md.setProperty("/project_code", oData.results[0].project_code);
-                    md.setProperty("/import_company_org_code", oData.results[0].import_company_org_code);
-                    md.setProperty("/account_code", oData.results[0].account_code);
-                    md.setProperty("/account_code_nm", oData.results[0].account_code_nm);
-                    md.setProperty("/provisional_budget_amount", oData.results[0].provisional_budget_amount);
-                 */
-
 
                 var account_code = mModel.getData().account_code;
                 var investment_ecst_type_code =  mModel.getData().investment_ecst_type_code;
