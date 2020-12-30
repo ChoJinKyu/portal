@@ -25,7 +25,7 @@ entity Vp_Vendor_Pool_supplier_Change_List_View {
     approval_title : String  @title: '품의제목';
     approval_status : String  @title: '품의상태';
     request_date : String(20)  @title: '품의요청일시';
-    write_date : String(20)  @title: '작성일시';
-    write_by : String(30)  @title: '작성자';
+    change_date : String(20)  @title: '변경일시';
+    changer_name : String(30)  @title: '변경자명';
     changer_empno : String(30) @title: '변경자사번';
 }
