@@ -18,8 +18,8 @@
                     columnsM="3">
                     <f:content id="informationPageSectionForm">
                         <VBox>
-                            <Label text="Separated" required="true"/>
-                            <ComboBox items="{/TaskMonitoringTypedCodeView}" required="true" placeholder="{I18N>/SEPARATED}" editable="{=${DetailView>/isCreate}}" id="combo_monitoring_type" selectedKey="{monitoring_type_code}" width="100%">
+                            <Label text="{I18N>/TYPE_NAME}" required="true"/>
+                            <ComboBox items="{/TaskMonitoringTypedCodeView}" required="true" placeholder="{I18N>/SEPARATED}" id="combo_monitoring_type" selectedKey="{monitoring_type_code}" width="100%">
                                 <core:Item key="{code}" text="{code_name}" />
                             </ComboBox>
                             <layoutData>
@@ -27,13 +27,12 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="{I18N>/TYPE}" required="true"/>
+                            <Label text="{I18N>/PURCHASING_TYPE_NAME}" required="true"/>
                              <MultiComboBox
                                     selectedKeys="{=${monitoring_purchasing_type_code}.split(';')}"
-                                    width="100%"
-                                    placeholder="{I18N>/TYPE}"
+                                    maxWidth="100%"
+                                    placeholder="{I18N>/PURCHASING_TYPE_NAME}"
                                     id="combo_purchasing_type"
-                                    editable="{=${DetailView>/isCreate}}"
                                     items="{/TaskMonitoringPurchaingTypeCodeView}"
                                     required="true"
                                    >

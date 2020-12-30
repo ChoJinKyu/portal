@@ -27,9 +27,9 @@
                                     columnsM="2"
                                     singleContainerFullSize="false">
                                         <f:content id="informationPageSectionForm">
-                                                <Label text="Separated" />
+                                                <Label text="{I18N>/TYPE_NAME}" />
                                                 <Text text="{monitoring_type_name}"/>
-                                                <Label text="{I18N>/TYPE}" />
+                                                <Label text="{I18N>/PURCHASING_TYPE_NAME}" />
                                                 <Text text="{=${monitoring_purchasing_type_name}.replaceAll(';',',')}"/>
                                                 <Label text="{I18N>/SCENARIO}" />
                                                 <Text text="{scenario_name}"/>
