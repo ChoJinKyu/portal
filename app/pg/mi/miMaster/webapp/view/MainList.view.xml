@@ -63,7 +63,7 @@
                             <smartFilterBar:ControlConfiguration key="mi_material_name" groupId="_BASIC" index="2" label="시황자재명"  
                             visibleInAdvancedArea="true" >
                                 <smartFilterBar:customControl>
-                                        <Input id="input_mi_material_name" placeholder="{I18N>/ECM00003}"/>
+                                        <Input id="input_mi_material_name" placeholder="{I18N>/INPUT}"/>
                                 </smartFilterBar:customControl>
                             </smartFilterBar:ControlConfiguration>
 
@@ -71,9 +71,23 @@
                             <smartFilterBar:ControlConfiguration key="category_code" groupId="_BASIC" index="3" label="{I18N>/CATEGORY}" 
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
-                                        <ComboBox id="combobox_category_code" items="{path: '/MICategoryView', templateShareable:true}" placeholder="{I18N>/OPTION}">
-                                        <core:Item key="{category_code}" text="{category_text}"/>
-                                    </ComboBox>
+                                        <MultiComboBox
+                                            id="multicombobox_category_code"
+                                            showSecondaryValues= "true"
+                                            placeholder="{I18N>/OPTION}"
+                                            width="200px"
+                                            items="{path:'/MICategoryHierarchyStructureView',
+                                                    sorter: {
+                                                        path: 'parent_category_code',
+                                                        descending: false,
+                                                        group: true
+                                                    },
+                                                    filters : [
+                                                        {path : 'hierarchy_level', operator : 'NE', value1 : '0'}
+                                                    ]
+                                            }"> 
+                                            <core:ListItem key="{category_code}" text="{category_code}" additionalText="{category_name}" />                                       
+                                        </MultiComboBox>
                                 </smartFilterBar:customControl>
                             </smartFilterBar:ControlConfiguration>
 

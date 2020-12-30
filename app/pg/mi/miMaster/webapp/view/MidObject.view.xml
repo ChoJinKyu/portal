@@ -126,7 +126,7 @@
                                                                 visible="{=!${oUi>/createMode}}"
                                         /> 
                                         <ComboBox
-                                            id="combobox_category_code"
+                                            id="comboBox_category_code"
                                             required="{oUi>/createMode}"
                                             visible="{oUi>/createMode}"
                                             placeholder="{I18N>/OPTION}"
