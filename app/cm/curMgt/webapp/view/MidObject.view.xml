@@ -20,19 +20,19 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="통화관리 상세" wrapping="true" />
+					<Title text="{I18N>/CURRENCY}{I18N>/MANAGEMENT} {I18N>/DETAIL}" wrapping="true" />
 				</uxap:expandedHeading>
 				<uxap:snappedHeading>
-					<Title text="통화관리 상세" wrapping="true" />
+					<Title text="{I18N>/CURRENCY}{I18N>/MANAGEMENT} {I18N>/DETAIL}" wrapping="true" />
 				</uxap:snappedHeading>
 				<uxap:expandedContent>
-					<Text text="통화코드 : {master>/currency_code}" />
+					<Text text="{I18N>/CURRENCY_CODE} : {master>/currency_code}" />
 				</uxap:expandedContent>
 				<uxap:snappedContent>
-					<Text text="통화코드 : {master>/currency_code}" />
+					<Text text="{I18N>/CURRENCY_CODE} : {master>/currency_code}" />
 				</uxap:snappedContent>
 				<uxap:snappedTitleOnMobile>
-					<Title text="통화 상세" />
+					<Title text="{I18N>/CURRENCY} {I18N>/DETAIL}" />
 				</uxap:snappedTitleOnMobile>
 				
                 <uxap:navigationActions>
@@ -66,27 +66,27 @@
 		</uxap:headerContent>
 
 		<uxap:sections>
-			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="통화 상세">
+			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="{I18N>/CURRENCY} {I18N>/DETAIL}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection1" >
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			<uxap:ObjectPageSection titleUppercase="false" title="시스템관리 정보">
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/SYSTEM}{I18N>/MANAGEMENT} {I18N>/INFORMATION}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<form:SimpleForm editable="false">
-							<Label text="생성자"/>
+							<Label text="{I18N>/CREATOR}"/>
 							<Text text="{master>/create_user_id}"/>
-							<Label text="생성일"/>
+							<Label text="{I18N>/CREATE}{I18N>/DATE}"/>
 							<Text text="{
 									path: 'master>/system_create_dtm',
 									formatter: '.dateFormatter.toUTCDateTimeString'
 								}"/>
-							<Label text="수정자"/>
+							<Label text="{I18N>/CHANGER}"/>
 							<Text text="{master>/update_user_id}"/>
-							<Label text="수정일"/>
+							<Label text="{I18N>/UPDATE}{I18N>/DATE}"/>
 							<Text text="{
 									path: 'master>/system_update_dtm',
 									formatter: '.dateFormatter.toUTCDateTimeString'
@@ -96,7 +96,7 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			<uxap:ObjectPageSection titleUppercase="false" title="통화 언어 정보">
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/CURRENCY} {I18N>/LANGUAGE} {I18N>/INFORMATION}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<Table id="midTable" 
@@ -109,34 +109,34 @@
 								width="auto">
 							<headerToolbar>
 								<OverflowToolbar>
-									<Title text="통화 언어 목록" level="H2"/>
+									<Title text="{I18N>/CURRENCY} {I18N>/LANGUAGE} {I18N>/LIST}" level="H2"/>
 									<ToolbarSpacer/>
 									<!-- Add the Personalization button -->
 									<Button id="midTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onMidTableAddButtonPress" />
-									<Button id="midTableDeleteButton" text="행삭제" type="Transparent" press=".onMidTableDeleteButtonPress" />
+									<Button id="midTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMidTableDeleteButtonPress" />
 									<ToolbarSeparator/>
 									<SearchField id="midTableSearchField" width="10rem" search=".onMidTableFilterPress" />
-									<Button id="midTableApplyFilterButton" text="조회" type="Transparent" press=".onMidTableApplyFilterButton" />
+									<Button id="midTableApplyFilterButton" text="{I18N>/SEARCH}" type="Transparent" press=".onMidTableApplyFilterButton" />
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
-								<Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="40px" >
-									<Text text="S" />
+								<Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="60px" >
+									<Text text="{I18N>/STATUS}" />
 								</Column>
 								<Column id="midColumnLanguageCode" minScreenWidth="Tablet" hAlign="Center">
-									<Text text="언어" />
+									<Text text="{I18N>/LANGUAGE}" />
 								</Column>
 								<Column id="midColumnCurrencyCodeName" minScreenWidth="Tablet" hAlign="Center">
-									<Text text="통화코드명" />
+									<Text text="{I18N>/CURRENCY_CODE_NAME}" />
 								</Column>
 								<Column id="midColumnCurrencyCodeDesc" minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="통화코드설명" />
+									<Text text="{I18N>/CURRENCY_CODE_DESC}" />
 								</Column>
                                 <Column id="midColumnCurrencyPrefix" minScreenWidth="Tablet" hAlign="Center">
-									<Text text="Prefix" />
+									<Text text="{I18N>/CURRENCY_PREFIX}" />
 								</Column>
 								<Column id="midColumnCurrencySuffix" minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="Suffix" />
+									<Text text="{I18N>/CURRENCY_SUFFIX}" />
 								</Column>
 							</columns>
 							<items>
@@ -161,10 +161,10 @@
                     ariaHasPopup="Dialog"
                     press=".onMessagePopoverPress" />
 				<ToolbarSpacer />
-                <Button id="pageEditButton" text="Edit" type="Transparent" press=".onPageEditButtonPress" />
-                <Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" visible="{= ${editMode>/newcheck} === 'new' ? false : true}"/>
-				<Button id="pageSaveButton" type="Emphasized" text="Save" press=".onPageSaveButtonPress" />
-				<Button id="pageCancelButton" type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
+                <Button id="pageEditButton" text="{I18N>/UPDATE}" type="Transparent" press=".onPageEditButtonPress" />
+                <Button id="pageDeleteButton" text="{I18N>/DELETE}" type="Transparent" press=".onPageDeleteButtonPress" visible="{= ${editMode>/newcheck} === 'new' ? false : true}"/>
+				<Button id="pageSaveButton" type="Emphasized" text="{I18N>/SAVE}" press=".onPageSaveButtonPress" />
+				<Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress"/>
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

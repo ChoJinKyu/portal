@@ -10,6 +10,7 @@
     height="100%">
 
     <f:DynamicPage id="page"
+        title="Mold Approval List"
         headerExpanded="false" 
         toggleHeaderOnTitleClick="true">
         <!-- DynamicPage Title -->
@@ -405,18 +406,18 @@
                                 </ComboBox> -->
 
 
-                                <CheckBox fieldGroupIds="{= ${list>approval_type_code}==='E'? 'checkBoxs':''}"  visible="{= ${list>approval_type_code}==='E'? true:false }" select=".onCheck" />                  
-                                <!-- <CheckBox fieldGroupIds="{= ${list>approve_status_code}==='DR'? 'checkBoxs':''}"  visible="{= ${list>approve_status_code}==='DR'? true:false }" select=".onCheck" />        -->
+                                <!-- <CheckBox fieldGroupIds="{= ${list>approval_type_code}==='E'? 'checkBoxs':''}"  visible="{= ${list>approval_type_code}==='E'? true:false }" select=".onCheck" />                   -->
+                                <CheckBox fieldGroupIds="{= ${list>approve_status_code}==='DR'? 'checkBoxs':''}"  visible="{= ${list>approve_status_code}==='DR'? true:false }" select=".onCheck" />       
                                 
-                                <ObjectIdentifier text="{list>approval_type}" />
-                                <ObjectIdentifier text="{list>company_name}" />
-                                <ObjectIdentifier text="{list>org_name}" />
-                                <ObjectIdentifier text="{list>approval_number}" />
-                                <ObjectIdentifier text="{list>approval_title}" />
-                                <ObjectIdentifier text="{list>requestor_name}" />
+                                <Text text="{list>approval_type}" />
+                                <Text text="{list>company_name}" />
+                                <Text text="{list>org_name}" />
+                                <Text text="{list>approval_number}" />
+                                <Text text="{list>approval_title}" />
+                                <Text text="{list>requestor_name}" />
                                 <!-- <ObjectIdentifier text="{list>request_date}" /> -->
                                 <DatePicker value="{list>request_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
-                                <ObjectIdentifier text="{list>approve_status}" />
+                                <Text text="{list>approve_status}" />
                                 <!-- <ObjectIdentifier text="{list>requestor_empno}" /> -->
                                 
 

@@ -25,14 +25,14 @@
                                 filters : [
                                     {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'}
                                 ],
-                                templateShareable:true}" 
-                        placeholder="선택 하세요.">
+                                templateShareable:true}"  
+                        placeholder="{I18N>/OPTION}">
                         <core:Item key="{org_code}" text="{org_name}"/>
                     </ComboBox>
                 </layout:VerticalLayout>  
                 <layout:VerticalLayout class="sapUiLargeMarginEnd">
                     <VBox visible="{= ${_oUiData>/radioButtonGroup} === 0 }">
-                        <Label text="자재코드"/>
+                        <Label text="{I18N>/MATERIAL_CODE}"/>
                         <!--수정사항 자재명 확인 -->
                         <ComboBox  
                             id="comboBox_materialView"
@@ -41,12 +41,12 @@
                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'}
                                     ],                            
                                     templateShareable:true}"                     
-                            placeholder="선택 하세요.">
+                            placeholder="{I18N>/OPTION}">
                             <core:Item key="{material_code}" text="{material_desc}"/>
                         </ComboBox>
                     </VBox>
                     <VBox visible="{= ${_oUiData>/radioButtonGroup} === 1 }">
-                        <Label text="공급업체코드"/>
+                        <Label text="{I18N>/SUPPLIER}"/>
                         <!--수정사항 tenant_id 정해지면 사용자 세션으로 바인딩 -->
                         <ComboBox  
                             id="comboBox_supplierView"
@@ -55,20 +55,20 @@
                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'}
                                     ],                             
                                     templateShareable:true}"                     
-                            placeholder="선택 하세요.">
+                            placeholder="{I18N>/OPTION}">
                             <core:Item key="{supplier_code}" text="{supplier_local_name}"/>
                         </ComboBox>
                     </VBox>
                 </layout:VerticalLayout> 
                 <layout:VerticalLayout class="sapUiLargeMarginEnd">
                     <VBox visible="{= ${_oUiData>/radioButtonGroup} === 0}">
-                        <Label  text="자재명"/>
+                        <Label  text="{I18N>/MATERIAL}"/>
                         <Input  id="input_material_desc"
                                 class="sapUiSmallMarginBottom" 
                         />   
                     </VBox>
                     <VBox visible="{= ${_oUiData>/radioButtonGroup} === 1}">
-                        <Label text="공급업체명"/>
+                        <Label text="{I18N>/SUPPLIER_NAME}"/>
                         <Input  id="input_supplier_local_name"
                                 class="sapUiSmallMarginBottom" 
                         />  
@@ -76,11 +76,11 @@
                 </layout:VerticalLayout>  
                 <layout:VerticalLayout class="sapUiTinyMarginEnd">
                     <Label text="　"/>
-                    <Button type="Transparent" text="Search" press=".onValueHelpMaterialDialogSearch"/>
+                    <Button type="Transparent" text="{I18N>/SEARCH}" press=".onValueHelpMaterialDialogSearch"/>
                 </layout:VerticalLayout>  
                 <layout:VerticalLayout class="sapUiTinyMarginEnd">
                     <Label text="　"/>
-                    <Button type="Emphasized"  text="Apply" press=".onValueHelpMaterialDialogApply"/>
+                    <Button type="Emphasized"  text="{I18N>/APPLY}" press=".onValueHelpMaterialDialogApply"/>
                 </layout:VerticalLayout>  
             </FlexBox> 
             </Panel>  
@@ -110,17 +110,17 @@
                     </Column>
                     <Column hAlign="Center" >
                         <header>
-                            <Label text="자재코드"/>                            
+                            <Label text="{I18N>/MATERIAL_CODE}"/>                            
                         </header>
                     </Column>
                     <Column hAlign="Center" >
                         <header>
-                            <Label text="자재명"/>                            
+                            <Label text="{I18N>/MATERIAL}"/>                            
                         </header>
                     </Column>
                     <Column hAlign="Center" >
                         <header>
-                            <Label text="공급업체"/>                            
+                            <Label text="{I18N>/SUPPLIER}"/>                            
                         </header>
                     </Column>    
                     <Column hAlign="Center" >

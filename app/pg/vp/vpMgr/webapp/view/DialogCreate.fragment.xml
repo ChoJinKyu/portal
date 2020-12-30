@@ -46,7 +46,7 @@
                                 </items>
                             </ComboBox>
                             <layoutData>
-                                <layout:GridData span="XL6 L6 M6 S12" />
+                                <layout:GridData span="XL4 L4 M4 S12" />
                             </layoutData> 
                         </VBox>
                         <VBox>
@@ -56,14 +56,20 @@
                                                         path : 'util>/CodeDetails',
                                                         filters : [
                                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
-                                                            {path : 'group_code', operator : 'EQ', value1 : 'PG_TE'}                               
+                                                            {path : 'group_code', operator : 'EQ', value1 : 'SP_SM_SUPPLIER_TYPE'}                               
                                                         ]
                                                     }"
                                 >
                                     <core:Item key="{util>code}" text="{util>code_description}" />
                                 </ComboBox>    
                             <layoutData>
-                                <layout:GridData span="XL6 L6 M6 S12" />
+                                <layout:GridData span="XL4 L4 M4 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox>
+                            <Button id="popTreeTableSearchButton"          text="Search"     press=".onDialogSearch"     type="Emphasized" />
+                            <layoutData>
+                                <layout:GridData span="XL4 L4 M4 S12" />
                             </layoutData> 
                         </VBox>
                         <VBox>
@@ -77,22 +83,19 @@
                             <table:TreeTable
                                 id="treeTable"
                                 selectionMode="Single"
-                                rowSelectionChange=".onCheck"                    
+                                rowSelectionChange=".onCheck"  
+	                            selectionBehavior="Row"                  
                                 enableColumnReordering="false"
-                                expandFirstLevel="false"
+                                expandFirstLevel="true"
                                 rows="{
-                                    path : '/VpPopupView',
+                                    path : 'tree>/VpPopupView',
                                     parameters : {
-                                        countMode: 'Inline',
-                                        treeAnnotationProperties : {
-                                            hierarchyLevelFor : 'hierarchy_level',
-                                            hierarchyNodeFor : 'node_id',
-                                            hierarchyParentNodeFor : 'parent_id',
-                                            hierarchyDrillStateFor : 'drill_state'
-                                        }
-                                    }
+                        	        arrayNames: ['nodes'],
+                        	        numberOfExpandedLevels: 3
+                       		        }
                                 }"
                                 >
+                                
                             <table:extension>
                                 <OverflowToolbar>
                                     <ToolbarSpacer/>
@@ -105,52 +108,52 @@
                             <table:columns>
                                     <table:Column label="Vendor Pool" >
                                         <table:template>
-                                            <Text id="t_vpNm" text="{vendor_pool_local_name}" wrapping="false" />
+                                            <Text id="t_vpNm" text="{tree>vendor_pool_local_name}" wrapping="false" />
                                         </table:template>
                                     </table:Column>
                                     <table:Column label="Higher Level" width="0rem" >
                                         <table:template>
-                                            <Text text="{higher_level_path}" wrapping="false" />
+                                            <Text text="{tree>higher_level_path}" wrapping="false" />
                                         </table:template>
                                     </table:Column>
                                     <table:Column label="Level" width="0rem">
                                         <table:template>
-                                            <Text text="{level_path}" wrapping="false" />
+                                            <Text text="{tree>level_path}" wrapping="false" />
                                         </table:template>
                                     </table:Column>                                                                          
                                     <table:Column label="Operation Unit" width="0rem">
                                         <table:template>
-                                            <Text text="{org_code}" wrapping="false" />
+                                            <Text text="{tree>org_code}" wrapping="false" />
                                         </table:template>
                                     </table:Column> 
                                     <table:Column label="Hierarchy Level" width="0rem">
                                         <table:template>
-                                            <Text text="{hierarchy_level}" wrapping="false" />
+                                            <Text text="{tree>hierarchy_level}" wrapping="false" />
                                         </table:template>
                                     </table:Column>                                      
                                     <table:Column label="TENANT ID" width="0rem">
                                         <table:template>
-                                            <Text text="{tenant_id}" wrapping="false" />
+                                            <Text text="{tree>tenant_id}" wrapping="false" />
                                         </table:template>
                                     </table:Column>  
                                     <table:Column label="COMPANY" width="0rem">
                                         <table:template>
-                                            <Text text="{company_code}" wrapping="false" />
+                                            <Text text="{tree>company_code}" wrapping="false" />
                                         </table:template>
                                     </table:Column>  
                                     <table:Column label="ORG TYPE" width="0rem">
                                         <table:template>
-                                            <Text text="{org_type_code}" wrapping="false" />
+                                            <Text text="{tree>org_type_code}" wrapping="false" />
                                         </table:template>
                                     </table:Column> 
                                     <table:Column label="PARENT VENDOR POOL" width="0rem">
                                         <table:template>
-                                            <Text text="{parent_vendor_pool_code}" wrapping="false" />
+                                            <Text text="{tree>parent_vendor_pool_code}" wrapping="false" />
                                         </table:template>
                                     </table:Column> 
                                     <table:Column label="Operation Unit" width="0rem">
                                         <table:template>
-                                            <Text text="{operation_unit_code}" wrapping="false" />
+                                            <Text text="{tree>operation_unit_code}" wrapping="false" />
                                         </table:template>
                                     </table:Column>                                                                                                                                                    
 

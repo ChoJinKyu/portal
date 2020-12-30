@@ -1,0 +1,1 @@
+sap.ui.define(["./BaseController"],function(n){"use strict";return n.extend("pg.monitor.controller.NotFound",{onLinkPressed:function(){this.getRouter().navTo("monitor")}})});

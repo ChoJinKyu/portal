@@ -66,7 +66,7 @@ sap.ui.define([
         },
         
         onAfterRendering : function () {
-			this.byId("pageSearchButton").firePress();
+			//this.byId("pageSearchButton").firePress();
 			return;
         },
 
@@ -195,7 +195,7 @@ sap.ui.define([
 		 */
 		_onRoutedThisPage: function(){
             this.getModel("mainListView").setProperty("/headerExpanded", true);
-            this.byId("pageSearchButton").firePress();
+            //this.byId("pageSearchButton").firePress();
 		},
 
 		/**
@@ -230,7 +230,8 @@ sap.ui.define([
 			
             var aSearchFilters = [];
 			if (sChain && sChain.length > 0) {
-				aSearchFilters.push(new Filter("use_flag", FilterOperator.EQ, sChain));
+                var vChain = (sChain === "true")?true:false;
+				aSearchFilters.push(new Filter("use_flag", FilterOperator.EQ, vChain));
 			}
 			if (sKeyword && sKeyword.length > 0) {
 				aSearchFilters.push(new Filter({

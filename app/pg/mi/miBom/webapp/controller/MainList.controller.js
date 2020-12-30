@@ -1,11 +1,12 @@
 sap.ui.define([
 	"./BaseController",
+	"ext/lib/util/Multilingual",
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
     "sap/m/MessageToast"
-], function (BaseController,  JSONModel,    Filter, FilterOperator, MessageBox, MessageToast) {
+], function (BaseController, Multilingual,  JSONModel,    Filter, FilterOperator, MessageBox, MessageToast) {
 	"use strict";
 
 	return BaseController.extend("pg.mi.miBom.controller.MainList", {
@@ -55,6 +56,28 @@ sap.ui.define([
 			console.group("onInit");
 			var oUi, oDeleteInfo, oResourceBundle = this.getResourceBundle();
 
+			var oMultilingual = new Multilingual();
+			this.setModel(oMultilingual.getModel(), "I18N");
+
+
+			oMultilingual.attachEvent("ready", function(oEvent){
+				var oi18nModel = oEvent.getParameter("model");
+				this.addHistoryEntry({
+					title: oi18nModel.getText("/MESSAGE_MANAGEMENT"),
+					icon: "sap-icon://table-view",
+					intent: "#Template-display"
+				}, true);
+
+				// Smart Filter Button 명 처리 START
+				var b = this.getView().byId("smartFilterBar").getContent()[0].getContent();
+				$.each(b, function(index, item) {
+					if (item.sId.search("btnGo") !== -1) {
+						item.setText(this.getModel("I18N").getText("/EXECUTE"));
+					}
+				}.bind(this));
+				// Smart Filter Button 명 처리 END
+			}.bind(this));
+						
 			// Model used to manipulate control states
 			oUi = new JSONModel({
 				headerExpanded: true,
@@ -174,7 +197,9 @@ sap.ui.define([
 			if (oSupplier_local_name.length > 0) {
 				var oSupplier_local_nameFilter = new Filter("supplier_local_name", FilterOperator.Contains, oSupplier_local_name);
 				mBindingParams.filters.push(oSupplier_local_nameFilter);
-            }            
+			}         
+
+			this._getSmartTableById().getTable().removeSelections(true);
         },
 		
 			
@@ -307,36 +332,36 @@ sap.ui.define([
 				sPath = oEvent.getSource().getBindingContext().getPath(),
 				oRecord = this.getModel().getProperty(sPath);
 				
-
-				var aParameters = sPath.substring( sPath.indexOf('(')+1, sPath.length );		
-				aParameters = aParameters.split(",");
-		
-				var size = aParameters.length;
-				var key, value;
-				for(var i=0 ; i < size ; i++) {
-					key = aParameters[i].split("=")[0];
-					value = aParameters[i].split("=")[1];			 
-					aParameters[key] = value;
-				}
-
-				//var otermsdelv = this._setReplace(aParameters["termsdelv"]);
-
-				//otermsdelv = otermsdelv.replace(")",'');
+			this._getSmartTableById().getTable().removeSelections(true);
+			var aParameters = sPath.substring( sPath.indexOf('(')+1, sPath.length );		
+			aParameters = aParameters.split(",");
 	
-	
-				this.getRouter().navTo("midPage", {
-					layout: oNextUIState.layout, 
-					tenant_id: this._setReplace(aParameters["tenant_id"]),
-					material_code: oRecord.material_code,
-					supplier_code: oRecord.supplier_code,
-					mi_bom_id: this._setReplace(aParameters["mi_bom_id"]),
-					mi_material_code: oRecord.mi_material_code,
-					currency_unit: oRecord.currency_unit,
-					quantity_unit: oRecord.quantity_unit,
-					exchange: oRecord.exchange,
-					termsdelv: oRecord.termsdelv,
-					
-				});
+			var size = aParameters.length;
+			var key, value;
+			for(var i=0 ; i < size ; i++) {
+				key = aParameters[i].split("=")[0];
+				value = aParameters[i].split("=")[1];			 
+				aParameters[key] = value;
+			}
+
+			//var otermsdelv = this._setReplace(aParameters["termsdelv"]);
+
+			//otermsdelv = otermsdelv.replace(")",'');
+
+
+			this.getRouter().navTo("midPage", {
+				layout: oNextUIState.layout, 
+				tenant_id: this._setReplace(aParameters["tenant_id"]),
+				material_code: oRecord.material_code,
+				supplier_code: oRecord.supplier_code,
+				mi_bom_id: this._setReplace(aParameters["mi_bom_id"]),
+				mi_material_code: oRecord.mi_material_code,
+				currency_unit: oRecord.currency_unit,
+				quantity_unit: oRecord.quantity_unit,
+				exchange: oRecord.exchange,
+				termsdelv: oRecord.termsdelv,
+				
+			});
 
 				
 
@@ -345,10 +370,12 @@ sap.ui.define([
             }
 
 			var oItem = oEvent.getSource();
-			oItem.setNavigated(true);
-			var oParent = oItem.getParent();
-			// store index of the item clicked, which can be used later in the columnResize event
-			this.iIndex = oParent.indexOfItem(oItem);
+
+			this._getSmartTableById().getTable().setSelectedItem(oItem);			
+			// oItem.setNavigated(true);
+			// var oParent = oItem.getParent();
+			// // store index of the item clicked, which can be used later in the columnResize event
+			// this.iIndex = oParent.indexOfItem(oItem);
 			console.groupEnd();
 		},
 
@@ -418,8 +445,8 @@ sap.ui.define([
             var oSelected = this._mainTable.getSelectedContexts();   
             if (oSelected.length > 0) { 
 
-                MessageBox.confirm("선택한 항목을 삭제 하시겠습니까?", {
-                    title: "삭제 확인",                                    
+                MessageBox.confirm(this.getModel("I18N").getText("/NCM00003"), {
+                    title: this.getModel("I18N").getText("/DELETE + CONFIRM"),                                    
                     onClose: this._deleteAction.bind(this),                                    
                     actions: [sap.m.MessageBox.Action.DELETE, sap.m.MessageBox.Action.CANCEL],
                     textDirection: sap.ui.core.TextDirection.Inherit    
@@ -656,13 +683,13 @@ sap.ui.define([
 					
 				function _handleDeleteSuccess(oData) {
 
-					MessageToast.show("삭제가 성공 하였습니다.");
+					MessageToast.show(this.getModel("I18N").getText("/NCM01002"));
 
 					//this.getView().byId("buttonMainTableDelete").setEnabled(false);
 				}
         
         		function _handleDeleteError(oError) {
-					MessageToast.show("삭제가 실패 되었습니다.");
+					MessageToast.show(this.getModel("I18N").getText("/NCM01002"));
 				}				
 	
 				// console.log(that._m.deleteHeaderItemCount);

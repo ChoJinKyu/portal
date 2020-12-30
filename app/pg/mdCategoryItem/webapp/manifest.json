@@ -54,19 +54,20 @@
     }
   },
   "sap.ui5": {
-    "flexEnabled": false,
     "rootView": {
       "viewName": "pg.mdCategoryItem.view.App",
       "type": "XML",
       "async": true,
-      "id": "app"
+      "id": "fcl"
     },
     "dependencies": {
       "minUI5Version": "1.60.1",
       "libs": {
         "sap.ui.core": {},
         "sap.m": {},
-        "sap.ui.layout": {}
+        "sap.ui.layout": {},
+        "sap.f": {},
+        "sap.uxap": {}
       }
     },
     "contentDensities": {
@@ -117,38 +118,35 @@
         "viewType": "XML",
         "async": true,
         "viewPath": "pg.mdCategoryItem.view",
-        "controlAggregation": "pages",
-        "controlId": "app",
+        "controlId": "fcl",
+        "transition": "slide",
         "clearControlAggregation": false
       },
       "routes": [
         {
-            "pattern": "",
-            "name": "mdCategoryItem",
+            "pattern": ":layout:",
+            "name": "mainPage",
             "target": [
-                "mdCategoryItem",
-                "detail"
+                "mainObject"
             ]
         },
         {
-            "pattern": "detail/{spmd_character_code}/{layout}",
-            "name": "detail",
+            "pattern": "midObject/{company_code}/{org_type_code}/{org_code}/{spmd_category_code}/{spmd_character_code}/{layout}",
+            "name": "midPage",
             "target": [
-                "mdCategoryItem",
-                "detail"
+                "mainObject",
+                "midObject"
             ]
         }
       ],
       "targets": {
-        "mdCategoryItem": {
-          "viewId": "mdCategoryItem",
+        "mainObject": {
           "viewName": "mdCategoryItem",
-          "viewLevel": 1,
 		  "controlAggregation": "beginColumnPages",
           "title": "{i18n>mainListViewTitle}"
         },
-        "detail": {
-            "viewName": "Detail",
+        "midObject": {
+            "viewName": "mdCategoryItemDetail",
             "controlAggregation": "midColumnPages"
         }
       }

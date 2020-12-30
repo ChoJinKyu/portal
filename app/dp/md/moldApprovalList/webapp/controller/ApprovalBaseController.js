@@ -49,27 +49,10 @@ sap.ui.define([
             this.moldMaster_data = [] ;
             this.quotation_data = [];  // supplier 전용 
 
-
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
 
-            this.getView().setModel(new ManagedModel(), "company");
-            this.getView().setModel(new ManagedModel(), "plant");
-            this.getView().setModel(new ManagedModel(), "appType");
-
-            this.getView().setModel(new JSONModel(Device), "device"); // file upload 
-
-            this.getView().setModel(new ManagedModel(), "appMaster");
-            this.getView().setModel(new ManagedModel(), "moldMaster");
-            this.getView().setModel(new ManagedListModel(), "appDetail");
-            this.getView().setModel(new ManagedListModel(), "approver");
-            this.getView().setModel(new ManagedListModel(), "referer");
-
-            oTransactionManager = new TransactionManager();
-            oTransactionManager.addDataModel(this.getModel("moldMaster"));
-            oTransactionManager.addDataModel(this.getModel("appMaster"));
-            oTransactionManager.addDataModel(this.getModel("approver"));
-            oTransactionManager.addDataModel(this.getModel("referer"));
+        
 
             this._showFormFragment();
         },
@@ -128,42 +111,17 @@ sap.ui.define([
 		 * Event handler for page edit button press
 		 * @public
 		 */
-        /*onPageEditButtonPress: function () {
-            this._toEditMode();
-        },*/
+        _editMode: function () {
+           this.getModel("contModel").setProperty("/editMode", true)
+           this.getModel("contModel").setProperty("/viewMode", false)
 
+        },
+        _viewMode : function(){
+           this.getModel("contModel").setProperty("/editMode", false)
+           this.getModel("contModel").setProperty("/viewMode", true) 
 
-		/**
-		 * Event handler for saving page changes
-		 * @public
-		 *//*
-       onPageSaveButtonPress: function () {
-           var oView = this.getView(),
-               me = this,
-               oMessageContents = this.byId("inputMessageContents");
+        },
 
-           if (!oMessageContents.getValue()) {
-               oMessageContents.setValueState(sap.ui.core.ValueState.Error);
-               return;
-           }
-           MessageBox.confirm("Are you sure ?", {
-               title: "Comfirmation",
-               initialFocus: sap.m.MessageBox.Action.CANCEL,
-               onClose: function (sButton) {
-                   if (sButton === MessageBox.Action.OK) {
-                       oView.setBusy(true);
-                       oView.getModel().submitBatch("odataGroupIdForUpdate").then(function (ok) {
-                           me._toShowMode();
-                           oView.setBusy(false);
-                           MessageToast.show("Success to save.");
-                       }).catch(function (err) {
-                           MessageBox.error("Error while saving.");
-                       });
-                   };
-               }
-           });
-       },
-*/
 		/**
 		 * Event handler for cancel page editing
 		 * @public
@@ -183,7 +141,39 @@ sap.ui.define([
 		 * @private
 		 */
         _onObjectMatched: function (oEvent) {
-            
+            /**
+             * init 에서 해당 모델을 선언하면 create 계속 연속 했을때 기존 데이터가 남아있어서
+             * 비정상적으로 나옴 
+             */        
+    
+            var oViewModel = new JSONModel({
+                busy: true,
+                delay: 0,
+                editMode : false ,
+                viewMode : true
+            });
+            this.setModel(oViewModel, "contModel");
+
+
+            this.getView().setModel(new ManagedModel(), "company");
+            this.getView().setModel(new ManagedModel(), "plant");
+            this.getView().setModel(new ManagedModel(), "appType");
+
+            this.getView().setModel(new JSONModel(Device), "device"); // file upload 
+
+            this.getView().setModel(new ManagedModel(), "appMaster");
+            this.getView().setModel(new ManagedModel(), "moldMaster");
+            this.getView().setModel(new ManagedListModel(), "appDetail");
+            this.getView().setModel(new ManagedListModel(), "approver");
+            this.getView().setModel(new ManagedListModel(), "referer");
+
+            oTransactionManager = new TransactionManager();
+            oTransactionManager.addDataModel(this.getModel("moldMaster"));
+            oTransactionManager.addDataModel(this.getModel("appMaster"));
+            oTransactionManager.addDataModel(this.getModel("approver"));
+            oTransactionManager.addDataModel(this.getModel("referer"));
+
+
             var oArgs = oEvent.getParameter("arguments");
             console.log(oArgs);
             this._createViewBindData(oArgs);
@@ -201,6 +191,8 @@ sap.ui.define([
             this.company_code = args.company_code;
             this.plant_code = (args.org_code == undefined ? args.plant_code : args.org_code);
 
+            console.log(" contrl " , this.getModel("contModel"));
+
            // this.getModel("purOrderItemLocalApprovalView").setProperty('/editMode', this.plant_code != undefined ? true : false);
 
             var oModel = this.getModel("company");
@@ -215,22 +207,29 @@ sap.ui.define([
             });
 
             var oModel2 = this.getModel("plant");
-            oModel2.setTransactionModel(this.getModel("org"));
+            oModel2.setTransactionModel(this.getModel("purOrg"));
 
-            oModel2.read("/Plant(tenant_id='" + this.tenant_id + "',company_code='" + this.company_code + "',plant_code='" + this.plant_code + "')", {
+            oModel2.read("/Pur_Operation_Org(tenant_id='" + this.tenant_id 
+                        + "',company_code='" + this.company_code 
+                        + "',org_type_code='" + "AU" 
+                        + "',org_code='" + this.plant_code + "')", {
                 filters: [],
                 success: function (oData) {
-
+                    console.log("orgName " , oData);
                 }
             });
 
             if (this.approval_number === "New") {
                 this._onApproverAddRow(0);
+                this.getModel("appMaster").setProperty("/requestor_empno", "140790"); // 나중에 세션 값 세팅 할 것 
+                this.getModel("appMaster").setProperty("/request_date", this._getToday());
+                this._editMode(); 
             } else {
+                this._viewMode();
                 this._onRoutedThisPage(this.approval_number); 
-                this._onApprovalPage(); // 이거 공통으로 각자 페이지에 하나 만듭시다 - this.approval_number 가 로드 된 후에 처리 해야 하는데 
-                                                            // 그 시점을 ApprovalBaseController. 에서 해줘야 겠네요 
             }
+             this._onApprovalPage(); // 이거 공통으로 각자 페이지에 하나 만듭시다 - this.approval_number 가 로드 된 후에 처리 해야 하는데 
+
         },
 
         _oFragments: {},
@@ -266,7 +265,9 @@ sap.ui.define([
                 new Filter("approval_number", FilterOperator.EQ, approvalNumber)
             ];
 
-            this._bindView("/ApprovalMasters(tenant_id='" + this.tenant_id + "',approval_number='" + approvalNumber + "')", "appMaster", [], function (oData) {
+            this._bindView("/AppMaster(tenant_id='" + this.tenant_id + "',approval_number='" + approvalNumber + "')", "appMaster", [], function (oData) {
+               
+                console.log(" oData >>> " , oData);
                 this.oRichTextEditor.setValue(oData.approval_contents);
             }.bind(this));
 
@@ -296,7 +297,7 @@ sap.ui.define([
             }.bind(this));
 
             this._bindView("/Approvers", "approver", filter, function (oData) { 
-                console.log(" Approvers >> " , oData);
+                console.log(" Approvers /////////////>> " , oData);
                 this._onLoadApproverRow(oData.results);
             }.bind(this));
 
@@ -510,7 +511,7 @@ sap.ui.define([
                 MessageToast.show("Type 을 먼저 선택해주세요.");
             } else {
                 var oView = this.getView();
-
+                 console.log("handleEmployeeSelectDialogPress >>> this._oDialog " , this._oDialog);
                 if (!this._oDialog) {
                     this._oDialog = Fragment.load({
                         id: oView.getId(),
@@ -822,8 +823,8 @@ sap.ui.define([
                  ,  approve_status_code : mst.approve_status_code 
                  ,  requestor_empno : mst.requestor_empno 
                  ,  request_date : this._getToday() 
-                 ,  create_user_id : '212430'
-                 ,  update_user_id : '212430'
+                 ,  create_user_id : mst.requestor_empno 
+                 ,  update_user_id : mst.requestor_empno 
                  ,  local_create_dtm : new Date() 
                  ,  local_update_dtm : new Date()
             };
@@ -870,11 +871,10 @@ sap.ui.define([
                 } 
             }
 
-             this.callAjax(data,"saveMoldApproval")
+            this.callAjax(data,"saveMoldApproval")
 
 
         } , 
-
 
         callAjax : function (data,fn) {  
             console.log("data >>>> " , data);
@@ -901,8 +901,13 @@ sap.ui.define([
                 }
             });
         }, 
-        onLoadThisPage : function (param) {
+        onLoadThisPage : function (param) { 
+           
+            this._viewMode();
+            this._onRoutedThisPage(param.approval_number); 
+            this._onApprovalPage();
 
+           /* console.log("param >>>> " , param);
             var that = this;
             var target = "";
             if(this.approval_type_code  == "B"){
@@ -912,12 +917,12 @@ sap.ui.define([
             }if(this.approval_type_code  == "E"){
                 target = "participatingSupplierSelection"
             }
-
+   
             that.getRouter().navTo(target , {
                 company_code: param.company_code
                 , plant_code: param.plant_code
                 , approval_number: param.approval_number
-            });
+            },true); */ 
 
         }
 

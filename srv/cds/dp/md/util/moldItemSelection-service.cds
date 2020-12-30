@@ -2,12 +2,17 @@ namespace dp.util;
 using { dp as moldMst } from '../../../../../db/cds/dp/md/DP_MD_MST-model';
 using { dp as approvalDtl } from '../../../../../db/cds/dp/md/DP_MD_APPROVAL_DTL-model';
 using { cm as codeDtl } from '../../../../../db/cds/cm/CM_CODE_DTL-model';
+using { cm as codeLng } from '../../../../../db/cds/cm/CM_CODE_LNG-model';
+using { cm as orgCodeLng } from '../../../../../db/cds/cm/CM_ORG_CODE_LNG-model'; 
+using { sp.Sm_Supplier_Mst as supplier } from '../../../../../db/cds/sp/sm/SP_SM_SUPPLIER_MST-model';
+using { cm as cmDept } from '../../../../../db/cds/cm/CM_HR_DEPARTMENT-model'; 
+using { dp as moldSche } from '../../../../../db/cds/dp/md/DP_MD_SCHEDULE-model';
 
 @path: '/dp.util.MoldItemSelectionService'
 service MoldItemSelectionService {
-    entity MoldMasters as projection on moldMst.Md_Mst; 
-    entity ApprovalDetails as projection on approvalDtl.Md_Approval_Dtl;
-
+    /** 
+      // 팝업 조회 용 
+     */
     view MoldItemSelect as
         select
             key m.mold_id,
@@ -22,11 +27,12 @@ service MoldItemSelectionService {
                 m.asset_number,
                 m.mold_item_type_code,
                 m.mold_production_type_code,
-                cd.code_description as mold_item_type_code_nm,
+                cl.code_name as mold_item_type_code_nm : String(240),
                 m.first_production_date,
                 m.production_complete_date,
                 m.budget_amount,
-                m.currency_code,
+                m.currency_code, 
+                cur.code_name as currency_code_nm : String(240) ,
                 m.target_amount,
                 m.order_confirmed_amount,
                 m.order_number,
@@ -36,7 +42,8 @@ service MoldItemSelectionService {
                 m.receiving_complete_date,
                 m.account_code,
                 m.accounting_department_code,
-                m.acq_department_code,
+                m.acq_department_code, 
+                dep.department_local_name as acq_department_code_nm : String(240) ,
                 m.remark,
                 m.eco_number,
                 m.set_id,
@@ -47,7 +54,7 @@ service MoldItemSelectionService {
                 m.book_currency_code,
                 m.budget_exrate_date,
                 m.budget_exrate,
-                m.split_pay_flag,
+                m.split_pay_type_code,
                 m.prepay_rate,
                 m.progresspay_rate,
                 m.rpay_rate,
@@ -74,17 +81,33 @@ service MoldItemSelectionService {
                 m.system_create_dtm,
                 m.system_update_dtm,
                 m.supplier_code,
-                m.mold_progress_status_code
-        from moldMst.Md_Mst m
-        join (
-            select
-                t.code_description,
-                t.code
-            from codeDtl.Code_Dtl t
-            where
-                t.group_code = 'DP_MD_ITEM_TYPE'
-        ) cd
-            on cd.code = m.mold_item_type_code
+                s1.supplier_local_name, 
+                '[' || m.supplier_code || '] ' || s1.supplier_local_name as  supplier_code_nm : String(240) ,
+                m.production_supplier_code, 
+                '[' || m.production_supplier_code || '] ' || s2.supplier_local_name as  production_supplier_code_nm : String(240),
+                s2.supplier_local_name as production_supplier_local_name : String(240) ,
+                m.mold_progress_status_code ,
+                ps.drawing_agreement_date as drawing_consent_plan : String(240) , 
+        		rs.drawing_agreement_date as drawing_consent_result : String(240)  ,
+        		ps.first_production_date as production_plan : String(240) , 
+        		rs.first_production_date as production_result  : String(240) ,
+        		ps.production_complete_date as completion_plan : String(240) , 
+        		rs.production_complete_date as completion_result  : String(240) 
+        from moldMst.Md_Mst m 
+        left join orgCodeLng.Org_Code_Lng as cur on m.company_code = cur.org_code 
+                                    and cur.group_code = 'DP_MD_LOCAL_CURRENCY' 
+                                    and cur.tenant_id = m.tenant_id 
+                                    and cur.code = m.currency_code 
+                                    and cur.language_cd = 'KO'
+        left join supplier s1 on s1.supplier_code = m.supplier_code  and s1.tenant_id = m.tenant_id 
+        left join supplier s2 on s2.supplier_code = m.production_supplier_code and s2.tenant_id = m.tenant_id  
+        left join cmDept.Hr_Department dep on dep.department_id =  m.acq_department_code and dep.tenant_id = m.tenant_id 
+        left join moldSche.Md_Schedule ps on ps.mold_id = m.mold_id and ps.mold_develope_date_type_code = 'P'
+        left join moldSche.Md_Schedule rs on rs.mold_id = m.mold_id and rs.mold_develope_date_type_code = 'R' 
+        left join codeLng.Code_Lng as cl on cl.code = m.mold_item_type_code 
+                             and cl.group_code = 'DP_MD_ITEM_TYPE' 
+                             and cl.language_cd = 'KO' 
+                             and cl.tenant_id = m.tenant_id 
         where
             m.mold_id not in (
                 select d.mold_id from approvalDtl.Md_Approval_Dtl d

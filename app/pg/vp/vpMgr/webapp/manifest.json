@@ -19,6 +19,13 @@
           "odataVersion": "2.0"
         }
       },
+      "mappingService": {
+        "uri": "srv-api/odata/v2/pg.vendorPoolMappingService/",
+        "type": "OData",
+        "settings": {
+            "odataVersion": "2.0"
+        }
+        },
       "commonUtilService": {
         "uri": "srv-api/odata/v2/cm.util.CommonService/",
         "type": "OData",
@@ -85,6 +92,16 @@
           "useBatch": true
         }
       },
+      "mapping": {
+        "dataSource": "mappingService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "useBatch": true
+        }
+      },
       "": {
         "dataSource": "mainService",
         "preload": true,
@@ -130,7 +147,7 @@
               ]
           },
           {
-              "pattern": "midObject/{layout}/{tenantId}/{vendorPool}",
+              "pattern": "midObject/{layout}/{tenantId}/{orgCode}/{operationUnitCode}/{vendorPool}",
               "name": "midPage",
               "target":[ 
                   "midTreeObject"
@@ -138,7 +155,7 @@
                   
           },
           {
-              "pattern": "midObjectDetail/{layout}/{tenantId}/{vendorPool}",
+              "pattern": "midObjectDetail/{layout}/{tenantId}/{orgCode}/{operationUnitCode}/{vendorPool}",
               "name": "midPageDetail",
               "target":[ 
                   "midTreeObject",

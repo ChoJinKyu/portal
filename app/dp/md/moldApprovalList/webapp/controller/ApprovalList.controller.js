@@ -33,7 +33,7 @@ sap.ui.define([
 ], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter
     , FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text
     , Token, Input, ComboBox, Item, Element, syncStyleClass, Label, SearchField, Multilingual, Export, ExportTypeCSV, ODataModel, ExcelUtil
-    , Validator) {
+    , Validator ) {
     "use strict";
     /**
      * @description 품의 목록 (총 품의 공통)
@@ -45,7 +45,7 @@ sap.ui.define([
     var dialogId = "";
     var path = '';
     var approvalTarget ='';
-
+        
     return BaseController.extend("dp.md.moldApprovalList.controller.ApprovalList", {
         
         dateFormatter: DateFormatter,
@@ -266,6 +266,8 @@ sap.ui.define([
                 approvalTarget = "purOrderItemLocalApproval"
             }if(oRecord.approval_type_code == "E"){
                 approvalTarget = "participatingSupplierSelection"
+            }if(oRecord.approval_type_code == "I"){
+                approvalTarget = "moldRecepitApproval"
             }
 
             console.log(approvalTarget);
@@ -711,7 +713,8 @@ sap.ui.define([
             }else if(id.indexOf("localOrder") > -1){
                approvalTarget = "purOrderItemLocalApproval"
             }else if(id.indexOf("receipt") > -1){
-                appTypeCode ="I"
+                approvalTarget = "moldRecepitApproval"
+               // appTypeCode ="I"
             }else if(id.indexOf("export") > -1){
                 appTypeCode ="X"
             }
@@ -784,51 +787,80 @@ sap.ui.define([
                 oModel = this.getModel(),
                 lModel = this.getModel("list"),
                 oView = this.getView(),
+                data ={},
                 //oSelected  = oTable.getSelectedItems(),
                 oSelected = [],
+                delApprData = [],
                 checkBoxs = this.getView().getControlsByFieldGroupId("checkBoxs");
+            var that = this;
             
             for (var i = 0; i < checkBoxs.length; i++) {
                 if (checkBoxs[i].mProperties.selected == true) {
+                    console.log(lModel.getData().Approvals[i]);
+                    delApprData.push({
+                        approval_number : lModel.getData().Approvals[i].approval_number
+                        ,tenant_id : lModel.getData().Approvals[i].tenant_id
+                    })
                     oSelected.push(i);
                 }
             }
+            console.log("delApprData >>>>", delApprData);
 
             if (oSelected.length > 0) {
-                MessageBox.confirm(this.getModel("I18N").getText("/NCM0104", oSelected.length, "삭제"), {//this.getModel("I18N").getText("/NCM0104", oSelected.length, "${I18N>/DELETE}")
+                MessageBox.confirm(("삭제하시겠습니까?"), {//this.getModel("I18N").getText("/NCM0104", oSelected.length, "${I18N>/DELETE}")
                     title: "Comfirmation",
                     initialFocus: sap.m.MessageBox.Action.CANCEL,
                     onClose: function (sButton) {
-                        if (sButton === MessageBox.Action.OK) {
-                            oSelected.forEach(function (idx) {
-                                console.log(lModel.getData().Approvals[idx]);
-                                console.log(lModel.getData().Approvals[idx].__entity);
-                                oModel.remove(lModel.getData().Approvals[idx].__entity, {
-                                    groupId: "delete"
-                                });
-                            });
-
-                            oModel.submitChanges({
-                                groupId: "delete",
-                                success: function () {
-                                    oView.setBusy(false);
-                                    MessageToast.show("Success to Delete.");
-                                    this.onPageSearchButtonPress();
-                                }.bind(this), error: function (oError) {
-                                    oView.setBusy(false);
-                                    MessageBox.error(oError.message);
-                                }
-                            });
+                        if(delApprData.length > 0){
+                            data = {
+                                inputData : { 
+                                    approvalMaster : delApprData 
+                                } 
+                            }
+                            that.callAjax(data,"deleteApproval");
                         }
-                    }.bind(this)
+                    }
                 });
-
-                //oTable.clearSelection();
 
             } else {
                 MessageBox.error("선택된 행이 없습니다.");
             }
 
+        },
+
+        callAjax : function (data,fn) {  
+           
+            var that = this;
+            //  /dp/md/moldApprovalList/webapp/srv-api/odata/v2/dp.MoldApprovalListService/RefererSearch
+            //  "xx/sampleMgr/webapp/srv-api/odata/v4/xx.SampleMgrV4Service/SaveSampleHeaderMultiProc"
+            var url = "/dp/md/moldApprovalList/webapp/srv-api/odata/v4/dp.MoldApprovalV4Service/"+fn;
+            console.log("data >>>> " , data);
+            console.log("url >>>> " , url);
+            $.ajax({
+                url: url,
+                type: "POST",
+                //datatype: "json",
+                data : JSON.stringify(data),
+                contentType: "application/json",
+                success: function(result){
+                    console.log("result>>>> " , result);
+                    MessageToast.show(that.getModel("I18N").getText("/"+result.messageCode));
+                    if(result.resultCode > -1){
+                        that.onLoadThisPage(result);
+                    }
+                },
+                error: function(e){
+                    
+                }
+            });
+        }, 
+
+        onLoadThisPage : function (param) { 
+            var target=""
+            var that = this;
+            that.getRouter().navTo(target , {
+
+            },true); 
         },
 
 
@@ -992,177 +1024,26 @@ sap.ui.define([
         ///////////////////// List search section End //////////////////////////
 
         ///////////////////// Excel export Start //////////////////////////
-        // exportToExcel: function (oTable) {
-        //     oTable = this.byId("mainTable");
-        //     console.log(this.byId("mainTable"));
-        //     var aColumns = oTable.getColumns();
-        //     console.log(oTable.getModel("list"));
-        //     //var aCells = oTable.getCells();
-        //     var aItems = oTable.getItems();
-        //     var aTemplate = [];
-        //     for (var i = 0; i < aColumns.length; i++) {
-        //         var oColumn = {
-        //             name: aColumns[i].getHeader().getText(),
-        //             template: {
-        //                 content: {
-        //                     path: null
-                            
-        //                 }
-        //             }
-        //         };
-                
-        //         if (aItems.length > 0) {
-        //             oColumn.template.content.path = aItems[0].getBindingContext("list").getPath();
-        //         }
-        //         aTemplate.push(oColumn);
-        //     }
-        //     var oExport = new Export({
-        //         // Type that will be used to generate the content. Own ExportType’s can be created to support other formats
-        //         exportType: new ExportTypeCSV({
-        //             separatorChar: ",",
-        //             charset: "utf-8"
-        //         }),
-        //         // Pass in the model created above
-        //         models: oTable.getModel(),
-        //         // binding information for the rows aggregation
-        //         rows: {
-        //             path: "/ApprovalMasters"
-        //         },
-        //         // column definitions with column name and binding info for the content
-        //         columns: aTemplate
-        //     });
-        //     oExport.saveFile().always(function () {
-        //         this.destroy();
-        //     });
-        // },
+      
 
-        
-        onDataExport : function(oEvent) {
-            console.log(this.getView());
-			var oExport = new Export({
-
-				// Type that will be used to generate the content. Own ExportType's can be created to support other formats
-				exportType : new ExportTypeCSV({
-					separatorChar: ",",
-                    charset: "utf-8"
-				}),
-
-				// Pass in the model created above
-				models : this.getView().getModel(),
-
-				// binding information for the rows aggregation
-				rows : {
-					path : "/Approvals"
-				},
-
-				// column definitions with column name and binding info for the content
-
-				columns : [{
-					name : "Approval Categori",
-					template : {
-						content : "{approval_type_code}"
-					}
-				}, {
-					name : "Company",
-					template : {
-						content : "{company_code}"
-					}
-				}, {
-					name : "Plant",
-					template : {
-						content : "{org_code}"
-					}
-				}, {
-					name : "Approval No",
-					template : {
-						content : "{approval_number}"
-					}
-				}, {
-					name : "Subject",
-					template : {
-						content : "{approval_title}"
-					}
-				}, {
-					name : "Requestor",
-					template : {
-						content : "{requestor_empno}"
-					}
-				}, {
-					name : "Request Date",
-					template : {
-						content : "{request_date}"
-					}
-                }, {
-					name : "Status",
-					template : {
-						content : "{approve_status_code}"
-					}
-				}]
-			});
-
-			//download exported file
-			oExport.saveFile().catch(function(oError) {
-				MessageBox.error("Error when downloading data. Browser might not be supported!\n\n" + oError);
-			}).then(function() {
-				oExport.destroy();
-			});
-        },
         onExportPress: function (_oEvent) {
             var sTableId = _oEvent.getSource().getParent().getParent().getId();
             if (!sTableId) { return; }
 
             var oTable = this.byId(sTableId);
-                        //var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
-            var sFileName = "MOLD APPROVAL LIST"; //file name to exporting
+            //var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
+            var sFileName = "MOLD APPROVAL LIST"
+            //var oData = this.getModel("list").getProperty("/Message"); //binded Data
             var oData = oTable.getModel("list").getProperty("/Approvals");
+            console.log(oTable);
+            console.log(sFileName);
             console.log(oData);
             ExcelUtil.fnExportExcel({
                 fileName: sFileName || "SpreadSheet",
                 table: oTable,
                 data: oData
             });
-
         },
-        onImportChange: function (_oEvent) {
-            var oTable = _oEvent.getSource().getParent().getParent();
-            var oModel = oTable.getModel();
-            var oExcelModel = this.getModel("excelModel");
-            
-            oExcelModel.setData({});
-            ExcelUtil.fnImportExcel({
-                uploader: _oEvent.getSource(),
-                file: _oEvent.getParameter("files") && _oEvent.getParameter("files")[0],
-                model: oExcelModel,
-                success: function () {
-                    var aTableData = oModel.getProperty("/Approvals") || [],
-                        aCols = oTable.getColumns(),
-                        oExcelData = this.model.getData();
-
-                    if (oExcelData) {
-                        var aData = oExcelData[Object.keys(oExcelData)[0]];
-
-                        aData.forEach(function (oRow) {
-                            var aKeys = Object.keys(oRow),
-                                newObj = {};
-                            aCols.forEach(function (oCol, idx) {
-                                debugger;
-                                var sLabel = typeof oCol.getLabel === "function" ? oCol.getLabel().getText() : oCol.getHeader().getText();//As Grid or Responsible Table
-                                var sName = oCol.data("bindName") || "";
-                                var iKeyIdx = aKeys.indexOf(sLabel);
-                                if (iKeyIdx > -1 && sName) {
-                                    var oValue = oRow[aKeys[iKeyIdx]];
-                                    if (oValue) {
-                                        oValue = oValue.toString();
-                                    }
-                                    newObj[sName] = oValue !== "N/A" ? oValue : "";
-                                }
-                            });
-                            aTableData.push(newObj);
-                        });
-                        oModel.setProperty("/Approvals", aTableData);
-                    }
-                }
-            });
-        },
+        
     });
 });

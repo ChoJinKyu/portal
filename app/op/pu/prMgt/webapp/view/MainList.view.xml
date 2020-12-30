@@ -32,7 +32,8 @@
         <!-- DynamicPage Header -->
         <f:header>
             <f:DynamicPageHeader pinnable="true">
-                <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" 
+                adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
                             <Label text="{i18n>listHDRequestDate}" labelFor="searchRequestDate" required="true"></Label>
@@ -202,6 +203,14 @@
                 <ToolbarSpacer />
 				<Button text="Save" type="Emphasized" press=".onPageSaveButtonPress" />
 				<Button text="Cancel" type="Transparent" press=".onPageCancelEditButtonPress"/>
+                 <ToolbarSpacer />
+                <Button
+                    icon="sap-icon://alert"
+                    type="Reject"
+                    text="{= ${message>/}.length }"
+                    visible="{= ${message>/}.length > 0 }"
+                    ariaHasPopup="Dialog"
+                    press=".onMessagePopoverPress" />               
             </OverflowToolbar>
         </f:footer>
     </f:DynamicPage>

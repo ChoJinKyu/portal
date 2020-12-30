@@ -217,7 +217,8 @@ sap.ui.define([
             var aCheckLng = [];
 
             for (var i = 0; i < oDetailsTable.getItems().length; i++) {
-                if ( oDetailsTable.getItems()[i].getCells()[1].getSelectedKey() === "" )
+                //if ( oDetailsTable.getItems()[i].getCells()[1].getSelectedKey() === "" )
+                if ( oDetailsTable.getItems()[i].getCells()[1].getText() === "" )
                 {
                     MessageToast.show("Language code is null or empty");
                     return false;

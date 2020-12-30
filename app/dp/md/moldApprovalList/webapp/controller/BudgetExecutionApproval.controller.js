@@ -59,8 +59,7 @@ sap.ui.define([
 
             this.setModel(oViewModel, "budgetExecutionApprovalView"); //change
             this.getRouter().getRoute("budgetExecutionApproval").attachPatternMatched(this._onObjectMatched, this);//change
-            
-            this.getView().setModel(new ManagedListModel(), "mdItemMaster"); 
+           
         },
    
         /* =========================================================== */
@@ -72,18 +71,38 @@ sap.ui.define([
         /* =========================================================== */
         _onApprovalPage : function () {
   
+            this.getView().setModel(new ManagedListModel(), "mdItemMaster"); 
+            this.getView().setModel(new ManagedModel(), "mdCommon"); 
+            this.getView().setModel(new ManagedListModel(), "importPlant"); 
+
             console.log(" this.approval_number "  ,  this.approval_number);
             var schFilter = [];
-   
+            var that = this;
             if (this.approval_number == "New") {
+                // ApprovalBaseController.prototype.onInit.call(this);
 
+                this._budgetEditFragment();
             } else {
+                this._budgetViewFragment();
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
                     , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
                 ];
-
-                this._bindViewBudget("/ItemBudgetExecution", "mdItemMaster", schFilter, function (oData) {
-                    console.log("ItemBudgetExecution >>>>>>", oData);
+                // this.getView().setModel(new ManagedModel(), "mdCommon");
+                var md = this.getModel('mdCommon');
+                this._bindViewBudget("/ItemBudgetExecution", "mdItemMaster", schFilter, function (oData) { 
+                    md.setProperty("/investment_ecst_type_code", oData.results[0].investment_ecst_type_code);
+                    md.setProperty("/investment_ecst_type_code_nm", oData.results[0].investment_ecst_type_code_nm);
+                    md.setProperty("/accounting_department_code", oData.results[0].accounting_department_code);
+                    md.setProperty("/import_company_code", oData.results[0].import_company_code);
+                    md.setProperty("/import_company_code_nm", oData.results[0].import_company_code_nm);
+                    md.setProperty("/project_code", oData.results[0].project_code);
+                    md.setProperty("/import_company_org_code", oData.results[0].import_company_org_code);
+                    md.setProperty("/import_company_org_code_nm", oData.results[0].import_company_org_code_nm);
+                    md.setProperty("/account_code", oData.results[0].account_code);
+                    md.setProperty("/account_code_nm", oData.results[0].account_code_nm);
+                    md.setProperty("/provisional_budget_amount", oData.results[0].provisional_budget_amount);
+                    console.log("md >>>>>>", md); 
+                    that._bindComboPlant(oData.results[0].import_company_code);
                 });
             }  
         },
@@ -100,6 +119,41 @@ sap.ui.define([
                     }
                 });
             },
+
+        /**
+         * Import Company 파라미터 받고 조회 
+         * @param {*} company_code 
+         */
+        onBCompanyChange : function (oEvent){
+            // console.log("oEvent >>> " , oEvent); var md = this.getModel('mdCommon');
+            // console.log("1 >>> " ,this.getView().byId('importCompany').getSelectedKey());
+            // console.log("2 >>> " ,this.getView().byId('importCompany').mProperties.selectedKey);
+            // console.log("3 >>> " ,this.getModel("mdItemMaster").getData().ItemBudgetExecution[0].import_company_code);
+
+            var company_code = this.getModel("mdCommon").getData().import_company_code;
+            this.getModel("mdCommon").getData().import_company_org_code = "";
+            this._bindComboPlant(company_code);
+        },
+        _bindComboPlant : function (company_code) { 
+            
+            var aFilter = [
+                         new Filter("tenant_id", FilterOperator.EQ, 'L1100')
+                        , new Filter("org_type_code", FilterOperator.EQ, 'AU')
+                        , new Filter("company_code", FilterOperator.EQ, company_code)
+                ];
+
+              var oView = this.getView(),
+                    oModel = this.getModel("importPlant");
+                oView.setBusy(true);
+                oModel.setTransactionModel(this.getModel("purOrg"));
+                oModel.read("/Pur_Operation_Org", {
+                    filters: aFilter,
+                    success: function (oData) { 
+                        oView.setBusy(false);
+                    }
+                });
+        } ,
+
        /**
          * @description moldItemSelect 공통팝업   
          * @param vThis : view page의 this 
@@ -122,7 +176,7 @@ sap.ui.define([
             var oArgs = {
                 company_code: this.company_code ,
                 org_code: this.plant_code,
-               // mold_progress_status_code : 'DEV_RCV' ,
+                mold_progress_status_code : 'DEV_RCV' ,
                 mold_id_arr: mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
             }
 
@@ -167,7 +221,7 @@ sap.ui.define([
                 "inspection_date": "",
                 "local_create_dtm": new Date(),
                 "local_update_dtm": new Date()
-            }, "/ItemBudgetExecution", 0);
+            }, "/ItemBudgetExecution");
         },
         /**
         * @description Participating Supplier 의 delete 버튼 누를시 
@@ -198,7 +252,71 @@ sap.ui.define([
             console.log();
         },
 
+        onPageEditButtonPress: function () {
+            this._budgetEditFragment();
+            this._editMode();
+        },
+
+        onPageCancelButtonPress: function () {
+            this._budgetViewFragment();
+            this._viewMode();
+        },
+
+        _budgetEditFragment : function(){
+            console.log("_budgetEditFragment");
+            var oPageSection = this.byId("budgetExecutionTableFragment");
+            oPageSection.removeAllBlocks();
+            this._loadFragment("BudgetExecutionTableEdit", function (oFragment) {
+                oPageSection.addBlock(oFragment);
+            }.bind(this));
+        },
+        _budgetViewFragment : function(){
+             console.log("_budgetViewFragment");
+             var oPageSection = this.byId("budgetExecutionTableFragment");
+            oPageSection.removeAllBlocks();
+            this._loadFragment("BudgetExecutionTableView", function (oFragment) {
+                oPageSection.addBlock(oFragment);
+            }.bind(this));
+        },
+        /**
+         * @description 미리보기 버튼눌렀을 경우 
+         */
+        onPagePreviewButtonPress : function(){
+            this.getView().setModel(new ManagedListModel(), "approverPreview"); 
+
+            if(this.getModel("approver").getData().Approvers != undefined){  // approver 는 맨 마지막 줄이 있어서 걔는 안보여주기 위해 새로 담음 
+                var ap = this.getModel("approver").getData().Approvers;
+                for(var i = 0 ; i < ap.length -1 ; i++){
+                    this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
+                }
+            }
+            
+            console.log("onPagePreviewButtonPress >>> this._oDialog " , this._oDialogPrev);
+            var oView = this.getView();
+
+            if (!this._oDialogPrev) {
+                this._oDialogPrev = Fragment.load({
+                    id: oView.getId(),
+                    name: "dp.md.moldApprovalList.view.BudgetExecutionApprovalPreView",
+                    controller: this
+                }).then(function (oDialog) {
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                }.bind(this));
+            }
+
+            this._oDialogPrev.then(function (oDialog) {
+                oDialog.open();
+            });
+
+        },
+        onPrvClosePress : function(){
+             this.byId("budgetExecutionPreview").close();
+            // this.byId("budgetExecutionPreview").destroy();
+        },
+
         onPageDraftButtonPress : function () { 
+ 
             /**
              * 'DR'
             'AR'
@@ -208,19 +326,40 @@ sap.ui.define([
             this.getModel("appMaster").setProperty("/approve_status_code", "DR");
 
             this.approval_type_code = "B";
+
             var bModel = this.getModel("mdItemMaster");
+            var mModel = this.getModel("mdCommon");
             this.approvalDetails_data = [] ;
             this.moldMaster_data = [] ;
+            console.log("bModel.getData().length " , bModel);
+            if(bModel.getData().ItemBudgetExecution == undefined || bModel.getData().ItemBudgetExecution.length == 0){
+                MessageToast.show("item 을 하나 이상 추가하세요.");
+                return;
+            }
+
+
             var that = this;
-           // console.log("bModel.getData().length " , bModel.getData().ItemBudgetExecution.length);
+            
             if(bModel.getData().ItemBudgetExecution != undefined && bModel.getData().ItemBudgetExecution.length > 0){
-                var account_code = bModel.getData().ItemBudgetExecution[0].account_code;
-                var investment_ecst_type_code =  bModel.getData().ItemBudgetExecution[0].investment_ecst_type_code;
-                var accounting_department_code =  bModel.getData().ItemBudgetExecution[0].accounting_department_code;
-                var import_company_code =  bModel.getData().ItemBudgetExecution[0].import_company_code;
-                var project_code =  bModel.getData().ItemBudgetExecution[0].project_code;
-                var import_company_org_code =  bModel.getData().ItemBudgetExecution[0].import_company_org_code;
-               // var provisional_budget_amount =  bModel.getData().ItemBudgetExecution[0].provisional_budget_amount;
+                /**
+                 *   md.setProperty("/investment_ecst_type_code", oData.results[0].investment_ecst_type_code);
+                    md.setProperty("/investment_ecst_type_code_nm", oData.results[0].investment_ecst_type_code_nm);
+                    md.setProperty("/accounting_department_code", oData.results[0].accounting_department_code);
+                    md.setProperty("/import_company_code", oData.results[0].import_company_code);
+                    md.setProperty("/project_code", oData.results[0].project_code);
+                    md.setProperty("/import_company_org_code", oData.results[0].import_company_org_code);
+                    md.setProperty("/account_code", oData.results[0].account_code);
+                    md.setProperty("/account_code_nm", oData.results[0].account_code_nm);
+                    md.setProperty("/provisional_budget_amount", oData.results[0].provisional_budget_amount);
+                 */
+
+
+                var account_code = mModel.getData().account_code;
+                var investment_ecst_type_code =  mModel.getData().investment_ecst_type_code;
+                var accounting_department_code =  mModel.getData().accounting_department_code;
+                var project_code =  mModel.getData().project_code;
+                var import_company_code = investment_ecst_type_code != "S" ? "" : mModel.getData().import_company_code;
+                var import_company_org_code = investment_ecst_type_code != "S" ? "" : mModel.getData().import_company_org_code;
 
                 bModel.getData().ItemBudgetExecution.forEach(function(item){
                     that.approvalDetails_data.push({

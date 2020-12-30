@@ -31,12 +31,12 @@
                     <HBox>
                         <sc:MicroProcessFlow>
                             <sc:content>
-                                <sc:MicroProcessFlowItem state="Success" stepWidth="3rem"/>
-                                <sc:MicroProcessFlowItem state="Success" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="Success" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="Success" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="Success" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="Success" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
                                 <sc:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
                                 <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
                                 <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
@@ -128,12 +128,12 @@
                     <HBox>
                         <sc:MicroProcessFlow>
                             <sc:content>
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://circle-task" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
                                 <sc:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
                                 <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
                                 <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
@@ -228,36 +228,36 @@
                     <form:content>
                         <VBox>
                             <Label text="{path:'I18N>/ITEM_TYPE', formatter:'I18NFormatter'}" labelFor="searchItemType"></Label>
-                            <ComboBox   id="searchItemType" width="100%"
+                            <MultiComboBox   id="searchItemType" width="100%"
                                         selectedKey=""
                                         items="{
-                                                    path : 'util>/CodeDetails',
+                                                    path : 'util>/Code',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
                                                     ]
                                                 }"
                             >
-                                <core:Item key="{util>code}" text="{util>code_description}" />
-                            </ComboBox>
+                                <core:Item key="{util>code}" text="{util>code_name}" />
+                            </MultiComboBox>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" linebreak="true" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="{path:'I18N>/PRODUCTION_TYPE', formatter:'I18NFormatter'}" labelFor="searchProductionType"></Label>
-                            <ComboBox   id="searchProductionType" width="100%"
+                            <MultiComboBox   id="searchProductionType" width="100%"
                                         selectedKey=""
                                         items="{
-                                                    path : 'util>/CodeDetails',
+                                                    path : 'util>/Code',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
                                                     ]
                                                 }"
                             >
-                                <core:Item key="{util>code}" text="{util>code_description}" />
-                            </ComboBox>
+                                <core:Item key="{util>code}" text="{util>code_name}" />
+                            </MultiComboBox>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -344,7 +344,7 @@
                         <ToolbarSpacer/>
                         <!-- <Button id="testSuppBtn"   type="Emphasized" text="Supp Test"             press=".onTestSuppBtnPress"    /> -->
                         <Button id="moldMstTableConfirmButton"   type="Emphasized" text="Confirm"             press=".onMoldMstTableConfirmButtonPress"    />
-                        <Button id="moldMstTableExcelButton"  type="Transparent"  text="Excel"            press=".onMoldMstTableExcelButtonPress"   />
+                        <Button id="moldMstTableExcelButton"  type="Transparent"  text="Excel"            press=".onExportPress"   />
                         <ToolbarSeparator/>
                         <Button icon="sap-icon://action-settings" press=".onMoldMstTablePersoButtonPressed" >
                             <layoutData>
@@ -396,14 +396,14 @@
                              <ComboBox   id="mold_progress_status_code"
                                         selectedKey="{list>mold_progress_status_code}"
                                         items="{
-                                                    path : 'util>/CodeDetails',
+                                                    path : 'util>/Code',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROGRESS_STATUS_LOCAL'}
                                                     ]
                                                 }"
                             editable="false" class="readonlyField" width="100%" >
-                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
                     </table:Column>
@@ -431,14 +431,20 @@
                     <table:Column width="9em" hAlign="Center">
                         <Label text="{path:'I18N>/COMPLETE_DATE', formatter:'I18NFormatter'}"  required="true"/>
                         <table:template>
-                            <DatePicker value="{list>production_complete_date_today}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"  required="true"/>
+                            <DatePicker value="{list>production_complete_date_plan}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"  required="true"/>
                         </table:template>
                     </table:Column>
 
                     <table:Column width="8em" hAlign="Center">
                         <Label text="{path:'I18N>/RCV_DOCUMENT', formatter:'I18NFormatter'}"  required="true"/>
                         <table:template>
-                            <Text text="attach"/>
+                            <core:Icon 
+                                src="sap-icon://attachment"
+                                press="handleAttachmentPress" >
+                                <core:layoutData>
+                                    <FlexItemData growFactor="1" />
+                                </core:layoutData>
+                            </core:Icon>
                         </table:template>
                     </table:Column>
 
@@ -487,21 +493,19 @@
                     </table:Column>
 
                     <table:Column id="moldItemTypeColumn" width="10em" hAlign="Center">
-                        <VBox>
                         <Label text="{path:'I18N>/ITEM_TYPE', formatter:'I18NFormatter'}" />
-                        </VBox>
                         <table:template>
                             <ComboBox   id="mold_item_type_code"
                                         selectedKey="{list>mold_item_type_code}"
                                         items="{
-                                                    path : 'util>/CodeDetails',
+                                                    path : 'util>/Code',
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
                                                     ]
                                                 }"
                             editable="{mode>/editFlag}" class="readonlyField" required="true" >
-                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                <core:Item key="{util>code}" text="{util>code_name}" />
                             </ComboBox>
                         </table:template>
                     </table:Column>
@@ -549,9 +553,7 @@
                     </table:Column>
 
                     <table:Column id="moldFamilyPartNo1Column" width="12em" hAlign="Center">
-                        <VBox>
                         <Label text="{path:'I18N>/FAMILY_PART_NUMBER', formatter:'I18NFormatter'}" />
-                        </VBox>
                         <table:template>
                             <Text text="{list>family_part_number_1} {list>family_part_number_2} {list>family_part_number_3} {list>family_part_number_4} {list>family_part_number_5}"/>
                         </table:template>

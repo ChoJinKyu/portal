@@ -238,7 +238,7 @@ sap.ui.define([
 				oView = this.getView();
 
             if(!oModel.isChanged()) {
-				MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
+				MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
 				return;
             }
 
@@ -253,7 +253,7 @@ sap.ui.define([
 			var oView = this.getView(),
                 that = this;
                 
-            MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
+            MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
@@ -265,7 +265,7 @@ sap.ui.define([
                                 that._toShowMode();
                                 oView.setBusy(false);
                                 that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-								MessageToast.show(this.getModel("I18N").getText("/NCM0005"));
+								MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
 							}.bind(this)
 						});
 					};
@@ -502,26 +502,26 @@ sap.ui.define([
 				],
 				type: sap.m.ListType.Inactive
             });
-            var oCountryCombo = new ComboBox({
-                    selectedKey: "{details>language_code}"
-                    , width : "100%"
-                    , editable: "{= ${details>_row_state_} === 'C' ? true : false}"  
-                    , selectionChange: function (oEvent) {
-                        this._CountryComboChange(oEvent);
-                            }.bind(this)     
-                });
+            // var oCountryCombo = new ComboBox({
+            //         selectedKey: "{details>language_code}"
+            //         , width : "100%"
+            //         , editable: "{= ${details>_row_state_} === 'C' ? true : false}"  
+            //         , selectionChange: function (oEvent) {
+            //             this._CountryComboChange(oEvent);
+            //                 }.bind(this)     
+            //     });
                 
-                oCountryCombo.bindItems({
-                    path: 'util>/CodeDetails',
-                    filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, 'L2100'),                       
-                        new Filter("group_code", FilterOperator.EQ, 'CM_LANG_CODE')
-                    ],
-                    template: new Item({
-                        key: "{util>code}",
-                        text: "{util>code_description}"                        
-                    })                   
-                });
+            //     oCountryCombo.bindItems({
+            //         path: 'util>/CodeDetails',
+            //         filters: [
+            //             new Filter("tenant_id", FilterOperator.EQ, 'L2100'),                       
+            //             new Filter("group_code", FilterOperator.EQ, 'CM_LANG_CODE')
+            //         ],
+            //         template: new Item({
+            //             key: "{util>code}",
+            //             text: "{util>code_description}"                        
+            //         })                   
+            //     });
 			this.oEditableTemplate = new ColumnListItem({
 				cells: [
 					new ObjectStatus({

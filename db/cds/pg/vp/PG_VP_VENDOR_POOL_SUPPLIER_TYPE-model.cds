@@ -21,4 +21,5 @@ entity Vp_Vendor_Pool_Supplier_Type {
     vendor_pool_mapping_use_flag: Boolean   @title: '협력사풀매핑사용여부';
     register_reason: String(50)   @title: '등록사유';
     approval_number: String(50)   @title: '품의번호';
+    crud_type_code : String(2)    @title: 'CRUD유형';
 }

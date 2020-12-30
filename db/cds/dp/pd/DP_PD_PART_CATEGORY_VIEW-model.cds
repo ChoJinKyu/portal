@@ -1,0 +1,18 @@
+namespace dp;
+@cds.persistence.exists
+	
+entity Pd_Part_Category_View {	
+  key hierarchy_rank : String(5)  not null @title: 'Rank' ;
+  key hierarchy_level : String(10) not null @title: 'Level' ;
+  key tenant_id : String(5)  not null @title: '테넌트ID' ;	
+  key company_code : String(10) default '*' not null @title: '회사코드' ;	
+  key org_type_code : String(2)  not null @title: '조직유형코드' ;	
+  key org_code : String(10)  not null @title: '조직코드' ;	
+  key category_code : String(50)  not null @title: '카테고리코드' ;	
+    parent_category_code : String(50)   @title: '상위카테고리코드' ;
+    sequence : Decimal default 1  @title: '순번' ;	
+    category_name : String(240)   @title: '카테고리명' ;
+    active_flag : Boolean   @title: '활성여부' ;	
+    update_user_id : String(255) @title: '최종수정자';
+    syste_update_dtm : DateTime @title: '최종수정일시';
+}

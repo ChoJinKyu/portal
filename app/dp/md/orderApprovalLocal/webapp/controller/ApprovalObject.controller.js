@@ -894,7 +894,7 @@ sap.ui.define([
                         }
 
                         for (var mdx = 0; mdx < moldMstData.length; mdx++) {
-                            moldMstData[mdx].split_pay_flag = oView.byId("partialPayment").mProperties.selected;
+                            moldMstData[mdx].split_pay_type_code = oView.byId("partialPayment").mProperties.selected;
                             moldMstData[mdx].prepay_rate = oView.byId("advanced").mProperties.value;
                             moldMstData[mdx].progresspay_rate = oView.byId("part").mProperties.value;
                             moldMstData[mdx].rpay_rate = oView.byId("residual").mProperties.value;

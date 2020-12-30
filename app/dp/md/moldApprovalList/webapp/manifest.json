@@ -75,6 +75,20 @@
                     "odataVersion": "2.0"
                 }
             },
+            "moldRecepitApprovalService": {
+                "uri": "srv-api/odata/v2/dp.MoldRecepitApprovalService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            },
+            "purchaseOrderApprovalService": {
+                "uri": "srv-api/odata/v2/dp.PurchaseOrderApprovalService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            },
             "participatingSupplierSelectionApprovalService": {
                 "uri": "srv-api/odata/v2/dp.ParticipatingSupplierSelectionApprovalService/",
                 "type": "OData",
@@ -210,6 +224,26 @@
                     "useBatch": true
                 }
             },
+            "recepit": {
+                "dataSource": "moldRecepitApprovalService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false,
+                    "useBatch": true
+                }
+            },
+            "purchaseOrder": {
+                "dataSource": "purchaseOrderApprovalService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false,
+                    "useBatch": true
+                }
+            },
             "participatingSupplierSelection": {
                 "dataSource": "participatingSupplierSelectionApprovalService",
                 "preload": true,
@@ -273,6 +307,13 @@
                     ]
                 },
                 {
+                    "pattern": "moldRecepitApproval/{company_code}/{plant_code}/{approval_number}",
+                    "name": "moldRecepitApproval",
+                    "target": [
+                        "moldRecepitApproval"
+                    ]
+                },
+                {
                     "pattern": "participatingSupplierSelection/{company_code}/{plant_code}/{approval_number}",
                     "name": "participatingSupplierSelection",
                     "target": [
@@ -280,10 +321,10 @@
                     ]
                 },
                 {
-                    "pattern": "purOrderItemLocalApproval/{company_code}/{plant_code}/{approval_number}",
-                    "name": "purOrderItemLocalApproval",
+                    "pattern": "purchaseOrderLocalApproval/{company_code}/{plant_code}/{approval_number}",
+                    "name": "purchaseOrderLocalApproval",
                     "target": [
-                        "purOrderItemLocalApproval"
+                        "purchaseOrderLocalApproval"
                     ]
                 },
                 {
@@ -320,17 +361,23 @@
                     "viewLevel": 2,
                     "title": "{i18n>budgetExecutionApprovalTitle}"
                 },
+                "moldRecepitApproval": {
+                    "viewName": "MoldRecepitApproval",
+                    "viewId": "moldRecepitApproval",
+                    "viewLevel": 2,
+                    "title": "{i18n>moldRecepitApprovalTitle}"
+                },
                 "participatingSupplierSelection": {
                     "viewName": "ParticipatingSupplierSelection",
                     "viewId": "participatingSupplierSelection",
                     "viewLevel": 2,
                     "title": "{i18n>participatingSupplierSelectionTitle}"
                 },
-                "purOrderItemLocalApproval": {
-                    "viewName": "PurOrderItemLocalApproval",
-                    "viewId": "purOrderItemLocalApproval",
+                "purchaseOrderLocalApproval": {
+                    "viewName": "PurchaseOrderLocalApproval",
+                    "viewId": "purchaseOrderLocalApproval",
                     "viewLevel": 2,
-                    "title": "{i18n>purOrderItemLocalApprovalTitle}"
+                    "title": "{i18n>purchaseOrderLocalApprovalTitle}"
                 },
                 "beaObject": {
                     "viewName": "BeaObject",

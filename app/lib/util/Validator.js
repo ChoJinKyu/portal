@@ -129,7 +129,7 @@ sap.ui.define([
                 try {
                     oValue = oControl.getProperty(_aValidateMultiValueProperties[i]);
                     if(oValue.length == 0){
-                        this._setValueState(oControl, ValueState.Error, this._i18n.getText("/ECM0202"));
+                        this._setValueState(oControl, ValueState.Error, this._i18n.getText("/ECM01001"));
                         isValid = false;
                         break;
                     }else{
@@ -145,12 +145,12 @@ sap.ui.define([
                     //oControl.getBinding(_aValidateProperties[i]);
                     oValue = oControl.getProperty(_aValidateProperties[i]);
                     if (!oValue == undefined || oValue === "" || oValue === null) {
-                        this._setValueState(oControl, ValueState.Error, this._i18n.getText("/ECM0201"));
+                        this._setValueState(oControl, ValueState.Error, this._i18n.getText("/ECM01002"));
                         isValid = false;
                         break;
                     } else if (oControl.getAggregation("picker") && oControl.getProperty("selectedKey").length === 0) {
                         // might be a select
-                        this._setValueState(oControl, ValueState.Error, this._i18n.getText("/ECM0202"));
+                        this._setValueState(oControl, ValueState.Error, this._i18n.getText("/ECM01001"));
                         isValid = false;
                         break;
                     } else {
@@ -216,7 +216,7 @@ sap.ui.define([
         var sLabel,
             eMessageType = MessageType.Error;
 
-        if (sMessage === undefined || sMessage === null) sMessage = this._i18n.getText("/ECM0203"); // Default message
+        if (sMessage === undefined || sMessage === null) sMessage = this._i18n.getText("/ECM01010"); // Default message
 
         switch (oControl.getMetadata().getName()) {
             case "sap.m.CheckBox":
@@ -274,7 +274,7 @@ sap.ui.define([
         if(sText) 
             oControl.setValueStateText(sText);
         else if(oControl.getValueStateText && !oControl.getValueStateText())
-            oControl.setValueStateText(this._i18n.getText("/ECM0203"));
+            oControl.setValueStateText(this._i18n.getText("/ECM01010"));
     };
 
     /**

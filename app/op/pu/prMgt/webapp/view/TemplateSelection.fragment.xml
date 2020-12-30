@@ -28,6 +28,7 @@
                             <ComboBox
                               id="SelectionPR_TYPE2"
                               width="100%"
+                              required="true"
                               showSecondaryValues= "true"
                               selectionChange=".onInitPR_TYPE3"
                               items="{
@@ -51,6 +52,7 @@
                               id="SelectionPR_TYPE3"
                               showSecondaryValues= "true"
                               width="100%"
+                              required="true"
                               selectionChange=".onInitPR_TYPE">
                             </ComboBox>
                              <layoutData>
@@ -63,6 +65,7 @@
                               id="SelectionPR_TYPE"
                               showSecondaryValues= "true"
                               width="100%"
+                              required="true"
                               selectionChange=".onInitTemplate">
                             </ComboBox>
                              <layoutData>
@@ -87,7 +90,7 @@
                     singleContainerFullSize="false" >                    
                     <form:content > 
                         <VBox>
-                            <SegmentedButton id="searchUsageSegmentButton" class="sapUiSmallMarginBottom" width="100%" >
+                            <SegmentedButton id="searchUsageSegmentButton" class="sapUiSmallMarginBottom" width="100%" required="true">
                                 <items>                            
                                 </items>                                
                             </SegmentedButton>

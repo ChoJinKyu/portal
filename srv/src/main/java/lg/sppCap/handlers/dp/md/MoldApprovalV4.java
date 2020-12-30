@@ -68,7 +68,7 @@ public class MoldApprovalV4 implements EventHandler {
         Collection<RefererV4> refList = data.getReferer();
 
         ResultMsg msg = ResultMsg.create();
-        msg.setMessageCode("NCM0005");
+        msg.setMessageCode("NCM01001");
         msg.setResultCode(0);
         msg.setCompanyCode(aMaster.getCompanyCode());
         msg.setPlantCode(aMaster.getOrgCode());
@@ -135,7 +135,7 @@ public class MoldApprovalV4 implements EventHandler {
                 }else if(aMaster.getApprovalTypeCode().equals("V")){
 
                 }else if(aMaster.getApprovalTypeCode().equals("E")){
-
+                    this.saveParticipatingSelection(data);
                 }
   
                  // 다 삭제 하고 다시 insert 한다.
@@ -183,6 +183,8 @@ public class MoldApprovalV4 implements EventHandler {
                         Result rst3 = moldApprovalService.run(i); 
                     } // for 
                 }// if   
+
+                 
             
             }else{ // create 
 
@@ -247,7 +249,7 @@ public class MoldApprovalV4 implements EventHandler {
                 }else if(aMaster.getApprovalTypeCode().equals("V")){
 
                 }else if(aMaster.getApprovalTypeCode().equals("E")){
-
+                    this.saveParticipatingSelection(data);
                 }
 
                 if(!approverList.isEmpty() && approverList.size() > 0){ 
@@ -365,6 +367,73 @@ public class MoldApprovalV4 implements EventHandler {
         }
     } 
 
+    // ParticipatingSelection 
+    private void saveParticipatingSelection( Data data ){
 
+        System.out.println(" approvalNumer " + this.APPROVAL_NUMBER);
+
+        ApprovalMasterV4 aMaster = data.getApprovalMaster();
+        Collection<MoldMasterV4> mMasterList = data.getMoldMaster();
+        
+        Collection<QuotationV4> qtnList= data.getQuotation();
     
+        if(!mMasterList.isEmpty() && mMasterList.size() > 0){
+            for(MoldMasterV4 row : mMasterList ){
+
+                System.out.println(" ApprovalMasterV4 " + row);
+                
+                MoldMasters m = MoldMasters.create();
+                m.setTenantId(row.getTenantId());
+                m.setMoldId(row.getMoldId());
+                m.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
+                m.setUpdateUserId(aMaster.getUpdateUserId()); 
+
+                if(row.getRowState().equals("D")){ // 삭제일 경우 수정되는 항목에 대한 리셋 
+                    m.setMoldItemTypeCode("");
+                    m.setTargetAmount(null);
+                    m.setProvisionalBudgetAmount(null);
+                    m.setBookCurrencyCode("");
+                    m.setCurrencyCode("");
+                    CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(m); 
+                    Result rst = moldApprovalService.run(u);
+                }else{ 
+                    m.setMoldItemTypeCode(row.getMoldItemTypeCode());
+                    m.setTargetAmount(new BigDecimal((String)(row.getTargetAmount()==null?"0":row.getTargetAmount())));
+                    m.setProvisionalBudgetAmount(new BigDecimal((String)(row.getProvisionalBudgetAmount()==null?"0":row.getProvisionalBudgetAmount())));
+                    m.setBookCurrencyCode(row.getBookCurrencyCode());
+                    m.setCurrencyCode(row.getCurrencyCode());
+
+                    CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(m); 
+                    Result rst = moldApprovalService.run(u);
+                }
+                
+            }  
+        }
+
+        if(!qtnList.isEmpty() && qtnList.size() > 0){
+            for(QuotationV4 row : qtnList ){
+                Quotation del = Quotation.create();
+                del.setMoldId(row.getMoldId());
+                del.setApprovalNumber(row.getApprovalNumber()); 
+                del.setSupplierCode(row.getSupplierCode()); 
+                Delete d2 = Delete.from(Quotation_.CDS_NAME).matching(del); 
+                Result rst2 = moldApprovalService.run(d2);
+            }  
+            for(QuotationV4 row : qtnList ){
+                if(row.getSupplierCode()!=null && row.getSequence()!=null){   
+                    Quotation q = Quotation.create();
+                    q.setMoldId(row.getMoldId());
+                    q.setApprovalNumber(row.getApprovalNumber()); 
+                    q.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
+                    q.setUpdateUserId(aMaster.getUpdateUserId()); 
+                    
+                    q.setSequence(new Integer(row.getSequence()==null?0:row.getSequence()));
+                    q.setSupplierCode(row.getSupplierCode()==null?"":row.getSupplierCode());
+                    
+                    CqnInsert i = Insert.into(Quotation_.CDS_NAME).entry(q); 
+                    Result rst = moldApprovalService.run(i);
+                }
+            }         
+        }
+    } 
 }

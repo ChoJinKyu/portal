@@ -101,7 +101,7 @@ service MoldApprovalV4Service {
         book_currency_code: String ;
         budget_exrate_date: String ;
         budget_exrate: String ;
-        split_pay_flag: String ;
+        split_pay_type_code: String ;
         prepay_rate: String ;
         progresspay_rate: String ;
         rpay_rate: String ;
@@ -149,6 +149,10 @@ service MoldApprovalV4Service {
         quotation : array of Quotation_v4;
     }
 
+    type ApprDeleteData {
+        approvalMaster : array of ApprovalMaster_v4 ;
+    }
+
     type resultMsg {
         messageCode : String;
         approval_number : String; 
@@ -158,5 +162,5 @@ service MoldApprovalV4Service {
     }
 
     action saveMoldApproval ( inputData : data ) returns resultMsg;
-
+    action deleteApproval (inputData : ApprDeleteData) returns resultMsg;
 }

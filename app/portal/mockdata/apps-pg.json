@@ -31,14 +31,9 @@
             "icon": "sap-icon://source-code",
             "subMenus": [
                 {
-                    "name": "App #1",
-                    "url": "../pg/purchaseMgr/webapp",
-                    "component": "pg.purchaseMgr"
-                },
-                {
-                    "name": "App #2",
-                    "url": "../pg/purchaseMgr/webap",
-                    "component": "pg.purchaseMgr"
+                    "name": "모니터링 관리",
+                    "url": "../pg/tm/tmMonitoring/webapp",
+                    "component": "pg.tm.tmMonitoring"
                 }
             ]
         },
@@ -54,7 +49,7 @@
                 {
                     "name": "Vendor Pool Management",
                     "url": "../pg/vp/vpMgt/webapp",
-                    "component": "vp.vpMgt"
+                    "component": "vp.vpMgr"
                 },                
                 {
                     "name": "App #4",

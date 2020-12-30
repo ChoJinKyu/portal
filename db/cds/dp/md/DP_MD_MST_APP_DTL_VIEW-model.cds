@@ -52,7 +52,7 @@ entity Md_Mst_App_Dtl_View {
         book_currency_code              : String(30)            @title:'장부통화코드';
         budget_exrate_date              : String(8)             @title:'예산환율일자';
         budget_exrate                   : Decimal(20,2)         @title:'예산환율';
-        split_pay_flag                  : Boolean               @title:'분할지급여부';
+        split_pay_type_code             : String(30)            @title:'분할지급코드';
         prepay_rate                     : Decimal(20,2)         @title:'선급금비율';
         progresspay_rate                : Decimal(20,2)         @title:'중도금비율';
         rpay_rate                       : Decimal(20,2)         @title:'잔여금액비율';

@@ -19,21 +19,27 @@ sap.ui.define([
 		return BaseController.extend("cm.codeMgt.controller.Master", {
 
             onInit: function () {
-                
+                this.oRouter = this.getOwnerComponent().getRouter();
+			    this.oRouter.getRoute("master").attachPatternMatched(this._onCodeMasterMatched, this);
             },
 
             onBeforeRendering : function(){
-                var oInitSearch = {
-                    tenant_id : "L2100"
-                }
                 var oContModel = this.getModel("contModel");
-                oContModel.setData(oInitSearch);
+                var sTenantId = "L2100";
+                oContModel.setProperty("/tenant_id", sTenantId);
 
                 this.onTenantChange();
+
             },
 
             onAfterRendering: function () {
-                
+
+            },
+
+            _onCodeMasterMatched: function (oEvent) {
+                var sThisViewId = this.getView().getId();
+                var oFcl = this.getOwnerComponent().getRootControl().byId("fcl");
+                oFcl.to(sThisViewId);
             },
 
 			onSearch: function () {
@@ -91,10 +97,11 @@ sap.ui.define([
                 oViewModel.setProperty("/detail", $.extend(true, {}, oTargetData));
                 oViewModel.setProperty("/detailClone", $.extend(true, {}, oTargetData));
 
-                ControlUtil.scrollToIndexOneColumnMTable(oEvent.getSource());
+                // ControlUtil.scrollToIndexOneColumnMTable(oEvent.getSource());
 
                 var oNavParam = {
-                    layout: oNextUIState.layout,
+                    // layout: oNextUIState.layout,
+                    layout: LayoutType.OneColumn,
                     tenantId : oTargetData.tenant_id,
                     groupCode : oTargetData.group_code
                 };
@@ -103,8 +110,8 @@ sap.ui.define([
 
             onCreatePress : function(oEvent){
                 var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(0);
-                var sLayout = oNextUIState.layout;
-                // var sLayout = "MidColumnFullScreen";
+                // var sLayout = oNextUIState.layout;
+                var sLayout = LayoutType.OneColumn;
                 
 			    this.getRouter().navTo("detail", {layout: sLayout});
             },

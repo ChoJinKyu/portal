@@ -31,7 +31,7 @@
                 <Select width="100%"
                         selectedKey="{spec>/mold_size}"
                         items="{
-                                    path : 'util>/CodeDetails',
+                                    path : 'util>/Code',
                                     filters : [
                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SIZE'}
@@ -40,13 +40,13 @@
                         editable="true"
                         required="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Runner"/>
                 <Select   width="100%"
                             selectedKey="{spec>/mold_hot_runner_spec_name}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_RUNNER'}
@@ -54,13 +54,13 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Return Type"/>
                 <Select   width="100%"
                             selectedKey="{spec>/mold_return_type_name}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_RETURN_TYPE'}
@@ -68,13 +68,13 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Runner Out"/>
                 <Select   width="100%"
                             selectedKey="{spec>/mold_runnerout_spec_name}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_RUNNER_OUT'}
@@ -82,7 +82,7 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
 
              <!-- </VBox>            
@@ -97,7 +97,7 @@
                 <Select width="100%"
                         selectedKey="{spec>/hot_runner_maker_name}"
                         items="{
-                                    path : 'util>/CodeDetails',
+                                    path : 'util>/Code',
                                     filters : [
                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_HR_MAKER'}
@@ -106,7 +106,7 @@
                         editable="true"
                         required="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
 
                 <Label text="Mold Size" required="true"/>
@@ -115,7 +115,7 @@
                 <Select   width="100%"
                             selectedKey="{spec>/mold_gate_spec_name}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_GATE'}
@@ -123,13 +123,13 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Form Out"/>
                 <Select   width="100%"
                             selectedKey="{spec>/mold_formout_method}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_FORM_OUT'}
@@ -137,7 +137,7 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Use Machine"/>
                 <Input value="{spec>/mold_tonnage}"/>
@@ -152,7 +152,7 @@
                 <Select width="100%"
                         selectedKey="{master>/mold_type_code}"
                         items="{
-                                    path : 'util>/CodeDetails',
+                                    path : 'util>/Code',
                                     filters : [
                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_TYPE'}
@@ -161,13 +161,13 @@
                         editable="true"
                         required="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Mold Structure" required="true"/>
                 <Select width="100%"
                         selectedKey="{spec>/die_form}"
                         items="{
-                                    path : 'util>/CodeDetails',
+                                    path : 'util>/Code',
                                     filters : [
                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_STRUCTURE'}
@@ -176,7 +176,7 @@
                         editable="true"
                         required="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text=""/>
                 <Text text=""/>
@@ -184,7 +184,7 @@
                 <Select   width="100%"
                             selectedKey="{spec>/mold_undercut_spec_name}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_UNDER_CUT'}
@@ -192,13 +192,13 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Out Process"/>
                 <Select   width="100%"
                             selectedKey="{spec>/mold_outform_spec_name}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_FORM_OUT'}
@@ -206,7 +206,7 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
              <!-- </VBox> -->
         </form:content>
@@ -254,7 +254,7 @@
                 <Select   width="100%"
                             selectedKey="{spec>/mold_cavity_material_name}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_CAVITY'}
@@ -262,13 +262,13 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Taper Pin"/>
                 <Select   width="100%"
                             selectedKey="{spec>/mold_slope_material_name}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_TAPER_PIN'}
@@ -276,7 +276,7 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Cycle Time"/>
                 <Input value="{spec>/cycle_time}"/>
@@ -286,7 +286,7 @@
                 <Select   width="100%"
                             selectedKey="{spec>/mold_core_material_name}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_CORE'}
@@ -294,13 +294,13 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Top Circle"/>
                 <Select   width="100%"
                             selectedKey="{spec>/top_circle_material_name}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_CORE'}
@@ -308,7 +308,7 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
 
             <!-- </VBox>            
@@ -317,7 +317,7 @@
                 <Select   width="100%"
                             selectedKey="{spec>/slide_core_material_name}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SCORE'}
@@ -325,13 +325,13 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Bottom Circle"/>
                 <Select   width="100%"
                             selectedKey="{spec>/bottom_circle_material_name}"
                             items="{
-                                        path : 'util>/CodeDetails',
+                                        path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_CORE'}
@@ -339,7 +339,7 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
             <!-- </VBox> -->
         </form:content>

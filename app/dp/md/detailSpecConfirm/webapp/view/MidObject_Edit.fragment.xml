@@ -34,14 +34,14 @@
                     class="readonlyField"
                     selectedKey="{master>/investment_ecst_type_code}"
                     items="{
-                                path : 'util>/CodeDetails',
+                                path : 'util>/Code',
                                 filters : [
                                     {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                     {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_BUDGET_TYPE'}
                                 ]
                             }"
                 >
-                <core:Item key="{util>code}" text="{util>code_description}" />
+                <core:Item key="{util>code}" text="{util>code_name}" />
             </Select>
 
 
@@ -58,14 +58,14 @@
             <Select width="100%"
                     selectedKey="{master>/market_type_code}"
                     items="{
-                                path : 'util>/CodeDetails',
+                                path : 'util>/Code',
                                 filters : [
                                     {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                     {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MARKET_TYPE'}
                                 ]
                             }"
                 >
-                <core:Item key="{util>code}" text="{util>code_description}" />
+                <core:Item key="{util>code}" text="{util>code_name}" />
             </Select>
             <Label text="Import Company"/>
             <!-- <Input value="{master>/import_company_code}"></Input> -->
@@ -101,14 +101,14 @@
                     class="readonlyField"
                     selectedKey="{master>/account_code}"
                     items="{
-                                path : 'util>/CodeDetails',
+                                path : 'util>/Code',
                                 filters : [
                                     {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                     {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ACCOUNT_NEW'}
                                 ]
                             }"
                 >
-                <core:Item key="{util>code}" text="[{util>code}] {util>code_description}" />
+                <core:Item key="{util>code}" text="[{util>code}] {util>code_name}" />
             </Select>
             <Label text="Product Group"/>
             <Input value="{master>/product_group_code}"></Input>

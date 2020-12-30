@@ -1,5 +1,6 @@
 sap.ui.define([
     "./BaseController",
+    "ext/lib/util/Multilingual",    
     "sap/ui/model/json/JSONModel",
     "ext/lib/util/ValidatorUtil",
     "sap/ui/model/Filter",
@@ -8,7 +9,7 @@ sap.ui.define([
     "sap/m/MessageToast",
     "sap/ui/core/ValueState",
     "ext/lib/util/Validator"
-], function (BaseController, JSONModel, ValidatorUtil, Filter, FilterOperator, MessageBox, MessageToast, ValueState, Validator) {
+], function (BaseController, Multilingual, JSONModel, ValidatorUtil, Filter, FilterOperator, MessageBox, MessageToast, ValueState, Validator) {
     "use strict";
     return BaseController.extend("pg.mi.miBom.controller.MidObject", {
 
@@ -207,6 +208,9 @@ sap.ui.define([
         onInit: function () {
             console.group("[mid] onInit");
 
+            var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
+                        
             //var mModel = new JSONModel("m", this._settingsModel);
             //this.getView().setModel(mModel); 
             // Attaches validation handlers
@@ -627,8 +631,8 @@ sap.ui.define([
 
             if(reqmTable.getSelectedItems().length<1){
                 this._showMessageBox(
-                    "선택 확인",
-                    "항목을 선택 하여 주십시요.",
+                    this.getModel("I18N").getText("/OPTION + CONFIRM"),
+                    this.getModel("I18N").getText("/NPG00016"),
                     this._m.messageType.Warning,
                     function(){return;}
                 );
@@ -953,8 +957,8 @@ sap.ui.define([
         onCancel : function () {
             var that = this;
 
-            MessageBox.confirm("작업내용을 취소 하게 됩니다. 취소 하시 겠습니까?", {
-                title : "Create",
+            MessageBox.confirm(this.getModel("I18N").getText("/NPG00007"), {
+                title : this.getModel("I18N").getText("/NPG00014"),
                 initialFocus : sap.m.MessageBox.Action.CANCEL,
                 onClose : function(sButton) {
                     if (sButton === MessageBox.Action.OK) {
@@ -1059,9 +1063,9 @@ sap.ui.define([
 
         _handleCreateSuccess: function (oData) {
             var that = this;
-            MessageBox.show("저장 성공 하였습니다.", {
+            MessageBox.show(this.getModel("I18N").getText("/NCM0005"), {
                 icon: MessageBox.Icon.SUCCESS,
-                title: "저장 확인",
+                title: this.getModel("I18N").getText("/SAVE + CONFIRM"),
                 actions: [MessageBox.Action.OK],
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
@@ -1223,8 +1227,8 @@ sap.ui.define([
 
             if(rightTable.getSelectedItems().length<1){
                 this._showMessageBox(
-                    "선택 확인",
-                    "항목을 선택 하여 주십시요.",
+                    this.getModel("I18N").getText("/OPTION + CONFIRM"),
+                    this.getModel("I18N").getText("/NPG00016"),
                     this._m.messageType.Warning,
                     function(){return;}
                 );
@@ -1271,9 +1275,9 @@ sap.ui.define([
                 "category_code": category_code,
                 "category_name": category_name,
                 "reqm_quantity_unit": quantity_unit, //소요수량단위 //기본값 으로 수량단위와 동일하게 셋팅
-                "reqm_quantity": 0, //사용자 입력
+                "reqm_quantity": "", //사용자 입력
                 "currency_unit": currency_unit,
-                "mi_base_reqm_quantity": "0.0",//시황기준소요수량
+                "mi_base_reqm_quantity": "",//시황기준소요수량
                 "quantity_unit": quantity_unit,
                 "exchange": exchange,
                 "termsdelv": termsdelv,
@@ -1310,7 +1314,7 @@ sap.ui.define([
                 success: function(oData, reponse) {
                 
                     if(reponse.data.results.length>0){
-                            that._showMessageToast("이미 등록된 항목 입니다.");
+                            that._showMessageToast(this.getModel("I18N").getText("/NPG00022"));
                     }else{
                         that.onMidListItemAdd(items);
                         that.onMaterialDetailClose();
@@ -1462,7 +1466,7 @@ sap.ui.define([
                         midList.oData[i].termsdelv == items.termsdelv
                         ){
                         bCheck = false;
-                        this._showMessageToast("이미 등록된 항목 입니다.");
+                        this._showMessageToast(this.getModel("I18N").getText("/NPG00022"));
                         return;
                     }
                 }
@@ -1521,8 +1525,8 @@ sap.ui.define([
                 
             if(oSelected.length<1){
                 this._showMessageBox(
-                    "선택 확인",
-                    "삭제할 항목을 선택 하여 주십시요.",
+                    this.getModel("I18N").getText("/OPTION + CONFIRM"),
+                    this.getModel("I18N").getText("/NCM01010"),
                     this._m.messageType.Warning,
                     function(){return;}
                 );
@@ -1628,6 +1632,7 @@ sap.ui.define([
 
             var oTable = this.getView().byId("midTable");
 
+            var tableCoutnt = 0;
             for (var idx = 0; idx < oTable.getItems().length; idx++) {
                 
                 var items = oTable.getItems()[idx];
@@ -1636,30 +1641,33 @@ sap.ui.define([
                 var reqm_quantity_unit = items.getCells()[5].mAggregations.items[0].mProperties.value,
                     reqm_quantity = items.getCells()[6].mAggregations.items[0].mProperties.value,
                     use_flag = items.getCells()[7].mAggregations.items[0].mProperties.selectedKey;
-                    
-                    
 
                 if(reqm_quantity_unit.length<1){
-                    this._showMessageToast("소요량 단위를 선택 하여 주십시요.")
-                   
+                    this._showMessageToast(this.getModel("I18N").getText("/NPG00005"));
                     bValueCheckFlag  =false;
                     return false;
                 }
 
                 if(reqm_quantity.length<1){
-                    this._showMessageToast("소요량 을 입력 하여 주십시요.");
+                    this._showMessageToast(this.getModel("I18N").getText("/NPG00005"));
                     bValueCheckFlag  =false;
                     return false;
                 }
 
                 if(use_flag.length<1){
-                    this._showMessageToast("Use Flag 를 선택하여 주십시요.")
-                    
+                    this._showMessageToast(this.getModel("I18N").getText("/NPG00001"));
                     bValueCheckFlag  =false;
                     return false;
                     
                 }
+                tableCoutnt++;
             }
+            if(tableCoutnt<1){
+
+                this._showMessageToast("필수 입력 내용과 시황자재를 추가 하셔야 합니다.");
+                bValueCheckFlag = false;
+            } 
+
             return bValueCheckFlag;
 
         },
@@ -1672,43 +1680,44 @@ sap.ui.define([
              var oUi = this.getModel("oUi");
              var bCreateFlag = oUi.getProperty("/createMode");
  
-             if(!this._onPageValidate()){
-                return;
+             var bValidate = this._onPageValidate();
+             console.log("bValidate", bValidate);
+             if(!bValidate){
+                 return false;
              }
 
             if(!this._checkData()){
                 return false;
             }
 
+            console.log("bCreateFlag");
             if(bCreateFlag){
-                if(ValidatorUtil.isValid(this.getView(),"requiredField")){
-                    MessageBox.confirm("추가 하시 겠습니까?", {
-                         title : "Create",
-                         initialFocus : sap.m.MessageBox.Action.CANCEL,
-                         onClose : function(sButton) {
-                             if (sButton === MessageBox.Action.OK) {
-                                 this._onSave();
-                             }else{
-                                 return;
-                             }
-                         }.bind(this)
-                     });
-                 }else{
-                     console.log("checkRequire")
-                 }
+
+                    MessageBox.confirm(this.getModel("I18N").getText("/NPG00014"), {
+                        title : "Create",
+                        initialFocus : sap.m.MessageBox.Action.CANCEL,
+                        onClose : function(sButton) {
+                            if (sButton === MessageBox.Action.OK) {
+                                this._onSave();
+                            }else{
+                                return;
+                            }
+                        }.bind(this)
+                    });
+               
              }else{
-                 MessageBox.confirm("수정 하시 겠습니까?", {
-                     title : "Update",
-                     initialFocus : sap.m.MessageBox.Action.CANCEL,
-                     onClose : function(sButton) {
-                         if (sButton === MessageBox.Action.OK) {
-                             this._onSave();
-                         }else{
-                             return;
-                         }
-                     }.bind(this)
-                 });
-             }
+                MessageBox.confirm(this.getModel("I18N").getText("/NPG00007"), {
+                    title : "Update",
+                    initialFocus : sap.m.MessageBox.Action.CANCEL,
+                    onClose : function(sButton) {
+                        if (sButton === MessageBox.Action.OK) {
+                            this._onSave();
+                        }else{
+                            return;
+                        }
+                    }.bind(this)
+                });
+            }
         },
 
          /**
@@ -1843,23 +1852,19 @@ sap.ui.define([
         deleteCheckAction: function(values) {
             var oData  = values[0].results;
             var oModel = this.getModel();
+            var oUiData = this.getModel("oUiData");
             var that = this;
-
-            var oDeleteActionMIMaterialCodeKey = {
-                tenant_id : oUiData.getProperty("/tenant_id"),
-                mi_material_code: oUiData.getProperty("/mi_material_code"),
-                category_code: oUiData.getProperty("/category_code")
-            }
-
-            console.log("oDeleteActionMIMaterialCodePath : "+oDeleteActionMIMaterialCodePath);
-
-            var oDeleteActionMIMaterialCodePath = oModel.createKey(
-                this._m.serviceName.mIMaterialCode, 
-                oDeleteActionMIMaterialCodeKey
-            );
 
             if(oData.length>0){
                 if(this._currentDeleitem == oData.length){
+             
+					var oDeleteMIMaterialCodeBOMManagementHeaderKey = {
+						tenant_id : oUiData.oData.tenant_id,
+						material_code: oUiData.oData.material_code,
+						supplier_code: oUiData.oData.supplier_code,
+						mi_bom_id: oUiData.oData.mi_bom_id
+                    };
+                                        
                     that._fnSetDeleteMode();
                     var deleteOdataPath = oModel.createKey(
                         "/MIMaterialCodeBOMManagementHeader",
@@ -2146,8 +2151,8 @@ sap.ui.define([
          */
         onDeleteAction : function (oEvent){
             console.log("onMidDelete");
-                MessageBox.confirm("해당 항목을 삭제 하시겠습니까?", {
-                    title: "삭제 확인",                                    
+                MessageBox.confirm(this.getModel("I18N").getText("/NCM00003"), {
+                    title: this.getModel("I18N").getText("/DELETE + CONFIRM"),                                    
                     onClose: this._deleteAction.bind(this),                                    
                     actions: [MessageBox.Action.DELETE, MessageBox.Action.CANCEL],
                     textDirection: sap.ui.core.TextDirection.Inherit    
@@ -2197,7 +2202,7 @@ sap.ui.define([
                         deleteItem++; 
                     }catch(error){
                         that._showMessageBox(
-                            "삭제 실패",
+                            this.getModel("I18N").getText("/DELETE + FAILURE"),
                             error,
                             this._m.messageType.Error,
                             function(){return;}
@@ -2294,8 +2299,8 @@ sap.ui.define([
 
         _handleCreateError: function (oError) {
             this._showMessageBox(
-                "저장 실패",
-                "저장 실패 하였습니다.",
+                this.getModel("I18N").getText("/SAVE + FAILURE"),
+                this.getModel("I18N").getText("/EPG00003"),
                 this._m.messageType.Error,
                 function(){return;}
             );
@@ -2303,9 +2308,9 @@ sap.ui.define([
 
         _handleUpdateSuccess: function (oData) {
             var that = this;
-            MessageBox.show("수정에 성공 하였습니다.", {
+            MessageBox.show(this.getModel("I18N").getText("/NPG00008"), {
                 icon: MessageBox.Icon.SUCCESS,
-                title: "수정 성공",
+                title: this.getModel("I18N").getText("/UPDATE + SUCCESS"),
                 actions: [MessageBox.Action.OK],
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
@@ -2319,8 +2324,8 @@ sap.ui.define([
         
         _handleUpdateError: function (oError) {
             this._showMessageBox(
-                "수정 실패",
-                "수정 실패 하였습니다.",
+                this.getModel("I18N").getText("/UPDATE + FAILURE"),
+                this.getModel("I18N").getText("/EPG00002"),
                 this._m.messageType.Error,
                 function(){return;}
             );
@@ -2332,9 +2337,9 @@ sap.ui.define([
          */
         _handleDeleteSuccess: function (oData) {
             var that = this;
-            MessageBox.show("삭제가 성공 하였습니다.", {
+            MessageBox.show(this.getModel("I18N").getText("/NCM01002"), {
                 icon: MessageBox.Icon.SUCCESS,
-                title: "삭제 성공.",
+                title: this.getModel("I18N").getText("/DELETE + SUCCESS"),
                 actions: [MessageBox.Action.OK],
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
@@ -2353,8 +2358,8 @@ sap.ui.define([
          */
         _handleDeleteError: function (oError) {
             this._showMessageBox(
-                "삭제 실패",
-                "삭제 실패 하였습니다.",
+                this.getModel("I18N").getText("/DELETE + FAILURE"),
+                this.getModel("I18N").getText("/EPG00001"),
                 this._m.messageType.Error,
                 function(){return;}
             );

@@ -27,9 +27,9 @@ sap.ui.define([
                     if(oControl.getProperty('required')){
                         if(!oControl.getValue()){
                             oControl.setValueState(ValueState.Error);
-                            oControl.setValueStateText(oI18n.getText("/NCM0005"));
+                            oControl.setValueStateText(oI18n.getText("/NCM01001"));
                             oMessageManager.addMessages(new Message({
-                                message: oI18n.getText("/NCM0005"),
+                                message: oI18n.getText("/NCM01001"),
                                 type: MessageType.Error
                             }));
                             bAllValid = false;

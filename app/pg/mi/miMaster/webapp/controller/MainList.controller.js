@@ -59,6 +59,23 @@ sap.ui.define([
 			var oMultilingual = new Multilingual();
 			this.setModel(oMultilingual.getModel(), "I18N");
 
+			oMultilingual.attachEvent("ready", function(oEvent){
+				var oi18nModel = oEvent.getParameter("model");
+				this.addHistoryEntry({
+					title: oi18nModel.getText("/MESSAGE_MANAGEMENT"),
+					icon: "sap-icon://table-view",
+					intent: "#Template-display"
+				}, true);
+
+				// Smart Filter Button 명 처리 START
+				var b = this.getView().byId("smartFilterBar").getContent()[0].getContent();
+				$.each(b, function(index, item) {
+					if (item.sId.search("btnGo") !== -1) {
+						item.setText(this.getModel("I18N").getText("/EXECUTE"));
+					}
+				}.bind(this));
+				// Smart Filter Button 명 처리 END
+			}.bind(this));
 
 			var oUi,
 				oResourceBundle = this.getResourceBundle();
@@ -78,7 +95,7 @@ sap.ui.define([
 
 			this.setModel(oUi, "oUi");
 		
-			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
+			//this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
             this._mainTable = this.getView().byId("mainTable");
 		
@@ -170,6 +187,9 @@ sap.ui.define([
 			console.group("onBeforeRebindTable");
 			
 			this._getSmartTableById().getTable().removeSelections(true);
+			//ui.table
+			//this._getSmartTableById().getTable().clearSelection();
+
 			var mBindingParams = oEvent.getParameter("bindingParams");
 			var oSmtFilter = this.getView().byId("smartFilterBar");             //smart filter
 			
@@ -200,10 +220,23 @@ sap.ui.define([
 				var oCodeFilter = new Filter("use_flag", FilterOperator.EQ, fOcode);
 				mBindingParams.filters.push(oCodeFilter);
 			}  
-			
+			this._getSmartTableById().getTable().removeSelections(true);
+			//this.setInitialSortOrder();
 			console.groupEnd();              
 		},
 
+		setInitialSortOrder: function() {
+            var oSmartTable = this._getSmartTableById();        
+            oSmartTable.applyVariant({
+                 sort: {
+                          sortItems: [{ 
+                                         columnKey: "system_update_dtm", 
+                                         operation:"Descending"}
+                                     ]
+                       }
+            });
+		},
+		
         /** 
 		 * table sort dialog 
          * @public
@@ -270,15 +303,15 @@ sap.ui.define([
                 that = this;
                   
             var oSelected = this._mainTable.getSelectedContexts();   
-            if (oSelected.length > 0) { 
+            if (oSelected.length > 0) {  
                             
-                MessageBox.confirm("선택한 항목을 삭제 하시겠습니까?", {
-                    title: "삭제 확인",                                    
+                MessageBox.confirm(this.getModel("I18N").getText("/NCM00003"), {
+                    title: this.getModel("I18N").getText("/DELETE + CONFIRM"),                                     
                     onClose: this._deleteAction.bind(this),                                    
                     actions: [sap.m.MessageBox.Action.DELETE, sap.m.MessageBox.Action.CANCEL],
                     textDirection: sap.ui.core.TextDirection.Inherit    
                 });
-              
+				
             }
             console.groupEnd();
         },
@@ -399,7 +432,7 @@ sap.ui.define([
 						var oLngEntity  = values[2].results.length;
 
 						if(oBomCount>0 || oPriceCount>0){
-							MessageToast.show("삭제 할수 없는 항목 입니다.");
+							MessageToast.show(this.getModel("I18N").getText("/NPG00004"));
 							return;
 						}else{
 							if(oLngEntity>0){
@@ -572,6 +605,11 @@ sap.ui.define([
 		 */
 		onMainTableItemPress: function(oEvent) {
 			console.group("onMainTableItemPress");
+
+			this._getSmartTableById().getTable().removeSelections(true);
+   
+			
+			
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
 				sPath = oEvent.getSource().getBindingContext().getPath(),
 				oRecord = this.getModel().getProperty(sPath);
@@ -597,10 +635,13 @@ sap.ui.define([
             }
 
 			var oItem = oEvent.getSource();
-			oItem.setNavigated(true);
-			var oParent = oItem.getParent();
-			// store index of the item clicked, which can be used later in the columnResize event
-			this.iIndex = oParent.indexOfItem(oItem);
+			//oItem.setNavigated(true);
+
+			this._getSmartTableById().getTable().setSelectedItem(oItem);
+
+			// var oParent = oItem.getParent();
+			// // store index of the item clicked, which can be used later in the columnResize event
+			// this.iIndex = oParent.indexOfItem(oItem);
 			console.groupEnd();
 		},
 
@@ -612,7 +653,7 @@ sap.ui.define([
 		_onRoutedThisPage: function(){
 			console.group("_onRoutedThisPage");
 			this.getModel("oUi").setProperty("/headerExpanded", true);
-			this.getModel().refresh(true);
+			//this.getModel().refresh(true);
 			console.groupEnd();
 		},
 
@@ -682,7 +723,7 @@ sap.ui.define([
          * @private
          */
 		_handleDeleteSuccess: function(oData) {
-			MessageToast.show("삭제가 성공 하였습니다.");
+			MessageToast.show(this.getModel("I18N").getText("/NCM01002"));
 			this.getView().byId("buttonMainTableDelete").setEnabled(false);
         },
         
@@ -692,7 +733,7 @@ sap.ui.define([
          * @private
          */
 		_handleDeleteError: function(oError) {
-			MessageToast.show("삭제가 실패 되었습니다.");
+			MessageToast.show(this.getModel("I18N").getText("/EPG00001"));
 		}
 
 	});

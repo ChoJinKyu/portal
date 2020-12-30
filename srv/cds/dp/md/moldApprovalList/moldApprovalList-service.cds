@@ -6,6 +6,7 @@ using { cm as plt } from '../../../../../db/cds/cm/CM_ORG_PLANT-model';
 using { cm as emp } from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
 using { dp as approvalDtl } from '../../../../../db/cds/dp/md/DP_MD_APPROVAL_DTL-model';
 using { dp as apps } from '../../../../../db/cds/dp/md/DP_MD_APPROVALS_VIEW-model';
+using { cm as codeLng } from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 
 using { dp as moldMstSpecView } from '../../../../../db/cds/dp/md/DP_MD_MST_SPEC_VIEW-model';
 using { dp as moldMst } from '../../../../../db/cds/dp/md/DP_MD_MST-model';
@@ -80,7 +81,8 @@ service MoldApprovalListService {
             , m.approval_type_code     
             , m.approval_title         
             , m.approval_contents      
-            , m.approve_status_code    
+            , m.approve_status_code  
+            , cd.code_name as approve_status_code_nm  : String(240)
             , m.requestor_empno        
             , m.request_date           
             , m.attch_group_number 
@@ -99,7 +101,12 @@ service MoldApprovalListService {
             , emp.locale_code         
             , emp.department_id   
         from approvalMst.Approval_Mst m 
-        join emp.Hr_Employee emp on m.requestor_empno = emp.employee_number ;
+        join emp.Hr_Employee emp on m.requestor_empno = emp.employee_number and emp.tenant_id = m.tenant_id  
+        join ( select 
+            l.code, l.code_name, l.tenant_id
+            from codeLng.Code_Lng l  
+            where l.group_code='CM_APPROVE_STATUS' and l.language_cd='KO') cd on cd.code =  m.approve_status_code and  cd.tenant_id = m.tenant_id
+        ;
 
     // referer 저장 목록 조회 
     view Referers as 
@@ -130,18 +137,34 @@ service MoldApprovalListService {
     // approvalline 저장목록 조회 
     view Approvers as
     select 
+        key ar.approve_sequence , 
         key ar.approval_number , 
-        key ar.approver_empno , 
         key hr.tenant_id , 
-        ar.approve_sequence , 
+        key ar.approver_empno , 
+        (
+            select l.code_name from codeLng.Code_Lng l
+            where
+                    l.group_code  = 'CM_APPROVER_TYPE'
+                and l.code        = ar.approver_type_code
+                and l.language_cd = 'KO'
+                and l.tenant_id   = ar.tenant_id
+        ) as approver_type_code_nm : String(240),
         ar.approver_type_code , 
         ar.approve_comment , 
+        (
+            select l.code_name from codeLng.Code_Lng l
+            where
+                    l.group_code  = 'CM_APPROVE_STATUS'
+                and l.code        = ar.approve_status_code
+                and l.language_cd = 'KO'
+                and l.tenant_id   = ar.tenant_id
+        ) as approve_status_code_nm : String(240),
         ar.approve_status_code , 
         ar.approve_date_time , 
         emp.user_korean_name ||'['|| emp.user_english_name||'] /'||hr.department_local_name as approver_name  : String(240)
     from approver.Approver ar 
     join emp.Hr_Employee  emp on emp.employee_number = ar.approver_empno 
     join  Dept hr on hr.department_id = emp.department_id  and hr.tenant_id = emp.tenant_id 
-    order by approve_sequence asc 
+    order by ar.approve_sequence asc 
     ;
 }

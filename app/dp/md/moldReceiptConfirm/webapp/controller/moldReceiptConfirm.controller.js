@@ -26,10 +26,11 @@ sap.ui.define([
     'sap/m/SearchField',
     "sap/m/Text",
     "sap/m/Token",
-    "dp/md/util/controller/SupplierSelection"
+    "dp/md/util/controller/SupplierSelection",
+    "ext/lib/util/ExcelUtil"
 ], function (BaseController, DateFormatter, ManagedListModel, Multilingual, Validator, moldReceiptConfirmPersoService, 
     ManagedObject, History, Element, Fragment, JSONModel, Filter, FilterOperator, Sorter, Column, Row, TablePersoController, Item, 
-    ComboBox, ColumnListItem, Input, MessageBox, MessageToast, ObjectIdentifier, SearchField, Text, Token, SupplierSelection, TransactionManager) {
+    ComboBox, ColumnListItem, Input, MessageBox, MessageToast, ObjectIdentifier, SearchField, Text, Token, SupplierSelection, ExcelUtil) {
     "use strict";
     
     return BaseController.extend("dp.md.moldReceiptConfirm.controller.moldReceiptConfirm", {
@@ -77,7 +78,9 @@ sap.ui.define([
                 customDataKey: "moldReceiptConfirm",
                 persoService: moldReceiptConfirmPersoService
             }).setTable(this.byId("moldMstTable"));
-            //console.log(this.byId("moldMstTable"));
+
+            //sheet.js cdn url
+            jQuery.getScript("https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js");
         },
         
         onMainTablePersoButtonPressed: function (event) {
@@ -314,17 +317,18 @@ sap.ui.define([
         
         onSuppValueHelpRequested: function(oEvent){
 
-            var sCompanyCode, sPlantCode;
+            var companyCodes, plantCodes;
             var row = oEvent.getSource().getParent();
             if(row && row.sParentAggregationName == 'rows'){
-                sCompanyCode = row.getCells()[0].getText();
-                sPlantCode = row.getCells()[1].getText();
+                companyCodes = row.getCells()[0].getText();
+                plantCodes = row.getCells()[1].getText();
             }else{
-                sCompanyCode = 'LGEKR';
-                sPlantCode = 'DFZ';
+                var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S";
+                companyCodes = this.getView().byId("searchCompany"+sSurffix).getSelectedKeys();
+                plantCodes = this.getView().byId("searchDivision"+sSurffix).getSelectedKeys();
             }
 
-            this.supplierSelection.showSupplierSelection(this, oEvent, sCompanyCode, sPlantCode);
+            this.supplierSelection.showSupplierSelection(this, oEvent, companyCodes, plantCodes);
         },
 
         onTestSuppBtnPress: function(oEvent){
@@ -332,11 +336,12 @@ sap.ui.define([
             sCompanyCode = 'LGEKR';
             sPlantCode = 'DFZ';
             this.supplierSelection.showSupplierSelection(this, oEvent, sCompanyCode, sPlantCode, function(data){
-                console.log('supplierSelection',data);
-
-                console.log(data[0].text);
-                console.log(data[1].text);
+                console.log(data);
             });
+        },
+
+        handleAttachmentPress: function(oEvent){
+            MessageToast.show( "준비중.." );
         },
 
         onMoldMstTableConfirmButtonPress: function(oEvent){
@@ -423,6 +428,22 @@ sap.ui.define([
 
         },
 
+        onExportPress: function (_oEvent) {
+            var sTableId = _oEvent.getSource().getParent().getParent().getId();
+            if (!sTableId) { return; }
+
+            var oTable = this.byId(sTableId);
+            
+            // var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
+            var oData = oTable.getModel('list').getProperty("/MoldMasterSpec");
+
+            ExcelUtil.fnExportExcel({
+                fileName: "MoldReceiptConfirm",
+                table: oTable,
+                data: oData
+            });
+        },
+
         familyFlagChange : function (oEvent) {
             var sSelectedKey = oEvent.getSource().getSelectedKey();
             
@@ -507,8 +528,8 @@ sap.ui.define([
                 //status = Element.registry.get(statusSelectedItemId).getText(),
                 receiptFromDate = this.getView().byId("searchCreationDate"+sSurffix).getDateValue(),
                 receiptToDate = this.getView().byId("searchCreationDate"+sSurffix).getSecondDateValue(),
-                itemType = this.getView().byId("searchItemType").getSelectedKey(),
-                productionType = this.getView().byId("searchProductionType").getSelectedKey(),
+                itemType = this.getView().byId("searchItemType").getSelectedKeys(),
+                productionType = this.getView().byId("searchProductionType").getSelectedKeys(),
                 // suppliers = this.getView().byId("searchSupplier").getTokens(),
                 supplier = this.getView().byId("searchSupplier").getValue(),
                 description = this.getView().byId("searchDescription").getValue(),
@@ -562,27 +583,38 @@ sap.ui.define([
             if(status == 'RCV_CNF'){
                 this.byId('moldMstTable').setSelectionMode('None');
                 this.byId('moldMstTableConfirmButton').setEnabled(false);
-                
             }
             
-            if (itemType && itemType.length > 0) {
-                aTableSearchState.push(new Filter("mold_item_type_code", FilterOperator.EQ, itemType));
-            }
-            if (productionType && productionType.length > 0) {
-                aTableSearchState.push(new Filter("mold_production_type_code", FilterOperator.EQ, productionType));
-            }
-            // if (suppliers && suppliers.length > 0) {
+            if(itemType.length > 0){
 
-            //     var _tmpFilter = [];
-            //     suppliers.forEach(function(item, idx, arr){
-            //         _tmpFilter.push(new Filter("supplier_code", FilterOperator.EQ, item.getKey()));
-            //     });
+                var _itemTypeFilters = [];
+                itemType.forEach(function(item){
+                    _itemTypeFilters.push(new Filter("mold_item_type_code", FilterOperator.EQ, item ));
+                });
 
-            //     aTableSearchState.push(new Filter({
-            //      filters: _tmpFilter,
-            //      and: false
-            //  }));
-            // }
+                aTableSearchState.push(
+                    new Filter({
+                        filters: _itemTypeFilters,
+                        and: false
+                    })
+                );
+            }
+
+            if(productionType.length > 0){
+
+                var _productionTypeFilters = [];
+                productionType.forEach(function(item){
+                    _productionTypeFilters.push(new Filter("mold_production_type_code", FilterOperator.EQ, item ));
+                });
+
+                aTableSearchState.push(
+                    new Filter({
+                        filters: _productionTypeFilters,
+                        and: false
+                    })
+                );
+            }
+
             if (supplier && supplier.length > 0) {
                 aTableSearchState.push(new Filter("supplier_code", FilterOperator.Contains, supplier));
             }
