@@ -49,7 +49,7 @@ sap.ui.define([
 
         formatter: Formatter,
         validator: new Validator(),
-
+        //수정
         onInit: function () {
             //DetailView Model
             var oViewModel = new JSONModel({
