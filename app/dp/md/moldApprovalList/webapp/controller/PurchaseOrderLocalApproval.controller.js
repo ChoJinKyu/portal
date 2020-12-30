@@ -58,19 +58,63 @@ sap.ui.define([
 
             this.setModel(oViewModel, "purchaseOrderLocalApprovalView");//change
             this.getRouter().getRoute("purchaseOrderLocalApproval").attachPatternMatched(this._onObjectMatched, this);//change
-            
-            this.getView().setModel(new ManagedListModel(), "moldMaster");
+
+            //this.getView().setModel(new ManagedListModel(), "moldMaster");
         },
 
         /* =========================================================== */
         /* event handlers                                              */
         /* =========================================================== */
-		
+
         /* =========================================================== */
         /* internal methods                                            */
         /* =========================================================== */
 
         /** PO Item Start */
+        _onApprovalPage: function () {
+
+            this.getView().setModel(new ManagedListModel(), "purOrderItem");
+            this.getView().setModel(new ManagedModel(), "payment");
+            //this.getView().setModel(new ManagedListModel(), "importPlant");
+
+            console.log(" this.approval_number ", this.approval_number);
+            var schFilter = [];
+            //var that = this;
+            if (this.approval_number == "New") {
+                // ApprovalBaseController.prototype.onInit.call(this);
+
+                //this._budgetEditFragment();
+            } else {
+                //this._budgetViewFragment();
+                schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
+                    , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
+                ];
+                // this.getView().setModel(new ManagedModel(), "mdCommon");
+                var md = this.getModel('payment');
+                this._bindViewPurchaseOrder("/PurchaseOrderItems", "purOrderItem", schFilter, function (oData) {console.log("oData >>>>>>", oData);
+                    md.setProperty("/split_pay_type_code", oData.results[0].split_pay_type_code);
+                    md.setProperty("/prepay_rate", oData.results[0].prepay_rate);
+                    md.setProperty("/progresspay_rate", oData.results[0].progresspay_rate);
+                    md.setProperty("/rpay_rate", oData.results[0].rpay_rate);
+                    //console.log("md >>>>>>", md);
+                    //that._bindComboPlant(oData.results[0].import_company_code);
+                });
+            }
+        },
+        _bindViewPurchaseOrder: function (sObjectPath, sModel, aFilter, callback) {
+            var oView = this.getView(),
+                oModel = this.getModel(sModel);
+            oView.setBusy(true);
+            oModel.setTransactionModel(this.getModel("purchaseOrder"));
+            oModel.read(sObjectPath, {
+                filters: aFilter,
+                success: function (oData) {
+                    oView.setBusy(false);
+                    callback(oData);
+                }
+            });
+        },
+
         /**
          * @description : Popup 창 : 품의서 PO Item 항목의 Add 버튼 클릭
          */
@@ -90,7 +134,7 @@ sap.ui.define([
                 mold_progress_status_code: 'ORD_APP',
                 mold_id_arr: mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
             }
-            
+
             this.moldItemPop.openMoldItemSelectionPop(this, oEvent, oArgs, function (oDataMold) {
                 if (oDataMold.length > 0) {
                     oDataMold.forEach(function (item) {
@@ -154,7 +198,7 @@ sap.ui.define([
                 MessageBox.error("삭제할 목록을 선택해주세요.");
             }
         },
-        
+
         onChangePayment: function (oEvent) {
             var oModel = this.getModel("moldMaster");
             /*
