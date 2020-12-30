@@ -266,6 +266,8 @@ sap.ui.define([
                 approvalTarget = "purOrderItemLocalApproval"
             }if(oRecord.approval_type_code == "E"){
                 approvalTarget = "participatingSupplierSelection"
+            }if(oRecord.approval_type_code == "I"){
+                approvalTarget = "moldRecepitApproval"
             }
 
             console.log(approvalTarget);
@@ -711,7 +713,8 @@ sap.ui.define([
             }else if(id.indexOf("localOrder") > -1){
                approvalTarget = "purOrderItemLocalApproval"
             }else if(id.indexOf("receipt") > -1){
-                appTypeCode ="I"
+                approvalTarget = "moldRecepitApproval"
+               // appTypeCode ="I"
             }else if(id.indexOf("export") > -1){
                 appTypeCode ="X"
             }

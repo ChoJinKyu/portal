@@ -27,7 +27,7 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="{i18n>appTitle}" wrapping="true" />
+					<Title text="Budget Execution Approval" wrapping="true" />
 				</uxap:expandedHeading>
 
 				<uxap:snappedHeading>
