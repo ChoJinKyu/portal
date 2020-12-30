@@ -204,9 +204,9 @@ sap.ui.define([
                             }
                             oItems[i].getAggregation("cells")[0].setText("D");
                             oItems[i].bindProperty("selected", "false");
-                            // oTable.removeItem(oItems[i]);
+
                         }
-                        // MessageToast.show("삭제가 완료되었습니다.");
+
                     }
 
                 }
@@ -359,16 +359,22 @@ sap.ui.define([
                     keyPath = "/TaskMonitoringCycleCodeLanguage(tenant_id='" + that.tenant_id + "',scenario_number=" + String(that.scenario_number.split('l')[0]) + ",monitoring_cycle_code='" + deleteCode + "',language_code='" + code + "')";
                     oModel.remove(keyPath, { "groupId": "UpdateGroup" });
                 });
-            } 
-            // else if (entitySet == "TaskMonitoringTypeCodeLanguage") {
-            //     language_code.forEach(function (code) {
-            //         keyPath = "/TaskMonitoringTypeCodeLanguage(tenant_id='" + that.tenant_id + "',scenario_number=" + String(that.scenario_number.split('l')[0]) + ",monitoring_type_code='" + deleteCode + "',language_code='" + code + "')";
-            //         oModel.remove(keyPath, { "groupId": "UpdateGroup" });
-            //     });
-            // } 
+            }
+            else if (entitySet == "TaskMonitoringTypeCodeLanguage") {
+                language_code.forEach(function (code) {
+                    keyPath = "/TaskMonitoringTypeCodeLanguage(tenant_id='" + that.tenant_id + "',scenario_number=" + String(that.scenario_number.split('l')[0]) + ",monitoring_type_code='" + deleteCode + "',language_code='" + code + "')";
+                    oModel.remove(keyPath, { "groupId": "UpdateGroup" });
+                });
+            }
             else if (entitySet == "TaskMonitoringOperationModeLanguage") {
                 language_code.forEach(function (code) {
                     keyPath = "/TaskMonitoringOperationModeLanguage(tenant_id='" + that.tenant_id + "',scenario_number=" + String(that.scenario_number.split('l')[0]) + ",monitoring_operation_mode_code='" + deleteCode + "',language_code='" + code + "')";
+                    oModel.remove(keyPath, { "groupId": "UpdateGroup" });
+                });
+            }
+            else if (entitySet == "TaskMonitoringPurchasingTypeCodeLanguage") {
+                language_code.forEach(function (code) {
+                    keyPath = "/TaskMonitoringPurchasingTypeCodeLanguage(tenant_id='" + that.tenant_id + "',scenario_number=" + String(that.scenario_number.split('l')[0]) + ",monitoring_purchasing_type_code='" + deleteCode + "',language_code='" + code + "')";
                     oModel.remove(keyPath, { "groupId": "UpdateGroup" });
                 });
             }
@@ -414,17 +420,25 @@ sap.ui.define([
                     console.log(b);
                     oModel.createEntry("/" + entitySet, b);
                 });
+            } else if (entitySet == "TaskMonitoringTypeCodeLanguage") {
+                oItem.monitoring_type_code = createCode;
+                var odata = oModel.oData["TaskMonitoringTypedCodeView(tenant_id='" + oItem.tenant_id + "',code='" + createCode + "')"];
+                oItem.monitoring_type_name = odata.code_name;
+                for (var i = 0; i < language_code.length; i++) {
+                    oItem.language_code = language_code[i];
+                    console.log(b);
+                    oModel.createEntry("/" + entitySet, b);
+                }
+            } else if (entitySet == "TaskMonitoringPurchasingTypeCodeLanguage") {
+                oItem.monitoring_purchasing_type_code = createCode;
+                var odata = oModel.oData["TaskMonitoringPurchaingTypeCodeView(tenant_id='" + oItem.tenant_id + "',code='" + createCode + "')"];
+                oItem.monitoring_purchasing_type_name = odata.code_name;
+                for (var i = 0; i < language_code.length; i++) {
+                    oItem.language_code = language_code[i];
+                    console.log(b);
+                    oModel.createEntry("/" + entitySet, b);
+                }
             }
-            // if (entitySet == "TaskMonitoringTypeCodeLanguage") {
-            //     oItem.monitoring_type_code = createCode;
-            //     var odata = oModel.oData["TaskMonitoringTypedCodeView(tenant_id='" + oItem.tenant_id + "',code='" + createCode + "')"];
-            //     oItem.monitoring_type_name = odata.code_name;
-            //     for (var i = 0; i < language_code.length; i++) {
-            //         oItem.language_code = language_code[i];
-            //         console.log(b);
-            //         oModel.createEntry("/" + entitySet, b);
-            //     }
-            // } 
             else if (entitySet == "TaskMonitoringOperationModeLanguage") {
                 oItem.monitoring_operation_mode_code = createCode;
                 language_code.forEach(function (code) {
@@ -767,8 +781,9 @@ sap.ui.define([
                 //Update 
                 //마스터 테이블
                 var master_uPath = "/TaskMonitoringMaster(tenant_id='" + tenant_id + "',scenario_number=" + senario_number + ")";
+                var selectedTypeCode = sap.ui.getCore().byId("combo_monitoring_type").getSelectedKey();
                 var masterUpdateObj = {
-                    monitoring_type_code: sap.ui.getCore().byId("combo_monitoring_type").getSelectedKey(),
+                    monitoring_type_code: selectedTypeCode,
                     activate_flag: sap.ui.getCore().byId("segmentButton_activate").getSelectedKey() === 'Yes' ? true : false,
                     monitoring_purpose: null,
                     scenario_desc: null,
@@ -783,13 +798,15 @@ sap.ui.define([
                 });
                 //구분
                 var odata = this.getView().getModel().oData[this.bindPath.replace('/', '')];
-                // this._deleteEntry("TaskMonitoringTypeCodeLanguage", odata.monitoring_type_code);
-                // var selectedTypeCode = sap.ui.getCore().byId("combo_monitoring_type").getSelectedKey();
-                // this._createEntry("TaskMonitoringTypeCodeLanguage", selectedTypeCode);
+                this._deleteEntry("TaskMonitoringTypeCodeLanguage", odata.monitoring_type_code);
+                this._createEntry("TaskMonitoringTypeCodeLanguage", selectedTypeCode);
                 //구매유형
+                var before = odata.monitoring_purchasing_type_code.split(';');
+                var after = sap.ui.getCore().byId("combo_purchasing_type").getSelectedKeys();
+                this._compareData(before, after, "TaskMonitoringPurchasingTypeCodeLanguage");
                 //법인 
-                var before = odata.company_code.split(';');
-                var after = sap.ui.getCore().byId("company_edit_combo").getSelectedKeys();
+                before = odata.company_code.split(';');
+                after = sap.ui.getCore().byId("company_edit_combo").getSelectedKeys();
                 this._compareData(before, after, "TaskMonitoringCompanyCode");
                 //사업본부
                 before = odata.bizunit_code.split(';');
