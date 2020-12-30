@@ -207,12 +207,15 @@ sap.ui.define([
             });
 
             var oModel2 = this.getModel("plant");
-            oModel2.setTransactionModel(this.getModel("org"));
+            oModel2.setTransactionModel(this.getModel("purOrg"));
 
-            oModel2.read("/Plant(tenant_id='" + this.tenant_id + "',company_code='" + this.company_code + "',plant_code='" + this.plant_code + "')", {
+            oModel2.read("/Pur_Operation_Org(tenant_id='" + this.tenant_id 
+                        + "',company_code='" + this.company_code 
+                        + "',org_type_code='" + "AU" 
+                        + "',org_code='" + this.plant_code + "')", {
                 filters: [],
                 success: function (oData) {
-
+                    console.log("orgName " , oData);
                 }
             });
 

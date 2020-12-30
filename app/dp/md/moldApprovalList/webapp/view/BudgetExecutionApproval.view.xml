@@ -240,9 +240,9 @@
                               selectedKey="{mdCommon>/import_company_org_code}" 
                               enabled="{=${mdCommon>/investment_ecst_type_code}!=='S'?false:true}"
                               items="{
-                                  path: 'importPlant>/Plant'
+                                  path: 'importPlant>/Pur_Operation_Org'
                               }">
-						<core:Item key="{importPlant>plant_code}" text="[{importPlant>plant_code}]{importPlant>plant_name}" />
+						<core:Item key="{importPlant>org_code}" text="[{importPlant>org_code}]{importPlant>org_name}" />
 					</ComboBox>
                      <!-- view Mode -->
                     <Text text="[{mdCommon>/import_company_org_code}] {mdCommon>/import_company_org_code_nm}" visible="{contModel>/viewMode}"/> 
@@ -303,7 +303,7 @@
 					</VBox>
 					<VBox class="sapUiSmallMargin">
 						<Label text="{I18N>/BUSINESS_DIVISION}"/>
-						<ObjectStatus text="[{plant>/plant_code}] {plant>/plant_name}" state="Error"/>
+						<ObjectStatus text="[{plant>/plant_code}] {plant>/org_name}" state="Error"/>
 					</VBox>
 				</HBox>
                 </form:content>
@@ -335,7 +335,6 @@
 			<OverflowToolbar>
 				<ToolbarSpacer />
 				<Button type="Transparent" text="Edit"      press=".onPageEditButtonPress" visible="{contModel>/viewMode}" />
-				<Button type="Transparent" text="CancelEdit"    press=".onPageCancelButtonPress" visible="{contModel>/editMode}" />
 				<Button type="Transparent" text="Draft"     press=".onPageDraftButtonPress"   visible="{contModel>/editMode}"/>
 				<Button type="Transparent" text="Preview"   press=".onPagePreviewButtonPress"  visible="{contModel>/editMode}" />
 				<Button type="Emphasized"  text="Request"   press=".onPageRequestButtonPress"/>

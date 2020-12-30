@@ -142,7 +142,7 @@ sap.ui.define([
                 console.log("selected data list >>>> ", oDataMold);
                 if (oDataMold.length > 0) {
                     oDataMold.forEach(function (item) {
-                        that._addbudgetExecutionTable(item);
+                        that._addMoldItemTable(item);
                     })
                 }
             });
@@ -152,7 +152,7 @@ sap.ui.define([
         * @description participating row 추가 
         * @param {*} data 
         */
-        _addbudgetExecutionTable: function (data) {
+        _addMoldItemTable: function (data) {
             var oTable = this.byId("moldRecepitTable"),
                 oModel = this.getModel("mdRecepit"),
                 mstModel = this.getModel("appMaster");

@@ -134,19 +134,21 @@ sap.ui.define([
             this.getModel("mdCommon").getData().import_company_org_code = "";
             this._bindComboPlant(company_code);
         },
-        _bindComboPlant : function (company_code) {
+        _bindComboPlant : function (company_code) { 
+            
             var aFilter = [
                          new Filter("tenant_id", FilterOperator.EQ, 'L1100')
+                        , new Filter("org_type_code", FilterOperator.EQ, 'AU')
                         , new Filter("company_code", FilterOperator.EQ, company_code)
                 ];
 
               var oView = this.getView(),
                     oModel = this.getModel("importPlant");
                 oView.setBusy(true);
-                oModel.setTransactionModel(this.getModel("org"));
-                oModel.read("/Plant", {
+                oModel.setTransactionModel(this.getModel("purOrg"));
+                oModel.read("/Pur_Operation_Org", {
                     filters: aFilter,
-                    success: function (oData) {
+                    success: function (oData) { 
                         oView.setBusy(false);
                     }
                 });
