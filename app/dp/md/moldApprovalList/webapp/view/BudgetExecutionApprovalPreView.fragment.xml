@@ -13,7 +13,7 @@
     xmlns:table="sap.ui.table" 
     xmlns="sap.m" >
 <Dialog id="budgetExecutionPreview" class="sapUiSmallMargin" title="" contentWidth="100%"  >
-  <VBox height="900px">
+  <VBox height="500px">
 	<uxap:ObjectPageLayout 
         id="page_bp_preview"
 		showTitleInHeaderContent="true"
