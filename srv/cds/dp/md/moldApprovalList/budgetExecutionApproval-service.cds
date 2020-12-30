@@ -7,7 +7,7 @@ using {cm as codeDtl} from '../../../../../db/cds/cm/CM_CODE_DTL-model';
 using { cm as codeLng } from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 using {cm as orgPlant}from '../../../../../db/cds/cm/CM_ORG_PLANT-model';
 using {cm as orgCompany} from '../../../../../db/cds/cm/CM_ORG_COMPANY-model';
-
+using {cm.Pur_Operation_Org as org } from '../../../../../db/cds/cm/CM_PUR_OPERATION_ORG-model';
 namespace dp;
 
 @path : '/dp.BudgetExecutionApprovalService'
@@ -96,7 +96,7 @@ service BudgetExecutionApprovalService {
                 mst.book_currency_code,
                 mst.budget_exrate_date,
                 mst.budget_exrate,
-                mst.split_pay_type_code ,
+                mst.split_pay_type_code,
                 mst.prepay_rate,
                 mst.progresspay_rate,
                 mst.rpay_rate,
@@ -105,7 +105,7 @@ service BudgetExecutionApprovalService {
                 mst.import_company_code, 
                 com.company_name as import_company_code_nm : String(240) ,
                 mst.import_company_org_code,
-                plant.plant_name as import_company_org_code_nm : String(240) , 
+                plant.org_name as import_company_org_code_nm : String(240) , 
                 mst.inspection_date,
                 mst.family_part_number_1,
                 mst.family_part_number_2,
@@ -134,7 +134,7 @@ service BudgetExecutionApprovalService {
         from approvalDtl.Md_Approval_Dtl dtl
         join moldMst.Md_Mst mst  on dtl.mold_id = mst.mold_id 
         left outer join orgCompany.Org_Company as com on com.company_code = mst.import_company_code 
-        left outer join orgPlant.Org_Plant as plant on mst.import_company_org_code = plant.plant_code and mst.import_company_code = plant.company_code 
+        left outer join org as plant on mst.import_company_org_code = plant.org_code and mst.import_company_code = plant.company_code 
         
         ; 
 
