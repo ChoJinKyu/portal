@@ -923,8 +923,8 @@ sap.ui.define([
                 //status = Element.registry.get(statusSelectedItemId).getText(),
                 receiptFromDate = this.getView().byId("searchCreationDate" + sSurffix).getDateValue(),
                 receiptToDate = this.getView().byId("searchCreationDate" + sSurffix).getSecondDateValue(),
-                itemType = this.getView().byId("searchItemType").getSelectedKey(),
-                productionType = this.getView().byId("searchProductionType").getSelectedKey(),
+                itemType = this.getView().byId("searchItemType").getSelectedKeys(),
+                productionType = this.getView().byId("searchProductionType").getSelectedKeys(),
                 eDType = this.getView().byId("searchEDType").getSelectedKey(),
                 description = this.getView().byId("searchDescription").getValue(),
                 model = this.getView().byId("searchModel").getValue(),
@@ -963,21 +963,43 @@ sap.ui.define([
                 );
             }
 
-            if (receiptFromDate === null) {
-                MessageToast.show("Receipt Date를 입력해 주세요");
-                return false;
-            } else {
+            if (receiptFromDate || receiptToDate) {
                 aTableSearchState.push(new Filter("local_create_dtm", FilterOperator.BT, receiptFromDate, receiptToDate));
             }
             if (status) {
                 aTableSearchState.push(new Filter("mold_progress_status_code", FilterOperator.EQ, status));
             }
-            if (itemType && itemType.length > 0) {
-                aTableSearchState.push(new Filter("mold_item_type_code", FilterOperator.EQ, itemType));
+            
+            if(itemType.length > 0){
+
+                var _itemTypeFilters = [];
+                itemType.forEach(function(item){
+                    _itemTypeFilters.push(new Filter("mold_item_type_code", FilterOperator.EQ, item ));
+                });
+
+                aTableSearchState.push(
+                    new Filter({
+                        filters: _itemTypeFilters,
+                        and: false
+                    })
+                );
             }
-            if (productionType && productionType.length > 0) {
-                aTableSearchState.push(new Filter("mold_production_type_code", FilterOperator.EQ, productionType));
+
+            if(productionType.length > 0){
+
+                var _productionTypeFilters = [];
+                productionType.forEach(function(item){
+                    _productionTypeFilters.push(new Filter("mold_production_type_code", FilterOperator.EQ, item ));
+                });
+
+                aTableSearchState.push(
+                    new Filter({
+                        filters: _productionTypeFilters,
+                        and: false
+                    })
+                );
             }
+
             if (eDType && eDType.length > 0) {
                 aTableSearchState.push(new Filter("mold_location_type_code", FilterOperator.EQ, eDType));
             }

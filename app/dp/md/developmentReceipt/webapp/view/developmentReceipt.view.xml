@@ -228,7 +228,7 @@
                     <form:content>
                         <VBox>
                             <Label text="Item Type " labelFor="searchItemType"></Label>
-                            <ComboBox   id="searchItemType" width="100%"
+                            <MultiComboBox   id="searchItemType" width="100%"
                                         selectedKey=""
                                         items="{
                                                     path : 'util>/Code',
@@ -239,14 +239,14 @@
                                                 }"
                             >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
-                            </ComboBox>
+                            </MultiComboBox>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" linebreak="true" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="Production Type" labelFor="searchProductionType"></Label>
-                            <ComboBox   id="searchProductionType" width="100%"
+                            <MultiComboBox   id="searchProductionType" width="100%"
                                         selectedKey=""
                                         items="{
                                                     path : 'util>/Code',
@@ -257,7 +257,7 @@
                                                 }"
                             >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
-                            </ComboBox>
+                            </MultiComboBox>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
