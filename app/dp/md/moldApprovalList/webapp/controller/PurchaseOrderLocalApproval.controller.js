@@ -56,8 +56,8 @@ sap.ui.define([
                 delay: 0
             });
 
-            this.setModel(oViewModel, "purOrderItemLocalApprovalView");//change
-            this.getRouter().getRoute("purOrderItemLocalApproval").attachPatternMatched(this._onObjectMatched, this);//change
+            this.setModel(oViewModel, "purchaseOrderLocalApprovalView");//change
+            this.getRouter().getRoute("purchaseOrderLocalApproval").attachPatternMatched(this._onObjectMatched, this);//change
             
             this.getView().setModel(new ManagedListModel(), "moldMaster");
         },
