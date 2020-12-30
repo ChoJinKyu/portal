@@ -122,7 +122,7 @@
               ]
           },
           {  
-            "pattern": "midObject/{layout}/{tenant_id}/{material_code}/{supplier_code}/{mi_bom_id}/{mi_material_code}/{currency_unit}/{quantity_unit}/{exchange}/{termsdelv}",
+            "pattern": "midObject/{layout}/{tenant_id}/{material_code}/{supplier_code}/{mi_bom_id}",
             "name": "midPage",
             "target": [
                 "mainObject",

@@ -118,6 +118,9 @@ sap.ui.define([
                 oEvent.getParameter("element").setValueState(ValueState.None);
             });
 
+            //header title hide
+            $("#__xmlview1--page-intHeader-BarPH").hide();
+
             //pageMode C Create, V View, E Edit
             var oUi = new JSONModel({
                 busy: false,
@@ -478,6 +481,7 @@ sap.ui.define([
                         for(var i=0;i<reponse.data.results.length;i++){
                             mIMaterialCodeText.oData[i].itemMode = that._m.itemMode.read;
                             mIMaterialCodeText.oData[i].odataMode = that._m.odataMode.yes;
+                            mIMaterialCodeText.oData[i].org_language_code = reponse.data.results[i].language_code;
                         }
 
                         that.getOwnerComponent().setModel(mIMaterialCodeText, "mIMaterialCodeText");
@@ -706,29 +710,38 @@ sap.ui.define([
             console.log("onComboBoxLanguageChange");
             var oTable = this.getView().byId(this._m.tableName);
             var e = oEvent;
-            
-            var nLength = e.getSource().getItems().length,
-                itmes =e.getSource().getItems(),
-                checkItemKey="",
-                nItemCount=0,
+            var oModel = this.getModel("mIMaterialCodeText");
+
+            var itmes = e.getSource().getItems(),
                 selectKey = e.getSource().getSelectedKey(),
                 nCound = 0;
 
-                for (var idx = 0; idx < oTable.getItems().length; idx++) {
-                    var items = oTable.getItems()[idx];
-                    if(items.getCells()[1].mAggregations.items[0].getItems()[0].getKey()===selectKey){
-                        nCound++;
+                var mData = {
+					"items": [
+						{
+							"key": "",
+							"text": ""
+                        }]
+                    };
+
+                                        
+            var vLanguage = "";
+            for(var i=0; i<oModel.oData.length; i++){
+                if(oModel.oData[i].language_code == selectKey){
+                    if(nCound>0){                                                
+                        //e.getSource().setSelectedKey("");
                     }
-                }                
-                
-                if(nCound>1)
-                {
-                    // this._showMessageToast("고유한 언어를 선택하여 주십시요.");
-                    // items.getCells()[1].mAggregations.items[0].setSelectedKey("");
-                    // //console.log error message
-                    // items.getCells()[1].mAggregations.items[0].getSelectedItem().setText("");
-                    // return;
-                }  
+                    nCound++;
+                }else{
+                    if(oModel.oData[i].language_code!="KO"){
+                        vLanguage = oModel.oData[i].language_code;
+                    }
+                }
+            }
+            if(nCound>1){
+                this._showMessageToast("고유한 언어를 선택하여 주십시요. 중복된 언어는 등록 되지 않습니다.");
+            }
+
         },
         /**
          * MIMaterialCodeText create
@@ -832,6 +845,8 @@ sap.ui.define([
             var oView = this.getView();
             var input_mi_material_code = this.getView().byId("input_mi_material_code");
             // 소문자 -> 대문자 변환
+
+            input_mi_material_code.setValue(input_mi_material_code.getValue().replace(/ /gi, ''));
             input_mi_material_code.setValue(input_mi_material_code.getValue().toUpperCase());
 
             if(input_mi_material_code.getValue().length > 3 ){
@@ -914,12 +929,13 @@ sap.ui.define([
                 o_mi_material_code =   oUiData.getProperty("/mi_material_code");
             }
 
+
             for(var i=0;i<omIMaterialCodeText.oData.length;i++){
 
                 if(omIMaterialCodeText.oData[i].mi_material_code == o_mi_material_code){
                     odataMode =  omIMaterialCodeText.oData[i].odataMode;
                     break;
-                }                        
+                }   
             }
             
             var bNullCheck = true;
@@ -1042,8 +1058,10 @@ sap.ui.define([
 
                 var input_mi_material_code,
                     combobox_category_code,
-                    switchUse_flag = this.getView().byId("switchUse_flag").getState(),
+                    segmentedbutton_use_flag = this.getView().byId("segmentedbutton_use_flag").getSelectedKey(),
                     msg = "";
+
+                var bSegmentedbutton_use_flag = segmentedbutton_use_flag=="true"? true:false;
 
                 if(oUi.getProperty("/createMode")){
 
@@ -1071,32 +1089,35 @@ sap.ui.define([
                 var blanguageCheck = false;
                 var mIMaterialCodeText= this._m.serviceName.mIMaterialCodeText;
 
-                for (var idx = 0; idx < oTable.getItems().length; idx++) {
-            
-                    var items = oTable.getItems()[idx], language_code,                
-                        itemMode = items.getCells()[0].getText();
+                var oMIMaterialCodeTextModel = this.getModel("mIMaterialCodeText");
+                var _deleteItemOdata = _deleteItem.getProperty("/oData");
 
-                    if(itemMode!=this._m.itemMode.read){
-                        language_code = items.getCells()[1].mAggregations.items[0].getSelectedKey();
-                    } else {
-                        language_code = items.getCells()[1].mAggregations.items[1].getText();
+                var updateTableItem = 0;
+                var createTableItem = 0;
+                var deleteTableItem = 0;
+                var updateItem = 0;
+                var createItem = 0;
+
+                for(var i=0; i<oMIMaterialCodeTextModel.oData.length; i++){
+
+                    var itemMode = oMIMaterialCodeTextModel.oData[i].itemMode;
+                    var org_language_code = oMIMaterialCodeTextModel.oData[i].org_language_code;
+                    var language_code = oMIMaterialCodeTextModel.oData[i].language_code;
+                    var mi_material_name = oMIMaterialCodeTextModel.oData[i].mi_material_name;
+
+                    if(itemMode==this._m.itemMode.read){
+
+                        if(org_language_code != language_code){                            
+                            //키 변경 delete 등록 
+                            //삭제를 위한 등록 
+                            oMIMaterialCodeTextModel.oData[i].language_code = org_language_code;
+                            _deleteItemOdata.push(oMIMaterialCodeTextModel.oData[i]);
+
+                            //모드 변경으로 산규상태로 변경
+                            itemMode=this._m.itemMode.create;
+                        }
                     }
 
-                    mi_material_name = items.getCells()[2].mAggregations.items[0].getValue();
-
-                    var updateTableItem = 0;
-                    var createTableItem = 0;
-                    var deleteTableItem = 0;
-                    var updateItem = 0;
-                    var createItem = 0;
-
-                    //자재명 등록을위한 할당 - 대표  KO
-                    if (newLanguage_code == "KO") {
-                        vMi_material_name = mi_material_name;
-                    }
-
-                    var o_mi_material_code;
-                    
                     // MIMaterialCodeText table key : update delete 
                     var oMIMaterialCodeTextKey = {
                         tenant_id : oUiData.getProperty("/tenant_id"),
@@ -1108,6 +1129,7 @@ sap.ui.define([
                             this._m.serviceName.mIMaterialCodeText,
                             oMIMaterialCodeTextKey
                     );
+
 
                     //MIMaterialCodeText  table item
                     if(itemMode==this._m.itemMode.create){
@@ -1129,10 +1151,10 @@ sap.ui.define([
                         };
 
                         console.log(this._m.serviceName.mIMaterialCodeText+"--createEntry table item");
+                        console.log(oMIMaterialCodeTextParameters+"--createEntry table item");
                         oModel.createEntry(this._m.serviceName.mIMaterialCodeText, oMIMaterialCodeTextParameters);
                         createTableItem++;
                     }
-
                     console.log("itemMode == this._m.itemMode.read");
                     //기존 게시물 업데이트를 위한 param 키 값은 제외 한다.
                     if(itemMode == this._m.itemMode.read || itemMode == this._m.itemMode.update){
@@ -1158,12 +1180,8 @@ sap.ui.define([
                         updateTableItem++;               
                     }
 
-                    //신규자재명 할당을 위해 KO가 없다면 한건이라도 등록한다. 
-                    if (newLanguage_code == "") {
-                        vMi_material_name = mi_material_name;
-                    }
-                } //end for
-
+                } //for end 
+                    
 
                 /**delete MIMaterialCodeText table item  */
                 var _deleteItemOdata = _deleteItem.getProperty("/oData");
@@ -1216,13 +1234,15 @@ sap.ui.define([
                     oMIMaterialCodeKey
                 );
 
+
+              
                 if (oUi.getProperty("/editMode")) {
                     console.log(oMIMaterialCodePath+" -- editMode");    
 
                     //사용여부를 변경했을때에만 수정
-                    if(switchUse_flag!=oUiData.getProperty("/use_flag")){
+                    if(bSegmentedbutton_use_flag !=oUiData.getProperty("/use_flag")){
                         oMIMaterialCodeParameters = {
-                            "use_flag": switchUse_flag,
+                            "use_flag": bSegmentedbutton_use_flag,
                             "local_create_dtm": new Date(),
                             "local_update_dtm": new Date(),
                             "create_user_id": this._sso.user.id,
@@ -1250,7 +1270,7 @@ sap.ui.define([
                             "tenant_id": this._sso.dept.tenant_id,
                             "mi_material_code": input_mi_material_code,
                             "category_code": combobox_category_code,
-                            "use_flag": switchUse_flag,
+                            "use_flag": bSegmentedbutton_use_flag,
                             "local_create_dtm": new Date(),
                             "local_update_dtm": new Date(),
                             "create_user_id": this._sso.user.id,
@@ -1443,7 +1463,7 @@ sap.ui.define([
 
         _setUseBatch : function() {
             console.log("_setUseBatch");
-            return;
+            
             var oModel = this.getModel();
             var that = this;
             
@@ -1454,6 +1474,7 @@ sap.ui.define([
                 success: that._handleDeleteSuccess.bind(this),
                 error: that._handleDeleteError.bind(this)
             });
+            oModel.refresh(true);
         },
 
         deleteChecklistError: function(reason) {
@@ -1488,10 +1509,10 @@ sap.ui.define([
         _handleCreateSuccess: function (oData) {
             var that = this;
 
-            MessageBox.show(this.getModel("I18N").getText("/NCM0005"), {
+            MessageBox.show(this.getModel("I18N").getText("/NCM01001"), {
                 icon: MessageBox.Icon.SUCCESS,
-                title: "저장 성공",
-                actions: [MessageBox.Action.OK],
+                title: this.getModel("I18N").getText("/SAVE"),
+                actions: [MessageBox.Action.OK], 
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
                         var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");

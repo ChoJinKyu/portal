@@ -60,29 +60,26 @@ sap.ui.define([
 			this.setModel(oMultilingual.getModel(), "I18N");
 
 
-			oMultilingual.attachEvent("ready", function(oEvent){
-				var oi18nModel = oEvent.getParameter("model");
-				this.addHistoryEntry({
-					title: oi18nModel.getText("/MESSAGE_MANAGEMENT"),
-					icon: "sap-icon://table-view",
-					intent: "#Template-display"
-				}, true);
 
+			oMultilingual.attachEvent("ready", function(oEvent){
+				var that = this;
+				var oi18nModel = oEvent.getParameter("model");
+				
 				// Smart Filter Button 명 처리 START
 				var b = this.getView().byId("smartFilterBar").getContent()[0].getContent();
-				$.each(b, function(index, item) {
+				$.each(b, function (index, item) {
 					if (item.sId.search("btnGo") !== -1) {
-						item.setText(this.getModel("I18N").getText("/EXECUTE"));
+						item.setText(oi18nModel.getText("/EXECUTE"));
 					}
 				}.bind(this));
-				// Smart Filter Button 명 처리 END
-			}.bind(this));
+
+			});
 						
 			// Model used to manipulate control states
 			oUi = new JSONModel({
 				headerExpanded: true,
 				mainListTableTitle : oResourceBundle.getText("mainListTableTitle"),
-				tableNoDataText : oResourceBundle.getText("tableNoDataText"),
+				tableNoDataText : this.getModel("I18N").getText("/NCM0001"),
 				busy : false
 			});
 
@@ -349,17 +346,15 @@ sap.ui.define([
 			//otermsdelv = otermsdelv.replace(")",'');
 
 
+            var mi_bom_id = this._setReplace(aParameters["mi_bom_id"]);
+            mi_bom_id = mi_bom_id.replace(')','');
+
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
 				tenant_id: this._setReplace(aParameters["tenant_id"]),
 				material_code: oRecord.material_code,
 				supplier_code: oRecord.supplier_code,
-				mi_bom_id: this._setReplace(aParameters["mi_bom_id"]),
-				mi_material_code: oRecord.mi_material_code,
-				currency_unit: oRecord.currency_unit,
-				quantity_unit: oRecord.quantity_unit,
-				exchange: oRecord.exchange,
-				termsdelv: oRecord.termsdelv,
+				mi_bom_id: mi_bom_id
 				
 			});
 
@@ -475,7 +470,7 @@ sap.ui.define([
 
 			if(oAction === sap.m.MessageBox.Action.DELETE) {
 				
-				oDeleteInfo.setData({oData:[]});
+				oDeleteInfo.setData(null);
 
 				//해당 테이블에 바인딩 되지 않아도 ITEM이 모두 삭제 되면 Header 정보도 삭제 되어야 한다. 
 				
@@ -498,250 +493,141 @@ sap.ui.define([
 
 					var o_tenant_id = that._setReplace(aParameters["tenant_id"]),
 						o_material_code = oRecord.material_code,
-						o_supplier_code= oRecord.supplier_code,
-						o_mi_material_code = oRecord.mi_material_code,
-						o_mi_bom_id =  that._setReplace(aParameters["mi_bom_id"]),
-						mi_material_code =  oRecord.mi_material_code,
-						o_currency_unit =  oRecord.currency_unit,
-						o_quantity_unit =  oRecord.quantity_unit,
-						o_exchange =  oRecord.exchange,
-						o_termsdelv =  oRecord.termsdelv;
+						o_supplier_code = oRecord.supplier_code,
+						o_mi_bom_id =  that._setReplace(aParameters["mi_bom_id"]);
 						
-					//item =====================================================================
-					var oDeleteMIMaterialCodeBOMManagementItemKey = {
-						tenant_id : o_tenant_id,
-						mi_bom_id: o_mi_bom_id,
-						mi_material_code: o_mi_material_code,
-						currency_unit: o_currency_unit,
-                        quantity_unit: o_quantity_unit,																								
-						exchange:  o_exchange,
-						termsdelv:  o_termsdelv
-                    };
-					var _deleteItemOdata = _deleteItem.getProperty("/delData");
+						o_mi_bom_id = o_mi_bom_id.replace(')','');
+					
 
-                    var oDeleteMIMaterialCodeBOMManagementItemPath = oModel.createKey(
-							that._m.serviceName.mIMaterialCodeBOMManagementItem,
-                            oDeleteMIMaterialCodeBOMManagementItemKey
-					);
+						
+					//tenant_id, mi_bom_id 기준으로 item을 삭제 한다. 
+					var oFilter = [
+						new Filter("tenant_id", FilterOperator.EQ, o_tenant_id),
+						new Filter("mi_bom_id", FilterOperator.EQ, o_mi_bom_id)
+					];
 
-					_deleteItemOdata.push(oDeleteMIMaterialCodeBOMManagementItemKey);
-                   
-					oModel.remove(
-						oDeleteMIMaterialCodeBOMManagementItemPath, 
-						{ 
-							groupId: that._m.groupID 
-						}
-					);
-					_nDeleteItem++;
+					var oDeleteInfoOdata = {
+						filter : oFilter,
+						tenant_id  : o_tenant_id,
+						mi_bom_id  : o_mi_bom_id
+					};   
 
-					var oDeleteMIMaterialCodeBOMManagementHeaderKey = {
-						tenant_id : o_tenant_id,
-						material_code: o_material_code,
-						supplier_code: o_supplier_code,
-						mi_bom_id: o_mi_bom_id
+					function readChecklistEntity(oDeleteInfoOdata) {
+						var that = this;
+								  
+						return new Promise(
+						  function(resolve, reject) {
+							
+							oModel.read("/MIMaterialCodeBOMManagementItem", {
+								filters: oDeleteInfoOdata.filter,
+								success: function(oData, reponse) {
+									resolve(oData);
+								},
+								error: function(oResult) {
+									reject(oResult);
+								}
+							});
+			
+						});
 					};
 
-					//header에 등록된 데이타 인지 확인
-					var flag_deleteHeadel_mi_bom_id = true;
-					var _deleteHeaderOdata = _deleteHeader.getProperty("/delData");
-					var _deleteItemOdata = _deleteItem.getProperty("/delData");
-
-					for(var x=0; x<_deleteHeaderOdata.length;x++){
-
-						if( _deleteHeaderOdata[x].tenant_id == o_tenant_id  &&
-							_deleteHeaderOdata[x].mi_bom_id == o_mi_bom_id ){
-
-							flag_deleteHeadel_mi_bom_id = false;
-
-							break;
-						}
-					}
-
-					//기존에 담겨 있지 않을때에만 header 정보 등록
-					if(flag_deleteHeadel_mi_bom_id){
-						_deleteHeaderOdata.push(oDeleteMIMaterialCodeBOMManagementHeaderKey);
-						_nDifferentDeleteHeaderItem++;
-					}
-				});
-
-				//header 작업 ---------------------------------------------------
-				var _deleteHeaderOdata = _deleteHeader.getProperty("/delData");
-				var _deleteItemOdata = _deleteItem.getProperty("/delData");
-
-				this._currentDeleitem = 0;
-
-				//배열에 담긴 key과 동일한 아이템 카운트 구함
-				for( var i=0; i < _deleteHeaderOdata.length; i++ ){
-
-					var oFilters=[];					
-					var deleteHeaderSameKeyItemCount = 0;
-					var oDeleteMIMaterialCodeBOMManagementHeaderKey;
-					var t = 0;					
-					for ( var x = 0; x < _deleteItemOdata.length; x++ ){
-						if(
-							_deleteItemOdata[x].tenant_id == _deleteHeaderOdata[i].tenant_id &&
-							_deleteItemOdata[x].mi_bom_id == _deleteHeaderOdata[i].mi_bom_id
-						 ){
-
-							if(t==0){
-								    oFilters = [
-									new Filter("tenant_id", FilterOperator.EQ, _deleteHeaderOdata[i].tenant_id),
-									new Filter("mi_bom_id", FilterOperator.EQ, _deleteHeaderOdata[i].mi_bom_id)
-								];
-						                   
-								oDeleteMIMaterialCodeBOMManagementHeaderKey = {
-									tenant_id : _deleteHeaderOdata[i].tenant_id,
-									material_code: _deleteHeaderOdata[i].material_code,
-									supplier_code: _deleteHeaderOdata[i].supplier_code,
-									mi_bom_id: _deleteHeaderOdata[i].mi_bom_id								
+					function deleteCheckAction(values) {
+						var oData  = values[0].results;						
+					
+						if(oData.length>0){
+						
+							for(var i=0;i<oData.length;i++){
+								var oDeleteMIMaterialCodeBOMManagementItemKey = {
+									tenant_id : oData[i].tenant_id,
+									mi_bom_id: oData[i].mi_bom_id,								
+									mi_material_code: oData[i].mi_material_code									
 								};
-								t=1;
+													
+								var deleteOdataPath = oModel.createKey(
+									"/MIMaterialCodeBOMManagementItem",
+									oDeleteMIMaterialCodeBOMManagementItemKey);
+			
+								oModel.remove(deleteOdataPath,{ 
+										groupId: "pgGroup" 
+									}
+								);   
 							}
 							
-							deleteHeaderSameKeyItemCount++;
+							var oDeleteMIMaterialCodeBOMManagementHeaderKey = {
+								tenant_id : o_tenant_id,
+								material_code: o_material_code,
+								supplier_code: o_supplier_code,
+								mi_bom_id: o_mi_bom_id
+							};	
+
+							var oDeleteMIMaterialCodeBOMManagementHeaderPath = oModel.createKey(
+								"/MIMaterialCodeBOMManagementHeader",
+								oDeleteMIMaterialCodeBOMManagementHeaderKey);
+
+								oModel.remove(oDeleteMIMaterialCodeBOMManagementHeaderPath,{ 
+									groupId: "pgGroup" 
+								}
+							);   
+
+							that._setUseBatch();
 						}
-					}//for end
-
-					var oDeleteInfoOdata = oDeleteInfo.getProperty("/oData");
-
-					var deleteItemInfo = {
-						info_no : i,
-						filter : oFilters,
-						delete_bom_item_count : deleteHeaderSameKeyItemCount,
-						delete_bom_header_key : oDeleteMIMaterialCodeBOMManagementHeaderKey
+					};	
+					
+					function deleteChecklistError(reason) {
+						console.log(" deleteChecklistError reason : " + reason)		
 					};
 
-					oDeleteInfoOdata.push(deleteItemInfo);
-				} //for end
-
-				//아이템 조사와 Header 최종 조사 내용을 실행한다. 
-				function readChecklistItemEntity(oDeleteInfoOdata) {
-					return new Promise(function(resolve, reject) {
-						that.getModel().read(that._m.serviceName.mIMaterialCodeBOMManagementItem, {
-							filters: oDeleteInfoOdata.filter,
-							success: function(oData) {		
-								console.log(">>readChecklistItemEntity");
-								resolve(oData);
-							},
-							error: function(oResult) {
-								reject(oResult);
-							}
-						});
-					});
-				};
-
-				function MakeQuerablePromise(promise) {
-					if (promise.isResolved) return promise;
-				
-					var isPending = true;
-					var isRejected = false;
-					var isFulfilled = false;
-				
-					var result = promise.then(
-						function(v) {
-							isFulfilled = true;
-							isPending = false;
-							return v; 
-						}, 
-						function(e) {
-							isRejected = true;
-							isPending = false;
-							throw e; 
-						}
-					);
-				
-					result.isFulfilled = function() { return isFulfilled; };
-					result.isPending = function() { return isPending; };
-					result.isRejected = function() { return isRejected; };
-					return result;
-				}
-				
-				this._deleteHeader = [];
-				for(var i=0; i < oDeleteInfoOdata.length ; i++ ){
-					
-					var deleteOdataPath = oModel.createKey(this._m.serviceName.mIMaterialCodeBOMManagementHeader, oDeleteInfoOdata[i].delete_bom_header_key);
-					oDeleteInfoOdata[i].deleteOdataPath = deleteOdataPath;
-					this._oDeleteInfoData = oDeleteInfoOdata[i];
-					//promises.push(readChecklistItemEntity(oDeleteInfoOdata[i]));
-					var readChecklistPromise =  MakeQuerablePromise(readChecklistItemEntity(oDeleteInfoOdata[i]));
-
-					readChecklistPromise.then(function(data){
-						//console.log("readChecklistPromise");
-						//console.log(data);
-						//console.log("Initial fulfilled:", readChecklistPromise.isFulfilled());
-						if(readChecklistPromise.isFulfilled()){
-							var t = that._oDeleteInfoData;
-							if(data.results.length==t.delete_bom_item_count){
-								console.log(">>>> remove header");
-								console.log("t.deleteOdataPath : ", t.deleteOdataPath);
-								that._deleteHeader.push(t.deleteOdataPath);
-
-							}
-						}
-					});
-				} //for end
-					
-				function _handleDeleteSuccess(oData) {
-
-					MessageToast.show(this.getModel("I18N").getText("/NCM01002"));
-
-					//this.getView().byId("buttonMainTableDelete").setEnabled(false);
-				}
-        
-        		function _handleDeleteError(oError) {
-					MessageToast.show(this.getModel("I18N").getText("/NCM01002"));
-				}				
-	
-				// console.log(that._m.deleteHeaderItemCount);
-
-				function _setUseBatch(oModel) {
-					console.log(" >>>>>>>>>>>>>>>>>>> setUseBatch <<<<<<<<<<<<<<<<<<<<<<<< ");
-					var that = this;
-						 
-					oModel.setUseBatch(true);				
-						oModel.submitChanges({
-						groupId: "pgGroup",
-						success: _handleDeleteSuccess.bind(this),
-						error: _handleDeleteError.bind(this)
-					});
-			
-					//oGlobalBusyDialog.close();
-					// oModel.updateBindings(true);
-					// oModel.refresh(true); 
-					//that._onMidServiceRead();
-				}
-
-				function deleteHeaders(){
-					if(that._deleteHeader.length>0){
-
-						for(var x=0; x<that._deleteHeader.length;x++){
-							oModel.remove(that._deleteHeader[x],{ 
-								groupId: "pgGroup" 
-							}); 
-						}
-						_setUseBatch(oModel);
-					}else{
-						_setUseBatch(oModel);
-					}
-
-					//sap.ui.getCore().byId("mainTable").getBinding("items").refresh();
-				}
-
-				function dataRefresh(){
-					oModel.updateBindings(true);
-					oModel.refresh(true); 
-					that.getView().byId("mainTable").getModel().refresh(true);
-					that.onBeforeRebindTable();
-				}
-				setTimeout(deleteHeaders, 1000);
-				setTimeout(dataRefresh, 1000);
-
+                    Promise.all([ readChecklistEntity(oDeleteInfoOdata)
+                    ]).then(deleteCheckAction.bind(that),
+							deleteChecklistError.bind(that));
+				});
 			}
-
             console.groupEnd();
 		},
 
-				
+		_setUseBatch : function () {
+            var oModel = this.getModel(),
+                that = this;
+                oModel.setUseBatch(true);
+                
+				oModel.submitChanges({
+					groupId: that._m.groupID,
+					success: that._handleDeleteSuccess.bind(this),
+					error: that._handleDeleteError.bind(this)
+				});
+
+                oModel.refresh(true); 
+                that._setBusy(false);   
+		},
+       /**
+         * 삭제 성공
+         * @param {ODATA} oData 
+         * @private
+         */
+        _handleDeleteSuccess: function (oData) {
+			var that = this;
+			
+            this._showMessageBox(
+                this.getModel("I18N").getText("/DELETE + SUCCESS"),
+                this.getModel("I18N").getText("/NCM01002"),
+                this._m.messageType.Error,
+                function(){return;}
+			);
+        },
+
+        /**
+         * 삭제실패
+         * @param {Event} oError 
+         * @private
+         */
+        _handleDeleteError: function (oError) {
+            this._showMessageBox(
+                this.getModel("I18N").getText("/DELETE + FAILURE"),
+                this.getModel("I18N").getText("/EPG00001"),
+                this._m.messageType.Error,
+                function(){return;}
+            );
+        },	
 		_handleUpdateSuccess: function(oData) {
 			MessageToast.show(this.getResourceBundle().getText("updateSuccess"));
 		},
@@ -760,7 +646,23 @@ sap.ui.define([
 		_setBusy : function (bIsBusy) {
 			var oModel = this.getView().getModel("oUi");
 			oModel.setProperty("/busy", bIsBusy);
-		}		
+		},
+        /**
+         * MESSAGE
+         * @param {String} title 
+         * @param {String} content 
+         * @param {sap.ui.core.MessageType} type 
+         * @param {function} closeEvent 
+         */
+        _showMessageBox : function(title, content, type, closeEvent){
+            MessageBox.show(content, {
+                icon: type,
+                title: title,
+                actions: [MessageBox.Action.OK],
+                styleClass: "sapUiSizeCompact",
+                onClose: closeEvent,
+            });
+        }			
 
 	});
 });

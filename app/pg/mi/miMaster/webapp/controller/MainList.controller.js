@@ -58,24 +58,28 @@ sap.ui.define([
 
 			var oMultilingual = new Multilingual();
 			this.setModel(oMultilingual.getModel(), "I18N");
-
-			oMultilingual.attachEvent("ready", function(oEvent){
+			var smartFilterBar = this.getView().byId("smartFilterBar");
+			
+            oMultilingual.attachEvent("ready", function(oEvent){
 				var oi18nModel = oEvent.getParameter("model");
 				this.addHistoryEntry({
-					title: oi18nModel.getText("/MESSAGE_MANAGEMENT"),
+					title: oi18nModel.getText("/USER_MANAGEMENT"),
 					icon: "sap-icon://table-view",
 					intent: "#Template-display"
 				}, true);
 
-				// Smart Filter Button 명 처리 START
-				var b = this.getView().byId("smartFilterBar").getContent()[0].getContent();
-				$.each(b, function(index, item) {
-					if (item.sId.search("btnGo") !== -1) {
-						item.setText(this.getModel("I18N").getText("/EXECUTE"));
-					}
-				}.bind(this));
-				// Smart Filter Button 명 처리 END
+			// Smart Filter Button 명 처리 START
+			var b = this.getView().byId("smartFilterBar").getContent()[0].getContent();
+			$.each(b, function (index, item) {
+				if (item.sId.search("btnGo") !== -1) {
+				//	item.setText(oi18nModel.getText("/EXECUTE"));
+				}
 			}.bind(this));
+				
+			
+			}.bind(this));
+			
+
 
 			var oUi,
 				oResourceBundle = this.getResourceBundle();
@@ -102,6 +106,9 @@ sap.ui.define([
             this._getSmartTableById().getTable().attachSelectionChange(this._selectionChanged.bind(this));
 
 			this.getModel("oUi").setProperty("/headerExpanded", true);
+
+
+
 			console.groupEnd();
 		},
 		
@@ -198,7 +205,7 @@ sap.ui.define([
 			var oMi_material_name = oSmtFilter.getControlByKey("mi_material_name").getValue();            
 			var oCategory_code = oSmtFilter.getControlByKey("category_code").getSelectedKey();    
             var oUse_flag = oSmtFilter.getControlByKey("use_flag").getSelectedKey();   
-            var fOcode = oUse_flag =="FALSE" ? false : true;
+            var fOcode = oUse_flag =="false" ? false : true;
 	
             
 			if (oMi_material_code.length > 0) {

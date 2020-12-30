@@ -37,15 +37,14 @@
 
             <f:DynamicPageHeader pinnable="false">
                 <f:content>
-                <smartVariantManagement:SmartVariantManagement        
+                <!-- <smartVariantManagement:SmartVariantManagement        
 				             id="pageVariantId"
-				             persistencyKey="PageVariantPKey" />                     
-                    <!-- Smart Filter -->
+				             persistencyKey="PageVariantPKey" />                      -->
+                    <!-- Smart Filter --><!--considerSelectionVariants Variant 표시 -->
+
                     <smartFilterBar:SmartFilterBar id="smartFilterBar" 
-                    entitySet="/MIMatListView " 
-                    smartVariant="pageVariantId"
-                    persistencyKey="SmartFilterPKey"
-                    considerSelectionVariants="true" 
+                    entitySet="MIMatListView" 
+                    considerSelectionVariants="false" 
                     enableBasicSearch="false" >
                         <smartFilterBar:controlConfiguration>
 
@@ -53,7 +52,7 @@
                             <smartFilterBar:ControlConfiguration  key="mi_material_code" groupId="_BASIC" index="1" label="시황자재코드"
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
-                                        <ComboBox id="combobox_mi_material_code" items="{path: '/MIMatListView', templateShareable:true}" placeholder="선택하세요.">
+                                        <ComboBox id="combobox_mi_material_code" items="{path: '/MIMatListView', templateShareable:true}" placeholder="{I18N>/OPTION}">
                                         <core:Item key="{mi_material_code}" text="{mi_material_code}"/>
                                     </ComboBox>
                                 </smartFilterBar:customControl>
@@ -72,7 +71,7 @@
                             <smartFilterBar:ControlConfiguration key="category_code" groupId="_BASIC" index="3" label="{I18N>/CATEGORY}" 
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
-                                        <ComboBox id="combobox_category_code" items="{path: '/MICategoryView', templateShareable:true}" placeholder="선택하세요.">
+                                        <ComboBox id="combobox_category_code" items="{path: '/MICategoryView', templateShareable:true}" placeholder="{I18N>/OPTION}">
                                         <core:Item key="{category_code}" text="{category_text}"/>
                                     </ComboBox>
                                 </smartFilterBar:customControl>
@@ -82,7 +81,7 @@
                           <smartFilterBar:ControlConfiguration key="use_flag" groupId="_BASIC" index="4" label="{I18N>/USE_FLAG}" 
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
-                                        <ComboBox id="combobox_use_flag" items="{path: '/UseYNView', templateShareable:true}" placeholder="선택하세요.">
+                                        <ComboBox id="combobox_use_flag" items="{path: '/UseYNView', templateShareable:true}" placeholder="{I18N>/OPTION}">
                                         <core:Item key="{code}" text="{code_name}"/>
                                     </ComboBox>
                                 </smartFilterBar:customControl>
@@ -99,8 +98,6 @@
 
         <!-- DynamicPage Content -->
         <f:content>
-        
-
                 <!-- Smart Table -->
                 <smartTable:SmartTable
                     width="100%"
@@ -115,7 +112,7 @@
                     beforeRebindTable=".onBeforeRebindTable"
                     beforeExport=".onBeforeExport"
                     useVariantManagement="false"
-                    useTablePersonalisation="false"
+                    useTablePersonalisation="true"
                     showTablePersonalisation="false"
                     header="시황자재 Master List"
                     showRowCount="true"
