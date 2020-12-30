@@ -297,7 +297,96 @@ public class MoldApprovalV4 implements EventHandler {
         context.setCompleted();
     
     }    
+    
+    @On(event = DeleteApprovalContext.CDS_NAME)
+    public void onDelete(DeleteApprovalContext context){
 
+        ApprDeleteData data = context.getInputData();
+
+        Collection<ApprovalMasterV4> aMaster = data.getApprovalMaster();
+        ResultMsg msg = ResultMsg.create();
+            
+        System.out.println("data>>> " + data);
+        System.out.println("aMaster>>> " + aMaster);
+        try {
+            if(!aMaster.isEmpty() && aMaster.size() > 0){
+                for(ApprovalMasterV4 row : aMaster ){
+
+                    System.out.println("ApprovalMasterV4 ::::::" + row);
+                    msg.setMessageCode("NCM01002");
+                    msg.setResultCode(0);
+                    msg.setCompanyCode(row.getCompanyCode());
+                    msg.setPlantCode(row.getOrgCode());
+                    
+        
+                    System.out.println("msg >>>>>" + msg);
+                    
+                    ApprovalMasters del = ApprovalMasters.create();
+                    del.setApprovalNumber(row.getApprovalNumber()); 
+                    del.setTenantId(row.getTenantId());
+                    del.setCompanyCode(row.getCompanyCode()); 
+                    del.setOrgCode(row.getOrgCode()); 
+                    // Delete d = Delete.from(ApprovalMasters_.CDS_NAME).matching(del); 
+                    // Result rst = moldApprovalService.run(d);
+                    int mold_id;
+
+                    String sql="SELECT MOLD_ID FROM DP_MD_APPROVAL_DTL WHERE APPROVAL_NUMBER='"+row.getApprovalNumber()+"'";
+                    Connection conn = jdbc.getDataSource().getConnection();
+                    // Local Temp Table 생성
+                    PreparedStatement statement = conn.prepareStatement(sql);
+                    ResultSet rs = null;    
+                    rs = statement.executeQuery();
+
+                    ArrayList<String> moldNums = new ArrayList<String>();
+                    while (rs.next()) { 
+                        moldNums.add(rs.getString(1));
+                    }
+
+                    System.out.println("Approval_number ::: "+ row.getApprovalNumber()+ "MOLD_ID ============= "+moldNums);
+
+                    for(int i=0; i< moldNums.size(); i++){
+                        String sql2="SELECT CURRENCY_CODE, TARGET_AMOUNT FROM DP_MD_MST WHERE MOLD_ID='"+moldNums.get(i)+"'";
+                        PreparedStatement statement2 = conn.prepareStatement(sql2);
+                        rs = statement2.executeQuery();
+                        ArrayList<String> moldTblData = new ArrayList<String>();
+                        
+                        while (rs.next()) { 
+                            moldTblData.add(rs.getString(1));
+                            moldTblData.add(rs.getString(2));
+                        }
+                        System.out.println("moldTblData :::::"+moldTblData);
+                        System.out.println("moldTblData :::::"+moldTblData.get(0));
+                        System.out.println("moldTblData :::::"+moldTblData.get(1));
+                        //UPDATE [테이블] SET [열] = '변경할값' WHERE [조건]
+
+                        String sql3="UPDATE DP_MD_MST SET CURRENCY_CODE='"+moldTblData.get(1)+"', TARGET_AMOUNT='"+moldTblData.get(2)+"'";
+                    }
+
+                    
+
+                    // // Quotation 삭제
+                    // String sql="DELETE FROM DP_MD_QUOTATION WHERE APPROVAL_NUMBER='"+row.getApprovalNumber()+"'";
+                    // // Referer 삭제
+                    // String sql3="DELETE FROM CM_REFERER WHERE APPROVAL_NUMBER='"+row.getApprovalNumber()+"'";
+                    // // Approver 삭제
+                    // String sql4="DELETE FROM CM_APPROVER WHERE APPROVAL_NUMBER='"+row.getApprovalNumber()+"'";
+                    // // Approval_DTL 삭제
+                    // String sql5="DELETE FROM DP_MD_APPROVAL_DTL WHERE APPROVAL_NUMBER='"+row.getApprovalNumber()+"'";
+                    
+
+                    // mold_id=jdbc.queryForObject(sql,Integer.class);
+                    // System.out.println("mold_id >>>>>>", mold_id);
+                }
+            }
+        }
+        catch (Exception e) {
+            msg.setMessageCode("FAILURE");
+            msg.setResultCode(-1);
+            e.printStackTrace();
+        }
+        context.setResult(msg);
+        context.setCompleted();
+    } 
     private String getApprovalNumber(Data data){ 
          /**
          * 품의서 번호 B20-00000001

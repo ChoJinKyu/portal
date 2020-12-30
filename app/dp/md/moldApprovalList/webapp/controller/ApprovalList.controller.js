@@ -266,8 +266,6 @@ sap.ui.define([
                 approvalTarget = "purOrderItemLocalApproval"
             }if(oRecord.approval_type_code == "E"){
                 approvalTarget = "participatingSupplierSelection"
-            }if(oRecord.approval_type_code == "I"){
-                approvalTarget = "moldRecepitApproval"
             }
 
             console.log(approvalTarget);
@@ -713,8 +711,7 @@ sap.ui.define([
             }else if(id.indexOf("localOrder") > -1){
                approvalTarget = "purOrderItemLocalApproval"
             }else if(id.indexOf("receipt") > -1){
-                approvalTarget = "moldRecepitApproval"
-               // appTypeCode ="I"
+                appTypeCode ="I"
             }else if(id.indexOf("export") > -1){
                 appTypeCode ="X"
             }
@@ -781,7 +778,7 @@ sap.ui.define([
                 }
             }
         },
-        //
+        
         onApplovalDeletePress: function () {
             var oTable = this.byId("mainTable"),
                 oModel = this.getModel(),
@@ -791,15 +788,25 @@ sap.ui.define([
                 //oSelected  = oTable.getSelectedItems(),
                 oSelected = [],
                 delApprData = [],
+                chkArr =[],
+                chkRow ="",
                 checkBoxs = this.getView().getControlsByFieldGroupId("checkBoxs");
+
             var that = this;
-            
+            console.log(oSelected);
             for (var i = 0; i < checkBoxs.length; i++) {
+                console.log(checkBoxs);
                 if (checkBoxs[i].mProperties.selected == true) {
-                    console.log(lModel.getData().Approvals[i]);
+                    chkRow = checkBoxs[i].mBindingInfos.fieldGroupIds.binding.aBindings[0].oContext.getPath();
+                    chkRow = chkRow.substring(11);
+                    chkArr.push(parseInt(chkRow));
+
+                    console.log(lModel.getData());
                     delApprData.push({
-                        approval_number : lModel.getData().Approvals[i].approval_number
-                        ,tenant_id : lModel.getData().Approvals[i].tenant_id
+                        approval_number : lModel.getData().Approvals[chkArr[i]].approval_number
+                        ,tenant_id : lModel.getData().Approvals[chkArr[i]].tenant_id
+                        ,company_code : lModel.getData().Approvals[chkArr[i]].company_code
+                        ,org_code : lModel.getData().Approvals[chkArr[i]].org_code
                     })
                     oSelected.push(i);
                 }
@@ -829,13 +836,14 @@ sap.ui.define([
         },
 
         callAjax : function (data,fn) {  
-           
+            
             var that = this;
             //  /dp/md/moldApprovalList/webapp/srv-api/odata/v2/dp.MoldApprovalListService/RefererSearch
             //  "xx/sampleMgr/webapp/srv-api/odata/v4/xx.SampleMgrV4Service/SaveSampleHeaderMultiProc"
             var url = "/dp/md/moldApprovalList/webapp/srv-api/odata/v4/dp.MoldApprovalV4Service/"+fn;
             console.log("data >>>> " , data);
             console.log("url >>>> " , url);
+            that.onLoadThisPage();
             $.ajax({
                 url: url,
                 type: "POST",
@@ -855,12 +863,11 @@ sap.ui.define([
             });
         }, 
 
-        onLoadThisPage : function (param) { 
-            var target=""
-            var that = this;
-            that.getRouter().navTo(target , {
-
-            },true); 
+        onLoadThisPage : function () { 
+            var oTable = this.byId("mainTable")
+            , oModel = this.getModel("list"); 
+            
+            oModel.refresh(true); 
         },
 
 
