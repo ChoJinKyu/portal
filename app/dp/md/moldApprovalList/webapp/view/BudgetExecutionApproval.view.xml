@@ -46,7 +46,7 @@
 				</uxap:snappedTitleOnMobile>
 
 				<uxap:actions>
-                    <!-- 상단 버튼 영역 -->
+					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress"  visible="{contModel>/viewMode}"/>
 				</uxap:actions>
 
                 <uxap:navigationActions>
@@ -334,7 +334,6 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
-				<Button type="Transparent" text="Edit"      press=".onPageEditButtonPress" visible="{contModel>/viewMode}" />
 				<Button type="Transparent" text="Draft"     press=".onPageDraftButtonPress"   visible="{contModel>/editMode}"/>
 				<Button type="Transparent" text="Preview"   press=".onPagePreviewButtonPress"  visible="{contModel>/editMode}" />
 				<Button type="Emphasized"  text="Request"   press=".onPageRequestButtonPress"/>
