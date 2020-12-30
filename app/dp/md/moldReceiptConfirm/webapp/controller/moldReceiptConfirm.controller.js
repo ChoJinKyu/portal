@@ -357,6 +357,8 @@ sap.ui.define([
                 return;
             }
 
+            debugger
+
             if(this.validator.validate( this.byId('moldMstTable') ) !== true){
                 MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
                 return;
@@ -436,6 +438,15 @@ sap.ui.define([
             
             // var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
             var oData = oTable.getModel('list').getProperty("/MoldMasterSpec");
+            var rows = oTable.getRows();
+
+            console.log('oData',oData);
+
+            for(var i=0 ; i<oData.length ; i++){
+                var _cells = rows[i].getCells();
+                oData[i].mold_progress_status_code = _cells[6].getValue();
+                // oData[i].inspection_flag = _cells[7].getValue();
+            }
 
             ExcelUtil.fnExportExcel({
                 fileName: "MoldReceiptConfirm",

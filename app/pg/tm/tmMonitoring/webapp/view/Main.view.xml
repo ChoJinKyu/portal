@@ -89,7 +89,7 @@
                                                         <core:CustomData key="p13nData"
                                                             value='\{"columnKey": "monitoring_type_name","columnIndex":"1", "leadingProperty": "monitoring_type_name", "sortProperty": "monitoring_type_name"}' />
                                                     </customData>
-                                                    <Text text="Separated" />
+                                                    <Text text="{I18N>/TYPE_NAME}" />
                                                 </Column>
                                                     <Column
                                                     hAlign="Center">

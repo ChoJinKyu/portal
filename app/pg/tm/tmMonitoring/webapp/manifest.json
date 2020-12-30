@@ -92,11 +92,7 @@
                 "controlId": "app",
                 "viewPath": "pg.tm.tmMonitoring.view",
                 "controlAggregation": "pages",
-                "async": true,
-                "transition": "slide",
-                "bypassed": {
-                    "target": "notFound"
-                }
+                "async": true
             },
             "routes": [
                 {

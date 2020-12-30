@@ -88,7 +88,7 @@
                                                                                     </Column>
                                                                                 </columns>
                                                                                 <items>
-                                                                                    <ColumnListItem type="Inactive" id="managerListmItem">
+                                                                                    <ColumnListItem type="Inactive">
                                                                                         <cells>
                                                                                             <Text text=""/>
                                                                                             <Text text="{employee_number}"/>
@@ -96,7 +96,7 @@
                                                                                             <Text text="{job_title}"/>
                                                                                             <Text text="{mobile_phone_number}"/>
                                                                                             <Text text="{department_id}"/>
-                                                                                            <SegmentedButton id="segmentButton_activate_flag" selectedKey="{=${monitoring_super_authority_flag} === true? 'Yes' : 'No'}" enabled="{=${DetailView>/isEditMode}}">
+                                                                                            <SegmentedButton id="segmentButton_activate_flag" selectionChange=".onChangeAuthorityFlag" selectedKey="{=${monitoring_super_authority_flag} === true? 'Yes' : 'No'}" enabled="{=${DetailView>/isEditMode}}">
                                                                                                 <items>
                                                                                                     <SegmentedButtonItem text="Yes" key="Yes" />
                                                                                                     <SegmentedButtonItem text="No" key="No" />
@@ -129,7 +129,7 @@
                                                 <f:content id="informationPageSectionForm">
                                                     <VBox  class="sapUiSmallMarginEnd">
                                                         <Label text="{I18N>/OPERATION}"/>
-                                                        <HBox>
+                                                        <HBox id="operating">
                                                             <CheckBox id="search_flag" text="{I18N>/DISPLAY}" editable="{=${DetailView>/isEditMode}}" selected="{=${operation_mode_display_flag} === 'true' ? true : false}" />
                                                             <HBox width="0.5rem"/>
                                                             <CheckBox id="calling_flag" text="{I18N>/EXPLAIN}" editable="{=${DetailView>/isEditMode}}" selected="{=${operation_mode_calling_flag} === 'true' ? true : false}"/>
@@ -252,7 +252,7 @@
                                                         </Column>
                                                     </columns>
                                                     <items>
-                                                        <ColumnListItem type="Active" id="signalListItem" press="signalListTableItemPress">
+                                                        <ColumnListItem type="Active" press="signalListTableItemPress">
                                                             <cells>
                                                                 <Text text=""/>
                                                                 <ComboBox width="80%" items="{/TaskMonitoringIndicatorNumberCodeView}" selectedKey="" selectionChange=".onChangeIndicator">
@@ -286,9 +286,9 @@
                                 <uxap:subSections>
                                     <uxap:ObjectPageSubSection>
                                         <uxap:blocks>
-                                            <UploadCollection id="UploadCollection" uploadEnabled="true" fileType="gif,png,jpg,jpeg,doc,docx,xls,xlsx,hwp,pdf,ppt,pdf" maximumFilenameLength="55"
+                                            <UploadCollection id="UploadCollection" uploadEnabled="false" fileType="gif,png,jpg,jpeg,doc,docx,xls,xlsx,hwp,pdf,ppt,pdf" maximumFilenameLength="55"
                                             maximumFileSize="10" multiple="false" change=".onChange" instantUpload="false" uploadButtonInvisible="{=!${ui>/bEditMode}}" 
-                                            items="{path: 'up>/items', templateShareable: false}" filenameLengthExceed="onFilenameLengthExceed" fileSizeExceed="onFileSizeExceed" typeMissmatch="onTypeMissmatch" uploadComplete="onUploadComplete" beforeUploadStarts="onBeforeUploadStarts" mode="SingleSelectMaster">
+                                             filenameLengthExceed="onFilenameLengthExceed" fileSizeExceed="onFileSizeExceed" typeMissmatch="onTypeMissmatch" uploadComplete="onUploadComplete" beforeUploadStarts="onBeforeUploadStarts" mode="SingleSelectMaster">
                                                                 <items>
                                                                     <UploadCollectionItem id="uploadItem" documentId="{up>documentId}" fileName="{up>fileName}"
                                                                      mimeType="{up>mimeType}" thumbnailUrl="{up>thumbnailUrl}" url="{up>url}" deletePress="onFileDeleted" enableEdit="{=${ui>/bEditMode}}" enableDelete="true" visibleDelete="{=${ui>/bEditMode}}" visibleEdit="{=${ui>/bEditMode}}" attributes="{path: 'up>attributes',templateShareable: false}" selected="{selected}">
@@ -308,8 +308,8 @@
                             <ToolbarSpacer/>
                             <!-- <Button id="pageHistoryButton" type="Transparent" text="History" press=".onHistoryBtnPress" visible="{=!${DetailView>/isCreate}}"/> -->
                             <Button id="pageEditButton" type="Transparent" text="Edit" press=".onPageEditButtonPress" enabled="{=!${DetailView>/isEditMode}}" />
-                            <Button id="pageCancelButton" type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress" enabled="{=${DetailView>/isEditMode}}"/>
-                            <Button id="pageDeleteButton" type="Transparent" text="Delete" enabled="{=${DetailView>/isEditMode}}" press="onDelete"/>
+                            <Button id="pageCancelButton" type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress" />
+                            <Button id="pageDeleteButton" type="Transparent" text="Delete" enabled="{=!${DetailView>/isCreate}}" press="onDelete"/>
                             <Button id="pageSaveButton" type="Emphasized" text="Save" press=".onSave" enabled="{=${DetailView>/isEditMode}}"/>
                               
                         </OverflowToolbar>

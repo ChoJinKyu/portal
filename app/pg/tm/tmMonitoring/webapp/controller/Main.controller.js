@@ -35,7 +35,7 @@ sap.ui.define([
                         item.setText(this.oi18nModel.getText("/EXECUTE"));
                     }
                 }.bind(this));
-
+                console.log(this.byId("MonitorListTable"));
 
             },
 
@@ -117,7 +117,12 @@ sap.ui.define([
                         aSearchFilters.push(new Filter("bizunit_name", FilterOperator.Contains, bizunit_name[a].getProperty("text")));
                     }
                 }
-                mBindingParams.filters.push(new Filter(aSearchFilters, false));
+                if (tenant_name.length === 0 && company_name.length === 0 && bizunit_name.length === 0) {
+                    mBindingParams.filters.push(new Filter([]));
+                }
+                mBindingParams.filters.push(new Filter(aSearchFilters, true));
+
+
 
             },
 

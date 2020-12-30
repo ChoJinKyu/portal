@@ -16,22 +16,22 @@
                     >
                 <columns>
                     <Column>
-                        <Text text="Type" />
+                        <Label text="Type" wrapping="true" />
                     </Column>
                     <Column>
-                        <Text text="Drawing Consent" />
+                        <Label text="Drawing Consent" wrapping="true" />
                     </Column>
                     <Column>
-                        <Text text="Settled Drawing" />
+                        <Label text="Settled Drawing" wrapping="true" />
+                    </Column>
+                    <Column >
+                        <Label text="1st Prod Date" wrapping="true" required="true"/>
                     </Column>
                     <Column>
-                        <Text text="1st Prod Date" required="true"/>
+                        <Label text="Complete Date" wrapping="true" required="true"/>
                     </Column>
                     <Column>
-                        <Text text="Complete Date" required="true"/>
-                    </Column>
-                    <Column>
-                        <Text text="Inspection Date" required="true"/>
+                        <Label text="Inspection Date" wrapping="true" required="true"/>
                     </Column>
                 </columns>
                 <items>
@@ -72,22 +72,22 @@
                     >
                 <columns>
                     <Column>
-                        <Text text="Type" />
+                        <Label text="Type" wrapping="true" />
                     </Column>
                     <Column>
-                        <Text text="1st Production Changed Date" />
+                        <Label text="1st Production Changed Date" wrapping="true" />
                     </Column>
                     <Column>
-                        <Text text="2nd Production Changed Date" />
+                        <Label text="2nd Production Changed Date" wrapping="true" />
                     </Column>
                     <Column>
-                        <Text text="3rd Production Changed Date" />
+                        <Label text="3rd Production Changed Date" wrapping="true" />
                     </Column>
                     <Column>
-                        <Text text="4th Production Changed Date" />
+                        <Label text="4th Production Changed Date" wrapping="true" />
                     </Column>
                     <Column>
-                        <Text text="5th Production Changed Date" />
+                        <Label text="5th Production Changed Date" wrapping="true" />
                     </Column>
                 </columns>
                 <items>
