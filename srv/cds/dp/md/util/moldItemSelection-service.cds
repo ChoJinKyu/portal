@@ -5,9 +5,9 @@ using { cm as codeDtl } from '../../../../../db/cds/cm/CM_CODE_DTL-model';
 
 @path: '/dp.util.MoldItemSelectionService'
 service MoldItemSelectionService {
-    entity MoldMasters as projection on moldMst.Md_Mst; 
+  /*  entity MoldMasters as projection on moldMst.Md_Mst; 
     entity ApprovalDetails as projection on approvalDtl.Md_Approval_Dtl;
-
+ */ 
     view MoldItemSelect as
         select
             key m.mold_id,
