@@ -1097,22 +1097,27 @@ sap.ui.define([
 				oExport.destroy();
 			});
         },
+
         onExportPress: function (_oEvent) {
             var sTableId = _oEvent.getSource().getParent().getParent().getId();
             if (!sTableId) { return; }
 
             var oTable = this.byId(sTableId);
-                        //var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
-            var sFileName = "MOLD APPROVAL LIST"; //file name to exporting
+            //var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
+            var sFileName = "MOLD APPROVAL LIST"
+            //var oData = this.getModel("list").getProperty("/Message"); //binded Data
             var oData = oTable.getModel("list").getProperty("/Approvals");
+            console.log(oTable);
+            console.log(sFileName);
             console.log(oData);
             ExcelUtil.fnExportExcel({
                 fileName: sFileName || "SpreadSheet",
                 table: oTable,
                 data: oData
             });
-
         },
+        
+
         onImportChange: function (_oEvent) {
             var oTable = _oEvent.getSource().getParent().getParent();
             var oModel = oTable.getModel();
