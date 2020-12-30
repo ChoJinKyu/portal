@@ -73,9 +73,7 @@ sap.ui.define([
         /* =========================================================== */
         _onApprovalPage : function () {
   
-            this.getView().setModel(new ManagedListModel(), "mdItemMaster"); 
-            this.getView().setModel(new ManagedModel(), "mdCommon"); 
-            this.getView().setModel(new ManagedListModel(), "importPlant"); 
+            this.getView().setModel(new ManagedListModel(), "mdItemMaster");
 
             console.log(" this.approval_number "  ,  this.approval_number);
             var schFilter = [];
@@ -92,19 +90,7 @@ sap.ui.define([
                 // this.getView().setModel(new ManagedModel(), "mdCommon");
                 var md = this.getModel('mdCommon');
                 this._bindViewBudget("/ItemBudgetExecution", "mdItemMaster", schFilter, function (oData) { 
-                    md.setProperty("/investment_ecst_type_code", oData.results[0].investment_ecst_type_code);
-                    md.setProperty("/investment_ecst_type_code_nm", oData.results[0].investment_ecst_type_code_nm);
-                    md.setProperty("/accounting_department_code", oData.results[0].accounting_department_code);
-                    md.setProperty("/import_company_code", oData.results[0].import_company_code);
-                    md.setProperty("/import_company_code_nm", oData.results[0].import_company_code_nm);
-                    md.setProperty("/project_code", oData.results[0].project_code);
-                    md.setProperty("/import_company_org_code", oData.results[0].import_company_org_code);
-                    md.setProperty("/import_company_org_code_nm", oData.results[0].import_company_org_code_nm);
-                    md.setProperty("/account_code", oData.results[0].account_code);
-                    md.setProperty("/account_code_nm", oData.results[0].account_code_nm);
-                    md.setProperty("/provisional_budget_amount", oData.results[0].provisional_budget_amount);
-                    console.log("md >>>>>>", md); 
-                    that._bindComboPlant(oData.results[0].import_company_code);
+                 
                 });
             }  
         },
@@ -122,45 +108,14 @@ sap.ui.define([
                 });
             },
 
-        /**
-         * Import Company 파라미터 받고 조회 
-         * @param {*} company_code 
-         */
-        onBCompanyChange : function (oEvent){
-            // console.log("oEvent >>> " , oEvent); var md = this.getModel('mdCommon');
-            // console.log("1 >>> " ,this.getView().byId('importCompany').getSelectedKey());
-            // console.log("2 >>> " ,this.getView().byId('importCompany').mProperties.selectedKey);
-            // console.log("3 >>> " ,this.getModel("mdItemMaster").getData().ItemBudgetExecution[0].import_company_code);
-
-            var company_code = this.getModel("mdCommon").getData().import_company_code;
-            this.getModel("mdCommon").getData().import_company_org_code = "";
-            this._bindComboPlant(company_code);
-        },
-        _bindComboPlant : function (company_code) {
-            var aFilter = [
-                         new Filter("tenant_id", FilterOperator.EQ, 'L1100')
-                        , new Filter("company_code", FilterOperator.EQ, company_code)
-                ];
-
-              var oView = this.getView(),
-                    oModel = this.getModel("importPlant");
-                oView.setBusy(true);
-                oModel.setTransactionModel(this.getModel("org"));
-                oModel.read("/Plant", {
-                    filters: aFilter,
-                    success: function (oData) {
-                        oView.setBusy(false);
-                    }
-                });
-        } ,
-
+   
        /**
          * @description moldItemSelect 공통팝업   
          * @param vThis : view page의 this 
          *       , oEvent : 이벤트 
          * ,     , oArges : company_code , org_code (필수)
 		 */
-        onBudgetExecutionAddPress: function (oEvent) {
+        onMoldRecepitAddPress: function (oEvent) {
             console.log("oEvent>>>>");
             var oModel = this.getModel("mdItemMaster");
 
@@ -226,8 +181,8 @@ sap.ui.define([
         /**
         * @description Participating Supplier 의 delete 버튼 누를시 
         */
-        onBudgetExecutionDelRow: function () {
-            var budgetExecutionTable = this.byId("budgetExecutionTable")
+        onMoldRecepitDelRow: function () {
+            var budgetExecutionTable = this.byId("moldRecepitTable")
                 , detailModel = this.getModel("mdItemMaster")
                 , oSelected = budgetExecutionTable.getSelectedIndices();
             ;
@@ -243,14 +198,6 @@ sap.ui.define([
                 MessageBox.error("삭제할 목록을 선택해주세요.");
             }
         } ,
-   
-        onChangePayment: function (oEvent) {
-            var oModel = this.getModel("moldMaster");
-            /*
-            approverData = verModel.getData().Approvers;*/
-            console.log();
-            console.log();
-        },
 
         onPageEditButtonPress: function () {
             this._budgetEditFragment();
@@ -263,18 +210,18 @@ sap.ui.define([
         },
 
         _budgetEditFragment : function(){
-            console.log("_budgetEditFragment");
-            var oPageSection = this.byId("budgetExecutionTableFragment");
+            console.log("MoldRecepitTableEdit.fragment");
+            var oPageSection = this.byId("moldRecepitTableFragment");
             oPageSection.removeAllBlocks();
-            this._loadFragment("BudgetExecutionTableEdit", function (oFragment) {
+            this._loadFragment("MoldRecepitTableEdit", function (oFragment) {
                 oPageSection.addBlock(oFragment);
             }.bind(this));
         },
         _budgetViewFragment : function(){
              console.log("_budgetViewFragment");
-             var oPageSection = this.byId("budgetExecutionTableFragment");
+             var oPageSection = this.byId("moldRecepitTableFragment");
             oPageSection.removeAllBlocks();
-            this._loadFragment("BudgetExecutionTableView", function (oFragment) {
+            this._loadFragment("MoldRecepitTableView", function (oFragment) {
                 oPageSection.addBlock(oFragment);
             }.bind(this));
         },
