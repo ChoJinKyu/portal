@@ -170,7 +170,7 @@ service MdCategoryV4Service {
 								, cid.org_type_code
 								, cid.org_code
 								, cid.spmd_category_code
-								, ifnull(cidl.spmd_category_code_name, cid.spmd_category_code_name) as spmd_category_code_name
+								, ifnull(cidl.spmd_category_code_name, cid.spmd_category_code_name) as spmd_category_code_name : String(50)
 							from cateId.Md_Category_Id as cid
 									left outer join cateIdLng.Md_Category_Id_Lng as cidl on (cid.tenant_id = cidl.tenant_id
 																  and cid.company_code = cidl.company_code
