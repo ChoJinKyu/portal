@@ -784,6 +784,7 @@ sap.ui.define([
                 oModel = this.getModel(),
                 lModel = this.getModel("list"),
                 oView = this.getView(),
+                data ={},
                 //oSelected  = oTable.getSelectedItems(),
                 oSelected = [],
                 delApprData = [],
@@ -808,17 +809,55 @@ sap.ui.define([
                     initialFocus: sap.m.MessageBox.Action.CANCEL,
                     onClose: function (sButton) {
                         if(delApprData.length > 0){
-                            console.log(delApprData);
+                            data = {
+                                inputData : { 
+                                    approvalMaster : delApprData 
+                                } 
+                            }
+                            that.callAjax(data,"deleteApproval");
                         }
                     }
                 });
-
-                //oTable.clearSelection();
 
             } else {
                 MessageBox.error("선택된 행이 없습니다.");
             }
 
+        },
+
+        callAjax : function (data,fn) {  
+           
+            var that = this;
+            //  /dp/md/moldApprovalList/webapp/srv-api/odata/v2/dp.MoldApprovalListService/RefererSearch
+            //  "xx/sampleMgr/webapp/srv-api/odata/v4/xx.SampleMgrV4Service/SaveSampleHeaderMultiProc"
+            var url = "/dp/md/moldApprovalList/webapp/srv-api/odata/v4/dp.MoldApprovalV4Service/"+fn;
+            console.log("data >>>> " , data);
+            console.log("url >>>> " , url);
+            $.ajax({
+                url: url,
+                type: "POST",
+                //datatype: "json",
+                data : JSON.stringify(data),
+                contentType: "application/json",
+                success: function(result){
+                    console.log("result>>>> " , result);
+                    MessageToast.show(that.getModel("I18N").getText("/"+result.messageCode));
+                    if(result.resultCode > -1){
+                        that.onLoadThisPage(result);
+                    }
+                },
+                error: function(e){
+                    
+                }
+            });
+        }, 
+
+        onLoadThisPage : function (param) { 
+            var target=""
+            var that = this;
+            that.getRouter().navTo(target , {
+
+            },true); 
         },
 
 
@@ -982,121 +1021,7 @@ sap.ui.define([
         ///////////////////// List search section End //////////////////////////
 
         ///////////////////// Excel export Start //////////////////////////
-        // exportToExcel: function (oTable) {
-        //     oTable = this.byId("mainTable");
-        //     console.log(this.byId("mainTable"));
-        //     var aColumns = oTable.getColumns();
-        //     console.log(oTable.getModel("list"));
-        //     //var aCells = oTable.getCells();
-        //     var aItems = oTable.getItems();
-        //     var aTemplate = [];
-        //     for (var i = 0; i < aColumns.length; i++) {
-        //         var oColumn = {
-        //             name: aColumns[i].getHeader().getText(),
-        //             template: {
-        //                 content: {
-        //                     path: null
-                            
-        //                 }
-        //             }
-        //         };
-                
-        //         if (aItems.length > 0) {
-        //             oColumn.template.content.path = aItems[0].getBindingContext("list").getPath();
-        //         }
-        //         aTemplate.push(oColumn);
-        //     }
-        //     var oExport = new Export({
-        //         // Type that will be used to generate the content. Own ExportType’s can be created to support other formats
-        //         exportType: new ExportTypeCSV({
-        //             separatorChar: ",",
-        //             charset: "utf-8"
-        //         }),
-        //         // Pass in the model created above
-        //         models: oTable.getModel(),
-        //         // binding information for the rows aggregation
-        //         rows: {
-        //             path: "/ApprovalMasters"
-        //         },
-        //         // column definitions with column name and binding info for the content
-        //         columns: aTemplate
-        //     });
-        //     oExport.saveFile().always(function () {
-        //         this.destroy();
-        //     });
-        // },
-
-        
-        onDataExport : function(oEvent) {
-            console.log(this.getView());
-			var oExport = new Export({
-
-				// Type that will be used to generate the content. Own ExportType's can be created to support other formats
-				exportType : new ExportTypeCSV({
-					separatorChar: ",",
-                    charset: "utf-8"
-				}),
-
-				// Pass in the model created above
-				models : this.getView().getModel(),
-
-				// binding information for the rows aggregation
-				rows : {
-					path : "/Approvals"
-				},
-
-				// column definitions with column name and binding info for the content
-
-				columns : [{
-					name : "Approval Categori",
-					template : {
-						content : "{approval_type_code}"
-					}
-				}, {
-					name : "Company",
-					template : {
-						content : "{company_code}"
-					}
-				}, {
-					name : "Plant",
-					template : {
-						content : "{org_code}"
-					}
-				}, {
-					name : "Approval No",
-					template : {
-						content : "{approval_number}"
-					}
-				}, {
-					name : "Subject",
-					template : {
-						content : "{approval_title}"
-					}
-				}, {
-					name : "Requestor",
-					template : {
-						content : "{requestor_empno}"
-					}
-				}, {
-					name : "Request Date",
-					template : {
-						content : "{request_date}"
-					}
-                }, {
-					name : "Status",
-					template : {
-						content : "{approve_status_code}"
-					}
-				}]
-			});
-
-			//download exported file
-			oExport.saveFile().catch(function(oError) {
-				MessageBox.error("Error when downloading data. Browser might not be supported!\n\n" + oError);
-			}).then(function() {
-				oExport.destroy();
-			});
-        },
+      
 
         onExportPress: function (_oEvent) {
             var sTableId = _oEvent.getSource().getParent().getParent().getId();
@@ -1117,47 +1042,5 @@ sap.ui.define([
             });
         },
         
-
-        onImportChange: function (_oEvent) {
-            var oTable = _oEvent.getSource().getParent().getParent();
-            var oModel = oTable.getModel();
-            var oExcelModel = this.getModel("excelModel");
-            
-            oExcelModel.setData({});
-            ExcelUtil.fnImportExcel({
-                uploader: _oEvent.getSource(),
-                file: _oEvent.getParameter("files") && _oEvent.getParameter("files")[0],
-                model: oExcelModel,
-                success: function () {
-                    var aTableData = oModel.getProperty("/Approvals") || [],
-                        aCols = oTable.getColumns(),
-                        oExcelData = this.model.getData();
-
-                    if (oExcelData) {
-                        var aData = oExcelData[Object.keys(oExcelData)[0]];
-
-                        aData.forEach(function (oRow) {
-                            var aKeys = Object.keys(oRow),
-                                newObj = {};
-                            aCols.forEach(function (oCol, idx) {
-                                debugger;
-                                var sLabel = typeof oCol.getLabel === "function" ? oCol.getLabel().getText() : oCol.getHeader().getText();//As Grid or Responsible Table
-                                var sName = oCol.data("bindName") || "";
-                                var iKeyIdx = aKeys.indexOf(sLabel);
-                                if (iKeyIdx > -1 && sName) {
-                                    var oValue = oRow[aKeys[iKeyIdx]];
-                                    if (oValue) {
-                                        oValue = oValue.toString();
-                                    }
-                                    newObj[sName] = oValue !== "N/A" ? oValue : "";
-                                }
-                            });
-                            aTableData.push(newObj);
-                        });
-                        oModel.setProperty("/Approvals", aTableData);
-                    }
-                }
-            });
-        },
     });
 });
