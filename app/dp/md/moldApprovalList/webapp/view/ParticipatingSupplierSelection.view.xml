@@ -128,10 +128,7 @@
                             </VBox>
                             <VBox class="sapUiSmallMargin">
                                 <Label text="{I18N>/BUSINESS_DIVISION}" />
-                                <ObjectStatus
-                                    text="[{plant>/plant_code}] {plant>/plant_name}" 
-                                    state="Error"
-                                    />
+                                <ObjectStatus text="[{plant>/plant_code}] {plant>/org_name}" state="Error"/>
                             </VBox>
                         </HBox>
 					</uxap:ObjectPageSubSection>

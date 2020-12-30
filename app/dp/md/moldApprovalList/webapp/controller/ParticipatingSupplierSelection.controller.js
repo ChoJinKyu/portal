@@ -208,9 +208,9 @@ sap.ui.define([
             console.log(" this.getModel " , this.getModel('appMaster'));
 
             var oArgs = {
-                company_code: this.getModel('appMaster').oData.company_code,
-                org_code: this.getModel('appMaster').oData.org_code,
-               // mold_progress_status_code : 'DEV_RCV' ,
+               company_code: this.company_code ,
+                org_code: this.plant_code,
+                mold_progress_status_code : 'DEV_RCV' ,
                 mold_id_arr: mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
             }
 
