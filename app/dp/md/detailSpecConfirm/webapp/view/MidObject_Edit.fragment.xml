@@ -41,7 +41,7 @@
                                 ]
                             }"
                 >
-                <core:Item key="{util>code}" text="{util>code_description}" />
+                <core:Item key="{util>code}" text="{util>code_name}" />
             </Select>
 
 
@@ -65,7 +65,7 @@
                                 ]
                             }"
                 >
-                <core:Item key="{util>code}" text="{util>code_description}" />
+                <core:Item key="{util>code}" text="{util>code_name}" />
             </Select>
             <Label text="Import Company"/>
             <!-- <Input value="{master>/import_company_code}"></Input> -->
@@ -108,7 +108,7 @@
                                 ]
                             }"
                 >
-                <core:Item key="{util>code}" text="[{util>code}] {util>code_description}" />
+                <core:Item key="{util>code}" text="[{util>code}] {util>code_name}" />
             </Select>
             <Label text="Product Group"/>
             <Input value="{master>/product_group_code}"></Input>

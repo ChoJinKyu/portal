@@ -33,7 +33,7 @@
                             editable="false"
                             class="readonlyField"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Runner"/>
                 <Select   width="100%"
@@ -48,7 +48,7 @@
                             editable="false"
                             class="readonlyField"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Return Type"/>
                 <Select   width="100%"
@@ -63,7 +63,7 @@
                             editable="false"
                             class="readonlyField"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Runner Out"/>
                 <Select   width="100%"
@@ -78,7 +78,7 @@
                             editable="false"
                             class="readonlyField"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
 
              <!-- </VBox>            
@@ -102,7 +102,7 @@
                             editable="false"
                             class="readonlyField"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Mold Size"/>
                 <Input value="{spec>/mold_size_2}" editable="false" class="readonlyField"/>
@@ -119,7 +119,7 @@
                             editable="false"
                             class="readonlyField"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Form Out"/>
                 <Select   width="100%"
@@ -134,7 +134,7 @@
                             editable="false"
                             class="readonlyField"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Use Machine"/>
                 <Input value="{spec>/mold_tonnage}" editable="false" class="readonlyField"/>
@@ -158,7 +158,7 @@
                             editable="false"
                             class="readonlyField"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Mold Structure"/>
                 <Select   width="100%"
@@ -173,7 +173,7 @@
                             editable="false"
                             class="readonlyField"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text=""/>
                 <Input value="" editable="false" class="readonlyField"/>
@@ -190,7 +190,7 @@
                             editable="false"
                             class="readonlyField"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
 
                 <Label text="Out Process"/>
@@ -206,7 +206,7 @@
                             editable="false"
                             class="readonlyField"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
              <!-- </VBox> -->
         </form:content>
@@ -265,7 +265,7 @@
                             editable="false"
                             class="readonlyField"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Taper Pin"/>
                 <Select   width="100%"
@@ -280,7 +280,7 @@
                             editable="false"
                             class="readonlyField"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Cycle Time"/>
                 <Input value="{spec>/cycle_time}" editable="false" class="readonlyField"/>
@@ -299,7 +299,7 @@
                             editable="false"
                             class="readonlyField"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Top Circle"/>
                 <Select   width="100%"
@@ -314,7 +314,7 @@
                             editable="false"
                             class="readonlyField"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
 
             <!-- </VBox>            
@@ -332,7 +332,7 @@
                             editable="false"
                             class="readonlyField"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Bottom Circle"/>
                 <Select   width="100%"
@@ -347,7 +347,7 @@
                             editable="false"
                             class="readonlyField"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
             <!-- </VBox> -->
         </form:content>
