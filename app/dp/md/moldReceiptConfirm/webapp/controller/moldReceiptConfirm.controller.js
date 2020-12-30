@@ -528,8 +528,8 @@ sap.ui.define([
                 //status = Element.registry.get(statusSelectedItemId).getText(),
                 receiptFromDate = this.getView().byId("searchCreationDate"+sSurffix).getDateValue(),
                 receiptToDate = this.getView().byId("searchCreationDate"+sSurffix).getSecondDateValue(),
-                itemType = this.getView().byId("searchItemType").getSelectedKey(),
-                productionType = this.getView().byId("searchProductionType").getSelectedKey(),
+                itemType = this.getView().byId("searchItemType").getSelectedKeys(),
+                productionType = this.getView().byId("searchProductionType").getSelectedKeys(),
                 // suppliers = this.getView().byId("searchSupplier").getTokens(),
                 supplier = this.getView().byId("searchSupplier").getValue(),
                 description = this.getView().byId("searchDescription").getValue(),
@@ -583,27 +583,38 @@ sap.ui.define([
             if(status == 'RCV_CNF'){
                 this.byId('moldMstTable').setSelectionMode('None');
                 this.byId('moldMstTableConfirmButton').setEnabled(false);
-                
             }
             
-            if (itemType && itemType.length > 0) {
-                aTableSearchState.push(new Filter("mold_item_type_code", FilterOperator.EQ, itemType));
-            }
-            if (productionType && productionType.length > 0) {
-                aTableSearchState.push(new Filter("mold_production_type_code", FilterOperator.EQ, productionType));
-            }
-            // if (suppliers && suppliers.length > 0) {
+            if(itemType.length > 0){
 
-            //     var _tmpFilter = [];
-            //     suppliers.forEach(function(item, idx, arr){
-            //         _tmpFilter.push(new Filter("supplier_code", FilterOperator.EQ, item.getKey()));
-            //     });
+                var _itemTypeFilters = [];
+                itemType.forEach(function(item){
+                    _itemTypeFilters.push(new Filter("mold_item_type_code", FilterOperator.EQ, item ));
+                });
 
-            //     aTableSearchState.push(new Filter({
-            //      filters: _tmpFilter,
-            //      and: false
-            //  }));
-            // }
+                aTableSearchState.push(
+                    new Filter({
+                        filters: _itemTypeFilters,
+                        and: false
+                    })
+                );
+            }
+
+            if(productionType.length > 0){
+
+                var _productionTypeFilters = [];
+                productionType.forEach(function(item){
+                    _productionTypeFilters.push(new Filter("mold_production_type_code", FilterOperator.EQ, item ));
+                });
+
+                aTableSearchState.push(
+                    new Filter({
+                        filters: _productionTypeFilters,
+                        and: false
+                    })
+                );
+            }
+
             if (supplier && supplier.length > 0) {
                 aTableSearchState.push(new Filter("supplier_code", FilterOperator.Contains, supplier));
             }
