@@ -10,7 +10,7 @@ entity Pd_Part_Category {
   key category_code : String(40)  not null @title: '카테고리 코드' ;	
     parent_category_code : String(40)   @title: '상위 카테고리 코드' ;	
     category_name : String(240)   @title: '카테고리 이름' ;	
-    seq : Decimal default 1  @title: '순번' ;	
+    sequence : Decimal default 1  @title: '순번' ;	
     active_flag : Boolean   @title: '활성여부' ;	
 }	
 extend Pd_Part_Category with util.Managed;
