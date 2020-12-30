@@ -75,6 +75,13 @@
                     "odataVersion": "2.0"
                 }
             },
+            "moldRecepitApprovalService": {
+                "uri": "srv-api/odata/v2/dp.MoldRecepitApprovalService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            },
             "purchaseOrderApprovalService": {
                 "uri": "srv-api/odata/v2/dp.PurchaseOrderApprovalService/",
                 "type": "OData",
@@ -209,6 +216,16 @@
             },
             "budget": {
                 "dataSource": "budgetExecutionApprovalService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false,
+                    "useBatch": true
+                }
+            },
+            "recepit": {
+                "dataSource": "moldRecepitApprovalService",
                 "preload": true,
                 "settings": {
                     "defaultBindingMode": "TwoWay",
