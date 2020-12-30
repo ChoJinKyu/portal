@@ -431,7 +431,7 @@
                     <table:Column width="9em" hAlign="Center">
                         <Label text="{path:'I18N>/COMPLETE_DATE', formatter:'I18NFormatter'}"  required="true"/>
                         <table:template>
-                            <DatePicker value="{list>production_complete_date_today}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"  required="true"/>
+                            <DatePicker value="{list>production_complete_date_plan}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"  required="true"/>
                         </table:template>
                     </table:Column>
 
