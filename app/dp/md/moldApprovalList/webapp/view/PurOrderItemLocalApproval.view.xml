@@ -145,6 +145,7 @@
                             >
                             <table:extension>
                                 <OverflowToolbar>
+                                    <Title text="Total PO Amount ({= ${appDetail>/ApprovalDetails} || 0})" level="H2"/>
                                     <ToolbarSpacer/>
                                     <Button id="btnPoItemAdd"    type="Transparent" text="{I18N>/ROW_ADD}" press=".onPoItemAddRow" >
                                         <customData>
@@ -301,7 +302,7 @@
                         <form:SimpleForm editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                             <form:content>
                                 <VBox>
-                                    <CheckBox id="partialPayment" text="Partial Payment" selected="{moldMaster>/MoldMasters/0/split_pay_flag}" select=".onChangePayment" />
+                                    <CheckBox id="partialPayment" text="Partial Payment" selected="{moldMaster>/MoldMasters/0/split_pay_type_code}" select=".onChangePayment" />
                                     <layoutData>
                                         <layout:GridData span="XL12 L12 M12 S12" />
                                     </layoutData>

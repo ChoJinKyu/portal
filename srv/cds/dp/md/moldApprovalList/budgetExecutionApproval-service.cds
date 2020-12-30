@@ -102,7 +102,7 @@ service BudgetExecutionApprovalService {
                 mst.book_currency_code,
                 mst.budget_exrate_date,
                 mst.budget_exrate,
-                mst.split_pay_flag,
+                mst.split_pay_type_code,
                 mst.prepay_rate,
                 mst.progresspay_rate,
                 mst.rpay_rate,

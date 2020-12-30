@@ -47,7 +47,7 @@ service MoldItemSelectionService {
                 m.book_currency_code,
                 m.budget_exrate_date,
                 m.budget_exrate,
-                m.split_pay_flag,
+                m.split_pay_type_code,
                 m.prepay_rate,
                 m.progresspay_rate,
                 m.rpay_rate,

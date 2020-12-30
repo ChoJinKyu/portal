@@ -101,7 +101,7 @@ service MoldApprovalV4Service {
         book_currency_code: String ;
         budget_exrate_date: String ;
         budget_exrate: String ;
-        split_pay_flag: String ;
+        split_pay_type_code: String ;
         prepay_rate: String ;
         progresspay_rate: String ;
         rpay_rate: String ;

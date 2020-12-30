@@ -63,7 +63,7 @@ SELECT
     ,a.book_currency_code              
     ,a.budget_exrate_date              
     ,a.budget_exrate                   
-    ,a.split_pay_flag                  
+    ,a.split_pay_type_code                  
     ,a.prepay_rate                     
     ,a.progresspay_rate                
     ,a.rpay_rate                       
