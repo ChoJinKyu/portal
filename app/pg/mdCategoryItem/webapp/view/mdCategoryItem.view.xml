@@ -63,8 +63,7 @@
                 selectionChange=".onSeletionChange"
                 noDataText="{I18N>/NCM0001}"
                 items="{
-                    path: 'list>/MdCategoryItem',
-                    sorter: { path: 'spmd_character_sort_seq'}
+                    path: 'list>/MdCategoryItem'
                 }"
 				class="sapFDynamicPageAlignContent"
                 columnResize="onColumnResize"
@@ -96,7 +95,7 @@
 
             <columns> 
                 <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="3em" >
-                    <Text text="S" />
+                    <Text text="" />
                 </Column>
                 <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="false" width="12em" >
                     <Text text="범주코드(임시:확인용)" />
@@ -159,7 +158,11 @@
 				<ColumnListItem type="Navigation" press="onListItemPress">
                     <cells>
                         <HBox align="Center">
-                            <Text text="{list>_row_state_}"></Text>
+                            <ObjectStatus icon="{
+                                path: 'list>_row_state_',
+                                formatter: '.formatter.toModelStateColumnIcon'
+                            }" />
+                            <!-- <Text text="{list>_row_state_}"></Text> -->
                         </HBox>
                         <HBox alignItems="Center">
                             <Text text="{list>spmd_category_code}"></Text>

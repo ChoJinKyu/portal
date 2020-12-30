@@ -3,6 +3,7 @@ sap.ui.define([
 	"ext/lib/util/Multilingual",
 	"ext/lib/util/Validator",
 	"ext/lib/formatter/DateFormatter",
+    "ext/lib/formatter/Formatter",
 	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
 	"ext/lib/model/ManagedListModel",
@@ -19,12 +20,12 @@ sap.ui.define([
 	"sap/ui/core/Item",
 	"./Utils"
 ],
-  function (BaseController, Multilingual, Validator, DateFormatter, History, JSONModel, ManagedListModel, TablePersoController, Sorter, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, Item, Utils) {
+  function (BaseController, Multilingual, Validator, DateFormatter, Formatter, History, JSONModel, ManagedListModel, TablePersoController, Sorter, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, Item, Utils) {
     "use strict";
 
     return BaseController.extend("pg.mdCategoryItem.controller.mdCategoryItem", {
 
-      //formatter: formatter,
+      formatter: Formatter,
        Validator : new Validator(),
 	   dateFormatter: DateFormatter,
 
@@ -83,7 +84,6 @@ sap.ui.define([
         //     mdCategoryItems = oItem.getBindingContext("list").getObject().spmd_character_code;
         // this.oRouter.navTo("detail", {layout: "TwoColumnsMidExpanded", spmd_character_code: mdCategoryItems});
 
-        // debugger;
         // oItem.setNavigated(true);
         // var oParent = this.byId("mainTable");
         // // store index of the item clicked, which can be used later in the columnResize event
@@ -124,7 +124,8 @@ sap.ui.define([
 
             var oTable = this.byId("mainTable");
             this.byId("buttonMainAddRow").setEnabled(true);     
-            this.byId("buttonMainCancelRow").setEnabled(false);  
+            this.byId("buttonMainCancelRow").setEnabled(false); 
+            console.log(this.rowIndex); 
             this._setEditChange(this.rowIndex,"R"); 
         },
       
@@ -188,7 +189,7 @@ sap.ui.define([
         var model = view.getModel(mName);
         // Validation
         if (model.getChanges() <= 0) {
-			MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
+			MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
           return;
         }
         if(this.Validator.validate(this.byId(tId)) !== true){
@@ -196,23 +197,27 @@ sap.ui.define([
             return;
         }
 
-        MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
+        MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
           title: this.getModel("I18N").getText("/SAVE"),
           initialFocus: sap.m.MessageBox.Action.CANCEL,
-          onClose: (function (sButton) {
+          onClose: function (sButton) {
             if (sButton === MessageBox.Action.OK) {
               view.setBusy(true);
               model.submitChanges({
                 groupId: "MdCategoryItem",
-                success: (function (oEvent) {
+                success: function (oEvent) {
                   view.setBusy(false);
-                  MessageToast.show(this.getModel("I18N").getText("/NCM0005"));
-                  this.refresh();
-                //   this.onSearch();
-                }).bind(this)
+                  MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
+                  this.byId("mainTable").getBinding("items").refresh();
+                  this._setEditChange(this.rowIndex,"R");  
+                //   this.refresh();
+                //   setTimeout(this.onSearch(), 3000);
+                  //위로 이동 클릭시 refresh 정상
+                  //아래 이동 클릭시 원복처리됨
+                }.bind(this)
               });
             }
-          }).bind(this)
+          }.bind(this)
         })
     },
 
@@ -238,7 +243,7 @@ sap.ui.define([
             // find the new index of the dragged row depending on the drop position
             var iNewItemIndex = iDroppedItemIndex + (sDropPosition === "After" ? 1 : -1);
             var oNewItem = oDroppedTable.getItems()[iNewItemIndex];
-            debugger;
+            
             if (!oNewItem) {
                 // dropped before the first row or after the last row
                 iNewRank = oRanking[sDropPosition](iDroppedItemRank);
@@ -256,13 +261,15 @@ sap.ui.define([
     },
 
     moveSelectedItem: function(sDirection) {
+        var that = this;       
         var oSelectedProductsTable = this.byId("mainTable");// 
         Utils.getSelectedItemContext(oSelectedProductsTable, function(oSelectedItemContext, iSelectedItemIndex) {
             var oSelectedItem = oSelectedProductsTable.getItems()[iSelectedItemIndex];
             var iSiblingItemIndex = iSelectedItemIndex + (sDirection === "Up" ? -1 : 1);
-            debugger;
-            this._setEditChange(iSelectedItemIndex,"R");  
             
+            console.log(iSelectedItemIndex + " / "+iSiblingItemIndex);
+
+            that._setEditChange(iSelectedItemIndex,"R");  
             var oSiblingItem = oSelectedProductsTable.getItems()[iSiblingItemIndex];
             var oSiblingItemContext = oSiblingItem.getBindingContext("list");
             
@@ -282,13 +289,14 @@ sap.ui.define([
             
             oProductsModel.setProperty("", iSiblingItemRank, oSelectedItemContext);//oSelectedItemContext
             oProductsModel.setProperty("", iSelectedItemRank, oSiblingItemContext);//oSiblingItemContext
-            oProductsModel.setProperty(iSeqIdx,oSeq);//iSeq
-            oProductsModel.setProperty(oSeqIdx,iSeq);//oSeq
+            oProductsModel.setProperty(iSeqIdx,iSeq);//iSeq
+            oProductsModel.setProperty(oSeqIdx,oSeq);//oSeq
 
             // after move select the sibling
             oSelectedProductsTable.getItems()[iSiblingItemIndex].setSelected(true);
-            this._setEditChange(iSiblingItemIndex,"E");  
-        });
+            that.rowIndex = iSiblingItemIndex;
+            that._setEditChange(iSiblingItemIndex,"E");  
+        }); //}.bind(this)); 도 가능
     },
 
     moveUp: function() {
@@ -300,6 +308,9 @@ sap.ui.define([
     },
 
 
+    /**
+     * @public
+     */
     _setEditChange: function(index,mode){
         var oTable = this.byId("mainTable");
         var flag = true;
