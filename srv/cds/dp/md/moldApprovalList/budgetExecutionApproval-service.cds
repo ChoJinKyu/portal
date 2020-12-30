@@ -13,12 +13,13 @@ namespace dp;
 @path : '/dp.BudgetExecutionApprovalService'
 service BudgetExecutionApprovalService {
 
+    /*
     entity ApprovalMasters as projection on approvalMst.Approval_Mst;
     entity ApprovalDetails as projection on approvalDtl.Md_Approval_Dtl;
     entity Approver        as projection on approver.Approver;
     entity MoldMasters     as projection on moldMst.Md_Mst;
     entity Referers        as projection on referer.Referer;
-
+    */
     view ItemBudgetExecution as
         select
             key dtl.approval_number,

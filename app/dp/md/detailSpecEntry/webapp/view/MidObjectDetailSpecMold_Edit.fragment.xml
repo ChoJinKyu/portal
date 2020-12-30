@@ -40,7 +40,7 @@
                             editable="true"
                             required="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Runner"/>
                 <Select   width="100%"
@@ -54,7 +54,7 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Return Type"/>
                 <Select   width="100%"
@@ -68,7 +68,7 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Runner Out"/>
                 <Select   width="100%"
@@ -82,7 +82,7 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
 
              <!-- </VBox>            
@@ -105,7 +105,7 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
 
                 <Label text="Mold Size" required="true"/>
@@ -122,7 +122,7 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Form Out"/>
                 <Select   width="100%"
@@ -136,7 +136,7 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Use Machine"/>
                 <Input value="{spec>/mold_tonnage}"/>
@@ -159,7 +159,7 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Mold Structure" required="true"/>
                 <Select   width="100%"
@@ -174,7 +174,7 @@
                             editable="true"
                             required="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text=""/>
                 <Text text=""/>
@@ -190,7 +190,7 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Out Process"/>
                 <Select   width="100%"
@@ -204,7 +204,7 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
              <!-- </VBox> -->
         </form:content>
@@ -262,7 +262,7 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Taper Pin"/>
                 <Select   width="100%"
@@ -276,7 +276,7 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Cycle Time"/>
                 <Input value="{spec>/cycle_time}"/>
@@ -294,7 +294,7 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Top Circle"/>
                 <Select   width="100%"
@@ -308,7 +308,7 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
 
             <!-- </VBox>            
@@ -325,7 +325,7 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Bottom Circle"/>
                 <Select   width="100%"
@@ -339,7 +339,7 @@
                                     }"
                             editable="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
             <!-- </VBox> -->
         </form:content>

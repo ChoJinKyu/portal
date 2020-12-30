@@ -49,7 +49,7 @@
                                         editable="false"
                                         class="readonlyField"
                             >
-                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                <core:Item key="{util>code}" text="{util>code_name}" />
                             </Select>
                             
                             <DatePicker value="{schedule>drawing_agreement_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
@@ -106,7 +106,7 @@
                                         editable="false"
                                         class="readonlyField"
                             >
-                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                <core:Item key="{util>code}" text="{util>code_name}" />
                             </Select>
                             <DatePicker value="{schedule/first_production_update_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
                             <DatePicker value="{schedule/second_production_update_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>

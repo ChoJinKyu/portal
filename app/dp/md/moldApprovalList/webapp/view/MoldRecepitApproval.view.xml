@@ -27,12 +27,12 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="{i18n>appTitle}" wrapping="true" />
+					<Title text="Mold Recepit Approval" wrapping="true" />
 				</uxap:expandedHeading>
 
 				<uxap:snappedHeading>
                     <FlexBox fitContainer="true" alignItems="Center">
-						<Title text="Budget Execution Approval" wrapping="true"/>
+						<Title text="Mold Recepit Approval" wrapping="true"/>
 					</FlexBox>
 				</uxap:snappedHeading>
 
@@ -85,12 +85,12 @@
                         <sc:MicroProcessFlow>
                             <sc:content>
                                 <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem"  />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem"  />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem"  />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
+                                <sc:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task"/>
                                 <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
                                 <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
                             </sc:content>
@@ -120,196 +120,10 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-            <uxap:ObjectPageSection titleUppercase="false" title="Item for Budget Execution">
+            <uxap:ObjectPageSection titleUppercase="false" title="Receipt Item">
 				<uxap:subSections>
-                    <uxap:ObjectPageSubSection> 
-                        <form:SimpleForm editable="true" 
-                         layout="ResponsiveGridLayout" 
-                         labelSpanXL="2" 
-                         labelSpanL="2" 
-                         labelSpanM="2" 
-                         labelSpanS="2" 
-                         adjustLabelSpan="false" 
-                         emptySpanXL="0" 
-                         emptySpanL="0" 
-                         emptySpanM="0" 
-                         emptySpanS="0" 
-                         columnsXL="2" 
-                         columnsL="1" 
-                         columnsM="1" 
-                         singleContainerFullSize="true">
-			        <form:content>
-                    <VBox>
-					<!-- Budget Type -->
-					<Label text="Budget Type" required="true"/>
-					<SegmentedButton visible="{contModel>/editMode}"
-                                     id="segInspection" 
-                                     selectedKey="{mdCommon>/investment_ecst_type_code}" 
-                                     width="100%" 
-                                     items="{ path : 'util>/Code',
-                                              filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_BUDGET_TYPE'}
-                                              ]
-                                            }">
-						<items>
-							<SegmentedButtonItem width="6em" text="{util>code_name}" key="{util>code}"/>
-						</items>
-					</SegmentedButton>
-                     <!-- view Mode -->
-                    <Text text="{mdCommon>/investment_ecst_type_code_nm}" visible="{contModel>/viewMode}"/>
-					<layoutData>
-						<layout:GridData span="XL6 L6 M12 S12"/>
-					</layoutData>
-				</VBox>
-				<VBox>
-					<Label text="Acquisition Department" required="true"/>
-                    <!-- edit Mode -->
-					<Input value="" showValueHelp="true" visible="{contModel>/editMode}"/>
-                    <!-- view Mode -->
-                    <Text text="" visible="{contModel>/viewMode}"/>
-					<layoutData>
-						<layout:GridData span="XL6 L6 M12 S12"/>
-					</layoutData>
-				</VBox>
-				<VBox>
-					<Label text="Account Department" required="true"/>
-                    <!-- edit Mode -->
-					<ComboBox visible="{contModel>/editMode}"
-                              width="100%" 
-                              id="acquisitionDepartment" 
-                              selectedKey="{mdCommon>/accounting_department_code}" 
-                              items="{}">
-						<core:Item key="{util>code}" text="{util>code_description}"/>
-					</ComboBox>
-                    <!-- view Mode -->
-                    <Text text="{mdCommon>/accounting_department_code}" visible="{contModel>/viewMode}"/>
-
-					<layoutData>
-						<layout:GridData span="XL6 L6 M12 S12"/>
-					</layoutData>
-				</VBox>
-				<VBox>
-					<Label text="Import Company"/>
-                    <!-- edit Mode -->
-					<ComboBox visible="{contModel>/editMode}"
-                              width="100%" 
-                              id="importCompany" 
-                              selectionChange=".onBCompanyChange"
-                              selectedKey="{mdCommon>/import_company_code}" 
-                              enabled="{=${mdCommon>/investment_ecst_type_code}!=='S'?false:true}"
-                              items="{
-                                   path: 'org>/Company',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                        ],
-                                        sorter: { path: 'company_code'}
-                              }">
-						<core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
-					</ComboBox>
-                    <!-- view Mode -->
-                    <Text text="[{mdCommon>/import_company_code}] {mdCommon>/import_company_code_nm}" visible="{contModel>/viewMode}"/>
-
-					<layoutData>
-						<layout:GridData span="XL6 L6 M12 S12"/>
-					</layoutData>
-				</VBox>
-				<VBox>
-					<!-- projectcode  {I18N>/PROJECT_CODE}-->
-					<Label text="Project Code" required="true"/> 
-                    <!-- edit Mode -->
-					<ComboBox visible="{contModel>/editMode}" 
-                              width="100%" 
-                              id="projectCode" 
-                              selectedKey="{mdCommon>/project_code}" 
-                              items="{}">
-						<core:Item key="{util>code}" text="{util>code_description}"/>
-					</ComboBox>
-                    <!-- view Mode -->
-                    <Text text="{mdCommon>/project_code}" visible="{contModel>/viewMode}"/>
-
-					<layoutData>
-						<layout:GridData span="XL6 L6 M12 S12"/>
-					</layoutData>
-				</VBox>
-				<VBox>
-					<Label text="Import Plant"/>
-					<ComboBox width="100%" 
-                              visible="{contModel>/editMode}" 
-                              id="importPlant" 
-                              selectedKey="{mdCommon>/import_company_org_code}" 
-                              enabled="{=${mdCommon>/investment_ecst_type_code}!=='S'?false:true}"
-                              items="{
-                                  path: 'importPlant>/Plant'
-                              }">
-						<core:Item key="{importPlant>plant_code}" text="[{importPlant>plant_code}]{importPlant>plant_name}" />
-					</ComboBox>
-                     <!-- view Mode -->
-                    <Text text="[{mdCommon>/import_company_org_code}] {mdCommon>/import_company_org_code_nm}" visible="{contModel>/viewMode}"/> 
-					<layoutData>
-						<layout:GridData span="XL6 L6 M12 S12"/>
-					</layoutData>
-				</VBox>
-				<VBox>
-					<Label text="{I18N>/ACCOUNT}" required="true"/>
-					<ComboBox visible="{contModel>/editMode}"  
-                              width="100%" 
-                              id="account" 
-                              selectedKey="{mdCommon>/account_code}" 
-                              items="{ path : 'util>/Code',
-                                        filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ACCOUNT_NEW'}
-                                        ]
-                                    }">
-						<core:Item key="{util>code}" text="{util>code_name}"/>
-					</ComboBox>
-                    <!-- view Mode -->
-                    <Text text="{mdCommon>/account_code_nm}" visible="{contModel>/viewMode}"/> 
-					<layoutData>
-						<layout:GridData span="XL6 L6 M12 S12"/>
-					</layoutData>
-				</VBox>
-				<VBox>
-					<Label text="{I18N>/CUSTOMER}"/>
-					<Input value="" showValueHelp="true" visible="{contModel>/editMode}" /> 
-                    <Text text="" visible="{contModel>/viewMode}"/>
-					<layoutData>
-						<layout:GridData span="XL6 L6 M12 S12"/>
-					</layoutData>
-				</VBox>
-				<VBox>
-					<Label text="Balanced Budget"/>
-					<HBox alignItems="End" justifyContent="End">
-						<ObjectStatus text="{mdCommon>/provisional_budget_amount}"/>
-						<ObjectStatus text="  KRW" state="Error"/>
-					</HBox>
-					<layoutData>
-						<layout:GridData span="XL6 L6 M12 S12"/>
-					</layoutData>
-				</VBox>
-				<VBox>
-					<Label text="Customer PO No"/>
-					<Input value=""  visible="{contModel>/editMode}" />
-                    <Text text="" visible="{contModel>/viewMode}"/>
-					<layoutData>
-						<layout:GridData span="XL6 L6 M12 S12"/>
-					</layoutData>
-				</VBox>
-				<HBox>
-					<VBox class="sapUiSmallMargin">
-						<Label text="{I18N>/AFFILIATE}"/>
-						<ObjectStatus text="[{company>/company_code}] {company>/company_name}" state="Error"/>
-					</VBox>
-					<VBox class="sapUiSmallMargin">
-						<Label text="{I18N>/BUSINESS_DIVISION}"/>
-						<ObjectStatus text="[{plant>/plant_code}] {plant>/plant_name}" state="Error"/>
-					</VBox>
-				</HBox>
-                </form:content>
-		        </form:SimpleForm>
-					</uxap:ObjectPageSubSection>
-                    <uxap:ObjectPageSubSection id="budgetExecutionTableFragment">
+                   
+                    <uxap:ObjectPageSubSection id="moldRecepitTableFragment">
                   
                     </uxap:ObjectPageSubSection>
                     
@@ -335,8 +149,8 @@
 			<OverflowToolbar>
 				<ToolbarSpacer />
 				<Button type="Transparent" text="Edit"      press=".onPageEditButtonPress" visible="{contModel>/viewMode}" />
-				<Button type="Transparent" text="CancelEdit"    press=".onPageCancelButtonPress" visible="{contModel>/editMode}" />
 				<Button type="Transparent" text="Draft"     press=".onPageDraftButtonPress"   visible="{contModel>/editMode}"/>
+				<Button type="Transparent" text="Request Cancel"    press=".onPageRequestCancelButtonPress"  />
 				<Button type="Transparent" text="Preview"   press=".onPagePreviewButtonPress"  visible="{contModel>/editMode}" />
 				<Button type="Emphasized"  text="Request"   press=".onPageRequestButtonPress"/>
 			</OverflowToolbar>

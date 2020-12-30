@@ -1,6 +1,5 @@
 VIEW DP_GS_SOURCING_POOL_CATEOGORY_VIEW AS
 SELECT cat.tenant_id,
-	cat.tenant_id,
 	cat.sourcing_supplier_nickname,
 	cat.company_code,
 	cat.org_type_code,

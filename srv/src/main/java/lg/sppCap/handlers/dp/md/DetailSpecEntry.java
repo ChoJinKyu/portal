@@ -76,7 +76,7 @@ public class DetailSpecEntry implements EventHandler {
             v_result.setReceiptConfirmedDate(strToday);
 
             v_result.setInspectionDatePlan((String)row.get("inspection_date_plan"));
-            v_result.setProductionCompleteDateToday((String)row.get("production_complete_date_today"));
+            v_result.setProductionCompleteDatePlan((String)row.get("production_complete_date_plan"));
             v_result.setProductionSupplierCode((String)row.get("production_supplier_code"));
 
             //실제 master table update 부분
@@ -87,7 +87,7 @@ public class DetailSpecEntry implements EventHandler {
             master.setReceiptConfirmedDate(strToday);
 
             master.setInspectionDate((String)row.get("inspection_date_plan"));
-            master.setProductionCompleteDate((String)row.get("production_complete_date_today"));
+            master.setProductionCompleteDate((String)row.get("production_complete_date_plan"));
             master.setProductionSupplierCode((String)row.get("production_supplier_code"));
 
             CqnUpdate masterUpdate = Update.entity(MoldMasters_.CDS_NAME).data(master);

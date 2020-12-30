@@ -33,7 +33,7 @@
                             editable="true"
                             required="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
              <!-- </VBox>            
             <VBox > -->
@@ -52,7 +52,7 @@
                             editable="true"
                             required="true"
                 >
-                    <core:Item key="{util>code}" text="{util>code_description}" />
+                    <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
                 <Label text="Mold Weight"/>
                 <Input value="{spec>/mold_weight}"/>
