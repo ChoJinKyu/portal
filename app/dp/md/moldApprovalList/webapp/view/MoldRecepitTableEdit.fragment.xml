@@ -1,5 +1,5 @@
 <!-- 
-   description : Mold Recepit Approval (금형 입고품의) 테이블 Edit 화면  
+   description : 집행품의 Edit 화면  
 -->
 <core:FragmentDefinition
 	xmlns="sap.m" 

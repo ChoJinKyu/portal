@@ -273,6 +273,13 @@
                     ]
                 },
                 {
+                    "pattern": "moldRecepitApproval/{company_code}/{plant_code}/{approval_number}",
+                    "name": "moldRecepitApproval",
+                    "target": [
+                        "moldRecepitApproval"
+                    ]
+                },
+                {
                     "pattern": "participatingSupplierSelection/{company_code}/{plant_code}/{approval_number}",
                     "name": "participatingSupplierSelection",
                     "target": [
@@ -319,6 +326,12 @@
                     "viewId": "budgetExecutionApproval",
                     "viewLevel": 2,
                     "title": "{i18n>budgetExecutionApprovalTitle}"
+                },
+                "moldRecepitApproval": {
+                    "viewName": "MoldRecepitApproval",
+                    "viewId": "moldRecepitApproval",
+                    "viewLevel": 2,
+                    "title": "{i18n>moldRecepitApprovalTitle}"
                 },
                 "participatingSupplierSelection": {
                     "viewName": "ParticipatingSupplierSelection",
