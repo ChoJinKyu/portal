@@ -68,7 +68,7 @@
 					<Label text="Status :"/>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
-                        text="{= ${appMaster>/approval_number} !== null ? 'Update' : 'New' }"
+                        text="{= ${appMaster>/approval_number} === undefined ?'New':''}{appMaster>/approve_status_code_nm}"
                         state="Error" />
 				</layout:VerticalLayout>
 
@@ -145,7 +145,8 @@
                             >
                             <table:extension>
                                 <OverflowToolbar>
-                                    <Title text="Total PO Amount ({= ${purOrderItem>/PurchaseOrderItems}.length || 0})" level="H2"/>
+                                    <Title text="Total PO Amount : {path: 'payment>/purchasing_amount', formatter: '.numberFormatter.toNumberString'} [{payment>/currency_code}]" level="H2"/>
+                                    
                                     <ToolbarSpacer/>
                                     <Button id="btnPoItemAdd"    type="Transparent" text="{I18N>/ROW_ADD}" press=".onPoItemAddRow" >
                                         <customData>
@@ -295,19 +296,19 @@
                                         <Text id="split_pay_type_code" text="{purOrderItem>split_pay_type_code}" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column width="12em" hAlign="Center">
+                                <table:Column width="12em" hAlign="Center" visible="false">
                                     <Label text="Advanced"/>
                                     <table:template>
                                         <Text id="prepay_rate" text="{purOrderItem>prepay_rate}" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column width="12em" hAlign="Center">
+                                <table:Column width="12em" hAlign="Center" visible="false">
                                     <Label text="Part"/>
                                     <table:template>
                                         <Text id="progresspay_rate" text="{purOrderItem>progresspay_rate}" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column width="12em" hAlign="Center">
+                                <table:Column width="12em" hAlign="Center" visible="false">
                                     <Label text="Residual"/>
                                     <table:template>
                                         <Text id="rpay_rate" text="{purOrderItem>rpay_rate}" />
@@ -320,16 +321,16 @@
                         <form:SimpleForm editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                             <form:content>
                                 <VBox>
-                                    <CheckBox id="partialPayment" text="Partial Payment" selected="{payment/split_pay_type_code}" select=".onChangePayment" />
+                                    <CheckBox id="partialPayment" text="Partial Payment" selected="{= ${payment>/split_pay_type_code} === undefined ? false : true }" select=".onChangePayment" />
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M6 S12" />
                                     </layoutData>
                                 </VBox>
                                 <VBox>
-                                    <SegmentedButton id="splitPayTypeCode" selectedKey="{payment/split_pay_type_code}" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
+                                    <SegmentedButton id="splitPayTypeCode" selectedKey="{payment>/split_pay_type_code}" class="sapUiSmallMarginBottom" width="100%" selectionChange="onChangePayment" >
                                         <items>
-                                            <SegmentedButtonItem text="Rate (%)" key="DEV_RCV" width="6em" />
-                                            <SegmentedButtonItem text="Amount" key="DEV_REQ" width="6em" />
+                                            <SegmentedButtonItem text="Rate (%)" key="R" width="6em" />
+                                            <SegmentedButtonItem text="Amount" key="A" width="6em" />
                                         </items>
                                     </SegmentedButton>
                                     <layoutData>
@@ -338,21 +339,21 @@
                                 </VBox>
                                 <VBox>
                                     <Label text="Advanced"/>
-                                    <Input id="advanced" value="{payment/prepay_rate}" textAlign="End" liveChange=".onChangePayment" />
+                                    <Input id="advanced" value="{payment>/prepay_rate}" textAlign="End" change=".onChangePayment" />
                                     <layoutData>
                                         <layout:GridData span="XL2 L3 M6 S12" />
                                     </layoutData>
                                 </VBox>
                                 <VBox>
                                     <Label text="Part"/>
-                                    <Input id="part" value="{payment/progresspay_rate}" textAlign="End" liveChange=".onChangePayment" />
+                                    <Input id="part" value="{payment>/progresspay_rate}" textAlign="End" change=".onChangePayment" />
                                     <layoutData>
                                         <layout:GridData span="XL2 L3 M6 S12" />
                                     </layoutData>
                                 </VBox>
                                 <VBox>
                                     <Label text="Residual"/>
-                                    <Input id="residual" value="{payment/rpay_rate}" textAlign="End" liveChange=".onChangePayment" />
+                                    <Input id="residual" value="{payment>/rpay_rate}" textAlign="End" change=".onChangePayment" />
                                     <layoutData>
                                         <layout:GridData span="XL2 L3 M6 S12" />
                                     </layoutData>

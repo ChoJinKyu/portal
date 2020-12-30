@@ -263,7 +263,7 @@ sap.ui.define([
             if(oRecord.approval_type_code == "B"){
                 approvalTarget = "budgetExecutionApproval"
             }if(oRecord.approval_type_code == "V"){
-                approvalTarget = "purOrderItemLocalApproval"
+                approvalTarget = "purchaseOrderLocalApproval"
             }if(oRecord.approval_type_code == "E"){
                 approvalTarget = "participatingSupplierSelection"
             }
@@ -709,7 +709,7 @@ sap.ui.define([
             }else if(id.indexOf("supplierSelection") > -1){
                 approvalTarget = "participatingSupplierSelection"
             }else if(id.indexOf("localOrder") > -1){
-               approvalTarget = "purOrderItemLocalApproval"
+               approvalTarget = "purchaseOrderLocalApproval"
             }else if(id.indexOf("receipt") > -1){
                 appTypeCode ="I"
             }else if(id.indexOf("export") > -1){
