@@ -53,7 +53,7 @@ sap.ui.define([
 			oMultilingual.attachEvent("ready", function(oEvent){
 				var oi18nModel = oEvent.getParameter("model");
 				this.addHistoryEntry({
-					title: oi18nModel.getText("/MESSAGE_MANAGEMENT"),
+					title: oi18nModel.getText("/MIPRICE_TITLE"),
 					icon: "sap-icon://table-view",
 					intent: "#Template-display"
                 }, true);
@@ -73,6 +73,7 @@ sap.ui.define([
         },
         
         onRenderedFirst : function () {
+            this.isFirst = true;
             this.byId("pageSearchButton").firePress();
             // this.onPageSearchButtonPress();
         },
@@ -126,12 +127,12 @@ sap.ui.define([
 		 */
 		onPageSearchButtonPress : function (oEvent) {
 			var forceSearch = function(){
-				var aTableSearchState = this._getSearchStates();
+                var aTableSearchState = this._getSearchStates();
 				this._applySearch(aTableSearchState);
 			}.bind(this);
 			
 			if(this.getModel("list").isChanged() === true){
-				MessageBox.confirm(this.getModel("I18N").getText("/NCM0003"), {
+				MessageBox.confirm(this.getModel("I18N").getText("/NCM00005"), {
 					title : this.getModel("I18N").getText("/SEARCH"),
 					initialFocus : sap.m.MessageBox.Action.CANCEL,
 					onClose : function(sButton) {
@@ -170,20 +171,22 @@ sap.ui.define([
 		},
 
 		onMainTableDeleteButtonPress: function(){
-			var oTable = this.byId("mainTable"),
-                oModel = this.getModel("list"),
-                aItems = oTable.getSelectedItems(),
-                aIndices = [];
+            //--- m Table 일 경우,
+			// var oTable = this.byId("mainTable"),
+            //     oModel = this.getModel("list"),
+            //     aItems = oTable.getSelectedItems(),
+            //     aIndices = [];
 			
-			aItems.forEach(function(oItem){
-				aIndices.push(oModel.getProperty("/MIMaterialPriceManagementView").indexOf(oItem.getBindingContext("list").getObject()));
-			});
-			aIndices = aIndices.sort(function(a, b){return b-a;});
-			aIndices.forEach(function(nIndex){
-				//oModel.removeRecord(nIndex);
-				oModel.markRemoved(nIndex);
-			});
-            oTable.removeSelections(true);
+			// aItems.forEach(function(oItem){
+			// 	aIndices.push(oModel.getProperty("/MIMaterialPriceManagementView").indexOf(oItem.getBindingContext("list").getObject()));
+			// });
+			// aIndices = aIndices.sort(function(a, b){return b-a;});
+			// aIndices.forEach(function(nIndex){
+			// 	//oModel.removeRecord(nIndex);
+			// 	oModel.markRemoved(nIndex);
+			// });
+            // oTable.removeSelections(true);
+            // -----------------//
             // this.validator.clearValueState(this.byId("mainTable"));
 
             // var [tId, mName] = arguments;
@@ -192,6 +195,12 @@ sap.ui.define([
             // table.getSelectedIndices().reverse().forEach(function (idx) {
             //     model.markRemoved(idx);
             // });
+
+            var table = this.byId("mainTable"),
+                model = this.getModel("list");
+            table.getSelectedIndices().reverse().forEach(function (idx) {
+                model.markRemoved(idx);
+            });
         },
        
         onMainTableSaveButtonPress: function(){
@@ -210,7 +219,7 @@ sap.ui.define([
             
         //    if(this.validator.validate(this.byId("mainTable")) !== true) return;
 
-			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
+			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
@@ -261,6 +270,7 @@ sap.ui.define([
                                         // that.onPageSearchButtonPress();
                                         // that.onBeforeRebindTable();
                                         // oModel.refresh(true);
+                                        MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
                                         that.byId("pageSearchButton").firePress();
                                     },
                                     error: function (aa, bb){
@@ -290,6 +300,7 @@ sap.ui.define([
                                         // that.onPageSearchButtonPress();
                                         // that.onBeforeRebindTable();
                                         // oModel.refresh(true);
+                                        MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
                                         that.byId("pageSearchButton").firePress();
                                     },
                                     error: function (aa, bb){
@@ -297,6 +308,62 @@ sap.ui.define([
                                         
                                     }
                                 });
+                            }else if( oRow["_row_state_"] == "U" ){
+
+                                delete oRow["_row_state_"];
+
+                                var oItem = {
+                                    "amount":  parseFloat(oRow["amount"] ),
+                                    "currency_unit": oRow["currency_unit"],
+                                    "delivery_mm": oRow["delivery_mm"],
+                                    "exchange": oRow["exchange"],
+                                    "exchange_unit": oRow["exchange_unit"],
+                                    "mi_date": new Date(oRow["mi_date"]),
+                                    "mi_material_code": oRow["mi_material_code"],
+                                    "quantity_unit": oRow["quantity_unit"],
+                                    "sourcing_group_code": oRow["sourcing_group_code"],
+                                    "termsdelv": oRow["termsdelv"],
+                                    
+                                    "use_flag": true,
+                                    "tenant_id": "L2100",
+                                    "local_create_dtm": new Date(),
+                                    "local_update_dtm": new Date(),
+                                    "create_user_id": "Admin",
+                                    "update_user_id": "Admin",
+                                    "system_create_dtm": new Date(),
+                                    "system_update_dtm": new Date()
+
+                                };
+
+                                // var path = oView.getModel().createKey("/MIMaterialPriceManagement", {
+                                //     tenant_id:'L2100',
+                                //     mi_material_code:'A001-01-01',
+                                //     exchange:'ICIS',
+                                //     currency_unit:'USD',
+                                //     quantity_unit:'TON',
+                                //     termsdelv:'CFR%20KR',
+                                //     mi_date:
+                                // });
+                                
+                                // oView.getModel().createEntry("/MIMaterialPriceManagement", b);
+                                oView.getModel().update("/MIMaterialPriceManagement", oItem , {
+                                    groupId: "updateRow",
+                                    method: "PUT",
+                                    success: function (oData) {
+                                        // oItem.__entity = sPath;
+                                        // that.onPageSearchButtonPress();
+                                        // that.onBeforeRebindTable();
+                                        // oModel.refresh(true);
+                                        MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
+                                        that.byId("pageSearchButton").firePress();
+                                    },
+                                    error: function (aa, bb){
+
+                                        
+                                    }
+                                });
+                                
+
                             }
                             
                         });
@@ -372,21 +439,55 @@ sap.ui.define([
             //     keyword = this.getView().byId("searchKeyword"+sSurffix).getValue();
 				
 			var aTableSearchState = [];
-			// if (chain && chain.length > 0) {
-			// 	aTableSearchState.push(new Filter("chain_code", FilterOperator.EQ, chain));
-			// }
-			// if (language && language.length > 0) {
-			// 	aTableSearchState.push(new Filter("language_code", FilterOperator.EQ, language));
-			// }
-			// if (keyword && keyword.length > 0) {
-			// 	aTableSearchState.push(new Filter({
-			// 		filters: [
-			// 			new Filter("tolower(message_code)", FilterOperator.Contains, "'" + keyword.toLowerCase().replace("'","''") + "'"),
-			// 			new Filter("tolower(message_contents)", FilterOperator.Contains, "'" + keyword.toLowerCase().replace("'","''") + "'")
-			// 		],
-			// 		and: false
-			// 	}));
-			// }
+            if( this.isFirst ) {
+                // 최초 실행시 빈 모델 바인딩 시키기 위함.
+                var oMi_material_codeFilter = new Filter("mi_material_code", FilterOperator.EQ, "ZASDFAWEGJWAEOFJAWEJWEAASDLKFJAS");
+                aTableSearchState.push(oMi_material_codeFilter);
+                this.isFirst = false;
+            }else {
+
+                var oSmtFilter = this.getView().byId("smartFilterBar");             //smart filter
+                
+                //combobox value
+                // var oMi_tenant_id = oSmtFilter.getControlByKey("tenant_id").getSelectedKey();    
+                var oMi_material_code = oSmtFilter.getControlByKey("mi_material_code").getSelectedKeys();
+                var oMi_material_name = oSmtFilter.getControlByKey("mi_material_name").getValue();            
+                var oCategory_code = oSmtFilter.getControlByKey("category_code").getSelectedKey();    
+                var oExchange = oSmtFilter.getControlByKey("exchange").getValue();    
+                var oMi_date = oSmtFilter.getControlByKey("mi_date").getValue();    
+                
+                if (oMi_material_code.length > 0) {
+                    for( var i = 0; i < oMi_material_code.length ; i ++ ) {
+                        var oMi_material_codeFilter = new Filter("mi_material_code", FilterOperator.EQ, oMi_material_code[i]);
+                        aTableSearchState.push(oMi_material_codeFilter);
+                    }
+                }
+    
+                if (oMi_material_name.length > 0) {
+                    var oMi_material_nameFilter = new Filter("mi_material_name", FilterOperator.Contains, oMi_material_name);
+                    aTableSearchState.push(oMi_material_nameFilter);
+                }
+    
+                if (oCategory_code.length > 0) {
+                    var oCategory_codeFilter = new Filter("category_code", FilterOperator.EQ, oCategory_code);
+                    aTableSearchState.push(oCategory_codeFilter);
+                }
+                
+                if (oExchange.length > 0) {
+                    var oExchangeFilter = new Filter("exchange", FilterOperator.Contains, oExchange);
+                    aTableSearchState.push(oExchangeFilter);
+                }  
+                
+                if (oMi_date.length > 0 ) {
+                    var oDateFormat = sap.ui.core.format.DateFormat.getInstance({
+                        pattern: "yyyy-MM-ddTHH:mm:ss"
+                    });
+                    var oDate = oDateFormat.format(oDateFormat.parse(oMi_date));
+    
+                    var oMi_dateFilter = new Filter("mi_date", FilterOperator.EQ, new Date(oDate));
+                    aTableSearchState.push(oMi_dateFilter);
+                }
+            }
 			return aTableSearchState;
 		},
 		
@@ -399,15 +500,9 @@ sap.ui.define([
 				hasGrouping: true
 			}).activate();
         },
-        /**
-         * Smart Table Filter Event onBeforeRebindTable
-         * @param {sap.ui.base.Event} oEvent 
-         */
-		onBeforeRebindTable: function (oEvent) {
-		
-            console.group("onBeforeRebindTable");
-
-			var mBindingParams = oEvent.getParameter("bindingParams");
+        onSearch: function( oEvent ) {
+            console.log( "onSearch ");
+            var mBindingParams = [];
 			var oSmtFilter = this.getView().byId("smartFilterBar");             //smart filter
 			
             //combobox value
@@ -417,36 +512,91 @@ sap.ui.define([
             var oCategory_code = oSmtFilter.getControlByKey("category_code").getSelectedKey();    
             var oExchange = oSmtFilter.getControlByKey("exchange").getValue();    
             var oMi_date = oSmtFilter.getControlByKey("mi_date").getValue();    
-
-			
-			// if (oMi_tenant_id.length > 0) {
-			// 	var oMi_tenant_idFilter = new Filter("tenant_id", FilterOperator.EQ, oMi_tenant_id);
-			// 	mBindingParams.filters.push(oMi_tenant_idFilter);
-            // }
-
-            // mBindingParams.filters.push(this.aFilterBase);
             
 			if (oMi_material_code.length > 0) {
                 for( var i = 0; i < oMi_material_code.length ; i ++ ) {
                     var oMi_material_codeFilter = new Filter("mi_material_code", FilterOperator.EQ, oMi_material_code[i]);
-                    mBindingParams.filters.push(oMi_material_codeFilter);
+                    mBindingParams.push(oMi_material_codeFilter);
                 }
 			}
 
 			if (oMi_material_name.length > 0) {
 				var oMi_material_nameFilter = new Filter("mi_material_name", FilterOperator.Contains, oMi_material_name);
-				mBindingParams.filters.push(oMi_material_nameFilter);
+				mBindingParams.push(oMi_material_nameFilter);
 			}
 
 			if (oCategory_code.length > 0) {
 				var oCategory_codeFilter = new Filter("category_code", FilterOperator.EQ, oCategory_code);
-				mBindingParams.filters.push(oCategory_codeFilter);
+				mBindingParams.push(oCategory_codeFilter);
 			}
 			
-			// if (oUse_flag.length > 0) {
-			// 	var oCodeFilter = new Filter("use_flag", FilterOperator.EQ, fOcode);
-			// 	mBindingParams.filters.push(oCodeFilter);
-			// }  
+			if (oExchange.length > 0) {
+				var oExchangeFilter = new Filter("exchange", FilterOperator.Contains, oExchange);
+				mBindingParams.push(oExchangeFilter);
+            }  
+            
+            if (oMi_date.length > 0 ) {
+                var oDateFormat = sap.ui.core.format.DateFormat.getInstance({
+                    pattern: "yyyy-MM-ddTHH:mm:ss"
+                });
+                var oDate = oDateFormat.format(oDateFormat.parse(oMi_date));
+
+				var oMi_dateFilter = new Filter("mi_date", FilterOperator.EQ, new Date(oDate));
+				mBindingParams.push(oMi_dateFilter);
+            }
+            
+            this.getView().byId("mainTable").getBinding("rows").filter( mBindingParams );
+        },
+        /**
+         * Smart Table Filter Event onBeforeRebindTable
+         * @param {sap.ui.base.Event} oEvent 
+         */
+		onBeforeRebindTable: function (oEvent) {
+		
+            console.group("onBeforeRebindTable");
+
+			// var mBindingParams = oEvent.getParameter("bindingParams");
+			// var oSmtFilter = this.getView().byId("smartFilterBar");             //smart filter
+			
+            // //combobox value
+            // // var oMi_tenant_id = oSmtFilter.getControlByKey("tenant_id").getSelectedKey();    
+			// var oMi_material_code = oSmtFilter.getControlByKey("mi_material_code").getSelectedKeys();
+			// var oMi_material_name = oSmtFilter.getControlByKey("mi_material_name").getValue();            
+            // var oCategory_code = oSmtFilter.getControlByKey("category_code").getSelectedKey();    
+            // var oExchange = oSmtFilter.getControlByKey("exchange").getValue();    
+            // var oMi_date = oSmtFilter.getControlByKey("mi_date").getValue();    
+            
+			// if (oMi_material_code.length > 0) {
+            //     for( var i = 0; i < oMi_material_code.length ; i ++ ) {
+            //         var oMi_material_codeFilter = new Filter("mi_material_code", FilterOperator.EQ, oMi_material_code[i]);
+            //         mBindingParams.filters.push(oMi_material_codeFilter);
+            //     }
+			// }
+
+			// if (oMi_material_name.length > 0) {
+			// 	var oMi_material_nameFilter = new Filter("mi_material_name", FilterOperator.Contains, oMi_material_name);
+			// 	mBindingParams.filters.push(oMi_material_nameFilter);
+			// }
+
+			// if (oCategory_code.length > 0) {
+			// 	var oCategory_codeFilter = new Filter("category_code", FilterOperator.EQ, oCategory_code);
+			// 	mBindingParams.filters.push(oCategory_codeFilter);
+			// }
+			
+			// if (oExchange.length > 0) {
+			// 	var oExchangeFilter = new Filter("exchange", FilterOperator.Contains, oExchange);
+			// 	mBindingParams.filters.push(oExchangeFilter);
+            // }  
+            
+            // if (oMi_date.length > 0 ) {
+            //     var oDateFormat = sap.ui.core.format.DateFormat.getInstance({
+            //         pattern: "yyyy-MM-ddTHH:mm:ss"
+            //     });
+            //     var oDate = oDateFormat.format(oDateFormat.parse(oMi_date));
+
+			// 	var oMi_dateFilter = new Filter("mi_date", FilterOperator.EQ, new Date(oDate));
+			// 	mBindingParams.filters.push(oMi_dateFilter);
+			// }
 			
 			console.groupEnd();              
         },

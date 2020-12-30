@@ -32,11 +32,47 @@ sap.ui.define([
                 var oView = this.getView();
                 oMultilingual = new Multilingual();
                 this.getView().setModel(oMultilingual.getModel(), "I18N");
+                var that = this;
+                this.getView().byId("smartFilterBar")._oSearchButton.setText("조회");
+                // oMultilingual.attachEvent("ready", function(oEvent){
+                //     var oi18nModel = oEvent.getParameter("model");
+                //     var searchText = oi18nModel.getText("/SEARCH");
+                //     this.getView().byId("smartFilterBar")._oSearchButton.setText(String(searchText));
+                // }, this);
 
-                
+                // oMultilingual.attachEvent("ready", function(e){
+                //     var oi18nModel = e.getParameter("model");
+                //     var searchText = oi18nModel.getText("/SEARCH");
+                //     this.getView().byId("smartFilterBar")._oSearchButton.setText(searchText); // 검색 버튼 Text 변경
+                // }, this);
+
+                // oMultilingual.attachEvent("ready", function(oEvent){
                     
-                
-                
+                //     var oi18nModel = oEvent.getParameter("model");
+                //     // this.addHistoryEntry({
+                //     //     title: oi18nModel.getText("/MESSAGE_MANAGEMENT"),
+                //     //     icon: "sap-icon://table-view",
+                //     //     intent: "#Template-display"
+                //     // }, true);
+                    
+                //     // Smart Filter Button 명 처리 START
+                //     var b = that.getView().byId("smartFilterBar").getContent()[0].getContent();
+                //     $.each(b, function(index, item) {
+                //         if (item.sId.search("btnGo") !== -1) {
+                //             item.setText(oi18nModel.getText("/SEARCH"));
+                //             console.log(oi18nModel.getText("/SEARCH"));
+                //         }
+                //     }.bind(this));
+                //     // Smart Filter Button 명 처리 END
+                //     // //  this.getView().byId("smartFilterBar")._oSearchButton.setText(oi18nModel.getText("/SEARCH"));
+                //     // var searchText = oi18nModel.getText("/SEARCH");
+                //     // if(searchText != undefined){
+                //     // that.getView().byId("smartFilterBar")._oSearchButton.setText(searchText);
+                //     //         console.log("smartFilterBar : ",oi18nModel.getText("/SEARCH"));
+
+                //     // }
+                // }.bind(this));
+
                 
                 this.oView = this.getView(); 
                 this._bDescendingSort = false;
@@ -58,6 +94,8 @@ sap.ui.define([
                 // var oRouter = this.getRouter();
                 // this.oRouter.initialize();
                 this.oRouter.attachBeforeRouteMatched(this._onProductMatched, this);
+
+                
                 // this.getView().byId("smartFilterBar")._oSearchButton.setText(); // 검색 버튼 Text 변경
             },
             _filterSearch: function(e){
@@ -425,6 +463,13 @@ sap.ui.define([
                 if(this._oScr.oData.screen != "D"){
                     oMaster.setData({"level":0, "indices": 0});
                 }
+
+                
+               
+
+
+
+
                 // var aa = this.getView().getModel("I18N").getText("/NCM00001");
                 if(textModel == undefined){
                     textModel = this.getView().getModel("I18N");
@@ -1120,6 +1165,35 @@ sap.ui.define([
 
             },
             onAfterRendering:function(e){
+
+
+
+                //  oMultilingual.attachEvent("ready", function(oEvent){
+                    
+                //     var oi18nModel = oEvent.getParameter("model");
+                //     // this.addHistoryEntry({
+                //     //     title: oi18nModel.getText("/MESSAGE_MANAGEMENT"),
+                //     //     icon: "sap-icon://table-view",
+                //     //     intent: "#Template-display"
+                //     // }, true);
+                    
+                //     // Smart Filter Button 명 처리 START
+                //     var b = this.getView().byId("smartFilterBar").getContent()[0].getContent();
+                //     $.each(b, function(index, item) {
+                //         if (item.sId.search("btnGo") !== -1) {
+                //             item.setText("조회");
+                //             console.log(oi18nModel.getText("/SEARCH"));
+                //         }
+                //     }.bind(this));
+                //     // Smart Filter Button 명 처리 END
+                //     // //  this.getView().byId("smartFilterBar")._oSearchButton.setText(oi18nModel.getText("/SEARCH"));
+                //     // var searchText = oi18nModel.getText("/SEARCH");
+                //     // if(searchText != undefined){
+                //     // that.getView().byId("smartFilterBar")._oSearchButton.setText(searchText);
+                //     //         console.log("smartFilterBar : ",oi18nModel.getText("/SEARCH"));
+
+                //     // }
+                // }.bind(this));
                 
                 console.log(" oMultilingual.getModel() 2: ", oMultilingual.getModel());
                 if(textModel != undefined){
@@ -1138,12 +1212,15 @@ sap.ui.define([
                 }else{
                     afterFlag = 1;
                 }
+
+                
                 
 
                 // alert(afterFlag);
                 if(afterFlag == -1 || this._lflag == "X"){
                     return;
                 }
+
 
                 // this.getView().byId("treeTable").getBinding("rows").filter( resultFilters , sap.ui.model.FilterType.Application); 
                 this.filterSearch("R");
