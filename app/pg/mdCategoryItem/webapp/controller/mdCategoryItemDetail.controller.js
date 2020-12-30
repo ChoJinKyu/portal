@@ -318,7 +318,7 @@ sap.ui.define([
                                         + "',org_code='"           + this._sOrg_code 
                                         + "',spmd_category_code='" + this._sSpmd_category_code 
                                         + "',spmd_character_code='" + this._sSpmd_character_code 
-                                        + "',spmd_character_sort_seq='" + this._sSpmd_character_sort_seq 
+                                        // + "',spmd_character_sort_seq='" + this._sSpmd_character_sort_seq  //error
                                         + "')";
                 var oMasterModel = this.getModel("master");
                 oView.setBusy(true);
