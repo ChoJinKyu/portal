@@ -96,7 +96,7 @@ service MdCategoryV4Service {
     action MdVpMappingStatusMultiProc( items : array of MdVpMappingStatusProcType ) returns String; 
     
     // Category범주 목록 Parameter View V4호출
-    // URL : /pg.MdCategoryV4Service/MdCategoryListConditionView
+    // URL : /pg.MdCategoryV4Service/MdCategoryListConditionView(language_code='EN')/Set
     /*********************************
     {"language_code":"EN"}
     *********************************/
@@ -116,10 +116,10 @@ service MdCategoryV4Service {
 			, cid.update_user_id
 			, cid.system_create_dtm
 			, cid.system_update_dtm
-			, cidl.language_code
+            , ifnull(cidl.language_code, :language_code) as language_code : String(4)
 			, ifnull(cidl.spmd_category_code_name, cid.spmd_category_code_name) as spmd_category_code_name : String(50)
 		from cateId.Md_Category_Id as cid
-		left outer join cateIdLng.Md_Category_Id_Lng as cidl on (
+		left outer join cateIdLng.Md_Category_Id_Lng as cidl on (        
 									  cid.tenant_id = cidl.tenant_id
 									  and cid.company_code = cidl.company_code
 									  and cid.org_type_code = cidl.org_type_code
@@ -130,7 +130,7 @@ service MdCategoryV4Service {
 		;
 
     // Item특성 목록 Parameter View V4호출
-    // URL : /pg.MdCategoryV4Service/MdItemListConditionView
+    // URL : /pg.MdCategoryV4Service/MdItemListConditionView(language_code='EN')/Set
     /*********************************
     {"language_code":"EN"}
     *********************************/
@@ -145,7 +145,7 @@ service MdCategoryV4Service {
 			, cid.spmd_category_code_name
 			, citm.spmd_character_sort_seq
 			, citm.spmd_character_serial_no
-			, citml.language_code
+            , ifnull(citml.language_code, :language_code) as language_code : String(4)
 			, ifnull(citml.spmd_character_code_name, citm.spmd_character_code_name) as spmd_character_code_name : String(100)
 			, ifnull(citml.spmd_character_desc, citm.spmd_character_desc) as spmd_character_desc : String(500)
 			, citm.local_create_dtm
@@ -192,7 +192,7 @@ service MdCategoryV4Service {
 
     // Category별 Item Condition View
     // Fiori Json Array 데이터 Ajax로 V4호출
-    // URL : /pg.MdCategoryV4Service/MdCategoryCodeItemConditionView
+    // URL : /pg.MdCategoryV4Service/MdCategoryCodeItemConditionView(tenant_id='L2100',company_code='*',org_type_code='BU',org_code='BIZ00200',spmd_category_code='C001')/Set
     /*********************************
     {"tenant_id":"L2100", "company_code":"*", "org_type_code":"BU", "org_code":"BIZ00200", "spmd_category_code":"C001"}
     *********************************/
@@ -233,5 +233,4 @@ service MdCategoryV4Service {
 		and cid.org_code = :org_code
 		and cid.spmd_category_code = :spmd_category_code
 		;
-
 }
