@@ -14,6 +14,13 @@ namespace pg;
 @path : '/pg.MdCategoryV4Service'
 service MdCategoryV4Service {
 
+    // 처리 결과 Return
+    type ReturnRslt {
+        rsltCd : String;
+        rsltMesg : String;
+        rsltInfo : String;  // result 추가JSON 정보 
+    }
+
     // VendorPool Category Item Mapping 1건 Procedure 호출
     // Fiori Json Array 데이터 Ajax로 V4호출
     // URL : /pg.MdCategoryV4Service/MdVpMappingItemProc
@@ -54,7 +61,7 @@ service MdCategoryV4Service {
         ]
     }
     *********************************/
-    action MdVpMappingItemMultiProc( items : array of MdVpMappingItemProcType ) returns String; 
+    action MdVpMappingItemMultiProc( items : array of MdVpMappingItemProcType ) returns ReturnRslt; 
 
 
     // VendorPool Mapping 상태(신규/저장/확정)처리 1건 Procedure 호출
@@ -82,6 +89,7 @@ service MdCategoryV4Service {
         confirmed_status_code : String(3);
         update_user_id : String(500);
     }
+
     // VendorPool Mapping 상태(신규/저장/확정)처리 array multi건 Procedure 호출
     // Fiori Json Array 데이터 Ajax로 V4호출
     // URL : /pg.MdCategoryV4Service/MdVpMappingStatusMultiProc
@@ -93,7 +101,8 @@ service MdCategoryV4Service {
         ]
     }
     *********************************/
-    action MdVpMappingStatusMultiProc( items : array of MdVpMappingStatusProcType ) returns String; 
+    //action MdVpMappingStatusMultiProc( items : array of MdVpMappingStatusProcType ) returns String; 
+    action MdVpMappingStatusMultiProc( items : array of MdVpMappingStatusProcType ) returns ReturnRslt; 
     
     // Category범주 목록 Parameter View V4호출
     // URL : /pg.MdCategoryV4Service/MdCategoryListConditionView(language_code='EN')/Set
