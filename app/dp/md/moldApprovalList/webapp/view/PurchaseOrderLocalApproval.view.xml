@@ -129,7 +129,7 @@
                             <VBox class="sapUiSmallMargin">
                                 <Label text="{I18N>/BUSINESS_DIVISION}" />
                                 <ObjectStatus
-                                    text="[{plant>/plant_code}] {plant>/plant_name}" 
+                                    text="[{plant>/org_code}] {plant>/org_name}" 
                                     state="Error"
                                     />
                             </VBox>
@@ -321,7 +321,7 @@
                         <form:SimpleForm editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                             <form:content>
                                 <VBox>
-                                    <CheckBox id="partialPayment" text="Partial Payment" selected="{= ${payment>/split_pay_type_code} === undefined ? false : true }" select=".onChangePayment" />
+                                    <CheckBox id="partialPayment" text="Partial Payment" selected="{= (${payment>/split_pay_type_code} === undefined || ${payment>/split_pay_type_code} === null) ? false : true }" select=".onSelectPayment" />
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M6 S12" />
                                     </layoutData>

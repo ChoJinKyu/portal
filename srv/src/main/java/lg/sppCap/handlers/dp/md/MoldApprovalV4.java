@@ -133,7 +133,7 @@ public class MoldApprovalV4 implements EventHandler {
                 if(aMaster.getApprovalTypeCode().equals("B")){  
                     this.saveBudgetExecution(data);
                 }else if(aMaster.getApprovalTypeCode().equals("V")){
-
+                    this.savePurchaseOrder(data);
                 }else if(aMaster.getApprovalTypeCode().equals("E")){
                     this.saveParticipatingSelection(data);
                 }
@@ -247,7 +247,7 @@ public class MoldApprovalV4 implements EventHandler {
                 if(aMaster.getApprovalTypeCode().equals("B")){  
                     this.saveBudgetExecution(data);
                 }else if(aMaster.getApprovalTypeCode().equals("V")){
-
+                    this.savePurchaseOrder(data);
                 }else if(aMaster.getApprovalTypeCode().equals("E")){
                     this.saveParticipatingSelection(data);
                 }
@@ -525,4 +525,42 @@ public class MoldApprovalV4 implements EventHandler {
             }         
         }
     } 
+    // PurchaseOrder 
+    private void savePurchaseOrder( Data data ){
+
+        System.out.println(" approvalNumer " + this.APPROVAL_NUMBER);
+
+        ApprovalMasterV4 aMaster = data.getApprovalMaster();
+        Collection<MoldMasterV4> mMasterList = data.getMoldMaster();
+    
+        if(!mMasterList.isEmpty() && mMasterList.size() > 0){
+            for(MoldMasterV4 row : mMasterList ){
+
+                System.out.println(" ApprovalMasterV4 " + row);
+
+                MoldMasters m = MoldMasters.create();
+                m.setTenantId(row.getTenantId());
+                m.setMoldId(row.getMoldId());
+                m.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
+                m.setUpdateUserId(aMaster.getUpdateUserId()); 
+
+                if(row.getRowState().equals("D") || row.getSplitPayTypeCode() == null || "".equals(row.getSplitPayTypeCode())){ // 삭제일 경우 수정되는 항목에 대한 리셋 
+                    m.setSplitPayTypeCode(null);
+                    m.setPrepayRate(null);
+                    m.setProgresspayRate(null);
+                    m.setRpayRate(null);
+                    CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(m); 
+                    Result rst = moldApprovalService.run(u);
+                }else{ 
+                    m.setSplitPayTypeCode(row.getSplitPayTypeCode());
+                    m.setPrepayRate(new BigDecimal((String)((row.getPrepayRate()==null||row.getPrepayRate()=="")?"0":row.getPrepayRate())));
+                    m.setProgresspayRate(new BigDecimal((String)((row.getProgresspayRate()==null||row.getProgresspayRate()=="")?"0":row.getProgresspayRate())));
+                    m.setRpayRate(new BigDecimal((String)((row.getRpayRate()==null||row.getRpayRate()=="")?"0":row.getRpayRate())));
+                    CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(m); 
+                    Result rst = moldApprovalService.run(u);
+                }
+
+            }  
+        }
+    }
 }

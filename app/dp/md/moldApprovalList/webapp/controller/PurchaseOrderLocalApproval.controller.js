@@ -27,8 +27,8 @@ sap.ui.define([
 ) {
     "use strict";
 
-    var oTransactionManager;
-    var oRichTextEditor;
+    //var oTransactionManager;
+    //var oRichTextEditor;
 
     return ApprovalBaseController.extend("dp.md.moldApprovalList.controller.PurchaseOrderItemLocal", {
 
@@ -85,18 +85,19 @@ sap.ui.define([
                     poAmount = 0;
                 
                 oModel.setProperty("/purchasing_amount", poAmount);*/
+                this._editablePayment(false);
             } else {
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
                     , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
                 ];
-                // this.getView().setModel(new ManagedModel(), "payment");
+                
                 var oModel = this.getModel('payment'),
                     poAmount = 0;
                 this._bindViewPurchaseOrder("/PurchaseOrderItems", "purOrderItem", schFilter, function (oData) {
                     if (oData.results.length > 0) {
                         oData.results.forEach(function (item) {
                             poAmount = poAmount + Number(item.purchasing_amount);
-                        }.bind(this));
+                        });
                     }
 
                     oModel.setProperty("/split_pay_type_code", oData.results[0].split_pay_type_code);
@@ -105,11 +106,14 @@ sap.ui.define([
                     oModel.setProperty("/rpay_rate", oData.results[0].rpay_rate);
                     oModel.setProperty("/purchasing_amount", poAmount);
                     oModel.setProperty("/currency_code", oData.results[0].currency_code);
-                    //console.log("md >>>>>>", md);
-                    //that._bindComboPlant(oData.results[0].import_company_code);
-                });
+                    
+                    if(oData.results[0].split_pay_type_code === null){
+                        this._editablePayment(false);
+                    }
+                }.bind(this));
             }
         },
+
         _bindViewPurchaseOrder: function (sObjectPath, sModel, aFilter, callback) {
             var oView = this.getView(),
                 oModel = this.getModel(sModel);
@@ -122,6 +126,13 @@ sap.ui.define([
                     callback(oData);
                 }
             });
+        },
+
+        _editablePayment: function (flag) {
+            this.getView().byId("splitPayTypeCode").setEnabled(flag);
+            this.getView().byId("advanced").setEnabled(flag);
+            this.getView().byId("part").setEnabled(flag);
+            this.getView().byId("residual").setEnabled(flag);
         },
 
         /**
@@ -219,7 +230,7 @@ sap.ui.define([
         },
 
         onChangePayment: function (oEvent) {
-            var oModel = this.getModel("purOrderItem"),
+            /*var oModel = this.getModel("purOrderItem"),
                 poData = oModel.getData().PurchaseOrderItems,
                 formName = oEvent.getSource().sId.split('--')[2],
                 formValue = oEvent.getSource().mProperties.value;
@@ -234,9 +245,39 @@ sap.ui.define([
                 }else if(formName === "residual"){
                     poData[idx].rpay_rate = formValue;
                 }
-            }//partialPayment
-            console.log(oEvent.getSource());
-            console.log(oEvent.getSource().sId.split('--')[2]);
+            }*///partialPayment
+            var pModel = this.getModel("payment"),
+                split_pay_type_code = pModel.getData().split_pay_type_code,
+                prepay_rate =  pModel.getData().prepay_rate,
+                progresspay_rate =  pModel.getData().progresspay_rate,
+                rpay_rate =  pModel.getData().rpay_rate,
+                purchasing_amount =  pModel.getData().purchasing_amount,
+                total = Number(prepay_rate) + Number(progresspay_rate) + Number(rpay_rate);
+
+            if(this.getView().byId("partialPayment").getSelected()){
+                if(split_pay_type_code === "A"){
+                    if(!(prepay_rate === null || prepay_rate === "") && !(progresspay_rate === null || progresspay_rate === "") && !(rpay_rate === null || rpay_rate === "")){
+                        if(total !== purchasing_amount){
+                            MessageToast.show("금액 합계가 맞지 않습니다.");
+                            return;
+                        }
+                    }
+                }else{
+                    if(split_pay_type_code === null || split_pay_type_code === ""){
+                        pModel.getData().split_pay_type_code = "R";
+                    }
+                    if(!(prepay_rate === null || prepay_rate === "") && !(progresspay_rate === null || progresspay_rate === "") && !(rpay_rate === null || rpay_rate === "")){
+                        if(total !== 100){
+                            MessageToast.show("Rate가 100이 아닙니다.");
+                            return;
+                        }
+                    }
+                }
+            }
+        },
+        
+        onSelectPayment: function (oEvent) {
+            this._editablePayment(oEvent.getSource().mProperties.selected);
         },
         
         /**
@@ -286,85 +327,90 @@ sap.ui.define([
             'RJ' */ 
             this.getModel("appMaster").setProperty("/approve_status_code", "DR");
 
+            this._onSubmit();
+        },
+
+        _onSubmit : function () { 
             this.approval_type_code = "V";
 
-            var bModel = this.getModel("purOrderItem");
-            var mModel = this.getModel("payment");
+            var oModel = this.getModel("purOrderItem"),
+                pModel = this.getModel("payment"),
+                split_pay_type_code = pModel.getData().split_pay_type_code,
+                prepay_rate =  pModel.getData().prepay_rate,
+                progresspay_rate =  pModel.getData().progresspay_rate,
+                rpay_rate =  pModel.getData().rpay_rate,
+                purchasing_amount =  pModel.getData().purchasing_amount,
+                total = Number(prepay_rate) + Number(progresspay_rate) + Number(rpay_rate);
+
             this.approvalDetails_data = [] ;
             this.moldMaster_data = [] ;
-            console.log("bModel.getData().length " , bModel);
-            if(bModel.getData().PurchaseOrderItems == undefined || bModel.getData().PurchaseOrderItems.length == 0){
+            
+            if(oModel.getData().PurchaseOrderItems == undefined || oModel.getData().PurchaseOrderItems.length == 0){
                 MessageToast.show("item 을 하나 이상 추가하세요.");
                 return;
             }
 
+            if(this.getView().byId("partialPayment").getSelected()){
+                if(split_pay_type_code === "A"){
+                    if(total !== purchasing_amount){
+                        MessageToast.show("금액 합계가 맞지 않습니다.");
+                        return;
+                    }
+                }else{
+                    if(total !== 100){
+                        MessageToast.show("Rate가 100이 아닙니다.");
+                        return;
+                    }
+                }
+            }else{
+                split_pay_type_code = null;
+                prepay_rate =  null;
+                progresspay_rate =  null;
+                rpay_rate =  null;
+            }
 
-            var that = this;
-            
-            if(bModel.getData().PurchaseOrderItems != undefined && bModel.getData().PurchaseOrderItems.length > 0){
-                var account_code = mModel.getData().account_code;
-                var investment_ecst_type_code =  mModel.getData().investment_ecst_type_code;
-                var accounting_department_code =  mModel.getData().accounting_department_code;
-                var project_code =  mModel.getData().project_code;
-                var import_company_code = investment_ecst_type_code != "S" ? "" : mModel.getData().import_company_code;
-                var import_company_org_code = investment_ecst_type_code != "S" ? "" : mModel.getData().import_company_org_code;
-
-                bModel.getData().PurchaseOrderItems.forEach(function(item){
-                    that.approvalDetails_data.push({
-                        tenant_id : that.tenant_id 
-                        , approval_number : that.approval_number 
-                        , mold_id : item.mold_id 
-                        , _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
+            if(oModel.getData().PurchaseOrderItems != undefined && oModel.getData().PurchaseOrderItems.length > 0){
+                oModel.getData().PurchaseOrderItems.forEach(function(item){
+                    this.approvalDetails_data.push({
+                        tenant_id : this.tenant_id, 
+                        approval_number : this.approval_number, 
+                        mold_id : item.mold_id, 
+                        _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
                     });
-                    that.moldMaster_data.push({
-                         tenant_id : that.tenant_id 
-                        , mold_id : item.mold_id 
-                        , account_code : account_code 
-                        , investment_ecst_type_code : investment_ecst_type_code 
-                        , accounting_department_code : accounting_department_code 
-                        , import_company_code : import_company_code 
-                        , project_code : project_code 
-                        , import_company_org_code : import_company_org_code 
-                        , mold_production_type_code : item.mold_production_type_code 
-                        , mold_item_type_code :  item.mold_item_type_code 
-                        , provisional_budget_amount : item.provisional_budget_amount 
-                        , asset_type_code : item.asset_type_code 
-                        , _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
+                    this.moldMaster_data.push({
+                        tenant_id : this.tenant_id,
+                        mold_id : item.mold_id,
+                        split_pay_type_code : split_pay_type_code,
+                        prepay_rate : prepay_rate,
+                        progresspay_rate : progresspay_rate,
+                        rpay_rate : rpay_rate,
+                        _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
                     });
-                });
+                }.bind(this));
 
             }
 
-            if(bModel._aRemovedRows.length > 0){
-                bModel._aRemovedRows.forEach(function(item){
-                    that.approvalDetails_data.push({
-                        tenant_id : that.tenant_id 
-                        , approval_number : that.approval_number 
-                        , mold_id : item.mold_id 
-                        , _row_state_ : "D"
+            if(oModel._aRemovedRows.length > 0){
+                oModel._aRemovedRows.forEach(function(item){
+                    this.approvalDetails_data.push({
+                        tenant_id : this.tenant_id, 
+                        approval_number : this.approval_number, 
+                        mold_id : item.mold_id, 
+                        _row_state_ : "D"
                     });
-                    that.moldMaster_data.push({
-                         tenant_id : that.tenant_id 
-                        , mold_id : item.mold_id 
-                        , account_code : account_code 
-                        , investment_ecst_type_code : investment_ecst_type_code 
-                        , accounting_department_code : accounting_department_code 
-                        , import_company_code : import_company_code 
-                        , project_code : project_code 
-                        , import_company_org_code : import_company_org_code 
-                        , mold_production_type_code : item.mold_production_type_code 
-                        , mold_item_type_code :  item.mold_item_type_code 
-                        , provisional_budget_amount : item.provisional_budget_amount 
-                        , asset_type_code : item.asset_type_code 
-                        , _row_state_ : "D"
+                    this.moldMaster_data.push({
+                        tenant_id : this.tenant_id, 
+                        mold_id : item.mold_id, 
+                        split_pay_type_code : "",
+                        prepay_rate : null,
+                        progresspay_rate : null,
+                        rpay_rate : null,
+                        _row_state_ : "D"
                     });
-                });
+                }.bind(this));
             }
-
 
             this._commonDataSettingAndSubmit();
-
         }
-
     });
 });
