@@ -165,7 +165,7 @@
       ],
       "targets": {
         "developmentReceipt": {
-          "viewName": "developmentReceipt",
+          "viewName": "DevelopmentReceipt",
           "viewId": "developmentReceipt",
           "viewLevel": 1,
           "title": "{i18n>developmentReceiptViewTitle}"

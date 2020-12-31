@@ -4,7 +4,7 @@ sap.ui.define([
     "ext/lib/model/ManagedListModel",
     "ext/lib/util/Multilingual",
     "ext/lib/util/Validator",
-    "./developmentReceiptPersoService",
+    "./DevelopmentReceiptPersoService",
     "sap/ui/base/ManagedObject",
     "sap/ui/core/routing/History",
     "sap/ui/core/Element",
@@ -26,12 +26,12 @@ sap.ui.define([
     'sap/m/SearchField',
     "sap/m/Text",
     "sap/m/Token"
-], function (BaseController, DateFormatter, ManagedListModel, Multilingual, Validator, developmentReceiptPersoService,
+], function (BaseController, DateFormatter, ManagedListModel, Multilingual, Validator, DevelopmentReceiptPersoService,
     ManagedObject, History, Element, Fragment, JSONModel, Filter, FilterOperator, Sorter, Column, Row, TablePersoController, Item,
     ComboBox, ColumnListItem, Input, MessageBox, MessageToast, ObjectIdentifier, SearchField, Text, Token) {
     "use strict";
 
-    return BaseController.extend("dp.md.developmentReceipt.controller.developmentReceipt", {
+    return BaseController.extend("dp.md.developmentReceipt.controller.DevelopmentReceipt", {
 
         dateFormatter: DateFormatter,
 
@@ -72,7 +72,7 @@ sap.ui.define([
 
             this._oTPC = new TablePersoController({
                 customDataKey: "developmentReceipt",
-                persoService: developmentReceiptPersoService
+                persoService: DevelopmentReceiptPersoService
             }).setTable(this.byId("moldMstTable"));
             //console.log(this.byId("moldMstTable"));
         },
