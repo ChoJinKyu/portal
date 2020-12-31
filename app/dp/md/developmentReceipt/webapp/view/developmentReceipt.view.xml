@@ -79,7 +79,7 @@
                                 <Label text="{I18N>/PLANT}" labelFor="searchDivisionS" required="true"></Label>
                                 <MultiComboBox  id="searchDivisionS" width="100%" selectedKey="" 
                                                 items="{
-                                                    path: '/Divisions',
+                                                    path: 'org>/Plant',
                                                     filters: [
                                                         {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                                     ],
@@ -87,7 +87,7 @@
                                                 }"
                                 selectionFinish="handleSelectionFinishDiv" required="true">
                                     <items>
-                                        <core:Item key="{org_code}" text="[{org_code}] {org_name}" />
+                                        <core:Item key="{org>org_code}" text="[{org>org_code}] {org>org_name}" />
                                     </items>
                                 </MultiComboBox>
                                 <layoutData>
@@ -175,7 +175,7 @@
                                 <Label text="{I18N>/PLANT}" labelFor="searchDivisionE" required="true"></Label>
                                 <MultiComboBox  id="searchDivisionE" width="100%" selectedKey="" 
                                                 items="{
-                                                    path: '/Divisions',
+                                                    path: 'org>/Plant',
                                                     filters: [
                                                         {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
                                                     ],
@@ -183,7 +183,7 @@
                                                 }"
                                 selectionFinish="handleSelectionFinishDiv" required="true">
                                     <items>
-                                        <core:Item key="{org_code}" text="[{org_code}] {org_name}" />
+                                        <core:Item key="{org>org_code}" text="[{org>org_code}] {org>org_name}" />
                                     </items>
                                 </MultiComboBox>
                                 <layoutData>
