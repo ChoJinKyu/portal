@@ -43,7 +43,7 @@ public class ProjectMgtService implements EventHandler {
         log.info("### tenant_id ====" + tenant_id);
 
         String max_project_number = "";
-        String v_sql = "SELECT IFNULL(MAX(CAST(REPLACE(EP_PROJECT_NUMBER, 'P' , '') as INTEGER)), 0) + 1 AS MAX_PROJECT_NUMBER FROM EP_PROJECT";
+        String v_sql = "SELECT IFNULL(MAX(CAST(REPLACE(EP_PROJECT_NUMBER, 'P' , '') as INTEGER)), 0) + 1 AS MAX_PROJECT_NUMBER FROM EP_PO_PROJECT";
 
         ResultSet v_rs = null;          
 
