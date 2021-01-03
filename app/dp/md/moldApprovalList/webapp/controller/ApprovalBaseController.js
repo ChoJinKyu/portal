@@ -96,13 +96,14 @@ sap.ui.define([
 		 * @public
 		 */
         onPageNavBackButtonPress: function () {
-            	var sPreviousHash = History.getInstance().getPreviousHash();
-                if (sPreviousHash !== undefined) {
-                    // eslint-disable-next-line sap-no-history-manipulation
-                    history.go(-1);
-                } else {
-                    this.getRouter().navTo("approvalList", {}, true);
-                } 
+            this._toShowMode();
+            var sPreviousHash = History.getInstance().getPreviousHash();
+            if (sPreviousHash !== undefined) {
+                // eslint-disable-next-line sap-no-history-manipulation
+                history.go(-1);
+            } else {
+                this.getRouter().navTo("approvalList", {}, true);
+            }
         },
 
         onPageEditButtonPress: function () {
