@@ -19,12 +19,16 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
+    'sap/ui/export/library',
+	'sap/ui/export/Spreadsheet',
     "sap/ui/model/json/JSONModel"
 ], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Formatter, Validator, ExcelUtil, TablePersoController, MainListPersoService, 
-		Filter, FilterOperator, Sorter, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, JSONModel) {
+		Filter, FilterOperator, Sorter, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item,exportLibrary, Spreadsheet, JSONModel) {
 	"use strict";
 
-	// var oTransactionManager;
+    // var oTransactionManager;
+    
+    var EdmType = exportLibrary.EdmType;
 
 	return BaseController.extend("pg.mi.miPrice.controller.MainList", {
 
@@ -41,6 +45,7 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {
+            
 			var oMultilingual = new Multilingual();
 			this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedListModel(), "list");
@@ -66,8 +71,8 @@ sap.ui.define([
                     }
 
                 }.bind(this));
-			}.bind(this));
-
+            }.bind(this));
+            
            //this._doInitTablePerso();
             this.enableMessagePopover();
         },
@@ -270,7 +275,7 @@ sap.ui.define([
                                         // that.onPageSearchButtonPress();
                                         // that.onBeforeRebindTable();
                                         // oModel.refresh(true);
-                                        MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
+                                        MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
                                         that.byId("pageSearchButton").firePress();
                                     },
                                     error: function (aa, bb){
@@ -300,7 +305,7 @@ sap.ui.define([
                                         // that.onPageSearchButtonPress();
                                         // that.onBeforeRebindTable();
                                         // oModel.refresh(true);
-                                        MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
+                                        MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
                                         that.byId("pageSearchButton").firePress();
                                     },
                                     error: function (aa, bb){
@@ -335,18 +340,18 @@ sap.ui.define([
 
                                 };
 
-                                // var path = oView.getModel().createKey("/MIMaterialPriceManagement", {
-                                //     tenant_id:'L2100',
-                                //     mi_material_code:'A001-01-01',
-                                //     exchange:'ICIS',
-                                //     currency_unit:'USD',
-                                //     quantity_unit:'TON',
-                                //     termsdelv:'CFR%20KR',
-                                //     mi_date:
-                                // });
+                                var path = oView.getModel().createKey("/MIMaterialPriceManagement", {
+                                    tenant_id:          oItem.tenant_id,
+                                    mi_material_code:   oItem.mi_material_code,
+                                    exchange:           oItem.exchange,
+                                    currency_unit:      oItem.currency_unit,
+                                    quantity_unit:      oItem.quantity_unit,
+                                    termsdelv:          oItem.termsdelv,
+                                    mi_date:            oItem.mi_date
+                                });
                                 
                                 // oView.getModel().createEntry("/MIMaterialPriceManagement", b);
-                                oView.getModel().update("/MIMaterialPriceManagement", oItem , {
+                                oView.getModel().update( path , oItem , {
                                     groupId: "updateRow",
                                     method: "PUT",
                                     success: function (oData) {
@@ -354,7 +359,7 @@ sap.ui.define([
                                         // that.onPageSearchButtonPress();
                                         // that.onBeforeRebindTable();
                                         // oModel.refresh(true);
-                                        MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
+                                        MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
                                         that.byId("pageSearchButton").firePress();
                                     },
                                     error: function (aa, bb){
@@ -420,29 +425,22 @@ sap.ui.define([
 				// ],
 				success: function(oData){
                     this.validator.clearValueState(this.byId("mainTable"));
+                    this.byId("mainTable").clearSelection();
 					oView.setBusy(false);
 				}.bind(this)
 			});
-            // ,
-			// 	sorters: [
-			// 		new Sorter("chain_code"),
-			// 		new Sorter("message_code"),
-			// 		new Sorter("language_code", true)
-			// 	]
-			//oTransactionManager.setServiceModel(this.getModel());
 		},
 		
 		_getSearchStates: function(){
-			// var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S",
-			// 	chain = this.getView().byId("searchChain"+sSurffix).getSelectedKey(),
-			// 	language = this.getView().byId("searchLanguage"+sSurffix).getSelectedKey(),
-            //     keyword = this.getView().byId("searchKeyword"+sSurffix).getValue();
-				
 			var aTableSearchState = [];
             if( this.isFirst ) {
                 // 최초 실행시 빈 모델 바인딩 시키기 위함.
                 var oMi_material_codeFilter = new Filter("mi_material_code", FilterOperator.EQ, "ZASDFAWEGJWAEOFJAWEJWEAASDLKFJAS");
                 aTableSearchState.push(oMi_material_codeFilter);
+
+                var oModel = this.getView().getModel();
+                oModel.setSizeLimit(1000);
+
                 this.isFirst = false;
             }else {
 
@@ -479,12 +477,12 @@ sap.ui.define([
                 }  
                 
                 if (oMi_date.length > 0 ) {
-                    var oDateFormat = sap.ui.core.format.DateFormat.getInstance({
-                        pattern: "yyyy-MM-ddTHH:mm:ss"
-                    });
-                    var oDate = oDateFormat.format(oDateFormat.parse(oMi_date));
+                    // var oDateFormat = sap.ui.core.format.DateFormat.getInstance({
+                    //     pattern: "yyyy-MM-ddTHH:mm:ss"
+                    // });
+                    // var oDate = oDateFormat.format(oDateFormat.parse(oMi_date));
     
-                    var oMi_dateFilter = new Filter("mi_date", FilterOperator.EQ, new Date(oDate));
+                    var oMi_dateFilter = new Filter("mi_date", FilterOperator.EQ, new Date(oMi_date));
                     aTableSearchState.push(oMi_dateFilter);
                 }
             }
@@ -500,53 +498,7 @@ sap.ui.define([
 				hasGrouping: true
 			}).activate();
         },
-        onSearch: function( oEvent ) {
-            console.log( "onSearch ");
-            var mBindingParams = [];
-			var oSmtFilter = this.getView().byId("smartFilterBar");             //smart filter
-			
-            //combobox value
-            // var oMi_tenant_id = oSmtFilter.getControlByKey("tenant_id").getSelectedKey();    
-			var oMi_material_code = oSmtFilter.getControlByKey("mi_material_code").getSelectedKeys();
-			var oMi_material_name = oSmtFilter.getControlByKey("mi_material_name").getValue();            
-            var oCategory_code = oSmtFilter.getControlByKey("category_code").getSelectedKey();    
-            var oExchange = oSmtFilter.getControlByKey("exchange").getValue();    
-            var oMi_date = oSmtFilter.getControlByKey("mi_date").getValue();    
-            
-			if (oMi_material_code.length > 0) {
-                for( var i = 0; i < oMi_material_code.length ; i ++ ) {
-                    var oMi_material_codeFilter = new Filter("mi_material_code", FilterOperator.EQ, oMi_material_code[i]);
-                    mBindingParams.push(oMi_material_codeFilter);
-                }
-			}
-
-			if (oMi_material_name.length > 0) {
-				var oMi_material_nameFilter = new Filter("mi_material_name", FilterOperator.Contains, oMi_material_name);
-				mBindingParams.push(oMi_material_nameFilter);
-			}
-
-			if (oCategory_code.length > 0) {
-				var oCategory_codeFilter = new Filter("category_code", FilterOperator.EQ, oCategory_code);
-				mBindingParams.push(oCategory_codeFilter);
-			}
-			
-			if (oExchange.length > 0) {
-				var oExchangeFilter = new Filter("exchange", FilterOperator.Contains, oExchange);
-				mBindingParams.push(oExchangeFilter);
-            }  
-            
-            if (oMi_date.length > 0 ) {
-                var oDateFormat = sap.ui.core.format.DateFormat.getInstance({
-                    pattern: "yyyy-MM-ddTHH:mm:ss"
-                });
-                var oDate = oDateFormat.format(oDateFormat.parse(oMi_date));
-
-				var oMi_dateFilter = new Filter("mi_date", FilterOperator.EQ, new Date(oDate));
-				mBindingParams.push(oMi_dateFilter);
-            }
-            
-            this.getView().byId("mainTable").getBinding("rows").filter( mBindingParams );
-        },
+        
         /**
          * Smart Table Filter Event onBeforeRebindTable
          * @param {sap.ui.base.Event} oEvent 
@@ -624,24 +576,12 @@ sap.ui.define([
                             var aKeys = Object.keys(oRow),
                                 newObj = {};
 
+                            oRow.mi_date = new Date( oRow.mi_date );
+
                             oListModel.addRecord(oRow, "/MIMaterialPriceManagementView", 0);
 							that.validator.clearValueState(that.byId("mainTable"));
-                            // aCols.forEach(function (oCol, idx) {
-                            //     debugger;
-                            //     var sLabel = typeof oCol.getLabel === "function" ? oCol.getLabel().getText() : oCol.getHeader().getText();//As Grid or Responsible Table
-                            //     var sName = oCol.data("bindName") || "";
-                            //     var iKeyIdx = aKeys.indexOf(sLabel);
-                            //     if (iKeyIdx > -1 && sName) {
-                            //         var oValue = oRow[aKeys[iKeyIdx]];
-                            //         if (oValue) {
-                            //             oValue = oValue.toString();
-                            //         }
-                            //         newObj[sName] = oValue !== "N/A" ? oValue : "";
-                            //     }
-                            // });
-                            // aTableData.push(newObj);
+
                         });
-                        // oModel.setProperty("/MIMaterialPriceManagementView", aTableData);
                     }
                 }
             });
@@ -649,17 +589,42 @@ sap.ui.define([
         onBeforeExport: function( oEvent ) {
             
         },
-        onSuggestionItemSelected: function (oEvent) {
-            console.log("onSuggestionItemSelected");
-        },
-        onSubmit: function (oEvent) {
-            console.log("onSubmit");
+        onLiveChange: function (oEvent) {
+            console.log("onLiveChange");
             var codeTemp = oEvent.getParameter("value");
 
+            this._setColumnbind( codeTemp, oEvent.getSource().getParent().getCells() );
+
+        },
+        onSuggestionItemSelected: function (oEvent) {
+            console.log("onSuggestionItemSelected");
+
+             var codeTemp = oEvent.getParameter("selectedItem").getProperty("text");
+
+            this._setColumnbind( codeTemp , oEvent.getSource().getParent().getCells());
+
+        },
+        onSubmit: function (oEvent) {
+
+            // setTimeout(function() {
+            //     console.log('Works! : ' + oEvent );
+            // }.bind(oEvent), 3000);
+           var codeTemp = oEvent.getParameter("value");
+
+           this._setColumnbind( codeTemp , oEvent.getSource().getParent().getCells());
+            
+
+        },
+
+        _setColumnbind: function( value , oCells ) {
+            // var codeTemp = oEvent.getParameter("value");
+
+             console.log("_setColumnbind >> " + value);
+
             var oView = this.getView(),
-                oModel = this.getModel(),
-                oEventTemp = oEvent,
-                oCells = oEventTemp.getSource().getParent().getCells();
+                oModel = this.getModel() ;//,
+                // oEventTemp = oEvent,
+                // oCells = oEventTemp.getSource().getParent().getCells();
 
                 oCells[2].setText("");
                 oCells[3].setText("");
@@ -668,7 +633,7 @@ sap.ui.define([
             //MIMatListView // mi_material_code
             
 			oModel.read("/MIMatListView", {
-                filters: [new Filter("mi_material_code", FilterOperator.EQ, codeTemp)],
+                filters: [new Filter("mi_material_code", FilterOperator.EQ, value)],
                 // sorters: [
 				// 	new Sorter("chain_code"),
 				// 	new Sorter("message_code"),
@@ -688,8 +653,89 @@ sap.ui.define([
                     
 				}.bind(this)
 			});
+        },
 
-        }
+
+        createColumnConfig: function() {
+			return [
+				{
+					label: '시황자재코드',
+					property: 'mi_material_code',
+					width: '25'
+				},
+				{
+					label: '시황자재명',
+					property: 'mi_material_name'
+				},
+				{
+					label: '카테고리코드',
+					property: 'category_code'
+				},
+				{
+					label: '카체고리명',
+					property: 'category_name'
+                },
+
+                {
+					label: '화폐단위',
+					property: 'currency_unit'
+                },
+                {
+					label: '수량단위',
+					property: 'quantity_unit'
+                },
+                {
+					label: '거래소단위',
+					property: 'exchange_unit'
+                },
+                {
+					label: '거래소',
+					property: 'exchange'
+                },
+                {
+					label: '인도조건',
+					property: 'termsdelv'
+                },
+                {
+					label: '소싱그룹코드',
+					property: 'sourcing_group_code'
+                },
+				{
+					label: '인도월',
+					property: 'delivery_mm'
+                },
+                {
+					label: '시황일자',
+					property: 'mi_date',
+                    type: EdmType.Date,
+                    format: 'yyyy/mm/dd'
+                },
+                 {
+					label: '금액',
+					property: 'amount',
+                    type: EdmType.Number,
+                    scale: 3
+                }
+            ];
+		},
+        onExport: function() {
+			var aCols, aProducts, oSettings, oSheet;
+
+			aCols = this.createColumnConfig();
+			aProducts = this.getView().getModel("list").getProperty('/MIMaterialPriceManagementView');
+
+			oSettings = {
+				workbook: { columns: aCols },
+				dataSource: aProducts
+			};
+
+			oSheet = new Spreadsheet(oSettings);
+			oSheet.build()
+				.then( function() {
+					MessageToast.show('Spreadsheet export has finished');
+				})
+				.finally(oSheet.destroy);
+		}
 
 
 	});
