@@ -14,7 +14,7 @@
             width="100%" 
             selectedKey="{master>/language_code}"
             items="{
-                path: 'util>/CodeDetails',
+                path: 'util>/Code',
                 filters: [
                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},                    
                     {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}

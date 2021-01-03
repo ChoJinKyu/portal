@@ -77,7 +77,7 @@
                                                     id="searchOrgTypeCombo"
                                                     width="100%"
                                                     items="{
-                                                        path: 'util>/CodeDetails',
+                                                        path: 'util>/Code',
                                                         filters: [
                                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                                             {path: 'group_code', operator: 'EQ', value1: 'CM_ORG_TYPE_CODE'}

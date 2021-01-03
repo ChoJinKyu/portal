@@ -66,6 +66,19 @@ sap.ui.define([
      */
     onInit: function () {
 
+        this.combo = {
+            company: {
+                path: 'org>/Org_Company',
+                filters: []
+            }
+        };
+
+        this.combo.company.filters.push({ path: 'tenant_id', operator: 'EQ', value1: 'L2100'});
+      this.getView().setModel(new JSONModel(
+          this.combo
+      ), "combo");
+
+
       // MidObject
       this.getView().setModel(new JSONModel({
         busy: true,
