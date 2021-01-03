@@ -85,7 +85,7 @@ sap.ui.define([
                     poAmount = 0;
                 
                 oModel.setProperty("/purchasing_amount", poAmount);*/
-                this._editablePayment(false);
+                //this._editablePayment(false);
             } else {
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
                     , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
@@ -94,22 +94,22 @@ sap.ui.define([
                 var oModel = this.getModel('payment'),
                     poAmount = 0;
                 this._bindViewPurchaseOrder("/PurchaseOrderItems", "purOrderItem", schFilter, function (oData) {
+                    var splitPayTypeCode = null;
                     if (oData.results.length > 0) {
                         oData.results.forEach(function (item) {
                             poAmount = poAmount + Number(item.purchasing_amount);
                         });
+                        splitPayTypeCode = oData.results[0].split_pay_type_code;
+                        oModel.setProperty("/split_pay_type_code", splitPayTypeCode);
+                        oModel.setProperty("/prepay_rate", oData.results[0].prepay_rate);
+                        oModel.setProperty("/progresspay_rate", oData.results[0].progresspay_rate);
+                        oModel.setProperty("/rpay_rate", oData.results[0].rpay_rate);
+                        oModel.setProperty("/purchasing_amount", poAmount);
+                        oModel.setProperty("/currency_code", oData.results[0].currency_code);
                     }
 
-                    oModel.setProperty("/split_pay_type_code", oData.results[0].split_pay_type_code);
-                    oModel.setProperty("/prepay_rate", oData.results[0].prepay_rate);
-                    oModel.setProperty("/progresspay_rate", oData.results[0].progresspay_rate);
-                    oModel.setProperty("/rpay_rate", oData.results[0].rpay_rate);
-                    oModel.setProperty("/purchasing_amount", poAmount);
-                    oModel.setProperty("/currency_code", oData.results[0].currency_code);
+                    oModel.setProperty("/partial_payment", splitPayTypeCode === null ? false : true);
                     
-                    if(oData.results[0].split_pay_type_code === null){
-                        this._editablePayment(false);
-                    }
                 }.bind(this));
             }
         },
@@ -134,6 +134,22 @@ sap.ui.define([
             this.getView().byId("part").setEnabled(flag);
             this.getView().byId("residual").setEnabled(flag);
         },
+
+        _toEditModeEachApproval: function(){
+            this.byId("advanced").removeStyleClass("readonlyField");
+            this.byId("part").removeStyleClass("readonlyField");
+            this.byId("residual").removeStyleClass("readonlyField");
+
+            this.byId("poItemTable").setSelectionMode(sap.ui.table.SelectionMode.MultiToggle);
+		},
+
+		_toShowModeEachApproval: function(){
+            this.byId("advanced").addStyleClass("readonlyField");
+            this.byId("part").addStyleClass("readonlyField");
+            this.byId("residual").addStyleClass("readonlyField");
+            
+            this.byId("poItemTable").setSelectionMode(sap.ui.table.SelectionMode.None);
+		},
 
         /**
          * @description : Popup 창 : 품의서 PO Item 항목의 Add 버튼 클릭
@@ -256,20 +272,24 @@ sap.ui.define([
 
             if(this.getView().byId("partialPayment").getSelected()){
                 if(split_pay_type_code === "A"){
-                    if(!(prepay_rate === null || prepay_rate === "") && !(progresspay_rate === null || progresspay_rate === "") && !(rpay_rate === null || rpay_rate === "")){
-                        if(total !== purchasing_amount){
-                            MessageToast.show("금액 합계가 맞지 않습니다.");
-                            return;
+                    if(prepay_rate !== undefined && progresspay_rate !== undefined && rpay_rate !== undefined){
+                        if(!(prepay_rate === null || prepay_rate === "") && !(progresspay_rate === null || progresspay_rate === "") && !(rpay_rate === null || rpay_rate === "")){
+                            if(total !== purchasing_amount){
+                                MessageToast.show("금액 합계가 맞지 않습니다.");
+                                return;
+                            }
                         }
                     }
                 }else{
                     if(split_pay_type_code === null || split_pay_type_code === ""){
                         pModel.getData().split_pay_type_code = "R";
                     }
-                    if(!(prepay_rate === null || prepay_rate === "") && !(progresspay_rate === null || progresspay_rate === "") && !(rpay_rate === null || rpay_rate === "")){
-                        if(total !== 100){
-                            MessageToast.show("Rate가 100이 아닙니다.");
-                            return;
+                    if(prepay_rate !== undefined && progresspay_rate !== undefined && rpay_rate !== undefined){
+                        if(!(prepay_rate === null || prepay_rate === "") && !(progresspay_rate === null || progresspay_rate === "") && !(rpay_rate === null || rpay_rate === "")){
+                            if(total !== 100){
+                                MessageToast.show("Rate가 100이 아닙니다.");
+                                return;
+                            }
                         }
                     }
                 }
@@ -317,15 +337,44 @@ sap.ui.define([
             // this.byId("budgetExecutionPreview").destroy();
         },
 
-        onPageDraftButtonPress : function () { 
- 
-            /**
-             * 'DR'
-            'AR'
-            'IA'
-            'AP'
-            'RJ' */ 
+        onPageDraftButtonPress : function () {
+            var status = this.getModel("appMaster").getProperty("/approve_status_code");
+            if(!(status === undefined || status === "DR")){
+                MessageToast.show( "Draft 상태 또는 신규일 때만 임시저장이 가능합니다." );
+                return;
+            }
+            /** Draft */
             this.getModel("appMaster").setProperty("/approve_status_code", "DR");
+
+            this._onSubmit();
+        },
+
+        onPageRequestCancelButtonPress : function () {
+            if(this.getModel("appMaster").getProperty("/approve_status_code") !== "AR"){
+                MessageToast.show( "Request 상태일 때만 Request Cancel 가능합니다." );
+                return;
+            }
+            /** Draft */ 
+            this.getModel("appMaster").setProperty("/approve_status_code", "DR");
+
+            this._onSubmit();
+        },
+
+        onPageRequestButtonPress : function () {
+            var oModel = this.getModel("purOrderItem");
+
+            if(this.getModel("appMaster").getProperty("/approve_status_code") !== "DR"){
+                MessageToast.show( "Draft 상태 또는 신규일 때만 Request 가능합니다." );
+                return;
+            }
+            
+            if(oModel.getData().PurchaseOrderItems == undefined || oModel.getData().PurchaseOrderItems.length == 0){
+                MessageToast.show("item 을 하나 이상 추가하세요.");
+                return;
+            }
+
+            /** Approval Request */ 
+            this.getModel("appMaster").setProperty("/approve_status_code", "AR");
 
             this._onSubmit();
         },
@@ -345,11 +394,6 @@ sap.ui.define([
             this.approvalDetails_data = [] ;
             this.moldMaster_data = [] ;
             
-            if(oModel.getData().PurchaseOrderItems == undefined || oModel.getData().PurchaseOrderItems.length == 0){
-                MessageToast.show("item 을 하나 이상 추가하세요.");
-                return;
-            }
-
             if(this.getView().byId("partialPayment").getSelected()){
                 if(split_pay_type_code === "A"){
                     if(total !== purchasing_amount){

@@ -52,8 +52,6 @@ sap.ui.define([
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
 
-        
-
             this._showFormFragment();
         },
 
@@ -105,6 +103,14 @@ sap.ui.define([
                 } else {
                     this.getRouter().navTo("approvalList", {}, true);
                 } 
+        },
+
+        onPageEditButtonPress: function () {
+            this._toEditMode();
+        },
+
+        onPageCancelEditButtonPress: function () {
+            this._toShowMode();
         },
 
 		/**
@@ -219,18 +225,42 @@ sap.ui.define([
                 }
             });
 
+            this._onRoutedThisPage(this.approval_number); 
+
             if (this.approval_number === "New") {
-                this._onApproverAddRow(0);
                 this.getModel("appMaster").setProperty("/requestor_empno", "140790"); // 나중에 세션 값 세팅 할 것 
                 this.getModel("appMaster").setProperty("/request_date", this._getToday());
-                this._editMode(); 
+                this._editMode();
             } else {
                 this._viewMode();
-                this._onRoutedThisPage(this.approval_number); 
             }
              this._onApprovalPage(); // 이거 공통으로 각자 페이지에 하나 만듭시다 - this.approval_number 가 로드 된 후에 처리 해야 하는데 
 
         },
+
+        _toEditMode: function(){
+            this._onEditApproverRow();
+            
+            var oUiModel = this.getView().getModel("mode");
+                oUiModel.setProperty("/editFlag", true);
+                oUiModel.setProperty("/viewFlag", false);
+
+            this.byId("titleInput").removeStyleClass("readonlyField");
+
+            this._toEditModeEachApproval();//품의서 별로 추가해서 처리해야 하는 내용 입력
+		},
+
+		_toShowMode: function(){
+            this._onShowApproverRow();
+
+            var oUiModel = this.getView().getModel("mode");
+                oUiModel.setProperty("/editFlag", false);
+                oUiModel.setProperty("/viewFlag", true);
+
+            this.byId("titleInput").addStyleClass("readonlyField");
+
+            this._toShowModeEachApproval();//품의서 별로 추가해서 처리해야 하는 내용 입력
+		},
 
         _oFragments: {},
         _showFormFragment: function () {
@@ -265,14 +295,15 @@ sap.ui.define([
                 new Filter("approval_number", FilterOperator.EQ, approvalNumber)
             ];
 
-            this._bindView("/AppMaster(tenant_id='" + this.tenant_id + "',approval_number='" + approvalNumber + "')", "appMaster", [], function (oData) {
-               
-                console.log(" oData >>> " , oData);
-                this.oRichTextEditor.setValue(oData.approval_contents);
-            }.bind(this));
-
-            this._bindView("/ApprovalDetails", "appDetail", filter, function (oData) {
+            if(approvalNumber !== "New"){
+                this._bindView("/AppMaster(tenant_id='" + this.tenant_id + "',approval_number='" + approvalNumber + "')", "appMaster", [], function (oData) {
                 
+                    console.log(" oData >>> " , oData);
+                    this.oRichTextEditor.setValue(oData.approval_contents);
+                }.bind(this));
+            }
+            this._bindView("/ApprovalDetails", "appDetail", filter, function (oData) {
+                /* 
                 var moldIdFilter = [];
                 var moldMstFilter = [];
 
@@ -288,17 +319,16 @@ sap.ui.define([
                         })
                     );
 
-                   /* 
+                   
                     dp.MoldApprovalListService 에 해당 엔터티 없음 
                     this._bindView("/MoldMasters", "moldMaster", moldMstFilter, function (oData) {
 
-                    }.bind(this)); */ 
-                }
+                    }.bind(this)); 
+                }*/ 
             }.bind(this));
 
             this._bindView("/Approvers", "approver", filter, function (oData) { 
                 console.log(" Approvers /////////////>> " , oData);
-                this._onLoadApproverRow(oData.results);
             }.bind(this));
 
             console.log(" Approvers >>> " , approvalNumber);
@@ -332,28 +362,31 @@ sap.ui.define([
         /**
          * @description Approval Row에 add 하기 
          */
-        _onLoadApproverRow: function (approverData) {
-            var oModel = this.getModel("approver");
+        _onEditApproverRow: function () {
+            var oModel = this.getModel("approver"),
+                approverData = oModel.getData().Approvers,
+                rowCount = 0;
 
             /** 기존 데이터에 화살표, 휴지통 추가 */
-            if (approverData.length > 0) {
-                for (var i = 0; i < approverData.length; i++) {
+            if (approverData !== undefined && approverData.length > 0) {
+                rowCount = approverData.length;
+                for (var i = 0; i < rowCount; i++) {
 
                     if (Number(oModel.getData().Approvers[i].approve_sequence) === 1) { // 첫Line은 bottom 으로 가는 화살표만 , Data가 1Row인 경우 화살표 없음 
                         oModel.getData().Approvers[i].arrowUp = "";
-                        oModel.getData().Approvers[i].arrowDown = (approverData.length > 1 && approverData[approverData.length - 1].approver_empno !== "") ? "sap-icon://arrow-bottom" : "";
+                        oModel.getData().Approvers[i].arrowDown = (rowCount > 1 && approverData[rowCount - 1].approver_empno !== "") ? "sap-icon://arrow-bottom" : "";
                         oModel.getData().Approvers[i].editMode = false;
                         oModel.getData().Approvers[i].trashShow = true;
                     } else { // 중간 꺼는 위아래 화살표 모두
                         oModel.getData().Approvers[i].arrowUp = "sap-icon://arrow-top";
-                        oModel.getData().Approvers[i].arrowDown = approverData.length - 1 === i ? "" : "sap-icon://arrow-bottom";
+                        oModel.getData().Approvers[i].arrowDown = rowCount - 1 === i ? "" : "sap-icon://arrow-bottom";
                         oModel.getData().Approvers[i].editMode = false;
                         oModel.getData().Approvers[i].trashShow = true;
                     }
                 }
             }
             /** 마지막 Search 하는 Row 담는 작업 */
-            this._onApproverAddRow(approverData.length);
+            this._onApproverAddRow(rowCount);
         },
 
         /**
@@ -373,6 +406,26 @@ sap.ui.define([
                 "editMode": true,
                 "trashShow": false
             }, "/Approvers");
+        },
+
+        /**
+         * @description Approval Row에 View
+         */
+        _onShowApproverRow: function () {
+            var oModel = this.getModel("approver"),
+                approverData = oModel.getData().Approvers;
+
+            if (approverData.length > 0) {
+                for (var i = 0; i < approverData.length; i++) {
+                    oModel.getData().Approvers[i].arrowUp = "";
+                    oModel.getData().Approvers[i].arrowDown = "";
+                    oModel.getData().Approvers[i].editMode = false;
+                    oModel.getData().Approvers[i].trashShow = false;
+                }
+                if (approverData[approverData.length-1].approver_empno === "") {
+                    oModel.removeRecord(approverData.length-1);
+                }
+            }
         },
 
         _bindView: function (sObjectPath, sModel, aFilter, callback) {
@@ -556,7 +609,7 @@ sap.ui.define([
             approverData[approverData.length - 1].approver_empno = obj.oData.approver_empno;
             approverData[approverData.length - 1].approver_name = obj.oData.approver_name;
 
-            this._onLoadApproverRow(approverData);
+            this._onEditApproverRow();
         },
 
         onApproverSortUp: function (oParam) {
@@ -906,6 +959,7 @@ sap.ui.define([
             this._viewMode();
             this._onRoutedThisPage(param.approval_number); 
             this._onApprovalPage();
+            this._toShowMode();
 
            /* console.log("param >>>> " , param);
             var that = this;
