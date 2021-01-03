@@ -106,7 +106,7 @@ sap.ui.define([
             // init and activate controller
             this._oTPC = new TablePersoController({
                 table: this.byId("mainTable"),
-                componentName: "moldApprovalList",
+                componentName: "Approvals",
                 persoService: ApprovalListPersoService,
                 hasGrouping: true
             }).activate();
@@ -709,7 +709,7 @@ sap.ui.define([
             }else if(id.indexOf("supplierSelection") > -1){
                 approvalTarget = "participatingSupplierSelection"
             }else if(id.indexOf("localOrder") > -1){
-               approvalTarget = "purOrderItemLocalApproval"
+               approvalTarget = "purchaseOrderLocalApproval"
             }else if(id.indexOf("receipt") > -1){
                 appTypeCode ="I"
             }else if(id.indexOf("export") > -1){
