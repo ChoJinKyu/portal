@@ -661,60 +661,71 @@ sap.ui.define([
 				{
 					label: '시황자재코드',
 					property: 'mi_material_code',
-					width: '25'
+					width: '15'
 				},
 				{
 					label: '시황자재명',
-					property: 'mi_material_name'
+					property: 'mi_material_name',
+					width: '25'
 				},
 				{
 					label: '카테고리코드',
-					property: 'category_code'
+					property: 'category_code',
+					width: '15'
 				},
 				{
 					label: '카체고리명',
-					property: 'category_name'
+					property: 'category_name',
+					width: '15'
                 },
-
                 {
 					label: '화폐단위',
-					property: 'currency_unit'
+					property: 'currency_unit',
+					width: '15'
                 },
                 {
 					label: '수량단위',
-					property: 'quantity_unit'
+					property: 'quantity_unit',
+					width: '15'
                 },
                 {
 					label: '거래소단위',
-					property: 'exchange_unit'
+					property: 'exchange_unit',
+					width: '15'
                 },
                 {
 					label: '거래소',
-					property: 'exchange'
+					property: 'exchange',
+					width: '15'
                 },
                 {
 					label: '인도조건',
-					property: 'termsdelv'
+					property: 'termsdelv',
+					width: '15'
                 },
                 {
 					label: '소싱그룹코드',
-					property: 'sourcing_group_code'
+					property: 'sourcing_group_code',
+					width: '15'
                 },
 				{
 					label: '인도월',
-					property: 'delivery_mm'
+					property: 'delivery_mm',
+					width: '15'
                 },
                 {
 					label: '시황일자',
 					property: 'mi_date',
                     type: EdmType.Date,
-                    format: 'yyyy/mm/dd'
+                    format: 'yyyy/mm/dd',
+					width: '15'
                 },
                  {
 					label: '금액',
 					property: 'amount',
                     type: EdmType.Number,
-                    scale: 3
+                    scale: 3,
+					width: '15'
                 }
             ];
 		},
@@ -726,13 +737,14 @@ sap.ui.define([
 
 			oSettings = {
 				workbook: { columns: aCols },
-				dataSource: aProducts
+				dataSource: aProducts,
+				fileName: this.byId("smartTable_MainTable_ResponsiveTable").getHeader()
 			};
 
 			oSheet = new Spreadsheet(oSettings);
 			oSheet.build()
 				.then( function() {
-					MessageToast.show('Spreadsheet export has finished');
+					// MessageToast.show('Spreadsheet export has finished');
 				})
 				.finally(oSheet.destroy);
 		}

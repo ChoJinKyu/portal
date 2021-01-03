@@ -115,7 +115,7 @@
                 
                 
                 id="smartTable_MainTable_ResponsiveTable"
-                header="{I18N>/MIPRICE_TITLE} List2"
+                header="{I18N>/MIPRICE_TITLE} List"
                 entitySet="list>/MIMaterialPriceManagementView" 
                 
                 
