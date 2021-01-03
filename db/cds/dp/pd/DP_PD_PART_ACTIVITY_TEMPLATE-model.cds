@@ -8,8 +8,8 @@ entity Pd_Part_Activity_Template {
   key org_type_code : String(2)  not null @title: '조직유형코드' ;	
   key org_code : String(10)  not null @title: '조직코드' ;	
   key part_project_type_code : String(30)  not null @title: '부품PJT유형코드' ;	
-  key activity_code : String(50)  not null @title: '활동코드' ;	
-    parent_activity_code : String(50)   @title: '상위활동코드' ;	
+  key activity_code : String(40)  not null @title: '활동코드' ;	
+    parent_activity_code : String(40)   @title: '상위활동코드' ;	
     develope_event_code : String(30)   @title: '이벤트코드' ;	
     sequence : Decimal default 1  @title: '순번' ;	
     actual_role_code : String(40)   @title: '실적 역할' ;	

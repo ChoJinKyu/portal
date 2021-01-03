@@ -32,6 +32,7 @@ select
     '' as po_status_code,
     mst.request_date,
     coalesce(dtl.supplier_opinion, '') as supplier_opinion,
+    coalesce(dtl.remark, '') as remark,
     dtl.local_create_dtm,
     dtl.local_update_dtm,
     dtl.create_user_id,

@@ -17,6 +17,7 @@
             <VBox class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginTop" width="500px">
                 <SearchField id="searchField_material_code" 
                              width="90%"
+                             visible="{=!${oUi>/changeItem}}"
                              required="true" 
                              search=".onMaterialSearch" 
                              selectOnFocus="false"
@@ -24,6 +25,7 @@
                              class="sapUiTinyMarginTop sapUiTinyMarginBegin" />
                 <SearchField id="searchField_category_name" 
                              width="90%" 
+                             visible="{=!${oUi>/changeItem}}"
                              search=".onMaterialSearch" 
                              selectOnFocus="false"                             
                              placeholder="Search Category"
@@ -126,8 +128,7 @@
 			</beginButton>
             <endButton>
              <Button  text="{I18N>/APPLY}"  
-             type="Emphasized"
-             visible="{=!${oUi>/changeItem}}" 
+             type="Emphasized" 
              press=".onMaterialDetailApply" />
             </endButton>
 	</Dialog>

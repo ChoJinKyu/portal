@@ -131,7 +131,7 @@
             ]
         },
         {
-            "pattern": "midObject/{company_code}/{org_type_code}/{org_code}/{spmd_category_code}/{spmd_character_code}/{layout}",
+            "pattern": "midObject/{company_code}/{org_type_code}/{org_code}/{spmd_category_code}/{spmd_character_code}/{spmd_character_sort_seq}/{layout}",
             "name": "midPage",
             "target": [
                 "mainObject",

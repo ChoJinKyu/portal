@@ -41,7 +41,7 @@
 				</uxap:snappedTitleOnMobile>
 
 				<uxap:actions>
-                    <!-- 상단 버튼 영역 -->
+					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" enabled="{= ${appMaster>/approve_status_code} === 'AR'?false:${mode>/viewFlag} }"/>
 				</uxap:actions>
 
                 <uxap:navigationActions>
@@ -68,7 +68,7 @@
 					<Label text="Status :"/>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
-                        text="{= ${appMaster>/approval_number} !== null ? 'Update' : 'New' }"
+                        text="{= ${appMaster>/approval_number} === undefined ?'New':''}{appMaster>/approve_status_code_nm}"
                         state="Error" />
 				</layout:VerticalLayout>
 
@@ -129,7 +129,7 @@
                             <VBox class="sapUiSmallMargin">
                                 <Label text="{I18N>/BUSINESS_DIVISION}" />
                                 <ObjectStatus
-                                    text="[{plant>/plant_code}] {plant>/plant_name}" 
+                                    text="[{plant>/org_code}] {plant>/org_name}" 
                                     state="Error"
                                     />
                             </VBox>
@@ -138,21 +138,22 @@
                     <uxap:ObjectPageSubSection>
                         <!-- Purchase Order Item Table -->
                         <table:Table id="poItemTable"
-                            selectionMode="MultiToggle"
+                            selectionMode="None"
                             visibleRowCountMode="Auto"
                             rows="{purOrderItem>/PurchaseOrderItems}"
                             cellClick=".onCellClick"
                             >
                             <table:extension>
                                 <OverflowToolbar>
-                                    <Title text="Total PO Amount ({= ${purOrderItem>/PurchaseOrderItems}.length || 0})" level="H2"/>
+                                    <Title text="Total PO Amount : {path: 'payment>/purchasing_amount', formatter: '.numberFormatter.toNumberString'} [{payment>/currency_code}]" level="H2"/>
+                                    
                                     <ToolbarSpacer/>
-                                    <Button id="btnPoItemAdd"    type="Transparent" text="{I18N>/ROW_ADD}" press=".onPoItemAddRow" >
+                                    <Button id="btnPoItemAdd"    type="Transparent" text="{I18N>/ROW_ADD}" press=".onPoItemAddRow" visible="{mode>/editFlag}">
                                         <customData>
                                             <core:CustomData key="multi" value="true" />
                                         </customData>
                                     </Button>
-                                    <Button id="btnPoItemDelete" type="Transparent" text="{I18N>/ROW_DELETE}"  press=".onPoItemDelRow" />
+                                    <Button id="btnPoItemDelete" type="Transparent" text="{I18N>/ROW_DELETE}"  press=".onPoItemDelRow" visible="{mode>/editFlag}"/>
                                 </OverflowToolbar>
                             </table:extension>                             
                             <table:columns>
@@ -295,19 +296,19 @@
                                         <Text id="split_pay_type_code" text="{purOrderItem>split_pay_type_code}" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column width="12em" hAlign="Center">
+                                <table:Column width="12em" hAlign="Center" visible="false">
                                     <Label text="Advanced"/>
                                     <table:template>
                                         <Text id="prepay_rate" text="{purOrderItem>prepay_rate}" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column width="12em" hAlign="Center">
+                                <table:Column width="12em" hAlign="Center" visible="false">
                                     <Label text="Part"/>
                                     <table:template>
                                         <Text id="progresspay_rate" text="{purOrderItem>progresspay_rate}" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column width="12em" hAlign="Center">
+                                <table:Column width="12em" hAlign="Center" visible="false">
                                     <Label text="Residual"/>
                                     <table:template>
                                         <Text id="rpay_rate" text="{purOrderItem>rpay_rate}" />
@@ -320,16 +321,18 @@
                         <form:SimpleForm editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                             <form:content>
                                 <VBox>
-                                    <CheckBox id="partialPayment" text="Partial Payment" selected="{payment/split_pay_type_code}" select=".onChangePayment" />
+                                    <CheckBox id="partialPayment" text="Partial Payment" editable="{mode>/editFlag}"
+                                        selected="{payment>/partial_payment}" />
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M6 S12" />
                                     </layoutData>
                                 </VBox>
                                 <VBox>
-                                    <SegmentedButton id="splitPayTypeCode" selectedKey="{payment/split_pay_type_code}" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
+                                    <SegmentedButton id="splitPayTypeCode" selectedKey="{payment>/split_pay_type_code}" class="sapUiSmallMarginBottom" width="100%" selectionChange="onChangePayment"
+                                        enabled="{= ${payment>/partial_payment}?${mode>/editFlag}:false }" >
                                         <items>
-                                            <SegmentedButtonItem text="Rate (%)" key="DEV_RCV" width="6em" />
-                                            <SegmentedButtonItem text="Amount" key="DEV_REQ" width="6em" />
+                                            <SegmentedButtonItem text="Rate (%)" key="R" width="6em" />
+                                            <SegmentedButtonItem text="Amount" key="A" width="6em" />
                                         </items>
                                     </SegmentedButton>
                                     <layoutData>
@@ -338,21 +341,21 @@
                                 </VBox>
                                 <VBox>
                                     <Label text="Advanced"/>
-                                    <Input id="advanced" value="{payment/prepay_rate}" textAlign="End" liveChange=".onChangePayment" />
+                                    <Input id="advanced" value="{payment>/prepay_rate}" textAlign="End" change=".onChangePayment" editable="{= ${payment>/partial_payment}?${mode>/editFlag}:false }" class="readonlyField" />
                                     <layoutData>
                                         <layout:GridData span="XL2 L3 M6 S12" />
                                     </layoutData>
                                 </VBox>
                                 <VBox>
                                     <Label text="Part"/>
-                                    <Input id="part" value="{payment/progresspay_rate}" textAlign="End" liveChange=".onChangePayment" />
+                                    <Input id="part" value="{payment>/progresspay_rate}" textAlign="End" change=".onChangePayment" editable="{= ${payment>/partial_payment}?${mode>/editFlag}:false }" class="readonlyField" />
                                     <layoutData>
                                         <layout:GridData span="XL2 L3 M6 S12" />
                                     </layoutData>
                                 </VBox>
                                 <VBox>
                                     <Label text="Residual"/>
-                                    <Input id="residual" value="{payment/rpay_rate}" textAlign="End" liveChange=".onChangePayment" />
+                                    <Input id="residual" value="{payment>/rpay_rate}" textAlign="End" change=".onChangePayment" editable="{= ${payment>/partial_payment}?${mode>/editFlag}:false }" class="readonlyField" />
                                     <layoutData>
                                         <layout:GridData span="XL2 L3 M6 S12" />
                                     </layoutData>
@@ -381,11 +384,12 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
-				<Button type="Transparent" text="Draft"         press=".onPageDraftButtonPress" />
-				<Button type="Transparent" text="Preview"       press=".onPagePreviewButtonPress" />
-				<Button type="Transparent" text="PO Sheet"      press=".onPagePOSheetButtonPress" />
-				<Button type="Transparent" text="Request Cancel" press=".onPageRequestCancelButtonPress" />
-				<Button type="Emphasized"  text="Request"       press=".onPageRequestButtonPress"/>
+				<Button type="Transparent" text="Cancel"         press=".onPageCancelEditButtonPress" enabled="{mode>/editFlag}" />
+				<Button type="Transparent" text="Draft"          press=".onPageDraftButtonPress" enabled="{mode>/editFlag}" />
+				<Button type="Transparent" text="Preview"        press=".onPagePreviewButtonPress" />
+				<Button type="Transparent" text="PO Sheet"       press=".onPagePOSheetButtonPress" />
+				<Button type="Transparent" text="Request Cancel" press=".onPageRequestCancelButtonPress" enabled="{= ${appMaster>/approve_status_code} === 'AR'?${mode>/viewFlag}:false }" />
+				<Button type="Emphasized"  text="Request"        press=".onPageRequestButtonPress" enabled="{mode>/editFlag}" />
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

@@ -19,6 +19,7 @@ import java.beans.BeanInfo;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -71,9 +72,10 @@ public class MdCategoryServiceV4 implements EventHandler {
 		String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP_PG_MD_VP_MAPPING_ITEM VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		String v_sql_callProc = "CALL PG_MD_VENDOR_POOL_MAPPING_ITEM_MULTI_PROC( I_TABLE => #LOCAL_TEMP_PG_MD_VP_MAPPING_ITEM, O_RTN_MESG => ? )";
 
-		String v_result = "";
 		Collection<MdVpMappingItemProcType> v_inRows = context.getItems();
-		StringBuffer strRsltBuf = new StringBuffer();
+        ReturnRslt rtnRslt = ReturnRslt.create();
+        ObjectMapper oMapper = new ObjectMapper();
+        Map<String, Object> rsltInfoMap = new HashMap<String, Object>();
 
 		try {
 
@@ -109,25 +111,31 @@ public class MdCategoryServiceV4 implements EventHandler {
 
 			// Procedure Call
 			CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc);
-			//ResultSet v_rs = v_statement_proc.executeQuery();
 			int iCnt = v_statement_proc.executeUpdate();
-			String rsltMesg = "SUCCESS";
 
-			strRsltBuf.append("{")
-					.append("\"rsltCd\":\"000\"")
-					.append(", \"rsltMesg\":\""+rsltMesg+"\"")
-					.append(", \"rsltCnt\":"+iCnt+"")
-					.append("}");
+            rsltInfoMap.put("procCnt", iCnt);
 
-			context.setResult(strRsltBuf.toString());
+            rtnRslt.setRsltCd("000");
+            rtnRslt.setRsltMesg("SUCCESS");
 
+            v_statement_table.close();
+            v_statement_insert.close();
+            v_statement_proc.close();
+            conn.close();
 		} catch (SQLException sqlE) {
-			sqlE.printStackTrace();
-			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"SQLException Fail...\"}");
+            sqlE.printStackTrace();
+            
+            rtnRslt.setRsltCd("999");
+            rtnRslt.setRsltMesg("SQLException Fail...");
+
 		} catch (Exception e) {
-			e.printStackTrace();
-			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"Exception Fail...\"}");
+            e.printStackTrace();
+            
+            rtnRslt.setRsltCd("999");
+            rtnRslt.setRsltMesg("Exception Fail...");
 		} finally {
+            try { rtnRslt.setRsltInfo(oMapper.writeValueAsString(rsltInfoMap)); } catch(Exception ex) {}  // result 추가JSON 정보 
+            context.setResult(rtnRslt);
 			context.setCompleted();
 		}
 
@@ -155,7 +163,9 @@ public class MdCategoryServiceV4 implements EventHandler {
 		String v_sql_callProc = "CALL PG_MD_VENDOR_POOL_MAPPING_STATUS_MULTI_PROC( I_TABLE => #LOCAL_TEMP_PG_MD_VP_MAPPING_STATUS, O_RTN_MESG => ? )";
 
 		Collection<MdVpMappingStatusProcType> v_inRows = context.getItems();
-		StringBuffer strRsltBuf = new StringBuffer();
+        ReturnRslt rtnRslt = ReturnRslt.create();
+        ObjectMapper oMapper = new ObjectMapper();
+        Map<String, Object> rsltInfoMap = new HashMap<String, Object>();
 
 		try {
 
@@ -189,61 +199,33 @@ public class MdCategoryServiceV4 implements EventHandler {
 
 			// Procedure Call
 			CallableStatement v_statement_proc = conn.prepareCall(v_sql_callProc);
-			//statement.execute();
-			//statement.executeQuery();
-			int iCnt = v_statement_proc.executeUpdate();
-			String rsltMesg = "SUCCESS";
+            int iCnt = v_statement_proc.executeUpdate();
+            
+            rsltInfoMap.put("procCnt", iCnt);
 
-			strRsltBuf.append("{")
-					.append("\"rsltCd\":\"000\"")
-					.append(", \"rsltMesg\":\""+rsltMesg+"\"")
-					.append(", \"rsltCnt\":"+iCnt+"")
-					.append("}");
+            rtnRslt.setRsltCd("000");
+            rtnRslt.setRsltMesg("SUCCESS");
 
-			context.setResult(strRsltBuf.toString());
-
+            v_statement_table.close();
+            v_statement_insert.close();
+            v_statement_proc.close();
+            conn.close();
 		} catch (SQLException sqlE) {
-			sqlE.printStackTrace();
-			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"SQLException Fail...\"}");
+            sqlE.printStackTrace();
+            
+            rtnRslt.setRsltCd("999");
+            rtnRslt.setRsltMesg("SQLException Fail...");
+
 		} catch (Exception e) {
-			e.printStackTrace();
-			context.setResult("{\"rsltCd\":\"999\", \"rsltMesg\":\"Exception Fail...\"}");
+            e.printStackTrace();
+            
+            rtnRslt.setRsltCd("999");
+            rtnRslt.setRsltMesg("Exception Fail...");
 		} finally {
+            try { rtnRslt.setRsltInfo(oMapper.writeValueAsString(rsltInfoMap)); } catch(Exception ex) {}  // result 추가JSON 정보 
+            context.setResult(rtnRslt);
 			context.setCompleted();
 		}
-	}
-
-	/**
-	 *
-	 * 전달받은 문자열에 지정된 길이에 맞게 0을 채운다
-	 *
-	 * @param des
-	 * @param size
-	 * @return
-	 */
-	private String getFillZero(String des, int size) {
-		StringBuffer str = new StringBuffer();
-
-		if (des == null) {
-			for (int i = 0; i < size; i++)
-				str.append("0");
-			return str.toString();
-		}
-
-		if (des.trim().length() > size)
-			return des.substring(0, size);
-		else
-			des = des.trim();
-
-		int diffsize = size - des.length();
-
-		for (int i = 0; i < diffsize; i++) {
-			str = str.append("0");
-		}
-
-		str.append(des);
-
-		return str.toString();
 	}
 
 }

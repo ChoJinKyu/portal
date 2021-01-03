@@ -60,14 +60,14 @@
 		</uxap:headerContent>
 
 		<uxap:sections>
-			<!-- <uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="Control Option Details">
+			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="Control Option Details">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection1" >
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
-			</uxap:ObjectPageSection> -->
+			</uxap:ObjectPageSection>
 
-			<uxap:ObjectPageSection titleUppercase="false" title="Managed Values" visible="{= !${midObjectViewModel>/isAddedMode}}">
+			<!-- <uxap:ObjectPageSection titleUppercase="false" title="Managed Values" visible="{= !${midObjectViewModel>/isAddedMode}}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<form:SimpleForm editable="false">
@@ -78,7 +78,7 @@
 						</form:SimpleForm>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
-			</uxap:ObjectPageSection>
+			</uxap:ObjectPageSection> -->
 
 			<uxap:ObjectPageSection titleUppercase="false" title="Langauage">
 				<uxap:subSections>
@@ -144,8 +144,8 @@
                     ariaHasPopup="Dialog"
                     press=".onMessagePopoverPress" />
 				<ToolbarSpacer />
-				<Button type="Emphasized" text="{I18N>/SAVE}" press=".onPageSaveButtonPress" />
 				<Button type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress"/>
+				<Button type="Emphasized" text="{I18N>/SAVE}" press=".onPageSaveButtonPress" />
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

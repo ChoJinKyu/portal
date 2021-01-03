@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 import java.util.Set;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.time.Instant;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -63,6 +64,8 @@ public class DevelopmentReceiptV4 implements EventHandler {
     @On(event = BindDevelopmentReceiptContext.CDS_NAME)
     public void onBindDevelopmentReceipt(BindDevelopmentReceiptContext context) {
 
+        Instant current = Instant.now();
+
         Collection<SavedMolds> v_inMultiData = context.getMoldDatas();
 
         ResultMsg msg = ResultMsg.create();
@@ -97,6 +100,7 @@ public class DevelopmentReceiptV4 implements EventHandler {
                     master.setFamilyPartNumber4((String) row.get("family_part_number_4"));
                     master.setFamilyPartNumber5((String) row.get("family_part_number_5"));
                     master.setSetId(Integer.toString(setIdSeq));
+                    master.setLocalUpdateDtm(current);
 
                     CqnUpdate masterUpdate = Update.entity(MoldMasters_.CDS_NAME).data(master);
                     Result resultMaster = developmentReceiptService.run(masterUpdate);
@@ -105,6 +109,7 @@ public class DevelopmentReceiptV4 implements EventHandler {
                     spec.setMoldId((String) row.get("mold_id"));
                     spec.setDieForm((String) row.get("die_form"));
                     spec.setMoldSize((String) row.get("mold_size"));
+                    spec.setLocalUpdateDtm(current);
                     CqnUpdate specUpdate = Update.entity(MoldSpecs_.CDS_NAME).data(spec);
                     Result resultSpec = developmentReceiptService.run(specUpdate);
                     

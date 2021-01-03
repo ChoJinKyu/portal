@@ -1,0 +1,28 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<form:SimpleForm id="midObjectForm1Edit" editable="false" >
+		
+		<!-- <core:Title text="Normal" /> -->	
+        <Label text="특성코드"/>
+        <Text text="{master>/spmd_character_code}"/>
+        <Label text="특성코드명" required="true"/>
+        <Input value="{
+                path: '{master>/spmd_character_code_name}',
+                type: 'sap.ui.model.type.String',
+                constraints: {
+                    maxLength: 50
+                }
+            }" required="true"></Input>       
+        <Label text="특성설명"/>
+        <Input value="{
+                path: '{master>/spmd_character_desc}',
+                type: 'sap.ui.model.type.String',
+                constraints: {
+                    maxLength: 50
+                }
+            }" ></Input>	
+	</form:SimpleForm>
+</core:FragmentDefinition>

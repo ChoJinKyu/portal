@@ -14,8 +14,9 @@
                 labelFor="input"
                 required="true"/>
             <Input
+                id="titleInput"
                 value="{appMaster>/approval_title}"
-                visible="true"
+                editable="{mode>/editFlag}" class="readonlyField"
                 width="40em" 
                 placeholder="Input data"
                 >

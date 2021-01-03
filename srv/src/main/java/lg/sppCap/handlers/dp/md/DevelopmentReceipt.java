@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 import java.util.Set;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.time.Instant;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -62,6 +63,8 @@ public class DevelopmentReceipt implements EventHandler {
     @On(event = CdsService.EVENT_UPDATE, entity=MoldMstView_.CDS_NAME)
     public void onUpdateDevelopmentReceipt(CdsUpdateEventContext context) {
 
+        Instant current = Instant.now();
+
         List<MoldMstView> v_results = new ArrayList<MoldMstView>();
 
         List<Map<String, Object>> entries = context.getCqn().entries();
@@ -107,6 +110,7 @@ public class DevelopmentReceipt implements EventHandler {
                     master.setFamilyPartNumber3((String) row.get("family_part_number_3"));
                     master.setFamilyPartNumber4((String) row.get("family_part_number_4"));
                     master.setFamilyPartNumber5((String) row.get("family_part_number_5"));
+                    master.setLocalUpdateDtm(current);
 
                     CqnUpdate masterUpdate = Update.entity(MoldMasters_.CDS_NAME).data(master);
                     //long headerUpdateCount = developmentReceiptService.run(masterUpdate).rowCount();
@@ -116,6 +120,7 @@ public class DevelopmentReceipt implements EventHandler {
                     spec.setMoldId((String) row.get("mold_id"));
                     spec.setDieForm((String) row.get("die_form"));
                     spec.setMoldSize((String) row.get("mold_size"));
+                    spec.setLocalUpdateDtm(current);
                     CqnUpdate specUpdate = Update.entity(MoldSpecs_.CDS_NAME).data(spec);
                     //long detailUpdateCount = developmentReceiptService.run(specUpdate).rowCount();
                     Result resultSpec = developmentReceiptService.run(specUpdate);

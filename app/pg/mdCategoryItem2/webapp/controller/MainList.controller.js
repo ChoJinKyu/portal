@@ -208,10 +208,10 @@ sap.ui.define([
 				data : JSON.stringify(param),
 				contentType: "application/json",
 				success: function(data){
-					alert("Success => "+data.value+"###");
+					alert("Reslt Value => ["+data.rsltCd+"] ["+data.rsltMesg+"] ["+data.rsltInfo+"] ");
 				},
-				error: function(e){
-					alert("Fail => ");
+				error: function(req){
+					alert("Ajax Error => "+req.status);
 				}
 			});
 
@@ -239,11 +239,11 @@ sap.ui.define([
 
 			var param = {};
 			var items = [];
-			items.push({tenant_id:"L2100", company_code:"TEST*", org_type_code:"BU", org_code:"BIZ00200", vendor_pool_code:"VP201610260087"});
-			items.push({tenant_id:"L2100", company_code:"TEST*", org_type_code:"BU", org_code:"BIZ00200", vendor_pool_code:"VP201610260089"});
-			items.push({tenant_id:"L2100", company_code:"TEST*", org_type_code:"BU", org_code:"BIZ00200", vendor_pool_code:"VP201610260090"});
-			items.push({tenant_id:"L2100", company_code:"TEST*", org_type_code:"BU", org_code:"BIZ00200", vendor_pool_code:"VP201610260091"});
-			items.push({tenant_id:"L2100", company_code:"TEST*", org_type_code:"BU", org_code:"BIZ00200", vendor_pool_code:"VP201610260092"});
+			items.push({tenant_id:"L2100", company_code:"*", org_type_code:"BU", org_code:"BIZ00200", vendor_pool_code:"VP201610260087"});
+			items.push({tenant_id:"L2100", company_code:"*", org_type_code:"BU", org_code:"BIZ00200", vendor_pool_code:"VP201610260089"});
+			items.push({tenant_id:"L2100", company_code:"*", org_type_code:"BU", org_code:"BIZ00200", vendor_pool_code:"VP201610260090"});
+			items.push({tenant_id:"L2100", company_code:"*", org_type_code:"BU", org_code:"BIZ00200", vendor_pool_code:"VP201610260091"});
+			items.push({tenant_id:"L2100", company_code:"*", org_type_code:"BU", org_code:"BIZ00200", vendor_pool_code:"VP201610260092"});
 
 			param.items = items; // param.items array변수명은 변경불가함 handler에서 사용하기 때문
 			$.ajax({
@@ -253,13 +253,34 @@ sap.ui.define([
 				data : JSON.stringify(param),
 				contentType: "application/json",
 				success: function(data){
-					alert("Success => "+data.value+"###");
+					alert("Reslt Value => ["+data.rsltCd+"] ["+data.rsltMesg+"] ["+data.rsltInfo+"] ");
 				},
-				error: function(e){
-					alert("Fail => ");
+				error: function(req){
+					alert("Ajax Error => "+req.status);
 				}
 			});
 
+        },
+
+        onCallView: function() {                
+            var oView = this.getView();
+            var v_this = this;
+            //var url = "pg/mdCategoryItem2/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdCategoryListConditionView(language_code='EN')/Set";    // 카테고리범주목록View 파라메터 호출O
+            var url = "pg/mdCategoryItem2/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdItemListConditionView(language_code='EN')/Set";    // 아이템특성목록View 파라메터 호출O
+            $.ajax({
+                url: url,
+                type: "GET",
+                contentType: "application/json",
+                success: function(data){
+                    console.log("##"+data.value+"##");
+                    //var v_viewModel = oView.getModel("viewModel").getData();
+                    //v_viewModel.masterList = data.value;
+                    //oView.getModel("viewModel").updateBindings(true);                        
+                },
+                error: function(e){
+                    
+                }
+            });
         },
 
         onMainTableSaveButtonPress: function(){

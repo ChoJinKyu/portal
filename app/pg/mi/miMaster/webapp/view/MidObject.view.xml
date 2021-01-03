@@ -8,7 +8,7 @@
     xmlns:core="sap.ui.core"
     height="100%">
     <App>
-        <Page id="page" title="시황자재 Master">
+        <Page id="page" title="시황자재 Master1" showHeader="false">
             <content>
                 <uxap:ObjectPageLayout                    
                     toggleHeaderOnTitleClick="true"
@@ -126,7 +126,7 @@
                                                                 visible="{=!${oUi>/createMode}}"
                                         /> 
                                         <ComboBox
-                                            id="combobox_category_code"
+                                            id="comboBox_category_code"
                                             required="{oUi>/createMode}"
                                             visible="{oUi>/createMode}"
                                             placeholder="{I18N>/OPTION}"
@@ -155,14 +155,17 @@
                                                 text="{= ${oUiData>/use_flag} ? 'Yes':'No'}" 
                                                 visible="{oUi>/readMode}"
                                                 class="sapMLabelNoText"/>
-                                        <Switch id="switchUse_flag" 
-                                                visible="{=!${oUi>/readMode}}"
-                                                state="{= !${oUi>/createMode} ? ${oUiData>/use_flag} : true}"
-                                        >
-                                            <layoutData>
-                                                <FlexItemData growFactor="1"/>
-                                            </layoutData>
-                                        </Switch>
+                                        <SegmentedButton 
+                                            id="segmentedbutton_use_flag"
+                                            selectedKey="{= !${oUi>/createMode} ? ${oUiData>/use_flag} : true}" 
+                                            visible="{=!${oUi>/readMode}}"
+                                            width="100%">
+                                            <items>
+                                                <SegmentedButtonItem text="Yes" width="3em" key="true"/>
+                                                <SegmentedButtonItem text="No" width="3em" key="false"/>
+                                            </items>
+                                        </SegmentedButton>                                               
+                                       
                                         </layout:VerticalLayout>
                                 </FlexBox>
                                 </uxap:ObjectPageSubSection>
@@ -232,6 +235,7 @@
                                                                             required="{= ${oUi>/readMode}===false &amp;&amp; ${mIMaterialCodeText>language_code}!=='KO'}"
                                                                             visible="{= ${oUi>/readMode}===false &amp;&amp; ${mIMaterialCodeText>language_code}!=='KO'}"
                                                                             placeholder="{I18N>/OPTION}">
+                                                                            <core:Item text="" key=""  />
                                                                     <core:Item key="{languageView>code}"                                                                                
                                                                                text="{languageView>code}"/>                                                                    
                                                                 </ComboBox>

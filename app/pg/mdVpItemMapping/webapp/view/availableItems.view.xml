@@ -16,7 +16,7 @@
 		growingThreshold="20"
 		beforeOpenContextMenu="onBeforeOpenContextMenu"
 		items="{
-			path: 'list>/MdVpItemMapping'
+			path: '{list>/MdCategory}'
 		}">
 		<contextMenu>
 			<Menu>
@@ -25,20 +25,21 @@
 		</contextMenu>
 		<headerToolbar>
 			<OverflowToolbar>
-				<Title text="Available Products" />
+				<Title text="SPMD Character List" />
 			</OverflowToolbar>
 		</headerToolbar>
 		<columns>
 			<Column>
-				<Text text="Product Name" />
+				<Text text="범주코드" />
 			</Column>
 			<Column>
-				<Text text="Category" />
+				<Text text="범주명" />
 			</Column>
-			<Column
-				hAlign="End"
-				width="6rem">
-				<Text text="Quantity" />
+			<Column>
+				<Text text="특성코드" />
+			</Column>
+			<Column>
+				<Text text="특성명" />
 			</Column>
 		</columns>
 		<dragDropConfig>
@@ -52,12 +53,10 @@
 		<items>
 			<ColumnListItem>
 				<cells>
-					<Text text="{Name}" wrapping="false" />
-					<Text text="{Category}" wrapping="false" />
-					<Text text="{
-						path: 'Quantity',
-						type: 'sap.ui.model.type.Integer'
-					}" />
+					<Text text="{spmd_category_code}" wrapping="false" />
+					<Text text="{spmd_category_code_name}" wrapping="false" />
+					<Text text="{spmd_character_code}" wrapping="false" />
+					<Text text="{spmd_character_code_name}" wrapping="false" />
 				</cells>
 			</ColumnListItem>
 		</items>

@@ -259,27 +259,27 @@
                                                         <Label text="ODATA"/>
                                                     </header>
                                                 </Column>                                                                                                                                                                                          
-                                                <Column hAlign="Center" width="150px">
+                                                <Column hAlign="Center" width="200px">
                                                     <header>
                                                         <Label text="Code"/>
                                                     </header>
                                                 </Column>                                                                           
-                                                <Column hAlign="Center" width="150px">
+                                                <Column hAlign="Center" width="200px">
                                                     <header>
                                                         <Label text="Name"/>
                                                     </header>
                                                 </Column>
-                                                <Column hAlign="Center">
+                                                <Column hAlign="Center"  width="150px">
                                                     <header>
                                                         <Label text="Category"/>
                                                     </header>
                                                 </Column>
-                                                <Column hAlign="Center">
+                                                <Column hAlign="Center" >
                                                     <header>
-                                                        <Label text="소요량 단위"/>
+                                                        <Label text="소요량 단위" />
                                                     </header>
                                                 </Column>                                                
-                                                <Column hAlign="Center">
+                                                <Column hAlign="Center" >
                                                     <header>
                                                         <Label text="소요량"/>
                                                     </header>
@@ -329,6 +329,7 @@
                                                         <VBox  alignItems="Center">  
                                                             <Input value="{midList>reqm_quantity_unit}" 
                                                                 visible="{=!${oUi>/readMode}}"
+                                                                required="{=!${oUi>/readMode}}"
                                                                 submit=".onReqmQuantityUnit" 
                                                                 valueHelpRequest=".onReqmQuantityUnit" 
                                                                 showValueHelp="true"

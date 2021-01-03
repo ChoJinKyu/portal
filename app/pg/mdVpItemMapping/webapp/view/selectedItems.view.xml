@@ -1,0 +1,70 @@
+<mvc:View
+    controllerName="pg.mdVpItemMapping.controller.selectedItems"
+	xmlns:dnd="sap.ui.core.dnd"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:c="sap.ui.core"
+	xmlns="sap.m"
+	height="100%">
+	<Table
+		id="table"
+		mode="SingleSelectMaster"
+		growing="true"
+		growingThreshold="10"
+		beforeOpenContextMenu="onBeforeOpenContextMenu"
+		items="{
+			path: '{list>/MdCategory}'
+		}"
+		noDataText="Please drag-and-drop products here.">
+		<contextMenu>
+			<Menu>
+				<MenuItem text="Move to Available Products" press="moveToAvailableProductsTable" />
+				
+			</Menu>
+		</contextMenu>
+		<headerToolbar>
+			<OverflowToolbar>
+				<Title text="Assigned Character" />
+				<ToolbarSpacer/>
+			</OverflowToolbar>
+		</headerToolbar>
+		<columns>
+			<Column>
+				<Text text="범주코드" />
+			</Column>
+			<Column>
+				<Text text="범주명" />
+			</Column>
+			<Column>
+				<Text text="특성코드" />
+			</Column>
+			<Column>
+				<Text text="특성명" />
+			</Column>
+		</columns>
+		<dragDropConfig>
+			<dnd:DragInfo
+				groupName="selected2available"
+				sourceAggregation="items" />
+			<dnd:DropInfo
+				groupName="available2selected"
+				targetAggregation="items"
+				dropPosition="Between"
+				drop="onDropSelectedProductsTable" />
+			<dnd:DragDropInfo
+				sourceAggregation="items"
+				targetAggregation="items"
+				dropPosition="Between"
+				drop="onDropSelectedProductsTable"/>
+		</dragDropConfig>
+		<items>
+			<ColumnListItem>
+				<cells>
+					<Text text="{spmd_category_code}" wrapping="false" />
+					<Text text="{spmd_category_code_name}" wrapping="false" />
+					<Text text="{spmd_character_code}" wrapping="false" />
+					<Text text="{spmd_character_code_name}" wrapping="false" />
+				</cells>
+			</ColumnListItem>
+		</items>
+	</Table>
+</mvc:View>

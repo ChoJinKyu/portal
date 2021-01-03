@@ -1,7 +1,11 @@
 namespace dp;
 
-@cds.persistence.exists
+using {dp as Project_Event} from './DP_TC_PROJECT_EVENT-model';
+using {dp as Project_Similar_Model} from './DP_TC_PROJECT_SIMILAR_MODEL-model';
+using {dp as Project_Base_Exrate} from './DP_TC_PROJECT_BASE_EXRATE-model';
+using {dp as Project_Addition_Info} from './DP_TC_PROJECT_ADDITION_INFO-model';
 
+@cds.persistence.exists
 entity TC_Project_View {
     key tenant_id                   : String(5) not null  @title : '테넌트ID';
     key project_code                : String(30) not null @title : '프로젝트코드';
@@ -57,4 +61,44 @@ entity TC_Project_View {
         target_status_code          : String(30)          @title : '목표재료비상태코드';
         forecast_status_name        : String(30)          @title : '예상재료비상태명';
         forecast_status_code        : String(30)          @title : '예상재료비상태코드';
+
+        events                      : Composition of many Project_Event.Tc_Project_Event
+                                          on  events.tenant_id    = tenant_id
+                                          and events.project_code = project_code
+                                          and events.model_code   = model_code;
+
+        silimar_model               : Composition of many Project_Similar_Model.Tc_Project_Similar_Model
+                                          on  silimar_model.tenant_id    = tenant_id
+                                          and silimar_model.project_code = project_code
+                                          and silimar_model.model_code   = model_code;
+
+        base_extra                  : Composition of many Project_Base_Exrate.Tc_Project_Base_Exrate
+                                          on  base_extra.tenant_id    = tenant_id
+                                          and base_extra.project_code = project_code
+                                          and base_extra.model_code   = model_code;
+
+
+        mtlmob                      : Composition of many Project_Addition_Info.Tc_Project_Addition_Info
+                                          on  mtlmob.tenant_id          = tenant_id
+                                          and mtlmob.project_code       = project_code
+                                          and mtlmob.model_code         = model_code
+                                          and mtlmob.addition_type_code = 'MTLLMOB'; //물동
+
+        sales_price                 : Composition of many Project_Addition_Info.Tc_Project_Addition_Info
+                                          on  sales_price.tenant_id          = tenant_id
+                                          and sales_price.project_code       = project_code
+                                          and sales_price.model_code         = model_code
+                                          and sales_price.addition_type_code = 'SALES_PRICE'; //판가
+
+        prcs_cost                   : Composition of many Project_Addition_Info.Tc_Project_Addition_Info
+                                          on  prcs_cost.tenant_id          = tenant_id
+                                          and prcs_cost.project_code       = project_code
+                                          and prcs_cost.model_code         = model_code
+                                          and prcs_cost.addition_type_code = 'PROCESSING_COST'; //가공비
+
+        sgna                        : Composition of many Project_Addition_Info.Tc_Project_Addition_Info
+                                          on  sgna.tenant_id          = tenant_id
+                                          and sgna.project_code       = project_code
+                                          and sgna.model_code         = model_code
+                                          and sgna.addition_type_code = 'SGNA'; //판관비
 }

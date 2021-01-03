@@ -39,6 +39,7 @@ entity Li_Publish_Item_View {
         po_status_code             : String(30)          @title : '발주상태코드';
         request_date               : Date                @title : '요청일자';
         supplier_opinion           : String(3000)        @title : 'VOC';
+        remark                     : String(3000)        @title : '비고';
 
 }
 
