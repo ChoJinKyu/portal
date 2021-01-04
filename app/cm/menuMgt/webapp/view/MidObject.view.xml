@@ -92,7 +92,7 @@
                               width="100%" 
                               selectedKey="{master>/chain_code}"
                               items="{
-                                  path: 'util>/CodeDetails',
+                                  path: 'util>/Code',
                                   filters: [
                                       {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                       {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
@@ -106,7 +106,7 @@
                               selectedKey="{master>/menu_type_code}" 
                               editable="{= ${midObjectView>/mode} === 'C'}"
                               items="{
-                                  path: 'util>/CodeDetails',
+                                  path: 'util>/Code',
                                   filters: [
                                       {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                       {path: 'group_code', operator: 'EQ', value1: 'CM_MENU_TYPE_CODE'}
@@ -284,7 +284,7 @@
                                         selectedKey="{details>language_code}"
                                         width="100%"
                                         items="{
-                                            path: 'util>/CodeDetails',
+                                            path: 'util>/Code',
                                             filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}

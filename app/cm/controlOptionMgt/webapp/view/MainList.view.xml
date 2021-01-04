@@ -40,7 +40,7 @@
                             <ComboBox id="searchChainCombo" width="100%" 
                                 selectedKey="CM" 
                                 items="{
-                                    path: 'util>/CodeDetails',
+                                    path: 'util>/Code',
                                     filters: [
                                         {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                         {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
@@ -55,7 +55,7 @@
                               id="searchOrgTypeCombo"
                               width="100%"
                               items="{
-                                path: 'util>/CodeDetails',
+                                path: 'util>/Code',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                     {path: 'group_code', operator: 'EQ', value1: 'CM_ORG_TYPE_CODE'}
@@ -103,7 +103,7 @@
                               id="searchLevelCombo"
                               width="100%"
                               items="{
-                                path: 'util>/CodeDetails',
+                                path: 'util>/Code',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                     {path: 'group_code', operator: 'EQ', value1: 'CM_CTRL_OPTION_LEVEL_CODE'}

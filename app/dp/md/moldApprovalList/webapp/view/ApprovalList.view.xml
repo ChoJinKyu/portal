@@ -321,6 +321,9 @@
                             <!-- <Text text="Status" /> -->
                             <Text text="{path:'I18N>/APPROVE_STATUS_CODE', formatter:'I18NFormatter'}" />
                         </Column>
+                        <Column visible="false" id="mainColumnEmail"  >
+                            <!-- <Text text="Status" /> -->
+                        </Column>
                     </columns>
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
@@ -418,6 +421,7 @@
                                 <!-- <ObjectIdentifier text="{list>request_date}" /> -->
                                 <DatePicker value="{list>request_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
                                 <Text text="{list>approve_status}" />
+                                <Text text="{list>email_id}" />
                                 <!-- <ObjectIdentifier text="{list>requestor_empno}" /> -->
                                 
 

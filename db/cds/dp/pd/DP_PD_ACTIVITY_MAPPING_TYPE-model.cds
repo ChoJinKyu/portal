@@ -1,8 +1,7 @@
 namespace dp;	
-using util from '../../cm/util/util-model';  	
-// using {dp as activityMapping} from '../pd/DP_PD_ACTIVITY_MAPPING-model';	
-	
-entity Pd_Activity_Mapping {	
+
+@cds.persistence.exists	
+entity Pd_Activity_Mapping_Type {	
   key tenant_id : String(5)  not null @title: '테넌트ID' ;	
   key company_code : String(10) default '*' not null @title: '회사코드' ;	
   key org_type_code : String(2)  not null @title: '조직유형코드' ;	
@@ -10,6 +9,10 @@ entity Pd_Activity_Mapping {
   key activity_code : String(40)  not null @title: '활동코드' ;	
   key product_activity_code : String(40)  not null @title: '제품활동코드' ;	
     activity_dependency_code : String(30) @title: 'Activity 선후행' ;	
-    active_flag : Boolean   @title: '활성여부' ;	
-}	
-extend Pd_Activity_Mapping with util.Managed;
+    active_flag : Boolean   @title: '활성여부' ;
+    update_user_id : String(255) @title: '최종수정자';
+    syste_update_dtm : DateTime @title: '최종수정일시';    
+    crud_type_code : String(1)     @title: 'CRUD유형';
+    update_activity_code : String(30)  not null @title: '변경후 활동코드' ;	
+    update_product_activity_code : String(30)  not null @title: '변경후 제품활동코드' ;	
+}

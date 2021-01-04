@@ -481,7 +481,7 @@ sap.ui.define([
                 //         }
             });
             oCountryCombo.bindItems({
-                path: 'util>/CodeDetails',
+                path: 'util>/Code',
                 filters: [
                     new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
                     new Filter("group_code", FilterOperator.EQ, 'CM_LANG_CODE')

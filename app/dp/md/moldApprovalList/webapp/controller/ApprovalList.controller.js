@@ -106,7 +106,7 @@ sap.ui.define([
             // init and activate controller
             this._oTPC = new TablePersoController({
                 table: this.byId("mainTable"),
-                componentName: "moldApprovalList",
+                componentName: "Approvals",
                 persoService: ApprovalListPersoService,
                 hasGrouping: true
             }).activate();

@@ -75,6 +75,7 @@
                         </VBox>
                         <table:template>
                             <ComboBox visible="{contModel>/editMode}"
+                                    editable="false"
                                     selectedKey="{mdItemMaster>mold_item_type_code}" items="{ path : 'util>/CodeDetails',
                                     filters : [
                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},

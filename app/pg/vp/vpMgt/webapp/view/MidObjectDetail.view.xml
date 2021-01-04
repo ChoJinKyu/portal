@@ -279,7 +279,7 @@
                                 <OverflowToolbar>
                                     <Title text="List ({= ${suplist>/VpSupplierDtlView}.length || 0})" level="H2"/>
                                     <ToolbarSpacer/>
-                                    <Button id="sppListAdd"     type="Emphasized" text="Add"        press=".onSppListAddButtonPress"   enabled="{mode>/viewFlag}" />
+                                    <Button id="sppListAdd"     type="Emphasized" text="Add"        press=".onDialogSupList"   enabled="{mode>/viewFlag}" />
                                     <Button id="sppListDel"     type="Emphasized" text="Delete"     press=".onSppListDelButtonPress"   enabled="{mode>/viewFlag}" />
                                     <ToolbarSeparator/>
                                 </OverflowToolbar>
@@ -444,7 +444,7 @@
                             <table:columns>
                                 <table:Column label="이름" width="20%" filterProperty="user_korean_name">
                                     <table:template>
-                                        <Text text="{manlist>user_korean_name}" wrapping="false" />
+                                        <Text text="{manlist>user_local_name}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
                                 <table:Column label="이름(EN)" width="0em" filterProperty="user_english_name">
@@ -464,7 +464,7 @@
                                 </table:Column>                                                            
                                 <table:Column label="부서" width="20%" filterProperty="department_korean_name">
                                     <table:template>
-                                        <Text text="{manlist>department_korean_name}" wrapping="false" />
+                                        <Text text="{manlist>department_local_name}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
                                 <table:Column label="" width="0em" filterProperty="department_english_name">
