@@ -8,8 +8,8 @@ entity Pd_Part_Category_View {
   key company_code : String(10) default '*' not null @title: '회사코드' ;	
   key org_type_code : String(2)  not null @title: '조직유형코드' ;	
   key org_code : String(10)  not null @title: '조직코드' ;	
-  key category_code : String(50)  not null @title: '카테고리코드' ;	
-    parent_category_code : String(50)   @title: '상위카테고리코드' ;
+  key category_code : String(40)  not null @title: '카테고리코드' ;	
+    parent_category_code : String(40)   @title: '상위카테고리코드' ;
     sequence : Decimal default 1  @title: '순번' ;	
     category_name : String(240)   @title: '카테고리명' ;
     active_flag : Boolean   @title: '활성여부' ;	

@@ -307,7 +307,6 @@ public class MoldApprovalV4 implements EventHandler {
         ResultMsg msg = ResultMsg.create();
             
         System.out.println("data>>> " + data);
-        System.out.println("aMaster>>> " + aMaster);
         try {
             if(!aMaster.isEmpty() && aMaster.size() > 0){
                 for(ApprovalMasterV4 row : aMaster ){
@@ -317,19 +316,7 @@ public class MoldApprovalV4 implements EventHandler {
                     msg.setResultCode(0);
                     msg.setCompanyCode(row.getCompanyCode());
                     msg.setPlantCode(row.getOrgCode());
-                    
-        
-                    System.out.println("msg >>>>>" + msg);
-                    
-                    ApprovalMasters del = ApprovalMasters.create();
-                    del.setApprovalNumber(row.getApprovalNumber()); 
-                    del.setTenantId(row.getTenantId());
-                    del.setCompanyCode(row.getCompanyCode()); 
-                    del.setOrgCode(row.getOrgCode()); 
-                    // Delete d = Delete.from(ApprovalMasters_.CDS_NAME).matching(del); 
-                    // Result rst = moldApprovalService.run(d);
-                    int mold_id;
-
+                
                     String sql="SELECT MOLD_ID FROM DP_MD_APPROVAL_DTL WHERE APPROVAL_NUMBER='"+row.getApprovalNumber()+"'";
                     Connection conn = jdbc.getDataSource().getConnection();
                     // Local Temp Table 생성
@@ -341,41 +328,68 @@ public class MoldApprovalV4 implements EventHandler {
                     while (rs.next()) { 
                         moldNums.add(rs.getString(1));
                     }
-
-                    System.out.println("Approval_number ::: "+ row.getApprovalNumber()+ "MOLD_ID ============= "+moldNums);
-
-                    for(int i=0; i< moldNums.size(); i++){
-                        String sql2="SELECT CURRENCY_CODE, TARGET_AMOUNT FROM DP_MD_MST WHERE MOLD_ID='"+moldNums.get(i)+"'";
-                        PreparedStatement statement2 = conn.prepareStatement(sql2);
-                        rs = statement2.executeQuery();
-                        ArrayList<String> moldTblData = new ArrayList<String>();
-                        
-                        while (rs.next()) { 
-                            moldTblData.add(rs.getString(1));
-                            moldTblData.add(rs.getString(2));
+                    if(row.getApprovalTypeCode().equals("B")){
+                        // 해당 품의서가 가지는 mold갯수만큼 돌면서 mold Master 정보 초기화함
+                        if(moldNums.size() > 0){
+                            for(int i=0; i< moldNums.size(); i++){
+                                String sql3="UPDATE DP_MD_MST SET "
+                                +"ACCOUNT_CODE=NULL, ACCOUNTING_DEPARTMENT_CODE=NULL, "
+                                +"INVESTMENT_ECST_TYPE_CODE=NULL, IMPORT_COMPANY_CODE=NULL, "
+                                +"IMPORT_COMPANY_ORG_CODE=NULL, PROJECT_CODE=NULL, "
+                                +"MOLD_PRODUCTION_TYPE_CODE=NULL, MOLD_ITEM_TYPE_CODE=NULL, "
+                                +"PROVISIONAL_BUDGET_AMOUNT=NULL, ASSET_TYPE_CODE=NULL "
+                                +"WHERE MOLD_ID='"+moldNums.get(i)+"'";
+                                statement = conn.prepareStatement(sql3);
+                                statement.executeUpdate();
+                            }
                         }
-                        System.out.println("moldTblData :::::"+moldTblData);
-                        System.out.println("moldTblData :::::"+moldTblData.get(0));
-                        System.out.println("moldTblData :::::"+moldTblData.get(1));
-                        //UPDATE [테이블] SET [열] = '변경할값' WHERE [조건]
-
-                        String sql3="UPDATE DP_MD_MST SET CURRENCY_CODE='"+moldTblData.get(1)+"', TARGET_AMOUNT='"+moldTblData.get(2)+"'";
+                    }else if(row.getApprovalTypeCode().equals("V")){
+                        // 해당 품의서가 가지는 mold갯수만큼 돌면서 mold Master 정보 초기화함
+                        if(moldNums.size() > 0){
+                            for(int i=0; i< moldNums.size(); i++){
+                                String sql3="UPDATE DP_MD_MST SET "
+                                +"SPLIT_PAY_TYPE_CODE=NULL, PREPAY_RATE=NULL, "
+                                +"PROGRESSPAY_RATE=NULL, RPAY_RATE=NULL "
+                                +"WHERE MOLD_ID='"+moldNums.get(i)+"'";
+                                statement = conn.prepareStatement(sql3);
+                                statement.executeUpdate();
+                            }
+                        }
+                    }else if(row.getApprovalTypeCode().equals("E")){
+                        // 해당 품의서가 가지는 mold갯수만큼 돌면서 mold Master 정보 초기화함
+                        if(moldNums.size() > 0){
+                            for(int i=0; i< moldNums.size(); i++){
+                                String sql3="UPDATE DP_MD_MST SET "
+                                +"CURRENCY_CODE=NULL, TARGET_AMOUNT=NULL "
+                                +"WHERE MOLD_ID='"+moldNums.get(i)+"'";
+                                statement = conn.prepareStatement(sql3);
+                                statement.executeUpdate();
+                            }
+                            // Quotation 삭제
+                            String sql4="DELETE FROM DP_MD_QUOTATION WHERE APPROVAL_NUMBER='"+row.getApprovalNumber()+"'";
+                            statement = conn.prepareStatement(sql4);
+                            statement.executeUpdate();
+                        }
+                        
                     }
-
-                    
-
-                    // // Quotation 삭제
-                    // String sql="DELETE FROM DP_MD_QUOTATION WHERE APPROVAL_NUMBER='"+row.getApprovalNumber()+"'";
-                    // // Referer 삭제
-                    // String sql3="DELETE FROM CM_REFERER WHERE APPROVAL_NUMBER='"+row.getApprovalNumber()+"'";
-                    // // Approver 삭제
-                    // String sql4="DELETE FROM CM_APPROVER WHERE APPROVAL_NUMBER='"+row.getApprovalNumber()+"'";
-                    // // Approval_DTL 삭제
-                    // String sql5="DELETE FROM DP_MD_APPROVAL_DTL WHERE APPROVAL_NUMBER='"+row.getApprovalNumber()+"'";
-                    
-
-                    // mold_id=jdbc.queryForObject(sql,Integer.class);
-                    // System.out.println("mold_id >>>>>>", mold_id);
+                        
+                        // Referer 삭제
+                        String sql5="DELETE FROM CM_REFERER WHERE APPROVAL_NUMBER='"+row.getApprovalNumber()+"'";
+                        statement = conn.prepareStatement(sql5);
+                        statement.executeUpdate();
+                        // Approver 삭제
+                        String sql6="DELETE FROM CM_APPROVER WHERE APPROVAL_NUMBER='"+row.getApprovalNumber()+"'";
+                        statement = conn.prepareStatement(sql6);
+                        statement.executeUpdate();
+                        // Approval_DTL 삭제
+                        String sql7="DELETE FROM DP_MD_APPROVAL_DTL WHERE APPROVAL_NUMBER='"+row.getApprovalNumber()+"'";
+                        statement = conn.prepareStatement(sql7);
+                        statement.executeUpdate();
+                        // Approval_MST 삭제
+                        String sql8="DELETE FROM CM_APPROVAL_MST WHERE APPROVAL_NUMBER='"+row.getApprovalNumber()+"'";
+                        statement = conn.prepareStatement(sql8);
+                        statement.executeUpdate();            
+     
                 }
             }
         }
@@ -478,18 +492,12 @@ public class MoldApprovalV4 implements EventHandler {
                 m.setUpdateUserId(aMaster.getUpdateUserId()); 
 
                 if(row.getRowState().equals("D")){ // 삭제일 경우 수정되는 항목에 대한 리셋 
-                    m.setMoldItemTypeCode("");
                     m.setTargetAmount(null);
-                    m.setProvisionalBudgetAmount(null);
-                    m.setBookCurrencyCode("");
                     m.setCurrencyCode("");
                     CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(m); 
                     Result rst = moldApprovalService.run(u);
                 }else{ 
-                    m.setMoldItemTypeCode(row.getMoldItemTypeCode());
                     m.setTargetAmount(new BigDecimal((String)(row.getTargetAmount()==null?"0":row.getTargetAmount())));
-                    m.setProvisionalBudgetAmount(new BigDecimal((String)(row.getProvisionalBudgetAmount()==null?"0":row.getProvisionalBudgetAmount())));
-                    m.setBookCurrencyCode(row.getBookCurrencyCode());
                     m.setCurrencyCode(row.getCurrencyCode());
 
                     CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(m); 

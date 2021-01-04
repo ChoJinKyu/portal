@@ -1,0 +1,470 @@
+<!-- 
+   description : 발주품의 미리보기  
+-->
+<core:FragmentDefinition
+    xmlns:uxap="sap.uxap"
+    xmlns:form="sap.ui.layout.form" 
+    xmlns:core="sap.ui.core" 
+    xmlns:layout="sap.ui.layout"
+    xmlns:tnt="sap.tnt"
+    xmlns:sc="sap.suite.ui.commons"
+    xmlns:si="sap.suite.ui.commons.statusindicator"
+    xmlns:u="sap.ui.unified" 
+    xmlns:table="sap.ui.table" 
+    xmlns="sap.m"
+    xmlns:rte="sap.ui.richtexteditor">
+<Dialog id="purchaseOrderLocalPreview" class="sapUiSmallMargin" title="" contentWidth="100%"  >
+  <VBox height="500px">
+	<uxap:ObjectPageLayout 
+        id="page_bp_preview"
+		showTitleInHeaderContent="true"
+		showEditHeaderButton="true" 
+        upperCaseAnchorBar="false"
+		showFooter="true"
+		editHeaderButtonPress="handleEditBtnPress" >
+		<uxap:headerTitle>
+			<uxap:ObjectPageDynamicHeaderTitle>
+				<uxap:expandedHeading>
+					<Title text="{i18n>purchaseOrderLocalApprovalTitle}" wrapping="true" />
+				</uxap:expandedHeading>
+
+				<uxap:snappedHeading>
+                    <FlexBox fitContainer="true" alignItems="Center">
+						<Title text="{i18n>purchaseOrderLocalApprovalTitle}" wrapping="true"/>
+					</FlexBox>
+				</uxap:snappedHeading>
+
+			    <uxap:expandedContent>
+				</uxap:expandedContent>
+
+				<uxap:snappedContent>
+				</uxap:snappedContent>
+
+				<uxap:snappedTitleOnMobile>
+				</uxap:snappedTitleOnMobile>
+
+				<uxap:actions>
+                    <!-- 상단 버튼 영역 -->
+				</uxap:actions>
+
+                <uxap:navigationActions>
+					<OverflowToolbarButton  icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPrvClosePress" />
+                </uxap:navigationActions>
+			</uxap:ObjectPageDynamicHeaderTitle>
+		</uxap:headerTitle>
+
+		<uxap:headerContent>
+			<FlexBox wrap="Wrap" >
+				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                    <ObjectStatus
+                        title="Report No"
+                        text="{appMaster>/approval_number}"/>
+                    <ObjectStatus
+                        title="Requester"
+                        text="{appMaster>/requestor_empno}"/>
+                    <ObjectStatus
+                        title="Request Date"
+                        text="{appMaster>/request_date}"/>
+				</layout:VerticalLayout>
+
+                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+					<Label text="Status :"/>
+                    <ObjectStatus
+                        class="sapMObjectStatusLarge"
+                        text="{= ${appMaster>/approval_number} === undefined ?'New':''}{appMaster>/approve_status_code_nm}"
+                        state="Error" />
+				</layout:VerticalLayout>
+
+                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                      <HBox>
+                        <Title text="Process"/>
+                    </HBox>
+                    <HBox>
+                        <sc:MicroProcessFlow>
+                            <sc:content>
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
+                                <sc:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                            </sc:content>
+                        </sc:MicroProcessFlow>
+                    </HBox>
+                    <HBox>
+                        <Text text=" PR" renderWhitespace="true" />
+                        <Text text="Budget" width="6em" textAlign="Right" />
+                        <Text text="RFQ" width="6em" textAlign="Center" />
+                        <Text text="   Mold&#10;   Spec" renderWhitespace="true" />
+                        <Text text="Purchase&#10; Contract" width="8em" textAlign="Center" />
+                        <Text text="PO" renderWhitespace="true" />
+                        <Text text="RCV" width="5em" textAlign="Right" />
+                        <Text text="Lease&#10;Contract" width="7.5em" textAlign="Center" />
+                        <Text text="Invoice" />
+                    </HBox>
+                </layout:VerticalLayout>
+			</FlexBox>
+		</uxap:headerContent>
+
+		<uxap:sections>
+			<uxap:ObjectPageSection titleUppercase="true" title="General Info">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection >
+                            <layout:VerticalLayout class="sapUiSmallMarginBeginEnd"> 
+                            <HBox alignItems="Center">
+                                <Label
+                                    text="Subject"
+                                    class="sapUiTinyMarginEnd"
+                                    textAlign="Left"
+                                    labelFor="input"/>
+                                <Text text="{appMaster>/approval_title}"/>
+                                 
+                            </HBox>
+                            <VBox>
+                                <Label text="Description"></Label> 
+                                <rte:RichTextEditor width="100%" height="600px" value="{appMaster>/approval_contents}" 
+                                    customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="true"
+                                    editable="false" />
+                            </VBox>
+                        </layout:VerticalLayout>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+            <uxap:ObjectPageSection titleUppercase="false" title="Purchase Order Item">
+				<uxap:subSections>
+                    <uxap:ObjectPageSubSection>
+                        <HBox>
+                            <VBox class="sapUiSmallMargin">
+                                <Label text="{I18N>/AFFILIATE}" />
+                                <ObjectStatus
+                                    text="[{company>/company_code}] {company>/company_name}" 
+                                    state="Error"
+                                    />
+                            </VBox>
+                            <VBox class="sapUiSmallMargin">
+                                <Label text="{I18N>/BUSINESS_DIVISION}" />
+                                <ObjectStatus
+                                    text="[{plant>/org_code}] {plant>/org_name}" 
+                                    state="Error"
+                                    />
+                            </VBox>
+                        </HBox>
+					</uxap:ObjectPageSubSection>
+                    <uxap:ObjectPageSubSection>
+                        <!-- Purchase Order Item Table -->
+                        <table:Table
+                            selectionMode="None"
+                            visibleRowCountMode="Auto"
+                            rows="{purOrderItem>/PurchaseOrderItems}"
+                            cellClick=".onCellClick"
+                            >
+                            <table:extension>
+                                <OverflowToolbar>
+                                    <Title text="Total PO Amount : {path: 'payment>/purchasing_amount', formatter: '.numberFormatter.toNumberString'} [{payment>/currency_code}]" level="H2"/>
+                                </OverflowToolbar>
+                            </table:extension>                             
+                            <table:columns>
+                                <table:Column width="15em" >
+                                    <Label text="Model"/>
+                                    <table:template>
+                                        <Text text="{purOrderItem>model}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="8em" hAlign="Center">
+                                    <Label text="Mold No"/>
+                                    <table:template>
+                                        <Text text="{purOrderItem>mold_number}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="3em" hAlign="Center">
+                                    <Label text="Seq"/>
+                                    <table:template>
+                                        <Text text="{purOrderItem>mold_sequence}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="12em">
+                                    <Label text="Description"/>
+                                    <table:template>
+                                        <Text text="{purOrderItem>spec_name}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="8em" hAlign="Center">
+                                    <VBox>
+                                    <Label text="Mold Item"/>
+                                    <Label text="Type"/>
+                                    </VBox>
+                                    <table:template>
+                                        <ComboBox   selectedKey="{purOrderItem>mold_item_type_code}"
+                                                    items="{
+                                                                path : 'util>/Code',
+                                                                filters : [
+                                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                                    {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
+                                                                ]
+                                                            }"
+                                        editable="false" class="readonlyField" >
+                                            <core:Item key="{util>code}" text="{util>code_name}" />
+                                        </ComboBox>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="6em" hAlign="Center">
+                                    <VBox>
+                                    <Label text="Book"/>
+                                    <Label text="Currency"/>
+                                    </VBox>
+                                    <table:template>
+                                        <Text text="{purOrderItem>book_currency_code}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="7em" hAlign="End">
+                                    <VBox>
+                                    <Label text="Budget"/>
+                                    <Label text="Amount"/>
+                                    </VBox>
+                                    <table:template>
+                                        <ObjectNumber emphasized="false"
+                                        number="{parts:[{path:'purOrderItem>provisional_budget_amount'},{path:'purOrderItem>book_currency_code'}],
+                                                type: 'sap.ui.model.type.Currency',
+                                                formatOptions: {showMeasure: false}}" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="6em" hAlign="Center">
+                                    <Label text="Currency"/>           
+                                    <table:template>
+                                        <Text text="{purOrderItem>currency_code}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="7em" hAlign="End">
+                                    <VBox>
+                                    <Label text="PO"/>
+                                    <Label text="Amount"/>
+                                    </VBox>
+                                    <table:template>
+                                        <ObjectNumber emphasized="false"
+                                        number="{parts:[{path:'purOrderItem>purchasing_amount'},{path:'purOrderItem>currency_code'}],
+                                                type: 'sap.ui.model.type.Currency',
+                                                formatOptions: {showMeasure: false}}" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="10em" hAlign="Center">
+                                    <VBox>
+                                    <Label text="Order"/>
+                                    <Label text="Supplier"/>
+                                    </VBox>
+                                    <table:template>
+                                        <Text text="{purOrderItem>supplier_code}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="7em" hAlign="Center">
+                                    <VBox>
+                                    <Label text="Target"/>
+                                    <Label text="Amount"/>
+                                    </VBox>
+                                    <table:template>
+                                        <ObjectNumber emphasized="false"
+                                        number="{parts:[{path:'purOrderItem>target_amount'},{path:'purOrderItem>currency_code'}],
+                                                type: 'sap.ui.model.type.Currency',
+                                                formatOptions: {showMeasure: false}}" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="12em" hAlign="Center">
+                                    <VBox>
+                                    <Label text="Production"/>
+                                    <Label text="Type"/>
+                                    </VBox>
+                                    <table:template>
+                                        <ComboBox   selectedKey="{purOrderItem>mold_production_type_code}"
+                                                    items="{
+                                                                path : 'util>/Code',
+                                                                filters : [
+                                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                                    {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
+                                                                ]
+                                                            }"
+                                        editable="false" class="readonlyField" >
+                                            <core:Item key="{util>code}" text="{util>code_name}" />
+                                        </ComboBox>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="12em" hAlign="Center">
+                                    <VBox>
+                                    <Label text="Family"/>
+                                    <Label text="Part No"/>
+                                    </VBox>
+                                    <table:template>
+                                        <Text text="{purOrderItem>family_part_number_1}" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="12em" hAlign="Center" visible="false">
+                                    <Label text="Partial Payment"/>
+                                    <table:template>
+                                        <Text text="{purOrderItem>split_pay_type_code}" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="12em" hAlign="Center" visible="false">
+                                    <Label text="Advanced"/>
+                                    <table:template>
+                                        <Text text="{purOrderItem>prepay_rate}" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="12em" hAlign="Center" visible="false">
+                                    <Label text="Part"/>
+                                    <table:template>
+                                        <Text text="{purOrderItem>progresspay_rate}" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="12em" hAlign="Center" visible="false">
+                                    <Label text="Residual"/>
+                                    <table:template>
+                                        <Text text="{purOrderItem>rpay_rate}" />
+                                    </table:template>
+                                </table:Column>
+                            </table:columns>
+                        </table:Table>
+                    </uxap:ObjectPageSubSection>
+                    <uxap:ObjectPageSubSection>
+                        <form:SimpleForm editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                            <form:content>
+                                <VBox>
+                                    <CheckBox text="Partial Payment" editable="false"
+                                        selected="{payment>/partial_payment}" />
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox>
+                                    <SegmentedButton selectedKey="{payment>/split_pay_type_code}" class="sapUiSmallMarginBottom" width="100%" selectionChange="onChangePayment"
+                                        enabled="false" >
+                                        <items>
+                                            <SegmentedButtonItem text="Rate (%)" key="R" width="6em" />
+                                            <SegmentedButtonItem text="Amount" key="A" width="6em" />
+                                        </items>
+                                    </SegmentedButton>
+                                    <layoutData>
+                                        <layout:GridData span="XL6 L6 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox>
+                                    <Label text="Advanced"/>
+                                    <Input value="{payment>/prepay_rate}" textAlign="End" change=".onChangePayment" editable="false" class="readonlyField" />
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L3 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox>
+                                    <Label text="Part"/>
+                                    <Input value="{payment>/progresspay_rate}" textAlign="End" change=".onChangePayment" editable="false" class="readonlyField" />
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L3 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox>
+                                    <Label text="Residual"/>
+                                    <Input value="{payment>/rpay_rate}" textAlign="End" change=".onChangePayment" editable="false" class="readonlyField" />
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L3 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                            </form:content>
+                        </form:SimpleForm>
+                    </uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+			<uxap:ObjectPageSection titleUppercase="false" title="Attachments">
+				<uxap:subSections>
+				    <uxap:ObjectPageSubSection id="pageAttachmentsSection_bp" >
+                            <Label text=""/>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+			<uxap:ObjectPageSection titleUppercase="false" title="Approval Line">
+				<uxap:subSections>
+                	<uxap:ObjectPageSubSection id="pageApprovalLineSection_bp">
+                    <!-- Approval Line -->
+                    <Table       
+                            growing="true"
+                            growingThreshold="20"
+                            class="sapFDynamicPageAlignContent" 
+                            updateFinished=".onListMainTableUpdateFinished"
+                            rowSelectionChange=".onCheck"
+                            mode="None"
+                            width="auto"
+                            items="{approverPreview>/Approvers}"
+                            >
+                        <headerToolbar>
+                            <OverflowToolbar>
+                            <Label text="Approval Line"/>
+                            </OverflowToolbar>
+                        </headerToolbar>
+                        <columns>
+                            <Column  minScreenWidth="Tablet" hAlign="Center"  width="3em" >
+                                <Text text="No." />
+                            </Column>
+                            <Column  minScreenWidth="Tablet" hAlign="Center" width="10em" >
+                                <Text text="Type" />
+                            </Column>
+                            <Column  minScreenWidth="Tablet" hAlign="Center" width="20em" >
+                                <Text text="Name/Dept" />
+                            </Column>
+                            <Column  minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                                <Text text="Status" />
+                            </Column> 
+                            <Column  minScreenWidth="Tablet" hAlign="Center" >
+                                <Text text="Comment" />
+                            </Column>
+                    
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="{approverPreview>approve_sequence}" />
+                                    <Text text="{approverPreview>approver_type_code_nm}" />
+                                    <Text text="{approverPreview>approver_name}" />
+                                    <Text text="{approverPreview>approve_status_code}" />
+                                    <Text text="{approverPreview>approve_comment}" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+
+					</uxap:ObjectPageSubSection>
+					<uxap:ObjectPageSubSection >
+                    <!-- Referer -->
+                    <VBox class="sapUiSmallMarginBegin">
+                    <Toolbar>
+                    <Label text="Referer" />
+                    </Toolbar>
+                    <layout:VerticalLayout class="sapUiContentPadding" width="100%">
+                        <MultiComboBox
+                            selectionChange="handleSelectionChangeReferer"
+                            selectionFinish="handleSelectionFinishReferer"
+                            width="100%"
+                            items="{ path: '/RefererSearch',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                        ]
+                                    }"
+                            editable="false">
+                            <core:Item key="{employee_number}" text="{s_referer_name}" />
+                        </MultiComboBox>
+                    </layout:VerticalLayout>
+                    <layoutData>
+                        <layout:GridData span="XL12 L12 M12 S12" />
+                    </layoutData> 
+                </VBox>
+                    </uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+		</uxap:sections>
+
+	</uxap:ObjectPageLayout>
+    </VBox>
+    </Dialog>
+</core:FragmentDefinition>

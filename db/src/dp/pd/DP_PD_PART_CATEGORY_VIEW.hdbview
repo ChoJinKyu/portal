@@ -1,4 +1,6 @@
-VIEW DP_PD_PART_CATEGORY_VIEW AS
+VIEW DP_PD_PART_CATEGORY_VIEW
+/* ( i_tenant_id NVARCHAR(5), i_org_type_code NVARCHAR(2), i_org_code NVARCHAR(10), i_parent_category_code NVARCHAR(40), i_active_flag BOOLEAN)  */
+ AS
 SELECT pa.hierarchy_rank,              /*현재node의 순번(sibling order by에 의한)*/				
       pa.hierarchy_level,              /*현재node의 Level*/
       pa.tenant_id,
@@ -28,6 +30,11 @@ SELECT pa.hierarchy_rank,              /*현재node의 순번(sibling order by�
                                 HIERARCHY_COMPOSITE_ID(tenant_id,org_type_code,org_code,parent_category_code) as parent_id, 				
                                 HIERARCHY_COMPOSITE_ID(tenant_id,org_type_code,org_code,category_code) as node_id				
 				        FROM dp_pd_part_category
+/*                        WHERE tenant_id = :i_tenant_id
+                          AND org_type_code = :i_org_type_code
+                          AND org_code = :i_org_code
+                          AND parent_category_code = :i_parent_category_code
+                          AND active_flag = :i_active_flag                            */
 				    )
 				    START WHERE parent_category_code = 'T'
             ) pa		

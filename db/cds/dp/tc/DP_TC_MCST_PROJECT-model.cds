@@ -37,10 +37,11 @@ entity Tc_Mcst_Project {
     key tenant_id               : String(5) not null  @title : '테넌트ID';
     key project_code            : String(30) not null @title : '프로젝트코드';
     key model_code              : String(40) not null @title : '모델코드';
-    key mcst_code               : String(30) not null @title : '재료비코드';
-    key version_sequence        : Decimal not null    @title : '버전순서';
+    key version_number          : String(30) not null @title : '버전번호';
         project_name            : String(100)         @title : '프로젝트명';
         model_name              : String(100)         @title : '모델명';
+        mcst_code               : String(30) not null @title : '재료비코드';
+        version_sequence        : Decimal not null    @title : '버전순서';
         company_code            : String(10)          @title : '회사코드';
         org_type_code           : String(2)           @title : '조직유형코드';
         org_code                : String(10)          @title : '조직코드';
@@ -74,43 +75,50 @@ entity Tc_Mcst_Project {
         mcst_sum_value          : Decimal             @title : '재료비합계값';
 
         mcst_events             : Composition of many Mcst_Project_Event.Tc_Mcst_Project_Event
-                                      on  mcst_events.tenant_id    = tenant_id
-                                      and mcst_events.project_code = project_code
-                                      and mcst_events.model_code   = model_code;
+                                      on  mcst_events.tenant_id      = tenant_id
+                                      and mcst_events.project_code   = project_code
+                                      and mcst_events.model_code     = model_code
+                                      and mcst_events.version_number = version_number;
 
-        mcst_silimar_model      : Composition of many Mcst_Project_Similar_Model.Tc_Mcst_Project_Similar_Model
-                                      on  mcst_silimar_model.tenant_id    = tenant_id
-                                      and mcst_silimar_model.project_code = project_code
-                                      and mcst_silimar_model.model_code   = model_code;
+        mcst_similar_model      : Composition of many Mcst_Project_Similar_Model.Tc_Mcst_Project_Similar_Model
+                                      on  mcst_similar_model.tenant_id      = tenant_id
+                                      and mcst_similar_model.project_code   = project_code
+                                      and mcst_similar_model.model_code     = model_code
+                                      and mcst_similar_model.version_number = version_number;
 
         mcst_base_extra         : Composition of many Mcst_Project_Base_Exrate.Tc_Mcst_Project_Base_Exrate
-                                      on  mcst_base_extra.tenant_id    = tenant_id
-                                      and mcst_base_extra.project_code = project_code
-                                      and mcst_base_extra.model_code   = model_code;
+                                      on  mcst_base_extra.tenant_id      = tenant_id
+                                      and mcst_base_extra.project_code   = project_code
+                                      and mcst_base_extra.model_code     = model_code
+                                      and mcst_base_extra.version_number = version_number;
 
 
         mcst_mtlmob             : Composition of many Mcst_Project_Addition_Info.Tc_Mcst_Project_Addition_Info
                                       on  mcst_mtlmob.tenant_id          = tenant_id
                                       and mcst_mtlmob.project_code       = project_code
                                       and mcst_mtlmob.model_code         = model_code
+                                      and mcst_mtlmob.version_number     = version_number
                                       and mcst_mtlmob.addition_type_code = 'MTLLMOB'; //물동
 
         mcst_sales_price        : Composition of many Mcst_Project_Addition_Info.Tc_Mcst_Project_Addition_Info
                                       on  mcst_sales_price.tenant_id          = tenant_id
                                       and mcst_sales_price.project_code       = project_code
                                       and mcst_sales_price.model_code         = model_code
+                                      and mcst_sales_price.version_number     = version_number
                                       and mcst_sales_price.addition_type_code = 'SALES_PRICE'; //판가
 
         mcst_prcs_cost          : Composition of many Mcst_Project_Addition_Info.Tc_Mcst_Project_Addition_Info
                                       on  mcst_prcs_cost.tenant_id          = tenant_id
                                       and mcst_prcs_cost.project_code       = project_code
                                       and mcst_prcs_cost.model_code         = model_code
+                                      and mcst_prcs_cost.version_number     = version_number
                                       and mcst_prcs_cost.addition_type_code = 'PROCESSING_COST'; //가공비
 
         mcst_sgna               : Composition of many Mcst_Project_Addition_Info.Tc_Mcst_Project_Addition_Info
                                       on  mcst_sgna.tenant_id          = tenant_id
                                       and mcst_sgna.project_code       = project_code
                                       and mcst_sgna.model_code         = model_code
+                                      and mcst_sgna.version_number     = version_number
                                       and mcst_sgna.addition_type_code = 'SGNA'; //판관비
 }
 
