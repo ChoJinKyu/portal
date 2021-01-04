@@ -100,23 +100,31 @@ sap.ui.define([
             var aSorter = [];
             aFilters.push(new Filter("spmd_category_code", FilterOperator.EQ, this.aSearchCategoryCd));
             aSorter.push(new Sorter("spmd_character_sort_seq", false));
-      
+
             var oView = this.getView();
-            var url = "pg/mdCategoryItem/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdItemListConditionView(language_code='KO')/Set";    // 아이템특성목록View 파라메터 호출O
+            var param1 = "'C001'";
+        //     var input = {};
+        //     var inputData = {};
+        //    inputData = {
+        //         "spmd_category_code": 'C001'//oView.getModel("list").getData().spmd_category_code
+        //     }
+        //     input.inputData = inputData;
+            
+            var url = "pg/mdCategoryItem/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdItemListConditionView(language_code='KO')/Set?$filter=spmd_category_code eq "+param1;    // 아이템특성목록View 파라메터 호출O
             $.ajax({
                 url: url,
                 type: "GET",
+                // data : JSON.stringify(input),
                 contentType: "application/json",
                 success: function(data){
-                    // console.log("##"+data.value+"##");
                     var v_list = oView.getModel("list").getData();
                     v_list.MdCategoryItem = data.value;
-                    // oView.getModel("list").updateBindings(true); 
+                    oView.getModel("list").updateBindings(true); 
                 },
                 error: function(e){
                     
                 }
-            }).bind(this);
+            });
 
             // this.getView()
             //     .setBusy(true)
