@@ -230,21 +230,12 @@ sap.ui.define([
 		 * @public
 		 */
         onPageSearchButtonPress: function (oEvent) {
-           if (oEvent.getParameters().refreshButtonPressed) {
-				// Search field's 'refresh' button has been pressed.
-				// This is visible if you select any master list item.
-				// In this case no new search is triggered, we only
-				// refresh the list binding.
-				this.onRefresh();
-			} else {
+            this.validator.validate( this.byId('pageSearchFormE'));
+            if(this.validator.validate( this.byId('pageSearchFormS') ) !== true) return;
 
-                this.validator.validate( this.byId('pageSearchFormE'));
-                if(this.validator.validate( this.byId('pageSearchFormS') ) !== true) return;
-
-                var aSearchFilters = this._getSearchStates();
-                console.log(aSearchFilters);
-				this._applySearch(aSearchFilters);
-			}
+            var aSearchFilters = this._getSearchStates();
+            console.log(aSearchFilters);
+            this._applySearch(aSearchFilters);
         },
 
 		/**
@@ -266,6 +257,8 @@ sap.ui.define([
                 approvalTarget = "purchaseOrderLocalApproval"
             }if(oRecord.approval_type_code == "E"){
                 approvalTarget = "participatingSupplierSelection"
+            }if(oRecord.approval_type_code == "I"){
+                approvalTarget = "moldRecepitApproval"
             }
 
             console.log(approvalTarget);
@@ -711,7 +704,7 @@ sap.ui.define([
             }else if(id.indexOf("localOrder") > -1){
                approvalTarget = "purchaseOrderLocalApproval"
             }else if(id.indexOf("receipt") > -1){
-                appTypeCode ="I"
+                approvalTarget ="moldRecepitApproval"
             }else if(id.indexOf("export") > -1){
                 appTypeCode ="X"
             }
@@ -790,25 +783,32 @@ sap.ui.define([
                 delApprData = [],
                 chkArr =[],
                 chkRow ="",
+                j=0,
                 checkBoxs = this.getView().getControlsByFieldGroupId("checkBoxs");
 
             var that = this;
-            console.log(oSelected);
+            console.log("checkBoxs ::::", checkBoxs);
             for (var i = 0; i < checkBoxs.length; i++) {
-                console.log(checkBoxs);
+                
                 if (checkBoxs[i].mProperties.selected == true) {
                     chkRow = checkBoxs[i].mBindingInfos.fieldGroupIds.binding.aBindings[0].oContext.getPath();
                     chkRow = chkRow.substring(11);
+                    
                     chkArr.push(parseInt(chkRow));
-
+                    console.log("chkRow :::::", chkRow);
+                    console.log("chkArr :::::", chkArr);
+                    console.log("j :::::", j);
                     console.log(lModel.getData());
                     delApprData.push({
-                        approval_number : lModel.getData().Approvals[chkArr[i]].approval_number
-                        ,tenant_id : lModel.getData().Approvals[chkArr[i]].tenant_id
-                        ,company_code : lModel.getData().Approvals[chkArr[i]].company_code
-                        ,org_code : lModel.getData().Approvals[chkArr[i]].org_code
+                        approval_number : lModel.getData().Approvals[chkArr[j]].approval_number
+                        ,tenant_id : lModel.getData().Approvals[chkArr[j]].tenant_id
+                        ,company_code : lModel.getData().Approvals[chkArr[j]].company_code
+                        ,org_code : lModel.getData().Approvals[chkArr[j]].org_code
+                        ,approval_type_code : lModel.getData().Approvals[chkArr[j]].approval_type_code
                     })
                     oSelected.push(i);
+                    
+                    j=j+1;
                 }
             }
             console.log("delApprData >>>>", delApprData);
@@ -825,6 +825,7 @@ sap.ui.define([
                                 } 
                             }
                             that.callAjax(data,"deleteApproval");
+                            that.onPageSearchButtonPress();
                         }
                     }
                 });
@@ -836,7 +837,7 @@ sap.ui.define([
         },
 
         callAjax : function (data,fn) {  
-            
+             
             var that = this;
             //  /dp/md/moldApprovalList/webapp/srv-api/odata/v2/dp.MoldApprovalListService/RefererSearch
             //  "xx/sampleMgr/webapp/srv-api/odata/v4/xx.SampleMgrV4Service/SaveSampleHeaderMultiProc"

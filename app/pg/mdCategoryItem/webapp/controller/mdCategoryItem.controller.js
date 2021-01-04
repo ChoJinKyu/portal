@@ -33,7 +33,12 @@ sap.ui.define([
           
         var oMultilingual = new Multilingual();
         this.setModel(oMultilingual.getModel(), "I18N");
-        this.getView().setModel(new ManagedListModel(), "list");
+        // this.getView().setModel(new ManagedListModel(), "list");
+        
+        this.viewModel = new JSONModel({
+            MdCategoryItem : []
+        });
+        this.getView().setModel(this.viewModel, "list");
         
         this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
@@ -95,20 +100,36 @@ sap.ui.define([
             var aSorter = [];
             aFilters.push(new Filter("spmd_category_code", FilterOperator.EQ, this.aSearchCategoryCd));
             aSorter.push(new Sorter("spmd_character_sort_seq", false));
+      
+            var oView = this.getView();
+            var url = "pg/mdCategoryItem/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdItemListConditionView(language_code='KO')/Set";    // 아이템특성목록View 파라메터 호출O
+            $.ajax({
+                url: url,
+                type: "GET",
+                contentType: "application/json",
+                success: function(data){
+                    // console.log("##"+data.value+"##");
+                    var v_list = oView.getModel("list").getData();
+                    v_list.MdCategoryItem = data.value;
+                    // oView.getModel("list").updateBindings(true); 
+                },
+                error: function(e){
+                    
+                }
+            }).bind(this);
 
-            this.getView()
-                .setBusy(true)
-                .getModel("list")
-                .setTransactionModel(this.getView().getModel())
-                .read("/MdCategoryItem", {
-                    filters: aFilters,                
-                    sorters : aSorter,
-                    success: (function (oData) {
-                    this.getView().setBusy(false);
-                    }).bind(this)
-                });
+            // this.getView()
+            //     .setBusy(true)
+            //     .getModel("list")
+            //     .setTransactionModel(this.getView().getModel())
+            //     .read("/MdCategoryItem", {
+            //         filters: aFilters,                
+            //         sorters : aSorter,
+            //         success: (function (oData) {
+            //         this.getView().setBusy(false);
+            //         }).bind(this)
+            //     });
 
-            var oTable = this.byId("mainTable");
             this.byId("buttonMainAddRow").setEnabled(true);  
             // this._setEditChange(this.rowIndex,"R"); 
         },

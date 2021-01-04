@@ -40,7 +40,7 @@
 		<!-- <DatePicker placeholder="Disable Date" dateValue="{master>/disable_date}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/> -->
 		<!-- <Label text="Chain" required="true"/>
 		<ComboBox id="searchChain" width="100%" selectedKey="{master>/chain_code}" items="{
-				path: 'util>/CodeDetails',
+				path: 'util>/Code',
 				filters: [
 					{path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
 					{path: 'company_code', operator: 'EQ', value1: '*'},

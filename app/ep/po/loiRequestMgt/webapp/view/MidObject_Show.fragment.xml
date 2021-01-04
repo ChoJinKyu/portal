@@ -1,0 +1,55 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:layout="sap.ui.layout" displayBlock="true"
+    xmlns:richtexteditor="sap.ui.richtexteditor"
+	xmlns:core="sap.ui.core">
+
+    <form:SimpleForm id="midObjectForm1Show"
+                                maxContainerCols="2"
+								editable="false"
+								layout="ResponsiveGridLayout"
+								labelSpanL="12"
+								labelSpanM="12"
+								emptySpanL="0"
+								emptySpanM="0"
+								columnsL="2"
+								columnsM="2">
+
+        <form:content>
+                <VBox>
+                    <Label text="* 요청명"/>
+                    <Input value="{master>/loi_request_title}" editable="false"/>
+                    <layoutData>
+                        <layout:GridData span="L12 M12 S12" />
+                    </layoutData>
+                </VBox>
+                <VBox>
+                    <Label text="* 목적"/>
+                    <TextArea value="{master>/loi_publish_purpose_desc}" rows="2" width="100%"  editable="false"/>
+                    <layoutData>
+                        <layout:GridData span="L12 M12 S12" />
+                    </layoutData>
+                </VBox>
+
+                <VBox id="idEditLayoutShow">
+                    <Label text="* 특기사항 :" />
+                    <richtexteditor:RichTextEditor
+                        editorType="TinyMCE4"
+                        width="100%"
+                        height="200px"
+                        editable="false"
+                        customToolbar="true"
+                        showGroupFont="true"
+                        showGroupLink="true"
+                        showGroupInsert="true"
+                        value="{master>/special_note}">
+                    </richtexteditor:RichTextEditor>
+                    <layoutData>
+                        <layout:GridData span="XL12 L12 M12 S12" />
+                    </layoutData>
+                </VBox>              
+        </form:content>                            
+	</form:SimpleForm>
+</core:FragmentDefinition>

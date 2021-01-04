@@ -51,7 +51,7 @@
           "component": "cm.organizationMgt"
         },
         {
-          "name": "구매 관리 (TBD)",
+          "name": "구매운영조직관리",
           "url": "../cm/purOrgMgt/webapp",
           "component": "cm.purOrgMgt"
         }

@@ -45,7 +45,7 @@ sap.ui.define([
                                 ? row.parent_menu_code
                                 : row.menu_code
                         ) || "",
-                        chainCode: this.byId("searchChainCombo").getSelectedKey()
+                        chainCode: row.chain_code || ""
                     }
                 });
             },
@@ -61,7 +61,7 @@ sap.ui.define([
                         menuCode: row.menu_code,
                         menuName: row.menu_name.replaceAll("#", "^"),
                         parentMenuCode: row.parent_menu_code,
-                        chainCode: this.byId("searchChainCombo").getSelectedKey()
+                        chainCode: row.chain_code || ""
                     }
                 });
             },
@@ -79,7 +79,7 @@ sap.ui.define([
                         and: false
                     }));
                 }
-                predicates.push(new Filter("language_code", FilterOperator.EQ, "KO"));
+                //predicates.push(new Filter("language_code", FilterOperator.EQ, "KO"));
                 this.treeListModel = this.treeListModel || new TreeListModel(this.getView().getModel());
                 this.getView().setBusy(true);
                 this.treeListModel

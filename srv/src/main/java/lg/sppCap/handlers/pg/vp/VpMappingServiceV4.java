@@ -463,12 +463,7 @@ public class VpMappingServiceV4 implements EventHandler {
             
             log.info("### try Start ###");
             conn = jdbc.getDataSource().getConnection();
-
-            // Vendor Pool Master Local Temp Table 삭제
-            //v_statement_tableMst = conn.prepareStatement(v_sql_dropTableMst);
-            //v_statement_tableMst.execute();
-
-
+            
             // Vendor Pool Mst Local Temp Table 생성
             v_statement_tableMst = conn.prepareStatement(v_sql_createTableMst.toString());
             v_statement_tableMst.execute();
@@ -681,21 +676,37 @@ public class VpMappingServiceV4 implements EventHandler {
 			e.printStackTrace();
         } finally {
             try{ 
-                if(conn != null){
-                    conn.close();              
-                } 
                 if(v_statement_tableMst != null){
+                    // Vendor Pool Master Local Temp Table 삭제
+                    v_statement_tableMst = conn.prepareStatement(v_sql_dropTableMst);
+                    v_statement_tableMst.execute();
+            
                     v_statement_tableMst.close();             
                 } 
                 if(v_statement_tableSupplier != null){
+                    // Vendor Pool Supplier Local Temp Table 삭제
+                    v_statement_tableSupplier = conn.prepareStatement(v_sql_dropTableSupplier);
+                    v_statement_tableSupplier.execute();
+            
                     v_statement_tableSupplier.close();              
                 } 
                 if(v_statement_tableItem != null){
+                    // Vendor Pool Item Local Temp Table 삭제
+                    v_statement_tableItem = conn.prepareStatement(v_sql_dropTableItem);
+                    v_statement_tableItem.execute();
+            
                     v_statement_tableItem.close();
                 } 
                 if(v_statement_tableManager != null){
+                    // Vendor Pool Manager Local Temp Table 삭제
+                    v_statement_tableManager = conn.prepareStatement(v_sql_dropTableManager);
+                    v_statement_tableManager.execute();
+                    
                     v_statement_tableManager.close();
                 } 
+                if(conn != null){
+                    conn.close();              
+                }                 
             } catch(Exception e){
 
             }

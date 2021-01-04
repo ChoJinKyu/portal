@@ -366,10 +366,10 @@
                             <Text id="org_code" text="{list>org_code}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldModelColumn" width="15em" >
+                    <table:Column id="moldModelColumn" width="15em"  hAlign="Center">
                         <Label text="{I18N>/MODEL}"/>
-                        <table:template>
-                            <Text id="model" text="{list>model}"/>
+                        <table:template >
+                            <Text id="model" text="{list>model}" textAlign="Left"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldMoldNoColumn" width="8em" hAlign="Center">
@@ -393,7 +393,8 @@
                     <table:Column id="moldStatusColumn" width="13em" hAlign="Center">
                         <Label text="{I18N>/STATUS}"/>
                         <table:template>
-                             <ComboBox   id="mold_progress_status_code"
+                            <Text text="{list>mold_progress_status_name}"/>
+                             <!-- <ComboBox   id="mold_progress_status_code"
                                         selectedKey="{list>mold_progress_status_code}"
                                         items="{
                                                     path : 'util>/Code',
@@ -404,7 +405,7 @@
                                                 }"
                             editable="false" class="readonlyField" width="100%" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
-                            </ComboBox>
+                            </ComboBox> -->
                         </table:template>
                     </table:Column>
 
@@ -472,9 +473,9 @@
                     <table:Column width="8em" hAlign="Center">
                         <Label text="{path:'I18N>/PRODUCTION_TYPE', formatter:'I18NFormatter'}" />
                         <table:template>
-                            <!-- <Text text="{list>mold_production_type_code}"/> -->
+                            <Text text="{list>mold_production_type_name}"/>
 
-                            <Select   width="100%"
+                            <!-- <Select   width="100%"
                                         selectedKey="{list>mold_production_type_code}"
                                         items="{
                                                     path : 'util>/Code',
@@ -487,7 +488,7 @@
                                         class="readonlyField"
                             >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
-                            </Select>
+                            </Select> -->
                             
                         </table:template>
                     </table:Column>
@@ -495,7 +496,8 @@
                     <table:Column id="moldItemTypeColumn" width="10em" hAlign="Center">
                         <Label text="{path:'I18N>/ITEM_TYPE', formatter:'I18NFormatter'}" />
                         <table:template>
-                            <ComboBox   id="mold_item_type_code"
+                            <Text text="{list>mold_item_type_name}"/>
+                            <!-- <ComboBox   id="mold_item_type_code"
                                         selectedKey="{list>mold_item_type_code}"
                                         items="{
                                                     path : 'util>/Code',
@@ -506,7 +508,7 @@
                                                 }"
                             editable="{mode>/editFlag}" class="readonlyField" required="true" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
-                            </ComboBox>
+                            </ComboBox> -->
                         </table:template>
                     </table:Column>
 
@@ -548,6 +550,8 @@
                     <table:Column width="8em" hAlign="Center">
                         <Label text="{path:'I18N>/CONFIRM_DATE', formatter:'I18NFormatter'}" />
                         <table:template>
+                            <!-- <Text text="{path: 'list>receipt_confirmed_date',
+                                  formatter: '.dateFormatter.toDateString'}"/> -->
                             <DatePicker value="{list>receipt_confirmed_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false"/>
                         </table:template>
                     </table:Column>

@@ -240,11 +240,49 @@ sap.ui.define([
         */
         onMoldItemSelectionApply: function (oEvent) {
             console.log(" [step] Participating Supplier Fragment Apply 버튼 클릭시 ", oEvent);
+            var popList = oThis.getModel("moldItemPopList").getData();
 
             var oTable = oThis.byId("popMoldItemSelectTable");
             var aItems = oTable.getSelectedItems();
             var that = this;
-            var datas = [];
+            var datas = []; 
+            var mold_id_arr = [];
+            if(aItems.length > 0){
+                aItems.forEach(function (oItem) {
+                    mold_id_arr.push(oItem.getCells()[0].getText());
+                }); 
+                // 서비스에서 조회한 모든 항목을 보내기 위해서 mold_id 만 배열로 담은 후 서비스 조회 모델에서 값을 구해서 세팅한다. 
+                for(var i = 0 ; i <  mold_id_arr.length  ; i++){ 
+                    for(var j = 0 ; j < popList.MoldItemSelect.length ; j++){ 
+                        console.log(" popList.MoldItemSelect[j].mold_id >>> " , popList.MoldItemSelect[j].mold_id );
+                        console.log(" mold_id_arr[i] >>> " , mold_id_arr[i] );
+                        if(popList.MoldItemSelect[j].mold_id == mold_id_arr[i]){
+                            var famList = []; 
+                            if(popList.MoldItemSelect[j].family_part_number_1){
+                                famList.push(popList.MoldItemSelect[j].family_part_number_1);
+                            }
+                            if(popList.MoldItemSelect[j].family_part_number_2){
+                                famList.push(popList.MoldItemSelect[j].family_part_number_2);
+                            }
+                            if(popList.MoldItemSelect[j].family_part_number_3){
+                                famList.push(popList.MoldItemSelect[j].family_part_number_3);
+                            }
+                            if(popList.MoldItemSelect[j].family_part_number_4){
+                                famList.push(popList.MoldItemSelect[j].family_part_number_4);
+                            }
+                            if(popList.MoldItemSelect[j].family_part_number_5){
+                                famList.push(popList.MoldItemSelect[j].family_part_number_5);
+                            }
+                            popList.MoldItemSelect[j].family_part_number_1 = famList.join(",") ;
+                           
+                            datas.push(popList.MoldItemSelect[j]);
+                        }
+                    }
+                }
+
+            }
+
+            /*
             aItems.forEach(function (oItem) {
                 console.log(" getSelectedItems >>>", oItem);
                 var famList = [];
@@ -281,7 +319,8 @@ sap.ui.define([
                 });
                 datas.push(obj);
             });
-
+                    */
+                    
             oCallback(datas);
             this.onExit();
         },

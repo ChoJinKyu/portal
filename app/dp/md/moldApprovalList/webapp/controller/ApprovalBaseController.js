@@ -26,7 +26,7 @@ sap.ui.define([
     "use strict";
 
     var oTransactionManager;
-    var oRichTextEditor;
+    //var oRichTextEditor;
 
     return BaseController.extend("dp.md.moldApprovalList.controller.ApprovalBaseController", {
 
@@ -114,20 +114,7 @@ sap.ui.define([
             this._toShowMode();
         },
 
-		/**
-		 * Event handler for page edit button press
-		 * @public
-		 */
-        _editMode: function () {
-           this.getModel("contModel").setProperty("/editMode", true)
-           this.getModel("contModel").setProperty("/viewMode", false)
 
-        },
-        _viewMode : function(){
-           this.getModel("contModel").setProperty("/editMode", false)
-           this.getModel("contModel").setProperty("/viewMode", true) 
-
-        },
 
 		/**
 		 * Event handler for cancel page editing
@@ -152,15 +139,6 @@ sap.ui.define([
              * init 에서 해당 모델을 선언하면 create 계속 연속 했을때 기존 데이터가 남아있어서
              * 비정상적으로 나옴 
              */        
-    
-            var oViewModel = new JSONModel({
-                busy: true,
-                delay: 0,
-                editMode : false ,
-                viewMode : true
-            });
-            this.setModel(oViewModel, "contModel");
-
 
             this.getView().setModel(new ManagedModel(), "company");
             this.getView().setModel(new ManagedModel(), "plant");
@@ -231,9 +209,9 @@ sap.ui.define([
             if (this.approval_number === "New") {
                 this.getModel("appMaster").setProperty("/requestor_empno", "140790"); // 나중에 세션 값 세팅 할 것 
                 this.getModel("appMaster").setProperty("/request_date", this._getToday());
-                this._editMode();
+               
             } else {
-                this._viewMode();
+                
             }
              this._onApprovalPage(); // 이거 공통으로 각자 페이지에 하나 만듭시다 - this.approval_number 가 로드 된 후에 처리 해야 하는데 
 
@@ -270,7 +248,7 @@ sap.ui.define([
                 
             this._loadFragment("GeneralInfo", function (oFragment) {
                 oPageGeneralInfoSection.addBlock(oFragment);
-                this.setRichEditor();
+                //this.setRichEditor();
             }.bind(this))
             
             var oPageAttachmentsSection = this.byId("pageAttachmentsSection");
@@ -300,7 +278,7 @@ sap.ui.define([
                 this._bindView("/AppMaster(tenant_id='" + this.tenant_id + "',approval_number='" + approvalNumber + "')", "appMaster", [], function (oData) {
                 
                     console.log(" oData >>> " , oData);
-                    this.oRichTextEditor.setValue(oData.approval_contents);
+                    //this.oRichTextEditor.setValue(oData.approval_contents);
                 }.bind(this));
             }
             this._bindView("/ApprovalDetails", "appDetail", filter, function (oData) {

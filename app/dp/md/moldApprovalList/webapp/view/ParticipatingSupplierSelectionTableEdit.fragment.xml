@@ -14,7 +14,7 @@
         xmlns:table="sap.ui.table" >
 
       		<table:Table id="psTable"
-                selectionMode="{=${contModel>/editMode}?'MultiToggle':'None'}" 
+                selectionMode="{=${mode>/editFlag}?'MultiToggle':'None'}" 
                 fixedColumnCount="6" 
                 visibleRowCountMode="Auto"
                 rows="{path:'mdItemMaster>/ParticipatingSupplier'}"
@@ -22,13 +22,13 @@
                 <table:extension>
                     <OverflowToolbar>
                         <ToolbarSpacer/>
-                        <Button id="btnPoItemAdd" visible="{contModel>/editMode}" type="Transparent" text="{I18N>/ROW_ADD}" press=".onPsAddPress" >
+                        <Button id="btnPoItemAdd" visible="{mode>/editFlag}" type="Transparent" text="{I18N>/ROW_ADD}" press=".onPsAddPress" >
                             <customData>
                                 <core:CustomData key="multi" value="true" />
                             </customData>
                         </Button>
-                        <Button visible="{contModel>/editMode}" id="btnPoItemDelete" type="Transparent" text="{I18N>/ROW_DELETE}"  press=".onPsDelRow" />
-                        <Button visible="{contModel>/editMode}" id="btnSupplier" type="Emphasized" text="Supplier Selection" press=".onSupplierSelection"/>
+                        <Button visible="{mode>/editFlag}" id="btnPoItemDelete" type="Transparent" text="{I18N>/ROW_DELETE}"  press=".onPsDelRow" />
+                        <Button visible="{mode>/editFlag}" id="btnSupplier" type="Emphasized" text="Supplier Selection" press=".onSupplierSelection"/>
                     </OverflowToolbar>
                 </table:extension>                             
                 <table:columns>
@@ -74,15 +74,15 @@
                             <Label text="Type"/>
                         </VBox>
                         <table:template>
-                            <ComboBox visible="{contModel>/editMode}"
+                            <ComboBox visible="{mode>/editFlag}"
                                     editable="false"
-                                    selectedKey="{mdItemMaster>mold_item_type_code}" items="{ path : 'util>/CodeDetails',
+                                    selectedKey="{mdItemMaster>mold_item_type_code}" items="{ path : 'util>/Code',
                                     filters : [
                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
                                     ]
                                 }">
-                                <core:Item key="{util>code}" text="{util>code_description}"/> 
+                                <core:Item key="{util>code}" text="{util>code_name}"/> 
                             </ComboBox>
                             <!-- <Text id="moldItemTypeCodeNm" text="{mdItemMaster>mold_item_type_code_nm}"/> -->
                         </table:template>
@@ -111,7 +111,7 @@
                         </VBox>
                         <table:template>
                         <!-- <Text text="{mdItemMaster>company_code}"/> -->
-                            <ComboBox visible="{contModel>/editMode}"
+                            <ComboBox visible="{mode>/editFlag}"
                                 id="g_currency" selectedKey="{mdItemMaster>currency_code}" 
                                 items="{ 
                                     path : 'psOrgCode>/OrgCodeLanguages',
@@ -132,7 +132,7 @@
                         </VBox>
                         <!-- <Label text="Budget Amount"/> -->
                         <table:template>
-                            <Input visible="{contModel>/editMode}" value="{mdItemMaster>target_amount}"/>
+                            <Input visible="{mode>/editFlag}" value="{mdItemMaster>target_amount}"/>
                             <!-- <Input value="{mdItemMaster>provisional_budget_amount}"/> -->
                         </table:template>
                     </table:Column>
