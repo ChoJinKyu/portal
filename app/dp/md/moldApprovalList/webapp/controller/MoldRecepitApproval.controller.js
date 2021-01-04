@@ -77,27 +77,33 @@ sap.ui.define([
         /* internal methods                                            */
         /* =========================================================== */
         _onApprovalPage : function () {
-  // MoldRecepit
+ 
             this.getView().setModel(new ManagedListModel(), "mdRecepit");
 
-            console.log(" this.approval_number "  ,  this.approval_number);
+            console.log(" mode "  ,  this.getView().getModel("mode"));
             var schFilter = [];
             var that = this;
             if (this.approval_number == "New") {
                 // ApprovalBaseController.prototype.onInit.call(this);
 
-                this._mdraEditFragment();
+               // this._mdraEditFragment();
             } else {
-                this._mdraViewFragment();
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
                     , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
                 ];
-
                 this._bindViewRecepit("/MoldRecepit", "mdRecepit", schFilter, function (oData) { 
                  
                 });
             }  
+
+            if(this.getView().getModel("mode").getProperty("/editFlag")){
+                this._mdraEditFragment();
+            }else{
+                this._mdraViewFragment();
+            }
+
         },
+
         _bindViewRecepit : function (sObjectPath, sModel, aFilter, callback) { 
                 var oView = this.getView(),
                     oModel = this.getModel(sModel);
@@ -112,15 +118,10 @@ sap.ui.define([
                 });
             },
 
-        onPageEditButtonPress: function () {
-            this._mdraEditFragment();
-            this._toEditMode();
-        },
 
-        onPageCancelButtonPress: function () {
-            this._mdraViewFragment();
-             this._toShowMode();
-        },
+        _toEditModeEachApproval : function(){ this._mdraEditFragment() },
+        _toShowModeEachApproval : function(){ this._mdraViewFragment() }  ,
+      
        /**
          * @description moldItemSelect 공통팝업   
          * @param vThis : view page의 this 
@@ -323,7 +324,7 @@ sap.ui.define([
             
             if(bModel.getData().MoldRecepit != undefined && bModel.getData().MoldRecepit.length > 0){
 
-                bModel.getData().ItemBudgetExecution.forEach(function(item){
+                bModel.getData().MoldRecepit.forEach(function(item){
                     that.approvalDetails_data.push({
                         tenant_id : that.tenant_id 
                         , approval_number : that.approval_number 

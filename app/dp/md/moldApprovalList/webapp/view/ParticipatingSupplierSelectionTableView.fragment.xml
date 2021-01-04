@@ -10,7 +10,7 @@
     xmlns:u="sap.ui.unified" 
     xmlns:table="sap.ui.table" >
                     <table:Table
-                        selectionMode="{=${contModel>/editMode}?'MultiToggle':'None'}" 
+                        selectionMode="{=${mode>/editFlag}?'MultiToggle':'None'}" 
                         fixedColumnCount="6" 
                         visibleRowCountMode="Auto"
                         rows="{path:'mdItemMaster>/ParticipatingSupplier'}"
@@ -18,13 +18,13 @@
                         <table:extension>
                             <OverflowToolbar>
                                 <ToolbarSpacer/>
-                                <Button visible="{contModel>/editMode}" type="Transparent" text="{I18N>/ROW_ADD}" press=".onPsAddPress" >
+                                <Button visible="{mode>/editFlag}" type="Transparent" text="{I18N>/ROW_ADD}" press=".onPsAddPress" >
                                     <customData>
                                         <core:CustomData key="multi" value="true" />
                                     </customData>
                                 </Button>
-                                <Button visible="{contModel>/editMode}" type="Transparent" text="{I18N>/ROW_DELETE}"  press=".onPsDelRow" />
-                                <Button visible="{contModel>/editMode}" type="Emphasized" text="Supplier Selection" press=".onSupplierSelection"/>
+                                <Button visible="{mode>/editFlag}" type="Transparent" text="{I18N>/ROW_DELETE}"  press=".onPsDelRow" />
+                                <Button visible="{mode>/editFlag}" type="Emphasized" text="Supplier Selection" press=".onSupplierSelection"/>
                             </OverflowToolbar>
                         </table:extension>                             
                         <table:columns>
@@ -70,7 +70,7 @@
                                     <Label text="Type"/>
                                 </VBox>
                                 <table:template>
-                                    <Text visible="{contModel>/viewMode}" text="{mdItemMaster>mold_item_type_code_nm}"/>
+                                    <Text visible="{mode>/viewFlag}" text="{mdItemMaster>mold_item_type_code_nm}"/>
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
@@ -96,7 +96,7 @@
                                     <Label text="Currency"/>
                                 </VBox>
                                 <table:template>
-                                    <Text visible="{contModel>/viewMode}" text="{mdItemMaster>currency_code}"/>
+                                    <Text visible="{mode>/viewFlag}" text="{mdItemMaster>currency_code}"/>
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">
@@ -105,7 +105,7 @@
                                     <Label text="Amount"/>
                                 </VBox>
                                 <table:template>
-                                    <Text visible="{contModel>/viewMode}" text="{mdItemMaster>target_amount}"/>
+                                    <Text visible="{mode>/viewFlag}" text="{mdItemMaster>target_amount}"/>
                                 </table:template>
                             </table:Column>
                             <table:Column width="10em" hAlign="Center">

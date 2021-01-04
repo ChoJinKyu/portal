@@ -27,7 +27,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import com.sap.cds.reflect.CdsModel;
+import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.EventContext;
+import com.sap.cds.services.ServiceException;
 import com.sap.cds.services.cds.CdsCreateEventContext;
 import com.sap.cds.services.cds.CdsReadEventContext;
 import com.sap.cds.services.cds.CdsService;
@@ -198,7 +200,54 @@ public class MdCategoryService implements EventHandler {
 
         });
     }
-    
+
+	// 카테고리 삭제 전
+	@Before(event=CdsService.EVENT_DELETE, entity=MdCategory_.CDS_NAME)
+	public void deleteBeforeMdCategoryIdProc(List<MdCategory> cateIds) {
+        log.info("### ID Delete [Before] ###");
+
+		if(!cateIds.isEmpty() && cateIds.size() > 0){
+
+			for(MdCategory cateId : cateIds) {
+                int iItemCnt = 0;
+                // DB처리
+				try {
+					Connection conn = jdbc.getDataSource().getConnection();
+                    // SPMD범주코드 Item특성 등록 유무 체크
+					String v_sql_get = "SELECT COUNT(*) AS CNT FROM PG_MD_CATEGORY_ITEM WHERE TENANT_ID=? AND COMPANY_CODE=? AND ORG_TYPE_CODE=? AND ORG_CODE=? AND SPMD_CATEGORY_CODE=? ";
+
+                    PreparedStatement v_stmt = conn.prepareStatement(v_sql_get);
+
+                    v_stmt.setObject(1, cateId.getTenantId());
+                    v_stmt.setObject(2, cateId.getCompanyCode());
+                    v_stmt.setObject(3, cateId.getOrgTypeCode());
+                    v_stmt.setObject(4, cateId.getOrgCode());
+                    v_stmt.setObject(5, cateId.getSpmdCategoryCode());
+            
+                    ResultSet rslt = v_stmt.executeQuery();
+                    
+					if(rslt.next()) {
+                        iItemCnt = rslt.getInt("CNT");
+                        if (iItemCnt > 0) throw new ServiceException(ErrorStatuses.BAD_REQUEST, "범주코드["+cateId.getSpmdCategoryCode()+"]를 삭제할 수 없습니다.");
+                    }
+
+                    log.info("###[LOG-10]=> ["+iItemCnt+"]");
+
+                    v_stmt.close();
+                    conn.close();
+				} catch (SQLException sqlE) {
+					sqlE.printStackTrace();
+					log.error("### ErrCode : "+sqlE.getErrorCode()+"###");
+					log.error("### ErrMesg : "+sqlE.getMessage()+"###");
+				} finally {
+
+                }
+
+				//log.info("###[LOG-11]=> ["+iItemCnt+"]");
+			}
+		}
+
+    }
 
 	/*
 	**********************************
@@ -337,21 +386,52 @@ public class MdCategoryService implements EventHandler {
 	// 카테고리 Item 삭제 전
 	@Before(event={CdsService.EVENT_DELETE}, entity=MdCategoryItem_.CDS_NAME)
 	public void deleteBeforeMdCategoryItemItemProc(List<MdCategoryItem> items) {
-		log.info("### Item Delete [Before] ###");
-	}
+        log.info("### Item Delete [Before] ###");
 
-	// 카테고리 Item 삭제
-	@On(event={CdsService.EVENT_DELETE}, entity=MdCategoryItem_.CDS_NAME)
-	public void deleteOnMdCategoryItemItemProc(List<MdCategoryItem> items) {
-		log.info("### Item Delete [On] ###");
-	}
+		if(!items.isEmpty() && items.size() > 0){
 
-	// 카테고리 Item 삭제 후
-	@After(event={CdsService.EVENT_DELETE}, entity=MdCategoryItem_.CDS_NAME)
-	public void deleteAfterMdCategoryItemProc(List<MdCategoryItem> items) {
-		log.info("### Item Delete [After] ###");
+            for (MdCategoryItem item : items) {
+                int iMappingCnt = 0;
+                // DB처리
+				try {
+					Connection conn = jdbc.getDataSource().getConnection();
+                    // Item특성코드 VendorPool-3별 Mapping 등록 유무 체크
+					String v_sql_get = "SELECT COUNT(*) AS CNT FROM PG_MD_VP_ITEM_MAPPING_ATTR WHERE TENANT_ID=? AND COMPANY_CODE=? AND ORG_TYPE_CODE=? AND ORG_CODE=? AND SPMD_CATEGORY_CODE=? AND SPMD_CHARACTER_CODE=? ";
+
+                    PreparedStatement v_stmt = conn.prepareStatement(v_sql_get);
+
+                    v_stmt.setObject(1, item.getTenantId());
+                    v_stmt.setObject(2, item.getCompanyCode());
+                    v_stmt.setObject(3, item.getOrgTypeCode());
+                    v_stmt.setObject(4, item.getOrgCode());
+                    v_stmt.setObject(5, item.getSpmdCategoryCode());
+                    v_stmt.setObject(6, item.getSpmdCharacterCode());
+            
+                    ResultSet rslt = v_stmt.executeQuery();
+                    
+					if(rslt.next()) {
+                        iMappingCnt = rslt.getInt("CNT");
+                        if (iMappingCnt > 0) throw new ServiceException(ErrorStatuses.BAD_REQUEST, "특성코드["+item.getSpmdCharacterCode()+"]를 삭제할 수 없습니다.");
+                    }
+
+                    log.info("###[LOG-10]=> ["+iMappingCnt+"]");
+
+                    v_stmt.close();
+                    conn.close();
+				} catch (SQLException sqlE) {
+					sqlE.printStackTrace();
+					log.error("### ErrCode : "+sqlE.getErrorCode()+"###");
+					log.error("### ErrMesg : "+sqlE.getMessage()+"###");
+				} finally {
+
+                }
+
+				//log.info("###[LOG-11]=> ["+iMappingCnt+"]");
+			}
+		}
+
     }
-    
+
 	// Vendor Pool Item매핑 목록
 	@After(event = CdsService.EVENT_READ, entity=MdVpMappingItemView_.CDS_NAME)
 	public void readAfterMdVpMappingItemViewProc(List<MdVpMappingItemView> lists) {
