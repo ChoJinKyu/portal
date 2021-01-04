@@ -402,17 +402,18 @@ sap.ui.define([
             //var sInputValue = oEvent.getSource().getValue();
             var _oUiData = this.getModel("_oUiData"),
                 materialTable = this.getModel("materialTable");
+            var that = this;    
             _oUiData.setProperty("/radioButtonGroup", this.getView().byId("radioButtonGroup").getSelectedIndex());
 
 			// create value help dialog
-			if (!this._valueHelpMaterialDialog) {
+			if (!that._valueHelpMaterialDialog) {
 
-                this._valueHelpMaterialDialog = sap.ui.xmlfragment(
-                    this._m.fragementId.materialDialog, 
-                    this._m.fragementPath.materialDialog,this
+                that._valueHelpMaterialDialog = sap.ui.xmlfragment(
+                    that._m.fragementId.materialDialog, 
+                    that._m.fragementPath.materialDialog,this
                 );
               
-                this.getView().addDependent(this._valueHelpMaterialDialog);
+                this.getView().addDependent(that._valueHelpMaterialDialog);
 
             }                
             
@@ -427,11 +428,12 @@ sap.ui.define([
          * @param {*} radioButtonGroup 
          */
 		_openValueHelpMaterialDialog: function (radioButtonGroup) {
+            var that = this;
             // open value help dialog filtered by the input value
             //기존 모델 초기화 
             this.setArrayModelNullAndUpdateBindings("materialTable");
 
-			this._valueHelpMaterialDialog.open();
+			that._valueHelpMaterialDialog.open();
 		},
 
         /**
@@ -450,16 +452,16 @@ sap.ui.define([
                 materialTable = new JSONModel(),
                 that = this;
                 
-            var oComboBox_materIalView = this._findFragmentControlId(this._m.fragementId.materialDialog, "comboBox_materialView"),
-                oCcomboBox_supplierView= this._findFragmentControlId(this._m.fragementId.materialDialog, "comboBox_supplierView"),
+            var oComboBox_materIalView = that._findFragmentControlId(that._m.fragementId.materialDialog, "comboBox_materialView"),
+                oCcomboBox_supplierView= that._findFragmentControlId(that._m.fragementId.materialDialog, "comboBox_supplierView"),
                 comboBox_materialView=oComboBox_materIalView.getSelectedKey(),
                 comboBox_supplierView=oCcomboBox_supplierView.getSelectedKey(),
-                input_material_desc=this._findFragmentControlId(this._m.fragementId.materialDialog, "input_material_desc").getValue(),
-                input_supplier_local_name=this._findFragmentControlId(this._m.fragementId.materialDialog, "input_supplier_local_name").getValue();
+                input_material_desc=that._findFragmentControlId(that._m.fragementId.materialDialog, "input_material_desc").getValue(),
+                input_supplier_local_name=that._findFragmentControlId(that._m.fragementId.materialDialog, "input_supplier_local_name").getValue();
                 //input_hidden_supplier_english_name=this._findFragmentControlId(this._m.fragementId.materialDialog, "input_supplier_local_name").getValue();
         
              var sFilters = [
-                new Filter("tenant_id", FilterOperator.EQ,  this._m.filter.tenant_id)
+                new Filter("tenant_id", FilterOperator.EQ,  that._m.filter.tenant_id)
             ];
 
             if(_oUiData.getProperty("/radioButtonGroup")==0){
@@ -494,7 +496,7 @@ sap.ui.define([
                 });
             }else{
   
-                sFilters.push(new Filter("tenant_id", FilterOperator.Contains, this._m.filter.tenant_id));                
+                sFilters.push(new Filter("tenant_id", FilterOperator.Contains, that._m.filter.tenant_id));                
                 if(comboBox_supplierView.length>0){
                     sFilters.push(new Filter("supplier_code", FilterOperator.Contains, comboBox_supplierView));
                 }
@@ -502,7 +504,7 @@ sap.ui.define([
                     sFilters.push(new Filter("supplier_local_name", FilterOperator.Contains, input_supplier_local_name));
                 }
 
-                oModel.read(this._m.serviceName.supplierView, {
+                oModel.read(that._m.serviceName.supplierView, {
                     async: false,
                     filters: sFilters,
                     success: function (rData, reponse) {
@@ -540,23 +542,24 @@ sap.ui.define([
         onReqmQuantityUnit : function(oEvent) {
             console.log("onReqmQuantityUnit");
             var obj = oEvent.getSource().oParent.oParent.getBindingContextPath(),
-            midList = this.getModel("midList");
-            this._selectedIndex = parseInt(obj.substring(1));
+                that = this,
+                midList = that.getModel("midList");
+                that._selectedIndex = parseInt(obj.substring(1));
 
-			if (!this._valueHelpReqmQuantityUnit) {
+			if (!that._valueHelpReqmQuantityUnit) {
 
-                this._valueHelpReqmQuantityUnit = sap.ui.xmlfragment(
-                    this._m.fragementId.reqmQuantityUnit, 
-                    this._m.fragementPath.reqmQuantityUnit,this
+                that._valueHelpReqmQuantityUnit = sap.ui.xmlfragment(
+                    that._m.fragementId.reqmQuantityUnit, 
+                    that._m.fragementPath.reqmQuantityUnit,this
                 );
-                this.getView().addDependent(this._valueHelpReqmQuantityUnit);
+                that.getView().addDependent(that._valueHelpReqmQuantityUnit);
             }   
-            this._openValueHelpReqmQuantityUnit();
+            that._openValueHelpReqmQuantityUnit();
             
             
-            var uom_name = this._findFragmentControlId(this._m.fragementId.reqmQuantityUnit, "searchField_uom_name");    
-            uom_name.setValue(midList.oData[this._selectedIndex].reqm_quantity_unit);            
-            this.onUomNameSearch();
+            var uom_name = that._findFragmentControlId(that._m.fragementId.reqmQuantityUnit, "searchField_uom_name");    
+            uom_name.setValue(midList.oData[that._selectedIndex].reqm_quantity_unit);            
+            that.onUomNameSearch();
          },
 
         /**
@@ -569,12 +572,12 @@ sap.ui.define([
                 oModel = this.getOwnerComponent().getModel(),
                 oUnitOfMeasureView = this.getModel("unitOfMeasureView"),
                 that = this,
-                searchField_uom_name = this._findFragmentControlId(this._m.fragementId.reqmQuantityUnit, "searchField_uom_name").getValue(),
-                reqmTable= this._findFragmentControlId(this._m.fragementId.reqmQuantityUnit, "reqmTable");             
+                searchField_uom_name = that._findFragmentControlId(that._m.fragementId.reqmQuantityUnit, "searchField_uom_name").getValue(),
+                reqmTable= that._findFragmentControlId(that._m.fragementId.reqmQuantityUnit, "reqmTable");             
                 
             var andFilter = [
-                new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id),
-                new Filter("language_code", FilterOperator.EQ, this._m.filter.language_code)                
+                new Filter("tenant_id", FilterOperator.EQ, that._m.filter.tenant_id),
+                new Filter("language_code", FilterOperator.EQ, that._m.filter.language_code)                
             ];
 
             var orFilter = [                
@@ -586,7 +589,7 @@ sap.ui.define([
             //기존 검색 데이타 초기화
             this.setModelNullAndUpdateBindings(oUnitOfMeasureView);
 
-            oModel.read(this._m.serviceName.unitOfMeasureView, {
+            oModel.read(that._m.serviceName.unitOfMeasureView, {
                 async: false,
                 filters: andFilter,
                 success: function (rData, reponse) {
@@ -606,16 +609,19 @@ sap.ui.define([
          */
 		_openValueHelpReqmQuantityUnit: function () {
             //기존 모델 초기화 
-            var unitOfMeasureView = this.getModel("unitOfMeasureView")
-            this.setModelNullAndUpdateBindings(unitOfMeasureView);
-			this._valueHelpReqmQuantityUnit.open();
+            var that = this;
+            var unitOfMeasureView = that.getModel("unitOfMeasureView");
+            
+            that.setModelNullAndUpdateBindings(unitOfMeasureView);
+			that._valueHelpReqmQuantityUnit.open();
 		},
 
         /**
          * 소요량 단위 close
          */
         closeValueHelpReqmQuantityUnit : function(evt){
-			this._valueHelpReqmQuantityUnit.close();
+            var that = this;
+			that._valueHelpReqmQuantityUnit.close();
         },
 
         /**
@@ -623,15 +629,16 @@ sap.ui.define([
          */
         onReqmQuantityUnitApply : function () {
             console.log("onReqmQuantityUnitApply");
-            var reqmTable =  this._findFragmentControlId(this._m.fragementId.reqmQuantityUnit, "reqmTable"), 
-            midList = this.getModel("midList"),
-                that = this;            
+            var that = this;
+            var reqmTable =  that._findFragmentControlId(that._m.fragementId.reqmQuantityUnit, "reqmTable"), 
+            midList = that.getModel("midList");
+                
 
             if(reqmTable.getSelectedItems().length<1){
-                this._showMessageBox(
-                    this.getModel("I18N").getText("/OPTION + CONFIRM"),
-                    this.getModel("I18N").getText("/NPG00016"),
-                    this._m.messageType.Warning,
+                that._showMessageBox(
+                    that.getModel("I18N").getText("/OPTION + CONFIRM"),
+                    that.getModel("I18N").getText("/NPG00016"),
+                    that._m.messageType.Warning,
                     function(){return;}
                 );
                 return;
@@ -640,9 +647,9 @@ sap.ui.define([
             var uom_code = reqmTable.getSelectedItems()[0].getCells()[0].mProperties.text;
             var uom_name = reqmTable.getSelectedItems()[0].getCells()[1].mProperties.text;
 
-            midList.oData[this._selectedIndex].reqm_quantity_unit = uom_code;
+            midList.oData[that._selectedIndex].reqm_quantity_unit = uom_code;
             midList.refresh(true);
-            this.closeValueHelpReqmQuantityUnit();
+            that.closeValueHelpReqmQuantityUnit();
 		},
 		/**
 		 * Event handler for Enter Full Screen Button pressed
@@ -744,14 +751,14 @@ sap.ui.define([
             console.log("_onMidServiceRead");
             
             var that = this,
-                oModel = this.getOwnerComponent().getModel(),
+                oModel = that.getOwnerComponent().getModel(),
                 oMidList = new JSONModel(),
                 oUiData = new JSONModel(),
-                sServiceUrl = this._m.serviceName.mIMaterialCodeBOMManagementHeaderView, //read는 master 페이지와 동일하게 사용한다. 
+                sServiceUrl = that._m.serviceName.mIMaterialCodeBOMManagementHeaderView, //read는 master 페이지와 동일하게 사용한다. 
                 aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id),
-                    new Filter("material_code", FilterOperator.EQ, this._m.filter.material_code),
-                    new Filter("supplier_code", FilterOperator.EQ, this._m.filter.supplier_code)
+                    new Filter("tenant_id", FilterOperator.EQ, that._m.filter.tenant_id),
+                    new Filter("material_code", FilterOperator.EQ, that._m.filter.material_code),
+                    new Filter("supplier_code", FilterOperator.EQ, that._m.filter.supplier_code)
                 ];
 
             oModel.read(sServiceUrl, {
@@ -774,14 +781,14 @@ sap.ui.define([
         _mIMaterialCodeBOMManagementHeaderServiceLoad : function() {
            console.log("_mIMaterialCodeBOMManagementHeaderServiceLoad");
             var that = this,
-                oModel = this.getOwnerComponent().getModel(),
+                oModel = that.getOwnerComponent().getModel(),
                 oUiData = new JSONModel(),
-                sServiceUrl = this._m.serviceName.mIMaterialCodeBOMManagementHeader, 
+                sServiceUrl = that._m.serviceName.mIMaterialCodeBOMManagementHeader, 
                 aFilters = [
-                new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id),
-                new Filter("material_code", FilterOperator.EQ, this._m.filter.material_code),
-                new Filter("supplier_code", FilterOperator.EQ, this._m.filter.supplier_code),
-                new Filter("mi_bom_id", FilterOperator.EQ, this._m.filter.mi_bom_id)          
+                new Filter("tenant_id", FilterOperator.EQ, that._m.filter.tenant_id),
+                new Filter("material_code", FilterOperator.EQ, that._m.filter.material_code),
+                new Filter("supplier_code", FilterOperator.EQ, that._m.filter.supplier_code),
+                new Filter("mi_bom_id", FilterOperator.EQ, that._m.filter.mi_bom_id)          
             ];
 
             oModel.read(sServiceUrl, {
@@ -804,14 +811,14 @@ sap.ui.define([
         _mIMaterialCodeBOMManagementViewServiceLoad : function() {
         console.log("_mIMaterialCodeBOMManagementViewServiceLoad");
             var that = this,
-                oModel = this.getOwnerComponent().getModel(),
+                oModel = that.getOwnerComponent().getModel(),
                 oMidList = new JSONModel(),
-                sServiceUrl = this._m.serviceName.mIMaterialCodeBOMManagementView, //read는 master 페이지와 동일하게 사용한다. 
+                sServiceUrl = that._m.serviceName.mIMaterialCodeBOMManagementView, //read는 master 페이지와 동일하게 사용한다. 
                 aFilters = [
-                new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id),
-                new Filter("material_code", FilterOperator.EQ, this._m.filter.material_code),
-                new Filter("supplier_code", FilterOperator.EQ, this._m.filter.supplier_code),
-                new Filter("mi_bom_id", FilterOperator.EQ, this._m.filter.mi_bom_id)          
+                new Filter("tenant_id", FilterOperator.EQ, that._m.filter.tenant_id),
+                new Filter("material_code", FilterOperator.EQ, that._m.filter.material_code),
+                new Filter("supplier_code", FilterOperator.EQ, that._m.filter.supplier_code),
+                new Filter("mi_bom_id", FilterOperator.EQ, that._m.filter.mi_bom_id)          
             ];
             
             oModel.read(sServiceUrl, {
@@ -840,10 +847,11 @@ sap.ui.define([
          */
         _onMidServiceRead : function(){
             console.log("_onMidServiceRead");
+            var that = this;
             //header
-            this._mIMaterialCodeBOMManagementHeaderServiceLoad();
+            that._mIMaterialCodeBOMManagementHeaderServiceLoad();
             //item //item 서비스를 사용하지 않고 MIMaterialCodeBOMManagementView 를 용한다. 12/29
-            this._mIMaterialCodeBOMManagementViewServiceLoad();
+            that._mIMaterialCodeBOMManagementViewServiceLoad();
         },     
 
         /**
@@ -1019,14 +1027,14 @@ sap.ui.define([
                 midList =this.getModel("midList"),
                 that = this;
 
-            this._selectedIndex = parseInt(obj.substring(1)); 
+                that._selectedIndex = parseInt(obj.substring(1)); 
 
-            this.onMaterialDetail(true);
+                that.onMaterialDetail(true);
 
-            var searchField_material_code = this._findFragmentControlId(this._m.fragementId.materialDetail, "searchField_material_code");
-            searchField_material_code.setValue(midList.oData[this._selectedIndex].mi_material_code);            
+            var searchField_material_code = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_material_code");
+            searchField_material_code.setValue(midList.oData[that._selectedIndex].mi_material_code);            
             
-            this.onMaterialSearch();
+            that.onMaterialSearch();
     
 
         },
@@ -1037,17 +1045,17 @@ sap.ui.define([
          */
         onMaterialDetail : function (bflag) {
             console.log("call funtion onMaterialDetail");
-
-            var oUi = this.getModel("oUi");
-			if (!this._valueHelpMaterialDetail) {
-                this._valueHelpMaterialDetail = sap.ui.xmlfragment(this._m.fragementId.materialDetail, this._m.fragementPath.materialDetail, this);
-                this.getView().addDependent(this._valueHelpMaterialDetail);
+            var that = this;
+            var oUi = that.getModel("oUi");
+			if (!that._valueHelpMaterialDetail) {
+                that._valueHelpMaterialDetail = sap.ui.xmlfragment(that._m.fragementId.materialDetail, that._m.fragementPath.materialDetail, this);
+                that.getView().addDependent(that._valueHelpMaterialDetail);
             }          
 
-            this._openValueHelpMaterialDetail();
+            that._openValueHelpMaterialDetail();
 
-            var searchField_material_code = this._findFragmentControlId(this._m.fragementId.materialDetail, "searchField_material_code");
-            var searchField_category_name = this._findFragmentControlId(this._m.fragementId.materialDetail, "searchField_category_name");
+            var searchField_material_code = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_material_code");
+            var searchField_category_name = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_category_name");
 
             oUi.setProperty("/changeItem", bflag);
 
@@ -1065,13 +1073,14 @@ sap.ui.define([
         _openValueHelpMaterialDetail : function () {
 
             //기존 load 모델 초기화
+            var that = this;
             var arrayModel = [               
                 "mIMaterialCostInformationView",
                 "mIMatListView"
             ];
           
-            this.setArrayModelNullAndUpdateBindings(arrayModel);
-            this._valueHelpMaterialDetail.open();
+            that.setArrayModelNullAndUpdateBindings(arrayModel);
+            that._valueHelpMaterialDetail.open();
         },
        
         /**
@@ -1079,16 +1088,16 @@ sap.ui.define([
          * @private
          */
         _onExit: function () {
-  
-            for (var sPropertyName in this._formFragments) {
-                if (!this._formFragments.hasOwnProperty(sPropertyName) || this._formFragments[sPropertyName] == null) {
+            var that = this;
+            for (var sPropertyName in that._formFragments) {
+                if (!that._formFragments.hasOwnProperty(sPropertyName) || that._formFragments[sPropertyName] == null) {
                     return;
                 }
 
-                this._setInit();
+                that._setInit();
                
-                this._formFragments[sPropertyName].destroy();
-                this._formFragments[sPropertyName] = null;
+                that._formFragments[sPropertyName].destroy();
+                that._formFragments[sPropertyName] = null;
             }
         },
 
@@ -1127,13 +1136,13 @@ sap.ui.define([
             var oModel = this.getOwnerComponent().getModel(),
                 aFilter = [],
                 that = this,
-                searchField_material_code = this._findFragmentControlId(this._m.fragementId.materialDetail, "searchField_material_code").getValue(),
-                searchField_category_name = this._findFragmentControlId(this._m.fragementId.materialDetail, "searchField_category_name").getValue(),
-                oTable = this._findFragmentControlId(this._m.fragementId.materialDetail, "leftTable");
+                searchField_material_code = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_material_code").getValue(),
+                searchField_category_name = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_category_name").getValue(),
+                oTable = that._findFragmentControlId(that._m.fragementId.materialDetail, "leftTable");
                 
            
             var andFilter = [
-                new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id)
+                new Filter("tenant_id", FilterOperator.EQ, that._m.filter.tenant_id)
             ];
             var orFilter = [];
             
@@ -1149,8 +1158,8 @@ sap.ui.define([
                 andFilter.push(new sap.ui.model.Filter(orFilter, false));
             }
 
-            var sServiceUrl = this._m.serviceName.mIMatListView;
-            var leftTable =  this._findFragmentControlId(this._m.fragementId.materialDetail, "leftTable");            
+            var sServiceUrl = that._m.serviceName.mIMatListView;
+            var leftTable =  that._findFragmentControlId(that._m.fragementId.materialDetail, "leftTable");            
             var mIMatListView = new JSONModel();
             oModel.read(sServiceUrl, {
                 async: false,
@@ -2095,6 +2104,7 @@ sap.ui.define([
          * @private
          */
         _fnCreateEntryItem : function(oModel, oData) {
+            var that = this;
             var createEntryItemParameters = {
                 "groupId": this._m.groupID,
                 "properties": {
@@ -2109,7 +2119,11 @@ sap.ui.define([
                     "termsdelv": oData.termsdelv,
                     "use_flag": oData.use_flag,
                     "local_create_dtm": new Date(),
-                    "create_user_id": this._sso.user.id
+                    "local_update_dtm": new Date(),
+                    "create_user_id": that._sso.user.id,
+                    "update_user_id": that._sso.user.id,
+                    "system_create_dtm": new Date(),
+                    "system_update_dtm": new Date()
                 }
             };
             try{

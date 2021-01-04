@@ -1,36 +1,54 @@
 package lg.sppCap.handlers.xx.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
+import com.sap.cds.Result;
+import com.sap.cds.ql.Select;
+import com.sap.cds.ql.cqn.CqnPredicate;
+import com.sap.cds.ql.cqn.CqnSelect;
 import com.sap.cds.services.cds.CdsReadEventContext;
 import com.sap.cds.services.cds.CdsService;
-import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
+import com.sap.cds.services.persistence.PersistenceService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import cds.gen.xx.util.commonservice.Code_;
+import lg.sppCap.frame.handler.BaseEventHandler;
 
 @Component
 @ServiceName("xx.util.CommonService")
-public class CommonService implements EventHandler {
+public class CommonService extends BaseEventHandler {
 
-    private List<Map<String, Object>> list = new ArrayList<>();
-
+    @Autowired
+    private PersistenceService db;
+    
     @On(event = CdsService.EVENT_READ, entity="xx.util.CommonService.Code1")
     public void onReadCode(CdsReadEventContext context) {
-        Map<String, Object> data1 = new HashMap<>();
-        data1.put("tenant_id", "TID");
-        data1.put("group_code", "Group Code");
-        data1.put("code", "Code");
-        data1.put("code_description", "Code Desc");
-        data1.put("sort_no", 11);
-        data1.put("code_name", "Valid code");
-        data1.put("code_name1", "Valid code11");
-        list.add(data1);
-        context.setResult(list);
+        String tenantId = this.getTenantId();
+        String languageCode = this.getLanguageCode(context);
+        // String filter = context.getParameterInfo().getQueryParameter("$filter");
+        Optional<CqnPredicate> where = context.getCqn().where();
+        // CqnPredicate predicate = where.orElseThrow();
+        CqnSelect codes = Select.from(Code_.class)
+            // .columns("group_code", "code", "code_name", "sort_no")
+            // .where(b ->
+            //     b.tenant_id().eq(tenantId)
+            //     .and(b.group_code().eq("CM_CHAIN_CD"))
+            // )
+            .columns(
+                c -> c.tenant_id(), 
+                c -> c.group_code(), 
+                c -> c.code(),
+                // c -> c.children().filter(p -> p.language_().eq(languageCode)).code_name(),
+                c -> c.sort_no())
+            .where(
+                where.get()
+            );
+        Result result = db.run(codes);
+        context.setResult(result.list());
     }
 
 }
