@@ -28,7 +28,7 @@ service PoApprMgtV4Service {
     // 외환신고품목은 한건씩 저장이나 확장을 위해 Multi Row 형태로 구현
     action SavePoForexDeclarationProc (forexItems : array of SavedForexItems) returns array of ResultForexItems;
 
-    view PoForexDeclarationSummaryView (tenant_id : String, company_code : String, purchasing_department_code : String, buyer_empno : String, po_start_date : Date, po_end_date : Date) as
+    view ForexDeclarationSummaryView (tenant_id : String, company_code : String, purchasing_department_code : String, buyer_empno : String, po_start_date : Date, po_end_date : Date) as
     select 'company' as group_type : String(50)
         , ifnull(sum(todo_count),0) as todo_count : Integer64
         , ifnull(sum(ongoing_count),0) as ongoing_count : Integer64
