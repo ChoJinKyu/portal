@@ -63,6 +63,7 @@
                             <Label text="구매요청 유형" labelFor="searchBsart" required="false"></Label>
                             <MultiComboBox
                               id="searchBsart"
+                              showSecondaryValues="true"
                               width="100%"
                               items="{
                                 path: 'util>/CodeDetails',
@@ -72,7 +73,7 @@
                                 ]
                               }">
                               <items>
-                                <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+                                <core:ListItem key="{util>code}" text="{util>code_description}" additionalText="{util>code}" />
                               </items>
                             </MultiComboBox>
                             <Label text="조직코드" labelFor="searchOrgCombo4" required="false"></Label>
