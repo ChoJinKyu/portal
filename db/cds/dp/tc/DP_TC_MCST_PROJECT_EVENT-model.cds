@@ -35,20 +35,18 @@ entity Tc_Mcst_Project_Event {
     key tenant_id           : String(5) not null  @title : '테넌트ID';
     key project_code        : String(30) not null @title : '프로젝트코드';
     key model_code          : String(40) not null @title : '모델코드';
-    key mcst_code           : String(30) not null @title : '재료비코드';
-    key version_sequence    : Decimal not null    @title : '버전순서';
+    key version_number      : String(30) not null @title : '버전번호';
     key develope_event_code : String(30) not null @title : '개발이벤트코드';
         start_date          : Date                @title : '시작일자';
         end_date            : Date                @title : '종료일자';
         sequence            : String              @title : '순서';
 /*
         mcst_event_ref      : Association[1.. * ] to Mcst_Project.Tc_Mcst_Project
-                                  on  mcst_event_ref.tenant_id        = tenant_id
-                                  and mcst_event_ref.project_code     = project_code
-                                  and mcst_event_ref.model_code       = model_code
-                                  and mcst_event_ref.mcst_code        = mcst_code
-                                  and mcst_event_ref.version_sequence = version_sequence;
-*/                                  
+                                  on  mcst_event_ref.tenant_id      = tenant_id
+                                  and mcst_event_ref.project_code   = project_code
+                                  and mcst_event_ref.model_code     = model_code
+                                  and mcst_event_ref.version_number = version_number;
+*/
 }
 
 extend Tc_Mcst_Project_Event with util.Managed;

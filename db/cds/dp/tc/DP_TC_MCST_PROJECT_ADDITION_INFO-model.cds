@@ -35,43 +35,38 @@ entity Tc_Mcst_Project_Addition_Info {
     key tenant_id            : String(5) not null  @title : '테넌트ID';
     key project_code         : String(30) not null @title : '프로젝트코드';
     key model_code           : String(40) not null @title : '모델코드';
-    key mcst_code            : String(30) not null @title : '재료비코드';
-    key version_sequence     : Decimal not null    @title : '버전순서';
+    key version_number       : String(30) not null @title : '버전번호';
     key addition_type_code   : String(30) not null @title : '추가유형코드';
     key period_code          : String(30) not null @title : '기간코드';
         addition_type_value  : String(10)          @title : '추가유형값';
 /*
         mcst_mtlmob_ref      : Association[0.. * ] to Mcst_Project.Tc_Mcst_Project
-                                   on  mcst_mtlmob_ref.tenant_id        = tenant_id
-                                   and mcst_mtlmob_ref.project_code     = project_code
-                                   and mcst_mtlmob_ref.model_code       = model_code
-                                   and mcst_mtlmob_ref.mcst_code        = mcst_code
-                                   and mcst_mtlmob_ref.version_sequence = version_sequence
-                                   and addition_type_code               = 'MTLLMOB'; //물동
+                                   on  mcst_mtlmob_ref.tenant_id      = tenant_id
+                                   and mcst_mtlmob_ref.project_code   = project_code
+                                   and mcst_mtlmob_ref.model_code     = model_code
+                                   and mcst_mtlmob_ref.version_number = version_number
+                                   and addition_type_code             = 'MTLLMOB'; //물동
 
         mcst_sales_price_ref : Association[0.. * ] to Mcst_Project.Tc_Mcst_Project
-                                   on  mcst_sales_price_ref.tenant_id        = tenant_id
-                                   and mcst_sales_price_ref.project_code     = project_code
-                                   and mcst_sales_price_ref.model_code       = model_code
-                                   and mcst_sales_price_ref.mcst_code        = mcst_code
-                                   and mcst_sales_price_ref.version_sequence = version_sequence
-                                   and addition_type_code                    = 'SALES_PRICE'; //판가
+                                   on  mcst_sales_price_ref.tenant_id      = tenant_id
+                                   and mcst_sales_price_ref.project_code   = project_code
+                                   and mcst_sales_price_ref.model_code     = model_code
+                                   and mcst_sales_price_ref.version_number = version_number
+                                   and addition_type_code                  = 'SALES_PRICE'; //판가
 
         mcst_prcs_cost_ref   : Association[0.. * ] to Mcst_Project.Tc_Mcst_Project
-                                   on  mcst_prcs_cost_ref.tenant_id        = tenant_id
-                                   and mcst_prcs_cost_ref.project_code     = project_code
-                                   and mcst_prcs_cost_ref.model_code       = model_code
-                                   and mcst_prcs_cost_ref.mcst_code        = mcst_code
-                                   and mcst_prcs_cost_ref.version_sequence = version_sequence
-                                   and addition_type_code                  = 'PROCESSING_COST'; //가공비
+                                   on  mcst_prcs_cost_ref.tenant_id      = tenant_id
+                                   and mcst_prcs_cost_ref.project_code   = project_code
+                                   and mcst_prcs_cost_ref.model_code     = model_code
+                                   and mcst_prcs_cost_ref.version_number = version_number
+                                   and addition_type_code                = 'PROCESSING_COST'; //가공비
 
         mcst_sgna_ref        : Association[0.. * ] to Mcst_Project.Tc_Mcst_Project
-                                   on  mcst_sgna_ref.tenant_id        = tenant_id
-                                   and mcst_sgna_ref.project_code     = project_code
-                                   and mcst_sgna_ref.model_code       = model_code
-                                   and mcst_sgna_ref.mcst_code        = mcst_code
-                                   and mcst_sgna_ref.version_sequence = version_sequence
-                                   and addition_type_code             = 'SGNA'; //판관비
+                                   on  mcst_sgna_ref.tenant_id      = tenant_id
+                                   and mcst_sgna_ref.project_code   = project_code
+                                   and mcst_sgna_ref.model_code     = model_code
+                                   and mcst_sgna_ref.version_number = version_number
+                                   and addition_type_code           = 'SGNA'; //판관비
 */
 }
 

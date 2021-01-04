@@ -74,10 +74,10 @@ entity Tc_Project {
                                       and events.project_code = project_code
                                       and events.model_code   = model_code;
 
-        silimar_model           : Composition of many Project_Similar_Model.Tc_Project_Similar_Model
-                                      on  silimar_model.tenant_id    = tenant_id
-                                      and silimar_model.project_code = project_code
-                                      and silimar_model.model_code   = model_code;
+        similar_model           : Composition of many Project_Similar_Model.Tc_Project_Similar_Model
+                                      on  similar_model.tenant_id    = tenant_id
+                                      and similar_model.project_code = project_code
+                                      and similar_model.model_code   = model_code;
 
         base_extra              : Composition of many Project_Base_Exrate.Tc_Project_Base_Exrate
                                       on  base_extra.tenant_id    = tenant_id
