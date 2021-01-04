@@ -438,15 +438,18 @@ sap.ui.define([
             
             // var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
             var oData = oTable.getModel('list').getProperty("/MoldMasterSpec");
-            var rows = oTable.getRows();
+            // var rows = oTable.getRows();
 
-            console.log('oData',oData);
+            // console.log('oData',oData);
 
-            for(var i=0 ; i<oData.length ; i++){
-                var _cells = rows[i].getCells();
-                oData[i].mold_progress_status_code = _cells[6].getValue();
-                // oData[i].inspection_flag = _cells[7].getValue();
-            }
+            // for(var i=0 ; i<oData.length ; i++){
+            //     console.log(i);
+            //     var _cells = rows[i].getCells();
+            //     oData[i].mold_progress_status_code = _cells[6].getValue();
+            //     oData[i].inspection_flag = oData[i].inspection_flag?'YES':'NO';
+            //     oData[i].mold_production_type_code = _cells[13].getSelectedItem().getText();
+            //     oData[i].mold_item_type_code = _cells[14].getValue();
+            // }
 
             ExcelUtil.fnExportExcel({
                 fileName: "MoldReceiptConfirm",
