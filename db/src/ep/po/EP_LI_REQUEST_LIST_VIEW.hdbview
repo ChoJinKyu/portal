@@ -41,4 +41,5 @@ left outer join   (select TOP 1
     order by pub.publish_date desc) as sub
 on  mst.tenant_id = sub.tenant_id
 and mst.company_code = sub.company_code
-and mst.loi_write_number = sub.loi_write_number;
+and mst.loi_write_number = sub.loi_write_number
+order by mst.loi_number asc;
