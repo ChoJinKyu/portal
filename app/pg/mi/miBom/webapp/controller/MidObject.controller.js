@@ -1027,14 +1027,14 @@ sap.ui.define([
                 midList =this.getModel("midList"),
                 that = this;
 
-            this._selectedIndex = parseInt(obj.substring(1)); 
+                that._selectedIndex = parseInt(obj.substring(1)); 
 
-            this.onMaterialDetail(true);
+                that.onMaterialDetail(true);
 
-            var searchField_material_code = this._findFragmentControlId(this._m.fragementId.materialDetail, "searchField_material_code");
-            searchField_material_code.setValue(midList.oData[this._selectedIndex].mi_material_code);            
+            var searchField_material_code = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_material_code");
+            searchField_material_code.setValue(midList.oData[that._selectedIndex].mi_material_code);            
             
-            this.onMaterialSearch();
+            that.onMaterialSearch();
     
 
         },
@@ -1045,17 +1045,17 @@ sap.ui.define([
          */
         onMaterialDetail : function (bflag) {
             console.log("call funtion onMaterialDetail");
-
-            var oUi = this.getModel("oUi");
-			if (!this._valueHelpMaterialDetail) {
-                this._valueHelpMaterialDetail = sap.ui.xmlfragment(this._m.fragementId.materialDetail, this._m.fragementPath.materialDetail, this);
-                this.getView().addDependent(this._valueHelpMaterialDetail);
+            var that = this;
+            var oUi = that.getModel("oUi");
+			if (!that._valueHelpMaterialDetail) {
+                that._valueHelpMaterialDetail = sap.ui.xmlfragment(that._m.fragementId.materialDetail, that._m.fragementPath.materialDetail, this);
+                that.getView().addDependent(that._valueHelpMaterialDetail);
             }          
 
-            this._openValueHelpMaterialDetail();
+            that._openValueHelpMaterialDetail();
 
-            var searchField_material_code = this._findFragmentControlId(this._m.fragementId.materialDetail, "searchField_material_code");
-            var searchField_category_name = this._findFragmentControlId(this._m.fragementId.materialDetail, "searchField_category_name");
+            var searchField_material_code = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_material_code");
+            var searchField_category_name = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_category_name");
 
             oUi.setProperty("/changeItem", bflag);
 
@@ -1073,13 +1073,14 @@ sap.ui.define([
         _openValueHelpMaterialDetail : function () {
 
             //기존 load 모델 초기화
+            var that = this;
             var arrayModel = [               
                 "mIMaterialCostInformationView",
                 "mIMatListView"
             ];
           
-            this.setArrayModelNullAndUpdateBindings(arrayModel);
-            this._valueHelpMaterialDetail.open();
+            that.setArrayModelNullAndUpdateBindings(arrayModel);
+            that._valueHelpMaterialDetail.open();
         },
        
         /**
@@ -1087,16 +1088,16 @@ sap.ui.define([
          * @private
          */
         _onExit: function () {
-  
-            for (var sPropertyName in this._formFragments) {
-                if (!this._formFragments.hasOwnProperty(sPropertyName) || this._formFragments[sPropertyName] == null) {
+            var that = this;
+            for (var sPropertyName in that._formFragments) {
+                if (!that._formFragments.hasOwnProperty(sPropertyName) || that._formFragments[sPropertyName] == null) {
                     return;
                 }
 
-                this._setInit();
+                that._setInit();
                
-                this._formFragments[sPropertyName].destroy();
-                this._formFragments[sPropertyName] = null;
+                that._formFragments[sPropertyName].destroy();
+                that._formFragments[sPropertyName] = null;
             }
         },
 
@@ -1135,13 +1136,13 @@ sap.ui.define([
             var oModel = this.getOwnerComponent().getModel(),
                 aFilter = [],
                 that = this,
-                searchField_material_code = this._findFragmentControlId(this._m.fragementId.materialDetail, "searchField_material_code").getValue(),
-                searchField_category_name = this._findFragmentControlId(this._m.fragementId.materialDetail, "searchField_category_name").getValue(),
-                oTable = this._findFragmentControlId(this._m.fragementId.materialDetail, "leftTable");
+                searchField_material_code = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_material_code").getValue(),
+                searchField_category_name = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_category_name").getValue(),
+                oTable = that._findFragmentControlId(that._m.fragementId.materialDetail, "leftTable");
                 
            
             var andFilter = [
-                new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id)
+                new Filter("tenant_id", FilterOperator.EQ, that._m.filter.tenant_id)
             ];
             var orFilter = [];
             
@@ -1157,8 +1158,8 @@ sap.ui.define([
                 andFilter.push(new sap.ui.model.Filter(orFilter, false));
             }
 
-            var sServiceUrl = this._m.serviceName.mIMatListView;
-            var leftTable =  this._findFragmentControlId(this._m.fragementId.materialDetail, "leftTable");            
+            var sServiceUrl = that._m.serviceName.mIMatListView;
+            var leftTable =  that._findFragmentControlId(that._m.fragementId.materialDetail, "leftTable");            
             var mIMatListView = new JSONModel();
             oModel.read(sServiceUrl, {
                 async: false,
