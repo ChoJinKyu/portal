@@ -1196,7 +1196,7 @@ sap.ui.define([
                 var exchange = items.getCells()[2].mProperties.text;
                 var termsdelv = items.getCells()[3].mProperties.text;
 
-                if(oUi.getProperty("changeItem")){
+                if(oUi.getProperty("/changeItem")){
                     if(midList.oData[this._selectedIndex]){
                         if(currency_unit==midList.oData[this._selectedIndex].currency_unit &&
                             quantity_unit==midList.oData[this._selectedIndex].quantity_unit &&
