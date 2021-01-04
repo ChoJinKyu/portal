@@ -51,7 +51,7 @@
                     "component": "dp.mm.uomMgt"
                 },
                 {
-                    "name": "Global Sourcing Pool t",
+                    "name": "Global Sourcing Pool",
                     "url": "../dp/gs/gsSupplierMgt/webapp",
                     "component": "dp.gs.gsSupplierMgt"
                 }
