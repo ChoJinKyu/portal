@@ -904,12 +904,10 @@ sap.ui.define([
             }
 
             this.callAjax(data,"saveMoldApproval")
-
-
         } , 
 
         callAjax : function (data,fn) {  
-            console.log("data >>>> " , data);
+            console.log("send data >>>> " , data);
             var that = this;
             //  /dp/md/moldApprovalList/webapp/srv-api/odata/v2/dp.MoldApprovalListService/RefererSearch
             //  "xx/sampleMgr/webapp/srv-api/odata/v4/xx.SampleMgrV4Service/SaveSampleHeaderMultiProc"
@@ -934,8 +932,7 @@ sap.ui.define([
             });
         }, 
         onLoadThisPage : function (param) { 
-           
-            this._viewMode();
+            this.approval_number = param.approval_number;  //  저장후  this.approval_number 를 세팅 하여 한번 저장 후에는 업데이트 처리 되도록 !! 
             this._onRoutedThisPage(param.approval_number); 
             this._onApprovalPage();
             this._toShowMode();

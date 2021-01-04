@@ -77,10 +77,10 @@ sap.ui.define([
         /* internal methods                                            */
         /* =========================================================== */
         _onApprovalPage : function () {
-  // MoldRecepit
+ 
             this.getView().setModel(new ManagedListModel(), "mdRecepit");
 
-            console.log(" this.approval_number "  ,  this.approval_number);
+            console.log(" mode "  ,  this.getView().getModel("mode"));
             var schFilter = [];
             var that = this;
             if (this.approval_number == "New") {
@@ -88,15 +88,20 @@ sap.ui.define([
 
                // this._mdraEditFragment();
             } else {
-               
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
                     , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
                 ];
-
                 this._bindViewRecepit("/MoldRecepit", "mdRecepit", schFilter, function (oData) { 
                  
                 });
             }  
+
+            if(this.getView().getModel("mode").getProperty("/editFlag")){
+                this._mdraEditFragment();
+            }else{
+                this._mdraViewFragment();
+            }
+
         },
 
         _bindViewRecepit : function (sObjectPath, sModel, aFilter, callback) { 
