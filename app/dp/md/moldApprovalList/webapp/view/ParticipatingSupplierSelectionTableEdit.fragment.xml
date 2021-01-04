@@ -76,13 +76,13 @@
                         <table:template>
                             <ComboBox visible="{contModel>/editMode}"
                                     editable="false"
-                                    selectedKey="{mdItemMaster>mold_item_type_code}" items="{ path : 'util>/CodeDetails',
+                                    selectedKey="{mdItemMaster>mold_item_type_code}" items="{ path : 'util>/Code',
                                     filters : [
                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
                                     ]
                                 }">
-                                <core:Item key="{util>code}" text="{util>code_description}"/> 
+                                <core:Item key="{util>code}" text="{util>code_name}"/> 
                             </ComboBox>
                             <!-- <Text id="moldItemTypeCodeNm" text="{mdItemMaster>mold_item_type_code_nm}"/> -->
                         </table:template>

@@ -236,22 +236,21 @@ sap.ui.define([
                 mstModel = this.getModel("appMaster");
             ;
             /** add record 시 저장할 model 과 다른 컬럼이 있을 경우 submit 안됨 */
-            var approval_number = mstModel.oData.approval_number;
-            console.log("data.oData :::", data.oData);
+            var approval_number = mstModel.approval_number;
             oModel.addRecord({
                 "approval_number": approval_number,
                 "tenant_id": "L1100",
-                "mold_id": String(data.oData.mold_id),
-                "model": data.oData.model,
-                "mold_number": data.oData.mold_number,
-                "mold_sequence": data.oData.mold_sequence,
-                "spec_name": data.oData.spec_name,
-                "mold_item_type_code": data.oData.mold_item_type_code,
-                "book_currency_code": data.oData.book_currency_code,
-                "provisional_budget_amount": data.oData.provisional_budget_amount,
-                "budget_amount": data.oData.budget_amount,
-                "currency_code": data.oData.currency_code,
-                "target_amount": data.oData.target_amount,
+                "mold_id": String(data.mold_id),
+                "model": data.model,
+                "mold_number": data.mold_number,
+                "mold_sequence": data.mold_sequence,
+                "spec_name": data.spec_name,
+                "mold_item_type_code": data.mold_item_type_code,
+                "book_currency_code": data.book_currency_code,
+                "provisional_budget_amount": data.provisional_budget_amount,
+                "budget_amount": data.budget_amount,
+                "currency_code": data.currency_code,
+                "target_amount": data.target_amount,
                 "local_create_dtm": new Date(),
                 "local_update_dtm": new Date()
             }, "/ParticipatingSupplier", 0);
