@@ -26,12 +26,6 @@
 					<Title text="구매 요청 생성" wrapping="true" />
 				</uxap:expandedHeading>
 
-				<uxap:snappedHeading>
-                    <FlexBox fitContainer="true" alignItems="Center">
-						<Title text="구매 요청 생성" wrapping="true"/>
-					</FlexBox>
-				</uxap:snappedHeading>
-
                 <uxap:navigationActions>
 					<OverflowToolbarButton id="pageNavigationBackButton" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onNavigationBackPress" />
                 </uxap:navigationActions>
@@ -52,7 +46,7 @@
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <ObjectStatus
                         title="구매요청 템플릿"
-                        text="석유화학 공사/용역구매"/>
+                        text="{detailModel>/pr_template_name}"/>
                     <ObjectStatus
                         title="구매요청 생성자"
                         text="{detailModel>/requestor_name}"/>
