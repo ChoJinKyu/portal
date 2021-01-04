@@ -19,6 +19,7 @@
         upperCaseAnchorBar="false"
 		showFooter="true"
 		editHeaderButtonPress="handleEditBtnPress" >
+
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
@@ -31,21 +32,8 @@
 					</FlexBox>
 				</uxap:snappedHeading>
 
-			    <uxap:expandedContent>
-				</uxap:expandedContent>
-
-				<uxap:snappedContent>
-				</uxap:snappedContent>
-
-				<uxap:snappedTitleOnMobile>
-				</uxap:snappedTitleOnMobile>
-
-				<uxap:actions>
-                    <!-- 상단 버튼 영역 -->
-				</uxap:actions>
-
                 <uxap:navigationActions>
-					<OverflowToolbarButton id="pageNavBackButton" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" />
+					<OverflowToolbarButton id="pageNavigationBackButton" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onNavigationBackPress" />
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
@@ -55,10 +43,10 @@
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <ObjectStatus
                         title="구매요청 번호"
-                        text="New"/>
+                        text="{detailModel>/pr_number}"/>
                     <ObjectStatus
                         title="구매요청 생성일자"
-                        text="2020-11-20"/>
+                        text="{detailModel>/local_update_dtm', formatter: '.dateFormatter.toDateString'}"/>
 				</layout:VerticalLayout>
 
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
@@ -67,7 +55,7 @@
                         text="석유화학 공사/용역구매"/>
                     <ObjectStatus
                         title="구매요청 생성자"
-                        text="김구매"/>
+                        text="{detailModel>/requestor_name}"/>
 				</layout:VerticalLayout>
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
@@ -77,7 +65,8 @@
                         text="New"
                         state="Error" />
 				</layout:VerticalLayout>
-
+                
+                <!-- Process 시작 -->
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                       <HBox>
                         <Title text="Process"/>
@@ -104,231 +93,184 @@
 
 		<uxap:sections id="pss">
 
-			<uxap:ObjectPageSection  id="pageSectionMain" titleUppercase="true" title="General Info">
+			<uxap:ObjectPageSection  id="pageSectionMain" titleUppercase="true" title="기본 정보">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
                         <layout:VerticalLayout class="sapUiSmallMarginBeginEnd"> 
-                                <HBox alignItems="Center">
-                                    <Label
-                                        text="Subject "
-                                      
-                                        class="sapUiTinyMarginEnd"
-                                        textAlign="Left"
-                                        labelFor="input"
-                                        required="true"/>
-                                    <Input
-                                        value="Input data"
-                                        visible="true"
-                                        width="40em" 
-                                        placeholder="필수"
-                                        >
-                                    </Input>
-                                </HBox>
-                            <VBox>
-                                <Label text="Description" labelFor="input" required="true"></Label> 
-                                <layout:VerticalLayout id="idVerticalLayout" class="sapUiContentPadding" width="100%">
+                            <HBox alignItems="Center">
+                                <Label
+                                    text="품의 제목"                                      
+                                    class="sapUiTinyMarginEnd"
+                                    textAlign="Left"
+                                    labelFor="input"
+                                    required="true"/>
+                                <Input
+                                    value="{detailModel>/pr_header_text}"
+                                    visible="true"
+                                    width="40em" 
+                                    placeholder="필수"
+                                    >
+                                </Input>
+                            </HBox>
+                            <HBox alignItems="Center">
+                                <Label
+                                    text="품의 내용"                           
+                                    class="sapUiTinyMarginEnd"
+                                    textAlign="Left"
+                                    labelFor="input"/>
+                            </HBox>
+                            <HBox alignItems="Center">
+                                <layout:VerticalLayout id="approvalLayout" class="sapUiContentPadding" width="100%">
                                 </layout:VerticalLayout>
-                            </VBox>
+                            </HBox>
                         </layout:VerticalLayout> 						
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-            <uxap:ObjectPageSection titleUppercase="false" title="Participating Supplier">
+            <!-- 품목 정보 시작 -->
+            <uxap:ObjectPageSection titleUppercase="false" title="품목 정보">
 				<uxap:subSections>
-					<uxap:ObjectPageSubSection>
-                       <HBox>
-                         <VBox class="sapUiSmallMargin">
-                            <Label text="Affiliate" />
-                            <ObjectStatus
-                                text="{company>/Org_Company/0/company_name}" 
-                                state="Error"
-                                />
-                         </VBox>
-                         <VBox class="sapUiSmallMargin">
-                            <Label text="Division" />
-                            <ObjectStatus
-                                text="{plant>/Org_Plant/0/plant_name}" 
-                                state="Error"
-                                />
-                         </VBox>
-                        </HBox>
-                    </uxap:ObjectPageSubSection>
                     <uxap:ObjectPageSubSection>
                         <!-- Participating Supplier Table -->
-                        <table:Table id="psTable"
+                        <table:Table id="pritemTable"
                                 selectionMode="MultiToggle"
-                                fixedColumnCount="4"
+                                fixedColumnCount="1"
                                 visibleRowCountMode="Auto"
-                                rows="{createlist>/undefined}"
+                                rows="{detailModel>/details}"
                                 >
                              <table:extension>
                                 <OverflowToolbar>
+                                    <Title text="{I18N>/ITEM} (0)" level="H2"/>
                                     <ToolbarSpacer/>
                                     <!-- Add the Personalization button -->
-                                    <Button id="btnPsAdd"     type="Transparent" text="Add" press=".handleTableSelectDialogPress" >
+                                    <Button id="btnPsAdd" type="Transparent" text="Add Item" press=".onItemAddRow" >
                                     	<customData>
                                             <core:CustomData key="multi" value="true" />
                                         </customData>
                                     </Button>
-                                    <Button id="btnPsDelete"   type="Transparent" text="Delete"  press=".onPsDelRow" />
-                                    <Button id="btnPsSuplierSel"  type="Emphasized"  text="Supplier Select"   press=".onPsSupplier" />
-                                    <!-- <ToolbarSeparator/>
-                                    <Button icon="sap-icon://action-settings" press="" >
-                                        <layoutData>
-                                            <OverflowToolbarLayoutData priority="NeverOverflow" />
-                                        </layoutData>
-                                    </Button> -->
+                                    <Button id="btnItemCopy"   type="Transparent" text="Copy"  press=".onItemCopyRow" />
+                                    <Button id="btnItemEditMulti"   type="Transparent" text="Edit Multiple"  press=".onItemEditMultiRow" />
+                                    <Button id="btnItemDelete"   type="Transparent" text="Delete"  press=".onItemDeleteRow" />
+                                    <Button icon="sap-icon://group-2" />
+                                    <Button icon="sap-icon://action-settings" />
                                 </OverflowToolbar>
                             </table:extension>          
 
-                                <table:columns>
-                                    <table:Column id="c_model" width="5em" hAlign="Center">
-                                        <Label text="Model"/>           
-                                        <table:template>
-                                            <Text id="t_model" text="{createlist>model}"/>
-                                        </table:template>
-                                    </table:Column>
-                                    <table:Column id="c_moldPartNo" width="10em" hAlign="Center">
-                                        <Label text="Mold&#10;Part No"/>           
-                                        <table:template>
-                                            <Text id="t_mold_part_no" text="{createlist>moldPartNo}"/>
-                                        </table:template>
-                                    </table:Column>
-                                    <table:Column id="c_seq" width="10em" hAlign="Center">
-                                        <Label text="Seq"/>           
-                                        <table:template>
-                                            <Text id="t_seq" text=""/>
-                                        </table:template>
-                                    </table:Column>
-                                    <table:Column id="c_description" width="10em" hAlign="Center">
-                                        <Label text="Description"/>           
-                                        <table:template>
-                                            <Text id="description" text=""/>
-                                        </table:template>
-                                    </table:Column>       
-                                    <table:Column id="c_MoldItemType" width="10em" hAlign="Center">
-                                        <Label text="Mold Item Type"/>           
-                                        <table:template>
-                                            <Text id="moldItemType" text=""/>
-                                        </table:template>
-                                    </table:Column>                                     
-                                    <table:Column id="c_bookCrrency" width="10em" hAlign="Center">
-                                        <Label text="Book Currency"/>           
-                                        <table:template>
-                                            <Text id="bookCurrency" text=""/>
-                                        </table:template>
-                                    </table:Column>                                     
-                                    <table:Column id="c_budetAmount" width="10em" hAlign="Center">
-                                        <Label text="Budget Amount"/>           
-                                        <table:template>
-                                            <Text id="budetAmount" text=""/>
-                                        </table:template>
-                                    </table:Column>                                     
-                                    <table:Column id="c_currency" width="10em" hAlign="Center">
-                                        <Label text="Currency"/>           
-                                        <table:template>
-                                              <ComboBox   id="currency"    
-                                                            selectedKey="{= ${list>family_part_number_1}.length > 0 ? 'Y' : 'N' }"
-                                                            items="{
-                                                                        path : 'util>/CodeDetails',
-                                                                        filters : [
-                                                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
-                                                                            {path : 'company_code', operator : 'EQ', value1 : '*'},
-                                                                            {path : 'group_code', operator : 'EQ', value1 : 'CM_YN'}
-                                                                        ]
-                                                                    }"
-                                                >
-                                                    <core:Item key="{util>code}" text="{util>code_description}" />
-                                            </ComboBox>
-                                        </table:template>
-                                    </table:Column>                                     
-                                    <table:Column id="c_targetAmount" width="10em" hAlign="Center">
-                                        <Label text="Target Amount"/>           
-                                        <table:template>
-                                            <Input id="targetAmount" value=""/>
-                                        </table:template>
-                                    </table:Column>                                     
-                                    <table:Column id="c_moldSupplier1" width="10em" hAlign="Center">
-                                        <Label text="Mold Supplier1"/>           
-                                        <table:template>
-                                            <Text id="moldSupplier1" text="{createlist>moldSupplier1}"/>
-                                        </table:template>
-                                    </table:Column>                                     
-                                    <table:Column id="c_moldSupplier2" width="10em" hAlign="Center">
-                                        <Label text="Mold Supplier2"/>           
-                                        <table:template>
-                                            <Text id="moldSupplier2" text="{createlist>moldSupplier2}"/>
-                                        </table:template>
-                                    </table:Column>                                     
-                                    <table:Column id="c_moldSupplier3" width="10em" hAlign="Center">
-                                        <Label text="Mold Supplier3"/>           
-                                        <table:template>
-                                            <Text id="moldSupplier3" text="{createlist>moldSupplier3}"/>
-                                        </table:template>
-                                    </table:Column>                                     
-                                    <table:Column id="c_moldSupplier4" width="10em" hAlign="Center">
-                                        <Label text="Mold Supplier4"/>           
-                                        <table:template>
-                                            <Text id="moldSupplier4" text="{createlist>moldSupplier4}"/>
-                                        </table:template>
-                                    </table:Column>                                     
-                                    <table:Column id="c_moldSupplier5" width="10em" hAlign="Center">
-                                        <Label text="Mold Supplier5"/>           
-                                        <table:template>
-                                            <Text id="moldSupplier5" text="{createlist>moldSupplier5}"/>
-                                        </table:template>
-                                    </table:Column>                                     
-                                    <table:Column id="c_moldSupplier6" width="10em" hAlign="Center">
-                                        <Label text="Mold Supplier6"/>           
-                                        <table:template>
-                                            <Text id="moldSupplier6" text="{createlist>moldSupplier6}"/>
-                                        </table:template>
-                                    </table:Column>                                     
-                                    <table:Column id="c_moldSupplier7" width="10em" hAlign="Center">
-                                        <Label text="Mold Supplier7"/>           
-                                        <table:template>
-                                            <Text id="moldSupplier7" text="{createlist>moldSupplier7}"/>
-                                        </table:template>
-                                    </table:Column>                                     
-                                    <table:Column id="c_moldSupplier8" width="10em" hAlign="Center">
-                                        <Label text="Mold Supplier8"/>           
-                                        <table:template>
-                                            <Text id="moldSupplier8" text="{createlist>moldSupplier8}"/>
-                                        </table:template>
-                                    </table:Column>                                     
-                                    <table:Column id="c_moldSupplier9" width="10em" hAlign="Center">
-                                        <Label text="Mold Supplier9"/>           
-                                        <table:template>
-                                            <Text id="moldSupplier9" text="{createlist>moldSupplier9}"/>
-                                        </table:template>
-                                    </table:Column>                                     
-                                    <table:Column id="c_moldSupplier10" width="10em" hAlign="Center">
-                                        <Label text="Mold Supplier10"/>           
-                                        <table:template>
-                                            <Text id="moldSupplier10" text="{createlist>moldSupplier10}"/>
-                                        </table:template>
-                                    </table:Column>                                     
-                                </table:columns>
-
+                            <table:columns>
+                                <table:Column id="c_model" width="4em" hAlign="Center">
+                                    <Label text="품목번호"/>
+                                    <table:template>
+                                        <Text id="t_model" text="{detailModel>pr_item_number}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column id="c_moldPartNo" width="10em" hAlign="Center">
+                                    <Label text="조직코드" required="true"/>           
+                                    <table:template>
+                                        <Input
+                                            value="{detailModel>org_code}"
+                                            showValueHelp="true"
+                                            valueHelpRequest=".onOpenOrgcodeDialog" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="10em" hAlign="Center">
+                                    <Label text="자재코드" required="true"/>           
+                                    <table:template>
+                                        <Input
+                                            value="{detailModel>material_code}"
+                                            showValueHelp="true"
+                                            valueHelpRequest=".onOpenMaterialDialog" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="10em" hAlign="Center">
+                                    <Label text="자재그룹" required="true"/>           
+                                    <table:template>
+                                        <Input value="{detailModel>material_group_code}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column id="c_description" width="10em" hAlign="Center">
+                                    <Label text="구매요총 품명" required="true"/>           
+                                    <table:template>
+                                        <Input value="{detailModel>pr_desc}"/>
+                                    </table:template>
+                                </table:Column>       
+                                <table:Column id="c_MoldItemType" width="10em" hAlign="Center">
+                                    <Label text="요청수량" required="true"/>
+                                    <table:template>
+                                        <Input value="{detailModel>pr_quantity}"/>
+                                    </table:template>
+                                </table:Column>                                     
+                                <table:Column id="c_bookCrrency" width="10em" hAlign="Center">
+                                    <Label text="단위" required="true"/>           
+                                    <table:template>
+                                        <Input value="{detailModel>pr_unit}"/>
+                                    </table:template>
+                                </table:Column>                                     
+                                <table:Column id="c_budetAmount" width="10em" hAlign="Center">
+                                    <Label text="구매요청가격" required="true"/>           
+                                    <table:template>
+                                        <Input value="{detailModel>estimated_price}"/>
+                                    </table:template>
+                                </table:Column>                               
+                                <table:Column id="c_currency" width="10em" hAlign="Center">
+                                    <Label text="통화" required="true"/>           
+                                    <table:template>
+                                        <Input id="currency" value="{detailModel>currency_code}"/>
+                                    </table:template>
+                                </table:Column>                                     
+                                <table:Column id="c_moldSupplier1" width="10em" hAlign="Center">
+                                    <Label text="구매담당자"/>           
+                                    <table:template>
+                                        <Input
+                                            value="{detailModel>buyer_empno}"
+                                            showValueHelp="true"
+                                            valueHelpRequest=".onOpenMaterialDialog" />
+                                    </table:template>
+                                </table:Column> 
+                                <table:Column id="c_moldSupplier4" width="10em" hAlign="Center">
+                                    <Label text="규격"/>    
+                                    <table:template>
+                                        <Input value=""/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column id="c_moldSupplier10" width="10em" hAlign="Center">
+                                    <Label text="비고"/>
+                                    <table:template>
+                                        <Input value="{detailModel>remark}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="10em" hAlign="Center">
+                                    <Label text="구매그룹"/>           
+                                    <table:template>
+                                        <Input value="{detailModel>purchasing_group_code}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="10em" hAlign="Center">
+                                    <Label text="저장위치"/>           
+                                    <table:template>
+                                        <Input value=""/>
+                                    </table:template>
+                                </table:Column>                              
+                            </table:columns>
                           </table:Table>
                        
                         <!-- // -->
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
+            <!-- 품목 정보 끝 -->
 
-			<uxap:ObjectPageSection titleUppercase="false" title="Attachments">
+            <!-- 첨부파일 시작 -->
+			<uxap:ObjectPageSection titleUppercase="false" title="Attachment">
 				<uxap:subSections>
-					<uxap:ObjectPageSubSection >
-                        <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" width="100%">
-                    
+                    <uxap:ObjectPageSubSection title="외부용" level="H2">
+                        <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" width="100%">                    
                             <UploadCollection
-                                id="UploadCollection"
+                                id="UploadCollectionOuter"
                                 maximumFilenameLength="55"
                                 maximumFileSize="10"
                                 multiple="true"
-                                sameFilenameAllowed="true"
+                                sameFilenameAllowed="false"
                                 instantUpload="false"
                                 noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
                                 change="onChange"
@@ -338,123 +280,113 @@
                                 typeMissmatch="onTypeMissmatch"
                                 uploadComplete="onUploadComplete"
                                 beforeUploadStarts="onBeforeUploadStarts" />
-                                
-                            <Button id="Button" text="Upload Now" press="onStartUpload" />
-                        </layout:VerticalLayout> 
+                            <Button id="ButtonUploadOuter" text="Upload Now" press="onStartUpload" />
+                        </layout:VerticalLayout>
+					</uxap:ObjectPageSubSection>
 
+                    <uxap:ObjectPageSubSection title="내부용" level="H2">
+                        <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" width="100%">                    
+                            <UploadCollection
+                                id="UploadCollectionInner"
+                                maximumFilenameLength="55"
+                                maximumFileSize="10"
+                                multiple="true"
+                                sameFilenameAllowed="false"
+                                instantUpload="false"
+                                noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
+                                change="onChange"
+                                fileDeleted="onFileDeleted"
+                                filenameLengthExceed="onFilenameLengthExceed"
+                                fileSizeExceed="onFileSizeExceed"
+                                typeMissmatch="onTypeMissmatch"
+                                uploadComplete="onUploadComplete"
+                                beforeUploadStarts="onBeforeUploadStarts" />
+                            <Button id="ButtonUploadInner" text="Upload Now" press="onStartUpload" />
+                        </layout:VerticalLayout>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
+            <!-- 첨부파일 끝 -->
 
-			
-
-			<uxap:ObjectPageSection titleUppercase="false" title="Approval Line">
+			<uxap:ObjectPageSection titleUppercase="false" title="Report Line">
 				<uxap:subSections>
+					<uxap:ObjectPageSubSection titleUppercase="false">
+						<uxap:blocks>
+                            <Table  id="reportLineTable"
+                                    sticky="HeaderToolbar,ColumnHeaders"
+                                    inset="false"
+                                    class="sapFDynamicPageAlignContent"
+                                    width="auto">
+                                <headerToolbar>
+                                    <Toolbar>
+                                        <Title id="title" text="Approval Line"/>
+                                        <ToolbarSpacer/>
+                                    </Toolbar>
+                                </headerToolbar>
+                                <columns>
+                                    <Column width="8em">
+                                        <Text text="No." />
+                                    </Column>
+                                    <Column>
+                                        <Text text="Type" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="Name / Dept." />
+                                    </Column>
+                                    <Column>
+                                        <Text text="Comment" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="Status" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="Add / Delete" />
+                                    </Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <ObjectIdentifier title="{Name}" text="{ProductId}"/>
+                                            <Text text="{SupplierName}" />
+                                            <Text text="" />
+                                            <Text text="" />
+                                            <Text text="" />
+                                            <Text text="" />
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+
 					<uxap:ObjectPageSubSection>
-                        <Table id="ApprovalTable"       
-                            growing="true"
-                            growingThreshold="20"
-                            class="sapFDynamicPageAlignContent" 
-                            updateFinished=".onListMainTableUpdateFinished"
-                            rowSelectionChange=".onCheck"
-                            mode="None"
-                            width="auto"
-                            items="{appList>/undefined}"
-                            >
-                        <headerToolbar>
-                            <OverflowToolbar>
-                            <Label text="Approval Line"/>
-                            </OverflowToolbar>
-                        </headerToolbar>
-                        <columns>
-                            <Column id="no" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="1.5em" >
-                                <Text text="No." />
-                            </Column>
-                            <Column id="type" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="12em" >
-                                <Text text="Type" />
-                            </Column>
-                            <Column id="nameDept" minScreenWidth="Tablet" hAlign="Center" width="12em" >
-                                <Text text="Name/Dept" />
-                            </Column>
-                            <Column id="status" minScreenWidth="Tablet" hAlign="Center" width="12em" >
-                                <Text text="Status" />
-                            </Column> 
-                            <Column id="comment" minScreenWidth="Tablet" hAlign="Center" width="12em" >
-                                <Text text="Comment" />
-                            </Column>
-                            <Column id="up" minScreenWidth="Tablet" hAlign="Center" width="1.5em" >
-                                  <Text text="" />
-                            </Column>					
-                            <Column id="down" minScreenWidth="Tablet" hAlign="Center" width="1.5em" >
-                                  <Text text="" />
-                            </Column>					
-                            <Column id="action" minScreenWidth="Tablet" hAlign="Center" width="1.5em" >
-                                  <Text text="" />
-                            </Column>					
-                        </columns>
-                        <items>
-                             <ColumnListItem>
-                                <cells>
-                                    <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
-                                    <Text text="{appList>no}" />
-                                    <ComboBox  id="searchItemType" width="100%"
-                                        selectedKey="{appList>type}" 
-                                        enabled="{appList>editMode}"
-                                        items="{
-                                            path: 'org>/Org_Company',
-                                            filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                            ],
-                                            sorter: { path: 'company_code'}
-                                        }"
-                                        >
-                                    <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
-                                    </ComboBox>
-                                    <SearchField id="searchField" enabled="{appList>editMode}" search=".onSearch" width="100%" placeholder="Search employee" value="{appList>nameDept}"/>
-                                    <Text text="{appList>status}" />
-                                    <Text text="{appList>comment}" />
-                                    <Button id="btnSortUp" icon="{appList>arrowUp}" press=".onSortUp(${appList>no})" tooltip="sort" visible="{= ${appList>arrowUp}===''?false:true }"></Button>
-                                    <Button id="btnSortDown" icon="{appList>arrowDown}" press=".onSortDown(${appList>no})"  visible="{= ${appList>arrowDown}===''?false:true }" tooltip="sort"></Button>
-                                    <Button id="btnDelete" icon="sap-icon://delete" press=".setApprovalRemoveRow(${appList>no})" tooltip="삭제" visible="{appList>trashShow}"></Button>
-                                </cells>
-                            </ColumnListItem>   
-                        </items>
-                        </Table>                           
-					</uxap:ObjectPageSubSection> 
-                    <uxap:ObjectPageSubSection>
-                        <VBox class="sapUiSmallMarginBegin">
-                         <Toolbar>
-                          <Label text="Referrer" />
-                          <ToolbarSpacer/>
-                        <HBox alignItems="End" justifyContent="End" >
-                            <Label text="Adress Book" class=""/>
-                            <core:Icon 
-                                src="sap-icon://contacts"
-                                class="size2 sapUiSmallMarginBeginEnd" 
-                                >
-                            </core:Icon>
-                           
-                        </HBox>
-                        </Toolbar>
-                            <layout:VerticalLayout class="sapUiContentPadding" width="100%">
-                                <MultiComboBox
-                                    selectionChange="handleSelectionChangeReferrer"
-                                    selectionFinish="handleSelectionFinishReferrer"
-                                    width="100%"
-                                    items="{ path: 'org>/Org_Company',
-                                                filters: [
-                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                                ],
-                                                sorter: { path: 'company_code'}
-                                            }">
-                                    <core:Item key="{org>company_code}" text="{org>company_name}" />
-                                </MultiComboBox>
-                            </layout:VerticalLayout>
-                            <layoutData>
-                                <layout:GridData span="XL12 L12 M12 S12" />
-                            </layoutData> 
-                         </VBox>
-                    </uxap:ObjectPageSubSection>
+						<uxap:blocks>
+                            <Table  id="referrerTable"
+                                    sticky="HeaderToolbar"
+                                    inset="false"
+                                    class="sapFDynamicPageAlignContent"
+                                    width="auto">
+                                <headerToolbar>
+                                    <Toolbar>
+                                        <Title id="referrerTitle" text="Referrer"/>
+                                        <ToolbarSpacer/>
+                                    </Toolbar>
+                                </headerToolbar>
+                                <columns>
+                                    <Column width="auto">
+                                        <Text text="Referrer" />
+                                    </Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <SearchField search="onDialogReferrer"/>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
@@ -462,10 +394,10 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
-				<Button type="Transparent" text="Draft" press=".onPageSaveButtonPress" />
-				<Button type="Transparent" text="Preview" press=".onPageSaveButtonPress" />
-				<!-- <Button type="Transparent" text="Delete" press=".onPageSaveButtonPress" /> -->
-				<Button type="Emphasized" text="Request" press=".onPageCancelEditButtonPress"/>
+				<Button type="Transparent" text="Draft" press=".onPageDraftButtonPress" />
+				<Button type="Transparent" text="Cancel" press=".onPageCancelButtonPress" />
+				<Button type="Transparent" text="Delete" press=".onPageDeleteButtonPress" />
+				<Button type="Emphasized"  text="Save" press=".onPageSaveButtonPress"/>
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

@@ -24,7 +24,7 @@
                         <form:content>
                             <VBox>
                                 <Label text="{path:'I18N>/COMPANY_NAME', formatter:'I18NFormatter'}" labelFor="searchCompanyS" required="true"></Label>     
-                                <MultiComboBox id="searchCompanyS" width="100%" selectedKey="" required="true" selectionFinish="handleSelectionFinishComp" items="{
+                                <MultiComboBox id="searchCompanyS" width="100%" selectedKey="" selectionFinish="handleSelectionFinishComp" items="{
                                         path: 'org>/Company',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
@@ -48,7 +48,8 @@
                                             {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
                                             {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
                                         ]
-                                    }">
+                                    }"
+                                    selectionFinish="handleSelectionFinishDiv">
                                     <items>
                                         <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
                                     </items>
@@ -67,14 +68,15 @@
                              <VBox>
                                 <Label text="{path:'I18N>/APPROVAL_TYPE_CODE', formatter:'I18NFormatter'}" labelFor="searchApprovalCategoryS" required="true"></Label>
                                 <MultiComboBox id="searchApprovalCategoryS" width="100%" selectedKey="" items="{
-                                            path : 'util>/CodeDetails',
+                                            path : 'util>/Code',
                                             filters : [
                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_APPROVAL_TYPE'}
                                             ],
                                             sorter: { path: 'code'}
-                                        }">
-                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                        }"
+                                        selectionFinish="handleSelectionFinishDiv">
+                                <core:Item key="{util>code}" text="{util>code_name}" />
                                 </MultiComboBox>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
@@ -112,7 +114,8 @@
                                             {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
                                             {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
                                         ]
-                                    }">
+                                    }"
+                                    selectionFinish="handleSelectionFinishDiv">
                                     <items>
                                         <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
                                     </items>
@@ -131,14 +134,15 @@
                              <VBox>
                                 <Label text="{path:'I18N>/APPROVAL_TYPE_CODE', formatter:'I18NFormatter'}" labelFor="searchApprovalCategoryE" required="true"></Label>
                                 <MultiComboBox id="searchApprovalCategoryE" width="100%" selectedKey="" items="{
-                                            path : 'util>/CodeDetails',
+                                            path : 'util>/Code',
                                             filters : [
                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_APPROVAL_TYPE'}
                                             ],
                                             sorter: { path: 'code'}
-                                        }">
-                                <core:Item key="{util>code}" text="{util>code_description}" />
+                                        }"
+                                        selectionFinish="handleSelectionFinishDiv">
+                                <core:Item key="{util>code}" text="{util>code_name}" />
                                 </MultiComboBox>
                                 
                                 <layoutData>
@@ -328,87 +332,6 @@
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>
-                                <!-- <CheckBox fieldGroupIds="{= ${list>approval_type_code}==='E'? 'checkBoxs':''}"  visible="{= ${list>approval_type_code}==='E'? true:false }" select=".onCheck" />                   -->
-                                <!-- <CheckBox fieldGroupIds="{= ${list>approve_status_code}==='DR'? 'checkBoxs':''}"  visible="{= ${list>approve_status_code}==='DR'? true:false }" select=".onCheck" />        -->
-                                <!-- <ComboBox 
-                                        editable="false"   
-                                        class="readonlyField"
-                                        selectedKey="{list>approval_type_code}"
-                                        items="{
-                                                    path : 'util>/CodeDetails',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_APPROVAL_TYPE'}
-                                                    ]
-                                                }"
-                                        width='100%'
-                                        >
-                                    <core:Item key="{util>code}" text="{util>code_description}" />
-                                </ComboBox>
-                                <ComboBox  
-                                        editable="false" 
-                                        class="readonlyField"
-                                        selectedKey="{list>company_code}" 
-                                        items="{
-                                                    path: 'org>/Company',
-                                                    filters: [
-                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                                    ],
-                                                    sorter: { path: 'company_code'}
-                                                }"
-                                        width='100%'
-                                        >
-                                    <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
-                                </ComboBox>
-                                <ComboBox
-                                        editable="false" 
-                                        class="readonlyField"  
-                                        selectedKey="{list>org_code}" 
-                                        items="{
-                                                    path: 'purOrg>/Pur_Operation_Org',
-                                                    filters: [
-                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                                    ]
-                                                }"
-                                        width='100%'
-                                        >
-                                    <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}] {purOrg>org_name}" />
-                                </ComboBox>
-                                <ObjectIdentifier text="{list>approval_number}" />
-                                <ObjectIdentifier text="{list>approval_title}" /> -->
-                                <!-- <ObjectIdentifier text="{list>requestor_empno}" /> -->
-                                <!-- <ComboBox
-                                        editable="false"   
-                                        class="readonlyField"
-                                        selectedKey="{list>requestor_empno}"
-                                        items="{
-                                                    path : 'user>/UserMgt',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'}
-                                                    ]
-                                                }"
-                                        width='100%'
-                                        >
-                                    <core:Item key="{user>employee_number}" text="[{user>english_employee_name}]{user>user_name}" />
-                                </ComboBox>
-                                <DatePicker value="{list>request_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
-                                <ComboBox
-                                        editable="false"   
-                                        class="readonlyField"
-                                        selectedKey="{list>approve_status_code}"
-                                        items="{
-                                                    path : 'util>/CodeDetails',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'CM_APPROVE_STATUS'}
-                                                    ]
-                                                }"
-                                        width='100%'
-                                        >
-                                    <core:Item key="{util>code}" text="{util>code_description}" />
-                                </ComboBox> -->
-
-
                                 <!-- <CheckBox fieldGroupIds="{= ${list>approval_type_code}==='E'? 'checkBoxs':''}"  visible="{= ${list>approval_type_code}==='E'? true:false }" select=".onCheck" />                   -->
                                 <CheckBox fieldGroupIds="{= ${list>approve_status_code}==='DR'? 'checkBoxs':''}"  visible="{= ${list>approve_status_code}==='DR'? true:false }" select=".onCheck" />       
                                 

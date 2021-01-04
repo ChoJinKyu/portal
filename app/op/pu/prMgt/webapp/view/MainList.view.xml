@@ -124,7 +124,7 @@
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
                         items="{list>/Pr_MstView}"
-                        mode="None" 
+                        mode="MultiSelect" 
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>

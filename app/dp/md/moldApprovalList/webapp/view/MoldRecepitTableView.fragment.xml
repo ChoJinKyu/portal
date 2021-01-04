@@ -14,7 +14,7 @@
         xmlns:table="sap.ui.table" >
 
       		<!-- budgetExecutionTable Table -->
-				    <table:Table id="moldRecepitTable" 
+				    <table:Table 
                              selectionMode="{=${mode>/editFlag}?'MultiToggle':'None'}" 
                              fixedColumnCount="6" 
                              visibleRowCountMode="Auto" 
@@ -39,34 +39,34 @@
 								<Text text="{mdRecepit>mold_id}"/>
 							</table:template>
 						</table:Column>
-						<table:Column id="c_approval_number" visible="false">
+						<table:Column  visible="false">
 							<Label text="approval_number"/>
 							<table:template>
-								<Text id="t_approval_number" text="{mdRecepit>approval_number}"/>
+								<Text text="{mdRecepit>approval_number}"/>
 							</table:template>
 						</table:Column>
-						<table:Column id="c_model" width="20em" hAlign="Center">
+						<table:Column  width="20em" hAlign="Center">
 							<Label text="{I18N>/MODEL}"/>
 							<table:template>
-								<Text id="t_model" text="{mdRecepit>model}"/>
+								<Text  text="{mdRecepit>model}"/>
 							</table:template>
 						</table:Column>
-						<table:Column id="c_moldPartNo" width="10em" hAlign="Center">
+						<table:Column width="10em" hAlign="Center">
 							<Label text="Mold No"/>
 							<table:template>
-								<Text id="t_mold_part_no" text="{mdRecepit>mold_number}"/>
+								<Text  text="{mdRecepit>mold_number}"/>
 							</table:template>
 						</table:Column>
-						<table:Column id="c_seq" width="5em" hAlign="Center">
+						<table:Column  width="5em" hAlign="Center">
 							<Label text="Seq"/>
 							<table:template>
-								<Text id="t_seq" text="{mdRecepit>mold_sequence}"/>
+								<Text text="{mdRecepit>mold_sequence}"/>
 							</table:template>
 						</table:Column>
-						<table:Column id="c_description" width="15em" hAlign="Center">
+						<table:Column  width="15em" hAlign="Center">
 							<Label text="{I18N>/DESCRIPTION}"/>
 							<table:template>
-								<Text id="description" text="{mdRecepit>spec_name}"/>
+								<Text  text="{mdRecepit>spec_name}"/>
 							</table:template>
 						</table:Column>
                         <!--  여기까지 픽스 -->
@@ -121,13 +121,10 @@
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Acquisition Department"/>
 					        <table:template>
-                                <Input  
-                                    showValueHelp="true" 
-                                    valueHelpOnly="true"
-                                    value="{mdRecepit>acq_department_code_nm}"
-                                    valueHelpRequest=".onValueHelpRequestedDept(${mdRecepit>mold_id})" > 
-                                    
-                                </Input>
+                            
+                                <Text text="{mdRecepit>acq_department_code_nm}"/>
+						
+                                
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">

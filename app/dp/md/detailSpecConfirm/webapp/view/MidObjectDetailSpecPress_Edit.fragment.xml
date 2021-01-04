@@ -28,7 +28,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SIZE'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                             required="true"
@@ -47,7 +48,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_STRUCTURE'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                             required="true"

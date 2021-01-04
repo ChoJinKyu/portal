@@ -262,13 +262,13 @@
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
-								<Column id="midStateColumn" minScreenWidth="Tablet" hAlign="Center" width="40px" >
+								<Column id="midStateColumn" minScreenWidth="Small" hAlign="Center" width="40px" >
 									<Text text="S" />
 								</Column>
-								<Column id="midLanguageCodeColumn" minScreenWidth="Tablet" hAlign="Center">
+								<Column id="midLanguageCodeColumn" minScreenWidth="Small" hAlign="Center">
 									<Text text="언어" />
 								</Column>
-                                <Column id="midMenuNameColumn" minScreenWidth="Tablet" hAlign="Center">
+                                <Column id="midMenuNameColumn" minScreenWidth="Small" hAlign="Center">
 									<Text text="메뉴명" />
 								</Column>
 							</columns>

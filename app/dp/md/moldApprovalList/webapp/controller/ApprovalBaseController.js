@@ -114,20 +114,7 @@ sap.ui.define([
             this._toShowMode();
         },
 
-		/**
-		 * Event handler for page edit button press
-		 * @public
-		 */
-        _editMode: function () {
-           this.getModel("contModel").setProperty("/editMode", true)
-           this.getModel("contModel").setProperty("/viewMode", false)
 
-        },
-        _viewMode : function(){
-           this.getModel("contModel").setProperty("/editMode", false)
-           this.getModel("contModel").setProperty("/viewMode", true) 
-
-        },
 
 		/**
 		 * Event handler for cancel page editing
@@ -152,15 +139,6 @@ sap.ui.define([
              * init 에서 해당 모델을 선언하면 create 계속 연속 했을때 기존 데이터가 남아있어서
              * 비정상적으로 나옴 
              */        
-    
-            var oViewModel = new JSONModel({
-                busy: true,
-                delay: 0,
-                editMode : false ,
-                viewMode : true
-            });
-            this.setModel(oViewModel, "contModel");
-
 
             this.getView().setModel(new ManagedModel(), "company");
             this.getView().setModel(new ManagedModel(), "plant");
@@ -231,9 +209,9 @@ sap.ui.define([
             if (this.approval_number === "New") {
                 this.getModel("appMaster").setProperty("/requestor_empno", "140790"); // 나중에 세션 값 세팅 할 것 
                 this.getModel("appMaster").setProperty("/request_date", this._getToday());
-                this._editMode();
+               
             } else {
-                this._viewMode();
+                
             }
              this._onApprovalPage(); // 이거 공통으로 각자 페이지에 하나 만듭시다 - this.approval_number 가 로드 된 후에 처리 해야 하는데 
 
@@ -926,12 +904,10 @@ sap.ui.define([
             }
 
             this.callAjax(data,"saveMoldApproval")
-
-
         } , 
 
         callAjax : function (data,fn) {  
-            console.log("data >>>> " , data);
+            console.log("send data >>>> " , data);
             var that = this;
             //  /dp/md/moldApprovalList/webapp/srv-api/odata/v2/dp.MoldApprovalListService/RefererSearch
             //  "xx/sampleMgr/webapp/srv-api/odata/v4/xx.SampleMgrV4Service/SaveSampleHeaderMultiProc"
@@ -956,8 +932,7 @@ sap.ui.define([
             });
         }, 
         onLoadThisPage : function (param) { 
-           
-            this._viewMode();
+            this.approval_number = param.approval_number;  //  저장후  this.approval_number 를 세팅 하여 한번 저장 후에는 업데이트 처리 되도록 !! 
             this._onRoutedThisPage(param.approval_number); 
             this._onApprovalPage();
             this._toShowMode();

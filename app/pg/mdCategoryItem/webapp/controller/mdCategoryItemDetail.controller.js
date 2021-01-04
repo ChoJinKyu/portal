@@ -311,7 +311,26 @@ sap.ui.define([
 				}, "/MdCategoryItemLng");
                 this._toEditMode();
                 
-			}else{                
+			}else{                   
+                // var oView = this.getView();
+                // // //var url = "pg/mdCategoryItem2/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdCategoryListConditionView(language_code='EN')/Set";    // 카테고리범주목록View 파라메터 호출O
+                // var url = "pg/mdCategoryItem2/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdItemListConditionView(language_code='KO')/Set";    // 아이템특성목록View 파라메터 호출O
+                // $.ajax({
+                //     url: url,
+                //     type: "GET",
+                //     contentType: "application/json",
+                //     success: function(data){
+                //         console.log("##"+data.value+"##");
+                //         debugger;
+                //         //var v_viewModel = oView.getModel("viewModel").getData();
+                //         //v_viewModel.masterList = data.value;
+                //         //oView.getModel("viewModel").updateBindings(true);                        
+                //     },
+                //     error: function(e){
+                        
+                //     }
+                // });
+
                 var sObjectPath = "/MdCategoryItem(tenant_id='"      + "L2100" 
                                         + "',company_code='"      + this._sCompany_code  
                                         + "',org_type_code='"      + this._sOrg_type_code 
