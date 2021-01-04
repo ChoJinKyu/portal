@@ -209,9 +209,6 @@ sap.ui.define([
             if (this.approval_number === "New") {
                 this.getModel("appMaster").setProperty("/requestor_empno", "140790"); // 나중에 세션 값 세팅 할 것 
                 this.getModel("appMaster").setProperty("/request_date", this._getToday());
-               
-            } else {
-                
             }
              this._onApprovalPage(); // 이거 공통으로 각자 페이지에 하나 만듭시다 - this.approval_number 가 로드 된 후에 처리 해야 하는데 
 
@@ -282,32 +279,13 @@ sap.ui.define([
                 }.bind(this));
             }
             this._bindView("/ApprovalDetails", "appDetail", filter, function (oData) {
-                /* 
-                var moldIdFilter = [];
-                var moldMstFilter = [];
 
-                if (oData.results.length > 0) {
-                    oData.results.forEach(function (item) {
-                        moldIdFilter.push(new Filter("mold_id", FilterOperator.EQ, item.mold_id));
-                    });
-
-                    moldMstFilter.push(
-                        new Filter({
-                            filters: moldIdFilter,
-                            and: false
-                        })
-                    );
-
-                   
-                    dp.MoldApprovalListService 에 해당 엔터티 없음 
-                    this._bindView("/MoldMasters", "moldMaster", moldMstFilter, function (oData) {
-
-                    }.bind(this)); 
-                }*/ 
             }.bind(this));
 
             this._bindView("/Approvers", "approver", filter, function (oData) { 
-                console.log(" Approvers /////////////>> " , oData);
+                if(approvalNumber === "New"){
+                    this._toEditMode();
+                }
             }.bind(this));
 
             console.log(" Approvers >>> " , approvalNumber);
