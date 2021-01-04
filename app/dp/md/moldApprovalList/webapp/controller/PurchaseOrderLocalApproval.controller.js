@@ -379,7 +379,12 @@ sap.ui.define([
             this._onSubmit();
         },
 
-        _onSubmit : function () { 
+        _onSubmit : function () {
+            if(this.validator.validate( this.byId("generalInfoLayout") ) !== true){
+                MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
+                return;
+            }
+
             this.approval_type_code = "V";
 
             var oModel = this.getModel("purOrderItem"),
