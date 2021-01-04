@@ -48,7 +48,8 @@
                                             {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
                                             {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
                                         ]
-                                    }">
+                                    }"
+                                    selectionFinish="handleSelectionFinishDiv">
                                     <items>
                                         <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
                                     </items>
@@ -73,7 +74,8 @@
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_APPROVAL_TYPE'}
                                             ],
                                             sorter: { path: 'code'}
-                                        }">
+                                        }"
+                                        selectionFinish="handleSelectionFinishDiv">
                                 <core:Item key="{util>code}" text="{util>code_description}" />
                                 </MultiComboBox>
                                 <layoutData>
@@ -112,7 +114,8 @@
                                             {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
                                             {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
                                         ]
-                                    }">
+                                    }"
+                                    selectionFinish="handleSelectionFinishDiv">
                                     <items>
                                         <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
                                     </items>
@@ -137,7 +140,8 @@
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_APPROVAL_TYPE'}
                                             ],
                                             sorter: { path: 'code'}
-                                        }">
+                                        }"
+                                        selectionFinish="handleSelectionFinishDiv">
                                 <core:Item key="{util>code}" text="{util>code_description}" />
                                 </MultiComboBox>
                                 
