@@ -261,7 +261,7 @@ sap.ui.define([
 
             //if (master.getData()["_state_"] == "C" || master.getData()["_state_"] == "U") {
                 headers.push({
-                    tenant_id: '1000',
+                    tenant_id: 'L2100',
                     company_code: 'C100',
                     loi_write_number: this._sLoiWriteNumber,
                     loi_number: loiNumber_val,
@@ -303,14 +303,15 @@ sap.ui.define([
 
                      if(r["_row_state_"] == "D"){
                          delfalg = "D";
-                     }else{
-                         delfalg = "U";
                      }
+                    //  else{
+                    //      delfalg = "U";
+                    //  }
 
                     
 
                     details.push({
-                        tenant_id: '1000',
+                        tenant_id: 'L2100',
                         company_code: 'C100',
                         loi_write_number: this._sLoiWriteNumber,
                         loi_item_number: loiItemNum_val,
@@ -333,6 +334,8 @@ sap.ui.define([
                          afterDelCnt++;
                         
                      }
+
+                     delfalg = "";
                     
                     
 

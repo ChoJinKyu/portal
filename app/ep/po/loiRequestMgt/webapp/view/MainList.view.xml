@@ -151,7 +151,7 @@
                             path: 'list>/LOIRequestListView',
                             sorter: { 
                                 path: 'loi_number',
-                                descending: true 
+                                descending: false 
                             }                   
                         }"
                         mode="None" 
