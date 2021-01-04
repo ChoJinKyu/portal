@@ -30,7 +30,7 @@
             <Label text="Item Type"/>
             <Text text="{mstSpecView>/mold_item_type_name}"/>
             <Label text="Order Supplier"/>
-            <Text text="{master>/order_vendor_id}"></Text>
+            <Text text="{master>/supplier_code}"></Text>
 
 
             <Label text="Mold Seq"/>
