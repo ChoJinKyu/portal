@@ -18,14 +18,9 @@
                 <Switch state="{spec>/inspection_flag}" customTextOn="Yes" customTextOff="No"  />
                 <Label text="Cavity Qty" required="true"/>
                 <Input value="{spec>/cavity_process_qty}" required="true"/>
-                <Label text="Demand Life" required="true"/>
+                <Label text="Demand Life(Shot)" required="true"/>
                 <Input type="Number" value="{path: 'spec>/request_life_shot_count', type: 'sap.ui.model.type.Integer'}" required="true"/>
-                <Text text="Shot">
-                    <layoutData>
-						<form:ColumnElementData cellsSmall="2" cellsLarge="1" />
-					</layoutData>
-                </Text>
-                <Label text="Hot Runner Valve Qty" required="true"/>
+                <Label text="Hot Runner Valve Qty(EA)" required="true"/>
                 <Input type="Number" value="{path: 'spec>/mold_hot_runner_qty', type: 'sap.ui.model.type.Integer'}" required="true"/>
                 <Label text="Size" required="true"/>
                 <Select width="100%"
@@ -95,7 +90,7 @@
                 <Switch state="{spec>/assembly_approval_flag}" customTextOn="Yes" customTextOff="No"  />
                 <Label text="Order Qty"/>
                 <Input value="{spec>/order_qty}"/>
-                <Label text="Mold Weight(kg)" required="true"/>
+                <Label text="Mold Weight(Kg)" required="true"/>
                 <Input value="{spec>/mold_weight}" required="true"/>
                 <Label text="Hot Runner Maker" required="true"/>
                 <Select width="100%"
@@ -114,7 +109,7 @@
                     <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
 
-                <Label text="Mold Size" required="true"/>
+                <Label text="Mold Size(W*L*H)" required="true"/>
                 <Input value="{spec>/mold_size_2}" required="true"/>
                 <Label text="Gate"/>
                 <Select   width="100%"
@@ -146,7 +141,7 @@
                 >
                     <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
-                <Label text="Use Machine"/>
+                <Label text="Use Machine(Ton)"/>
                 <Input value="{spec>/mold_tonnage}"/>
 
             <!-- </VBox>            
@@ -230,23 +225,23 @@
         columnsXL="3" >
         <form:content>
             <core:Title text="Spare Parts" />
-                <Label text="Eye-Bolt"/>
+                <Label text="Eye-Bolt(EA)"/>
                 <Input type="Number" value="{path: 'spec>/spare_part_eyebolt_count', type: 'sap.ui.model.type.Integer'}"/>
-                <Label text="Heater"/>
+                <Label text="Heater(KIT)"/>
                 <Input type="Number" value="{path: 'spec>/spare_part_heater_count', type: 'sap.ui.model.type.Integer'}"/>
 
             <!-- </VBox>            
             <VBox > -->
-                <Label text="Ej-Sleeve"/> 
+                <Label text="Ej-Sleeve(EA)"/> 
                 <Input type="Number" value="{path: 'spec>/spare_part_ejslave_count', type: 'sap.ui.model.type.Integer'}"/>
-                <Label text="Speaker Core"/>
+                <Label text="Speaker Core(EA)"/>
                 <Input type="Number" value="{path: 'spec>/spare_part_speaker_core_count', type: 'sap.ui.model.type.Integer'}"/>
 
             <!-- </VBox>            
             <VBox > -->
-                <Label text="Ejector-Pin"/> 
+                <Label text="Ejector-Pin(EA)"/> 
                 <Input type="Number" value="{path: 'spec>/spare_part_ejector_pin_count', type: 'sap.ui.model.type.Integer'}"/>
-                <Label text="Etc."/>
+                <Label text="Etc.(EA)"/>
                 <Input type="Number" value="{path: 'spec>/spare_part_etc_count', type: 'sap.ui.model.type.Integer'}"/>
             <!-- </VBox> -->
         </form:content>
@@ -291,7 +286,7 @@
                 >
                     <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
-                <Label text="Cycle Time"/>
+                <Label text="Cycle Time(Sec)"/>
                 <Input value="{spec>/cycle_time}"/>
             <!-- </VBox>            
             <VBox > -->
