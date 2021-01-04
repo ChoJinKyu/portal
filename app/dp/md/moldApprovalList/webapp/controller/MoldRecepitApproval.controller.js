@@ -301,16 +301,21 @@ sap.ui.define([
              this.getModel("mdRecepit").refresh(true); 
           
         },
-        onPageDraftButtonPress : function () { 
- 
-            /**
-             * 'DR'
-            'AR'
-            'IA'
-            'AP'
-            'RJ' */ 
-            this.getModel("appMaster").setProperty("/approve_status_code", "DR");
 
+        onPageRequestButtonPress : function (){
+            this.getModel("appMaster").setProperty("/approve_status_code", "AR"); // 결제요청 
+            this._moldRecepitApprovalDataSetting();
+        } ,
+        onPageDraftButtonPress : function () { 
+            this.getModel("appMaster").setProperty("/approve_status_code", "DR"); // 임시저장 
+            this._moldRecepitApprovalDataSetting();
+        } , 
+        onPageRequestCancelButtonPress : function () { 
+            this.getModel("appMaster").setProperty("/approve_status_code", "DR"); // 임시저장 
+            this._moldRecepitApprovalDataSetting();
+        } , 
+
+        _moldRecepitApprovalDataSetting : function () { 
             this.approval_type_code = "I";
 
             var bModel = this.getModel("mdRecepit");

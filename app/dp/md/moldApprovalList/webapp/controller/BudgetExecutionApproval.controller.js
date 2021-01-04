@@ -312,18 +312,20 @@ sap.ui.define([
             // this.byId("budgetExecutionPreview").destroy();
         },
 
+        onPageRequestButtonPress : function (){
+            this.getModel("appMaster").setProperty("/approve_status_code", "AR"); // 결제요청 
+            this._budgetExecutionDataSetting();
+        } ,
         onPageDraftButtonPress : function () { 
- 
-            /**
-             * 'DR'
-            'AR'
-            'IA'
-            'AP'
-            'RJ' */ 
-            this.getModel("appMaster").setProperty("/approve_status_code", "DR");
-
+            this.getModel("appMaster").setProperty("/approve_status_code", "DR"); // 임시저장 
+            this._budgetExecutionDataSetting();
+        } , 
+         onPageRequestCancelButtonPress : function () { 
+            this.getModel("appMaster").setProperty("/approve_status_code", "DR"); // 임시저장 
+            this._budgetExecutionDataSetting();
+         },
+        _budgetExecutionDataSetting : function(){
             this.approval_type_code = "B";
-
             var bModel = this.getModel("mdItemMaster");
             var mModel = this.getModel("mdCommon");
             this.approvalDetails_data = [] ;
@@ -412,9 +414,11 @@ sap.ui.define([
 
 
             this._commonDataSettingAndSubmit();
-
         }
 
+
+
+        
 
 
 
