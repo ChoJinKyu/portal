@@ -157,27 +157,34 @@ sap.ui.define([
                 oModel = this.getModel("mdRecepit"),
                 mstModel = this.getModel("appMaster");
             ;
-            /** add record 시 저장할 model 과 다른 컬럼이 있을 경우 submit 안됨 */
+            /** add record 시 저장할 model 과 다른 컬럼이 있을 경우 submit 안됨 */ 
+             
             var approval_number = mstModel.oData.approval_number;
+ console.log("approval_number  >>>> ", approval_number );
+
             oModel.addRecord({
                 "tenant_id": "L1100",
-                "mold_id": String(data.oData.mold_id),
+                "mold_id": String(data.mold_id),
                 "approval_number": approval_number,
-                "model": data.oData.model,
-                "mold_number": data.oData.mold_number,
-                "mold_sequence": data.oData.mold_sequence,
-                "spec_name": data.oData.spec_name,
-                "mold_item_type_code": data.oData.mold_item_type_code,
-                "book_currency_code": data.oData.book_currency_code,
-                "budget_amount": data.oData.budget_amount,
-                "mold_production_type_code": data.oData.mold_production_type_code,
-                "asset_type_code": data.oData.asset_type_code,
-                "family_part_number_1": data.oData.family_part_number_1,
+                "model": data.model,
+                "mold_number": data.mold_number,
+                "mold_sequence": data.mold_sequence,
+                "spec_name": data.spec_name,
+                "mold_item_type_code": data.mold_item_type_code,
+                "book_currency_code": data.book_currency_code,
+                "budget_amount": data.budget_amount,
+                "mold_production_type_code": data.mold_production_type_code,
+                "asset_type_code": data.asset_type_code,
+                "family_part_number_1": data.family_part_number_1,
                 "budget_exrate_date": "",
                 "inspection_date": "",
                 "local_create_dtm": new Date(),
                 "local_update_dtm": new Date()
-            }, "/ItemBudgetExecution");
+            }, "/MoldRecepit");
+
+            console.log("moldRecepit >>>> ", oModel );
+
+
         },
         /**
         * @description Participating Supplier 의 delete 버튼 누를시 
