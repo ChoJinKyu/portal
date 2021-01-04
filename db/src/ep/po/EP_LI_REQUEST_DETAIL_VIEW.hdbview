@@ -32,4 +32,5 @@ from ep_li_dtl as dtl
 left outer join ep_li_mst as mst 
 on dtl.tenant_id = mst.tenant_id 
 and dtl.company_code = mst.company_code
-and dtl.loi_write_number = mst.loi_write_number;
+and dtl.loi_write_number = mst.loi_write_number
+order by dtl.loi_write_number,dtl.item_sequence asc;
