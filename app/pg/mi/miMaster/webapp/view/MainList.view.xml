@@ -52,7 +52,7 @@
                             <smartFilterBar:ControlConfiguration  key="mi_material_code" groupId="_BASIC" index="1" label="{I18N>/MI_MATERIAL_CODE}"
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
-                                <Input id="input_mi_material_code" placeholder="{I18N>/INPUT}"/> 
+                                <Input id="input_mi_material_code" liveChange=".onUpperLiveChange" placeholder="{I18N>/INPUT}" class=".sapMInput.myCustomCSSClass .sapMInputBaseInner"/> 
                                         <!-- <ComboBox id="combobox_mi_material_code" items="{path: '/MIMatListView', templateShareable:true}" placeholder="{I18N>/OPTION}">
                                         <core:Item key="{mi_material_code}" text="{mi_material_code}"/>
                                     </ComboBox> -->

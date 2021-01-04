@@ -766,6 +766,11 @@ sap.ui.define([
          */
 		_handleDeleteError: function(oError) {
 			MessageToast.show(this.getModel("I18N").getText("/EPG00001"));
+		},
+
+		onUpperLiveChange : function(oEvent){
+			var input = oEvent.getSource();
+			input.setValue(input.getValue().toUpperCase());
 		}
 
 	});
