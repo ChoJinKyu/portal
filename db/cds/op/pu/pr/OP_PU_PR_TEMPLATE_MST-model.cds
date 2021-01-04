@@ -19,6 +19,8 @@ entity Pu_Pr_Template_Mst {
         erp_interface_flag  : Boolean        not null @cds.on.insert: false @title: 'ERP인터페이스여부' ;	
         default_template_number : String(10)          @title: '기본템플릿번호' ;	
         use_flag            : Boolean        not null @cds.on.insert: false @title: '사용여부' ;	
+        approval_flag       : Boolean        not null @cds.on.insert: false @title: '품의여부' ;	
+
     }	
 extend Pu_Pr_Template_Mst with util.Managed;    
 
