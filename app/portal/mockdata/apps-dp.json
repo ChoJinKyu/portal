@@ -49,6 +49,11 @@
                     "name": "UOM Management",
                     "url": "../dp/mm/uomMgt/webapp",
                     "component": "dp.mm.uomMgt"
+                },
+                {
+                    "name": "Global Sourcing Pool t",
+                    "url": "../dp/gs/gsSupplierMgt/webapp",
+                    "component": "dp.gs.gsSupplierMgt"
                 }
             ]
         },
