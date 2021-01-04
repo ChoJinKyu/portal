@@ -60,29 +60,29 @@ sap.ui.define([
 			this.setModel(oMultilingual.getModel(), "I18N");
 
 
-
-			oMultilingual.attachEvent("ready", function(oEvent){
-				var that = this;
+			var oi18nSearch = this.getModel("I18N").getText("/SEARCH");		
+            oMultilingual.attachEvent("ready", function(oEvent){
 				var oi18nModel = oEvent.getParameter("model");
-				
+				// this.addHistoryEntry({
+				// 	title: oi18nModel.getText("/USER_MANAGEMENT"),
+				// 	icon: "sap-icon://table-view",
+				// 	intent: "#Template-display"
+				// }, true);
+
 				// Smart Filter Button 명 처리 START
 				var b = this.getView().byId("smartFilterBar").getContent()[0].getContent();
 				$.each(b, function (index, item) {
 					if (item.sId.search("btnGo") !== -1) {
-						item.setText(oi18nModel.getText("/EXECUTE"));
+						if(oi18nSearch==null){
+							oi18nSearch = "조회";
+						}
+						item.setText(oi18nSearch);
 					}
 				}.bind(this));
-
-			});
-						
-			// Model used to manipulate control states
-			oUi = new JSONModel({
-				headerExpanded: true,
-				mainListTableTitle : oResourceBundle.getText("mainListTableTitle"),
-				tableNoDataText : this.getModel("I18N").getText("/NCM0001"),
-				busy : false
-			});
-
+					
+			
+			}.bind(this));
+			
 
 			oDeleteInfo = new JSONModel({oData:[]});
 			this.setModel(oUi, "oUi");
