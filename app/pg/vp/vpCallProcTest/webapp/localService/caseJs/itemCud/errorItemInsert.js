@@ -135,7 +135,7 @@ vpManagerList.push({
     , company_code: "*"
     , org_type_code: "BU"
     , org_code: "BIZ00200"
-    , vendor_pool_code: "VP201610260092"
+    , vendor_pool_code: "VP201610260095"
     , vendor_pool_person_empno: "EBBB"
     , crud_type_code : "C"
 });
