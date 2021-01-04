@@ -51,7 +51,8 @@ sap.ui.define([
             //this.setModel(new JSONModel(), "viewModel");
 
             // view에서 사용할 메인 Model
-            this.setModel(new JSONModel(), "detailModel");
+            this.setModel(new JSONModel(), "detailModel"); 
+            this.setModel(new JSONModel(), "viewModel");           
 
             this.getRouter().getRoute("midCreate").attachPatternMatched(this._onObjectMatched, this);
             
@@ -62,7 +63,13 @@ sap.ui.define([
             //this.getView().setModel(new ManagedListModel(),"createlist"); // Participating Supplier
             //this.getView().setModel(new ManagedListModel(),"appList"); // apporval list 
             //this.getView().setModel(new JSONModel(Device), "device"); // file upload 
-		},
+        },
+        
+        onBeforeRendering : function(){            
+        },
+
+        onAfterRendering: function () {
+        },
 
         /**
 		 * Binds the view to the data path.
@@ -72,8 +79,9 @@ sap.ui.define([
 
             var oArgs = oEvent.getParameter("arguments");
             var sTenantId = oArgs.tenantId;
-
-            if(sTenantId) {
+            
+            // 초기 데이터 설정
+            if(sTenantId && sTenantId === "new") {
                 this._fnSetCreateData(oArgs);
             }else{
                 this._fnGetMasterData(oArgs);
@@ -82,22 +90,70 @@ sap.ui.define([
             //this._createViewBindData(oArgs); 
 			//this._onLoadApprovalRow();
             //this.oSF = this.getView().byId("searchField");
+
+            // 템플릿 리스트 조회
+            this._fnGetPrTemplateList();
         },
+        
+        _fnGetPrTemplateList: function() {
+            var that = this,
+                oView = this.getView(),
+                //vPR_TYPEValue = oArgs.pr_type_code,
+                //vPR_TYPE2Value = oArgs.pr_type_code_2,
+                //vPR_TYPE3Value = oArgs.pr_type_code_3,
+                oServiceModel = this.getModel(),
+                oDetailModel = this.getModel('detailModel'),
+                oViewModel = this.getModel('viewModel');
+
+            var oDetailData = oDetailModel.getProperty("/");
+
+            var aFilters = [
+                    new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+                    new Filter("pr_type_code", FilterOperator.EQ, oDetailData.pr_type_code),
+                    new Filter("pr_type_code_2", FilterOperator.EQ, oDetailData.pr_type_code_2),
+                    new Filter("pr_type_code_3", FilterOperator.EQ, oDetailData.pr_type_code_3)
+                ];
+
+            oServiceModel.read("/Pr_TMapView", {
+                filters: aFilters,
+                success: function (oData) {
+                    oViewModel.setProperty("/prTemplateList", oData.results);
+
+                    // PR 템플릿 정보 세텅
+                    oData.results.some(function(oPrTemplateData){
+                        if(oPrTemplateData.pr_template_number === oDetailData.pr_template_number){
+                            //oPrTemplateData = oData;
+                            oDetailData.pr_template_name =  oPrTemplateData.pr_template_name;
+                            oDetailData.pr_type_name =  oPrTemplateData.pr_type_name;
+                            oDetailData.pr_type_name_2 =  oPrTemplateData.pr_type_name_2;
+                            oDetailData.pr_type_name_3 =  oPrTemplateData.pr_type_name_3;
+                            oDetailModel.setProperty("/",oDetailData);
+                            return true;
+                        }
+                    });
+                },
+                error: function (oData) {
+                }
+            });
+
+        },
+
 
         /**
          * 신규 생성 시 초기 데이터 세팅  
          */
         _fnSetCreateData : function(oArgs){
             var oToday = new Date();
-
+            var oViewModel = this.getModel('viewModel');
+                        
             var oNewMasterData = {
                 tenant_id: "L2100",
                 company_code: "",
                 pr_number: "NEW",
-                pr_type_code: "",
-                pr_type_code_2: "",
-                pr_type_code_3: "",
-                pr_template_number: "",
+                pr_type_code: oArgs.pr_type_code,
+                pr_type_code_2: oArgs.pr_type_code_2,
+                pr_type_code_3: oArgs.pr_type_code_3,
+                pr_template_number: oArgs.pr_template_number,
                 pr_create_system_code: "",
                 requestor_empno: "",
                 requestor_name: "김구매",
@@ -113,8 +169,26 @@ sap.ui.define([
                 erp_pr_number: "",
                 local_create_dtm: oToday,
                 local_update_dtm: oToday,
-                details: []
+                details: [],
+                pr_template_name: "",
+                pr_type_name: "",
+                pr_type_name_2: "",
+                pr_type_name_3: ""
             };
+
+            // PR 템플릿 정보 세텅
+            // var aPrTemplateList = [], oPrTemplateData = {};
+            // aPrTemplateList = oViewModel.getProperty("/prTemplateList");
+            // aPrTemplateList.some(function(oData){
+            //     if(oData.pr_template_number === oArgs.pr_template_number){
+            //         //oPrTemplateData = oData;
+            //         oNewMasterData.pr_template_name =  oData.pr_template_name;
+            //         oNewMasterData.pr_type_name =  oData.pr_type_name;
+            //         oNewMasterData.pr_type_name_2 =  oData.pr_type_name_2;
+            //         oNewMasterData.pr_type_name_3 =  oData.pr_type_name_3;
+            //         return true;
+            //     }
+            // });
 
             this.setModel(new JSONModel(oNewMasterData), "detailModel");
         },
@@ -267,25 +341,29 @@ sap.ui.define([
          */
         setRichEditor : function (){ 
             var that = this,
-			    sHtmlValue = '';
-            sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
-				function (RTE, EditorType) {
-					var oRichTextEditor = new RTE("myRTE", {
-						editorType: EditorType.TinyMCE4,
-						width: "100%",
-						height: "200px",
-						customToolbar: true,
-						showGroupFont: true,
-						showGroupLink: true,
-						showGroupInsert: true,
-						value: sHtmlValue,
-						ready: function () {
-							this.addButtonGroup("styleselect").addButtonGroup("table");
-						}
-					});
+                sHtmlValue = '';            
+            var oApprovalLayout = this.getView().byId("approvalLayout");
+            var oPrCreateApprovalRTE = oApprovalLayout.getContent("prCreateApprovalRTE");
+            if(!oPrCreateApprovalRTE){
+                sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
+                    function (RTE, EditorType) {
+                        var oRichTextEditor = new RTE("prCreateApprovalRTE", {
+                            editorType: EditorType.TinyMCE4,
+                            width: "100%",
+                            height: "200px",
+                            customToolbar: true,
+                            showGroupFont: true,
+                            showGroupLink: true,
+                            showGroupInsert: true,
+                            value: sHtmlValue,
+                            ready: function () {
+                                this.addButtonGroup("styleselect").addButtonGroup("table");
+                            }
+                        });
 
-					that.getView().byId("approvalLayout").addContent(oRichTextEditor);
-			});
+                       oApprovalLayout.addContent(oRichTextEditor);
+                });
+            }
         },
 
 
