@@ -67,6 +67,9 @@ sap.ui.define([
             
         },
 
+        onRenderedFirst: function () {
+            this.byId("pageSearchButton").firePress();
+        },
 
         /* =========================================================== */
         /* event handlers                                              */

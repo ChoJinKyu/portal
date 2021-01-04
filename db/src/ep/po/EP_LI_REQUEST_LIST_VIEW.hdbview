@@ -4,9 +4,12 @@ select
     mst.company_code,
     mst.loi_write_number,
     mst.loi_number,
+    mst.request_department_code,
+    mst.requestor_empno,
     mst.request_date,
     mst.loi_request_title,
     mst.loi_publish_purpose_desc,
+    mst.special_note,
     (case when mst.loi_request_status_code = '121010' then '작성중'
         when mst.loi_request_status_code = '121020' then '결재진행증'
         when mst.loi_request_status_code = '121030' then '결재반려'

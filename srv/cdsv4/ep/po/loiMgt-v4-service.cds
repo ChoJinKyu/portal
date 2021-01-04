@@ -111,7 +111,92 @@ service LoiMgtV4Service {
         loi_write_number: String(50),
         loi_item_number: String(50),
         remark: String(3000)
-    ) returns String;        
+    ) returns String;       
+
+
+    type SavedHeaders : {
+        tenant_id                   : String;
+        company_code                : String;
+        loi_write_number            : String;
+        loi_number                  : String;
+        loi_request_title           : String;
+        loi_publish_purpose_desc    : String;
+        special_note                : String;
+        requestor_empno             : String;
+        request_department_code     : String;
+       // request_date                : Date;
+        
+    };
+
+    type SavedReqDetails : {
+        tenant_id           : String;
+        company_code        : String;
+        loi_write_number    : String;
+        loi_item_number     : String;
+        item_sequence       : String;
+        ep_item_code        : String;
+        item_desc           : String;
+        unit                : String;
+        request_quantity    : String;
+        currency_code       : String;
+        request_amount      : String;
+        supplier_code       : String;
+        buyer_empno         : String;
+        remark              : String;
+        row_state           : String;
+    };
+
+
+    // Procedure 호출해서 header/Detail 저장
+    // Header 단건, Detail multi
+    // Test 데이터
+    /*********************************
+    {
+        "inputData" : {
+            "savedHeaders" : [
+               {"tenant_id":"1000", "company_code":"C100", "loi_write_number":"121000000001", "loi_number":"LOI2020-001", "loi_request_title":"LOI 1st", "loi_publish_purpose_desc":"test"},
+            
+            ],
+            "savedReqDetails" : [
+                {"tenant_id":"1000", "company_code":"C100", "loi_write_number":"121000000001", "loi_item_number":"1", "item_sequence":"10", "ep_item_code":"itemcode1", "item_desc":"itemcode1", "unit":"EA", "request_quantity":"2", "currency_code":"KRW", "request_amount":"10000", "buyer_empno":"", "remark":"remark01"},
+                {"tenant_id":"1000", "company_code":"C100", "loi_write_number":"121000000001", "loi_item_number":"2", "item_sequence":"20", "ep_item_code":"itemcode1", "item_desc":"itemcode1", "unit":"EA", "request_quantity":"2", "currency_code":"KRW", "request_amount":"10000", "buyer_empno":"", "remark":"remark02"},
+                {"tenant_id":"1000", "company_code":"C100", "loi_write_number":"121000000001", "loi_item_number":"3", "item_sequence":"30", "ep_item_code":"itemcode1", "item_desc":"itemcode1", "unit":"EA", "request_quantity":"2", "currency_code":"KRW", "request_amount":"10000", "buyer_empno":"", "remark":"remark03"}
+            
+            
+            ]
+        }
+    }
+    *********************************/
+    type saveReturnType {
+        savedHeaders : array of SavedHeaders;
+        savedReqDetails : array of SavedReqDetails;
+    }
+
+    action SaveLoiRequestMultiEntitylProc (inputData : saveReturnType) returns saveReturnType; 
+
+    
+    type DeleteDetails : {
+        tenant_id : String;
+        company_code : String;
+        loi_write_number: String;
+        loi_item_number: String;
+    };
+    
+    type reqMulDelType {
+        tenant_id : String;
+        company_code : String;
+        loi_write_number : String; 
+    }
+
+    type reqDelType {
+        tenant_id : String;
+        company_code : String;
+        loi_write_number : String; 
+        details:  array of DeleteDetails;
+    }
+
+    //LOI 발행요청 MST & DTL 삭제
+    action DeleteLoiMulEntityProc (inputData : reqMulDelType) returns String;     
 
 
 }
