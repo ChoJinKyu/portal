@@ -20,14 +20,40 @@
                 <Label text="Demand Life"/>
                 <Text text="{spec>/request_life_shot_count}"></Text>
                 <Label text="Size"/>
-                <Text text="{spec>/mold_size}"></Text>
+                <Select   width="100%"
+                            selectedKey="{spec>/mold_size}"
+                            items="{
+                                        path : 'util>/Code',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SIZE'}
+                                        ]
+                                    }"
+                            editable="false"
+                            class="readonlyField"
+                >
+                    <core:Item key="{util>code}" text="{util>code_name}" />
+                </Select>
 
              <!-- </VBox>            
             <VBox > -->
                 <Label text="Assembly Approval"/> 
                 <Switch state="{spec>/assembly_approval_flag}" customTextOn="Yes" customTextOff="No" enabled="false" />
                 <Label text="Mold Structure"/>
-                <Text text="{spec>/die_form}"/>
+                <Select   width="100%"
+                            selectedKey="{spec>/die_form}"
+                            items="{
+                                        path : 'util>/Code',
+                                        filters : [
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_STRUCTURE'}
+                                        ]
+                                    }"
+                            editable="false"
+                            class="readonlyField"
+                >
+                    <core:Item key="{util>code}" text="{util>code_name}" />
+                </Select>
                 <Label text="Mold Weight"/>
                 <Text text="{spec>/mold_weight}"></Text>
                 <Label text="Open Size"/>

@@ -35,7 +35,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SIZE'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                             required="true"
@@ -50,7 +51,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_RUNNER'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
@@ -64,7 +66,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_RETURN_TYPE'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
@@ -78,7 +81,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_RUNNER_OUT'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
@@ -101,7 +105,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_HR_MAKER'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
@@ -118,7 +123,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_GATE'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
@@ -132,7 +138,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_FORM_OUT'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
@@ -155,7 +162,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_TYPE'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
@@ -169,7 +177,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_STRUCTURE'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                             required="true"
@@ -186,7 +195,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_UNDER_CUT'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
@@ -200,7 +210,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_OUT_PROCESS'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
@@ -258,7 +269,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_CAVITY'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
@@ -272,7 +284,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_TAPER_PIN'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
@@ -290,7 +303,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_CORE'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
@@ -304,7 +318,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_CORE'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
@@ -321,7 +336,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SCORE'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
@@ -335,7 +351,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_CORE'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
