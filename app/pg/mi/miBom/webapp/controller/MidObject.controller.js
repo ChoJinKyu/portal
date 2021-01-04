@@ -2104,6 +2104,7 @@ sap.ui.define([
          * @private
          */
         _fnCreateEntryItem : function(oModel, oData) {
+            var that = this;
             var createEntryItemParameters = {
                 "groupId": this._m.groupID,
                 "properties": {
@@ -2118,7 +2119,11 @@ sap.ui.define([
                     "termsdelv": oData.termsdelv,
                     "use_flag": oData.use_flag,
                     "local_create_dtm": new Date(),
-                    "create_user_id": this._sso.user.id
+                    "local_update_dtm": new Date(),
+                    "create_user_id": that._sso.user.id,
+                    "update_user_id": that._sso.user.id,
+                    "system_create_dtm": new Date(),
+                    "system_update_dtm": new Date()
                 }
             };
             try{
