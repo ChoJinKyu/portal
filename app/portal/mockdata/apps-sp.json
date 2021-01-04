@@ -1,18 +1,13 @@
 {
     "menus": [
         {
-            "name": "Exam1",
+            "name": "Sourcing",
             "icon": "sap-icon://source-code",
             "subMenus": [
                 {
-                    "name": "Funding",
-                    "url": "../sp/sf/fundingNotify/webapp",
-                    "component": "sp.sf.fundingNotify"
-                },
-                {
-                    "name": "Supplier-Funding",
-                    "url": "../sp/sf/fundingNotifySup/webapp",
-                    "component": "sp.sf.fundingNotifySup"
+                    "name": "견적/입찰 관리",
+                    "url": "../sp/sc/scQBMgt/webapp",
+                    "component": "sp.sc.scQBMgt"
                 }
             ]
         },
