@@ -1,29 +1,29 @@
 {
     "menus": [
         {
-            "name": "Exam1",
+            "name": "LOI",
             "icon": "sap-icon://source-code",
             "subMenus": [
                 {
-                    "name": "App #1",
-                    "url": "../cm/codeMgr/webapp",
-                    "component": "cm.codeMgr"
+                    "name": "LOI 발행요청",
+                    "url": "../ep/po/loiRequestMgt/webapp",
+                    "component": "ep.po.loiRequestMgt"
                 },
                 {
-                    "name": "App #2",
-                    "url": "../cm/controlOptionMgr/webapp",
-                    "component": "cm.controlOptionMgr"
+                    "name": "LOI 발행현황",
+                    "url": "../ep/po/loiPublishMgt/webapp",
+                    "component": "ep.po.loiPublishMgt"
                 }
             ]
         },
         {
-            "name": "Exam2",
+            "name": "업체선정발주",
             "icon": "sap-icon://locate-me",
             "subMenus": [
                 {
-                    "name": "App #3",
-                    "url": "../cm/codeMgr/webapp",
-                    "component": "cm.codeMgr"
+                    "name": "설비/공사 Project현황",
+                    "url": "../ep/po/projectMgt/webapp",
+                    "component": "ep.po.projectMgt"
                 },
                 {
                     "name": "App #4",
