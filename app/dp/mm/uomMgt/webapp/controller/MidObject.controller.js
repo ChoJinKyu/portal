@@ -437,7 +437,7 @@ sap.ui.define([
                     required : true
                 });
                 oLanguageCode.bindItems({
-                    path: 'util>/CodeDetails',
+                    path: 'util>/Code',
                     filters: [
                         new Filter("tenant_id", FilterOperator.EQ, 'L2600'),                        
                         new Filter("group_code", FilterOperator.EQ, 'CM_LANG_CODE')
