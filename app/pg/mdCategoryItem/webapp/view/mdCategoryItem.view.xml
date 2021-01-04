@@ -58,6 +58,10 @@
       </f:header>
       <f:content>
         <VBox>
+                <!-- ,
+                    filters: [
+                     {path: 'spmd_category_code', operator: 'EQ', value1: 'C001'}
+                    ] -->
         <Table id="mainTable"
                 sticky="HeaderToolbar,ColumnHeaders" 
                 inset="false" 
@@ -68,6 +72,7 @@
                 noDataText="{I18N>/NCM0001}"
                 items="{
                     path: 'list>/MdCategoryItem'
+
                 }"
 				class="sapFDynamicPageAlignContent"
                 columnResize="onColumnResize"
@@ -191,10 +196,11 @@
                             <Text text="{list>update_user_id}"></Text>
                         </HBox>
                         <HBox alignItems="Center">
-                            <Text text="{path : 'list>local_create_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}"></Text>
+                        <!-- , formatter: '.dateFormatter.toUTCDateTimeString' -->
+                            <Text text="{path : 'list>local_create_dtm'}"></Text> 
                         </HBox>
                         <HBox alignItems="Center">
-                            <Text text="{path : 'list>local_update_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}"></Text>
+                            <Text text="{path : 'list>local_update_dtm'}"></Text>
                         </HBox>
                     </cells>
                 </ColumnListItem>
