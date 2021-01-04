@@ -306,49 +306,33 @@
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Maker Flag" width="8rem">
+                            <table:Column label="Maker Flag" width="8rem" hAlign="Center">
                                 <table:template>
-                                    <Switch state="{list>maker_flag}" customTextOn="Yes" customTextOff="No">
-                                        <layoutData>
-                                            <FlexItemData growFactor="1" />
-                                        </layoutData>
-                                    </Switch>                                
+                                    <Text text="{= !!${list>maker_flag} ? 'Y' : 'N'}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                                         
-                            <table:Column label="Supplier Flag" width="8rem">
+                            <table:Column label="Supplier Flag" width="8rem"  hAlign="Center">
                                 <table:template>
-                                    <Switch state="{list>supplier_flag}" customTextOn="Yes" customTextOff="No">
-                                        <layoutData>
-                                            <FlexItemData growFactor="1" />
-                                        </layoutData>
-                                    </Switch>                                  
+                                    <Text text="{= !!${list>supplier_flag} ? 'Y' : 'N'}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
                             <table:Column label="Status" width="8rem">
                                 <table:template>
-                                    <Text text="{list>supplier_status_name}" wrapping="false" />
+                                    <Text text="{list>supplier_status_name}" wrapping="false"  />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="V/P 제외여부" width="8rem">
-                                <table:template>
-                                    <Switch state="{list>vendor_pool_apply_exception_flag}" customTextOn="Yes" customTextOff="No">
-                                        <layoutData>
-                                            <FlexItemData growFactor="1" />
-                                        </layoutData>
-                                    </Switch>                               
+                            <table:Column label="V/P 제외여부" width="8rem"  hAlign="Center">
+                                <table:template >
+                                    <Text text="{= !!${list>vendor_pool_apply_exception_flag} ? 'Y' : 'N'}" wrapping="false" />                               
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="SD 제외여부" width="8rem">
+                            <table:Column label="SD 제외여부" width="8rem" hAlign="Center">
                                 <table:template>
-                                    <Switch state="{list>sd_exception_flag}" customTextOn="Yes" customTextOff="No">
-                                        <layoutData>
-                                            <FlexItemData growFactor="1" />
-                                        </layoutData>
-                                    </Switch>                                
+                                    <Text text="{= !!${list>sd_exception_flag} ? 'Y' : 'N'}" wrapping="false" />                                
                                 </table:template>
                             </table:Column>
                                         
@@ -364,13 +348,10 @@
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="평가통제여부" width="8rem">
+                            <table:Column label="평가통제여부" width="8rem" hAlign="Center">
                                 <table:template>
-                                    <Switch state="{list>supeval_control_flag}" customTextOn="Yes" customTextOff="No">
-                                        <layoutData>
-                                            <FlexItemData growFactor="1" />
-                                        </layoutData>
-                                    </Switch>                                 
+                                    <Text text="{= !!${list>supeval_control_flag} ? 'Y' : 'N'}" wrapping="false" />  
+                              
                                 </table:template>
                             </table:Column>                        
 
