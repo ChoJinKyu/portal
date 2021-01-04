@@ -190,25 +190,25 @@ sap.ui.define([
             oModel.addRecord({
                 "tenant_id": this.tenant_id,
                 "approval_number": this.approval_number,
-                "mold_id": data.oData.mold_id + "",
-                "model": data.oData.model,
-                "mold_number": data.oData.mold_number,
-                "mold_sequence": data.oData.mold_sequence,
-                "spec_name": data.oData.spec_name,
-                "mold_item_type_code": data.oData.mold_item_type_code,
-                "book_currency_code": data.oData.book_currency_code,
-                "provisional_budget_amount": data.oData.provisional_budget_amount,
-                "currency_code": data.oData.currency_code,
-                "purchasing_amount": data.oData.purchasing_amount,
-                "supplier_code": data.oData.supplier_code,
-                "target_amount": data.oData.target_amount,
-                "mold_production_type_code": data.oData.mold_production_type_code,
-                "family_part_number_1": data.oData.family_part_number_1
+                "mold_id": data.mold_id + "",
+                "model": data.model,
+                "mold_number": data.mold_number,
+                "mold_sequence": data.mold_sequence,
+                "spec_name": data.spec_name,
+                "mold_item_type_code": data.mold_item_type_code,
+                "book_currency_code": data.book_currency_code,
+                "provisional_budget_amount": data.provisional_budget_amount,
+                "currency_code": data.currency_code,
+                "purchasing_amount": data.purchasing_amount,
+                "supplier_code": data.supplier_code,
+                "target_amount": data.target_amount,
+                "mold_production_type_code": data.mold_production_type_code,
+                "family_part_number_1": data.family_part_number_1
             }, "/ApprovalDetails", 0);
             //this.validator.clearValueState(this.byId("poItemTable"));
 
             var pModel = this.getModel('payment'),
-                poAmount = Number(pModel.getProperty("/purchasing_amount")) + Number(data.oData.purchasing_amount);
+                poAmount = Number(pModel.getProperty("/purchasing_amount")) + Number(data.purchasing_amount);
             pModel.setProperty("/purchasing_amount", poAmount);
         },
 
@@ -354,10 +354,8 @@ sap.ui.define([
                 MessageToast.show( "Request 상태일 때만 Request Cancel 가능합니다." );
                 return;
             }
-            /** Draft */ 
-            this.getModel("appMaster").setProperty("/approve_status_code", "DR");
-
-            this._onSubmit();
+            
+            this._onSubmit("DR");/** Draft */
         },
 
         onPageRequestButtonPress : function () {
@@ -373,19 +371,18 @@ sap.ui.define([
                 return;
             }
 
-            /** Approval Request */ 
-            this.getModel("appMaster").setProperty("/approve_status_code", "AR");
-
-            this._onSubmit();
+            this._onSubmit("AR");/** Approval Request */
         },
 
-        _onSubmit : function () {
+        _onSubmit : function (approveStatusCode) {
             if(this.validator.validate( this.byId("generalInfoLayout") ) !== true){
                 MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
                 return;
             }
 
             this.approval_type_code = "V";
+
+            this.getModel("appMaster").setProperty("/approve_status_code", approveStatusCode);
 
             var oModel = this.getModel("purOrderItem"),
                 pModel = this.getModel("payment"),
