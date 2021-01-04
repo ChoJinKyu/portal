@@ -1,0 +1,290 @@
+<mvc:View controllerName="ep.po.loiRequestMgt.controller.MidObject" 
+	xmlns:mvc="sap.ui.core.mvc" 
+	xmlns="sap.m" 
+	xmlns:uxap="sap.uxap" 
+	xmlns:layout="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:co="sap.suite.ui.commons"
+	xmlns:core="sap.ui.core"
+    xmlns:sc="sap.suite.ui.commons" 
+    xmlns:microchart="sap.suite.ui.microchart" 
+    xmlns:m="sap.m"
+	height="100%">
+
+	<uxap:ObjectPageLayout id="page"
+		toggleHeaderOnTitleClick="false"
+		alwaysShowContentHeader = "true"
+		preserveHeaderStateOnScroll="false"
+		headerContentPinnable="false"
+		isChildPage="true"
+		upperCaseAnchorBar="false"
+		showTitleInHeaderContent="true"
+		showEditHeaderButton="true" 
+		showFooter="true">
+       
+		 <uxap:headerTitle>
+			<uxap:ObjectPageDynamicHeaderTitle>
+				<uxap:expandedHeading>
+					<Title text="LOI 발행요청 상세" wrapping="true" />
+				</uxap:expandedHeading>
+				<uxap:snappedTitleOnMobile>
+					<Title text="품의정보" />
+				</uxap:snappedTitleOnMobile>
+                <uxap:navigationActions>
+					<OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press="onPageEnterFullScreenButtonPress" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
+					<OverflowToolbarButton id="pageExitFullScreenButton" type="Transparent" icon="sap-icon://exit-full-screen" press="onPageExitFullScreenButtonPress" tooltip="Exit Full Screen Mode" visible="false"/>
+					<OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                </uxap:navigationActions>
+			</uxap:ObjectPageDynamicHeaderTitle>
+		</uxap:headerTitle>
+
+		<uxap:headerContent>
+			<FlexBox wrap="Wrap" visible="true">
+				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                    <ObjectStatus
+                        title="LOI 번호: "
+                        text="{master>/loi_number}"/>
+                    <ObjectStatus
+                    title="요청자"
+                    text=""/>
+				</layout:VerticalLayout>
+
+                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                    <ObjectStatus
+                        title="요청일자"
+                        text="{
+                                path: 'master>/request_date',
+                                type: 'sap.ui.model.type.Date',
+                                formatter: {
+                                pattern: 'yyyy/MM/dd'
+                                }
+                            }" />
+
+                    <ObjectStatus
+                        title="요청부서"
+                        text=""/>
+                    </layout:VerticalLayout>
+
+                    <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                        <Label text="Status :"/>
+                    <ObjectStatus
+                        class="sapMObjectStatusLarge"
+                        text="{master>/loi_request_status_code}"
+                        state="Error" />
+                            </layout:VerticalLayout>
+
+                            <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                    <Label text="Process 2 : "/>
+                        <HBox>
+                            <sc:MicroProcessFlow>
+                                <sc:content>
+                                    <sc:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                    <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                </sc:content>
+                            </sc:MicroProcessFlow>
+                        </HBox>
+                        <HBox>
+                            <Text text="LOI요청"  width="4em" renderWhitespace="true" />
+                            <Text text=" LOI업체&#10; 선정"  width="4em" renderWhitespace="true" />
+                            <Text text="LOI발행" width="6em" textAlign="Center" />
+                            <Text text=" LOI발행&#10; 통보" renderWhitespace="true" />
+                        </HBox>
+                </layout:VerticalLayout>  
+
+			</FlexBox>
+		</uxap:headerContent>
+
+		<uxap:sections>
+			<!-- Master 에 관한 정보 -->
+            <uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="품의정보">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection id="pageSubSection1" >
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+            <!-- 첨부파일 시작 -->
+			<uxap:ObjectPageSection titleUppercase="false" title="첨부파일">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<uxap:blocks>
+                            <!-- File Upload 시작-->
+                            <UploadCollection
+                                id="UploadCollection"
+                                maximumFilenameLength="55"
+                                maximumFileSize="10"
+                                multiple="true"
+                                sameFilenameAllowed="true"
+                                instantUpload="false"
+                                noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
+                                change="onChange"
+                                fileDeleted="onFileDeleted"
+                                filenameLengthExceed="onFilenameLengthExceed"
+                                fileSizeExceed="onFileSizeExceed"
+                                typeMissmatch="onTypeMissmatch"
+                                uploadComplete="onUploadComplete"
+                                beforeUploadStarts="onBeforeUploadStarts" />
+                            <!-- File Upload 끝-->
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+            <!-- 첨부파일 끝 -->
+
+			<!-- Detail 에 관한 정보 -->
+			<uxap:ObjectPageSection titleUppercase="false" title="대상품의">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<Table id="midTable" 
+								sticky="HeaderToolbar,ColumnHeaders" 
+								inset="false" 
+								items="{details>/LOIRequestDetailView}"
+                                rows="{
+                                    path: 'details>/LOIRequestDetailView',
+                                    sorter: { 
+                                        path: 'item_sequence',
+                                        descending: true 
+                                    }                   
+                                }"
+								class="sapFDynamicPageAlignContent" 
+								updateFinished=".onMidTableUpdateFinished"
+								mode="MultiSelect" 
+								width="auto">
+
+							<headerToolbar>
+								<OverflowToolbar>
+                                    <Title text="Items ({= ${details>/LOIRequestDetailView}.length || 0})" level="H2"/>
+									<ToolbarSpacer/>
+                                    <Button id="midTableAddButton" text="Add" type="Transparent" press=".onMidTableAddButtonPress" />
+									<Button id="midTableDeleteButton" text="Delete" type="Transparent" press=".onMidTableDeleteButtonPress('midTable', 'details', 'LOIRequestDetailView')" />
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+								<Column id="midStateColumn" minScreenWidth="Tablet" hAlign="Center" width="40px" >
+									<Text text="S" />
+								</Column>
+								<Column id="midLevelCodeColumn" minScreenWidth="Tablet" hAlign="Center">
+									<Text text="Line No." />
+								</Column>
+                                <Column id="midOrgTypeCodeColumn" minScreenWidth="Tablet" hAlign="Center">
+									<Text text="플랜트" />
+								</Column>
+								<Column id="midLevelValueColumn" minScreenWidth="Tablet" hAlign="Center">
+									<Text text="품목코드" required="true" />
+								</Column>
+								<Column id="midValueColumn" minScreenWidth="Tablet" hAlign="Center" >
+									<Text text="품명" />
+								</Column>
+                                <Column id="midStartDateColumn" minScreenWidth="Tablet" hAlign="Center" >
+									<Text text="단위" />
+								</Column>
+                                <Column id="midEndDateColumn" minScreenWidth="Tablet" hAlign="Center" >
+									<Text text="수량" />
+								</Column>
+                                <Column id="midEndDateColumn2" minScreenWidth="Tablet" hAlign="Center" >
+									<Text text="통화" />
+								</Column>
+                                <Column id="midEndDateColumn3" minScreenWidth="Tablet" hAlign="Center" >
+									<Text text="금액" />
+								</Column>
+                                <Column id="midEndDateColumn4" minScreenWidth="Tablet" hAlign="Center" >
+									<Text text="수행업체" />
+								</Column>
+                                <Column id="midEndDateColumn5" minScreenWidth="Tablet" hAlign="Center" >
+									<Text text="구매담당자" />
+								</Column>
+                                <Column id="midEndDateColumn6" minScreenWidth="Tablet" hAlign="Center" >
+									<Text text="비고" />
+								</Column>
+
+							</columns>
+							<items>
+								<!-- <ColumnListItem type="Inactive" press=".onMidTableItemPress">
+                              
+								</ColumnListItem> -->
+
+                                <ColumnListItem press=".onMidTableItemPress">
+									<cells>
+										<Text text="{details>_row_state_}"/>
+                                        <Input value="{details>item_sequence}"/>
+                                        <Input value="{details>tenant_id}"/>
+                                        <Input value="{details>ep_item_code}"/>
+                                        <Input value="{details>item_desc}"/>
+                                        <Input value="{details>unit}"/>
+                                        <Input value="{details>request_quantity}"/>
+                                        <!-- <Input value="{details>currency_code}"/> -->
+
+                                        <ComboBox
+                                        id="midLevelCombo"
+                                        width="100%"
+                                        selectedKey="{details>currency_code}"   
+                                        items="{
+                                            path: '/CurrencyUnitView',
+                                            filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                            ]
+                                        }">
+                                        <items>
+                                            <core:Item key="{currency_code}" text="{currency_code}" />
+                                        </items>
+                                        </ComboBox>
+                                        <!-- <Input value="{details>request_amount}"/> -->
+
+                                         <Input value="{
+                                            path: 'details>request_amount',
+                                            formatter: '.numberFormatter.toNumberString'
+                                        }"/>
+                                        <Input value="{details>supplier_code}"/>
+                                        <Input value="{details>buyer_empno}"/>
+                                        <Input value="{details>remark}"/>
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+            <!-- 결재라인 시작 -->
+			<uxap:ObjectPageSection titleUppercase="false" title="결재라인">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<uxap:blocks>
+                            <!-- Approval & Reference 시작 -->
+                            <HBox>
+        
+                            </HBox>
+                            <!-- Approval & Reference 끝 -->
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+            <!-- 결재라인 끝 -->
+
+
+
+
+
+		</uxap:sections>
+
+		<!-- 하단 버튼 처리 툴바 -->
+		<uxap:footer>
+			<OverflowToolbar>
+        <Button
+            icon="sap-icon://alert"
+            type="Emphasized"
+            text="{= ${message>/}.length }"
+            visible="{= ${message>/}.length > 0 }"
+            ariaHasPopup="Dialog"
+            press=".onMessagePopoverPress" />
+				<ToolbarSpacer />
+                <Button id="pageEditButton" text="Edit" type="Transparent" press=".onPageEditButtonPress" />
+                <Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" visible="{= ${editMode>/newcheck} === 'new' ? false : true}"/>
+				<Button id="pageSaveButton" type="Emphasized" text="Save" press=".onPageSaveButtonPress" />
+				<Button id="pageCancelButton" type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
+			</OverflowToolbar>
+		</uxap:footer>
+	</uxap:ObjectPageLayout>
+</mvc:View>
