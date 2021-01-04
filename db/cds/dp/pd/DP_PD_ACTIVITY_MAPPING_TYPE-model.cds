@@ -13,6 +13,6 @@ entity Pd_Activity_Mapping_Type {
     update_user_id : String(255) @title: '최종수정자';
     syste_update_dtm : DateTime @title: '최종수정일시';    
     crud_type_code : String(1)     @title: 'CRUD유형';
-    update_activity_code : String(30)  not null @title: '변경후 활동코드' ;	
-    update_product_activity_code : String(30)  not null @title: '변경후 제품활동코드' ;	
+    update_activity_code : String(40)  not null @title: '변경후 활동코드' ;	
+    update_product_activity_code : String(40)  not null @title: '변경후 제품활동코드' ;	
 }
