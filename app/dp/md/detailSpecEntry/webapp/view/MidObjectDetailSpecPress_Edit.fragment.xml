@@ -18,7 +18,7 @@
                 <Switch state="{spec>/inspection_flag}" customTextOn="Yes" customTextOff="No"  />
                 <Label text="Order Qty"/>
                 <Input value="{spec>/order_qty}"/>
-                <Label text="Demand Life" required="true"/>
+                <Label text="Demand Life(Shot)" required="true"/>
                 <Input type="Number" value="{path: 'spec>/request_life_shot_count', type: 'sap.ui.model.type.Integer'}" required="true"/>
                 <Label text="Size" required="true"/>
                 <Select   width="100%"
@@ -28,7 +28,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SIZE'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                             required="true"
@@ -47,15 +48,16 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_STRUCTURE'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
                     <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
-                <Label text="Mold Weight"/>
+                <Label text="Mold Weight(Kg)"/>
                 <Input value="{spec>/mold_weight}"/>
-                <Label text="Open Size"/>
+                <Label text="Open Size(W*P)"/>
                 <Input value="{spec>/press_open_size}"/>
 
 
@@ -63,11 +65,11 @@
             <VBox > -->
                 <Label text="Use Material" required="true"/> 
                 <Input value="{spec>/use_material_value}" required="true"/>
-                <Label text="Process Qty" required="true"/>
+                <Label text="Process Qty(EA)" required="true"/>
                 <Input value="{spec>/cavity_process_qty}" required="true"/>
                 <Label text="Material Thickness"/>
                 <Input value="{spec>/press_material_thickness}"/>
-                <Label text="Material Size"/>
+                <Label text="Material Size(W*P)"/>
                 <Input value="{spec>/press_material_size}"/>
              <!-- </VBox> -->
         </form:content>
@@ -81,23 +83,23 @@
         <form:content>
             <core:Title text="Spare Parts" />
             <!-- <VBox> -->
-                <Label text="P-Punch"/>
+                <Label text="P-Punch(EA)"/>
                 <Input type="Number" value="{path: 'spec>/spare_part_p_punch_count', type: 'sap.ui.model.type.Integer'}"/>
-                <Label text="Die Button"/>
+                <Label text="Die Button(EA)"/>
                 <Input type="Number" value="{path: 'spec>/spare_part_die_button_count', type: 'sap.ui.model.type.Integer'}"/>
 
             <!-- </VBox>            
             <VBox > -->
-                <Label text="B-Punch"/> 
+                <Label text="B-Punch(EA)"/> 
                 <Input type="Number" value="{path: 'spec>/spare_part_b_punch_count', type: 'sap.ui.model.type.Integer'}"/>
-                <Label text="Ejector Pin"/>
+                <Label text="Ejector Pin(EA)"/>
                 <Input type="Number" value="{path: 'spec>/spare_part_ejector_pin_count', type: 'sap.ui.model.type.Integer'}"/>
 
             <!-- </VBox>            
             <VBox > -->
-                <Label text="Spring"/> 
+                <Label text="Spring(EA)"/> 
                 <Input type="Number" value="{path: 'spec>/spare_part_spring_count', type: 'sap.ui.model.type.Integer'}"/>
-                <Label text="Etc. Press"/>
+                <Label text="Etc. Press(EA)"/>
                 <Input type="Number" value="{path: 'spec>/spare_part_etc_count', type: 'sap.ui.model.type.Integer'}"/>
             <!-- </VBox> -->
         </form:content>

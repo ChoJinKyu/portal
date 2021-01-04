@@ -47,7 +47,7 @@
 
 				<uxap:actions>
                     <!-- 상단 버튼 영역 -->
-                    <Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" />
+                    <Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" visible="{mode>/viewFlag}"/>
 				</uxap:actions>
 
                 <uxap:navigationActions>
@@ -160,10 +160,10 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
-				<Button type="Transparent" text="Draft"     press=".onPageDraftButtonPress"   visible="{contModel>/editMode}"/>
-				<Button type="Transparent" text="Request Cancel"    press=".onPageRequestCancelButtonPress"  />
-				<Button type="Transparent" text="Preview"   press=".onPagePreviewButtonPress"  visible="{contModel>/editMode}" />
-				<Button type="Emphasized"  text="Request"   press=".onPageRequestButtonPress"/>
+				<Button type="Transparent" text="Draft"     press=".onPageDraftButtonPress"   visible="{mode>/editFlag}"/>
+				<Button type="Transparent" text="Request Cancel"    press=".onPageRequestCancelButtonPress"  visible="{=${appMaster>/approve_status_code}==='AR'?true:false}" />
+				<Button type="Transparent" text="Preview"   press=".onPagePreviewButtonPress"  visible="{mode>/editFlag}" />
+				<Button type="Emphasized"  text="Request"   press=".onPageRequestButtonPress" visible="{=${appMaster>/approve_status_code}==='AR'?false:true}"/>
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

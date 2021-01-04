@@ -130,6 +130,10 @@ sap.ui.define([
             if (oArges.mold_progress_status_code != undefined) {
                 aSearchFilters.push(new Filter("mold_progress_status_code", FilterOperator.EQ, oArges.mold_progress_status_code));
             }
+            // 추가 검색 조건 
+            if (oArges.mold_purchasing_type_code != undefined) {
+                aSearchFilters.push(new Filter("mold_purchasing_type_code", FilterOperator.EQ, oArges.mold_purchasing_type_code));
+            }
 
             if (oArges.mold_id_arr != undefined && oArges.mold_id_arr.length > 0) {
 

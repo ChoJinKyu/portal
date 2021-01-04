@@ -17,7 +17,7 @@
                 <Switch state="{spec>/inspection_flag}" customTextOn="Yes" customTextOff="No" enabled="false" />
                 <Label text="Order Qty"/>
                 <Text text="{spec>/order_qty}"/>
-                <Label text="Demand Life"/>
+                <Label text="Demand Life(Shot)"/>
                 <Text text="{spec>/request_life_shot_count}"></Text>
                 <Label text="Size"/>
                 <Text text="{spec>/mold_size}"></Text>
@@ -28,9 +28,9 @@
                 <Switch state="{spec>/assembly_approval_flag}" customTextOn="Yes" customTextOff="No" enabled="false" />
                 <Label text="Mold Structure"/>
                 <Text text="{spec>/die_form}"/>
-                <Label text="Mold Weight"/>
+                <Label text="Mold Weight(Kg)"/>
                 <Text text="{spec>/mold_weight}"></Text>
-                <Label text="Open Size"/>
+                <Label text="Open Size(W*P)"/>
                 <Text text="{spec>/press_open_size}"></Text>
 
 
@@ -38,11 +38,11 @@
             <VBox > -->
                 <Label text="Use Material"/> 
                 <Text text="{spec>/use_material_value}"/>
-                <Label text="Process Qty"/>
+                <Label text="Process Qty(EA)"/>
                 <Text text="{spec>/cavity_process_qty}"/>
                 <Label text="Material Thickness"/>
                 <Text text="{spec>/press_material_thickness}"></Text>
-                <Label text="Material Size"/>
+                <Label text="Material Size(W*P)"/>
                 <Text text="{spec>/press_material_size}"></Text>
              <!-- </VBox> -->
         </form:content>
@@ -56,23 +56,23 @@
         <form:content>
             <core:Title text="Spare Parts" />
             <!-- <VBox> -->
-                <Label text="P-Punch"/>
+                <Label text="P-Punch(EA)"/>
                 <Text text="{spec>/spare_part_p_punch_count}"/>
-                <Label text="Die Button"/>
+                <Label text="Die Button(EA)"/>
                 <Text text="{spec>/spare_part_die_button_count}"/>
 
             <!-- </VBox>            
             <VBox > -->
-                <Label text="B-Punch"/> 
+                <Label text="B-Punch(EA)"/> 
                 <Text text="{spec>/spare_part_b_punch_count}"/>
-                <Label text="Ejector Pin"/>
+                <Label text="Ejector Pin(EA)"/>
                 <Text text="{spec>/spare_part_ejector_pin_count}"/>
 
             <!-- </VBox>            
             <VBox > -->
-                <Label text="Spring"/> 
+                <Label text="Spring(EA)"/> 
                 <Text text="{spec>/spare_part_spring_count}"/>
-                <Label text="Etc. Press"/>
+                <Label text="Etc. Press(EA)"/>
                 <Text text="{spec>/spare_part_etc_count}"/>
             <!-- </VBox> -->
         </form:content>

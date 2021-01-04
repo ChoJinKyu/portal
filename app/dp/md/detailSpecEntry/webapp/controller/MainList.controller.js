@@ -481,7 +481,7 @@ sap.ui.define([
                 this.oColModel = new JSONModel({
                     "cols": [
                         {
-                            "label": "Part No",
+                            "label": "Mold No",
                             "template": "mold_number"
                         },
                         {
@@ -497,7 +497,7 @@ sap.ui.define([
 
                 path = '/PartNumbers';
 
-                this._oValueHelpDialog.setTitle('Part No');
+                this._oValueHelpDialog.setTitle('Mold No');
                 this._oValueHelpDialog.setKey('mold_number');
                 this._oValueHelpDialog.setDescriptionKey('spec_name');
             }

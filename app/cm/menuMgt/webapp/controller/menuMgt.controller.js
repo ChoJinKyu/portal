@@ -7,12 +7,13 @@ sap.ui.define([
     'sap/ui/core/Fragment',
     'sap/ui/model/Sorter',
     "sap/m/MessageBox",
-    "sap/m/MessageToast"
+    "sap/m/MessageToast",
+    "sap/f/LayoutType",
 ],
 	/**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
    */
-    function (Controller, JSONModel, TreeListModel, Filter, FilterOperator, Fragment, Sorter, MessageBox, MessageToast) {
+    function (Controller, JSONModel, TreeListModel, Filter, FilterOperator, Fragment, Sorter, MessageBox, MessageToast, LayoutType) {
         "use strict";
 
         return Controller.extend("cm.menuMgt.controller.menuMgt", {
@@ -56,7 +57,7 @@ sap.ui.define([
                 var row = this.getView().getModel("tree").getObject(event.getParameters().rowContext.sPath);
                 // 라우팅 한다.
                 this.getRouter().navTo("midPage", {
-                    layout: this.getOwnerComponent().getHelper().getNextUIState(1).layout,
+                    layout: LayoutType.TwoColumnsBeginExpanded,//this.getOwnerComponent().getHelper().getNextUIState(1).layout,
                     "?query": {
                         menuCode: row.menu_code,
                         menuName: row.menu_name.replaceAll("#", "^"),

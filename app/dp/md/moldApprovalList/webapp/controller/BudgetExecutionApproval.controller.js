@@ -79,11 +79,9 @@ sap.ui.define([
             var schFilter = [];
             var that = this;
             if (this.approval_number == "New") {
-                // ApprovalBaseController.prototype.onInit.call(this);
 
-                this._budgetEditFragment();
             } else {
-                this._budgetViewFragment();
+
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
                     , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
                 ];
@@ -104,7 +102,13 @@ sap.ui.define([
                     console.log("md >>>>>>", md); 
                     that._bindComboPlant(oData.results[0].import_company_code);
                 });
-            }  
+            }
+            
+            if(this.getView().getModel("mode").getProperty("/editFlag")){
+               this._budgetEditFragment();
+            }else{
+               this._budgetViewFragment();
+            }
         },
         _bindViewBudget : function (sObjectPath, sModel, aFilter, callback) { 
                 var oView = this.getView(),
@@ -252,15 +256,8 @@ sap.ui.define([
             console.log();
         },
 
-        onPageEditButtonPress1: function () {
-            this._budgetEditFragment();
-            this._toEditMode();
-        },
-
-        onPageCancelButtonPress: function () {
-            this._budgetViewFragment();
-            this._toShowMode();
-        },
+        _toEditModeEachApproval : function(){ this._budgetEditFragment() } ,
+        _toShowModeEachApproval : function(){ this._budgetViewFragment() } ,
 
         _budgetEditFragment : function(){
             console.log("_budgetEditFragment");
@@ -315,18 +312,20 @@ sap.ui.define([
             // this.byId("budgetExecutionPreview").destroy();
         },
 
+        onPageRequestButtonPress : function (){
+            this.getModel("appMaster").setProperty("/approve_status_code", "AR"); // 결제요청 
+            this._budgetExecutionDataSetting();
+        } ,
         onPageDraftButtonPress : function () { 
- 
-            /**
-             * 'DR'
-            'AR'
-            'IA'
-            'AP'
-            'RJ' */ 
-            this.getModel("appMaster").setProperty("/approve_status_code", "DR");
-
+            this.getModel("appMaster").setProperty("/approve_status_code", "DR"); // 임시저장 
+            this._budgetExecutionDataSetting();
+        } , 
+         onPageRequestCancelButtonPress : function () { 
+            this.getModel("appMaster").setProperty("/approve_status_code", "DR"); // 임시저장 
+            this._budgetExecutionDataSetting();
+         },
+        _budgetExecutionDataSetting : function(){
             this.approval_type_code = "B";
-
             var bModel = this.getModel("mdItemMaster");
             var mModel = this.getModel("mdCommon");
             this.approvalDetails_data = [] ;
@@ -415,9 +414,11 @@ sap.ui.define([
 
 
             this._commonDataSettingAndSubmit();
-
         }
 
+
+
+        
 
 
 

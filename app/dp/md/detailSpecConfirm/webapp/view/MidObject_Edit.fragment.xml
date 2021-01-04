@@ -38,7 +38,8 @@
                                 filters : [
                                     {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                     {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_BUDGET_TYPE'}
-                                ]
+                                ],
+                                sorter: { path: 'sort_no'}
                             }"
                 >
                 <core:Item key="{util>code}" text="{util>code_name}" />
@@ -62,7 +63,8 @@
                                 filters : [
                                     {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                     {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MARKET_TYPE'}
-                                ]
+                                ],
+                                sorter: { path: 'sort_no'}
                             }"
                 >
                 <core:Item key="{util>code}" text="{util>code_name}" />
@@ -105,7 +107,8 @@
                                 filters : [
                                     {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                     {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ACCOUNT_NEW'}
-                                ]
+                                ],
+                                sorter: { path: 'sort_no'}
                             }"
                 >
                 <core:Item key="{util>code}" text="[{util>code}] {util>code_name}" />

@@ -15,7 +15,7 @@
 
       		<!-- budgetExecutionTable Table -->
 				    <table:Table id="moldRecepitTable" 
-                             selectionMode="{=${contModel>/editMode}?'MultiToggle':'None'}" 
+                             selectionMode="{=${mode>/editFlag}?'MultiToggle':'None'}" 
                              fixedColumnCount="6" 
                              visibleRowCountMode="Auto" 
                              rows="{path:'mdRecepit>/MoldRecepit'}">
@@ -23,13 +23,13 @@
 						<OverflowToolbar>
 							<ToolbarSpacer/>
 							<!-- Add the Personalization button -->
-							    <Button visible="{contModel>/editMode}" type="Transparent" text="{I18N>/ROW_ADD}" press=".onMoldRecepitAddPress">
+							    <Button visible="{mode>/editFlag}" type="Transparent" text="{I18N>/ROW_ADD}" press=".onMoldRecepitAddPress">
 								<!-- Add -->
 								<customData>
 									<core:CustomData key="multi" value="true"/>
 								</customData>
 							</Button>
-							<Button visible="{contModel>/editMode}" type="Transparent" text="{I18N>/ROW_DELETE}" press=".onMoldRecepitDelRow"/>
+							<Button visible="{mode>/editFlag}" type="Transparent" text="{I18N>/ROW_DELETE}" press=".onMoldRecepitDelRow"/>
 						</OverflowToolbar>
 					</table:extension>
 					<table:columns>

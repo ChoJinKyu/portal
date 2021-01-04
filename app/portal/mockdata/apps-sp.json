@@ -10,9 +10,9 @@
                     "component": "sp.sf.fundingNotify"
                 },
                 {
-                    "name": "App #2",
-                    "url": "../cm/controlOptionMgr/webapp",
-                    "component": "cm.controlOptionMgr"
+                    "name": "Supplier-Funding",
+                    "url": "../sp/sf/fundingNotifySup/webapp",
+                    "component": "sp.sf.fundingNotifySup"
                 }
             ]
         },
