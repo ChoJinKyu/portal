@@ -13,6 +13,7 @@ entity Md_Mst_Spec_View {
         mold_item_type_name             : String;
         mold_production_type_name       : String;
         mold_spec_status_name           : String;
+        mold_progress_status_name       : String;
         family_part_numbers             : String;
         receipt_confirmed_user_name     : String;
         inspection_date_plan            : String;
