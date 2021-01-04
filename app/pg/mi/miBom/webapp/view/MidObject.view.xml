@@ -231,7 +231,7 @@
                                             </headerToolbar>                                            
                                             <columns> 
                                                 <Column hAlign="Center" 
-                                                    width="10px"
+                                                    width="0px"
                                                     visible="false" 
                                                 >
                                                     <header>
@@ -239,19 +239,19 @@
                                                     </header>
                                                 </Column>    
                                                 <Column hAlign="Center" 
-                                                    width="1px"
+                                                    width="0px"
                                                     visible="false" 
                                                 >
                                                     <header>
                                                         <Label text="ODATA"/>
                                                     </header>
                                                 </Column>                                                                                                                                                                                          
-                                                <Column hAlign="Center" width="150px">
+                                                <Column hAlign="Center">
                                                     <header>
                                                         <Label text="{I18N>/CODE}"/>
                                                     </header>
                                                 </Column>                                                                           
-                                                <Column hAlign="Center" width="200px">
+                                                <Column hAlign="Center">
                                                     <header>
                                                         <Label text="{I18N>/NAME}"/>
                                                     </header>
@@ -263,7 +263,7 @@
                                                 </Column>
                                                 <Column hAlign="Center" >
                                                     <header>
-                                                        <Label text="소요량 단위" width="120px"/>
+                                                        <Label text="소요량 단위"/>
                                                     </header>
                                                 </Column>                                                
                                                 <Column hAlign="Center" >
@@ -271,7 +271,7 @@
                                                         <Label text="소요량"/>
                                                     </header>
                                                 </Column>
-                                                <Column hAlign="Center" width="100px">
+                                                <Column hAlign="Center">
                                                     <header>
                                                         <Label text="{I18N>/USE_FLAG}"/>
                                                     </header>
@@ -288,7 +288,7 @@
                                                 </Column>
                                                 <Column hAlign="Center">
                                                     <header>
-                                                        <Label text="거래소"  width="120px"/>
+                                                        <Label text="거래소"/>
                                                     </header>
                                                 </Column>
                                                 <Column hAlign="Center">
