@@ -58,6 +58,19 @@ sap.ui.define([
 			}
         })(),
 
+        formatterRequired: (function(){
+			return {
+				visibleRequired: function(oData){
+                    switch (oData)
+                    {
+                        case "Company": return false;
+                        case "Plant": return true;
+                    }
+					return ;
+                }
+			}
+        })(),
+
         validator: new Validator(),
 
         /* =========================================================== */
@@ -141,13 +154,13 @@ sap.ui.define([
 
         _valueCheck : function (selectedKey) {
 
-             if ( selectedKey === "Unit" || selectedKey === "Division" || selectedKey === "Purchasing" || selectedKey === "Division") {
+             if ( selectedKey === "Unit" || selectedKey === "Division" || selectedKey === "Purchasing" || selectedKey === "Company") {
                 if (this.getView().byId("search_tenant")) {
                 if (this.validator.validate(this.byId("search_tenant")) !== true) {
                     return "return";
                     } 
                 }  
-            } else if (selectedKey === "Plant" || selectedKey === "Company" ) {
+            } else if (selectedKey === "Plant" ) {
                 if (this.getView().byId("search_tenant")) {
                 if (this.validator.validate(this.byId("search_tenant")) !== true) {
                     if (this.getView().byId("search_company")) {
