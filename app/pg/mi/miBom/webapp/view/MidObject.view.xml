@@ -10,6 +10,7 @@
     <App>
         <Page id="page" 
         title="자재별 시황자재 BOM 등록" 
+        showHeader="false"
         busy="{oUi>/busy}">
             <content>
                 <uxap:ObjectPageLayout                    
@@ -29,18 +30,7 @@
                             </uxap:expandedHeading>
 
                             <uxap:navigationActions>
-                                <OverflowToolbarButton
-                                    id="pageEnterFullScreenButton"
-                                    type="Transparent"
-                                    icon="sap-icon://full-screen"
-                                    press="onPageEnterFullScreenButtonPress"
-                                    visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
-                                <OverflowToolbarButton
-                                    id="pageExitFullScreenButton"
-                                    type="Transparent"
-                                    icon="sap-icon://exit-full-screen"
-                                    press="onPageExitFullScreenButtonPress"
-                                    visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
+
                                 <OverflowToolbarButton
                                     id="pageNavBackButton"
                                     type="Transparent"

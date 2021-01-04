@@ -25,26 +25,8 @@
                             <uxap:expandedHeading>
                                 <Title text="{i18n>appTitle}" wrapping="true"/>
                             </uxap:expandedHeading>
-                            <uxap:snappedHeading>
-                                <Title text="{i18n>appTitle}" wrapping="true"/>
-                            </uxap:snappedHeading>
-                            <uxap:snappedTitleOnMobile>
-                                <Title text="{i18n>appTitle}"/>
-                            </uxap:snappedTitleOnMobile>
 
                             <uxap:navigationActions>
-                                <OverflowToolbarButton
-                                    id="pageEnterFullScreenButton"
-                                    type="Transparent"
-                                    icon="sap-icon://full-screen"
-                                    press="onPageEnterFullScreenButtonPress"
-                                    visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
-                                <OverflowToolbarButton
-                                    id="pageExitFullScreenButton"
-                                    type="Transparent"
-                                    icon="sap-icon://exit-full-screen"
-                                    press="onPageExitFullScreenButtonPress"
-                                    visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
                                 <OverflowToolbarButton
                                     id="pageNavBackButton"
                                     type="Transparent"
