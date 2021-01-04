@@ -381,7 +381,7 @@ sap.ui.define([
 		 */
 		_onRoutedThisPage: function(){
 			console.group("_onRoutedThisPage");
-			this.getModel("oUi").setProperty("/headerExpanded", true);
+			//this.getModel("oUi").setProperty("/headerExpanded", true);
 			this.getModel().refresh(true);
 			console.groupEnd();
 		},

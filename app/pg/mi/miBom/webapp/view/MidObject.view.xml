@@ -249,31 +249,31 @@
                                                     </header>
                                                 </Column>    
                                                 <Column hAlign="Center" 
-                                                    width="10px"
+                                                    width="1px"
                                                     visible="false" 
                                                 >
                                                     <header>
                                                         <Label text="ODATA"/>
                                                     </header>
                                                 </Column>                                                                                                                                                                                          
-                                                <Column hAlign="Center" width="200px">
+                                                <Column hAlign="Center" width="150px">
                                                     <header>
-                                                        <Label text="Code"/>
+                                                        <Label text="{I18N>/CODE}"/>
                                                     </header>
                                                 </Column>                                                                           
                                                 <Column hAlign="Center" width="200px">
                                                     <header>
-                                                        <Label text="Name"/>
+                                                        <Label text="{I18N>/NAME}"/>
                                                     </header>
                                                 </Column>
-                                                <Column hAlign="Center"  width="150px">
+                                                <Column hAlign="Center">
                                                     <header>
-                                                        <Label text="Category"/>
+                                                        <Label text="{I18N>/CATEGORY}"/>
                                                     </header>
                                                 </Column>
                                                 <Column hAlign="Center" >
                                                     <header>
-                                                        <Label text="소요량 단위" />
+                                                        <Label text="소요량 단위" width="120px"/>
                                                     </header>
                                                 </Column>                                                
                                                 <Column hAlign="Center" >
@@ -281,7 +281,7 @@
                                                         <Label text="소요량"/>
                                                     </header>
                                                 </Column>
-                                                <Column hAlign="Center">
+                                                <Column hAlign="Center" width="100px">
                                                     <header>
                                                         <Label text="{I18N>/USE_FLAG}"/>
                                                     </header>
@@ -298,7 +298,7 @@
                                                 </Column>
                                                 <Column hAlign="Center">
                                                     <header>
-                                                        <Label text="거래소"/>
+                                                        <Label text="거래소"  width="120px"/>
                                                     </header>
                                                 </Column>
                                                 <Column hAlign="Center">
@@ -362,9 +362,9 @@
                                                             <Text   text="{= ${midList>use_flag}?'Yes':'No'}"
                                                                     visible="{oUi>/readMode}"/> 
                                                         </VBox>         
-                                                        <Text text="{midList>currency_unit}" width="40px"/>                                          
-                                                        <Text text="{midList>quantity_unit}" width="40px"/>                                          
-                                                        <Text text="{midList>exchange}" width="40px"/>                                          
+                                                        <Text text="{midList>currency_unit}"/>                                          
+                                                        <Text text="{midList>quantity_unit}"/>                                          
+                                                        <Text text="{midList>exchange}"/>                                          
                                                         <Text text="{midList>termsdelv}" />                                          
                                                     </cells>
                                                 </ColumnListItem>

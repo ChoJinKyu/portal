@@ -218,7 +218,7 @@ sap.ui.define([
             });
 
             //header title hide
-            $("#__xmlview1--page-intHeader-BarPH").hide();
+            $("#__xmlview1--page-intHeader-BarPH").hide(); 
             
             //pageMode C Create, V View, E Edit
             var oUi = new JSONModel({
