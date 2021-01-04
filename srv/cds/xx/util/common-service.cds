@@ -1,13 +1,11 @@
 namespace xx.util;
 
-using { cm.Code_Dtl as codeDetail, cm.Code_Lng as codeLanguage } from '../../../../db/cds/cm/CM_CODE_LNG-model';
 using { xx.Message as message } from '../../../../db/cds/xx/template/XX_MESSAGE-model';
+using { xx.Code_View as code } from '../../../../db/cds/xx/XX_CODE_VIEW-model';
+using { xx.Country_View as country } from '../../../../db/cds/xx/XX_COUNTRY_VIEW-model';
 
 @path : '/xx.util.CommonService'
 service CommonService {
-
-    @deprecation
-    entity CodeDetails as projection on codeDetail;
 
     @readonly
     entity Message as projection on message;
@@ -17,17 +15,37 @@ service CommonService {
         select
             key a.tenant_id,
             key a.group_code,
+            key a.language_code,
             key a.code,
-            a.code_description,
-            a.sort_no,
-            (select b.code_name from codeLanguage b where a.tenant_id  = b.tenant_id 
-                and a.group_code = b.group_code
-                and a.code = b.code
-                and b.language_cd = 'KO') as code_name: String(240)
+            a.code_name,
+            a.parent_group_code,
+            a.parent_code,
+            a.sort_no
         from
-            codeDetail a
+            code a
         where
-            $now between a.start_date and a.end_date
+            a.language_code = 'KO'
+            and $now between a.start_date and a.end_date
+    ;
+
+    @readonly
+    view Country as
+        select
+            key a.tenant_id,
+            key a.country_code,
+            key a.language_code,
+            a.country_name,
+            a.description,
+            a.language,
+            a.iso_code,
+            a.eu_code,
+            a.date_format_code,
+            a.number_format_code,
+            a.currency_code
+        from
+            country a
+        where
+            a.language_code = 'KO'
     ;
 
 }
