@@ -45,7 +45,7 @@ sap.ui.define([
                                 ? row.parent_menu_code
                                 : row.menu_code
                         ) || "",
-                        chainCode: this.byId("searchChainCombo").getSelectedKey()
+                        chainCode: row.chain_code || ""
                     }
                 });
             },
@@ -61,7 +61,7 @@ sap.ui.define([
                         menuCode: row.menu_code,
                         menuName: row.menu_name.replaceAll("#", "^"),
                         parentMenuCode: row.parent_menu_code,
-                        chainCode: this.byId("searchChainCombo").getSelectedKey()
+                        chainCode: row.chain_code || ""
                     }
                 });
             },

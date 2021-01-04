@@ -273,6 +273,16 @@ sap.ui.define([
             if(this.getView().byId("partialPayment").getSelected()){
                 if(split_pay_type_code === "A"){
                     if(prepay_rate !== undefined && progresspay_rate !== undefined && rpay_rate !== undefined){
+                        if(!(prepay_rate === null || prepay_rate === "") && prepay_rate >= total){
+                            MessageToast.show("선급금이 Total 금액 미만이어야 합니다.");
+                            return;
+                        }else if(!(progresspay_rate === null || progresspay_rate === "") && progresspay_rate >= total){
+                            MessageToast.show("중도금이 Total 금액 미만이어야 합니다.");
+                            return;
+                        }else if(!(rpay_rate === null || rpay_rate === "") && rpay_rate >= total){
+                            MessageToast.show("잔금이 Total 금액 미만이어야 합니다.");
+                            return;
+                        }
                         if(!(prepay_rate === null || prepay_rate === "") && !(progresspay_rate === null || progresspay_rate === "") && !(rpay_rate === null || rpay_rate === "")){
                             if(total !== purchasing_amount){
                                 MessageToast.show("금액 합계가 맞지 않습니다.");
@@ -285,6 +295,16 @@ sap.ui.define([
                         pModel.getData().split_pay_type_code = "R";
                     }
                     if(prepay_rate !== undefined && progresspay_rate !== undefined && rpay_rate !== undefined){
+                        if(!(prepay_rate === null || prepay_rate === "") && prepay_rate >= 100){
+                            MessageToast.show("선급금 비율이 100미만이어야 합니다.");
+                            return;
+                        }else if(!(progresspay_rate === null || progresspay_rate === "") && progresspay_rate >= 100){
+                            MessageToast.show("중도금 비율이 100미만이어야 합니다.");
+                            return;
+                        }else if(!(rpay_rate === null || rpay_rate === "") && rpay_rate >= 100){
+                            MessageToast.show("잔금 비율이 100미만이어야 합니다.");
+                            return;
+                        }
                         if(!(prepay_rate === null || prepay_rate === "") && !(progresspay_rate === null || progresspay_rate === "") && !(rpay_rate === null || rpay_rate === "")){
                             if(total !== 100){
                                 MessageToast.show("Rate가 100이 아닙니다.");
@@ -306,23 +326,18 @@ sap.ui.define([
         onPagePreviewButtonPress : function(){
             this.getView().setModel(new ManagedListModel(), "approverPreview"); 
 
-            if(this.getModel("approver").getData().Approvers != undefined){  // approver 는 맨 마지막 줄이 있어서 걔는 안보여주기 위해 새로 담음 
-                var ap = this.getModel("approver").getData().Approvers;
-                for(var i = 0 ; i < ap.length -1 ; i++){
-                    this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
-                }
+            var ap = this.getModel("approver").getData().Approvers;
+            for(var i = 0 ; i < ap.length -1 ; i++){
+                this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
             }
             
-            console.log("onPagePreviewButtonPress >>> this._oDialog " , this._oDialogPrev);
-            var oView = this.getView();
-
             if (!this._oDialogPrev) {
                 this._oDialogPrev = Fragment.load({
-                    id: oView.getId(),
-                    name: "dp.md.moldApprovalList.view.BudgetExecutionApprovalPreView",
+                    id: this.getView().getId(),
+                    name: "dp.md.moldApprovalList.view.PurchaseOrderLocalPreview",
                     controller: this
                 }).then(function (oDialog) {
-                    oView.addDependent(oDialog);
+                    this.getView().addDependent(oDialog);
                     return oDialog;
                 }.bind(this));
             }
@@ -333,8 +348,8 @@ sap.ui.define([
 
         },
         onPrvClosePress : function(){
-             this.byId("budgetExecutionPreview").close();
-            // this.byId("budgetExecutionPreview").destroy();
+             this.byId("purchaseOrderLocalPreview").close();
+            // this.byId("purchaseOrderLocalPreview").destroy();
         },
 
         onPageDraftButtonPress : function () {
@@ -343,10 +358,8 @@ sap.ui.define([
                 MessageToast.show( "Draft 상태 또는 신규일 때만 임시저장이 가능합니다." );
                 return;
             }
-            /** Draft */
-            this.getModel("appMaster").setProperty("/approve_status_code", "DR");
-
-            this._onSubmit();
+            
+            this._onSubmit("DR");/** Draft */
         },
 
         onPageRequestCancelButtonPress : function () {
@@ -398,11 +411,31 @@ sap.ui.define([
             
             if(this.getView().byId("partialPayment").getSelected()){
                 if(split_pay_type_code === "A"){
+                    if(prepay_rate >= total){
+                        MessageToast.show("선급금이 Total 금액 미만이어야 합니다.");
+                        return;
+                    }else if(progresspay_rate >= total){
+                        MessageToast.show("중도금이 Total 금액 미만이어야 합니다.");
+                        return;
+                    }else if(rpay_rate >= total){
+                        MessageToast.show("잔금이 Total 금액 미만이어야 합니다.");
+                        return;
+                    }
                     if(total !== purchasing_amount){
                         MessageToast.show("금액 합계가 맞지 않습니다.");
                         return;
                     }
                 }else{
+                    if(prepay_rate >= 100){
+                        MessageToast.show("선급금 비율이 100미만이어야 합니다.");
+                        return;
+                    }else if(progresspay_rate >= 100){
+                        MessageToast.show("중도금 비율이 100미만이어야 합니다.");
+                        return;
+                    }else if(rpay_rate >= 100){
+                        MessageToast.show("잔금 비율이 100미만이어야 합니다.");
+                        return;
+                    }
                     if(total !== 100){
                         MessageToast.show("Rate가 100이 아닙니다.");
                         return;

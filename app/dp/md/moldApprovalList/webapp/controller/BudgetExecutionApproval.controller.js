@@ -252,14 +252,14 @@ sap.ui.define([
             console.log();
         },
 
-        onPageEditButtonPress: function () {
+        onPageEditButtonPress1: function () {
             this._budgetEditFragment();
-            this._editMode();
+            this._toEditMode();
         },
 
         onPageCancelButtonPress: function () {
             this._budgetViewFragment();
-            this._viewMode();
+            this._toShowMode();
         },
 
         _budgetEditFragment : function(){

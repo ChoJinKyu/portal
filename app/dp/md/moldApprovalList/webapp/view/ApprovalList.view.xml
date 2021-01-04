@@ -48,7 +48,8 @@
                                             {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
                                             {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
                                         ]
-                                    }">
+                                    }"
+                                    selectionFinish="handleSelectionFinishDiv" required="true">
                                     <items>
                                         <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
                                     </items>
@@ -59,7 +60,7 @@
                             </VBox>
                             <VBox>
                                 <Label text="{path:'I18N>/REQUEST_DATE', formatter:'I18NFormatter'}" labelFor="searchRequestDateS" required="true"></Label>
-                                <DateRangeSelection id="searchRequestDateS" width="100%" change="handleChange"/>
+                                <DateRangeSelection id="searchRequestDateS" width="100%" change="handleChange" required="true"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
@@ -73,7 +74,8 @@
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_APPROVAL_TYPE'}
                                             ],
                                             sorter: { path: 'code'}
-                                        }">
+                                        }"
+                                        selectionFinish="handleSelectionFinishDiv" required="true">
                                 <core:Item key="{util>code}" text="{util>code_description}" />
                                 </MultiComboBox>
                                 <layoutData>
@@ -88,7 +90,7 @@
                         <form:content>
                             <VBox>
                                 <Label text="{path:'I18N>/COMPANY_NAME', formatter:'I18NFormatter'}" labelFor="searchCompanyE" required="true"></Label>     
-                                <MultiComboBox id="searchCompanyE" width="100%" selectedKey="" selectionFinish="handleSelectionFinishComp" items="{
+                                <MultiComboBox id="searchCompanyE" width="100%" selectedKey="" selectionFinish="handleSelectionFinishComp"  required="true" items="{
                                        path: 'org>/Company',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
@@ -112,7 +114,8 @@
                                             {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
                                             {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
                                         ]
-                                    }">
+                                    }"
+                                    selectionFinish="handleSelectionFinishDiv"  required="true">
                                     <items>
                                         <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}]{purOrg>org_name}" />
                                     </items>
@@ -122,8 +125,8 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="{path:'I18N>/REQUEST_DATE', formatter:'I18NFormatter'}" labelFor="searchRequestDateE" required="true"></Label>
-                                <DateRangeSelection id="searchRequestDateE" width="100%" change="handleChange"/>
+                                <Label text="{path:'I18N>/REQUEST_DATE', formatter:'I18NFormatter'}" labelFor="searchRequestDateE" required="true" ></Label>
+                                <DateRangeSelection id="searchRequestDateE" width="100%" change="handleChange" required="true"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
@@ -137,7 +140,8 @@
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_APPROVAL_TYPE'}
                                             ],
                                             sorter: { path: 'code'}
-                                        }">
+                                        }"
+                                        selectionFinish="handleSelectionFinishDiv"  required="true">
                                 <core:Item key="{util>code}" text="{util>code_description}" />
                                 </MultiComboBox>
                                 

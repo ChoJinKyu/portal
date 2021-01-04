@@ -230,21 +230,12 @@ sap.ui.define([
 		 * @public
 		 */
         onPageSearchButtonPress: function (oEvent) {
-           if (oEvent.getParameters().refreshButtonPressed) {
-				// Search field's 'refresh' button has been pressed.
-				// This is visible if you select any master list item.
-				// In this case no new search is triggered, we only
-				// refresh the list binding.
-				this.onRefresh();
-			} else {
+            this.validator.validate( this.byId('pageSearchFormE'));
+            if(this.validator.validate( this.byId('pageSearchFormS') ) !== true) return;
 
-                this.validator.validate( this.byId('pageSearchFormE'));
-                if(this.validator.validate( this.byId('pageSearchFormS') ) !== true) return;
-
-                var aSearchFilters = this._getSearchStates();
-                console.log(aSearchFilters);
-				this._applySearch(aSearchFilters);
-			}
+            var aSearchFilters = this._getSearchStates();
+            console.log(aSearchFilters);
+            this._applySearch(aSearchFilters);
         },
 
 		/**
@@ -813,6 +804,7 @@ sap.ui.define([
                         ,tenant_id : lModel.getData().Approvals[chkArr[j]].tenant_id
                         ,company_code : lModel.getData().Approvals[chkArr[j]].company_code
                         ,org_code : lModel.getData().Approvals[chkArr[j]].org_code
+                        ,approval_type_code : lModel.getData().Approvals[chkArr[j]].approval_type_code
                     })
                     oSelected.push(i);
                     
@@ -833,6 +825,7 @@ sap.ui.define([
                                 } 
                             }
                             that.callAjax(data,"deleteApproval");
+                            that.onPageSearchButtonPress();
                         }
                     }
                 });

@@ -17,9 +17,10 @@ sap.ui.define([
   "sap/m/Input",
   "sap/m/ComboBox",
   "sap/ui/core/Item",
+  "sap/f/LayoutType",
 ], function (BaseController, ValidatorUtil, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter,
   Filter, FilterOperator, Fragment, MessageBox, MessageToast,
-  ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+  ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, LayoutType) {
 
   "use strict";
 
@@ -54,10 +55,10 @@ sap.ui.define([
       });
     },
 
-		/**
-		 * Called when the midObject controller is instantiated.
-		 * @public
-		 */
+    /**
+     * Called when the midObject controller is instantiated.
+     * @public
+     */
     onInit: function () {
       this.getView().setModel(new JSONModel({
         busy: true,
@@ -189,14 +190,7 @@ sap.ui.define([
      * @public
      */
     onFull: function () {
-      var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
-      this.getRouter().navTo("midPage", {
-        layout: sNextLayout,
-        "?query": {
-          menuCode: "",
-          menuName: ""
-        }
-      });
+      this.getModel("fcl").setProperty("/layout", LayoutType.MidColumnFullScreen);
       this.getModel("midObjectView").setProperty("/screen", "Full");
     },
     /**
@@ -204,14 +198,7 @@ sap.ui.define([
      * @public
      */
     onExit: function () {
-      var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
-      this.getRouter().navTo("midPage", {
-        layout: sNextLayout,
-        "?query": {
-          menuCode: "",
-          menuName: ""
-        }
-      });
+      this.getModel("fcl").setProperty("/layout", LayoutType.TwoColumnsMidExpanded);
       this.getModel("midObjectView").setProperty("/screen", "");
     },
     /**
@@ -219,8 +206,7 @@ sap.ui.define([
      * @public
      */
     onNavBack: function () {
-      var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
-      this.getRouter().navTo("menuMgt", { layout: sNextLayout });
+      this.getModel("fcl").setProperty("/layout", LayoutType.OneColumn);
     },
     /**
      * Event handler for page edit button press

@@ -201,7 +201,7 @@
                                         path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_FORM_OUT'}
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_OUT_PROCESS'}
                                         ]
                                     }"
                             editable="true"
@@ -315,7 +315,7 @@
             <VBox > -->
                 <Label text="Slide Core"/> 
                 <Select   width="100%"
-                            selectedKey="{spec>/slide_core_material_name}"
+                            selectedKey="{spec>/mold_slide_core_material_name}"
                             items="{
                                         path : 'util>/Code',
                                         filters : [
