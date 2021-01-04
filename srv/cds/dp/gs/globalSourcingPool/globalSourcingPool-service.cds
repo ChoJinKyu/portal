@@ -67,7 +67,7 @@ service GlobalSourcingPoolService {
     on cd.tenant_id = evl.tenant_id
     and cd.group_code = 'DP_GS_EVALUATION_RESULT'
     and cd.code = evl.sourcing_evaluation_result_code
-    and cd.language_cd = 'EN'
+    and cd.language_cd = 'KO'
     ;
 
     view SourcingPoolCommitteeView as
@@ -88,7 +88,7 @@ service GlobalSourcingPoolService {
     on cd.tenant_id = com.tenant_id
     and cd.group_code = 'DP_GS_COMMITTEE_RESULT'
     and cd.code = com.committee_result_code
-    and cd.language_cd = 'EN'
+    and cd.language_cd = 'KO'
     ;
     
 
@@ -161,7 +161,7 @@ service GlobalSourcingPoolService {
     on cd1.tenant_id = evl.tenant_id
     and cd1.group_code = 'DP_GS_EVALUATION_RESULT'
     and cd1.code = evl.sourcing_evaluation_result_code
-    and cd1.language_cd = 'EN'
+    and cd1.language_cd = 'KO'
     left outer join Committee.Gs_Sourcing_Pool_Committee com
     on com.tenant_id = evl.tenant_id
     and com.sourcing_supplier_nickname = evl.sourcing_supplier_nickname
@@ -173,7 +173,7 @@ service GlobalSourcingPoolService {
     on cd2.tenant_id = com.tenant_id
     and cd2.group_code = 'DP_GS_COMMITTEE_RESULT'
     and cd2.code = com.committee_result_code
-    and cd2.language_cd = 'EN'
+    and cd2.language_cd = 'KO'
     ;
     
 }
