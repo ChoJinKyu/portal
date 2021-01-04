@@ -118,7 +118,8 @@ sap.ui.define([
 		 * Event handler for page edit button press
 		 * @public
 		 */
-        _editMode: function () {
+        _editMode: function () { 
+            console.log(" 여기 들어옴? ");
            this.getModel("contModel").setProperty("/editMode", true)
            this.getModel("contModel").setProperty("/viewMode", false)
 
