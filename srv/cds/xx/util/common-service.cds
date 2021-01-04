@@ -3,6 +3,7 @@ namespace xx.util;
 using { xx.Message as message } from '../../../../db/cds/xx/template/XX_MESSAGE-model';
 using { xx.Code_View as code } from '../../../../db/cds/xx/XX_CODE_VIEW-model';
 using { xx.Country_View as country } from '../../../../db/cds/xx/XX_COUNTRY_VIEW-model';
+using { xx.Currency_View as currency } from '../../../../db/cds/xx/XX_CURRENCY_VIEW-model';
 
 @path : '/xx.util.CommonService'
 service CommonService {
@@ -32,10 +33,9 @@ service CommonService {
     view Country as
         select
             key a.tenant_id,
-            key a.country_code,
             key a.language_code,
-            a.country_name,
-            a.description,
+            key a.country_code,
+            a.country_code_name,
             a.language,
             a.iso_code,
             a.eu_code,
@@ -47,5 +47,25 @@ service CommonService {
         where
             a.language_code = 'KO'
     ;
+
+    @readonly
+    view Currency as
+        select
+            key a.tenant_id,
+            key a.language_code,
+            key a.currency_code,
+            a.currency_code_name,
+            a.scale,
+            a.extension_scale,
+            a.currency_prefix,
+            a.currency_suffix
+        from
+            currency a
+        where
+            a.language_code = 'KO'
+            and $now between a.effective_start_date and a.effective_end_date
+            and use_flag = true
+    ;
+
 
 }
