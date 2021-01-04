@@ -47,7 +47,7 @@
 
 				<uxap:actions>
                     <!-- 상단 버튼 영역 -->
-                    <Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" />
+                    <Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" visible="{mode>/viewFlag}"/>
 				</uxap:actions>
 
                 <uxap:navigationActions>
