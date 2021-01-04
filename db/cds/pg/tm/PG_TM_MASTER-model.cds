@@ -18,10 +18,15 @@
 namespace pg;
 
 using util from '../../cm/util/util-model';
+using {cm as Org_Tenant} from '../../cm/CM_ORG_TENANT-model';
 using {pg as Task_Monitoring_Master} from '../tm/PG_TM_MASTER-model';
 
 entity Tm_Master {
     key tenant_id            : String(5) not null @title : '회사코드';
+
+        tenant_ids           : Association to Org_Tenant.Org_Tenant
+                                   on tenant_ids.tenant_id = tenant_id;
+
     key scenario_number      : Integer64 not null @title : '시나리오번호';
         monitoring_type_code : String(30)         @title : '모니터링구분코드';
         activate_flag        : Boolean not null   @title : '활성화여부';
