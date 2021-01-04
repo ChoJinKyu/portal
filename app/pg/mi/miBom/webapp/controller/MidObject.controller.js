@@ -2127,7 +2127,7 @@ sap.ui.define([
                 }
             };
             try{
-                oModel.createEntry(this._m.serviceName.mIMaterialCodeBOMManagementItem, createEntryItemParameters);
+                oModel.createEntry(that._m.serviceName.mIMaterialCodeBOMManagementItem, createEntryItemParameters);
                 return true;
             }catch(error){
                 return false;
@@ -2141,6 +2141,7 @@ sap.ui.define([
          * @param {*} oData 
          */        
         _fnUpdateHeader : function( oModel, oData) {
+            var that = this;
 
             var oKey = {
                 tenant_id : oData.tenant_id,
@@ -2152,14 +2153,14 @@ sap.ui.define([
             var updateHeaderParameters = {
                 "pcst_currency_unit": oData.pcst_currency_unit,
                 "local_update_dtm": new Date(),
-                "update_user_id": this._sso.user.id
+                "update_user_id": that._sso.user.id
             }            
 
             try{
-                var sUpdatePath = oModel.createKey(this._m.serviceName.mIMaterialCodeBOMManagementHeader, oKey);
+                var sUpdatePath = oModel.createKey(that._m.serviceName.mIMaterialCodeBOMManagementHeader, oKey);
                 oModel.update(sUpdatePath, 
                     updateHeaderParameters, 
-                    { groupId: this._m.groupID } );
+                    { groupId: that._m.groupID } );
                 return true;
             }catch(error){
                 return false;
@@ -2171,6 +2172,7 @@ sap.ui.define([
          * @private
          */
         _fnUpdateItem : function( oModel, oData) {
+            var that = this;
             var oKey = {
                 tenant_id : oData.tenant_id,
                 mi_bom_id : oData.mi_bom_id,
@@ -2189,10 +2191,10 @@ sap.ui.define([
             }
 
             try{
-                var sUpdatePath = oModel.createKey(this._m.serviceName.mIMaterialCodeBOMManagementItem, oKey);
+                var sUpdatePath = oModel.createKey(that._m.serviceName.mIMaterialCodeBOMManagementItem, oKey);
                 oModel.update(sUpdatePath, 
                     updateItemParameters, 
-                    { groupId: this._m.groupID } );
+                    { groupId: that._m.groupID } );
                 return true;
             }catch(error){
                 return false;
@@ -2200,7 +2202,8 @@ sap.ui.define([
         },
 
 
-        _fnDeleteHeader : function(oModel, oData) {            
+        _fnDeleteHeader : function(oModel, oData) {     
+            var that = this;       
             var oKey = {
                 tenant_id : oData.tenant_id,
                 material_code : oData.material_code,
@@ -2209,8 +2212,8 @@ sap.ui.define([
             }
 
             try{
-                var sDeletePath = oModel.createKey(this._m.serviceName.mIMaterialCodeBOMManagementHeader, oKey);
-                oModel.remove(sDeletePath,{ groupId: this._m.groupID } );
+                var sDeletePath = oModel.createKey(that._m.serviceName.mIMaterialCodeBOMManagementHeader, oKey);
+                oModel.remove(sDeletePath,{ groupId: that._m.groupID } );
                 return true;
             }catch(error){
                 return false;
@@ -2222,6 +2225,7 @@ sap.ui.define([
          * @private
          */
         _fnDeleteItem : function( oModel, oData) {
+            var that = this;
             var oKey = {
                 tenant_id : oData.tenant_id,
                 mi_bom_id : oData.mi_bom_id,
@@ -2229,8 +2233,8 @@ sap.ui.define([
             }
 
             try{
-                var sDeletePath = oModel.createKey(this._m.serviceName.mIMaterialCodeBOMManagementItem, oKey);
-                oModel.remove(sDeletePath,{ groupId: this._m.groupID } );
+                var sDeletePath = oModel.createKey(that._m.serviceName.mIMaterialCodeBOMManagementItem, oKey);
+                oModel.remove(sDeletePath,{ groupId: that._m.groupID } );
                 return true;
             }catch(error){
                 return false;
@@ -2243,7 +2247,7 @@ sap.ui.define([
          * @param {sap.ui.base.Event} oEvent 
          */
         onDeleteAction : function (oEvent){
-            console.log("onMidDelete");
+            console.log("onMidDelete");            
                 MessageBox.confirm(this.getModel("I18N").getText("/NCM00003"), {
                     title: this.getModel("I18N").getText("/DELETE + CONFIRM"),                                    
                     onClose: this._deleteAction.bind(this),                                    
