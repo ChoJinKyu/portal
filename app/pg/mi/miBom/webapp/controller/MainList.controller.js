@@ -596,7 +596,9 @@ sap.ui.define([
 					error: that._handleDeleteError.bind(this)
 				});
 
-                oModel.refresh(true); 
+				oModel.updateBindings(true);
+				oModel.refresh(true); 
+				that.getView().byId("mainTable").getModel().refresh(true);
                 that._setBusy(false);   
 		},
        /**
@@ -644,8 +646,9 @@ sap.ui.define([
 
 
 		_setBusy : function (bIsBusy) {
-			var oModel = this.getView().getModel("oUi");
-			oModel.setProperty("/busy", bIsBusy);
+			// var that = this;
+			// var oModel = that.getModel("oUi");
+			// oModel.setProperty("/busy", bIsBusy);
 		},
         /**
          * MESSAGE
