@@ -306,23 +306,18 @@ sap.ui.define([
         onPagePreviewButtonPress : function(){
             this.getView().setModel(new ManagedListModel(), "approverPreview"); 
 
-            if(this.getModel("approver").getData().Approvers != undefined){  // approver 는 맨 마지막 줄이 있어서 걔는 안보여주기 위해 새로 담음 
-                var ap = this.getModel("approver").getData().Approvers;
-                for(var i = 0 ; i < ap.length -1 ; i++){
-                    this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
-                }
+            var ap = this.getModel("approver").getData().Approvers;
+            for(var i = 0 ; i < ap.length -1 ; i++){
+                this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
             }
             
-            console.log("onPagePreviewButtonPress >>> this._oDialog " , this._oDialogPrev);
-            var oView = this.getView();
-
             if (!this._oDialogPrev) {
                 this._oDialogPrev = Fragment.load({
-                    id: oView.getId(),
-                    name: "dp.md.moldApprovalList.view.BudgetExecutionApprovalPreView",
+                    id: this.getView().getId(),
+                    name: "dp.md.moldApprovalList.view.PurchaseOrderLocalPreview",
                     controller: this
                 }).then(function (oDialog) {
-                    oView.addDependent(oDialog);
+                    this.getView().addDependent(oDialog);
                     return oDialog;
                 }.bind(this));
             }
@@ -333,8 +328,8 @@ sap.ui.define([
 
         },
         onPrvClosePress : function(){
-             this.byId("budgetExecutionPreview").close();
-            // this.byId("budgetExecutionPreview").destroy();
+             this.byId("purchaseOrderLocalPreview").close();
+            // this.byId("purchaseOrderLocalPreview").destroy();
         },
 
         onPageDraftButtonPress : function () {
