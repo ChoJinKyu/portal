@@ -18,7 +18,7 @@
                              selectionMode="{=${contModel>/editMode}?'MultiToggle':'None'}" 
                              fixedColumnCount="6" 
                              visibleRowCountMode="Auto" 
-                             rows="{path:'mdItemMaster>/ItemBudgetExecution'}">
+                             rows="{path:'mdRecepit>/MoldRecepit'}">
 					<table:extension>
 						<OverflowToolbar>
 							<ToolbarSpacer/>
@@ -36,37 +36,37 @@
 						<table:Column visible="false">
 							<Label text="mold_id"/>
 							<table:template>
-								<Text text="{mdItemMaster>mold_id}"/>
+								<Text text="{mdRecepit>mold_id}"/>
 							</table:template>
 						</table:Column>
 						<table:Column id="c_approval_number" visible="false">
 							<Label text="approval_number"/>
 							<table:template>
-								<Text id="t_approval_number" text="{mdItemMaster>approval_number}"/>
+								<Text id="t_approval_number" text="{mdRecepit>approval_number}"/>
 							</table:template>
 						</table:Column>
 						<table:Column id="c_model" width="20em" hAlign="Center">
 							<Label text="{I18N>/MODEL}"/>
 							<table:template>
-								<Text id="t_model" text="{mdItemMaster>model}"/>
+								<Text id="t_model" text="{mdRecepit>model}"/>
 							</table:template>
 						</table:Column>
 						<table:Column id="c_moldPartNo" width="10em" hAlign="Center">
 							<Label text="Mold No"/>
 							<table:template>
-								<Text id="t_mold_part_no" text="{mdItemMaster>mold_number}"/>
+								<Text id="t_mold_part_no" text="{mdRecepit>mold_number}"/>
 							</table:template>
 						</table:Column>
 						<table:Column id="c_seq" width="5em" hAlign="Center">
 							<Label text="Seq"/>
 							<table:template>
-								<Text id="t_seq" text="{mdItemMaster>mold_sequence}"/>
+								<Text id="t_seq" text="{mdRecepit>mold_sequence}"/>
 							</table:template>
 						</table:Column>
 						<table:Column id="c_description" width="15em" hAlign="Center">
 							<Label text="{I18N>/DESCRIPTION}"/>
 							<table:template>
-								<Text id="description" text="{mdItemMaster>spec_name}"/>
+								<Text id="description" text="{mdRecepit>spec_name}"/>
 							</table:template>
 						</table:Column>
                         <!--  여기까지 픽스 -->
@@ -74,7 +74,7 @@
 							<Label text="Item Type"/>
 							<table:template>
 								<ComboBox visible="{contModel>/editMode}"
-                                        selectedKey="{mdItemMaster>mold_item_type_code}" 
+                                        selectedKey="{mdRecepit>mold_item_type_code}" 
                                         items="{ path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
@@ -90,7 +90,7 @@
 							<Label text="Currency"/>
 							<table:template>
 								<ComboBox  visible="{contModel>/editMode}" 
-                                        selectedKey="{mdItemMaster>currency_code}" 
+                                        selectedKey="{mdRecepit>currency_code}" 
                                         items="{ path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
@@ -105,79 +105,79 @@
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Receipt Amount"/>
 							<table:template>
-								<Text text="{mdItemMaster>receiving_amount}"/>
+								<Text text="{mdRecepit>receiving_amount}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Book Currency"/>
 							<table:template>
-								<Text text="{mdItemMaster>book_currency_code}"/>
+								<Text text="{mdRecepit>book_currency_code}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Budget Amount"/>
 							<table:template>
-								<Text text="{mdItemMaster>provisional_budget_amount}"/>
+								<Text text="{mdRecepit>provisional_budget_amount}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="15em" hAlign="Center">
 							<Label text="Order Supplier"/>
 							<table:template>
-								<Text text="{mdItemMaster>supplier_code}"/>
+								<Text text="{mdRecepit>supplier_code}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Production Supplier"/>
 							<table:template>
-								<Text text="{mdItemMaster>production_supplier_code}"/>
+								<Text text="{mdRecepit>production_supplier_code}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Project Code"/>
 					        <table:template>
-								<Text text="{mdItemMaster>project_code}"/>
+								<Text text="{mdRecepit>project_code}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Acquisition Department"/>
 					        <table:template>
-								<Text text="{mdItemMaster>acq_department_code}"/>
+								<Text text="{mdRecepit>acq_department_code}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Drawing Consent Plan"/>
 					        <table:template>
-                                <DatePicker value="{mdItemMaster>drawing_agreement_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
+                                <DatePicker value="{mdRecepit>drawing_agreement_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Drawing Consent Result"/>
 					        <table:template>
-                                <DatePicker value="{mdItemMaster>drawing_agreement_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
+                                <DatePicker value="{mdRecepit>drawing_agreement_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="1st Production Plan"/>
 					        <table:template>
-								<DatePicker value="{mdItemMaster>first_production_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
+								<DatePicker value="{mdRecepit>first_production_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="1st Production Result"/>
 					        <table:template>
-								<DatePicker value="{mdItemMaster>first_production_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
+								<DatePicker value="{mdRecepit>first_production_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Completion Plan"/>
 					        <table:template>
-								<DatePicker value="{mdItemMaster>production_complete_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
+								<DatePicker value="{mdRecepit>production_complete_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Completion Result"/>
 					        <table:template>
-								<DatePicker value="{mdItemMaster>production_complete_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
+								<DatePicker value="{mdRecepit>production_complete_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
 							</table:template>
 						</table:Column>
 

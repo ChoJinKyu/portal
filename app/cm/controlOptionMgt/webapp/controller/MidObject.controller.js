@@ -506,7 +506,7 @@ sap.ui.define([
           new ComboBox({
             selectedKey: "{details>control_option_level_code}",
             items: {
-              path: 'util>/CodeDetails',
+              path: 'util>/Code',
               filters: [
                 new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
                 new Filter("group_code", FilterOperator.EQ, 'CM_CTRL_OPTION_LEVEL_CODE')
@@ -524,7 +524,7 @@ sap.ui.define([
           // new ComboBox({
           //   selectedKey: "{details>org_type_code}",
           //   items: {
-          //     path: 'util>/CodeDetails',
+          //     path: 'util>/Code',
           //     filters: [
           //       new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
           //       new Filter("group_code", FilterOperator.EQ, 'CM_ORG_TYPE_CODE')
@@ -546,7 +546,7 @@ sap.ui.define([
               return new ComboBox({
                 selectedKey: "{details>org_type_code}",
                 items: {
-                  path: 'util>/CodeDetails',
+                  path: 'util>/Code',
                   filters: [
                     new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
                     new Filter("group_code", FilterOperator.EQ, 'CM_ORG_TYPE_CODE')

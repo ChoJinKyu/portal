@@ -1,5 +1,5 @@
 <mvc:View controllerName="dp.md.moldApprovalList.controller.PurchaseOrderLocalApproval" 
-  xmlns:mvc="sap.ui.core.mvc"
+    xmlns:mvc="sap.ui.core.mvc"
     xmlns:uxap="sap.uxap"
     xmlns:form="sap.ui.layout.form" 
     xmlns:core="sap.ui.core" 

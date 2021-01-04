@@ -43,7 +43,8 @@ sap.ui.define([
             this.setModel(new ManagedModel(), "geninfo");
             this.setModel(new ManagedListModel(), "suplist");
 			this.setModel(new ManagedListModel(), "matlist");
-            this.setModel(new ManagedListModel(), "manlist");                
+            this.setModel(new ManagedListModel(), "manlist");
+            this.setModel(new ManagedListModel(), "psuplist");                
 
             this.getRouter().getRoute("midPageDetail").attachPatternMatched(this._onRoutedThisPageDtl, this);
 			// this.setModel(oViewModel, "midObjectView");
@@ -104,13 +105,77 @@ sap.ui.define([
 
 		},
 
+         /**
+         * @public
+         * @see 사용처 DialogCreate Fragment Open 이벤트
+         */
+
+         onDialogSupList: function (){
+            var oView = this.getView();
+
+			if (!this.pDialog) {
+				this.pDialog = Fragment.load({
+					id: oView.getId(),
+					name: "vp.vpMgt.view.DialogSupList",
+					controller: this
+				}).then(function (oDialog) {
+					// connect dialog to the root view of this component (models, lifecycle)
+					oView.addDependent(oDialog);
+					return oDialog;
+				});
+			} 
+			this.pDialog.then(function(oDialog) {
+                oDialog.open();
+                this.onAfterDialog();
+			}.bind(this));
+        },
+        onAfterDialog:function(){
+            
+            var oView = this.getView(),
+			    oModel = this.getModel("psuplist");
+			oView.setBusy(true);
+			oModel.setTransactionModel(this.getModel("mapping"));
+			oModel.read("/VpSupplierMstView", {
+				success: function(oData){
+                    console.log("oData:"+ oData);
+ 					oView.setBusy(false);
+                }.bind(this)
+            });
+
+        },        
+
+        onSupSearchButtonPress :function (){
+        
+            var predicates = [];
+
+            if (!!this.byId("s_pop_supplier_local_name").getValue()) {
+                    predicates.push(new Filter("supplier_local_name", FilterOperator.Contains, this.byId("s_pop_supplier_local_name").getValue()));
+                }
+            console.log("_PopsupplySearch!!");
+            var oView = this.getView(),
+			    oModel = this.getModel("psuplist");
+			oView.setBusy(true);
+			oModel.setTransactionModel(this.getModel("mapping"));
+			oModel.read("/VpSupplierMstView", {
+				filters: predicates,
+				success: function(oData){
+                    console.log("oData:"+ oData);
+ 					oView.setBusy(false);
+                }.bind(this)
+            });
+
+
+        },
+        supPopupClose : function(oEvent){
+          this.byId("addSupList").close();
+        },
+
+
 		/**
 		 * Event handler for page edit button press
 		 * @public
 		 */
-		onPageEditButtonPress: function(){
-			this._toEditMode();
-		},
+
 		
 		/**
 		 * Event handler for delete page entity

@@ -26,7 +26,7 @@ sap.ui.define([
     "use strict";
 
     var oTransactionManager;
-    var oRichTextEditor;
+    //var oRichTextEditor;
 
     return BaseController.extend("dp.md.moldApprovalList.controller.ApprovalBaseController", {
 
@@ -270,7 +270,7 @@ sap.ui.define([
                 
             this._loadFragment("GeneralInfo", function (oFragment) {
                 oPageGeneralInfoSection.addBlock(oFragment);
-                this.setRichEditor();
+                //this.setRichEditor();
             }.bind(this))
             
             var oPageAttachmentsSection = this.byId("pageAttachmentsSection");
@@ -300,7 +300,7 @@ sap.ui.define([
                 this._bindView("/AppMaster(tenant_id='" + this.tenant_id + "',approval_number='" + approvalNumber + "')", "appMaster", [], function (oData) {
                 
                     console.log(" oData >>> " , oData);
-                    this.oRichTextEditor.setValue(oData.approval_contents);
+                    //this.oRichTextEditor.setValue(oData.approval_contents);
                 }.bind(this));
             }
             this._bindView("/ApprovalDetails", "appDetail", filter, function (oData) {

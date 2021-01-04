@@ -723,45 +723,48 @@ sap.ui.define([
 			oModel.read("/vPSearchView", {
 				filters: aSearchFilters,
 				success: function(oData){
-                    oDataLen = oData.results.length;
+                    //ui.table merge 
 
-                    that.mainTable.setVisibleRowCount(0);
-                    var oColumn = that.mainTable.getColumns()[0];
-                    that.mainTable.sort(oColumn);
-                    console.log(oDataLen);
+                    // oDataLen = oData.results.length;
+
+                    // that.mainTable.setVisibleRowCount(0);
+                    // var oColumn = that.mainTable.getColumns()[0];
+                    // that.mainTable.sort(oColumn);
+                    // console.log(oDataLen);
         
-                    that.mainTable.onAfterRendering = function() {
-                        sap.ui.table.Table.prototype.onAfterRendering.apply(this, arguments);
-                        var aRows = that.mainTable.getRows();
-                        if (aRows && aRows.length > 0) {
-                            var pRow = {};
-                            for (var i = 0; i <  aRows.length; i++) {
-                                if (i > 0) {
-                                    var pCell = pRow.getCells()[0],
-                                        cCell = aRows[i].getCells()[0];
-                                        console.log(cCell.getText(), pCell.getText());
-                                    if (cCell.getText() === pCell.getText()) {
-                                        $("#" + cCell.getId()).css("visibility", "hidden");
-                                        $("#" + pRow.getId() + "-col0").css("border-bottom-style", "hidden");
-                                    }
+                    // that.mainTable.onAfterRendering = function() {
+                    //     sap.ui.table.Table.prototype.onAfterRendering.apply(this, arguments);
+                    //     var aRows = that.mainTable.getRows();
+                    //     if (aRows && aRows.length > 0) {
+                    //         var pRow = {};
+                    //         for (var i = 0; i <  aRows.length; i++) {
+                    //             if (i > 0) {
+                    //                 var pCell = pRow.getCells()[0],
+                    //                     cCell = aRows[i].getCells()[0];
+                    //                     console.log(cCell.getText(), pCell.getText());
+                    //                 if (cCell.getText() === pCell.getText()) {
+                    //                     $("#" + cCell.getId()).css("visibility", "hidden");
+                    //                     $("#" + pRow.getId() + "-col0").css("border-bottom-style", "hidden");
+                    //                 }
 
-                                    var pCell1 = pRow.getCells()[1],
-                                        cCell1 = aRows[i].getCells()[1];
-                                        console.log(cCell.getText(), pCell.getText());
-                                    if (cCell1.getText() === pCell1.getText()) {
-                                        $("#" + cCell1.getId()).css("visibility", "hidden");
-                                        $("#" + pRow.getId() + "-col1").css("border-bottom-style", "hidden");
-                                    }
+                    //                 var pCell1 = pRow.getCells()[1],
+                    //                     cCell1 = aRows[i].getCells()[1];
+                    //                     console.log(cCell.getText(), pCell.getText());
+                    //                 if (cCell1.getText() === pCell1.getText()) {
+                    //                     $("#" + cCell1.getId()).css("visibility", "hidden");
+                    //                     $("#" + pRow.getId() + "-col1").css("border-bottom-style", "hidden");
+                    //                 }
 
                                   
-                                }
-                                pRow = aRows[i];
-                            }
-                        }
-                        console.log(oDataLen);
-                        that.mainTable.setVisibleRowCount(oDataLen);
-                        oView.setBusy(false);                        
-                    };
+                    //             }
+                    //             pRow = aRows[i];
+                    //         }
+                    //     }
+                    //     console.log(oDataLen);
+                    //     that.mainTable.setVisibleRowCount(oDataLen);
+                    //     oView.setBusy(false);                        
+                    // };
+                    oView.setBusy(false);
 				}
             });
 		},

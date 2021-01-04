@@ -122,6 +122,13 @@
                                         filters: []
                                     }"
                                 >
+                                <!-- <ComboBox 
+                                    width="100%"
+                                    id="searchCompanyCode"  
+                                    enabled="{= ${midObjectView>/mode} === 'C'}"
+                                    selectedKey="{master>/company_code}"
+                                    items="{company>/items}"
+                                > -->
                                     <items>
                                         <core:Item key="{org>company_code}"  text="{org>company_code} : {org>company_name}"/>
                                     </items>
@@ -139,7 +146,7 @@
                                     enabled="{= ${midObjectView>/mode} === 'C'}"
                                     selectedKey="{master>/org_type_code}"
                                     items="{
-                                        path: 'util>/CodeDetails',
+                                        path: 'util>/Code',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_ORG_TYPE_CODE'}
@@ -230,7 +237,7 @@
                                     id="affiliateCodeCombo"
                                     enabled="{= ${midObjectView>/mode} === 'C'}"
                                     items="{
-                                        path: 'util>/CodeDetails',
+                                        path: 'util>/Code',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_ORG_TYPE_CODE'}
@@ -298,7 +305,7 @@
                                     selectedKey="{master>/hq_au_code}"
                                     enabled="{= ${midObjectView>/mode} !== 'R'}"
                                     items="{
-                                        path: 'util>/CodeDetails',
+                                        path: 'util>/Code',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                             {path: 'group_code', operator: 'EQ', value1: 'CM_ORG_TYPE_CODE'}
