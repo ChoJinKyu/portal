@@ -7,7 +7,11 @@ select
     mst.request_date,
     mst.loi_request_title,
     mst.loi_publish_purpose_desc,
-    mst.loi_request_status_code,
+    (case when mst.loi_request_status_code = '121010' then '작성중'
+        when mst.loi_request_status_code = '121020' then '결재진행증'
+        when mst.loi_request_status_code = '121030' then '결재반려'
+        when mst.loi_request_status_code = '121040' then '요청완료'
+        end) as loi_request_status_code,
     mst.investment_review_flag,
     sub.buyer_empno,	
     sub.publish_date,

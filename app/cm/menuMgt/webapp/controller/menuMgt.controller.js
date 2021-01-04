@@ -79,7 +79,7 @@ sap.ui.define([
                         and: false
                     }));
                 }
-                predicates.push(new Filter("language_code", FilterOperator.EQ, "KO"));
+                //predicates.push(new Filter("language_code", FilterOperator.EQ, "KO"));
                 this.treeListModel = this.treeListModel || new TreeListModel(this.getView().getModel());
                 this.getView().setBusy(true);
                 this.treeListModel

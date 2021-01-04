@@ -39,7 +39,7 @@
                         <VBox>
                             <Label text="Chain:" labelFor="searchChainCombo" required="true"></Label>
                             <ComboBox id="searchChainCombo" width="100%" 
-                                selectedKey="CM"
+                                selectedKey=""
                                 selectionChange=".onSelectionChange"
                                 items="{
                                     path: 'util>/Code',
