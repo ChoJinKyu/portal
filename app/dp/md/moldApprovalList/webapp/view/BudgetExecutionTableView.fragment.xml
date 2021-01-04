@@ -15,7 +15,7 @@
 
       		<!-- budgetExecutionTable Table -->
 				    <table:Table 
-                             selectionMode="{=${contModel>/editMode}?'MultiToggle':'None'}" 
+                             selectionMode="{=${mode>/editFlag}?'MultiToggle':'None'}" 
                              fixedColumnCount="6" 
                              visibleRowCountMode="Auto" 
                              rows="{path:'mdItemMaster>/ItemBudgetExecution'}">
@@ -23,13 +23,13 @@
 						<OverflowToolbar>
 							<ToolbarSpacer/>
 							<!-- Add the Personalization button -->
-							    <Button visible="{contModel>/editMode}" type="Transparent" text="{I18N>/ROW_ADD}" press=".onBudgetExecutionAddPress">
+							    <Button visible="{mode>/editFlag}" type="Transparent" text="{I18N>/ROW_ADD}" press=".onBudgetExecutionAddPress">
 								<!-- Add -->
 								<customData>
 									<core:CustomData key="multi" value="true"/>
 								</customData>
 							</Button>
-							<Button visible="{contModel>/editMode}" type="Transparent" text="{I18N>/ROW_DELETE}" press=".onBudgetExecutionDelRow"/>
+							<Button visible="{mode>/editFlag}" type="Transparent" text="{I18N>/ROW_DELETE}" press=".onBudgetExecutionDelRow"/>
 						</OverflowToolbar>
 					</table:extension>
 					<table:columns>
@@ -72,13 +72,13 @@
 						<table:Column  width="10em" hAlign="Center">
 							<Label text="Production Type"/>
 							<table:template>
-                                <Text visible="{contModel>/viewMode}" text="{mdItemMaster>mold_production_type_code_nm}"/>
+                                <Text visible="{mode>/viewFlag}" text="{mdItemMaster>mold_production_type_code_nm}"/>
 							</table:template>
 						</table:Column>
 						<table:Column  width="10em" hAlign="Center">
 							<Label text="Item Type"/>
 							<table:template>
-                                 <Text visible="{contModel>/viewMode}" text="{mdItemMaster>mold_item_type_code_nm}"/>
+                                 <Text visible="{mode>/viewFlag}" text="{mdItemMaster>mold_item_type_code_nm}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
@@ -90,13 +90,13 @@
 						<table:Column  width="10em" hAlign="Center">
 							<Label text="Budget Amount"/>
 							<table:template>
-                                <Text visible="{contModel>/viewMode}" text="{mdItemMaster>provisional_budget_amount}"/>
+                                <Text visible="{mode>/viewFlag}" text="{mdItemMaster>provisional_budget_amount}"/>
 							</table:template>
 						</table:Column>
 						<table:Column  width="10em" hAlign="Center">
 							<Label text="Asset Type"/>
 							<table:template>
-                                 <Text visible="{contModel>/viewMode}" text="{mdItemMaster>asset_type_code_nm}"/>
+                                 <Text visible="{mode>/viewFlag}" text="{mdItemMaster>asset_type_code_nm}"/>
 							</table:template>
 						</table:Column>
 						<table:Column  width="15em" hAlign="Center">

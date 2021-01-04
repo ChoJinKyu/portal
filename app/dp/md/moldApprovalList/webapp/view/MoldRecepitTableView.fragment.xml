@@ -121,7 +121,13 @@
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Acquisition Department"/>
 					        <table:template>
-                                <Text text="{mdRecepit>acq_department_code_nm}"/>
+                                <Input  
+                                    showValueHelp="true" 
+                                    valueHelpOnly="true"
+                                    value="{mdRecepit>acq_department_code_nm}"
+                                    valueHelpRequest=".onValueHelpRequestedDept(${mdRecepit>mold_id})" > 
+                                    
+                                </Input>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
