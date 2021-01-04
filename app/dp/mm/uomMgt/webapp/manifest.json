@@ -102,6 +102,12 @@
           "useBatch": true
         }
       },
+      "contModel": {
+        "type": "sap.ui.model.json.JSONModel",
+        "settings": {
+            "defaultBindingMode": "TwoWay"
+        }
+      },
       "": {
         "dataSource": "mainService",
         "preload": true,
