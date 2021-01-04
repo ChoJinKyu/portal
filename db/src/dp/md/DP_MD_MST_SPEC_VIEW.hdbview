@@ -5,9 +5,10 @@ SELECT
     , ifnull((select USER_LOCAL_NAME from CM_HR_EMPLOYEE where EMPLOYEE_NUMBER=b.CREATE_USER_ID),'-') create_user_name 
     , ifnull((select USER_LOCAL_NAME from CM_HR_EMPLOYEE where EMPLOYEE_NUMBER=b.CREATE_USER_ID),'-')||'['||b.CREATE_USER_ID||']' create_user
     , TO_VARCHAR(b.LOCAL_UPDATE_DTM,'YYYY-MM-DD') last_update_date 
-    ,(select code_description from cm_code_dtl where group_code ='DP_MD_ITEM_TYPE' and code=a.mold_item_type_code) mold_item_type_name
-    ,(select code_description from CM_CODE_DTL where GROUP_CODE ='DP_MD_PROD_TYPE' and code=a.mold_production_type_code) mold_production_type_name
-    ,(select code_description from CM_CODE_DTL where GROUP_CODE ='DP_MD_MOLD_SPEC_STATUS' and code=b.mold_spec_status_code) mold_spec_status_name
+    ,(select code_name from CM_CODE_LNG where TENANT_ID='L1100' and LANGUAGE_CD='KO' and group_code ='DP_MD_ITEM_TYPE' and code=a.mold_item_type_code) mold_item_type_name
+    ,(select code_name from CM_CODE_LNG where TENANT_ID='L1100' and LANGUAGE_CD='KO' and GROUP_CODE ='DP_MD_PROD_TYPE' and code=a.mold_production_type_code) mold_production_type_name
+    ,(select code_name from CM_CODE_LNG where TENANT_ID='L1100' and LANGUAGE_CD='KO' and GROUP_CODE ='DP_MD_MOLD_SPEC_STATUS' and code=b.mold_spec_status_code) mold_spec_status_name
+    ,(select code_name from CM_CODE_LNG where TENANT_ID='L1100' and LANGUAGE_CD='KO' and GROUP_CODE =''DP_MD_PROGRESS_STATUS_LOCAL'' and code=b.mold_progress_status_code) mold_progress_status_name
     ,trim(ifnull(a.family_part_number_1,'')||' '||ifnull(a.family_part_number_2,'')||' '||ifnull(a.family_part_number_3,'')||' '||ifnull(a.family_part_number_4,'')||' '||ifnull(a.family_part_number_5,'')) family_part_numbers
     ,ifnull((select USER_LOCAL_NAME from CM_HR_EMPLOYEE where EMPLOYEE_NUMBER=a.receipt_confirmed_user_empno),'-')||'['||b.CREATE_USER_ID||']' receipt_confirmed_user_name
     ,( case when b.inspection_flag = false then (select inspection_date from dp_md_schedule where mold_id=a.mold_id and mold_develope_date_type_code='P')
