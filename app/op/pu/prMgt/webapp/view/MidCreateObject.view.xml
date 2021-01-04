@@ -152,7 +152,7 @@
                             </table:extension>          
 
                             <table:columns>
-                                <table:Column id="c_model" width="4em" hAlign="Center">
+                                <table:Column id="c_model" width="5em" hAlign="Center">
                                     <Label text="품목번호"/>
                                     <table:template>
                                         <Text id="t_model" text="{detailModel>pr_item_number}"/>
