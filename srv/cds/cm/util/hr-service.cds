@@ -12,8 +12,14 @@ service HrService {
         select
             key e.tenant_id,
             key e.employee_number,
-                e.user_local_name
+                e.user_local_name,
+                e.email_id,
+                d.department_local_name,
+                d.department_id
         from employee as e
+        left join Dept as d
+            on e.department_id = d.department_id
+            and e.tenant_id = d.tenant_id
         left join user as u
             on e.employee_number = u.employee_number;
 
