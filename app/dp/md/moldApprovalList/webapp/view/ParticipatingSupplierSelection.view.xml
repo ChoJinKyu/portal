@@ -41,8 +41,9 @@
 				</uxap:snappedTitleOnMobile>
 
 				<uxap:actions>
-                    <!-- 상단 버튼 영역 -->
+					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" enabled="{= ${appMaster>/approve_status_code} === 'AR'?false:${mode>/viewFlag} }"/>
 				</uxap:actions>
+
 
                 <uxap:navigationActions>
 					<OverflowToolbarButton id="pageNavBackButton" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" />
@@ -156,7 +157,6 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
-				<Button type="Transparent" text="Edit"      press=".onPageEditButtonPress" visible="{contModel>/viewMode}" />
 				<Button type="Transparent" text="CancelEdit"    press=".onPageCancelButtonPress" visible="{contModel>/editMode}" />
 				<Button type="Transparent" text="Draft"     press=".onPageDraftButtonPress"   visible="{contModel>/editMode}"/>
 				<Button type="Transparent" text="Preview"   press=".onPagePreviewButtonPress"  visible="{contModel>/editMode}" />

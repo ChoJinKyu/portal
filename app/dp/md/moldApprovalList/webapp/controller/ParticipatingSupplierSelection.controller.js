@@ -287,10 +287,10 @@ sap.ui.define([
             }
         } ,
 
-        onPageEditButtonPress: function () {
-            this._participatingEditFragment();
-            this._editMode();
-        },
+        // onPageEditButtonPress: function () {
+        //     this._participatingEditFragment();
+        //     this._editMode();
+        // },
 
         onPageCancelButtonPress: function () {
             this._participatingViewFragment();
