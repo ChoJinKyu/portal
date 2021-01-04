@@ -1,0 +1,115 @@
+<mvc:View
+	controllerName="sp.sc.scQBMgt.controller.CreatePage"
+	displayBlock="true"
+	xmlns="sap.m"
+	xmlns:f="sap.f"
+    xmlns:core="sap.ui.core" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:form="sap.ui.layout.form" 
+	xmlns:mvc="sap.ui.core.mvc">
+
+	<App id="app">
+			<pages>
+				<Page id="page" title="Create Page">
+					<content>
+                        <form:SimpleForm editable="true"  layout="ResponsiveGridLayout">
+                            <form:content>
+                            <VBox>
+                                <Label text="Negociation Type "  class="sapUitinyMargin" />
+                                <ComboBox selectedKey="1" width="90%">
+                                    <core:Item key="1" text="RFQ"/>
+                                </ComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M3 S3"/>
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="Outcome " class="sapUitinyMargin" />
+                                <ComboBox selectedKey="1" width="90%">
+                                    <core:Item key="1" text="BPA"/>
+                                </ComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M3 S3"/>
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <HBox justifyContent="End" >
+                                    <Button text="Cancel" press="onCancelPrss" class="sapUiSmallMarginEnd" />
+                                    <Button text="Apply" type="Emphasized" class="sapUiLargeMarginEnd" />
+                                </HBox>
+                            </VBox>
+                            </form:content>
+                            
+                        </form:SimpleForm>
+                        <!-- <Panel width="50%">
+                            <ToolbarSpacer/> 
+                            <Text text="                                   " />
+                            <Button text="Cancel" press="onCancelPrss" />
+                            <Button text="Apply" />
+                        </Panel> -->
+                        
+                    </content>
+                    	
+			
+                        <!-- <HVox width="50%">
+                            <Button text="11" />
+                        </HVox> -->
+                    
+                        
+
+                        
+
+                        
+                            <!-- <layout:VerticalLayout>
+                                <FlexBox height="30px" alignItems="Start" justifyContent="Start" >
+                                
+                                    <VBox>
+                                        <Label text="Negociation Type "  class="    " />
+                                        <ComboBox selectedKey="1">
+                                            <core:Item key="1" text="RFQ"/>
+                                        </ComboBox>
+                                    </VBox>
+                                        
+                                        <Label text="Outcome " class="sapUiLargeMarginBegin" />
+                                        <ComboBox selectedKey="1">
+                                            <core:Item key="1" text="BPA"/>
+                                        </ComboBox>
+                                        
+                                </FlexBox>  
+                                <FlexBox height="30px" alignItems="Start" justifyContent="Start" visible="{=!${oUi>/createMode}}">
+                                    <Button text="Cancel" press="onCancelPrss" />
+                                    <Button text="Apply" />
+                                </FlexBox>          
+                                  
+                            </layout:VerticalLayout>  -->
+                            
+                                
+                        
+<!-- 
+                        <Label text="Negociation Type"  />
+                            <ComboBox selectedKey="1">
+                                <core:Item key="1" text="RFQ"/>
+                            </ComboBox>
+                        <VBox>
+                            
+                            
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Outcome" />
+                            <ComboBox selectedKey="1">
+                                <core:Item key="1" text="BPA"/>
+                            </ComboBox>
+                        </VBox>
+                        
+                     -->
+                            
+                        
+                    <!-- </content> -->
+				</Page>
+			</pages>
+		</App>
+
+</mvc:View>
