@@ -11,7 +11,6 @@ entity Se_Operation_Unit_Mst {
       evaluation_request_mode_code     : String(30)          @title: '평가요청방식코드' ;	
       evaluation_request_approval_flag : Boolean             @title: '평가요청품의여부' ;	
       operation_plan_flag              : Boolean             @title: '운영계획여부' ;	
-      vendor_pool_operation_unit_code  : String(30)          @title: '협력사풀운영단위코드' ;	
       eval_apply_vendor_pool_lvl_no    : Decimal             @title: '평가적용협력사풀레벨번호' ;	
 }	
 extend Se_Operation_Unit_Mst with util.Managed;	
