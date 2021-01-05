@@ -235,7 +235,7 @@ sap.ui.define([
 
             if (this._sTenantId !== "new"){
                 if(!oMasterModel.isChanged() && !oDetailsModel.isChanged()) {
-                    MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
+                    MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
                     return;
                 }
             }
@@ -243,7 +243,7 @@ sap.ui.define([
             if(this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
             if(this.validator.validate(this.byId("midTable")) !== true) return;
 
-			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
+			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
@@ -254,7 +254,7 @@ sap.ui.define([
 								that._toShowMode();
                                 oView.setBusy(false);
                                 that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-								MessageToast.show(that.getModel("I18N").getText("/NCM0005"));
+								MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
 							}
 						});
 					};
