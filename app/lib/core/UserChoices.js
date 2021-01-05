@@ -19,6 +19,18 @@ sap.ui.define([
             return sLang.substring(0, 2);
         },
 
+        getDateTimeFormatString: function(){
+            return "yyyy-MM-dd HH:mm:ss";
+        },
+
+        getDateFormatString: function(){
+            return "yyyy-MM-dd";
+        },
+
+        getTimeFormatString: function(){
+            return "HH:mm:ss";
+        },
+
         getUserInfo: function(){
             return new sap.ushell.services.UserInfo();
         },

@@ -231,10 +231,17 @@
           ]
         },
         {
-          "pattern": "example8",
-          "name": "example8",
+          "pattern": "example8_1",
+          "name": "example8_1",
           "target": [
-            "example8"
+            "example8_1"
+          ]
+        },
+        {
+          "pattern": "example8_2",
+          "name": "example8_2",
+          "target": [
+            "example8_2"
           ]
         },
         {
@@ -278,9 +285,13 @@
           "viewName": "PivotTable",
           "viewId": "example7"
         },
-        "example8": {
+        "example8_1": {
           "viewName": "NumberFormat",
-          "viewId": "example8"
+          "viewId": "example8_1"
+        },
+        "example8_2": {
+          "viewName": "DateFormat",
+          "viewId": "example8_2"
         },
         "example9": {
           "viewName": "UsingODataV4",
