@@ -342,9 +342,10 @@ sap.ui.define([
                   
             var oSelected = this._mainTable.getSelectedContexts();   
             if (oSelected.length > 0) {  
-                            
+				var mTitle = this.getModel("I18N").getText("/DELETE") + " " + this.getModel("I18N").getText("/CONFIRM");
+
                 MessageBox.confirm(this.getModel("I18N").getText("/NCM00003"), {
-                    title: this.getModel("I18N").getText("/DELETE + CONFIRM"),                                     
+                    title: mTitle,                                     
                     onClose: this._deleteAction.bind(this),                                    
                     actions: [sap.m.MessageBox.Action.DELETE, sap.m.MessageBox.Action.CANCEL],
                     textDirection: sap.ui.core.TextDirection.Inherit    
@@ -756,17 +757,21 @@ sap.ui.define([
 		
 
 		_handleUpdateSuccess: function(oData) {
-			MessageToast.show(this.getResourceBundle().getText("updateSuccess"));
+			var mTitle = this.getModel("I18N").getText("/UPDATE") + " " + this.getModel("I18N").getText("/SUCCESS");			
+			MessageToast.show(mTitle);
 		},
 		_handleUpdateError: function(oError) {
-			MessageBox.error(this.getResourceBundle().getText("updateError"));
+			var mTitle = this.getModel("I18N").getText("/UPDATE") + " " + this.getModel("I18N").getText("/FAILURE");						
+			MessageBox.error(mTitle);
 		},
 
 		_handleCreateSuccess: function(oData) {
-			MessageToast.show(this.getResourceBundle().getText("createSuccess"));
+			var mTitle = this.getModel("I18N").getText("/ADDITION") + " " + this.getModel("I18N").getText("/SUCCESS");			
+			MessageToast.show(mTitle);
 		},
 		_handleCreateError: function(oError) {
-			MessageBox.error(this.getResourceBundle().getText("createError"));
+			var mTitle = this.getModel("I18N").getText("/ADDITION") + " " + this.getModel("I18N").getText("/FAILURE");						
+			MessageBox.error(mTitle);
 		},		
      /**
          * 삭제 성공

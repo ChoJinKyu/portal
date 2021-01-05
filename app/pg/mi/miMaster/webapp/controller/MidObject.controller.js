@@ -569,9 +569,9 @@ sap.ui.define([
             // }else{
             //     console.log("not mIMaterialCodeText model hasPendingChanges");
             // }
-
+            var mTitle = this.getModel("I18N").getText("/CANCEL") + " " + this.getModel("I18N").getText("/CONFIRM");	
             MessageBox.confirm(this.getModel("I18N").getText("/NPG00013"), {
-                title : this.getModel("I18N").getText("/CANCEL"),
+                title : mTitle,
                 initialFocus : sap.m.MessageBox.Action.CANCEL,
                 onClose : function(sButton) {
                     if (sButton === MessageBox.Action.OK) {
@@ -806,11 +806,11 @@ sap.ui.define([
              }
 
              
-
+             var mTitle = this.getModel("I18N").getText("/ADDITION") + " " + this.getModel("I18N").getText("/CONFIRM");	 
              if(bCreateFlag){
                  if(ValidatorUtil.isValid(this.getView(),"requiredField")){
                      MessageBox.confirm(this.getModel("I18N").getText("/NPG00014"), {
-                         title : "Create",
+                         title : mTitle,
                          initialFocus : sap.m.MessageBox.Action.CANCEL,
                          onClose : function(sButton) {
                              if (sButton === MessageBox.Action.OK) {
@@ -824,8 +824,9 @@ sap.ui.define([
                      console.log("checkRequire")
                  }
              }else{
+                var mTitle = this.getModel("I18N").getText("/Update") + " " + this.getModel("I18N").getText("/CONFIRM");
                  MessageBox.confirm(this.getModel("I18N").getText("/NPG00007"), {
-                     title : "Update",
+                     title : mTitle,
                      initialFocus : sap.m.MessageBox.Action.CANCEL,
                      onClose : function(sButton) {
                          if (sButton === MessageBox.Action.OK) {
@@ -1336,9 +1337,10 @@ sap.ui.define([
          */
         onDeleteAction : function () {
             console.log("onDeleteAction");
+            var mTitle = this.getModel("I18N").getText("/DELETE") + " " + this.getModel("I18N").getText("/CONFIRM");
             if(ValidatorUtil.isValid(this.getView(),"requiredField")){
                 MessageBox.confirm(this.getModel("I18N").getText("/NCM00003"), {
-                    title : this.getModel("I18N").getText("/DELETE + CONFIRM"),
+                    title : mTitle,
                     initialFocus : sap.m.MessageBox.Action.CANCEL,
                     onClose : function(sButton) {
                         if (sButton === MessageBox.Action.OK) {
@@ -1536,10 +1538,10 @@ sap.ui.define([
 
         _handleCreateSuccess: function (oData) {
             var that = this;
-
+            var mTitle = that.getModel("I18N").getText("/SAVE") + " " + that.getModel("I18N").getText("/SUCCESS");	
             MessageBox.show(this.getModel("I18N").getText("/NCM01001"), {
                 icon: MessageBox.Icon.SUCCESS,
-                title: this.getModel("I18N").getText("/SAVE"),
+                title: mTitle,
                 actions: [MessageBox.Action.OK], 
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
@@ -1565,10 +1567,10 @@ sap.ui.define([
         },
         _handleUpdateSuccess: function (oData) {
             var that = this;
-
+            var mTitle = that.getModel("I18N").getText("/UPDATE") + " " + that.getModel("I18N").getText("/SUCCESS");
             MessageBox.show(this.getModel("I18N").getText("/NPG00008"), {
                 icon: MessageBox.Icon.SUCCESS,
-                title: this.getModel("I18N").getText("/UPDATE + SUCCESS"),
+                title: mTitle,
                 actions: [MessageBox.Action.OK],
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
@@ -1598,9 +1600,10 @@ sap.ui.define([
         _handleDeleteSuccess: function (oData) {
 
             var that = this;
+            var mTitle = that.getModel("I18N").getText("/DELETE") + " " + that.getModel("I18N").getText("/SUCCESS");
             MessageBox.show(this.getModel("I18N").getText("/NCM01002"), {
                 icon: MessageBox.Icon.SUCCESS,
-                title: this.getModel("I18N").getText("/DELETE + SUCCESS"),
+                title: mTitle,
                 actions: [MessageBox.Action.OK],
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
