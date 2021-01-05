@@ -318,10 +318,12 @@ sap.ui.define([
             var bModel = this.getModel("mdRecepit");
             this.approvalDetails_data = [] ;
             this.moldMaster_data = [] ;
-            console.log("bModel.getData().length " , bModel);
+            
+            if(this.validator.validate(this.byId("generalInfoLayout") ) !== true){
+                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
+                return;
+            }
           
-
-
             var that = this;
             
             if(bModel.getData().MoldRecepit != undefined && bModel.getData().MoldRecepit.length > 0){
