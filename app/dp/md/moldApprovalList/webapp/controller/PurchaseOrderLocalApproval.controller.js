@@ -1,5 +1,4 @@
 sap.ui.define([
-    "ext/lib/formatter/DateFormatter",
     "ext/lib/formatter/NumberFormatter",
     "ext/lib/model/ManagedModel",
     "ext/lib/model/ManagedListModel",
@@ -21,7 +20,7 @@ sap.ui.define([
     "sap/ui/richtexteditor/RichTextEditor",
     "./ApprovalBaseController",
     "dp/md/util/controller/MoldItemSelection"
-], function (DateFormatter, NumberFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
+], function (NumberFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
     Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalBaseController, MoldItemSelection
 ) {
@@ -32,7 +31,6 @@ sap.ui.define([
 
     return ApprovalBaseController.extend("dp.md.moldApprovalList.controller.PurchaseOrderItemLocal", {
 
-        //dateFormatter: DateFormatter,
         numberFormatter: NumberFormatter,
 
         validator: new Validator(),

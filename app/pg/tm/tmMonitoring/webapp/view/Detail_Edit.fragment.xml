@@ -19,7 +19,7 @@
                     <f:content id="informationPageSectionForm">
                         <VBox>
                             <Label text="{I18N>/TYPE_NAME}" required="true"/>
-                            <ComboBox items="{/TaskMonitoringTypedCodeView}" required="true" placeholder="{I18N>/SEPARATED}" id="combo_monitoring_type" selectedKey="{monitoring_type_code}" width="100%">
+                            <ComboBox items="{/TaskMonitoringTypedCodeView}" required="true" placeholder="{I18N>/TYPE_NAME}" id="combo_monitoring_type" selectedKey="{monitoring_type_code}" width="100%">
                                 <core:Item key="{code}" text="{code_name}" />
                             </ComboBox>
                             <layoutData>
@@ -94,7 +94,7 @@
                                 editable="{=${DetailView>/isCreate}}" 
                                 selectedKey="{tenant_id}" 
                                 items="{/OrgTenantView}" 
-                                change=".onChangeTenant" 
+                                selectionChange=".onChangeTenant" 
                                 width="100%" 
                                 required="true"
                                 placeholder="{I18N>/TENANT_NAME}">
