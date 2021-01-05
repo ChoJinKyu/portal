@@ -1,15 +1,16 @@
 namespace xx.util;
 
-using { xx.Message as message } from '../../../../db/cds/xx/template/XX_MESSAGE-model';
-using { xx.Code_View as code } from '../../../../db/cds/xx/XX_CODE_VIEW-model';
-using { xx.Country_View as country } from '../../../../db/cds/xx/XX_COUNTRY_VIEW-model';
-using { xx.Currency_View as currency } from '../../../../db/cds/xx/XX_CURRENCY_VIEW-model';
+using { xx.Message as xx_Message } from '../../../../db/cds/xx/template/XX_MESSAGE-model';
+using { xx.Code_View as xx_Code } from '../../../../db/cds/xx/XX_CODE_VIEW-model';
+using { xx.Country_View as xx_Country } from '../../../../db/cds/xx/XX_COUNTRY_VIEW-model';
+using { xx.Currency_View as xx_Currency } from '../../../../db/cds/xx/XX_CURRENCY_VIEW-model';
+using { cm.Time_Zone as cm_Time_Zone } from '../../../../db/cds/cm/CM_TIME_ZONE-model';
 
 @path : '/xx.util.CommonService'
 service CommonService {
 
     @readonly
-    entity Message as projection on message;
+    entity Message as projection on xx_Message;
 
     @readonly
     view Code as
@@ -23,7 +24,7 @@ service CommonService {
             a.parent_code,
             a.sort_no
         from
-            code a
+            xx_Code a
         where
             a.language_code = 'KO'
             and $now between a.start_date and a.end_date
@@ -43,7 +44,7 @@ service CommonService {
             a.number_format_code,
             a.currency_code
         from
-            country a
+            xx_Country a
         where
             a.language_code = 'KO'
     ;
@@ -60,11 +61,35 @@ service CommonService {
             a.currency_prefix,
             a.currency_suffix
         from
-            currency a
+            xx_Currency a
         where
             a.language_code = 'KO'
             and $now between a.effective_start_date and a.effective_end_date
             and use_flag = true
+    ;
+
+    @readonly
+    view Time_Zone as
+        select
+            key a.tenant_id,
+            key a.timezone_code,
+            a.timezone_name,
+            a.country_code,
+            a.gmt_offset,
+            a.dst_start_month,
+            a.dst_start_day,
+            a.dst_start_week,
+            a.dst_start_day_of_week,
+            a.dst_start_time_rate,
+            a.dst_end_month,
+            a.dst_end_day,
+            a.dst_end_week,
+            a.dst_end_day_of_week,
+            a.dst_end_time_rate
+        from
+            cm_Time_Zone a
+        where
+            a.dst_flag = true
     ;
 
 
