@@ -212,12 +212,27 @@ sap.ui.define([
          * Event handler for saving page changes
          * @public
          */
-        onPageSaveButtonPress: function () {
+        onPageSaveButtonPress: function (flag) {
             var view = this.getView(),
                 master = view.getModel("master"),
                 detail = view.getModel("details"),
                 oModel = this.getModel("v4Proc"),
                 that = this;
+
+            // '121010'	'작성중'
+            // '121020'	'결재진행중'
+            // '121030'	'결재반려'
+            // '121040'	'요청완료'
+
+            var statusCode = "121010";
+            if(flag == "R") {
+                statusCode = "121040";
+            }else if(flag == "B") {
+                statusCode = "121020";
+            }else {
+                statusCode = "121010";
+            }
+
 
 
             console.log(">>> detail", detail.getData());
@@ -269,8 +284,9 @@ sap.ui.define([
                     loi_publish_purpose_desc: master.getData()["loi_publish_purpose_desc"],
                     special_note: master.getData()["special_note"],
                     requestor_empno: '5450',
-                    request_department_code: '58665481'//,
+                    request_department_code: '58665481',
                     //request_date: new Date()
+                    loi_request_status_code : statusCode
                 });
 
             //}
@@ -313,7 +329,7 @@ sap.ui.define([
                     details.push({
                         tenant_id: 'L2100',
                         company_code: 'C100',
-                        loi_write_number: this._sLoiWriteNumber,
+                        loi_write_number: r["loi_write_number"],//this._sLoiWriteNumber,
                         loi_item_number: loiItemNum_val,
                         item_sequence: String(r["item_sequence"] - (afterDelCnt*10)),
                         ep_item_code: r["ep_item_code"],
@@ -400,9 +416,13 @@ sap.ui.define([
                             success: function(data){
                                 console.log("---------data ssss-------" ,JSON.stringify(data));
 
+
+
                                 //that._setModelEditCancelMode();
                                 //that._setItemSequence(); //itemsequence 
-                                that.onReload();
+                                if (detail.getChanges().length > 0) {
+                                     that.onReload(data);
+                                }
 
                                 view.setBusy(false);
 								that._toShowMode();
@@ -421,21 +441,20 @@ sap.ui.define([
 
         },
 
-        onReload: function() {
+        onReload: function(data) {
 
-            var oView = this.getView();;
-
+            var oView = this.getView();
             this.getModel("midObjectView").setProperty("/isAddedMode", false);
-                this._bindView("/LOIRequestListView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',loi_write_number='" + this._sLoiWriteNumber + "')");
+                this._bindView("/LOIRequestListView(tenant_id='" + data.savedReqDetails[0].tenant_id + "',company_code='" + data.savedReqDetails[0].company_code + "',loi_write_number='" + data.savedReqDetails[0].loi_write_number + "')");
                 oView.setBusy(true);
 
                 var oDetailsModel = this.getModel('details');
                     oDetailsModel.setTransactionModel(this.getModel());
                     oDetailsModel.read("/LOIRequestDetailView", {
                         filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-                                new Filter("company_code", FilterOperator.EQ, this._sCompanyCode),
-                                new Filter("loi_write_number", FilterOperator.EQ, this._sLoiWriteNumber)
+                            new Filter("tenant_id", FilterOperator.EQ, data.savedReqDetails[0].tenant_id),
+                                new Filter("company_code", FilterOperator.EQ, data.savedReqDetails[0].company_code),
+                                new Filter("loi_write_number", FilterOperator.EQ, data.savedReqDetails[0].loi_write_number)
                         ],
                         sorters: [
                             new Sorter("item_sequence", false)

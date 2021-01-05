@@ -178,7 +178,7 @@
 								<Column id="midValueColumn" minScreenWidth="Tablet" hAlign="Center" >
 									<Text text="품명" />
 								</Column>
-                                <Column id="midStartDateColumn" minScreenWidth="Tablet" hAlign="Center"  width="50px" >
+                                <Column id="midStartDateColumn" minScreenWidth="Tablet" hAlign="Center"  width="70px" >
 									<Text text="단위" />
 								</Column>
                                 <Column id="midEndDateColumn" minScreenWidth="Tablet" hAlign="Center"  width="50px">
@@ -296,7 +296,9 @@
 				<ToolbarSpacer />
                 <Button id="pageEditButton" text="Edit" type="Transparent" press=".onPageEditButtonPress" />
                 <Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" visible="{= ${editMode>/newcheck} === 'new' ? false : true}"/>
-				<Button id="pageSaveButton" type="Emphasized" text="Save" press=".onPageSaveButtonPress" />
+				<Button id="pageSaveButton" type="Emphasized" text="Save" press=".onPageSaveButtonPress('S')" />
+                <Button id="pageByPassButton" type="Emphasized" text="ByPass" press=".onPageSaveButtonPress('B')" />
+                <Button id="pageRequestButton" type="Emphasized" text="Request" press=".onPageSaveButtonPress('R')" />
 				<Button id="pageCancelButton" type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
 			</OverflowToolbar>
 		</uxap:footer>

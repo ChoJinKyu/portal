@@ -530,8 +530,9 @@ public class LoiMgtV4 implements EventHandler {
                                     .append("LOI_PUBLISH_PURPOSE_DESC NVARCHAR(1000), ")
                                     .append("SPECIAL_NOTE NCLOB, ")
                                     .append("REQUESTOR_EMPNO NVARCHAR(30), ")
-                                    .append("REQUEST_DEPARTMENT_CODE NVARCHAR(50) ")
+                                    .append("REQUEST_DEPARTMENT_CODE NVARCHAR(50), ")
                                     //.append("REQUEST_DATE DATE ")
+                                    .append("LOI_REQUEST_STATUS_CODE NVARCHAR(30) ")
                                 .append(")");
 
         
@@ -557,7 +558,7 @@ public class LoiMgtV4 implements EventHandler {
         String v_sql_dropableH = "DROP TABLE #LOCAL_TEMP_H";
         String v_sql_dropableD = "DROP TABLE #LOCAL_TEMP_D";
 
-        String v_sql_insertTableH = "INSERT INTO #LOCAL_TEMP_H VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String v_sql_insertTableH = "INSERT INTO #LOCAL_TEMP_H VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         String v_sql_callProc = "CALL EP_PO_LOI_REQUEST_HD_SAVE_PROC(I_H_TABLE => #LOCAL_TEMP_H, I_D_TABLE => #LOCAL_TEMP_D, O_D_TABLE => ?)";
@@ -591,8 +592,9 @@ public class LoiMgtV4 implements EventHandler {
                     v_inRow.get("loi_publish_purpose_desc"),
                     v_inRow.get("special_note"),
                     v_inRow.get("requestor_empno"),
-                    v_inRow.get("request_department_code")//,
+                    v_inRow.get("request_department_code"),
                     //v_inRow.get("request_date")
+                    v_inRow.get("loi_request_status_code")
                 };
                 batchH.add(values);
             }
@@ -627,17 +629,17 @@ public class LoiMgtV4 implements EventHandler {
 
         int[] updateCountsD = jdbc.batchUpdate(v_sql_insertTableD, batchD);
 
-        // Procedure Call
+        // // Procedure Call
         // SqlReturnResultSet oHTable = new SqlReturnResultSet("O_H_TABLE", new RowMapper<SavedHeaders>(){
-        //     @Override
+        // //     @Override
         //     public SavedHeaders mapRow(ResultSet v_rs, int rowNum) throws SQLException {
         //         SavedHeaders v_row = SavedHeaders.create();
         //         v_row.setTenantId(v_rs.getString("tenant_id"));
         //         v_row.setCompanyCode(v_rs.getString("company_code"));
         //         v_row.setLoiWriteNumber(v_rs.getString("loi_write_number"));
         //         v_row.setLoiNumber(v_rs.getString("loi_number"));
-        //         v_row.setLoiRequestTitle(v_rs.getString("loi_request_title"));
-        //         v_row.setLoiPublishPurposeDesc(v_rs.getString("loi_publish_purpose_desc"));
+        //          v_row.setLoiRequestTitle(v_rs.getString("loi_request_title"));
+        //          v_row.setLoiPublishPurposeDesc(v_rs.getString("loi_publish_purpose_desc"));
         //         v_resultH.add(v_row);
         //         return v_row;
         //     }
