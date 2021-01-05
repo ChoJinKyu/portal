@@ -259,40 +259,40 @@
                                 <Text text="{mdRecepit>acq_department_code_nm}"/>
 							</table:template>
 						</table:Column>
-						<table:Column width="10em" hAlign="Center">
+				<table:Column width="10em" hAlign="Center">
 							<Label text="Drawing Consent Plan"/>
 					        <table:template>
-                               <Text text="{mdRecepit>drawing_consent_plan}"/>
+                               <Text text="{path: 'mdRecepit>drawing_consent_plan', formatter: '.dateFormatter.toDateString'}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Drawing Consent Result"/>
 					        <table:template>
-                                <Text text="{mdRecepit>drawing_consent_result}"/>
+                                <Text text="{path:'mdRecepit>drawing_consent_result', formatter: '.dateFormatter.toDateString'}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="1st Production Plan"/>
 					        <table:template>
-								<Text text="{mdRecepit>production_plan}"/>
+								<Text text="{path:'mdRecepit>production_plan', formatter: '.dateFormatter.toDateString'}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="1st Production Result"/>
 					        <table:template>
-								<Text text="{mdRecepit>production_result}"/>
+								<Text text="{path:'mdRecepit>production_result', formatter: '.dateFormatter.toDateString'}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Completion Plan"/>
 					        <table:template>
-								<Text text="{mdRecepit>completion_plan}" />
+								<Text text="{path:'mdRecepit>completion_plan', formatter: '.dateFormatter.toDateString'}"  />
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Completion Result"/>
 					        <table:template>
-								<Text text="{mdRecepit>completion_result}" />
+								<Text text="{path:'mdRecepit>completion_result' , formatter: '.dateFormatter.toDateString'}" />
 							</table:template>
 						</table:Column>
 

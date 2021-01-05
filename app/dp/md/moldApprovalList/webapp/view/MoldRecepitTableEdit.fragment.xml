@@ -11,7 +11,9 @@
         xmlns:co="sap.suite.ui.commons" 
         xmlns:si="sap.suite.ui.commons.statusindicator" 
         xmlns:u="sap.ui.unified" 
-        xmlns:table="sap.ui.table" >
+        xmlns:table="sap.ui.table" 
+        xmlns:lib-m="ext.lib.m"
+        >
 
       		<!-- budgetExecutionTable Table -->
 				    <table:Table id="moldRecepitTable" 
@@ -133,37 +135,37 @@
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Drawing Consent Plan"/>
 					        <table:template>
-                               <Text text="{mdRecepit>drawing_consent_plan}"/>
+                               <Text text="{path: 'mdRecepit>drawing_consent_plan', formatter: '.dateFormatter.toDateString'}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Drawing Consent Result"/>
 					        <table:template>
-                                <Text text="{mdRecepit>drawing_consent_result}"/>
+                                <Text text="{path:'mdRecepit>drawing_consent_result', formatter: '.dateFormatter.toDateString'}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="1st Production Plan"/>
 					        <table:template>
-								<Text text="{mdRecepit>production_plan}"/>
+								<Text text="{path:'mdRecepit>production_plan', formatter: '.dateFormatter.toDateString'}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="1st Production Result"/>
 					        <table:template>
-								<Text text="{mdRecepit>production_result}"/>
+								<Text text="{path:'mdRecepit>production_result', formatter: '.dateFormatter.toDateString'}"/>
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Completion Plan"/>
 					        <table:template>
-								<Text text="{mdRecepit>completion_plan}" />
+								<Text text="{path:'mdRecepit>completion_plan', formatter: '.dateFormatter.toDateString'}"  />
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Completion Result"/>
 					        <table:template>
-								<Text text="{mdRecepit>completion_result}" />
+								<Text text="{path:'mdRecepit>completion_result' , formatter: '.dateFormatter.toDateString'}" />
 							</table:template>
 						</table:Column>
 
