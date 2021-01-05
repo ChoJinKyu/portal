@@ -824,7 +824,7 @@ sap.ui.define([
                      console.log("checkRequire")
                  }
              }else{
-                var mTitle = this.getModel("I18N").getText("/Update") + " " + this.getModel("I18N").getText("/CONFIRM");
+                var mTitle = this.getModel("I18N").getText("/UPDATE") + " " + this.getModel("I18N").getText("/CONFIRM");
                  MessageBox.confirm(this.getModel("I18N").getText("/NPG00007"), {
                      title : mTitle,
                      initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -1558,8 +1558,9 @@ sap.ui.define([
          
         },
         _handleCreateError: function (oError) {
+            var mTitle = this.getModel("I18N").getText("/SAVE") + " " + this.getModel("I18N").getText("/FAILURE");
             this._showMessageBox(
-                this.getModel("I18N").getText("/SAVE + FAILURE"),
+                mTitle,
                 this.getModel("I18N").getText("/EPG00003"),
                 this._m.messageType.Error,
                 function(){return;}
@@ -1584,9 +1585,9 @@ sap.ui.define([
         },
 
         _handleUpdateError: function (oError) {
-
+            var mTitle = this.getModel("I18N").getText("/UPDATE") + " " + this.getModel("I18N").getText("/FAILURE");
             this._showMessageBox(
-                this.getModel("I18N").getText("/UPDATE + FAILURE"),
+                mTitle,
                 this.getModel("I18N").getText("/EPG00002"),
                 this._m.messageType.Error,
                 function(){return;}
@@ -1621,8 +1622,9 @@ sap.ui.define([
          * @private
          */
         _handleDeleteError: function (oError) {
+            var mTitle = this.getModel("I18N").getText("/DELETE") + " " + this.getModel("I18N").getText("/FAILURE");
             this._showMessageBox(
-                this.getModel("I18N").getText("/DELETE + FAILURE"),
+                mTitle,
                 this.getModel("I18N").getText("/EPG00001"),
                 this._m.messageType.Error,
                 function(){return;}
