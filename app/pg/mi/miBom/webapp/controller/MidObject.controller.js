@@ -204,8 +204,9 @@ sap.ui.define([
         onInit: function () {
             console.group("[mid] onInit");
 
+            var that = this;
             var oMultilingual = new Multilingual();
-            this.setModel(oMultilingual.getModel(), "I18N");
+            that.setModel(oMultilingual.getModel(), "I18N");
                         
             //var mModel = new JSONModel("m", this._settingsModel);
             //this.getView().setModel(mModel); 
@@ -232,21 +233,21 @@ sap.ui.define([
                 deleteMode : false
             });
             var  _deleteItem = new JSONModel({"delData":[]});
-            
-            this.setModel(_deleteItem, "_deleteItem");
-            this.setModel(oUi, "oUi");
+            that.setModel(_deleteItem, "_deleteItem");
 
-            this._fnControlSetting();
+            that.setModel(oUi, "oUi");
 
-            this._fnSetReadMode();
+            that._fnControlSetting();
+
+            that._fnSetReadMode();
             
    
             //개발일때. 
             //수정대상
-            this._controlMode(this._m.controlMode.Qa);
+            that._controlMode(that._m.controlMode.Qa);
 
-            this._Page = this.getView().byId("page");
-            this._Page.setFloatingFooter(true);
+            that._Page = that.getView().byId("page");
+            that._Page.setFloatingFooter(true);
 
 
             console.groupEnd();
@@ -258,12 +259,13 @@ sap.ui.define([
          */
         _fnControlSetting : function() {
             console.log("_fnControlSetting");
-            var comboBox_pcst_currency_unit = this.getView().byId("comboBox_pcst_currency_unit");            
+            var that = this;
+            var comboBox_pcst_currency_unit = that.getView().byId("comboBox_pcst_currency_unit");            
             var oBindingComboBox = comboBox_pcst_currency_unit.getBinding("items");
 
             var aFiltersComboBox = [
-                new Filter("tenant_id", "EQ", this._m.filter.tenant_id),
-                new Filter("language_code", "EQ", this._m.filter.language_code)
+                new Filter("tenant_id", "EQ", that._m.filter.tenant_id),
+                new Filter("language_code", "EQ", that._m.filter.language_code)
             ];
               
            // oBindingComboBox.filter(aFiltersComboBox);  
@@ -1136,13 +1138,11 @@ sap.ui.define([
          */
         _onExit: function () {
             var that = this;
+            that._setInit();
             for (var sPropertyName in that._formFragments) {
                 if (!that._formFragments.hasOwnProperty(sPropertyName) || that._formFragments[sPropertyName] == null) {
                     return;
                 }
-
-                that._setInit();
-               
                 that._formFragments[sPropertyName].destroy();
                 that._formFragments[sPropertyName] = null;
             }

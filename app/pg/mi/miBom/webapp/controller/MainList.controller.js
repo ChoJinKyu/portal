@@ -296,14 +296,16 @@ sap.ui.define([
 			console.log("==== mm onMainTableCreate");
 			var that = this;
 
-			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
+			var oNextUIState = that.getOwnerComponent().getHelper().getNextUIState(1);
 			var sLayout = oNextUIState.layout;
 			// console.log("sLayout", sLayout);
 			//  sLayout = "MidColumnFullScreen";	
 
+			that._getSmartTableById().getTable().removeSelections(true);
+			that.getView().byId("mainTable").removeSelections(true);
 			var oNavParam = {
 				layout: sLayout, 
-				tenant_id: this._sso.dept.tenant_id,
+				tenant_id: that._sso.dept.tenant_id,
 				material_code:"new",
 				supplier_code: "　",	
 				mi_bom_id: "　",	
@@ -314,7 +316,7 @@ sap.ui.define([
 				termsdelv: "　"
 			};
 
-			this.getRouter().navTo("midPage", oNavParam);
+			that.getRouter().navTo("midPage", oNavParam);
 		},
 		
 		/**
