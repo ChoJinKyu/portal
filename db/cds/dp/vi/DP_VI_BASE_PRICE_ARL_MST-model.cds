@@ -35,7 +35,7 @@ entity VI_Base_Price_Arl_Mst {
         approval_status_code_fk     : Association to code
                                           on  approval_status_code_fk.tenant_id  = tenant_id
                                           and approval_status_code_fk.group_code = 'DP_VI_APPROVAL_STATUS_CODE'
-                                          and approval_status_code_fk.code       = new_change_code;
+                                          and approval_status_code_fk.code       = approval_status_code;
         approval_requestor_empno_fk : Association to employee
                                           on  approval_requestor_empno_fk.tenant_id       = tenant_id
                                           and approval_requestor_empno_fk.employee_number = approval_requestor_empno;
