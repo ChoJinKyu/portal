@@ -104,12 +104,8 @@ sap.ui.define([
                 });
             }
             
-            if(this.getView().getModel("mode").getProperty("/editFlag")){
-               this._budgetEditFragment();
-            }else{
-               this._budgetViewFragment();
-            }
         },
+
         _bindViewBudget : function (sObjectPath, sModel, aFilter, callback) { 
                 var oView = this.getView(),
                     oModel = this.getModel(sModel);
@@ -294,7 +290,7 @@ sap.ui.define([
             if (!this._oDialogPrev) {
                 this._oDialogPrev = Fragment.load({
                     id: oView.getId(),
-                    name: "dp.md.moldApprovalList.view.BudgetExecutionApprovalPreView",
+                    name: "dp.md.moldApprovalList.view.BudgetExecutionApprovalPreView", 
                     controller: this
                 }).then(function (oDialog) {
                     oView.addDependent(oDialog);

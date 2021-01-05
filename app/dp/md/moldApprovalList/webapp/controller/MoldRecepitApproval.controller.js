@@ -95,13 +95,6 @@ sap.ui.define([
                  
                 });
             }  
-
-            if(this.getView().getModel("mode").getProperty("/editFlag")){
-                this._mdraEditFragment();
-            }else{
-                this._mdraViewFragment();
-            }
-
         },
 
         _bindViewRecepit : function (sObjectPath, sModel, aFilter, callback) { 
@@ -224,8 +217,6 @@ sap.ui.define([
                 MessageBox.error("삭제할 목록을 선택해주세요.");
             }
         } ,
-
-
         _mdraEditFragment : function(){
             console.log(" _mdraEditFragment ");
             var oPageSection = this.byId("moldRecepitTableFragment");
