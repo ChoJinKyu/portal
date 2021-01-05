@@ -279,6 +279,10 @@ sap.ui.define([
             this._fnSetMode("edit");
         },
 
+        _fnSetCopyMode : function() {
+            this._fnSetMode("copy");
+        },
+
         _fnSetDeleteMode : function(){
             this._fnSetMode("delete");
         },        
@@ -289,9 +293,10 @@ sap.ui.define([
 
         _fnSetMode : function(mode){
             var bRead = false,
-            bCreate = false,
-            bEdit = false,
-            bDelete = false;
+                bCreate = false,
+                bEdit = false,
+                bCopy = false,
+                bDelete = false;
 
             if(mode === "read"){
                 bRead = true;
@@ -302,11 +307,16 @@ sap.ui.define([
             }else if(mode ==="delete"){
                 bDelete = true;                
             }
+            else if(mode ==="copy"){
+                bCopy = true;                
+            }            
+
             var oUi = this.getModel("oUi");
             oUi.setProperty("/readMode", bRead);
             oUi.setProperty("/createMode", bCreate);
             oUi.setProperty("/editMode", bEdit);
             oUi.setProperty("/deleteMode", bDelete);
+            oUi.setProperty("/copyMode", bCopy);
         },
 
         /**
@@ -1017,6 +1027,14 @@ sap.ui.define([
          */
         onEdit: function () {
             this._fnSetEditMode();         
+        },
+
+        /**
+         * 화면에서 버튼 이벤트 수정모드 전환
+         * @public
+         */        
+        onCopy : function () {
+            this._fnSetCopyMode();    
         },
 
         /**

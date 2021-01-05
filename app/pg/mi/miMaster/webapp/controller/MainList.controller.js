@@ -80,11 +80,7 @@ sap.ui.define([
 						item.setText(oi18nSearch);
 					}
 				}.bind(this));
-					
-			
 			}.bind(this));
-			
-
 
 			var oUi,
 				oResourceBundle = this.getResourceBundle();
@@ -92,10 +88,12 @@ sap.ui.define([
 			// Model used to manipulate control states
 			oUi = new JSONModel({
 				headerExpanded: true,
-				mainListTableTitle : oResourceBundle.getText("mainListTableTitle"),
-				tableNoDataText : oResourceBundle.getText("tableNoDataText")
+				busy : false
 			});
 
+			// mainListTableTitle : oResourceBundle.getText("mainListTableTitle"),
+			// tableNoDataText : oResourceBundle.getText("tableNoDataText")
+						
 			var oUiData = new JSONModel({
 				tenant_id : this._sso.dept.tenant_id
 			});
@@ -113,6 +111,7 @@ sap.ui.define([
 			this.getModel("oUi").setProperty("/headerExpanded", true);
 
 
+			
 
 			console.groupEnd();
 		},
@@ -125,7 +124,6 @@ sap.ui.define([
 			this.getView().getModel().metadataLoaded().then(this._onCreateModeMetadataLoaded.bind(this));
 			console.groupEnd();
 		},
-
 		/**
 		 * Metadata Load group Setting
 		 * @private
@@ -197,14 +195,14 @@ sap.ui.define([
          */
 		onBeforeRebindTable: function (oEvent) {
 			console.group("onBeforeRebindTable");
-			
+
+
 			this._getSmartTableById().getTable().removeSelections(true);
 			//ui.table
 			//this._getSmartTableById().getTable().clearSelection();
 
 			var mBindingParams = oEvent.getParameter("bindingParams");
 			var oSmtFilter = this.getView().byId("smartFilterBar");             //smart filter
-			
 	
 			var oMi_material_code = oSmtFilter.getControlByKey("mi_material_code").getValue(); 
 			var oMi_material_name = oSmtFilter.getControlByKey("mi_material_name").getValue();            
@@ -240,20 +238,27 @@ sap.ui.define([
 				mBindingParams.filters.push(oCodeFilter);
 			}  
 			this._getSmartTableById().getTable().removeSelections(true);
-			//this.setInitialSortOrder();
+			//this.setInitialSortOrder(oEvent);
 			console.groupEnd();              
 		},
 
-		setInitialSortOrder: function() {
-            var oSmartTable = this._getSmartTableById();        
-            oSmartTable.applyVariant({
-                 sort: {
-                          sortItems: [{ 
-                                         columnKey: "system_update_dtm", 
-                                         operation:"Descending"}
-                                     ]
-                       }
-            });
+		setInitialSortOrder: function(oEvent) {
+
+			var oSmartTable = oEvent.getSource();
+
+			if (this._isOnInit == null) this._isOnInit = true; 
+			if (this._isOnInit) {
+				oSmartTable.applyVariant({
+					sort: {
+						sortItems: [{
+								columnKey: "system_update_dtm",
+								operation: "Descending"
+							}
+						]
+					}
+				});
+				this._isOnInit = false;
+			}
 		},
 		
         /** 

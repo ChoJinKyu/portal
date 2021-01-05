@@ -133,7 +133,7 @@
                     showRowCount="true"
                     editable="true"                    
                     persistencyKey="SmartTableAnalytical_Explored"
-                    enableAutoBinding="false"                     
+                    enableAutoBinding="true"                     
                     class="sapUiResponsiveContentPadding"
                     demandPopin="true"
                     initiallyVisibleFields="mi_material_code,mi_material_name,category_name,use_flag,category_code"
@@ -221,7 +221,7 @@
                                         </Column>
                                     </columns>
                                     <items>
-                                        <ColumnListItem type="Navigation" hAlign="Middle" press=".onMainTableItemPress">
+                                        <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                                              <Text textAlign="Center" text="{mi_material_code}"></Text>
                                              <Text textAlign="Center" text="{mi_material_name}"></Text>
                                              <Text textAlign="Center" text="{category_name}"></Text>

@@ -99,6 +99,7 @@
                     persistencyKey="SmartTablePKey"                    
                     class="sapUiResponsiveContentPadding"
                     demandPopin="true"
+                    enableAutoBinding="true"
                     customData:useSmartField="true"
                     showFullScreenButton="false">
                     <smartTable:customToolbar>
@@ -194,8 +195,7 @@
                                     </columns>
                                     <items>
                                         <ColumnListItem 
-                                        type="Navigation" 
-                                        hAlign="Middle" 
+                                        type="Navigation"                                         
                                         press=".onMainTableItemPress">
                                             <Text text="{material_code}"></Text>
                                             <Text text="{material_desc}"></Text>
