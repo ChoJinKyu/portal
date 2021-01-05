@@ -21,15 +21,20 @@ using { dp as Description } from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_DES
 using { dp as Organization } from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_ORG-model';
 using { dp as OrgAttribute } from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_ORG_ATTR-model';
 using { dp as Valuation } from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_VAL-model';
-using { dp as Favorites } from '../../../../../db/cds/dp/mm/DP_MM_MTL_USER_FAVORITES-model';
 
-using { dp as Class } from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_CLASS-model';
-using { dp as ClassLng } from  '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_CLASS_LNG-model';
-using { dp as Commodity }    from  '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_COMMODITY-model';
-using { dp as CommodityLng } from  '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_COMMODITY_LNG-model';
-using { dp as mtlGroup }    from  '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_GROUP-model';
-using { dp as mtlGroupLng } from  '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_GROUP_LNG-model';
 
+using { dp.MtlClassMgtService as MtlClass } from '../../mm/basicDataMgt/mtlClassMgt-service';
+using { dp.MtlCommodityMgtService as MtlCommodity } from '../../mm/basicDataMgt/mtlCommodityMgt-service';
+using { dp.MtlGroupMgtService as MtlGroup } from '../../mm/basicDataMgt/mtlGroupMgt-service';
+
+// Global Sourcing Supplier
+using { dp as Supplier } from '../../../../../db/cds/dp/gs/DP_GS_SUPPLIER_GEN-model';
+// HR Employee
+using { cm as Employee } from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
+// 공통코드
+using { cm as Code } from '../../../../../db/cds/cm/CM_CODE_VIEW-model';
+
+// 조직코드
 using { cm as OperationOrg} from '../../../../../db/cds/cm/CM_PUR_OPERATION_ORG-model';
 
 
@@ -43,154 +48,76 @@ service MaterialMasterMgtService {
     entity MaterialOrg as projection on Organization.Mm_Material_Org;
     entity MaterialOrgAttr as projection on OrgAttribute.Mm_Material_Org_Attr;
     entity MaterialVal as projection on Valuation.Mm_Material_Val;
-    entity MtlUserFavorites as projection on Favorites.Mm_Mtl_User_Favorites;
-
-    // MaterialGroup View
-    view MaterialGroupView as 
-    select key grp.tenant_id,
-           key grp.material_group_code,
-           key grpl.language_code,
-           ifnull(grpl.material_group_name, grp.material_group_name) as material_group_name: String(100),
-           ifnull(grpl.material_group_desc, grp.material_group_desc) as material_group_desc: String(1000),
-           grp.use_flag
-    from mtlGroup.Mm_Material_Group  grp 
-    left outer join mtlGroup.Mm_Material_Group_Lng grpl 
-    on grpl.tenant_id = grp.tenant_id
-    and grpl.material_group_code = grp.material_group_code
-    ;
-
-    // Material Class View
-    view MaterialClassView as 
-    select key cls.tenant_id,
-           key cls.material_class_code,
-           key clsl.language_code,
-           ifnull(clsl.material_class_name, cls.material_class_name) as material_class_name: String(100),
-           ifnull(clsl.material_class_desc, cls.material_class_desc) as material_class_desc: String(1000),
-           cls.use_flag   
-    from Class.Mm_Material_Class cls
-    left outer join ClassLng.Mm_Material_Class_Lng  clsl
-    on clsl.tenant_id = cls.tenant_id
-    and clsl.material_class_code = cls.material_class_code
-    ;
-
-    // Commodity View
-    view MaterialCommodityView as 
-    select key com.tenant_id,
-           key com.commodity_code,
-           key coml.language_code,
-           ifnull(coml.commodity_name, com.commodity_name) as commodity_name: String(100),
-           ifnull(coml.commodity_desc, com.commodity_desc) as commodity_desc: String(1000),
-           com.use_flag     
-    from Commodity.Mm_Material_Commodity com
-    left outer join CommodityLng.Mm_Material_Commodity_Lng coml
-    on coml.tenant_id = com.tenant_id
-    and coml.commodity_code = com.commodity_code
-    ;
+    
 
     // 자재기본
+    @readonly
     view MaterialMstView as
-    select key mst.tenant_id,
-           key mst.material_code,
-           ifnull(des.material_desc, mst.material_desc) as material_desc : String(300),
-           mst.material_spec,
-           mst.base_uom_code,
-           mst.material_group_code,
-           mst.purchasing_uom_code,
-           mst.variable_po_unit_indicator,
-           mst.material_class_code,
-           mst.commodity_code,
-           mst.maker_part_number,
-           mst.maker_code,
-           mst.maker_part_profile_code,
-           mst.maker_material_code,
-           des.language_code
-    from Master.Mm_Material_Mst  mst
-    left outer join Description.Mm_Material_Desc_Lng des
-    on des.tenant_id = mst.tenant_id
-    and des.material_code = mst.material_code
-    and des.language_code = 'KO'
+    select  key m.tenant_id,
+            key m.material_code,
+            ifnull(l.material_desc, m.material_desc) as material_desc: String(300),
+            m.material_spec,
+            m.material_type_code,
+            m.base_uom_code,
+            m.material_group_code,
+            m.purchasing_uom_code,
+            m.variable_po_unit_indicator,
+            m.material_class_code,
+            m.commodity_code,
+            m.maker_part_number,
+            m.maker_code,
+            m.maker_part_profile_code,
+            m.maker_material_code
+    from Master.Mm_Material_Mst m
+    left join Description.Mm_Material_Desc_Lng l
+    on l.tenant_id = m.tenant_id 
+    and l.material_code = m.material_code
+    and l.language_code = 'KO'
     ;
 
+    @readonly
     view MaterialMstAllView as
     select key mst.tenant_id,
            key mst.material_code,
            mst.material_desc,
            mst.material_spec,
+           mst.material_type_code,
+           cd1.code_name  as material_type_name : String(240),
            mst.base_uom_code,
            mst.material_group_code,
-           mgv.material_group_name,
+           grp.material_group_name,
            mst.purchasing_uom_code,
            mst.variable_po_unit_indicator,
+           cd2.code_name as variable_po_unit_indic_name : String(240),
            mst.material_class_code,
-           mcv.material_class_name,
+           cls.material_class_name,
            mst.commodity_code,
-           cmv.commodity_name,
+           com.commodity_name,
            mst.maker_part_number,
            mst.maker_code,
            mst.maker_part_profile_code,
-           mst.maker_material_code,
-           mst.language_code
+           mst.maker_material_code
     from MaterialMstView mst
-    left outer join MaterialGroupView mgv
-    on mgv.tenant_id = mst.tenant_id
-    and mgv.material_group_code = mst.material_group_code
-    and mgv.language_code = 'KO'
-    left outer join MaterialClassView mcv
-    on mcv.tenant_id = mst.tenant_id
-    and mcv.material_class_code = mst.material_class_code
-    and mcv.language_code = 'KO'
-    left outer join MaterialCommodityView cmv
-    on cmv.tenant_id = mst.tenant_id
-    and cmv.commodity_code = mst.commodity_code
-    and cmv.language_code = 'KO'
-    ;
-
-/*
-view MaterialMstAllView as
-    select key mst.tenant_id,
-           key mst.material_code,
-           mst.material_desc,
-           mst.material_spec,
-           mst.base_uom_code,
-           mst.material_group_code,
-           ifnull(grp.material_group_name, grpl.material_group_name) as material_group_name : String(100),
-           mst.purchasing_uom_code,
-           mst.variable_po_unit_indicator,
-           mst.material_class_code,
-           ifnull(clsl.material_class_name, cls.material_class_name) as material_class_name : String(100),
-           mst.commodity_code,
-           ifnull(coml.commodity_name, com.commodity_name) as commodity_name : String(100),
-           mst.maker_part_number,
-           mst.maker_code,
-           mst.maker_part_profile_code,
-           mst.maker_material_code,
-           mst.language_code
-    from MaterialMstView mst
-    left outer join mtlGroup.Mm_Material_Group  grp 
-    on grp.tenant_id = mst.tenant_id
-    and grp.material_group_code = mst.material_group_code
-    left outer join mtlGroup.Mm_Material_Group_Lng grpl 
-    on grpl.tenant_id = grp.tenant_id
-    and grpl.material_group_code = grp.material_group_code
-    and grpl.language_code = 'KO'
-    left outer join Class.Mm_Material_Class cls
+    left join MtlClass.MtlClassView cls
     on cls.tenant_id = mst.tenant_id
     and cls.material_class_code = mst.material_class_code
-    left outer join ClassLng.Mm_Material_Class_Lng  clsl
-    on clsl.tenant_id = cls.tenant_id
-    and clsl.material_class_code = cls.material_class_code
-    and clsl.language_code = 'KO'
-    left outer join Commodity.Mm_Material_Commodity com
+    left join MtlGroup.MtlGroupView grp
+    on grp.tenant_id = mst.tenant_id
+    and grp.material_group_code = mst.material_group_code
+    left join MtlCommodity.MtlCommodityView com
     on com.tenant_id = mst.tenant_id
     and com.commodity_code = mst.commodity_code
-    left outer join CommodityLng.Mm_Material_Commodity_Lng coml
-    on coml.tenant_id = com.tenant_id
-    and coml.commodity_code = com.commodity_code
-    and coml.language_code = 'KO'
+    left join Code.Code_View cd1
+    on cd1.tenant_id = mst.tenant_id
+    and cd1.group_code = 'DP_MM_MATERIAL_TYPE'
+    and cd1.code = mst.material_type_code
+    and cd1.language_cd = 'KO'
+    left join Code.Code_View cd2
+    on cd1.tenant_id = mst.tenant_id
+    and cd1.group_code = 'DP_MM_VAR_PO_UNIT_INDICATOR'
+    and cd1.code = mst.variable_po_unit_indicator
+    and cd1.language_cd = 'KO'
     ;
-*/
-
-   
 
     // 자재조직 View
     @readonly
@@ -224,6 +151,7 @@ view MaterialMstAllView as
     and oat.org_code = org.org_code
     left join OperationOrg.Pur_Operation_Org poo 
     on poo.tenant_id = org.tenant_id
+    and poo.company_code = org.company_code
     and poo.org_type_code = org.org_type_code
     and poo.org_code = org.org_code 
     ;
@@ -237,11 +165,14 @@ view MaterialMstAllView as
            org.org_name,
            mst.material_desc,
            mst.material_spec,
+           mst.material_type_code,
+           mst.material_type_name,
            mst.base_uom_code,
            mst.material_group_code,
            mst.material_group_name,
            mst.purchasing_uom_code,
            mst.variable_po_unit_indicator,
+           mst.variable_po_unit_indic_name,
            mst.material_class_code,
            mst.material_class_name,
            mst.commodity_code,
@@ -250,162 +181,55 @@ view MaterialMstAllView as
            mst.maker_code,
            mst.maker_part_profile_code,
            mst.maker_material_code,
-           mst.language_code,
            org.material_status_code,
+           cd1.code_name as material_status_name : String(240),
            org.purchasing_group_code,
            org.batch_management_flag,
            org.automatic_po_allow_flag,
            org.hs_code,
            org.import_group_code,
+           cd2.code as import_group_name : String(240),
            org.user_item_type_code,
+           cd3.code_name as user_item_type_name : String(240),
            org.purchasing_item_flag,
            org.purchasing_enable_flag,
            org.osp_item_flag,
            org.buyer_empno,
+           hr1.user_local_name as buyer_local_name : String(240),
            org.eng_item_flag,
            org.develope_person_empno,
+           hr2.user_local_name as develope_person_local_name : String(240),
            org.charged_osp_item_flag
     from MaterialOrgView  org
-    inner join MaterialMstAllView mst
+    left join MaterialMstAllView mst
     on mst.tenant_id = org.tenant_id
     and mst.material_code = org.material_code
+    left join Code.Code_View cd1
+    on cd1.tenant_id = org.tenant_id
+    and cd1.group_code = 'DP_MM_MATERIAL_STATUS'
+    and cd1.code = org.material_status_code
+    and cd1.language_cd = 'KO'
+    left join Code.Code_View cd2
+    on cd1.tenant_id = org.tenant_id
+    and cd1.group_code = 'DP_MM_IMPORT_GROUP_CODE'
+    and cd1.code = org.import_group_code
+    and cd1.language_cd = 'KO'
+    left join Code.Code_View cd3
+    on cd1.tenant_id = org.tenant_id
+    and cd1.group_code = 'DP_MM_USER_ITEM_TYPE'
+    and cd1.code = org.user_item_type_code
+    and cd1.language_cd = 'KO'
+    left join Employee.Hr_Employee hr1
+    on hr1.tenant_id = org.tenant_id
+    and hr1.employee_number = org.buyer_empno
+    left join Employee.Hr_Employee hr2
+    on hr1.tenant_id = org.tenant_id
+    and hr1.employee_number = org.develope_person_empno
     ;
+
     
-/*    
-    view MaterialOrgView as
-    select key org.tenant_id,
-           key org.material_code,
-           key org.company_code,
-           key org.org_type_code,
-           key org.org_code,
-           poo.org_name,
-           ifnull(des.material_desc, mst.material_desc) as material_desc : String(300),
-           mst.material_spec,
-           mst.base_uom_code,
-           mst.material_group_code,
-           mst.purchasing_uom_code,
-           mst.variable_po_unit_indicator,
-           mst.material_class_code,
-           mst.commodity_code,
-           mst.maker_part_number,
-           mst.maker_code,
-           mst.maker_part_profile_code,
-           mst.maker_material_code,
-           des.language_code,
-           org.material_status_code,
-           org.purchasing_group_code,
-           org.batch_management_flag,
-           org.automatic_po_allow_flag,
-           org.hs_code,
-           org.import_group_code,
-           org.user_item_type_code,
-           org.purchasing_item_flag,
-           org.purchasing_enable_flag,
-           org.osp_item_flag,
-           org.buyer_empno,
-           org.eng_item_flag,
-           oat.develope_person_empno,
-           oat.charged_osp_item_flag
-    from Organization.Mm_Material_Org  org
-    left join OrgAttribute.Mm_Material_Org_Attr oat
-    on oat.tenant_id = org.tenant_id
-    and oat.material_code = org.material_code
-    and oat.company_code = org.company_code
-    and oat.org_type_code = org.org_type_code
-    and oat.org_code = org.org_code
-    left join OperationOrg.Pur_Operation_Org poo 
-    on poo.tenant_id = org.tenant_id
-    and poo.org_type_code = org.org_type_code
-    and poo.org_code = org.org_code     
-    left join Master.Mm_Material_Mst  mst
-    on mst.tenant_id = org.tenant_id
-    and mst.material_code = org.material_code
-    left outer join Description.Mm_Material_Desc_Lng des
-    on des.tenant_id = mst.tenant_id
-    and des.material_code = mst.material_code
-    and des.language_code = 'KO'
-    ;
-
-view MaterialOrgAllView as
-    select key org.tenant_id,
-           key org.material_code,
-           key org.company_code,
-           key org.org_type_code,
-           key org.org_code,
-           porg.org_name,
-           ifnull(des.material_desc, mst.material_desc) as material_desc : String(300),
-           mst.material_spec,
-           mst.base_uom_code,
-           mst.material_group_code,
-           ifnull(grp.material_group_name, grpl.material_group_name) as material_group_name : String(100),
-           mst.purchasing_uom_code,
-           mst.variable_po_unit_indicator,
-           mst.material_class_code,
-           ifnull(clsl.material_class_name, cls.material_class_name) as material_class_name : String(100),
-           mst.commodity_code,
-           ifnull(coml.commodity_name, com.commodity_name) as commodity_name : String(100),
-           mst.maker_part_number,
-           mst.maker_code,
-           mst.maker_part_profile_code,
-           mst.maker_material_code,
-           des.language_code,
-           org.material_status_code,
-           org.purchasing_group_code,
-           org.batch_management_flag,
-           org.automatic_po_allow_flag,
-           org.hs_code,
-           org.import_group_code,
-           org.user_item_type_code,
-           org.purchasing_item_flag,
-           org.purchasing_enable_flag,
-           org.osp_item_flag,
-           org.buyer_empno,
-           org.eng_item_flag,
-           oat.develope_person_empno,
-           oat.charged_osp_item_flag
-    from Organization.Mm_Material_Org  org
-    left join OrgAttribute.Mm_Material_Org_Attr oat
-    on oat.tenant_id = org.tenant_id
-    and oat.material_code = org.material_code
-    and oat.company_code = org.company_code
-    and oat.org_type_code = org.org_type_code
-    and oat.org_code = org.org_code
-    left join OperationOrg.Pur_Operation_Org porg 
-    on porg.tenant_id = org.tenant_id
-    and porg.org_type_code = org.org_type_code
-    and porg.org_code = org.org_code     
-    left join Master.Mm_Material_Mst  mst
-    on mst.tenant_id = org.tenant_id
-    and mst.material_code = org.material_code
-    left outer join Description.Mm_Material_Desc_Lng des
-    on des.tenant_id = mst.tenant_id
-    and des.material_code = mst.material_code
-    and des.language_code = 'KO'
-    left outer join mtlGroup.Mm_Material_Group  grp 
-    on grp.tenant_id = mst.tenant_id
-    and grp.material_group_code = mst.material_group_code
-    left outer join mtlGroup.Mm_Material_Group_Lng grpl 
-    on grpl.tenant_id = grp.tenant_id
-    and grpl.material_group_code = grp.material_group_code
-    and grpl.language_code = 'KO'
-    left outer join Class.Mm_Material_Class cls
-    on cls.tenant_id = mst.tenant_id
-    and cls.material_class_code = mst.material_class_code
-    left outer join ClassLng.Mm_Material_Class_Lng  clsl
-    on clsl.tenant_id = cls.tenant_id
-    and clsl.material_class_code = cls.material_class_code
-    and clsl.language_code = 'KO'
-    left outer join Commodity.Mm_Material_Commodity com
-    on com.tenant_id = mst.tenant_id
-    and com.commodity_code = mst.commodity_code
-    left outer join CommodityLng.Mm_Material_Commodity_Lng coml
-    on coml.tenant_id = com.tenant_id
-    and coml.commodity_code = com.commodity_code
-    and coml.language_code = 'KO'
-    ;
-*/
-
     // 자재평가
+    @readonly
     view MaterialValView as
     select key val.tenant_id,
            key val.material_code,
@@ -415,43 +239,18 @@ view MaterialOrgAllView as
            key val.valuation_area_code,
            key val.valuation_class_code,
            porg.org_name,
-           ifnull(des.material_desc, mst.material_desc) as material_desc : String(300),
-           mst.material_spec,
-           mst.base_uom_code,
-           mst.material_group_code,
-           mst.purchasing_uom_code,
-           mst.variable_po_unit_indicator,
-           mst.material_class_code,
-           mst.commodity_code,
-           mst.maker_part_number,
-           mst.maker_code,
-           mst.maker_part_profile_code,
-           mst.maker_material_code,
-           des.language_code,
            val.valuation_type_code,
            val.material_price_unit,
            val.standard_price,
            val.moving_average_price
-    from Valuation.Mm_Material_Val val
-    left join Valuation.Mm_Material_Org org
-    on org.tenant_id = val.tenant_id
-    and org.material_code = val.material_code
-    and org.company_code = val.company_code
-    and org.org_type_code = val.org_type_code
-    and org.org_code = val.org_code    
+    from Valuation.Mm_Material_Val val  
     left join OperationOrg.Pur_Operation_Org porg 
-    on porg.tenant_id = org.tenant_id
-    and porg.org_type_code = org.org_type_code
-    and porg.org_code = org.org_code 
-    left join Master.Mm_Material_Mst  mst
-    on mst.tenant_id = val.tenant_id
-    and mst.material_code = val.material_code
-    left outer join Description.Mm_Material_Desc_Lng des
-    on des.tenant_id = mst.tenant_id
-    and des.material_code = mst.material_code
-    and des.language_code = 'KO'
+    on porg.tenant_id = val.tenant_id
+    and porg.org_type_code = val.org_type_code
+    and porg.org_code = val.org_code 
     ;
 
+    @readonly
     view MaterialValAllView as
     select key val.tenant_id,
            key val.material_code,
@@ -460,171 +259,34 @@ view MaterialOrgAllView as
            key val.org_code,
            key val.valuation_area_code,
            key val.valuation_class_code,
-           ifnull(des.material_desc, mst.material_desc) as material_desc : String(300),
-           mst.material_spec,
-           mst.base_uom_code,
-           mst.material_group_code,
-           mst.purchasing_uom_code,
-           mst.variable_po_unit_indicator,
-           mst.material_class_code,
-           mst.commodity_code,
-           mst.maker_part_number,
-           mst.maker_code,
-           mst.maker_part_profile_code,
-           mst.maker_material_code,
-           des.language_code,
+           mst.material_desc,
+           cd1.code_name as valuation_area_name : String(240),
+           cd2.code_name as valuation_class_name : String(240),
            val.valuation_type_code,
+           cd3.code_name as valuation_type_name : String(240),
            val.material_price_unit,
            val.standard_price,
            val.moving_average_price
-    from Valuation.Mm_Material_Val val
-    left join Valuation.Mm_Material_Org org
-    on org.tenant_id = val.tenant_id
-    and org.material_code = val.material_code
-    and org.company_code = val.company_code
-    and org.org_type_code = val.org_type_code
-    and org.org_code = val.org_code    
-    left join Master.Mm_Material_Mst  mst
+    from MaterialValView val
+    left join MaterialMstView mst
     on mst.tenant_id = val.tenant_id
     and mst.material_code = val.material_code
-    left outer join Description.Mm_Material_Desc_Lng des
-    on des.tenant_id = mst.tenant_id
-    and des.material_code = mst.material_code
-    and des.language_code = 'KO'
-    ;
-/*
-    // 자재코드 검색 View
-    view SearchMaterialMstView as
-    select key mst.tenant_id,
-           key mst.material_code,
-           case when fav.material_code is not null then true else false end as favofites_flag : Boolean,
-           ifnull(des.material_desc, mst.material_desc) as material_desc : String(300),
-           mst.material_spec,
-           mst.base_uom_code,
-           mst.material_group_code,
-           ifnull(grp.material_group_name, grpl.material_group_name) as material_group_name : String(100),
-           mst.purchasing_uom_code,
-           mst.variable_po_unit_indicator,
-           mst.material_class_code,
-           ifnull(clsl.material_class_name, cls.material_class_name) as material_class_name : String(100),
-           mst.commodity_code,
-           ifnull(coml.commodity_name, com.commodity_name) as commodity_name : String(100),
-           mst.maker_part_number,
-           mst.maker_code,
-           mst.maker_part_profile_code,
-           mst.maker_material_code,
-           des.language_code
-    from Master.Mm_Material_Mst  mst
-    left outer join Description.Mm_Material_Desc_Lng des
-    on des.tenant_id = mst.tenant_id
-    and des.material_code = mst.material_code
-    and des.language_code = 'KO'
-    left outer join Favorites.Mm_Mtl_User_Favorites fav
-    on fav.tenant_id = mst.tenant_id
-    and fav.material_code = mst.material_code
-    left outer join mtlGroup.Mm_Material_Group  grp 
-    on grp.tenant_id = mst.tenant_id
-    and grp.material_group_code = mst.material_group_code
-    left outer join mtlGroup.Mm_Material_Group_Lng grpl 
-    on grpl.tenant_id = grp.tenant_id
-    and grpl.material_group_code = grp.material_group_code
-    and grpl.language_code = 'KO'
-    left outer join Class.Mm_Material_Class cls
-    on cls.tenant_id = mst.tenant_id
-    and cls.material_class_code = mst.material_class_code
-    left outer join ClassLng.Mm_Material_Class_Lng  clsl
-    on clsl.tenant_id = cls.tenant_id
-    and clsl.material_class_code = cls.material_class_code
-    and clsl.language_code = 'KO'
-    left outer join Commodity.Mm_Material_Commodity com
-    on com.tenant_id = mst.tenant_id
-    and com.commodity_code = mst.commodity_code
-    left outer join CommodityLng.Mm_Material_Commodity_Lng coml
-    on coml.tenant_id = com.tenant_id
-    and coml.commodity_code = com.commodity_code
-    and coml.language_code = 'KO'
+    left join Code.Code_View cd1 
+    on cd1.tenant_id = val.tenant_id
+    and cd1.group_code = 'DP_MM_MTL_VALUATION_AREA'
+    and cd1.code = val.valuation_area_code
+    and cd1.language_cd = 'KO'
+    left join Code.Code_View cd2
+    on cd1.tenant_id = val.tenant_id
+    and cd2.group_code = 'DP_MM_MTL_VALUATION_CLASS'
+    and cd2.code = val.valuation_class_code
+    and cd2.language_cd = 'KO'
+    left join Code.Code_View cd3
+    on cd1.tenant_id = val.tenant_id
+    and cd2.group_code = 'DP_MM_MTL_VALUATION_TYPE'
+    and cd2.code = val.valuation_type_code
+    and cd2.language_cd = 'KO'
     ;
 
-    view SearchMaterialOrgView as
-    select key org.tenant_id,
-           key org.material_code,
-           key org.company_code,
-           key org.org_type_code,
-           key org.org_code,
-           porg.org_name,
-           case when fav.material_code is not null then true else false end as favofites_flag : Boolean,
-           ifnull(des.material_desc, mst.material_desc) as material_desc : String(300),
-           mst.material_spec,
-           mst.base_uom_code,
-           mst.material_group_code,
-           ifnull(grp.material_group_name, grpl.material_group_name) as material_group_name : String(100),
-           mst.purchasing_uom_code,
-           mst.variable_po_unit_indicator,
-           mst.material_class_code,
-           ifnull(clsl.material_class_name, cls.material_class_name) as material_class_name : String(100),
-           mst.commodity_code,
-           ifnull(coml.commodity_name, com.commodity_name) as commodity_name : String(100),
-           mst.maker_part_number,
-           mst.maker_code,
-           mst.maker_part_profile_code,
-           mst.maker_material_code,
-           des.language_code,
-           org.material_status_code,
-           org.purchasing_group_code,
-           org.batch_management_flag,
-           org.automatic_po_allow_flag,
-           org.hs_code,
-           org.import_group_code,
-           org.user_item_type_code,
-           org.purchasing_item_flag,
-           org.purchasing_enable_flag,
-           org.osp_item_flag,
-           org.buyer_empno,
-           org.eng_item_flag,
-           oat.develope_person_empno,
-           oat.charged_osp_item_flag
-    from Organization.Mm_Material_Org  org
-    left join OrgAttribute.Mm_Material_Org_Attr oat
-    on oat.tenant_id = org.tenant_id
-    and oat.material_code = org.material_code
-    and oat.company_code = org.company_code
-    and oat.org_type_code = org.org_type_code
-    and oat.org_code = org.org_code
-    left join OperationOrg.Pur_Operation_Org porg 
-    on porg.tenant_id = org.tenant_id
-    and porg.org_type_code = org.org_type_code
-    and porg.org_code = org.org_code     
-    left join Master.Mm_Material_Mst  mst
-    on mst.tenant_id = org.tenant_id
-    and mst.maker_material_code = org.tenant_id
-    left outer join Description.Mm_Material_Desc_Lng des
-    on des.tenant_id = mst.tenant_id
-    and des.material_code = mst.material_code
-    and des.language_code = 'KO'
-    left outer join mtlGroup.Mm_Material_Group  grp 
-    on grp.tenant_id = mst.tenant_id
-    and grp.material_group_code = mst.material_group_code
-    left outer join mtlGroup.Mm_Material_Group_Lng grpl 
-    on grpl.tenant_id = grp.tenant_id
-    and grpl.material_group_code = grp.material_group_code
-    and grpl.language_code = 'KO'
-    left outer join Class.Mm_Material_Class cls
-    on cls.tenant_id = mst.tenant_id
-    and cls.material_class_code = mst.material_class_code
-    left outer join ClassLng.Mm_Material_Class_Lng  clsl
-    on clsl.tenant_id = cls.tenant_id
-    and clsl.material_class_code = cls.material_class_code
-    and clsl.language_code = 'KO'
-    left outer join Commodity.Mm_Material_Commodity com
-    on com.tenant_id = mst.tenant_id
-    and com.commodity_code = mst.commodity_code
-    left outer join CommodityLng.Mm_Material_Commodity_Lng coml
-    on coml.tenant_id = com.tenant_id
-    and coml.commodity_code = com.commodity_code
-    and coml.language_code = 'KO'
-    left outer join Favorites.Mm_Mtl_User_Favorites fav
-    on fav.tenant_id = org.tenant_id
-    and fav.material_code = org.material_code
-    ;
-*/
+
 }

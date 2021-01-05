@@ -34,10 +34,10 @@ service MtlGroupMgtService {
            m.use_flag,
            l.language_code
     from  mtlGroup.Mm_Material_Group m
-    left outer join mtlGroupLng.Mm_Material_Group_Lng l
+    left join mtlGroupLng.Mm_Material_Group_Lng l
     on l.tenant_id = m.tenant_id
-      and l.material_group_code = m.material_group_code 
-      and l.language_code = 'EN'
+    and l.material_group_code = m.material_group_code 
+    and l.language_code = 'KO'
     ;
 
 }
