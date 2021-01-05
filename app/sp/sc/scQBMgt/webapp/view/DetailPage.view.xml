@@ -9,7 +9,7 @@
     xmlns:co="sap.suite.ui.commons"
     xmlns:si="sap.suite.ui.commons.statusindicator"
 	height="100%">
-    <Page showNavButton="true" navButtonPress=".onNavBack"  title="견적계획">
+    <!-- <Page showNavButton="true" navButtonPress=".onNavBack"  title="견적계획"> -->
 	<uxap:ObjectPageLayout id="page"
 		toggleHeaderOnTitleClick="true"
 		alwaysShowContentHeader = "true"
@@ -22,23 +22,17 @@
 		showFooter="true">
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
-            
-                <!-- <uxap:navigationActions> 
-                    
-                </uxap:navigationActions> -->
-				<uxap:expandedHeading>
-                    
+                <!-- <uxap:navigationActions> </uxap:navigationActions> -->
+				<uxap:expandedHeading>                  
 					<Title text="견적 계획" wrapping="true" />
 				</uxap:expandedHeading>
 				<uxap:snappedHeading>
 					<Title text="견적 계획" wrapping="true" />
 				</uxap:snappedHeading>
 				<uxap:snappedContent>
-				</uxap:snappedContent>
-			
+				</uxap:snappedContent>			
                 <uxap:navigationActions>
-					
-					<OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+					<OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onNavBack" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
                 </uxap:navigationActions> 
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
@@ -51,18 +45,38 @@
                     <ObjectStatus title="Create Date" text="2020/07/20"  class="sapUiLargeMarginBegin" />
                 </layout:VerticalLayout>
 
-                <!-- <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                    <ObjectStatus title="Affiliate" text="EKHQ"/>
-                    <ObjectStatus title="Division" text="DFZ"/>
-                </layout:VerticalLayout> -->
-
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
 					<Label text="Status :"/>
                     <ObjectStatus class="sapMObjectStatusLarge" text="Draft" state="Error" />
 				</layout:VerticalLayout>
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                    <!-- <co:ProcessFlow id="pageHeaderProcessFlow" scrollable="false" nodePress="onNodePress">
+                        <co:lanes>
+                            <co:ProcessFlowLaneHeader
+                                laneId="pageHeaderProcessFlowOrderLane"
+                                iconSrc="sap-icon://order-status"
+                                text="In Order"
+                                position="0" />
+                            <co:ProcessFlowLaneHeader
+                                laneId="pageHeaderProcessFlowDeliveryLane"
+                                iconSrc="sap-icon://monitor-payments"
+                                text="In Delivery"
+                                position="1" />
+                            <co:ProcessFlowLaneHeader
+                                laneId="pageHeaderProcessFlowInvoiceLane"
+                                iconSrc="sap-icon://payment-approval"
+                                text="In Invoice"
+                                position="2" />
+                            <co:ProcessFlowLaneHeader
+                                laneId="pageHeaderProcessFlowAccountingLane"
+                                iconSrc="sap-icon://money-bills"
+                                text="In Accounting"
+                                position="3" />
+                        </co:lanes>
+                    </co:ProcessFlow> -->
+
 					<!-- <Label text="Process 2 : "/> -->
-                    <co:ProcessFlow id="pageHeaderProcessFlow" scrollable="false" nodePress="onNodePress">
+                    <!-- <co:ProcessFlow id="pageHeaderProcessFlow" scrollable="false" nodePress="onNodePress">
                         <co:nodes>
                             <co:ProcessFlowNode
                                 nodeId="1"
@@ -125,190 +139,70 @@
                                 text="In Accounting"
                                 position="3" />
                         </co:lanes>
-                    </co:ProcessFlow>
+                    </co:ProcessFlow> -->
 				</layout:VerticalLayout>
 			</FlexBox>
 		</uxap:headerContent>
 
 		<uxap:sections>
-			<!-- <uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" visible="true" title="Header">
-				<uxap:subSections>
-					<uxap:ObjectPageSubSection id="pageSubSection1" >
-					</uxap:ObjectPageSubSection>
-				</uxap:subSections>
-			</uxap:ObjectPageSection> -->
-
+            <!-- Header Start -->
 			<uxap:ObjectPageSection id="objectPageSection" titleUppercase="false" title="Header" visible="true" subSectionLayout="titleOnTop" >
 				<uxap:subSections >
 					<uxap:ObjectPageSubSection>
-                        <!-- <VBox class="sapUiSmallMargin"> -->
                         <Panel id="panel_Header" expandable="true" expanded="true" headerText="Header Content">
-						<form:SimpleForm id="formHeader1" editable="true"  layout="ColumnLayout"
-                                        columnsM="2"
-                                        columnsL="2"
-                                        columnsXL="3">
-                            <!-- <core:Title text="Category 정보" level="H3" /> -->
-                            <!-- <form:content> -->
-                                <Label  text="Negotiation No" 
-                                        class="sapMLabelNoText"/>
-                                <Input   id="inputNegotiationNo" 
-                                        class="sapMLabelNoText"/>
-                                <Label  text="Type" 
-                                        class="sapMLabelNoText"/>
-                                <!-- <Text   id="textCode" 
-                                        visible="{= ${util>/flag} === 'S' ?  true : false}"
-                                        class="sapMLabelNoText"/>                                      -->
-                                <Input  id="inputType"
-                                        enabled="false"
-                                        value="RFQ"
-                                        class="sapUiSmallMarginEnd"
-                                />
-                                <Label  text="Outcome" 
-                                        class="sapMLabelNoText"/>
-                                <Input  id="inputOutcome" 
-                                        enabled="false"
-                                        value="BPA"
-                                        class="sapMLabelNoText"/>  
-                                <!-- <layoutData>
-                                    <layout:GridData span="XL2 L3 M4 S4" />
-                                </layoutData> -->
-                            <!-- </form:content> -->
-<!--                             
-                                <Label  text="Title" 
-                                    required="true"
-                                    design="Bold" 
-                                    class="sapMLabelNoText"/>
-                                <Input  id="inputTitle" 
-                                    class="sapMLabelNoText"/> -->
-                            
-						</form:SimpleForm>
-                        <!--  <form:SimpleForm id="formHeader2" editable="true"  layout="ColumnLayout">
-                                       columnsM="1"
-                                        columnsL="3"
-                                        columnsXL="4" > -->
-                        
-                        <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin">
-                            <Label  text="Title" 
-                                    required="true"
-                                    class="sapMLabelNoText"/>
-                            <Input  id="inputTitle" 
-                                    class="sapMLabelNoText" width="100%"/>
-                            <!-- <layoutData>
-                                <layout:GridData span="XL12 L12 M6 S12"/>
-                            </layoutData> -->
-                        </VBox>
-                        <!-- </form:SimpleForm> -->
-                        <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin sapUiTinyMarginTop" >
-                            <Label  text="Description" 
-                                        class="sapMLabelNoText"/>
-                            <rte:RichTextEditor id="reMonitoringPurpose" editable="true" editorType="TinyMCE4" width="100%" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="true"/>
-                        </VBox>
+                            <form:SimpleForm id="formHeader1" editable="true"  layout="ColumnLayout"
+                                            columnsM="2"
+                                            columnsL="2"
+                                            columnsXL="3">
 
-                        
-                        <form:SimpleForm id="formHeader3" editable="true"  layout="ResponsiveGridLayout" >
-                            <VBox>
-                                <HBox class="sapUiTinyMarginTop">
-                                    <VBox width="40%">
-                                        <Label  text="Bid Style" 
-                                            class="sapMLabelNoText"/>
-                                        <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedIndex="0" class="sapUiTinyMarginBeginEnd">
-                                            <RadioButton id="RB1-1" text="Sealed (purchaser : X,Supplier :X)" />
-                                            <RadioButton id="RB1-2" text="Blind (purchaser : O,Supplier :X)" />
-                                        </RadioButtonGroup>
-                                    </VBox>
-                                    <VBox width="30%">
-                                        <Label  text="Incoterms" 
-                                                class="sapMLabelNoText"/>
-                                        <ComboBox width="90%"/>
-                                    </VBox>
-                                </HBox>
-                                <HBox class="sapUiTinyMarginTop">
-                                    <VBox alignItems="Center">
-                                        <Label  text="Period" 
-                                                required="true"
-                                                class="sapMLabelNoText"/> 
-                                        <CheckBox />  
-                                        <layoutData>
-                                            <layout:GridData span="XL1 L1 M1 S1" />
-                                        </layoutData> 
-                                    </VBox>
-                                    <VBox  width="6%">
-                                        <Label  text="" 
-                                                class="sapMLabelNoText"/> 
-                                        <Text text="Immediately" />
-                                    </VBox>
-                                    <VBox width="15%">
-                                        <Label text="" class="sapMLabelNoText"/>   
-                                        <DateRangeSelection
-                                            placeholder="YYYY/MM/DD ~ YYYY/MM/DD"
-                                            change="handleChange"
-                                            class="sapUiSmallMarginBottom"/> 
-                                        <layoutData>
-                                            <layout:GridData span="XL2 L2 M2 S2" />
-                                        </layoutData> 
-                                    </VBox>
-                                    <VBox width="16.3%" />
-                                    <VBox width="6%">
-                                        <Label  text="Auto round" 
-                                                class="sapMLabelNoText"/> 
-                                        <Input />  
-                                        <layoutData>
-                                            <layout:GridData span="XL2 L2 M2 S2" />
-                                        </layoutData> 
-                                    </VBox>
-                                    <VBox width="2%" class="sapUiTinyMarginBegin">
-                                        <Label  text="" 
-                                                class="sapMLabelNoText"/> 
-                                        <Text text="Hr" />
-                                        <layoutData>
-                                            <layout:GridData span="XL1 L1 M1 S1" />
-                                        </layoutData> 
-                                    </VBox>
-                                    
-                                    <VBox width="6%">
-                                        <Label  text="Auto round" 
-                                                class="sapMLabelNoText"/> 
-                                        <Input />  
-                                        <layoutData>
-                                            <layout:GridData span="XL2 L2 M2 S2" />
-                                        </layoutData> 
-                                    </VBox>
-                                    <VBox class="sapUiTinyMarginBegin">
-                                        <Label  text="" 
-                                                class="sapMLabelNoText"/> 
-                                        <Text text="Tiems" />
-                                        <layoutData>
-                                            <layout:GridData span="XL1 L1 M1 S1" />
-                                        </layoutData> 
-                                    </VBox>
-
-
-                                </HBox>
+                                <Label  text="Negotiation No"  class="sapMLabelNoText"/>
+                                <Input   id="inputNegotiationNo" />
+                                <Label  text="Type"  class="sapMLabelNoText"/>
+                                <Input  id="inputType" enabled="false" value="RFQ" class="sapUiSmallMarginEnd"/>
+                                <Label  text="Outcome"  class="sapMLabelNoText"/>
+                                <Input  id="inputOutcome" enabled="false" value="BPA" />  
+                            </form:SimpleForm>
+                  
+                            <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin">
+                                <Label  text="Title" required="true"  class="sapMLabelNoText"/>
+                                <Input  id="inputTitle" width="100%"/>
                             </VBox>
 
+                            <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin sapUiTinyMarginTop" >
+                                <Label  text="Description"  class="sapMLabelNoText"/>
+                                <rte:RichTextEditor id="reMonitoringPurpose" editable="true" editorType="TinyMCE4" width="100%" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
+                            </VBox>
 
+                            <form:SimpleForm id="formHeader3" editable="true"  layout="ColumnLayout"
+                                            columnsM="1"
+                                            columnsL="1"
+                                            columnsXL="2" >
 
+                                <form:content>
+                                    <HBox>
+                                        <Button text="111" />
+                                    </HBox>
 
-                            <!-- <Label  text="Bid Style" 
-                                    design="Bold" 
-                                    class="sapMLabelNoText"/>
-                            <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedIndex="0" class="sapUiMediumMarginBottom">
-                                <RadioButton id="RB1-1" text="Sealed (purchaser : X,Supplier :X)" />
-                                <RadioButton id="RB1-2" text="Blind (purchaser : O,Supplier :X)" />
-                            </RadioButtonGroup>
-                            <Label  text="Incoterms" 
-                                    design="Bold" 
-                                    class="sapMLabelNoText"/>
-                            <ComboBox /> -->
-                        </form:SimpleForm>
-                        
-                            <!-- <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" 
-                                             adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
-                                <form:content width="20%">
+                                    <Label  text="Bid Style" 
+                                            design="Bold" 
+                                            class="sapMLabelNoText"/>
+                                    <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedIndex="0" class="sapUiMediumMarginBottom">
+                                        <RadioButton id="RB1-1" text="Round Bidding(Sealed)" />
+                                        <RadioButton id="RB1-2" text="Reserve Auction(Open)" />
+                                    </RadioButtonGroup>
+                                    <Label  text="Incoterms" 
+                                            design="Bold" 
+                                            class="sapMLabelNoText"/>
+                                    <ComboBox />
+                                </form:content>          
+                            </form:SimpleForm>
+                            
+                            <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" 
+                                                adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                                <form:content >
                                     <VBox >
                                         <Label  text="Period" 
                                                 required="true"
-                                                design="Bold" 
                                                 class="sapMLabelNoText"/> 
                                         <CheckBox />  
                                         <layoutData>
@@ -325,63 +219,168 @@
                                             <layout:GridData span="XL2 L2 M2 S2" />
                                         </layoutData> 
                                     </VBox>
-                                    <VBox>
-                                        <Label  text="" 
-                                                class="sapMLabelNoText"/> 
-                                        <Text text="" />
+                                    <HBox >
+                                        <VBox class="sapUiTinyMarginBeginEnd">
+                                        <Label  text="Max Round Count" 
+                                            required="true"
+                                            class="sapMLabelNoText "/> 
+                                        <Input value="3"/>
+                                        
+                                            <!-- <layoutData>
+                                                <layout:GridData span="XL1 L1 M1 S1" />
+                                            </layoutData>  -->
+                                        </VBox>
+                                        <VBox justifyContent="Center" alignContent="Center" alignItems="Center" class="">
+                                            <Label  text="" 
+                                            class="sapMLabelNoText"/> 
+                                            <CheckBox class="sapUiMediumMarginBegin" />
+                                        </VBox>
+                                        <VBox >
+                                            <Label  text="" 
+                                            class="sapMLabelNoText"/> 
+                                            <Text text="Auto Round"/>   
+                                        </VBox>
+                                        <VBox class="sapUiTinyMarginBeginEnd" >
+                                            <Label  text="" 
+                                            class="sapMLabelNoText"/> 
+                                            <Input value="5" />
+                                        </VBox>
+                                        <VBox >
+                                            <Label  text="" 
+                                            class="sapMLabelNoText"/> 
+                                            <Text text="Minute"/>
+                                        </VBox>
+
+
                                         <layoutData>
-                                            <layout:GridData span="XL1 L1 M1 S1" />
+                                            <layout:GridData span="XL4 L4 M4 S4" />
                                         </layoutData> 
-                                    </VBox>
+                                    </HBox>
+
                                     <VBox>
-                                        <Label  text="Auto round" 
-                                                class="sapMLabelNoText"/> 
-                                        <Input />  
+                                        <Label  text="Previous Round" 
+                                            class="sapMLabelNoText"/>
+                                        <RadioButtonGroup id="rbg6" columns="2" width="100%" selectedIndex="0" class="sapUiTinyMargin sapUiTinyMarginEnd sapUiTinyMarginTop sapUiTinyMarginBegin sapUiTinyMarginBottom" >
+                                                <RadioButton id="RB6-1" text="Yes" />
+                                                <RadioButton id="RB6-2" text="No" />
+                                            </RadioButtonGroup>
                                         <layoutData>
                                             <layout:GridData span="XL2 L2 M2 S2" />
-                                        </layoutData> 
-                                    </VBox>
-                                    <VBox>
-                                        <Label  text="" 
-                                                class="sapMLabelNoText"/> 
-                                        <Text text="Hr" />
-                                        <layoutData>
-                                            <layout:GridData span="XL1 L1 M1 S1" />
                                         </layoutData> 
                                     </VBox>
                                     
-                                    <VBox>
-                                        <Label  text="Auto round" 
-                                                class="sapMLabelNoText"/> 
-                                        <Input />  
-                                        <layoutData>
-                                            <layout:GridData span="XL2 L2 M2 S2" />
-                                        </layoutData> 
-                                    </VBox>
-                                    <VBox>
-                                        <Label  text="" 
-                                                class="sapMLabelNoText"/> 
-                                        <Text text="Tiems" />
-                                        <layoutData>
-                                            <layout:GridData span="XL1 L1 M1 S1" />
-                                        </layoutData> 
-                                    </VBox>
                                     
                                 </form:content>
-                            </form:SimpleForm> -->
-                            
+                            </form:SimpleForm>
+
+
+                            <!-- <layout:Splitter class="sapUiSmallMarginBegin sapUiTinyMarginTop">
+                                <layout:layoutData>
+                                    <layout:SplitterLayoutData size="auto" resizable="false"/>
+                                </layout:layoutData>
+                                <layout:contentAreas>
+                                    <VBox>
+                                        <layoutData>
+                                            <layout:SplitterLayoutData size="auto" resizable="false"/>
+                                        </layoutData>
+                                        <HBox>
+                                            <Label width="" text="Bid Style" class="sapMLabelNoText"/>
+                                            <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedIndex="0" class="sapUiTinyMarginBeginEnd">
+                                                <RadioButton id="RB1-1" text="Sealed (purchaser : X,Supplier :X)" />
+                                                <RadioButton id="RB1-2" text="Blind (purchaser : O,Supplier :X)" />
+                                            </RadioButtonGroup>
+                                        </HBox>
+
+                                        <HBox>
+                                            <Label  text="Period" 
+                                                    required="true"
+                                                    class="sapMLabelNoText"/> 
+                                            <CheckBox text="Immediately"/>  
+                                            <HBox>
+                                                <DatePicker placeholder="Start Date ..." id="searchFromDatePicker"/>
+                                                <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
+                                                <DatePicker placeholder="End Date ..." id="searchToDatePicker"/>
+                                            </HBox>
+                                        </HBox>
+                                    </VBox>
+                                
+                                    <VBox>
+                                        <HBox>
+                                            <Label  text="Incoterms" />
+                                            <ComboBox width="100%" >
+                                                <layoutData>
+                                                    <layout:SplitterLayoutData size="100%" resizable="false"/>
+                                                </layoutData>
+                                            </ComboBox>
+                                        </HBox>
+
+                                        <HBox>
+                                            <Label  text="Extension Period" 
+                                                    class="sapMLabelNoText"/> 
+                                            <Input />   
+                                            <Text text="Hr" />
+
+                                            <Label  text="Extension Count" 
+                                                    class="sapMLabelNoText"/> 
+                                            <Input />   
+                                            <Text text="times" />
+                                        </HBox>
+                                    </VBox>
+                                </layout:contentAreas>
+
+                            </layout:Splitter> -->
+
+                            <form:SimpleForm maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" 
+                                 labelSpanL="2" labelSpanM="2" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                                <form:content>
+                                    <HBox >
+                                        <!-- <Label width="" text="Bid Style" class="sapMLabelNoText"/>
+                                        <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedIndex="0" class="sapUiTinyMarginBeginEnd">
+                                            <RadioButton id="RB1-1" text="Sealed (purchaser : X,Supplier :X)" />
+                                            <RadioButton id="RB1-2" text="Blind (purchaser : O,Supplier :X)" />
+                                        </RadioButtonGroup> -->
+                                    </HBox>
+
+                                    <!-- <HBox>
+                                        <Label  text="Incoterms" />
+                                        <ComboBox width="100%"/>
+                                    </HBox> -->
+
+                                    <!-- <HBox >
+                                        <Label  text="Period" 
+                                                required="true"
+                                                class="sapMLabelNoText"/> 
+                                        <CheckBox text="Immediately"/>  
+                                        <HBox>
+                                            <DatePicker placeholder="Start Date ..." id="searchFromDatePicker"/>
+                                            <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
+                                            <DatePicker placeholder="End Date ..." id="searchToDatePicker"/>
+                                        </HBox>
+                                    </HBox> -->
+
+                                    <!-- <HBox>
+                                        <Label  text="Extension Period" 
+                                                class="sapMLabelNoText"/> 
+                                        <Input />   
+                                        <Text text="Hr" />
+
+                                         <Label  text="Extension Count" 
+                                                class="sapMLabelNoText"/> 
+                                        <Input />   
+                                        <Text text="times" />
+                                    </HBox> -->
+                                </form:content>
+                            </form:SimpleForm>
+             
                             <VBox class="sapUiSmallMarginBegin">
-                                <Label  text="Note To Supplier"
-                                        class="sapMLabelNoText"/>
+                                <Label  text="Note To Supplier" class="sapMLabelNoText"/>
                                 <rte:RichTextEditor id="reSupplier" editable="true" editorType="TinyMCE4" width="100%" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="true"/>
                             </VBox>
-
-                                
 
                             <Table id="tableAttachments" 
                                 sticky="HeaderToolbar,ColumnHeaders" 
 								inset="false" 
-								class="sapFDynamicPageAlignContent" 
+								class="sapUiSmallMarginBegin sapFDynamicPageAlignContent" 
 								mode="None"
 								width="auto">
                                 <headerToolbar>
@@ -422,7 +421,7 @@
                                     </Column>
                                 </columns>
                                 <items>
-                                    <ColumnListItem type="Inactive" >
+                                    <!-- <ColumnListItem type="Inactive" >
                                         <cells>
                                             <Text text="txt"/>
                                             <Text text="fileName1"/>
@@ -441,7 +440,7 @@
                                             <Text text="20109046_미정단가_홍길동"/>
                                             <CheckBox />  
                                         </cells>
-                                    </ColumnListItem>
+                                    </ColumnListItem> -->
                                 </items>
 						    </Table>
 
@@ -931,5 +930,5 @@
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>
-    </Page>
+    <!-- </Page> -->
 </mvc:View>
