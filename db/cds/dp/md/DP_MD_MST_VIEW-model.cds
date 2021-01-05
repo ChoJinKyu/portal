@@ -39,6 +39,7 @@ entity Md_Mst_View {
         remark                          : String(3000)          @title:'비고';
         mold_develope_request_type_code : String(30)            @title:'금형개발요청유형코드';
         mold_develope_requestor_empno   : String(255)           @title:'금형개발요청자사번';
+        mold_develope_requestor_name    : String(480)           @title:'금형개발요청자이름';
         eco_number                      : String(240)           @title:'ECO번호';
         set_id                          : String(100)           @title:'SETID';
         ap_transfer_status_code         : String(30)            @title:'AP전송유형코드';
