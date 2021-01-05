@@ -71,6 +71,7 @@ sap.ui.define([
             this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
             
         },
+        
 
         // onRichTextEditorRendering : function () {
         //     var view = this.getView(),
@@ -172,13 +173,6 @@ sap.ui.define([
             var view = this.getView(),
                 master = view.getModel("master"),
                 that = this;
-            // console.log(master.getData()["funding_notify_contents"]);
-            
-            // Validation
-            // if (!master.getData()["chain_code"]) {
-            //     MessageBox.alert("Chain을 입력하세요");
-            //     return;
-            // }
 
             MessageBox.confirm("Are you sure ?", {
                 title: "Comfirmation",
@@ -242,8 +236,7 @@ sap.ui.define([
         _onRoutedThisPage: function (oEvent) {
             
             var oArgs = oEvent.getParameter("arguments"),
-                oView = this.getView(),
-                utcDate = this._getUtcSapDate();
+                oView = this.getView();
             
             this._sTenantId = oArgs.tenantId;
             this._sFundingNotifyNumber = oArgs.fundingNotifyNumber;
@@ -314,40 +307,18 @@ sap.ui.define([
         _toEditMode: function () {
             var oMidObjectView = this.getView().getModel("midObjectView");
             var FALSE = false;
-            //this._showFormFragment('MidObject_Edit');
             this.byId("page").setSelectedSection("pageSectionMain");
-            //this.byId("page").setProperty("showFooter", !FALSE);
             this.byId("pageNavBackButton").setEnabled(FALSE);
-            this.byId("pageCancelButton").setEnabled(true);
             oMidObjectView.setProperty("/editMode", true);
         },
 
         _toShowMode: function () {
             var oMidObjectView = this.getView().getModel("midObjectView");
             var TRUE = true;
-            //this._showFormFragment('MidObject_Show');
             this.byId("page").setSelectedSection("pageSectionMain");
-            //this.byId("page").setProperty("showFooter", !TRUE);
             this.byId("pageNavBackButton").setEnabled(TRUE);
-            this.byId("pageCancelButton").setEnabled(TRUE);
             oMidObjectView.setProperty("/editMode", false);
             
-        },
-
-         /**
-         * UTC 기준 DATE를 반환합니다.
-         * @private
-         * @return "yyyy-MM-dd'T'HH:mm:ss"
-         */
-        _getUtcSapDate: function () {
-            var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                pattern: "yyyy-MM-dd'T'HH:mm"
-            });
-
-            var oNow = new Date();
-            var utcDate = oDateFormat.format(oNow) + ":00Z";
-            
-            return utcDate;
         }
     });
 });

@@ -298,7 +298,20 @@ sap.ui.define([
                     "tenant_id": "L2100",
                     "funding_notify_number": "",
                     "funding_notify_title": "",
-                    "funding_notify_contents": "&nbsp;",
+                    "funding_notify_contents": '<p>귀사의 번영과 가정의 행복을 기원하며, 평소 협력회 발전을 위해 노력해 주신 성원에 깊이 감사를 드립니다.</p>'
+                                                +'<p>다름이 아니오라 아래와 같이 자금신청에 대하여 공고 하오니 관심이 있는 협력회 회원사에서는 신청하여 주시기 바랍니다</p>'
+                                                +'<p>&nbsp;</p>'
+                                                +'<p>지원조건</p>'
+                                                +'<p>&nbsp;1. 자금 지원 한도: 협력회사 당 20억원</p>'
+                                                +'<p>&nbsp;2. 금리 : 4%(2005년도 지원 기준)</p>'
+                                                +'<p>&nbsp;3. 상환 조건 : 3년 거치 3년 분할 상환</p>'
+                                                +'<p>&nbsp;&nbsp;&nbsp; - 물품대 상계 상환이 원칙이며, 현금으로도 상환 가능함.</p>'
+                                                +'<p>&nbsp;4. 담보</p>'
+                                                +'<p>&nbsp;&nbsp; 1) 지급이행보증보험, 지급보증서 중 택일하며 공증 필참</p>'
+                                                +'<p>&nbsp;&nbsp; 2) 담보물은 대여금의 100% 여야 함</p>'
+                                                +'<p>&nbsp;5. 지원대상 투자 대상</p>'
+                                                +'<p>접수</p>'
+                                                +'<p>&nbsp;1. 신청 방법: PCM 상의</p>',
                     "local_create_dtm": utcDate,
                     "local_update_dtm": utcDate,
                     "create_user_id": "Admin",
