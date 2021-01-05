@@ -28,10 +28,10 @@
 					<Title text="Category Item Detail" wrapping="true" />
 				</uxap:snappedHeading>
 				<uxap:expandedContent>
-					<Text text="Details for Category Item : {master>/MdCategoryItem/spmd_character_code}" />
+					<Text text="Details for Category Item : {master>/spmd_character_code}" />
 				</uxap:expandedContent>
 				<uxap:snappedContent>
-					<Text text="Details for Category Item : {master>/MdCategoryItem/spmd_character_code}" />
+					<Text text="Details for Category Item : {master>/spmd_character_code}" />
 				</uxap:snappedContent>
 				<uxap:snappedTitleOnMobile>
 					<Title text="Control Option Details" />
