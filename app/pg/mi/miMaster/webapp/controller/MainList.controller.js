@@ -53,33 +53,34 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {
-			
 			console.group("onInit");
 
 			var oMultilingual = new Multilingual();
 			this.setModel(oMultilingual.getModel(), "I18N");
 			var smartFilterBar = this.getView().byId("smartFilterBar");
+			var that = this;
 			
+			//this.getModel("I18N").getText("/NCM0001")
+			var oi18nSearch = this.getModel("I18N").getText("/SEARCH");		
             oMultilingual.attachEvent("ready", function(oEvent){
 				var oi18nModel = oEvent.getParameter("model");
-				this.addHistoryEntry({
-					title: oi18nModel.getText("/USER_MANAGEMENT"),
-					icon: "sap-icon://table-view",
-					intent: "#Template-display"
-				}, true);
+				// this.addHistoryEntry({
+				// 	title: oi18nModel.getText("/USER_MANAGEMENT"),
+				// 	icon: "sap-icon://table-view",
+				// 	intent: "#Template-display"
+				// }, true);
 
-			// Smart Filter Button 명 처리 START
-			var b = this.getView().byId("smartFilterBar").getContent()[0].getContent();
-			$.each(b, function (index, item) {
-				if (item.sId.search("btnGo") !== -1) {
-				//	item.setText(oi18nModel.getText("/EXECUTE"));
-				}
+				// Smart Filter Button 명 처리 START
+				var b = this.getView().byId("smartFilterBar").getContent()[0].getContent();
+				$.each(b, function (index, item) {
+					if (item.sId.search("btnGo") !== -1) {
+						if(oi18nSearch==null){
+							oi18nSearch = "조회";
+						}						
+						item.setText(oi18nSearch);
+					}
+				}.bind(this));
 			}.bind(this));
-				
-			
-			}.bind(this));
-			
-
 
 			var oUi,
 				oResourceBundle = this.getResourceBundle();
@@ -87,10 +88,12 @@ sap.ui.define([
 			// Model used to manipulate control states
 			oUi = new JSONModel({
 				headerExpanded: true,
-				mainListTableTitle : oResourceBundle.getText("mainListTableTitle"),
-				tableNoDataText : oResourceBundle.getText("tableNoDataText")
+				busy : false
 			});
 
+			// mainListTableTitle : oResourceBundle.getText("mainListTableTitle"),
+			// tableNoDataText : oResourceBundle.getText("tableNoDataText")
+						
 			var oUiData = new JSONModel({
 				tenant_id : this._sso.dept.tenant_id
 			});
@@ -99,7 +102,7 @@ sap.ui.define([
 
 			this.setModel(oUi, "oUi");
 		
-			//this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
+			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
             this._mainTable = this.getView().byId("mainTable");
 		
@@ -108,6 +111,7 @@ sap.ui.define([
 			this.getModel("oUi").setProperty("/headerExpanded", true);
 
 
+			
 
 			console.groupEnd();
 		},
@@ -120,7 +124,6 @@ sap.ui.define([
 			this.getView().getModel().metadataLoaded().then(this._onCreateModeMetadataLoaded.bind(this));
 			console.groupEnd();
 		},
-
 		/**
 		 * Metadata Load group Setting
 		 * @private
@@ -192,16 +195,16 @@ sap.ui.define([
          */
 		onBeforeRebindTable: function (oEvent) {
 			console.group("onBeforeRebindTable");
-			
+
+
 			this._getSmartTableById().getTable().removeSelections(true);
 			//ui.table
 			//this._getSmartTableById().getTable().clearSelection();
 
 			var mBindingParams = oEvent.getParameter("bindingParams");
 			var oSmtFilter = this.getView().byId("smartFilterBar");             //smart filter
-			
 	
-			var oMi_material_code = oSmtFilter.getControlByKey("mi_material_code").getSelectedKey();   
+			var oMi_material_code = oSmtFilter.getControlByKey("mi_material_code").getValue(); 
 			var oMi_material_name = oSmtFilter.getControlByKey("mi_material_name").getValue();            
 			//var oCategory_code = oSmtFilter.getControlByKey("category_code").getSelectedKey();    
             var oUse_flag = oSmtFilter.getControlByKey("use_flag").getSelectedKey();   
@@ -212,7 +215,7 @@ sap.ui.define([
 
             
 			if (oMi_material_code.length > 0) {
-				var oMi_material_codeFilter = new Filter("mi_material_code", FilterOperator.EQ, oMi_material_code);
+				var oMi_material_codeFilter = new Filter("mi_material_code", FilterOperator.Contains, oMi_material_code);
 				mBindingParams.filters.push(oMi_material_codeFilter);
 			}
 
@@ -235,20 +238,27 @@ sap.ui.define([
 				mBindingParams.filters.push(oCodeFilter);
 			}  
 			this._getSmartTableById().getTable().removeSelections(true);
-			//this.setInitialSortOrder();
+			//this.setInitialSortOrder(oEvent);
 			console.groupEnd();              
 		},
 
-		setInitialSortOrder: function() {
-            var oSmartTable = this._getSmartTableById();        
-            oSmartTable.applyVariant({
-                 sort: {
-                          sortItems: [{ 
-                                         columnKey: "system_update_dtm", 
-                                         operation:"Descending"}
-                                     ]
-                       }
-            });
+		setInitialSortOrder: function(oEvent) {
+
+			var oSmartTable = oEvent.getSource();
+
+			if (this._isOnInit == null) this._isOnInit = true; 
+			if (this._isOnInit) {
+				oSmartTable.applyVariant({
+					sort: {
+						sortItems: [{
+								columnKey: "system_update_dtm",
+								operation: "Descending"
+							}
+						]
+					}
+				});
+				this._isOnInit = false;
+			}
 		},
 		
         /** 
@@ -344,12 +354,17 @@ sap.ui.define([
                     var sPath = oItem.getBindingContextPath();	
 					var mParameters = {"groupId":that._m.groupID};
 					var oRecord = that.getModel().getProperty(sPath);
-					var groupID = that._m.groupID;
+					var groupID = that._m.groupID;				
+					//var oTenant_id = that._sso.dept.tenant_id;
+
+
 					var oDeleteMIMaterialCodeKey = {
 						tenant_id : oRecord.tenant_id,
 						mi_material_code: oRecord.mi_material_code,
 						category_code:  oRecord.category_code
-					}
+					};
+					
+					
 					var oDeleteMaterialCodePath = oModel.createKey(
 							that._m.serviceName.mIMaterialCode,
 							oDeleteMIMaterialCodeKey
@@ -418,7 +433,7 @@ sap.ui.define([
 								oModel.read("/MIMaterialCodeText", {
 								filters: oFilter,
 								success: function(oData) {		
-									console.log(">>_readCheckLngEntity");
+									console.log(">>_readCheckLngEntity success");
 									resolve(oData);
 								},
 								error: function(oResult) {
@@ -430,11 +445,13 @@ sap.ui.define([
 
 					function _deleteMIMaterialCodeText(oMIMaterialCodeTextPath) {
 						console.log("_deleteActionLng --delete");
+						console.log("_deleteActionLng --oMIMaterialCodeTextPath", oMIMaterialCodeTextPath);
 						oModel.remove(oMIMaterialCodeTextPath, { groupId: groupID}); 			
 					};
 
 					function _deleteMiMaterialCode(oMIMaterialCodePath) {
 						console.log("_deleteMiMaterialCode --delete");
+						console.log("_deleteMiMaterialCode --oMIMaterialCodePath", oMIMaterialCodePath);						
 						oModel.remove(oMIMaterialCodePath, { groupId: groupID }); 			
 					};
 
@@ -445,9 +462,12 @@ sap.ui.define([
 						var oPriceCount = values[1].results.length;
 						var oLngEntity  = values[2].results.length;
 
+						console.log("oBomCount", oBomCount);
+						console.log("oPriceCount", oPriceCount);
+						console.log("oLngEntity", oLngEntity);
 						if(oBomCount>0 || oPriceCount>0){
-							MessageToast.show(this.getModel("I18N").getText("/NPG00004"));
-							return;
+							MessageToast.show("시황정보 등록이 되어 삭제 할수 없습니다.");
+							return; 
 						}else{
 							if(oLngEntity>0){
 								var LanDataSource = values[2].results;
@@ -465,7 +485,8 @@ sap.ui.define([
 										oMIMaterialCodeTextKey
 									);
 
-									setTimeout(_deleteMIMaterialCodeText(oMIMaterialCodeTextPath), 500);
+									_deleteMIMaterialCodeText(oMIMaterialCodeTextPath)
+									//setTimeout(_deleteMIMaterialCodeText(oMIMaterialCodeTextPath), 500);
 								}
 
 								function dataRefresh(){
@@ -474,6 +495,7 @@ sap.ui.define([
 									that.getView().byId("mainTable").getModel().refresh(true);
 								}
 
+								console.log("oDeleteMaterialCodePath", oDeleteMaterialCodePath);
 								setTimeout(_deleteMiMaterialCode(oDeleteMaterialCodePath), 500);
 								setTimeout(that._setUseBatch(oModel), 500);
 								setTimeout(dataRefresh, 500);
@@ -494,6 +516,7 @@ sap.ui.define([
 						new Filter("mi_material_code", FilterOperator.EQ, oRecord.mi_material_code)
 					];
 
+					console.log("--Promise oFilter--", oFilter);
 					var bFlag = Promise.all([  
 									_readCheckBOMEntity(oFilter),
 									_readCheckPriceEntity(oFilter),
@@ -667,7 +690,7 @@ sap.ui.define([
 		_onRoutedThisPage: function(){
 			console.group("_onRoutedThisPage");
 			this.getModel("oUi").setProperty("/headerExpanded", true);
-			//this.getModel().refresh(true);
+			this.getModel().refresh(true);
 			console.groupEnd();
 		},
 
@@ -748,6 +771,11 @@ sap.ui.define([
          */
 		_handleDeleteError: function(oError) {
 			MessageToast.show(this.getModel("I18N").getText("/EPG00001"));
+		},
+
+		onUpperLiveChange : function(oEvent){
+			var input = oEvent.getSource();
+			input.setValue(input.getValue().toUpperCase());
 		}
 
 	});

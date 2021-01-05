@@ -31,7 +31,7 @@
                     <layoutData>
                         <layout:GridData span="L12 M12 S12" />
                     </layoutData>
-                </VBox>
+                </VBox>      
 
                 <VBox id="idEditLayoutShow">
                     <Label text="* 특기사항 :" />
@@ -49,7 +49,7 @@
                     <layoutData>
                         <layout:GridData span="XL12 L12 M12 S12" />
                     </layoutData>
-                </VBox>              
+                </VBox>            
         </form:content>                            
 	</form:SimpleForm>
 </core:FragmentDefinition>

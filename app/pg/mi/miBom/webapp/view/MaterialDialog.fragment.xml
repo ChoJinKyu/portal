@@ -126,7 +126,7 @@
                     </Column>    
                     <Column hAlign="Center" >
                         <header>
-                            <Label text="공급업체명"/>                            
+                            <Label text="{I18N>/SUPPLIER_LOCAL_NAME}"/>                            
                         </header>
                     </Column>                                                                                                 
                 </columns>

@@ -18,12 +18,22 @@
 namespace pg;
 
 using util from '../../cm/util/util-model';
+using {cm as Org_Tenant} from '../../cm/CM_ORG_TENANT-model';
+using {cm as Org_Company} from '../../cm/CM_ORG_COMPANY-model';
 using {pg as Task_Monitoring_Company_Code} from '../tm/PG_TM_COMP_CODE-model';
 
 entity Tm_Comp_Code {
     key tenant_id       : String(5) not null  @title : '회사코드';
+
+        tenant_ids      : Association to Org_Tenant.Org_Tenant
+                              on tenant_ids.tenant_id = tenant_id;
+
     key scenario_number : Integer64 not null  @title : '시나리오번호';
     key company_code    : String(10) not null @title : '법인코드';
+
+        company_codes   : Association to Org_Company.Org_Company
+                              on  company_codes.tenant_id    = tenant_id
+                              and company_codes.company_code = company_code;
 }
 
 extend Tm_Comp_Code with util.Managed;

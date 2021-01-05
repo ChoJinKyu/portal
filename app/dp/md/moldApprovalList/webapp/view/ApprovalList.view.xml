@@ -266,7 +266,6 @@
                     growingThreshold="20"
                     class="sapFDynamicPageAlignContent" 
                     updateFinished=".onListMainTableUpdateFinished"
-                    cellClick=".onCellClick"
                     width="auto"
                     items="{list>/Approvals}">
                     <headerToolbar>

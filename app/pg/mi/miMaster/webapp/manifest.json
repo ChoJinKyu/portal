@@ -108,7 +108,7 @@
 				"transition": "slide",
         "bypassed": {
           "target": [
-            "notFound"
+            "mainObject"
           ]
         },
         "async": true
@@ -138,10 +138,6 @@
           "midObject": {
               "viewName": "MidObject",
               "controlAggregation": "midColumnPages"
-          },
-          "notFound": {
-            "viewName": "MidObjectNotFound",
-            "viewId": "notFound"
           }
       }
     }

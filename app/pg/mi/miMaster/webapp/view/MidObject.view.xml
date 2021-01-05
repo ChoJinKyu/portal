@@ -8,7 +8,7 @@
     xmlns:core="sap.ui.core"
     height="100%">
     <App>
-        <Page id="page" title="시황자재 Master1" showHeader="false">
+        <Page id="page" title="시황자재 Master" showHeader="false">
             <content>
                 <uxap:ObjectPageLayout                    
                     toggleHeaderOnTitleClick="true"
@@ -25,34 +25,13 @@
                             <uxap:expandedHeading>
                                 <Title text="{i18n>appTitle}" wrapping="true"/>
                             </uxap:expandedHeading>
-                            <uxap:snappedHeading>
-                                <Title text="{i18n>appTitle}" wrapping="true"/>
-                            </uxap:snappedHeading>
-                            <uxap:snappedTitleOnMobile>
-                                <Title text="{i18n>appTitle}"/>
-                            </uxap:snappedTitleOnMobile>
 
                             <uxap:navigationActions>
-                                <OverflowToolbarButton
-                                    id="pageEnterFullScreenButton"
-                                    type="Transparent"
-                                    icon="sap-icon://full-screen"
-                                    press="onPageEnterFullScreenButtonPress"
-                                    tooltip="Enter Full Screen Mode"
-                                    visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
-                                <OverflowToolbarButton
-                                    id="pageExitFullScreenButton"
-                                    type="Transparent"
-                                    icon="sap-icon://exit-full-screen"
-                                    press="onPageExitFullScreenButtonPress"
-                                    tooltip="Exit Full Screen Mode"
-                                    visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
                                 <OverflowToolbarButton
                                     id="pageNavBackButton"
                                     type="Transparent"
                                     icon="sap-icon://decline"
                                     text="back"
-                                    tooltip="back to the list"
                                     press=".onPageNavBackButtonPress"
                                     visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
                             </uxap:navigationActions>
@@ -61,9 +40,9 @@
                     <uxap:headerContent>
                         <layout:VerticalLayout>
                             <FlexBox height="30px" alignItems="Start" justifyContent="Start" visible="{=!${oUi>/createMode}}">
-                                    <Label text="Update :"/>
+                                    <Label text="{I18N>/UPDATE_USER_ID} :"/>
                                     <Label text="{oUiData>/update_user_id}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
-                                    <Label text="Update Data :" class="sapUiLargeMarginBegin" />
+                                    <Label text="Update Date :" class="sapUiLargeMarginBegin" />
                                     <Label text="{
                                         path: 'oUiData>/system_update_dtm',
                                         type: 'sap.ui.model.type.Date',
@@ -92,7 +71,7 @@
                                 <uxap:ObjectPageSubSection>   
                                         <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiLargeMarginBottom" >        
                                             <layout:VerticalLayout class="sapUiLargeMarginEnd">
-                                            <Label  text="시황자재코드" 
+                                            <Label  text="{I18N>/MI_MATERIAL_CODE} :" 
                                                 design="Bold" 
                                                 class="sapUiTinyMarginTop sapUiTinyMarginBottom sapMLabelNoText"/>
                                             <Text  
@@ -100,8 +79,8 @@
                                                 text="{oUiData>/mi_material_code}" 
                                                 class="sapMLabelNoText"/>  
                                             <Input  id="input_mi_material_code"
-                                                valueStateText="{I18N>/MANDATORY}"
-                                                placeholder="{I18N>/NPG00011}"
+                                                valueStateText="{I18N>/MANDATORY}" 
+                                                placeholder="{I18N>/INPUT}"
                                                 liveChange=".onMiMaterialCodeCheck"
                                                 class="sapUiSmallMarginEnd"
                                                 value="{
@@ -119,17 +98,17 @@
                                         </FlexBox>
                                 <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiLargeMarginBottom" >        
                                     <layout:VerticalLayout class="sapUiLargeMarginEnd">
-                                        <Label  text="{I18N>/CATEGORY}" design="Bold" class="sapUiTinyMarginTop sapUiTinyMarginBottom sapMLabelNoText"/>
+                                        <Label  text="{I18N>/CATEGORY} :" design="Bold" class="sapUiTinyMarginTop sapUiTinyMarginBottom sapMLabelNoText"/>
                                         <Text   id="textcategoryName" 
                                                                 text="{oUiData>/category_name}" 
                                                                 class="sapMLabelNoText"
                                                                 visible="{=!${oUi>/createMode}}"
                                         /> 
                                         <ComboBox
-                                            id="comboBox_category_code"
+                                            id="combobox_category_code"
                                             required="{oUi>/createMode}"
                                             visible="{oUi>/createMode}"
-                                            placeholder="{I18N>/OPTION}"
+                                            placeholder="{I18N>/OPTION}"                                            
                                             width="200px"
                                             items="{path:'/MICategoryHierarchyStructureView',
                                                     sorter: {
@@ -148,7 +127,7 @@
                                 </FlexBox>
                                 <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiLargeMarginBottom" >        
                                     <layout:VerticalLayout class="sapUiLargeMarginEnd">
-                                        <Label  text="{I18N>/USE_FLAG}" 
+                                        <Label  text="{I18N>/USE_FLAG} :" 
                                                 design="Bold" 
                                                 class="sapUiTinyMarginTop sapUiTinyMarginBottom sapMLabelNoText"/>
                                         <Text   id="textUseflag" 
@@ -173,14 +152,21 @@
                         </uxap:ObjectPageSection>
                     </uxap:sections>
                     <uxap:sections>
-                        <uxap:ObjectPageSection titleUppercase="false" title="Material Language Manage">
+                        <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/LANGUAGE}">
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection>
                                     <uxap:blocks>
                                             <Table
                                                 id="midTable"
                                                 mode="{= ${oUi>/readMode}?'None':'MultiSelect'}" 
-                                                items="{mIMaterialCodeText>/}"
+                                                items="{
+                                                path: 'mIMaterialCodeText>/',
+                                                    sorter: {
+                                                        path: 'itemMode',
+                                                        ascending: true
+                                                    }                                                
+                                               }"
+
                                                 width="100%"> 
                                                 <headerToolbar>
                                                     <OverflowToolbar>
@@ -210,7 +196,7 @@
                                                     </Column>                                                                                                      
                                                     <Column hAlign="Center">
                                                         <header>
-                                                            <Label text="{I18N>/LANGUAGE}"/>
+                                                            <Label text="{I18N>/LANGUAGE_CODE}"/>
                                                         </header>
                                                     </Column>
                                                     <Column hAlign="Center">
@@ -226,25 +212,21 @@
                                                             <VBox>
                                                                 <ComboBox   selectionChange=".onComboBoxLanguageChange"
                                                                             selectedKey="{mIMaterialCodeText>language_code}"
+                                                                            width="150px"
+                                                                            textAlign="Center"
                                                                             items="{
-                                                                                path: 'languageView>/',  
-                                                                                filters : [
-                                                                                    {path : 'code', operator : 'NE', value1 : 'KO'}
-                                                                                ],                                                                                                                                                                                                           
+                                                                                path: 'languageView>/' ,                                                                                                                                                                                     
                                                                                 templateShareable:false}"
-                                                                            required="{= ${oUi>/readMode}===false &amp;&amp; ${mIMaterialCodeText>language_code}!=='KO'}"
-                                                                            visible="{= ${oUi>/readMode}===false &amp;&amp; ${mIMaterialCodeText>language_code}!=='KO'}"
+                                                                            required="{= ${mIMaterialCodeText>itemMode}==='C'}"
+                                                                            visible="{= ${mIMaterialCodeText>itemMode}==='C'}"
                                                                             placeholder="{I18N>/OPTION}">
                                                                             <core:Item text="" key=""  />
                                                                     <core:Item key="{languageView>code}"                                                                                
-                                                                               text="{languageView>code}"/>                                                                    
+                                                                               text="{languageView>code} - {languageView>code_name}"/>                                                                    
                                                                 </ComboBox>
-                                                                <Text   text="{mIMaterialCodeText>language_code}"
-                                                                        visible="{= ${mIMaterialCodeText>language_code}==='KO'}"
-                                                                        />
-                                                                <Text   text="{mIMaterialCodeText>language_code}"
-                                                                        visible="{= ${oUi>/readMode}===true &amp;&amp; ${mIMaterialCodeText>language_code}!=='KO'}"
-                                                                        />                                                                        
+                                                                        <Text   text="{mIMaterialCodeText>language_code}"
+                                                                        visible="{= ${mIMaterialCodeText>itemMode}!=='C'}"
+                                                                        />                                                                   
                                                             </VBox>
                                                             <VBox>
                                                                 <Input  value="{mIMaterialCodeText>mi_material_name}" 

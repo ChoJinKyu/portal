@@ -40,8 +40,8 @@ entity Tc_Mcst_Project {
     key version_number          : String(30) not null @title : '버전번호';
         project_name            : String(100)         @title : '프로젝트명';
         model_name              : String(100)         @title : '모델명';
-        mcst_code               : String(30) not null @title : '재료비코드';
-        version_sequence        : Decimal not null    @title : '버전순서';
+        mcst_code               : String(30)          @title : '재료비코드';
+        version_sequence        : Decimal             @title : '버전순서';
         company_code            : String(10)          @title : '회사코드';
         org_type_code           : String(2)           @title : '조직유형코드';
         org_code                : String(10)          @title : '조직코드';

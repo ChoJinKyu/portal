@@ -1,3 +1,5 @@
+https://lgcommondev-workspaces-ws-kdmcz-app1.jp10.applicationstudio.cloud.sap/pg/mi/miBom/webapp/index.html
+
 MIMaterialCodeBOMManagementHeader(tenant_id='L2100',material_code='1000149',supplier_code='KR01818401',mi_bom_id='70410dec-e97d-c004-2630-c5b274ce3777')
 
 MIMaterialCodeBOMManagementHeader(tenant_id='L2100',material_code='1000149',supplier_code='KR01818401',mi_bom_id='70410dec-e97d-c004-2630-c5b274ce3777')        

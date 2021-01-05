@@ -174,15 +174,15 @@ sap.ui.define([
 
             if(mode === "read"){
                 bRead = true;
-                bCreate = false,
+                bCreate = false;
                 bEdit = false;
             }else if(mode === "create"){
                 bRead = false;
-                bCreate = true,
+                bCreate = true;
                 bEdit = false;
             }else if(mode === "edit"){
                 bRead = false;
-                bCreate = false,
+                bCreate = false;
                 bEdit = true;
             }
 
@@ -402,6 +402,11 @@ sap.ui.define([
             this.setArrayModelNullAndUpdateBindings(arrayModel);
         },
 
+        _initialControlValue : function(){
+            //$("#__xmlview1--combobox_category_code-inner").val("");
+            this.getView().byId("combobox_category_code").setValue(null);
+            this.getView().byId("input_mi_material_code").setValue("");
+        },
 
 		/**
 		 * When it routed to this page from the other page.
@@ -412,12 +417,8 @@ sap.ui.define([
             console.log("[mid] _onRoutedThisPage");
         
             this._initialModel();
+            this._initialControlValue();
             this._onPageClearValidate();
-
-            
-
-            this.getView().byId("input_mi_material_code").setValue("");
-            //this.getView().byId("comboBoxCategory_code").setSelectedKey("");
 
             var oArgs = oEvent.getParameter("arguments"),
                 oUiData = this.getModel("oUiData"),
@@ -739,7 +740,7 @@ sap.ui.define([
                 }
             }
             if(nCound>1){
-                this._showMessageToast("고유한 언어를 선택하여 주십시요. 중복된 언어는 등록 되지 않습니다.");
+                this._showMessageToast(this.getModel("I18N").getText("/NPG00018"));
             }
 
         },
@@ -771,7 +772,7 @@ sap.ui.define([
             var items = {
                 "tenant_id": oUiData.getProperty("/tenant_id"),
                 "mi_material_code": input_mi_material_code,
-                "language_code": "",
+                "language_code": "KO",
                 "mi_material_name": "",
                 "local_create_dtm": new Date(),
                 "local_update_dtm": new Date(),
@@ -805,6 +806,8 @@ sap.ui.define([
              if(!this._checkData()){
                  return;
              }
+
+             
 
              if(bCreateFlag){
                  if(ValidatorUtil.isValid(this.getView(),"requiredField")){
@@ -947,6 +950,31 @@ sap.ui.define([
                 }
             }
 
+            var arrLanguage =[];
+            var kolanguageCount = 0;
+            for(var i=0;i<omIMaterialCodeText.oData.length;i++){
+                
+                if(omIMaterialCodeText.oData[i].language_code=="KO"){
+                    kolanguageCount++;
+                }
+                arrLanguage.push(omIMaterialCodeText.oData[i].language_code);
+            }
+            
+            if(kolanguageCount<1){
+                this._showMessageToast(this.getModel("I18N").getText("/NPG00019"));
+                return false;
+            }
+
+            var languageSet = new Set(arrLanguage);
+            //console.log(arrLanguage.length);
+            //console.log(languageSet.size);
+            // duplicate
+            if(arrLanguage.length !== languageSet.size) {
+                bValidator = false;
+                this._showMessageToast(this.getModel("I18N").getText("/NPG00018"));
+                return;
+            }
+            
             if(!bNullCheck){
                 this._showMessageToast(this.getModel("I18N").getText("/NPG00010"));
                 return false;
@@ -1488,6 +1516,7 @@ sap.ui.define([
         _onExit: function () {
     
             this._initialModel();
+            this._initialControlValue();
             for (var sPropertyName in this._formFragments) {
                 if (!this._formFragments.hasOwnProperty(sPropertyName) || this._formFragments[sPropertyName] == null) {
                     return;
@@ -1582,7 +1611,6 @@ sap.ui.define([
                     }
                 }
             });
-
         },
 
         /**

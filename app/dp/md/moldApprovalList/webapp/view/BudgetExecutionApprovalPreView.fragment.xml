@@ -12,9 +12,9 @@
     xmlns:u="sap.ui.unified" 
     xmlns:table="sap.ui.table" 
     xmlns="sap.m" >
-<Dialog id="budgetExecutionPreview" class="sapUiSmallMargin" title="" contentWidth="100%"  >
-  <VBox height="500px">
+<Dialog id="budgetExecutionPreview" class="sapUiSmallMargin" title="Preview" contentWidth="100%" contentHeight="630px">
 	<uxap:ObjectPageLayout 
+        height="600px"
         id="page_bp_preview"
 		showTitleInHeaderContent="true"
 		showEditHeaderButton="true" 
@@ -24,7 +24,7 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="{i18n>appTitle}" wrapping="true" />
+					<Title text="Budget Execution Approval" wrapping="true" />
 				</uxap:expandedHeading>
 
 				<uxap:snappedHeading>
@@ -376,7 +376,7 @@
 				<uxap:subSections>
                 	<uxap:ObjectPageSubSection id="pageApprovalLineSection_bp">
                     <!-- Approval Line -->
-                    <Table       
+                        <Table       
                             growing="true"
                             growingThreshold="20"
                             class="sapFDynamicPageAlignContent" 
@@ -407,7 +407,6 @@
                             <Column  minScreenWidth="Tablet" hAlign="Center" >
                                 <Text text="Comment" />
                             </Column>
-                    
                         </columns>
                         <items>
                             <ColumnListItem>
@@ -425,32 +424,29 @@
 					</uxap:ObjectPageSubSection>
 					<uxap:ObjectPageSubSection >
                     <!-- Referer -->
-                    <Table       
-                            growing="true"
-                            growingThreshold="20"
-                            class="sapFDynamicPageAlignContent" 
-                            mode="None"
-                            width="auto"
-                            items="{referer>/Referers}"
-                            >
-                        <headerToolbar>
-                            <OverflowToolbar>
-                            <Label text="Referer"/>
-                            </OverflowToolbar>
-                        </headerToolbar>
-                        <columns>
-                            <Column  minScreenWidth="Tablet" hAlign="Center"  >
-                                <Text text="Name/Dept" />
-                            </Column>
-                        </columns>
-                        <items>
-                            <ColumnListItem>
-                                <cells>
-                                    <Text text="{referer>referer_name}" />
-                                </cells>
-                            </ColumnListItem>
-                        </items>
-                        </Table>
+                    <VBox class="sapUiSmallMarginBegin">
+                        <Toolbar>
+                        <Label text="Referer" />
+                        </Toolbar>
+                        <layout:VerticalLayout class="sapUiContentPadding" width="100%">
+                            <MultiComboBox
+                                selectionChange="handleSelectionChangeReferer"
+                                selectionFinish="handleSelectionFinishReferer"
+                                selectedKeys="{refererPreview>/refArr}"
+                                width="100%"
+                                items="{ path: '/RefererSearch',
+                                            filters: [
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                            ]
+                                        }"
+                                editable="false">
+                                <core:Item key="{employee_number}" text="{s_referer_name}" />
+                            </MultiComboBox>
+                        </layout:VerticalLayout>
+                        <layoutData>
+                            <layout:GridData span="XL12 L12 M12 S12" />
+                        </layoutData> 
+                    </VBox>
                     </uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
@@ -458,6 +454,5 @@
 		</uxap:sections>
 
 	</uxap:ObjectPageLayout>
-    </VBox>
     </Dialog>
 </core:FragmentDefinition>

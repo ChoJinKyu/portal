@@ -142,6 +142,10 @@ modules:
       - miCategory-content.zip
       name: miCategory
       target-path: resources/
+    - artifacts:
+      - npMst-content.zip
+      name: npMst
+      target-path: resources/
 - name: sampleMstMgr
   type: html5
   path: app/xx/sampleMstMgr
@@ -284,6 +288,14 @@ modules:
 - name: miCategory
   type: html5
   path: app/pg/mi/miCategory
+  build-parameters:
+    builder: custom
+    commands:
+    - npm run build
+    supported-platforms: []
+- name: npMst
+  type: html5
+  path: app/sp/np/npMst
   build-parameters:
     builder: custom
     commands:

@@ -75,17 +75,11 @@ sap.ui.define([
 
             this.getView().setModel(new ManagedListModel(), "purOrderItem");
             this.getView().setModel(new ManagedModel(), "payment");
-            //this.getView().setModel(new ManagedListModel(), "importPlant");
-
-            console.log(" this.approval_number ", this.approval_number);
+            
             var schFilter = [];
             
-            if (this.approval_number == "New") {
-                /*var oModel = this.getModel('payment'),
-                    poAmount = 0;
+            if (this.approval_number === "New") {
                 
-                oModel.setProperty("/purchasing_amount", poAmount);*/
-                //this._editablePayment(false);
             } else {
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
                     , new Filter("tenant_id", FilterOperator.EQ, 'L1100')

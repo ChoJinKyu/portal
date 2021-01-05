@@ -25,12 +25,13 @@ entity Im_Supplier_Idea {
   key idea_number : String(10)  not null @title: '아이디어번호' ;	
     idea_title : String(100)  not null @title: '아이디어제목' ;	
     idea_progress_status_code : String(30)  not null @title: '아이디어진행상태코드' ;
+    idea_date : Date not null @title: '아이디어일자';
     supplier_code : String(10)  not null @title: '공급업체코드' ;	
     idea_create_user_id : String(255)  not null @title: '아이디어작성사용자ID' ;	
     bizunit_code : String(10)   @title: '사업본부코드' ;	
     idea_product_group_code : String(30)  not null @title: '아이디어제품군' ;	
     idea_type_code : String(30)  not null @title: '아이디어유형코드' ;	
-    idea_period : String(30)  not null @title: '아이디어기간' ;	
+    idea_period_code : String(30)  not null @title: '아이디어기간코드' ;	
     idea_manager_empno : String(30)   @title: '아이디어관리자사번' ;	
     idea_part_desc : String(100)   @title: '아이디어부품설명' ;	
     current_proposal_contents : String(500)   @title: '현재제안내용' ;	

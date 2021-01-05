@@ -4,14 +4,20 @@ select
     mst.company_code,
     mst.loi_write_number,
     mst.loi_number,
+    mst.request_department_code,
+    mst.request_department_code as request_department_name,
+    mst.requestor_empno,
+    mst.requestor_empno as requestor_name,
     mst.request_date,
     mst.loi_request_title,
     mst.loi_publish_purpose_desc,
-    (case when mst.loi_request_status_code = '121010' then '작성중'
-        when mst.loi_request_status_code = '121020' then '결재진행증'
-        when mst.loi_request_status_code = '121030' then '결재반려'
-        when mst.loi_request_status_code = '121040' then '요청완료'
-        end) as loi_request_status_code,
+    mst.special_note,
+    (select code_description
+    from   cm_code_dtl
+    where  tenant_id = mst.tenant_id
+    and    group_code = 'EP_LOI_REQUEST_STATUS'
+    and    code = mst.loi_request_status_code) loi_request_status_name,
+    mst.loi_request_status_code,
     mst.investment_review_flag,
     sub.buyer_empno,	
     sub.publish_date,
@@ -38,4 +44,5 @@ left outer join   (select TOP 1
     order by pub.publish_date desc) as sub
 on  mst.tenant_id = sub.tenant_id
 and mst.company_code = sub.company_code
-and mst.loi_write_number = sub.loi_write_number;
+and mst.loi_write_number = sub.loi_write_number
+order by mst.loi_number asc;

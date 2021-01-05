@@ -8,6 +8,7 @@
 	xmlns:core="sap.ui.core"
     xmlns:sc="sap.suite.ui.commons" 
     xmlns:microchart="sap.suite.ui.microchart" 
+    xmlns:lib-m="ext.lib.control.m"
     xmlns:m="sap.m"
 	height="100%">
 
@@ -46,7 +47,7 @@
                         text="{master>/loi_number}"/>
                     <ObjectStatus
                     title="요청자"
-                    text=""/>
+                    text="{master>/requestor_name}"/>
 				</layout:VerticalLayout>
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
@@ -62,14 +63,14 @@
 
                     <ObjectStatus
                         title="요청부서"
-                        text=""/>
+                        text="{master>/request_department_name}"/>
                     </layout:VerticalLayout>
 
                     <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                         <Label text="Status :"/>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
-                        text="{master>/loi_request_status_code}"
+                        text="{master>/loi_request_status_name}"
                         state="Error" />
                             </layout:VerticalLayout>
 
@@ -134,7 +135,7 @@
             <!-- 첨부파일 끝 -->
 
 			<!-- Detail 에 관한 정보 -->
-			<uxap:ObjectPageSection titleUppercase="false" title="대상품의">
+			<uxap:ObjectPageSection titleUppercase="false" title="대상품목">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<Table id="midTable" 
@@ -145,7 +146,7 @@
                                     path: 'details>/LOIRequestDetailView',
                                     sorter: { 
                                         path: 'item_sequence',
-                                        descending: true 
+                                        descending: false 
                                     }                   
                                 }"
 								class="sapFDynamicPageAlignContent" 
@@ -165,7 +166,7 @@
 								<Column id="midStateColumn" minScreenWidth="Tablet" hAlign="Center" width="40px" >
 									<Text text="S" />
 								</Column>
-								<Column id="midLevelCodeColumn" minScreenWidth="Tablet" hAlign="Center">
+								<Column id="midLevelCodeColumn" minScreenWidth="Tablet" hAlign="Center" width="50px">
 									<Text text="Line No." />
 								</Column>
                                 <Column id="midOrgTypeCodeColumn" minScreenWidth="Tablet" hAlign="Center">
@@ -177,10 +178,10 @@
 								<Column id="midValueColumn" minScreenWidth="Tablet" hAlign="Center" >
 									<Text text="품명" />
 								</Column>
-                                <Column id="midStartDateColumn" minScreenWidth="Tablet" hAlign="Center" >
+                                <Column id="midStartDateColumn" minScreenWidth="Tablet" hAlign="Center"  width="50px" >
 									<Text text="단위" />
 								</Column>
-                                <Column id="midEndDateColumn" minScreenWidth="Tablet" hAlign="Center" >
+                                <Column id="midEndDateColumn" minScreenWidth="Tablet" hAlign="Center"  width="50px">
 									<Text text="수량" />
 								</Column>
                                 <Column id="midEndDateColumn2" minScreenWidth="Tablet" hAlign="Center" >
@@ -201,15 +202,28 @@
 
 							</columns>
 							<items>
-								<!-- <ColumnListItem type="Inactive" press=".onMidTableItemPress">
+								<!-- <ColumnListItem type="Inactive" press=".onMidTableItemPress" width="4em">
                               
 								</ColumnListItem> -->
 
                                 <ColumnListItem press=".onMidTableItemPress">
 									<cells>
 										<Text text="{details>_row_state_}"/>
-                                        <Input value="{details>item_sequence}"/>
-                                        <Input value="{details>tenant_id}"/>
+                                        <Text text="{details>item_sequence}"/>
+                                        <!-- <Input value="{details>item_sequence}"/> -->
+                                        <!-- <Input value="{details>tenant_id}"/> -->
+                                        <lib-m:CodePicker id="searchTenantPicker"
+                                            placeholder="Enter a tenant name"
+                                            keyField="tenant_id"
+                                            textField="tenant_name"
+                                            suggestionItems="{
+                                                path: '/',
+                                                serviceName: 'cm.util.OrgService',
+                                                entityName: 'Tenant'
+                                            }">
+                                            <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Timezone"
+                                                keyFieldHeaderText="Tenant ID" textFieldHeaderText="Tenant" />
+                                        </lib-m:CodePicker>
                                         <Input value="{details>ep_item_code}"/>
                                         <Input value="{details>item_desc}"/>
                                         <Input value="{details>unit}"/>

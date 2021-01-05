@@ -218,8 +218,9 @@ sap.ui.define([
             });
 
             //header title hide
+            $(".sapMBarPH sapMBarContainer").hide(); 
+            //header title hide
             $("#__xmlview1--page-intHeader-BarPH").hide();
-            
             //pageMode C Create, V View, E Edit
             var oUi = new JSONModel({
                 busy: false,
@@ -278,6 +279,10 @@ sap.ui.define([
             this._fnSetMode("edit");
         },
 
+        _fnSetCopyMode : function() {
+            this._fnSetMode("copy");
+        },
+
         _fnSetDeleteMode : function(){
             this._fnSetMode("delete");
         },        
@@ -288,9 +293,10 @@ sap.ui.define([
 
         _fnSetMode : function(mode){
             var bRead = false,
-            bCreate = false,
-            bEdit = false,
-            bDelete = false;
+                bCreate = false,
+                bEdit = false,
+                bCopy = false,
+                bDelete = false;
 
             if(mode === "read"){
                 bRead = true;
@@ -301,11 +307,16 @@ sap.ui.define([
             }else if(mode ==="delete"){
                 bDelete = true;                
             }
+            else if(mode ==="copy"){
+                bCopy = true;                
+            }            
+
             var oUi = this.getModel("oUi");
             oUi.setProperty("/readMode", bRead);
             oUi.setProperty("/createMode", bCreate);
             oUi.setProperty("/editMode", bEdit);
             oUi.setProperty("/deleteMode", bDelete);
+            oUi.setProperty("/copyMode", bCopy);
         },
 
         /**
@@ -401,17 +412,18 @@ sap.ui.define([
             //var sInputValue = oEvent.getSource().getValue();
             var _oUiData = this.getModel("_oUiData"),
                 materialTable = this.getModel("materialTable");
+            var that = this;    
             _oUiData.setProperty("/radioButtonGroup", this.getView().byId("radioButtonGroup").getSelectedIndex());
 
 			// create value help dialog
-			if (!this._valueHelpMaterialDialog) {
+			if (!that._valueHelpMaterialDialog) {
 
-                this._valueHelpMaterialDialog = sap.ui.xmlfragment(
-                    this._m.fragementId.materialDialog, 
-                    this._m.fragementPath.materialDialog,this
+                that._valueHelpMaterialDialog = sap.ui.xmlfragment(
+                    that._m.fragementId.materialDialog, 
+                    that._m.fragementPath.materialDialog,this
                 );
               
-                this.getView().addDependent(this._valueHelpMaterialDialog);
+                this.getView().addDependent(that._valueHelpMaterialDialog);
 
             }                
             
@@ -426,11 +438,12 @@ sap.ui.define([
          * @param {*} radioButtonGroup 
          */
 		_openValueHelpMaterialDialog: function (radioButtonGroup) {
+            var that = this;
             // open value help dialog filtered by the input value
             //기존 모델 초기화 
             this.setArrayModelNullAndUpdateBindings("materialTable");
 
-			this._valueHelpMaterialDialog.open();
+			that._valueHelpMaterialDialog.open();
 		},
 
         /**
@@ -449,16 +462,16 @@ sap.ui.define([
                 materialTable = new JSONModel(),
                 that = this;
                 
-            var oComboBox_materIalView = this._findFragmentControlId(this._m.fragementId.materialDialog, "comboBox_materialView"),
-                oCcomboBox_supplierView= this._findFragmentControlId(this._m.fragementId.materialDialog, "comboBox_supplierView"),
+            var oComboBox_materIalView = that._findFragmentControlId(that._m.fragementId.materialDialog, "comboBox_materialView"),
+                oCcomboBox_supplierView= that._findFragmentControlId(that._m.fragementId.materialDialog, "comboBox_supplierView"),
                 comboBox_materialView=oComboBox_materIalView.getSelectedKey(),
                 comboBox_supplierView=oCcomboBox_supplierView.getSelectedKey(),
-                input_material_desc=this._findFragmentControlId(this._m.fragementId.materialDialog, "input_material_desc").getValue(),
-                input_supplier_local_name=this._findFragmentControlId(this._m.fragementId.materialDialog, "input_supplier_local_name").getValue();
+                input_material_desc=that._findFragmentControlId(that._m.fragementId.materialDialog, "input_material_desc").getValue(),
+                input_supplier_local_name=that._findFragmentControlId(that._m.fragementId.materialDialog, "input_supplier_local_name").getValue();
                 //input_hidden_supplier_english_name=this._findFragmentControlId(this._m.fragementId.materialDialog, "input_supplier_local_name").getValue();
         
              var sFilters = [
-                new Filter("tenant_id", FilterOperator.EQ,  this._m.filter.tenant_id)
+                new Filter("tenant_id", FilterOperator.EQ,  that._m.filter.tenant_id)
             ];
 
             if(_oUiData.getProperty("/radioButtonGroup")==0){
@@ -493,7 +506,7 @@ sap.ui.define([
                 });
             }else{
   
-                sFilters.push(new Filter("tenant_id", FilterOperator.Contains, this._m.filter.tenant_id));                
+                sFilters.push(new Filter("tenant_id", FilterOperator.Contains, that._m.filter.tenant_id));                
                 if(comboBox_supplierView.length>0){
                     sFilters.push(new Filter("supplier_code", FilterOperator.Contains, comboBox_supplierView));
                 }
@@ -501,7 +514,7 @@ sap.ui.define([
                     sFilters.push(new Filter("supplier_local_name", FilterOperator.Contains, input_supplier_local_name));
                 }
 
-                oModel.read(this._m.serviceName.supplierView, {
+                oModel.read(that._m.serviceName.supplierView, {
                     async: false,
                     filters: sFilters,
                     success: function (rData, reponse) {
@@ -539,23 +552,24 @@ sap.ui.define([
         onReqmQuantityUnit : function(oEvent) {
             console.log("onReqmQuantityUnit");
             var obj = oEvent.getSource().oParent.oParent.getBindingContextPath(),
-            midList = this.getModel("midList");
-            this._selectedIndex = parseInt(obj.substring(1));
+                that = this,
+                midList = that.getModel("midList");
+                that._selectedIndex = parseInt(obj.substring(1));
 
-			if (!this._valueHelpReqmQuantityUnit) {
+			if (!that._valueHelpReqmQuantityUnit) {
 
-                this._valueHelpReqmQuantityUnit = sap.ui.xmlfragment(
-                    this._m.fragementId.reqmQuantityUnit, 
-                    this._m.fragementPath.reqmQuantityUnit,this
+                that._valueHelpReqmQuantityUnit = sap.ui.xmlfragment(
+                    that._m.fragementId.reqmQuantityUnit, 
+                    that._m.fragementPath.reqmQuantityUnit,this
                 );
-                this.getView().addDependent(this._valueHelpReqmQuantityUnit);
+                that.getView().addDependent(that._valueHelpReqmQuantityUnit);
             }   
-            this._openValueHelpReqmQuantityUnit();
+            that._openValueHelpReqmQuantityUnit();
             
             
-            var uom_name = this._findFragmentControlId(this._m.fragementId.reqmQuantityUnit, "searchField_uom_name");    
-            uom_name.setValue(midList.oData[this._selectedIndex].reqm_quantity_unit);            
-            this.onUomNameSearch();
+            var uom_name = that._findFragmentControlId(that._m.fragementId.reqmQuantityUnit, "searchField_uom_name");    
+            uom_name.setValue(midList.oData[that._selectedIndex].reqm_quantity_unit);            
+            that.onUomNameSearch();
          },
 
         /**
@@ -568,12 +582,12 @@ sap.ui.define([
                 oModel = this.getOwnerComponent().getModel(),
                 oUnitOfMeasureView = this.getModel("unitOfMeasureView"),
                 that = this,
-                searchField_uom_name = this._findFragmentControlId(this._m.fragementId.reqmQuantityUnit, "searchField_uom_name").getValue(),
-                reqmTable= this._findFragmentControlId(this._m.fragementId.reqmQuantityUnit, "reqmTable");             
+                searchField_uom_name = that._findFragmentControlId(that._m.fragementId.reqmQuantityUnit, "searchField_uom_name").getValue(),
+                reqmTable= that._findFragmentControlId(that._m.fragementId.reqmQuantityUnit, "reqmTable");             
                 
             var andFilter = [
-                new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id),
-                new Filter("language_code", FilterOperator.EQ, this._m.filter.language_code)                
+                new Filter("tenant_id", FilterOperator.EQ, that._m.filter.tenant_id),
+                new Filter("language_code", FilterOperator.EQ, that._m.filter.language_code)                
             ];
 
             var orFilter = [                
@@ -585,7 +599,7 @@ sap.ui.define([
             //기존 검색 데이타 초기화
             this.setModelNullAndUpdateBindings(oUnitOfMeasureView);
 
-            oModel.read(this._m.serviceName.unitOfMeasureView, {
+            oModel.read(that._m.serviceName.unitOfMeasureView, {
                 async: false,
                 filters: andFilter,
                 success: function (rData, reponse) {
@@ -605,16 +619,19 @@ sap.ui.define([
          */
 		_openValueHelpReqmQuantityUnit: function () {
             //기존 모델 초기화 
-            var unitOfMeasureView = this.getModel("unitOfMeasureView")
-            this.setModelNullAndUpdateBindings(unitOfMeasureView);
-			this._valueHelpReqmQuantityUnit.open();
+            var that = this;
+            var unitOfMeasureView = that.getModel("unitOfMeasureView");
+            
+            that.setModelNullAndUpdateBindings(unitOfMeasureView);
+			that._valueHelpReqmQuantityUnit.open();
 		},
 
         /**
          * 소요량 단위 close
          */
         closeValueHelpReqmQuantityUnit : function(evt){
-			this._valueHelpReqmQuantityUnit.close();
+            var that = this;
+			that._valueHelpReqmQuantityUnit.close();
         },
 
         /**
@@ -622,15 +639,16 @@ sap.ui.define([
          */
         onReqmQuantityUnitApply : function () {
             console.log("onReqmQuantityUnitApply");
-            var reqmTable =  this._findFragmentControlId(this._m.fragementId.reqmQuantityUnit, "reqmTable"), 
-            midList = this.getModel("midList"),
-                that = this;            
+            var that = this;
+            var reqmTable =  that._findFragmentControlId(that._m.fragementId.reqmQuantityUnit, "reqmTable"), 
+            midList = that.getModel("midList");
+                
 
             if(reqmTable.getSelectedItems().length<1){
-                this._showMessageBox(
-                    this.getModel("I18N").getText("/OPTION + CONFIRM"),
-                    this.getModel("I18N").getText("/NPG00016"),
-                    this._m.messageType.Warning,
+                that._showMessageBox(
+                    that.getModel("I18N").getText("/OPTION + CONFIRM"),
+                    that.getModel("I18N").getText("/NPG00016"),
+                    that._m.messageType.Warning,
                     function(){return;}
                 );
                 return;
@@ -639,9 +657,9 @@ sap.ui.define([
             var uom_code = reqmTable.getSelectedItems()[0].getCells()[0].mProperties.text;
             var uom_name = reqmTable.getSelectedItems()[0].getCells()[1].mProperties.text;
 
-            midList.oData[this._selectedIndex].reqm_quantity_unit = uom_code;
+            midList.oData[that._selectedIndex].reqm_quantity_unit = uom_code;
             midList.refresh(true);
-            this.closeValueHelpReqmQuantityUnit();
+            that.closeValueHelpReqmQuantityUnit();
 		},
 		/**
 		 * Event handler for Enter Full Screen Button pressed
@@ -743,14 +761,14 @@ sap.ui.define([
             console.log("_onMidServiceRead");
             
             var that = this,
-                oModel = this.getOwnerComponent().getModel(),
+                oModel = that.getOwnerComponent().getModel(),
                 oMidList = new JSONModel(),
                 oUiData = new JSONModel(),
-                sServiceUrl = this._m.serviceName.mIMaterialCodeBOMManagementHeaderView, //read는 master 페이지와 동일하게 사용한다. 
+                sServiceUrl = that._m.serviceName.mIMaterialCodeBOMManagementHeaderView, //read는 master 페이지와 동일하게 사용한다. 
                 aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id),
-                    new Filter("material_code", FilterOperator.EQ, this._m.filter.material_code),
-                    new Filter("supplier_code", FilterOperator.EQ, this._m.filter.supplier_code)
+                    new Filter("tenant_id", FilterOperator.EQ, that._m.filter.tenant_id),
+                    new Filter("material_code", FilterOperator.EQ, that._m.filter.material_code),
+                    new Filter("supplier_code", FilterOperator.EQ, that._m.filter.supplier_code)
                 ];
 
             oModel.read(sServiceUrl, {
@@ -773,14 +791,14 @@ sap.ui.define([
         _mIMaterialCodeBOMManagementHeaderServiceLoad : function() {
            console.log("_mIMaterialCodeBOMManagementHeaderServiceLoad");
             var that = this,
-                oModel = this.getOwnerComponent().getModel(),
+                oModel = that.getOwnerComponent().getModel(),
                 oUiData = new JSONModel(),
-                sServiceUrl = this._m.serviceName.mIMaterialCodeBOMManagementHeader, 
+                sServiceUrl = that._m.serviceName.mIMaterialCodeBOMManagementHeader, 
                 aFilters = [
-                new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id),
-                new Filter("material_code", FilterOperator.EQ, this._m.filter.material_code),
-                new Filter("supplier_code", FilterOperator.EQ, this._m.filter.supplier_code),
-                new Filter("mi_bom_id", FilterOperator.EQ, this._m.filter.mi_bom_id)          
+                new Filter("tenant_id", FilterOperator.EQ, that._m.filter.tenant_id),
+                new Filter("material_code", FilterOperator.EQ, that._m.filter.material_code),
+                new Filter("supplier_code", FilterOperator.EQ, that._m.filter.supplier_code),
+                new Filter("mi_bom_id", FilterOperator.EQ, that._m.filter.mi_bom_id)          
             ];
 
             oModel.read(sServiceUrl, {
@@ -803,14 +821,14 @@ sap.ui.define([
         _mIMaterialCodeBOMManagementViewServiceLoad : function() {
         console.log("_mIMaterialCodeBOMManagementViewServiceLoad");
             var that = this,
-                oModel = this.getOwnerComponent().getModel(),
+                oModel = that.getOwnerComponent().getModel(),
                 oMidList = new JSONModel(),
-                sServiceUrl = this._m.serviceName.mIMaterialCodeBOMManagementView, //read는 master 페이지와 동일하게 사용한다. 
+                sServiceUrl = that._m.serviceName.mIMaterialCodeBOMManagementView, //read는 master 페이지와 동일하게 사용한다. 
                 aFilters = [
-                new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id),
-                new Filter("material_code", FilterOperator.EQ, this._m.filter.material_code),
-                new Filter("supplier_code", FilterOperator.EQ, this._m.filter.supplier_code),
-                new Filter("mi_bom_id", FilterOperator.EQ, this._m.filter.mi_bom_id)          
+                new Filter("tenant_id", FilterOperator.EQ, that._m.filter.tenant_id),
+                new Filter("material_code", FilterOperator.EQ, that._m.filter.material_code),
+                new Filter("supplier_code", FilterOperator.EQ, that._m.filter.supplier_code),
+                new Filter("mi_bom_id", FilterOperator.EQ, that._m.filter.mi_bom_id)          
             ];
             
             oModel.read(sServiceUrl, {
@@ -839,10 +857,11 @@ sap.ui.define([
          */
         _onMidServiceRead : function(){
             console.log("_onMidServiceRead");
+            var that = this;
             //header
-            this._mIMaterialCodeBOMManagementHeaderServiceLoad();
+            that._mIMaterialCodeBOMManagementHeaderServiceLoad();
             //item //item 서비스를 사용하지 않고 MIMaterialCodeBOMManagementView 를 용한다. 12/29
-            this._mIMaterialCodeBOMManagementViewServiceLoad();
+            that._mIMaterialCodeBOMManagementViewServiceLoad();
         },     
 
         /**
@@ -910,7 +929,18 @@ sap.ui.define([
             this._initialControlValue();
             this._initialFilter();
         },
-		/**
+
+        _fnGuid : function(){
+            function guid() {
+                function s4() {
+                    return ((1 + Math.random()) * 0x10000 | 0).toString(16).substring(1);
+                }
+                return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+            };
+
+            return guid();
+        },
+        /**
 		 * When it routed to this page from the other page.
 		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
 		 * @private
@@ -925,14 +955,7 @@ sap.ui.define([
                 oArgs = oEvent.getParameter("arguments"),
                 oModel = this.getOwnerComponent().getModel();
 
-            function guid() {
-                function s4() {
-                    return ((1 + Math.random()) * 0x10000 | 0).toString(16).substring(1);
-                }
-                return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-            }
-            
-            this._m.mi_bom_id = guid();
+            this._m.mi_bom_id = this._fnGuid();
             this._m.filter.tenant_id = oArgs.tenant_id;
             this._m.filter.material_code = oArgs.material_code;
             this._m.filter.supplier_code = oArgs.supplier_code;
@@ -1011,6 +1034,21 @@ sap.ui.define([
         },
 
         /**
+         * 화면에서 버튼 이벤트 수정모드 전환
+         * @public
+         */        
+        onCopy : function () {
+            console.log("onCopy");
+            var oUiData = this.getModel("oUiData");
+
+            this._fnSetCopyMode();  
+
+            this.getView().byId("input_base_quantity").setValue(oUiData.getProperty("/base_quantity"));
+            this.getView().byId("input_processing_cost").setValue(oUiData.getProperty("/processing_cost"));
+
+        },
+
+        /**
          * 항목 선택
          */
         onMaterialChange : function(oEvent){
@@ -1018,14 +1056,14 @@ sap.ui.define([
                 midList =this.getModel("midList"),
                 that = this;
 
-            this._selectedIndex = parseInt(obj.substring(1)); 
+                that._selectedIndex = parseInt(obj.substring(1)); 
 
-            this.onMaterialDetail(true);
+                that.onMaterialDetail(true);
 
-            var searchField_material_code = this._findFragmentControlId(this._m.fragementId.materialDetail, "searchField_material_code");
-            searchField_material_code.setValue(midList.oData[this._selectedIndex].mi_material_code);            
+            var searchField_material_code = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_material_code");
+            searchField_material_code.setValue(midList.oData[that._selectedIndex].mi_material_code);            
             
-            this.onMaterialSearch();
+            that.onMaterialSearch();
     
 
         },
@@ -1036,17 +1074,17 @@ sap.ui.define([
          */
         onMaterialDetail : function (bflag) {
             console.log("call funtion onMaterialDetail");
-
-            var oUi = this.getModel("oUi");
-			if (!this._valueHelpMaterialDetail) {
-                this._valueHelpMaterialDetail = sap.ui.xmlfragment(this._m.fragementId.materialDetail, this._m.fragementPath.materialDetail, this);
-                this.getView().addDependent(this._valueHelpMaterialDetail);
+            var that = this;
+            var oUi = that.getModel("oUi");
+			if (!that._valueHelpMaterialDetail) {
+                that._valueHelpMaterialDetail = sap.ui.xmlfragment(that._m.fragementId.materialDetail, that._m.fragementPath.materialDetail, this);
+                that.getView().addDependent(that._valueHelpMaterialDetail);
             }          
 
-            this._openValueHelpMaterialDetail();
+            that._openValueHelpMaterialDetail();
 
-            var searchField_material_code = this._findFragmentControlId(this._m.fragementId.materialDetail, "searchField_material_code");
-            var searchField_category_name = this._findFragmentControlId(this._m.fragementId.materialDetail, "searchField_category_name");
+            var searchField_material_code = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_material_code");
+            var searchField_category_name = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_category_name");
 
             oUi.setProperty("/changeItem", bflag);
 
@@ -1064,13 +1102,14 @@ sap.ui.define([
         _openValueHelpMaterialDetail : function () {
 
             //기존 load 모델 초기화
+            var that = this;
             var arrayModel = [               
                 "mIMaterialCostInformationView",
                 "mIMatListView"
             ];
           
-            this.setArrayModelNullAndUpdateBindings(arrayModel);
-            this._valueHelpMaterialDetail.open();
+            that.setArrayModelNullAndUpdateBindings(arrayModel);
+            that._valueHelpMaterialDetail.open();
         },
        
         /**
@@ -1078,16 +1117,16 @@ sap.ui.define([
          * @private
          */
         _onExit: function () {
-  
-            for (var sPropertyName in this._formFragments) {
-                if (!this._formFragments.hasOwnProperty(sPropertyName) || this._formFragments[sPropertyName] == null) {
+            var that = this;
+            for (var sPropertyName in that._formFragments) {
+                if (!that._formFragments.hasOwnProperty(sPropertyName) || that._formFragments[sPropertyName] == null) {
                     return;
                 }
 
-                this._setInit();
+                that._setInit();
                
-                this._formFragments[sPropertyName].destroy();
-                this._formFragments[sPropertyName] = null;
+                that._formFragments[sPropertyName].destroy();
+                that._formFragments[sPropertyName] = null;
             }
         },
 
@@ -1126,13 +1165,13 @@ sap.ui.define([
             var oModel = this.getOwnerComponent().getModel(),
                 aFilter = [],
                 that = this,
-                searchField_material_code = this._findFragmentControlId(this._m.fragementId.materialDetail, "searchField_material_code").getValue(),
-                searchField_category_name = this._findFragmentControlId(this._m.fragementId.materialDetail, "searchField_category_name").getValue(),
-                oTable = this._findFragmentControlId(this._m.fragementId.materialDetail, "leftTable");
+                searchField_material_code = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_material_code").getValue(),
+                searchField_category_name = that._findFragmentControlId(that._m.fragementId.materialDetail, "searchField_category_name").getValue(),
+                oTable = that._findFragmentControlId(that._m.fragementId.materialDetail, "leftTable");
                 
            
             var andFilter = [
-                new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id)
+                new Filter("tenant_id", FilterOperator.EQ, that._m.filter.tenant_id)
             ];
             var orFilter = [];
             
@@ -1148,8 +1187,8 @@ sap.ui.define([
                 andFilter.push(new sap.ui.model.Filter(orFilter, false));
             }
 
-            var sServiceUrl = this._m.serviceName.mIMatListView;
-            var leftTable =  this._findFragmentControlId(this._m.fragementId.materialDetail, "leftTable");            
+            var sServiceUrl = that._m.serviceName.mIMatListView;
+            var leftTable =  that._findFragmentControlId(that._m.fragementId.materialDetail, "leftTable");            
             var mIMatListView = new JSONModel();
             oModel.read(sServiceUrl, {
                 async: false,
@@ -1196,7 +1235,7 @@ sap.ui.define([
                 var exchange = items.getCells()[2].mProperties.text;
                 var termsdelv = items.getCells()[3].mProperties.text;
 
-                if(oUi.getProperty("changeItem")){
+                if(oUi.getProperty("/changeItem")){
                     if(midList.oData[this._selectedIndex]){
                         if(currency_unit==midList.oData[this._selectedIndex].currency_unit &&
                             quantity_unit==midList.oData[this._selectedIndex].quantity_unit &&
@@ -1484,6 +1523,7 @@ sap.ui.define([
             
                         var input_material_code = that.getView().byId("input_material_code");
                         input_material_code.setValue(sourceName);
+                        input_material_code.setValueState(ValueState.None);
             
                         var input_hidden_material_code = that.getView().byId("input_hidden_material_code");
                         var input_hidden_material_desc = that.getView().byId("input_hidden_material_desc");
@@ -1496,6 +1536,7 @@ sap.ui.define([
                         input_hidden_supplier_code.setValue(supplier_code);
                         input_hidden_supplier_local_name.setValue(supplier_local_name);
 
+                        
                         that.onMaterialDialog_close();
                     }
                 }
@@ -1677,17 +1718,23 @@ sap.ui.define([
             var _oUi = this.getModel("oUi"),
                 bCheckValidate = true;
 
-            if(_oUi.getProperty("/createMode")){
+            if(_oUi.getProperty("/createMode")==true || _oUi.getProperty("/copyMode")==true){
                 bCheckValidate =  this.validator.validate(this.byId(this._m.page));
                 if(bCheckValidate) {
                     this.validator.clearValueState(this.byId(this._m.page));
+                }else{
+                    return false;
                 }
             }
             
             bCheckValidate =  this.validator.validate(this.byId("midTable"));
             if(bCheckValidate){
                 this.validator.clearValueState(this.byId("midTable"));
+            }else{
+                return false;
             }
+
+            
             return bCheckValidate;
 
         },
@@ -1768,9 +1815,11 @@ sap.ui.define([
             // this.getView().getModel().attachPropertyChange(this._propertyChanged.bind(this));
              var oUi = this.getModel("oUi");
              var bCreateFlag = oUi.getProperty("/createMode");
+             var bCopyFlag = oUi.getProperty("/copyMode");
  
              var bValidate = this._onPageValidate();
              console.log("bValidate", bValidate);
+
              if(!bValidate){
                  return false;
              }
@@ -1779,7 +1828,6 @@ sap.ui.define([
                 return false;
             }
 
-            console.log("bCreateFlag");
             if(bCreateFlag){
 
                     MessageBox.confirm(this.getModel("I18N").getText("/NPG00014"), {
@@ -1794,9 +1842,24 @@ sap.ui.define([
                         }.bind(this)
                     });
                
-             }else{
+             }
+             else if(bCopyFlag){
+
+                MessageBox.confirm("복사 하시겠습니까?", {
+                    title : "복사 확인",
+                    initialFocus : sap.m.MessageBox.Action.CANCEL,
+                    onClose : function(sButton) {
+                        if (sButton === MessageBox.Action.OK) {
+                            this._onSave();
+                        }else{
+                            return;
+                        }
+                    }.bind(this)
+                });
+             }
+             else{
                 MessageBox.confirm(this.getModel("I18N").getText("/NPG00007"), {
-                    title : "Update",
+                    title : this.getModel("I18N").getText("/UPDATE"),
                     initialFocus : sap.m.MessageBox.Action.CANCEL,
                     onClose : function(sButton) {
                         if (sButton === MessageBox.Action.OK) {
@@ -1818,6 +1881,7 @@ sap.ui.define([
 
             var oUi = this.getModel("oUi"),
                 bCreateFlag = oUi.getProperty("/createMode"),
+                bCopyFlag = oUi.getProperty("/copyMode"),
                 bEditFlag = oUi.getProperty("/editMode"),
                 that = this,
                 oModel = this.getModel(),
@@ -1840,7 +1904,7 @@ sap.ui.define([
                 
 
                 //Crate
-                if(bCreateFlag){
+                if(bCreateFlag==true || bCopyFlag ==true){
                     //material_code, supplier_code, 기준수량, 가공비, 가공비 통화
                     midList.oData[i].material_code = that.byId("input_hidden_material_code").getValue(),
                     midList.oData[i].supplier_code = that.byId("input_hidden_supplier_code").getValue(),
@@ -1848,6 +1912,11 @@ sap.ui.define([
                     midList.oData[i].processing_cost = that.byId("input_processing_cost").getValue(),
                     midList.oData[i].pcst_currency_unit = that.byId("comboBox_pcst_currency_unit").getSelectedKey();
                   
+                    if(bCopyFlag){
+                        
+                        midList.oData[i].mi_bom_id =  that._fnGuid();
+                    }
+
                     if(i==0){
                         if(that._fnCreateEntryHeader(oModel, midList.oData[i])){
                             createHeader++;
@@ -1860,8 +1929,6 @@ sap.ui.define([
                 }
                 else {  //Update
                     midList.oData[i].pcst_currency_unit = that.byId("comboBox_pcst_currency_unit").getSelectedKey();   
-                                  
-
 
                     if(i==0){
 
@@ -2001,6 +2068,12 @@ sap.ui.define([
                         success: that._handleUpdateSuccess.bind(this),
                         error: that._handleUpdateError.bind(this)
                     });
+                }else if(oUi.getProperty("/copyMode")){
+                    oModel.submitChanges({
+                        groupId: that._m.groupID,
+                        success: that._handleCopySuccess.bind(this),
+                        error: that._handleCopyError.bind(this)
+                    });
                 }else{
                     oModel.submitChanges({
                         groupId: that._m.groupID,
@@ -2094,6 +2167,7 @@ sap.ui.define([
          * @private
          */
         _fnCreateEntryItem : function(oModel, oData) {
+            var that = this;
             var createEntryItemParameters = {
                 "groupId": this._m.groupID,
                 "properties": {
@@ -2108,11 +2182,15 @@ sap.ui.define([
                     "termsdelv": oData.termsdelv,
                     "use_flag": oData.use_flag,
                     "local_create_dtm": new Date(),
-                    "create_user_id": this._sso.user.id
+                    "local_update_dtm": new Date(),
+                    "create_user_id": that._sso.user.id,
+                    "update_user_id": that._sso.user.id,
+                    "system_create_dtm": new Date(),
+                    "system_update_dtm": new Date()
                 }
             };
             try{
-                oModel.createEntry(this._m.serviceName.mIMaterialCodeBOMManagementItem, createEntryItemParameters);
+                oModel.createEntry(that._m.serviceName.mIMaterialCodeBOMManagementItem, createEntryItemParameters);
                 return true;
             }catch(error){
                 return false;
@@ -2126,6 +2204,7 @@ sap.ui.define([
          * @param {*} oData 
          */        
         _fnUpdateHeader : function( oModel, oData) {
+            var that = this;
 
             var oKey = {
                 tenant_id : oData.tenant_id,
@@ -2137,14 +2216,14 @@ sap.ui.define([
             var updateHeaderParameters = {
                 "pcst_currency_unit": oData.pcst_currency_unit,
                 "local_update_dtm": new Date(),
-                "update_user_id": this._sso.user.id
+                "update_user_id": that._sso.user.id
             }            
 
             try{
-                var sUpdatePath = oModel.createKey(this._m.serviceName.mIMaterialCodeBOMManagementHeader, oKey);
+                var sUpdatePath = oModel.createKey(that._m.serviceName.mIMaterialCodeBOMManagementHeader, oKey);
                 oModel.update(sUpdatePath, 
                     updateHeaderParameters, 
-                    { groupId: this._m.groupID } );
+                    { groupId: that._m.groupID } );
                 return true;
             }catch(error){
                 return false;
@@ -2156,6 +2235,7 @@ sap.ui.define([
          * @private
          */
         _fnUpdateItem : function( oModel, oData) {
+            var that = this;
             var oKey = {
                 tenant_id : oData.tenant_id,
                 mi_bom_id : oData.mi_bom_id,
@@ -2174,10 +2254,10 @@ sap.ui.define([
             }
 
             try{
-                var sUpdatePath = oModel.createKey(this._m.serviceName.mIMaterialCodeBOMManagementItem, oKey);
+                var sUpdatePath = oModel.createKey(that._m.serviceName.mIMaterialCodeBOMManagementItem, oKey);
                 oModel.update(sUpdatePath, 
                     updateItemParameters, 
-                    { groupId: this._m.groupID } );
+                    { groupId: that._m.groupID } );
                 return true;
             }catch(error){
                 return false;
@@ -2185,7 +2265,8 @@ sap.ui.define([
         },
 
 
-        _fnDeleteHeader : function(oModel, oData) {            
+        _fnDeleteHeader : function(oModel, oData) {     
+            var that = this;       
             var oKey = {
                 tenant_id : oData.tenant_id,
                 material_code : oData.material_code,
@@ -2194,8 +2275,8 @@ sap.ui.define([
             }
 
             try{
-                var sDeletePath = oModel.createKey(this._m.serviceName.mIMaterialCodeBOMManagementHeader, oKey);
-                oModel.remove(sDeletePath,{ groupId: this._m.groupID } );
+                var sDeletePath = oModel.createKey(that._m.serviceName.mIMaterialCodeBOMManagementHeader, oKey);
+                oModel.remove(sDeletePath,{ groupId: that._m.groupID } );
                 return true;
             }catch(error){
                 return false;
@@ -2207,6 +2288,7 @@ sap.ui.define([
          * @private
          */
         _fnDeleteItem : function( oModel, oData) {
+            var that = this;
             var oKey = {
                 tenant_id : oData.tenant_id,
                 mi_bom_id : oData.mi_bom_id,
@@ -2214,8 +2296,8 @@ sap.ui.define([
             }
 
             try{
-                var sDeletePath = oModel.createKey(this._m.serviceName.mIMaterialCodeBOMManagementItem, oKey);
-                oModel.remove(sDeletePath,{ groupId: this._m.groupID } );
+                var sDeletePath = oModel.createKey(that._m.serviceName.mIMaterialCodeBOMManagementItem, oKey);
+                oModel.remove(sDeletePath,{ groupId: that._m.groupID } );
                 return true;
             }catch(error){
                 return false;
@@ -2228,7 +2310,7 @@ sap.ui.define([
          * @param {sap.ui.base.Event} oEvent 
          */
         onDeleteAction : function (oEvent){
-            console.log("onMidDelete");
+            console.log("onMidDelete");            
                 MessageBox.confirm(this.getModel("I18N").getText("/NCM00003"), {
                     title: this.getModel("I18N").getText("/DELETE + CONFIRM"),                                    
                     onClose: this._deleteAction.bind(this),                                    
@@ -2399,6 +2481,7 @@ sap.ui.define([
                 }
             });
         },
+       
         
         _handleUpdateError: function (oError) {
             this._showMessageBox(
@@ -2408,6 +2491,33 @@ sap.ui.define([
                 function(){return;}
             );
         },
+
+        _handleCopySuccess: function (oData) {
+            var that = this;
+            MessageBox.show("복사 성공 하였습니다.", {
+                icon: MessageBox.Icon.SUCCESS,
+                title: "복사 성공",
+                actions: [MessageBox.Action.OK],
+                onClose: function (sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        var sNextLayout = that.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+                        that._onExit();
+                        that.getRouter().navTo("mainPage", { layout: sNextLayout });
+                    }
+                }
+            });
+        },
+       
+        
+        _handleCopyError: function (oError) {
+            this._showMessageBox(
+                "복사 실패",
+                "복사 실패 하였습니다.",
+                this._m.messageType.Error,
+                function(){return;}
+            );
+        },
+
         /**
          * 삭제 성공
          * @param {ODATA} oData 

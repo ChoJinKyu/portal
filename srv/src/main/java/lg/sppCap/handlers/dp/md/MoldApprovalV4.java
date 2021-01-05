@@ -333,6 +333,7 @@ public class MoldApprovalV4 implements EventHandler {
                         moldNums.add(rs.getString(1));
                     }
                     if(row.getApprovalTypeCode().equals("B")){
+                        // 예산집행 품의 update 항목 초기화
                         // 해당 품의서가 가지는 mold갯수만큼 돌면서 mold Master 정보 초기화함
                         if(moldNums.size() > 0){
                             for(int i=0; i< moldNums.size(); i++){
@@ -348,12 +349,25 @@ public class MoldApprovalV4 implements EventHandler {
                             }
                         }
                     }else if(row.getApprovalTypeCode().equals("V")){
+                        // local 발주품의 update 항목 초기화
                         // 해당 품의서가 가지는 mold갯수만큼 돌면서 mold Master 정보 초기화함
                         if(moldNums.size() > 0){
                             for(int i=0; i< moldNums.size(); i++){
                                 String sql3="UPDATE DP_MD_MST SET "
                                 +"SPLIT_PAY_TYPE_CODE=NULL, PREPAY_RATE=NULL, "
                                 +"PROGRESSPAY_RATE=NULL, RPAY_RATE=NULL "
+                                +"WHERE MOLD_ID='"+moldNums.get(i)+"'";
+                                statement = conn.prepareStatement(sql3);
+                                statement.executeUpdate();
+                            }
+                        }
+                    }else if(row.getApprovalTypeCode().equals("I")){
+                        // local 입고품의 update 항목 초기화
+                        // 해당 품의서가 가지는 mold갯수만큼 돌면서 mold Master 정보 초기화함
+                        if(moldNums.size() > 0){
+                            for(int i=0; i< moldNums.size(); i++){
+                                String sql3="UPDATE DP_MD_MST SET "
+                                +"ACQ_DEPARTMENT_CODE=NULL "
                                 +"WHERE MOLD_ID='"+moldNums.get(i)+"'";
                                 statement = conn.prepareStatement(sql3);
                                 statement.executeUpdate();
@@ -376,6 +390,8 @@ public class MoldApprovalV4 implements EventHandler {
                         }
                         
                     }
+
+                    
                         
                         // Referer 삭제
                         String sql5="DELETE FROM CM_REFERER WHERE APPROVAL_NUMBER='"+row.getApprovalNumber()+"'";

@@ -1,0 +1,163 @@
+<mvc:View controllerName="sp.sf.fundingNotifySup.controller.MainList"
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m" 
+    xmlns:f="sap.f" 
+    xmlns:form="sap.ui.layout.form" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:core="sap.ui.core" 
+    xmlns:lib-m="ext.lib.m"
+    height="100%">
+
+    <f:DynamicPage id="page"
+        headerExpanded="{mainListView>/headerExpanded}" 
+        toggleHeaderOnTitleClick="true">
+        <!-- DynamicPage Title -->
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:heading>
+                    <Title text="{I18N>/FUNDING_NOTIFICATION}" />
+                </f:heading>
+                <f:snappedContent>
+                </f:snappedContent>
+                <f:expandedContent>
+                </f:expandedContent>
+                <f:actions>
+                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
+                </f:actions>
+                <f:navigationActions>
+                    <Button icon="sap-icon://unfavorite" type="Transparent" />
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <!-- DynamicPage Header -->
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                    <form:content>
+                        <VBox>
+                            <Label text="{I18N>/TITLE} :"></Label>
+                            <Input id="searchTitle" placeholder="{I18N>/TITLE}"></Input>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="{I18N>/APPLICATION_PERIOD} :" labelFor="searchDateS"></Label>
+                            <DateRangeSelection id="searchDateS" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD"/>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                    </form:content>
+                </form:SimpleForm>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <VBox>
+                <Table id="mainTable" 
+                    sticky="HeaderToolbar,ColumnHeaders" 
+                    inset="false" 
+                    growing="true"
+                    growingThreshold="10"
+                    class="sapFDynamicPageAlignContent" 
+                    updateFinished=".onMainTableUpdateFinished"
+                    items="{list>/SfFundingNotify}"
+                    mode="None" 
+                    width="auto">
+                    <headerToolbar>
+                        <OverflowToolbar>
+                            <Title text="{I18N>/FUNDING_NOTIFICATION} ({= ${list>/SfFundingNotify}.length || 0})" level="H2"/>
+                            <ToolbarSpacer/>
+                            <!-- <Button id="mainTableAddButton" text="{I18N>/CREATE}" type="Transparent" press=".onMainTableAddButtonPress" /> -->
+                            <ToolbarSeparator/>
+                            <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+                                <layoutData>
+                                    <OverflowToolbarLayoutData priority="NeverOverflow" />
+                                </layoutData>
+                            </Button>
+                        </OverflowToolbar>
+                    </headerToolbar>
+                    <columns>
+                        <Column id="mainFundingNumberColumn" minScreenWidth="Tablet" width="6em" hAlign="Center">
+                            <Text text="{I18N>/NOTIFICATION_NUMBER}" />
+                        </Column>
+                        <Column id="mainFundingTitleComlumn" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                            <Text text="{I18N>/TITLE}" />
+                        </Column>
+                        <Column id="mainFundingCreateUser" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                            <Text text="{I18N>/WRITER}" />
+                        </Column>
+                        <Column id="mainFundingLocalCreateDtm" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                            <Text text="{I18N>/WRITE_DATE}" />
+                        </Column>
+                        <Column id="mainFundingFundingStartDate" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                            <Text text="{I18N>/APPLICATION_PERIOD}" />
+                        </Column>
+                        <Column id="mainFundingApplClosingDate" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                            <Text text="{I18N>/APPLICATION_DUE_DATE}" />
+                        </Column>
+                        <Column id="mainFundingApply" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                            <Text text="{I18N>/APPLICATION}" />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem type="Navigation" press=".onMainTableItemPress">
+                            <cells>
+                                <Text text="{list>funding_notify_number}"/>
+                                <Text text="{list>funding_notify_title}"/>
+                                <Text text="{list>create_user_id}"/>
+                                <Text
+                                    text="{
+                                        path: 'list>local_create_dtm',
+                                        type: 'sap.ui.model.type.Date',
+                                        formatOptions: {
+                                        pattern: 'yyyy-MM-dd'
+                                        }
+                                    }"/>
+                                <HBox justifyContent="Center">
+                                    <Text
+                                        text="{
+                                            path: 'list>funding_notify_start_date',
+                                            type: 'sap.ui.model.type.Date',
+                                            formatOptions: {
+                                                pattern: 'yyyy-MM-dd'
+                                            }
+                                        }"/>
+                                    <Text textAlign="Center" text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd"/>
+                                    <Text textAlign="Center"
+                                        text=" {
+                                            path: 'list>funding_notify_end_date',
+                                            type: 'sap.ui.model.type.Date',
+                                            formatOptions: {
+                                            pattern: 'yyyy-MM-dd'
+                                            }
+                                        }"/>
+                                </HBox>
+                                <Text
+                                    text="{
+                                        path: 'list>funding_appl_closing_date',
+                                        type: 'sap.ui.model.type.Date',
+                                        formatOptions: {
+                                        pattern: 'yyyy-MM-dd'
+                                        }
+                                    }"/>
+                                <HBox justifyContent="Center">
+                                    <Button id="applicationCreateBtn" text="작성" type="Emphasized" press=".onCreateFundingNotify" visible="{list>btnCreate}"/>
+                                    <Button id="applicationCloseBtn" text="마감" editable="false" visible="{list>btnClose}"/>
+                                </HBox>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </VBox>
+        </f:content>
+        <!-- DynamicPage Footer -->
+        <f:footer>
+            <OverflowToolbar>
+                <ToolbarSpacer />
+				<Button text="Save" type="Emphasized" press=".onPageSaveButtonPress" />
+				<Button text="Cancel" type="Transparent" press=".onPageCancelEditButtonPress"/>
+            </OverflowToolbar>
+        </f:footer>
+    </f:DynamicPage>
+</mvc:View>

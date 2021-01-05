@@ -102,14 +102,11 @@ sap.ui.define([
                     console.log("md >>>>>>", md); 
                     that._bindComboPlant(oData.results[0].import_company_code);
                 });
+                this._budgetViewFragment(); // New 가 아닐때 초기 로딩 안해줌 
             }
             
-            if(this.getView().getModel("mode").getProperty("/editFlag")){
-               this._budgetEditFragment();
-            }else{
-               this._budgetViewFragment();
-            }
         },
+
         _bindViewBudget : function (sObjectPath, sModel, aFilter, callback) { 
                 var oView = this.getView(),
                     oModel = this.getModel(sModel);
@@ -288,13 +285,23 @@ sap.ui.define([
                 }
             }
             
-            console.log("onPagePreviewButtonPress >>> this._oDialog " , this._oDialogPrev);
+           var ref = this.getModel("referer");
+           this.getView().setModel(new ManagedModel(), "refererPreview");
+
+           var rArr = [];
+           if(ref.getData().Referers != undefined && ref.getData().Referers.length >0){
+                ref.getData().Referers.forEach(function(item){
+                    rArr.push(item.referer_empno); 
+                });
+            }
+            this.getModel("refererPreview").setProperty("/refArr", rArr);
+
             var oView = this.getView();
 
             if (!this._oDialogPrev) {
                 this._oDialogPrev = Fragment.load({
                     id: oView.getId(),
-                    name: "dp.md.moldApprovalList.view.BudgetExecutionApprovalPreView",
+                    name: "dp.md.moldApprovalList.view.BudgetExecutionApprovalPreView", 
                     controller: this
                 }).then(function (oDialog) {
                     oView.addDependent(oDialog);
@@ -312,18 +319,20 @@ sap.ui.define([
             // this.byId("budgetExecutionPreview").destroy();
         },
 
+        onPageRequestButtonPress : function (){
+            this.getModel("appMaster").setProperty("/approve_status_code", "AR"); // 결제요청 
+            this._budgetExecutionDataSetting();
+        } ,
         onPageDraftButtonPress : function () { 
- 
-            /**
-             * 'DR'
-            'AR'
-            'IA'
-            'AP'
-            'RJ' */ 
-            this.getModel("appMaster").setProperty("/approve_status_code", "DR");
-
+            this.getModel("appMaster").setProperty("/approve_status_code", "DR"); // 임시저장 
+            this._budgetExecutionDataSetting();
+        } , 
+         onPageRequestCancelButtonPress : function () { 
+            this.getModel("appMaster").setProperty("/approve_status_code", "DR"); // 임시저장 
+            this._budgetExecutionDataSetting();
+         },
+        _budgetExecutionDataSetting : function(){
             this.approval_type_code = "B";
-
             var bModel = this.getModel("mdItemMaster");
             var mModel = this.getModel("mdCommon");
             this.approvalDetails_data = [] ;
@@ -412,9 +421,11 @@ sap.ui.define([
 
 
             this._commonDataSettingAndSubmit();
-
         }
 
+
+
+        
 
 
 

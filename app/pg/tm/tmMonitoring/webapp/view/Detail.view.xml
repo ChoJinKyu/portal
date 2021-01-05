@@ -167,12 +167,12 @@
                                             <VBox class="sapUiTinyMarginTop" id="monitoringVBox">
                                                     <Label text="{I18N>/MONITORING_PURPOSE}" design="Bold"/>
                                                     <rte:RichTextEditor id="reMonitoringPurpose" editorType="TinyMCE4" width="100%" visible="{=${DetailView>/isEditMode}}"  editable="true" value="{monitoring_purpose}" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
-                                                    <FormattedText htmlText="{monitoring_purpose}" visible="{=!${DetailView>/isEditMode}}"/>
+                                                    <FormattedText id="PurposeFormattedText" htmlText="{monitoring_purpose}" visible="{=!${DetailView>/isEditMode}}"/>
                                                 </VBox>
                                                 <VBox class="sapUiSmallMarginTop" id="scenarioVBox">
                                                     <Label text="{I18N>/SCENARIO_DESC}" design="Bold"/>
                                                     <rte:RichTextEditor id="reMonitoringScenario" class="sapUiTinyMarginTop" visible="{=${DetailView>/isEditMode}}" editorType="TinyMCE4" editable="true" width="100%" value="{scenario_desc}" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
-                                                    <FormattedText htmlText="{scenario_desc}" visible="{=!${DetailView>/isEditMode}}"/>
+                                                    <FormattedText id="ScenarioDescFormattedText" htmlText="{scenario_desc}" visible="{=!${DetailView>/isEditMode}}"/>
                                                 </VBox>
                                            </l:VerticalLayout>
                                     </uxap:blocks>
@@ -191,7 +191,7 @@
                                             <VBox class="sapUiSmallMarginTop" id="systemVBox">
                                                 <Label text="{I18N>/SOURCE_SYSTEM_DESC}" design="Bold"/>
                                                 <rte:RichTextEditor id="reSourceSystemDetail" class="sapUiTinyMarginTop" editorType="TinyMCE4" visible="{=${DetailView>/isEditMode}}" editable="true" width="100%" value="{source_system_desc}" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
-                                                <FormattedText htmlText="{source_system_desc}" visible="{=!${DetailView>/isEditMode}}"/>
+                                                <FormattedText id="ReSourceSystemFormattedText" htmlText="{source_system_desc}" visible="{=!${DetailView>/isEditMode}}"/>
                                             </VBox>
                                         </l:VerticalLayout>
                                     </uxap:blocks>
@@ -289,14 +289,14 @@
                                             <UploadCollection id="UploadCollection" uploadEnabled="false" fileType="gif,png,jpg,jpeg,doc,docx,xls,xlsx,hwp,pdf,ppt,pdf" maximumFilenameLength="55"
                                             maximumFileSize="10" multiple="false" change=".onChange" instantUpload="false" uploadButtonInvisible="{=!${ui>/bEditMode}}" 
                                              filenameLengthExceed="onFilenameLengthExceed" fileSizeExceed="onFileSizeExceed" typeMissmatch="onTypeMissmatch" uploadComplete="onUploadComplete" beforeUploadStarts="onBeforeUploadStarts" mode="SingleSelectMaster">
-                                                                <items>
+                                                                <!-- <items>
                                                                     <UploadCollectionItem id="uploadItem" documentId="{up>documentId}" fileName="{up>fileName}"
                                                                      mimeType="{up>mimeType}" thumbnailUrl="{up>thumbnailUrl}" url="{up>url}" deletePress="onFileDeleted" enableEdit="{=${ui>/bEditMode}}" enableDelete="true" visibleDelete="{=${ui>/bEditMode}}" visibleEdit="{=${ui>/bEditMode}}" attributes="{path: 'up>attributes',templateShareable: false}" selected="{selected}">
                                                                         <attributes>
                                                                             <ObjectAttribute title="{up>title}" text="{parts: [ 'up>text', 'up&gt;type' ]}" active="false"/>
                                                                         </attributes>
                                                                     </UploadCollectionItem>
-                                                                </items>
+                                                                </items> -->
                                             </UploadCollection>
                                         </uxap:blocks>
                                     </uxap:ObjectPageSubSection>

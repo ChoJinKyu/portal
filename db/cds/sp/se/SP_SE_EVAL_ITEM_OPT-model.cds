@@ -13,7 +13,7 @@ entity Se_Eval_Item_Opt {
       option_article_name            : String(240)          @title: '선택항목명' ;	
       option_article_start_value     : String(100)          @title: '선택항목시작값' ;	
       option_article_end_value       : String(100)          @title: '선택항목종료값' ;	
-      evaluation_score               : Integer              @title: '평가점수' ;	
+      evaluation_score               : Decimal(5,2)         @title: '평가점수' ;	
       sort_sequence                  : Decimal              @title: '정렬순서' ;	
 }	
 extend Se_Eval_Item_Opt with util.Managed;	

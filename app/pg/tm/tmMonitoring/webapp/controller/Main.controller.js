@@ -37,6 +37,8 @@ sap.ui.define([
                 }.bind(this));
                 console.log(this.byId("MonitorListTable"));
 
+                
+
             },
 
             /** table excel export
@@ -94,6 +96,7 @@ sap.ui.define([
              *  @public
              */
             onSearchTable: function (oEvent) {
+                this.byId("MonitorListTable").getModel().refresh(true);
                 var mBindingParams = oEvent.getParameter("bindingParams");
                 var oSmtFilter = this.getView().byId("smartFilterBar");
                 var tenant_combo = this.getView().byId("tenant_combo"),         //회사 콤보박스
@@ -102,7 +105,7 @@ sap.ui.define([
                     company_name = company_combo.getSelectedItems(),
                     bizunit_combo = this.getView().byId("bizunit_combo"),           //사업본부 콤보박스
                     bizunit_name = bizunit_combo.getSelectedItems();
-
+                
                 var aSearchFilters = [];
                 if (tenant_name.length > 0) {
                     aSearchFilters.push(new Filter("tenant_name", FilterOperator.Contains, tenant_name));

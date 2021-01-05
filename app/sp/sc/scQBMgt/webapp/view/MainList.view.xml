@@ -1,0 +1,425 @@
+<!-- <mvc:View controllerName="pg.cl2.controller.App" xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m">
+	<Shell id="shell">
+		<App id="app">
+			<pages>
+				<Page id="page" title="{i18n>title}">
+					<content></content>
+				</Page>
+			</pages>
+		</App>
+	</Shell>
+</mvc:View> -->
+
+<mvc:View controllerName="sp.sc.scQBMgt.controller.MainList"
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m" 
+    xmlns:f="sap.f" 
+    xmlns:form="sap.ui.layout.form" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:core="sap.ui.core" 
+    xmlns:t="sap.ui.table"
+    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+    xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+    height="100%">
+    
+    <f:DynamicPage id="page"
+        headerExpanded="true" 
+        toggleHeaderOnTitleClick="true">
+        
+        <f:title>
+            <f:DynamicPageTitle stateChange="stateChange">
+                <f:heading>
+                    <!-- <Title text="{i18n>appTitle}" /> -->
+                    <Title text="Negotiation Workbench" />
+                </f:heading>
+                <f:snappedContent>
+                </f:snappedContent>
+                <f:expandedContent>
+                </f:expandedContent>
+                <f:actions>
+                    <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onPageSearchButtonPress" />
+                </f:actions>
+                <!-- <f:navigationActions>
+                    <Button icon="sap-icon://unfavorite" type="Transparent" />
+                </f:navigationActions> -->
+            </f:DynamicPageTitle>
+        </f:title>
+
+        <f:header> 
+            <f:DynamicPageHeader pinnable="true">
+                <!-- <form:SimpleForm id="pageSearchForm"  editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" 
+                        labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" >
+                    <form:content>
+                        <VBox>
+                            <Label text="Negotiation Type" labelFor="Negotiation Type" ></Label>
+                                <Input />
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                           
+                        </VBox>
+                        <VBox>
+                            <Label text="Negotiation No" labelFor="Negotiation No"  />
+                            <Input />
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Outcome" labelFor="Outcome"  />
+                            <Input />
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Buyer" labelFor="Buyer"  />
+                            <Input />
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Date" />
+                            <ComboBox width="100%" />
+
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M4 S4" />
+                            </layoutData>
+                            
+                        </VBox>
+                        <VBox>
+                            <Label text="From"/>
+                            <DatePicker
+                                placeholder="YYYY/MM/DD"
+                                change="handleChange"
+                                class="sapUiSmallMarginBottom"/>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M4 S4" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="To"/>
+                            <DatePicker
+                                placeholder="YYYY/MM/DD"
+                                change="handleChange"
+                                class="sapUiSmallMarginBottom"/>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M4 S4" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Title"   />
+                            <Input />
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        
+                        <VBox>
+                            <Label text="Status"  />
+                            <ComboBox width="100%" />
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Status"  />
+                            <ComboBox width="100%" />
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Status"  />
+                            <ComboBox width="100%" />
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                           
+                    </form:content>
+                </form:SimpleForm> -->
+                <form:SimpleForm id="pageSearchForm"  editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" 
+                        labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" >
+                    <form:content>
+                        <VBox>
+                            <Label text="Negotiation Type" labelFor="Negotiation Type" ></Label>
+                                <ComboBox placeholder="ALL" width="100%"/>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M3 S3" />
+                                </layoutData>
+                           
+                        </VBox>
+                        <VBox>
+                            <Label text="Negotiation No" labelFor="Negotiation No"  />
+                            <Input />
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M3 S3" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Outcome" labelFor="Outcome"  />
+                            <ComboBox placeholder="선택해주세요" width="100%"/>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M3 S3" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Buyer" labelFor="Buyer"  />
+                            <Input />
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M3 S3" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Date" />
+                            <ComboBox placeholder="Create Date" width="100%" />
+
+                            <layoutData>
+                                <layout:GridData span="XL2 L2 M2 S2" />
+                            </layoutData>
+                            
+                        </VBox>
+                        <VBox>
+                            <Label text="From"/>
+                            <DatePicker
+                                placeholder="YYYY/MM/DD"
+                                change="handleChange"
+                                class="sapUiSmallMarginBottom"/>
+                            <layoutData>
+                                <layout:GridData span="XL2 L2 M2 S2" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="To"/>
+                            <DatePicker
+                                placeholder="YYYY/MM/DD"
+                                change="handleChange"
+                                class="sapUiSmallMarginBottom"/>
+                            <layoutData>
+                                <layout:GridData span="XL2 L2 M2 S2" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Title"   />
+                            <Input />
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M3 S3" />
+                            </layoutData>
+                        </VBox>
+                        
+                        <VBox>
+                            <Label text="Status"  />
+                            <ComboBox placeholder="1개 선택됨" width="100%" />
+                            <layoutData>
+                                <layout:GridData span="XL1 L1 M1 S1" />
+                            </layoutData>
+                        </VBox>
+                        <VBox alignItems="Center">
+                            <Label text="Auto RFQ"  />
+                            <CheckBox />
+                            <layoutData>
+                                <layout:GridData span="XL1 L1 M1 S1" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Award Status"  />
+                            <ComboBox placeholder="1개 선택됨" width="100%" />
+                            <layoutData>
+                                <layout:GridData span="XL1 L1 M1 S1" />
+                            </layoutData>
+                        </VBox>
+                        
+                           
+                    </form:content>
+                </form:SimpleForm>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            
+
+            <VBox>
+             <!-- <ScrollContainer id="scrollContainer" vertical="true" height="500px" width="100%" class="sapUiContentPadding" > -->
+                <!-- <Panel height="50%">  visibleRowCount="30"  minAutoRowCount  firstVisibleRowChanged="firstVisibleRowChanged"
+                        visibleRowCountMode="Auto"-->
+                    
+                    <!-- <smartTable:SmartTable id="smartListTable" entitySet="LineItemsSet"
+                        smartFilterId="smartFilterBar" tableType="ResponsiveTable"
+                        useExportToExcel="true" beforeExport="onBeforeExport" useVariantManagement="false"
+                        useTablePersonalisation="true" header="Line Items" showRowCount="true"
+                        persistencyKey="SmartTableAnalytical_Explored" enableAutoBinding="true"
+                        demandPopin="true" class="sapUiResponsiveContentPadding"> -->
+                        <Table id="ListTable" mode="MultiSelect" itemPress="ListTableItemPress" width="auto" class="sapFDynamicPageAlignContent" >
+                            <headerToolbar>
+                                <OverflowToolbar>
+                                    <Title id="title" text="Negotiation Workbench List (2)" level="H2"/> 
+                                    <ToolbarSpacer/>
+                                    <Button id="mainTableButtonAllOpen" text="Create" type="Transparent" press=".onMainTableCreate" enabled="true"  />
+                                    
+                                    <ToolbarSeparator/>
+                                </OverflowToolbar>
+                            </headerToolbar>
+                            <columns>
+                                <Column  width="100px" hAlign="Begin" >
+                                    <Text text="Negotiation No"  />
+                                </Column>
+                                <Column  width="4rem" hAlign="Begin">
+                                    <Text text="Rev." />
+                                </Column>
+                                <Column  width="4rem" hAlign="Begin">
+                                    <Text text="Status" />
+                                </Column>
+                                <Column  width="8rem" hAlign="Begin">
+                                    <Text text="Award Status" />
+                                </Column>
+                                <Column  width="8rem" hAlign="Begin">
+                                    <Text text="Reply(Count)" />
+                                </Column>
+                                <Column  width="10rem" hAlign="Begin">
+                                    <Text text="Suppliers(Count)" />
+                                </Column>
+                                <Column  width="5rem" hAlign="Begin">
+                                    <Text text="Partici pation" />
+                                </Column>
+                                <Column  width="8rem" hAlign="Begin">
+                                    <Text text="ReMaining time" />
+                                </Column>
+                                <Column  width="10rem" hAlign="Begin">
+                                    <Text text="Title" />
+                                </Column>
+                                <Column  width="5rem" hAlign="Begin">
+                                    <Text text="Parts(Count)" />
+                                </Column>
+                                <Column  width="10rem" hAlign="Begin">
+                                    <Text text="Negotiation Type" />
+                                </Column>
+                                <Column  width="5rem" hAlign="Begin">
+                                    <Text text="Quote Style" />
+                                </Column>
+                                <Column  width="5rem" hAlign="Begin">
+                                    <Text text="Bid Open Status" />
+                                </Column>
+                                <Column  width="5rem" hAlign="Begin">
+                                    <Text text="Out come" />
+                                </Column>
+                                <Column  width="8rem" hAlign="Begin">
+                                    <Text text="Req Submission Status" />
+                                </Column>
+                                <Column  width="100px" hAlign="Begin">
+                                    <Text text="Req Reapproval" />
+                                </Column>
+                                <Column  width="5rem" hAlign="Begin">
+                                    <Text text="Part No" />
+                                </Column>
+                                
+                            </columns>
+                            <items   type="Active">
+                                <!-- <ColumnListItem  type="Active" >
+                                    <cells>
+                                        <Text
+                                            text="2426536-1" />
+                                    </cells>
+                                    <cells>
+                                        <Text
+                                            text="1" />
+                                    </cells>
+                                </ColumnListItem> -->
+                            </items>
+                        </Table>
+                    <!-- </smartTable:SmartTable> -->
+                
+                    <!-- <t:TreeTable 
+                        id="treeTable"
+                        filter="treetablefilter"
+                        sort="sort"
+                        toggleOpenState="toggleOpenState"
+                        visibleRowCountMode="Auto"
+                        enableSelectAll="false"
+                        minAutoRowCount="16"
+                        onAfterRendering="onAfterRendering"
+                        enableColumnReordering="false"
+                        
+                        class="sapFDynamicPageAlignContent" 
+                        rowSelectionChange="treeTableSelection"
+                        cellClick="treeTableCellClick"
+                        selectionMode="{= ${sm>/screen} === 'M' ? 'MultiToggle' : 'None'}"
+                        rows="{
+                            path : '/MICategoryHierarchyStructureView',
+                            parameters : {
+                                countMode: 'Inline',
+                                treeAnnotationProperties : {
+                                    hierarchyLevelFor : 'hierarchy_level',
+                                    hierarchyNodeFor : 'node_id',
+                                    hierarchyParentNodeFor : 'parent_node_id',
+                                    hierarchyDrillStateFor : 'drillstate'
+                                }
+                            }
+                        }">
+                        <t:extension>
+                            <OverflowToolbar>
+                                <Title id="title" text="Category" level="H2"/> 
+                                <ToolbarSpacer/>
+                                <Button id="mainTableButtonAllOpen" text="{I18N>/EXPAND}" type="Transparent" press=".onMainTableexpandAll" enabled="{=${sm>/screen} === 'M' ? true : false}"  />
+                                <Button id="mainTableButtonAllClose" text="{I18N>/COLLAPSE}" type="Transparent" press=".onMainTablecollapseAll" enabled="{=${sm>/screen} === 'M' ? true : false}"  />
+                                <Button id="mainTableCreate0Button" text="{I18N>/CREATE_SAME_LEVEL}" type="Transparent" press=".onMainTableCreate0ButtonPress" enabled="{= ${master>/indices} === 0 ? ${sm>/screen} === 'M' ? true : false : false}"  />
+                                <Button id="mainTableCreate1Button" text="{I18N>/CREATE_LOWER_LEVEL}" type="Transparent" press=".onMainTableCreate1ButtonPress" enabled="{= ${master>/indices} === 1 ? ${master>/level} === 0 ? ${sm>/screen} === 'M' ? true : false : false : false}" />
+                                <Button id="mainTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMainTableDeleteButtonPress" enabled="{= ${master>/indices} > 0 ? ${sm>/screen} === 'M' ? true : false : false}"/>
+                                <ToolbarSeparator/>
+                            </OverflowToolbar>
+                        </t:extension>
+                        
+                        <t:columns>
+                            <t:Column label="{I18N>/CATEGORY_CODE}">    
+                                <t:template>
+                                    <Text text="{category_code}" wrapping="false" />
+                                </t:template>
+                            </t:Column>
+                            <t:Column label="{I18N>/CATEGORY_NAME}">    
+                                <t:template>
+                                    <Text text="{category_name}" wrapping="false" />
+                                </t:template>
+                            </t:Column>
+                            <t:Column label="{I18N>/USE_FLAG}">    
+                                <t:template>
+                                    <Text text="{= ${use_flag} === true ? 'Yes' : 'No'}"/>
+                                </t:template>
+                            </t:Column>
+                            <t:Column label="{I18N>/WRITER}">    
+                                <t:template>
+                                    <Text text="{create_user_id}" wrapping="false" />
+                                </t:template>
+                            </t:Column>
+                            <t:Column label="{I18N>/WRITE_DATE}">    
+                                <t:template>
+                                    <Text text="{path: 'system_create_dtm',
+                                    type: 'sap.ui.model.type.Date'}" wrapping="false" />
+                                </t:template>
+                            </t:Column>
+
+                            <t:Column label="" width="2rem" >
+                                <t:template>
+                                    <ObjectStatus
+                                        icon="sap-icon://feeder-arrow"   />
+                                </t:template>
+                            </t:Column>
+                        </t:columns>
+                    </t:TreeTable> -->
+                <!-- </ScrollContainer> -->
+            </VBox>
+            
+            
+        </f:content>
+        
+        
+        <!-- <f:footer>
+            <OverflowToolbar>
+                <ToolbarSpacer />
+				<Button text="Save" type="Emphasized" press=".onPageSaveButtonPress" />
+				<Button text="Cancel" type="Transparent" press=".onPageCancelEditButtonPress"/>
+            </OverflowToolbar>
+        </f:footer> -->
+    </f:DynamicPage>
+    
+</mvc:View>

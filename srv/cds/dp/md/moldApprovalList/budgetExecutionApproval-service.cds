@@ -134,7 +134,7 @@ service BudgetExecutionApprovalService {
         from approvalDtl.Md_Approval_Dtl dtl
         join moldMst.Md_Mst mst  on dtl.mold_id = mst.mold_id 
         left outer join orgCompany.Org_Company as com on com.company_code = mst.import_company_code 
-        left outer join org as plant on mst.import_company_org_code = plant.org_code and mst.import_company_code = plant.company_code 
+        left outer join org as plant on mst.import_company_org_code = plant.org_code and mst.import_company_code = plant.company_code and plant.org_type_code = 'AU'
         
         ; 
 
