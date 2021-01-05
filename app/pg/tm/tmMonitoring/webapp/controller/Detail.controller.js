@@ -38,8 +38,6 @@ sap.ui.define([
 
             this.setModel(oViewModel, "DetailView");
 
-
-
             //DetailMatched
             var oOwnerComponent = this.getOwnerComponent();
             this.oRouter = oOwnerComponent.getRouter();
@@ -65,7 +63,6 @@ sap.ui.define([
             // @ts-ignore
             this.cycle_multibox = new sap.m.MultiComboBox({
                 selectedKeys: "{=${monitoring_cycle_code}.split(';')}",
-                maxWidth: "100%",
                 placeholder: "{I18N>/CYCLE}",
                 items: {
                     path: '/TaskMonitoringCycleCodeView',
@@ -129,13 +126,12 @@ sap.ui.define([
                 oView.getModel().read("/TaskMonitoringMaster(tenant_id='" + this.tenant_id + "',scenario_number=" + this.scenario_number + ")", {
                     success: function (oData) {
                         this.detailData = oData;
-                        this.PurposeFormattedText = this.detailData.monitoring_purpose === '' ? 'No Description' : atob(this.detailData.monitoring_purpose);
-                        this.ScenarioDescFormattedText = this.detailData.scenario_desc === '' ? 'No Description' : atob(this.detailData.scenario_desc);
-                        this.ReSourceSystemFormattedText = this.detailData.source_system_desc === '' ? 'No Description' : atob(this.detailData.source_system_desc);
-                        this.byId("PurposeFormattedText").setHtmlText(this.PurposeFormattedText);
-                        this.byId("ScenarioDescFormattedText").setHtmlText(this.ScenarioDescFormattedText);
-                        this.byId("ReSourceSystemFormattedText").setHtmlText(this.ReSourceSystemFormattedText);
-
+                        this.PurposeFormattedText = this.detailData.monitoring_purpose === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.monitoring_purpose)));
+                        this.ScenarioDescFormattedText = this.detailData.scenario_desc === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.scenario_desc)));
+                        this.ReSourceSystemFormattedText = this.detailData.source_system_desc === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.source_system_desc)));
+                        this.byId("PurposeFormattedText").setHtmlText(this.PurposeFormattedText === null ? 'No Description': this.PurposeFormattedText);
+                        this.byId("ScenarioDescFormattedText").setHtmlText(this.ScenarioDescFormattedText  === null ? 'No Description': this.ScenarioDescFormattedText);
+                        this.byId("ReSourceSystemFormattedText").setHtmlText(this.ReSourceSystemFormattedText === null ? 'No Description': this.ReSourceSystemFormattedText);
                     }.bind(this),
                     error: function () {
                         this.byId("PurposeFormattedText").setHtmlText("No Description");
@@ -146,6 +142,18 @@ sap.ui.define([
 
             }
 
+        },
+
+        removeRichTextEditorValue: function () {
+            this.byId("reMonitoringPurpose").setValue(null);
+            this.byId("reMonitoringScenario").setValue(null);
+            this.byId("reSourceSystemDetail").setValue(null);
+        },
+
+        removeFormattedTextValue: function () {
+            this.byId("PurposeFormattedText").setHtmlText(null);
+            this.byId("ScenarioDescFormattedText").setHtmlText(null);
+            this.byId("ReSourceSystemFormattedText").setHtmlText(null);
         },
 
 
@@ -524,9 +532,9 @@ sap.ui.define([
                     scenario_number: senario_number,
                     monitoring_type_code: sap.ui.getCore().byId("combo_monitoring_type").getSelectedKey(),
                     activate_flag: sap.ui.getCore().byId("segmentButton_activate").getSelectedKey() === 'Yes' ? true : false,
-                    monitoring_purpose: this.htmlDecoding(monitoringPurposeValue, this.byId("reMonitoringPurpose").getId()),
-                    scenario_desc: this.htmlDecoding(scenarioDescValue, this.byId("reMonitoringScenario").getId()),
-                    source_system_desc: this.htmlDecoding(sourceSystemDescValue, this.byId("reSourceSystemDetail").getId()),
+                    monitoring_purpose: this.htmlEncoding(monitoringPurposeValue, this.byId("reMonitoringPurpose").getId()),
+                    scenario_desc: this.htmlEncoding(scenarioDescValue, this.byId("reMonitoringScenario").getId()),
+                    source_system_desc: this.htmlEncoding(sourceSystemDescValue, this.byId("reSourceSystemDetail").getId()),
                     local_create_dtm: new Date(),
                     local_update_dtm: new Date(),
                     create_user_id: "Admin",
@@ -786,6 +794,7 @@ sap.ui.define([
                         //refresh
                         oModel.refresh(true);
 
+
                     },
                     error: function (cc, vv) {
                         sap.m.MessageToast.show("Save Failed");
@@ -804,9 +813,9 @@ sap.ui.define([
                 var masterUpdateObj = {
                     monitoring_type_code: selectedTypeCode,
                     activate_flag: sap.ui.getCore().byId("segmentButton_activate").getSelectedKey() === 'Yes' ? true : false,
-                    monitoring_purpose: this.htmlDecoding(monitoringPurposeValue, this.byId("reMonitoringPurpose").getId()),
-                    scenario_desc: this.htmlDecoding(scenarioDescValue, this.byId("reMonitoringScenario").getId()),
-                    source_system_desc: this.htmlDecoding(sourceSystemDescValue, this.byId("reSourceSystemDetail").getId()),
+                    monitoring_purpose: this.htmlEncoding(monitoringPurposeValue, this.byId("reMonitoringPurpose").getId()),
+                    scenario_desc: this.htmlEncoding(scenarioDescValue, this.byId("reMonitoringScenario").getId()),
+                    source_system_desc: this.htmlEncoding(sourceSystemDescValue, this.byId("reSourceSystemDetail").getId()),
                     local_update_dtm: new Date(),
                     update_user_id: "Admin",
                     system_update_dtm: new Date()
@@ -928,12 +937,13 @@ sap.ui.define([
 
             }
 
-
+            this.removeRichTextEditorValue();
+            this.removeFormattedTextValue();
         },
 
-        htmlDecoding: function (value, sId) {
-            console.log(btoa(value));
-            return btoa(value);
+        htmlEncoding: function (value, sId) {
+            // return window.btoa(value);
+            return btoa(unescape(encodeURIComponent(value)))
         },
 
 
@@ -1282,15 +1292,23 @@ sap.ui.define([
             //주기 text -> multicombobox로 변경
             this.byId("cycleVBox").removeItem(this.cycleText);
             this.byId("cycleVBox").insertItem(this.cycle_multibox, 1);
+            //회사,법인,사업본부 SelectionChange Event
             if (this.scenario_number !== "New") {
                 sap.ui.getCore().byId("tenant_edit_combo").fireSelectionChange();
             }
+            //회사, 법인 combobox item reset
             sap.ui.getCore().byId("company_edit_combo").removeAllItems();
             sap.ui.getCore().byId("bizunit_edit_combo").removeAllItems();
-            //richTextEditor
-            this.byId("reMonitoringPurpose").setValue(this.scenario_number === 'New' ? '' : this.PurposeFormattedText);
-            this.byId("reMonitoringScenario").setValue(this.scenario_number === 'New' ? '' : this.ScenarioDescFormattedText);
-            this.byId("reSourceSystemDetail").setValue(this.scenario_number === 'New' ? '' : this.ReSourceSystemFormattedText);
+            //remove description
+            if (this.scenario_number === "New") {
+                this.removeRichTextEditorValue();
+            } else {
+                //richTextEditor
+                this.byId("reMonitoringPurpose").setValue(this.PurposeFormattedText === '' ? null : this.PurposeFormattedText);
+                this.byId("reMonitoringScenario").setValue(this.ScenarioDescFormattedText === '' ? null : this.ScenarioDescFormattedText);
+                this.byId("reSourceSystemDetail").setValue(this.ReSourceSystemFormattedText === '' ? null : this.ReSourceSystemFormattedText);
+            }
+
         },
 
         /**

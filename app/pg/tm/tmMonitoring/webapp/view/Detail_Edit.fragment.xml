@@ -23,14 +23,13 @@
                                 <core:Item key="{code}" text="{code_name}" />
                             </ComboBox>
                             <layoutData>
-                                <l:GridData span="XL3 L3 M6 S12" />
+                                <l:GridData span="XL3 L3 M4 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="{I18N>/PURCHASING_TYPE_NAME}" required="true"/>
                              <MultiComboBox
                                     selectedKeys="{=${monitoring_purchasing_type_code}.split(';')}"
-                                    maxWidth="100%"
                                     placeholder="{I18N>/PURCHASING_TYPE_NAME}"
                                     id="combo_purchasing_type"
                                     items="{/TaskMonitoringPurchaingTypeCodeView}"
@@ -39,7 +38,7 @@
                                     <core:Item key="{code}" text="{code_name}"/>
                             </MultiComboBox>
                             <layoutData>
-                                <l:GridData span="XL3 L3 M6 S12" />
+                                <l:GridData span="XL3 L3 M4 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
@@ -52,7 +51,7 @@
                                 </items>
 			                </SegmentedButton>
                             <layoutData>
-                                <l:GridData span="XL6 L6 M6 S12" />
+                                <l:GridData span="XL3 L3 M4 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>

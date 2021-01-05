@@ -140,7 +140,7 @@
                                                             <l:GridData span="XL3 L3 M6 S12"/>
                                                         </layoutData>
                                                     </VBox>
-                                                    <VBox id="cycleVBox">
+                                                    <VBox id="cycleVBox" templateShareable="true">
                                                         <Label text="{I18N>/CYCLE}"/>
                                                         <!-- <MultiComboBox id="cycle_combo" editable="false" items="{/MonitoringCycleView}">
                                                             <core:Item key="{code}" text="{code_name}"/>
