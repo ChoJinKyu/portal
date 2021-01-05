@@ -43,7 +43,10 @@
                     </uxap:headerTitle>
                     <uxap:headerContent>
                         <layout:VerticalLayout>
-                            <FlexBox height="30px" alignItems="Start" justifyContent="Start" visible="{=!${oUi>/createMode}}"> 
+                            <FlexBox height="30px" 
+                                     alignItems="Start" 
+                                     justifyContent="Start" 
+                                     visible="{= ${oUi>/createMode}===false &amp;&amp; ${oUi>/copyMode}===false}"> 
                                     <Label text="{I18N>/UPDATE_USER_ID} :"/>
                                     <Label text="{oUiData>/update_user_id}"  
                                     class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
@@ -66,13 +69,13 @@
                                 <uxap:ObjectPageSubSection>      
                                     <layout:VerticalLayout width="100%">
                                         <FlexBox height="28px" alignItems="Start" justifyContent="Start" class="sapUiTinyMarginTop">
-                                            <Label text="{I18N>/BOM}" required="{oUi>/createMode}"/>
+                                            <Label text="{I18N>/BOM}" required="{= ${oUi>/createMode}===true || ${oUi>/copyMode}===true}"/>
                                         </FlexBox>
                                         <FlexBox height="40px" alignItems="Start" justifyContent="Start"
-                                                 visible="{oUi>/createMode}" 
+                                                 visible="{= ${oUi>/createMode}===true || ${oUi>/copyMode}===true}" 
                                                  class="sapUiTinyMarginBottom">        
                                             <RadioButtonGroup id="radioButtonGroup" columns="3" width="100%" selectedIndex="0">
-                                                <RadioButton id="radioButtonType01" text="{I18N>/MI_MATERIAL}/{I18N>/CODE}" />
+                                                <RadioButton id="radioButtonType01" text="자재명/{I18N>/CODE}" />
                                                 <RadioButton id="radioButtonType02" text="{I18N>/SUPPLIER}/{I18N>/CODE}" />
                                             </RadioButtonGroup>  
                                         </FlexBox>
@@ -82,29 +85,29 @@
                                         <Input id="input_hidden_supplier_local_name" visible="false"/>
                                         <Input id="input_hidden_supplier_english_name" visible="false"/>
                                         <Input id="input_material_code" 
-                                                    required="{oUi>/createMode}"
-                                                    width="100%"
-                                                    visible="{oUi>/createMode}"
-                                                    class="sapUiSmallMarginBottom"                                                    
-                                                    showValueHelp="true" 
-                                                    enabled = "true"
-                                                    placeholder="{I18N>/OPTION}"
-                                                    valueHelpRequest=".handleValueHelpMaterial"
-                                                    value="{
-                                                            path : '{_oUiData>/string}',
-                                                            type : 'sap.ui.model.type.String',
-                                                            constraints : {
-                                                                minLength: 1,
-                                                                maxLength: 30
-                                                            }
-                                                        }"  
-                                                    />
+                                                required="{= ${oUi>/createMode}===true || ${oUi>/copyMode}===true}"
+                                                width="100%"
+                                                visible="{= ${oUi>/createMode}===true || ${oUi>/copyMode}===true}"
+                                                class="sapUiSmallMarginBottom"                                                    
+                                                showValueHelp="true" 
+                                                enabled = "true"
+                                                placeholder="{I18N>/OPTION}"
+                                                valueHelpRequest=".handleValueHelpMaterial"
+                                                value="{
+                                                        path : '{_oUiData>/string}',
+                                                        type : 'sap.ui.model.type.String',
+                                                        constraints : {
+                                                            minLength: 1,
+                                                            maxLength: 30
+                                                        }
+                                                    }"  
+                                                />
                                                                                 
                                         <FlexBox    height="40px" 
                                                     alignItems="Start" 
                                                     justifyContent="Start" 
                                                     class="sapUiTinyMarginBottom"
-                                                    visible="{=!${oUi>/createMode}}">        
+                                                    visible="{= ${oUi>/createMode}===false &amp;&amp; ${oUi>/copyMode}===false}">        
                                             <Label  text="[{oUiData>/material_code}] {oUiData>/material_desc} / [{oUiData>/supplier_code}] {oUiData>/supplier_local_name}" design="Bold"/>
                                         </FlexBox>                                          
                                         <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiLargeMarginBottom" >        
@@ -114,18 +117,18 @@
 
                                                         class="sapUiTinyMarginBottom"/>                                               
                                                 <Label  text="{oUiData>/base_quantity}"
-                                                        visible="{=!${oUi>/createMode}}"
+                                                        visible="{= ${oUi>/createMode}===false &amp;&amp; ${oUi>/copyMode}===false}"
                                                         type="Number"
                                                         textAlign="Right" 
                                                         width="60px"                                                        
                                                         design="Bold"/>
                                                 <Input  id="input_base_quantity"
-                                                        required="{oUi>/createMode}"
+                                                        required="{= ${oUi>/createMode}===true || ${oUi>/copyMode}===true}"
                                                         class="sapUiSmallMarginBottom"
                                                         type = "Number"
                                                         placeholder="Number" 
                                                         textAlign="Right"                                                                                               
-                                                        visible="{oUi>/createMode}"
+                                                        visible="{= ${oUi>/createMode}===true || ${oUi>/copyMode}===true}"
                                                         value="{
                                                             path : '{_oUiData>/number}',
                                                             type : 'sap.ui.model.type.Integer',
@@ -138,16 +141,16 @@
                                             </layout:VerticalLayout>  
                                             <layout:VerticalLayout class="sapUiTinyMarginBottom sapUiLargeMarginBegin sapUiLargeMarginEnd">
                                                 <Label  text="{I18N>/PROCESSING_COST}:" 
-                                                required="{oUi>/createMode}" 
+                                                required="{= ${oUi>/createMode}===true || ${oUi>/copyMode}===true}" 
                                                 class="sapUiTinyMarginBottom"/>
                                                 <Label  text="{oUiData>/processing_cost}" design="Bold"
-                                                        visible="{=!${oUi>/createMode}}" 
+                                                        visible="{= ${oUi>/createMode}===false &amp;&amp; ${oUi>/copyMode}===false}"
                                                         textAlign="Right" 
                                                         width="50px"                                                              
                                                         class="sapUiLargeMarginEnd"/>
                                                 <Input  id="input_processing_cost"
-                                                        required="{oUi>/createMode}"
-                                                        visible="{oUi>/createMode}"
+                                                        required="{= ${oUi>/createMode}===true || ${oUi>/copyMode}===true}"
+                                                        visible="{= ${oUi>/createMode}===true || ${oUi>/copyMode}===true}"
                                                         type = "Number"
                                                         placeholder="Number"
                                                         textAlign="Right"
@@ -371,24 +374,34 @@
                 <OverflowToolbar id="overflowToolbar">
                     <ToolbarSpacer/>
                         <HBox visible="{oUi>/readMode}">
-                            <Button type="Transparent" text="{I18N>/CANCEL}" enabled="false" />                        
+                            <Button type="Transparent" text="{I18N>/CANCEL}" enabled="false" />
+                            <Button type="Transparent" text="{I18N>/COPY}" enabled="true" press=".onCopy"/>                         
                             <Button type="Transparent" text="{I18N>/UPDATE}" enabled="true" press=".onEdit"/>
                             <Button type="Transparent" text="{I18N>/DELETE}" enabled="false" />
                             <Button type="Emphasized" text="{I18N>/SAVE}"  enabled="false"  />
                         </HBox>
-                        <HBox visible="{oUi>/editMode}">
-                            <!-- <Button type="Transparent" text="Show" enabled="true" press=".onRead"/> -->
+                        <HBox visible="{oUi>/editMode}">                            
                             <Button type="Transparent" text="{I18N>/CANCEL}" enabled="true" press=".onCancel"/>
+                            <Button type="Transparent" text="{I18N>/COPY}" enabled="false"/> 
                             <Button type="Transparent" text="{I18N>/UPDATE}" enabled="false"/>
                             <Button type="Transparent" text="{I18N>/DELETE}" enabled="true" press=".onDeleteAction"/>                    
                             <Button type="Emphasized" text="{I18N>/SAVE}"  enabled="true" press=".onSaveAction"/>
                         </HBox>
                         <HBox visible="{oUi>/createMode}">
-                            <Button type="Transparent" text="{I18N>/CANCEL}" enabled="true" press=".onCancel"/>                        
+                            <Button type="Transparent" text="{I18N>/CANCEL}" enabled="true" press=".onCancel"/>
+                            <Button type="Transparent" text="{I18N>/COPY}" enabled="false"/>                         
                             <Button type="Transparent" text="{I18N>/UPDATE}" enabled="false"/>
                             <Button type="Transparent" text="{I18N>/DELETE}" enabled="false"/>
                             <Button type="Emphasized" text="{I18N>/SAVE}" press=".onSaveAction"/>
                         </HBox>
+                        <HBox visible="{oUi>/copyMode}">
+                            <Button type="Transparent" text="{I18N>/CANCEL}" enabled="true" press=".onCancel"/>
+                            <Button type="Transparent" text="{I18N>/COPY}" enabled="false"/>                         
+                            <Button type="Transparent" text="{I18N>/UPDATE}" enabled="false"/>
+                            <Button type="Transparent" text="{I18N>/DELETE}" enabled="false"/>
+                            <Button type="Emphasized" text="{I18N>/SAVE}" press=".onSaveAction"/>
+                        </HBox>
+
                 </OverflowToolbar>
             </footer>
         </Page>

@@ -32,8 +32,10 @@ entity Li_Publish_Item_View {
         currency_code              : String(15)          @title : '통화코드';
         loi_selection_number       : String(50)          @title : 'LOI선정번호';
         loi_selection_status_code  : String(30)          @title : 'LOI선정상태코드';
+        loi_selection_status_name  : String(240)         @title : 'LOI선정상태명';
         loi_publish_number         : String(50)          @title : 'LOI발행번호';
         loi_publish_status_code    : String(30)          @title : 'LOI발행상태코드';
+        loi_publish_status_name    : String(240)         @title : 'LOI발행상태명';
         // po_number                  : String(50)          @title : '발주번호';
         // po_item_number             : String(10)          @title : '발주품목번호';
         po_status_code             : String(30)          @title : '발주상태코드';
