@@ -181,7 +181,7 @@
                                                 <ObjectIdentifier text="{=${company_name}.replaceAll(';', ',')}"/>
                                                 <ObjectIdentifier text="{=${bizunit_name}.replaceAll(';', ',')}"/>
                                                 <ObjectIdentifier text="{=${manager_local_name}.replaceAll(';', ',')}"/>
-                                                <ObjectIdentifier text="{path: 'enrollment_date', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy/MM/dd'} }"/>
+                                                <ObjectIdentifier text="{path: 'enrollment_date', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy/MM/dd'} , UTC: true}"/>
                                                 <ObjectStatus icon="{= ${operation_mode_display_flag} === 'true' ? 'sap-icon://accept' : ''}"/>
                                                 <ObjectStatus icon="{= ${operation_mode_calling_flag} === 'true' ? 'sap-icon://accept' : ''}"/>
                                                 <ObjectStatus icon="{= ${operation_mode_alram_flag} === 'true' ? 'sap-icon://accept' : ''}"/>

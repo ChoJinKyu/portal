@@ -235,7 +235,8 @@
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
-                                                    ]
+                                                    ],
+                                                    sorter: { path: 'sort_no'}
                                                 }"
                             >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
@@ -253,7 +254,8 @@
                                                     filters : [
                                                         {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
-                                                    ]
+                                                    ],
+                                                    sorter: { path: 'sort_no'}
                                                 }"
                             >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
@@ -394,18 +396,6 @@
                         <Label text="{I18N>/STATUS}"/>
                         <table:template>
                             <Text text="{list>mold_progress_status_name}"/>
-                             <!-- <ComboBox   id="mold_progress_status_code"
-                                        selectedKey="{list>mold_progress_status_code}"
-                                        items="{
-                                                    path : 'util>/Code',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROGRESS_STATUS_LOCAL'}
-                                                    ]
-                                                }"
-                            editable="false" class="readonlyField" width="100%" >
-                                <core:Item key="{util>code}" text="{util>code_name}" />
-                            </ComboBox> -->
                         </table:template>
                     </table:Column>
 
@@ -474,21 +464,6 @@
                         <Label text="{path:'I18N>/PRODUCTION_TYPE', formatter:'I18NFormatter'}" />
                         <table:template>
                             <Text text="{list>mold_production_type_name}"/>
-
-                            <!-- <Select   width="100%"
-                                        selectedKey="{list>mold_production_type_code}"
-                                        items="{
-                                                    path : 'util>/Code',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
-                                                    ]
-                                                }"
-                                        editable="false"
-                                        class="readonlyField"
-                            >
-                                <core:Item key="{util>code}" text="{util>code_name}" />
-                            </Select> -->
                             
                         </table:template>
                     </table:Column>
@@ -497,18 +472,6 @@
                         <Label text="{path:'I18N>/ITEM_TYPE', formatter:'I18NFormatter'}" />
                         <table:template>
                             <Text text="{list>mold_item_type_name}"/>
-                            <!-- <ComboBox   id="mold_item_type_code"
-                                        selectedKey="{list>mold_item_type_code}"
-                                        items="{
-                                                    path : 'util>/Code',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
-                                                    ]
-                                                }"
-                            editable="{mode>/editFlag}" class="readonlyField" required="true" >
-                                <core:Item key="{util>code}" text="{util>code_name}" />
-                            </ComboBox> -->
                         </table:template>
                     </table:Column>
 

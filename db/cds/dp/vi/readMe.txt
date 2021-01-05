@@ -58,6 +58,35 @@ curl -X POST http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_Ar
 ]} 
 ]}'
 
+# 수정 : master-detail-prices
+curl -X PATCH http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_Arl_Master\(tenant_id=\'L2100\',approval_number=\'202101040001\'\) \
+-H "Content-Type: application/json" \
+-d '{
+    "approval_title": "개발VI 품의서 수정 테스트 중....",
+    "approval_type_code": "10", "new_change_code": "10", "approval_status_code": "10", "approval_request_desc": "품의 수정 테스트 중....", 
+    "approval_requestor_empno": "15", "approval_request_date": "2020-12-10T00:00:00", 
+    "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2021-01-04T10:18:46Z",
+    "details": [ 
+        { 
+            "company_code": "LGEKR", "org_type_code": "PU", "org_code": "EKHQ", "au_code": "10", "material_code": "2", "supplier_code": "KR00002600", "base_date": "2020-12-10T00:00:00", "base_price_ground_code": "10", "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z", 
+            "prices": [
+                { "item_sequence": 1, "market_code": "2", "new_base_price": "150", "new_base_price_currency_code": "KRW", "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2020-12-03T10:18:46Z"}
+            ]
+        } 
+    ]
+}'
+
+# 수정 : master
+curl -X PATCH http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_Arl_Master\(tenant_id=\'L2100\',approval_number=\'202101040001\'\) \
+-H "Content-Type: application/json" \
+-d '{
+    "approval_title": "개발VI 품의서 수정 테스트",
+    "approval_type_code": "10", "new_change_code": "10", "approval_status_code": "10", "approval_request_desc": "품의 수정 테스트", 
+    "approval_requestor_empno": "15", "approval_request_date": "2020-12-10T00:00:00", 
+    "local_create_dtm": "2020-12-03T10:18:46Z", "local_update_dtm": "2021-01-04T10:18:46Z"
+}'
+
+
 # 삭제
 curl -X DELETE http://localhost:8080/odata/v2/dp.BasePriceArlService/Base_Price_Arl_Master\(tenant_id=\'L2100\',approval_number=\'202012180003\'\)
 

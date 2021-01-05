@@ -1,34 +1,29 @@
 {
     "menus": [
         {
-            "name": "Exam1",
+            "name": "Sourcing",
             "icon": "sap-icon://source-code",
             "subMenus": [
                 {
-                    "name": "Funding",
-                    "url": "../sp/sf/fundingNotify/webapp",
-                    "component": "sp.sf.fundingNotify"
-                },
-                {
-                    "name": "App #2",
-                    "url": "../cm/controlOptionMgr/webapp",
-                    "component": "cm.controlOptionMgr"
+                    "name": "견적/입찰 관리",
+                    "url": "../sp/sc/scQBMgt/webapp",
+                    "component": "sp.sc.scQBMgt"
                 }
             ]
         },
         {
-            "name": "Exam2",
+            "name": "협력사 자금지원 관리",
             "icon": "sap-icon://locate-me",
             "subMenus": [
                 {
-                    "name": "App #3",
-                    "url": "../cm/codeMgr/webapp",
-                    "component": "cm.codeMgr"
+                    "name": "지원공고 작성",
+                    "url": "../sp/sf/fundingNotify/webapp",
+                    "component": "sp.sf.fundingNotify"
                 },
                 {
-                    "name": "App #4",
-                    "url": "../cm/controlOptionMgr/webapp",
-                    "component": "cm.controlOptionMgr"
+                    "name": "지원공고 신청",
+                    "url": "../sp/sf/fundingNotifySup/webapp",
+                    "component": "sp.sf.fundingNotifySup"
                 }
             ]
         }

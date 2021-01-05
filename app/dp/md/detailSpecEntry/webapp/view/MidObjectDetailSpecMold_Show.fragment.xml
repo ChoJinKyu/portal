@@ -16,9 +16,9 @@
                 <Switch state="{spec>/inspection_flag}" customTextOn="Yes" customTextOff="No" enabled="false" />
                 <Label text="Cavity Qty"/>
                 <Input value="{spec>/cavity_process_qty}" editable="false" class="readonlyField"/>
-                <Label text="Demand Life"/>
+                <Label text="Demand Life(Shot)"/>
                 <Input value="{spec>/request_life_shot_count}" editable="false" class="readonlyField"/>
-                <Label text="Hot Runner Valve Qty"/>
+                <Label text="Hot Runner Valve Qty(EA)"/>
                 <Input value="{spec>/mold_hot_runner_qty}" editable="false" class="readonlyField"/>
                 <Label text="Size"/>
                 <Select   width="100%"
@@ -87,7 +87,7 @@
                 <Switch state="{spec>/assembly_approval_flag}" customTextOn="Yes" customTextOff="No" enabled="false" />
                 <Label text="Order Qty"/>
                 <Input value="{spec>/order_qty}" editable="false" class="readonlyField"/>
-                <Label text="Mold Weight"/>
+                <Label text="Mold Weight(Kg)"/>
                 <Input value="{spec>/mold_weight}" editable="false" class="readonlyField"/>
                 <Label text="Hot Runner Maker"/>
                 <Select   width="100%"
@@ -104,7 +104,7 @@
                 >
                     <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
-                <Label text="Mold Size"/>
+                <Label text="Mold Size(W*L*H)"/>
                 <Input value="{spec>/mold_size_2}" editable="false" class="readonlyField"/>
                 <Label text="Gate"/>
                 <Select   width="100%"
@@ -136,7 +136,7 @@
                 >
                     <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
-                <Label text="Use Machine"/>
+                <Label text="Use Machine(Ton)"/>
                 <Input value="{spec>/mold_tonnage}" editable="false" class="readonlyField"/>
 
             <!-- </VBox>            
@@ -200,7 +200,7 @@
                                         path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_FORM_OUT'}
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_OUT_PROCESS'}
                                         ]
                                     }"
                             editable="false"
@@ -220,23 +220,23 @@
             <form:content>
             <core:Title text="Spare Parts" />
             <!-- <VBox> -->
-                <Label text="Eye-Bolt"/>
+                <Label text="Eye-Bolt(EA)"/>
                 <Input value="{spec>/spare_part_eyebolt_count}" editable="false" class="readonlyField"/>
-                <Label text="Heater"/>
+                <Label text="Heater(KIT)"/>
                 <Input value="{spec>/spare_part_heater_count}" editable="false" class="readonlyField"/>
 
             <!-- </VBox>            
             <VBox > -->
-                <Label text="Ej-Sleeve"/> 
+                <Label text="Ej-Sleeve(EA)"/> 
                 <Input value="{spec>/spare_part_ejslave_count}" editable="false" class="readonlyField"/>
-                <Label text="Speaker Core"/>
+                <Label text="Speaker Core(EA)"/>
                 <Input value="{spec>/spare_part_speaker_core_count}" editable="false" class="readonlyField"/>
 
             <!-- </VBox>            
             <VBox > -->
-                <Label text="Ejector-Pin"/> 
+                <Label text="Ejector-Pin(EA)"/> 
                 <Input value="{spec>/spare_part_ejector_pin_count}" editable="false" class="readonlyField"/>
-                <Label text="Etc."/>
+                <Label text="Etc.(EA)"/>
                 <Input value="{spec>/spare_part_etc_count}" editable="false" class="readonlyField"/>
             <!-- </VBox> -->
             </form:content>
@@ -282,7 +282,7 @@
                 >
                     <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
-                <Label text="Cycle Time"/>
+                <Label text="Cycle Time(Sec)"/>
                 <Input value="{spec>/cycle_time}" editable="false" class="readonlyField"/>
             <!-- </VBox>            
             <VBox > -->
@@ -321,7 +321,7 @@
             <VBox > -->
                 <Label text="Slide Core"/> 
                 <Select   width="100%"
-                            selectedKey="{spec>/slide_core_material_name}"
+                            selectedKey="{spec>/mold_slide_core_material_name}"
                             items="{
                                         path : 'util>/Code',
                                         filters : [

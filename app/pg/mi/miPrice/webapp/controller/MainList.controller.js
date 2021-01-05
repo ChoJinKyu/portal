@@ -232,6 +232,11 @@ sap.ui.define([
 
                         var oList = oModel.getChanges();
                         oList.forEach( function (oRow) {
+                            if( oRow["amount"] == null || oRow["amount"].length == 0 ) {
+                                MessageToast.show(that.getModel("I18N").getText("/ECM01010"))
+                                return;
+                            }
+
                             // ["amount", "category_code", "category_name", "currency_unit", "delivery_mm", "exchange", "exchange_unit", "mi_date", "mi_material_code", "mi_material_name", "quantity_unit", "sourcing_group_code", "termsdelv", "__entity", "_row_state_"]
                             var aKeys = Object.keys(oRow);
                             if( oRow["_row_state_"] == "C" ){
@@ -279,8 +284,11 @@ sap.ui.define([
                                         that.byId("pageSearchButton").firePress();
                                     },
                                     error: function (aa, bb){
-
-                                        
+                                        if( aa.statusCode == "409" ) {
+                                            MessageToast.show(that.getModel("I18N").getText("/ECM01004"));
+                                        }else {
+                                            MessageToast.show(that.getModel("I18N").getText("/EPG00003"));
+                                        }
                                     }
                                 });
                                 
@@ -309,8 +317,7 @@ sap.ui.define([
                                         that.byId("pageSearchButton").firePress();
                                     },
                                     error: function (aa, bb){
-
-                                        
+                                        MessageToast.show(that.getModel("I18N").getText("/EPG00001")); 
                                     }
                                 });
                             }else if( oRow["_row_state_"] == "U" ){
@@ -363,7 +370,7 @@ sap.ui.define([
                                         that.byId("pageSearchButton").firePress();
                                     },
                                     error: function (aa, bb){
-
+                                        MessageToast.show(that.getModel("I18N").getText("/EPG00002")); 
                                         
                                     }
                                 });

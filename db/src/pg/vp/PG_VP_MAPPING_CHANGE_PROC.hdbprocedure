@@ -63,14 +63,32 @@ BEGIN
         SELECT *
         FROM :I_SUP
         ORDER BY TENANT_ID, COMPANY_CODE,  ORG_TYPE_CODE, ORG_CODE, VENDOR_POOL_CODE, SUPPLIER_CODE;
+        
+    DECLARE CURSOR l_itm_cursor FOR
+        SELECT *
+        FROM :I_ITM
+        ORDER BY TENANT_ID, COMPANY_CODE,  ORG_TYPE_CODE, ORG_CODE, VENDOR_POOL_CODE, MATERIAL_CODE;
+    
+    DECLARE CURSOR l_man_cursor FOR
+        SELECT *
+        FROM :I_MAN
+        ORDER BY TENANT_ID, COMPANY_CODE,  ORG_TYPE_CODE, ORG_CODE, VENDOR_POOL_CODE, VENDOR_POOL_PERSON_EMPNO;
     
     DECLARE invalid_input_param CONDITION FOR SQL_ERROR_CODE 10000;
     DECLARE invalid_where_info  CONDITION FOR SQL_ERROR_CODE 10001;
     DECLARE invalid_crud_info   CONDITION FOR SQL_ERROR_CODE 10002;
+    DECLARE error_mst_crud      CONDITION FOR SQL_ERROR_CODE 10003;
+    DECLARE var_rollback NVARCHAR(100) := 'ROLLBACK';
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
 		--O_MSG = SELECT  'NG' RETURN_CODE, ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;
-		O_MSG = SELECT  'NG' RETURN_CODE, ::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;
+		EXEC (:var_rollback);
+		IF ::SQL_ERROR_CODE < 10000 THEN
+			O_MSG = SELECT  'NG' RETURN_CODE, LPAD(::SQL_ERROR_CODE, 8, '0')||'-'||::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;
+		ELSE 
+			O_MSG = SELECT  'NG' RETURN_CODE, ::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;
+		END IF;
+		
 	END;
 	
 	/********************************************************
@@ -86,15 +104,15 @@ BEGIN
     FROM   :I_MST;
 	
 	IF  V_MASTER_COUNT  != 1 THEN
-		SIGNAL invalid_input_param SET MESSAGE_TEXT = 'EPG00017'||'-'||'Param Error.';
+		SIGNAL invalid_input_param SET MESSAGE_TEXT = 'EPG00017'||'-'||'Param Error.(Please Check Master Data Count)';
 	END IF;
 	
-	IF TRIM( ' ' FROM :I_USER_ID )  = '' THEN
-	    SIGNAL invalid_input_param SET MESSAGE_TEXT = 'EPG00015'||'-'||'Param Error.';
+	IF IFNULL( :I_USER_ID, '-999')  = '-999' OR TRIM( ' ' FROM :I_USER_ID ) = '' THEN
+	    SIGNAL invalid_input_param SET MESSAGE_TEXT = 'EPG00015'||'-'||'Param Error.(Please Check User Info)';
 	END IF;
 	
-	IF TRIM( ' ' FROM :I_USER_NO )  = '' THEN
-	    SIGNAL invalid_input_param SET MESSAGE_TEXT = 'EPG00016'||'-'||'Param Error.';
+	IF IFNULL( :I_USER_NO, '-999')  = '-999' OR TRIM( ' ' FROM :I_USER_NO ) = '' THEN
+	    SIGNAL invalid_input_param SET MESSAGE_TEXT = 'EPG00016'||'-'||'Param Error.(Please Check User Info)';
 	END IF;
 	
 	/********************************************************
@@ -115,23 +133,23 @@ BEGIN
 	FOR loop_mst AS l_mst_cursor DO
 	    V_TEST_MSG := loop_mst.VENDOR_POOL_CODE;
 	    
-	    IF TRIM( ' ' FROM loop_mst.TENANT_ID )  = '' THEN
+	    IF IFNULL( loop_mst.TENANT_ID, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.TENANT_ID ) = '' THEN
 	        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00004'||'-'||'Master Error.';
 	    END IF;
 	    
-	    IF TRIM( ' ' FROM loop_mst.COMPANY_CODE )  = '' THEN
+	    IF IFNULL( loop_mst.COMPANY_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.COMPANY_CODE ) = '' THEN
 	        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00005'||'-'||'Master Error.';
 	    END IF;
 	    
-	    IF TRIM( ' ' FROM loop_mst.ORG_TYPE_CODE )  = '' THEN
+	    IF IFNULL( loop_mst.ORG_TYPE_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.ORG_TYPE_CODE ) = '' THEN
 	        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00006'||'-'||'Master Error.';
 	    END IF;
 	    
-	    IF TRIM( ' ' FROM loop_mst.ORG_CODE )  = '' THEN
+	    IF IFNULL( loop_mst.ORG_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.ORG_CODE ) = '' THEN
 	        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00007'||'-'||'Master Error.';
 	    END IF;
 	    
-	    IF TRIM( ' ' FROM loop_mst.VENDOR_POOL_CODE )  = '' THEN
+	    IF IFNULL( loop_mst.VENDOR_POOL_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.VENDOR_POOL_CODE ) = '' THEN
 	        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00008'||'-'||'Master Error.';
 	    END IF;
 	    
@@ -164,72 +182,76 @@ BEGIN
 	    	IF TRIM( ' ' FROM loop_mst.CRUD_TYPE_CODE )  =  'U' THEN
 		        --기존 데이터가 존재하는 경우 수정
 		    	IF V_MASTER_EXIST_CNT = 1 THEN
-		    	    UPDATE  PG_VP_VENDOR_POOL_MST MST
-					SET     VENDOR_POOL_LOCAL_NAME				= TRIM( ' ' FROM loop_mst.VENDOR_POOL_LOCAL_NAME )
-						   ,VENDOR_POOL_ENGLISH_NAME 			= TRIM( ' ' FROM loop_mst.VENDOR_POOL_ENGLISH_NAME )
-						   ,REPR_DEPARTMENT_CODE 				= TRIM( ' ' FROM loop_mst.REPR_DEPARTMENT_CODE )			   
-						   ,OPERATION_UNIT_CODE 				= TRIM( ' ' FROM loop_mst.OPERATION_UNIT_CODE )
-						   ,INP_TYPE_CODE 						= TRIM( ' ' FROM loop_mst.INP_TYPE_CODE )
-						   ,MTLMOB_BASE_CODE 					= TRIM( ' ' FROM loop_mst.MTLMOB_BASE_CODE )
-						   ,REGULAR_EVALUATION_FLAG 			= IFNULL( loop_mst.REGULAR_EVALUATION_FLAG, TRUE)
-						   ,INDUSTRY_CLASS_CODE 				= TRIM( ' ' FROM loop_mst.INDUSTRY_CLASS_CODE )
-						   ,SD_EXCEPTION_FLAG 					= IFNULL( loop_mst.SD_EXCEPTION_FLAG, FALSE)
-						   ,VENDOR_POOL_APPLY_EXCEPTION_FLAG 	= IFNULL( loop_mst.VENDOR_POOL_APPLY_EXCEPTION_FLAG, FALSE)
-						   ,DOMESTIC_NET_PRICE_DIFF_RATE 		= loop_mst.DOMESTIC_NET_PRICE_DIFF_RATE
-						   ,DOM_OVERSEA_NETPRICE_DIFF_RATE 		= loop_mst.DOM_OVERSEA_NETPRICE_DIFF_RATE
-						   ,EQUIPMENT_GRADE_CODE 				= TRIM( ' ' FROM loop_mst.EQUIPMENT_GRADE_CODE )
-						   ,EQUIPMENT_TYPE_CODE 				= TRIM( ' ' FROM loop_mst.EQUIPMENT_TYPE_CODE )
-						   ,VENDOR_POOL_DESC 					= TRIM( ' ' FROM loop_mst.VENDOR_POOL_DESC )
-						   ,VENDOR_POOL_HISTORY_DESC 			= TRIM( ' ' FROM loop_mst.VENDOR_POOL_HISTORY_DESC )
-						   ,PARENT_VENDOR_POOL_CODE 			= TRIM( ' ' FROM loop_mst.PARENT_VENDOR_POOL_CODE )
-						   ,LEAF_FLAG 				 			= IFNULL( loop_mst.LEAF_FLAG, FALSE)
-						   ,MAKER_MATERIAL_CODE_MNGT_FLAG 		= IFNULL( loop_mst.MAKER_MATERIAL_CODE_MNGT_FLAG, FALSE)
-						   ,LEVEL_NUMBER 			 			= loop_mst.LEVEL_NUMBER 
-						   ,DISPLAY_SEQUENCE 		 			= loop_mst.DISPLAY_SEQUENCE 
-						   ,REGISTER_REASON 		 			= TRIM( ' ' FROM loop_mst.REGISTER_REASON )
-						   ,APPROVAL_NUMBER        				= TRIM( ' ' FROM loop_mst.APPROVAL_NUMBER )			   
-						   ,LOCAL_UPDATE_DTM       				= NOW()
-						   ,UPDATE_USER_ID         				= I_USER_ID
-						   ,SYSTEM_UPDATE_DTM      				= NOW()
-					WHERE   TENANT_ID           = loop_mst.TENANT_ID
-					AND     COMPANY_CODE        = loop_mst.COMPANY_CODE
-					AND     ORG_TYPE_CODE       = loop_mst.ORG_TYPE_CODE
-					AND     ORG_CODE            = loop_mst.ORG_CODE
-					AND     VENDOR_POOL_CODE    = loop_mst.VENDOR_POOL_CODE
-				    ;
-				    
-				    SELECT ::ROWCOUNT into V_CUD_COUNT FROM DUMMY;
-		    
-				    IF V_CUD_COUNT != 1 THEN
-				        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||'Master Update Error.';
-				    	--raise_application_error(-20001, 'PG_VP_VENDOR_POOL_MST UPDATE ERROR '|| loop_mst.VENDOR_POOL_CODE||' ['||::ROWCOUNT||']');
-				    END IF;
+                    BEGIN
+						--DECLARE EXIT HANDLER FOR SQLEXCEPTION RESIGNAL SET MESSAGE_TEXT = 'EPG00099'||'-'||'Master Update Error.';
+						
+						UPDATE  PG_VP_VENDOR_POOL_MST MST
+	                    SET     VENDOR_POOL_LOCAL_NAME				= TRIM( ' ' FROM loop_mst.VENDOR_POOL_LOCAL_NAME )
+	                            ,VENDOR_POOL_ENGLISH_NAME 			= TRIM( ' ' FROM loop_mst.VENDOR_POOL_ENGLISH_NAME )
+	                            ,REPR_DEPARTMENT_CODE 				= TRIM( ' ' FROM loop_mst.REPR_DEPARTMENT_CODE )			   
+	                            ,OPERATION_UNIT_CODE 				= TRIM( ' ' FROM loop_mst.OPERATION_UNIT_CODE )
+	                            ,INP_TYPE_CODE 						= TRIM( ' ' FROM loop_mst.INP_TYPE_CODE )
+	                            ,MTLMOB_BASE_CODE 					= TRIM( ' ' FROM loop_mst.MTLMOB_BASE_CODE )
+	                            ,REGULAR_EVALUATION_FLAG 			= IFNULL( loop_mst.REGULAR_EVALUATION_FLAG, TRUE)
+	                            ,INDUSTRY_CLASS_CODE 				= TRIM( ' ' FROM loop_mst.INDUSTRY_CLASS_CODE )
+	                            ,SD_EXCEPTION_FLAG 					= IFNULL( loop_mst.SD_EXCEPTION_FLAG, FALSE)
+	                            ,VENDOR_POOL_APPLY_EXCEPTION_FLAG 	= IFNULL( loop_mst.VENDOR_POOL_APPLY_EXCEPTION_FLAG, FALSE)
+	                            ,DOMESTIC_NET_PRICE_DIFF_RATE 		= loop_mst.DOMESTIC_NET_PRICE_DIFF_RATE
+	                            ,DOM_OVERSEA_NETPRICE_DIFF_RATE 	= loop_mst.DOM_OVERSEA_NETPRICE_DIFF_RATE
+	                            ,EQUIPMENT_GRADE_CODE 				= TRIM( ' ' FROM loop_mst.EQUIPMENT_GRADE_CODE )
+	                            ,EQUIPMENT_TYPE_CODE 				= TRIM( ' ' FROM loop_mst.EQUIPMENT_TYPE_CODE )
+	                            ,VENDOR_POOL_DESC 					= TRIM( ' ' FROM loop_mst.VENDOR_POOL_DESC )
+	                            ,VENDOR_POOL_HISTORY_DESC 			= TRIM( ' ' FROM loop_mst.VENDOR_POOL_HISTORY_DESC )
+	                            ,PARENT_VENDOR_POOL_CODE 			= TRIM( ' ' FROM loop_mst.PARENT_VENDOR_POOL_CODE )
+	                            ,LEAF_FLAG 				 			= IFNULL( loop_mst.LEAF_FLAG, FALSE)
+	                            ,MAKER_MATERIAL_CODE_MNGT_FLAG 		= IFNULL( loop_mst.MAKER_MATERIAL_CODE_MNGT_FLAG, FALSE)
+	                            ,LEVEL_NUMBER 			 			= loop_mst.LEVEL_NUMBER 
+	                            ,DISPLAY_SEQUENCE 		 			= loop_mst.DISPLAY_SEQUENCE 
+	                            ,REGISTER_REASON 		 			= TRIM( ' ' FROM loop_mst.REGISTER_REASON )
+	                            ,APPROVAL_NUMBER        			= TRIM( ' ' FROM loop_mst.APPROVAL_NUMBER )			   
+	                            ,LOCAL_UPDATE_DTM       			= NOW()
+	                            ,UPDATE_USER_ID         			= I_USER_ID
+	                            ,SYSTEM_UPDATE_DTM      			= NOW()
+	                    WHERE   TENANT_ID           = loop_mst.TENANT_ID
+	                    AND     COMPANY_CODE        = loop_mst.COMPANY_CODE
+	                    AND     ORG_TYPE_CODE       = loop_mst.ORG_TYPE_CODE
+	                    AND     ORG_CODE            = loop_mst.ORG_CODE
+	                    AND     VENDOR_POOL_CODE    = loop_mst.VENDOR_POOL_CODE
+	                    ;
+	                    
+	                    SELECT ::ROWCOUNT into V_CUD_COUNT FROM DUMMY;
+	            
+	                    IF V_CUD_COUNT != 1 THEN
+	                        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||'Master Update Error.';
+	                        --raise_application_error(-20001, 'PG_VP_VENDOR_POOL_MST UPDATE ERROR '|| loop_mst.VENDOR_POOL_CODE||' ['||::ROWCOUNT||']');
+	                    END IF;
+                    END;
 				    
 				    FOR loop_sup AS l_sup_cursor DO
 					    V_TEST_MSG := loop_sup.SUPPLIER_CODE;
 					    V_SUPPLIER_LOOP_INDEX := V_SUPPLIER_LOOP_INDEX + 1;
 					    
-					    IF TRIM( ' ' FROM loop_sup.TENANT_ID )  = '' THEN
+					    IF IFNULL( loop_sup.TENANT_ID, '-999')  = '-999' OR TRIM( ' ' FROM loop_sup.TENANT_ID ) = '' THEN
 					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00004'||'-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||']';
 					    END IF;
 					    
-					    IF TRIM( ' ' FROM loop_sup.COMPANY_CODE )  = '' THEN
+					    IF IFNULL( loop_sup.COMPANY_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_sup.COMPANY_CODE ) = '' THEN
 					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00005'||'-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||']';
 					    END IF;
 					    
-					    IF TRIM( ' ' FROM loop_sup.ORG_TYPE_CODE )  = '' THEN
+					    IF IFNULL( loop_sup.ORG_TYPE_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_sup.ORG_TYPE_CODE ) = '' THEN
 					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00006'||'-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||']';
 					    END IF;
 					    
-					    IF TRIM( ' ' FROM loop_sup.ORG_CODE )  = '' THEN
+					    IF IFNULL( loop_sup.ORG_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_sup.ORG_CODE ) = '' THEN
 					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00007'||'-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||']';
 					    END IF;
 					    
-					    IF TRIM( ' ' FROM loop_sup.VENDOR_POOL_CODE )  = '' THEN
+					    IF IFNULL( loop_sup.VENDOR_POOL_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_sup.VENDOR_POOL_CODE ) = '' THEN
 					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00008'||'-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||']';
 					    END IF;
 					    
-					    IF TRIM( ' ' FROM loop_sup.SUPPLIER_CODE )  = '' THEN
+					    IF IFNULL( loop_sup.SUPPLIER_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_sup.SUPPLIER_CODE ) = '' THEN
 					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00012'||'-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||']';
 					    END IF;
 					    
@@ -289,6 +311,7 @@ BEGIN
 									   ,SUPPLIER_BASE_PORTION_RATE			= loop_sup.SUPPLIER_BASE_PORTION_RATE
 									   ,REGISTER_REASON						= TRIM( ' ' FROM loop_sup.REGISTER_REASON )
 									   ,APPROVAL_NUMBER						= loop_sup.APPROVAL_NUMBER                       
+									   ,VENDOR_POOL_MAPPING_USE_FLAG        = True
 									   ,LOCAL_UPDATE_DTM       				= NOW()
 									   ,UPDATE_USER_ID         				= I_USER_ID
 									   ,SYSTEM_UPDATE_DTM      				= NOW()
@@ -373,6 +396,301 @@ BEGIN
 						    END IF;
 					    END IF;
 					END FOR;
+					
+					FOR loop_itm AS l_itm_cursor DO
+					    V_TEST_MSG := loop_itm.MATERIAL_CODE;
+					    V_ITEM_LOOP_INDEX := V_ITEM_LOOP_INDEX + 1;
+					    
+					    IF IFNULL( loop_itm.TENANT_ID, '-999')  = '-999' OR TRIM( ' ' FROM loop_itm.TENANT_ID ) = '' THEN
+					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00004'||'-'||'Item Error.['||V_ITEM_LOOP_INDEX||']';
+					    END IF;
+					    
+					    IF IFNULL( loop_itm.COMPANY_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_itm.COMPANY_CODE ) = '' THEN
+					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00005'||'-'||'Item Error.['||V_ITEM_LOOP_INDEX||']';
+					    END IF;
+					    
+					    IF IFNULL( loop_itm.ORG_TYPE_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_itm.ORG_TYPE_CODE ) = '' THEN
+					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00006'||'-'||'Item Error.['||V_ITEM_LOOP_INDEX||']';
+					    END IF;
+					    
+					    IF IFNULL( loop_itm.ORG_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_itm.ORG_CODE ) = '' THEN
+					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00007'||'-'||'Item Error.['||V_ITEM_LOOP_INDEX||']';
+					    END IF;
+					    
+					    IF IFNULL( loop_itm.VENDOR_POOL_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_itm.VENDOR_POOL_CODE ) = '' THEN
+					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00008'||'-'||'Item Error.['||V_ITEM_LOOP_INDEX||']';
+					    END IF;
+					    
+					    IF IFNULL( loop_itm.MATERIAL_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_itm.MATERIAL_CODE ) = '' THEN
+					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00021'||'-'||'Item Error.['||V_ITEM_LOOP_INDEX||']';
+					    END IF;
+					    
+					    IF TRIM( ' ' FROM loop_itm.CRUD_TYPE_CODE )  NOT IN ('D', 'C', 'U') THEN
+					        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00009'||'-'||'Item Error.['||V_ITEM_LOOP_INDEX||']';
+					    END IF;
+					    
+					    IF TRIM( ' ' FROM loop_mst.TENANT_ID )  != TRIM( ' ' FROM loop_itm.TENANT_ID ) THEN
+					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||'Item Error.['||V_ITEM_LOOP_INDEX||']';
+					    END IF;
+					    
+					    IF TRIM( ' ' FROM loop_mst.COMPANY_CODE )  != TRIM( ' ' FROM loop_itm.COMPANY_CODE ) THEN
+					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||'Item Error.['||V_ITEM_LOOP_INDEX||']';
+					    END IF;
+					    
+					    IF TRIM( ' ' FROM loop_mst.ORG_TYPE_CODE )  != TRIM( ' ' FROM loop_itm.ORG_TYPE_CODE ) THEN
+					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||'Item Error.['||V_ITEM_LOOP_INDEX||']';
+					    END IF;
+					    
+					    IF TRIM( ' ' FROM loop_mst.ORG_CODE )  != TRIM( ' ' FROM loop_itm.ORG_CODE ) THEN
+					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||'Item Error.['||V_ITEM_LOOP_INDEX||']';
+					    END IF;
+					    
+					    IF TRIM( ' ' FROM loop_mst.VENDOR_POOL_CODE )  != TRIM( ' ' FROM loop_itm.VENDOR_POOL_CODE ) THEN
+					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||'Item Error.['||V_ITEM_LOOP_INDEX||']';
+					    END IF;
+					    
+					    SELECT  COUNT(*)
+						INTO    V_ITEM_EXIST_CNT
+						FROM    PG_VP_VENDOR_POOL_ITEM_DTL A
+						WHERE   A.TENANT_ID           = loop_itm.TENANT_ID
+					    AND     A.COMPANY_CODE        = loop_itm.COMPANY_CODE
+					    AND     A.ORG_TYPE_CODE       = loop_itm.ORG_TYPE_CODE
+					    AND     A.ORG_CODE            = loop_itm.ORG_CODE
+					    AND     A.VENDOR_POOL_CODE    = loop_itm.VENDOR_POOL_CODE
+					    AND     A.MATERIAL_CODE       = loop_itm.MATERIAL_CODE
+					    ;
+					    
+					    IF TRIM( ' ' FROM loop_itm.CRUD_TYPE_CODE )  =  'C'  OR TRIM( ' ' FROM loop_itm.CRUD_TYPE_CODE )  =  'U' THEN
+					        
+							IF V_ITEM_EXIST_CNT > 1 THEN
+								SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00010'||'-'||'Item Error.['||V_ITEM_LOOP_INDEX||']';
+							END IF;
+							
+							--1건이 존재하는 경우 UPDATE
+							IF V_ITEM_EXIST_CNT = 1 THEN
+							    UPDATE  PG_VP_VENDOR_POOL_ITEM_DTL
+								SET     REGISTER_REASON						= TRIM( ' ' FROM loop_itm.REGISTER_REASON )
+									   ,APPROVAL_NUMBER						= loop_itm.APPROVAL_NUMBER        
+									   ,VENDOR_POOL_MAPPING_USE_FLAG        = True
+									   ,LOCAL_UPDATE_DTM       				= NOW()
+									   ,UPDATE_USER_ID         				= I_USER_ID
+									   ,SYSTEM_UPDATE_DTM      				= NOW()
+								WHERE   TENANT_ID           = loop_itm.TENANT_ID
+								AND     COMPANY_CODE        = loop_itm.COMPANY_CODE
+								AND     ORG_TYPE_CODE       = loop_itm.ORG_TYPE_CODE
+								AND     ORG_CODE            = loop_itm.ORG_CODE
+								AND     VENDOR_POOL_CODE    = loop_itm.VENDOR_POOL_CODE
+								AND     MATERIAL_CODE       = loop_itm.MATERIAL_CODE
+							    ;
+							-- 존재하지 않는 경우 신규생성
+							ELSE
+							    INSERT INTO  PG_VP_VENDOR_POOL_ITEM_DTL
+							    (
+								    	 TENANT_ID                          ,COMPANY_CODE                        ,ORG_TYPE_CODE
+										,ORG_CODE                           ,VENDOR_POOL_CODE                    ,MATERIAL_CODE
+										,VENDOR_POOL_MAPPING_USE_FLAG       ,REGISTER_REASON				     ,APPROVAL_NUMBER
+										,LOCAL_CREATE_DTM                   ,CREATE_USER_ID         		     ,SYSTEM_CREATE_DTM
+										,LOCAL_UPDATE_DTM                   ,UPDATE_USER_ID                      ,SYSTEM_UPDATE_DTM
+							    ) VALUES (
+							    		 loop_itm.TENANT_ID
+							    		,loop_itm.COMPANY_CODE
+							    		,loop_itm.ORG_TYPE_CODE
+							    		,loop_itm.ORG_CODE
+							    		,loop_itm.VENDOR_POOL_CODE
+							    		,loop_itm.MATERIAL_CODE
+							    		,TRUE
+										,TRIM( ' ' FROM loop_itm.REGISTER_REASON )
+										,loop_itm.APPROVAL_NUMBER
+										,NOW()
+										,I_USER_ID
+										,NOW()
+										,NOW()
+										,I_USER_ID
+										,NOW()
+							    )
+							    ;
+							END IF;
+						    
+						    SELECT ::ROWCOUNT into V_CUD_COUNT FROM DUMMY;
+						    
+						    IF V_CUD_COUNT != 1 THEN
+						        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||'Item Update(Insert) Error.['||V_ITEM_LOOP_INDEX||']';
+						    END IF;
+					    ELSE
+							IF V_ITEM_EXIST_CNT != 1 THEN
+							    SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00020'||'-'||'Item Error.['||V_ITEM_LOOP_INDEX||']';
+							ELSE
+						    
+								UPDATE  PG_VP_VENDOR_POOL_ITEM_DTL MST
+								SET     VENDOR_POOL_MAPPING_USE_FLAG		= FALSE
+									   ,LOCAL_UPDATE_DTM       				= NOW()
+									   ,UPDATE_USER_ID         				= I_USER_ID
+									   ,SYSTEM_UPDATE_DTM      				= NOW()
+								WHERE   TENANT_ID           = loop_itm.TENANT_ID
+								AND     COMPANY_CODE        = loop_itm.COMPANY_CODE
+								AND     ORG_TYPE_CODE       = loop_itm.ORG_TYPE_CODE
+								AND     ORG_CODE            = loop_itm.ORG_CODE
+								AND     VENDOR_POOL_CODE    = loop_itm.VENDOR_POOL_CODE
+								AND     MATERIAL_CODE       = loop_itm.MATERIAL_CODE
+							    ;
+						    END IF;
+						    
+						    SELECT ::ROWCOUNT into V_CUD_COUNT FROM DUMMY;
+						    
+						    IF V_CUD_COUNT != 1 THEN
+						        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||'Item Update(Insert) Error.['||V_ITEM_LOOP_INDEX||']';
+						    END IF;
+					    END IF;
+					END FOR;
+					
+					FOR loop_man AS l_man_cursor DO
+					    V_TEST_MSG := loop_man.VENDOR_POOL_PERSON_EMPNO;
+					    V_MANAGER_LOOP_INDEX := V_MANAGER_LOOP_INDEX + 1;
+					    
+					    IF IFNULL( loop_man.TENANT_ID, '-999')  = '-999' OR TRIM( ' ' FROM loop_man.TENANT_ID ) = '' THEN
+					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00004'||'-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||']';
+					    END IF;
+					    
+					    IF IFNULL( loop_man.COMPANY_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_man.COMPANY_CODE ) = '' THEN
+					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00005'||'-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||']';
+					    END IF;
+					    
+					    IF IFNULL( loop_man.ORG_TYPE_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_man.ORG_TYPE_CODE ) = '' THEN
+					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00006'||'-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||']';
+					    END IF;
+					    
+					    IF IFNULL( loop_man.ORG_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_man.ORG_CODE ) = '' THEN
+					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00007'||'-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||']';
+					    END IF;
+					    
+					    IF IFNULL( loop_man.VENDOR_POOL_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_man.VENDOR_POOL_CODE ) = '' THEN
+					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00008'||'-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||']';
+					    END IF;
+					    
+					    IF IFNULL( loop_man.VENDOR_POOL_PERSON_EMPNO, '-999')  = '-999' OR TRIM( ' ' FROM loop_man.VENDOR_POOL_PERSON_EMPNO ) = '' THEN
+					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00022'||'-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||']';
+					    END IF;
+					    
+					    IF TRIM( ' ' FROM loop_man.CRUD_TYPE_CODE )  NOT IN ('D', 'C', 'U') THEN
+					        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00009'||'-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||']';
+					    END IF;
+					    
+					    IF TRIM( ' ' FROM loop_mst.TENANT_ID )  != TRIM( ' ' FROM loop_man.TENANT_ID ) THEN
+					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||']';
+					    END IF;
+					    
+					    IF TRIM( ' ' FROM loop_mst.COMPANY_CODE )  != TRIM( ' ' FROM loop_man.COMPANY_CODE ) THEN
+					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||']';
+					    END IF;
+					    
+					    IF TRIM( ' ' FROM loop_mst.ORG_TYPE_CODE )  != TRIM( ' ' FROM loop_man.ORG_TYPE_CODE ) THEN
+					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||']';
+					    END IF;
+					    
+					    IF TRIM( ' ' FROM loop_mst.ORG_CODE )  != TRIM( ' ' FROM loop_man.ORG_CODE ) THEN
+					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||']';
+					    END IF;
+					    
+					    IF TRIM( ' ' FROM loop_mst.VENDOR_POOL_CODE )  != TRIM( ' ' FROM loop_man.VENDOR_POOL_CODE ) THEN
+					        SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00018'||'-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||']';
+					    END IF;
+					    
+					    SELECT  COUNT(*)
+						INTO    V_MANAGER_EXIST_CNT
+						FROM    PG_VP_VENDOR_POOL_MANAGER_DTL A
+						WHERE   A.TENANT_ID         			= loop_man.TENANT_ID
+					    AND     A.COMPANY_CODE      			= loop_man.COMPANY_CODE
+					    AND     A.ORG_TYPE_CODE     			= loop_man.ORG_TYPE_CODE
+					    AND     A.ORG_CODE          			= loop_man.ORG_CODE
+					    AND     A.VENDOR_POOL_CODE  			= loop_man.VENDOR_POOL_CODE
+					    AND     A.VENDOR_POOL_PERSON_EMPNO      = loop_man.VENDOR_POOL_PERSON_EMPNO
+					    ;
+					    
+					    IF TRIM( ' ' FROM loop_man.CRUD_TYPE_CODE )  =  'C'  OR TRIM( ' ' FROM loop_man.CRUD_TYPE_CODE )  =  'U' THEN
+					        
+							IF V_MANAGER_EXIST_CNT > 1 THEN
+								SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00010'||'-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||']';
+							END IF;
+							
+							--1건이 존재하는 경우 UPDATE
+							IF V_MANAGER_EXIST_CNT = 1 THEN
+							    UPDATE  PG_VP_VENDOR_POOL_MANAGER_DTL
+								SET     VENDOR_POOL_PERSON_ROLE_TEXT		= TRIM( ' ' FROM loop_man.VENDOR_POOL_PERSON_ROLE_TEXT )
+									   ,REGISTER_REASON						= TRIM( ' ' FROM loop_man.REGISTER_REASON )
+									   ,APPROVAL_NUMBER						= loop_man.APPROVAL_NUMBER                       
+									   ,VENDOR_POOL_MAPPING_USE_FLAG        = True
+									   ,LOCAL_UPDATE_DTM       				= NOW()
+									   ,UPDATE_USER_ID         				= I_USER_ID
+									   ,SYSTEM_UPDATE_DTM      				= NOW()
+								WHERE   TENANT_ID           			= loop_man.TENANT_ID
+								AND     COMPANY_CODE        			= loop_man.COMPANY_CODE
+								AND     ORG_TYPE_CODE       			= loop_man.ORG_TYPE_CODE
+								AND     ORG_CODE            			= loop_man.ORG_CODE
+								AND     VENDOR_POOL_CODE    			= loop_man.VENDOR_POOL_CODE
+								AND     VENDOR_POOL_PERSON_EMPNO        = loop_man.VENDOR_POOL_PERSON_EMPNO
+							    ;
+							-- 존재하지 않는 경우 신규생성
+							ELSE
+							    INSERT INTO  PG_VP_VENDOR_POOL_MANAGER_DTL
+							    (
+								    	 TENANT_ID                          ,COMPANY_CODE                        ,ORG_TYPE_CODE
+										,ORG_CODE                           ,VENDOR_POOL_CODE                    ,VENDOR_POOL_PERSON_EMPNO
+										,VENDOR_POOL_PERSON_ROLE_TEXT       ,VENDOR_POOL_MAPPING_USE_FLAG        ,REGISTER_REASON				
+										,APPROVAL_NUMBER                    ,LOCAL_CREATE_DTM                    ,CREATE_USER_ID         		
+										,SYSTEM_CREATE_DTM                  ,LOCAL_UPDATE_DTM                    ,UPDATE_USER_ID
+										,SYSTEM_UPDATE_DTM
+							    ) VALUES (
+							    		 loop_man.TENANT_ID
+							    		,loop_man.COMPANY_CODE
+							    		,loop_man.ORG_TYPE_CODE
+							    		,loop_man.ORG_CODE
+							    		,loop_man.VENDOR_POOL_CODE
+							    		,loop_man.VENDOR_POOL_PERSON_EMPNO
+							    		,TRIM( ' ' FROM loop_man.VENDOR_POOL_PERSON_ROLE_TEXT )
+										,TRUE
+										,TRIM( ' ' FROM loop_man.REGISTER_REASON )
+										,loop_man.APPROVAL_NUMBER
+										,NOW()
+										,I_USER_ID
+										,NOW()
+										,NOW()
+										,I_USER_ID
+										,NOW()
+							    )
+							    ;
+							END IF;
+						    
+						    SELECT ::ROWCOUNT into V_CUD_COUNT FROM DUMMY;
+						    
+						    IF V_CUD_COUNT != 1 THEN
+						        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||'Supplier Update(Insert) Error.['||V_MANAGER_LOOP_INDEX||']';
+						    END IF;
+					    ELSE
+							IF V_MANAGER_EXIST_CNT != 1 THEN
+							    SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00020'||'-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||']';
+							ELSE
+						    
+								UPDATE  PG_VP_VENDOR_POOL_MANAGER_DTL MST
+								SET     VENDOR_POOL_MAPPING_USE_FLAG		= FALSE
+									   ,LOCAL_UPDATE_DTM       				= NOW()
+									   ,UPDATE_USER_ID         				= I_USER_ID
+									   ,SYSTEM_UPDATE_DTM      				= NOW()
+								WHERE   TENANT_ID           			= loop_man.TENANT_ID
+								AND     COMPANY_CODE    			    = loop_man.COMPANY_CODE
+								AND     ORG_TYPE_CODE   			    = loop_man.ORG_TYPE_CODE
+								AND     ORG_CODE            			= loop_man.ORG_CODE
+								AND     VENDOR_POOL_CODE    			= loop_man.VENDOR_POOL_CODE
+								AND     VENDOR_POOL_PERSON_EMPNO        = loop_man.VENDOR_POOL_PERSON_EMPNO
+							    ;
+						    END IF;
+						    
+						    SELECT ::ROWCOUNT into V_CUD_COUNT FROM DUMMY;
+						    
+						    IF V_CUD_COUNT != 1 THEN
+						        SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||'Supplier Update(Insert) Error.['||V_MANAGER_LOOP_INDEX||']';
+						    END IF;
+					    END IF;
+					END FOR;
 		    	
 		    	--UPDATE이고 기존 데이터가 존재지 않는 경우 에러
 		    	ELSE 
@@ -397,7 +715,7 @@ BEGIN
 				    AND     A.VENDOR_POOL_USE_FLAG = FALSE;
 				    
 				    IF V_MASTER_EXIST_DELETE_CNT > 0 THEN 
-				    	SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00019'||'-'||'Master Error(EXIST DELETE COUNT CHK).';
+				    	SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00019'||'-'||'Master Error(EXIST DELETED MASTER DATA. PLEASE CHECK AGAIN).';
 				    END IF;
 		    	    
 		    	    INSERT INTO PG_VP_VENDOR_POOL_MST MST(

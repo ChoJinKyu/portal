@@ -3,6 +3,8 @@ using from './md/dp_md_index.cds';
 using from './gs/dp_gs_index.cds';
 // 협력사제안 관리
 using from './im/dp_im_index.cds';
+// 신규부품개발업체선정
+using from './sd/dp_sd_index.cds';
 // 자재코드생성 관리
 using from './mm/dp_mm_index.cds';
 // 선행부품개발

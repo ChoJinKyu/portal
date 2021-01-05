@@ -1,5 +1,3 @@
-//아직 작성X
-
 var inputInfo = {},
     vpMstList = [],
     vpSupplierList = [],
@@ -72,7 +70,7 @@ vpSupplierList.push({
     ,vendor_pool_mapping_use_flag: true
     ,register_reason: "AAA"
     ,approval_number: "AAA"
-    ,crud_type_code : "I"
+    ,crud_type_code : "C"
 });
 
 vpSupplierList.push({
@@ -95,7 +93,7 @@ vpSupplierList.push({
     ,vendor_pool_mapping_use_flag: true
     ,register_reason: "AAA"
     ,approval_number: "AAA"
-    ,crud_type_code : "I"
+    ,crud_type_code : "C"
 });
 
 inputInfo.inputData.vpSupplier = vpSupplierList;            
@@ -106,7 +104,8 @@ vpItemList.push({
     , org_type_code: "BU"
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP201610260092"
-    , material_code: "PAAA"
+    , material_code: "PCCC"
+    , crud_type_code : "C"
 });
 
 vpItemList.push({
@@ -114,8 +113,9 @@ vpItemList.push({
     , company_code: "*"
     , org_type_code: "BU"
     , org_code: "BIZ00200"
-    , vendor_pool_code: "VP201610260095"
+    , vendor_pool_code: "VP201610260092"
     , material_code: "PBBB"
+    , crud_type_code : "C"
 });
 
 inputInfo.inputData.vpItem = vpItemList;            
@@ -126,7 +126,8 @@ vpManagerList.push({
     , org_type_code: "BU"
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP201610260092"
-    , vendor_pool_person_empno: "EAAA"
+    , vendor_pool_person_empno: "ECCC"
+    , crud_type_code : "C"
 });
 
 vpManagerList.push({
@@ -136,6 +137,7 @@ vpManagerList.push({
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP201610260092"
     , vendor_pool_person_empno: "EBBB"
+    , crud_type_code : "C"
 });
 
 inputInfo.inputData.vpManager = vpManagerList;

@@ -19,6 +19,10 @@
 
 using { dp as uom } from '../../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE-model';
 using { dp as uomLng } from '../../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE_LNG-model';
+
+//using { dp as uomConversion } from '../../../../../db/cds/dp/mm/DP_MM_UOM_CONVERSION_PROC-model';
+
+
 namespace dp;
 @path : '/dp.UomMgtService'
 
@@ -55,5 +59,7 @@ service UomMgtService {
       and l.uom_code = u.uom_code
       and l.language_code = 'KO'
     ;
+
+    
 
 }

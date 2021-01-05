@@ -10,6 +10,7 @@
     <App>
         <Page id="page" 
         title="자재별 시황자재 BOM 등록" 
+        showHeader="false"
         busy="{oUi>/busy}">
             <content>
                 <uxap:ObjectPageLayout                    
@@ -29,26 +30,12 @@
                             </uxap:expandedHeading>
 
                             <uxap:navigationActions>
-                                <OverflowToolbarButton
-                                    id="pageEnterFullScreenButton"
-                                    type="Transparent"
-                                    icon="sap-icon://full-screen"
-                                    press="onPageEnterFullScreenButtonPress"
-                                    tooltip="Enter Full Screen Mode"
-                                    visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
-                                <OverflowToolbarButton
-                                    id="pageExitFullScreenButton"
-                                    type="Transparent"
-                                    icon="sap-icon://exit-full-screen"
-                                    press="onPageExitFullScreenButtonPress"
-                                    tooltip="Exit Full Screen Mode"
-                                    visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
+
                                 <OverflowToolbarButton
                                     id="pageNavBackButton"
                                     type="Transparent"
                                     icon="sap-icon://decline"
                                     text="back"
-                                    tooltip="back to the list"
                                     press=".onPageNavBackButtonPress"
                                     visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
                             </uxap:navigationActions>
@@ -57,10 +44,10 @@
                     <uxap:headerContent>
                         <layout:VerticalLayout>
                             <FlexBox height="30px" alignItems="Start" justifyContent="Start" visible="{=!${oUi>/createMode}}"> 
-                                    <Label text="Update :"/>
+                                    <Label text="{I18N>/UPDATE_USER_ID} :"/>
                                     <Label text="{oUiData>/update_user_id}"  
                                     class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
-                                    <Label text="Update Data :"/>
+                                    <Label text="Update Date :"/>
                                     <Label text="{
                                         path: 'oUiData>/system_update_dtm',
                                         type: 'sap.ui.model.type.Date',
@@ -74,19 +61,19 @@
                         </layout:VerticalLayout>  
                     </uxap:headerContent>
                     <uxap:sections>
-                        <uxap:ObjectPageSection titleUppercase="false" title="General Info"  >
+                        <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/BASIC_INFO}"  >
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection>      
                                     <layout:VerticalLayout width="100%">
                                         <FlexBox height="28px" alignItems="Start" justifyContent="Start" class="sapUiTinyMarginTop">
-                                            <Label text="자재정보" required="{oUi>/createMode}"/>
+                                            <Label text="{I18N>/BOM}" required="{oUi>/createMode}"/>
                                         </FlexBox>
                                         <FlexBox height="40px" alignItems="Start" justifyContent="Start"
                                                  visible="{oUi>/createMode}" 
                                                  class="sapUiTinyMarginBottom">        
                                             <RadioButtonGroup id="radioButtonGroup" columns="3" width="100%" selectedIndex="0">
-                                                <RadioButton id="radioButtonType01" text="자재명/코드" />
-                                                <RadioButton id="radioButtonType02" text="공급업체/코드" />
+                                                <RadioButton id="radioButtonType01" text="{I18N>/MI_MATERIAL}/{I18N>/CODE}" />
+                                                <RadioButton id="radioButtonType02" text="{I18N>/SUPPLIER}/{I18N>/CODE}" />
                                             </RadioButtonGroup>  
                                         </FlexBox>
                                         <Input id="input_hidden_material_code" visible="false" />
@@ -244,7 +231,7 @@
                                             </headerToolbar>                                            
                                             <columns> 
                                                 <Column hAlign="Center" 
-                                                    width="10px"
+                                                    width="0px"
                                                     visible="false" 
                                                 >
                                                     <header>
@@ -252,31 +239,31 @@
                                                     </header>
                                                 </Column>    
                                                 <Column hAlign="Center" 
-                                                    width="10px"
+                                                    width="0px"
                                                     visible="false" 
                                                 >
                                                     <header>
                                                         <Label text="ODATA"/>
                                                     </header>
                                                 </Column>                                                                                                                                                                                          
-                                                <Column hAlign="Center" width="200px">
+                                                <Column hAlign="Center">
                                                     <header>
-                                                        <Label text="Code"/>
+                                                        <Label text="{I18N>/CODE}"/>
                                                     </header>
                                                 </Column>                                                                           
-                                                <Column hAlign="Center" width="200px">
+                                                <Column hAlign="Center">
                                                     <header>
-                                                        <Label text="Name"/>
+                                                        <Label text="{I18N>/NAME}"/>
                                                     </header>
                                                 </Column>
-                                                <Column hAlign="Center"  width="150px">
+                                                <Column hAlign="Center">
                                                     <header>
-                                                        <Label text="Category"/>
+                                                        <Label text="{I18N>/CATEGORY}"/>
                                                     </header>
                                                 </Column>
                                                 <Column hAlign="Center" >
                                                     <header>
-                                                        <Label text="소요량 단위" />
+                                                        <Label text="소요량 단위"/>
                                                     </header>
                                                 </Column>                                                
                                                 <Column hAlign="Center" >
@@ -365,9 +352,9 @@
                                                             <Text   text="{= ${midList>use_flag}?'Yes':'No'}"
                                                                     visible="{oUi>/readMode}"/> 
                                                         </VBox>         
-                                                        <Text text="{midList>currency_unit}" width="40px"/>                                          
-                                                        <Text text="{midList>quantity_unit}" width="40px"/>                                          
-                                                        <Text text="{midList>exchange}" width="40px"/>                                          
+                                                        <Text text="{midList>currency_unit}"/>                                          
+                                                        <Text text="{midList>quantity_unit}"/>                                          
+                                                        <Text text="{midList>exchange}"/>                                          
                                                         <Text text="{midList>termsdelv}" />                                          
                                                     </cells>
                                                 </ColumnListItem>

@@ -1,0 +1,800 @@
+<mvc:View controllerName="sp.sc.scQBMgt.controller.DetailPage2"
+	xmlns:mvc="sap.ui.core.mvc" 
+	xmlns="sap.m" 
+	xmlns:uxap="sap.uxap" 
+	xmlns:layout="sap.ui.layout" 
+    xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core"
+    xmlns:rte="sap.ui.richtexteditor"
+	height="100%">
+    <Page showNavButton="true" navButtonPress=".onNavBack"  title="입찰계획">
+	<uxap:ObjectPageLayout id="page" 
+		toggleHeaderOnTitleClick="true"
+		alwaysShowContentHeader = "true"
+		preserveHeaderStateOnScroll="false"
+		headerContentPinnable="true"
+		isChildPage="true"
+		upperCaseAnchorBar="false"
+		showTitleInHeaderContent="true"
+		showEditHeaderButton="true" 
+		showFooter="true">
+		<uxap:headerTitle>
+			<uxap:ObjectPageDynamicHeaderTitle>
+				<uxap:expandedHeading>
+					<Title text="입찰계획" wrapping="true" />
+				</uxap:expandedHeading>
+				<uxap:snappedHeading>
+					<Title text="입찰계획" wrapping="true" />
+				</uxap:snappedHeading>
+				<uxap:snappedContent>
+				</uxap:snappedContent>
+				<uxap:snappedTitleOnMobile>
+					<Title text="입찰계획" />
+				</uxap:snappedTitleOnMobile>
+				<uxap:navigationActions>
+					<OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                </uxap:navigationActions> 
+			</uxap:ObjectPageDynamicHeaderTitle>
+		</uxap:headerTitle>
+
+		<uxap:headerContent>
+            <layout:VerticalLayout>
+                <FlexBox id="headerContentId" height="30px" alignItems="Start" justifyContent="Start" >
+                        <Label text="Negotiation No :"  class="sapUiLargeMarginBegin" />
+                        <Label text="3426536-1" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold" />
+                        <Label text="Creater :" class="sapUiLargeMarginBegin" />
+                        <Label text="김갑수[ks.kim]"  
+                        class="sapUiTinyMarginBegin"  
+                        design="Bold"/>  
+                        <Label text="Create Date :"  class="sapUiLargeMarginBegin" />
+                        <Label text="2020/07/20" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold" />
+                </FlexBox>  
+                <FlexBox height="30px" alignItems="Start" justifyContent="Start" >
+                    <Label text="Status :"  class="sapUiLargeMarginBegin" />
+                    <Label text="Draft" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold" />
+                </FlexBox>  
+            </layout:VerticalLayout> 
+		</uxap:headerContent>
+
+		<uxap:sections>
+			<uxap:ObjectPageSection titleUppercase="false" title="Header" visible="true">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+                        <!-- <VBox class="sapUiSmallMargin"> -->
+                        <Panel id="panel_Header" expandable="true" expanded="true" headerText="Header Content">
+                            <form:SimpleForm id="formHeader1" editable="true"  layout="ColumnLayout"
+                                            columnsM="2"
+                                            columnsL="2"
+                                            columnsXL="3">
+                                <!-- <core:Title text="Category 정보" level="H3" /> -->
+                                <!-- <form:content> -->
+                                    <Label  text="Negotiation No" 
+                                            design="Bold" 
+                                            class="sapMLabelNoText"/>
+                                    <Input   id="inputNegotiationNo" 
+                                            class="sapMLabelNoText"/>
+                                    <Label  text="type" 
+                                            design="Bold" 
+                                            class="sapMLabelNoText"/>
+                                    <!-- <Text   id="textCode" 
+                                            visible="{= ${util>/flag} === 'S' ?  true : false}"
+                                            class="sapMLabelNoText"/>                                      -->
+                                    <Input  id="inputType"
+                                            enabled="false"
+                                            value="2-steps bidding"
+                                            class="sapUiSmallMarginEnd"
+                                    />
+                                    <Label  text="Outcome" 
+                                            design="Bold" 
+                                            class="sapMLabelNoText"/>
+                                    <Input  id="inputOutcome" 
+                                            enabled="false"
+                                            value="BPA"
+                                            class="sapMLabelNoText"/>  
+                                    
+                            </form:SimpleForm>
+                            
+                            <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin"> 
+                                <Label  text="Title" 
+                                        required="true"
+                                        design="Bold" 
+                                        class="sapMLabelNoText"/>
+                                <Input  id="inputTitle" 
+                                        class="sapMLabelNoText" width="100%"/>
+                                
+                                <Label  text="Description" 
+                                            design="Bold" 
+                                            class="sapMLabelNoText"/>
+                                <rte:RichTextEditor id="reMonitoringPurpose" editable="true" editorType="TinyMCE4" width="100%" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="true"/>
+                            </VBox>
+
+                            
+                            <form:SimpleForm id="formHeader3" editable="true"  layout="ColumnLayout"
+                                            columnsM="1"
+                                            columnsL="1"
+                                            columnsXL="3" >
+                                <Label  text="Bid Style" 
+                                        design="Bold" 
+                                        class="sapMLabelNoText"/>
+                                <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedIndex="0" class="sapUiMediumMarginBottom">
+                                    <RadioButton id="RB1-1" text="Round Bidding(Sealed)" />
+                                    <RadioButton id="RB1-2" text="Reserve Auction(Open)" />
+                                </RadioButtonGroup>
+                                <Label  text="Incoterms" 
+                                        design="Bold" 
+                                        class="sapMLabelNoText"/>
+                                <ComboBox />
+                            </form:SimpleForm>
+                            
+                            <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" 
+                                                adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                                <form:content >
+                                    <VBox >
+                                        <Label  text="Period" 
+                                                required="true"
+                                                class="sapMLabelNoText"/> 
+                                        <CheckBox />  
+                                        <layoutData>
+                                            <layout:GridData span="XL1 L1 M1 S1" />
+                                        </layoutData> 
+                                    </VBox>
+                                    <VBox>
+                                        <Label text="Immediately" class="sapMLabelNoText"/>   
+                                        <DateRangeSelection
+                                            placeholder="YYYY/MM/DD ~ YYYY/MM/DD"
+                                            change="handleChange"
+                                            class="sapUiSmallMarginBottom"/> 
+                                        <layoutData>
+                                            <layout:GridData span="XL2 L2 M2 S2" />
+                                        </layoutData> 
+                                    </VBox>
+                                    <HBox >
+                                        <VBox class="sapUiTinyMarginBeginEnd">
+                                        <Label  text="Max Round Count" 
+                                            required="true"
+                                            class="sapMLabelNoText "/> 
+                                        <Input value="3"/>
+                                        
+                                            <!-- <layoutData>
+                                                <layout:GridData span="XL1 L1 M1 S1" />
+                                            </layoutData>  -->
+                                        </VBox>
+                                        <VBox justifyContent="Center" alignContent="Center" alignItems="Center" class="">
+                                            <Label  text="" 
+                                            class="sapMLabelNoText"/> 
+                                            <CheckBox class="sapUiMediumMarginBegin" />
+                                        </VBox>
+                                        <VBox >
+                                            <Label  text="" 
+                                            class="sapMLabelNoText"/> 
+                                            <Text text="Auto Round"/>   
+                                        </VBox>
+                                        <VBox class="sapUiTinyMarginBeginEnd" >
+                                            <Label  text="" 
+                                            class="sapMLabelNoText"/> 
+                                            <Input value="5" />
+                                        </VBox>
+                                        <VBox >
+                                            <Label  text="" 
+                                            class="sapMLabelNoText"/> 
+                                            <Text text="Minute"/>
+                                        </VBox>
+
+
+                                        <layoutData>
+                                            <layout:GridData span="XL4 L4 M4 S4" />
+                                        </layoutData> 
+                                    </HBox>
+
+                                    <VBox>
+                                        <Label  text="Previous Round" 
+                                            class="sapMLabelNoText"/>
+                                        <RadioButtonGroup id="rbg6" columns="2" width="100%" selectedIndex="0" class="sapUiTinyMargin sapUiTinyMarginEnd sapUiTinyMarginTop sapUiTinyMarginBegin sapUiTinyMarginBottom" >
+                                                <RadioButton id="RB6-1" text="Yes" />
+                                                <RadioButton id="RB6-2" text="No" />
+                                            </RadioButtonGroup>
+                                        <layoutData>
+                                            <layout:GridData span="XL2 L2 M2 S2" />
+                                        </layoutData> 
+                                    </VBox>
+                                    
+                                    
+                                </form:content>
+                            </form:SimpleForm>
+
+                            <VBox width="auto">
+                                <Label  text="Note To Supplier" 
+                                        design="Bold" 
+                                        class="sapMLabelNoText sapUiSmallMarginBegin"/>
+                                <rte:RichTextEditor class="sapUiSmallMarginBegin" id="reSupplier" editable="true" editorType="TinyMCE4" width="100%" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="true"/>
+                            </VBox>
+                            
+                            
+
+                            <Table id="tableAttachments" 
+                                sticky="HeaderToolbar,ColumnHeaders" 
+                                inset="false" 
+                                class="sapFDynamicPageAlignContent" 
+                                mode="None"
+                                width="auto">
+                                <headerToolbar>
+                                    <OverflowToolbar>
+                                        <Title text="Attachments (2)" level="H2"/>
+                                        <ToolbarSpacer/>
+                                        
+                                        <Button  text="Load Attached file From Requisition" type="Transparent" press=".onMidTableAddButtonPress"  />
+                                        <Button  text="Add" type="Transparent" press=".onMidTableDeleteButtonPress" />
+                                        <!-- <ToolbarSeparator/>
+                                        <SearchField id="midTableSearchField" width="10rem" search=".onMidTableFilterPress" visible="false" enabled="false" />
+                                        <Button id="midTableApplyFilterButton" text="Apply" type="Transparent" press=".onMidTableApplyFilterButton" enabled="false" visible="false"/> -->
+                                    </OverflowToolbar>
+                                </headerToolbar>
+                                <columns>
+                                    
+                                    <!-- language_code -->
+                                    <Column  minScreenWidth="Tablet" hAlign="Center" demandPopin="true" >
+                                        <Text text="Type" />
+                                    </Column>
+                                    <!-- <Column id="category_code" minScreenWidth="Tablet" hAlign="Center" >
+                                        <Text text="category_code" />
+                                    </Column> -->
+                                    <Column minScreenWidth="Tablet" hAlign="Center"  visible="{= ${util>/flag} === 'S' ?  true : false}" demandPopin="true">
+                                        <Text text="File Name" />
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="Description" />
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="Submission No" />
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="Title" />
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="Delete" />
+                                    </Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem type="Inactive" >
+                                        <cells>
+                                            <Text text="txt"/>
+                                            <Text text="fileName1"/>
+                                            <Text text="Timing Controller ** SW0887A, SI"/>
+                                            <Text text="2198849-1"/>
+                                            <Text text="20109040_미정단가_홍길동"/>
+                                            <CheckBox />  
+                                        </cells>
+                                    </ColumnListItem>
+                                    <ColumnListItem type="Inactive" >
+                                        <cells>
+                                            <Text text="xlsm"/>
+                                            <Text text="fileName2"/>
+                                            <Text text="Bare PCB ** LM195WF1-SPA1-T"/>
+                                            <Text text="2198865-1"/>
+                                            <Text text="20109046_미정단가_홍길동"/>
+                                            <CheckBox />  
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+
+                        </Panel>
+                        
+					</uxap:ObjectPageSubSection>
+                    
+				</uxap:subSections>
+                
+			</uxap:ObjectPageSection>
+
+            <uxap:ObjectPageSection titleUppercase="false" title="Control" visible="true">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+                        <Panel id="panel_Control" expandable="true" expanded="true" headerText="Control Content" class="sapUiTinyMargin">
+						<!-- <form:SimpleForm  editable="true"  layout="ColumnLayout"
+                                        columnsM="1"
+                                        columnsL="2"
+                                        columnsXL="4"> -->
+                            <!-- <form:SimpleForm maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" 
+                                             labelSpanL="2" labelSpanM="2" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="1"> -->
+                            <VBox>
+                                <form:SimpleForm  
+                                    class="sapUiTinyMargin sapUiTinyMarginEnd sapUiTinyMarginTop sapUiTinyMarginBegin sapUiTinyMarginBottom"
+                                    layout="ResponsiveGridLayout"
+                                    editable="true"
+                                    >
+                                    <form:content>
+                                        <VBox width="100%">
+                                            <HBox width="100%" class="sapUiTinyMarginTop">
+                                                <VBox width="30%">
+                                                    <Label  text="Award Type" 
+                                                            class="sapMLabelNoText"/> 
+                                                    <ComboBox width="90%" placeholder="Target Price Setup"> 
+                                                        <core:Item key="1" text="Target Price Setup" />
+                                                    </ComboBox > 
+                                                    <layoutData>
+                                                        <layout:GridData span="XL3 L4 M6 S12"/>
+                                                    </layoutData>
+                                                </VBox>
+                                                <VBox width="15%" class="">
+                                                    <Label  text="Target Price Setup " 
+                                                            class="sapMLabelNoText"/>
+                                                    <RadioButtonGroup id="rbg2" columns="2" width="100%" selectedIndex="0" class="sapUiTinyMarginBeginEnd" >
+                                                        <RadioButton id="RB2-1" text="Yes" />
+                                                        <RadioButton id="RB2-2" text="No" />
+                                                    </RadioButtonGroup>
+                                                    <layoutData>
+                                                        <layout:GridData span="XL2 L4 M6 S12"/>
+                                                    </layoutData>
+                                                </VBox>
+                                                <VBox width="30%">
+                                                    <Label  text="Target Total Amount" 
+                                                            class="sapMLabelNoText"/> 
+                                                    <Input /> 
+                                                    <layoutData>
+                                                        <layout:GridData span="XL3 L4 M6 S12"/>
+                                                    </layoutData>
+                                                </VBox>
+                                            </HBox>
+
+                                            <HBox width="100%" class="sapUiTinyMarginTop">
+                                                <VBox width="30%">
+                                                    <Label  text="Selection of Suppliers" 
+                                                            class="sapMLabelNoText"/> 
+                                                    <ComboBox  width="90%" placeholder="Lowest Price Supplier"> 
+                                                        <core:Item key="1" text="Target Price Setup" />
+                                                    </ComboBox > 
+                                                    <layoutData>
+                                                        <layout:GridData span="XL3 L4 M6 S12"/>
+                                                    </layoutData>
+                                                </VBox>
+                                                <VBox width="15%" class="">
+                                                    <Label  text="Participative" 
+                                                            class="sapMLabelNoText"/>
+                                                    <RadioButtonGroup id="rbg3" columns="2" width="100%" selectedIndex="0" class="sapUiTinyMarginBeginEnd"  >
+                                                        <RadioButton id="RB3-1" text="Yes" />
+                                                        <RadioButton id="RB3-2" text="No" />
+                                                    </RadioButtonGroup>
+                                                    <layoutData>
+                                                        <layout:GridData span="XL2 L4 M6 S12"/>
+                                                    </layoutData>
+                                                </VBox>
+                                                <VBox width="30%">
+                                                    <Label  text="Partial Quotation" 
+                                                            class="sapMLabelNoText"/> 
+                                                    <RadioButtonGroup id="rbg4" columns="2" width="100%" selectedIndex="0" class="sapUiTinyMarginBeginEnd" >
+                                                        <RadioButton id="RB4-1" text="Yes" />
+                                                        <RadioButton id="RB4-2" text="No" />
+                                                    </RadioButtonGroup>
+                                                    <layoutData>
+                                                        <layout:GridData span="XL3 L4 M6 S12"/>
+                                                    </layoutData>
+                                                </VBox>
+                                            </HBox>
+
+                                            <HBox width="100%" class="sapUiTinyMarginTop">
+                                                <VBox width="30%">
+                                                    <Label  text="On-site presentation" 
+                                                            class="sapMLabelNoText"/>
+                                                    <RadioButtonGroup id="rbg5" columns="2" width="100%" selectedIndex="0" class="sapUiTinyMarginBeginEnd" >
+                                                        <RadioButton id="RB5-1" text="Yes" />
+                                                        <RadioButton id="RB5-2" text="No" />
+                                                    </RadioButtonGroup> 
+                                                    <layoutData>
+                                                        <layout:GridData span="XL3 L4 M6 S12"/>
+                                                    </layoutData>
+                                                </VBox>
+                                                <VBox width="20%" class="">
+                                                    <Label  text="On-site presentation Date" 
+                                                            class="sapMLabelNoText"/>
+                                                    <DateTimePicker
+                                                        placeholder="YY/MM/DD, tt:mm"
+                                                        change="handleChange"
+                                                        class=""/> 
+                                                    <layoutData>
+                                                        <layout:GridData span="XL2 L4 M6 S12"/>
+                                                    </layoutData>
+                                                </VBox>
+                                                
+                                            </HBox>
+
+                                            <HBox width="100%" class="sapUiTinyMarginTop">
+                                                <VBox width="60%">
+                                                    <Label  text="On-site presentation Place" 
+                                                            class="sapMLabelNoText"/>
+                                                    <Input />
+                                                    <!-- <layoutData>
+                                                        <layout:GridData span="XL3 L4 M6 S12"/>
+                                                    </layoutData> -->
+                                                </VBox>
+                                                
+                                            </HBox>
+
+                                            <HBox width="100%" class="sapUiTinyMarginTop">
+                                                <VBox width="30%">
+                                                    <Label  text="Supplier Manager" 
+                                                            class="sapMLabelNoText"/>
+                                                    <Input placeholder="사용자 이름" width="90%" />
+                                                    <!-- <layoutData>
+                                                        <layout:GridData span="XL3 L4 M6 S12"/>
+                                                    </layoutData> -->
+                                                </VBox>
+                                                <VBox width="15%" />
+                                                <VBox width="30%">
+                                                    <Label  text="Phone No" 
+                                                            class="sapMLabelNoText"/>
+                                                    <Input />
+                                                    <!-- <layoutData>
+                                                        <layout:GridData span="XL3 L4 M6 S12"/>
+                                                    </layoutData> -->
+                                                </VBox>
+                                                
+                                            </HBox>
+
+                                        </VBox>
+                                        
+                                        
+                                    </form:content>
+                                </form:SimpleForm  >
+
+
+
+
+                                <!-- <form:SimpleForm 찐
+                                    class="sapUiTinyMargin"
+                                    layout="ResponsiveGridLayout"
+                                    editable="true"
+                                    >
+                                    <form:content>
+                                        <VBox>
+                                            <Label  text="Selection of Suppliers" 
+                                                    class="sapMLabelNoText"/> 
+                                            <ComboBox  width="90%" placeholder="Lowest Price Supplier"> 
+                                                <core:Item key="1" text="Target Price Setup" />
+                                            </ComboBox > 
+                                            <layoutData>
+                                                <layout:GridData span="XL3 L4 M6 S12"/>
+                                            </layoutData>
+                                        </VBox>
+                                        <VBox>
+                                            <Label  text="Participative" 
+                                                    class="sapMLabelNoText"/>
+                                            <RadioButtonGroup id="rbg3" columns="2" width="100%" selectedIndex="0" class="sapUiTinyMargin" >
+                                                <RadioButton id="RB3-1" text="Yes" />
+                                                <RadioButton id="RB3-2" text="No" />
+                                            </RadioButtonGroup>
+                                            <layoutData>
+                                                <layout:GridData span="XL2 L4 M6 S12"/>
+                                            </layoutData>
+                                        </VBox>
+                                        <VBox>
+                                            <Label  text="Partial Quotation" 
+                                                    class="sapMLabelNoText"/> 
+                                            <RadioButtonGroup id="rbg4" columns="2" width="100%" selectedIndex="0" class="sapUiTinyMargin" >
+                                                <RadioButton id="RB4-1" text="Yes" />
+                                                <RadioButton id="RB4-2" text="No" />
+                                            </RadioButtonGroup>
+                                            <layoutData>
+                                                <layout:GridData span="XL2 L4 M6 S12"/>
+                                            </layoutData>
+                                        </VBox>
+                                        
+                                    </form:content>
+                                </form:SimpleForm>
+                                <form:SimpleForm 
+                                    class="sapUiTinyMargin sapUiTinyMarginEnd sapUiTinyMarginTop sapUiTinyMarginBegin sapUiTinyMarginBottom"
+                                    layout="ResponsiveGridLayout"
+                                    editable="true">
+                                    <form:content>
+                                        <VBox>
+                                            <Label  text="On-site presentation" 
+                                                    class="sapMLabelNoText"/>
+                                            <RadioButtonGroup id="rbg5" columns="2" width="100%" selectedIndex="0" class="sapUiTinyMargin sapUiTinyMarginEnd sapUiTinyMarginTop sapUiTinyMarginBegin sapUiTinyMarginBottom" >
+                                                <RadioButton id="RB5-1" text="Yes" />
+                                                <RadioButton id="RB5-2" text="No" />
+                                            </RadioButtonGroup>
+                                            <layoutData>
+                                                <layout:GridData span="XL2 L4 M6 S12"/>
+                                            </layoutData>
+                                        </VBox>
+                                        <VBox>
+                                            <Label  text="On-site presentation Date" 
+                                                    class="sapMLabelNoText"/>
+                                            <DateTimePicker
+                                                placeholder="YY/MM/DD, tt:mm"
+                                                change="handleChange"
+                                                class="sapUiSmallMarginBottom"/> 
+                                            
+                                            <layoutData>
+                                                <layout:GridData span="XL2 L4 M6 S12"/>
+                                            </layoutData>
+                                        </VBox>
+                                    </form:content>
+                                </form:SimpleForm >
+                                <form:SimpleForm
+                                    class="sapUiTinyMargin sapUiTinyMarginEnd sapUiTinyMarginTop sapUiTinyMarginBegin sapUiTinyMarginBottom"
+                                    layout="ResponsiveGridLayout"
+                                    editable="true" >
+                                    <VBox>
+                                        <Label  text="On-site presentation Place" 
+                                                class="sapMLabelNoText"/>
+                                        <Input />
+                                        
+                                        <layoutData>
+                                            <layout:GridData span="XL9 L9 M9 S9"/>
+                                        </layoutData>
+                                    </VBox>
+                                </form:SimpleForm >
+                                <form:SimpleForm
+                                    class="sapUiTinyMargin sapUiTinyMarginEnd sapUiTinyMarginTop sapUiTinyMarginBegin sapUiTinyMarginBottom"
+                                    layout="ResponsiveGridLayout"
+                                    editable="true" >
+                                    <VBox>
+                                        <Label  text="Supplier Manager" 
+                                                class="sapMLabelNoText"/>
+                                        <Input placeholder="사용자 이름" />
+                                        <layoutData>
+                                            <layout:GridData span="XL3 L4 M6 S12"/>
+                                        </layoutData>
+                                    </VBox>
+                                    <VBox>
+                                        <Label  text="Phone No" 
+                                                class="sapMLabelNoText"/>
+                                        <Input />
+                                        <layoutData>
+                                            <layout:GridData span="XL3 L4 M6 S12"/>
+                                        </layoutData>
+                                    </VBox>
+
+                                </form:SimpleForm > 찐 -->
+                            </VBox>
+                            
+
+                            <!-- demandPopin -->
+                            <!-- <form:SimpleForm maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" 
+                                             labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                                <form:content>
+                                    <VBox>
+                                        <Label  text="Award Type" 
+                                                class="sapMLabelNoText"/> 
+                                        <ComboBox selectedKey="1" width="90%"> 
+                                            <core:Item key="1" text="Target Price Setup" />
+                                        </ComboBox > 
+                                        <layoutData>
+                                            <layout:GridData span="XL3 L4 M6 S12"/>
+                                        </layoutData>
+                                    </VBox>
+                                    <VBox>
+                                        <Label  text="Bid Style" 
+                                                design="Bold" 
+                                                class="sapMLabelNoText"/>
+                                        <RadioButtonGroup id="rbg3" columns="2" width="100%" selectedIndex="0" class="sapUiMediumMarginBottom" >
+                                            <RadioButton id="RB3-1" text="Yes" />
+                                            <RadioButton id="RB3-2" text="No" />
+                                        </RadioButtonGroup>
+                                        <layoutData>
+                                            <layout:GridData span="XL2 L4 M6 S12"/>
+                                        </layoutData>
+                                    </VBox>
+                                    <VBox>
+                                        <Label  text="Target Total Amount" 
+                                                class="sapMLabelNoText"/> 
+                                        <Input /> 
+                                        <layoutData>
+                                            <layout:GridData span="XL3 L4 M6 S12"/>
+                                        </layoutData>
+                                    </VBox>
+                                </form:content>
+                            </form:SimpleForm> -->
+
+
+                            
+                            
+                            
+                            
+                             
+						<!-- </form:SimpleForm> -->
+                        </Panel>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+			<uxap:ObjectPageSection titleUppercase="false" title="Line">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+                        <Panel id="panel_Content" expandable="true" expanded="true" headerText="Line Content">
+                             <Table 
+                                sticky="HeaderToolbar,ColumnHeaders" 
+								inset="false" 
+								class="sapFDynamicPageAlignContent" 
+								mode="MultiSelect"
+								width="auto">
+                                <headerToolbar>
+                                    <OverflowToolbar>
+                                        <!-- <Title text="Attachments (2)" level="H2"/> -->
+                                        <Button  text="Add Supplier in bulk" type="Transparent" press=".onMidTableAddButtonPress"  />
+                                        <Button  text="Exclude Supplier From Vender Pool" type="Transparent" press=".onMidTableDeleteButtonPress" />
+                                        <ToolbarSpacer/>
+                                        <Button  text="Vendor Pool Change" type="Transparent" press=".onMidTableAddButtonPress"  />
+                                        <Button  text="Simple Change" type="Transparent" press=".onMidTableAddButtonPress"  />
+                                        <Button  text="Add" type="Transparent" press=".onMidTableDeleteButtonPress" />
+                                        <Button  text="Delete" type="Transparent" press=".onMidTableDeleteButtonPress" />
+                                        <!-- <ToolbarSeparator/>
+                                        <SearchField id="midTableSearchField" width="10rem" search=".onMidTableFilterPress" visible="false" enabled="false" />
+                                        <Button id="midTableApplyFilterButton" text="Apply" type="Transparent" press=".onMidTableApplyFilterButton" enabled="false" visible="false"/> -->
+                                    </OverflowToolbar>
+                                </headerToolbar>
+                                <columns>
+                                    
+                                    <!-- language_code -->
+                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                        <Text text=" " />
+                                    </Column>
+                                    <Column  minScreenWidth="Tablet" hAlign="Center" demandPopin="true" >
+                                        <Label text="Operating Unit" required="true" />
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                        <Text text="Requisition No" />
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="Submission No" />
+                                    </Column>
+                                    <Column  minScreenWidth="Tablet" hAlign="Center" demandPopin="true" >
+                                        <Label text="Line Type" required="true" />
+                                    </Column>
+                                    <Column  minScreenWidth="Tablet" hAlign="Center" demandPopin="true" >
+                                        <Label text="Part No" required="true" />
+                                    </Column>
+                                    <Column  minScreenWidth="Tablet" hAlign="Center" demandPopin="true" >
+                                        <Label text="Description" required="true" />
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="Specification" />
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="Vender Pool" />
+                                    </Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem type="Inactive" >
+                                        <cells>
+                                            <Button text="Apply" />
+                                            <Text text="LG Display Korea"/>
+                                            <Text text=""/>
+                                            <Text text=""/>
+                                            <Text text="AA"/>
+                                            <Text text="0ISWL-0236B"/>
+                                            <Text text="Timing Controller ** SW0887A ,SI"/>
+                                            <Text text=""/>
+                                            <Text text="T-Con"/>
+                                        </cells>
+                                    </ColumnListItem>
+                                    <ColumnListItem type="Inactive" >
+                                        <cells>
+                                            <Button text="Apply" />
+                                            <Text text="LG Display Korea"/>
+                                            <Text text=""/>
+                                            <Text text=""/>
+                                            <Text text="AA"/>
+                                            <Text text="6870S-18748"/>
+                                            <Text text="Bare PCB ** LM195WF1-SPA1 -T"/>
+                                            <Text text=""/>
+                                            <Text text="PCB_MLB"/>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+						    </Table>
+
+
+                            <Table 
+                                sticky="HeaderToolbar,ColumnHeaders" 
+								inset="false" 
+								class="sapFDynamicPageAlignContent" 
+								mode="None"
+								width="auto">
+                                
+                                <columns>
+                                    
+                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                        <Text text="Specific Supplier" />
+                                    </Column>
+                                    <Column  minScreenWidth="Tablet" hAlign="Center" demandPopin="true" >
+                                        <Label text="Quantity" required="true" />
+                                    </Column>
+                                    <Column  minScreenWidth="Tablet" hAlign="Center" demandPopin="true" >
+                                        <Label text="UOM" required="true" />
+                                    </Column>
+                                    <Column  minScreenWidth="Tablet" hAlign="Center" demandPopin="true" >
+                                        <Label text="Currency" required="true" />
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                        <Text text="Response Currency" />
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="SExchange Rate Type" />
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="Exchange Rate Date" />
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="Start Price" />
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="Display to Supplier" />
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="Target Price" />
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="Current Price" />
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="S/Parts Supply Type" />
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                        <Text text="Attachments" />
+                                    </Column>
+                                    
+                                </columns>
+                                <items>
+                                    <ColumnListItem type="Inactive" >
+                                        <cells>
+                                            <!-- <Button text="Apply" /> -->
+                                            <Text text="0"/>
+                                            <Text text=""/>
+                                            <Text text="EA"/>
+                                            <ComboBox selectedKey="1">
+                                                <core:Item key="1" text="KRW" />
+                                            </ComboBox>
+                                            <Text text=""/>
+                                            <Text text=""/>
+                                            <Text text=""/>
+                                            <Text text=""/>
+                                            <Text text="N"/>
+                                            <Text text=""/>
+                                            <Text text=""/>
+                                            <Text text=""/>
+                                            <Text text=""/>
+                                        </cells>
+                                    </ColumnListItem>
+                                    <ColumnListItem type="Inactive" >
+                                        <cells>
+                                            <!-- <Button text="Apply" /> -->
+                                            <Text text="0"/>
+                                            <Text text=""/>
+                                            <Text text="EA"/>
+                                            <ComboBox selectedKey="1">
+                                                <core:Item key="1" text="KRW" />
+                                            </ComboBox>
+                                            <Text text=""/>
+                                            <Text text=""/>
+                                            <Text text=""/>
+                                            <Text text=""/>
+                                            <Text text="N"/>
+                                            <Text text=""/>
+                                            <Text text=""/>
+                                            <Text text=""/>
+                                            <Text text=""/>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+						    </Table>
+                        </Panel>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+            
+
+            
+            
+        
+		</uxap:sections>
+		<uxap:footer>
+			<OverflowToolbar>
+                <ToolbarSpacer />
+                <Button text="Edit" type="Transparent" press=".onPageEditButtonPress" />
+				<Button text="Save as Draft" type="Emphasized" press=".onPageSaveButtonPress" />
+			</OverflowToolbar>
+		</uxap:footer>
+	</uxap:ObjectPageLayout>
+    </Page>
+</mvc:View>

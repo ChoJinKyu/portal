@@ -49,14 +49,17 @@
                     <smartFilterBar:SmartFilterBar id="smartFilterBar" 
                         entitySet="MIMaterialPriceManagementView " 
                         enableBasicSearch="false" 
+                        useToolbar="false"
+                        filterContainerWidth="20rem"
                         search=".onPageSearchButtonPress"
                         >
                         <smartFilterBar:controlConfiguration>
                             <!-- 시황자재코드 -->
-                            <smartFilterBar:ControlConfiguration  key="mi_material_code" groupId="_BASIC" index="1" label="{I18N>/MI_MATERIAL_CODE}"
-                                visibleInAdvancedArea="true">
+                            <smartFilterBar:ControlConfiguration id="tempId" key="mi_material_code" groupId="_BASIC" index="1" label="{I18N>/MI_MATERIAL_CODE}"
+                                visibleInAdvancedArea="true" width="500px">
                                 <smartFilterBar:customControl>
-                                    <MultiComboBox id="combobox_mi_material_code" items="{path: '/MIMatCodeView', templateShareable:true}" placeholder="선택하세요.">
+                                    <MultiComboBox id="combobox_mi_material_code" items="{path: '/MIMatCodeView', templateShareable:true}" placeholder="선택하세요."
+                                    >
                                         <core:Item key="{mi_material_code}" text="{mi_material_code}"/>
                                     </MultiComboBox>
                                 </smartFilterBar:customControl>
@@ -292,14 +295,15 @@
                             <Text text="{I18N>/MI_DATE}" />
                             <t:template>
                                 <DatePicker  valueFormat="yyyy/MM/dd" displayFormat="yyyy/MM/dd'" required="true" editable="{= ${list>_row_state_} === 'C' }"
-                                    value="{path: 'list>mi_date', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'yyyy/MM/dd'} }" />
+                                    value="{path: 'list>mi_date', type: 'sap.ui.model.type.Date', 
+                                    formatOptions: { pattern: 'yyyy/MM/dd', UTC: true} }" />
                             </t:template>
                         </t:Column>
                     
                         <t:Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
                             <Text text="{I18N>/AMOUNT}" />
                             <t:template>
-                                <Input value="{list>amount}" type="Number" textAlign="Right"></Input>
+                                <Input value="{list>amount}" type="Number" textAlign="Right" required="true" ></Input>
                             </t:template>
                         </t:Column>
                     </t:columns>  

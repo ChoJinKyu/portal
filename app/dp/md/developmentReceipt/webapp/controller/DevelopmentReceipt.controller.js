@@ -177,7 +177,7 @@ sap.ui.define([
 		 * @public
 		 */
         onMoldMstTablePersoRefresh: function () {
-            developmentReceiptPersoService.resetPersData();
+            DevelopmentReceiptPersoService.resetPersData();
             this._oTPC.refresh();
         },
 
@@ -254,7 +254,7 @@ sap.ui.define([
                 oModel = this.getModel("list");
             var aItems = oTable.getRows();
             var oldItems = [];
-            var that = this;
+            
             aItems.forEach(function (oItem) {
                 //  console.log("oItem >>> " , oItem.mAggregations.cells[0].mProperties.text);
                 //  console.log("oItem >>> " , oItem.mAggregations.cells[1].mProperties.selectedKey);
@@ -935,6 +935,8 @@ sap.ui.define([
             var companyFilters = [];
             var divisionFilters = [];
 
+            aTableSearchState.push(new Filter("mold_purchasing_type_code", FilterOperator.EQ, "L"));
+
             if (company.length > 0) {
 
                 company.forEach(function (item) {
@@ -1295,7 +1297,7 @@ sap.ui.define([
             this._oTPC = new TablePersoController({
                 table: this.byId("moldMstTable"),
                 componentName: "developmentReceipt",
-                persoService: developmentReceiptPersoService,
+                persoService: DevelopmentReceiptPersoService,
                 hasGrouping: true
             }).activate();
         }

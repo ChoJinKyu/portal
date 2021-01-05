@@ -67,6 +67,9 @@ sap.ui.define([
             
         },
 
+        onRenderedFirst: function () {
+            this.byId("pageSearchButton").firePress();
+        },
 
         /* =========================================================== */
         /* event handlers                                              */
@@ -203,6 +206,9 @@ sap.ui.define([
 
             oModel.read("/LOIRequestListView", {
                 filters: aSearchFilters,
+                sorters: [
+                    new Sorter("loi_number", false)
+                ],
                 success: function (oData) {
                     oView.setBusy(false);
 

@@ -7,10 +7,10 @@
 <VBox class="sapUiSmallMargin" id="midObjectForm1Show">    
 	<form:SimpleForm         
         editable="false"
-        layout="ColumnLayout"			
+        layout="ColumnLayout"        		
         columnsM="2"
         columnsL="2"
-        columnsXL="3" >
+        columnsXL="2" >
 		
         <form:content>            
 			<Label text="{I18N>/UOM_CODE}" required="true"/>
@@ -49,8 +49,8 @@
         editable="false"
         layout="ColumnLayout"
         columnsM="2"
-        columnsL="3"
-        columnsXL="3" >
+        columnsL="2"
+        columnsXL="2" >
         <form:content>		
             <core:Title text="Display" />
 			<!-- <Label text="Commercial" required="true"/>
@@ -72,8 +72,8 @@
         editable="false"
         layout="ColumnLayout"
         columnsM="2"
-        columnsL="3"
-        columnsXL="3" >
+        columnsL="2"
+        columnsXL="2" >
         <form:content>
             <core:Title text="Conversion" />
 			<Label text="{I18N>/CONVERSION_NUMERATOR}" required="true"/>

@@ -839,7 +839,7 @@ sap.ui.define([
                     ]
                 });
 
-                this.modelName = '';
+                this.modelName = 'dse';
                 this.vhdPath = '/Models';
                 
                 this._oValueHelpDialog.setTitle('Model');
@@ -867,8 +867,8 @@ sap.ui.define([
                     ]
                 });
 
-                this.modelName = '';
-                this.vhdPath = '/MoldNumbers';
+                this.modelName = 'dse';
+                this.vhdPath = '/PartNumbers';
                 this._oValueHelpDialog.setTitle('Mold No');
                 this._oValueHelpDialog.setKey('mold_number');
                 this._oValueHelpDialog.setDescriptionKey('spec_name');

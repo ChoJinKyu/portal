@@ -15,7 +15,7 @@
 
       		<!-- budgetExecutionTable Table -->
 				    <table:Table id="budgetExecutionTable" 
-                             selectionMode="{=${contModel>/editMode}?'MultiToggle':'None'}" 
+                             selectionMode="{=${mode>/editFlag}?'MultiToggle':'None'}" 
                              fixedColumnCount="6" 
                              visibleRowCountMode="Auto" 
                              rows="{path:'mdItemMaster>/ItemBudgetExecution'}">
@@ -23,13 +23,13 @@
 						<OverflowToolbar>
 							<ToolbarSpacer/>
 							<!-- Add the Personalization button -->
-							    <Button visible="{contModel>/editMode}" type="Transparent" text="{I18N>/ROW_ADD}" press=".onBudgetExecutionAddPress">
+							    <Button visible="{mode>/editFlag}" type="Transparent" text="{I18N>/ROW_ADD}" press=".onBudgetExecutionAddPress">
 								<!-- Add -->
 								<customData>
 									<core:CustomData key="multi" value="true"/>
 								</customData>
 							</Button>
-							<Button visible="{contModel>/editMode}" type="Transparent" text="{I18N>/ROW_DELETE}" press=".onBudgetExecutionDelRow"/>
+							<Button visible="{mode>/editFlag}" type="Transparent" text="{I18N>/ROW_DELETE}" press=".onBudgetExecutionDelRow"/>
 						</OverflowToolbar>
 					</table:extension>
 					<table:columns>
@@ -72,7 +72,7 @@
 						<table:Column id="c_productionType" width="10em" hAlign="Center">
 							<Label text="Production Type"/>
 							<table:template>
-								<ComboBox visible="{contModel>/editMode}"
+								<ComboBox visible="{mode>/editFlag}"
                                         selectedKey="{mdItemMaster>mold_production_type_code}" 
                                         items="{ path : 'util>/Code',
                                         filters : [
@@ -88,7 +88,7 @@
 						<table:Column id="c_itemType" width="10em" hAlign="Center">
 							<Label text="Item Type"/>
 							<table:template>
-								<ComboBox  visible="{contModel>/editMode}" 
+								<ComboBox  visible="{mode>/editFlag}" 
                                         selectedKey="{mdItemMaster>mold_item_type_code}" 
                                         items="{ path : 'util>/Code',
                                         filters : [
@@ -110,14 +110,14 @@
 						<table:Column id="c_budget_amount" width="10em" hAlign="Center">
 							<Label text="Budget Amount"/>
 							<table:template>
-								<Input visible="{contModel>/editMode}"  value="{mdItemMaster>provisional_budget_amount}"/>
+								<Input visible="{mode>/editFlag}"  value="{mdItemMaster>provisional_budget_amount}"/>
                                
 							</table:template>
 						</table:Column>
 						<table:Column id="c_assetType" width="10em" hAlign="Center">
 							<Label text="Asset Type"/>
 							<table:template>
-								<ComboBox visible="{contModel>/editMode}" 
+								<ComboBox visible="{mode>/editFlag}" 
                                         selectedKey="{mdItemMaster>asset_type_code}" 
                                         items="{ path : 'util>/Code',
                                         filters : [

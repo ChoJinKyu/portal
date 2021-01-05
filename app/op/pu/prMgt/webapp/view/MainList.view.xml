@@ -15,7 +15,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{i18n>PR_MANAGEMENT}" />
+                    <Title text="{I18N>/PURCHASE_REQUISITION} {I18N>/SEARCH}" />
                 </f:heading>
                 <f:snappedContent>
                 </f:snappedContent>
@@ -33,7 +33,9 @@
         <f:header>
             <f:DynamicPageHeader pinnable="true">
                 <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" 
-                adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" 
+                                        emptySpanL="0" emptySpanM="0" 
+                                        columnsL="2" columnsM="2" >
                     <form:content>
                         <VBox>
                             <Label text="{i18n>listHDRequestDate}" labelFor="searchRequestDate" required="true"></Label>
@@ -54,13 +56,14 @@
                               </items>
                             </MultiComboBox>
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="구매요청 유형" labelFor="searchBsart" required="false"></Label>
                             <MultiComboBox
                               id="searchBsart"
+                              showSecondaryValues="true"
                               width="100%"
                               items="{
                                 path: 'util>/CodeDetails',
@@ -70,7 +73,7 @@
                                 ]
                               }">
                               <items>
-                                <core:Item key="{util>code}" text="{util>code}: {util>code_description}" />
+                                <core:ListItem key="{util>code}" text="{util>code_description}" additionalText="{util>code}" />
                               </items>
                             </MultiComboBox>
                             <Label text="조직코드" labelFor="searchOrgCombo4" required="false"></Label>
@@ -87,7 +90,7 @@
                                     </items>
                                 </MultiComboBox>
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
@@ -96,7 +99,7 @@
                             <Label text="{i18n>listHDBOprater}" labelFor="searchBOprater" required="false"></Label>
                             <Input id="searchBOprater" placeholder="Search"></Input>
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         
@@ -106,7 +109,7 @@
                             <Label text="{i18n>listHDBMaktx}" labelFor="searchBMaktx"></Label>
                             <Input id="searchBMaktx" placeholder="Search"></Input>
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>                      
                             
@@ -124,13 +127,14 @@
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
                         items="{list>/Pr_MstView}"
-                        mode="None" 
+                        mode="MultiSelect" 
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
                             <Title text="{i18n>appTitle} ({= ${list>/Pr_MstView}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
-                            <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddDialogPress" />
+                            <Button id="mainTableAddButton" text="{I18N>/CREATE}" type="Transparent" press=".onMainTableAddDialogPress" />
+                            <Button id="mainTableDeleteButton" text="{I18N>/DELETE}" type="Transparent" />
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                                 <layoutData>

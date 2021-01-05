@@ -235,7 +235,7 @@
                                               <ComboBox   id="currency"    
                                                             selectedKey="{= ${list>family_part_number_1}.length > 0 ? 'Y' : 'N' }"
                                                             items="{
-                                                                        path : 'util>/CodeDetails',
+                                                                        path : 'util>/Code',
                                                                         filters : [
                                                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
                                                                             {path : 'company_code', operator : 'EQ', value1 : '*'},
@@ -243,7 +243,7 @@
                                                                         ]
                                                                     }"
                                                 >
-                                                    <core:Item key="{util>code}" text="{util>code_description}" />
+                                                    <core:Item key="{util>code}" text="{util>code_name}" />
                                             </ComboBox>
                                         </table:template>
                                     </table:Column>                                     

@@ -49,18 +49,19 @@
                         <smartFilterBar:controlConfiguration>
 
                             <!-- 시황자재코드 -->
-                            <smartFilterBar:ControlConfiguration  key="mi_material_code" groupId="_BASIC" index="1" label="시황자재코드"
+                            <smartFilterBar:ControlConfiguration  key="mi_material_code" groupId="_BASIC" index="1" label="{I18N>/MI_MATERIAL_CODE}"
                             visibleInAdvancedArea="true">
                                 <smartFilterBar:customControl>
-                                        <ComboBox id="combobox_mi_material_code" items="{path: '/MIMatListView', templateShareable:true}" placeholder="{I18N>/OPTION}">
+                                <Input id="input_mi_material_code" liveChange=".onUpperLiveChange" placeholder="{I18N>/INPUT}" class=".sapMInput.myCustomCSSClass .sapMInputBaseInner"/> 
+                                        <!-- <ComboBox id="combobox_mi_material_code" items="{path: '/MIMatListView', templateShareable:true}" placeholder="{I18N>/OPTION}">
                                         <core:Item key="{mi_material_code}" text="{mi_material_code}"/>
-                                    </ComboBox>
+                                    </ComboBox> -->
                                 </smartFilterBar:customControl>
                                 
                             </smartFilterBar:ControlConfiguration>
 
                             <!-- 시황자재명 -->
-                            <smartFilterBar:ControlConfiguration key="mi_material_name" groupId="_BASIC" index="2" label="시황자재명"  
+                            <smartFilterBar:ControlConfiguration key="mi_material_name" groupId="_BASIC" index="2" label="{I18N>/MI_MATERIAL_NAME}"  
                             visibleInAdvancedArea="true" >
                                 <smartFilterBar:customControl>
                                         <Input id="input_mi_material_name" placeholder="{I18N>/INPUT}"/>
@@ -119,7 +120,7 @@
                     id="smartTable_MainTable_ResponsiveTable"
                     smartVariant="pageVariantId"                    
                     entitySet="MIMatListView"
-                    tableBindingPath="{MIMatListView}"
+                    tableBindingPath="{/MIMatListView}"
                     smartFilterId="smartFilterBar"
                     tableType="ResponsiveTable"
                     useExportToExcel="true"
@@ -161,15 +162,15 @@
                         </OverflowToolbar>
                     </smartTable:customToolbar>
                             <Table id="mainTable" 
-                                    mode="MultiSelect"
-                                    sticky="HeaderToolbar,ColumnHeaders">
+                                   mode="MultiSelect"
+                                   sticky="HeaderToolbar,ColumnHeaders">
                                  <columns>  
                                        <Column minScreenWidth ="" demandPopin="false" importance="High"  popinDisplay="WithoutHeader">
                                         <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "mi_material_code", "leadingProperty": "mi_material_code", "sortProperty": "mi_material_code", "filterProperty": "mi_material_code", "columnIndex": 1}'/>
                                         </customData>
-                                            <Text text="시황자재코드"></Text>
+                                            <Text text="{I18N>/MI_MATERIAL_CODE}"></Text>
                                         </Column>
 
                                         <Column minScreenWidth ="" demandPopin="false" importance="High">
@@ -177,14 +178,14 @@
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "mi_material_name", "leadingProperty": "mi_material_name", "sortProperty": "mi_material_name", "filterProperty": "mi_material_name", "columnIndex": 2}'/>
                                         </customData>
-                                             <Text text="시황자재명"></Text>
+                                             <Text text="{I18N>/MI_MATERIAL_NAME}"></Text>
                                         </Column>
                                         <Column minScreenWidth ="" demandPopin="false" importance="High">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "category_name", "leadingProperty": "category_name", "sortProperty": "category_name", "filterProperty": "category_name", "columnIndex": 3}'/>
                                         </customData>
-                                             <Text text="{I18N>/CATEGORY}"></Text>
+                                             <Text text="{I18N>/CATEGORY_NAME}"></Text>
                                         </Column>
 
                                         <Column minScreenWidth ="" demandPopin="true">
@@ -195,14 +196,23 @@
                                              <Text text="{I18N>/USE_FLAG}"></Text>                                                                             
                                         </Column>
 
-                                        <Column visible="false" minScreenWidth ="" demandPopin="false">
+                                        <Column width="0px">
                                           <customData>
                                         <core:CustomData key="p13nData"
-                                        value='\{"columnKey": "category_code", "leadingProperty": "category_code", "sortProperty": "category_code", "filterProperty": "category_code", "columnIndex": 5}'/>
+                                        value='\{"columnKey": "category_code", "leadingProperty": "category_code", "columnIndex": -100}'/>
                                         </customData>
-                                             <Text text="CATEGORY CODE"></Text>                                                                             
+                                             <Text visible="false" text="{I18N>/CATEGORY_CODE}"></Text>                                                                             
                                         </Column>
-                                           <Column visible="false" minScreenWidth ="" demandPopin="false">
+
+                                        <Column width="0px">
+                                          <customData>
+                                        <core:CustomData key="p13nData"
+                                        value='\{"columnKey": "tenant_id", "leadingProperty": "tenant_id", "columnIndex": -101}'/>
+                                        </customData>
+                                             <Text visible="false" text="{I18N>/TENANT_ID}"></Text>                                                                             
+                                        </Column>
+
+                                        <Column visible="false">
                                           <customData>
                                         <core:CustomData key="p13nData"
                                         value='\{"columnKey": "system_update_dtm", "leadingProperty": "system_update_dtm", "sortProperty": "system_update_dtm", "filterProperty": "system_update_dtm", "columnIndex": 6}'/>
@@ -216,7 +226,8 @@
                                              <Text textAlign="Center" text="{mi_material_name}"></Text>
                                              <Text textAlign="Center" text="{category_name}"></Text>
                                              <Text textAlign="Center" text="{= ${use_flag} ? 'Yes':'No'}"></Text>  
-                                             <Text textAlign="Center" text="{category_code}"></Text>
+                                             <Text visible="false"  text="{category_code}"></Text>
+                                             <Text visible="false"  text="{tenant_id}"></Text>
                                              <Text textAlign="Center" text="{system_update_dtm}"></Text>
                                         </ColumnListItem>
                                     </items> 

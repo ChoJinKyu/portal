@@ -47,13 +47,26 @@ public class FundingNotifyService implements EventHandler {
 
         try {
             Connection conn = jdbc.getDataSource().getConnection();
+            
             // Local Temp Table 생성
             PreparedStatement f_statement = conn.prepareStatement(f_sql);
             f_rs = f_statement.executeQuery();
-            System.out.println("FUNDING_NOTIFY_NUMBER ============= "+f_rs.getString("FUNDING_NOTIFY_NUMBER"));
+            
             if(f_rs.next()) funding_notify_number = String.valueOf(f_rs.getString("FUNDING_NOTIFY_NUMBER"));
+
+            
+            //Connection conn = jdbc.getDataSource().getConnection();
+
+            // Local Temp Table 생성
+            //PreparedStatement v_statement = conn.prepareStatement(v_sql);
+            //v_rs = v_statement.executeQuery();
+
+            //if(v_rs.next()) vendor_pool_code = String.valueOf(v_rs.getString("VENDOR_POOL_CODE"));
+            funding_notify_number = jdbc.queryForObject(f_sql, String.class);
+
+            //System.out.println("FUNDING_NOTIFY_NUMBER ============= "+f_rs.getString("FUNDING_NOTIFY_NUMBER"));
+
             for(SfFundingNotify fundingNotify : SfFundingNotify) {
-                System.out.println(funding_notify_number);
                 fundingNotify.setFundingNotifyNumber(funding_notify_number);
                 fundingNotify.setLocalCreateDtm(current);
                 fundingNotify.setLocalUpdateDtm(current);
@@ -61,9 +74,6 @@ public class FundingNotifyService implements EventHandler {
 		} catch (Exception e) { 
 			e.printStackTrace();
         }
-
         System.out.println("#### beforeCreateFundingNotify END....");
-
     }
-
 }

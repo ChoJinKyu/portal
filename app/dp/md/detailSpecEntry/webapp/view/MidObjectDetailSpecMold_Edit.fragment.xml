@@ -18,14 +18,14 @@
                 <Switch state="{spec>/inspection_flag}" customTextOn="Yes" customTextOff="No"  />
                 <Label text="Cavity Qty" required="true"/>
                 <Input value="{spec>/cavity_process_qty}" required="true"/>
-                <Label text="Demand Life" required="true"/>
+                <Label text="Demand Life(Shot)" required="true"/>
                 <Input type="Number" value="{path: 'spec>/request_life_shot_count', type: 'sap.ui.model.type.Integer'}" required="true"/>
                 <Text text="Shot">
                     <layoutData>
                         <form:ColumnElementData cellsSmall="2" cellsLarge="1" />
                     </layoutData>
                 </Text>
-                <Label text="Hot Runner Valve Qty" required="true"/>
+                <Label text="Hot Runner Valve Qty(EA)" required="true"/>
                 <Input type="Number" value="{path: 'spec>/mold_hot_runner_qty', type: 'sap.ui.model.type.Integer'}" required="true"/>
                 <Label text="Size" required="true"/>
                 <Select   width="100%"
@@ -35,7 +35,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SIZE'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                             required="true"
@@ -50,7 +51,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_RUNNER'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
@@ -64,7 +66,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_RETURN_TYPE'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
@@ -78,7 +81,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_RUNNER_OUT'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
@@ -91,7 +95,7 @@
                 <Switch state="{spec>/assembly_approval_flag}" customTextOn="Yes" customTextOff="No"  />
                 <Label text="Order Qty"/>
                 <Input value="{spec>/order_qty}"/>
-                <Label text="Mold Weight" required="true"/>
+                <Label text="Mold Weight(Kg)" required="true"/>
                 <Input value="{spec>/mold_weight}" required="true"/>
                 <Label text="Hot Runner Maker" required="true"/>
                 <Select   width="100%"
@@ -101,14 +105,15 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_HR_MAKER'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
                     <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
 
-                <Label text="Mold Size" required="true"/>
+                <Label text="Mold Size(W*L*H)" required="true"/>
                 <Input value="{spec>/mold_size_2}" required="true"/>
                 <Label text="Gate"/>
                 <Select   width="100%"
@@ -118,7 +123,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_GATE'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
@@ -132,13 +138,14 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_FORM_OUT'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
                     <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
-                <Label text="Use Machine"/>
+                <Label text="Use Machine(Ton)"/>
                 <Input value="{spec>/mold_tonnage}"/>
 
             <!-- </VBox>            
@@ -155,7 +162,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_TYPE'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
@@ -169,7 +177,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_STRUCTURE'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                             required="true"
@@ -186,7 +195,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_UNDER_CUT'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
@@ -199,8 +209,9 @@
                                         path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
-                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_FORM_OUT'}
-                                        ]
+                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_OUT_PROCESS'}
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
@@ -218,24 +229,24 @@
         <form:content>
             <core:Title text="Spare Parts" />
             <!-- <VBox> -->
-                <Label text="Eye-Bolt"/>
+                <Label text="Eye-Bolt(EA)"/>
                 <Input type="Number" value="{path: 'spec>/spare_part_eyebolt_count', type: 'sap.ui.model.type.Integer'}"/>
                 
-                <Label text="Heater"/>
+                <Label text="Heater(KIT)"/>
                 <Input type="Number" value="{path: 'spec>/spare_part_heater_count', type: 'sap.ui.model.type.Integer'}"/>
 
             <!-- </VBox>            
             <VBox > -->
-                <Label text="Ej-Sleeve"/> 
+                <Label text="Ej-Sleeve(EA)"/> 
                 <Input type="Number" value="{path: 'spec>/spare_part_ejslave_count', type: 'sap.ui.model.type.Integer'}"/>
-                <Label text="Speaker Core"/>
+                <Label text="Speaker Core(EA)"/>
                 <Input type="Number" value="{path: 'spec>/spare_part_speaker_core_count', type: 'sap.ui.model.type.Integer'}"/>
 
             <!-- </VBox>            
             <VBox > -->
-                <Label text="Ejector-Pin"/> 
+                <Label text="Ejector-Pin(EA)"/> 
                 <Input type="Number" value="{path: 'spec>/spare_part_ejector_pin_count', type: 'sap.ui.model.type.Integer'}"/>
-                <Label text="Etc."/>
+                <Label text="Etc.(EA)"/>
                 <Input type="Number" value="{path: 'spec>/spare_part_etc_count', type: 'sap.ui.model.type.Integer'}"/>
             <!-- </VBox> -->
         </form:content>
@@ -258,7 +269,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_CAVITY'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
@@ -272,13 +284,14 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_TAPER_PIN'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
                     <core:Item key="{util>code}" text="{util>code_name}" />
                 </Select>
-                <Label text="Cycle Time"/>
+                <Label text="Cycle Time(Sec)"/>
                 <Input value="{spec>/cycle_time}"/>
             <!-- </VBox>            
             <VBox > -->
@@ -290,7 +303,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_CORE'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
@@ -304,7 +318,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_CORE'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
@@ -315,13 +330,14 @@
             <VBox > -->
                 <Label text="Slide Core"/> 
                 <Select   width="100%"
-                            selectedKey="{spec>/slide_core_material_name}"
+                            selectedKey="{spec>/mold_slide_core_material_name}"
                             items="{
                                         path : 'util>/Code',
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SCORE'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >
@@ -335,7 +351,8 @@
                                         filters : [
                                             {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_CORE'}
-                                        ]
+                                        ],
+                                        sorter: { path: 'sort_no'}
                                     }"
                             editable="true"
                 >

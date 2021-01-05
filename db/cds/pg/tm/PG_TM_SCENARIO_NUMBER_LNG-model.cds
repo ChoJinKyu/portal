@@ -18,13 +18,24 @@
 namespace pg;
 
 using util from '../../cm/util/util-model';
+using {cm as Org_Tenant} from '../../cm/CM_ORG_TENANT-model';
+using {pg as Scnr_Num} from './PG_TM_MASTER-model';
 using {pg as Task_Monitoring_Senario} from '../tm/PG_TM_SCENARIO_NUMBER_LNG-model';
 
 entity Tm_Scenario_Number_Lng {
-    key tenant_id       : String(5) not null  @title : '회사코드';
-    key scenario_number : Integer64 not null  @title : '시나리오번호';
-    key language_code   : String(10) not null @title : '언어코드';
-        scenario_name   : String(240)         @title : '시나리오명';
+    key tenant_id        : String(5) not null  @title : '회사코드';
+
+        tenant_ids       : Association to Org_Tenant.Org_Tenant
+                               on tenant_ids.tenant_id = tenant_id;
+
+    key scenario_number  : Integer64 not null  @title : '시나리오번호';
+
+        scenario_numbers : Association to Scnr_Num.Tm_Master
+                               on  scenario_numbers.tenant_id       = tenant_id
+                               and scenario_numbers.scenario_number = scenario_number;
+
+    key language_code    : String(10) not null @title : '언어코드';
+        scenario_name    : String(240)         @title : '시나리오명';
 }
 
 extend Tm_Scenario_Number_Lng with util.Managed;

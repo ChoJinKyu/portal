@@ -7,6 +7,9 @@ using { ep as loiPubItemView } from '../../../../db/cds/ep/po/EP_LI_PUBLISH_ITEM
 using { ep as loiReqDetailView} from '../../../../db/cds/ep/po/EP_LI_REQUEST_DETAIL_VIEW-model';
 using { ep as loiReqListView} from '../../../../db/cds/ep/po/EP_LI_REQUEST_LIST_VIEW-model';
 
+//Unit Code
+using {cm.Currency_Lng as CurrencyLanguage} from '../../../../db/cds/cm/CM_CURRENCY_LNG-model';
+
 namespace ep;
 
 @path : 'ep.LoiMgtService'
@@ -28,4 +31,16 @@ service LoiMgtService {
         key loi_number
         from loiMst.Li_Mst 
         group by tenant_id, company_code, loi_number;
+
+    // Currency Unit View
+     view CurrencyUnitView @(title : '통화단위코드 View') as 
+         select
+         key tenant_id,          //회사코드
+         key currency_code,      //통화단위코드
+         key language_code,      //언어코드
+             currency_code_name  //통화단위코드명
+         from CurrencyLanguage
+         where
+             language_code = 'KO';
+
 }

@@ -82,6 +82,7 @@ service MoldItemSelectionService {
                 m.system_update_dtm,
                 m.supplier_code,
                 s1.supplier_local_name, 
+                m.mold_purchasing_type_code , 
                 '[' || m.supplier_code || '] ' || s1.supplier_local_name as  supplier_code_nm : String(240) ,
                 m.production_supplier_code, 
                 '[' || m.production_supplier_code || '] ' || s2.supplier_local_name as  production_supplier_code_nm : String(240),

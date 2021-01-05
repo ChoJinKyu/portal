@@ -5,7 +5,7 @@
     xmlns:form="sap.ui.layout.form" 
     xmlns:layout="sap.ui.layout" 
     xmlns:core="sap.ui.core" 
-    xmlns:lib-m="ext.lib.m"
+    xmlns:lib-m="ext.lib.control.m"
     height="100%">
 
     <f:DynamicPage id="page"
@@ -76,14 +76,44 @@
                         </VBox>
                         <VBox>
                             <Label text="요청부서" labelFor="searchRequestDepartment"></Label>
-                            <Input id="searchRequestDepartment" placeholder="Input data"></Input>
+                            <!-- <Input id="searchRequestDepartment" placeholder="Input data"></Input> -->
+                            <lib-m:CodePicker id="searchRequestDepartment"
+                                placeholder="Enter a department name"
+                                keyField="department_id"
+                                textField="department_local_name"
+                                suggestionItems="{
+                                    path: '/',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                    ],
+                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                    entityName: 'Department'
+                                }">
+                                <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Department"
+                                    keyFieldHeaderText="Department ID" textFieldHeaderText="Department" />
+                            </lib-m:CodePicker>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="요청자" labelFor="searchRequestor"></Label>
-                            <Input id="searchRequestor" placeholder="Input data"></Input>
+                            <!-- <Input id="searchRequestor" placeholder="Input data"></Input> -->
+                            <lib-m:CodePicker id="searchRequestor"
+                                placeholder="Enter a Employee name"
+                                keyField="employee_number"
+                                textField="user_local_name"
+                                suggestionItems="{
+                                    path: '/',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                    ],
+                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                    entityName: 'Employee'
+                                }">
+                                <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
+                                    keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
+                            </lib-m:CodePicker>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
@@ -121,14 +151,14 @@
                             path: 'list>/LOIRequestListView',
                             sorter: { 
                                 path: 'loi_number',
-                                descending: true 
+                                descending: false 
                             }                   
                         }"
                         mode="None" 
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="Request List ({= ${list>/LOIRequestListView}.length || 0})" level="H2"/>
+                            <Title text="Request List ({= (${list>/LOIRequestListView})?${list>/LOIRequestListView}.length:0})" level="H2"/>
                             <ToolbarSpacer/>
                             <Button id="mainTableAddButton" text="Create" type="Transparent" press=".onMainTableAddButtonPress" />
                             <ToolbarSeparator/>
@@ -175,8 +205,8 @@
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>
                                 <ObjectIdentifier text="{list>loi_number}" />
-                                <ObjectIdentifier text="" />
-                                <ObjectIdentifier text="" />
+                                <ObjectIdentifier text="{list>requestor_empno}" />
+                                <ObjectIdentifier text="{list>request_department_code}" />
                                 <ObjectIdentifier text="{
                                         path: 'list>request_date',
                                         formatter: '.dateFormatter.toDateString'

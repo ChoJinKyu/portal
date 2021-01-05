@@ -18,17 +18,20 @@ sap.ui.define([
     , "sap/m/Label"
 ], function (BaseController, JSONModel, History, ManagedListModel, ManagedModel, RichTextEditor , DateFormatter, Filter, FilterOperator, Fragment
             , MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label) {
-	"use strict";
+    
+    "use strict";
+    
+    var sSelectedPath;
+  
     /**
-     * @description 예산집행품의 Create 화면 
-     * @author jinseon.lee
+     * @description 구매요청 Create 화면 
+     * @author OhVeryGood
      * @date 2020.12.01
      */
 	return BaseController.extend("op.pu.PrMgt.controller.MidCreateObject", {
 
         dateFormatter: DateFormatter,
         
-
 		/* =========================================================== */
 		/* lifecycle methods                                           */
 		/* =========================================================== */
@@ -38,52 +41,313 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () { 
-              console.log("MidCreateObject Controller 호출");
-			// Model used to manipulate control states. The chosen values make sure,
-			// detail page shows busy indication immediately so there is no break in
-			// between the busy indication for loading the view's meta data
-			var oViewModel = new JSONModel({
-					busy : true,
-					delay : 0
-                });
-                
-            this.setModel(oViewModel, "midCreateObjectView");
-            this.getRouter().getRoute("midCreate").attachPatternMatched(this._onObjectMatched, this);
-            this.getView().setModel(new ManagedListModel(),"company");
-            this.getView().setModel(new ManagedListModel(),"plant");
-            this.getView().setModel(new ManagedListModel(),"createlist"); // Participating Supplier
-            this.getView().setModel(new ManagedListModel(),"appList"); // apporval list 
-            this.getView().setModel(new JSONModel(Device), "device"); // file upload 
-		},
 
-	    onAfterRendering : function () {
-         
+			// var oViewModel = new JSONModel({
+			// 		busy : true,
+			// 		delay : 0
+            //     });                
+            // this.setModel(oViewModel, "midCreateObjectView");
+
+            //this.setModel(new JSONModel(), "viewModel");
+
+            // view에서 사용할 메인 Model
+            this.setModel(new JSONModel(), "detailModel"); 
+            this.setModel(new JSONModel(), "viewModel");           
+
+            this.getRouter().getRoute("midCreate").attachPatternMatched(this._onObjectMatched, this);
+            
+            
+            //this.getRouter().getRoute("midCreate").attachPatternMatched(this._onObjectMatched, this);
+            //this.getView().setModel(new ManagedListModel(),"company");
+            //this.getView().setModel(new ManagedListModel(),"plant");
+            //this.getView().setModel(new ManagedListModel(),"createlist"); // Participating Supplier
+            //this.getView().setModel(new ManagedListModel(),"appList"); // apporval list 
+            //this.getView().setModel(new JSONModel(Device), "device"); // file upload 
         },
+        
+        onBeforeRendering : function(){            
+        },
+
+        onAfterRendering: function () {
+        },
+
+        /**
+		 * Binds the view to the data path.
+		 */
+		_onObjectMatched : function (oEvent) { 
+            var oArgs = oEvent.getParameter("arguments");
+            var sTenantId = oArgs.tenantId;
+            
+            // 초기 데이터 설정
+            if(sTenantId && sTenantId === "new") {
+                this._fnSetCreateData(oArgs);
+            }else{
+                this._fnGetMasterData(oArgs);
+            }
+
+            //this._createViewBindData(oArgs); 
+			//this._onLoadApprovalRow();
+            //this.oSF = this.getView().byId("searchField");
+
+            // 템플릿 리스트 조회
+            this._fnGetPrTemplateList();
+
+            // 텍스트 에디터
+            this.setRichEditor();
+        },
+        
+        _fnGetPrTemplateList: function() {
+            var that = this,
+                oView = this.getView(),
+                oServiceModel = this.getModel(),
+                oDetailModel = this.getModel('detailModel'),
+                oViewModel = this.getModel('viewModel');
+
+            var oDetailData = oDetailModel.getProperty("/");
+
+            var aFilters = [
+                    new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+                    new Filter("pr_type_code", FilterOperator.EQ, oDetailData.pr_type_code),
+                    new Filter("pr_type_code_2", FilterOperator.EQ, oDetailData.pr_type_code_2),
+                    new Filter("pr_type_code_3", FilterOperator.EQ, oDetailData.pr_type_code_3)
+                ];
+
+            oServiceModel.read("/Pr_TMapView", {
+                filters: aFilters,
+                success: function (oData) {
+                    oViewModel.setProperty("/prTemplateList", oData.results);
+
+                    // PR 템플릿 정보 세텅
+                    oData.results.some(function(oPrTemplateData){
+                        if(oPrTemplateData.pr_template_number === oDetailData.pr_template_number){
+                            oDetailData.pr_template_name =  oPrTemplateData.pr_template_name;
+                            oDetailData.pr_type_name =  oPrTemplateData.pr_type_name;
+                            oDetailData.pr_type_name_2 =  oPrTemplateData.pr_type_name_2;
+                            oDetailData.pr_type_name_3 =  oPrTemplateData.pr_type_name_3;
+                            oDetailModel.setProperty("/",oDetailData);
+                            return true;
+                        }
+                    });
+                },
+                error: function (oErrorData) {
+                }
+            });
+
+        },
+
+
+        /**
+         * 신규 생성 시 초기 데이터 세팅  
+         */
+        _fnSetCreateData : function(oArgs){
+            var oToday = new Date();
+            var oViewModel = this.getModel('viewModel');
+                        
+            var oNewMasterData = {
+                tenant_id: "L2100",
+                company_code: "",
+                pr_number: "NEW",
+                pr_type_code: oArgs.pr_type_code,
+                pr_type_code_2: oArgs.pr_type_code_2,
+                pr_type_code_3: oArgs.pr_type_code_3,
+                pr_template_number: oArgs.pr_template_number,
+                pr_create_system_code: "",
+                requestor_empno: "",
+                requestor_name: "김구매",
+                requestor_department_code: "10010",
+                requestor_department_name: "생산1팀",
+                request_date: new Date(),
+                pr_create_status_code: "A",
+                pr_header_text: "테스트 구매요청",
+                approval_flag: false,
+                approval_number: "",
+                erp_interface_flag: false,
+                erp_pr_type_code: "",
+                erp_pr_number: "",
+                local_create_dtm: oToday,
+                local_update_dtm: oToday,
+                details: [],
+                pr_template_name: "",
+                pr_type_name: "",
+                pr_type_name_2: "",
+                pr_type_name_3: ""
+            };
+
+            this.setModel(new JSONModel(oNewMasterData), "detailModel");
+        },
+
+        /**
+         * 기존 데이터 조회  
+         */
+        _fnGetMasterData : function(){
+
+        },
+
+        /**
+         * 품목 라인 추가
+         */
+        onItemAddRow: function () {
+            var oDetailModel = this.getModel("detailModel"),
+                aDetails = oDetailModel.getProperty("/details"),
+                oToday = new Date();
+
+            var itemNumber = aDetails.length + 1;
+
+            aDetails.push({tenant_id:"", 
+                        company_code: "LGEKR", 
+                        pr_number: "1",
+                        pr_item_number: itemNumber,
+                        org_code: "", 
+                        material_code: "", 
+                        material_group_code: "", 
+                        pr_desc: "", 
+                        local_create_dtm: oToday, 
+                        local_update_dtm: oToday
+                        });
+            oDetailModel.refresh();
+        },
+
+        /**
+         * List 화면으로 이동
+         */
+        onNavigationBackPress: function () {
+			var sPreviousHash = History.getInstance().getPreviousHash();
+			if (sPreviousHash !== undefined) {
+				// eslint-disable-next-line sap-no-history-manipulation
+				history.go(-1);
+			} else {
+				this.getRouter().navTo("mainPage", {}, true);
+			}
+		},
+        
+        /**
+         * Dialog Close
+         */
+        onClose: function (oEvent) {
+            var sFragmentName = oEvent.getSource().data("fragmentName");
+            this[sFragmentName].then(function(oDialog) {
+                oDialog.close();
+            });
+        },
+
+        //==================== Material Code Dialog 시작 ====================
+        /**
+         * 자재정보 검색 MaterialDialog.fragment open
+         */
+		onOpenMaterialDialog: function (oEvent) {
+            sSelectedPath = oEvent.getSource().getBindingContext("detailModel").getPath();
+            var oView = this.getView();
+
+            var oSampleData = {
+                    "familyMaterialCode": [],
+                    "materialCode": [{"org_code": "A001", "material_code": "A001-01-01"},
+                                    {"org_code": "A002", "material_code": "A001-01-02"},
+                                    {"org_code": "A003", "material_code": "A001-01-03"},
+                                    {"org_code": "A004", "material_code": "A001-01-04"},
+                                    {"org_code": "A005", "material_code": "A001-01-05"},
+                                    {"org_code": "A005", "material_code": "A001-01-06"},
+                                    {"org_code": "A005", "material_code": "A001-01-07"},
+                                    {"org_code": "A005", "material_code": "A001-01-08"},
+                                    {"org_code": "A005", "material_code": "A001-01-09"},
+                                    {"org_code": "A005", "material_code": "A001-01-10"}]
+                    };
+            this.setModel(new JSONModel(oSampleData), "materialCodeModel");
+
+           // oMarterialCodeModel.attachRequestCompleted(function(data) {
+                if (!this._oMaterialDialog) {
+                    this._oMaterialDialog = Fragment.load({
+                        id: oView.getId(),
+                        name: "op.pu.PrMgt.view.MaterialDialog",
+                        controller: this
+                    }).then(function (oDialog) {
+                        oView.addDependent(oDialog);
+                        return oDialog;
+                    });
+                }
+                this._oMaterialDialog.then(function(oDialog) {
+                    oDialog.open();
+                });
+            //}.bind(this));
+
+            this._oDialogTableSelect.then(function (oDialog) {
+                oDialog.open();
+            });
+        },
+        
+        /**
+         * Material Code Dialog에서 Checkbox 선택 시
+         */
+        onSelectMaterialCode: function (oEvent) {
+            var oMaterialCodeModel = this.getModel("materialCodeModel");
+            var oParameters = oEvent.getParameters();
+
+            oMaterialCodeModel.setProperty(oParameters.listItems[0].getBindingContext("materialCodeModel").getPath()+"/checked", oParameters.selected);
+        },
+
+        /**
+         * Material Code 선택 후 apply
+         */
+        onMaterialDetailApply: function (oEvent) {
+            var aMaterialCode = this.getModel("materialCodeModel").getProperty("/materialCode");
+            var oDetailModel = this.getModel("detailModel");
+            var oSelectedDetail = oDetailModel.getProperty(sSelectedPath);
+            var bChecked = false;
+
+            for( var i=0; i<aMaterialCode.length; i++ ) {
+                var oMaterialCode = aMaterialCode[i];
+
+                if( oMaterialCode.checked ) {
+                    oSelectedDetail.material_code = oMaterialCode.material_code;
+
+                    delete oMaterialCode.checked;
+                    bChecked = true;
+
+                    break;
+                }
+            }
+
+            // 선택된 Material Code가 있는지 경우
+            if( bChecked ) {
+                oDetailModel.refresh();
+                this.onClose(oEvent);
+            }
+            // 선택된 Material Code가 없는 경우
+            else {
+                MessageBox.error("추가할 데이터를 선택해 주십시오.");
+            }
+        },
+        //==================== Material Code Dialog 끝 ====================
+        
+
         /**
          * 폅집기 창 
          */
         setRichEditor : function (){ 
             var that = this,
-			sHtmlValue = ''
-            sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
-				function (RTE, EditorType) {
-					var oRichTextEditor = new RTE("myRTE", {
-						editorType: EditorType.TinyMCE4,
-						width: "100%",
-						height: "600px",
-						customToolbar: true,
-						showGroupFont: true,
-						showGroupLink: true,
-						showGroupInsert: true,
-						value: sHtmlValue,
-						ready: function () {
-							this.addButtonGroup("styleselect").addButtonGroup("table");
-						}
-					});
+                sHtmlValue = '';            
+            var oApprovalLayout = this.getView().byId("approvalLayout");
 
-					that.getView().byId("idVerticalLayout").addContent(oRichTextEditor);
-			});
+            sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
+                function (RTE, EditorType) {
+                    var oRichTextEditor = new RTE("prCreateApprovalRTE", {
+                        editorType: EditorType.TinyMCE4,
+                        width: "100%",
+                        height: "200px",
+                        customToolbar: true,
+                        showGroupFont: true,
+                        showGroupLink: true,
+                        showGroupInsert: true,
+                        value: sHtmlValue,
+                        ready: function () {
+                            this.addButtonGroup("styleselect").addButtonGroup("table");
+                        }
+                    });
+
+                    oApprovalLayout.addContent(oRichTextEditor);
+            });
         },
+
+
 
 		/* =========================================================== */
 		/* event handlers                                              */
@@ -94,7 +358,7 @@ sap.ui.define([
 		 * If not, it will replace the current entry of the browser history with the miainList route.
 		 * @public
 		 */
-		onPageNavBackButtonPress : function() {
+		//onPageNavBackButtonPress : function() {
 		/*	var sPreviousHash = History.getInstance().getPreviousHash();
 			if (sPreviousHash !== undefined) {
 				// eslint-disable-next-line sap-no-history-manipulation
@@ -102,7 +366,7 @@ sap.ui.define([
 			} else {
 				this.getRouter().navTo("approvalList", {}, true);
 			} */
-		},
+		//},
 
 		/**
 		 * Event handler for page edit button press
@@ -126,7 +390,7 @@ sap.ui.define([
 				oMessageContents.setValueState(sap.ui.core.ValueState.Error);
 				return;
 			}
-			MessageBox.confirm("Are you sure ?", {
+			MessageBox.confirm("저장 하시겠습니까 ?", {
 				title : "Comfirmation",
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
@@ -156,19 +420,8 @@ sap.ui.define([
 		/* internal methods                                            */
 		/* =========================================================== */
 
-		/**
-		 * Binds the view to the data path.
-		 * @function
-		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
-		 * @private
-		 */
-		_onObjectMatched : function (oEvent) { 
-            this.setRichEditor();
-            this._createViewBindData(oArgs); 
-			var oArgs = oEvent.getParameter("arguments"); 
-            this._onLoadApprovalRow();
-            this.oSF = this.getView().byId("searchField");
-        },
+
+
         /**
          * @description 초기 생성시 파라미터를 받고 들어옴 
          * @param {*} args : company , plant   

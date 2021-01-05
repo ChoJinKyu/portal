@@ -29,21 +29,21 @@
                              search=".onMaterialSearch" 
                              selectOnFocus="false"                             
                              placeholder="Search Category"
-                             class="sapUiTinyMarginTop sapUiTinyMarginBegin" />
+                             class="sapUiTinyMarginTop sapUiTinyMarginBegin  sapUiSmallMarginBottom" />
                 <Table  id="leftTable"
                         mode="SingleSelectLeft"
                         items="{mIMatListView>/}"
                         selectionChange=".onSelectedLeftTableItem"
                         itemPress=".onSelectedLeftTableItem"                        
-                        noDataText="No Data"
-                        class="sapUiSmallMarginBegin sapUiSmallMarginTop"
+                        noDataText="{I18N>/NCM0001}" 
+                        class="sapUiSmallMarginBegin"
                 >
                     <columns>
                         <Column hAlign="Center" visible="false"><header><Label text="tenant_id"/></header></Column>
                         <Column hAlign="Center" visible="false"><header><Label text="category_code"/></header></Column>
-                        <Column hAlign="Center" ><header><Label text="Code"/></header></Column>
-                        <Column hAlign="Center" ><header><Label text="Name"/></header></Column>
-                        <Column hAlign="Center" ><header><Label text="Category"/></header></Column>                                                                                                                    
+                        <Column hAlign="Center" ><header><Label text="{I18N>/CODE}"/></header></Column>
+                        <Column hAlign="Center" ><header><Label text="{I18N>/NAME}"/></header></Column>
+                        <Column hAlign="Center" ><header><Label text="{I18N>/CATEGORY}"/></header></Column>                                                                                                                    
                     </columns>
                     <items>
                         <ColumnListItem type="Active">

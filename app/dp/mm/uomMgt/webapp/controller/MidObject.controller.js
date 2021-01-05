@@ -18,10 +18,11 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
-    "sap/m/ObjectStatus"
+    "sap/m/ObjectStatus",
+    "sap/f/LayoutType"
 ], function (BaseController, Multilingual, Validator, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
 	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
-	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus) {
+	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus, LayoutType) {
 		
 	"use strict";
 
@@ -99,34 +100,34 @@ sap.ui.define([
 		 * Event handler for Enter Full Screen Button pressed
 		 * @public
 		 */
-		onPageEnterFullScreenButtonPress: function () {
-			var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
-			this.getRouter().navTo("midPage", {
-				layout: sNextLayout, 
-				tenantId: this._sTenantId,
-				uomCode: this._sUomCode
-			});
-		},
-		/**
-		 * Event handler for Exit Full Screen Button pressed
-		 * @public
-		 */
-		onPageExitFullScreenButtonPress: function () {
-			var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
-			this.getRouter().navTo("midPage", {
-				layout: sNextLayout, 
-				tenantId: this._sTenantId,
-				uomCode: this._sUomCode
-			});
-		},
-		/**
-		 * Event handler for Nav Back Button pressed
-		 * @public
-		 */
-		onPageNavBackButtonPress: function () {
-			var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+		
+		handleFullScreen: function () {
+            var oContModel = this.getModel("contModel");
+            oContModel.setProperty("/midObject/visibleFullScreenBtn", false);
+
+            // var sLayout = LayoutType.EndColumnFullScreen;
+            var sLayout = LayoutType.MidColumnFullScreen;
+			this._changeFlexibleColumnLayout(sLayout);
+        },
+        
+		handleExitFullScreen: function () {
+			var oContModel = this.getModel("contModel");
+            oContModel.setProperty("/midObject/visibleFullScreenBtn", true);
+
+            // var sLayout = LayoutType.ThreeColumnsEndExpanded;
+            var sLayout = LayoutType.TwoColumnsMidExpanded;
+            this._changeFlexibleColumnLayout(sLayout);
+        },
+        
+		handleClose: function () {
+            var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
             this.getRouter().navTo("mainPage", {layout: sNextLayout});
-		},
+        },
+
+        _changeFlexibleColumnLayout : function(layout){
+            var oFclModel = this.getModel("fcl");
+            oFclModel.setProperty("/layout", layout);
+        },
 
 		/**
 		 * Event handler for page edit button press
@@ -208,7 +209,7 @@ sap.ui.define([
 
             if (this._sTenantId !== "new"){
                 if(!oMasterModel.isChanged() && !oDetailsModel.isChanged()) {
-                    MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
+                    MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
                     return;
                 }
             }
@@ -216,7 +217,7 @@ sap.ui.define([
             if(this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
             if(this.validator.validate(this.byId("midTable")) !== true) return;
 
-			MessageBox.confirm(this.getModel("I18N").getText("/NCM0004"), {
+			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
@@ -227,7 +228,7 @@ sap.ui.define([
 								that._toShowMode();
                                 oView.setBusy(false);
                                 that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-								MessageToast.show(that.getModel("I18N").getText("/NCM0005"));
+								MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
 							}
 						});
 					};
@@ -302,7 +303,9 @@ sap.ui.define([
 			var oArgs = oEvent.getParameter("arguments"),
 				oView = this.getView();
 			this._sTenantId = oArgs.tenantId;
-			this._sUomCode = oArgs.uomCode;
+            this._sUomCode = oArgs.uomCode;
+            
+            this._fnInitControlModel();
 
 			if(oArgs.tenantId == "new" && oArgs.uomCode == "code"){
 				//It comes Add button pressed from the before page.
@@ -347,7 +350,19 @@ sap.ui.define([
 				this._toShowMode();
 			}
 			oTransactionManager.setServiceModel(this.getModel());
-		},
+        },
+        
+        _fnInitControlModel : function(){
+            var oData = {
+                readMode : null,
+                createMode : null,
+                editMode : null
+            }
+
+            var oContModel = this.getModel("contModel");
+            oContModel.setProperty("/midObject", oData);            
+            oContModel.setProperty("/midObject/visibleFullScreenBtn", true);
+        },
 
 		/**
 		 * Binds the view to the object path.
@@ -371,10 +386,12 @@ sap.ui.define([
 			var FALSE = false;
             this._showFormFragment('MidObject_Edit');
 			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("page").setProperty("showFooter", !FALSE);
+			// this.byId("page").setProperty("showFooter", !FALSE);
 			this.byId("pageEditButton").setEnabled(FALSE);
 			// this.byId("pageDeleteButton").setEnabled(FALSE);
-			this.byId("pageNavBackButton").setEnabled(FALSE);
+            // this.byId("pageNavBackButton").setEnabled(FALSE);
+            this.byId("pageSaveButton").setEnabled(!FALSE);
+            this.byId("pageCancelButton").setEnabled(!FALSE);
 
 			this.byId("midTableAddButton").setEnabled(!FALSE);
 			this.byId("midTableDeleteButton").setEnabled(!FALSE);
@@ -388,10 +405,12 @@ sap.ui.define([
 			var TRUE = true;
 			this._showFormFragment('MidObject_Show');
 			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("page").setProperty("showFooter", !TRUE);
+			// this.byId("page").setProperty("showFooter", !TRUE);
 			this.byId("pageEditButton").setEnabled(TRUE);
 			// this.byId("pageDeleteButton").setEnabled(TRUE);
-			this.byId("pageNavBackButton").setEnabled(TRUE);
+            // this.byId("pageNavBackButton").setEnabled(TRUE);
+            this.byId("pageSaveButton").setEnabled(!TRUE);
+            this.byId("pageCancelButton").setEnabled(!TRUE);
 
 			this.byId("midTableAddButton").setEnabled(!TRUE);
 			this.byId("midTableDeleteButton").setEnabled(!TRUE);

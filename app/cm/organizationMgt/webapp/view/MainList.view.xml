@@ -47,8 +47,9 @@
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
+                            <!-- {path: 'view>/selectedTabKey',formatter: '.formatterRequired.visibleRequired'} -->
                             <VBox visible="{path: 'view>/selectedTabKey',formatter: '.formatterVbox.visibleCompany'}">
-                                <Label required="true" text="{I18N>/COMPANY}: "/>
+                                <Label required="{path: 'view>/selectedTabKey',formatter: '.formatterRequired.visibleRequired'}" text="{I18N>/COMPANY}: "/>
                                 <ComboBox   
                                     id="search_company"
                                     required="true"

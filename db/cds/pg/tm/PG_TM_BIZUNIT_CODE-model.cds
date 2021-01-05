@@ -18,12 +18,22 @@
 namespace pg;
 
 using util from '../../cm/util/util-model';
+using {cm as Org_Tenant} from '../../cm/CM_ORG_TENANT-model';
+using {cm as Org_Bizunit} from '../../cm/CM_ORG_UNIT-model';
 using {pg as Task_Monitoring_Company_Code} from '../tm/PG_TM_BIZUNIT_CODE-model';
 
 entity Tm_Bizunit_Code {
     key tenant_id       : String(5) not null  @title : '회사코드';
+
+        tenant_ids      : Association to Org_Tenant.Org_Tenant
+                              on tenant_ids.tenant_id = tenant_id;
+
     key scenario_number : Integer64 not null  @title : '시나리오번호';
     key bizunit_code    : String(10) not null @title : '사업본부코드';
+
+        bizunit_codes   : Association to Org_Bizunit.Org_Unit
+                              on  bizunit_codes.tenant_id    = tenant_id
+                              and bizunit_codes.bizunit_code = bizunit_code;
 }
 
 extend Tm_Bizunit_Code with util.Managed;

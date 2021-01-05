@@ -134,7 +134,7 @@
             <!-- 첨부파일 끝 -->
 
 			<!-- Detail 에 관한 정보 -->
-			<uxap:ObjectPageSection titleUppercase="false" title="대상품의">
+			<uxap:ObjectPageSection titleUppercase="false" title="대상품목">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<Table id="midTable" 
@@ -145,7 +145,7 @@
                                     path: 'details>/LOIRequestDetailView',
                                     sorter: { 
                                         path: 'item_sequence',
-                                        descending: true 
+                                        descending: false 
                                     }                   
                                 }"
 								class="sapFDynamicPageAlignContent" 

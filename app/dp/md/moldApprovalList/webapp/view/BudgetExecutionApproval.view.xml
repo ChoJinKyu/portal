@@ -46,7 +46,7 @@
 				</uxap:snappedTitleOnMobile>
 
 				<uxap:actions>
-					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress"  visible="{contModel>/viewMode}"/>
+					<Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress"  visible="{mode>/viewFlag}"/>
 				</uxap:actions>
 
                 <uxap:navigationActions>
@@ -142,7 +142,7 @@
                     <VBox>
 					<!-- Budget Type -->
 					<Label text="Budget Type" required="true"/>
-					<SegmentedButton visible="{contModel>/editMode}"
+					<SegmentedButton visible="{mode>/editFlag}"
                                      id="segInspection" 
                                      selectedKey="{mdCommon>/investment_ecst_type_code}" 
                                      width="100%" 
@@ -157,7 +157,7 @@
 						</items>
 					</SegmentedButton>
                      <!-- view Mode -->
-                    <Text text="{mdCommon>/investment_ecst_type_code_nm}" visible="{contModel>/viewMode}"/>
+                    <Text text="{mdCommon>/investment_ecst_type_code_nm}" visible="{mode>/viewFlag}"/>
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -165,9 +165,9 @@
 				<VBox>
 					<Label text="Acquisition Department" required="true"/>
                     <!-- edit Mode -->
-					<Input value="" showValueHelp="true" visible="{contModel>/editMode}"/>
+					<Input value="" showValueHelp="true" visible="{mode>/editFlag}"/>
                     <!-- view Mode -->
-                    <Text text="" visible="{contModel>/viewMode}"/>
+                    <Text text="" visible="{mode>/viewFlag}"/>
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -175,7 +175,7 @@
 				<VBox>
 					<Label text="Account Department" required="true"/>
                     <!-- edit Mode -->
-					<ComboBox visible="{contModel>/editMode}"
+					<ComboBox visible="{mode>/editFlag}"
                               width="100%" 
                               id="acquisitionDepartment" 
                               selectedKey="{mdCommon>/accounting_department_code}" 
@@ -183,7 +183,7 @@
 						<core:Item key="{util>code}" text="{util>code_description}"/>
 					</ComboBox>
                     <!-- view Mode -->
-                    <Text text="{mdCommon>/accounting_department_code}" visible="{contModel>/viewMode}"/>
+                    <Text text="{mdCommon>/accounting_department_code}" visible="{mode>/viewFlag}"/>
 
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
@@ -192,7 +192,7 @@
 				<VBox>
 					<Label text="Import Company"/>
                     <!-- edit Mode -->
-					<ComboBox visible="{contModel>/editMode}"
+					<ComboBox visible="{mode>/editFlag}"
                               width="100%" 
                               id="importCompany" 
                               selectionChange=".onBCompanyChange"
@@ -208,7 +208,7 @@
 						<core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
 					</ComboBox>
                     <!-- view Mode -->
-                    <Text text="[{mdCommon>/import_company_code}] {mdCommon>/import_company_code_nm}" visible="{contModel>/viewMode}"/>
+                    <Text text="[{mdCommon>/import_company_code}] {mdCommon>/import_company_code_nm}" visible="{mode>/viewFlag}"/>
 
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
@@ -218,7 +218,7 @@
 					<!-- projectcode  {I18N>/PROJECT_CODE}-->
 					<Label text="Project Code" required="true"/> 
                     <!-- edit Mode -->
-					<ComboBox visible="{contModel>/editMode}" 
+					<ComboBox visible="{mode>/editFlag}" 
                               width="100%" 
                               id="projectCode" 
                               selectedKey="{mdCommon>/project_code}" 
@@ -226,7 +226,7 @@
 						<core:Item key="{util>code}" text="{util>code_description}"/>
 					</ComboBox>
                     <!-- view Mode -->
-                    <Text text="{mdCommon>/project_code}" visible="{contModel>/viewMode}"/>
+                    <Text text="{mdCommon>/project_code}" visible="{mode>/viewFlag}"/>
 
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
@@ -235,7 +235,7 @@
 				<VBox>
 					<Label text="Import Plant"/>
 					<ComboBox width="100%" 
-                              visible="{contModel>/editMode}" 
+                              visible="{mode>/editFlag}" 
                               id="importPlant" 
                               selectedKey="{mdCommon>/import_company_org_code}" 
                               enabled="{=${mdCommon>/investment_ecst_type_code}!=='S'?false:true}"
@@ -245,14 +245,14 @@
 						<core:Item key="{importPlant>org_code}" text="[{importPlant>org_code}]{importPlant>org_name}" />
 					</ComboBox>
                      <!-- view Mode -->
-                    <Text text="[{mdCommon>/import_company_org_code}] {mdCommon>/import_company_org_code_nm}" visible="{contModel>/viewMode}"/> 
+                    <Text text="[{mdCommon>/import_company_org_code}] {mdCommon>/import_company_org_code_nm}" visible="{mode>/viewFlag}"/> 
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
 				</VBox>
 				<VBox>
 					<Label text="{I18N>/ACCOUNT}" required="true"/>
-					<ComboBox visible="{contModel>/editMode}"  
+					<ComboBox visible="{mode>/editFlag}"  
                               width="100%" 
                               id="account" 
                               selectedKey="{mdCommon>/account_code}" 
@@ -265,15 +265,15 @@
 						<core:Item key="{util>code}" text="{util>code_name}"/>
 					</ComboBox>
                     <!-- view Mode -->
-                    <Text text="{mdCommon>/account_code_nm}" visible="{contModel>/viewMode}"/> 
+                    <Text text="{mdCommon>/account_code_nm}" visible="{mode>/viewFlag}"/> 
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
 				</VBox>
 				<VBox>
 					<Label text="{I18N>/CUSTOMER}"/>
-					<Input value="" showValueHelp="true" visible="{contModel>/editMode}" /> 
-                    <Text text="" visible="{contModel>/viewMode}"/>
+					<Input value="" showValueHelp="true" visible="{mode>/editFlag}" /> 
+                    <Text text="" visible="{mode>/viewFlag}"/>
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -290,8 +290,8 @@
 				</VBox>
 				<VBox>
 					<Label text="Customer PO No"/>
-					<Input value=""  visible="{contModel>/editMode}" />
-                    <Text text="" visible="{contModel>/viewMode}"/>
+					<Input value=""  visible="{mode>/editFlag}" />
+                    <Text text="" visible="{mode>/viewFlag}"/>
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -334,9 +334,10 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
-				<Button type="Transparent" text="Draft"     press=".onPageDraftButtonPress"   visible="{contModel>/editMode}"/>
-				<Button type="Transparent" text="Preview"   press=".onPagePreviewButtonPress"  visible="{contModel>/editMode}" />
-				<Button type="Emphasized"  text="Request"   press=".onPageRequestButtonPress"/>
+				<Button type="Transparent" text="Draft"     press=".onPageDraftButtonPress"   visible="{mode>/editFlag}"/>
+                <Button type="Transparent" text="Request Cancel"  press=".onPageRequestCancelButtonPress"   visible="{=${appMaster>/approve_status_code}==='AR'?true:false}" />
+				<Button type="Transparent" text="Preview"   press=".onPagePreviewButtonPress"  visible="{mode>/editFlag}" />
+				<Button type="Emphasized"  text="Request"   press=".onPageRequestButtonPress" visible="{=${appMaster>/approve_status_code}==='AR'?false:true}"/>
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

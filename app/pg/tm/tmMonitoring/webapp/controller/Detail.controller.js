@@ -59,6 +59,8 @@ sap.ui.define([
 
             this.setModel(oViewModel, "DetailView");
 
+
+
             //DetailMatched
             var oOwnerComponent = this.getOwnerComponent();
             this.oRouter = oOwnerComponent.getRouter();
@@ -104,7 +106,7 @@ sap.ui.define([
 
         _onDetailMatched: function (oEvent) {
             var oView = this.getView();
-            this.getView().getModel().refresh(true);
+            oView.getModel().refresh(true);
             this.scenario_number = oEvent.getParameter("arguments")["scenario_number"],
                 this.tenant_id = oEvent.getParameter("arguments")["tenant_id"];
             this.company_code = oEvent.getParameter("arguments")["company_code"],
@@ -117,8 +119,10 @@ sap.ui.define([
                 }.bind(this),
                 error: function () { }
             });
+
             //필수입력항목 검사 결과 초기화
             this.validator.clearValueState(sap.ui.getCore().byId("simpleform_edit"));
+
 
             if (this.scenario_number === "New") {
                 this.getModel("DetailView").setProperty("/isEditMode", true);
@@ -139,10 +143,20 @@ sap.ui.define([
                 monitoringVBox.bindElement(detail_info_Path);
                 scenarioVBox.bindElement(detail_info_Path);
                 systemVBox.bindElement(detail_info_Path);
+                //richText editor, formatted text value
+                this.PurposeFormattedText = atob(this.byId("reMonitoringPurpose").getValue());
+                this.ScenarioDescFormattedText = atob(this.byId("reMonitoringScenario").getValue());
+                this.ReSourceSystemFormattedText = atob(this.byId("reSourceSystemDetail").getValue());
+
                 this._toShowMode();
 
             }
+            //richTextEditor
+            this.byId("PurposeFormattedText").setHtmlText(this.PurposeFormattedText);
+            this.byId("ScenarioDescFormattedText").setHtmlText(this.ScenarioDescFormattedText);
+            this.byId("ReSourceSystemFormattedText").setHtmlText(this.ReSourceSystemFormattedText);
         },
+
 
         /**
          * signalList Insert Data(Items)
@@ -321,7 +335,7 @@ sap.ui.define([
                                 sap.m.MessageToast.show("Delete Success");
                                 that.getRouter().navTo("main", {}, true);
                                 //main 테이블 refresh
-                                sap.ui.getCore().byId("container-tmMonitoring---main--MonitorListTable").getModel().refresh(true);
+
                             },
                             error: function (cc, vv) {
                                 sap.m.MessageToast.show("Delete Failed");
@@ -329,7 +343,7 @@ sap.ui.define([
                         });
 
                         that.getRouter().navTo("main", {}, true);
-                        oModel.setRefreshAfterChange(true);
+                        oModel.refresh(true);
 
 
                     } else if (sButton === MessageBox.Action.CANCEL) {
@@ -339,6 +353,7 @@ sap.ui.define([
             });
 
             console.groupEnd();
+            oModel.refresh(true);
         },
 
         _deleteEntry: function (entitySet, deleteCode) {
@@ -497,6 +512,10 @@ sap.ui.define([
                 MessageToast.show("필수입력 항목을 입력해주십시오.");
                 return;
             }
+            //richTextEditor
+            var monitoringPurposeValue = this.byId("reMonitoringPurpose").getValue();
+            var scenarioDescValue = this.byId("reMonitoringScenario").getValue();
+            var sourceSystemDescValue = this.byId("reSourceSystemDetail").getValue();
             if (this.scenario_number === "New") {
                 var tenant_id = sap.ui.getCore().byId("tenant_edit_combo").getSelectedKey();
                 var senario_number = String(this.senario_number_max);
@@ -507,9 +526,9 @@ sap.ui.define([
                     scenario_number: senario_number,
                     monitoring_type_code: sap.ui.getCore().byId("combo_monitoring_type").getSelectedKey(),
                     activate_flag: sap.ui.getCore().byId("segmentButton_activate").getSelectedKey() === 'Yes' ? true : false,
-                    monitoring_purpose: null,
-                    scenario_desc: null,
-                    source_system_desc: null,
+                    monitoring_purpose: this.htmlDecoding(monitoringPurposeValue, this.byId("reMonitoringPurpose").getId()),
+                    scenario_desc: this.htmlDecoding(scenarioDescValue, this.byId("reMonitoringScenario").getId()),
+                    source_system_desc: this.htmlDecoding(sourceSystemDescValue, this.byId("reSourceSystemDetail").getId()),
                     local_create_dtm: new Date(),
                     local_update_dtm: new Date(),
                     create_user_id: "Admin",
@@ -766,8 +785,7 @@ sap.ui.define([
                     success: function (oData, oResponse) {
                         sap.m.MessageToast.show("Save Success");
                         that.getRouter().navTo("main", {}, true);
-                        //main 테이블 refresh
-                        sap.ui.getCore().byId("container-tmMonitoring---main--MonitorListTable").getModel().refresh(true);
+
                     },
                     error: function (cc, vv) {
                         sap.m.MessageToast.show("Save Failed");
@@ -782,12 +800,13 @@ sap.ui.define([
                 //마스터 테이블
                 var master_uPath = "/TaskMonitoringMaster(tenant_id='" + tenant_id + "',scenario_number=" + senario_number + ")";
                 var selectedTypeCode = sap.ui.getCore().byId("combo_monitoring_type").getSelectedKey();
+
                 var masterUpdateObj = {
                     monitoring_type_code: selectedTypeCode,
                     activate_flag: sap.ui.getCore().byId("segmentButton_activate").getSelectedKey() === 'Yes' ? true : false,
-                    monitoring_purpose: null,
-                    scenario_desc: null,
-                    source_system_desc: null,
+                    monitoring_purpose: this.htmlDecoding(monitoringPurposeValue, this.byId("reMonitoringPurpose").getId()),
+                    scenario_desc: this.htmlDecoding(scenarioDescValue, this.byId("reMonitoringScenario").getId()),
+                    source_system_desc: this.htmlDecoding(sourceSystemDescValue, this.byId("reSourceSystemDetail").getId()),
                     local_update_dtm: new Date(),
                     update_user_id: "Admin",
                     system_update_dtm: new Date()
@@ -897,19 +916,25 @@ sap.ui.define([
                         console.log("update success");
                         sap.m.MessageToast.show("Save Success");
                         that.getRouter().navTo("main", {}, true);
-                        //main 테이블 refresh
-                        sap.ui.getCore().byId("container-tmMonitoring---main--MonitorListTable").getModel().refresh(true);
+
                     }, error: function () {
                         console.log("update failed");
                         sap.m.MessageToast.show("Save Failed");
                     }
                 });
-                //refresh
-                oModel.setRefreshAfterChange(true);
+                console.log(masterUpdateObj);
 
             }
+            //refresh
+            oModel.refresh(true);
 
         },
+
+        htmlDecoding: function (value, sId) {
+            console.log(btoa(value));
+            return btoa(value);
+        },
+
 
         /**
         * 메인화면으로 이동
@@ -941,8 +966,7 @@ sap.ui.define([
                                 that.getRouter().navTo("main", {}, true);
                             }
                             //법인, 사업본부 아이템 remove
-                            sap.ui.getCore().byId("company_edit_combo").removeAllItems();
-                            sap.ui.getCore().byId("bizunit_edit_combo").removeAllItems();
+
 
                         }
 
@@ -951,34 +975,13 @@ sap.ui.define([
 
             }
 
-
+            sap.ui.getCore().byId("company_edit_combo").removeAllItems();
+            sap.ui.getCore().byId("bizunit_edit_combo").removeAllItems();
             this.getView().getModel().refresh(true);
-            this.validator.clearValueState(sap.ui.getCore().byId("simpleform_edit"));
+
 
         },
 
-        /**
-          *  history 테이블 버튼 (popup open)
-          * @public
-          */
-        onHistoryBtnPress: function (oEvent) {
-            if (!this._isAddHistoryPopup) {
-                this._oHistoryDialog = sap.ui.xmlfragment("dialog_history", "pg.tm.tmMonitoring.view.History", this);
-                this.getView().addDependent(this._oHistoryDialog);
-                this._isAddHistoryPopup = true;
-            }
-            this._oHistoryDialog.open();
-
-        },
-
-        /**
-        *  history Cancel 버튼 (popup close)
-        * @public
-        */
-        // @ts-ignore
-        onPressDialogClose: function (oEvent) {
-            this._oHistoryDialog.close();
-        },
 
         /**
          * 회사,법인, 사업본부 filter 기능
@@ -1087,6 +1090,7 @@ sap.ui.define([
          */
         onPressManagerDialogClose: function (oEvent) {
             //Search Input 값 reset
+            // sap.ui.getCore().byId("dialog_manager").getModel().refresh(true);
             sap.ui.getCore().byId("dialog_manager--manager_input").setValue("");
             sap.ui.getCore().byId("dialog_manager--jobTitle_input").setValue("");
             sap.ui.getCore().byId("dialog_manager--phoneNumber_input").setValue("");
@@ -1280,6 +1284,10 @@ sap.ui.define([
             this.byId("cycleVBox").removeItem(this.cycleText);
             this.byId("cycleVBox").insertItem(this.cycle_multibox, 1);
             sap.ui.getCore().byId("tenant_edit_combo").fireChange();
+            //richTextEditor
+            this.byId("reMonitoringPurpose").setValue(this.PurposeFormattedText);
+            this.byId("reMonitoringScenario").setValue(this.ScenarioDescFormattedText);
+            this.byId("reSourceSystemDetail").setValue(this.ReSourceSystemFormattedText);
 
         },
 
@@ -1303,6 +1311,8 @@ sap.ui.define([
             //주기 multicombobox -> text로 변경
             this.byId("cycleVBox").removeItem(this.cycle_multibox);
             this.byId("cycleVBox").insertItem(this.cycleText, 1);
+
+
 
         },
 
@@ -1357,7 +1367,6 @@ sap.ui.define([
                     }),
                     // @ts-ignore
                     new sap.m.ComboBox({
-                        id: "indicatorNameComboBox",
                         width: "80%",
                         selectedKey: "{monitoring_ind_number_cd}",
                         items: {
@@ -1441,7 +1450,6 @@ sap.ui.define([
                     }),
                     // @ts-ignore
                     new sap.m.ComboBox({
-                        id: "unitComboBox",
                         width: "80%",
                         selectedKey: "{monitoring_ind_compare_base_cd}",
                         items: {

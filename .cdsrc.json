@@ -34,6 +34,8 @@
             "db/cds/dp",
             "db/cds/dp/gs",
             "db/cds/dp/pd",
+            "db/cds/dp/im",
+            "db/cds/dp/sd",
             "db/cds/dp/mm",
             "db/cds/dp/sc",
             "db/cds/dp/sc/categoryMgt",
