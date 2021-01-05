@@ -1,0 +1,36 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<form:SimpleForm id="midObjectForm1Edit" editable="false" >
+		
+		<!-- <core:Title text="Normal" /> -->	
+        <Label text="범주코드"/>
+        <Text text="{master>/spmd_category_code}"/>
+        <Label text="범주코드명" required="true"/>
+        <Input value="{
+                path: 'master>/spmd_category_code_name',
+                type: 'sap.ui.model.type.String',
+                constraints: {
+                    maxLength: 50
+                }
+            }" required="true"></Input>       
+        <Label text="RGB글꼴색상코드"/>
+        <Input value="{
+                path: 'master>/rgb_font_color_code',
+                type: 'sap.ui.model.type.String',
+                constraints: {
+                    maxLength: 50
+                }
+            }" ></Input>	     
+        <Label text="RGB셀색상코드"/>
+        <Input value="{
+                path: 'master>/rgb_cell_clolor_code',
+                type: 'sap.ui.model.type.String',
+                constraints: {
+                    maxLength: 50
+                }
+            }" ></Input>
+	</form:SimpleForm>
+</core:FragmentDefinition>

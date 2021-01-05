@@ -59,7 +59,7 @@
       "viewName": "pg.mdCategory.view.App",
       "type": "XML",
       "async": true,
-      "id": "app"
+      "id": "fcl"
     },
     "dependencies": {
       "minUI5Version": "1.60.1",
@@ -117,25 +117,36 @@
         "viewType": "XML",
         "async": true,
         "viewPath": "pg.mdCategory.view",
-        "controlAggregation": "pages",
-        "controlId": "app",
+        "controlId": "fcl",
+        "transition": "slide",
         "clearControlAggregation": false
       },
       "routes": [
         {
-          "pattern": "",
-          "name": "mdCategory",
+          "pattern": ":layout:",
+          "name": "mainPage",
           "target": [
-            "mdCategory"
+            "mainObject"
           ]
+        },
+        {
+            "pattern": "midObject/{company_code}/{org_type_code}/{org_code}/{spmd_category_code}/{spmd_category_sort_sequence}/{layout}",
+            "name": "midPage",
+            "target": [
+                "mainObject",
+                "midObject"
+            ]
         }
       ],
       "targets": {
-        "mdCategory": {
-          "viewId": "mdCategory",
+        "mainObject": {
           "viewName": "mdCategory",
-          "viewLevel": 1,
+		  "controlAggregation": "beginColumnPages",
           "title": "{i18n>mainListViewTitle}"
+        },
+        "midObject": {
+            "viewName": "mdCategoryDetail",
+            "controlAggregation": "midColumnPages"
         }
       }
     }

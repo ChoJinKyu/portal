@@ -82,7 +82,7 @@ sap.ui.define([
         var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
                 sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
-        
+        this.byId("buttonMainDeleteRow").setEnabled(false);
         this.getRouter().navTo("midPage", {
             layout: oNextUIState.layout, 
             company_code: oRecord.company_code,
@@ -147,7 +147,6 @@ sap.ui.define([
                 oDataArr = oModel.getProperty("/MdCategoryItem"); 
                 oDataLength = oDataArr.length;
                 lastCtgrSeq = oDataArr[oDataLength-1].spmd_character_sort_seq;
-                console.log(lastCtgrSeq);
                 ctgrSeq = String(parseInt(lastCtgrSeq)+1);
             }
             this.getRouter().navTo("midPage", {
