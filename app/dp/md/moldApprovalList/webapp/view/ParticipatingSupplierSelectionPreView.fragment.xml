@@ -437,32 +437,28 @@
 					</uxap:ObjectPageSubSection>
 					<uxap:ObjectPageSubSection >
                     <!-- Referer -->
-                    <Table       
-                            growing="true"
-                            growingThreshold="20"
-                            class="sapFDynamicPageAlignContent" 
-                            mode="None"
-                            width="auto"
-                            items="{referer>/Referers}"
-                            >
-                        <headerToolbar>
-                            <OverflowToolbar>
-                            <Label text="Referer"/>
-                            </OverflowToolbar>
-                        </headerToolbar>
-                        <columns>
-                            <Column  minScreenWidth="Tablet" hAlign="Center"  >
-                                <Text text="Name/Dept" />
-                            </Column>
-                        </columns>
-                        <items>
-                            <ColumnListItem>
-                                <cells>
-                                    <Text text="{referer>referer_name}" />
-                                </cells>
-                            </ColumnListItem>
-                        </items>
-                        </Table>
+                        <VBox class="sapUiSmallMarginBegin">
+                            <Toolbar>
+                                <Label text="Referer" />
+                            </Toolbar>
+                            <layout:VerticalLayout class="sapUiContentPadding" width="100%">
+                                <MultiComboBox
+                                    selectionChange="handleSelectionChangeReferer"
+                                    selectionFinish="handleSelectionFinishReferer"
+                                    width="100%"
+                                    items="{ path: '/RefererSearch',
+                                                filters: [
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
+                                                ]
+                                            }"
+                                    editable="false">
+                                    <core:Item key="{employee_number}" text="{s_referer_name}" />
+                                </MultiComboBox>
+                            </layout:VerticalLayout>
+                            <layoutData>
+                                <layout:GridData span="XL12 L12 M12 S12" />
+                            </layoutData> 
+                        </VBox>
                     </uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>

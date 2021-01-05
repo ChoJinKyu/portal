@@ -332,8 +332,8 @@ sap.ui.define([
             console.log("approverPreview " , this.getModel("approverPreview").getData());
             var oView = this.getView();
 
-            if (!this._oDialog) {
-                this._oDialog = Fragment.load({
+            if (!this._oDialogPreview) {
+                this._oDialogPreview = Fragment.load({
                     id: oView.getId(),
                     name: "dp.md.moldApprovalList.view.ParticipatingSupplierSelectionPreView",
                     controller: this
@@ -343,7 +343,7 @@ sap.ui.define([
                 }.bind(this));
             }
 
-            this._oDialog.then(function (oDialog) {
+            this._oDialogPreview.then(function (oDialog) {
                 oDialog.open();
             });
 

@@ -60,6 +60,7 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
+            
             var oViewModel,
                 oResourceBundle = this.getResourceBundle();
             
