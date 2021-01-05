@@ -66,13 +66,13 @@ service MaterialMasterMgtService {
     left outer join Description.Mm_Material_Desc_Lng des
     on des.tenant_id = mst.tenant_id
     and des.material_code = mst.material_code
-    and des.language_code = 'EN'
+    and des.language_code = 'KO'
     ;
 
     view MaterialMstAllView as
     select key mst.tenant_id,
            key mst.material_code,
-           ifnull(des.material_desc, mst.material_desc) as material_desc : String(300),
+           mst.material_desc,
            mst.material_spec,
            mst.base_uom_code,
            mst.material_group_code,
@@ -87,12 +87,8 @@ service MaterialMasterMgtService {
            mst.maker_code,
            mst.maker_part_profile_code,
            mst.maker_material_code,
-           des.language_code
-    from Master.Mm_Material_Mst  mst
-    left outer join Description.Mm_Material_Desc_Lng des
-    on des.tenant_id = mst.tenant_id
-    and des.material_code = mst.material_code
-    and des.language_code = 'KO'
+           mst.language_code
+    from MaterialMstView mst
     left outer join mtlGroup.Mm_Material_Group  grp 
     on grp.tenant_id = mst.tenant_id
     and grp.material_group_code = mst.material_group_code
@@ -116,14 +112,93 @@ service MaterialMasterMgtService {
     and coml.language_code = 'KO'
     ;
 
-    // 자재조직
+    // 자재조직 View
+    @readonly
+    view MaterialOrgView as 
+    select key org.tenant_id,
+           key org.material_code,
+           key org.company_code,
+           key org.org_type_code,
+           key org.org_code,
+           poo.org_name,
+           org.material_status_code,
+           org.purchasing_group_code,
+           org.batch_management_flag,
+           org.automatic_po_allow_flag,
+           org.hs_code,
+           org.import_group_code,
+           org.user_item_type_code,
+           org.purchasing_item_flag,
+           org.purchasing_enable_flag,
+           org.osp_item_flag,
+           org.buyer_empno,
+           org.eng_item_flag,
+           oat.develope_person_empno,
+           oat.charged_osp_item_flag
+    from Organization.Mm_Material_Org  org
+    left join OrgAttribute.Mm_Material_Org_Attr oat
+    on oat.tenant_id = org.tenant_id
+    and oat.material_code = org.material_code
+    and oat.company_code = org.company_code
+    and oat.org_type_code = org.org_type_code
+    and oat.org_code = org.org_code
+    left join OperationOrg.Pur_Operation_Org poo 
+    on poo.tenant_id = org.tenant_id
+    and poo.org_type_code = org.org_type_code
+    and poo.org_code = org.org_code 
+    ;
+
+    view MaterialOrgAllView as
+    select key org.tenant_id,
+           key org.material_code,
+           key org.company_code,
+           key org.org_type_code,
+           key org.org_code,
+           org.org_name,
+           mst.material_desc,
+           mst.material_spec,
+           mst.base_uom_code,
+           mst.material_group_code,
+           mst.material_group_name,
+           mst.purchasing_uom_code,
+           mst.variable_po_unit_indicator,
+           mst.material_class_code,
+           mst.material_class_name,
+           mst.commodity_code,
+           mst.commodity_name,
+           mst.maker_part_number,
+           mst.maker_code,
+           mst.maker_part_profile_code,
+           mst.maker_material_code,
+           mst.language_code,
+           org.material_status_code,
+           org.purchasing_group_code,
+           org.batch_management_flag,
+           org.automatic_po_allow_flag,
+           org.hs_code,
+           org.import_group_code,
+           org.user_item_type_code,
+           org.purchasing_item_flag,
+           org.purchasing_enable_flag,
+           org.osp_item_flag,
+           org.buyer_empno,
+           org.eng_item_flag,
+           org.develope_person_empno,
+           org.charged_osp_item_flag
+    from MaterialOrgView  org
+    inner join MaterialMstAllView mst
+    on mst.tenant_id = org.tenant_id
+    and mst.material_code = org.material_code
+    ;
+    
+/*    
     view MaterialOrgView as
     select key org.tenant_id,
            key org.material_code,
            key org.company_code,
            key org.org_type_code,
            key org.org_code,
-           porg.org_name,
+           poo.org_name,
            ifnull(des.material_desc, mst.material_desc) as material_desc : String(300),
            mst.material_spec,
            mst.base_uom_code,
@@ -158,13 +233,13 @@ service MaterialMasterMgtService {
     and oat.company_code = org.company_code
     and oat.org_type_code = org.org_type_code
     and oat.org_code = org.org_code
-    left join OperationOrg.Pur_Operation_Org porg 
-    on porg.tenant_id = org.tenant_id
-    and porg.org_type_code = org.org_type_code
-    and porg.org_code = org.org_code     
+    left join OperationOrg.Pur_Operation_Org poo 
+    on poo.tenant_id = org.tenant_id
+    and poo.org_type_code = org.org_type_code
+    and poo.org_code = org.org_code     
     left join Master.Mm_Material_Mst  mst
     on mst.tenant_id = org.tenant_id
-    and mst.maker_material_code = org.tenant_id
+    and mst.material_code = org.material_code
     left outer join Description.Mm_Material_Desc_Lng des
     on des.tenant_id = mst.tenant_id
     and des.material_code = mst.material_code
@@ -221,7 +296,7 @@ view MaterialOrgAllView as
     and porg.org_code = org.org_code     
     left join Master.Mm_Material_Mst  mst
     on mst.tenant_id = org.tenant_id
-    and mst.maker_material_code = org.tenant_id
+    and mst.material_code = org.material_code
     left outer join Description.Mm_Material_Desc_Lng des
     on des.tenant_id = mst.tenant_id
     and des.material_code = mst.material_code
@@ -248,6 +323,8 @@ view MaterialOrgAllView as
     and coml.commodity_code = com.commodity_code
     and coml.language_code = 'KO'
     ;
+*/
+
     // 자재평가
     view MaterialValView as
     select key val.tenant_id,
@@ -335,7 +412,7 @@ view MaterialOrgAllView as
     and des.material_code = mst.material_code
     and des.language_code = 'KO'
     ;
-
+/*
     // 자재코드 검색 View
     view SearchMaterialMstView as
     select key mst.tenant_id,
@@ -469,4 +546,5 @@ view MaterialOrgAllView as
     on fav.tenant_id = org.tenant_id
     and fav.material_code = org.material_code
     ;
+*/
 }
