@@ -569,10 +569,15 @@ public class MoldApprovalV4 implements EventHandler {
                 Result rst2 = moldApprovalService.run(d2);
             }  
             for(QuotationV4 row : qtnList ){
+                System.out.println("QuotationV4 ::::" + row);
                 if(row.getSupplierCode()!=null && row.getSequence()!=null){   
                     Quotation q = Quotation.create();
                     q.setMoldId(row.getMoldId());
-                    q.setApprovalNumber(row.getApprovalNumber()); 
+                    if(row.getApprovalNumber().equals("New")){
+                        q.setApprovalNumber(this.APPROVAL_NUMBER);
+                    }else{
+                        q.setApprovalNumber(row.getApprovalNumber()); 
+                    }
                     q.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
                     q.setUpdateUserId(aMaster.getUpdateUserId()); 
                     
