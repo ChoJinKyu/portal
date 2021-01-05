@@ -114,7 +114,6 @@
                                             <layout:VerticalLayout class="sapUiLargeMarginEnd">
                                                 <Label  text="기준수량:" 
                                                         required="{oUi>/createMode}"
-
                                                         class="sapUiTinyMarginBottom"/>                                               
                                                 <Label  text="{oUiData>/base_quantity}"
                                                         visible="{= ${oUi>/createMode}===false &amp;&amp; ${oUi>/copyMode}===false}"
@@ -127,6 +126,7 @@
                                                         class="sapUiSmallMarginBottom"
                                                         type = "Number"
                                                         placeholder="Number" 
+                                                        liveChange="._checkNumber"
                                                         textAlign="Right"                                                                                               
                                                         visible="{= ${oUi>/createMode}===true || ${oUi>/copyMode}===true}"
                                                         value="{
@@ -153,6 +153,7 @@
                                                         visible="{= ${oUi>/createMode}===true || ${oUi>/copyMode}===true}"
                                                         type = "Number"
                                                         placeholder="Number"
+                                                        liveChange="._checkNumber"
                                                         textAlign="Right"
                                                         value="{
                                                             path : '{_oUiData>/number}',

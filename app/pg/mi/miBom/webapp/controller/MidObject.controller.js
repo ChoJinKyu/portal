@@ -410,14 +410,38 @@ sap.ui.define([
          * @public
          */
 		handleValueHelpMaterial: function (oEvent) {
-
+            console.log("handleValueHelpMaterial");
             //var sInputValue = oEvent.getSource().getValue();
             var _oUiData = this.getModel("_oUiData"),
                 materialTable = this.getModel("materialTable");
             var that = this;    
-            _oUiData.setProperty("/radioButtonGroup", this.getView().byId("radioButtonGroup").getSelectedIndex());
+            _oUiData.setProperty("/radioButtonGroup", that.getView().byId("radioButtonGroup").getSelectedIndex());
 
 			// create value help dialog
+			if (!this._valueHelpMaterialDialog) {
+                that._valueHelpMaterialDialog = sap.ui.xmlfragment(
+                    that._m.fragementId.materialDialog, 
+                    that._m.fragementPath.materialDialog,this
+                );
+                that.getView().addDependent(that._valueHelpMaterialDialog);
+            }                
+            
+            //기존 검색 데이타 초기화
+            that.setModelNullAndUpdateBindings(materialTable);
+			that._openValueHelpMaterialDialog();
+		},
+
+        /**
+         * 아이템 선택후 가격정보 선택
+         * @param {*} radioButtonGroup 
+         */
+		_openValueHelpMaterialDialog: function (radioButtonGroup) {
+            console.log("_openValueHelpMaterialDialog");
+            var that = this;
+            // open value help dialog filtered by the input value
+            //기존 모델 초기화 
+            that.setArrayModelNullAndUpdateBindings("materialTable");
+
 			if (!that._valueHelpMaterialDialog) {
 
                 that._valueHelpMaterialDialog = sap.ui.xmlfragment(
@@ -427,25 +451,9 @@ sap.ui.define([
               
                 that.getView().addDependent(that._valueHelpMaterialDialog);
 
-            }                
+            }  
             
-            //기존 검색 데이타 초기화
-            that.setModelNullAndUpdateBindings(materialTable);
-
-			that._openValueHelpMaterialDialog();
-		},
-
-        /**
-         * 아이템 선택후 가격정보 선택
-         * @param {*} radioButtonGroup 
-         */
-		_openValueHelpMaterialDialog: function (radioButtonGroup) {
-            var that = this;
-            // open value help dialog filtered by the input value
-            //기존 모델 초기화 
-            that.setArrayModelNullAndUpdateBindings("materialTable");
-
-			that._valueHelpMaterialDialog.open();
+            that._valueHelpMaterialDialog.open();
 		},
 
         /**
@@ -623,8 +631,17 @@ sap.ui.define([
             //기존 모델 초기화 
             var that = this;
             var unitOfMeasureView = that.getModel("unitOfMeasureView");
-            
+         
             that.setModelNullAndUpdateBindings(unitOfMeasureView);
+			if (!that._valueHelpReqmQuantityUnit) {
+
+                that._valueHelpReqmQuantityUnit = sap.ui.xmlfragment(
+                    that._m.fragementId.reqmQuantityUnit, 
+                    that._m.fragementPath.reqmQuantityUnit,this
+                );
+                that.getView().addDependent(that._valueHelpReqmQuantityUnit);
+            }    
+
 			that._valueHelpReqmQuantityUnit.open();
 		},
 
@@ -1143,15 +1160,24 @@ sap.ui.define([
         _onExit: function () {
             var that = this;
             that._setInit();
-            for (var sPropertyName in that._formFragments) {
-                if (!that._formFragments.hasOwnProperty(sPropertyName) || that._formFragments[sPropertyName] == null) {
-                    return;
-                }
-                that._formFragments[sPropertyName].destroy();
-                that._formFragments[sPropertyName] = null;
-            }
+            that._fragmentDistory();           
+
         },
 
+        _fragmentDistory : function(){
+            var that = this;
+
+            // if (that._valueHelpMaterialDetail) {
+            //     that._valueHelpMaterialDetail.destroy(true);
+            // }
+            // if (that._valueHelpMaterialDialog) {
+            //     that._valueHelpMaterialDialog.destroy(true);
+            // }
+            // if (that._valueHelpReqmQuantityUnit) {
+            //     that._valueHelpReqmQuantityUnit.destroy(true);
+            // }
+
+        },
         _handleCreateSuccess: function (oData) {
             console.log("_handleCreateSuccess");
             var that = this;
@@ -2616,7 +2642,14 @@ sap.ui.define([
             var that = this;
 			var oModel = that.getView().getModel("oUi");
 			oModel.setProperty("/busy", bIsBusy);
-		}	              
+        },
+        
+        _checkNumber : function (oEvent) {
+            var _oInput = oEvent.getSource();
+            var val = _oInput.getValue();
+            val = val.replace(/[^\d]/g, '');
+            _oInput.setValue(val);
+        }
            
     });
 });

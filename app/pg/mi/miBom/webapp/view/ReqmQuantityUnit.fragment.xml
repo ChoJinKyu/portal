@@ -30,8 +30,8 @@
                     class="sapUiSmallMargin sapUiSmallMarginTop"
             >
                 <columns>
-                    <Column hAlign="Center" ><header><Label text="Code"/></header></Column>
-                    <Column hAlign="Center" ><header><Label text="Name"/></header></Column>                                                                                                                    
+                    <Column hAlign="Center" ><header><Label text="{I18N>/CODE}"/></header></Column>
+                    <Column hAlign="Center" ><header><Label text="{I18N>/NAME}"/></header></Column>                                                                                                                    
                 </columns>
                 <items>
                     <ColumnListItem type="Active">
@@ -45,11 +45,11 @@
         </VBox>
 		</content>
 			<beginButton>
-				<Button type="Transparent"  text="Cancel" press=".closeValueHelpReqmQuantityUnit" />
+				<Button type="Transparent"  text="{I18N>/CANCEL}" press=".closeValueHelpReqmQuantityUnit" />
                
 			</beginButton>
             <endButton>
-             <Button  text="Apply" 
+             <Button  text="{I18N>/APPLY}"  
              type="Emphasized"
              press=".onReqmQuantityUnitApply" />
             </endButton>
