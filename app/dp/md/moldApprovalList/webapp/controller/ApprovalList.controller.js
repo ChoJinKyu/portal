@@ -278,13 +278,17 @@ sap.ui.define([
                     plantFilters.push(new Filter({
                         filters: [
                             new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
+                            new Filter("org_type_code", FilterOperator.EQ, 'AU'),
                             new Filter("company_code", FilterOperator.EQ, item.getKey())
                         ],
                         and: true
                     }));
                 });
             } else {
-                plantFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L1100'));
+                plantFilters.push(
+                    new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
+                    new Filter("org_type_code", FilterOperator.EQ, 'AU')
+                );
             }
 
             var filter = new Filter({
@@ -605,6 +609,7 @@ sap.ui.define([
             plantFilter.push(new Filter({
                 filters: [
                     new Filter("tenant_id", FilterOperator.EQ, 'L1100'),
+                    new Filter("org_type_code", FilterOperator.EQ, 'AU'),
                     new Filter("company_code", FilterOperator.EQ, source.getSelectedKey())
                 ],
                 and: true
