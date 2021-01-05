@@ -205,14 +205,14 @@
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>
                                 <ObjectIdentifier text="{list>loi_number}" />
-                                <ObjectIdentifier text="{list>requestor_empno}" />
-                                <ObjectIdentifier text="{list>request_department_code}" />
+                                <ObjectIdentifier text="{list>requestor_name}" />
+                                <ObjectIdentifier text="{list>request_department_name}" />
                                 <ObjectIdentifier text="{
                                         path: 'list>request_date',
                                         formatter: '.dateFormatter.toDateString'
                                     }"/>
                                 <ObjectIdentifier text="{list>loi_request_title}" />
-                                <ObjectIdentifier text="{list>loi_request_status_code}" />
+                                <ObjectIdentifier text="{list>loi_request_status_name}" />
                                 <!-- <ObjectIdentifier text="{list>investment_review_flag}" /> -->
                                 <ObjectIdentifier text="{list>buyer_empno}" />
                                 <ObjectIdentifier text="{list>publish_date}" />

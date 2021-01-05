@@ -257,7 +257,7 @@ sap.ui.define([
             }
 
             if (status) {
-                aSearchFilters.push(new Filter("loi_request_status_code", FilterOperator.EQ, status));
+                aSearchFilters.push(new Filter("loi_request_status_name", FilterOperator.EQ, status));
             }
 
 
