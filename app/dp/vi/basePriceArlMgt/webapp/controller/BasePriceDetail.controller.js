@@ -1,5 +1,6 @@
 sap.ui.define([
     "ext/lib/controller/BaseController",
+    "ext/lib/model/ManagedListModel",
     "ext/lib/model/TransactionManager",
     "ext/lib/util/Validator",
     "ext/lib/formatter/Formatter",
@@ -13,25 +14,24 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "sap/m/MessageToast"
 ],
-  function (BaseController, TransactionManager, Validator, Formatter, DateFormatter,
+  function (BaseController, ManagedListModel, TransactionManager, Validator, Formatter, DateFormatter,
         JSONModel, ODataModel, RichTextEditor, MessageBox, Fragment, Filter, FilterOperator, MessageToast) {
     "use strict";
 
-    var sSelectedPath;
+    var sSelectedPath, sTenantId, oDialogInfo;
 
-    return BaseController.extend("dp.vi.basePriceArl.controller.BasePriceDetail", {
+    return BaseController.extend("dp.vi.basePriceArlMgt.controller.BasePriceDetail", {
         dateFormatter: DateFormatter,
 
         onInit: function () {
             var oBasePriceListRootModel = this.getOwnerComponent().getModel("basePriceArlRootModel");
-            var sTenantId = oBasePriceListRootModel.getProperty("/tenantId");
+            sTenantId = oBasePriceListRootModel.getProperty("/tenantId");
 
             switch (sTenantId) {
                 case "L2100" :
                 default :
             }       
 
-            sTenantId
             // 하드코딩 시작
             var oCodeData = {
                 basis: [{code: "1", text: "Cost Analysis (Cost Table)"},
@@ -43,25 +43,11 @@ sap.ui.define([
             var oCodeModel = new JSONModel(oCodeData);
             oCodeModel.setSizeLimit(1000);
             this.setModel(oCodeModel, "codeModel");
-
-            // var oMaterialCodeData = {familyMaterialCode: [],
-            //                 materialCode: [{org_code: "CNZ", material_code: "12345678", description: "Electronic Part, Unclassified", spec:"NCN-PRODUCT PART", commondify:"", uom:"EA", uit:"G", item_status:"Obsolete"},
-            //                 {org_code: "CVZ", material_code: "1234567888", description: "Electronic Part, Unclassified", spec:"NCN-PRODUCT PART", commondify:"", uom:"EA", uit:"P", item_status:"Obsolete"},
-            //                 {org_code: "CVZ", material_code: "1234567777", description: "Electronic Part, Unclassified", spec:"NCN-PRODUCT PART", commondify:"", uom:"EA", uit:"G", item_status:"Obsolete"},
-            //                 {org_code: "CVZ", material_code: "12345678AA", description: "Electronic Part, Unclassified", spec:"NCN-PRODUCT PART", commondify:"", uom:"EA", uit:"G", item_status:"Obsolete"},
-            //                 {org_code: "DR2", material_code: "12345678BB", description: "Electronic Part, Unclassified", spec:"NCN-PRODUCT PART", commondify:"", uom:"EA", uit:"G", item_status:"To be obsolete"}]};
-            // var oMaterialCodeData = {familyMaterialCode: [],
-            //                 materialCode: [{org_code: "CNZ", material_code: "12345678"},
-            //                 {org_code: "CVZ", material_code: "1234567888"},
-            //                 {org_code: "CVZ", material_code: "1234567777"},
-            //                 {org_code: "CVZ", material_code: "12345678AA"},
-            //                 {org_code: "DR2", material_code: "12345678BB"}]};
-            // this.setModel(new JSONModel(oMaterialCodeData), "materialCodeModel");
             // 하드코딩 끝
 
             // Currency 데이터 조회 시작
-            var oCurrencyModel = this.getOwnerComponent().getModel("currencyModel");
-            oCurrencyModel.read("/Currency", {
+            var oCurrencyODataModel = this.getOwnerComponent().getModel("currencyODataModel");
+            oCurrencyODataModel.read("/Currency", {
                 filters : [],
                 success : function(data){
                     if( data && data.results ) {
@@ -76,6 +62,9 @@ sap.ui.define([
 
             // 해당 View(BasePriceDetail)에서 사용할 메인 Model 생성
             this.setModel(new JSONModel(), "detailModel");
+
+            // Dialog에서 사용할 Model 생성
+            this.setModel(new JSONModel({materialCode: [], familyMaterialCode: [], supplier: []}), "dialogModel");
 
             // Router설정. Detail 화면이 호출될 때마다 _getBasePriceDetail 함수 호출
             this.oRouter = this.getOwnerComponent().getRouter();
@@ -93,6 +82,8 @@ sap.ui.define([
             var oBasePriceListRootModel = this.getModel("basePriceArlRootModel");
             var oSelectedData = oBasePriceListRootModel.getProperty("/selectedData");
 
+            sTenantId = oBasePriceListRootModel.getProperty("/tenantId");
+
             // 리스트에서 선택해서 넘어오는 경우
             if( oSelectedData && oSelectedData.tenant_id ) {
                 var that = this;
@@ -106,7 +97,7 @@ sap.ui.define([
                 oModel.read("/Base_Price_Arl_Master", {
                     filters : aFilters,
                     urlParameters: {
-                        "$expand": "details/prices"
+                        "$expand": "details/material_code_fk,details/prices"
                     },
                     success : function(data){
                         oView.setBusy(false);
@@ -135,7 +126,7 @@ sap.ui.define([
                                     "new_change_code": "10",
                                     "approval_status_code": "10",
                                     "approval_request_desc": "품의 테스트",
-                                    "approval_requestor_empno": "15",
+                                    "approval_requestor_empno": "5452",
                                     "update_user_id": "Tester",
                                     "approval_request_date": oToday,
                                     "local_create_dtm": oToday,
@@ -156,7 +147,7 @@ sap.ui.define([
             sHtmlValue = ''
             sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
                 function (RTE, EditorType) {
-                    var oRichTextEditor = new RTE("myRTE", {
+                    var oRichTextEditor = new RTE(that.getView().getId()+"myRTE", {
                         editorType: EditorType.TinyMCE4,
                         width: "100%",
                         height: "200px",
@@ -201,7 +192,8 @@ sap.ui.define([
                 oToday = new Date();
 
             aDetails.push({base_date:oToday, 
-                        company_code: "LGEKR", 
+                        company_code: "LGCKR",
+                        org_code: "EKHQ",
                         org_type_code: "PU",
                         au_code: "10",
                         base_price_ground_code: "10", 
@@ -281,6 +273,7 @@ sap.ui.define([
             if( aDetails ) {
                 aDetails.forEach(function (oDetails) {
                     delete oDetails.checked;
+                    delete oDetails.material_code_fk;
                 });
             }
 
@@ -290,7 +283,7 @@ sap.ui.define([
                     success: function(data){
                         // return 값이 있고 approval_number가 있는 경우에만 저장 완료
                         if( data && data.approval_number ) {
-                            MessageBox.success("저장되었습니다.");
+                            MessageToast.show("저장되었습니다.");
                             var oMaster = that._returnDataRearrange(data);
                             oDetailModel.setData(oMaster);
                         }
@@ -304,12 +297,11 @@ sap.ui.define([
                 var sUpdatePath = oModel.createKey("/Base_Price_Arl_Master", this._getMasterKey(oData, "Master"));
                 oModel.update(sUpdatePath, oData, {
                     success: function(data){
-                        // return 값이 있고 approval_number가 있는 경우에만 저장 완료
-                        if( data && data.approval_number ) {
-                            MessageBox.success("수정되었습니다.");
-                            var oMaster = that._returnDataRearrange(data);
-                            oDetailModel.setData(oMaster);
-                        }
+                        // if( data && data.approval_number ) {
+                            MessageToast.show("수정되었습니다.");
+                        //     var oMaster = that._returnDataRearrange(data);
+                        //     oDetailModel.setData(oMaster);
+                        // }
                     },
                     error: function(data){
                         console.log('error', data);
@@ -371,76 +363,171 @@ sap.ui.define([
 
             this.getRouter().navTo("basePriceList");
         },
-        
+
         /**
-         * Dialog Close
+         * ==================== Dialog 시작 ==========================
          */
-        onClose: function (oEvent) {
-            var sFragmentName = oEvent.getSource().data("fragmentName");
-            this[sFragmentName].then(function(oDialog) {
-                oDialog.close();
+        /**
+         * Dialog.fragment open
+         */
+		onOpenDialog: function (oEvent) {
+            sSelectedPath = oEvent.getSource().getBindingContext("detailModel").getPath();
+            var oView = this.getView();
+            var sDialog = oEvent.getSource().data("dialog");
+
+            // oDialogInfo 객체의 property 설명
+            // name: Dialog 구분값(materialCode, familyMaterialCode, supplier)
+            // dialogObject: 생성된 Dialog Promise 객체
+            // path: Dialog fragment path
+            oDialogInfo = {name: sDialog, dialogObject: null, path: ""};
+
+            // open된 Dialog에 따라 분기
+            switch (sDialog) {
+                case "materialCode":
+                    oDialogInfo.dialogObject = this._oMaterialDialog;
+                    oDialogInfo.path = "dp.vi.basePriceArlMgt.view.MaterialDialog";
+                    break;
+                case "familyMaterialCode":
+                    oDialogInfo.dialogObject = this._oFamilyMaterialDialog;
+                    oDialogInfo.path = "dp.vi.basePriceArlMgt.view.FamilyMaterialDialog";
+                    break;
+                case "supplier":
+                    oDialogInfo.dialogObject = this._oSupplierDialog;
+                    oDialogInfo.path = "dp.vi.basePriceArlMgt.view.SupplierDialog";
+                    break;
+            }
+
+            if ( !oDialogInfo.dialogObject ) {
+                oDialogInfo.dialogObject = Fragment.load({
+                    id: oView.getId(),
+                    name: oDialogInfo.path,
+                    controller: this
+                }).then(function (oDialog) {
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                });
+
+                switch (sDialog) {
+                    case "materialCode":
+                        this._oMaterialDialog = oDialogInfo.dialogObject;
+                        break;
+                    case "familyMaterialCode":
+                        this._oFamilyMaterialDialog = oDialogInfo.dialogObject;
+                        break;
+                    case "supplier":
+                        this._oSupplierDialog = oDialogInfo.dialogObject;
+                        break;
+                }
+            }
+
+            oDialogInfo.dialogObject.then(function(oDialog) {
+                oDialog.open();
+
+                this.onGetDialogData();
+            }.bind(this));
+        },
+
+        /**
+         * Dialog data 조회
+         */
+        onGetDialogData: function (oEvent) {
+            var oModel = this.getModel();
+            var aFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)];
+            var sTableId = "", sODataUrl = "", sFilterPropertyName = "", sModelPath = "";
+
+            // open된 Dialog에 따라 분기
+            // sTableId: 각 Dialog의 table id
+            // sODdataUrl: OData Url
+            // sFilterPropertyName: 추가할 Filter property
+            // sModelPath: dialogModel에 바인딩할  path
+            switch (oDialogInfo.name) {
+                case "materialCode":
+                    sTableId = "materialCodeTable";
+                    sODataUrl = "/Material_Mst";
+                    sFilterPropertyName = "material_code";
+                    sModelPath = "/materialCode";
+                    break;
+                case "familyMaterialCode":
+                    sTableId = "familyMaterialCodeTable";
+                    sODataUrl = "/Material_Mst";
+                    sFilterPropertyName = "material_code";
+                    sModelPath = "/failyMaterialCode";
+                    break;
+                case "supplier":
+                    sTableId = "supplierTable";
+                    sODataUrl = "/Supplier_Mst";
+                    sFilterPropertyName = "supplier_code";
+                    sModelPath = "/supplier";
+                    break;
+            }
+
+            var oTable = this.byId(sTableId);
+            // 테이블 SearchField 검색값 초기화
+            oTable.getHeaderToolbar().getContent()[2].setValue("");
+
+            // SearchField에서 검색으로 데이터 조회하는 경우 Filter 추가
+            if( oEvent ) {
+                var sQuery = oEvent.getSource().getValue();
+                aFilters.push(new Filter(sFilterPropertyName, FilterOperator.Contains, sQuery));
+            }
+
+            oTable.setBusy(true);
+
+            oModel.read(sODataUrl, {
+                filters : aFilters,
+                success: function(data) {
+                    oTable.setBusy(false);
+                    
+                    if( data ) {
+                        this.getModel("dialogModel").setProperty(sModelPath, data.results);
+                    }
+                }.bind(this),
+                error: function(data){
+                    oTable.setBusy(false);
+                    console.log('error', data);
+                    MessageBox.error(data.message);
+                }
             });
         },
 
         /**
-         * ==================== Material Code Dialog 시작 ==========================
+         * Dialog에서 Row 선택 시
          */
-        /**
-         * 자재정보 검색 MaterialDialog.fragment open
-         */
-		onOpenMaterialDialog: function (oEvent) {
-            sSelectedPath = oEvent.getSource().getBindingContext("detailModel").getPath();
-            var oView = this.getView();
-            var sPath = jQuery.sap.getModulePath("dp.vi.basePriceArl", "/json/materialCode.json");
-            var oMarterialCodeModel = new JSONModel(sPath);
-
-            oMarterialCodeModel.attachRequestCompleted(function(data) {
-                if (!this._oMaterialDialog) {
-                    this._oMaterialDialog = Fragment.load({
-                        id: oView.getId(),
-                        name: "dp.vi.basePriceArl.view.MaterialDialog",
-                        controller: this
-                    }).then(function (oDialog) {
-                        oView.addDependent(oDialog);
-                        return oDialog;
-                    });
-                }
-                this._oMaterialDialog.then(function(oDialog) {
-                    oDialog.open();
-                });
-            }.bind(this));
-
-            this.setModel(oMarterialCodeModel, "materialCodeModel");
-        },
-
-        /**
-         * Material Code Dialog에서 Checkbox 선택 시
-         */
-        onSelectMaterialCode: function (oEvent) {
-            var oMaterialCodeModel = this.getModel("materialCodeModel");
+        onSelectDialogRow: function (oEvent) {
+            var oDialogModel = this.getModel("dialogModel");
             var oParameters = oEvent.getParameters();
 
-            oMaterialCodeModel.setProperty(oParameters.listItems[0].getBindingContext("materialCodeModel").getPath()+"/checked", oParameters.selected);
+            oDialogModel.setProperty(oParameters.listItems[0].getBindingContext("dialogModel").getPath()+"/checked", oParameters.selected);
         },
 
         /**
-         * Material Code 선택 후 apply
+         * Dialog Row Data 선택 후 apply
          */
-        onMaterialDetailApply: function (oEvent) {
-            var aMaterialCode = this.getModel("materialCodeModel").getProperty("/materialCode");
+        onDailogRowDataApply: function (oEvent) {
+            var aDialogData = this.getModel("dialogModel").getProperty("/"+oDialogInfo.name);
             var oDetailModel = this.getModel("detailModel");
             var oSelectedDetail = oDetailModel.getProperty(sSelectedPath);
             var bChecked = false;
 
-            for( var i=0; i<aMaterialCode.length; i++ ) {
-                var oMaterialCode = aMaterialCode[i];
+            for( var i=0; i<aDialogData.length; i++ ) {
+                var oDialogData = aDialogData[i];
 
-                if( oMaterialCode.checked ) {
-                    oSelectedDetail.material_code = oMaterialCode.material_code;
-                    //oSelectedDetail.description = oMaterialCode.description;
-                    //oSelectedDetail.spec = oMaterialCode.spec;
+                if( oDialogData.checked ) {
+                    switch(oDialogInfo.name) {
+                        case "materialCode":
+                            if( !oSelectedDetail.material_code_fk ) {
+                                oSelectedDetail.material_code_fk = {};
+                            }
+                            oSelectedDetail.material_code = oDialogData.material_code;
+                            oSelectedDetail.material_code_fk.material_desc = oDialogData.material_desc;
+                            oSelectedDetail.material_code_fk.material_spec = oDialogData.material_spec;
+                            break;
+                        case "supplier":
+                            oSelectedDetail.supplier_code = oDialogData.supplier_code;
+                            oSelectedDetail.supplier_local_name = oDialogData.supplier_local_name;
+                    }
 
-                    delete oMaterialCode.checked;
+                    delete oDialogData.checked;
                     bChecked = true;
 
                     break;
@@ -457,37 +544,22 @@ sap.ui.define([
                 MessageBox.error("추가할 데이터를 선택해 주십시오.");
             }
         },
-
+          
         /**
-         * ==================== Family Material Code Dialog 끝 ==========================
+         * Dialog Close
          */
-
-        /**
-         * Family 자재정보 검색 FamilyMaterialDialog.fragment open
-         */
-		onOpenFamilyMaterialDialog: function (oEvent) {
-            var oView = this.getView();
-            var oMaterialCodeModel = this.getModel("materialCodeModel");
-            oMaterialCodeModel.setProperty("/selectedPath", oEvent.getSource().getBindingContext("detailModel").getPath());
-
-			if (!this._oFamilyMaterialDialog) {
-				this._oFamilyMaterialDialog = Fragment.load({
-					id: oView.getId(),
-                    name: "dp.vi.basePriceArl.view.FamilyMaterialDialog",
-                    controller: this
-				}).then(function (oDialog) {
-					oView.addDependent(oDialog);
-					return oDialog;
-				});
-			}
-			this._oFamilyMaterialDialog.then(function(oDialog) {
-				oDialog.open();
-			});
+        onClose: function (oEvent) {
+            oDialogInfo.dialogObject.then(function(oDialog) {
+                oDialog.close();
+            });
         },
 
-         /**
-         * ==================== Family Material Code Dialog 시작 ==========================
+        /**
+         * ==================== Dialog 끝 ==========================
          */
+
+
+
     });
   }
 );

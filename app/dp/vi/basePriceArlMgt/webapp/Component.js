@@ -5,7 +5,7 @@ sap.ui.define([
 ], function (UIComponent, JSONModel, Multilingual) {
   "use strict";
 
-  return UIComponent.extend("dp.vi.basePriceArl.Component", {
+  return UIComponent.extend("dp.vi.basePriceArlMgt.Component", {
 
     metadata: {
       manifest: "json"
@@ -15,7 +15,7 @@ sap.ui.define([
         // call the base component's init function
         UIComponent.prototype.init.apply(this, arguments);
 
-        this.setModel(new JSONModel({tenantId: "L1100",
+        this.setModel(new JSONModel({tenantId: "L2100",
         tenantList: [
       {
         "tenant_id": "L1100",

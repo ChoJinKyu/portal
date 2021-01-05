@@ -1,4 +1,4 @@
-<mvc:View controllerName="dp.vi.basePriceArl.controller.BasePriceDetail"
+<mvc:View controllerName="dp.vi.basePriceArlMgt.controller.BasePriceDetail"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:uxap="sap.uxap"
     xmlns="sap.m"
@@ -29,49 +29,28 @@
 		<uxap:headerContent>
 			<FlexBox wrap="Wrap">
                 <!-- Requester 시작 -->
-                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                    <ObjectStatus title="{I18N>/APPROVAL_NUMBER}" text="{detailModel>/approval_number}"/>
+                <layout:VerticalLayout class="sapUiResponsiveMargin">
+                    <!-- <ObjectStatus title="{I18N>/APPROVAL_NUMBER}" text="{detailModel>/approval_number}"/> -->
+                    <ObjectStatus title="Approval Number" text="{detailModel>/approval_number}"/>
                     <!-- <ObjectStatus title="{I18N>/REQUESTER}" text="{detailModel>/update_user_id}"/> -->
-                    <ObjectStatus title="REQUESTER" text="{detailModel>/update_user_id}"/>
-                    <ObjectStatus title="{I18N>/REQUEST_DATE}" text="{path:'detailModel>/local_update_dtm', formatter: '.dateFormatter.toDateString'}"/>
+                    <ObjectStatus title="Requester" text="{detailModel>/update_user_id}"/>
+                    <!-- <ObjectStatus title="{I18N>/REQUEST_DATE}" text="{path:'detailModel>/local_update_dtm', formatter: '.dateFormatter.toDateString'}"/> -->
+                    <ObjectStatus title="Request Date" text="{path:'detailModel>/local_update_dtm', formatter: '.dateFormatter.toDateString'}"/>
                 </layout:VerticalLayout>
                 <!-- Requester 끝 -->
 
                 <!-- Status 시작 -->
-				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-					<Label text="{I18N>/STATUS} :"/>
-                    <ObjectStatus class="sapMObjectStatusLarge" text="Drafting" state="Error" />
+				<layout:VerticalLayout class="sapUiResponsiveMargin">
+					<!-- <Label text="{I18N>/STATUS} :"/> -->
+					<Label text="Status :"/>
+                    <ObjectStatus class="sapMObjectStatusLarge" text="Draft" state="Error" />
 				</layout:VerticalLayout>
                 <!-- Status 끝 -->
 
                 <!-- Process 시작 -->
-                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-					<Label text="{I18N>/PROCESS} : "/>
-                    <!-- <co:ProcessFlow id="pageHeaderProcessFlow" scrollable="false">
-                        <co:lanes>
-                            <co:ProcessFlowLaneHeader
-                                laneId="pageHeaderProcessFlowOrderLane"
-                                iconSrc="sap-icon://order-status"
-                                text="Drafting"
-                                position="0" />
-                            <co:ProcessFlowLaneHeader
-                                laneId="pageHeaderProcessFlowDeliveryLane"
-                                iconSrc="sap-icon://monitor-payments"
-                                text="Request For Approval"
-                                position="1" />
-                            <co:ProcessFlowLaneHeader
-                                laneId="pageHeaderProcessFlowInvoiceLane"
-                                iconSrc="sap-icon://payment-approval"
-                                text="Approved"
-                                position="2" />
-                            <co:ProcessFlowLaneHeader
-                                laneId="pageHeaderProcessFlowAccountingLane"
-                                iconSrc="sap-icon://money-bills"
-                                text="Rejected"
-                                position="3" />
-                        </co:lanes>
-                    </co:ProcessFlow> -->
-
+                <layout:VerticalLayout class="sapUiResponsiveMargin">
+					<!-- <Label text="{I18N>/PROCESS} : "/> -->
+					<Label text="Process : "/>
                     <HBox>
                         <co:MicroProcessFlow>
                             <co:content>
@@ -82,8 +61,8 @@
                         </co:MicroProcessFlow>
                     </HBox>
                     <HBox>
-                        <Text text="Drafting" width="4rem" />
-                        <Text text="Request&#10; For Approval" width="6rem" textAlign="Center" />
+                        <Text text="Draft" width="4rem" />
+                        <Text text="Requested" width="6rem" textAlign="Center" />
                         <Text text="Approved" width="6rem" textAlign="Center" />
                     </HBox>
 				</layout:VerticalLayout>
@@ -99,7 +78,7 @@
 						<uxap:blocks>
                             <HBox alignItems="Center">
                                 <Label
-                                    text="APPROVAL NAME"
+                                    text="Approval Name"
                                     design="Bold"
                                     class="sapUiTinyMarginEnd"
                                     textAlign="Left"
@@ -119,7 +98,7 @@
 
             <!-- Material Code 시작 -->
             <!-- <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/BASE_PRICE_LIST}({codeModel>/detailsLength})"> -->
-            <uxap:ObjectPageSection titleUppercase="false" title="BASE PRICE LIST({codeModel>/detailsLength})">
+            <uxap:ObjectPageSection titleUppercase="false" title="Base Price List({codeModel>/detailsLength})">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
@@ -134,50 +113,63 @@
                                     <t:extension>
                                         <OverflowToolbar class="sapFDynamicPageAlignContent">
                                             <ToolbarSpacer />
-                                            <Button text="{I18N>/UPLOAD}" type="Transparent"/>
-                                            <Button text="{I18N>/ADDITION}" type="Transparent" press=".onAddBasePrice" />
-                                            <Button text="{I18N>/DELETE}" type="Transparent" press=".onDeleteDetailRow" />
-                                            <Button icon="sap-icon://excel-attachment" />
+                                            <!-- <Button text="{I18N>/UPLOAD}" type="Transparent"/>
+                                            <Button text="{I18N>/ADDITION}" type="Transparent" press=".onAddBasePrice" /> -->
+                                            <Button text="Upload" type="Transparent"/>
+                                            <Button text="Add" type="Transparent" press=".onAddBasePrice" />
+                                            <!-- <Button text="{I18N>/DELETE}" type="Transparent" press=".onDeleteDetailRow" /> -->
+                                            <Button text="Delete" type="Transparent" press=".onDeleteDetailRow" />
+                                            <!-- <Button icon="sap-icon://excel-attachment" />
                                             <Button icon="sap-icon://group-2" />
-                                            <Button icon="sap-icon://action-settings" />
+                                            <Button icon="sap-icon://action-settings" /> -->
                                         </OverflowToolbar>
                                     </t:extension>
                                     <t:columns>
                                         <t:Column hAlign="Center" width="6rem">
-                                            <Label text="{I18N>/COMPANY}" textAlign="Center" />
+                                            <!-- <Label text="{I18N>/COMPANY}" textAlign="Center" /> -->
+                                            <Label text="Company" textAlign="Center" />
                                             <t:template>
                                                 <Text text="{detailModel>company_code}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="6rem">
-                                            <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" />
+                                            <!-- <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" /> -->
+                                            <Label text="Pur Org" textAlign="Center" />
                                             <t:template>
                                                 <Text text="{detailModel>org_code}" />
                                             </t:template>
                                         </t:Column>
-                                        <t:Column hAlign="Center" width="10rem">
-                                            <Label text="{I18N>/MATERIAL_CODE}" />
+                                        <t:Column width="10rem">
+                                            <!-- <Label text="{I18N>/MATERIAL_CODE}" textAlign="Center" width="100%" /> -->
+                                            <Label text="Material Code" textAlign="Center" width="100%" />
                                             <t:template>
                                                 <Input
                                                     value="{detailModel>material_code}"
                                                     showValueHelp="true"
-                                                    valueHelpRequest=".onOpenMaterialDialog" />
+                                                    valueHelpRequest=".onOpenDialog" >
+                                                    <customData>
+                                                        <core:CustomData key="dialog" value="materialCode"  />
+                                                    </customData>
+                                                </Input>
                                             </t:template>
                                         </t:Column>
-                                        <t:Column hAlign="Center" width="16rem">
-                                            <Label text="{I18N>/DESCRIPTION}" textAlign="Center" />
+                                        <t:Column width="14rem">
+                                            <!-- <Label text="{I18N>/DESCRIPTION}" textAlign="Center" width="100%" /> -->
+                                            <Label text="Description" textAlign="Center" width="100%" />
                                             <t:template>
-                                                <Text text="{detailModel>description}" />
+                                                <Text text="{detailModel>material_code_fk/material_desc}" />
                                             </t:template>
                                         </t:Column>
-                                        <t:Column hAlign="Center" width="12rem">
-                                            <Label text="{I18N>/SPEC_DESC}" />
+                                        <t:Column width="20rem">
+                                            <!-- <Label text="{I18N>/SPEC_DESC}" textAlign="Center" width="100%" /> -->
+                                            <Label text="Spec" textAlign="Center" width="100%" />
                                             <t:template>
-                                                <Text text="{detailModel>spec}" />
+                                                <Text text="{detailModel>material_code_fk/material_spec}" />
                                             </t:template>
                                         </t:Column>
-                                        <t:Column hAlign="Center" width="12rem">
-                                            <Label text="{I18N>/BASIS}" textAlign="Center" />
+                                        <t:Column width="12rem">
+                                            <!-- <Label text="{I18N>/BASIS}" textAlign="Center" /> -->
+                                            <Label text="Basis" textAlign="Center" width="100%" />
                                             <t:template>
                                                 <Select
                                                     items="{codeModel>/basis}"
@@ -188,51 +180,64 @@
                                                 </Select>
                                             </t:template>
                                         </t:Column>
-                                        <t:Column headerSpan="2" hAlign="Center" width="6rem" visible="{= ${basePriceArlRootModel>/tenantId} === 'L2100' ? true : false}">
+                                        <t:Column headerSpan="2" width="6rem" visible="{= ${basePriceProgressStatusMgtRootModel>/tenantId} === 'L2100' ? true : false}">
                                             <t:multiLabels>
-                                                <Label text="{I18N>/SUPPLIER}" textAlign="Center" />
-                                                <Label text="{I18N>/CODE}" textAlign="Center" />
+                                                <!-- <Label text="{I18N>/SUPPLIER}" textAlign="Center" width="100%" />
+                                                <Label text="{I18N>/CODE}" textAlign="Center" width="100%" /> -->
+                                                <Label text="Supplier" textAlign="Center" width="100%" />
+                                                <Label text="Code" textAlign="Center" width="100%" />
                                             </t:multiLabels>
                                             <t:template>
-                                                <Text text="{detailModel>supplier_code}" />
+                                                <Text text="{detailModel>supplier_code}" textAlign="Center" width="100%" />
                                             </t:template>
                                         </t:Column>
-                                        <t:Column width="10rem" hAlign="Center" visible="{= ${basePriceArlRootModel>/tenantId} === 'L2100' ? true : false}">
+                                        <t:Column width="10rem" visible="{= ${basePriceProgressStatusMgtRootModel>/tenantId} === 'L2100' ? true : false}">
                                             <t:multiLabels>
-                                                <Label text="{I18N>/SUPPLIER}" textAlign="Center" />
-                                                <Label text="{I18N>/Name}" textAlign="Center" />
+                                                <Label text="{I18N>/SUPPLIER}" textAlign="Center" width="100%" />
+                                                <!-- <Label text="{I18N>/NAME}" textAlign="Center" width="100%" /> -->
+                                                <Label text="Name" textAlign="Center" width="100%" />
                                             </t:multiLabels>
                                             <t:template>
                                                 <Input
-                                                    value="{detailModel>supplier_name}"
+                                                    value="{detailModel>supplier_local_name}"
                                                     showValueHelp="true"
-                                                    valueHelpRequest=".onOpenSupplierDialog" />
+                                                    valueHelpRequest=".onOpenDialog" >
+                                                    <customData>
+                                                        <core:CustomData key="dialog" value="supplier"  />
+                                                    </customData>
+                                                </Input>
                                             </t:template>
                                         </t:Column>
-                                        <t:Column headerSpan="3" hAlign="Center" width="10rem">
+                                        <t:Column headerSpan="3" width="10rem">
                                             <t:multiLabels>
-                                                <Label text="{I18N>/DOMESTIC}" textAlign="Center" />
-                                                <Label text="{I18N>/BASE_DATE}" textAlign="Center" />
+                                                <!-- <Label text="{I18N>/DOMESTIC}" textAlign="Center" />
+                                                <Label text="{I18N>/BASE_DATE}" textAlign="Center" /> -->
+                                                <Label text="Domestic" textAlign="Center" width="100%" />
+                                                <Label text="Base Date" textAlign="Center" width="100%" />
                                             </t:multiLabels>
                                             <t:template>
                                                 <Text text="{
                                                     path: 'detailModel>base_date',
-                                                    formatter: '.dateFormatter.toDateString'}" />
+                                                    formatter: '.dateFormatter.toDateString'}" textAlign="Center" width="100%" />
                                             </t:template>
                                         </t:Column>
-                                        <t:Column width="10rem" hAlign="Center">
+                                        <t:Column width="10rem">
                                             <t:multiLabels>
-                                                <Label text="{I18N>/DOMESTIC}" textAlign="Center" />
-                                                <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" />
+                                                <!-- <Label text="{I18N>/DOMESTIC}" textAlign="Center" />
+                                                <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" /> -->
+                                                <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%" />
+                                                <Label text="New Base Price" textAlign="Center" width="100%" />
                                             </t:multiLabels>
                                             <t:template>
                                                 <Input value="{detailModel>prices/0/new_base_price}" type="Number" />
                                             </t:template>
                                         </t:Column>
-                                        <t:Column width="6rem" hAlign="Center">
+                                        <t:Column width="6rem">
                                             <t:multiLabels>
-                                                <Label text="{I18N>/DOMESTIC}" textAlign="Center" />
-                                                <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" />
+                                                <!-- <Label text="{I18N>/DOMESTIC}" textAlign="Center" />
+                                                <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" /> -->
+                                                <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%" />
+                                                <Label text="Curr." textAlign="Center" width="100%" />
                                             </t:multiLabels>
                                             <t:template>
                                                 <ComboBox
@@ -244,30 +249,36 @@
                                                 </ComboBox>
                                             </t:template>
                                         </t:Column>
-                                        <t:Column headerSpan="3" hAlign="Center" width="10rem">
+                                        <t:Column headerSpan="3" width="10rem">
                                             <t:multiLabels>
-                                                <Label text="{I18N>/EXPORT}" textAlign="Center" />
-                                                <Label text="{I18N>/BASE_DATE}" textAlign="Center" />
+                                                <!-- <Label text="{I18N>/EXPORT}" textAlign="Center" />
+                                                <Label text="{I18N>/BASE_DATE}" textAlign="Center" /> -->
+                                                <Label text="Export" textAlign="Center" width="100%" />
+                                                <Label text="Base Date" textAlign="Center" width="100%" />
                                             </t:multiLabels>
                                             <t:template>
                                                 <Text text="{
                                                     path: 'detailModel>base_date',
-                                                    formatter: '.dateFormatter.toDateString'}" />
+                                                    formatter: '.dateFormatter.toDateString'}" textAlign="Center" width="100%" />
                                             </t:template>
                                             </t:Column>
-                                        <t:Column width="10rem" hAlign="Center">
+                                        <t:Column width="10rem">
                                             <t:multiLabels>
-                                                    <Label text="{I18N>/EXPORT}" textAlign="Center" />
-                                                <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" />
+                                                <!-- <Label text="{I18N>/EXPORT}" textAlign="Center" />
+                                                <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" /> -->
+                                                <Label text="Export" textAlign="Center" width="100%" />
+                                                <Label text="New Base Price" textAlign="Center" width="100%" />
                                             </t:multiLabels>
                                             <t:template>
                                                 <Input value="{detailModel>prices/1/new_base_price}" type="Number" />
                                             </t:template>
                                             </t:Column>
-                                        <t:Column width="6rem" hAlign="Center">
+                                        <t:Column width="6rem" >
                                             <t:multiLabels>
-                                                <Label text="{I18N>/EXPORT}" textAlign="Center" />
-                                                <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" />
+                                                <!-- <Label text="{I18N>/EXPORT}" textAlign="Center" />
+                                                <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" /> -->
+                                                <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%" />
+                                                <Label text="Curr." textAlign="Center" width="100%" />
                                             </t:multiLabels>
                                             <t:template>
                                                 <ComboBox
@@ -279,58 +290,67 @@
                                                 </ComboBox>
                                             </t:template>
                                         </t:Column>
-                                        <t:Column hAlign="Center" width="12rem">
-                                            <t:multiLabels>
-                                                <Label text="{I18N>/BASE_PRICE_TYPE}"/>
-                                            </t:multiLabels>
+                                        <t:Column width="12rem">
+                                            <!-- <Label text="{I18N>/BASE_PRICE_TYPE}" textAlign="Center" width="100%" /> -->
+                                            <Label text="Base Price Type" textAlign="Center" width="100%" />
                                             <t:template>
                                                 <Text text="{detailModel>supplier_code}" />
                                             </t:template>
                                         </t:Column>
-                                        <t:Column headerSpan="4" hAlign="Center" width="6rem">
+                                        <t:Column headerSpan="4" width="6rem">
                                             <t:multiLabels>
-                                                <Label text="{I18N>/FAMILY_MATERIAL_CODE}" textAlign="Center" />
-                                                <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" />
+                                                <!-- <Label text="{I18N>/FAMILY_MATERIAL_CODE}" textAlign="Center" width="100%" /> -->
+                                                <Label text="Family Material Code" textAlign="Center" width="100%" />
+                                                <!-- <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" width="100%" /> -->
+                                                <Label text="Pur Org" textAlign="Center" width="100%" />
                                             </t:multiLabels>
                                             <t:template>
                                                 <Text text="{detailModel>div}" />
                                             </t:template>
                                             </t:Column>
-                                        <t:Column hAlign="Center" width="12rem">
+                                        <t:Column width="12rem">
                                             <t:multiLabels>
-                                                <Label text="{I18N>/FAMILY_MATERIAL_CODE}"/>
-                                                <Label text="{I18N>/MATERIAL_CODE}" textAlign="Center" />
+                                                <Label text="{I18N>/FAMILY_MATERIAL_CODE}" textAlign="Center" width="100%" />
+                                                <!-- <Label text="{I18N>/MATERIAL_CODE}" textAlign="Center" width="100%" /> -->
+                                                <Label text="Material Code" textAlign="Center" width="100%" />
                                             </t:multiLabels>
                                             <t:template>
                                                 <Input
                                                     value="{detailModel>PART_NO}"
                                                     visible="{= ${detailModel>basis} === '3' ? true : false }"
                                                     showValueHelp="true"
-                                                    valueHelpRequest=".onOpenFamilyMaterialDialog" />
+                                                    valueHelpRequest=".onOpenDialog" >
+                                                    <customData>
+                                                        <core:CustomData key="dialog" value="familyMaterialCode"  />
+                                                    </customData>
+                                                </Input>
                                             </t:template>
                                             </t:Column>
-                                        <t:Column hAlign="Center" width="12rem">
+                                        <t:Column width="12rem">
                                             <t:multiLabels>
-                                                <Label text="{I18N>/FAMILY_MATERIAL_CODE}"/>
-                                                <Label text="{I18N>/SUPPLIER_CODE}" textAlign="Center" />
+                                                <Label text="{I18N>/FAMILY_MATERIAL_CODE}" textAlign="Center" width="100%" />
+                                                <!-- <Label text="{I18N>/SUPPLIER_CODE}" textAlign="Center" width="100%" /> -->
+                                                <Label text="Supplier Code" textAlign="Center" width="100%" />
                                             </t:multiLabels>
                                             <t:template>
                                                 <Text text="{detailModel>supplier_code}" />
                                             </t:template>
                                         </t:Column>
-                                        <t:Column hAlign="Center" width="12rem">
+                                        <t:Column width="12rem">
                                             <t:multiLabels>
-                                                <Label text="{I18N>/FAMILY_MATERIAL_CODE}"/>
-                                                <Label text="{I18N>/SUPPLIER_NAME}" textAlign="Center" />
+                                                <Label text="{I18N>/FAMILY_MATERIAL_CODE}" textAlign="Center" width="100%" />
+                                                <!-- <Label text="{I18N>/SUPPLIER_NAME}" textAlign="Center" width="100%" /> -->
+                                                <Label text="Supplyer Name" textAlign="Center" width="100%" />
                                             </t:multiLabels>
                                             <t:template>
                                                 <Text text="{detailModel>supplier_name}" />
                                             </t:template>
                                         </t:Column>
-                                        <t:Column hAlign="Center"  width="12rem">
-                                            <Label text="{I18N>/HQ_NPD_BASE_PRICE}" />
+                                        <t:Column width="12rem">
+                                            <!-- <Label text="{I18N>/HQ_NPD_BASE_PRICE}" textAlign="Center" width="100%" /> -->
+                                            <Label text="HQ NPD Base Price" textAlign="Center" width="100%" />
                                             <t:template>
-                                                <Text text="{detailModel>hq_npd_base_price}" />
+                                                <Text text="{detailModel>hq_npd_base_price}" textAlign="Right" width="100%" />
                                             </t:template>
                                         </t:Column>
                                     </t:columns>
@@ -344,7 +364,8 @@
             <!-- Material Code 끝 -->
 
             <!-- Description 시작 -->
-            <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/DESCRIPTION}">
+            <!-- <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/DESCRIPTION}"> -->
+            <uxap:ObjectPageSection titleUppercase="false" title="Description">
                 <uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
@@ -359,7 +380,8 @@
             <!-- Description 시작 -->
 
             <!-- Attachment 시작 -->
-			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/ATTACHMENT}">
+			<!-- <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/ATTACHMENT}"> -->
+			<uxap:ObjectPageSection titleUppercase="false" title="Attachment">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
@@ -472,7 +494,7 @@
         <uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
-                <Button
+                <!-- <Button
                     text="{I18N>/CHANGE_DEVELOPER}" press=".onChangeDeveloper" />
 				<Button
                     text="{I18N>/DRAFT}" press=".onDraft" />
@@ -485,6 +507,20 @@
                 <Button
                     type="Emphasized"
                     text="{I18N>/REQUEST}"
+                    press=".onRequest" /> -->
+                <Button
+                    text="Change Developer" press=".onChangeDeveloper" />
+				<Button
+                    text="Draft" press=".onDraft" />
+                <Button
+                    text="Preview" press=".onPreview" />
+                <Button
+                    text="Cancel" press=".onBack" />
+                <Button
+                    text="Delete" press=".onDelete" />
+                <Button
+                    type="Emphasized"
+                    text="Request"
                     press=".onRequest" />
 			</OverflowToolbar>
 		</uxap:footer>

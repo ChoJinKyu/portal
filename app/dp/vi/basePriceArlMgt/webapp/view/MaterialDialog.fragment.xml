@@ -24,15 +24,16 @@
                 </HBox> -->
                 <!-- Material Code List 시작 -->
                 <Table 
-                    items="{materialCodeModel>/materialCode}"
+                    id="materialCodeTable"
+                    items="{dialogModel>/materialCode}"
                     mode="SingleSelectMaster"
-                    selectionChange=".onSelectMaterialCode" >
+                    selectionChange=".onSelectDialogRow" >
                     <headerToolbar>
                         <OverflowToolbar>
                             <content>
                                 <Title text="Material Code List" level="H2" />
                                 <ToolbarSpacer />
-                                <SearchField search="" width="15rem"/>
+                                <SearchField search=".onGetDialogData" width="15rem"/>
                             </content>
                         </OverflowToolbar>
                     </headerToolbar>
@@ -42,17 +43,17 @@
                                 <Label text="Div" />                            
                             </header>
                         </Column>
-                        <Column hAlign="Center" width="8rem" >
+                        <Column hAlign="Center" width="7rem" >
                             <header>
                                 <Label text="Material Code" />                            
                             </header>
                         </Column>
-                        <Column hAlign="Center" >
+                        <Column hAlign="Center" width="14rem" >
                             <header>
                                 <Label text="Description" />                            
                             </header>
                         </Column>
-                        <Column hAlign="Center" width="12rem" >
+                        <Column hAlign="Center" >
                             <header>
                                 <Label text="Spec" />                            
                             </header>
@@ -81,14 +82,14 @@
                     <items>
                         <ColumnListItem>
                             <cells>
-                                <Text text="{materialCodeModel>org_code}"/>
-                                <Text text="{materialCodeModel>material_code}"/>
-                                <Text text="{materialCodeModel>description}"/>
-                                <Text text="{materialCodeModel>spec}"/>
-                                <Text text="{materialCodeModel>commondify}"/>
-                                <Text text="{materialCodeModel>uom}"/>
-                                <Text text="{materialCodeModel>uit}"/>
-                                <Text text="{materialCodeModel>item_status}"/>
+                                <Text text="{dialogModel>org_code}"/>
+                                <Text text="{dialogModel>material_code}"/>
+                                <Text text="{dialogModel>material_desc}"/>
+                                <Text text="{dialogModel>material_spec}"/>
+                                <Text text="{dialogModel>commodity_code}"/>
+                                <Text text="{dialogModel>base_uom_code}"/>
+                                <Text text="{dialogModel>uit}"/>
+                                <Text text="{dialogModel>item_status}"/>
                             </cells>
                         </ColumnListItem>
                     </items>
@@ -97,21 +98,13 @@
             <!-- </VBox>
         </HBox> -->
 		</content>
-			<beginButton>
-				<Button text="Close" press=".onClose" >
-                    <customData>
-                        <core:CustomData key="fragmentName" value="_oMaterialDialog"  />
-                    </customData>
-                </Button>
-			</beginButton>
-            <endButton>
-                <Button  text="Apply" 
-                    type="Emphasized"
-                    press=".onMaterialDetailApply" >
-                    <customData>
-                        <core:CustomData key="fragmentName" value="_oMaterialDialog"  />
-                    </customData>
-                </Button>
-            </endButton>
+        <beginButton>
+            <Button text="Close" press=".onClose" />
+        </beginButton>
+        <endButton>
+            <Button  text="Apply" 
+                type="Emphasized"
+                press=".onDailogRowDataApply" />
+        </endButton>
 	</Dialog>
 </core:FragmentDefinition>

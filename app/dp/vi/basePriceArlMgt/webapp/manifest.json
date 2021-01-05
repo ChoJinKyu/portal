@@ -1,7 +1,7 @@
 {
   "_version": "1.12.0",
   "sap.app": {
-    "id": "dp.vi.basePriceArl",
+    "id": "dp.vi.basePriceArlMgt",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "applicationVersion": {
@@ -17,6 +17,14 @@
     },
     "dataSources": {
       "mainService": {
+        "uri": "srv-api/odata/v2/dp.BasePriceArlService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0",
+          "localUri": "localService/metadata.xml"
+        }
+      },
+      "materialCodeService": {
         "uri": "srv-api/odata/v2/dp.BasePriceArlService/",
         "type": "OData",
         "settings": {
@@ -57,7 +65,7 @@
   "sap.ui5": {
     "flexEnabled": false,
     "rootView": {
-      "viewName": "dp.vi.basePriceArl.view.App",
+      "viewName": "dp.vi.basePriceArlMgt.view.App",
       "type": "XML",
       "async": true,
       "id": "app"
@@ -78,20 +86,30 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "dp.vi.basePriceArl.i18n.i18n"
+          "bundleName": "dp.vi.basePriceArlMgt.i18n.i18n"
         }
       },
       "": {
         "dataSource": "mainService",
         "preload": true,
         "settings": {
-          "operationMode": "Server",
-          "groupId": "$direct",
-          "synchronizationMode": "None",
-          "autoExpandSelect": true
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "useBatch": true
         }
       },
-      "currencyModel": {
+      "materialCodeODataModel": {
+        "dataSource": "materialCodeService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "useBatch": true
+        }
+      },
+      "currencyODataModel": {
         "dataSource": "currencyService",
         "preload": true,
         "settings": {
@@ -117,7 +135,7 @@
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
         "async": true,
-        "viewPath": "dp.vi.basePriceArl.view",
+        "viewPath": "dp.vi.basePriceArlMgt.view",
         "controlAggregation": "pages",
         "controlId": "app",
         "clearControlAggregation": false,
