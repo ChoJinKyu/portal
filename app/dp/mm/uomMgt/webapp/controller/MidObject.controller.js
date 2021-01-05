@@ -252,7 +252,7 @@ sap.ui.define([
             var oView = this.getView();
             var sTenantId = this._sTenantId;
             if (sTenantId === "new"){
-                this.onPageNavBackButtonPress();
+                this.handleClose();
             }else if (sTenantId !== "new"){
                 
                 this.getModel("midObjectView").setProperty("/isAddedMode", false);                
