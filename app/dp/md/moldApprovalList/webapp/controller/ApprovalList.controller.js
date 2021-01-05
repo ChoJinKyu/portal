@@ -247,6 +247,10 @@ sap.ui.define([
                 approvalTarget = "participatingSupplierSelection"
             }if(oRecord.approval_type_code == "I"){
                 approvalTarget = "moldRecepitApproval"
+            }if(oRecord.approval_type_code == "A"){ 
+                var oUiModel = this.getView().getModel("mode");
+                oUiModel.setProperty("/cancelCreateFlag", false);
+                approvalTarget = "participatingSupplierSelectionCancelApproval"
             }
 
             console.log(approvalTarget);

@@ -43,7 +43,6 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
-
             // 각자 fragment 에서 세팅할 테이터 
             this.approvalDetails_data = [] ;
             this.moldMaster_data = [] ;
@@ -114,6 +113,19 @@ sap.ui.define([
 
         onPageCancelEditButtonPress: function () {
             this._toShowMode();
+        },
+
+        // 입찰대상 협력사 취소품의 이동 
+         onPageCancellationButtonPress: function () { 
+      
+            var oUiModel = this.getView().getModel("mode");
+                oUiModel.setProperty("/cancelCreateFlag", true);
+
+             this.getRouter().navTo("participatingSupplierSelectionCancelApproval" , {
+                  company_code: this.company_code 
+                , plant_code: this.plant_code 
+                , approval_number: this.approval_number 
+            });
         },
 
 		/**
