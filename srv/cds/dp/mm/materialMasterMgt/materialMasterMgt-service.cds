@@ -395,6 +395,7 @@ view MaterialOrgAllView as
            key org.org_type_code,
            key org.org_code,
            porg.org_name,
+           case when fav.material_code is not null then true else false end as favofites_flag : Boolean,
            ifnull(des.material_desc, mst.material_desc) as material_desc : String(300),
            mst.material_spec,
            mst.base_uom_code,
