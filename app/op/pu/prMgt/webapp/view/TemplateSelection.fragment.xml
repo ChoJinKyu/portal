@@ -7,7 +7,7 @@
     xmlns:f="sap.f"
     xmlns:form="sap.ui.layout.form"
     xmlns:layout="sap.ui.layout" >
-    <Dialog id="dialogTemplateSelection" class="sapUiSmallMargin" title="Select Templet" contentWidth="35%" >
+    <Dialog id="dialogTemplateSelection" class="sapUiSmallMargin" title="Select Template" contentWidth="35%" >
         <VBox class="sapUiSmallMargin" >
             <form:SimpleForm  title="구매요청 생성"             
                 editable="false"
@@ -24,7 +24,7 @@
                 singleContainerFullSize="false" >                    
                     <form:content >                      
                         <VBox>
-                            <Label text = "품목그룹" labelFor="TemplateSelectionBsart" required="false"/> 
+                            <Label text = "품목그룹" labelFor="SelectionPR_TYPE2" required="false"/> 
                             <ComboBox
                               id="SelectionPR_TYPE2"
                               width="100%"
