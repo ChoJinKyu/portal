@@ -147,6 +147,7 @@
 		</content>
 			<beginButton>
 				<Button type="Transparent" text="Close" press="onMaterialDialog_close" />
+                <Button type="Emphasized"  text="{I18N>/APPLY}" press=".onValueHelpMaterialDialogApply"/>
 			</beginButton>
 	</Dialog>
 

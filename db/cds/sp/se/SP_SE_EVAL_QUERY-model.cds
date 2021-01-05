@@ -15,7 +15,7 @@ entity Se_Eval_Query {
       evaluation_article_name        : String(240)          @title: '평가항목명' ;	
       qttive_item_actual_value       : String(100)          @title: '정량항목실적값' ;	
       evaluation_article_desc        : String(3000)         @title: '평가항목설명' ;	
-      evaluation_score               : Integer              @title: '평가점수' ;	
+      evaluation_score               : Decimal(5,2)         @title: '평가점수' ;	
       evaluation_submit_flag         : Boolean              @title: '평가제출여부' ;	
 }	
 extend Se_Eval_Query with util.Managed;	

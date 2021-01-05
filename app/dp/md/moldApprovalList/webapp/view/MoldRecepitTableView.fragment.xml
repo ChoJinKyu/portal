@@ -11,7 +11,10 @@
         xmlns:co="sap.suite.ui.commons" 
         xmlns:si="sap.suite.ui.commons.statusindicator" 
         xmlns:u="sap.ui.unified" 
-        xmlns:table="sap.ui.table" >
+        xmlns:table="sap.ui.table" 
+        xmlns:lib-m="ext.lib.m"
+        core:require="{ I18NFormatter: 'dp/md/util/controller/I18NFormatter' }"
+        >
 
       		<!-- mold recepit Table -->
 				    <table:Table 

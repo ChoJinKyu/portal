@@ -24,9 +24,9 @@ vpMstList.push({
     ,vendor_pool_local_name : "GAS_Others1"
     ,vendor_pool_english_name : "GAS_Others2"
     ,repr_department_code: "B234"                
-    ,operation_unit_code : "RAW_MATERIAL1"
-    ,inp_type_code : "MBLMOB1"
-    ,mtlmob_base_code : "AMOUNT1"
+    ,operation_unit_code : "RAW_MATERIAL"
+    ,inp_type_code : "MBLMOB"
+    ,mtlmob_base_code : "AMOUNT"
     ,regular_evaluation_flag : true
     ,industry_class_code : "AAAAA"
     ,sd_exception_flag : false
@@ -56,7 +56,7 @@ vpSupplierList.push({
     , org_type_code: "BU"
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP201610260092"
-    , supplier_code: "KR00003900"
+    , supplier_code: "KR00004000"
     ,supeval_target_flag: false
     ,supplier_op_plan_review_flag: false
     ,supeval_control_flag: false
@@ -70,7 +70,7 @@ vpSupplierList.push({
     ,vendor_pool_mapping_use_flag: true
     ,register_reason: "AAA"
     ,approval_number: "AAA"
-    ,crud_type_code : "C"
+    ,crud_type_code : "U"
 });
 
 vpSupplierList.push({
@@ -79,7 +79,7 @@ vpSupplierList.push({
     , org_type_code: "BU"
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP201610260092"
-    , supplier_code: "KR12344100"
+    , supplier_code: "KR12344200"
     ,supeval_target_flag: false
     ,supplier_op_plan_review_flag: false
     ,supeval_control_flag: false
@@ -93,7 +93,7 @@ vpSupplierList.push({
     ,vendor_pool_mapping_use_flag: true
     ,register_reason: "AAA"
     ,approval_number: "AAA"
-    ,crud_type_code : "C"
+    ,crud_type_code : "U"
 });
 
 inputInfo.inputData.vpSupplier = vpSupplierList;            
@@ -104,8 +104,8 @@ vpItemList.push({
     , org_type_code: "BU"
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP201610260092"
-    , material_code: "PCCC"
-    , crud_type_code : "C"
+    , material_code: "PEEE"
+    , crud_type_code : "U"
 });
 
 vpItemList.push({
@@ -114,8 +114,8 @@ vpItemList.push({
     , org_type_code: "BU"
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP201610260092"
-    , material_code: "PBBB"
-    , crud_type_code : "C"
+    , material_code: "PFFF"
+    , crud_type_code : "U"
 });
 
 inputInfo.inputData.vpItem = vpItemList;            
@@ -126,8 +126,8 @@ vpManagerList.push({
     , org_type_code: "BU"
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP201610260092"
-    , vendor_pool_person_empno: "ECCC"
-    , crud_type_code : "C"
+    , vendor_pool_person_empno: "EEEE"
+    , crud_type_code : "U"
 });
 
 vpManagerList.push({
@@ -136,8 +136,8 @@ vpManagerList.push({
     , org_type_code: "BU"
     , org_code: "BIZ00200"
     , vendor_pool_code: "VP201610260092"
-    , vendor_pool_person_empno: "EBBB"
-    , crud_type_code : "C"
+    , vendor_pool_person_empno: "EDDD"
+    , crud_type_code : "U"
 });
 
-inputInfo.inputData.vpManager = vpManagerList;
+inputInfo.inputData.vpManager = vpManagerList; 

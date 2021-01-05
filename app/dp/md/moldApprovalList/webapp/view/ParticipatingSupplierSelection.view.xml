@@ -22,12 +22,12 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="{i18n>appTitle}" wrapping="true" />
+					<Title text="{i18n>participatingSupplierSelectionTitle}" wrapping="true" />
 				</uxap:expandedHeading>
 
 				<uxap:snappedHeading>
                     <FlexBox fitContainer="true" alignItems="Center">
-						<Title text="{i18n>appTitle}" wrapping="true"/>
+						<Title text="{i18n>participatingSupplierSelectionTitle}" wrapping="true"/>
 					</FlexBox>
 				</uxap:snappedHeading>
 
@@ -158,7 +158,7 @@
 			<OverflowToolbar>
 				<ToolbarSpacer />
 				<Button type="Transparent" text="Edit"      press=".onPageEditButtonPress" visible="{mode>/viewFlag}" />
-				<Button type="Transparent" text="CancelEdit"    press=".onPageCancelButtonPress" visible="{mode>/editFlag}" />
+				<Button type="Transparent" text="Cancel"    press=".onPageCancelEditButtonPress" visible="{mode>/editFlag}" />
 				<Button type="Transparent" text="Draft"     press=".onPageDraftButtonPress"   visible="{mode>/editFlag}"/>
 				<Button type="Transparent" text="Preview"   press=".onPagePreviewButtonPress"  visible="{mode>/editFlag}" />
 				<Button type="Emphasized"  text="Request"   press=".onPageRequestButtonPress"/>

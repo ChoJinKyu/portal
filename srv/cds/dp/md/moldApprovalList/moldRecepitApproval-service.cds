@@ -46,12 +46,12 @@ service MoldRecepitApprovalService {
                 mst.project_code, 
                 mst.acq_department_code, 
                 dep.department_local_name as acq_department_code_nm : String(240) ,
-                ps.drawing_agreement_date as drawing_consent_plan : String(240) , 
-        		rs.drawing_agreement_date as drawing_consent_result : String(240)  ,
-        		ps.first_production_date as production_plan : String(240) , 
-        		rs.first_production_date as production_result  : String(240) ,
-        		ps.production_complete_date as completion_plan : String(240) , 
-        		rs.production_complete_date as completion_result  : String(240) 
+                cast(ps.drawing_agreement_date as Date ) as drawing_consent_plan : Date , 
+        		cast(rs.drawing_agreement_date as Date ) as drawing_consent_result : Date ,
+        		cast(ps.first_production_date as Date ) as production_plan : Date , 
+        		cast(rs.first_production_date as Date ) as production_result  : Date ,
+                cast(ps.production_complete_date as Date ) as completion_plan : Date ,
+                cast(rs.production_complete_date as Date ) as completion_result  : Date 
         from approvalDtl.Md_Approval_Dtl dtl
         join moldMst.Md_Mst mst on dtl.mold_id = mst.mold_id 
         join orgCodeLng.Org_Code_Lng as cur on mst.company_code = cur.org_code 

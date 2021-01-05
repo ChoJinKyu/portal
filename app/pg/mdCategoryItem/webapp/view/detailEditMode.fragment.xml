@@ -7,10 +7,10 @@
 		
 		<!-- <core:Title text="Normal" /> -->	
         <Label text="특성코드"/>
-        <Text text="{master>/MdCategoryItem/spmd_character_code}"/>
+        <Text text="{master>/spmd_character_code}"/>
         <Label text="특성코드명" required="true"/>
         <Input value="{
-                path: 'master>/MdCategoryItem/spmd_character_code_name',
+                path: 'master>/spmd_character_code_name',
                 type: 'sap.ui.model.type.String',
                 constraints: {
                     maxLength: 50
@@ -18,7 +18,7 @@
             }" required="true"></Input>       
         <Label text="특성설명"/>
         <Input value="{
-                path: 'master>/MdCategoryItem/spmd_character_desc',
+                path: 'master>/spmd_character_desc',
                 type: 'sap.ui.model.type.String',
                 constraints: {
                     maxLength: 50

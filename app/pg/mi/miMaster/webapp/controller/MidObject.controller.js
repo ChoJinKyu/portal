@@ -377,7 +377,6 @@ sap.ui.define([
             var sNextLayout = this.getOwnerComponent().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
 
             this._onExit();
-
             this.getRouter().navTo("mainPage", { layout: sNextLayout });
             console.groupEnd();
         },
@@ -577,7 +576,6 @@ sap.ui.define([
                 onClose : function(sButton) {
                     if (sButton === MessageBox.Action.OK) {
                         that._onExit();
-
                         that.getRouter().navTo("mainPage", { layout: sNextLayout });
                     }else{
                         return;
@@ -1327,7 +1325,7 @@ sap.ui.define([
                     error: this._handleCreateError.bind(this)
                 });
 
-                oModel.refresh(true);
+               // oModel.refresh(true);
                 
             }
         },
@@ -1513,8 +1511,8 @@ sap.ui.define([
          * Exit
          * @private
          */
-        _onExit: function () {
-    
+        _onExit: function () {    
+            console.log("_onExit");
             this._initialModel();
             this._initialControlValue();
             for (var sPropertyName in this._formFragments) {
@@ -1529,6 +1527,7 @@ sap.ui.define([
         },
 
         onRefresh : function () {
+            console.log("onRefresh");
             var oBinding = this.byId("midTable").getBinding("rows");
             this.getView().setBusy(true);
             oBinding.refresh();
@@ -1551,9 +1550,9 @@ sap.ui.define([
                 }
             });
 
-            var sNextLayout = this.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
-            this._onExit();
-            this.getRouter().navTo("mainPage", { layout: sNextLayout });
+            //var sNextLayout = this.getView().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+            //this._onExit();
+            //this.getRouter().navTo("mainPage", { layout: sNextLayout });
          
         },
         _handleCreateError: function (oError) {

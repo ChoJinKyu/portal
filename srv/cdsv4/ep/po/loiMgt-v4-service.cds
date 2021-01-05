@@ -124,7 +124,8 @@ service LoiMgtV4Service {
         special_note                : String;
         requestor_empno             : String;
         request_department_code     : String;
-       // request_date                : Date;
+        // request_date                : Date;
+        loi_request_status_code     : String;
         
     };
 

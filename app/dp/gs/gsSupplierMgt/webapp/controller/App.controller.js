@@ -11,7 +11,9 @@ sap.ui.define([
 			this.oRouter = this.getOwnerComponent().getRouter();
 			this.oRouter.attachRouteMatched(this.onRouteMatched, this);
             this.oRouter.attachBeforeRouteMatched(this.onBeforeRouteMatched, this);
-		},
+        },
+        
+        
 
 		onBeforeRouteMatched: function(oEvent) {
 			var oModel = this.getOwnerComponent().getModel("fcl");
