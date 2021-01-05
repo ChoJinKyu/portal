@@ -45,6 +45,48 @@ service MaterialMasterMgtService {
     entity MaterialVal as projection on Valuation.Mm_Material_Val;
     entity MtlUserFavorites as projection on Favorites.Mm_Mtl_User_Favorites;
 
+    // MaterialGroup View
+    view MaterialGroupView as 
+    select key grp.tenant_id,
+           key grp.material_group_code,
+           key grpl.language_code,
+           ifnull(grpl.material_group_name, grp.material_group_name) as material_group_name: String(100),
+           ifnull(grpl.material_group_desc, grp.material_group_desc) as material_group_desc: String(1000),
+           grp.use_flag
+    from mtlGroup.Mm_Material_Group  grp 
+    left outer join mtlGroup.Mm_Material_Group_Lng grpl 
+    on grpl.tenant_id = grp.tenant_id
+    and grpl.material_group_code = grp.material_group_code
+    ;
+
+    // Material Class View
+    view MaterialClassView as 
+    select key cls.tenant_id,
+           key cls.material_class_code,
+           key clsl.language_code,
+           ifnull(clsl.material_class_name, cls.material_class_name) as material_class_name: String(100),
+           ifnull(clsl.material_class_desc, cls.material_class_desc) as material_class_desc: String(1000),
+           cls.use_flag   
+    from Class.Mm_Material_Class cls
+    left outer join ClassLng.Mm_Material_Class_Lng  clsl
+    on clsl.tenant_id = cls.tenant_id
+    and clsl.material_class_code = cls.material_class_code
+    ;
+
+    // Commodity View
+    view MaterialCommodityView as 
+    select key com.tenant_id,
+           key com.commodity_code,
+           key coml.language_code,
+           ifnull(coml.commodity_name, com.commodity_name) as commodity_name: String(100),
+           ifnull(coml.commodity_desc, com.commodity_desc) as commodity_desc: String(1000),
+           com.use_flag     
+    from Commodity.Mm_Material_Commodity com
+    left outer join CommodityLng.Mm_Material_Commodity_Lng coml
+    on coml.tenant_id = com.tenant_id
+    and coml.commodity_code = com.commodity_code
+    ;
+
     // 자재기본
     view MaterialMstView as
     select key mst.tenant_id,
@@ -70,6 +112,41 @@ service MaterialMasterMgtService {
     ;
 
     view MaterialMstAllView as
+    select key mst.tenant_id,
+           key mst.material_code,
+           mst.material_desc,
+           mst.material_spec,
+           mst.base_uom_code,
+           mst.material_group_code,
+           mgv.material_group_name,
+           mst.purchasing_uom_code,
+           mst.variable_po_unit_indicator,
+           mst.material_class_code,
+           mcv.material_class_name,
+           mst.commodity_code,
+           cmv.commodity_name,
+           mst.maker_part_number,
+           mst.maker_code,
+           mst.maker_part_profile_code,
+           mst.maker_material_code,
+           mst.language_code
+    from MaterialMstView mst
+    left outer join MaterialGroupView mgv
+    on mgv.tenant_id = mst.tenant_id
+    and mgv.material_group_code = mst.material_group_code
+    and mgv.language_code = 'KO'
+    left outer join MaterialClassView mcv
+    on mcv.tenant_id = mst.tenant_id
+    and mcv.material_class_code = mst.material_class_code
+    and mcv.language_code = 'KO'
+    left outer join MaterialCommodityView cmv
+    on cmv.tenant_id = mst.tenant_id
+    and cmv.commodity_code = mst.commodity_code
+    and cmv.language_code = 'KO'
+    ;
+
+/*
+view MaterialMstAllView as
     select key mst.tenant_id,
            key mst.material_code,
            mst.material_desc,
@@ -111,6 +188,9 @@ service MaterialMasterMgtService {
     and coml.commodity_code = com.commodity_code
     and coml.language_code = 'KO'
     ;
+*/
+
+   
 
     // 자재조직 View
     @readonly
