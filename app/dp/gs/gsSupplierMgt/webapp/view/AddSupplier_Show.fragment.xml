@@ -1,0 +1,57 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core"
+    xmlns:uxap="sap.uxap" >
+<VBox class="sapUiSmallMargin" id="midObjectForm1Show">    
+	<form:SimpleForm         
+        editable="false"
+        layout="ColumnLayout"			
+        labelSpanXL="12"
+        labelSpanL="12"
+        labelSpanM="12"
+        labelSpanS="12"
+        adjustLabelSpan="false"
+        emptySpanXL="4"
+        emptySpanL="4"
+        emptySpanM="4"
+        emptySpanS="0"
+        columnsXL="1"
+        columnsL="1"
+        columnsM="1" >
+		
+        <form:content>            
+			<Label text="공급업체 로컬명"/>
+			<Input value="{SupplierGen>/sourcing_supplier_local_name}" editable="false" class="readonlyField"/>
+            <Label text="공급업체 영문명"/>
+			<Input value="{SupplierGen>/sourcing_supplier_english_name}" editable="false" class="readonlyField"/>
+            <Label text="사업장 주소(로컬)"/>
+			<Input value="{SupplierGen>/local_full_address}" editable="false" class="readonlyField"/>
+            <Label text="사업장 주소(영문)"/>
+			<Input value="{SupplierGen>/english_full_address}" editable="false" class="readonlyField"/>
+            <Label text="제안품목"/>
+			<Input value="{SupplierGen>/product_desc}" editable="false" class="readonlyField"/>
+            <Label text="이메일"/>
+			<Input value="{SupplierGen>/email_address}" editable="false" class="readonlyField"/>
+            <Label text="AN 프로파일"/>
+			<Input value="{SupplierGen>/an_profile}" editable="false" class="readonlyField"/>
+            <Label text="비고"/>
+			<Input value="{SupplierGen>/remark}" editable="false" class="readonlyField"/>			
+	    </form:content>
+    </form:SimpleForm>
+
+    <form:SimpleForm 
+        editable="false"
+        layout="ColumnLayout"
+        columnsM="2"
+        columnsL="3"
+        columnsXL="3" >
+        <form:content>
+            <core:Title text="첨부" />  
+            <Label text="추후 개발 예정"/>
+			<Input value="" editable="false" class="readonlyField"/>        
+	    </form:content>
+	</form:SimpleForm>
+</VBox>
+</core:FragmentDefinition>

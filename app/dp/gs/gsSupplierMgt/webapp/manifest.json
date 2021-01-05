@@ -123,6 +123,13 @@
               ]
           },
           {
+              "pattern": "addSupplier/{layout}/{tenantId}/{ssn}",
+              "name": "suppliePage",
+              "target": [                 
+                  "addSupplier"
+              ]
+          },
+          {
               "pattern": "midObject/{layout}/{tenantId}/{uomCode}",
               "name": "midPage",
               "target": [
@@ -134,6 +141,10 @@
       "targets": {
           "mainObject": {
               "viewName": "MainList",
+              "controlAggregation": "beginColumnPages"
+          },
+          "addSupplier": {
+              "viewName": "AddSupplier",
               "controlAggregation": "beginColumnPages"
           },
           "midObject": {
