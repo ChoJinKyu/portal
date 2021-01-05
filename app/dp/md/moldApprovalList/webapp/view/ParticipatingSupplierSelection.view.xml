@@ -129,7 +129,7 @@
                             </VBox>
                             <VBox class="sapUiSmallMargin">
                                 <Label text="{I18N>/BUSINESS_DIVISION}" />
-                                <ObjectStatus text="[{plant>/plant_code}] {plant>/org_name}" state="Error"/>
+                                <ObjectStatus text="[{plant>/org_code}] {plant>/org_name}" state="Error"/>
                             </VBox>
                         </HBox>
 					</uxap:ObjectPageSubSection>
@@ -157,10 +157,10 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
-				<Button type="Transparent" text="Edit"      press=".onPageEditButtonPress" visible="{mode>/viewFlag}" />
 				<Button type="Transparent" text="Cancel"    press=".onPageCancelEditButtonPress" visible="{mode>/editFlag}" />
 				<Button type="Transparent" text="Draft"     press=".onPageDraftButtonPress"   visible="{mode>/editFlag}"/>
 				<Button type="Transparent" text="Preview"   press=".onPagePreviewButtonPress"  visible="{mode>/editFlag}" />
+                <Button type="Transparent" text="Request Cancel" press=".onPageRequestCancelButtonPress" enabled="{= ${appMaster>/approve_status_code} === 'AR'?${mode>/viewFlag}:false }" />
 				<Button type="Emphasized"  text="Request"   press=".onPageRequestButtonPress"/>
 			</OverflowToolbar>
 		</uxap:footer>
