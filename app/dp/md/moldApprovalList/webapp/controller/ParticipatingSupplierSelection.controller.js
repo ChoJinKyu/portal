@@ -491,16 +491,11 @@ sap.ui.define([
                     that.moldMaster_data.push({
                          tenant_id : that.tenant_id 
                         , mold_id : item.mold_id 
-                        , account_code : account_code 
-                        , investment_ecst_type_code : investment_ecst_type_code 
-                        , accounting_department_code : accounting_department_code 
-                        , import_company_code : import_company_code 
-                        , project_code : project_code 
-                        , import_company_org_code : import_company_org_code 
-                        , mold_production_type_code : item.mold_production_type_code 
-                        , mold_item_type_code :  item.mold_item_type_code 
-                        , provisional_budget_amount : item.provisional_budget_amount 
-                        , asset_type_code : item.asset_type_code 
+                        , mold_item_type_code : item.mold_item_type_code
+                        , book_currency_code : item.book_currency_code
+                        , provisional_budget_amount : item.provisional_budget_amount
+                        , currency_code : item.currency_code
+                        , target_amount : item.target_amount
                         , _row_state_ : "D"
                     });
                 });
