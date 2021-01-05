@@ -479,7 +479,7 @@ sap.ui.define([
                     ],
                     template: new Item({
                         key: "{util>code}",
-                        text: "{util>code_description}"
+                        text: "{util>code_name}"
                     })
                 });                
 			this.oEditableTemplate = new ColumnListItem({
@@ -516,7 +516,7 @@ sap.ui.define([
 			this.byId("midTable").bindItems({
 				path: "details>/UomClassLng",
 				template: oTemplate
-				// templateShareable: true,
+				// templateShareable: false,
 				// key: ""
 			}).setKeyboardMode(sKeyboardMode);
 		},
