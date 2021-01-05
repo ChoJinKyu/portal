@@ -92,28 +92,28 @@ service MaterialMasterMgtService {
     left outer join Description.Mm_Material_Desc_Lng des
     on des.tenant_id = mst.tenant_id
     and des.material_code = mst.material_code
-    and des.language_code = 'EN'
+    and des.language_code = 'KO'
     left outer join mtlGroup.Mm_Material_Group  grp 
     on grp.tenant_id = mst.tenant_id
     and grp.material_group_code = mst.material_group_code
     left outer join mtlGroup.Mm_Material_Group_Lng grpl 
     on grpl.tenant_id = grp.tenant_id
     and grpl.material_group_code = grp.material_group_code
-    and grpl.language_code = 'EN'
+    and grpl.language_code = 'KO'
     left outer join Class.Mm_Material_Class cls
     on cls.tenant_id = mst.tenant_id
     and cls.material_class_code = mst.material_class_code
     left outer join ClassLng.Mm_Material_Class_Lng  clsl
     on clsl.tenant_id = cls.tenant_id
     and clsl.material_class_code = cls.material_class_code
-    and clsl.language_code = 'EN'
+    and clsl.language_code = 'KO'
     left outer join Commodity.Mm_Material_Commodity com
     on com.tenant_id = mst.tenant_id
     and com.commodity_code = mst.commodity_code
     left outer join CommodityLng.Mm_Material_Commodity_Lng coml
     on coml.tenant_id = com.tenant_id
     and coml.commodity_code = com.commodity_code
-    and coml.language_code = 'EN'
+    and coml.language_code = 'KO'
     ;
 
     // 자재조직
@@ -168,7 +168,7 @@ service MaterialMasterMgtService {
     left outer join Description.Mm_Material_Desc_Lng des
     on des.tenant_id = mst.tenant_id
     and des.material_code = mst.material_code
-    and des.language_code = 'EN'
+    and des.language_code = 'KO'
     ;
 
 view MaterialOrgAllView as
