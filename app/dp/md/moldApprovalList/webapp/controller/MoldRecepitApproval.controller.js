@@ -245,13 +245,24 @@ sap.ui.define([
                     this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
                 }
             }
-            
+
+           var ref = this.getModel("referer");
+           this.getView().setModel(new ManagedModel(), "refererPreview");
+
+           var rArr = [];
+           if(ref.getData().Referers != undefined && ref.getData().Referers.length >0){
+                ref.getData().Referers.forEach(function(item){
+                    rArr.push(item.referer_empno); 
+                });
+            }
+            this.getModel("refererPreview").setProperty("/refArr", rArr);
+
             var oView = this.getView();
 
             if (!this._oDialogPrev) {
                 this._oDialogPrev = Fragment.load({
                     id: oView.getId(),
-                    name: "dp.md.moldApprovalList.view.BudgetExecutionApprovalPreView",
+                    name: "dp.md.moldApprovalList.view.MoldRecepitApprovalPreView",
                     controller: this
                 }).then(function (oDialog) {
                     oView.addDependent(oDialog);
@@ -265,8 +276,7 @@ sap.ui.define([
 
         },
         onPrvClosePress : function(){
-             this.byId("budgetExecutionPreview").close();
-            // this.byId("budgetExecutionPreview").destroy();
+             this.byId("moldRecepitPreview").close();
         },
         onValueHelpRequestedDept : function(mold_id){ 
             console.log('oEvent>>>> ' , mold_id);

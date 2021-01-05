@@ -13,7 +13,7 @@
         xmlns:u="sap.ui.unified" 
         xmlns:table="sap.ui.table" >
 
-      		<!-- budgetExecutionTable Table -->
+      		<!-- mold recepit Table -->
 				    <table:Table 
                              selectionMode="{=${mode>/editFlag}?'MultiToggle':'None'}" 
                              fixedColumnCount="6" 
@@ -121,10 +121,7 @@
 						<table:Column width="10em" hAlign="Center">
 							<Label text="Acquisition Department"/>
 					        <table:template>
-                            
                                 <Text text="{mdRecepit>acq_department_code_nm}"/>
-						
-                                
 							</table:template>
 						</table:Column>
 						<table:Column width="10em" hAlign="Center">

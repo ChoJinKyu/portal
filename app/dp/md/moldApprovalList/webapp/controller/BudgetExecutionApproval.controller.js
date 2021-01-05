@@ -284,7 +284,17 @@ sap.ui.define([
                 }
             }
             
-            console.log("onPagePreviewButtonPress >>> this._oDialog " , this._oDialogPrev);
+           var ref = this.getModel("referer");
+           this.getView().setModel(new ManagedModel(), "refererPreview");
+
+           var rArr = [];
+           if(ref.getData().Referers != undefined && ref.getData().Referers.length >0){
+                ref.getData().Referers.forEach(function(item){
+                    rArr.push(item.referer_empno); 
+                });
+            }
+            this.getModel("refererPreview").setProperty("/refArr", rArr);
+
             var oView = this.getView();
 
             if (!this._oDialogPrev) {
