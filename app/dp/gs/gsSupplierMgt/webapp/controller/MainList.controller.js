@@ -244,8 +244,7 @@ sap.ui.define([
             this.getRouter().navTo("suppliePage", {
 				layout: LayoutType.OneColumn,
 				tenantId: tenantId,
-                ssn: ssn,
-                mode: "edit"
+                ssn: ssn
 			});
 
 			// MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
