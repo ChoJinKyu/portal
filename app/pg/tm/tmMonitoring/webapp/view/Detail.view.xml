@@ -166,13 +166,13 @@
                                             <l:VerticalLayout width="100%">
                                             <VBox class="sapUiTinyMarginTop" id="monitoringVBox">
                                                     <Label text="{I18N>/MONITORING_PURPOSE}" design="Bold"/>
-                                                    <rte:RichTextEditor id="reMonitoringPurpose" editorType="TinyMCE4" width="100%" visible="{=${DetailView>/isEditMode}}"  editable="true" value="{monitoring_purpose}" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
-                                                    <FormattedText id="PurposeFormattedText" htmlText="{monitoring_purpose}" visible="{=!${DetailView>/isEditMode}}"/>
+                                                    <rte:RichTextEditor id="reMonitoringPurpose" editorType="TinyMCE4" width="100%" visible="{=${DetailView>/isEditMode}}"  editable="true" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
+                                                    <FormattedText id="PurposeFormattedText"  visible="{=!${DetailView>/isEditMode}}"/>
                                                 </VBox>
                                                 <VBox class="sapUiSmallMarginTop" id="scenarioVBox">
                                                     <Label text="{I18N>/SCENARIO_DESC}" design="Bold"/>
-                                                    <rte:RichTextEditor id="reMonitoringScenario" class="sapUiTinyMarginTop" visible="{=${DetailView>/isEditMode}}" editorType="TinyMCE4" editable="true" width="100%" value="{scenario_desc}" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
-                                                    <FormattedText id="ScenarioDescFormattedText" htmlText="{scenario_desc}" visible="{=!${DetailView>/isEditMode}}"/>
+                                                    <rte:RichTextEditor id="reMonitoringScenario" class="sapUiTinyMarginTop" visible="{=${DetailView>/isEditMode}}" editorType="TinyMCE4" editable="true" width="100%"  customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
+                                                    <FormattedText id="ScenarioDescFormattedText" visible="{=!${DetailView>/isEditMode}}"/>
                                                 </VBox>
                                            </l:VerticalLayout>
                                     </uxap:blocks>
@@ -190,8 +190,8 @@
                                      <l:VerticalLayout width="100%">
                                             <VBox class="sapUiSmallMarginTop" id="systemVBox">
                                                 <Label text="{I18N>/SOURCE_SYSTEM_DESC}" design="Bold"/>
-                                                <rte:RichTextEditor id="reSourceSystemDetail" class="sapUiTinyMarginTop" editorType="TinyMCE4" visible="{=${DetailView>/isEditMode}}" editable="true" width="100%" value="{source_system_desc}" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
-                                                <FormattedText id="ReSourceSystemFormattedText" htmlText="{source_system_desc}" visible="{=!${DetailView>/isEditMode}}"/>
+                                                <rte:RichTextEditor id="reSourceSystemDetail" class="sapUiTinyMarginTop" editorType="TinyMCE4" visible="{=${DetailView>/isEditMode}}" editable="true" width="100%"  customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
+                                                <FormattedText id="ReSourceSystemFormattedText" visible="{=!${DetailView>/isEditMode}}"/>
                                             </VBox>
                                         </l:VerticalLayout>
                                     </uxap:blocks>
@@ -306,11 +306,11 @@
                         <uxap:footer>
                         <OverflowToolbar>
                             <ToolbarSpacer/>
-                            <!-- <Button id="pageHistoryButton" type="Transparent" text="History" press=".onHistoryBtnPress" visible="{=!${DetailView>/isCreate}}"/> -->
-                            <Button id="pageEditButton" type="Transparent" text="Edit" press=".onPageEditButtonPress" enabled="{=!${DetailView>/isEditMode}}" />
-                            <Button id="pageCancelButton" type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress" />
-                            <Button id="pageDeleteButton" type="Transparent" text="Delete" enabled="{=!${DetailView>/isCreate}}" press="onDelete"/>
-                            <Button id="pageSaveButton" type="Emphasized" text="Save" press=".onSave" enabled="{=${DetailView>/isEditMode}}"/>
+                        
+                            <Button id="pageEditButton" type="Transparent" text="{I18N>/UPDATE}" press=".onPageEditButtonPress" enabled="{=!${DetailView>/isEditMode}}" />
+                            <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress" />
+                            <Button id="pageDeleteButton" type="Transparent" text="{I18N>/DELETE}" enabled="{=!${DetailView>/isCreate}}" press="onDelete"/>
+                            <Button id="pageSaveButton" type="Emphasized" text="{I18N>/SAVE}" press=".onSave" enabled="{=${DetailView>/isEditMode}}"/>
                               
                         </OverflowToolbar>
                         </uxap:footer>
