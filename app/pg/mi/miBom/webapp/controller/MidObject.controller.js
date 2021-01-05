@@ -423,14 +423,14 @@ sap.ui.define([
                     that._m.fragementPath.materialDialog,this
                 );
               
-                this.getView().addDependent(that._valueHelpMaterialDialog);
+                that.getView().addDependent(that._valueHelpMaterialDialog);
 
             }                
             
             //기존 검색 데이타 초기화
-            this.setModelNullAndUpdateBindings(materialTable);
+            that.setModelNullAndUpdateBindings(materialTable);
 
-			this._openValueHelpMaterialDialog();
+			that._openValueHelpMaterialDialog();
 		},
 
         /**
@@ -441,7 +441,7 @@ sap.ui.define([
             var that = this;
             // open value help dialog filtered by the input value
             //기존 모델 초기화 
-            this.setArrayModelNullAndUpdateBindings("materialTable");
+            that.setArrayModelNullAndUpdateBindings("materialTable");
 
 			that._valueHelpMaterialDialog.open();
 		},
@@ -540,7 +540,7 @@ sap.ui.define([
             }
          
             var oMaterialTableList = new JSONModel([]);
-            this.getOwnerComponent().setModel(oMaterialTableList, "materialTableList");
+            that.getOwnerComponent().setModel(oMaterialTableList, "materialTableList");
 
            // 
 		},
@@ -579,9 +579,9 @@ sap.ui.define([
         onUomNameSearch : function (oEvent){
             console.log("onUomNameSearch");
             var unitOfMeasureView = new JSONModel(),            
-                oModel = this.getOwnerComponent().getModel(),
-                oUnitOfMeasureView = this.getModel("unitOfMeasureView"),
                 that = this,
+                oModel = that.getOwnerComponent().getModel(),
+                oUnitOfMeasureView = that.getModel("unitOfMeasureView"),                
                 searchField_uom_name = that._findFragmentControlId(that._m.fragementId.reqmQuantityUnit, "searchField_uom_name").getValue(),
                 reqmTable= that._findFragmentControlId(that._m.fragementId.reqmQuantityUnit, "reqmTable");             
                 
@@ -597,7 +597,7 @@ sap.ui.define([
             andFilter.push(new sap.ui.model.Filter(orFilter, false));
 
             //기존 검색 데이타 초기화
-            this.setModelNullAndUpdateBindings(oUnitOfMeasureView);
+            that.setModelNullAndUpdateBindings(oUnitOfMeasureView);
 
             oModel.read(that._m.serviceName.unitOfMeasureView, {
                 async: false,
@@ -668,7 +668,8 @@ sap.ui.define([
 		 */
         onPageEnterFullScreenButtonPress: function () {
             var sNextLayout = this.getOwnerComponent().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
-            this.getRouter().navTo("midPage", {
+            var that = this;
+            that.getRouter().navTo("midPage", {
                 layout: sNextLayout,
                 tenant_id: this._stenant_id,
                 controlOptionCode: this._sControlOptionCode
@@ -693,11 +694,12 @@ sap.ui.define([
 		 */
         onPageNavBackButtonPress: function () {
             console.group("onPageNavBackButtonPress");
-            var sNextLayout = this.getOwnerComponent().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+            var that = this;
+            var sNextLayout = that.getOwnerComponent().getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
 
-            this._onExit();
+            that._onExit();
 
-            this.getRouter().navTo("mainPage", { layout: sNextLayout });
+            that.getRouter().navTo("mainPage", { layout: sNextLayout });
             console.groupEnd();
         },
 
@@ -707,15 +709,16 @@ sap.ui.define([
 		 */
         onPageDeleteButtonPress: function () {
             console.group("onPageDeleteButtonPress");
-            var oView = this.getView(),
-                me = this;
+            var that = this;
+            var oView = that.getView();
+                
             MessageBox.confirm("Are you sure to delete?", {
                 title: "Comfirmation",
                 initialFocus: sap.m.MessageBox.Action.CANCEL,
                 onClose: function (sButton) {
                     if (sButton === MessageBox.Action.OK) {
-                        me.getView().getBindingContext().delete('$direct').then(function () {
-                            me.onNavBack();
+                        that.getView().getBindingContext().delete('$direct').then(function () {
+                            that.onNavBack();
                         }, function (oError) {
                             MessageBox.error(oError.message);
                         });
@@ -759,7 +762,7 @@ sap.ui.define([
          * call function onValueHelpMaterialDialogApply
          */
         _checkMIMaterialCodeBOMManagementHeaderViewService : function(tenant_id, material_code, supplier_code){
-            console.log("_onMidServiceRead");
+            console.log("_checkMIMaterialCodeBOMManagementHeaderViewService");
             
             var that = this,
                 oModel = that.getOwnerComponent().getModel(),
@@ -870,7 +873,8 @@ sap.ui.define([
          * @private
          */
         _initialModel : function() {
-          
+          console.log("_initialModel");
+          var that = this;
                 var arrayModel = [
                     "oUiData",
                     "_oUi",
@@ -888,19 +892,22 @@ sap.ui.define([
                 ];
 
               
-                this.setArrayModelNullAndUpdateBindings(arrayModel);
+                that.setArrayModelNullAndUpdateBindings(arrayModel);
         },
 
 
         _initialControlValue : function(){
-            this.getView().byId("input_base_quantity").setValue("");
-            this.getView().byId("input_processing_cost").setValue("");
-            this.getView().byId("input_hidden_material_code").setValue("");
-            this.getView().byId("input_hidden_material_desc").setValue("");
-            this.getView().byId("input_hidden_supplier_code").setValue("");
-            this.getView().byId("input_hidden_supplier_local_name").setValue("");
-            this.getView().byId("input_hidden_supplier_english_name").setValue("");
-            this.getView().byId("input_material_code").setValue("");
+            console.log("_initialControlValue");
+            var that = this;
+
+            that.getView().byId("input_base_quantity").setValue("");
+            that.getView().byId("input_processing_cost").setValue("");
+            that.getView().byId("input_hidden_material_code").setValue("");
+            that.getView().byId("input_hidden_material_desc").setValue("");
+            that.getView().byId("input_hidden_supplier_code").setValue("");
+            that.getView().byId("input_hidden_supplier_local_name").setValue("");
+            that.getView().byId("input_hidden_supplier_english_name").setValue("");
+            that.getView().byId("input_material_code").setValue("");
 
             // var oComboBox_materIalView = this._findFragmentControlId(this._m.fragementId.materialDialog, "comboBox_materialView"),
             //     oComboBox_supplierView = this._findFragmentControlId(this._m.fragementId.materialDialog, "comboBox_supplierView");
@@ -914,24 +921,31 @@ sap.ui.define([
 
         
         _initialFilter : function(){
-            this._m.filter.tenant_id = "";
-            this._m.filter.material_code = "";
-            this._m.filter.supplier_code = "";
-            this._m.filter.mi_bom_id = "";
-            this._m.filter.mi_material_code = "";
-            this._m.filter.currency_uni = "";
-            this._m.filter.quantity_unit = "";
-            this._m.filter.exchange = "";
-            this._m.filter.termsdelv = "";
+            console.log("_initialFilter");
+
+            var that = this;
+
+            that._m.filter.tenant_id = "";
+            that._m.filter.material_code = "";
+            that._m.filter.supplier_code = "";
+            that._m.filter.mi_bom_id = "";
+            that._m.filter.mi_material_code = "";
+            that._m.filter.currency_uni = "";
+            that._m.filter.quantity_unit = "";
+            that._m.filter.exchange = "";
+            that._m.filter.termsdelv = "";
         },
 
         _setInit : function(){
-            this._initialModel();
-            this._initialControlValue();
-            this._initialFilter();
+            console.log("_setInit");
+            var that = this;
+            that._initialModel();
+            that._initialControlValue();
+            that._initialFilter();
         },
 
         _fnGuid : function(){
+
             function guid() {
                 function s4() {
                     return ((1 + Math.random()) * 0x10000 | 0).toString(16).substring(1);
@@ -948,47 +962,47 @@ sap.ui.define([
 		 */
         _onRoutedThisPage: function (oEvent) {
             console.log("_onRoutedThisPage");
-
-            this._setInit();
-            this._onPageClearValidate();
+            var that = this;
+            that._setInit();
+            that._onPageClearValidate();
 
             var _oUiData = this.getModel("_oUiData"),
                 oArgs = oEvent.getParameter("arguments"),
                 oModel = this.getOwnerComponent().getModel();
 
-            this._m.mi_bom_id = this._fnGuid();
-            this._m.filter.tenant_id = oArgs.tenant_id;
-            this._m.filter.material_code = oArgs.material_code;
-            this._m.filter.supplier_code = oArgs.supplier_code;
-            this._m.filter.mi_bom_id = oArgs.mi_bom_id
+                that._m.mi_bom_id = this._fnGuid();
+                that._m.filter.tenant_id = oArgs.tenant_id;
+                that._m.filter.material_code = oArgs.material_code;
+                that._m.filter.supplier_code = oArgs.supplier_code;
+                that._m.filter.mi_bom_id = oArgs.mi_bom_id
     
-            if (this._m.filter.material_code == "new") {
+            if (that._m.filter.material_code == "new") {
                 console.log("=============== new item ===============");
-                var oModel = this.getModel("midList");   
+                var oModel = that.getModel("midList");   
                 if(oModel){
                     oModel.setData(null);     
                     oModel.updateBindings(true);
                 }
                 
-                this._fnSetCreateMode();
+                that._fnSetCreateMode();
 
                 var oUiData = new JSONModel({pcst_currency_unit:"KRW"});
-                this.getOwnerComponent().setModel(oUiData, "oUiData");
+                that.getOwnerComponent().setModel(oUiData, "oUiData");
 
             }else{
 
                 
-                if(this._m.filter.material_code.length>0){
+                if(that._m.filter.material_code.length>0){
                 
-                    this._onMidServiceRead();
+                    that._onMidServiceRead();
 
                     //항목 추가나  수정시 사용.
                     //this._onHiddenMidServiceRead();
 
-                    this._fnSetReadMode();
+                    that._fnSetReadMode();
                 }
                 else {
-                    this._fnSetEditMode();
+                    that._fnSetEditMode();
                 }
             } 
         
@@ -1002,7 +1016,8 @@ sap.ui.define([
          * @public
          */
         onRead : function () {
-            this._fnSetReadMode(); 
+            var that = this;
+            that._fnSetReadMode(); 
         },
 
         /**
@@ -1011,8 +1026,8 @@ sap.ui.define([
         onCancel : function () {
             var that = this;
 
-            MessageBox.confirm(this.getModel("I18N").getText("/NPG00007"), {
-                title : this.getModel("I18N").getText("/NPG00014"),
+            MessageBox.confirm(that.getModel("I18N").getText("/NPG00007"), {
+                title : that.getModel("I18N").getText("/NPG00014"),
                 initialFocus : sap.m.MessageBox.Action.CANCEL,
                 onClose : function(sButton) {
                     if (sButton === MessageBox.Action.OK) {
@@ -1031,7 +1046,8 @@ sap.ui.define([
          * @public
          */
         onEdit: function () {
-            this._fnSetEditMode();         
+            var that = this;
+            that._fnSetEditMode();         
         },
 
         /**
@@ -1040,12 +1056,13 @@ sap.ui.define([
          */        
         onCopy : function () {
             console.log("onCopy");
-            var oUiData = this.getModel("oUiData");
+            var that = this;
+            var oUiData = that.getModel("oUiData");
 
-            this._fnSetCopyMode();  
+            that._fnSetCopyMode();  
 
-            this.getView().byId("input_base_quantity").setValue(oUiData.getProperty("/base_quantity"));
-            this.getView().byId("input_processing_cost").setValue(oUiData.getProperty("/processing_cost"));
+            that.getView().byId("input_base_quantity").setValue(oUiData.getProperty("/base_quantity"));
+            that.getView().byId("input_processing_cost").setValue(oUiData.getProperty("/processing_cost"));
 
         },
 
@@ -1133,8 +1150,8 @@ sap.ui.define([
 
         _handleCreateSuccess: function (oData) {
             var that = this;
-            var mTitle = this.getModel("I18N").getText("/SAVE") + " " + this.getModel("I18N").getText("/SUCCESS");
-            MessageBox.show(this.getModel("I18N").getText("/NCM01001"), {
+            var mTitle = that.getModel("I18N").getText("/SAVE") + " " + that.getModel("I18N").getText("/SUCCESS");
+            MessageBox.show(that.getModel("I18N").getText("/NCM01001"), {
                 icon: MessageBox.Icon.SUCCESS,
                 title: mTitle,
                 actions: [MessageBox.Action.OK],
@@ -1163,7 +1180,6 @@ sap.ui.define([
          */
         onMaterialSearch : function (oEvent) {
             console.log("onMaterialSearch");
-
             var oModel = this.getOwnerComponent().getModel(),
                 aFilter = [],
                 that = this,
@@ -1220,15 +1236,17 @@ sap.ui.define([
   
         onRightTableUpdateFinished : function () {
             console.log("onRightTableUpdateFinished");
-            this._setSelectedRightTableItem();
+            var that = this;
+            that._setSelectedRightTableItem();
         },
           
 
         _setSelectedRightTableItem : function (){
             console.log("_setSelectedRightTableItem");
-            var rightTable = this._findFragmentControlId(this._m.fragementId.materialDetail, "rightTable"),
-                midList =this.getModel("midList"),
-                oUi = this.getModel("oUi");
+            var that = this;
+            var rightTable = that._findFragmentControlId(this._m.fragementId.materialDetail, "rightTable"),
+                midList =that.getModel("midList"),
+                oUi = that.getModel("oUi");
             
             for (var idx = 0; idx < rightTable.getItems().length; idx++) {
                 var items = rightTable.getItems()[idx];
@@ -1238,11 +1256,11 @@ sap.ui.define([
                 var termsdelv = items.getCells()[3].mProperties.text;
 
                 if(oUi.getProperty("/changeItem")){
-                    if(midList.oData[this._selectedIndex]){
-                        if(currency_unit==midList.oData[this._selectedIndex].currency_unit &&
-                            quantity_unit==midList.oData[this._selectedIndex].quantity_unit &&
-                            exchange==midList.oData[this._selectedIndex].exchange &&
-                            termsdelv==midList.oData[this._selectedIndex].termsdelv
+                    if(midList.oData[that._selectedIndex]){
+                        if(currency_unit==midList.oData[that._selectedIndex].currency_unit &&
+                            quantity_unit==midList.oData[that._selectedIndex].quantity_unit &&
+                            exchange==midList.oData[that._selectedIndex].exchange &&
+                            termsdelv==midList.oData[that._selectedIndex].termsdelv
                         ){
                             items.setSelected(true);
                         }
@@ -1258,11 +1276,11 @@ sap.ui.define([
          */
         onSelectedLeftTableItem : function (oEvent) {
             console.log("onSelectedLeftTableItem");
-
-            var oModel = this.getOwnerComponent().getModel(),
-                leftTable =  this._findFragmentControlId(this._m.fragementId.materialDetail, "leftTable"),
+            var that = this;
+            var oModel = that.getOwnerComponent().getModel(),
+                leftTable =  that._findFragmentControlId(this._m.fragementId.materialDetail, "leftTable"),
                 aFilter = [],
-                that = this;
+                that = that;
             
             var tenant_id = leftTable.getSelectedItems()[0].getCells()[0].mProperties.text;
             var mi_material_code = leftTable.getSelectedItems()[0].getCells()[2].mProperties.text; 
@@ -1272,7 +1290,7 @@ sap.ui.define([
             aFilter.push(new Filter("mi_material_code", FilterOperator.EQ, mi_material_code));
             
             
-            var sServiceUrl = this._m.serviceName.mIMaterialCostInformationView;
+            var sServiceUrl = that._m.serviceName.mIMaterialCostInformationView;
             
             var mIMaterialCostInformationView = new JSONModel();
             oModel.read(sServiceUrl, {
@@ -1293,18 +1311,18 @@ sap.ui.define([
          */
         onMaterialDetailApply : function () {
             console.log("onMaterialDetailApply");
-            var leftTable =  this._findFragmentControlId(this._m.fragementId.materialDetail, "leftTable"), 
-                rightTable = this._findFragmentControlId(this._m.fragementId.materialDetail, "rightTable"),
-                oModel = this.getModel(),
-                oUi = this.getModel("oUi"),
-                mTitle = this.getModel("I18N").getText("/OPTION") + " " + this.getModel("I18N").getText("/CONFIRM"),            
-                that = this;            
+            var that = this;
+            var leftTable =  that._findFragmentControlId(that._m.fragementId.materialDetail, "leftTable"), 
+                rightTable = that._findFragmentControlId(that._m.fragementId.materialDetail, "rightTable"),
+                oModel = that.getModel(),
+                oUi = that.getModel("oUi"),
+                mTitle = that.getModel("I18N").getText("/OPTION") + " " + that.getModel("I18N").getText("/CONFIRM");            
 
             if(rightTable.getSelectedItems().length<1){
-                this._showMessageBox(
+                that._showMessageBox(
                     mTitle,
-                    this.getModel("I18N").getText("/NPG00016"),
-                    this._m.messageType.Warning,
+                    that.getModel("I18N").getText("/NPG00016"),
+                    that._m.messageType.Warning,
                     function(){return;}
                 );
                 return;
@@ -1324,11 +1342,11 @@ sap.ui.define([
             var termsdelv = rightTable.getSelectedItems()[0].getCells()[3].mProperties.text;
 
             //자재정보 선택을 참조한다. 
-            var material_code = this.getView().byId("input_hidden_material_code").getValue();
-            var material_desc = this.getView().byId("input_hidden_material_desc").getValue(); //자재명
-            var supplier_code = this.getView().byId("input_hidden_supplier_code").getValue();
-            var supplier_local_name = this.getView().byId("input_hidden_supplier_local_name").getValue();
-            var supplier_english_name = this.getView().byId("input_hidden_supplier_english_name").getValue();
+            var material_code = that.getView().byId("input_hidden_material_code").getValue();
+            var material_desc = that.getView().byId("input_hidden_material_desc").getValue(); //자재명
+            var supplier_code = that.getView().byId("input_hidden_supplier_code").getValue();
+            var supplier_local_name = that.getView().byId("input_hidden_supplier_local_name").getValue();
+            var supplier_english_name = that.getView().byId("input_hidden_supplier_english_name").getValue();
 
  
             var items = {
@@ -1349,12 +1367,12 @@ sap.ui.define([
                 "quantity_unit": quantity_unit,
                 "exchange": exchange,
                 "termsdelv": termsdelv,
-                "mi_bom_id": this._m.mi_bom_id,
+                "mi_bom_id": that._m.mi_bom_id,
                 "use_flag": true,
                 "local_create_dtm": new Date(),
                 "local_update_dtm": new Date(),
-                "create_user_id": this._sso.user.id,
-                "update_user_id": this._sso.user.id,
+                "create_user_id": that._sso.user.id,
+                "update_user_id": that._sso.user.id,
                 "system_create_dtm": new Date(),
                 "system_update_dtm": new Date(),
                 "itemMode" : that._m.itemMode.create,
@@ -1428,22 +1446,23 @@ sap.ui.define([
          */
         onValueHelpMaterialDialogApply : function () {
             console.log("onValueHelpMaterialDialogApply");
-            var oTable = this._findFragmentControlId(this._m.fragementId.materialDialog, "materialTable"),
-                mTitle = this.getModel("I18N").getText("/OPTION") + " " + this.getModel("I18N").getText("/CONFIRM"),              
+            var that = this;
+            var oTable = that._findFragmentControlId(that._m.fragementId.materialDialog, "materialTable"),
+                mTitle = that.getModel("I18N").getText("/OPTION") + " " + that.getModel("I18N").getText("/CONFIRM"),              
                 oSelected = oTable.getSelectedContexts();
 
             if(oSelected.length<1){
-                this._showMessageBox(
+                that._showMessageBox(
                     mTitle,
-                    this.getModel("I18N").getText("/NPG00016"),
-                    this._m.messageType.Warning,
+                    that.getModel("I18N").getText("/NPG00016"),
+                    that._m.messageType.Warning,
                     function(){return;}
                 );
                 return;
             }
 
             var aSelectedItems = oTable.getSelectedItems();
-            this._MaterialApply(aSelectedItems);
+            that._MaterialApply(aSelectedItems);
             
         },
 
@@ -1502,7 +1521,7 @@ sap.ui.define([
 
 
             var filters = [
-                new Filter("tenant_id", FilterOperator.EQ, this._m.filter.tenant_id),
+                new Filter("tenant_id", FilterOperator.EQ, that._m.filter.tenant_id),
                 new Filter("material_code", FilterOperator.EQ, material_code),
                 new Filter("supplier_code", FilterOperator.EQ, supplier_code)
             ];
@@ -1553,14 +1572,16 @@ sap.ui.define([
          * 자재 및 서플라이어 검색창 Close
          */
         onMaterialDialog_close : function (){
-            this._valueHelpMaterialDialog.close();
+            var that = this;
+            that._valueHelpMaterialDialog.close();
         },
         /**     
          * 시황재재 선택 및 가격정보 선택 페이지 close
          * @public
          */
         onMaterialDetailClose : function() {
-            this._valueHelpMaterialDetail.close();
+            var that = this;
+            that._valueHelpMaterialDetail.close();
         },
         
         /**
@@ -1580,7 +1601,7 @@ sap.ui.define([
             if(midList==null){
                 var omidList = new JSONModel();
                 omidList.setData([items]);
-                this.setModel(omidList,"midList");                
+                that.setModel(omidList,"midList");                
                  that.onMaterialDetailClose();
                 return;
             }
@@ -1605,7 +1626,7 @@ sap.ui.define([
                     return;
                 }else{
                     if(!bCheck){
-                        this._showMessageToast(this.getModel("I18N").getText("/NPG00022"));
+                        that._showMessageToast(that.getModel("I18N").getText("/NPG00022"));
                     }
                 }
 
@@ -1613,7 +1634,7 @@ sap.ui.define([
               
                 var omidList = new JSONModel();
                 omidList.setData([items]);
-                this.setModel(omidList,"midList");
+                that.setModel(omidList,"midList");
                 that.onMaterialDetailClose();
                 return;
                 
@@ -1629,17 +1650,18 @@ sap.ui.define([
         },
 
         onMidListItemUpdate : function (items) {
-            
-            var midList = this.getModel("midList");
+            console.log("onMidListItemUpdate");
+            var that = this;
+            var midList = that.getModel("midList");
            
-            if( midList.oData[this._selectedIndex] ){
-                midList.oData[this._selectedIndex].currency_unit = items.currency_unit;
-                midList.oData[this._selectedIndex].quantity_unit = items.quantity_unit;
-                midList.oData[this._selectedIndex].exchange = items.exchange;
-                midList.oData[this._selectedIndex].termsdelv = items.termsdelv;
+            if( midList.oData[that._selectedIndex] ){
+                midList.oData[that._selectedIndex].currency_unit = items.currency_unit;
+                midList.oData[that._selectedIndex].quantity_unit = items.quantity_unit;
+                midList.oData[that._selectedIndex].exchange = items.exchange;
+                midList.oData[that._selectedIndex].termsdelv = items.termsdelv;
                 
                 midList.refresh(true);
-                this.onMaterialDetailClose();
+                that.onMaterialDetailClose();
             }
 
         },        
@@ -1651,18 +1673,18 @@ sap.ui.define([
         onMidListItemDelete : function () {
             console.log("onMidListItemDelete");
             
-            var oModel = this.getModel("midList"),
-                _deleteItem = this.getModel("_deleteItem"),
-                that = this,
-                oTable = this.getView().byId("midTable"),
+            var that = this,
+                oModel = that.getModel("midList"),
+                _deleteItem = that.getModel("_deleteItem"),                
+                oTable = that.getView().byId("midTable"),
                 oSelected = oTable.getSelectedContexts(),
-                mTitle = this.getModel("I18N").getText("/OPTION") + " " + this.getModel("I18N").getText("/CONFIRM");
+                mTitle = that.getModel("I18N").getText("/OPTION") + " " + that.getModel("I18N").getText("/CONFIRM");
                 
             if(oSelected.length<1){
                 this._showMessageBox(
                     mTitle,
-                    this.getModel("I18N").getText("/NCM01010"),
-                    this._m.messageType.Warning,
+                    that.getModel("I18N").getText("/NCM01010"),
+                    that._m.messageType.Warning,
                     function(){return;}
                 );
                 return;
@@ -1722,36 +1744,35 @@ sap.ui.define([
          * @private 
          */
         _onPageValidate: function(){
-            var _oUi = this.getModel("oUi"),
+            var that = this;
+            var _oUi = that.getModel("oUi"),
                 bCheckValidate = true;
 
             if(_oUi.getProperty("/createMode")==true || _oUi.getProperty("/copyMode")==true){
-                bCheckValidate =  this.validator.validate(this.byId(this._m.page));
+                bCheckValidate =  that.validator.validate(that.byId(that._m.page));
                 if(bCheckValidate) {
-                    this.validator.clearValueState(this.byId(this._m.page));
+                    that.validator.clearValueState(that.byId(that._m.page));
                 }else{
                     return false;
                 }
             }
             
-            bCheckValidate =  this.validator.validate(this.byId("midTable"));
+            bCheckValidate =  that.validator.validate(that.byId("midTable"));
             if(bCheckValidate){
-                this.validator.clearValueState(this.byId("midTable"));
+                that.validator.clearValueState(that.byId("midTable"));
             }else{
                 return false;
             }
-
-            
             return bCheckValidate;
-
         },
 
         /**
          * midTable required live check
          */
-        onRequiredCheckTable : function() {            
+        onRequiredCheckTable : function() {  
+            var that = this;          
             //if(this.validator.validate(this.byId("midTable"))){
-                this.validator.clearValueState(this.byId("midTable"));
+                that.validator.clearValueState(that.byId("midTable"));
            // }
         },
         /**
@@ -1759,8 +1780,9 @@ sap.ui.define([
          * @private 
          */
         _onPageClearValidate: function(){
-            this.validator.clearValueState(this.byId("page"));
-            this.validator.clearValueState(this.byId("midTable"));
+            var that = this; 
+            that.validator.clearValueState(that.byId("page"));
+            that.validator.clearValueState(that.byId("midTable"));
         },
         
 
@@ -1770,10 +1792,11 @@ sap.ui.define([
          */
         _checkData : function(){
             console.log("call function ==================== _checkData : function(){====================");
-            var oUi = this.getModel("oUi"),
+            var that = this;
+            var oUi = that.getModel("oUi"),
                 bValueCheckFlag = true;
 
-            var oTable = this.getView().byId("midTable");
+            var oTable = that.getView().byId("midTable");
 
             var tableCoutnt = 0;
             for (var idx = 0; idx < oTable.getItems().length; idx++) {
@@ -1786,19 +1809,19 @@ sap.ui.define([
                     use_flag = items.getCells()[7].mAggregations.items[0].mProperties.selectedKey;
 
                 if(reqm_quantity_unit.length<1){
-                    this._showMessageToast(this.getModel("I18N").getText("/NPG00005"));
+                    that._showMessageToast(that.getModel("I18N").getText("/NPG00005"));
                     bValueCheckFlag  =false;
                     return false;
                 }
 
                 if(reqm_quantity.length<1){
-                    this._showMessageToast(this.getModel("I18N").getText("/NPG00005"));
+                    that._showMessageToast(that.getModel("I18N").getText("/NPG00005"));
                     bValueCheckFlag  =false;
                     return false;
                 }
 
                 if(use_flag.length<1){
-                    this._showMessageToast(this.getModel("I18N").getText("/NPG00001"));
+                    that._showMessageToast(that.getModel("I18N").getText("/NPG00001"));
                     bValueCheckFlag  =false;
                     return false;
                     
@@ -1807,7 +1830,7 @@ sap.ui.define([
             }
             if(tableCoutnt<1){
 
-                this._showMessageToast("필수 입력 내용과 시황자재를 추가 하셔야 합니다.");
+                that._showMessageToast("필수 입력 내용과 시황자재를 추가 하셔야 합니다.");
                 bValueCheckFlag = false;
             } 
 
@@ -1820,29 +1843,30 @@ sap.ui.define([
         onSaveAction : function(){
             console.log("call function ==================== onMidSave ====================");
             // this.getView().getModel().attachPropertyChange(this._propertyChanged.bind(this));
-             var oUi = this.getModel("oUi");
+             var that = this;
+             var oUi = that.getModel("oUi");
              var bCreateFlag = oUi.getProperty("/createMode");
              var bCopyFlag = oUi.getProperty("/copyMode");
  
-             var bValidate = this._onPageValidate();
+             var bValidate = that._onPageValidate();
              console.log("bValidate", bValidate);
 
              if(!bValidate){
                  return false;
              }
 
-            if(!this._checkData()){
+            if(!that._checkData()){
                 return false;
             }
 
             if(bCreateFlag){
 
-                    MessageBox.confirm(this.getModel("I18N").getText("/NPG00014"), {
+                    MessageBox.confirm(that.getModel("I18N").getText("/NPG00014"), {
                         title : "Create",
                         initialFocus : sap.m.MessageBox.Action.CANCEL,
                         onClose : function(sButton) {
                             if (sButton === MessageBox.Action.OK) {
-                                this._onSave();
+                                that._onSave();
                             }else{
                                 return;
                             }
@@ -1857,7 +1881,7 @@ sap.ui.define([
                     initialFocus : sap.m.MessageBox.Action.CANCEL,
                     onClose : function(sButton) {
                         if (sButton === MessageBox.Action.OK) {
-                            this._onSave();
+                            that._onSave();
                         }else{
                             return;
                         }
@@ -1865,12 +1889,12 @@ sap.ui.define([
                 });
              }
              else{
-                MessageBox.confirm(this.getModel("I18N").getText("/NPG00007"), {
-                    title : this.getModel("I18N").getText("/UPDATE"),
+                MessageBox.confirm(that.getModel("I18N").getText("/NPG00007"), {
+                    title : that.getModel("I18N").getText("/UPDATE"),
                     initialFocus : sap.m.MessageBox.Action.CANCEL,
                     onClose : function(sButton) {
                         if (sButton === MessageBox.Action.OK) {
-                            this._onSave();
+                            that._onSave();
                         }else{
                             return;
                         }
@@ -1885,14 +1909,13 @@ sap.ui.define([
          _onSave: function () {
 
             console.log("call function ==================== onMidSave ====================");
-
+            var that = this;
             var oUi = this.getModel("oUi"),
                 bCreateFlag = oUi.getProperty("/createMode"),
                 bCopyFlag = oUi.getProperty("/copyMode"),
-                bEditFlag = oUi.getProperty("/editMode"),
-                that = this,
-                oModel = this.getModel(),
-                midList = this.getModel("midList"),
+                bEditFlag = oUi.getProperty("/editMode"),                
+                oModel = that.getModel(),
+                midList = that.getModel("midList"),
                 updateHeader = 0, 
                 createHeader = 0,
                 updateItem = 0, 
@@ -1950,7 +1973,7 @@ sap.ui.define([
                         }
                     }
 
-                    if((midList.oData[i].itemMode==this._m.itemMode.create))
+                    if((midList.oData[i].itemMode==that._m.itemMode.create))
                     {
                         if(that._fnCreateEntryItem(oModel, midList.oData[i])){
                             createItem++;
@@ -1972,10 +1995,10 @@ sap.ui.define([
             console.log("updateItem =================================", updateItem);
             console.log("deleteItem =================================", deleteItem);
 
-            this._currentDeleitem = 0;
+            that._currentDeleitem = 0;
             if(deleteItem>0 && createItem<1){  
 
-                this._currentDeleitem = deleteItem;
+                that._currentDeleitem = deleteItem;
                 
                 var oFilter = [
                     new Filter("tenant_id", FilterOperator.EQ, that._m.filter.tenant_id),
@@ -1994,7 +2017,7 @@ sap.ui.define([
 
                 if(bEditFlag){
 
-                    Promise.all([ this.readChecklistEntity(oDeleteInfoOdata)
+                    Promise.all([ that.readChecklistEntity(oDeleteInfoOdata)
                     ]).then(that.deleteCheckAction.bind(that),
                             that.deleteChecklistError.bind(that));
                 }
@@ -2029,13 +2052,14 @@ sap.ui.define([
         },
 
         deleteCheckAction: function(values) {
-            var oData  = values[0].results;
-            var oModel = this.getModel();
-            var oUiData = this.getModel("oUiData");
+            console.log("deleteCheckAction");
             var that = this;
+            var oData  = values[0].results;
+            var oModel = that.getModel();
+            var oUiData = that.getModel("oUiData");
 
             if(oData.length>0){
-                if(this._currentDeleitem == oData.length){
+                if(that._currentDeleitem == oData.length){
              
 					var oDeleteMIMaterialCodeBOMManagementHeaderKey = {
 						tenant_id : oUiData.oData.tenant_id,
@@ -2064,9 +2088,10 @@ sap.ui.define([
         },
 
         _setUseBatch : function () {
-            var oModel = this.getModel(),
-                oUi = this.getModel("oUi"),
-                that = this;
+            var that = this;
+            var oModel = that.getModel(),
+                oUi = that.getModel("oUi");
+
                 oModel.setUseBatch(true);
                 if(oUi.getProperty("/deleteMode")){
                     oModel.submitChanges({
@@ -2095,7 +2120,7 @@ sap.ui.define([
                 }
 
                 setTimeout(oModel.refresh(true), 500);
-                setTimeout(this._fnSetReadMode(), 500);
+                setTimeout(that._fnSetReadMode(), 500);
                 setTimeout(that._onExit(), 500);
                
                 that._setBusy(false);   
@@ -2151,8 +2176,9 @@ sap.ui.define([
          */
         _fnCreateEntryHeader : function(oModel, oData){
             console.log("_fnCreateHeader");
+            var that = this;
             var headerParameters = {
-                "groupId": this._m.groupID,
+                "groupId": that._m.groupID,
                 "properties": {
                     "tenant_id": oData.tenant_id,
                     "material_code": oData.material_code,
@@ -2162,11 +2188,11 @@ sap.ui.define([
                     "pcst_currency_unit": oData.pcst_currency_unit,
                     "mi_bom_id": oData.mi_bom_id,
                     "local_create_dtm": new Date(),
-                    "create_user_id": this._sso.user.id
+                    "create_user_id": that._sso.user.id
                 }
             };
             try{
-                oModel.createEntry(this._m.serviceName.mIMaterialCodeBOMManagementHeader, headerParameters);
+                oModel.createEntry(that._m.serviceName.mIMaterialCodeBOMManagementHeader, headerParameters);
                 return true;
             }catch(error){
                 return false;
@@ -2180,7 +2206,7 @@ sap.ui.define([
         _fnCreateEntryItem : function(oModel, oData) {
             var that = this;
             var createEntryItemParameters = {
-                "groupId": this._m.groupID,
+                "groupId": that._m.groupID,
                 "properties": {
                     "tenant_id": oData.tenant_id,
                     "mi_bom_id": oData.mi_bom_id,
@@ -2321,11 +2347,12 @@ sap.ui.define([
          * @param {sap.ui.base.Event} oEvent 
          */
         onDeleteAction : function (oEvent){
-            console.log("onMidDelete");      
-            var mTitle = this.getModel("I18N").getText("/DELETE") + " " + this.getModel("I18N").getText("/CONFIRM");      
-                MessageBox.confirm(this.getModel("I18N").getText("/NCM00003"), {
+            console.log("onMidDelete");   
+            var that = this;   
+            var mTitle = that.getModel("I18N").getText("/DELETE") + " " + that.getModel("I18N").getText("/CONFIRM");      
+                MessageBox.confirm(that.getModel("I18N").getText("/NCM00003"), {
                     title: mTitle,                                    
-                    onClose: this._deleteAction.bind(this),                                    
+                    onClose: that._deleteAction.bind(this),                                    
                     actions: [MessageBox.Action.DELETE, MessageBox.Action.CANCEL],
                     textDirection: sap.ui.core.TextDirection.Inherit    
                 });
@@ -2336,9 +2363,9 @@ sap.ui.define([
          */
         _deleteMIMaterialCodeBOMManagementItem : function () {
             console.log("_deleteMIMaterialCodeBOMManagementItem");
-            var oModel = this.getOwnerComponent().getModel(),
-                _deleteItem = this.getModel("_deleteItem"),
-                that = this,
+            var that = this;
+            var oModel = that.getOwnerComponent().getModel(),
+                _deleteItem = that.getModel("_deleteItem"),
                 deleteItem=0,
                 _deleteItemOdata = _deleteItem.getProperty("/delData");
 
@@ -2361,7 +2388,7 @@ sap.ui.define([
                     }
                 
                     oDeleteMIMaterialCodeBOMManagementItemPath = oModel.createKey(
-                            this._m.serviceName.mIMaterialCodeBOMManagementItem,
+                        that._m.serviceName.mIMaterialCodeBOMManagementItem,
                             oDeleteMIMaterialCodeBOMManagementItemKey
                     );
 
@@ -2369,16 +2396,16 @@ sap.ui.define([
                         oModel.remove(
                             oDeleteMIMaterialCodeBOMManagementItemPath, 
                             { 
-                                groupId: this._m.groupID 
+                                groupId: that._m.groupID 
                             }
                         );
                         deleteItem++; 
                     }catch(error){
-                        var mTitle = this.getModel("I18N").getText("/DELETE") + " " + this.getModel("I18N").getText("/FAILURE");
+                        var mTitle = that.getModel("I18N").getText("/DELETE") + " " + that.getModel("I18N").getText("/FAILURE");
                         that._showMessageBox(
                             mTitle,
                             error,
-                            this._m.messageType.Error,
+                            that._m.messageType.Error,
                             function(){return;}
                         ); 
                     }
@@ -2401,7 +2428,7 @@ sap.ui.define([
                 oModel = that.getModel(),
                 oView = that.getView(),
                 midList = that.getModel("midList"),
-                oUi = this.getModel("oUi"),
+                oUi = that.getModel("oUi"),
                 bEditFlag = oUi.getProperty("/editMode");
             
 			if(oAction === MessageBox.Action.DELETE) {
@@ -2451,7 +2478,7 @@ sap.ui.define([
     
                     if(bEditFlag){
     
-                        Promise.all([ this.readChecklistEntity(oDeleteInfoOdata)
+                        Promise.all([ that.readChecklistEntity(oDeleteInfoOdata)
                         ]).then(that.deleteCheckAction.bind(that),
                                 that.deleteChecklistError.bind(that));
                     }
@@ -2474,19 +2501,20 @@ sap.ui.define([
         },
 
         _handleCreateError: function (oError) {
-            var mTitle = this.getModel("I18N").getText("/SAVE") + " " + this.getModel("I18N").getText("/FAILURE");
-            this._showMessageBox(
+            var that = this;
+            var mTitle = that.getModel("I18N").getText("/SAVE") + " " + that.getModel("I18N").getText("/FAILURE");
+            that._showMessageBox(
                 mTitle,
-                this.getModel("I18N").getText("/EPG00003"),
-                this._m.messageType.Error,
+                that.getModel("I18N").getText("/EPG00003"),
+                that._m.messageType.Error,
                 function(){return;}
             );
         },
 
         _handleUpdateSuccess: function (oData) {
             var that = this;
-            var mTitle = this.getModel("I18N").getText("/UPDATE") + " " + this.getModel("I18N").getText("/SUCCESS");
-            MessageBox.show(this.getModel("I18N").getText("/NPG00008"), {
+            var mTitle = that.getModel("I18N").getText("/UPDATE") + " " + that.getModel("I18N").getText("/SUCCESS");
+            MessageBox.show(that.getModel("I18N").getText("/NPG00008"), {
                 icon: MessageBox.Icon.SUCCESS,
                 title: mTitle,
                 actions: [MessageBox.Action.OK],
@@ -2502,11 +2530,12 @@ sap.ui.define([
        
         
         _handleUpdateError: function (oError) {
-            var mTitle = this.getModel("I18N").getText("/UPDATE") + " " + this.getModel("I18N").getText("/FAILURE");
+            var that = this;
+            var mTitle = that.getModel("I18N").getText("/UPDATE") + " " + thithats.getModel("I18N").getText("/FAILURE");
             this._showMessageBox(
                 mTitle,
-                this.getModel("I18N").getText("/EPG00002"),
-                this._m.messageType.Error,
+                that.getModel("I18N").getText("/EPG00002"),
+                that._m.messageType.Error,
                 function(){return;}
             );
         },
@@ -2529,10 +2558,11 @@ sap.ui.define([
        
         
         _handleCopyError: function (oError) {
+            var that = this;
             this._showMessageBox(
                 "복사 실패",
                 "복사 실패 하였습니다.",
-                this._m.messageType.Error,
+                that._m.messageType.Error,
                 function(){return;}
             );
         },
@@ -2544,8 +2574,8 @@ sap.ui.define([
          */
         _handleDeleteSuccess: function (oData) {
             var that = this;
-            var mTitle = this.getModel("I18N").getText("/DELETE") + " " + this.getModel("I18N").getText("/SUCCESS");
-            MessageBox.show(this.getModel("I18N").getText("/NCM01002"), {
+            var mTitle = that.getModel("I18N").getText("/DELETE") + " " + that.getModel("I18N").getText("/SUCCESS");
+            MessageBox.show(that.getModel("I18N").getText("/NCM01002"), {
                 icon: MessageBox.Icon.SUCCESS,
                 title: mTitle,
                 actions: [MessageBox.Action.OK],
@@ -2565,16 +2595,18 @@ sap.ui.define([
          * @private
          */
         _handleDeleteError: function (oError) {
-            var mTitle = this.getModel("I18N").getText("/DELETE") + " " + this.getModel("I18N").getText("/FAILURE");            
-            this._showMessageBox(
+            var that = this;
+            var mTitle = that.getModel("I18N").getText("/DELETE") + " " + that.getModel("I18N").getText("/FAILURE");            
+            that._showMessageBox(
                 mTitle,
-                this.getModel("I18N").getText("/EPG00001"),
-                this._m.messageType.Error,
+                that.getModel("I18N").getText("/EPG00001"),
+                that._m.messageType.Error,
                 function(){return;}
             );
         },
         _setBusy : function (bIsBusy) {
-			var oModel = this.getView().getModel("oUi");
+            var that = this;
+			var oModel = that.getView().getModel("oUi");
 			oModel.setProperty("/busy", bIsBusy);
 		}	              
            

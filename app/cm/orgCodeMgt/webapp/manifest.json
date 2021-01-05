@@ -162,7 +162,7 @@
 
             "routes": [
 				{
-					"pattern": ":layout:",
+					"pattern": "master/:layout:",
 					"name": "master",
 					"target": [
 						"master"
@@ -172,7 +172,6 @@
 					"pattern": "detail/{layout}/:tenantId:/:groupCode:",
 					"name": "detail",
 					"target": [
-                        "master",
 						"detail"
 					]
 				},
@@ -180,7 +179,6 @@
 					"pattern": "detailDetail/{layout}/:tenantId:/:groupCode:/:orgCode:/:code:",
 					"name": "detailDetail",
 					"target": [
-						"master",
 						"detail",
 						"detailDetail"
 					]
@@ -193,11 +191,11 @@
 				},
 				"detail": {
                     "viewName": "Detail",
-                    "controlAggregation": "midColumnPages"
+                    "controlAggregation": "beginColumnPages"
 				},
 				"detailDetail": {
                     "viewName": "DetailDetail",
-                    "controlAggregation": "endColumnPages"
+                    "controlAggregation": "midColumnPages"
 				}
 			}
 

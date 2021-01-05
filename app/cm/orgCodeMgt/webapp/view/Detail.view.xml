@@ -338,7 +338,7 @@
                                     </m:Column>
                                 </m:columns>
                                 <m:items>
-                                    <m:ColumnListItem type="Navigation" press=".onHandleItemPress">
+                                    <m:ColumnListItem type="Navigation" press=".onHandleOrgCodeListItemPress">
                                         <m:cells>
                                             <m:Text
                                                     text="{viewModel>code}" />

@@ -143,7 +143,8 @@ sap.ui.define([
             var oContModel = this.getModel("contModel");
             oContModel.setProperty("/detail/footer", true);
 
-            var sLayout = LayoutType.TwoColumnsMidExpanded;
+            //var sLayout = LayoutType.TwoColumnsMidExpanded;
+            var sLayout = LayoutType.OneColumn;
             this._changeFlexibleColumnLayout(sLayout);
         },
 
@@ -154,9 +155,9 @@ sap.ui.define([
 
 		_onCodeDetailMatched: function (oEvent) {
             var sLayout = oEvent.getParameter("arguments").layout;
-            if(sLayout === "TwoColumnsMidExpanded"){
-                return false;
-            }
+            // if(sLayout === "TwoColumnsMidExpanded"){
+            //     return false;
+            // }
             this._fnInitControlModel();
             
             var sTenantId = oEvent.getParameter("arguments").tenantId;
@@ -260,6 +261,8 @@ sap.ui.define([
                 groupId: sGroupId,
                 success: function(data){
                     this._fnReadDetails(oParam.tenant_id, oParam.group_code);
+                    this._fnSetReadMode();
+                    MessageToast.show("Success to save.");
                 }.bind(this),
                 error: function(data){
                     console.log('error',data)
@@ -280,17 +283,19 @@ sap.ui.define([
                 });
             });
             
+            
             oModel.submitChanges({
                 groupId: sGroupId,
                 success: function(data){
-                    this._fnSetReadMode();
+                    //this._fnSetReadMode();
                     //this.handleClose();
-                    MessageToast.show("Success to save.");
+                    //MessageToast.show("Success to save.");
                 }.bind(this),
                 error: function(data){
-                    console.log('Create error',data)
+                    console.log('Create error',data);
+                    MessageToast.show("Fail to save.");
                 }
-            });
+            });            
         },
 
         _fnUpdateCodeDetail : function(){
