@@ -46,12 +46,12 @@ service MoldRecepitApprovalService {
                 mst.project_code, 
                 mst.acq_department_code, 
                 dep.department_local_name as acq_department_code_nm : String(240) ,
-                ps.drawing_agreement_date as drawing_consent_plan : String(240) , 
-        		rs.drawing_agreement_date as drawing_consent_result : String(240)  ,
-        		ps.first_production_date as production_plan : String(240) , 
-        		rs.first_production_date as production_result  : String(240) ,
-        		ps.production_complete_date as completion_plan : String(240) , 
-        		rs.production_complete_date as completion_result  : String(240) 
+                left(ps.drawing_agreement_date,4)||'.'||substring(ps.drawing_agreement_date, 5, 2)||'.'||right(ps.drawing_agreement_date,2) as drawing_consent_plan : String(240) , 
+        		left(rs.drawing_agreement_date,4)||'.'||substring(rs.drawing_agreement_date, 5, 2)||'.'||right(rs.drawing_agreement_date,2) as drawing_consent_result : String(240)  ,
+        		left(ps.first_production_date,4)||'.'||substring(ps.first_production_date, 5, 2)||'.'||right(ps.first_production_date,2) as production_plan : String(240) , 
+        		left(rs.first_production_date,4)||'.'||substring(rs.first_production_date, 5, 2)||'.'||right(rs.first_production_date,2) as production_result  : String(240) ,
+                left(ps.production_complete_date,4)||'.'||substring(ps.production_complete_date, 5, 2)||'.'||right(ps.production_complete_date,2) as completion_plan : String(240) ,
+                left(rs.production_complete_date,4)||'.'||substring(rs.production_complete_date, 5, 2)||'.'||right(rs.production_complete_date,2) as completion_result  : String(240) 
         from approvalDtl.Md_Approval_Dtl dtl
         join moldMst.Md_Mst mst on dtl.mold_id = mst.mold_id 
         join orgCodeLng.Org_Code_Lng as cur on mst.company_code = cur.org_code 
