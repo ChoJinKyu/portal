@@ -1896,11 +1896,16 @@ sap.ui.define([
                 updateHeader = 0, 
                 createHeader = 0,
                 updateItem = 0, 
-                createItem = 0, 
+                createItem = 0,
+                copyBomId = "" ,
                 deleteItem = 0;
                 //that._setBusy(true);
 
 
+
+            if(bCopyFlag){
+                copyBomId = that._fnGuid();
+            }
 
             for(var i=0;i<midList.oData.length;i++){
 
@@ -1921,7 +1926,7 @@ sap.ui.define([
                   
                     if(bCopyFlag){
                         
-                        midList.oData[i].mi_bom_id =  that._fnGuid();
+                        midList.oData[i].mi_bom_id =  copyBomId;
                     }
 
                     if(i==0){
@@ -2089,11 +2094,10 @@ sap.ui.define([
                     });
                 }
 
-
-                oModel.refresh(true); 
-                // this._onMidServiceRead();
-                 this._fnSetReadMode();
-                that._onExit();  
+                setTimeout(oModel.refresh(true), 500);
+                setTimeout(this._fnSetReadMode(), 500);
+                setTimeout(that._onExit(), 500);
+               
                 that._setBusy(false);   
         },
         /*
