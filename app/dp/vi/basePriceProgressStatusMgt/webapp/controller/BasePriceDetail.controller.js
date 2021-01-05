@@ -20,11 +20,11 @@ sap.ui.define([
 
     var sSelectedPath, sTenantId, oDialogInfo;
 
-    return BaseController.extend("dp.vi.basePriceArlMgt.controller.BasePriceDetail", {
+    return BaseController.extend("dp.vi.basePriceProgressStatusMgt.controller.BasePriceDetail", {
         dateFormatter: DateFormatter,
 
         onInit: function () {
-            var oBasePriceListRootModel = this.getOwnerComponent().getModel("basePriceArlRootModel");
+            var oBasePriceListRootModel = this.getOwnerComponent().getModel("basePriceProgressStatusMgtRootModel");
             sTenantId = oBasePriceListRootModel.getProperty("/tenantId");
 
             switch (sTenantId) {
@@ -79,7 +79,7 @@ sap.ui.define([
         _getBasePriceDetail: function () {
             var oView = this.getView();
             var oCodeModel = this.getModel("codeModel");
-            var oBasePriceListRootModel = this.getModel("basePriceArlRootModel");
+            var oBasePriceListRootModel = this.getModel("basePriceProgressStatusMgtRootModel");
             var oSelectedData = oBasePriceListRootModel.getProperty("/selectedData");
 
             sTenantId = oBasePriceListRootModel.getProperty("/tenantId");
@@ -126,7 +126,7 @@ sap.ui.define([
                                     "new_change_code": "10",
                                     "approval_status_code": "10",
                                     "approval_request_desc": "품의 테스트",
-                                    "approval_requestor_empno": "5452",
+                                    "approval_requestor_empno": "5450",
                                     "update_user_id": "Tester",
                                     "approval_request_date": oToday,
                                     "local_create_dtm": oToday,
@@ -279,7 +279,7 @@ sap.ui.define([
 
             if( !oData.approval_number ) {
                 oModel.create("/Base_Price_Arl_Master", oData, {
-                    //groupId: "saveBasePriceArl",
+                    //groupId: "savebasePriceProgressStatusMgt",
                     success: function(data){
                         // return 값이 있고 approval_number가 있는 경우에만 저장 완료
                         if( data && data.approval_number ) {
@@ -311,7 +311,7 @@ sap.ui.define([
             }
 
             // oModel.submitChanges({
-            //     groupId: "saveBasePriceArl",
+            //     groupId: "savebasePriceProgressStatusMgt",
             //     success: function(data){
             //         console.log("submitChanges");
             //     }.bind(this),
@@ -358,7 +358,7 @@ sap.ui.define([
          * List 화면으로 이동
          */
         onBack: function () {
-            var oBasePriceListRootModel = this.getModel("basePriceArlRootModel");
+            var oBasePriceListRootModel = this.getModel("basePriceProgressStatusMgtRootModel");
             oBasePriceListRootModel.setProperty("/selectedData", null);
 
             this.getRouter().navTo("basePriceList");
@@ -385,15 +385,15 @@ sap.ui.define([
             switch (sDialog) {
                 case "materialCode":
                     oDialogInfo.dialogObject = this._oMaterialDialog;
-                    oDialogInfo.path = "dp.vi.basePriceArlMgt.view.MaterialDialog";
+                    oDialogInfo.path = "dp.vi.basePriceProgressStatusMgt.view.MaterialDialog";
                     break;
                 case "familyMaterialCode":
                     oDialogInfo.dialogObject = this._oFamilyMaterialDialog;
-                    oDialogInfo.path = "dp.vi.basePriceArlMgt.view.FamilyMaterialDialog";
+                    oDialogInfo.path = "dp.vi.basePriceProgressStatusMgt.view.FamilyMaterialDialog";
                     break;
                 case "supplier":
                     oDialogInfo.dialogObject = this._oSupplierDialog;
-                    oDialogInfo.path = "dp.vi.basePriceArlMgt.view.SupplierDialog";
+                    oDialogInfo.path = "dp.vi.basePriceProgressStatusMgt.view.SupplierDialog";
                     break;
             }
 

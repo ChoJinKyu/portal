@@ -12,11 +12,11 @@ sap.ui.define([
 
     var sSelectedPath, sTenantId, oDialogInfo;
 
-    return BaseController.extend("dp.vi.basePriceArlMgt.controller.BasePriceList", {
+    return BaseController.extend("dp.vi.basePriceProgressStatusMgt.controller.BasePriceList", {
         dateFormatter: DateFormatter,
 
         onInit: function () {
-            var oBasePriceListRootModel = this.getOwnerComponent().getModel("basePriceArlRootModel");
+            var oBasePriceListRootModel = this.getOwnerComponent().getModel("basePriceProgressStatusMgtRootModel");
             sTenantId = oBasePriceListRootModel.getProperty("/tenantId");
 
             this.setModel(new JSONModel(), "listModel");
@@ -36,6 +36,7 @@ sap.ui.define([
                 oFilterModelData = oFilterModel.getData(),
                 aFilters = [],
                 sStatus = oFilterModelData.status,
+                sMaterialCode = oFilterModelData.materialCode,
                 sApprovalNumber = oFilterModelData.approvalNumber,
                 oRequestBy = oFilterModelData.requestBy,
                 oDateValue = oFilterModelData.dateValue,
@@ -43,7 +44,12 @@ sap.ui.define([
 
             // Status가 있는 경우
             if( sStatus ) {
-                aFilters.push(new Filter("approval_status_code", FilterOperator.EQ, sStatus));
+                aFilters.push(new Filter("approval_number_fk/approval_status_code", FilterOperator.EQ, sStatus));
+            }
+
+            // Material Code가 있는 경우
+            if( sMaterialCode ) {
+                aFilters.push(new Filter("material_code", FilterOperator.EQ, sMaterialCode));
             }
 
             // Approval Number가 있는 경우
@@ -73,10 +79,10 @@ sap.ui.define([
             filtersParam =  Array.isArray(filtersParam) ? filtersParam : [];
             oView.setBusy(true);
 
-            oModel.read("/Base_Price_Arl_Master", {
+            oModel.read("/Base_Price_Arl_Detail", {
                 filters : filtersParam,
                 urlParameters: {
-                    "$expand": "approval_status_code_fk,approval_requestor_empno_fk,approval_type_code_fk,tenant_id_fk"
+                    "$expand": "approval_number_fk,prices,material_code_fk,company_code_fk"
                 },
                 success : function(data){
                     oView.setBusy(false);
@@ -130,7 +136,7 @@ sap.ui.define([
 
             if( oBindingContext ) {
                 var sPath = oBindingContext.getPath();
-                var oBasePriceListRootModel = this.getModel("basePriceArlRootModel");
+                var oBasePriceListRootModel = this.getModel("basePriceProgressStatusMgtRootModel");
                 oBasePriceListRootModel.setProperty("/selectedData", oListModel.getProperty(sPath));
             }
 
@@ -150,7 +156,7 @@ sap.ui.define([
                 if ( !this._oMaterialDialog ) {
                     this._oMaterialDialog = Fragment.load({
                         id: oView.getId(),
-                        name: "dp.vi.basePriceArlMgt.view.MaterialDialog",
+                        name: "dp.vi.basePriceProgressStatusMgt.view.MaterialDialog",
                         controller: this
                     }).then(function (oDialog) {
                         oView.addDependent(oDialog);

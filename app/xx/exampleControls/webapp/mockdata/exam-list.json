@@ -37,7 +37,12 @@
     {
         "name": "Number formated - With Locale and Currency",
         "icon": "sap-icon://source-code",
-        "viewName": "example8"
+        "viewName": "example8_1"
+    },
+    {
+        "name": "Date Formatter",
+        "icon": "sap-icon://source-code",
+        "viewName": "example8_2"
     },
     {
         "name": "X - Using OData V4",

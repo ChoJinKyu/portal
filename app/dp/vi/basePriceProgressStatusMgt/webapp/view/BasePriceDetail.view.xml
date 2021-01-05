@@ -1,4 +1,4 @@
-<mvc:View controllerName="dp.vi.basePriceArlMgt.controller.BasePriceDetail"
+<mvc:View controllerName="dp.vi.basePriceProgressStatusMgt.controller.BasePriceDetail"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:uxap="sap.uxap"
     xmlns="sap.m"
@@ -29,7 +29,7 @@
 		<uxap:headerContent>
 			<FlexBox wrap="Wrap">
                 <!-- Requester 시작 -->
-                <layout:VerticalLayout class="sapUiResponsiveMargin">
+                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <!-- <ObjectStatus title="{I18N>/APPROVAL_NUMBER}" text="{detailModel>/approval_number}"/> -->
                     <ObjectStatus title="Approval Number" text="{detailModel>/approval_number}"/>
                     <!-- <ObjectStatus title="{I18N>/REQUESTER}" text="{detailModel>/update_user_id}"/> -->
@@ -40,7 +40,7 @@
                 <!-- Requester 끝 -->
 
                 <!-- Status 시작 -->
-				<layout:VerticalLayout class="sapUiResponsiveMargin">
+				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
 					<!-- <Label text="{I18N>/STATUS} :"/> -->
 					<Label text="Status :"/>
                     <ObjectStatus class="sapMObjectStatusLarge" text="Draft" state="Error" />
@@ -48,7 +48,7 @@
                 <!-- Status 끝 -->
 
                 <!-- Process 시작 -->
-                <layout:VerticalLayout class="sapUiResponsiveMargin">
+                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
 					<!-- <Label text="{I18N>/PROCESS} : "/> -->
 					<Label text="Process : "/>
                     <HBox>

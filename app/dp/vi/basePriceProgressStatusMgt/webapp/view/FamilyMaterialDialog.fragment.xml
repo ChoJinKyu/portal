@@ -45,7 +45,7 @@
                             <Text text="{detailModel>material_code}" />
                         </table:template>
                     </table:Column>
-                    <table:Column headerSpan="2" hAlign="Center" width="6rem" visible="{= ${basePriceArlRootModel>/tenantId} === 'L2100' ? true : false}">
+                    <table:Column headerSpan="2" hAlign="Center" width="6rem" visible="{= ${basePriceProgressStatusMgtRootModel>/tenantId} === 'L2100' ? true : false}">
                         <table:multiLabels>
                             <Label text="{I18N>/SUPPLIER}" textAlign="Center" />
                             <Label text="{I18N>/CODE}" textAlign="Center" />
@@ -54,7 +54,7 @@
                             <Text text="{detailModel>supplier_code}" />
                         </table:template>
                     </table:Column>
-                    <table:Column width="10rem" hAlign="Center" visible="{= ${basePriceArlRootModel>/tenantId} === 'L2100' ? true : false}">
+                    <table:Column width="10rem" hAlign="Center" visible="{= ${basePriceProgressStatusMgtRootModel>/tenantId} === 'L2100' ? true : false}">
                         <table:multiLabels>
                             <Label text="{I18N>/SUPPLIER}" textAlign="Center" />
                             <Label text="{I18N>/Name}" textAlign="Center" />

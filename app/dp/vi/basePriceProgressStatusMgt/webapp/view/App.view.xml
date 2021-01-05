@@ -1,5 +1,5 @@
 <mvc:View
-	controllerName="dp.vi.basePriceArlMgt.controller.App"
+	controllerName="dp.vi.basePriceProgressStatusMgt.controller.App"
 	displayBlock="true"
 	xmlns="sap.m"
 	xmlns:mvc="sap.ui.core.mvc">

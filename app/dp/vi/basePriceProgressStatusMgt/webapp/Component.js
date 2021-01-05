@@ -5,7 +5,7 @@ sap.ui.define([
 ], function (UIComponent, JSONModel, Multilingual) {
   "use strict";
 
-  return UIComponent.extend("dp.vi.basePriceArlMgt.Component", {
+  return UIComponent.extend("dp.vi.basePriceProgressStatusMgt.Component", {
 
     metadata: {
       manifest: "json"
@@ -86,7 +86,7 @@ sap.ui.define([
         "tenant_id": "L4500",
         "tenant_name": "판토스"
       }
-    ]}), "basePriceArlRootModel");
+    ]}), "basePriceProgressStatusMgtRootModel");
         this.setModel(new Multilingual().getModel(), "I18N");
     },
   });
