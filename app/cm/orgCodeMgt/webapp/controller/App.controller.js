@@ -1,9 +1,10 @@
 sap.ui.define([
-	"ext/lib/controller/BaseController",
+    "ext/lib/controller/BaseController",
+    "ext/lib/util/Multilingual",
 	"sap/ui/core/UIComponent",
     "sap/m/library",
     "sap/ui/model/json/JSONModel"
-], function (BaseController, UIComponent, mobileLibrary, JSONModel) {
+], function (BaseController, Multilingual, UIComponent, mobileLibrary, JSONModel) {
     "use strict";
     
     // shortcut for sap.m.URLHelper
@@ -12,15 +13,25 @@ sap.ui.define([
 	return BaseController.extend("cm.orgCodeMgt.controller.App", {
 
 		onInit : function () {
-            this.getView().setModel(new JSONModel(), "searchModel");
-            
+            var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
+                
 			// apply content density mode to root view
             this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
             
             this.oRouter = this.getOwnerComponent().getRouter();
 			// this.oRouter.attachRouteMatched(this.onRouteMatched, this);
 			this.oRouter.attachBeforeRouteMatched(this.onBeforeRouteMatched, this);
-		},
+        },
+
+        onBeforeRendering : function(){
+            if(!this.getRouter().getHashChanger().getHash()){
+                var oNavParam = {
+                    layout: "OneColumn"
+                };
+                this.getRouter().navTo("master", oNavParam);
+            }
+        },
         /**
 		 * Convenience method for accessing the router.
 		 * @public
@@ -49,28 +60,8 @@ sap.ui.define([
 		 */
 		setModel : function (oModel, sName) {
 			return this.getView().setModel(oModel, sName);
-		},
-
-		/**
-		 * Getter for the resource bundle.
-		 * @public
-		 * @returns {sap.ui.model.resource.ResourceModel} the resourceModel of the component
-		 */
-		getResourceBundle : function () {
-			return this.getOwnerComponent().getModel("i18n").getResourceBundle();
-		},
-		/**
-		 * Event handler when the share by E-Mail button has been clicked
-		 * @public
-		 */
-		onShareEmailPress : function () {
-			var oViewModel = (this.getModel("objectView") || this.getModel("worklistView"));
-			URLHelper.triggerEmail(
-				null,
-				oViewModel.getProperty("/shareSendEmailSubject"),
-				oViewModel.getProperty("/shareSendEmailMessage")
-			);
-		},
+        },
+        
 		/**
 		* Adds a history entry in the FLP page history
 		* @public
@@ -112,7 +103,15 @@ sap.ui.define([
 			// Update the layout of the FlexibleColumnLayout
 			if (sLayout) {
 				oModel.setProperty("/layout", sLayout);
-			}
+            }
+
+            var sName = oEvent.getParameters().name;
+            //console.log(sName);
+            
+            if(sName === "master" || sName === "detail"){
+                var oFcl = this.byId("fcl");
+                //oFcl.removeAllBeginColumnPages();
+            }
 		},
 
 		// Update the close/fullscreen buttons visibility

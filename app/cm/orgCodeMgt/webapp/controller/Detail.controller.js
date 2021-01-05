@@ -8,18 +8,21 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "sap/f/LayoutType",
-    "ext/lib/util/ValidatorUtil",
-    "./Master.controller"
-], function (BaseController, Multilingual, JSONModel, Filter, Sorter, FilterOperator, MessageBox, MessageToast, LayoutType, ValidatorUtil, Master) {
+    "ext/lib/util/ValidatorUtil"
+], function (BaseController, Multilingual, JSONModel, Filter, Sorter, FilterOperator, MessageBox, MessageToast, LayoutType, ValidatorUtil) {
 	"use strict";
 
 	return BaseController.extend("cm.orgCodeMgt.controller.Detail", {
-		onInit: function () {
-			this.oRouter = this.getOwnerComponent().getRouter();
-            this.oRouter.getRoute("detail").attachPatternMatched(this._onCodeGroupDetailMatched, this);
-            
+
+		onInit: function () {            
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
+
+            //this._fnInitControlModel();
+            
+            this.oRouter = this.getOwnerComponent().getRouter();
+            this.oRouter.getRoute("detail").attachPatternMatched(this._onOrgCodeGroupDetailMatched, this);
+            
         },
 
         onBeforeRendering : function(){
@@ -36,14 +39,14 @@ sap.ui.define([
 
         _fnInitControlModel : function(){
             var oData = {
-                readMode : null,
-                createMode : null,
-                editMode : null,
+                readMode : true,
+                createMode : false,
+                editMode : false,
                 footer : true
             }
 
             var oContModel = this.getModel("contModel");
-            oContModel.setProperty("/detail", oData);
+            oContModel.setProperty("/detail", oData);                       
         },
 
         _fnSetReadMode : function(){
@@ -81,6 +84,7 @@ sap.ui.define([
             oContModel.setProperty("/detail/readMode", bRead);
             oContModel.setProperty("/detail/createMode", bCreate);
             oContModel.setProperty("/detail/editMode", bEdit);
+            oContModel.refresh();
         },
 
         onEditPress : function(){
@@ -114,16 +118,8 @@ sap.ui.define([
             oViewModel.setProperty("/OrgCodeDetails", []);
         },
 
-		onHandleItemPress: function (oEvent) {
-			// var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(2),
-			// 	supplierPath = oEvent.getSource().getBindingContext("products").getPath(),
-			// 	supplier = supplierPath.split("/").slice(-1).pop();
-
-			// this.oRouter.navTo("detailDetail", {layout: oNextUIState.layout,
-            //     product: this._product, supplier: supplier});
+		onHandleOrgCodeListItemPress: function (oEvent) {
             this._fnShowFooter(false);
-
-            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(2);
             
             var oViewModel = this.getModel('viewModel');
             var sPath = oEvent.getSource().getBindingContextPath();
@@ -133,7 +129,8 @@ sap.ui.define([
             oViewModel.setProperty("/detailDetailClone", $.extend(true, {}, oTargetData));
 
             var oNavParam = {
-                layout: oNextUIState.layout,
+                //layout: oNextUIState.layout,
+                layout: LayoutType.TwoColumnsMidExpanded,
                 tenantId : oTargetData.tenant_id,
                 companyCode : oTargetData.company_code,
                 groupCode : oTargetData.group_code,
@@ -145,15 +142,18 @@ sap.ui.define([
         
 		handleClose: function () {
             var sLayout = LayoutType.OneColumn;
-            var oFclModel = this.getModel("fcl");
-            oFclModel.setProperty("/layout", sLayout);
+            //var oFclModel = this.getModel("fcl");
+            //oFclModel.setProperty("/layout", sLayout);
+            this.getRouter().navTo("master", {layout: sLayout});
         },
         
         onAddDetailDetailPress : function(){
             this._fnShowFooter(false);
-            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(2);
+            // var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(2);
+            // this.getRouter().navTo("detailDetail", {layout: oNextUIState.layout});
             
-            this.getRouter().navTo("detailDetail", {layout: oNextUIState.layout});
+            var oNextUIState = LayoutType.TwoColumnsMidExpanded;
+            this.getRouter().navTo("detailDetail", {layout: oNextUIState});
         },
 
         _fnMasterSearch : function(){
@@ -271,7 +271,7 @@ sap.ui.define([
             });
         },
 
-		_onCodeGroupDetailMatched: function (oEvent) {
+		_onOrgCodeGroupDetailMatched: function (oEvent) {
             this._fnInitControlModel();
 
             var sTenantId = oEvent.getParameter("arguments").tenantId;
@@ -290,6 +290,10 @@ sap.ui.define([
                 this._fnSetReadMode();
                 this._fnReadDetails(sTenantId, sGroupCode);
             }
+
+            var sThisViewId = this.getView().getId();
+            var oFcl = this.getOwnerComponent().getRootControl().byId("fcl");
+            oFcl.to(sThisViewId);
 
             //ScrollTop
             var oObjectPageLayout = this.getView().byId("objectPageLayout");

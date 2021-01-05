@@ -230,8 +230,6 @@ sap.ui.define([
 			var oView = this.getView(),
                 me = this;
 
-            console.log(this.byId('scheduleTable1E'));
-
             if(this.validator.validate( this.byId('scheduleTable1E') ) !== true){
                 MessageToast.show( this.getModel('I18N').getText('/ECM0201') );
                 return;

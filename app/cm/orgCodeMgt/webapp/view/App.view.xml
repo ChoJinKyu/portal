@@ -5,7 +5,7 @@
     xmlns:f="sap.f"
 	xmlns:mvc="sap.ui.core.mvc">
 
-	<App id="app">
+	<App>
 		<f:FlexibleColumnLayout
 			id="fcl"
 			autoFocus="false"

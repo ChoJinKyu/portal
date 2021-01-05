@@ -1,24 +1,3 @@
-/**
- * 작성일 : 2020.10.29
- * 화면ID :
- * 
- * 작업 이력 
- * ===============================================================================
- * date           2020-11-06     
- * x1. delete 작업시 message confirm 작업 
- * x2. edit 버튼 작업시 uiModel 활용 으로 정리
- * x3. 각 버튼 처리 확인
- * x4. signalList 에서의 담당자 fragment 오픈 처리 (화면내에서 처리로 변경)
- * 
- * date           2020-11-09   
- * 1. 화면 기획서 문서와 담당자 확인 필요.
- * 2. 각종 버튼 이벤트 처리 완료시 메세지 처리
- * 3. History - 상세 테이블 바인딩 수정
- * 4. file upload 이벤트는 onChange 됨.
- * 5. save 저장시 각 오브젝트 컨트롤 값 가져오기.
- * 
- */
-
 // @ts-ignore
 sap.ui.define([
     "ext/lib/controller/BaseController",
@@ -128,6 +107,7 @@ sap.ui.define([
                 this.getModel("DetailView").setProperty("/isEditMode", true);
                 this.getModel("DetailView").setProperty("/isCreate", true);
                 oView.bindElement("/TaskMonitoringMasterView");
+
                 this._toEditMode();
 
             } else {
@@ -143,18 +123,29 @@ sap.ui.define([
                 monitoringVBox.bindElement(detail_info_Path);
                 scenarioVBox.bindElement(detail_info_Path);
                 systemVBox.bindElement(detail_info_Path);
-                //richText editor, formatted text value
-                this.PurposeFormattedText = atob(this.byId("reMonitoringPurpose").getValue());
-                this.ScenarioDescFormattedText = atob(this.byId("reMonitoringScenario").getValue());
-                this.ReSourceSystemFormattedText = atob(this.byId("reSourceSystemDetail").getValue());
 
                 this._toShowMode();
 
+                oView.getModel().read("/TaskMonitoringMaster(tenant_id='" + this.tenant_id + "',scenario_number=" + this.scenario_number + ")", {
+                    success: function (oData) {
+                        this.detailData = oData;
+                        this.PurposeFormattedText = this.detailData.monitoring_purpose === '' ? 'No Description' : atob(this.detailData.monitoring_purpose);
+                        this.ScenarioDescFormattedText = this.detailData.scenario_desc === '' ? 'No Description' : atob(this.detailData.scenario_desc);
+                        this.ReSourceSystemFormattedText = this.detailData.source_system_desc === '' ? 'No Description' : atob(this.detailData.source_system_desc);
+                        this.byId("PurposeFormattedText").setHtmlText(this.PurposeFormattedText);
+                        this.byId("ScenarioDescFormattedText").setHtmlText(this.ScenarioDescFormattedText);
+                        this.byId("ReSourceSystemFormattedText").setHtmlText(this.ReSourceSystemFormattedText);
+
+                    }.bind(this),
+                    error: function () {
+                        this.byId("PurposeFormattedText").setHtmlText("No Description");
+                        this.byId("ScenarioDescFormattedText").setHtmlText("No Description");
+                        this.byId("ReSourceSystemFormattedText").setHtmlText("No Description");
+                    }
+                });
+
             }
-            //richTextEditor
-            this.byId("PurposeFormattedText").setHtmlText(this.PurposeFormattedText);
-            this.byId("ScenarioDescFormattedText").setHtmlText(this.ScenarioDescFormattedText);
-            this.byId("ReSourceSystemFormattedText").setHtmlText(this.ReSourceSystemFormattedText);
+
         },
 
 
@@ -301,32 +292,41 @@ sap.ui.define([
                             operation_mode_code = "TKMTOMC003"
                             operation_mode_code_arr.push(operation_mode_code);
                         }
-                        for (i = 0; i < operation_mode_code_arr.length; i++) {
-                            for (m = 0; m < language_code.length; m++) {
-                                var operationPath = "/TaskMonitoringOperationModeLanguage(tenant_id='" + that.tenant_id + "',scenario_number=" + that.scenario_number +
-                                    ",monitoring_operation_mode_code='" + operation_mode_code_arr[i] + "',language_code='" + language_code[m] + "')";
-                                console.log(operationPath);
-                                oModel.remove(operationPath, { groupId: "DeleteGroup" });
-                            }
-                        }
-                        //TaskMonitoringCycleCodeLanguage 주기
-                        var cycleItems = odata.monitoring_cycle_code.split(';');
-                        for (i = 0; i < cycleItems.length; i++) {
-                            for (m = 0; m < language_code.length; m++) {
-                                var cyclePath = "/TaskMonitoringCycleCodeLanguage(tenant_id='" + that.tenant_id + "',scenario_number=" + that.scenario_number +
-                                    ",monitoring_cycle_code='" + cycleItems[i] + "',language_code='" + language_code[m] + "')";
-                                console.log(cyclePath);
-                                oModel.remove(cyclePath, { groupId: "DeleteGroup" });
+                        if (operation_mode_code_arr.length !== 0) {
+                            for (i = 0; i < operation_mode_code_arr.length; i++) {
+                                for (m = 0; m < language_code.length; m++) {
+                                    var operationPath = "/TaskMonitoringOperationModeLanguage(tenant_id='" + that.tenant_id + "',scenario_number=" + that.scenario_number +
+                                        ",monitoring_operation_mode_code='" + operation_mode_code_arr[i] + "',language_code='" + language_code[m] + "')";
+                                    console.log(operationPath);
+                                    oModel.remove(operationPath, { groupId: "DeleteGroup" });
+                                }
                             }
                         }
 
+                        //TaskMonitoringCycleCodeLanguage 주기
+                        if (odata.monitoring_cycle_code !== "") {
+                            var cycleItems = odata.monitoring_cycle_code.split(';');
+                            for (i = 0; i < cycleItems.length; i++) {
+                                for (m = 0; m < language_code.length; m++) {
+                                    var cyclePath = "/TaskMonitoringCycleCodeLanguage(tenant_id='" + that.tenant_id + "',scenario_number=" + that.scenario_number +
+                                        ",monitoring_cycle_code='" + cycleItems[i] + "',language_code='" + language_code[m] + "')";
+                                    console.log(cyclePath);
+                                    oModel.remove(cyclePath, { groupId: "DeleteGroup" });
+                                }
+                            }
+                        }
+
+
                         //TaskMonitoringManagerDetail 담당자
-                        var managerItems = odata.manager.split(';');
-                        managerItems.forEach(function (manager) {
-                            var managerPath = "/TaskMonitoringManagerDetail(tenant_id='" + that.tenant_id + "',scenario_number=" + that.scenario_number + ",monitoring_manager_empno='" + manager + "')";
-                            console.log(managerPath);
-                            oModel.remove(managerPath, { groupId: "DeleteGroup" });
-                        });
+                        if (odata.manager !== "") {
+                            var managerItems = odata.manager.split(';');
+                            managerItems.forEach(function (manager) {
+                                var managerPath = "/TaskMonitoringManagerDetail(tenant_id='" + that.tenant_id + "',scenario_number=" + that.scenario_number + ",monitoring_manager_empno='" + manager + "')";
+                                console.log(managerPath);
+                                oModel.remove(managerPath, { groupId: "DeleteGroup" });
+                            });
+
+                        }
 
                         oModel.submitChanges({
                             groupId: "DeleteGroup",
@@ -334,16 +334,15 @@ sap.ui.define([
                             success: function (oData, oResponse) {
                                 sap.m.MessageToast.show("Delete Success");
                                 that.getRouter().navTo("main", {}, true);
-                                //main 테이블 refresh
-
+                                //refresh
+                                oModel.refresh(true);
                             },
                             error: function (cc, vv) {
                                 sap.m.MessageToast.show("Delete Failed");
                             }
                         });
 
-                        that.getRouter().navTo("main", {}, true);
-                        oModel.refresh(true);
+
 
 
                     } else if (sButton === MessageBox.Action.CANCEL) {
@@ -352,8 +351,7 @@ sap.ui.define([
                 }
             });
 
-            console.groupEnd();
-            oModel.refresh(true);
+
         },
 
         _deleteEntry: function (entitySet, deleteCode) {
@@ -785,6 +783,8 @@ sap.ui.define([
                     success: function (oData, oResponse) {
                         sap.m.MessageToast.show("Save Success");
                         that.getRouter().navTo("main", {}, true);
+                        //refresh
+                        oModel.refresh(true);
 
                     },
                     error: function (cc, vv) {
@@ -916,6 +916,8 @@ sap.ui.define([
                         console.log("update success");
                         sap.m.MessageToast.show("Save Success");
                         that.getRouter().navTo("main", {}, true);
+                        //refresh
+                        oModel.refresh(true);
 
                     }, error: function () {
                         console.log("update failed");
@@ -925,8 +927,7 @@ sap.ui.define([
                 console.log(masterUpdateObj);
 
             }
-            //refresh
-            oModel.refresh(true);
+
 
         },
 
@@ -975,8 +976,6 @@ sap.ui.define([
 
             }
 
-            sap.ui.getCore().byId("company_edit_combo").removeAllItems();
-            sap.ui.getCore().byId("bizunit_edit_combo").removeAllItems();
             this.getView().getModel().refresh(true);
 
 
@@ -1283,12 +1282,15 @@ sap.ui.define([
             //주기 text -> multicombobox로 변경
             this.byId("cycleVBox").removeItem(this.cycleText);
             this.byId("cycleVBox").insertItem(this.cycle_multibox, 1);
-            sap.ui.getCore().byId("tenant_edit_combo").fireChange();
+            if (this.scenario_number !== "New") {
+                sap.ui.getCore().byId("tenant_edit_combo").fireSelectionChange();
+            }
+            sap.ui.getCore().byId("company_edit_combo").removeAllItems();
+            sap.ui.getCore().byId("bizunit_edit_combo").removeAllItems();
             //richTextEditor
-            this.byId("reMonitoringPurpose").setValue(this.PurposeFormattedText);
-            this.byId("reMonitoringScenario").setValue(this.ScenarioDescFormattedText);
-            this.byId("reSourceSystemDetail").setValue(this.ReSourceSystemFormattedText);
-
+            this.byId("reMonitoringPurpose").setValue(this.scenario_number === 'New' ? '' : this.PurposeFormattedText);
+            this.byId("reMonitoringScenario").setValue(this.scenario_number === 'New' ? '' : this.ScenarioDescFormattedText);
+            this.byId("reSourceSystemDetail").setValue(this.scenario_number === 'New' ? '' : this.ReSourceSystemFormattedText);
         },
 
         /**
@@ -1618,7 +1620,7 @@ sap.ui.define([
             hbox.setVisible(!hbox.getVisible());
             var btn = this.byId("managerTableBtn");
             btn.setIcon(hbox.getVisible() === false ? "sap-icon://expand-all" : "sap-icon://collapse-all");
-        },
+        }
 
 
 

@@ -14,8 +14,9 @@ using {pg.MI_Material_Code_Lng as MaterialCodeLng} from '../../../../db/cds/pg/m
 using {sp.Sm_Supplier_Mst as SupplierMst} from '../../../../db/cds/sp/sm/SP_SM_SUPPLIER_MST-model';     // Supplier Mst(공급업체 Mst)
 
 //CM CODE
-using {cm.Code_Dtl as CodeDtl} from '../../../../db/cds/cm/CM_CODE_DTL-model';              // CodeDtl(사업본부)
-using {cm.Code_Lng as CodeLng} from '../../../../db/cds/cm/CM_CODE_LNG-model';              // CodeLng(플랜트)
+using {cm.Code_Mst as CodeMst} from '../../../../db/cds/cm/CM_CODE_MST-model';              // CodeMst(공통마스터코드)
+using {cm.Code_Dtl as CodeDtl} from '../../../../db/cds/cm/CM_CODE_DTL-model';              // CodeDtl(공통코드상세)
+using {cm.Code_Lng as CodeLng} from '../../../../db/cds/cm/CM_CODE_LNG-model';              // CodeLng(공통코드언어)
 using {cm.Currency as Currency} from '../../../../db/cds/cm/CM_CURRENCY-model';             // Currency(통화)
 using {cm.Currency_Lng as CurrencyLng} from '../../../../db/cds/cm/CM_CURRENCY_LNG-model';  // Currency Lng(통화언어)
 
@@ -229,6 +230,19 @@ service marketIntelligenceSacService {
     //               on  mc.tenant_id         =  ml.tenant_id
     //               and mc.mi_material_code  =  ml.mi_material_code
     //               and ml.language_code  =  'KO';
+
+    // CodeMst View: 공통마스터코드
+    view CmCodeMstView @(title : '공통마스터코드 View') as
+        select
+            key tenant_id
+           ,key group_code
+           ,    chain_code
+           ,    group_name
+           ,    group_description
+           ,    maximum_column_size
+           ,    use_flag
+        from  CodeMst
+        ;
 
     // CodeDtl View: 공통코드
     view CmCodeDtlView @(title : '공통코드 View') as
