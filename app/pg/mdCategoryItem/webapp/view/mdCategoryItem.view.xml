@@ -36,6 +36,19 @@
             <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                 <form:content>
                     <VBox>
+                    
+                        <!-- <Label text="Operation ORG" labelFor="search_Operation_ORG_S" required="true"></Label>
+                        <ComboBox id="search_Operation_ORG_S" width="10rem" selectedKey="BIZ00200" items="{
+                                path: '/VpOperationOrg',
+                                filters: [
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                ],
+                                sorter: { path: 'operation_org_code'}
+                            }">
+                            <items>
+                                <core:Item key="{operation_org_code}" text="{operation_org_name}" />
+                            </items>
+                        </ComboBox> -->
                         <Label text="사업본부: " labelFor="searchDeptS"></Label>
                         <ComboBox id="searchDeptS" width="100%" items="{
                                 path: 'util>/CodeDetails',

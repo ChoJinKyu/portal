@@ -184,12 +184,12 @@ sap.ui.define([
                 oDetailsModel = this.getModel("details"),
                 that = this;
 
-            if (this._sSpmd_character_code !== "new"){
-                if (!oMasterModel.isChanged() && !oDetailsModel.isChanged() ) {
-                    MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
-                    return;                
-                }
-            }
+            // if (this._sSpmd_character_code !== "new"){
+            //     if ( !oMasterModel.isChanged() && !oDetailsModel.isChanged() ) {
+            //         MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
+            //         return;                
+            //     }
+            // }
 
             if(this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
             if(this.validator.validate(this.byId("midTable")) !== true) return;
@@ -199,7 +199,27 @@ sap.ui.define([
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
-						oView.setBusy(true);
+                        oView.setBusy(true);
+
+                        // $.ajax({
+                        //     url: url,
+                        //     type: "POST",
+                        //     data : JSON.stringify(input),
+                        //     contentType: "application/json",
+                        //     success: function(data){
+
+                        //         console.log("#########Success#####", data.value);
+                        //         oView.setBusy(false);
+						// 		that._toShowMode();
+                        //         that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+						// 		MessageToast.show(that.getModel("I18N").getText("/NCM0005"));                                
+                        //         that._toShowMode();
+                        //     },
+                        //     error: function(e){
+                        //         console.log("error====", e);
+                        //     }
+                        // });
+
 						oTransactionManager.submit({						
 							success: function(ok){
 								that._toShowMode();
@@ -246,8 +266,9 @@ sap.ui.define([
                     contentType: "application/json",
                     success: function(data){
                         var v_list = oView.getModel("master").getData();
-                        v_list.MdCategoryItem = data.value;
+                        v_list.MdCategoryItem = data.value[0];
                         oView.getModel("master").updateBindings(true); 
+                        // that.getModel("master").setTransactionModel(this.getModel());
                     },
                     error: function(e){
                         
@@ -365,18 +386,12 @@ sap.ui.define([
                     url: url,
                     type: "GET",
                     contentType: "application/json",
-                    // filters: aFilters,   
                     success: function(data){
                         var v_list = oView.getModel("master").getData();
-                        v_list.MdCategoryItem = data.value;
+                        v_list.MdCategoryItem = data.value[0];
                         oView.getModel("master").updateBindings(true); 
-                        debugger;
-                        // that.getModel("master").setTransactionModel(this.getModel());
-                        // var v_list = oView.getModel("master").getData();
-                        // v_list.MdCategoryItem = data.value;
-                        // oView.getModel("master").updateBindings(true); 
                     },
-                    error: function(e){
+                    error: function(e){ 
                         
                     }
                 });
