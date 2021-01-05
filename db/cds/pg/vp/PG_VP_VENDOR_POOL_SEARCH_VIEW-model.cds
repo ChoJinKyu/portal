@@ -39,6 +39,7 @@ entity Vp_Vendor_Pool_Search_View {
   supeval_control_flag: Boolean @title: '평가통제';
   supeval_control_start_date: String(8) @title: '평가통제시작';
   supeval_control_end_date: String(8) @title: '평가통제종료';
+  temp_type: String(1) @title: '공급업체변경여부(Y/N)';
   supplier_rm_control_flag: Boolean @title: 'RM통제';
   sd_exception_flag: Boolean @title: 'SD예외';
   vendor_pool_apply_exception_flag: Boolean @title: 'V/P예외';
