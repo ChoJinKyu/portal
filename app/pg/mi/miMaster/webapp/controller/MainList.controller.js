@@ -195,6 +195,7 @@ sap.ui.define([
          */
 		onBeforeRebindTable: function (oEvent) {
 			console.group("onBeforeRebindTable");
+			var that = this;
 
 
 			this._getSmartTableById().getTable().removeSelections(true);
@@ -237,18 +238,30 @@ sap.ui.define([
 				var oCodeFilter = new Filter("use_flag", FilterOperator.EQ, fOcode);
 				mBindingParams.filters.push(oCodeFilter);
 			}  
+
 			this._getSmartTableById().getTable().removeSelections(true);
-			//this.setInitialSortOrder(oEvent);
+
+			if (that._isOnInit == null) that._isOnInit = true; 
+			if (that._isOnInit) {
+
+				mBindingParams.sorter = [
+					new sap.ui.model.Sorter("system_update_dtm", true)
+				];
+
+				that._isOnInit = false;
+			}
+
 			console.groupEnd();              
 		},
 
-		setInitialSortOrder: function(oEvent) {
+		_setInitialSortOrder: function() {
+			console.log("setInitialSortOrder");
 
-			var oSmartTable = oEvent.getSource();
+			//var oSmartTable = oEvent.getSource();
 
 			if (this._isOnInit == null) this._isOnInit = true; 
 			if (this._isOnInit) {
-				oSmartTable.applyVariant({
+				this._getSmartTableById().getTable().applyVariant({
 					sort: {
 						sortItems: [{
 								columnKey: "system_update_dtm",
@@ -310,6 +323,7 @@ sap.ui.define([
 			} else {
 				sTitle = this.getResourceBundle().getText("mainListTableTitle");
 			}
+
 			this.getModel("oUI").setProperty("/mainListTableTitle", sTitle);
 		},
 

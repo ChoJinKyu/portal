@@ -172,6 +172,7 @@ sap.ui.define([
          */
 		onBeforeRebindTable: function (oEvent) {
 			console.log("onBeforeRebindTable");
+			var that = this;
 			
 			this._getSmartTableById().getTable().removeSelections(true);
 			var mBindingParams = oEvent.getParameter("bindingParams");
@@ -194,7 +195,21 @@ sap.ui.define([
 				mBindingParams.filters.push(oSupplier_local_nameFilter);
 			}         
 
+			//var firstItem = this._getSmartTableById.getItems()[0];
+			//this._getSmartTableById().getTable().setSelectedItem(firstItem);
+
 			this._getSmartTableById().getTable().removeSelections(true);
+
+			if (that._isOnInit == null) that._isOnInit = true; 
+			if (that._isOnInit) {
+
+				mBindingParams.sorter = [
+					new sap.ui.model.Sorter("system_update_dtm", true)
+				];
+
+				that._isOnInit = false;
+			}
+
         },
 		
 			
