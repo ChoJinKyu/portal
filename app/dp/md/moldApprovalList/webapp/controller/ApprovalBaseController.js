@@ -117,14 +117,13 @@ sap.ui.define([
 
         // 입찰대상 협력사 취소품의 이동 
          onPageCancellationButtonPress: function () { 
-      
-            var oUiModel = this.getView().getModel("mode");
-                oUiModel.setProperty("/cancelCreateFlag", true);
-
+            var Cancellation = this.getView().getModel('Cancellation');
+            Cancellation.setProperty("/approvalNumber", this.approval_number);
+            Cancellation.setProperty("/isCreate", true);
              this.getRouter().navTo("participatingSupplierSelectionCancelApproval" , {
                   company_code: this.company_code 
                 , plant_code: this.plant_code 
-                , approval_number: this.approval_number 
+                , approval_number: "New"
             });
         },
 
@@ -188,7 +187,6 @@ sap.ui.define([
             this.company_code = args.company_code;
             this.plant_code = (args.org_code == undefined ? args.plant_code : args.org_code);
 
-            console.log(" contrl " , this.getModel("contModel"));
             var oModel = this.getModel("company");
 
             oModel.setTransactionModel(this.getModel("org"));

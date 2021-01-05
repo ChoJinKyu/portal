@@ -63,7 +63,6 @@ sap.ui.define([
             this.setModel(oViewModel, "participatingSupplierSelectionCancelApprovalView");//change
             this.getRouter().getRoute("participatingSupplierSelectionCancelApproval").attachPatternMatched(this._onObjectMatched, this);//change
             this.getView().setModel(new ManagedListModel(), "mdItemMaster");
-            this.getView().setModel(new ManagedListModel(), "psOrgCode"); //currency 콤보박스
             
         },
 
@@ -77,31 +76,31 @@ sap.ui.define([
         _onApprovalPage : function () {
   
             console.log(" this.approval_number "  ,  this.approval_number);
-            console.log(" mode "  ,  this.getModel("mode"));
+            console.log(" Cancellation "  ,  this.getView().getModel('Cancellation'));
             var schFilter = [];
             var schFilter2 = [];
    
             if (this.approval_number == "New") {
-                this._participatingEditFragment();
+                 this._participatingEditFragment();
+
+                schFilter = [new Filter("approval_number", FilterOperator.EQ, this.getView().getModel('Cancellation').getProperty("/approvalNumber"))
+                    , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
+                ];
+
+                this._bindViewParticipating("/ParticipatingSupplier", "mdItemMaster", schFilter, function (oData) {
+                    console.log("ParticipatingSupplier >>>>>>", oData);
+                });
+
             } else {
                 this._participatingViewFragment();
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
                     , new Filter("tenant_id", FilterOperator.EQ, 'L1100')
                 ];
 
-                schFilter2 = [
-                    new Filter("tenant_id", FilterOperator.EQ, 'L1100' ),
-                    new Filter("group_code", FilterOperator.EQ, 'DP_MD_LOCAL_CURRENCY' ),
-                    new Filter("language_cd", FilterOperator.EQ, 'KO' ),
-                    new Filter("org_code", FilterOperator.EQ, this.company_code)
-                ]; 
-
                 this._bindViewParticipating("/ParticipatingSupplier", "mdItemMaster", schFilter, function (oData) {
                     console.log("ParticipatingSupplier >>>>>>", oData);
                 });
-                this._bindViewCurrency("/OrgCodeLanguages", "psOrgCode", schFilter2, function (oData) {
-                    console.log("OrgCodeLanguages >>>>>>", oData);
-                });
+  
             }  
         },
 
@@ -118,156 +117,6 @@ sap.ui.define([
                 }
             });
         },
-        _bindViewCurrency : function (sObjectPath, sModel, aFilter, callback) { 
-            var oView = this.getView(),
-                oModel = this.getModel(sModel);
-            oView.setBusy(true);
-            oModel.setTransactionModel(this.getModel("orgCode"));
-            oModel.read(sObjectPath, {
-                filters: aFilter,
-                success: function (oData) {
-                    oView.setBusy(false);
-                    callback(oData);
-                }
-            });
-        },
-
-        onSupplierSelection: function (oEvent){
-                var oTable = this.byId("psTable")
-                , psModel = this.getModel("mdItemMaster"); 
-                var oSelected = oTable.getSelectedIndices(); 
-                
-                console.log(oSelected);
-                
-            if (oSelected.length > 0) {
-                this.supplierSelection.showSupplierSelection(this, oEvent, this.company_code, this.org_code, function(data){
-                    if(data.length > 0) {
-                        supplierData=[];
-                        for(var i=0; i<data.length; i++){
-                            supplierData.push(data[i]);             
-                        }
-                        var aTokens = oEvent.getParameter("tokens");
-                    }
-                    console.log("supplierData :::", supplierData);
-                    if(supplierData.length == 0){
-                        MessageBox.error("Supplier를 하나이상 선택해주세요.");
-                    }else{               
-                        oSelected.forEach(function(idx){
-                            psModel.getData().ParticipatingSupplier[idx].supplier_code_1 = (supplierData[0] == undefined ?null:supplierData[0].key);
-                            psModel.getData().ParticipatingSupplier[idx].supplier_code_2 = (supplierData[1] == undefined ?null:supplierData[1].key);
-                            psModel.getData().ParticipatingSupplier[idx].supplier_code_3 = (supplierData[2] == undefined ?null:supplierData[2].key);
-                            psModel.getData().ParticipatingSupplier[idx].supplier_code_4 = (supplierData[3] == undefined ?null:supplierData[3].key);
-                            psModel.getData().ParticipatingSupplier[idx].supplier_code_5 = (supplierData[4] == undefined ?null:supplierData[4].key);
-                            psModel.getData().ParticipatingSupplier[idx].supplier_code_6 = (supplierData[5] == undefined ?null:supplierData[5].key);
-                            psModel.getData().ParticipatingSupplier[idx].supplier_code_7 = (supplierData[6] == undefined ?null:supplierData[6].key);
-                            psModel.getData().ParticipatingSupplier[idx].supplier_code_8 = (supplierData[7] == undefined ?null:supplierData[7].key);
-                            psModel.getData().ParticipatingSupplier[idx].supplier_code_9 = (supplierData[8] == undefined ?null:supplierData[8].key);
-                            psModel.getData().ParticipatingSupplier[idx].supplier_code_10 = (supplierData[9] == undefined ?null:supplierData[9].key);
-                            psModel.getData().ParticipatingSupplier[idx].supplier_code_11 = (supplierData[10] == undefined ?null:supplierData[10].key);
-                            psModel.getData().ParticipatingSupplier[idx].supplier_code_12 = (supplierData[11] == undefined ?null:supplierData[11].key);
-                            psModel.getData().ParticipatingSupplier[idx].sequence_1 = (supplierData[0] == undefined ?null:"1");
-                            psModel.getData().ParticipatingSupplier[idx].sequence_2 = (supplierData[1] == undefined ?null:"2");
-                            psModel.getData().ParticipatingSupplier[idx].sequence_3 = (supplierData[2] == undefined ?null:"3");
-                            psModel.getData().ParticipatingSupplier[idx].sequence_4 = (supplierData[3] == undefined ?null:"4");
-                            psModel.getData().ParticipatingSupplier[idx].sequence_5 = (supplierData[4] == undefined ?null:"5");
-                            psModel.getData().ParticipatingSupplier[idx].sequence_6 = (supplierData[5] == undefined ?null:"6");
-                            psModel.getData().ParticipatingSupplier[idx].sequence_7 = (supplierData[6] == undefined ?null:"7");
-                            psModel.getData().ParticipatingSupplier[idx].sequence_8 = (supplierData[7] == undefined ?null:"8");
-                            psModel.getData().ParticipatingSupplier[idx].sequence_9 = (supplierData[8] == undefined ?null:"9");
-                            psModel.getData().ParticipatingSupplier[idx].sequence_10 = (supplierData[9] == undefined ?null:"10");
-                            psModel.getData().ParticipatingSupplier[idx].sequence_11 = (supplierData[10] == undefined ?null:"11");
-                            psModel.getData().ParticipatingSupplier[idx].sequence_12 = (supplierData[11] == undefined ?null:"12");
-                            psModel.refresh(true); 
-                        });
-                    }
-                });
-                
-            } else {
-                MessageBox.error("선택된 행이 없습니다.");
-            }
-            
-        },
-        /**
-         * @description moldItemSelect 공통팝업   
-         * @param vThis : view page의 this 
-         *       , oEvent : 이벤트 
-         * ,     , oArges : company_code , org_code (필수)
-		 */
-        onPsAddPress: function (oEvent) {
-            console.log("oEvent>>>>");
-            var oModel = this.getModel("mdItemMaster");
-
-            console.log(" mdItemMaster >>>> ", oModel);
-
-            var mIdArr = [];
-            if (oModel.oData.ParticipatingSupplier != undefined && oModel.oData.ParticipatingSupplier.length > 0) {
-                oModel.oData.ParticipatingSupplier.forEach(function (item) {
-                    mIdArr.push(item.mold_id);
-                });
-            }
-
-            console.log(" this.getModel " , this.getModel('appMaster'));
-
-            var oArgs = {
-               company_code: this.company_code ,
-                org_code: this.plant_code,
-                //mold_progress_status_code : 'DEV_RCV' ,
-                mold_id_arr: mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
-            }
-
-            var that = this;
-
-            this.moldItemPop.openMoldItemSelectionPop(this, oEvent, oArgs, function (oDataMold) {
-                console.log("selected data list >>>> ", oDataMold);
-                if (oDataMold.length > 0) {
-                    oDataMold.forEach(function (item) {
-                        that._addPsTable(item);
-                    })
-                }
-            });
-        },
-
-        /**
-         * @description Mold Item row 추가 
-         * @param {*} data 
-         */
-        _addPsTable: function (data) {
-                var oTable = this.byId("psTable"),
-                oModel = this.getModel("mdItemMaster"),
-                mstModel = this.getModel("appMaster");
-            ;
-            console.log(data);
-            /** add record 시 저장할 model 과 다른 컬럼이 있을 경우 submit 안됨 */
-            var approval_number = mstModel.approval_number;
-            oModel.addRecord({
-                "approval_number": approval_number,
-                "tenant_id": "L1100",
-                "mold_id": String(data.mold_id),
-                "model": data.model,
-                "mold_number": data.mold_number,
-                "mold_sequence": data.mold_sequence,
-                "spec_name": data.spec_name,
-                "mold_item_type_code": data.mold_item_type_code,
-                "book_currency_code": data.book_currency_code,
-                "provisional_budget_amount": data.provisional_budget_amount,
-                "budget_amount": data.budget_amount,
-                "currency_code": data.currency_code,
-                "target_amount": data.target_amount,
-                "local_create_dtm": new Date(),
-                "local_update_dtm": new Date()
-            }, "/ParticipatingSupplier", 0);
-        },
-
-    
-
-        /**
-         * @public 
-         * @see 사용처 Participating Supplier Fragment 취소 이벤트
-         */
-        onExit: function () {
-            this.byId("dialogMolItemSelection").close();
-        },
-
         /**
         * @description Participating Supplier 의 delete 버튼 누를시 
         */
@@ -289,11 +138,6 @@ sap.ui.define([
             }
         } ,
 
-        // onPageEditButtonPress: function () {
-        //     this._participatingEditFragment();
-        //     this._editMode();
-        // },
-        
         onPageCancelButtonPress: function () {
             this._participatingViewFragment();
             this._viewMode();
@@ -306,11 +150,11 @@ sap.ui.define([
             console.log("_participatingEditFragment");
             var oPageSection = this.byId("participatingSupplierSelectionTableFragment");
             oPageSection.removeAllBlocks();
-            this._loadFragment("ParticipatingSupplierSelectionTableEdit", function (oFragment) {
+            this._loadFragment("ParticipatingSupplierSelectionCancelTableEdit", function (oFragment) {
                 oPageSection.addBlock(oFragment);
             }.bind(this));
         },
-        _participatingViewFragment : function(){
+        _participatingViewFragment : function(){ // 협력사 선정품의랑 같은거 사용 
              console.log("_participatingEditFragment");
              var oPageSection = this.byId("participatingSupplierSelectionTableFragment");
             oPageSection.removeAllBlocks();
@@ -319,7 +163,7 @@ sap.ui.define([
             }.bind(this));
         },
 
-        onPagePreviewButtonPress : function(){
+        onPagePreviewButtonPress : function(){ // 협력사 선정품의랑 같은거 사용 
             this.getView().setModel(new ManagedListModel(), "approverPreview"); 
 
         //    this.getModel("approverPreview").setData(this.getModel("approver").getData());

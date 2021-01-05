@@ -248,8 +248,9 @@ sap.ui.define([
             }if(oRecord.approval_type_code == "I"){
                 approvalTarget = "moldRecepitApproval"
             }if(oRecord.approval_type_code == "A"){ 
-                var oUiModel = this.getView().getModel("mode");
-                oUiModel.setProperty("/cancelCreateFlag", false);
+                var Cancellation = this.getView().getModel('Cancellation');
+                Cancellation.setProperty("/approvalNumber", null);
+                Cancellation.setProperty("/isCreate", false);
                 approvalTarget = "participatingSupplierSelectionCancelApproval"
             }
 
