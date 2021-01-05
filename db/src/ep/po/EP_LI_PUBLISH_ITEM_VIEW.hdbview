@@ -27,8 +27,12 @@ select
     coalesce(dtl.currency_code, '') as currency_code,
     dtl.loi_selection_number,
     coalesce(sel.loi_selection_status_code, '') as loi_selection_status_code,
+    (select ep_get_code_name_func(dtl.tenant_id, 'EP_LOI_SELECTION_STATUS', sel.loi_selection_status_code, 'KO') from dummy) as loi_selection_status_name,
+    -- ''  as loi_selection_status_name,
     dtl.loi_publish_number,
     coalesce(pub.loi_publish_status_code, '') as loi_publish_status_code,
+    (select ep_get_code_name_func(dtl.tenant_id, 'EP_LOI_PUBLISH_STATUS', pub.loi_publish_status_code, 'KO') from dummy) as loi_publish_status_name,
+    -- '' as loi_publish_status_name,
     '' as po_status_code,
     mst.request_date,
     coalesce(dtl.supplier_opinion, '') as supplier_opinion,
@@ -51,4 +55,6 @@ select
     left outer join ep_li_supplier_selection as sel
     on dtl.tenant_id = sel.tenant_id 
     and dtl.company_code = sel.company_code
-    and dtl.loi_selection_number = sel.loi_selection_number;
+    and dtl.loi_selection_number = sel.loi_selection_number
+    where mst.loi_request_status_code = '121040'
+    ;
