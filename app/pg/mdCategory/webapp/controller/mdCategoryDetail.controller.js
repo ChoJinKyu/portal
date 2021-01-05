@@ -288,7 +288,7 @@ sap.ui.define([
                     "spmd_category_code_name": "",
                     "rgb_font_color_code": "",
                     "rgb_cell_clolor_code": "",
-                    "spmd_category_sort_sequence": "" 
+                    "spmd_category_sort_sequence": this._sSpmd_category_sort_sequence
                 }, "/MdCategory");
                 
 				var oDetailsModel = this.getModel("details");

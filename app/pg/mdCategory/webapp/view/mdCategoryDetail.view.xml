@@ -22,19 +22,13 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="Category Item Detail" wrapping="true" />
+					<Title text="Category Detail" wrapping="true" />
 				</uxap:expandedHeading>
 				<uxap:snappedHeading>
-					<Title text="Category Item Detail" wrapping="true" />
+					<Title text="Category Detail" wrapping="true" />
 				</uxap:snappedHeading>
-				<uxap:expandedContent>
-					<Text text="Details for Category Item : {master>/spmd_character_code}" />
-				</uxap:expandedContent>
-				<uxap:snappedContent>
-					<Text text="Details for Category Item : {master>/spmd_character_code}" />
-				</uxap:snappedContent>
 				<uxap:snappedTitleOnMobile>
-					<Title text="Control Option Details" />
+					<Title text="{I18N>/MASTER_INFO}" />
 				</uxap:snappedTitleOnMobile>
 				<uxap:actions>
 					<Button id="pageEditButton" text="{I18N>/UPDATE}" type="Emphasized" press=".onPageEditButtonPress" />
@@ -54,14 +48,14 @@
 		</uxap:headerContent>
 
 		<uxap:sections>
-			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="Control Option Details">
+			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="{I18N>/MASTER_INFO}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection1" >
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			<uxap:ObjectPageSection titleUppercase="false" title="Langauage">
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/LANGUAGE}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<Table id="midTable" 
