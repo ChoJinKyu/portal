@@ -11,7 +11,7 @@ entity Se_Eval_Sheet_Eval_Item {
   key regular_evaluation_id            : String(100) not null @title: '정기평가ID' ;	
   key evaluation_article_code          : String(15)  not null @title: '평가항목코드' ;	
       parent_evaluation_article_code   : String(15)           @title: '상위평가항목코드' ;	
-      evaluation_distrb_score_weight   : Decimal              @title: '평가배점가중치' ;	
+      evaluation_distrb_score_weight   : Decimal(5,2)         @title: '평가배점가중치' ;	
       evaluation_execute_mode_code     : String(30)           @title: '평가실행방식코드' ;	
       evaluation_article_type_code     : String(30)           @title: '평가항목구분코드' ;	
       evaluation_distrb_scr_type_cd    : String(30)           @title: '평가배점유형코드' ;	
