@@ -70,16 +70,16 @@ service ParticipatingSupplierSelectionApprovalService {
         qtn_12.sequence as sequence_12 : String(5)
 	from approvalDtl.Md_Approval_Dtl dtl
 	join moldMst.Md_Mst mst on dtl.mold_id = mst.mold_id
-    left JOIN qtn.Md_Quotation AS qtn_1 ON dtl.mold_id = qtn_1.mold_id and qtn_1.sequence = 1 
-	left JOIN qtn.Md_Quotation AS qtn_2 ON dtl.mold_id = qtn_2.mold_id and qtn_2.sequence = 2
-	left JOIN qtn.Md_Quotation AS qtn_3 ON dtl.mold_id = qtn_3.mold_id and qtn_3.sequence = 3
-	left JOIN qtn.Md_Quotation AS qtn_4 ON dtl.mold_id = qtn_4.mold_id and qtn_4.sequence = 4
-	left JOIN qtn.Md_Quotation AS qtn_5 ON dtl.mold_id = qtn_5.mold_id and qtn_5.sequence = 5
-	left JOIN qtn.Md_Quotation AS qtn_6 ON dtl.mold_id = qtn_6.mold_id and qtn_6.sequence = 6
-	left JOIN qtn.Md_Quotation AS qtn_7 ON dtl.mold_id = qtn_7.mold_id and qtn_7.sequence = 7
-	left JOIN qtn.Md_Quotation AS qtn_8 ON dtl.mold_id = qtn_8.mold_id and qtn_8.sequence = 8
-	left JOIN qtn.Md_Quotation AS qtn_9 ON dtl.mold_id = qtn_9.mold_id and qtn_9.sequence = 9
-	left JOIN qtn.Md_Quotation AS qtn_10 ON dtl.mold_id = qtn_10.mold_id and qtn_10.sequence = 10
-	left JOIN qtn.Md_Quotation AS qtn_11 ON dtl.mold_id = qtn_11.mold_id and qtn_11.sequence = 11
-	left JOIN qtn.Md_Quotation AS qtn_12 ON dtl.mold_id = qtn_12.mold_id and qtn_12.sequence = 12;
+    left JOIN qtn.Md_Quotation AS qtn_1 ON dtl.mold_id = qtn_1.mold_id and qtn_1.sequence = 1 and dtl.approval_number = qtn_1.approval_number
+	left JOIN qtn.Md_Quotation AS qtn_2 ON dtl.mold_id = qtn_2.mold_id and qtn_2.sequence = 2 and dtl.approval_number = qtn_2.approval_number
+	left JOIN qtn.Md_Quotation AS qtn_3 ON dtl.mold_id = qtn_3.mold_id and qtn_3.sequence = 3 and dtl.approval_number = qtn_3.approval_number
+	left JOIN qtn.Md_Quotation AS qtn_4 ON dtl.mold_id = qtn_4.mold_id and qtn_4.sequence = 4 and dtl.approval_number = qtn_4.approval_number
+	left JOIN qtn.Md_Quotation AS qtn_5 ON dtl.mold_id = qtn_5.mold_id and qtn_5.sequence = 5 and dtl.approval_number = qtn_5.approval_number
+	left JOIN qtn.Md_Quotation AS qtn_6 ON dtl.mold_id = qtn_6.mold_id and qtn_6.sequence = 6 and dtl.approval_number = qtn_6.approval_number
+	left JOIN qtn.Md_Quotation AS qtn_7 ON dtl.mold_id = qtn_7.mold_id and qtn_7.sequence = 7 and dtl.approval_number = qtn_7.approval_number
+	left JOIN qtn.Md_Quotation AS qtn_8 ON dtl.mold_id = qtn_8.mold_id and qtn_8.sequence = 8 and dtl.approval_number = qtn_8.approval_number
+	left JOIN qtn.Md_Quotation AS qtn_9 ON dtl.mold_id = qtn_9.mold_id and qtn_9.sequence = 9 and dtl.approval_number = qtn_9.approval_number
+	left JOIN qtn.Md_Quotation AS qtn_10 ON dtl.mold_id = qtn_10.mold_id and qtn_10.sequence = 10 and dtl.approval_number = qtn_10.approval_number
+	left JOIN qtn.Md_Quotation AS qtn_11 ON dtl.mold_id = qtn_11.mold_id and qtn_11.sequence = 11 and dtl.approval_number = qtn_11.approval_number
+	left JOIN qtn.Md_Quotation AS qtn_12 ON dtl.mold_id = qtn_12.mold_id and qtn_12.sequence = 12 and dtl.approval_number = qtn_12.approval_number;
 }
