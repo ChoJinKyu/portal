@@ -93,24 +93,11 @@ sap.ui.define([
 
             this.getRouter().getRoute("approvalList").attachPatternMatched(this._onRoutedThisPage, this);
 
-            this._oTPC = new TablePersoController({
-                customDataKey: "approvalList",
-                persoService: ApprovalListPersoService
-            }).setTable(this.byId("mainTable"));
-            //console.log(this.byId("moldMstTable"));
             this._doInitTablePerso();
 
         },
        
-        _doInitTablePerso: function () {
-            // init and activate controller
-            this._oTPC = new TablePersoController({
-                table: this.byId("mainTable"),
-                componentName: "Approvals",
-                persoService: ApprovalListPersoService,
-                hasGrouping: true
-            }).activate();
-        },
+        
         /**
          * @private
          * @see init 이후 바로 실행됨
@@ -1052,6 +1039,16 @@ sap.ui.define([
                 data: oData
             });
         },
+        
+        _doInitTablePerso: function () {
+            // init and activate controller
+            this._oTPC = new TablePersoController({
+                table: this.byId("mainTable"),
+                componentName: "moldApprovalList",
+                persoService: ApprovalListPersoService,
+                hasGrouping: true
+            }).activate();
+        }
         
     });
 });
